@@ -339,7 +339,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`w-full max-w-md rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight 
  ?'bg-white text-[var(--ink)]' 
- :'bg-[var(--surface)] text-[var(--sunken)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  {/* Modal Header */}
@@ -368,7 +368,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -618,7 +618,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={() => setShowCreateBandSection(false)}
- className="text-[var(--ink-2)] hover:text-[var(--sunken)] p-1 cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--ink-2)] p-1 cursor-pointer"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -1173,7 +1173,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <ModalPortal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200 text-left">
  <div className={`w-full max-w-lg rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
  }`}>
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] border-b /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
@@ -1380,7 +1380,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  ) : <span />}
  <button
  onClick={() => setShowUpgradeModal(false)}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] transition-colors cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cerrar
  </button>

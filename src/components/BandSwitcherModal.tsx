@@ -759,7 +759,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  {/* In-App Create / Add Band Modal with Full 2-Step Flow & Plans */}
  {showCreateBandModal && (
  <div className="fixed inset-0 z-[85] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-150 overflow-y-auto">
- <div className={`w-full ${createBandStep === 1 ?'max-w-lg' :'max-w-5xl'} rounded-3xl bg-[var(--bg)] text-[var(--sunken)] p-6 sm:p-8 shadow-2xl space-y-6 transition-all duration-300 my-auto`}>
+ <div className={`w-full ${createBandStep === 1 ?'max-w-lg' :'max-w-5xl'} rounded-3xl bg-[var(--bg)] text-[var(--ink-2)] p-6 sm:p-8 shadow-2xl space-y-6 transition-all duration-300 my-auto`}>
  
  {/* Step 1: Band Details */}
  {createBandStep === 1 && (
@@ -911,7 +911,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </div>
 
  <div className="text-center space-y-2">
- <h2 className="text-2xl sm:text-3xl font-bold text-[var(--sunken)] tracking-tight">
+ <h2 className="text-2xl sm:text-3xl font-bold text-[var(--ink-2)] tracking-tight">
  Elige el plan para <span className="text-[var(--acc)]">{newBandName.trim() ||'tu Proyecto'}</span>
  </h2>
  <p className="text-[var(--ink-2)] max-w-xl mx-auto text-xs sm:text-sm">
@@ -976,7 +976,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <div className="flex items-center justify-between gap-1 mb-1">
  <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)]">Gratis</span>
  </div>
- <h3 className="text-base font-bold text-[var(--sunken)]">Ensayo</h3>
+ <h3 className="text-base font-bold text-[var(--ink-2)]">Ensayo</h3>
  <div className="mt-1.5 flex items-baseline gap-1">
  <span className="text-2xl font-black text-[var(--ink)]">0€</span>
  <span className="text-[11px] text-[var(--ink-2)] font-medium">/ siempre</span>
@@ -1046,7 +1046,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  ].map((f, i) => {
  const isHighlighted = newBandFeatureCategory ==='all' || newBandFeatureCategory === f.cat;
  return (
- <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--sunken)] opacity-100' :'text-[var(--ink-2)] opacity-40'}`}>
+ <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--ink-2)] opacity-100' :'text-[var(--ink-2)] opacity-40'}`}>
  <Check className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`} />
  <span className={isHighlighted && newBandFeatureCategory !=='all' ?'font-bold text-[var(--acc)]' :''}>{f.text}</span>
  </li>
@@ -1101,7 +1101,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  ].map((f, i) => {
  const isHighlighted = newBandFeatureCategory ==='all' || newBandFeatureCategory === f.cat;
  return (
- <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--sunken)] opacity-100' :'text-[var(--ink-2)] opacity-40'}`}>
+ <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--ink-2)] opacity-100' :'text-[var(--ink-2)] opacity-40'}`}>
  <Zap className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
  <span className={isHighlighted && newBandFeatureCategory !=='all' ?'font-bold text-[var(--acc)]' :''}>{f.text}</span>
  </li>
@@ -1193,7 +1193,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  {/* In-App Delete Band Confirmation Modal */}
  {bandToDelete && (
  <div className="fixed inset-0 z-[85] flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in duration-150">
- <div className="w-full max-w-sm rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--sunken)] p-5 shadow-2xl space-y-4">
+ <div className="w-full max-w-sm rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink-2)] p-5 shadow-2xl space-y-4">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-rose-500/15 flex items-center justify-center text-rose-400 shrink-0">
  <Trash2 className="w-5 h-5" />
@@ -1238,7 +1238,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
  return (
  <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 text-left">
- <div className="w-full max-w-lg rounded-[var(--r-l)] shadow-2xl bg-[var(--surface)] /30 text-[var(--sunken)] overflow-hidden flex flex-col">
+ <div className="w-full max-w-lg rounded-[var(--r-l)] shadow-2xl bg-[var(--surface)] /30 text-[var(--ink-2)] overflow-hidden flex flex-col">
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] border-b /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
  <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center">
@@ -1356,7 +1356,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <div className="px-6 py-3 bg-[var(--surface)] border-t flex justify-end">
  <button
  onClick={() => setShowUpgradeModal(false)}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] transition-colors cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cerrar
  </button>

@@ -272,7 +272,7 @@ export function NegotiationSimulationModal({
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none font-sans leading-relaxed ${
  isStitchLight
  ?'bg-sky-500/15 text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--sunken)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
  <p className={`text-[10px] font-sans ${textMuted} leading-tight`}>

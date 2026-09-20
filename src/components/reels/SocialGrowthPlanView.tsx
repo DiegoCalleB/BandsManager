@@ -319,7 +319,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {channel.platform ==='tiktok' && <Video className="w-4 h-4 text-cyan-400" />}
  {channel.platform ==='youtube' && <Youtube className="w-4 h-4 text-red-500" />}
  {channel.platform ==='spotify' && <Music2 className="w-4 h-4 text-emerald-500" />}
- <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--sunken)]">
+ <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
  {channel.name}
  </h4>
  </div>
@@ -350,7 +350,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <Circle className="w-4 h-4 text-[var(--ink-2)] shrink-0 mt-0.5" />
  )}
  <div>
- <p className="text-xs font-mono font-bold text-[var(--sunken)]">{action.title}</p>
+ <p className="text-xs font-mono font-bold text-[var(--ink-2)]">{action.title}</p>
  <p className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5">{action.kpiTarget}</p>
  </div>
  </div>
@@ -409,7 +409,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {dayPlan.recommendedPlatform ==='todas' && <span className="text-[var(--acc)] flex items-center gap-1"><Flame className="w-3 h-3" /> Todas las Redes</span>}
  </div>
 
- <h5 className="text-xs font-bold text-[var(--sunken)] mb-1">{dayPlan.focus}</h5>
+ <h5 className="text-xs font-bold text-[var(--ink-2)] mb-1">{dayPlan.focus}</h5>
  <p className="text-[10px] font-mono text-[var(--ink-2)] leading-relaxed">{dayPlan.contentAction}</p>
  </div>
  </div>
@@ -457,7 +457,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {/* Action Items & Tactics Checklist (7 columns) */}
  <div className="lg:col-span-7 space-y-4">
  <div className="flex items-center justify-between">
- <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--sunken)] flex items-center gap-1.5">
+ <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
  Checklist de Tácticas & Plan de Acción para la Banda
  </h4>
@@ -492,7 +492,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </button>
  <div className="flex-1">
  <div className="flex flex-wrap items-center gap-2 mb-1">
- <span className={`text-xs font-bold ${isDone ?'line-through text-[var(--ink-2)]' :'text-[var(--sunken)]'}`}>
+ <span className={`text-xs font-bold ${isDone ?'line-through text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  {action.title}
  </span>
  <span className={`text-[8px] font-mono uppercase px-1.5 py-0.2 rounded ${impactColor} font-bold`}>

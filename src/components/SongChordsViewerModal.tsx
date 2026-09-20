@@ -510,7 +510,7 @@ export function SongChordsViewerModal({
  Ver Ficha Completa →
  </button>
  </div>
- <p className="text-[var(--sunken)] text-sm font-semibold tracking-wide bg-black/40 p-2 rounded-[var(--r-s)] border-[var(--hair)]5">
+ <p className="text-[var(--ink-2)] text-sm font-semibold tracking-wide bg-black/40 p-2 rounded-[var(--r-s)] border-[var(--hair)]5">
  {guiaSustituto.estructura}
  </p>
  </div>
@@ -563,7 +563,7 @@ export function SongChordsViewerModal({
  <span className="text-rose-400 font-bold block text-[11px] uppercase tracking-wider">
  3. Cortes, Entradas y Claves
  </span>
- <p className="text-[var(--sunken)] leading-relaxed">
+ <p className="text-[var(--ink-2)] leading-relaxed">
  {guiaSustituto.cortesYClaves ||'Sin indicaciones especiales de cortes.'}
  </p>
  </div>
@@ -572,7 +572,7 @@ export function SongChordsViewerModal({
  <span className="text-purple-300 font-bold block text-[11px] uppercase tracking-wider">
  4. Capo / Afinación
  </span>
- <p className="text-[var(--sunken)] leading-relaxed">
+ <p className="text-[var(--ink-2)] leading-relaxed">
  {guiaSustituto.capoTraste ||'Standard / Sin Capo'}
  </p>
  </div>
@@ -581,7 +581,7 @@ export function SongChordsViewerModal({
  <span className="text-cyan-400 font-bold block text-[11px] uppercase tracking-wider">
  5. Protagonismo de Instrumentos / Arreglos
  </span>
- <p className="text-[var(--sunken)] leading-relaxed">
+ <p className="text-[var(--ink-2)] leading-relaxed">
  {guiaSustituto.instrumentosClave ||'Seguir el pulso principal de batería y bajo.'}
  </p>
  </div>
@@ -778,7 +778,7 @@ function renderFormattedChordSheet(text: string) {
  </span>
  );
  }
- return <span key={pIdx} className="text-[var(--sunken)]">{part}</span>;
+ return <span key={pIdx} className="text-[var(--ink-2)]">{part}</span>;
  })}
  </div>
  );
@@ -802,7 +802,7 @@ function renderFormattedChordSheet(text: string) {
 
  // Standard lyrics line
  return (
- <div key={idx} className="text-[var(--sunken)] py-0.5">
+ <div key={idx} className="text-[var(--ink-2)] py-0.5">
  {line ||'\u00A0'}
  </div>
  );

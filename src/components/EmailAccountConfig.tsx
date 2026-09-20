@@ -204,7 +204,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  const inputClass = `w-full p-2.5 rounded-[var(--r-m)] text-xs font-mono transition-all outline-none ${
  isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] text-[var(--sunken)] focus:border-sky-500/60'
+ :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-sky-500/60'
  }`;
  const labelClass ='text-xs font-mono font-semibold text-[var(--ink-2)] flex items-center gap-2';
 
@@ -282,7 +282,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  type="button"
  onClick={handleDisconnectGmailOAuth}
  disabled={gmailOAuthDisconnecting}
- className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+ className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
  >
  {gmailOAuthDisconnecting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Unlink className="w-3 h-3" />}
  Desconectar
@@ -336,7 +336,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  <button
  type="button"
  onClick={() => setEditing(true)}
- className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
+ className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
  >
  <RefreshCw className="w-3 h-3" />
  Cambiar cuenta
@@ -360,7 +360,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  ?'bg-sky-500/20 border-sky-400/80 text-sky-200 shadow-sm shadow-sky-900/30'
  : isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 /80 text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--sunken)]'
+ :'bg-[var(--surface)]/80 /80 text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink-2)]'
  }`}
  >
  {p ==='gmail' ?'Gmail' : p ==='outlook' ?'Outlook' :'Otro (manual)'}

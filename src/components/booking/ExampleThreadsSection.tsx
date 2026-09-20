@@ -178,7 +178,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  title="Abrir para ver o editar este hilo"
  >
  <div className="min-w-0">
- <span className="font-bold text-[var(--sunken)]">{t.titulo ||'Sin título'}</span>
+ <span className="font-bold text-[var(--ink-2)]">{t.titulo ||'Sin título'}</span>
  <span className="text-[var(--ink-2)] ml-2">{t.mensajes.length} mensaje(s) · {RESULTADO_LABEL[t.resultado] || t.resultado}</span>
  </div>
  <div className="flex items-center gap-1 shrink-0">

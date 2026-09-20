@@ -250,7 +250,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <span className="text-[10px] text-[var(--ink-2)] font-mono">Sugerencia IA Lista</span>
  </div>
 
- <div className="text-xs text-[var(--sunken)] space-y-2">
+ <div className="text-xs text-[var(--ink-2)] space-y-2">
  <div>
  <strong className="text-indigo-300 font-mono block text-[11px] mb-0.5">Propuesta de Arreglo:</strong>
  <p className="leading-relaxed whitespace-pre-line bg-black/40 p-2.5 rounded-[var(--r-s)] font-sans text-[var(--ink-2)]">

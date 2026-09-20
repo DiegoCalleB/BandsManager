@@ -135,7 +135,7 @@ export default function Finanzas({
  const categories = Array.from(new Set(payments.map(p => p.categoria)));
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
- const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
+ const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const cardBorder = isStitchLight ?'-slate-200' :'-neutral-800';
@@ -262,7 +262,7 @@ export default function Finanzas({
  className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  activeTab ==='rentabilidad'
  ? colors.primary
- : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  <Calculator className="w-3.5 h-3.5" /> Rentabilidad por Bolo
@@ -272,7 +272,7 @@ export default function Finanzas({
  className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
  activeTab ==='ledger'
  ? colors.primary
- : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  Libro Diario (Historial)
@@ -282,7 +282,7 @@ export default function Finanzas({
  className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
  activeTab ==='analytics'
  ? colors.primary
- : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  Análisis de Costes (Categorías)

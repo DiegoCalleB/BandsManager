@@ -59,7 +59,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  onClick={() => setIsOpen(false)}
  />
 
- <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] p-4 shadow-2xl z-50 text-[var(--sunken)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
+ <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] p-4 shadow-2xl z-50 text-[var(--ink-2)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
  {/* Header */}
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-2.5">
  <div className="flex items-center gap-2">
@@ -133,7 +133,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  key={idx}
  type="button"
  onClick={() => handleInsertSymbol(sym)}
- className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--surface)] hover: hover:bg-[var(--acc)]/20 text-[var(--sunken)] hover:text-[var(--ink)] font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
+ className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--surface)] hover: hover:bg-[var(--acc)]/20 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
  title={`Insertar ${sym}`}
  >
  {sym}

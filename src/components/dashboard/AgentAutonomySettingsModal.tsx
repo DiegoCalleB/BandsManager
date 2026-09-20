@@ -715,7 +715,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('email_dispatch')}
  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
  >
- <span className={`text-[11px] font-sans flex items-center gap-1.5 ${emailAccountConnected ?'text-[var(--ink-2)] line-through' :'text-[var(--sunken)]'}`}>
+ <span className={`text-[11px] font-sans flex items-center gap-1.5 ${emailAccountConnected ?'text-[var(--ink-2)] line-through' :'text-[var(--ink-2)]'}`}>
  {emailAccountConnected ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full shrink-0" />}
  Conectar el buzón de la banda
  </span>
@@ -726,7 +726,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('tone')}
  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
  >
- <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.toneTrained ?'text-[var(--ink-2)] line-through' :'text-[var(--sunken)]'}`}>
+ <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.toneTrained ?'text-[var(--ink-2)] line-through' :'text-[var(--ink-2)]'}`}>
  {startupChecklist.toneTrained ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full shrink-0" />}
  Entrenar el ADN de voz de la banda
  </span>
@@ -737,7 +737,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('tone')}
  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
  >
- <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.templateCustomized ?'text-[var(--ink-2)] line-through' :'text-[var(--sunken)]'}`}>
+ <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.templateCustomized ?'text-[var(--ink-2)] line-through' :'text-[var(--ink-2)]'}`}>
  {startupChecklist.templateCustomized ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full shrink-0" />}
  Personalizar al menos una plantilla de categoría
  </span>
@@ -1855,7 +1855,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-bold ${
  auditAgentFilter === f.id
  ?'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/50 shadow-xs'
- :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  {f.label}
@@ -1924,7 +1924,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t /60 text-[10px] font-mono text-[var(--ink-2)]">
  <div className="flex items-center gap-1.5">
  <UserCheck className="w-3 h-3 text-[var(--ink-2)]" />
- <span>Disparado por: <strong className="text-[var(--sunken)]">{log.usuario_email || log.usuario_id ||'Sistema'}</strong> ({log.disparado_por_tipo})</span>
+ <span>Disparado por: <strong className="text-[var(--ink-2)]">{log.usuario_email || log.usuario_id ||'Sistema'}</strong> ({log.disparado_por_tipo})</span>
  </div>
  {affectedCount > 0 && (
  <span className="text-[var(--acc)]/70/90 font-bold">

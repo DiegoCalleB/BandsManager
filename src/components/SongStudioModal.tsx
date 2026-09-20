@@ -4806,7 +4806,7 @@ export default function SongStudioModal({
  </button>
  )}
  </div>
- <p className="text-[var(--sunken)] mt-0.5">{comm.texto}</p>
+ <p className="text-[var(--ink-2)] mt-0.5">{comm.texto}</p>
  </div>
  <div className="flex items-center gap-2 shrink-0">
  <span className="text-[9px] font-mono text-[var(--ink-2)]">{comm.fecha}</span>
@@ -6013,7 +6013,7 @@ export default function SongStudioModal({
  <AlertCircle className="w-4 h-4 text-[var(--acc)]" />
  <span>⚠️ Modo Degradado Activo (Filtros DSP Básicos)</span>
  </div>
- <p className="text-[11px] text-[var(--sunken)] font-sans leading-relaxed">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
  {stemProgressModal.degradedReason ||'El motor neuronal no estaba disponible en este momento. Las pistas se han generado con Iris Básico (filtrado por frecuencias de señal).'}
  </p>
  <div className="pt-1 text-[10px] font-mono text-[var(--acc)]/70">
@@ -6263,7 +6263,7 @@ export default function SongStudioModal({
  )}
  <span>{stemProgressModal.errorTitle ||'Diagnóstico del Error'}</span>
  </div>
- <p className="text-[12px] text-[var(--sunken)] font-sans leading-relaxed whitespace-pre-wrap break-words font-medium">
+ <p className="text-[12px] text-[var(--ink-2)] font-sans leading-relaxed whitespace-pre-wrap break-words font-medium">
  {stemProgressModal.errorMessage ||'No se pudo completar la separación de pistas.'}
  </p>
  </div>

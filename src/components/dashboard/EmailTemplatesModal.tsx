@@ -163,7 +163,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-2 cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/20 /60 text-[var(--acc)]/70 shadow-md'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -219,7 +219,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  {/* Body preview */}
  <div className="space-y-1">
  <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider">Cuerpo del Mensaje:</span>
- <pre className="p-4 rounded-[var(--r-s)] bg-[var(--surface)]/90 text-xs font-sans text-[var(--sunken)] whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">
+ <pre className="p-4 rounded-[var(--r-s)] bg-[var(--surface)]/90 text-xs font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">
  {currentTpl.body.replace(/{bandName}/g, bandName)}
  </pre>
  </div>

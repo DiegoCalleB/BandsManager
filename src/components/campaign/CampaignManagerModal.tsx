@@ -410,7 +410,7 @@ export function CampaignManagerModal({
  className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors ${
  isSelected
  ?'bg-purple-600/30 text-purple-200 border-purple-500/60'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:'
  }`}
  >
  <cat.icon className="w-3 h-3" />
@@ -475,7 +475,7 @@ export function CampaignManagerModal({
  className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
  !activeCampaign
  ?'bg-[var(--surface)]/80 shadow-md ring-1 ring-amber-400/30'
- :'bg-[var(--surface)] hover: text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'bg-[var(--surface)] hover: text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-3">

@@ -124,7 +124,7 @@ export function TemplateConfigSection({
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  <IconComp className="w-3.5 h-3.5" />

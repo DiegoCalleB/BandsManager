@@ -169,7 +169,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <Languages className="w-4 h-4" />
  </div>
  <div>
- <h5 className="text-xs font-bold text-[var(--sunken)]">Panel & Menús</h5>
+ <h5 className="text-xs font-bold text-[var(--ink-2)]">Panel & Menús</h5>
  <p className="text-[11px] text-[var(--ink-2)] mt-0.5 leading-relaxed">
  Todos los módulos, botones y tablas cambian de inmediato en tiempo real.
  </p>
@@ -181,7 +181,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <MessageSquareText className="w-4 h-4" />
  </div>
  <div>
- <h5 className="text-xs font-bold text-[var(--sunken)]">Agentes de IA</h5>
+ <h5 className="text-xs font-bold text-[var(--ink-2)]">Agentes de IA</h5>
  <p className="text-[11px] text-[var(--ink-2)] mt-0.5 leading-relaxed">
  Redacción de propuestas y respuestas a salas afinadas según el idioma seleccionado.
  </p>
@@ -193,7 +193,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <FileText className="w-4 h-4" />
  </div>
  <div>
- <h5 className="text-xs font-bold text-[var(--sunken)]">Dossier EPK</h5>
+ <h5 className="text-xs font-bold text-[var(--ink-2)]">Dossier EPK</h5>
  <p className="text-[11px] text-[var(--ink-2)] mt-0.5 leading-relaxed">
  Biografía oficial y fichas técnicas generadas con este idioma por defecto.
  </p>

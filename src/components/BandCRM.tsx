@@ -1027,7 +1027,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <th className="p-3 text-right text-[var(--acc)]/70 bg-[var(--acc)]/10 border-l /20 font-bold">band_id</th>
  </tr>
  </thead>
- <tbody className="divide-y divide-[var(--hair)]800/60 bg-[var(--surface)]/40 text-[var(--sunken)]">
+ <tbody className="divide-y divide-[var(--hair)]800/60 bg-[var(--surface)]/40 text-[var(--ink-2)]">
  {registeredBands.length === 0 ? (
  <tr>
  <td colSpan={9} className="p-8 text-center text-[var(--ink-2)] italic">
@@ -1105,7 +1105,7 @@ Bakandeya Agent Manager IA & Músicos`;
  id="band-filter-status"
  value={statusFilter}
  onChange={(e) => setStatusFilter(e.target.value as BandRelationshipStatus |'todos')}
- className="bg-[var(--surface)] text-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
+ className="bg-[var(--surface)] text-[var(--ink-2)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
  >
  <option value="todos">🤝 Todos los Estados</option>
  <option value="colegas_aliados">🤝 Colegas / Aliados</option>
@@ -1121,7 +1121,7 @@ Bakandeya Agent Manager IA & Músicos`;
  id="band-filter-location"
  value={locationFilter}
  onChange={(e) => setLocationFilter(e.target.value)}
- className="bg-[var(--surface)] text-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 cursor-pointer max-w-[160px] truncate"
+ className="bg-[var(--surface)] text-[var(--ink-2)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 cursor-pointer max-w-[160px] truncate"
  >
  <option value="todos">📍 Todas las Ciudades</option>
  {availableLocations.map(loc => (
@@ -1326,7 +1326,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <div className="flex items-center justify-between text-[var(--ink-2)] pt-1">
  <span className="text-[10px] text-[var(--ink-2)] uppercase">Aforo habitual:</span>
- <span className="font-bold text-[var(--sunken)]">{band.aforo_promedio ? `~${band.aforo_promedio} pers.` :'No indicado'}</span>
+ <span className="font-bold text-[var(--ink-2)]">{band.aforo_promedio ? `~${band.aforo_promedio} pers.` :'No indicado'}</span>
  </div>
  </div>
 
@@ -1547,7 +1547,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {isAddEditModalOpen && (
  <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">

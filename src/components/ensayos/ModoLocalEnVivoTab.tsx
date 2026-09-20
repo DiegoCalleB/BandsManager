@@ -696,7 +696,7 @@ export function ModoLocalEnVivoTab({
  <button
  disabled={activeIndex === 0}
  onClick={() => setActiveIndex(prev => prev - 1)}
- className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--sunken)] hover:bg-[var(--surface)]/70 disabled:opacity-30 disabled:hover:bg-[var(--surface)]/80 font-mono font-bold text-xs cursor-pointer transition-all"
+ className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-30 disabled:hover:bg-[var(--surface)]/80 font-mono font-bold text-xs cursor-pointer transition-all"
  >
  <ChevronLeft className="w-4 h-4" />
  <span>Anterior</span>

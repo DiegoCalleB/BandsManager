@@ -164,7 +164,7 @@ export function EnsayoCronometro({
 
  <button
  onClick={resetTimer}
- className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer border-[var(--hair)]"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer border-[var(--hair)]"
  title="Reiniciar cronómetro"
  >
  <RotateCcw className="w-3.5 h-3.5" />

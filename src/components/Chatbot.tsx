@@ -731,7 +731,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const parts = text.split(/(\*\*.*?\*\*)/g);
  return parts.map((part, i) => {
  if (part.startsWith('**') && part.endsWith('**')) {
- return <strong key={i} className={`font-bold ${isStitchLight ?'text-indigo-950' :'text-[var(--sunken)]'}`}>{part.slice(2, -2)}</strong>;
+ return <strong key={i} className={`font-bold ${isStitchLight ?'text-indigo-950' :'text-[var(--ink-2)]'}`}>{part.slice(2, -2)}</strong>;
  }
  return part;
  });
@@ -1720,7 +1720,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <Guitar className="w-4 h-4" />
  </div>
  <div>
- <h4 className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 uppercase ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`}>
+ <h4 className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 uppercase ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}`}>
  Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block animate-pulse ${isStitchLight ?'bg-indigo-600 shadow-[0_0_8px_rgba(79,70,229,0.8)]' :'bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]'}`} />
  </h4>
  <span className="text-[9px] font-mono text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
@@ -1947,7 +1947,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <select
  value={songPicker[audioKey].selectedId}
  onChange={(e) => setSongPicker(prev => ({ ...prev, [audioKey]: { ...prev[audioKey], selectedId: e.target.value } }))}
- className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-white text-[var(--ink)]' :'bg-black text-[var(--sunken)]'}`}
+ className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-white text-[var(--ink)]' :'bg-black text-[var(--ink-2)]'}`}
  >
  <option value="">— Selecciona una canción —</option>
  {songPicker[audioKey].songs.map(s => (
@@ -2031,7 +2031,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <select
  value={songPicker[audioKey].selectedId}
  onChange={(e) => setSongPicker(prev => ({ ...prev, [audioKey]: { ...prev[audioKey], selectedId: e.target.value } }))}
- className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-white text-[var(--ink)]' :'bg-black text-[var(--sunken)]'}`}
+ className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-white text-[var(--ink)]' :'bg-black text-[var(--ink-2)]'}`}
  >
  <option value="">— Selecciona una canción —</option>
  {songPicker[audioKey].songs.map(s => (
@@ -2411,7 +2411,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  }`}
  >
  <div className="flex justify-between items-start">
- <strong className={`${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'} font-semibold truncate`}>
+ <strong className={`${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'} font-semibold truncate`}>
  {item.nombre_sala}
  </strong>
  <span className="text-[8px] opacity-75 font-mono">{item.ciudad}</span>
@@ -2468,7 +2468,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  className={`flex-1 rounded-[var(--r-m)] px-3.5 py-2 text-xs focus:outline-none transition-all font-sans resize-none max-h-28 min-h-[38px] ${
  isStitchLight 
  ?'bg-white text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-2)]' 
- :'bg-[var(--surface)]/60 text-[var(--sunken)] focus:-cyan-500/50 placeholder:text-[var(--ink-2)]'
+ :'bg-[var(--surface)]/60 text-[var(--ink-2)] focus:-cyan-500/50 placeholder:text-[var(--ink-2)]'
  }`}
  />
  <button

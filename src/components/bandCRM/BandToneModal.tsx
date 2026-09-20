@@ -265,7 +265,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  const inputClass = `w-full p-2 rounded-[var(--r-s)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-500/50 ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :'bg-black/40 text-[var(--sunken)]'
+ :'bg-black/40 text-[var(--ink-2)]'
  }`;
  const labelClass ='text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] block mb-1';
 
@@ -273,7 +273,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  {/* Header */}
  <div className="flex items-center justify-between pb-3 border-b /10">
@@ -633,7 +633,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  className={`w-full p-3 rounded-[var(--r-m)] font-mono text-[10px] leading-relaxed focus:outline-none ${
  isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink)]'
- :'bg-black/60 text-[var(--sunken)]'
+ :'bg-black/60 text-[var(--ink-2)]'
  }`}
  />
 

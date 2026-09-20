@@ -173,7 +173,7 @@ export function MemberNotesModal({
  </div>
  <div>
  <h3 className={`text-base font-black font-display uppercase tracking-wider ${
- isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'
+ isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'
  }`}>
  Notas para Repertorio por Miembro
  </h3>
@@ -237,7 +237,7 @@ export function MemberNotesModal({
  onChange={(e) => setGeneralRepertorioNote(e.target.value)}
  placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco..."
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)] focus:border-indigo-500' :'bg-[var(--surface)] text-[var(--sunken)] focus:border-[var(--hair)]'
+ isStitchLight ?'bg-white text-[var(--ink)] focus:border-indigo-500' :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
  }`}
  />
  </div>
@@ -328,7 +328,7 @@ export function MemberNotesModal({
  {member.name.charAt(0)}
  </div>
  <div>
- <span className={`text-sm font-bold ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`}>
+ <span className={`text-sm font-bold ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}`}>
  {member.name}
  </span>
  <span className="ml-2 text-[11px] px-2 py-0.5 rounded-md bg-white/10 text-[var(--ink-2)] font-mono">
@@ -371,7 +371,7 @@ export function MemberNotesModal({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] text-[var(--sunken)] focus:border-[var(--hair)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
  }`}
  />
  </div>

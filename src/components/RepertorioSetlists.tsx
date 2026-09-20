@@ -2992,7 +2992,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowIdealCurve((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- showIdealCurve ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ showIdealCurve ?'bg-[var(--surface)]/70 text-[var(--ink-2)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Curva ideal de referencia: un arco de pacing clásico escalado al rango real de energías de tu repertorio"
  >
@@ -3003,7 +3003,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowBpmLine((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- showBpmLine ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ showBpmLine ?'bg-[var(--surface)]/70 text-[var(--ink-2)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Línea de BPM en un eje secundario — apagada por defecto para no saturar el gráfico en pantallas estrechas"
  >
@@ -3014,7 +3014,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowTonalidad((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- showTonalidad ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ showTonalidad ?'bg-[var(--surface)]/70 text-[var(--ink-2)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Tonalidad de cada canción junto a su punto — con muchos temas seguidos, usa el zoom (🔍) para separarlos y leerlos bien"
  >
@@ -3025,7 +3025,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setChartZoom((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- chartZoom ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ chartZoom ?'bg-[var(--surface)]/70 text-[var(--ink-2)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Ensancha el gráfico y añade scroll horizontal — más espacio entre puntos para leer tonalidad/BPM por tramos"
  >
@@ -3036,7 +3036,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowTransitionBadges((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- showTransitionBadges ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ showTransitionBadges ?'bg-[var(--surface)]/70 text-[var(--ink-2)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Muestra u oculta los ticks (✓) y aspas (✕) de calidad de unión entre temas en el gráfico"
  >
@@ -4928,7 +4928,7 @@ export default function RepertorioSetlists({
  ?'bg-[var(--alert-soft)] border-rose-700/60 text-rose-100'
  : statusBanner.type ==='warning'
  ?'bg-[var(--acc-soft)] /60 text-[var(--acc)]'
- :'bg-[var(--surface)] text-[var(--sunken)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  {statusBanner.type ==='loading' && (

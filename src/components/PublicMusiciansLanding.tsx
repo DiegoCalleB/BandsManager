@@ -155,7 +155,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  };
 
  return (
- <div className="min-h-screen bg-[var(--sunken)] text-[var(--sunken)] font-sans selection:bg-[var(--acc)] selection:text-black">
+ <div className="min-h-screen bg-[var(--sunken)] text-[var(--ink-2)] font-sans selection:bg-[var(--acc)] selection:text-black">
  {/* Background Ambient Glows */}
  <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
  <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[var(--acc)]/10 rounded-full blur-[120px]" />
@@ -382,7 +382,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  {/* Band Name */}
  <div className="space-y-1.5">
- <label className="text-[11px] font-bold font-mono uppercase text-[var(--sunken)] tracking-wider flex items-center justify-between">
+ <label className="text-[11px] font-bold font-mono uppercase text-[var(--ink-2)] tracking-wider flex items-center justify-between">
  <span>{t.labelBandName}</span>
  <span className="text-[var(--acc)] text-[10px] font-normal lowercase tracking-normal">imprescindible</span>
  </label>
@@ -398,7 +398,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  {/* Email */}
  <div className="space-y-1.5">
- <label className="text-[11px] font-bold font-mono uppercase text-[var(--sunken)] tracking-wider flex items-center justify-between">
+ <label className="text-[11px] font-bold font-mono uppercase text-[var(--ink-2)] tracking-wider flex items-center justify-between">
  <span>{t.labelEmail}</span>
  <span className="text-[var(--acc)] text-[10px] font-normal lowercase tracking-normal">imprescindible</span>
  </label>

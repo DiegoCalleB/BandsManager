@@ -943,7 +943,7 @@ export default function BookingCRM({
 
 
  const subCardBg = isStitchLight ?'bg-[var(--bg)]/60' :'bg-[var(--surface)]';
- const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
+ const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCityFilter ? 1 : 0) + (statusFilter !=='todos' ? 1 : 0) + (typeFilter !=='todos' ? 1 : 0) + (minCapacityFilter > 0 ? 1 : 0) + (onlyFavoritesFilter ? 1 : 0) + (onlyVerifiedFilter ? 1 : 0) + (activeSavedFilterId ? 1 : 0);
@@ -2129,7 +2129,7 @@ export default function BookingCRM({
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  <IconComp className="w-3.5 h-3.5" />

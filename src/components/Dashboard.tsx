@@ -290,7 +290,7 @@ export default function Dashboard({
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink)]';
- const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
+ const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
 
@@ -496,7 +496,7 @@ export default function Dashboard({
  <Calendar className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--sunken)] flex items-center gap-2">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-2">
  Próximas Fechas y Agenda
  </h3>
  <p className="text-xs font-mono text-[var(--ink-2)]">
@@ -518,7 +518,7 @@ export default function Dashboard({
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode ==='all'
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-xs'
- :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  title="Ver eventos de todas las bandas"
  >
@@ -533,7 +533,7 @@ export default function Dashboard({
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode ==='active'
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-xs'
- :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  title={`Ver solo eventos de ${activeBandName}`}
  >
@@ -563,7 +563,7 @@ export default function Dashboard({
  className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
  >
  <div className="flex items-start gap-3.5">
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center shrink-0 shadow-sm">
  <span className="text-lg font-mono font-black leading-none text-[var(--acc)]">
  {item.day}
  </span>
@@ -592,7 +592,7 @@ export default function Dashboard({
  </span>
  </div>
 
- <h4 className="text-base font-bold font-display tracking-wide mt-1.5 text-[var(--sunken)] truncate">
+ <h4 className="text-base font-bold font-display tracking-wide mt-1.5 text-[var(--ink-2)] truncate">
  {item.title}
  </h4>
 
@@ -640,7 +640,7 @@ export default function Dashboard({
  <QrCode className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Captura QR & Fans
  </h3>
  <p className="text-[11px] font-mono text-[var(--ink-2)]">
@@ -678,7 +678,7 @@ export default function Dashboard({
  <BookOpen className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Dossier (EPK) Digital
  </h3>
  <p className="text-[11px] font-mono text-[var(--ink-2)]">

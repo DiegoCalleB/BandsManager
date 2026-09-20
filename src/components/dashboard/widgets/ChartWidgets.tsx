@@ -240,7 +240,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  <Building2 className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Embudo de Contrataciones
  </h3>
  <p className="text-[11px] font-mono text-[var(--ink-2)]">Conversión de Salas & Festivales</p>
@@ -315,7 +315,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  <DollarSign className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Evolución Financiera & Caché
  </h3>
  <p className="text-[11px] font-mono text-[var(--ink-2)]">Ingresos vs Gastos de Directos</p>
@@ -399,7 +399,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  <Users className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Captación de Fans & QR
  </h3>
  <p className="text-[11px] font-mono text-[var(--ink-2)]">Crecimiento en Registro de Seguidores</p>

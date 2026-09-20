@@ -268,7 +268,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  type="text"
  value={setlistName}
  onChange={(e) => setSetlistName(e.target.value)}
- className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-sm text-[var(--sunken)] focus:outline-none focus:border-sky-400"
+ className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-sm text-[var(--ink-2)] focus:outline-none focus:border-sky-400"
  />
  </div>
 
@@ -282,11 +282,11 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  if (it.type ==='block') {
  return (
  <div key={idx} className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${it.included ?'bg-[var(--surface)]/80' :'bg-[var(--surface)] opacity-50'}`}>
- <span className="text-xs text-[var(--sunken)]">📋 {it.titulo} <span className="text-[var(--ink-2)]">({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})</span></span>
+ <span className="text-xs text-[var(--ink-2)]">📋 {it.titulo} <span className="text-[var(--ink-2)]">({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})</span></span>
  <button
  type="button"
  onClick={() => toggleBlockIncluded(idx)}
- className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--sunken)] font-mono"
+ className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink-2)] font-mono"
  >
  {it.included ?'Descartar' :'Incluir'}
  </button>
@@ -298,7 +298,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  return (
  <div key={idx} className={`p-2 rounded-[var(--r-s)] space-y-1.5 ${isDiscarded ?'bg-[var(--surface)] opacity-50' :'bg-[var(--surface)]/80'}`}>
  <div className="flex items-center justify-between gap-2">
- <span className="text-xs text-[var(--sunken)] flex items-center gap-1.5">
+ <span className="text-xs text-[var(--ink-2)] flex items-center gap-1.5">
  <Music className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />"{it.detectedTitle}"
  </span>
  {it.action ==='link_matched' && (
@@ -309,7 +309,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <select
  value={it.action}
  onChange={(e) => updateSongItem(idx, { action: e.target.value as SongAction })}
- className="text-[10px] bg-black/60 rounded px-1.5 py-1 text-[var(--sunken)] font-mono"
+ className="text-[10px] bg-black/60 rounded px-1.5 py-1 text-[var(--ink-2)] font-mono"
  >
  {it.matchedSongId && <option value="link_matched">Vincular a"{it.matchedSongTitle}"</option>}
  <option value="create_new">Crear canción nueva</option>
@@ -322,14 +322,14 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  value={it.newTitle}
  onChange={(e) => updateSongItem(idx, { newTitle: e.target.value })}
  placeholder="Título de la canción nueva"
- className="text-[10px] bg-black/60 rounded px-1.5 py-1 text-[var(--sunken)] flex-1 min-w-[140px]"
+ className="text-[10px] bg-black/60 rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
  />
  )}
  {it.action ==='link_other' && (
  <select
  value={it.linkedSongId}
  onChange={(e) => updateSongItem(idx, { linkedSongId: e.target.value })}
- className="text-[10px] bg-black/60 rounded px-1.5 py-1 text-[var(--sunken)] flex-1 min-w-[140px]"
+ className="text-[10px] bg-black/60 rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
  >
  <option value="">Elige una canción del catálogo...</option>
  {catalogSongs.map((s) => (

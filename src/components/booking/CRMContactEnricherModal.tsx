@@ -77,7 +77,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`relative w-full max-w-lg my-auto rounded-[var(--r-l)] shadow-2xl p-6 overflow-hidden ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center justify-between pb-4 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
@@ -92,7 +92,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <button
  onClick={onClose}
  disabled={isProcessing}
- className="p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors"
+ className="p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -121,7 +121,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <span className="text-[11px] font-semibold text-[var(--ink-2)] uppercase tracking-wider">Contactos actualizados:</span>
  {enrichedResults.map((r, i) => (
  <div key={i} className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 flex flex-col gap-1">
- <span className="font-bold text-[var(--sunken)]">{r.name}</span>
+ <span className="font-bold text-[var(--ink-2)]">{r.name}</span>
  <div className="flex flex-wrap gap-3 text-[11px] text-[var(--ink-2)]">
  {r.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-emerald-400" /> {r.email}</span>}
  {r.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-blue-400" /> {r.phone}</span>}
@@ -138,7 +138,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  type="button"
  onClick={onClose}
  disabled={isProcessing}
- className="px-4 py-2 text-xs font-semibold rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors"
+ className="px-4 py-2 text-xs font-semibold rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors"
  >
  Cerrar
  </button>

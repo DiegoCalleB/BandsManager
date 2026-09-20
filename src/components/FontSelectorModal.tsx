@@ -23,7 +23,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[85vh] ${
  isStitchLight 
  ?'bg-white text-[var(--ink)]' 
- :'bg-[var(--surface)] text-[var(--sunken)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  {/* Header */}
@@ -51,7 +51,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -125,7 +125,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  {/* Live Preview Sample */}
  <div 
  className={`p-3 rounded-[var(--r-s)] text-sm transition-all ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] -neutral-800/80 text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] -neutral-800/80 text-[var(--ink-2)]'
  }`}
  style={{ fontFamily: preset.displayFont }}
  >

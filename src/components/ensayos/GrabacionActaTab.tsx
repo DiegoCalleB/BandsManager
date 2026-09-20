@@ -317,7 +317,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <span className="text-xs text-[var(--ink-2)]">
  ¿Grabaste con Zoom H4n o grabadora externa?
  </span>
- <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-xs font-mono font-bold cursor-pointer transition-colors">
+ <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-mono font-bold cursor-pointer transition-colors">
  <Upload className="w-3.5 h-3.5" />
  <span>Subir Archivo de Audio</span>
  <input

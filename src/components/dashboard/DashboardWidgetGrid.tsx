@@ -429,7 +429,7 @@ export function DashboardWidgetGrid({
  >
  {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
  {isEditMode && (
- <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-stone-950 p-2 rounded-t-xl mb-1 text-xs font-mono text-[var(--sunken)] shadow-md gap-2">
+ <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-stone-950 p-2 rounded-t-xl mb-1 text-xs font-mono text-[var(--ink-2)] shadow-md gap-2">
  <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
  <GripVertical className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">
@@ -541,7 +541,7 @@ export function DashboardWidgetGrid({
  <Plus className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-lg font-bold font-display text-[var(--sunken)]">
+ <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">
  Catálogo de Widgets del Dashboard
  </h3>
  <p className="text-xs font-mono text-[var(--ink-2)]">
@@ -569,7 +569,7 @@ export function DashboardWidgetGrid({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold whitespace-nowrap cursor-pointer transition-all ${
  selectedCategory === cat
  ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-xs'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  {cat}
@@ -589,7 +589,7 @@ export function DashboardWidgetGrid({
  >
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-2">
- <span className="text-sm font-bold text-[var(--sunken)]">{item.title}</span>
+ <span className="text-sm font-bold text-[var(--ink-2)]">{item.title}</span>
  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--acc)]">
  {item.category}
  </span>

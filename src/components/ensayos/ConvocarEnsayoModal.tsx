@@ -311,7 +311,7 @@ export function ConvocarEnsayoModal({
  <button
  type="button"
  onClick={handleAddObjetivo}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-xs font-mono font-bold flex items-center gap-1 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-mono font-bold flex items-center gap-1 cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" /> Añadir
  </button>

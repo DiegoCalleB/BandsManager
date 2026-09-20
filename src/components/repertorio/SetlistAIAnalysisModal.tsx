@@ -644,13 +644,13 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {/* Narrative Arc */}
  <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
  <p className="text-xs text-[var(--ink-2)] mb-1.5">📖 Arco Narrativo</p>
- <p className="text-sm text-[var(--sunken)]">{analysis.narrativeArc}</p>
+ <p className="text-sm text-[var(--ink-2)]">{analysis.narrativeArc}</p>
  </div>
 
  {/* Psychological Flow */}
  <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
  <p className="text-xs text-[var(--ink-2)] mb-1.5">🧠 Flujo Psicológico</p>
- <p className="text-sm text-[var(--sunken)]">{analysis.psychologicalFlow}</p>
+ <p className="text-sm text-[var(--ink-2)]">{analysis.psychologicalFlow}</p>
  </div>
 
  {/* Strengths */}
@@ -667,7 +667,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  {/* Suggestions */}
  <div>
- <h3 className="text-sm font-semibold text-[var(--sunken)] mb-3 flex items-center gap-2">
+ <h3 className="text-sm font-semibold text-[var(--ink-2)] mb-3 flex items-center gap-2">
  <Zap className="w-3.5 h-3.5 text-purple-400" />
  Sugerencias ({(liveSuggestions || analysis.suggestions).length})
  </h3>
@@ -699,7 +699,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="flex-1">
  <div className="flex items-start justify-between gap-2">
  <div>
- <p className="text-sm font-semibold text-[var(--sunken)]">{sugg.title}</p>
+ <p className="text-sm font-semibold text-[var(--ink-2)]">{sugg.title}</p>
  <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  {getCategoryIcon(sugg.category)} {sugg.category}
  </p>
@@ -761,7 +761,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  </div>
  <div>
  <p className="text-[var(--ink-2)]">💡 Sugerencia:</p>
- <p className="text-[var(--sunken)] font-medium">{sugg.suggestion}</p>
+ <p className="text-[var(--ink-2)] font-medium">{sugg.suggestion}</p>
  </div>
  <div>
  <p className="text-[var(--ink-2)]">⭐ Impacto:</p>
@@ -803,7 +803,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="flex gap-2">
  <button
  onClick={handlePrintAnalysis}
- className="flex-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
+ className="flex-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
  title="Exportar el análisis a PDF/impresión"
  >
  <Printer className="w-4 h-4" />
@@ -812,7 +812,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <button
  onClick={handleDownloadImage}
  disabled={exportingImage}
- className="flex-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
+ className="flex-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
  title="Descargar el análisis completo como imagen PNG"
  >
  {exportingImage ? <Loader className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
@@ -821,7 +821,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <button
  onClick={handleShareAnalysis}
  disabled={sharing}
- className="flex-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
+ className="flex-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
  title="Compartir por WhatsApp u otra app"
  >
  {sharing ? <Loader className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />}

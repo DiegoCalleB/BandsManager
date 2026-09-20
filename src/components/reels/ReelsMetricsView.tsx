@@ -1006,7 +1006,7 @@ export function ReelsMetricsView({
  <div>
  <div className="flex items-center gap-2 flex-wrap">
  <BarChart3 className="w-4 h-4 text-indigo-400" />
- <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--sunken)]">Curva de Crecimiento Multiplataforma</span>
+ <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">Curva de Crecimiento Multiplataforma</span>
  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400">
  Escala Adaptativa: 0 - {yAxisDomain[1] >= 1000 ? `${(yAxisDomain[1] / 1000).toFixed(1)}k` : yAxisDomain[1]}
  </span>
@@ -1409,7 +1409,7 @@ export function ReelsMetricsView({
  <span className="text-[8px] font-mono text-[var(--ink-2)]">{item.published_at.split('T')[0]}</span>
  )}
  </div>
- <h4 className={`text-xs font-bold line-clamp-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`} title={item.title}>
+ <h4 className={`text-xs font-bold line-clamp-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}`} title={item.title}>
  {item.title}
  </h4>
  </div>
@@ -1461,7 +1461,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1479,7 +1479,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1496,7 +1496,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1513,7 +1513,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1530,7 +1530,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1602,7 +1602,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -2081,7 +2081,7 @@ export function ReelsMetricsView({
  <div className="w-12 h-12 rounded-[var(--r-l)] bg-indigo-500/15 text-indigo-400 flex items-center justify-center mb-3">
  <UploadCloud className="w-6 h-6" />
  </div>
- <div className="text-sm font-bold text-[var(--sunken)]">
+ <div className="text-sm font-bold text-[var(--ink-2)]">
  Arrastra o haz clic para subir captura
  </div>
  <div className="text-[11px] text-[var(--ink-2)] font-mono mt-1">

@@ -110,8 +110,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  ?'bg-amber-50 text-[var(--ink)] shadow-xs'
  :'bg-[var(--bg)] text-[var(--ink)]'
  : hasAlerts
- ?'bg-[var(--acc-soft)] /40 text-[var(--sunken)] shadow-xs'
- :'bg-[var(--surface)]/80 text-[var(--sunken)]'
+ ?'bg-[var(--acc-soft)] /40 text-[var(--ink-2)] shadow-xs'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2.5 min-w-0 flex-1">
  <div className={`p-1.5 rounded-[var(--r-s)] bg-gradient-to-br shrink-0 ${getWeatherIconBackdrop(weatherData?.iconType)}`}>
@@ -122,7 +122,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <span className="text-sm font-bold font-mono text-[var(--acc)]">
  {isLoading ?'...' : (weatherData?.temperature !== undefined ? `${weatherData.temperature}°C` :'--')}
  </span>
- <span className={`text-xs font-medium truncate ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--sunken)]'}`}>
+ <span className={`text-xs font-medium truncate ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  {isLoading ?'Consultando tiempo...' : (weatherData?.conditionText ||'Clima')}
  </span>
  {weatherData?.rainProbability !== undefined && (
@@ -175,9 +175,9 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  :'bg-gradient-to-br from-amber-50/70 to-sky-50/70 text-[var(--ink)]' 
  : hasAlerts
  ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90 border-rose-500/40 text-[var(--sunken)] shadow-rose-950/20 shadow-lg'
- :'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-stone-900/90 /40 text-[var(--sunken)] shadow-amber-950/20 shadow-lg'
- :'bg-gradient-to-br from-stone-900/80 to-[var(--surface)]/80 /25 text-[var(--sunken)]'
+ ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90 border-rose-500/40 text-[var(--ink-2)] shadow-rose-950/20 shadow-lg'
+ :'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-stone-900/90 /40 text-[var(--ink-2)] shadow-amber-950/20 shadow-lg'
+ :'bg-gradient-to-br from-stone-900/80 to-[var(--surface)]/80 /25 text-[var(--ink-2)]'
  }`}>
  {/* Barra superior del widget del tiempo */}
  <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b /15">
@@ -305,7 +305,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  )}
  </div>
- <p className={`text-xs font-medium flex items-center gap-1.5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--sunken)]'}`}>
+ <p className={`text-xs font-medium flex items-center gap-1.5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  <span>{weatherData.conditionText}</span>
  </p>
  </div>
@@ -413,7 +413,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap mb-0.5">
- <span className="font-bold font-mono text-xs text-[var(--sunken)] tracking-tight">
+ <span className="font-bold font-mono text-xs text-[var(--ink-2)] tracking-tight">
  {alert.title}
  </span>
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${

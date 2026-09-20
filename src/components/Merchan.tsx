@@ -295,7 +295,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
  <div>
  <h1 className={`text-2xl sm:text-3xl font-black uppercase tracking-wider font-display flex items-center gap-3 ${
- isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'
+ isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'
  }`}>
  <Sparkles className={`w-8 h-8 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`} />
  Taller de Merchandising IA
@@ -565,7 +565,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs font-mono focus:outline-none ${
  isStitchLight 
  ?'bg-white border-indigo-200 text-[var(--ink)] focus:border-indigo-500' 
- :'bg-[var(--surface)] border-indigo-500/30 text-[var(--sunken)] focus:border-indigo-500'
+ :'bg-[var(--surface)] border-indigo-500/30 text-[var(--ink-2)] focus:border-indigo-500'
  }`}
  />
  </div>

@@ -383,7 +383,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </div>
  <div>
  <h3 className={`text-sm font-bold font-display uppercase tracking-wider flex items-center gap-2 ${
- isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'
+ isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'
  }`}>
  Evolución de Redes Sociales & Base de Fans en BBDD
  <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-mono font-normal flex items-center gap-1">

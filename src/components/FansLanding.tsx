@@ -639,7 +639,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <span className={`${isFull ?'text-sm sm:text-base' :'text-xs'} font-extrabold text-[var(--ink)] group-hover:text-[var(--acc)]/70 transition-colors block truncate leading-tight`}>
  Revolut
  </span>
- <span className={`${isFull ?'text-xs' :'text-[10px]'} text-[var(--ink-2)] font-mono block truncate group-hover:text-[var(--sunken)] leading-tight`}>
+ <span className={`${isFull ?'text-xs' :'text-[10px]'} text-[var(--ink-2)] font-mono block truncate group-hover:text-[var(--ink-2)] leading-tight`}>
  {revolutDisplay.replace(/^revolut\.me\//,'@')}
  </span>
  </div>
@@ -1501,7 +1501,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <Check className="w-3.5 h-3.5 text-[var(--surface)] absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" strokeWidth={4} />
  </div>
  <span className="text-[10px] text-[var(--ink-2)] font-mono leading-relaxed group-hover:text-[var(--ink-2)] transition-colors pt-0.5">
- {t('consentPrefix')}<button type="button" onClick={() => setShowPrivacyModal(true)} className="text-[var(--acc)] underline hover:text-[var(--acc)]/70 font-bold inline">{t('consentPrivacyLink')}</button>{t('consentMiddle')}<strong className="text-[var(--sunken)]">{t('consentExplicit')}</strong>{t('consentSuffix')}
+ {t('consentPrefix')}<button type="button" onClick={() => setShowPrivacyModal(true)} className="text-[var(--acc)] underline hover:text-[var(--acc)]/70 font-bold inline">{t('consentPrivacyLink')}</button>{t('consentMiddle')}<strong className="text-[var(--ink-2)]">{t('consentExplicit')}</strong>{t('consentSuffix')}
  </span>
  </label>
  </div>

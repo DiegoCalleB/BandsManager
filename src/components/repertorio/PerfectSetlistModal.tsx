@@ -322,7 +322,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <div className="space-y-4">
  <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
  <p className="text-xs text-[var(--ink-2)] mb-1.5">🪄 Resumen del plan</p>
- <p className="text-sm text-[var(--sunken)]">{plan.summary}</p>
+ <p className="text-sm text-[var(--ink-2)]">{plan.summary}</p>
  </div>
 
  {liveActions.length === 0 && (
@@ -343,7 +343,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <div key={idx} className={`rounded-[var(--r-s)] p-3 flex items-start gap-2.5 ${isInvalid ?'bg-[var(--surface)] opacity-50' :'bg-[var(--surface)]/80'}`}>
  <span className="text-sm mt-0.5">{icon}</span>
  <div className="flex-1">
- <p className="text-sm font-medium text-[var(--sunken)]">{label}</p>
+ <p className="text-sm font-medium text-[var(--ink-2)]">{label}</p>
  <p className="text-xs text-[var(--ink-2)] mt-0.5">{action.reason}</p>
  </div>
  {isInvalid ? (
@@ -419,7 +419,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  value={comentarioFeedback}
  onChange={(e) => setComentarioFeedback(e.target.value)}
  placeholder="Ej:'Evita más de una balada seguida','el bis siempre un tema conocido'..."
- className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-[11px] text-[var(--sunken)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
+ className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-[11px] text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
  />
  <div className="flex items-center gap-1.5 text-[10px] font-mono">
  <span className="text-[var(--ink-2)] uppercase tracking-wider">Alcance:</span>
@@ -456,7 +456,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <button
  onClick={() => handleGenerateWithFeedback(true)}
  title="Crea una copia nueva desde cero en vez de reutilizar la actual"
- className="flex-1 bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--sunken)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink-2)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  🆕 Nueva copia
  </button>

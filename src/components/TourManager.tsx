@@ -962,7 +962,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => recalculateAllFuelStops()}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] border-[var(--hair)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] border-[var(--hair)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
  title="Aplica la suma de consumos a las distancias de todas las paradas"
  >
  <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" /> Recalcular Paradas
@@ -1349,7 +1349,7 @@ export default function TourManager({
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)] text-sm text-[var(--sunken)]">
+ <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)] text-sm text-[var(--ink-2)]">
  Gira: <strong className="text-[var(--ink)]">{tourToDelete.name}</strong>
  </div>
 

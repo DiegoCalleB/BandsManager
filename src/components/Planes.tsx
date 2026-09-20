@@ -874,7 +874,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  type="button"
  onClick={handleOpenCustomerPortal}
  disabled={isOpeningPortal}
- className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
  >
  <ExternalLink className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Bajar a {plan.name}</span>

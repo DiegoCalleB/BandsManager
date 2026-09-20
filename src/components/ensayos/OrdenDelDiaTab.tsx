@@ -480,7 +480,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={() => setShowAddBlockModal(true)}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-xs font-mono font-bold transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-mono font-bold transition-all cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>+ Bloque / Pausa</span>
@@ -922,7 +922,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={() => handleImportSetlist(st, false)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] transition-colors cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] transition-colors cursor-pointer"
  title="Añade las canciones al final de lo que ya tienes"
  >
  + Añadir al final

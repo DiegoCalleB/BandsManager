@@ -248,7 +248,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight 
  ?'bg-white text-[var(--ink)]' 
- :'bg-[var(--surface)] text-[var(--sunken)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <datalist id="instrument-suggestions">
@@ -277,7 +277,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]/80 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -292,7 +292,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='list'
  ?'-indigo-400 text-indigo-400'
- :'-transparent text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  <Users className="w-3.5 h-3.5" />
@@ -303,7 +303,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='create'
  ?'-indigo-400 text-indigo-400'
- :'-transparent text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  <UserPlus className="w-3.5 h-3.5" />
@@ -314,7 +314,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='associate'
  ?'text-indigo-400 border-b border-indigo-400'
- :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  <Link2 className="w-3.5 h-3.5" />
@@ -407,7 +407,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  :'bg-[var(--surface)] text-blue-300 -blue-500/30 hover:bg-[var(--surface)]/80'
  } ${isSelf ?'opacity-70 cursor-not-allowed' :''}`}
  >
- <option value="member" className="bg-[var(--surface)] text-[var(--sunken)]">Rol: Miembro</option>
+ <option value="member" className="bg-[var(--surface)] text-[var(--ink-2)]">Rol: Miembro</option>
  <option value="leader" className="bg-[var(--surface)] text-[var(--acc)]/70">Rol: Admin</option>
  </select>
 
@@ -628,7 +628,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setAssocEmail(e.target.value)}
  placeholder="Introduce su email exacto..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
+ isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  required
  />
@@ -642,7 +642,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  value={assocRole}
  onChange={(e) => setAssocRole(e.target.value as UserRole)}
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
+ isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <option value="member">Miembro de Banda (Músico)</option>
@@ -661,7 +661,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setAssocInstrument(e.target.value)}
  placeholder="Ej: Guitarra, Bajista, Manager, Coros"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
+ isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
  </div>

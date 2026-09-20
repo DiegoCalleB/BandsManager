@@ -414,7 +414,7 @@ export function CalendarWidget({
  : isToday
  ?'bg-[var(--surface)]/60 /40 text-[var(--acc)] font-black'
  : dayEvents.length > 0
- ?'bg-[var(--surface)] /80 text-[var(--sunken)] hover:/30'
+ ?'bg-[var(--surface)] /80 text-[var(--ink-2)] hover:/30'
  :'bg-[var(--surface)]/50 /40 text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  >
@@ -450,7 +450,7 @@ export function CalendarWidget({
  }`}>
  {evt.type}
  </span>
- <p className="font-bold text-[var(--sunken)] mt-1">{evt.title}</p>
+ <p className="font-bold text-[var(--ink-2)] mt-1">{evt.title}</p>
  <p className="text-[var(--ink-2)] text-[11px]">{evt.location}</p>
  </div>
  <ArrowRight className="w-3.5 h-3.5 text-[var(--ink-2)]" />

@@ -380,7 +380,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  <div className="relative flex items-center">
  <Lock className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type={showPassword ?'text' :'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Contraseña" className={`${inputClass} pr-11`} required />
- <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer">
+ <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer">
  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
  </div>
@@ -459,7 +459,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  <div className="relative flex items-center">
  <Lock className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type={showRegPassword ?'text' :'password'} value={regPassword} onChange={(e) => setRegPassword(e.target.value)} placeholder="Contraseña" className={`${inputClass} pr-11`} required />
- <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer">
+ <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer">
  {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
  </div>
@@ -498,7 +498,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
  {view ==='reset-password' && (
  <div className="w-full animate-in slide-in-from-bottom-4 duration-300 space-y-4">
- <button type="button" onClick={() => { setError(null); setView('login'); }} className="flex items-center gap-1.5 text-xs text-[var(--ink-2)] hover:text-[var(--sunken)] cursor-pointer">
+ <button type="button" onClick={() => { setError(null); setView('login'); }} className="flex items-center gap-1.5 text-xs text-[var(--ink-2)] hover:text-[var(--ink-2)] cursor-pointer">
  <ArrowLeft className="w-3.5 h-3.5" />
  <span>Volver al login</span>
  </button>

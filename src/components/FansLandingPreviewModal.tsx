@@ -166,13 +166,13 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  <select
  value={selectedConcertId}
  onChange={e => setSelectedConcertId(e.target.value)}
- className="bg-transparent text-xs font-mono text-[var(--sunken)] outline-none cursor-pointer max-w-[160px] truncate"
+ className="bg-transparent text-xs font-mono text-[var(--ink-2)] outline-none cursor-pointer max-w-[160px] truncate"
  >
- <option value="" className="bg-[var(--surface)] text-[var(--sunken)]">
+ <option value="" className="bg-[var(--surface)] text-[var(--ink-2)]">
  {t('previewGeneralConcert')}
  </option>
  {concerts.map(c => (
- <option key={c.id} value={c.id} className="bg-[var(--surface)] text-[var(--sunken)]">
+ <option key={c.id} value={c.id} className="bg-[var(--surface)] text-[var(--ink-2)]">
  {c.ciudad} - {c.sala}
  </option>
  ))}

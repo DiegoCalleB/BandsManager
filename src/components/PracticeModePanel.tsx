@@ -505,7 +505,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  return { text:'📐 Plantilla genérica (sin IA disponible)', tone:'text-[var(--ink-2)]' };
  };
 
- const panelBg = isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]';
+ const panelBg = isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]';
  const cardBg = isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60 /80';
 
  return (
@@ -604,25 +604,25 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => nudgeBpm(-5)}
  title="-5 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
  >-5</button>
  <button
  onClick={() => nudgeBpm(-1)}
  title="-1 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
  >-1</button>
- <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ?'text-[var(--acc)]/70' :'text-[var(--sunken)]'}`}>
+ <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ?'text-[var(--acc)]/70' :'text-[var(--ink-2)]'}`}>
  {targetBpm} BPM
  </span>
  <button
  onClick={() => nudgeBpm(1)}
  title="+1 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
  >+1</button>
  <button
  onClick={() => nudgeBpm(5)}
  title="+5 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
  >+5</button>
  {speed !== 1 && (
  <button
@@ -638,10 +638,10 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <div className="flex items-center gap-1.5">
  <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span className="text-[10px] font-mono text-[var(--ink-2)]">Bucle</span>
- <button onClick={markLoopA} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]">
+ <button onClick={markLoopA} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]">
  A {loopA != null ? formatTime(loopA) :'--:--'}
  </button>
- <button onClick={markLoopB} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]">
+ <button onClick={markLoopB} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]">
  B {loopB != null ? formatTime(loopB) :'--:--'}
  </button>
  {(loopA != null || loopB != null) && (
@@ -803,7 +803,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {chordsSourceLabel(chords.chordsSource).text}
  {chords.esAproximado &&' · ⚠️ aproximado, verifica de oído'}
  </p>
- <pre className="text-[11px] font-mono whitespace-pre-wrap text-[var(--sunken)] max-h-40 overflow-y-auto bg-black/30 rounded-[var(--r-s)] p-2">
+ <pre className="text-[11px] font-mono whitespace-pre-wrap text-[var(--ink-2)] max-h-40 overflow-y-auto bg-black/30 rounded-[var(--r-s)] p-2">
  {chords.cifradoTexto}
  </pre>
  {onApplyAsMainChords && (
@@ -844,7 +844,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => handleExport('mezcla-actual')}
  disabled={isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--sunken)] hover:bg-[var(--surface)]/70 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting ==='mezcla-actual' ?'Generando…' :'Mi mezcla actual'}
  </button>

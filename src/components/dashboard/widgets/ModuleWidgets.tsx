@@ -94,7 +94,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
  <Music className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Repertorio & Setlists
  </h3>
  <p className="text-xs font-mono text-[var(--ink-2)]">Canciones e Iris Stems</p>
@@ -116,7 +116,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
  <div className="flex items-center gap-3">
  <Disc3 className="w-8 h-8 text-purple-400 animate-spin-slow shrink-0" />
  <div>
- <span className="text-xl font-mono font-bold text-[var(--sunken)]">{songCount}</span>
+ <span className="text-xl font-mono font-bold text-[var(--ink-2)]">{songCount}</span>
  <p className="text-xs font-mono text-[var(--ink-2)]">Temas guardados en catálogo</p>
  </div>
  </div>
@@ -140,7 +140,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
  <DollarSign className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Balance & Cachés
  </h3>
  <p className="text-xs font-mono text-[var(--ink-2)]">Recaudación bruta proyectada</p>
@@ -182,7 +182,7 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
  <Users className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Fans & Captación
  </h3>
  <p className="text-xs font-mono text-[var(--ink-2)]">Comunidad y códigos QR</p>
@@ -228,7 +228,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
  <BookOpen className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Dossier EPK Público
  </h3>
  <p className="text-xs font-mono text-[var(--ink-2)]">Presencia y prensa para salas</p>
@@ -276,7 +276,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
  <Bot className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Agente IA de Booking
  </h3>
  <p className="text-xs font-mono text-[var(--ink-2)]">Redactor & Lector Autónomo</p>
@@ -317,7 +317,7 @@ export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) 
  <Truck className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
  Giras & Logística
  </h3>
  <p className="text-xs font-mono text-[var(--ink-2)]">Rutas de conciertos y producción</p>
@@ -337,7 +337,7 @@ export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) 
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
  <div>
- <span className="text-sm font-mono font-bold text-[var(--sunken)]">{tours.length} Giras Programadas</span>
+ <span className="text-sm font-mono font-bold text-[var(--ink-2)]">{tours.length} Giras Programadas</span>
  <p className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5">Rutas y hoteles unificados</p>
  </div>
  </div>

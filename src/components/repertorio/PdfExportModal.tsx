@@ -1400,7 +1400,7 @@ export function PdfExportModal({
  className={`p-2 rounded-[var(--r-m)] transition-colors active:scale-95 cursor-pointer ${
  isStitchLight
  ?'hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
- :'hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  <X className="w-5 h-5" />
