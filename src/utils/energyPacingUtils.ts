@@ -11,7 +11,6 @@ export interface EnergyInfo {
   hexColor: string;
   bgClass: string;
   textClass: string;
-  borderClass: string;
 }
 
 export interface SetlistEnergyPoint {
@@ -81,8 +80,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       icon: '🌙',
       hexColor: '#0284c7',
       bgClass: 'bg-[var(--acc)]/15',
-      textClass: 'text-[var(--ink-2)]',
-      borderClass: 'border-[var(--tentative)]/30'
+      textClass: 'text-[var(--ink-2)]'
     };
   }
 
@@ -94,8 +92,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       icon: '🎵',
       hexColor: '#059669',
       bgClass: 'bg-[var(--ok)]/15',
-      textClass: 'text-[var(--ok)]',
-      borderClass: 'border-[var(--ok)]/30'
+      textClass: 'text-[var(--ok)]'
     };
   }
 
@@ -107,8 +104,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       icon: '🔥',
       hexColor: '#a16207',
       bgClass: 'bg-[var(--acc)]/15',
-      textClass: 'text-[var(--acc)]/80',
-      borderClass: 'border-[var(--hair)]'
+      textClass: 'text-[var(--acc)]/80'
     };
   }
 
@@ -119,8 +115,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
     icon: '💣',
     hexColor: '#a21caf',
     bgClass: 'bg-[var(--tentative)]/15',
-    textClass: 'text-[var(--tentative)]/80',
-    borderClass: 'border-[var(--tentative)]/30'
+    textClass: 'text-[var(--tentative)]/80'
   };
 }
 
@@ -202,8 +197,7 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
           icon: ICONOS_BLOQUE[subtipo] || '📌',
           hexColor: isBis ? '#a21caf' : '#64748b',
           bgClass: isBis ? 'bg-[var(--tentative)]/15' : 'bg-[var(--ink-2)]/40/30',
-          textClass: isBis ? 'text-[var(--tentative)]/80' : 'text-[var(--ink-2)]',
-          borderClass: isBis ? 'border-[var(--tentative)]/30' : 'border-[var(--hair)]'
+          textClass: isBis ? 'text-[var(--tentative)]/80' : 'text-[var(--ink-2)]'
         }
       });
     }

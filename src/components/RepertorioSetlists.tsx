@@ -159,17 +159,17 @@ function generatePdfStylesheet(): string {
  `;
 }
 
-export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
- header: { label:'Encabezado de Bloque / Sección', icon:'⚡', bg:'bg-[var(--acc)]/20', text:'text-[var(--acc)]', border:'border-[var(--acc)]/50' },
- presentacion: { label:'Presentación Banda / Saludo', icon:'🎤', bg:'bg-[var(--ok)]/15', text:'text-[var(--ok)]', border:'border-[var(--ok)]/30' },
- intro_tema: { label:'Intro / Historia del Tema', icon:'🗣️', bg:'bg-[var(--acc-soft)]/80', text:'text-[var(--acc)]', border:'border-[var(--acc)]/30' },
- beatbox: { label:'Performance Beatbox / Ritmo', icon:'🥁', bg:'bg-[var(--acc)]/15', text:'text-[var(--acc)]', border:'border-[var(--acc)]/30' },
- solo_performance: { label:'Solo de Instrumento / Jam', icon:'🎸', bg:'bg-[var(--acc-soft)]/60', text:'text-[var(--acc)]', border:'border-[var(--acc)]/30' },
- cambio_instrumento: { label:'Cambio Instrumento / Afinación', icon:'🔧', bg:'bg-[var(--ok)]/15', text:'text-[var(--ok)]', border:'border-[var(--ok)]/30' },
- chapa: { label:'Chapa / Discurso con el Público', icon:'💬', bg:'bg-[var(--acc)]/15', text:'text-[var(--acc)]', border:'border-[var(--acc)]/30' },
- descanso: { label:'Pausa / Intermedio / Agua', icon:'⏸️', bg:'bg-[var(--sunken)]', text:'text-[var(--ink-2)]', border:'border-[var(--hair)]' },
- bis: { label:'BIS / Parón Pre-Bis', icon:'💣', bg:'bg-[var(--alert)]/15', text:'text-[var(--alert)]', border:'border-[var(--alert)]/30' },
- otro: { label:'Otro Evento del Show', icon:'📌', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]', border:'' }
+export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: string; text: string }> = {
+ header: { label:'Encabezado de Bloque / Sección', icon:'⚡', bg:'bg-[var(--acc)]/20', text:'text-[var(--acc)]' },
+ presentacion: { label:'Presentación Banda / Saludo', icon:'🎤', bg:'bg-[var(--ok)]/15', text:'text-[var(--ok)]' },
+ intro_tema: { label:'Intro / Historia del Tema', icon:'🗣️', bg:'bg-[var(--acc-soft)]/80', text:'text-[var(--acc)]' },
+ beatbox: { label:'Performance Beatbox / Ritmo', icon:'🥁', bg:'bg-[var(--acc)]/15', text:'text-[var(--acc)]' },
+ solo_performance: { label:'Solo de Instrumento / Jam', icon:'🎸', bg:'bg-[var(--acc-soft)]/60', text:'text-[var(--acc)]' },
+ cambio_instrumento: { label:'Cambio Instrumento / Afinación', icon:'🔧', bg:'bg-[var(--ok)]/15', text:'text-[var(--ok)]' },
+ chapa: { label:'Chapa / Discurso con el Público', icon:'💬', bg:'bg-[var(--acc)]/15', text:'text-[var(--acc)]' },
+ descanso: { label:'Pausa / Intermedio / Agua', icon:'⏸️', bg:'bg-[var(--sunken)]', text:'text-[var(--ink-2)]' },
+ bis: { label:'BIS / Parón Pre-Bis', icon:'💣', bg:'bg-[var(--alert)]/15', text:'text-[var(--alert)]' },
+ otro: { label:'Otro Evento del Show', icon:'📌', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]' }
 };
 
 // GIF 1x1 transparente para anular la"foto" fantasma que el navegador dibuja por defecto al
@@ -3217,12 +3217,10 @@ export default function RepertorioSetlists({
  className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-mono font-bold shrink-0"
  style={info ? {
  background: `radial-gradient(circle at 35% 30%, ${info.hexColor}40, #0a0a0a 75%)`,
- border: `1.5px solid ${info.hexColor}`,
  boxShadow: `0 0 9px ${info.hexColor}80, inset 0 0 4px ${info.hexColor}30`,
  color: info.hexColor
  } : {
  background:'#171717',
- border:'1.5px solid #3f3f46',
  color:'#71717a'
  }}
  title={info ? `${info.label} · ${point.score}/20` : point.name}
@@ -3713,7 +3711,7 @@ export default function RepertorioSetlists({
  });
  setEditingEnergyItemId(it.id);
  }}
- className={`text-[8px] font-mono px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`}
+ className={`text-[8px] font-mono px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${energy.bgClass} ${energy.textClass}`}
  title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ?' — fijada a mano' :''}. Clic para cambiarla.`}
  >
  <span>{energy.icon}</span>
@@ -4024,7 +4022,7 @@ export default function RepertorioSetlists({
  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
  onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
- className={`border rounded-[var(--r-s)] transition-all cursor-pointer ${typeConfig.bg} ${typeConfig.border} ${
+ className={`rounded-[var(--r-s)] transition-all cursor-pointer ${typeConfig.bg} ${
  isDragging ?'opacity-40 scale-[0.98]' :''
  } ${
  isDragOver ?'border-2 scale-[1.01] shadow-lg' :''
@@ -4046,7 +4044,7 @@ export default function RepertorioSetlists({
  <span className="text-base shrink-0">{typeConfig.icon}</span>
 
  {/* Type Label */}
- <span className={`text-[8px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded-sm shrink-0 ${typeConfig.text} ${typeConfig.border}`}>
+ <span className={`text-[8px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded-sm shrink-0 ${typeConfig.text}`}>
  {typeConfig.label}
  </span>
 
