@@ -313,8 +313,8 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  .info-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
  .info-box p.label { font-size: 12px; color: #999; margin: 0 0 6px 0; }
  .info-box p.value { font-size: 14px; color: #eee; margin: 0; line-height: 1.5; }
- .strengths { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.4); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
- .improvements { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.4); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+ .strengths { background: var(--ok-glow); border: 1px solid rgba(16,185,129,0.4); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+ .improvements { background: var(--acc-glow); border: 1px solid rgba(245,158,11,0.4); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
  ul { margin: 6px 0 0 0; padding-left: 18px; font-size: 13px; }
  .footer { margin-top: 24px; font-size: 11px; font-family: monospace; color: #666; text-align: center; }
  @media print { body { background: #fff; color: #111; } .score-box, .chart-box, .info-box { background: #f5f5f5; border-color: #ccc; } .strengths { background: #ecfdf5; } .improvements { background: #fffbeb; } }

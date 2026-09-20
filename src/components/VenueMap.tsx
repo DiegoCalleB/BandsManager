@@ -447,7 +447,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  border-radius: 20px;
  padding: 2px 8px 2px 3px;
  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
- border: ${isSelected ? `2.5px solid ${pinColor}` :'1px solid rgba(0,0,0,0.15)'};
+ border: ${isSelected ? `2.5px solid ${pinColor}` :'1px solid var(--shadow-soft)'};
  white-space: nowrap;
  position: relative;
  z-index: 2;

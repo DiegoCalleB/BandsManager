@@ -351,7 +351,7 @@ export function EnergyChart({
  >
  {!compact && (
  <style>{`
- .energy-map-glow .recharts-area-curve { filter: drop-shadow(0 0 5px rgba(255,255,255,0.25)) drop-shadow(0 0 10px rgba(255,255,255,0.12)); }
+ .energy-map-glow .recharts-area-curve { filter: drop-shadow(0 0 5px rgba(var(--ink-rgb), 0.25)) drop-shadow(0 0 10px rgba(var(--ink-rgb), 0.12)); }
  /* El"momento wow" al entrar a Repertorio por primera vez: mientras la curva se dibuja
  despacio (GRAND_ENTRANCE_MS), el fondo del propio Mapa de Energía respira con un halo
  dorado — sincronizado a la misma duración, para que la puesta en escena no se limite

@@ -631,7 +631,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  {/* Recordar contraseña & Restablecer contraseña */}
  <div className="flex items-center justify-between text-xs text-[var(--ink-2)] px-1 pt-0.5">
  <label className="flex items-center gap-2 cursor-pointer select-none text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors">
- <div className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ?'bg-[var(--acc)] border-[var(--acc)] text-[var(--ink)] shadow-[0_0_10px_rgba(242,202,80,0.4)]' :'bg-[var(--surface)] /80'}`}>
+ <div className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ?'bg-[var(--acc)] border-[var(--acc)] text-[var(--ink)] shadow-[0_0_10px_var(--acc-glow)]' :'bg-[var(--surface)] /80'}`}>
  <input
  type="checkbox"
  checked={rememberMe}
@@ -776,7 +776,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_var(--acc-glow)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
@@ -857,7 +857,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading || (resetConfirmPassword.length > 0 && resetNewPassword !== resetConfirmPassword)}
- className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_var(--acc-glow)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
@@ -969,7 +969,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_var(--acc-glow)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
@@ -1034,7 +1034,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_var(--acc-glow)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
@@ -1144,7 +1144,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_var(--acc-glow)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">

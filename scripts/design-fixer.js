@@ -67,6 +67,47 @@ const FIXES = [
   { find: /text-emerald-500\/90 dark:text-emerald-400\/80/g, replace: 'text-[var(--ok)]', desc: 'emerald dark: prefix → --ok' },
   { find: /text-emerald-500\/90/g, replace: 'text-[var(--ok)]', desc: 'emerald text → --ok' },
   { find: /-neutral-800/g, replace: 'bg-[var(--surface)]', desc: 'neutral-800 → --surface' },
+
+  // Inline rgba → tokens (for visualizations & special effects)
+  { find: /rgba\(30,\s*30,\s*36,\s*0\.95\)/g, replace: "var(--bg)", desc: 'rgba(30,30,36,0.95) dark bg → --bg' },
+  { find: /rgba\(20,\s*20,\s*24,\s*0\.6\)/g, replace: "var(--bg)", desc: 'rgba(20,20,24,0.6) dark bg → --bg' },
+  { find: /rgba\(16,\s*185,\s*129,\s*0\.1\)/g, replace: "var(--ok-glow)", desc: 'green glow → --ok-glow' },
+  { find: /rgba\(245,\s*158,\s*11,\s*0\.1\)/g, replace: "var(--acc-glow)", desc: 'orange glow → --acc-glow' },
+  { find: /rgba\(0,\s*0,\s*0,\s*0\.5\)/g, replace: "var(--shadow-dark)", desc: 'black shadow → --shadow-dark' },
+  { find: /rgba\(0,\s*0,\s*0,\s*0\.15\)/g, replace: "var(--shadow-soft)", desc: 'soft shadow → --shadow-soft' },
+  { find: /rgba\(255,\s*255,\s*255,\s*0\.25\)/g, replace: "rgba(var(--ink-rgb), 0.25)", desc: 'white glow → ink glow' },
+  { find: /rgba\(255,\s*255,\s*255,\s*0\.12\)/g, replace: "rgba(var(--ink-rgb), 0.12)", desc: 'white subtle glow → ink subtle' },
+  { find: /rgba\(242,\s*202,\s*80,\s*0\.1\)/g, replace: "var(--acc-glow)", desc: 'gold glow → --acc-glow' },
+
+  // Tailwind shadow utilities with inline rgba → token equivalents
+  { find: /shadow-\[0_0_8px_rgba\(0,\s*0,\s*0,\s*0\.15\)\]/g, replace: "shadow-[0_0_8px_var(--shadow-soft)]", desc: 'shadow soft rgba → --shadow-soft' },
+  { find: /shadow-\[0_0_10px_rgba\(242,\s*202,\s*80,\s*0\.4\)\]/g, replace: "shadow-[0_0_10px_var(--acc-glow)]", desc: 'shadow gold 10px → --acc-glow' },
+  { find: /shadow-\[0_0_12px_rgba\(0,\s*0,\s*0,\s*0\.15\)\]/g, replace: "shadow-[0_0_12px_var(--shadow-soft)]", desc: 'shadow soft rgba 12px → --shadow-soft' },
+  { find: /shadow-\[0_0_12px_rgba\(245,\s*158,\s*11,\s*0\.18\)\]/g, replace: "shadow-[0_0_12px_var(--acc-glow)]", desc: 'shadow amber 12px → --acc-glow' },
+  { find: /shadow-\[0_0_12px_rgba\(251,\s*191,\s*36,\s*0\.8\)\]/g, replace: "shadow-[0_0_12px_var(--acc-glow)]", desc: 'shadow amber-400 → --acc-glow' },
+  { find: /shadow-\[0_0_14px_rgba\(251,\s*191,\s*36,\s*0\.2\)\]/g, replace: "shadow-[0_0_14px_var(--acc-glow)]", desc: 'shadow gold 14px → --acc-glow' },
+  { find: /shadow-\[0_0_15px_rgba\(245,\s*158,\s*11,\s*0\.15\)\]/g, replace: "shadow-[0_0_15px_var(--acc-glow)]", desc: 'shadow amber 15px → --acc-glow' },
+  { find: /shadow-\[0_0_16px_rgba\(251,\s*191,\s*36,\s*0\.2\)\]/g, replace: "shadow-[0_0_16px_var(--acc-glow)]", desc: 'shadow gold 16px → --acc-glow' },
+  { find: /shadow-\[0_0_20px_rgba\(242,\s*202,\s*80,\s*0\.15\)\]/g, replace: "shadow-[0_0_20px_var(--acc-glow)]", desc: 'shadow gold → --acc-glow' },
+  { find: /shadow-\[0_0_20px_rgba\(251,\s*191,\s*36,\s*0\.3\)\]/g, replace: "shadow-[0_0_20px_var(--acc-glow)]", desc: 'shadow amber-400 20px → --acc-glow' },
+  { find: /shadow-\[0_0_20px_rgba\(245,\s*158,\s*11,\s*0\.2\)\]/g, replace: "shadow-[0_0_20px_var(--acc-glow)]", desc: 'shadow amber → --acc-glow' },
+  { find: /shadow-\[0_0_30px_rgba\(16,\s*185,\s*129,\s*0\.2\)\]/g, replace: "shadow-[0_0_30px_var(--ok-glow)]", desc: 'shadow emerald glow → --ok-glow' },
+  { find: /shadow-\[0_0_35px_rgba\(242,\s*202,\s*80,\s*0\.18\)\]/g, replace: "shadow-[0_0_35px_var(--acc-glow)]", desc: 'shadow gold glow → --acc-glow' },
+  { find: /shadow-\[0_0_35px_rgba\(251,\s*191,\s*36,\s*0\.75\)\]/g, replace: "shadow-[0_0_35px_rgba(var(--ink-rgb), 0.75)]", desc: 'shadow amber-400 pulse → ink shadow' },
+  { find: /shadow-\[0_0_12px_rgba\(29,\s*185,\s*84,\s*0\.4\)\]/g, replace: "shadow-[0_0_12px_rgba(var(--ok-rgb), 0.4)]", desc: 'shadow emerald → ok shadow' },
+  { find: /shadow-\[0_0_10px_rgba\(239,\s*68,\s*68,\s*0\.7\)\]/g, replace: "shadow-[0_0_10px_rgba(var(--alert-rgb), 0.7)]", desc: 'shadow red → alert shadow' },
+  { find: /shadow-\[0_0_10px_rgba\(239,\s*68,\s*68,\s*0\.9\)\]/g, replace: "shadow-[0_0_10px_rgba(var(--alert-rgb), 0.9)]", desc: 'shadow red → alert shadow' },
+  { find: /shadow-\[0_0_10px_rgba\(220,\s*38,\s*38,\s*0\.7\)\]/g, replace: "shadow-[0_0_10px_rgba(var(--alert-rgb), 0.7)]", desc: 'shadow red-600 → alert shadow' },
+  { find: /shadow-\[0_0_8px_rgba\(79,\s*70,\s*229,\s*0\.8\)\]/g, replace: "shadow-[0_0_8px_rgba(79, 70, 229, 0.8)]", desc: 'indigo brand color preserved' },
+  { find: /shadow-\[0_0_8px_rgba\(6,\s*182,\s*212,\s*0\.8\)\]/g, replace: "shadow-[0_0_8px_rgba(6, 182, 212, 0.8)]", desc: 'cyan brand color preserved' },
+  { find: /shadow-\[0_0_12px_rgba\(168,\s*85,\s*247,\s*0\.18\)\]/g, replace: "shadow-[0_0_12px_rgba(168, 85, 247, 0.18)]", desc: 'purple brand color preserved' },
+
+  // Drop-shadow utilities with inline rgba → token equivalents
+  { find: /drop-shadow-\[0_0_6px_rgba\(251,\s*191,\s*36,\s*0\.4\)\]/g, replace: "drop-shadow-[0_0_6px_var(--acc-glow)]", desc: 'drop-shadow amber → --acc-glow' },
+  { find: /drop-shadow-\[0_0_8px_rgba\(245,\s*158,\s*11,\s*0\.25\)\]/g, replace: "drop-shadow-[0_0_8px_var(--acc-glow)]", desc: 'drop-shadow amber → --acc-glow' },
+  { find: /drop-shadow-\[0_0_8px_rgba\(29,\s*185,\s*84,\s*0\.5\)\]/g, replace: "drop-shadow-[0_0_8px_rgba(var(--ok-rgb), 0.5)]", desc: 'drop-shadow emerald → ok shadow' },
+  { find: /drop-shadow-\[0_0_15px_rgba\(242,\s*202,\s*80,\s*0\.2\)\]/g, replace: "drop-shadow-[0_0_15px_var(--acc-glow)]", desc: 'drop-shadow gold → --acc-glow' },
+  { find: /drop-shadow-\[0_0_20px_rgba\(242,\s*202,\s*80,\s*0\.25\)\]/g, replace: "drop-shadow-[0_0_20px_var(--acc-glow)]", desc: 'drop-shadow gold → --acc-glow' },
 ];
 
 function fixFile(filePath) {

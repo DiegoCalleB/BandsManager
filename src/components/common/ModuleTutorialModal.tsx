@@ -299,7 +299,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  {targetRect && effectiveFloatingMode && (
  <div className="fixed inset-0 z-[9999] pointer-events-none">
  <div
- className="absolute border-2 sm:border-3 rounded-[var(--r-m)] transition-all duration-300 shadow-[0_0_35px_rgba(251,191,36,0.75)] animate-pulse pointer-events-none"
+ className="absolute border-2 sm:border-3 rounded-[var(--r-m)] transition-all duration-300 shadow-[0_0_35px_rgba(var(--ink-rgb), 0.75)] animate-pulse pointer-events-none"
  style={{
  top: Math.max(0, targetRect.top - 4),
  left: Math.max(0, targetRect.left - 4),

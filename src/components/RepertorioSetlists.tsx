@@ -2688,7 +2688,7 @@ export default function RepertorioSetlists({
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
  isStitchLight 
  ?'bg-purple-100 hover:bg-purple-200 text-purple-950 border-purple-300'
- :'bg-purple-950/50 hover:bg-purple-900/70 text-purple-200 hover:text-[var(--ink)] shadow-[0_0_12px_rgba(168,85,247,0.18)]'
+ :'bg-purple-950/50 hover:bg-purple-900/70 text-purple-200 hover:text-[var(--ink)] shadow-[0_0_12px_rgba(168, 85, 247, 0.18)]'
  }`}
  title="Cerebro IA: Análisis de narrativa, curva de energía, transiciones de tono y sugerencias"
  >
@@ -2714,7 +2714,7 @@ export default function RepertorioSetlists({
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
  isStitchLight 
  ?'bg-amber-100 hover:bg-amber-200 text-[var(--acc)]'
- :'bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--ink)] hover:text-[var(--ink)] shadow-[0_0_12px_rgba(245,158,11,0.18)]'
+ :'bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--ink)] hover:text-[var(--ink)] shadow-[0_0_12px_var(--acc-glow)]'
  }`}
  title="Optimizar IA: Generar el setlist perfecto con orden dinámico ideal y clímax de concierto"
  >

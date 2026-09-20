@@ -334,7 +334,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <Heart 
  className={`w-5 h-5 transition-all transform group-active:scale-125 ${
  isCurrentSongFavorited 
- ?'fill-[var(--ok)] text-[var(--ok)] drop-shadow-[0_0_8px_rgba(29,185,84,0.5)] scale-110' 
+ ?'fill-[var(--ok)] text-[var(--ok)] drop-shadow-[0_0_8px_rgba(var(--ok-rgb), 0.5)] scale-110' 
  :'text-[var(--ink-2)] group-hover:text-[var(--ink)]'
  }`}
  />
@@ -440,16 +440,16 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  />
 
  <div 
- className="h-full bg-gradient-to-r from-[var(--ok)] via-[var(--ok)] to-[#20df64] transition-all duration-150 relative shadow-[0_0_12px_rgba(29,185,84,0.4)]"
+ className="h-full bg-gradient-to-r from-[var(--ok)] via-[var(--ok)] to-[#20df64] transition-all duration-150 relative shadow-[0_0_12px_rgba(var(--ok-rgb), 0.4)]"
  style={{ width: `${stageProgressPct}%` }}
  >
  <div 
  className="absolute inset-0 opacity-40 pointer-events-none" 
  style={{
- backgroundImage:'repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0, 0, 0, 0.5) 3px, rgba(0, 0, 0, 0.5) 6px)'
+ backgroundImage:'repeating-linear-gradient(90deg, transparent 0px, transparent 3px, var(--shadow-dark) 3px, var(--shadow-dark) 6px)'
  }}
  />
- <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-white shadow-[0_0_8px_rgba(0,0,0,0.15)] opacity-90" />
+ <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-white shadow-[0_0_8px_var(--shadow-soft)] opacity-90" />
  </div>
 
  <input

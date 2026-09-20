@@ -4179,7 +4179,7 @@ export default function SongStudioModal({
  onClick={() => handleToggleMuteTrack(idea, tr.id)}
  className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-black cursor-pointer transition-all shrink-0 ${
  isMuted
- ?'bg-red-600 text-[var(--ink)] border-red-500 shadow-[0_0_10px_rgba(220,38,38,0.7)] ring-1 ring-red-400/50'
+ ?'bg-red-600 text-[var(--ink)] border-red-500 shadow-[0_0_10px_rgba(var(--alert-rgb), 0.7)] ring-1 ring-red-400/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:text-[var(--ink)] hover:bg-[var(--surface)]/70'
  }`}
  title="Mute (M) - Silenciar pista"
@@ -4191,7 +4191,7 @@ export default function SongStudioModal({
  onClick={() => handleToggleSoloTrack(idea, tr.id)}
  className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-black cursor-pointer transition-all shrink-0 ${
  isSolo
- ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-[0_0_12px_rgba(251,191,36,0.8)] ring-1 ring-amber-300/60'
+ ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-[0_0_12px_var(--acc-glow)] ring-1 ring-amber-300/60'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:text-[var(--ink)] hover:bg-[var(--surface)]/70'
  }`}
  title="Solo (S) - Aísla esta pista en exclusiva (Cubase style)"

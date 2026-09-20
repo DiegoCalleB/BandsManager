@@ -340,7 +340,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  border: 1.5px solid ${badgeCfg.color};
  border-radius: 20px;
  padding: 3px 8px 3px 4px;
- box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+ box-shadow: 0 4px 14px var(--shadow-dark);
  white-space: nowrap;">
  ${bandIconHtml}
  <span style="

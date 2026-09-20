@@ -638,9 +638,9 @@ export function SongTransitionPreviewModal({
  <div
  className="md:col-span-5 p-2 rounded-[var(--r-m)] transition relative overflow-hidden flex flex-col justify-between"
  style={{
- backgroundColor: currentGains.isPlayingA ?'rgba(30,30,36,0.95)' :'rgba(20,20,24,0.6)',
+ backgroundColor: currentGains.isPlayingA ?'var(--bg)' :'var(--bg)',
  borderColor: currentGains.isPlayingA ?'var(--acc)' :'#2a2a30',
- boxShadow: currentGains.isPlayingA ?'0 0 10px rgba(242,202,80,0.1)' :'none'
+ boxShadow: currentGains.isPlayingA ?'0 0 10px var(--acc-glow)' :'none'
  }}
  >
  <div>
@@ -781,9 +781,9 @@ export function SongTransitionPreviewModal({
  <div
  className="md:col-span-5 p-2 rounded-[var(--r-m)] transition relative overflow-hidden flex flex-col justify-between"
  style={{
- backgroundColor: currentGains.isPlayingB ?'rgba(30,30,36,0.95)' :'rgba(20,20,24,0.6)',
+ backgroundColor: currentGains.isPlayingB ?'var(--bg)' :'var(--bg)',
  borderColor: currentGains.isPlayingB ?'var(--acc)' :'#2a2a30',
- boxShadow: currentGains.isPlayingB ?'0 0 10px rgba(242,202,80,0.1)' :'none'
+ boxShadow: currentGains.isPlayingB ?'0 0 10px var(--acc-glow)' :'none'
  }}
  >
  <div>
@@ -1083,7 +1083,7 @@ export function SongTransitionPreviewModal({
 
  {/* Playhead Indicator */}
  <div
- className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_8px_rgba(0,0,0,0.15)] z-20 pointer-events-none transition-all duration-75"
+ className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_8px_var(--shadow-soft)] z-20 pointer-events-none transition-all duration-75"
  style={{
  left: `${(currentTime / timeline.totalDurationSec) * 100}%`
  }}

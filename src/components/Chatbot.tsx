@@ -1721,7 +1721,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </div>
  <div>
  <h4 className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 uppercase ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}`}>
- Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block animate-pulse ${isStitchLight ?'bg-indigo-600 shadow-[0_0_8px_rgba(79,70,229,0.8)]' :'bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]'}`} />
+ Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block animate-pulse ${isStitchLight ?'bg-indigo-600 shadow-[0_0_8px_rgba(79, 70, 229, 0.8)]' :'bg-cyan-500 shadow-[0_0_8px_rgba(6, 182, 212, 0.8)]'}`} />
  </h4>
  <span className="text-[9px] font-mono text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
  </div>

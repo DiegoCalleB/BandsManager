@@ -549,7 +549,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  isDragged ?'opacity-30 scale-95 border-dashed' :''
  } ${
  isActive
- ?'bg-gradient-to-b from-amber-0/20 via-[var(--surface)] to-[var(--bg)] /80 shadow-[0_0_20px_rgba(245,158,11,0.2)] ring-1 ring-amber-0/40'
+ ?'bg-gradient-to-b from-amber-0/20 via-[var(--surface)] to-[var(--bg)] /80 shadow-[0_0_20px_var(--acc-glow)] ring-1 ring-amber-0/40'
  :'bg-[var(--surface)] border-[var(--hair)] hover:/70 hover:bg-[var(--surface)] hover:shadow-lg'
  } ${switchingBandId && !isSwitching ?'opacity-40 grayscale pointer-events-none' :''}`}
  >
@@ -1072,7 +1072,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </div>
 
  {/* PLAN 3: DE GIRA (Destacado) */}
- <div className="bg-[var(--surface)] border-2 border-[var(--acc)] rounded-3xl p-5 flex flex-col relative shadow-[0_0_35px_rgba(242,202,80,0.18)]">
+ <div className="bg-[var(--surface)] border-2 border-[var(--acc)] rounded-3xl p-5 flex flex-col relative shadow-[0_0_35px_var(--acc-glow)]">
  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--acc)] text-[var(--ink)] text-[9px] font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full flex items-center gap-1 shadow-md whitespace-nowrap">
  <Star className="w-2.5 h-2.5 fill-current" />
  Más Popular

@@ -1107,11 +1107,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  src={logoUrl} 
  alt={bandName} 
  onError={() => setImgError(true)}
- className="w-24 h-24 mx-auto object-contain p-1 rounded-[var(--r-l)] border-2 /40 bg-[var(--surface)] shadow-xl drop-shadow-[0_0_15px_rgba(242,202,80,0.2)]" 
+ className="w-24 h-24 mx-auto object-contain p-1 rounded-[var(--r-l)] border-2 /40 bg-[var(--surface)] shadow-xl drop-shadow-[0_0_15px_var(--acc-glow)]" 
  />
  </div>
  ) : (
- <div className="w-24 h-24 mx-auto rounded-[var(--r-l)] border-2 /50 bg-gradient-to-br from-[var(--surface)] to-[var(--surface)] flex flex-col items-center justify-center p-2 shadow-2xl drop-shadow-[0_0_20px_rgba(242,202,80,0.25)]">
+ <div className="w-24 h-24 mx-auto rounded-[var(--r-l)] border-2 /50 bg-gradient-to-br from-[var(--surface)] to-[var(--surface)] flex flex-col items-center justify-center p-2 shadow-2xl drop-shadow-[0_0_20px_var(--acc-glow)]">
  <Flame className="w-10 h-10 text-[var(--acc)] mb-0.5 animate-pulse" />
  <span className="text-[10px] font-black text-[var(--acc)]/70 font-display uppercase tracking-wider line-clamp-1">{bandName}</span>
  </div>
@@ -1509,7 +1509,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <button 
  type="submit"
  disabled={loading}
- className="w-full py-4 mt-1 bg-gradient-to-r from-[var(--acc)] to-[#e0a820] hover:from-[#ffe088] hover:to-[var(--acc)] text-[#121111] font-black text-sm uppercase tracking-widest font-mono rounded-[var(--r-m)] shadow-[0_0_20px_rgba(242,202,80,0.15)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
+ className="w-full py-4 mt-1 bg-gradient-to-r from-[var(--acc)] to-[#e0a820] hover:from-[#ffe088] hover:to-[var(--acc)] text-[#121111] font-black text-sm uppercase tracking-widest font-mono rounded-[var(--r-m)] shadow-[0_0_20px_var(--acc-glow)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
  >
  {loading ? (
  <>

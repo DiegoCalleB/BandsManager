@@ -3372,7 +3372,7 @@ export default function ReelsCenter({
  >
  {/* Visual highlight segment on the timeline */}
  <div 
- className="absolute top-1 bottom-1 bg-[var(--acc)]/20 rounded-md flex items-center justify-between px-2 shadow-[0_0_15px_rgba(245,158,11,0.15)] group-hover:bg-[var(--acc)]/25 transition-all touch-none"
+ className="absolute top-1 bottom-1 bg-[var(--acc)]/20 rounded-md flex items-center justify-between px-2 shadow-[0_0_15px_var(--acc-glow)] group-hover:bg-[var(--acc)]/25 transition-all touch-none"
  style={{ left: `${startPct}%`, width: `${activeWidth}%` }}
  >
  {/* Left Grab Handle (Start) */}
@@ -3414,7 +3414,7 @@ export default function ReelsCenter({
 
  {/* Live Playhead Indicator inside the crop segment */}
  <div 
- className="absolute top-0 bottom-0 w-0.5 bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.9)] z-20 transition-all duration-1000 ease-linear pointer-events-none"
+ className="absolute top-0 bottom-0 w-0.5 bg-red-500 shadow-[0_0_10px_rgba(var(--alert-rgb), 0.9)] z-20 transition-all duration-1000 ease-linear pointer-events-none"
  style={{ left: `${playheadPct}%` }}
  >
  <div className="absolute -top-1 -left-1 w-2.5 h-2.5 rounded-full bg-red-500" />

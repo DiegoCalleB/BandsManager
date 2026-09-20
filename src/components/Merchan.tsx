@@ -679,7 +679,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className="w-28 h-28 bg-contain bg-center bg-no-repeat transition-all" 
  style={{ 
  backgroundImage: `url(${displayGraphic})`,
- filter: (design.assetType ==='logo' && !isLightColor(design.shirtColor ||'#121111')) ?'invert(1) drop-shadow(0 4px 6px rgba(0,0,0,0.5))' :'drop-shadow(0 4px 6px rgba(0,0,0,0.15))'
+ filter: (design.assetType ==='logo' && !isLightColor(design.shirtColor ||'#121111')) ?'invert(1) drop-shadow(0 4px 6px var(--shadow-dark))' :'drop-shadow(0 4px 6px var(--shadow-soft))'
  }} 
  />
  )}

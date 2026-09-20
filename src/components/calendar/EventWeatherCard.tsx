@@ -75,9 +75,9 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  const getWeatherIconBackdrop = (iconType?: EventWeatherData['iconType']) => {
  switch (iconType) {
  case'sun':
- return'from-amber-0/30 via-amber-400/10 to-transparent /50 shadow-[0_0_20px_rgba(251,191,36,0.3)]';
+ return'from-amber-0/30 via-amber-400/10 to-transparent /50 shadow-[0_0_20px_var(--acc-glow)]';
  case'cloud-sun':
- return'from-amber-0/25 via-slate-700/25 to-transparent /35 shadow-[0_0_16px_rgba(251,191,36,0.2)]';
+ return'from-amber-0/25 via-slate-700/25 to-transparent /35 shadow-[0_0_16px_var(--acc-glow)]';
  case'cloud':
  return'from-slate-600/35 via-slate-800/25 to-transparent /40 shadow-[0_0_14px_rgba(148,163,184,0.2)]';
  case'rain':
@@ -89,7 +89,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  case'fog':
  return'from-slate-500/25 via-zinc-700/25 to-transparent /35 shadow-[0_0_12px_rgba(148,163,184,0.2)]';
  default:
- return'from-amber-0/20 to-transparent /30 shadow-[0_0_14px_rgba(251,191,36,0.2)]';
+ return'from-amber-0/20 to-transparent /30 shadow-[0_0_14px_var(--acc-glow)]';
  }
  };
 

@@ -320,7 +320,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  {submitted ? (
  /* SUCCESS CONFIRMATION */
  <div className="p-8 sm:p-12 rounded-3xl bg-[var(--surface)] shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95">
- <div className="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+ <div className="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-[0_0_30px_var(--ok-glow)]">
  <CheckCircle2 className="w-10 h-10" />
  </div>
 
