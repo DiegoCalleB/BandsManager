@@ -1,6 +1,6 @@
-import React from 'react';
-import { Users, Plus, Trash2, Mail, Instagram, ShieldCheck, UserCheck } from 'lucide-react';
-import { WizardMemberItem } from '../types';
+import React from'react';
+import { Users, Plus, Trash2, Mail, Instagram, ShieldCheck, UserCheck } from'lucide-react';
+import { WizardMemberItem } from'../types';
 
 interface StepMembersProps {
  members: WizardMemberItem[];
@@ -45,7 +45,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  >
  <div className="flex items-center gap-3">
  <div className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold text-xs ${
- m.isLeader ? 'bg-amber-500/20 text-amber-300' : 'bg-zinc-800 text-zinc-300 border-[var(--hair)]'
+ m.isLeader ?'bg-amber-500/20 text-amber-300' :'bg-zinc-800 text-zinc-300 border-[var(--hair)]'
  }`}>
  {m.name.charAt(0).toUpperCase()}
  </div>
@@ -59,9 +59,9 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  )}
  </div>
  <div className="flex items-center gap-3 text-xs text-zinc-400 mt-0.5">
- <span>{m.role || 'Músico'}</span>
+ <span>{m.role ||'Músico'}</span>
  {m.email && <span className="text-zinc-500">· {m.email}</span>}
- {m.instagram && <span className="text-zinc-500">· @{m.instagram.replace('@', '')}</span>}
+ {m.instagram && <span className="text-zinc-500">· @{m.instagram.replace('@','')}</span>}
  </div>
  </div>
  </div>

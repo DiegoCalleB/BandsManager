@@ -1,4 +1,4 @@
-import React from 'react';
+import React from'react';
 
 interface NoTranslateProps {
  children: React.ReactNode;
@@ -14,8 +14,8 @@ interface NoTranslateProps {
  */
 export const NoTranslate: React.FC<NoTranslateProps> = ({
  children,
- className = '',
- as: Component = 'span',
+ className ='',
+ as: Component ='span',
  title,
  style,
 }) => {

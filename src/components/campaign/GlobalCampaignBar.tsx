@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { BookingCampaign, Lead } from '../../types';
-import { leadMatchesCampaign } from '../../utils/campaignMatch';
+import React, { useState } from'react';
+import { BookingCampaign, Lead } from'../../types';
+import { leadMatchesCampaign } from'../../utils/campaignMatch';
 import {
  Target, Calendar, MapPin, Users, X, Settings2, Building2,
  ChevronRight, ChevronDown, ChevronUp, Sparkles, Flame, CheckCircle2
-} from 'lucide-react';
+} from'lucide-react';
 
 interface GlobalCampaignBarProps {
  campaign: BookingCampaign;
@@ -37,7 +37,7 @@ export function GlobalCampaignBar({
  {/* Background ambient glow */}
  <div 
  className="absolute -right-10 -top-10 w-28 h-28 rounded-full blur-3xl opacity-15 pointer-events-none"
- style={{ backgroundColor: campaign.color || '#8b5cf6' }}
+ style={{ backgroundColor: campaign.color ||'#8b5cf6' }}
  />
 
  {/* Main Bar Content */}
@@ -48,9 +48,9 @@ export function GlobalCampaignBar({
  <div 
  className="w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center shrink-0 shadow-xs"
  style={{ 
- backgroundColor: `${campaign.color || '#8b5cf6'}25`,
- borderColor: `${campaign.color || '#8b5cf6'}50`,
- color: campaign.color || '#a78bfa'
+ backgroundColor: `${campaign.color ||'#8b5cf6'}25`,
+ borderColor: `${campaign.color ||'#8b5cf6'}50`,
+ color: campaign.color ||'#a78bfa'
  }}
  >
  <Flame className="w-3.5 h-3.5 animate-pulse" />
@@ -70,7 +70,7 @@ export function GlobalCampaignBar({
  <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-[var(--ink-3)] mt-0.5">
  <span className="inline-flex items-center gap-1 text-sky-300 font-medium truncate max-w-[200px]">
  <MapPin className="w-2.5 h-2.5 text-sky-400 shrink-0" />
- {campaign.targetCities?.join(', ') || 'Todas las ciudades'}
+ {campaign.targetCities?.join(',') ||'Todas las ciudades'}
  </span>
  <span className="text-neutral-600">•</span>
  <span className="inline-flex items-center gap-1 text-amber-300 font-mono">
@@ -90,7 +90,7 @@ export function GlobalCampaignBar({
  type="button"
  onClick={() => setIsMobileExpanded(prev => !prev)}
  className="sm:hidden p-1 text-[var(--ink-2)] hover:text-purple-300 transition-colors shrink-0"
- title={isMobileExpanded ? "Ocultar detalles" : "Ver ciudades y fechas"}
+ title={isMobileExpanded ?"Ocultar detalles" :"Ver ciudades y fechas"}
  >
  {isMobileExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
  </button>
@@ -104,9 +104,9 @@ export function GlobalCampaignBar({
  type="button"
  onClick={() => onNavigate('booking', { campaignFilter: campaign.id })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
- currentView === 'booking'
- ? 'bg-purple-500 text-white shadow-xs'
- : 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
+ currentView ==='booking'
+ ?'bg-purple-500 text-white shadow-xs'
+ :'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
  }`}
  title="Ver salas objetivo de esta campaña en Booking CRM"
  >
@@ -119,9 +119,9 @@ export function GlobalCampaignBar({
  type="button"
  onClick={() => onNavigate('calendario', { selectedDate: firstTargetDate })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
- currentView === 'calendario'
- ? 'bg-purple-500 text-white shadow-xs'
- : 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
+ currentView ==='calendario'
+ ?'bg-purple-500 text-white shadow-xs'
+ :'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
  }`}
  title="Ver fechas de la campaña en el Calendario"
  >
@@ -134,9 +134,9 @@ export function GlobalCampaignBar({
  type="button"
  onClick={() => onNavigate('bandas', { campaignCities: campaign.targetCities })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
- currentView === 'bandas'
- ? 'bg-purple-500 text-white shadow-xs'
- : 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
+ currentView ==='bandas'
+ ?'bg-purple-500 text-white shadow-xs'
+ :'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
  }`}
  title="Ver grupos en las ciudades objetivo para Co-booking"
  >
@@ -174,7 +174,7 @@ export function GlobalCampaignBar({
  <div className="sm:hidden pt-2 mt-2 border-t border-purple-500/20 text-[10px] text-[var(--ink-3)] flex flex-col gap-1 animate-fade-in relative z-10">
  <div className="flex items-center gap-1.5 text-sky-300 font-medium">
  <MapPin className="w-3 h-3 text-sky-400 shrink-0" />
- <span>{campaign.targetCities?.join(', ') || 'Todas las ciudades'}</span>
+ <span>{campaign.targetCities?.join(',') ||'Todas las ciudades'}</span>
  </div>
  <div className="flex items-center justify-between text-[var(--ink-3)]">
  <span className="inline-flex items-center gap-1 text-amber-300 font-mono">

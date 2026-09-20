@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from 'react';
-import { X, Search, Check, ListPlus, Star } from 'lucide-react';
-import { Song, ThemeColors } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
-import { formatSecondsToMmSs } from '../../utils/repertorioUtils';
-import { formatSongTitle } from '../../utils/formatSongTitle';
+import React, { useMemo, useState } from'react';
+import { X, Search, Check, ListPlus, Star } from'lucide-react';
+import { Song, ThemeColors } from'../../types';
+import { ModalPortal } from'../common/ModalPortal';
+import { formatSecondsToMmSs } from'../../utils/repertorioUtils';
+import { formatSongTitle } from'../../utils/formatSongTitle';
 
 interface AddSongsToSetlistModalProps {
  isOpen: boolean;
@@ -35,7 +35,7 @@ export function AddSongsToSetlistModal({
  const set = new Set<string>();
  songs.forEach(s => {
  const alb = s.albumDisco || s.album;
- set.add(alb || 'Singles / Sin Disco');
+ set.add(alb ||'Singles / Sin Disco');
  });
  return ['todos', ...Array.from(set)];
  }, [songs]);
@@ -43,12 +43,12 @@ export function AddSongsToSetlistModal({
  if (!isOpen) return null;
 
  const filteredSongs = songs.filter(s => {
- const matchSearch = search === '' ||
+ const matchSearch = search ==='' ||
  s.titulo.toLowerCase().includes(search.toLowerCase()) ||
  (s.tonalidad && s.tonalidad.toLowerCase().includes(search.toLowerCase()));
  const matchFav = !onlyFavoritos || s.favoritoGeneral;
- const alb = s.albumDisco || s.album || 'Singles / Sin Disco';
- const matchAlbum = albumFilter === 'todos' || alb === albumFilter;
+ const alb = s.albumDisco || s.album ||'Singles / Sin Disco';
+ const matchAlbum = albumFilter ==='todos' || alb === albumFilter;
  return matchSearch && matchFav && matchAlbum;
  });
 
@@ -113,7 +113,7 @@ export function AddSongsToSetlistModal({
  onChange={(e) => setSearch(e.target.value)}
  placeholder="Buscar por título o tonalidad..."
  className={`w-full pl-8 pr-3 py-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -123,11 +123,11 @@ export function AddSongsToSetlistModal({
  value={albumFilter}
  onChange={(e) => setAlbumFilter(e.target.value)}
  className={`text-[10px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[#d1b375]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[#d1b375]'
  }`}
  >
  {albumsList.map(alb => (
- <option key={alb} value={alb}>{alb === 'todos' ? 'Todos los álbumes' : alb}</option>
+ <option key={alb} value={alb}>{alb ==='todos' ?'Todos los álbumes' : alb}</option>
  ))}
  </select>
 
@@ -136,11 +136,11 @@ export function AddSongsToSetlistModal({
  onClick={() => setOnlyFavoritos(p => !p)}
  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold cursor-pointer transition-colors ${
  onlyFavoritos
- ? 'bg-amber-500/20 text-amber-300'
- : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white'
+ ?'bg-amber-500/20 text-amber-300'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white'
  }`}
  >
- <Star className={`w-3 h-3 ${onlyFavoritos ? 'fill-amber-400' : ''}`} />
+ <Star className={`w-3 h-3 ${onlyFavoritos ?'fill-amber-400' :''}`} />
  <span>Solo Favoritos</span>
  </button>
 
@@ -181,14 +181,14 @@ export function AddSongsToSetlistModal({
  onClick={() => toggleSong(s.id)}
  className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
  isSelected
- ? 'bg-[#1db954]/15 border-[#1db954]/50'
+ ?'bg-[#1db954]/15 border-[#1db954]/50'
  : isStitchLight
- ? 'bg-[var(--bg)] hover:bg-[var(--sunken)]'
- : 'bg-[var(--surface)] hover:bg-neutral-800'
+ ?'bg-[var(--bg)] hover:bg-[var(--sunken)]'
+ :'bg-[var(--surface)] hover:bg-neutral-800'
  }`}
  >
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-mono text-xs font-black transition-all ${
- isSelected ? 'bg-[#1db954] border-[#1db954] text-black shadow-sm scale-105' : ' text-neutral-500'
+ isSelected ?'bg-[#1db954] border-[#1db954] text-black shadow-sm scale-105' :' text-neutral-500'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>
@@ -208,7 +208,7 @@ export function AddSongsToSetlistModal({
  )}
  </div>
  <div className="text-[10px] text-[var(--ink-2)] font-mono truncate">
- {(s.albumDisco || s.album || 'Sin álbum')} · {s.tonalidad || '—'} · {formatSecondsToMmSs(s.duracionSegundos || 0)}
+ {(s.albumDisco || s.album ||'Sin álbum')} · {s.tonalidad ||'—'} · {formatSecondsToMmSs(s.duracionSegundos || 0)}
  </div>
  </div>
  </button>
@@ -221,7 +221,7 @@ export function AddSongsToSetlistModal({
  <span className="text-[10px] font-mono text-[var(--ink-2)]">
  {selectedIds.length > 0
  ? `${selectedIds.length} seleccionadas (en orden 1..${selectedIds.length}) · ${formatSecondsToMmSs(selectedDurationSeconds)}`
- : 'Ninguna canción seleccionada'}
+ :'Ninguna canción seleccionada'}
  </span>
  <div className="flex gap-2">
  <button
@@ -238,7 +238,7 @@ export function AddSongsToSetlistModal({
  className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[#1db954] hover:bg-[#1ed760] disabled:opacity-40 disabled:cursor-not-allowed text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
  >
  <ListPlus className="w-4 h-4 stroke-[3]" />
- <span>Añadir {selectedIds.length > 0 ? `${selectedIds.length} Canciones en Orden` : 'Canciones'}</span>
+ <span>Añadir {selectedIds.length > 0 ? `${selectedIds.length} Canciones en Orden` :'Canciones'}</span>
  </button>
  </div>
  </div>

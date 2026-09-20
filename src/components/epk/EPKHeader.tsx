@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from'react';
 import {
  Copy,
  Check,
@@ -11,8 +11,8 @@ import {
  MoreVertical,
  ChevronLeft,
  ChevronRight
-} from 'lucide-react';
-import { EPKBlockId, EPK_BLOCKS, EPKHealthStats } from './epkBlocks';
+} from'lucide-react';
+import { EPKBlockId, EPK_BLOCKS, EPKHealthStats } from'./epkBlocks';
 
 interface EPKHeaderProps {
  activeBlock: EPKBlockId;
@@ -42,13 +42,13 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  const [showHealthDetails, setShowHealthDetails] = useState(false);
 
  const healthItems = [
- { key: 'logo', label: 'Logo', ok: health.hasLogo, block: 'archivos' as EPKBlockId },
- { key: 'bio', label: 'Bio', ok: health.hasBio, block: 'perfil' as EPKBlockId },
- { key: 'dossier', label: 'PDF', ok: health.hasDossier, block: 'archivos' as EPKBlockId },
- { key: 'rider', label: 'Rider', ok: health.hasRider, block: 'archivos' as EPKBlockId },
- { key: 'miembros', label: 'Músicos', ok: health.numMiembros > 0, block: 'perfil' as EPKBlockId },
- { key: 'temas', label: 'Audio', ok: health.numTemas > 0, block: 'musica' as EPKBlockId },
- { key: 'idiomas', label: 'Idiomas', ok: health.numTraducciones > 0, block: 'donaciones' as EPKBlockId }
+ { key:'logo', label:'Logo', ok: health.hasLogo, block:'archivos' as EPKBlockId },
+ { key:'bio', label:'Bio', ok: health.hasBio, block:'perfil' as EPKBlockId },
+ { key:'dossier', label:'PDF', ok: health.hasDossier, block:'archivos' as EPKBlockId },
+ { key:'rider', label:'Rider', ok: health.hasRider, block:'archivos' as EPKBlockId },
+ { key:'miembros', label:'Músicos', ok: health.numMiembros > 0, block:'perfil' as EPKBlockId },
+ { key:'temas', label:'Audio', ok: health.numTemas > 0, block:'musica' as EPKBlockId },
+ { key:'idiomas', label:'Idiomas', ok: health.numTraducciones > 0, block:'donaciones' as EPKBlockId }
  ];
  const completedCount = healthItems.filter(h => h.ok).length;
  const totalCount = healthItems.length;
@@ -73,7 +73,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => setShowHealthDetails(prev => !prev)}
  className="mt-0.5 text-[10px] font-mono flex items-center gap-1 cursor-pointer transition text-stone-400 hover:text-amber-300"
  >
- <span className={completedCount >= 5 ? 'text-emerald-400 font-semibold' : 'text-amber-400 font-semibold'}>
+ <span className={completedCount >= 5 ?'text-emerald-400 font-semibold' :'text-amber-400 font-semibold'}>
  ● {completedCount}/{totalCount} requisitos listos
  </span>
  {showHealthDetails ? <ChevronUp className="w-3 h-3 text-stone-500" /> : <ChevronDown className="w-3 h-3 text-stone-500" />}
@@ -98,8 +98,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => setShowMobileMenu(prev => !prev)}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
  showMobileMenu
- ? 'bg-stone-800 text-amber-300'
- : 'bg-stone-900 border-stone-700/80 text-stone-300 hover:text-white'
+ ?'bg-stone-800 text-amber-300'
+ :'bg-stone-900 border-stone-700/80 text-stone-300 hover:text-white'
  }`}
  aria-label="Más acciones del dossier"
  >
@@ -137,7 +137,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  ) : (
  <Copy className="w-3.5 h-3.5 text-amber-400 shrink-0" />
  )}
- <span>{copiedPublicUrl ? '¡Copiado!' : 'Copiar URL pública'}</span>
+ <span>{copiedPublicUrl ?'¡Copiado!' :'Copiar URL pública'}</span>
  </button>
 
  {onOpenTutorial && (
@@ -187,12 +187,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  }}
  className={`px-2 py-0.5 rounded flex items-center gap-1 transition ${
  item.ok
- ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- : 'bg-stone-900 text-stone-400 border-stone-800'
+ ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+ :'bg-stone-900 text-stone-400 border-stone-800'
  }`}
  >
  <span>{item.label}</span>
- <span>{item.ok ? '✓' : '○'}</span>
+ <span>{item.ok ?'✓' :'○'}</span>
  </button>
  ))}
  </div>
@@ -256,8 +256,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  </h2>
  <p className="text-[var(--ink-3)] text-xs max-w-2xl leading-relaxed">
  {isPromoPlan
- ? 'Configura por bloques tu dossier oficial: identidad, archivos, audio, vídeos y rider listos para festivales y salas.'
- : 'Configura por bloques tu dossier oficial: identidad, archivos, audio, vídeos y rider. Sincronizado para el EPK público y los agentes de contratación.'}
+ ?'Configura por bloques tu dossier oficial: identidad, archivos, audio, vídeos y rider listos para festivales y salas.'
+ :'Configura por bloques tu dossier oficial: identidad, archivos, audio, vídeos y rider. Sincronizado para el EPK público y los agentes de contratación.'}
  </p>
  </div>
 
@@ -288,7 +288,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  ) : (
  <Copy className="w-3.5 h-3.5 text-amber-400" />
  )}
- <span>{copiedPublicUrl ? '¡Copiado!' : 'Copiar URL'}</span>
+ <span>{copiedPublicUrl ?'¡Copiado!' :'Copiar URL'}</span>
  </button>
 
  <a
@@ -326,12 +326,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock('archivos')}
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasLogo
- ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- : 'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+ :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
  }`}
  title="Logo de la banda (Bloque Archivos)"
  >
- Logo {health.hasLogo ? '✓' : '○'}
+ Logo {health.hasLogo ?'✓' :'○'}
  </button>
 
  <button
@@ -339,12 +339,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock('perfil')}
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasBio
- ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- : 'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+ :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
  }`}
  title="Biografía oficial (Bloque Perfil)"
  >
- Bio {health.hasBio ? '✓' : '○'}
+ Bio {health.hasBio ?'✓' :'○'}
  </button>
 
  <button
@@ -352,12 +352,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock('archivos')}
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasDossier
- ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- : 'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+ :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
  }`}
  title="Dossier en PDF (Bloque Archivos)"
  >
- PDF {health.hasDossier ? '✓' : '○'}
+ PDF {health.hasDossier ?'✓' :'○'}
  </button>
 
  <button
@@ -365,12 +365,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock('archivos')}
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasRider
- ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- : 'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+ :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
  }`}
  title="Rider técnico (Bloque Archivos)"
  >
- Rider {health.hasRider ? '✓' : '○'}
+ Rider {health.hasRider ?'✓' :'○'}
  </button>
 
  <button
@@ -378,12 +378,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock('perfil')}
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numMiembros > 0
- ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- : 'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+ :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
  }`}
  title="Miembros de la formación (Bloque Perfil)"
  >
- {health.numMiembros} {health.numMiembros === 1 ? 'músico' : 'músicos'} {health.numMiembros > 0 ? '✓' : '○'}
+ {health.numMiembros} {health.numMiembros === 1 ?'músico' :'músicos'} {health.numMiembros > 0 ?'✓' :'○'}
  </button>
 
  <button
@@ -391,12 +391,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock('musica')}
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numTemas > 0
- ? 'bg-sky-500/10 text-sky-400 border-sky-500/20'
- : 'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ ?'bg-sky-500/10 text-sky-400 border-sky-500/20'
+ :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
  }`}
  title="Temas y audio preview (Bloque Música)"
  >
- {health.numTemas} {health.numTemas === 1 ? 'tema' : 'temas'}
+ {health.numTemas} {health.numTemas === 1 ?'tema' :'temas'}
  </button>
 
  <button
@@ -404,12 +404,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock('donaciones')}
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numTraducciones > 0
- ? 'bg-purple-500/10 text-purple-300 border-purple-500/20'
- : 'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ ?'bg-purple-500/10 text-purple-300 border-purple-500/20'
+ :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
  }`}
  title="Versiones en otros idiomas (Bloque Donaciones & Idiomas)"
  >
- {health.numTraducciones + 1} {health.numTraducciones === 0 ? 'idioma' : 'idiomas'}
+ {health.numTraducciones + 1} {health.numTraducciones === 0 ?'idioma' :'idiomas'}
  </button>
  </div>
 
@@ -419,8 +419,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => setShowAiNotice(!showAiNotice)}
  className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-semibold flex items-center gap-1.5 transition ${
  showAiNotice
- ? 'bg-amber-500/20 text-amber-300 /30'
- : 'bg-stone-900/60 text-stone-400 border-stone-800 hover:text-amber-300'
+ ?'bg-amber-500/20 text-amber-300 /30'
+ :'bg-stone-900/60 text-stone-400 border-stone-800 hover:text-amber-300'
  }`}
  title="Ver integración con Chatbot y Agentes de IA"
  >
@@ -463,11 +463,11 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock(block.id)}
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
  isActive
- ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
- : 'bg-stone-900/90 border-stone-800 text-[var(--ink-3)] hover:text-white hover:border-stone-700'
+ ?'bg-amber-500 text-slate-950 font-bold shadow-sm'
+ :'bg-stone-900/90 border-stone-800 text-[var(--ink-3)] hover:text-white hover:border-stone-700'
  }`}
  >
- <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-slate-950' : 'text-amber-400'}`} />
+ <Icon className={`w-3.5 h-3.5 ${isActive ?'text-slate-950' :'text-amber-400'}`} />
  <span>{block.label}</span>
  </button>
  );

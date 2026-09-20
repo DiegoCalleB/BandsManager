@@ -1,6 +1,6 @@
-import React from 'react';
-import { auditDateAndCity, HolidayAuditResult } from '../../utils/holidayAuditor';
-import { AlertTriangle, Sparkles, Calendar, Info, CheckCircle2, Flame } from 'lucide-react';
+import React from'react';
+import { auditDateAndCity, HolidayAuditResult } from'../../utils/holidayAuditor';
+import { AlertTriangle, Sparkles, Calendar, Info, CheckCircle2, Flame } from'lucide-react';
 
 interface HolidayDateWarningProps {
  date?: string | Date | null;
@@ -13,15 +13,15 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
  date,
  city,
  compact = false,
- className = ''
+ className =''
 }) => {
  if (!date) return null;
 
  const audit = auditDateAndCity(date, city);
- if (!audit || audit.riskLevel === 'safe') return null;
+ if (!audit || audit.riskLevel ==='safe') return null;
 
  if (compact) {
- if (audit.riskLevel === 'opportunity') {
+ if (audit.riskLevel ==='opportunity') {
  return (
  <span 
  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 ${className}`}
@@ -33,7 +33,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
  );
  }
 
- if (audit.riskLevel === 'high_risk') {
+ if (audit.riskLevel ==='high_risk') {
  return (
  <span 
  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 animate-pulse ${className}`}
@@ -57,7 +57,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
  }
 
  // Full detailed banner
- if (audit.riskLevel === 'opportunity') {
+ if (audit.riskLevel ==='opportunity') {
  return (
  <div className={`p-3 rounded-[var(--r-m)] bg-emerald-950/40 text-emerald-200 text-xs space-y-1 ${className}`}>
  <div className="flex items-center gap-2 font-bold text-emerald-300">
@@ -71,7 +71,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
  );
  }
 
- if (audit.riskLevel === 'high_risk') {
+ if (audit.riskLevel ==='high_risk') {
  return (
  <div className={`p-3 rounded-[var(--r-m)] bg-rose-950/40 text-rose-200 text-xs space-y-1 ${className}`}>
  <div className="flex items-center gap-2 font-bold text-rose-300">

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead, BookingCampaign } from '../types';
-import { calculateVehiclesFuelCost } from '../utils/tourUtils';
-import { ModalPortal } from './common/ModalPortal';
-import { HolidayDateWarning } from './common/HolidayDateWarning';
+import React, { useState } from'react';
+import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead, BookingCampaign } from'../types';
+import { calculateVehiclesFuelCost } from'../utils/tourUtils';
+import { ModalPortal } from'./common/ModalPortal';
+import { HolidayDateWarning } from'./common/HolidayDateWarning';
 import { 
  Plus, Edit3, Trash2, MapPin, Truck, Calendar, DollarSign, 
  Activity, TrendingUp, Calculator, Users, CheckSquare, Square, 
  CheckCircle2, AlertCircle, RefreshCw, ArrowRight, Sparkles, Target
-} from 'lucide-react';
+} from'lucide-react';
 
 interface TourManagerProps {
  colors: ThemeColors;
@@ -41,8 +41,8 @@ export default function TourManager({
  onDeleteTour,
  bandUsers = [],
  currentUser,
- currentBandId = 'band-bakandeya',
- currentBandName = 'Bakandeya',
+ currentBandId ='band-bakandeya',
+ currentBandName ='Bakandeya',
  onAddConcert,
  onUpdateConcert,
  onAddPayment,
@@ -52,24 +52,24 @@ export default function TourManager({
  const [isModalOpen, setIsModalOpen] = useState(false);
 
  // Sync Notification Toast
- const [syncFeedback, setSyncFeedback] = useState<{ tourId: string; message: string; type: 'success' | 'info' | 'error' } | null>(null);
+ const [syncFeedback, setSyncFeedback] = useState<{ tourId: string; message: string; type:'success' |'info' |'error' } | null>(null);
 
  // Form state
  const [formNombre, setFormNombre] = useState('');
  const [formVehiculos, setFormVehiculos] = useState<TourVehicle[]>([
  {
- id: 'veh-1',
- nombre: 'Furgoneta Sprinter / Master (Grande)',
+ id:'veh-1',
+ nombre:'Furgoneta Sprinter / Master (Grande)',
  consumoL100km: 9.5,
  precioCarburanteEUR: 1.55,
- tipoCombustible: 'diesel'
+ tipoCombustible:'diesel'
  }
  ]);
- const [formEstado, setFormEstado] = useState<'planificacion' | 'confirmada' | 'completada' | 'cancelada'>('planificacion');
+ const [formEstado, setFormEstado] = useState<'planificacion' |'confirmada' |'completada' |'cancelada'>('planificacion');
  const [formStops, setFormStops] = useState<TourRouteStop[]>([]);
 
  // Convocatoria / Miembros State
- const [formConvocatoriaTipo, setFormConvocatoriaTipo] = useState<'completa' | 'parcial'>('completa');
+ const [formConvocatoriaTipo, setFormConvocatoriaTipo] = useState<'completa' |'parcial'>('completa');
  const [formConvocadosIds, setFormConvocadosIds] = useState<string[]>([]);
  const [formSincronizarCalendario, setFormSincronizarCalendario] = useState(true);
  const [formSincronizarFinanzas, setFormSincronizarFinanzas] = useState(false);
@@ -80,28 +80,28 @@ export default function TourManager({
  if (bandUsers && bandUsers.length > 0) {
  return bandUsers.map((u, idx) => ({
  id: u.id || `member-${idx}-${u.name || u.username}`,
- name: u.name || u.username || 'Músico',
- role: u.role || 'Miembro',
- instrument: u.instrument || (u.role === 'leader' ? 'Líder / Músico' : 'Músico')
+ name: u.name || u.username ||'Músico',
+ role: u.role ||'Miembro',
+ instrument: u.instrument || (u.role ==='leader' ?'Líder / Músico' :'Músico')
  }));
  }
  return [
- { id: 'usr-1', name: 'Voz Principal / Guitarra', role: 'Músico', instrument: 'Voz / Guitarra' },
- { id: 'usr-2', name: 'Batería / Percusión', role: 'Músico', instrument: 'Batería' },
- { id: 'usr-3', name: 'Bajo', role: 'Músico', instrument: 'Bajo' },
- { id: 'usr-4', name: 'Teclados / Sintes', role: 'Músico', instrument: 'Teclados' },
- { id: 'usr-5', name: 'Técnico de Sonido', role: 'Staff', instrument: 'Sonido / P.A.' }
+ { id:'usr-1', name:'Voz Principal / Guitarra', role:'Músico', instrument:'Voz / Guitarra' },
+ { id:'usr-2', name:'Batería / Percusión', role:'Músico', instrument:'Batería' },
+ { id:'usr-3', name:'Bajo', role:'Músico', instrument:'Bajo' },
+ { id:'usr-4', name:'Teclados / Sintes', role:'Músico', instrument:'Teclados' },
+ { id:'usr-5', name:'Técnico de Sonido', role:'Staff', instrument:'Sonido / P.A.' }
  ];
  }, [bandUsers]);
 
  // Vehicle Presets
  const VEHICLE_PRESETS = [
- { label: '🚐 Furgoneta Grande (Sprinter, Crafter, Master)', name: 'Furgoneta Grande (Sprinter)', l100km: 9.5, fuel: 'diesel', defaultPrice: 1.55 },
- { label: '🚐 Furgoneta Mediana (Transit Custom, Transporter, Vito)', name: 'Furgoneta Mediana (Transit/Vito)', l100km: 7.8, fuel: 'diesel', defaultPrice: 1.55 },
- { label: '🚐 Furgoneta Pequeña (Berlingo, Kangoo, Partner)', name: 'Furgoneta Pequeña (Berlingo)', l100km: 6.2, fuel: 'diesel', defaultPrice: 1.55 },
- { label: '🚗 Turismo / Coche de Apoyo', name: 'Turismo / Coche de Apoyo', l100km: 6.8, fuel: 'gasolina95', defaultPrice: 1.62 },
- { label: '⚡ Furgoneta Eléctrica', name: 'Furgoneta Eléctrica', l100km: 22.0, fuel: 'electrico', defaultPrice: 0.25 },
- { label: '⚙️ Vehículo Personalizado', name: 'Vehículo Adicional', l100km: 8.5, fuel: 'diesel', defaultPrice: 1.55 },
+ { label:'🚐 Furgoneta Grande (Sprinter, Crafter, Master)', name:'Furgoneta Grande (Sprinter)', l100km: 9.5, fuel:'diesel', defaultPrice: 1.55 },
+ { label:'🚐 Furgoneta Mediana (Transit Custom, Transporter, Vito)', name:'Furgoneta Mediana (Transit/Vito)', l100km: 7.8, fuel:'diesel', defaultPrice: 1.55 },
+ { label:'🚐 Furgoneta Pequeña (Berlingo, Kangoo, Partner)', name:'Furgoneta Pequeña (Berlingo)', l100km: 6.2, fuel:'diesel', defaultPrice: 1.55 },
+ { label:'🚗 Turismo / Coche de Apoyo', name:'Turismo / Coche de Apoyo', l100km: 6.8, fuel:'gasolina95', defaultPrice: 1.62 },
+ { label:'⚡ Furgoneta Eléctrica', name:'Furgoneta Eléctrica', l100km: 22.0, fuel:'electrico', defaultPrice: 0.25 },
+ { label:'⚙️ Vehículo Personalizado', name:'Vehículo Adicional', l100km: 8.5, fuel:'diesel', defaultPrice: 1.55 },
  ];
 
  const handleAddVehicle = (presetIndex: number = 0) => {
@@ -160,7 +160,7 @@ export default function TourManager({
 
  // Auto-calculate dietas based on active members in the expedition
  const handleAutoCalculateDietas = () => {
- const numMembers = formConvocatoriaTipo === 'completa' 
+ const numMembers = formConvocatoriaTipo ==='completa' 
  ? availableMembers.length 
  : (formConvocadosIds.length > 0 ? formConvocadosIds.length : availableMembers.length);
 
@@ -190,11 +190,11 @@ export default function TourManager({
  setFormNombre('');
  setFormVehiculos([
  {
- id: 'veh-1',
- nombre: 'Furgoneta Sprinter / Master (Grande)',
+ id:'veh-1',
+ nombre:'Furgoneta Sprinter / Master (Grande)',
  consumoL100km: 9.5,
  precioCarburanteEUR: 1.55,
- tipoCombustible: 'diesel'
+ tipoCombustible:'diesel'
  }
  ]);
  setFormEstado('planificacion');
@@ -213,16 +213,16 @@ export default function TourManager({
  const vehicles: TourVehicle[] = (tour.vehiculos && tour.vehiculos.length > 0)
  ? tour.vehiculos
  : [{
- id: 'veh-1',
- nombre: tour.vehiculo || 'Furgoneta 9 Plazas',
+ id:'veh-1',
+ nombre: tour.vehiculo ||'Furgoneta 9 Plazas',
  consumoL100km: tour.consumoL100km ?? 9.5,
  precioCarburanteEUR: tour.precioCarburanteEUR ?? 1.55,
- tipoCombustible: tour.tipoCombustible ?? 'diesel'
+ tipoCombustible: tour.tipoCombustible ??'diesel'
  }];
 
  setFormVehiculos(vehicles);
  setFormEstado(tour.estado);
- setFormConvocatoriaTipo(tour.convocatoria_tipo || 'completa');
+ setFormConvocatoriaTipo(tour.convocatoria_tipo ||'completa');
  setFormConvocadosIds(tour.convocados_ids && tour.convocados_ids.length > 0 
  ? tour.convocados_ids 
  : availableMembers.map(m => m.id));
@@ -250,13 +250,13 @@ export default function TourManager({
  sum + (stop.gastosAlojamiento || 0) + (stop.gastosGasolina || 0) + (stop.gastosDietas || 0), 0);
 
  const primaryVehicle = formVehiculos[0] || {
- nombre: 'Furgoneta',
+ nombre:'Furgoneta',
  consumoL100km: 9.5,
  precioCarburanteEUR: 1.55,
- tipoCombustible: 'diesel'
+ tipoCombustible:'diesel'
  };
 
- const convocadosNombres = formConvocatoriaTipo === 'completa'
+ const convocadosNombres = formConvocatoriaTipo ==='completa'
  ? availableMembers.map(m => m.name)
  : availableMembers.filter(m => formConvocadosIds.includes(m.id)).map(m => m.name);
 
@@ -276,19 +276,19 @@ export default function TourManager({
  band_id: currentBandId,
  bandName: currentBandName,
  fecha: stop.fecha,
- ciudad: stop.ciudad || 'Ciudad de Gira',
- sala: stop.sala || 'Sala de Gira',
+ ciudad: stop.ciudad ||'Ciudad de Gira',
+ sala: stop.sala ||'Sala de Gira',
  cache: Number(stop.ingresoCacheEstimated || 0),
  aforo_vendido: 0,
  aforo_total: 300,
- contrato_firmado: formEstado === 'confirmada' || formEstado === 'completada',
- estado_pago: 'pendiente',
- notas: `Gira: ${formNombre.trim()} (Parada #${idx + 1})${stop.notasLogisticas ? ` - ${stop.notasLogisticas}` : ''}`,
- tipo: 'sala',
+ contrato_firmado: formEstado ==='confirmada' || formEstado ==='completada',
+ estado_pago:'pendiente',
+ notas: `Gira: ${formNombre.trim()} (Parada #${idx + 1})${stop.notasLogisticas ? ` - ${stop.notasLogisticas}` :''}`,
+ tipo:'sala',
  giraId: tourId,
  giraNombre: formNombre.trim(),
  convocatoria_tipo: formConvocatoriaTipo,
- convocados_ids: formConvocatoriaTipo === 'completa' ? availableMembers.map(m => m.id) : formConvocadosIds,
+ convocados_ids: formConvocatoriaTipo ==='completa' ? availableMembers.map(m => m.id) : formConvocadosIds,
  convocados_nombres: convocadosNombres,
  gastosDetalle: {
  gasolina: stop.gastosGasolina || 0,
@@ -320,7 +320,7 @@ export default function TourManager({
  id: tourId,
  band_id: currentBandId,
  nombre: formNombre.trim(),
- vehiculo: formVehiculos.map(v => v.nombre).filter(Boolean).join(", ") || primaryVehicle.nombre,
+ vehiculo: formVehiculos.map(v => v.nombre).filter(Boolean).join(",") || primaryVehicle.nombre,
  consumoL100km: primaryVehicle.consumoL100km,
  precioCarburanteEUR: primaryVehicle.precioCarburanteEUR,
  tipoCombustible: primaryVehicle.tipoCombustible,
@@ -342,8 +342,8 @@ export default function TourManager({
 
  setSyncFeedback({
  tourId,
- message: `Gira "${tourData.nombre}" guardada y sincronizada con ${updatedStops.length} paradas en el Calendario.`,
- type: 'success'
+ message: `Gira"${tourData.nombre}" guardada y sincronizada con ${updatedStops.length} paradas en el Calendario.`,
+ type:'success'
  });
  setTimeout(() => setSyncFeedback(null), 5000);
  };
@@ -369,12 +369,12 @@ export default function TourManager({
  onAddPayment({
  id: `pay-in-${tour.id}-${stop.id || idx}-${now}`,
  band_id: currentBandId,
- tipo: 'ingreso',
- categoria: 'concierto',
- concepto: `Caché Gira: ${tour.nombre} - ${stop.ciudad || 'Parada'} (${stop.sala || 'Sala'})`,
+ tipo:'ingreso',
+ categoria:'concierto',
+ concepto: `Caché Gira: ${tour.nombre} - ${stop.ciudad ||'Parada'} (${stop.sala ||'Sala'})`,
  importe: Number(stop.ingresoCacheEstimated),
  fecha: stop.fecha || tour.fechaInicio || new Date().toISOString().split('T')[0],
- estado: 'pendiente'
+ estado:'pendiente'
  });
  count++;
  }
@@ -385,30 +385,30 @@ export default function TourManager({
  onAddPayment({
  id: `pay-gas-${tour.id}-${now}`,
  band_id: currentBandId,
- tipo: 'gasto',
- categoria: 'transporte',
+ tipo:'gasto',
+ categoria:'transporte',
  concepto: `Combustible Flota Gira: ${tour.nombre} (${tour.vehiculos?.length || 1} veh.)`,
  importe: Number(totalGasolina),
  fecha: tour.fechaInicio || new Date().toISOString().split('T')[0],
- estado: 'pendiente'
+ estado:'pendiente'
  });
  count++;
  }
 
  // Gasto Dietas
  if (totalDietas > 0) {
- const numPers = tour.convocatoria_tipo === 'parcial' && tour.convocados_ids?.length 
+ const numPers = tour.convocatoria_tipo ==='parcial' && tour.convocados_ids?.length 
  ? tour.convocados_ids.length 
  : availableMembers.length;
  onAddPayment({
  id: `pay-dietas-${tour.id}-${now}`,
  band_id: currentBandId,
- tipo: 'gasto',
- categoria: 'comida',
+ tipo:'gasto',
+ categoria:'comida',
  concepto: `Dietas Expedición Gira: ${tour.nombre} (${numPers} miembros)`,
  importe: Number(totalDietas),
  fecha: tour.fechaInicio || new Date().toISOString().split('T')[0],
- estado: 'pendiente'
+ estado:'pendiente'
  });
  count++;
  }
@@ -418,20 +418,20 @@ export default function TourManager({
  onAddPayment({
  id: `pay-hotel-${tour.id}-${now}`,
  band_id: currentBandId,
- tipo: 'gasto',
- categoria: 'alojamiento',
+ tipo:'gasto',
+ categoria:'alojamiento',
  concepto: `Hoteles / Alojamientos Gira: ${tour.nombre}`,
  importe: Number(totalAlojamiento),
  fecha: tour.fechaInicio || new Date().toISOString().split('T')[0],
- estado: 'pendiente'
+ estado:'pendiente'
  });
  count++;
  }
 
  setSyncFeedback({
  tourId: tour.id,
- message: `¡Volcado exitoso! Se han registrado ${count} movimientos contables en Finanzas para la gira "${tour.nombre}".`,
- type: 'success'
+ message: `¡Volcado exitoso! Se han registrado ${count} movimientos contables en Finanzas para la gira"${tour.nombre}".`,
+ type:'success'
  });
  setTimeout(() => setSyncFeedback(null), 6000);
  };
@@ -439,14 +439,14 @@ export default function TourManager({
  const addStop = () => {
  setFormStops([...formStops, {
  id: `stop-${Date.now()}`,
- ciudad: '',
- sala: '',
+ ciudad:'',
+ sala:'',
  fecha: new Date().toISOString().split('T')[0],
  distanciaAnteriorKm: 0,
  tiempoConduccionHoras: 0,
  gastosAlojamiento: 0,
  gastosGasolina: 0,
- gastosDietas: (formConvocatoriaTipo === 'completa' ? availableMembers.length : formConvocadosIds.length || availableMembers.length) * (dietaPerPersona || 25),
+ gastosDietas: (formConvocatoriaTipo ==='completa' ? availableMembers.length : formConvocadosIds.length || availableMembers.length) * (dietaPerPersona || 25),
  ingresoCacheEstimated: 0,
  }]);
  };
@@ -456,7 +456,7 @@ export default function TourManager({
  const currentStop = { ...newStops[index], [field]: value };
  
  // Auto-calculate fuel & driving time based on all vehicles parameters
- if (field === 'distanciaAnteriorKm') {
+ if (field ==='distanciaAnteriorKm') {
  const km = Number(value) || 0;
  currentStop.gastosGasolina = calculateVehiclesFuelCost(km, formVehiculos);
  currentStop.tiempoConduccionHoras = Math.round((km / 85) * 10) / 10; // Avg 85 km/h
@@ -588,7 +588,7 @@ export default function TourManager({
  const vehiclesCount = tour.vehiculos?.length || (tour.vehiculo ? 1 : 0);
 
  // Formación info
- const isFormacionParcial = tour.convocatoria_tipo === 'parcial';
+ const isFormacionParcial = tour.convocatoria_tipo ==='parcial';
  const convocadosCount = isFormacionParcial && tour.convocados_ids 
  ? tour.convocados_ids.length 
  : availableMembers.length;
@@ -607,16 +607,16 @@ export default function TourManager({
  ✓ Convocado
  </span>
  ) : (
- <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-neutral-800 text-[var(--ink-2)] ">
+ <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-neutral-800 text-[var(--ink-2)]">
  No convocado
  </span>
  )}
  </div>
  <div className="flex flex-wrap items-center gap-2 mt-1.5">
  <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-mono font-bold
- ${tour.estado === 'confirmada' ? colors.badgeGreen : 
- tour.estado === 'planificacion' ? colors.badgeYellow :
- tour.estado === 'cancelada' ? colors.badgeRed : 'bg-neutral-800 text-neutral-300'}`}>
+ ${tour.estado ==='confirmada' ? colors.badgeGreen : 
+ tour.estado ==='planificacion' ? colors.badgeYellow :
+ tour.estado ==='cancelada' ? colors.badgeRed :'bg-neutral-800 text-neutral-300'}`}>
  {tour.estado}
  </span>
  <span className={`text-[10px] ${colors.textMuted} flex items-center gap-1 font-mono`}>
@@ -626,9 +626,9 @@ export default function TourManager({
  {/* Convocatoria Badge */}
  <span className={`text-[10px] px-2 py-0.5 rounded font-mono flex items-center gap-1 ${
  isFormacionParcial 
- ? 'bg-purple-500/10 text-purple-300 border-purple-500/30' 
- : 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20'
- }`} title={tour.convocados_nombres?.join(", ") || 'Toda la banda'}>
+ ?'bg-purple-500/10 text-purple-300 border-purple-500/30' 
+ :'bg-emerald-500/10 text-emerald-300 border-emerald-500/20'
+ }`} title={tour.convocados_nombres?.join(",") ||'Toda la banda'}>
  <Users className="w-3 h-3" />
  {isFormacionParcial ? `Banda Parcial (${convocadosCount} músicos)` : `Banda Completa (${availableMembers.length})`}
  </span>
@@ -638,7 +638,7 @@ export default function TourManager({
  </span>
  )}
  {vehiclesCount > 1 ? (
- <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded font-mono flex items-center gap-1" title={tour.vehiculos?.map(v => v.nombre).join(" + ")}>
+ <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded font-mono flex items-center gap-1" title={tour.vehiculos?.map(v => v.nombre).join(" +")}>
  <Truck className="w-3 h-3 text-amber-400" />
  {vehiclesCount} vehículos
  </span>
@@ -674,7 +674,7 @@ export default function TourManager({
  +{totalIngresos} €
  </div>
  </div>
- <div className={`p-2.5 rounded-[var(--r-m)] ${beneficioNeto >= 0 ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-rose-500/10 border-rose-500/20 text-rose-400'}`}>
+ <div className={`p-2.5 rounded-[var(--r-m)] ${beneficioNeto >= 0 ?'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :'bg-rose-500/10 border-rose-500/20 text-rose-400'}`}>
  <span className="text-[9px] opacity-80 uppercase tracking-wider block font-mono">Margen Neto</span>
  <div className="text-xs font-extrabold mt-0.5 flex items-center gap-1">
  <TrendingUp className="w-3 h-3" />
@@ -687,10 +687,10 @@ export default function TourManager({
  <div>
  <h4 className="text-[10px] uppercase font-mono text-[var(--ink-2)] mb-2 flex justify-between items-center">
  <span>Ruta ({tour.stops.length} paradas)</span>
- <span className="text-[var(--ink-2)] truncate max-w-[200px]" title={tour.vehiculos?.map(v => v.nombre).join(", ") || tour.vehiculo}>
+ <span className="text-[var(--ink-2)] truncate max-w-[200px]" title={tour.vehiculos?.map(v => v.nombre).join(",") || tour.vehiculo}>
  {tour.vehiculos && tour.vehiculos.length > 1 
  ? `${tour.vehiculos.length} Vehículos` 
- : (tour.vehiculo || '1 Vehículo')}
+ : (tour.vehiculo ||'1 Vehículo')}
  </span>
  </h4>
  <div className="space-y-1.5">
@@ -702,8 +702,8 @@ export default function TourManager({
  <div className="flex items-center justify-between text-xs">
  <div className="flex items-center gap-2 min-w-0">
  <span className="text-sky-400 font-mono text-xs font-bold">{idx + 1}.</span>
- <span className="font-bold truncate text-slate-100 text-xs sm:text-sm">{stop.ciudad || 'Por determinar'}</span>
- <span className="text-zinc-300 text-xs font-semibold truncate">({stop.sala || 'Sala tbd'})</span>
+ <span className="font-bold truncate text-slate-100 text-xs sm:text-sm">{stop.ciudad ||'Por determinar'}</span>
+ <span className="text-zinc-300 text-xs font-semibold truncate">({stop.sala ||'Sala tbd'})</span>
  </div>
  <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
  {stop.ingresoCacheEstimated ? (
@@ -770,7 +770,7 @@ export default function TourManager({
  <div>
  <h3 className="text-lg font-bold font-display flex items-center gap-2">
  <Truck className="w-5 h-5 text-sky-400" />
- {editingTour ? 'Editar Gira' : 'Nueva Gira'}
+ {editingTour ?'Editar Gira' :'Nueva Gira'}
  </h3>
  <p className="text-xs text-[var(--ink-2)] mt-0.5">
  Configura la ruta, flota de vehículos, selección de miembros y sincronización automática.
@@ -834,9 +834,9 @@ export default function TourManager({
  setFormConvocadosIds(availableMembers.map(m => m.id));
  }}
  className={`px-3 py-1 text-xs font-mono font-bold rounded-md transition-all cursor-pointer ${
- formConvocatoriaTipo === 'completa'
- ? 'bg-purple-600 text-white shadow-sm'
- : 'text-[var(--ink-2)] hover:text-white'
+ formConvocatoriaTipo ==='completa'
+ ?'bg-purple-600 text-white shadow-sm'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  👥 Banda Completa ({availableMembers.length})
@@ -845,9 +845,9 @@ export default function TourManager({
  type="button"
  onClick={() => setFormConvocatoriaTipo('parcial')}
  className={`px-3 py-1 text-xs font-mono font-bold rounded-md transition-all cursor-pointer ${
- formConvocatoriaTipo === 'parcial'
- ? 'bg-purple-600 text-white shadow-sm'
- : 'text-[var(--ink-2)] hover:text-white'
+ formConvocatoriaTipo ==='parcial'
+ ?'bg-purple-600 text-white shadow-sm'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  👤 Formación Parcial / Reducida
@@ -856,7 +856,7 @@ export default function TourManager({
  </div>
 
  {/* Lista de Miembros para Convocatoria */}
- {formConvocatoriaTipo === 'parcial' && (
+ {formConvocatoriaTipo ==='parcial' && (
  <div className="space-y-2.5 animate-in fade-in duration-200">
  <div className="flex justify-between items-center text-[11px] text-[var(--ink-2)] font-mono">
  <span>Marca los músicos o miembros del equipo que viajarán en esta gira:</span>
@@ -889,12 +889,12 @@ export default function TourManager({
  onClick={() => handleToggleMember(m.id)}
  className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-3 transition-all cursor-pointer ${
  isSelected
- ? 'bg-purple-500/20 border-purple-500/50 text-white shadow-sm'
- : 'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ ?'bg-purple-500/20 border-purple-500/50 text-white shadow-sm'
+ :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 ${
- isSelected ? 'bg-purple-600 text-white' : 'border '
+ isSelected ?'bg-purple-600 text-white' :'border'
  }`}>
  {isSelected && <CheckSquare className="w-3.5 h-3.5" />}
  </div>
@@ -913,7 +913,7 @@ export default function TourManager({
  <div className="p-3 rounded-[var(--r-m)] bg-black/40 flex flex-wrap items-center justify-between gap-3 text-xs">
  <div className="flex items-center gap-2">
  <span className="text-purple-300 font-mono font-bold">
- Expedición: {formConvocatoriaTipo === 'completa' ? availableMembers.length : formConvocadosIds.length} personas convocadas
+ Expedición: {formConvocatoriaTipo ==='completa' ? availableMembers.length : formConvocadosIds.length} personas convocadas
  </span>
  </div>
 
@@ -944,7 +944,7 @@ export default function TourManager({
  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-sky-500/20 pb-3">
  <div>
  <span className="text-xs font-mono font-bold text-sky-300 uppercase tracking-wider flex items-center gap-1.5">
- <Truck className="w-4 h-4 text-sky-400" /> Flota & Vehículos de la Gira ({formVehiculos.length} {formVehiculos.length === 1 ? 'vehículo' : 'vehículos'})
+ <Truck className="w-4 h-4 text-sky-400" /> Flota & Vehículos de la Gira ({formVehiculos.length} {formVehiculos.length === 1 ?'vehículo' :'vehículos'})
  </span>
  <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  Añade todos los coches o furgonetas que viajan. El consumo de combustible sumará el gasto combinado de la flota.
@@ -979,7 +979,7 @@ export default function TourManager({
  Vehículo #{vIdx + 1}
  </span>
  <span className="text-xs font-semibold text-neutral-300">
- {veh.nombre || 'Vehículo sin nombre'}
+ {veh.nombre ||'Vehículo sin nombre'}
  </span>
  </div>
  {formVehiculos.length > 1 && (
@@ -1014,7 +1014,7 @@ export default function TourManager({
  <label className="text-[10px] font-mono text-[var(--ink-2)] uppercase block mb-1">Nombre / Identificador</label>
  <input
  value={veh.nombre}
- onChange={e => handleUpdateVehicle(vIdx, 'nombre', e.target.value)}
+ onChange={e => handleUpdateVehicle(vIdx,'nombre', e.target.value)}
  placeholder="Ej. Furgoneta Principal (Banda)"
  className="w-full p-2 rounded-[var(--r-s)] bg-black/60 border-[var(--hair)] text-xs text-white focus:border-sky-500"
  />
@@ -1022,21 +1022,21 @@ export default function TourManager({
 
  <div>
  <label className="text-[10px] font-mono text-amber-300 uppercase block mb-1">
- Consumo ({veh.tipoCombustible === 'electrico' ? 'kWh/100km' : 'L/100km'})
+ Consumo ({veh.tipoCombustible ==='electrico' ?'kWh/100km' :'L/100km'})
  </label>
  <input
  type="number"
  step="0.1"
  min="0.1"
  value={veh.consumoL100km}
- onChange={e => handleUpdateVehicle(vIdx, 'consumoL100km', Number(e.target.value))}
+ onChange={e => handleUpdateVehicle(vIdx,'consumoL100km', Number(e.target.value))}
  className="w-full p-2 rounded-[var(--r-s)] bg-black/60 text-xs font-bold text-amber-300 focus:"
  />
  </div>
 
  <div>
  <label className="text-[10px] font-mono text-emerald-300 uppercase block mb-1">
- Precio (€/{veh.tipoCombustible === 'electrico' ? 'kWh' : 'Litro'})
+ Precio (€/{veh.tipoCombustible ==='electrico' ?'kWh' :'Litro'})
  </label>
  <div className="flex gap-1">
  <input
@@ -1044,12 +1044,12 @@ export default function TourManager({
  step="0.01"
  min="0.01"
  value={veh.precioCarburanteEUR ?? 1.55}
- onChange={e => handleUpdateVehicle(vIdx, 'precioCarburanteEUR', Number(e.target.value))}
+ onChange={e => handleUpdateVehicle(vIdx,'precioCarburanteEUR', Number(e.target.value))}
  className="w-full p-2 rounded-[var(--r-s)] bg-black/60 text-xs font-bold text-emerald-300 focus:border-emerald-400"
  />
  <select
- value={veh.tipoCombustible || 'diesel'}
- onChange={e => handleUpdateVehicle(vIdx, 'tipoCombustible', e.target.value)}
+ value={veh.tipoCombustible ||'diesel'}
+ onChange={e => handleUpdateVehicle(vIdx,'tipoCombustible', e.target.value)}
  className="p-2 rounded-[var(--r-s)] bg-black/60 border-[var(--hair)] text-[10px] text-neutral-300 cursor-pointer"
  >
  <option value="diesel">Diésel</option>
@@ -1073,7 +1073,7 @@ export default function TourManager({
  <div className="text-[11px] text-[var(--ink-2)]">
  {formVehiculos.map((v, i) => (
  <span key={`veh-fleet-summary-${v.id || i}-${i}`} className="inline-block mr-2">
- • {v.nombre || `Vehículo ${i+1}`}: {v.consumoL100km} {v.tipoCombustible === 'electrico' ? 'kWh' : 'L'}/100km @ {v.precioCarburanteEUR || 1.55}€ (≈ {(((Number(v.consumoL100km) || 0) * (Number(v.precioCarburanteEUR) || 1.55))).toFixed(2)}€/100km)
+ • {v.nombre || `Vehículo ${i+1}`}: {v.consumoL100km} {v.tipoCombustible ==='electrico' ?'kWh' :'L'}/100km @ {v.precioCarburanteEUR || 1.55}€ (≈ {(((Number(v.consumoL100km) || 0) * (Number(v.precioCarburanteEUR) || 1.55))).toFixed(2)}€/100km)
  </span>
  ))}
  </div>
@@ -1149,7 +1149,7 @@ export default function TourManager({
  <label className="text-[10px] uppercase font-mono text-[var(--ink-2)] block">Ciudad</label>
  <input
  value={stop.ciudad}
- onChange={e => updateStop(idx, 'ciudad', e.target.value)}
+ onChange={e => updateStop(idx,'ciudad', e.target.value)}
  placeholder="Ciudad"
  className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-[var(--hair)] text-sm focus:border-sky-500"
  />
@@ -1158,7 +1158,7 @@ export default function TourManager({
  <label className="text-[10px] uppercase font-mono text-[var(--ink-2)] block">Sala / Festival</label>
  <input
  value={stop.sala}
- onChange={e => updateStop(idx, 'sala', e.target.value)}
+ onChange={e => updateStop(idx,'sala', e.target.value)}
  placeholder="Nombre de la sala"
  className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-[var(--hair)] text-sm focus:border-sky-500"
  />
@@ -1168,7 +1168,7 @@ export default function TourManager({
  <input
  type="date"
  value={stop.fecha}
- onChange={e => updateStop(idx, 'fecha', e.target.value)}
+ onChange={e => updateStop(idx,'fecha', e.target.value)}
  className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-[var(--hair)] text-sm focus:border-sky-500"
  />
  </div>
@@ -1182,15 +1182,15 @@ export default function TourManager({
  </span>
  {stop.distanciaAnteriorKm && stop.distanciaAnteriorKm > 0 ? (
  <span className="text-[9px] text-amber-300 font-normal">
- {formVehiculos.length} {formVehiculos.length === 1 ? 'vehículo' : 'vehículos'}
+ {formVehiculos.length} {formVehiculos.length === 1 ?'vehículo' :'vehículos'}
  </span>
  ) : null}
  </label>
  <input
  type="number"
  min="0"
- value={stop.distanciaAnteriorKm || ''}
- onChange={e => updateStop(idx, 'distanciaAnteriorKm', Number(e.target.value))}
+ value={stop.distanciaAnteriorKm ||''}
+ onChange={e => updateStop(idx,'distanciaAnteriorKm', Number(e.target.value))}
  placeholder="Km desde anterior"
  className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-[var(--hair)] text-sm focus:border-sky-500"
  />
@@ -1206,8 +1206,8 @@ export default function TourManager({
  <input
  type="number"
  min="0"
- value={stop.ingresoCacheEstimated || ''}
- onChange={e => updateStop(idx, 'ingresoCacheEstimated', Number(e.target.value))}
+ value={stop.ingresoCacheEstimated ||''}
+ onChange={e => updateStop(idx,'ingresoCacheEstimated', Number(e.target.value))}
  placeholder="0 €"
  className="w-full p-1.5 rounded bg-black/40 text-xs text-emerald-300 font-bold"
  />
@@ -1219,8 +1219,8 @@ export default function TourManager({
  <input
  type="number"
  min="0"
- value={stop.gastosGasolina || ''}
- onChange={e => updateStop(idx, 'gastosGasolina', Number(e.target.value))}
+ value={stop.gastosGasolina ||''}
+ onChange={e => updateStop(idx,'gastosGasolina', Number(e.target.value))}
  placeholder="0 €"
  className="w-full p-1.5 rounded bg-black/40 text-xs text-amber-200 font-semibold"
  />
@@ -1230,8 +1230,8 @@ export default function TourManager({
  <input
  type="number"
  min="0"
- value={stop.gastosAlojamiento || ''}
- onChange={e => updateStop(idx, 'gastosAlojamiento', Number(e.target.value))}
+ value={stop.gastosAlojamiento ||''}
+ onChange={e => updateStop(idx,'gastosAlojamiento', Number(e.target.value))}
  placeholder="0 €"
  className="w-full p-1.5 rounded bg-black/40 border-[var(--hair)] text-xs"
  />
@@ -1241,8 +1241,8 @@ export default function TourManager({
  <input
  type="number"
  min="0"
- value={stop.gastosDietas || ''}
- onChange={e => updateStop(idx, 'gastosDietas', Number(e.target.value))}
+ value={stop.gastosDietas ||''}
+ onChange={e => updateStop(idx,'gastosDietas', Number(e.target.value))}
  placeholder="0 €"
  className="w-full p-1.5 rounded bg-black/40 border-[var(--hair)] text-xs"
  />
@@ -1278,7 +1278,7 @@ export default function TourManager({
  const totalIngresos = formStops.reduce((sum, stop) => sum + (stop.ingresoCacheEstimated || 0), 0);
  const totalGastos = formStops.reduce((sum, stop) => sum + (stop.gastosAlojamiento || 0) + (stop.gastosGasolina || 0) + (stop.gastosDietas || 0), 0);
  const neto = totalIngresos - totalGastos;
- const numPers = formConvocatoriaTipo === 'completa' ? availableMembers.length : (formConvocadosIds.length || availableMembers.length);
+ const numPers = formConvocatoriaTipo ==='completa' ? availableMembers.length : (formConvocadosIds.length || availableMembers.length);
  const netoPorPersona = numPers > 0 ? Math.round(neto / numPers) : 0;
 
  return (
@@ -1293,13 +1293,13 @@ export default function TourManager({
  </div>
  <div>
  <span className="text-[10px] text-[var(--ink-2)] uppercase font-mono block">Margen Neto Total</span>
- <span className={`text-base sm:text-lg font-extrabold ${neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+ <span className={`text-base sm:text-lg font-extrabold ${neto >= 0 ?'text-emerald-400' :'text-rose-400'}`}>
  {neto >= 0 ? `+${neto}` : neto} €
  </span>
  </div>
  <div>
  <span className="text-[10px] text-purple-300 uppercase font-mono block">Neto / Músico ({numPers}pax)</span>
- <span className={`text-base sm:text-lg font-extrabold ${netoPorPersona >= 0 ? 'text-purple-300' : 'text-rose-400'}`}>
+ <span className={`text-base sm:text-lg font-extrabold ${netoPorPersona >= 0 ?'text-purple-300' :'text-rose-400'}`}>
  {netoPorPersona >= 0 ? `+${netoPorPersona}` : netoPorPersona} €
  </span>
  </div>
@@ -1325,7 +1325,7 @@ export default function TourManager({
  className="px-5 py-2 rounded-[var(--r-m)] text-sm font-bold bg-[var(--acc)] text-[var(--acc-ink)] hover:bg-[#e0b83e] shadow-lg active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
  >
  <Activity className="w-4 h-4" />
- {editingTour ? 'Guardar Cambios' : 'Crear Gira'}
+ {editingTour ?'Guardar Cambios' :'Crear Gira'}
  </button>
  </div>
  </div>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Lead } from '../../types';
-import { X, Sparkles, CheckCircle2, AlertCircle, Loader2, Globe, Mail, Phone, Instagram } from 'lucide-react';
-import { apiFetch } from '../../utils/api';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { Lead } from'../../types';
+import { X, Sparkles, CheckCircle2, AlertCircle, Loader2, Globe, Mail, Phone, Instagram } from'lucide-react';
+import { apiFetch } from'../../utils/api';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface CRMContactEnricherModalProps {
  isOpen: boolean;
@@ -40,7 +40,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  setStatusMessage(`Buscando datos de contacto para ${lead.nombre_sala}...`);
  
  try {
- const res = await apiFetch(`/api/leads/${lead.id}/enrich`, { method: 'POST' });
+ const res = await apiFetch(`/api/leads/${lead.id}/enrich`, { method:'POST' });
  if (res && res.success && res.data) {
  enrichedList.push({
  leadId: lead.id,
@@ -77,9 +77,9 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`relative w-full max-w-lg my-auto rounded-[var(--r-l)] shadow-2xl p-6 overflow-hidden ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
  }`}>
- <div className="flex items-center justify-between pb-4 border-b ">
+ <div className="flex items-center justify-between pb-4 border-b">
  <div className="flex items-center gap-2">
  <div className="p-2 rounded-[var(--r-s)] bg-amber-500/10 text-amber-400">
  <Sparkles className="w-5 h-5" />
@@ -99,7 +99,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  </div>
 
  <div className="my-5 space-y-4 text-xs">
- <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)]/60 /80'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60 /80'}`}>
  <div className="flex items-center justify-between mb-2">
  <span className="font-semibold text-neutral-300">Salas con información incompleta:</span>
  <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-bold">{incompleteLeads.length}</span>
@@ -133,7 +133,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  )}
  </div>
 
- <div className="flex items-center justify-end gap-3 pt-4 border-t ">
+ <div className="flex items-center justify-end gap-3 pt-4 border-t">
  <button
  type="button"
  onClick={onClose}

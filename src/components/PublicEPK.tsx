@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from'react';
 import {
  Download, Share2, ExternalLink,
  Check, Mail, Phone, MapPin, Play, Pause,
  Volume2, X, Music, Radio, Sparkles, Quote, Instagram, Globe, Ticket
-} from 'lucide-react';
-import { EPKConfig, Song, Concert, EPKSectionId } from '../types';
-import { SocialPlatformsList } from './SocialPlatformsList';
-import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict, idiomasDisponiblesParaEpk } from '../i18n/epkTranslations';
-import { interpolate } from '../i18n/fansTranslations';
-import { useEpkLanguage } from '../hooks/useEpkLanguage';
-import { resolverContenidoEpk } from '../utils/epkTraducciones';
-import { safeUrl } from '../utils/safeUrl';
-import { getEffectiveSectionsOrder, getTemplateStyles } from './epk/epkTemplates';
-import { getFontFamilyById } from '../config/bandFonts';
+} from'lucide-react';
+import { EPKConfig, Song, Concert, EPKSectionId } from'../types';
+import { SocialPlatformsList } from'./SocialPlatformsList';
+import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict, idiomasDisponiblesParaEpk } from'../i18n/epkTranslations';
+import { interpolate } from'../i18n/fansTranslations';
+import { useEpkLanguage } from'../hooks/useEpkLanguage';
+import { resolverContenidoEpk } from'../utils/epkTraducciones';
+import { safeUrl } from'../utils/safeUrl';
+import { getEffectiveSectionsOrder, getTemplateStyles } from'./epk/epkTemplates';
+import { getFontFamilyById } from'../config/bandFonts';
 
 interface PublicEPKProps {
  initialData?: {
@@ -41,7 +41,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
  useEffect(() => {
  if (!initialData) {
- const searchParams = typeof window !== 'undefined' ? window.location.search : '';
+ const searchParams = typeof window !=='undefined' ? window.location.search :'';
  fetch(`/api/public/epk${searchParams}`)
  .then(res => (res.ok && res.headers.get('content-type')?.includes('application/json')) ? res.json().catch(() => null) : null)
  .then(data => {
@@ -65,7 +65,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  url
  });
  } catch (err) {
- if ((err as Error).name !== 'AbortError') {
+ if ((err as Error).name !=='AbortError') {
  console.error('Error sharing:', err);
  }
  }
@@ -78,7 +78,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
  const dict = EPK_TRANSLATIONS[language];
  const bandName = epkData?.bandName || epkData?.registeredBand?.nombre_banda || dict.bandaPorDefecto;
- const isBakandeya = (epkData?.bandId || '').includes('bakandeya') || bandName.toLowerCase().includes('bakandeya');
+ const isBakandeya = (epkData?.bandId ||'').includes('bakandeya') || bandName.toLowerCase().includes('bakandeya');
 
  // Etiquetas fijas de la interfaz. El nombre de la banda y el año siempre están disponibles
  // como variables, así que cualquier cadena del diccionario puede usar {bandName} y {year}.
@@ -96,19 +96,19 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
  const config: EPKConfig = epkData?.epkConfig || {
  biografia: isBakandeya ? t('bioPorDefectoBakandeya') : t('bioPorDefecto'),
- logoUrl: isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : "",
+ logoUrl: isBakandeya ?"/logo_bakandeya_bueno_sin_fondo.png" :"",
  bandPhotos: [],
  riderTecnico: t('riderPorDefecto'),
  enlacesRedes: {},
- contactoBooking: { nombre: bandName, email: "", telefono: "" },
+ contactoBooking: { nombre: bandName, email:"", telefono:"" },
  temasDestacadosIds: []
  };
 
- const displayLogo = config.logoUrl || (isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : null);
+ const displayLogo = config.logoUrl || (isBakandeya ?"/logo_bakandeya_bueno_sin_fondo.png" : null);
 
  // El endpoint público devuelve los temas tal cual salen de Supabase (snake_case), pero el
- // resto de la app usa camelCase. Sin normalizar, 'albumDisco' salía undefined y caía al
- // literal "Sencillo", y el audio real que ya está subido no se reproducía nunca.
+ // resto de la app usa camelCase. Sin normalizar,'albumDisco' salía undefined y caía al
+ // literal"Sencillo", y el audio real que ya está subido no se reproducía nunca.
  const songs: any[] = (epkData?.highlightedSongs || []).map((s: any) => ({
  ...s,
  albumDisco: s.albumDisco ?? s.album_disco ?? s.album,
@@ -119,9 +119,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
  // Un enlace de artista/álbum de Spotify se puede incrustar cambiando la ruta por /embed/.
  // Se exigen los 22 caracteres del ID real: si no, un enlace de relleno como
- // '/artist/bakandeya' generaba un iframe que no carga y dejaba un hueco vacío en la página.
+ //'/artist/bakandeya' generaba un iframe que no carga y dejaba un hueco vacío en la página.
  const spotifyEmbedUrl = (() => {
- const raw = config.enlacesRedes?.spotify || "";
+ const raw = config.enlacesRedes?.spotify ||"";
  const match = raw.match(/open\.spotify\.com\/(artist|album|track|playlist)\/([A-Za-z0-9]{22})/);
  return match ? `https://open.spotify.com/embed/${match[1]}/${match[2]}` : null;
  })();
@@ -129,14 +129,14 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  // Solo se puede incrustar un VÍDEO concreto, no un canal: si el enlace es de canal (@handle
  // o /c/), se deja como enlace normal en vez de meter un iframe roto.
  const aEmbed = (raw: string): string | null => {
- const yt = (raw || "").match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
+ const yt = (raw ||"").match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
- const vimeo = (raw || "").match(/vimeo\.com\/(?:video\/)?(\d+)/);
+ const vimeo = (raw ||"").match(/vimeo\.com\/(?:video\/)?(\d+)/);
  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
  return null;
  };
 
- const youtubeEmbedUrl = aEmbed(config.enlacesRedes?.youtube || "");
+ const youtubeEmbedUrl = aEmbed(config.enlacesRedes?.youtube ||"");
 
  // Vídeos elegidos a mano en el gestor del EPK. El destacado va primero y en grande.
  const videos = (config.videos || []).filter(v => v?.url && aEmbed(v.url));
@@ -206,14 +206,14 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </h2>
  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
  {[
- { label: t('etiquetaMusicos'), valor: datos.numMusicos ? String(datos.numMusicos) : '' },
+ { label: t('etiquetaMusicos'), valor: datos.numMusicos ? String(datos.numMusicos) :'' },
  {
  label: t('etiquetaDuracion'),
  valor: contenido.dato('duracionDirecto')
  ? (/[a-zA-Z]/.test(contenido.dato('duracionDirecto')) ? contenido.dato('duracionDirecto') : `${contenido.dato('duracionDirecto')} ${t('unidadMinutos')}`)
- : ''
+ :''
  },
- { label: t('etiquetaCiudadBase'), valor: datos.ciudadBase || '' },
+ { label: t('etiquetaCiudadBase'), valor: datos.ciudadBase ||'' },
  { label: t('etiquetaFormatos'), valor: contenido.dato('formatos') }
  ].filter(d => d.valor).map(d => (
  <div key={d.label} className={`${styles.card} rounded-[var(--r-m)] p-4`}>
@@ -290,7 +290,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" loading="lazy" />
  ) : (
  <div className="w-full h-full flex items-center justify-center text-2xl font-black opacity-40">
- {(m.nombre || '?').charAt(0).toUpperCase()}
+ {(m.nombre ||'?').charAt(0).toUpperCase()}
  </div>
  )}
  </div>
@@ -300,7 +300,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  {contenido.bioMiembro(m) && <p className="text-[11px] opacity-70 mt-1 leading-snug">{contenido.bioMiembro(m)}</p>}
  {m.instagram?.trim() && (() => {
  const raw = m.instagram.trim();
- const username = raw.replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/^@/, '').replace(/\/$/, '');
+ const username = raw.replace(/^https?:\/\/(www\.)?instagram\.com\//,'').replace(/^@/,'').replace(/\/$/,'');
  const url = safeUrl(raw.startsWith('http') ? raw : `https://instagram.com/${username}`);
  if (!url) return null;
  const ctaText = t('seguirInstagram');
@@ -321,7 +321,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  @{username}
  </span>
  <span className="text-[10px] font-semibold text-pink-400 group-hover/ig:text-pink-300 shrink-0 ml-0.5">
- {ctaText.split(' ')[0]} ↗
+ {ctaText.split('')[0]} ↗
  </span>
  </a>
  </div>
@@ -358,7 +358,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
  <div className="space-y-2.5 pt-2 text-sm">
  <div className="flex items-center gap-2.5 font-medium">
- <span className={`w-2 h-2 rounded-full ${styles.accentBtn.includes('fuchsia') ? 'bg-fuchsia-400' : styles.accentBtn.includes('orange') ? 'bg-orange-400' : 'bg-amber-400'} shrink-0`}></span>
+ <span className={`w-2 h-2 rounded-full ${styles.accentBtn.includes('fuchsia') ?'bg-fuchsia-400' : styles.accentBtn.includes('orange') ?'bg-orange-400' :'bg-amber-400'} shrink-0`}></span>
  <span>{config.contactoBooking?.nombre || t('managerPorDefecto')}</span>
  </div>
  <div className="flex items-center gap-2.5 font-mono">
@@ -379,7 +379,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  className="hover:underline truncate max-w-[200px]"
  title="Sitio Web Oficial"
  >
- {config.enlacesRedes.website.replace(/^https?:\/\//, '')}
+ {config.enlacesRedes.website.replace(/^https?:\/\//,'')}
  </a>
  </div>
  )}
@@ -419,8 +419,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <div key={cita.id} className={`${styles.cardHighlight} rounded-[var(--r-l)] p-5 flex flex-col justify-between space-y-4 shadow-lg transition`}>
  <div className="space-y-3">
  <Quote className={`w-6 h-6 ${styles.quoteIcon}`} />
- <p className="text-sm italic leading-relaxed">
- "{cita.texto}"
+ <p className="text-sm italic leading-relaxed">"{cita.texto}"
  </p>
  </div>
  <div className="pt-3 border-t border-current/15">
@@ -450,7 +449,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <div className="space-y-1">
  <h4 className="font-bold text-base leading-tight">{song.titulo}</h4>
  <p className="text-xs opacity-75">
- {[song.albumDisco, song.genero, song.duracion].filter(Boolean).join(' • ')}
+ {[song.albumDisco, song.genero, song.duracion].filter(Boolean).join(' •')}
  </p>
  </div>
  {song.audioPrincipalUrl && (
@@ -517,7 +516,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <>
  <button
  type="button"
- onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior: 'smooth' })}
+ onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior:'smooth' })}
  aria-label={t('fotoAnterior')}
  className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
@@ -525,7 +524,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </button>
  <button
  type="button"
- onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior: 'smooth' })}
+ onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior:'smooth' })}
  aria-label={t('fotoSiguiente')}
  className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
@@ -545,7 +544,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
  {t('seccionEscucha')}
  </h2>
- <div className={`grid gap-4 ${spotifyEmbedUrl && youtubeEmbedUrl ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
+ <div className={`grid gap-4 ${spotifyEmbedUrl && youtubeEmbedUrl ?'lg:grid-cols-2' :'grid-cols-1'}`}>
  {youtubeEmbedUrl && (
  <div className={`rounded-[var(--r-m)] overflow-hidden ${styles.card} aspect-video`}>
  <iframe
@@ -654,7 +653,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  onClick={() => setLanguage(l.code)}
  aria-pressed={language === l.code}
  title={l.label}
- className={`px-2 py-1 rounded-md text-xs font-bold transition ${language === l.code ? styles.accentBtn : 'opacity-70 hover:opacity-100'}`}
+ className={`px-2 py-1 rounded-md text-xs font-bold transition ${language === l.code ? styles.accentBtn :'opacity-70 hover:opacity-100'}`}
  >
  <span aria-hidden="true">{l.flag}</span>
  <span className="hidden sm:inline ml-1 uppercase">{l.code}</span>
@@ -682,12 +681,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <div className={`absolute inset-0 ${styles.heroNoPhoto} print:hidden`} />
  )}
 
- <div className={`relative max-w-5xl mx-auto px-6 flex flex-col items-center text-center justify-end ${fotoPortada ? 'min-h-[78vh] pt-32 pb-16' : 'min-h-[62vh] pt-32 pb-14'}`}>
+ <div className={`relative max-w-5xl mx-auto px-6 flex flex-col items-center text-center justify-end ${fotoPortada ?'min-h-[78vh] pt-32 pb-16' :'min-h-[62vh] pt-32 pb-14'}`}>
  {displayLogo && (
  <img
  src={displayLogo}
  alt={t('logoOficialAlt')}
- className={`rounded-[var(--r-m)] object-cover shadow-2xl mb-7 ${fotoPortada ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-24 h-24 sm:w-28 sm:h-28'}`}
+ className={`rounded-[var(--r-m)] object-cover shadow-2xl mb-7 ${fotoPortada ?'w-16 h-16 sm:w-20 sm:h-20' :'w-24 h-24 sm:w-28 sm:h-28'}`}
  />
  )}
 
@@ -717,25 +716,25 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <div className="max-w-5xl mx-auto px-4 pt-14 pb-28 print:p-0 print:pt-4">
  {effectiveSections.map((sectionId: EPKSectionId) => {
  switch (sectionId) {
- case 'cifras':
+ case'cifras':
  return renderCifras();
- case 'datos':
+ case'datos':
  return renderDatos();
- case 'videos':
+ case'videos':
  return renderVideos();
- case 'miembros':
+ case'miembros':
  return renderMiembros();
- case 'bio':
+ case'bio':
  return renderBio();
- case 'prensa':
+ case'prensa':
  return renderPrensa();
- case 'musica':
+ case'musica':
  return renderMusica();
- case 'galeria':
+ case'galeria':
  return renderGaleria();
- case 'escucha':
+ case'escucha':
  return renderEscucha();
- case 'conciertos':
+ case'conciertos':
  return renderConciertos();
  default:
  return null;
@@ -770,13 +769,13 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <button
  onClick={() => setPlayingSongId(isCurrentlyPlaying ? null : activeSong.id)}
  className={`w-10 h-10 rounded-[var(--r-m)] ${styles.accentBtn} flex items-center justify-center shrink-0 shadow transition`}
- aria-label={isCurrentlyPlaying ? 'Pausar' : 'Reproducir'}
+ aria-label={isCurrentlyPlaying ?'Pausar' :'Reproducir'}
  >
  {isCurrentlyPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
  </button>
  <div className="min-w-0 pr-1">
  <p className={`text-[10px] ${styles.accentText} font-bold uppercase tracking-wider flex items-center gap-1`}>
- <Music className="w-3 h-3 animate-pulse" /> {isCurrentlyPlaying ? t('playerPista') : 'Audio Demo'}
+ <Music className="w-3 h-3 animate-pulse" /> {isCurrentlyPlaying ? t('playerPista') :'Audio Demo'}
  </p>
  <p className="text-xs font-bold truncate">{activeSong.titulo}</p>
  <p className="text-[11px] opacity-75 truncate">{activeSong.albumDisco || bandName}</p>

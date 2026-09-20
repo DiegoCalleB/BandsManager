@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { X, Calendar, Clock, MapPin, Users, Disc3, FileText, CheckSquare, Plus, Sparkles } from 'lucide-react';
-import { Rehearsal, ThemeColors, Setlist } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { X, Calendar, Clock, MapPin, Users, Disc3, FileText, CheckSquare, Plus, Sparkles } from'lucide-react';
+import { Rehearsal, ThemeColors, Setlist } from'../../types';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface ConvocarEnsayoModalProps {
  isOpen: boolean;
@@ -29,11 +29,11 @@ export function ConvocarEnsayoModal({
  const [fecha, setFecha] = useState(
  initialRehearsal?.fecha || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0]
  );
- const [hora, setHora] = useState(initialRehearsal?.hora || '19:30');
- const [horaFin, setHoraFin] = useState(initialRehearsal?.horaFin || '21:30');
- const [lugar, setLugar] = useState(initialRehearsal?.lugar || 'Local de Ensayo');
- const [setlistId, setSetlistId] = useState(initialRehearsal?.setlistId || '');
- const [notas, setNotas] = useState(initialRehearsal?.notas || '');
+ const [hora, setHora] = useState(initialRehearsal?.hora ||'19:30');
+ const [horaFin, setHoraFin] = useState(initialRehearsal?.horaFin ||'21:30');
+ const [lugar, setLugar] = useState(initialRehearsal?.lugar ||'Local de Ensayo');
+ const [setlistId, setSetlistId] = useState(initialRehearsal?.setlistId ||'');
+ const [notas, setNotas] = useState(initialRehearsal?.notas ||'');
  const [duracionEstimadaMin, setDuracionEstimadaMin] = useState(
  initialRehearsal?.duracionEstimadaMin || 120
  );
@@ -45,8 +45,8 @@ export function ConvocarEnsayoModal({
  const [nuevoObjetivo, setNuevoObjetivo] = useState('');
  const [objetivos, setObjetivos] = useState<Array<{ id: string; texto: string; completado: boolean }>>(
  initialRehearsal?.objetivos || [
- { id: 'obj-1', texto: 'Afinar la dinámica y transiciones entre temas', completado: false },
- { id: 'obj-2', texto: 'Repasar los coros y segundas voces', completado: false }
+ { id:'obj-1', texto:'Afinar la dinámica y transiciones entre temas', completado: false },
+ { id:'obj-2', texto:'Repasar los coros y segundas voces', completado: false }
  ]
  );
 
@@ -91,9 +91,9 @@ export function ConvocarEnsayoModal({
  horaFin,
  lugar,
  notas,
- estado: initialRehearsal?.estado || 'programado',
+ estado: initialRehearsal?.estado ||'programado',
  setlistId: setlistId || undefined,
- convocatoria_tipo: convocadosIds.length === bandUsers.length ? 'completa' : 'parcial',
+ convocatoria_tipo: convocadosIds.length === bandUsers.length ?'completa' :'parcial',
  convocados_ids: convocadosIds,
  convocados_nombres: convocadosNombres,
  asistentes: convocadosNombres,
@@ -118,7 +118,7 @@ export function ConvocarEnsayoModal({
  </div>
  <div>
  <h3 className="text-base font-display font-bold text-zinc-100">
- {isEditing ? 'Editar Ensayo Convocado' : 'Convocar Nuevo Ensayo'}
+ {isEditing ?'Editar Ensayo Convocado' :'Convocar Nuevo Ensayo'}
  </h3>
  <p className="text-xs text-[var(--ink-2)] font-mono">
  Sincronizado automáticamente con tu Calendario
@@ -246,8 +246,8 @@ export function ConvocarEnsayoModal({
  onClick={() => toggleConvocado(u.id)}
  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono transition-all cursor-pointer ${
  isSelected
- ? 'bg-amber-400/20 text-amber-300 font-bold'
- : 'bg-neutral-800/60 text-[var(--ink-2)] border-transparent hover:'
+ ?'bg-amber-400/20 text-amber-300 font-bold'
+ :'bg-neutral-800/60 text-[var(--ink-2)] border-transparent hover:'
  }`}
  >
  <Users className="w-3 h-3" />
@@ -301,7 +301,7 @@ export function ConvocarEnsayoModal({
  value={nuevoObjetivo}
  onChange={e => setNuevoObjetivo(e.target.value)}
  onKeyDown={e => {
- if (e.key === 'Enter') {
+ if (e.key ==='Enter') {
  e.preventDefault();
  handleAddObjetivo();
  }
@@ -345,7 +345,7 @@ export function ConvocarEnsayoModal({
  type="submit"
  className="px-5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-amber-400 text-[var(--surface)] hover:bg-amber-300 transition-all cursor-pointer shadow-md shadow-amber-400/20 active:scale-95"
  >
- {isEditing ? 'Guardar Cambios' : 'Convocar Ensayo'}
+ {isEditing ?'Guardar Cambios' :'Convocar Ensayo'}
  </button>
  </div>
  </form>

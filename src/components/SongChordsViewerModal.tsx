@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from'react';
 import {
  X,
  Play,
@@ -23,13 +23,13 @@ import {
  Share2,
  MessageSquare,
  Upload
-} from 'lucide-react';
-import { Song, SongSubstituteGuide } from '../types';
-import { formatSongTitle } from '../utils/formatSongTitle';
-import { ShareModal } from './ShareModal';
-import { ModalPortal } from './common/ModalPortal';
-import { formatSongShareText } from '../utils/shareUtils';
-import { SongStudioStructureUploadModal } from './song_studio/SongStudioStructureUploadModal';
+} from'lucide-react';
+import { Song, SongSubstituteGuide } from'../types';
+import { formatSongTitle } from'../utils/formatSongTitle';
+import { ShareModal } from'./ShareModal';
+import { ModalPortal } from'./common/ModalPortal';
+import { formatSongShareText } from'../utils/shareUtils';
+import { SongStudioStructureUploadModal } from'./song_studio/SongStudioStructureUploadModal';
 import {
  processChordText,
  extractUniqueChords,
@@ -37,7 +37,7 @@ import {
  GuitarChordShape,
  transposeChordToken,
  parseRootNote
-} from '../utils/chordUtils';
+} from'../utils/chordUtils';
 
 interface SongChordsViewerModalProps {
  song: Song;
@@ -50,8 +50,8 @@ export function SongChordsViewerModal({
  onClose,
  onUpdateSong
 }: SongChordsViewerModalProps) {
- const [activeTab, setActiveTab] = useState<'chords' | 'substitute' | 'edit'>('chords');
- const [notation, setNotation] = useState<'ES' | 'EN'>('ES');
+ const [activeTab, setActiveTab] = useState<'chords' |'substitute' |'edit'>('chords');
+ const [notation, setNotation] = useState<'ES' |'EN'>('ES');
  const [transpose, setTranspose] = useState<number>(0);
  
  // Auto-scroll state
@@ -112,15 +112,15 @@ export function SongChordsViewerModal({
  setIsGeneratingAi(true);
  setAiSuccessMsg(null);
 
- const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
- const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') ||'';
+ const headers: Record<string, string> = {'Content-Type':'application/json' };
  if (token) {
  headers['Authorization'] = `Bearer ${token}`;
  headers['x-auth-token'] = token;
  }
 
  const response = await fetch('/api/generate-song-chords', {
- method: 'POST',
+ method:'POST',
  headers,
  body: JSON.stringify({
  songId: song.id,
@@ -137,7 +137,7 @@ export function SongChordsViewerModal({
 
  const data = await response.json();
  if (!response.ok || !data.success) {
- throw new Error(data.error || 'Error al generar acordes con IA');
+ throw new Error(data.error ||'Error al generar acordes con IA');
  }
 
  setCifradoTexto(data.cifradoTexto);
@@ -154,12 +154,12 @@ export function SongChordsViewerModal({
 
  // Igual que en el análisis automático: el mensaje debe distinguir una transcripción
  // real, una propuesta honesta de la IA (aproximada o no) y la plantilla de relleno
- // genérica cuando la IA falla del todo, en vez de llamar "éxito" a las tres por igual.
- if (data.chordsSource === 'audio_real') {
+ // genérica cuando la IA falla del todo, en vez de llamar"éxito" a las tres por igual.
+ if (data.chordsSource ==='audio_real') {
  setAiSuccessMsg('✓ Letra y acordes transcritos del audio real');
- } else if (data.chordsSource === 'ia_sin_audio' && !data.esAproximado) {
+ } else if (data.chordsSource ==='ia_sin_audio' && !data.esAproximado) {
  setAiSuccessMsg('✓ Cifrado propuesto por IA a partir del título y la tonalidad');
- } else if (data.chordsSource === 'ia_sin_audio' && data.esAproximado) {
+ } else if (data.chordsSource ==='ia_sin_audio' && data.esAproximado) {
  setAiSuccessMsg('⚠️ Acordes aproximados de memoria, sin confirmar: verifícalos de oído');
  } else {
  setAiSuccessMsg('⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico, revísalo');
@@ -167,7 +167,7 @@ export function SongChordsViewerModal({
  setTimeout(() => setAiSuccessMsg(null), 5000);
  } catch (err: any) {
  console.error('Error generating with AI:', err);
- setAiSuccessMsg(`⚠️ ${err.message || 'No se pudieron generar los acordes'}`);
+ setAiSuccessMsg(`⚠️ ${err.message ||'No se pudieron generar los acordes'}`);
  setTimeout(() => setAiSuccessMsg(null), 5000);
  } finally {
  setIsGeneratingAi(false);
@@ -183,15 +183,15 @@ export function SongChordsViewerModal({
  };
 
  // Save to server
- const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
- const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') ||'';
+ const headers: Record<string, string> = {'Content-Type':'application/json' };
  if (token) {
  headers['Authorization'] = `Bearer ${token}`;
  headers['x-auth-token'] = token;
  }
 
  fetch(`/api/songs/${song.id}`, {
- method: 'PUT',
+ method:'PUT',
  headers,
  body: JSON.stringify(updatedSong)
  }).catch(err => console.error('Error saving song chords:', err));
@@ -244,7 +244,7 @@ export function SongChordsViewerModal({
  )}
  </div>
  <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] font-mono mt-0.5">
- <span>Tonalidad: <strong className="text-amber-400">{song.tonalidad || 'Mim'}</strong></span>
+ <span>Tonalidad: <strong className="text-amber-400">{song.tonalidad ||'Mim'}</strong></span>
  <span>•</span>
  <span>Tempo: <strong className="text-emerald-400">{song.bpm || 120} BPM</strong></span>
  {song.afinacion && (
@@ -270,10 +270,10 @@ export function SongChordsViewerModal({
  onClick={handleGenerateWithAi}
  disabled={isGeneratingAi}
  className="px-3 py-1.5 rounded-[var(--r-m)] bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-purple-950/50 disabled:opacity-50"
- title={song.audioPrincipalUrl ? 'Reanalizar escuchando el audio real de la canción' : 'Generar cifrado y guía con IA (sin audio disponible)'}
+ title={song.audioPrincipalUrl ?'Reanalizar escuchando el audio real de la canción' :'Generar cifrado y guía con IA (sin audio disponible)'}
  >
- <Wand2 className={`w-4 h-4 text-purple-200 ${isGeneratingAi ? 'animate-spin' : ''}`} />
- <span>{isGeneratingAi ? 'Generando...' : 'IA Cifrado'}</span>
+ <Wand2 className={`w-4 h-4 text-purple-200 ${isGeneratingAi ?'animate-spin' :''}`} />
+ <span>{isGeneratingAi ?'Generando...' :'IA Cifrado'}</span>
  </button>
 
  {/* Secondary actions — icon-only to keep the header clean */}
@@ -310,14 +310,14 @@ export function SongChordsViewerModal({
  <div className="bg-[var(--surface)]/80 px-4 py-2.5 border-b flex flex-wrap items-center justify-between gap-3 text-xs font-mono shrink-0">
  
  {/* TABS SELECTOR */}
- <div className="flex items-center bg-black/50 p-1 rounded-[var(--r-m)] ">
+ <div className="flex items-center bg-black/50 p-1 rounded-[var(--r-m)]">
  <button
  type="button"
  onClick={() => setActiveTab('chords')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
- activeTab === 'chords'
- ? 'bg-amber-500 text-black shadow'
- : 'text-[var(--ink-2)] hover:text-white'
+ activeTab ==='chords'
+ ?'bg-amber-500 text-black shadow'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <FileText className="w-3.5 h-3.5" />
@@ -328,9 +328,9 @@ export function SongChordsViewerModal({
  type="button"
  onClick={() => setActiveTab('substitute')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
- activeTab === 'substitute'
- ? 'bg-purple-600 text-white shadow'
- : 'text-[var(--ink-2)] hover:text-white'
+ activeTab ==='substitute'
+ ?'bg-purple-600 text-white shadow'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <UserCheck className="w-3.5 h-3.5" />
@@ -341,9 +341,9 @@ export function SongChordsViewerModal({
  type="button"
  onClick={() => setActiveTab('edit')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
- activeTab === 'edit'
- ? 'bg-neutral-800 text-white shadow'
- : 'text-[var(--ink-2)] hover:text-white'
+ activeTab ==='edit'
+ ?'bg-neutral-800 text-white shadow'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -352,11 +352,11 @@ export function SongChordsViewerModal({
  </div>
 
  {/* INTERACTIVE CONTROLS (Only visible on chords tab) */}
- {activeTab === 'chords' && (
+ {activeTab ==='chords' && (
  <div className="flex flex-wrap items-center gap-3">
  
  {/* TRANSPOSITION CONTROL */}
- <div className="flex items-center gap-1 bg-black/40 px-2 py-1 rounded-[var(--r-m)] ">
+ <div className="flex items-center gap-1 bg-black/40 px-2 py-1 rounded-[var(--r-m)]">
  <span className="text-[11px] text-[var(--ink-2)] mr-1">Tono:</span>
  <button
  type="button"
@@ -366,7 +366,7 @@ export function SongChordsViewerModal({
  >
  -1
  </button>
- <span className={`w-8 text-center font-bold ${transpose !== 0 ? 'text-amber-400' : 'text-[var(--ink-3)]'}`}>
+ <span className={`w-8 text-center font-bold ${transpose !== 0 ?'text-amber-400' :'text-[var(--ink-3)]'}`}>
  {transpose > 0 ? `+${transpose}` : transpose}
  </span>
  <button
@@ -392,23 +392,23 @@ export function SongChordsViewerModal({
  {/* NOTATION TOGGLE (Latino / C-D-E) */}
  <button
  type="button"
- onClick={() => setNotation(prev => prev === 'ES' ? 'EN' : 'ES')}
+ onClick={() => setNotation(prev => prev ==='ES' ?'EN' :'ES')}
  className="px-2.5 py-1 rounded-[var(--r-m)] bg-black/40 hover: text-[var(--ink-3)] hover:text-white font-bold transition cursor-pointer flex items-center gap-1"
  title="Cambiar entre Cifrado Latino (Do, Re, Mi) e Inglés (C, D, E)"
  >
  <span>Cifrado:</span>
- <span className="text-amber-400">{notation === 'ES' ? 'Do - Re - Mi' : 'C - D - E'}</span>
+ <span className="text-amber-400">{notation ==='ES' ?'Do - Re - Mi' :'C - D - E'}</span>
  </button>
 
  {/* AUTO-SCROLL CONTROLLER */}
- <div className="flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-[var(--r-m)] ">
+ <div className="flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-[var(--r-m)]">
  <button
  type="button"
  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
  className={`px-2.5 py-0.5 rounded-[var(--r-s)] font-bold flex items-center gap-1 transition cursor-pointer ${
  isAutoScrolling
- ? 'bg-emerald-600 text-white animate-pulse'
- : 'bg-white/10 text-[var(--ink-3)] hover:text-white'
+ ?'bg-emerald-600 text-white animate-pulse'
+ :'bg-white/10 text-[var(--ink-3)] hover:text-white'
  }`}
  title="Iniciar/Pausar Desfile Automático"
  >
@@ -425,7 +425,7 @@ export function SongChordsViewerModal({
  type="button"
  onClick={() => setScrollSpeed(v)}
  className={`w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center transition cursor-pointer ${
- scrollSpeed === v ? 'bg-emerald-500 text-black' : 'bg-white/10 text-[var(--ink-2)]'
+ scrollSpeed === v ?'bg-emerald-500 text-black' :'bg-white/10 text-[var(--ink-2)]'
  }`}
  >
  {v}x
@@ -441,8 +441,8 @@ export function SongChordsViewerModal({
  onClick={() => setShowChordDiagrams(!showChordDiagrams)}
  className={`px-2.5 py-1 rounded-[var(--r-m)] font-bold transition cursor-pointer ${
  showChordDiagrams
- ? 'bg-purple-950/40 border-purple-500/50 text-purple-300'
- : 'bg-black/40 text-[var(--ink-2)] hover:text-white'
+ ?'bg-purple-950/40 border-purple-500/50 text-purple-300'
+ :'bg-black/40 text-[var(--ink-2)] hover:text-white'
  }`}
  >
  🎸 Diagramas
@@ -466,17 +466,17 @@ export function SongChordsViewerModal({
  <div
  className={`border-b px-4 py-2 text-xs font-mono flex items-center justify-between animate-in fade-in ${
  aiSuccessMsg.startsWith('⚠️')
- ? 'bg-amber-950/80 /40 text-amber-300'
- : 'bg-emerald-950/80 border-emerald-500/40 text-emerald-300'
+ ?'bg-amber-950/80 /40 text-amber-300'
+ :'bg-emerald-950/80 border-emerald-500/40 text-emerald-300'
  }`}
  >
  <span className="flex items-center gap-2">
- <Sparkles className={`w-4 h-4 shrink-0 ${aiSuccessMsg.startsWith('⚠️') ? 'text-amber-400' : 'text-emerald-400'}`} />
+ <Sparkles className={`w-4 h-4 shrink-0 ${aiSuccessMsg.startsWith('⚠️') ?'text-amber-400' :'text-emerald-400'}`} />
  {aiSuccessMsg}
  </span>
  <button
  onClick={() => setAiSuccessMsg(null)}
- className={aiSuccessMsg.startsWith('⚠️') ? 'text-amber-400 hover:text-white' : 'text-emerald-400 hover:text-white'}
+ className={aiSuccessMsg.startsWith('⚠️') ?'text-amber-400 hover:text-white' :'text-emerald-400 hover:text-white'}
  >
  ✕
  </button>
@@ -492,7 +492,7 @@ export function SongChordsViewerModal({
  className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scroll-smooth"
  >
  {/* TAB 1: CHORDS & LYRICS SHEET (LaCuerda style) */}
- {activeTab === 'chords' && (
+ {activeTab ==='chords' && (
  <div className="space-y-6 max-w-3xl mx-auto">
  
  {/* SUBSTITUTE QUICK SUMMARY BANNER */}
@@ -524,7 +524,7 @@ export function SongChordsViewerModal({
  )}
 
  {/* TAB 2: SUBSTITUTE QUICK GUIDE (FICHA PARA MÚSICO SUSTITUTO) */}
- {activeTab === 'substitute' && (
+ {activeTab ==='substitute' && (
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
  <div className="bg-gradient-to-br from-purple-950/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] shadow-xl space-y-5">
  <div className="flex items-center gap-3 border-b border-purple-500/30 pb-4">
@@ -546,7 +546,7 @@ export function SongChordsViewerModal({
  1. Estructura Exacta del Tema
  </span>
  <p className="text-white text-sm font-semibold leading-relaxed">
- {guiaSustituto.estructura || 'Sin estructura definida.'}
+ {guiaSustituto.estructura ||'Sin estructura definida.'}
  </p>
  </div>
 
@@ -555,7 +555,7 @@ export function SongChordsViewerModal({
  2. Progresión Armónica Clave
  </span>
  <p className="text-white text-sm font-semibold leading-relaxed">
- {guiaSustituto.progresionClave || 'Ver cifrado completo.'}
+ {guiaSustituto.progresionClave ||'Ver cifrado completo.'}
  </p>
  </div>
 
@@ -564,7 +564,7 @@ export function SongChordsViewerModal({
  3. Cortes, Entradas y Claves
  </span>
  <p className="text-[var(--sunken)] leading-relaxed">
- {guiaSustituto.cortesYClaves || 'Sin indicaciones especiales de cortes.'}
+ {guiaSustituto.cortesYClaves ||'Sin indicaciones especiales de cortes.'}
  </p>
  </div>
 
@@ -573,7 +573,7 @@ export function SongChordsViewerModal({
  4. Capo / Afinación
  </span>
  <p className="text-[var(--sunken)] leading-relaxed">
- {guiaSustituto.capoTraste || 'Standard / Sin Capo'}
+ {guiaSustituto.capoTraste ||'Standard / Sin Capo'}
  </p>
  </div>
 
@@ -582,7 +582,7 @@ export function SongChordsViewerModal({
  5. Protagonismo de Instrumentos / Arreglos
  </span>
  <p className="text-[var(--sunken)] leading-relaxed">
- {guiaSustituto.instrumentosClave || 'Seguir el pulso principal de batería y bajo.'}
+ {guiaSustituto.instrumentosClave ||'Seguir el pulso principal de batería y bajo.'}
  </p>
  </div>
  </div>
@@ -602,7 +602,7 @@ export function SongChordsViewerModal({
  )}
 
  {/* TAB 3: EDIT MODE */}
- {activeTab === 'edit' && (
+ {activeTab ==='edit' && (
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
  <div className="bg-[var(--surface)]/90 p-5 rounded-[var(--r-l)] space-y-4">
  <div className="flex items-center justify-between border-b pb-3">
@@ -643,7 +643,7 @@ export function SongChordsViewerModal({
  <label className="text-[var(--ink-2)] block mb-0.5">Estructura Exacta del Tema:</label>
  <input
  type="text"
- value={guiaSustituto.estructura || ''}
+ value={guiaSustituto.estructura ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, estructura: e.target.value })}
  className="w-full p-2 bg-black rounded-[var(--r-s)] text-white"
  placeholder="Intro -> Verso -> Estribillo -> Outro"
@@ -654,7 +654,7 @@ export function SongChordsViewerModal({
  <label className="text-[var(--ink-2)] block mb-0.5">Progresiones Clave:</label>
  <input
  type="text"
- value={guiaSustituto.progresionClave || ''}
+ value={guiaSustituto.progresionClave ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, progresionClave: e.target.value })}
  className="w-full p-2 bg-black rounded-[var(--r-s)] text-white"
  placeholder="Verso: Mim - Do | Estribillo: Sol - Re"
@@ -665,7 +665,7 @@ export function SongChordsViewerModal({
  <label className="text-[var(--ink-2)] block mb-0.5">Cortes y Claves en Vivo:</label>
  <input
  type="text"
- value={guiaSustituto.cortesYClaves || ''}
+ value={guiaSustituto.cortesYClaves ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, cortesYClaves: e.target.value })}
  className="w-full p-2 bg-black rounded-[var(--r-s)] text-white"
  placeholder="Parón en compás 8..."
@@ -676,7 +676,7 @@ export function SongChordsViewerModal({
  <label className="text-[var(--ink-2)] block mb-0.5">Capo / Afinación:</label>
  <input
  type="text"
- value={guiaSustituto.capoTraste || ''}
+ value={guiaSustituto.capoTraste ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, capoTraste: e.target.value })}
  className="w-full p-2 bg-black rounded-[var(--r-s)] text-white"
  placeholder="Capo 2º traste"
@@ -690,7 +690,7 @@ export function SongChordsViewerModal({
  </div>
 
  {/* RIGHT SIDEBAR: CHORD DIAGRAMS DRAWER */}
- {activeTab === 'chords' && showChordDiagrams && (
+ {activeTab ==='chords' && showChordDiagrams && (
  <div className="w-full md:w-64 bg-[var(--surface)] border-t md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
  <div className="flex items-center justify-between border-b pb-2">
  <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5">
@@ -787,7 +787,7 @@ function renderFormattedChordSheet(text: string) {
  // Otherwise check if line contains chords separated by spaces. Usa el mismo validador de
  // acordes (parseRootNote) que la transposición y la lista de diagramas: antes esta línea
  // tenía su propia regex duplicada que solo miraba si el token EMPEZABA por una nota, sin
- // validar el resto ("Get", "Fire", "Baby" contaban como acordes en letras en inglés).
+ // validar el resto ("Get","Fire","Baby" contaban como acordes en letras en inglés).
  const tokens = line.trim().split(/\s+/);
  const chordCount = tokens.filter(t => parseRootNote(t) !== null).length;
  const isChordLine = chordCount > 0 && chordCount / tokens.length >= 0.7;
@@ -803,7 +803,7 @@ function renderFormattedChordSheet(text: string) {
  // Standard lyrics line
  return (
  <div key={idx} className="text-[var(--sunken)] py-0.5">
- {line || '\u00A0'}
+ {line ||'\u00A0'}
  </div>
  );
  });
@@ -830,7 +830,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  </div>
  )}
  <div className="grid grid-cols-6 gap-0.5 my-1 text-[var(--ink-2)] border-b pb-0.5">
- {['E', 'A', 'D', 'G', 'B', 'E'].map((s, i) => (
+ {['E','A','D','G','B','E'].map((s, i) => (
  <span key={i} className="text-center">{s}</span>
  ))}
  </div>
@@ -839,9 +839,9 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  {shape.frets.map((fret, stringIdx) => (
  <div key={stringIdx} className="flex flex-col items-center">
  <span className={`font-bold ${
- fret === -1 ? 'text-rose-400' : fret === 0 ? 'text-emerald-400' : 'text-amber-300'
+ fret === -1 ?'text-rose-400' : fret === 0 ?'text-emerald-400' :'text-amber-300'
  }`}>
- {fret === -1 ? 'x' : fret === 0 ? 'o' : fret}
+ {fret === -1 ?'x' : fret === 0 ?'o' : fret}
  </span>
  </div>
  ))}
@@ -918,10 +918,10 @@ Mim Do Re Mim
 
 function getSampleSubstituteGuide(song: Song): SongSubstituteGuide {
  return {
- estructura: 'Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo de Guitarra -> Outro',
- progresionClave: 'Verso: Mim - Do - Re - Mim | Estribillo: Sol - Re - Mim - Do',
- cortesYClaves: 'Corte seco en el compás 8 del solo. Entrada de voz sola en el verso 2.',
- capoTraste: 'Sin Capo / Afinación Standard E',
- instrumentosClave: 'Entrada potente de vientos en el estribillo. Redoble de batería para paso a solo.'
+ estructura:'Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo de Guitarra -> Outro',
+ progresionClave:'Verso: Mim - Do - Re - Mim | Estribillo: Sol - Re - Mim - Do',
+ cortesYClaves:'Corte seco en el compás 8 del solo. Entrada de voz sola en el verso 2.',
+ capoTraste:'Sin Capo / Afinación Standard E',
+ instrumentosClave:'Entrada potente de vientos en el estribillo. Redoble de batería para paso a solo.'
  };
 }

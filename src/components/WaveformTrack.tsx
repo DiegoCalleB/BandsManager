@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
-import WaveSurfer from 'wavesurfer.js';
-import { resolveAudioUrl, parseGoogleDriveAudioUrl } from '../utils/audioStorage';
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from'react';
+import WaveSurfer from'wavesurfer.js';
+import { resolveAudioUrl, parseGoogleDriveAudioUrl } from'../utils/audioStorage';
 
-const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+const SILENT_AUDIO_URI ='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 
 interface WaveformTrackProps {
  audioUrl: string;
@@ -58,7 +58,7 @@ const FallbackWaveformCanvas: React.FC<{ color: string; seedStr: string; progres
  const x = i * (barWidth + barGap);
  const y = centerY - barHeight / 2;
 
- ctx.fillStyle = x <= progressX ? color : color + '50';
+ ctx.fillStyle = x <= progressX ? color : color +'50';
  ctx.fillRect(x, y, barWidth, barHeight);
  }
  };
@@ -67,7 +67,7 @@ const FallbackWaveformCanvas: React.FC<{ color: string; seedStr: string; progres
 
  const parent = canvas.parentElement;
  let observer: ResizeObserver | null = null;
- if (parent && typeof ResizeObserver !== 'undefined') {
+ if (parent && typeof ResizeObserver !=='undefined') {
  observer = new ResizeObserver(() => renderCanvas());
  observer.observe(parent);
  }
@@ -87,7 +87,7 @@ const FallbackWaveformCanvas: React.FC<{ color: string; seedStr: string; progres
 
 const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  audioUrl,
- color = '#818cf8',
+ color ='#818cf8',
  masterDuration = 30,
  trackDuration,
  currentTime = 0,
@@ -105,9 +105,9 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  // Callback ref to forward HTMLAudioElement cleanly to parent and internal ref
  const setAudioRef = (node: HTMLAudioElement | null) => {
  audioRef.current = node;
- if (typeof ref === 'function') {
+ if (typeof ref ==='function') {
  ref(node);
- } else if (ref && 'current' in ref) {
+ } else if (ref &&'current' in ref) {
  (ref as React.MutableRefObject<HTMLAudioElement | null>).current = node;
  }
  };
@@ -126,13 +126,13 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  })();
 
  // Helper time formatter & duration checks
- const isFiniteNum = (val: any): val is number => typeof val === 'number' && !isNaN(val) && isFinite(val) && val > 0;
+ const isFiniteNum = (val: any): val is number => typeof val ==='number' && !isNaN(val) && isFinite(val) && val > 0;
 
  const formatSecs = (secs: number) => {
- if (!secs || isNaN(secs) || !isFinite(secs) || secs <= 0) return '0:00';
+ if (!secs || isNaN(secs) || !isFinite(secs) || secs <= 0) return'0:00';
  const m = Math.floor(secs / 60);
  const s = Math.floor(secs % 60);
- return `${m}:${s < 10 ? '0' : ''}${s}`;
+ return `${m}:${s < 10 ?'0' :''}${s}`;
  };
 
  // Effective durations for DAW grid alignment
@@ -162,7 +162,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  resolveAudioUrl(audioUrl)
  .then((url) => {
  if (active) {
- setResolvedUrl(url || '');
+ setResolvedUrl(url ||'');
  }
  })
  .catch((err) => {
@@ -181,7 +181,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  // Reload audio element ONLY when validAudioSrc actually changes to a new URL
  useEffect(() => {
  if (audioRef.current && validAudioSrc) {
- const currentSrc = audioRef.current.src || '';
+ const currentSrc = audioRef.current.src ||'';
  // Only set src and call load if src differs and is not already assigned
  if (currentSrc !== validAudioSrc && !currentSrc.endsWith(validAudioSrc)) {
  audioRef.current.src = validAudioSrc;
@@ -204,9 +204,9 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  try {
  ws = WaveSurfer.create({
  container: containerRef.current,
- waveColor: color + '40', // slightly transparent for background
+ waveColor: color +'40', // slightly transparent for background
  progressColor: color,
- cursorColor: 'transparent', // Custom unified playhead rendered on top
+ cursorColor:'transparent', // Custom unified playhead rendered on top
  barWidth: 2,
  barGap: 1,
  barRadius: 2,
@@ -270,7 +270,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  if (wavesurfer.current) {
  try {
  wavesurfer.current.setOptions({
- waveColor: color + '40',
+ waveColor: color +'40',
  progressColor: color,
  });
  } catch (e) {
@@ -296,7 +296,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  <audio 
  ref={setAudioRef} 
  src={validAudioSrc || SILENT_AUDIO_URI} 
- preload={validAudioSrc ? "metadata" : "none"}
+ preload={validAudioSrc ?"metadata" :"none"}
  onError={(e) => e.preventDefault()}
  onLoadedMetadata={(e) => {
  const el = e.currentTarget;
@@ -335,7 +335,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  <div className="absolute inset-0 pointer-events-none z-0">
  <FallbackWaveformCanvas 
  color={color} 
- seedStr={audioUrl || 'track-seed'} 
+ seedStr={audioUrl ||'track-seed'} 
  progressPercent={(currentTime / effTrackDur) * 100} 
  />
  </div>
@@ -357,7 +357,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  {/* Unified Synchronized Master Playhead Cursor Line */}
  <div 
  className="absolute top-0 bottom-0 w-0.5 bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.9)] z-20 pointer-events-none"
- style={{ left: `${playheadPercent}%`, willChange: 'left' }}
+ style={{ left: `${playheadPercent}%`, willChange:'left' }}
  >
  <div className="w-2 h-2 -ml-[3px] -mt-[1px] bg-amber-400 rotate-45 shadow-md" />
  </div>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, Clock, Zap, AlertCircle } from 'lucide-react';
-import { ThemeColors } from '../../types';
+import React, { useState, useEffect, useRef } from'react';
+import { Play, Pause, RotateCcw, Clock, Zap, AlertCircle } from'lucide-react';
+import { ThemeColors } from'../../types';
 
 interface EnsayoCronometroProps {
  totalEstimatedMin?: number;
@@ -15,9 +15,9 @@ export function formatTime(seconds: number): string {
  const mins = Math.floor((seconds % 3600) / 60);
  const secs = seconds % 60;
  if (hrs > 0) {
- return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+ return `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
  }
- return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+ return `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
 }
 
 export function EnsayoCronometro({
@@ -78,18 +78,18 @@ export function EnsayoCronometro({
  if (isCompact) {
  return (
  <div className="flex items-center gap-2 bg-[#141413] border-[#262522] rounded-[var(--r-m)] px-3 py-1.5 shadow-sm">
- <Clock className={`w-3.5 h-3.5 ${isActive ? 'text-amber-400 animate-pulse' : 'text-[var(--ink-2)]'}`} />
- <span className={`font-mono font-bold text-sm tracking-wider ${isOvertime ? 'text-rose-400' : 'text-zinc-100'}`}>
+ <Clock className={`w-3.5 h-3.5 ${isActive ?'text-amber-400 animate-pulse' :'text-[var(--ink-2)]'}`} />
+ <span className={`font-mono font-bold text-sm tracking-wider ${isOvertime ?'text-rose-400' :'text-zinc-100'}`}>
  {formatTime(seconds)}
  </span>
  <button
  onClick={toggleTimer}
  className={`p-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  isActive
- ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
- : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30'
+ ?'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
+ :'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30'
  }`}
- title={isActive ? 'Pausar Cronómetro' : 'Iniciar Cronómetro'}
+ title={isActive ?'Pausar Cronómetro' :'Iniciar Cronómetro'}
  >
  {isActive ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 fill-current" />}
  </button>
@@ -106,8 +106,8 @@ export function EnsayoCronometro({
 
  <div className="flex items-center justify-between gap-3 mb-3">
  <div className="flex items-center gap-2">
- <div className={`p-1.5 rounded-[var(--r-s)] ${isActive ? 'bg-amber-400/15 text-amber-400' : 'bg-neutral-800 text-[var(--ink-2)]'}`}>
- <Clock className={`w-4 h-4 ${isActive ? 'animate-pulse' : ''}`} />
+ <div className={`p-1.5 rounded-[var(--r-s)] ${isActive ?'bg-amber-400/15 text-amber-400' :'bg-neutral-800 text-[var(--ink-2)]'}`}>
+ <Clock className={`w-4 h-4 ${isActive ?'animate-pulse' :''}`} />
  </div>
  <div>
  <h4 className="text-xs font-mono font-bold text-zinc-200 uppercase tracking-wider">
@@ -130,7 +130,7 @@ export function EnsayoCronometro({
  <div className="flex items-baseline justify-between gap-4 my-2">
  <div className="flex items-baseline gap-2">
  <span className={`text-3xl sm:text-4xl font-mono font-black tracking-tight ${
- isOvertime ? 'text-rose-400' : isActive ? 'text-amber-400' : 'text-zinc-100'
+ isOvertime ?'text-rose-400' : isActive ?'text-amber-400' :'text-zinc-100'
  }`}>
  {formatTime(seconds)}
  </span>
@@ -145,8 +145,8 @@ export function EnsayoCronometro({
  onClick={toggleTimer}
  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shadow-sm active:scale-95 ${
  isActive
- ? 'bg-amber-500 text-[var(--surface)] hover:bg-amber-400 shadow-amber-500/20'
- : 'bg-emerald-500 text-[var(--surface)] hover:bg-emerald-400 shadow-emerald-500/20'
+ ?'bg-amber-500 text-[var(--surface)] hover:bg-amber-400 shadow-amber-500/20'
+ :'bg-emerald-500 text-[var(--surface)] hover:bg-emerald-400 shadow-emerald-500/20'
  }`}
  >
  {isActive ? (
@@ -178,10 +178,10 @@ export function EnsayoCronometro({
  <div
  className={`h-full rounded-full transition-all duration-300 ${
  isOvertime
- ? 'bg-gradient-to-r from-rose-500 to-red-600'
+ ?'bg-gradient-to-r from-rose-500 to-red-600'
  : progressPct > 80
- ? 'bg-gradient-to-r from-amber-400 to-orange-500'
- : 'bg-gradient-to-r from-emerald-400 to-teal-500'
+ ?'bg-gradient-to-r from-amber-400 to-orange-500'
+ :'bg-gradient-to-r from-emerald-400 to-teal-500'
  }`}
  style={{ width: `${progressPct}%` }}
  />

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Trash2 } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React from'react';
+import { Trash2 } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
 
 export interface ConfirmDeleteData {
  title: string;

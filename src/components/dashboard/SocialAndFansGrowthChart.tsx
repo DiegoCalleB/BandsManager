@@ -1,20 +1,20 @@
-import React, { useState, useMemo } from 'react';
-import { ThemeColors, SocialMetric, Fan, EPKConfig } from '../../types';
+import React, { useState, useMemo } from'react';
+import { ThemeColors, SocialMetric, Fan, EPKConfig } from'../../types';
 import { 
  Instagram, Youtube, Video, Music2, Heart, TrendingUp, Users, Radio,
  Eye, EyeOff, RefreshCw, SlidersHorizontal, ArrowUpRight, CheckCircle2,
  ShieldCheck, Sparkles, ExternalLink, Activity, QrCode, Calendar, Clock
-} from 'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+} from'lucide-react';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from'recharts';
 
-export type TimePeriod = '7d' | '30d' | '90d' | '1y' | 'all';
+export type TimePeriod ='7d' |'30d' |'90d' |'1y' |'all';
 
 export const TIME_PERIOD_OPTIONS: { id: TimePeriod; label: string; shortLabel: string; days: number | null }[] = [
- { id: '7d', label: 'Últimos 7 días', shortLabel: '7D', days: 7 },
- { id: '30d', label: 'Últimos 30 días', shortLabel: '30D', days: 30 },
- { id: '90d', label: 'Últimos 90 días', shortLabel: '90D', days: 90 },
- { id: '1y', label: 'Último año', shortLabel: '1A', days: 365 },
- { id: 'all', label: 'Histórico completo', shortLabel: 'Todo', days: null },
+ { id:'7d', label:'Últimos 7 días', shortLabel:'7D', days: 7 },
+ { id:'30d', label:'Últimos 30 días', shortLabel:'30D', days: 30 },
+ { id:'90d', label:'Últimos 90 días', shortLabel:'90D', days: 90 },
+ { id:'1y', label:'Último año', shortLabel:'1A', days: 365 },
+ { id:'all', label:'Histórico completo', shortLabel:'Todo', days: null },
 ];
 
 interface SocialAndFansGrowthChartProps {
@@ -34,7 +34,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  epkConfig,
  colors,
  isStitchLight = false,
- bandName = 'Bakandeya',
+ bandName ='Bakandeya',
  bandId,
  onNavigate
 }) => {
@@ -100,7 +100,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  const totalFans = fans.length;
  const uneteFans = useMemo(() => {
  return fans.filter(f => {
- const src = (f.comoConocio || '').toLowerCase();
+ const src = (f.comoConocio ||'').toLowerCase();
  return (
  src.includes('unete') ||
  src.includes('únete') ||
@@ -115,7 +115,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
  const directoFans = useMemo(() => {
  return fans.filter(f => {
- const src = (f.comoConocio || '').toLowerCase();
+ const src = (f.comoConocio ||'').toLowerCase();
  return src.includes('directo') || src.includes('concierto') || src.includes('qr') || Boolean(f.conciertoOrigenId);
  }).length;
  }, [fans]);
@@ -128,7 +128,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  // Sort and aggregate metrics by date
  const sortedMetrics = useMemo(() => {
  const mapByDate = new Map<string, SocialMetric>();
- const sorted = [...metrics].sort((a, b) => (a.fecha || '').localeCompare(b.fecha || ''));
+ const sorted = [...metrics].sort((a, b) => (a.fecha ||'').localeCompare(b.fecha ||''));
  
  for (const m of sorted) {
  if (!m.fecha) continue;
@@ -183,7 +183,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
  // Filter metrics according to the selected time period
  const filteredMetrics = useMemo(() => {
- if (selectedPeriod === 'all' || !currentPeriodConfig.days) {
+ if (selectedPeriod ==='all' || !currentPeriodConfig.days) {
  return sortedMetrics;
  }
  const cutoff = new Date();
@@ -200,7 +200,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  const metricDate = m.fecha;
  const fansUpToDate = fans.filter(f => !f.fechaCaptura || f.fechaCaptura <= metricDate).length;
  const uneteFansUpToDate = fans.filter(f => {
- const src = (f.comoConocio || '').toLowerCase();
+ const src = (f.comoConocio ||'').toLowerCase();
  const isUnete = src.includes('unete') || src.includes('únete') || src.includes('web') || src.includes('formulario') || src.includes('landing') || !src;
  return isUnete && (!f.fechaCaptura || f.fechaCaptura <= metricDate);
  }).length;
@@ -250,23 +250,23 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  let daysBack: number[];
  let baseFactor: number;
  switch (selectedPeriod) {
- case '7d':
+ case'7d':
  daysBack = [7, 5, 4, 3, 2, 1, 0];
  baseFactor = 0.92;
  break;
- case '30d':
+ case'30d':
  daysBack = [30, 24, 18, 12, 6, 0];
  baseFactor = 0.78;
  break;
- case '90d':
+ case'90d':
  daysBack = [90, 75, 60, 45, 30, 15, 0];
  baseFactor = 0.65;
  break;
- case '1y':
+ case'1y':
  daysBack = [365, 300, 240, 180, 120, 60, 0];
  baseFactor = 0.45;
  break;
- case 'all':
+ case'all':
  default:
  daysBack = [180, 150, 120, 90, 60, 30, 0];
  baseFactor = 0.50;
@@ -283,7 +283,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  // Check real fan registrations before this date
  const fansUpToDate = fans.filter(f => !f.fechaCaptura || f.fechaCaptura <= dateStr).length;
  const uneteUpToDate = fans.filter(f => {
- const src = (f.comoConocio || '').toLowerCase();
+ const src = (f.comoConocio ||'').toLowerCase();
  const isUnete = src.includes('unete') || src.includes('únete') || src.includes('web') || src.includes('formulario') || src.includes('landing') || !src;
  return isUnete && (!f.fechaCaptura || f.fechaCaptura <= dateStr);
  }).length;
@@ -347,11 +347,11 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
  const selectOnlyChannel = (channel: keyof typeof selectedChannels) => {
  setSelectedChannels({
- instagram: channel === 'instagram',
- tiktok: channel === 'tiktok',
- youtube: channel === 'youtube',
- spotify: channel === 'spotify',
- fans: channel === 'fans',
+ instagram: channel ==='instagram',
+ tiktok: channel ==='tiktok',
+ youtube: channel ==='youtube',
+ spotify: channel ==='spotify',
+ fans: channel ==='fans',
  });
  };
 
@@ -370,20 +370,20 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  return (
  <div className={`p-5 rounded-[var(--r-l)] transition-all ${
  isStitchLight 
- ? 'bg-[var(--bg)]/90 shadow-sm text-[var(--ink)]' 
- : 'bg-[#18181b]/90 shadow-sm text-zinc-100'
+ ?'bg-[var(--bg)]/90 shadow-sm text-[var(--ink)]' 
+ :'bg-[#18181b]/90 shadow-sm text-zinc-100'
  }`}>
  {/* Header Section */}
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 border-b /60">
  <div className="flex items-center gap-3">
  <div className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${
- isStitchLight ? 'bg-amber-500/15 text-amber-600' : 'bg-amber-500/20 text-amber-400'
+ isStitchLight ?'bg-amber-500/15 text-amber-600' :'bg-amber-500/20 text-amber-400'
  }`}>
  <TrendingUp className="w-5 h-5" />
  </div>
  <div>
  <h3 className={`text-sm font-bold font-display uppercase tracking-wider flex items-center gap-2 ${
- isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]'
+ isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'
  }`}>
  Evolución de Redes Sociales & Base de Fans en BBDD
  <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-mono font-normal flex items-center gap-1">
@@ -404,8 +404,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => onNavigate('fans')}
  className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
  isStitchLight
- ? 'bg-white hover:bg-[var(--sunken)] text-[var(--ink)] '
- : 'bg-neutral-800/80 hover:bg-neutral-700 text-amber-300 '
+ ?'bg-white hover:bg-[var(--sunken)] text-[var(--ink)]'
+ :'bg-neutral-800/80 hover:bg-neutral-700 text-amber-300'
  }`}
  title="Ir al gestor de comunidad, muro y capturas de fans"
  >
@@ -418,8 +418,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => onNavigate('reels')}
  className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
  isStitchLight
- ? 'bg-sky-500 text-white hover:bg-sky-600 border-sky-600'
- : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black '
+ ?'bg-sky-500 text-white hover:bg-sky-600 border-sky-600'
+ :'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black'
  }`}
  title="Abrir el panel completo de métricas y sincronización"
  >
@@ -438,8 +438,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasInstagram && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ? 'bg-white border-pink-200 shadow-xs' 
- : 'bg-[var(--surface)]/60 border-pink-950/40'
+ ?'bg-white border-pink-200 shadow-xs' 
+ :'bg-[var(--surface)]/60 border-pink-950/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-pink-400 flex items-center gap-1">
@@ -454,7 +454,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {countInstagram.toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
- <span>{latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}% ER` : 'Audiencia activa'}</span>
+ <span>{latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}% ER` :'Audiencia activa'}</span>
  </div>
  </div>
  </div>
@@ -464,8 +464,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasTikTok && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ? 'bg-white border-cyan-200 shadow-xs' 
- : 'bg-[var(--surface)]/60 border-cyan-950/40'
+ ?'bg-white border-cyan-200 shadow-xs' 
+ :'bg-[var(--surface)]/60 border-cyan-950/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-cyan-400 flex items-center gap-1">
@@ -480,7 +480,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {countTikTok.toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
- <span>{latestMetric?.tiktok_total_likes ? `${(latestMetric.tiktok_total_likes / 1000).toFixed(1)}k likes` : 'Contenido viral'}</span>
+ <span>{latestMetric?.tiktok_total_likes ? `${(latestMetric.tiktok_total_likes / 1000).toFixed(1)}k likes` :'Contenido viral'}</span>
  </div>
  </div>
  </div>
@@ -490,8 +490,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasYouTube && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ? 'bg-white border-red-200 shadow-xs' 
- : 'bg-[var(--surface)]/60 border-red-950/40'
+ ?'bg-white border-red-200 shadow-xs' 
+ :'bg-[var(--surface)]/60 border-red-950/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-red-400 flex items-center gap-1">
@@ -506,7 +506,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {countYouTube.toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
- <span>{latestMetric?.youtube_total_views ? `${(latestMetric.youtube_total_views / 1000).toFixed(1)}k views` : 'Canal oficial'}</span>
+ <span>{latestMetric?.youtube_total_views ? `${(latestMetric.youtube_total_views / 1000).toFixed(1)}k views` :'Canal oficial'}</span>
  </div>
  </div>
  </div>
@@ -516,8 +516,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasSpotify && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ? 'bg-white border-emerald-200 shadow-xs' 
- : 'bg-[var(--surface)]/60 border-emerald-950/40'
+ ?'bg-white border-emerald-200 shadow-xs' 
+ :'bg-[var(--surface)]/60 border-emerald-950/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-emerald-400 flex items-center gap-1">
@@ -532,7 +532,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {countSpotify.toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
- <span>{latestMetric?.spotify_followers ? `${latestMetric.spotify_followers} seguidores` : 'Streaming mensual'}</span>
+ <span>{latestMetric?.spotify_followers ? `${latestMetric.spotify_followers} seguidores` :'Streaming mensual'}</span>
  </div>
  </div>
  </div>
@@ -541,8 +541,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Card 5: Fans Registrados en Base de Datos (Formulario Únete) */}
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all col-span-2 sm:col-span-1 ${
  isStitchLight 
- ? 'bg-amber-50 shadow-sm' 
- : 'bg-gradient-to-br from-amber-950/30 to-[var(--surface)] /40 shadow-sm shadow-amber-950/20'
+ ?'bg-amber-50 shadow-sm' 
+ :'bg-gradient-to-br from-amber-950/30 to-[var(--surface)] /40 shadow-sm shadow-amber-950/20'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-amber-400 flex items-center gap-1">
@@ -577,7 +577,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <span className="font-bold">Periodo:</span>
  </span>
  <div className={`flex items-center gap-1 p-0.5 rounded-[var(--r-m)] ${
- isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-[var(--surface)]/80 '
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80'
  }`}>
  {TIME_PERIOD_OPTIONS.map(opt => {
  const isSelected = selectedPeriod === opt.id;
@@ -589,11 +589,11 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all cursor-pointer ${
  isSelected
  ? isStitchLight
- ? 'bg-amber-500 text-slate-950 shadow-xs'
- : 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-sm shadow-amber-950/40'
+ ?'bg-amber-500 text-slate-950 shadow-xs'
+ :'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-sm shadow-amber-950/40'
  : isStitchLight
- ? 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
- : 'text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
+ ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
+ :'text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
  }`}
  title={opt.label}
  >
@@ -606,7 +606,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Period Summary Indicator */}
  {periodGrowthSummary && (
  <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-[9px] font-mono ${
- isStitchLight ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-emerald-950/20 text-emerald-300 border-emerald-500/20'
+ isStitchLight ?'bg-emerald-50 text-emerald-800 border-emerald-200' :'bg-emerald-950/20 text-emerald-300 border-emerald-500/20'
  }`}>
  <TrendingUp className="w-3 h-3 text-emerald-400" />
  <span>
@@ -623,8 +623,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={selectAllChannels}
  className={`text-[9px] font-mono px-2.5 py-1 rounded-[var(--r-s)] transition-all flex items-center gap-1 self-end md:self-auto cursor-pointer ${
  isStitchLight
- ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] '
- : ' bg-neutral-800/60 hover:bg-neutral-700 text-[var(--ink-3)]'
+ ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ :' bg-neutral-800/60 hover:bg-neutral-700 text-[var(--ink-3)]'
  }`}
  title="Restaurar y mostrar todos los canales disponibles"
  >
@@ -645,16 +645,16 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.instagram
  ? isStitchLight
- ? 'bg-pink-50 border-pink-300 text-pink-700'
- : 'bg-pink-950/30 border-pink-500/40 text-pink-300'
- : 'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ ?'bg-pink-50 border-pink-300 text-pink-700'
+ :'bg-pink-950/30 border-pink-500/40 text-pink-300'
+ :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
  }`}>
  <button
  type="button"
  onClick={() => toggleChannel('instagram')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ? 'bg-pink-500 animate-pulse' : 'bg-neutral-600'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ?'bg-pink-500 animate-pulse' :'bg-neutral-600'}`}></span>
  <Instagram className="w-3 h-3 text-pink-500" />
  <span>Instagram</span>
  <span className="text-[9px] px-1 py-0.2 rounded bg-pink-500/15 font-mono font-bold">
@@ -678,16 +678,16 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.tiktok
  ? isStitchLight
- ? 'bg-cyan-50 border-cyan-300 text-cyan-700'
- : 'bg-cyan-950/30 border-cyan-500/40 text-cyan-300'
- : 'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ ?'bg-cyan-50 border-cyan-300 text-cyan-700'
+ :'bg-cyan-950/30 border-cyan-500/40 text-cyan-300'
+ :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
  }`}>
  <button
  type="button"
  onClick={() => toggleChannel('tiktok')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ? 'bg-cyan-400 animate-pulse' : 'bg-neutral-600'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ?'bg-cyan-400 animate-pulse' :'bg-neutral-600'}`}></span>
  <Video className="w-3 h-3 text-cyan-400" />
  <span>TikTok</span>
  <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-500/15 font-mono font-bold">
@@ -711,16 +711,16 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.youtube
  ? isStitchLight
- ? 'bg-red-50 border-red-300 text-red-700'
- : 'bg-red-950/30 border-red-500/40 text-red-300'
- : 'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ ?'bg-red-50 border-red-300 text-red-700'
+ :'bg-red-950/30 border-red-500/40 text-red-300'
+ :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
  }`}>
  <button
  type="button"
  onClick={() => toggleChannel('youtube')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ? 'bg-red-500 animate-pulse' : 'bg-neutral-600'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ?'bg-red-500 animate-pulse' :'bg-neutral-600'}`}></span>
  <Youtube className="w-3 h-3 text-red-500" />
  <span>YouTube</span>
  <span className="text-[9px] px-1 py-0.2 rounded bg-red-500/15 font-mono font-bold">
@@ -744,16 +744,16 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.spotify
  ? isStitchLight
- ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
- : 'bg-emerald-950/30 border-emerald-500/40 text-emerald-300'
- : 'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ ?'bg-emerald-50 border-emerald-300 text-emerald-700'
+ :'bg-emerald-950/30 border-emerald-500/40 text-emerald-300'
+ :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
  }`}>
  <button
  type="button"
  onClick={() => toggleChannel('spotify')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ? 'bg-emerald-500 animate-pulse' : 'bg-neutral-600'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ?'bg-emerald-500 animate-pulse' :'bg-neutral-600'}`}></span>
  <Music2 className="w-3 h-3 text-emerald-500" />
  <span>Spotify</span>
  <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/15 font-mono font-bold">
@@ -776,16 +776,16 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.fans
  ? isStitchLight
- ? 'bg-amber-50 text-amber-800 font-bold shadow-xs'
- : 'bg-amber-950/40 /60 text-amber-200 font-bold shadow-sm shadow-amber-950/30'
- : 'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ ?'bg-amber-50 text-amber-800 font-bold shadow-xs'
+ :'bg-amber-950/40 /60 text-amber-200 font-bold shadow-sm shadow-amber-950/30'
+ :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
  }`}>
  <button
  type="button"
  onClick={() => toggleChannel('fans')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.fans ? 'bg-amber-400 animate-pulse' : 'bg-neutral-600'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.fans ?'bg-amber-400 animate-pulse' :'bg-neutral-600'}`}></span>
  <Heart className="w-3 h-3 text-amber-400 fill-amber-400/30" />
  <span>Fans BD (Únete)</span>
  <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 font-mono font-black">
@@ -851,7 +851,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </linearGradient>
  </defs>
 
- <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isStitchLight ? '#e2e8f0' : '#222222'} />
+ <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isStitchLight ?'#e2e8f0' :'#222222'} />
 
  <XAxis 
  dataKey="fecha" 
@@ -860,7 +860,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  tickLine={false} 
  axisLine={false}
  tickFormatter={(tick) => {
- if (!tick) return '';
+ if (!tick) return'';
  const parts = tick.split('-');
  return parts.length === 3 ? `${parts[2]}/${parts[1]}` : tick;
  }}
@@ -877,18 +877,18 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
  <Tooltip 
  contentStyle={{ 
- backgroundColor: isStitchLight ? '#ffffff' : 'var(--surface)', 
- borderColor: isStitchLight ? '#cbd5e1' : '#333333',
- borderRadius: '10px',
- fontSize: '11px',
- fontFamily: 'monospace',
- boxShadow: '0 10px 25px -5px rgba(0,0,0,0.4)'
+ backgroundColor: isStitchLight ?'#ffffff' :'var(--surface)', 
+ borderColor: isStitchLight ?'#cbd5e1' :'#333333',
+ borderRadius:'10px',
+ fontSize:'11px',
+ fontFamily:'monospace',
+ boxShadow:'0 10px 25px -5px rgba(0,0,0,0.4)'
  }}
- labelStyle={{ fontWeight: 'bold', color: isStitchLight ? '#1e293b' : '#ffffff', marginBottom: '4px' }}
+ labelStyle={{ fontWeight:'bold', color: isStitchLight ?'#1e293b' :'#ffffff', marginBottom:'4px' }}
  formatter={(value: any, name: any) => {
  const num = Number(value || 0);
  const formatted = num >= 1000 ? `${num.toLocaleString()} (${(num / 1000).toFixed(1)}k)` : `${num}`;
- if (name === 'Fans Registrados (BD / Únete)') {
+ if (name ==='Fans Registrados (BD / Únete)') {
  return [`${formatted} (${uneteFans} vía formulario Únete)`, name];
  }
  return [formatted, name];
@@ -971,8 +971,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </span>
  <span>•</span>
  <span className="text-[var(--ink-2)]">
- Landing pública: <a href={bandId ? `/unete?band=${encodeURIComponent(bandId)}` : '/unete'} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-0.5">
- {bandId ? `/unete?band=${bandId.replace(/^(band|reg)-/, '')}` : '/unete'} <ExternalLink className="w-2.5 h-2.5" />
+ Landing pública: <a href={bandId ? `/unete?band=${encodeURIComponent(bandId)}` :'/unete'} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-0.5">
+ {bandId ? `/unete?band=${bandId.replace(/^(band|reg)-/,'')}` :'/unete'} <ExternalLink className="w-2.5 h-2.5" />
  </a>
  </span>
  </div>

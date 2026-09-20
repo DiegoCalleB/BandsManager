@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Disc3, Sparkles, Scissors, Play, Pause, Plus, Trash2, ArrowUp, ArrowDown, Download, Check, RefreshCw, Layers, Radio, Volume2, VolumeX, HelpCircle, FileText, ExternalLink, X, Combine, GitMerge, CheckSquare, Square, Wand2, Music2, FileCode, ListPlus, Sliders, ChevronDown, ChevronUp, RotateCcw, RotateCw, Clock, Zap, AlertTriangle, Upload, CheckCircle2, Undo2, Redo2, Lock, Key, ShieldCheck, Tag, Target } from 'lucide-react';
-import { Song, ThemeColors } from '../../types';
-import { apiFetch } from '../../utils/api';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { Disc3, Sparkles, Scissors, Play, Pause, Plus, Trash2, ArrowUp, ArrowDown, Download, Check, RefreshCw, Layers, Radio, Volume2, VolumeX, HelpCircle, FileText, ExternalLink, X, Combine, GitMerge, CheckSquare, Square, Wand2, Music2, FileCode, ListPlus, Sliders, ChevronDown, ChevronUp, RotateCcw, RotateCw, Clock, Zap, AlertTriangle, Upload, CheckCircle2, Undo2, Redo2, Lock, Key, ShieldCheck, Tag, Target } from'lucide-react';
+import { Song, ThemeColors } from'../../types';
+import { apiFetch } from'../../utils/api';
+import { ModalPortal } from'../common/ModalPortal';
 
 export interface TrackCutItem {
  index: number;
@@ -10,7 +10,7 @@ export interface TrackCutItem {
  start: number; // in seconds
  end: number; // in seconds
  duration: number; // in seconds
- type: 'musica' | 'dialogo';
+ type:'musica' |'dialogo';
  speechTranscription?: string;
  lyricsWithChords?: string;
  tonalidad?: string;
@@ -34,13 +34,13 @@ interface LiveConcertToAlbumModalProps {
 }
 
 const formatSeconds = (totalSecs: number): string => {
- if (isNaN(totalSecs) || totalSecs < 0) return '00:00';
+ if (isNaN(totalSecs) || totalSecs < 0) return'00:00';
  const hrs = Math.floor(totalSecs / 3600);
  const mins = Math.floor((totalSecs % 3600) / 60);
  const secs = Math.floor(totalSecs % 60);
 
- const mStr = String(mins).padStart(2, '0');
- const sStr = String(secs).padStart(2, '0');
+ const mStr = String(mins).padStart(2,'0');
+ const sStr = String(secs).padStart(2,'0');
 
  if (hrs > 0) {
  return `${hrs}:${mStr}:${sStr}`;
@@ -63,7 +63,7 @@ const parseTimeToSeconds = (str: string): number => {
 export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = ({
  isOpen,
  onClose,
- bandName = 'Nuestra Banda',
+ bandName ='Nuestra Banda',
  colors,
  isStitchLight,
  onSaveAlbumToCatalog,
@@ -88,7 +88,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  // Quick Naming & Batch Renaming Assistant state
  const [showQuickNamingModal, setShowQuickNamingModal] = useState(false);
  const [batchPastedText, setBatchPastedText] = useState('');
- const [quickNamingActiveTab, setQuickNamingActiveTab] = useState<'table' | 'paste'>('table');
+ const [quickNamingActiveTab, setQuickNamingActiveTab] = useState<'table' |'paste'>('table');
 
  // Push snapshot to history stack before mutating tracks
  const pushHistorySnapshot = () => {
@@ -118,9 +118,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  React.useEffect(() => {
  const handleKeyDown = (e: KeyboardEvent) => {
  const target = e.target as HTMLElement;
- const isEditingText = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA');
+ const isEditingText = target && (target.tagName ==='INPUT' || target.tagName ==='TEXTAREA');
 
- if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+ if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() ==='z') {
  if (e.shiftKey) {
  if (!isEditingText && redoStack.length > 0) {
  e.preventDefault();
@@ -132,7 +132,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  handleUndo();
  }
  }
- } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+ } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() ==='y') {
  if (!isEditingText && redoStack.length > 0) {
  e.preventDefault();
  handleRedo();
@@ -188,8 +188,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setIsSavingCookies(true);
  try {
  const res = await fetch('/api/concert-to-album/save-cookies', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({ cookiesText: cookiesInputText.trim() }),
  });
  const data = await res.json();
@@ -201,10 +201,10 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setCookieModalOpen(false);
  }, 2200);
  } else {
- setErrorMessage(data.error || 'Error al guardar las cookies de YouTube.');
+ setErrorMessage(data.error ||'Error al guardar las cookies de YouTube.');
  }
  } catch (err: any) {
- setErrorMessage(err.message || 'Error al conectar con el servidor.');
+ setErrorMessage(err.message ||'Error al conectar con el servidor.');
  } finally {
  setIsSavingCookies(false);
  }
@@ -212,7 +212,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  const handleDeleteCookies = async () => {
  try {
- await fetch('/api/concert-to-album/delete-cookies', { method: 'POST' });
+ await fetch('/api/concert-to-album/delete-cookies', { method:'POST' });
  setHasYoutubeCookies(false);
  setCookiesInputText('');
  setCookieSuccessMsg('Cookies eliminadas del servidor.');
@@ -236,16 +236,16 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  // Helper for binary streaming upload via FormData & Chunks (handles 1GB+ files cleanly without 413 limits)
  const uploadFileBinary = async (
  file: File,
- folder = 'conciertos_fuente',
+ folder ='conciertos_fuente',
  onProgress?: (msg: string) => void
  ): Promise<string> => {
  const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks fit easily inside Cloud Run / proxy limits
 
  const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
- let activeBandId = '';
+ let activeBandId ='';
  try {
  const userStr = localStorage.getItem('bakandeya_user');
- if (userStr) activeBandId = JSON.parse(userStr)?.band_id || '';
+ if (userStr) activeBandId = JSON.parse(userStr)?.band_id ||'';
  } catch {}
 
  const authHeaders: Record<string, string> = {};
@@ -259,7 +259,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  formData.append('folder', folder);
 
  const uploadRes = await fetch('/api/upload', {
- method: 'POST',
+ method:'POST',
  headers: authHeaders,
  body: formData,
  });
@@ -270,7 +270,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  }
 
  const uploadData = await uploadRes.json();
- return uploadData.filePath || uploadData.url || '';
+ return uploadData.filePath || uploadData.url ||'';
  }
 
  // Chunked upload for files > 10MB
@@ -298,7 +298,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  }
 
  const res = await fetch('/api/upload/chunk', {
- method: 'POST',
+ method:'POST',
  headers: authHeaders,
  body: formData,
  });
@@ -310,7 +310,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  const data = await res.json();
  if (data.completed) {
- return data.filePath || data.url || '';
+ return data.filePath || data.url ||'';
  }
  }
 
@@ -325,7 +325,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setIsLinkingLocalFile(true);
  setErrorMessage(null);
  try {
- const sourceFilePath = await uploadFileBinary(file, 'conciertos_fuente', (msg) => {
+ const sourceFilePath = await uploadFileBinary(file,'conciertos_fuente', (msg) => {
  setAnalysisStatus(msg);
  });
  setAnalyzedSourcePath(sourceFilePath);
@@ -333,7 +333,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setYoutubeBlocked(false);
  } catch (err: any) {
  console.error('Error linking local audio file:', err);
- alert(err.message || 'Error al vincular el archivo de audio local.');
+ alert(err.message ||'Error al vincular el archivo de audio local.');
  } finally {
  setIsLinkingLocalFile(false);
  }
@@ -344,7 +344,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setErrorMessage(null);
  try {
  const res = await apiFetch('/api/concert-to-album/demo-audio', {
- method: 'POST',
+ method:'POST',
  });
  if (res.success && res.filePath) {
  setAnalyzedSourcePath(res.filePath);
@@ -355,7 +355,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  }
  } catch (err: any) {
  console.error('Error loading demo audio:', err);
- alert(err.message || 'Error al cargar el audio demo.');
+ alert(err.message ||'Error al cargar el audio demo.');
  } finally {
  setIsLinkingLocalFile(false);
  }
@@ -418,12 +418,12 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setGeneratedResult(null);
 
  try {
- let sourceFilePath = '';
+ let sourceFilePath ='';
 
  // If user uploaded local file, upload to temp folder first using FormData chunk streaming
  if (uploadedFile) {
  setAnalysisStatus('Subiendo archivo local al servidor...');
- sourceFilePath = await uploadFileBinary(uploadedFile, 'conciertos_fuente', (msg) => {
+ sourceFilePath = await uploadFileBinary(uploadedFile,'conciertos_fuente', (msg) => {
  setAnalysisStatus(msg);
  });
  setAnalyzedSourcePath(sourceFilePath);
@@ -432,14 +432,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setAnalysisStatus(
  useAi
  ? transcribeFirst
- ? 'Transcribiendo y analizando el audio completo con IA para alinear cortes y letras...'
- : 'Analizando acústica y detectando estructura del concierto...'
- : 'Detectando silencios, pausas y capítulos del concierto...'
+ ?'Transcribiendo y analizando el audio completo con IA para alinear cortes y letras...'
+ :'Analizando acústica y detectando estructura del concierto...'
+ :'Detectando silencios, pausas y capítulos del concierto...'
  );
 
  const response = await fetch('/api/concert-to-album/analyze', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  url: youtubeUrl.trim(),
  sourceFilePath,
@@ -451,18 +451,18 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  if (!response.ok) {
  const errData = await response.json();
- throw new Error(errData.error || 'Error al analizar el concierto.');
+ throw new Error(errData.error ||'Error al analizar el concierto.');
  }
 
  const data = await response.json();
  setAlbumTitle(data.albumTitle || `Directo - ${artistName}`);
  setArtistName(data.artist || artistName);
  setTracks(data.tracks || []);
- if (typeof data.youtubeBlocked !== 'undefined') setYoutubeBlocked(Boolean(data.youtubeBlocked));
- if (typeof data.audioAvailable !== 'undefined') setAudioAvailable(Boolean(data.audioAvailable));
+ if (typeof data.youtubeBlocked !=='undefined') setYoutubeBlocked(Boolean(data.youtubeBlocked));
+ if (typeof data.audioAvailable !=='undefined') setAudioAvailable(Boolean(data.audioAvailable));
  } catch (err: any) {
  console.error('Error analyzing concert:', err);
- setErrorMessage(err.message || 'Error durante el análisis del concierto.');
+ setErrorMessage(err.message ||'Error durante el análisis del concierto.');
  } finally {
  setIsAnalyzing(false);
  }
@@ -481,20 +481,20 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  try {
  const response = await fetch('/api/concert-to-album/process', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  url: youtubeUrl.trim(),
  sourceFilePath: analyzedSourcePath,
  tracks,
- albumTitle: albumTitle || 'Directo en Vivo',
+ albumTitle: albumTitle ||'Directo en Vivo',
  artist: artistName || bandName,
  }),
  });
 
  if (!response.ok) {
  const errData = await response.json();
- throw new Error(errData.error || 'Error al trocear el concierto.');
+ throw new Error(errData.error ||'Error al trocear el concierto.');
  }
 
  const data = await response.json();
@@ -506,7 +506,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setTracks(data.tracks);
  } catch (err: any) {
  console.error('Error slicing concert:', err);
- setErrorMessage(err.message || 'Error al procesar el troceado del disco.');
+ setErrorMessage(err.message ||'Error al procesar el troceado del disco.');
  } finally {
  setIsProcessing(false);
  }
@@ -519,7 +519,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  prev.map((t) => {
  if (t.index === index) {
  const updated = { ...t, [key]: value };
- if (key === 'start' || key === 'end') {
+ if (key ==='start' || key ==='end') {
  updated.duration = Math.max(0, updated.end - updated.start);
  }
  return updated;
@@ -541,7 +541,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  start,
  end,
  duration: 180,
- type: 'musica',
+ type:'musica',
  };
  const updated = [...prev, newTrack];
  return updated.map((t, i) => ({ ...t, index: i + 1 }));
@@ -556,12 +556,12 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  });
  };
 
- const handleMoveTrack = (index: number, direction: 'up' | 'down') => {
+ const handleMoveTrack = (index: number, direction:'up' |'down') => {
  pushHistorySnapshot();
  setTracks((prev) => {
  const idx = prev.findIndex((t) => t.index === index);
  if (idx < 0) return prev;
- const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+ const targetIdx = direction ==='up' ? idx - 1 : idx + 1;
  if (targetIdx < 0 || targetIdx >= prev.length) return prev;
 
  const newArr = [...prev];
@@ -578,11 +578,11 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  const track = tracks.find((t) => t.index === trackIndex);
  if (!track || !track.speechTranscription) return;
 
- const cleanSpeech = track.speechTranscription.replace(/[\n\r]+/g, ' ').trim();
+ const cleanSpeech = track.speechTranscription.replace(/[\n\r]+/g,'').trim();
  const firstPhrase = cleanSpeech.split(/[.!?]/)[0].trim();
  const suggested = firstPhrase.length > 45 ? `${firstPhrase.slice(0, 42)}...` : firstPhrase;
  if (suggested) {
- handleUpdateTrack(trackIndex, 'title', `Speech: "${suggested}"`);
+ handleUpdateTrack(trackIndex,'title', `Speech:"${suggested}"`);
  }
  };
 
@@ -602,14 +602,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  if (idx >= lines.length) return tr;
 
  let cleanName = lines[idx];
- // Strip leading numbering: "1.", "01.", "1 -", "1)", "#1", etc.
- cleanName = cleanName.replace(/^(?:#?\d+[\.\)\-:\s]+|\s*[-–—]\s*)+/i, '').trim();
+ // Strip leading numbering:"1.","01.","1 -","1)","#1", etc.
+ cleanName = cleanName.replace(/^(?:#?\d+[\.\)\-:\s]+|\s*[-–—]\s*)+/i,'').trim();
  if (!cleanName) cleanName = lines[idx];
 
  // Auto-detect if it sounds like a speech or dialogue
  const lower = cleanName.toLowerCase();
  const isSpeechKeyword = /speech|presentaci[oó]n|saludo|hablado|charla|an[eé]cdota|intro hablada|palabras|agradecimiento|bises?\s+hablado|chapa/i.test(lower);
- const newType = isSpeechKeyword ? 'dialogo' : tr.type;
+ const newType = isSpeechKeyword ?'dialogo' : tr.type;
 
  return {
  ...tr,
@@ -649,13 +649,13 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  const handleSetStartFromCurrentSnippet = (trackIndex: number) => {
  if (!activeSnippet) return;
  const currentAbs = Math.max(0, Math.round((activeSnippet.start + snippetCurrentTime) * 10) / 10);
- handleUpdateTrack(trackIndex, 'start', currentAbs);
+ handleUpdateTrack(trackIndex,'start', currentAbs);
  };
 
  const handleSetEndFromCurrentSnippet = (trackIndex: number) => {
  if (!activeSnippet) return;
  const currentAbs = Math.max(0, Math.round((activeSnippet.start + snippetCurrentTime) * 10) / 10);
- handleUpdateTrack(trackIndex, 'end', currentAbs);
+ handleUpdateTrack(trackIndex,'end', currentAbs);
  };
 
  const getYouTubeVideoId = (url: string) => {
@@ -711,7 +711,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setActiveSnippet({
  trackIndex: track.index,
  title: track.title,
- audioUrl: '',
+ audioUrl:'',
  start: track.start,
  end: track.end,
  });
@@ -723,8 +723,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setLoadingSnippetIndex(track.index);
  try {
  const response = await fetch('/api/concert-to-album/preview-snippet', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  url: youtubeUrl.trim(),
  sourceFilePath: analyzedSourcePath,
@@ -736,12 +736,12 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  if (!response.ok) {
  const errData = await response.json();
- throw new Error(errData.error || 'Error al obtener previsualización del trozo.');
+ throw new Error(errData.error ||'Error al obtener previsualización del trozo.');
  }
 
  const data = await response.json();
  if (data.audioUrl) {
- handleUpdateTrack(track.index, 'audioUrl', data.audioUrl);
+ handleUpdateTrack(track.index,'audioUrl', data.audioUrl);
  setActiveSnippet({
  trackIndex: track.index,
  title: track.title,
@@ -759,7 +759,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  }
  } catch (err: any) {
  console.error('Error generating snippet preview:', err);
- alert(err.message || 'No se pudo generar la previsualización del trozo.');
+ alert(err.message ||'No se pudo generar la previsualización del trozo.');
  } finally {
  setLoadingSnippetIndex(null);
  }
@@ -771,19 +771,19 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setIsClassifying(true);
  try {
  const response = await fetch('/api/concert-to-album/classify-tracks', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  tracks,
  bandName: artistName || bandName,
- albumTitle: albumTitle || 'Directo en Vivo',
+ albumTitle: albumTitle ||'Directo en Vivo',
  useAi,
  }),
  });
 
  if (!response.ok) {
  const errData = await response.json();
- throw new Error(errData.error || 'Error al auto-clasificar.');
+ throw new Error(errData.error ||'Error al auto-clasificar.');
  }
 
  const data = await response.json();
@@ -792,7 +792,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  }
  } catch (err: any) {
  console.error('Error auto-classifying tracks:', err);
- alert(err.message || 'No se pudo completar la auto-clasificación.');
+ alert(err.message ||'No se pudo completar la auto-clasificación.');
  } finally {
  setIsClassifying(false);
  }
@@ -804,8 +804,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setIsDetectingCues(true);
  try {
  const response = await fetch('/api/concert-to-album/detect-cues', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  tracks,
  sourceFilePath: analyzedSourcePath,
@@ -815,7 +815,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  if (!response.ok) {
  const errData = await response.json();
- throw new Error(errData.error || 'Error al autodetectar CUEs de inicio.');
+ throw new Error(errData.error ||'Error al autodetectar CUEs de inicio.');
  }
 
  const data = await response.json();
@@ -825,7 +825,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  }
  } catch (err: any) {
  console.error('Error auto-detecting cues:', err);
- alert(err.message || 'No se pudo completar la autodetección de CUEs.');
+ alert(err.message ||'No se pudo completar la autodetección de CUEs.');
  } finally {
  setIsDetectingCues(false);
  }
@@ -856,7 +856,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  pushHistorySnapshot();
  let adjustedCount = 0;
  const updated = tracks.map((t) => {
- if (t.type === 'musica' && t.cueIn && t.cueIn > 0.2) {
+ if (t.type ==='musica' && t.cueIn && t.cueIn > 0.2) {
  const newStart = Math.round((t.start + t.cueIn) * 10) / 10;
  const newDuration = Math.max(0.5, Math.round((t.end - newStart) * 10) / 10);
  adjustedCount++;
@@ -903,7 +903,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  start: minStart,
  end: maxEnd,
  duration: maxEnd - minStart,
- type: trackA.type === 'musica' || trackB.type === 'musica' ? 'musica' : 'dialogo',
+ type: trackA.type ==='musica' || trackB.type ==='musica' ?'musica' :'dialogo',
  speechTranscription: mergedSpeech,
  };
 
@@ -925,9 +925,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  const minStart = Math.min(...targetTracks.map((t) => t.start));
  const maxEnd = Math.max(...targetTracks.map((t) => t.end));
- const mergedTitle = targetTracks.map((t) => t.title).join(' + ');
+ const mergedTitle = targetTracks.map((t) => t.title).join(' +');
  const mergedSpeech = targetTracks.map((t) => t.speechTranscription).filter(Boolean).join('\n');
- const hasMusic = targetTracks.some((t) => t.type === 'musica');
+ const hasMusic = targetTracks.some((t) => t.type ==='musica');
 
  const mergedTrack: TrackCutItem = {
  index: sortedIdxs[0],
@@ -935,7 +935,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  start: minStart,
  end: maxEnd,
  duration: maxEnd - minStart,
- type: hasMusic ? 'musica' : 'dialogo',
+ type: hasMusic ?'musica' :'dialogo',
  speechTranscription: mergedSpeech,
  };
 
@@ -1002,8 +1002,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setTranscribingIndex(track.index);
  try {
  const response = await fetch('/api/concert-to-album/transcribe-speech', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  trackTitle: track.title,
  url: youtubeUrl.trim(),
@@ -1018,16 +1018,16 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  if (!response.ok) {
  const errData = await response.json();
- throw new Error(errData.error || 'Error al transcribir discurso.');
+ throw new Error(errData.error ||'Error al transcribir discurso.');
  }
 
  const data = await response.json();
  if (data.transcription) {
- handleUpdateTrack(track.index, 'speechTranscription', data.transcription);
+ handleUpdateTrack(track.index,'speechTranscription', data.transcription);
  }
  } catch (err: any) {
  console.error('Error transcribing speech:', err);
- alert(err.message || 'No se pudo generar la transcripción del discurso.');
+ alert(err.message ||'No se pudo generar la transcripción del discurso.');
  } finally {
  setTranscribingIndex(null);
  }
@@ -1038,8 +1038,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setTranscribingChordsIndex(track.index);
  try {
  const response = await fetch('/api/concert-to-album/transcribe-song', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  title: track.title,
  artist: artistName || bandName,
@@ -1056,19 +1056,19 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  if (!response.ok) {
  const errData = await response.json();
- throw new Error(errData.error || 'Error al transcribir letra y acordes.');
+ throw new Error(errData.error ||'Error al transcribir letra y acordes.');
  }
 
  const data = await response.json();
  if (data.lyricsWithChords) {
- handleUpdateTrack(track.index, 'lyricsWithChords', data.lyricsWithChords);
- if (data.tonalidad) handleUpdateTrack(track.index, 'tonalidad', data.tonalidad);
- if (data.bpm) handleUpdateTrack(track.index, 'bpm', data.bpm);
+ handleUpdateTrack(track.index,'lyricsWithChords', data.lyricsWithChords);
+ if (data.tonalidad) handleUpdateTrack(track.index,'tonalidad', data.tonalidad);
+ if (data.bpm) handleUpdateTrack(track.index,'bpm', data.bpm);
  setExpandedChordsIndex(track.index);
  }
  } catch (err: any) {
  console.error('Error transcribing song chords:', err);
- alert(err.message || 'No se pudo generar la transcripción de acordes.');
+ alert(err.message ||'No se pudo generar la transcripción de acordes.');
  } finally {
  setTranscribingChordsIndex(null);
  }
@@ -1097,12 +1097,12 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  });
 
  try {
- if (track.type === 'dialogo') {
+ if (track.type ==='dialogo') {
  // Transcribe speech/interlude
  setTranscribingIndex(track.index);
  const response = await fetch('/api/concert-to-album/transcribe-speech', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  trackTitle: track.title,
  url: youtubeUrl.trim(),
@@ -1118,7 +1118,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  if (response.ok) {
  const data = await response.json();
  if (data.transcription) {
- handleUpdateTrack(track.index, 'speechTranscription', data.transcription);
+ handleUpdateTrack(track.index,'speechTranscription', data.transcription);
  }
  }
  setTranscribingIndex(null);
@@ -1126,8 +1126,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  // Transcribe song lyrics and chords
  setTranscribingChordsIndex(track.index);
  const response = await fetch('/api/concert-to-album/transcribe-song', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  title: track.title,
  artist: artistName || bandName,
@@ -1144,9 +1144,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  if (response.ok) {
  const data = await response.json();
- if (data.lyricsWithChords) handleUpdateTrack(track.index, 'lyricsWithChords', data.lyricsWithChords);
- if (data.tonalidad) handleUpdateTrack(track.index, 'tonalidad', data.tonalidad);
- if (data.bpm) handleUpdateTrack(track.index, 'bpm', data.bpm);
+ if (data.lyricsWithChords) handleUpdateTrack(track.index,'lyricsWithChords', data.lyricsWithChords);
+ if (data.tonalidad) handleUpdateTrack(track.index,'tonalidad', data.tonalidad);
+ if (data.bpm) handleUpdateTrack(track.index,'bpm', data.bpm);
  }
  setTranscribingChordsIndex(null);
  }
@@ -1164,12 +1164,12 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  const trackListToUse = generatedResult ? generatedResult.tracks : tracks;
  if (!trackListToUse || trackListToUse.length === 0) return;
 
- const setlistTitle = `Directo: ${albumTitle || 'Concierto en Vivo'}`;
+ const setlistTitle = `Directo: ${albumTitle ||'Concierto en Vivo'}`;
  const setlistItems = trackListToUse.map((t, idx) => ({
  id: `i_live_${Date.now()}_${idx}`,
- tipoItem: t.type === 'musica' ? 'cancion' : 'intro_tema',
+ tipoItem: t.type ==='musica' ?'cancion' :'intro_tema',
  tituloCustom: t.title,
- notaTema: t.speechTranscription || (t.type === 'musica' ? `Tonalidad: ${t.tonalidad || 'Mim'} | BPM: ${t.bpm || 120}` : ''),
+ notaTema: t.speechTranscription || (t.type ==='musica' ? `Tonalidad: ${t.tonalidad ||'Mim'} | BPM: ${t.bpm || 120}` :''),
  duracionEstimadaMinutos: Math.max(1, Math.round(t.duration / 60)),
  duracionEstimadaSegundos: t.duration || 180,
  }));
@@ -1179,8 +1179,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  const newSetlist = {
  id: `setlist_${Date.now()}`,
  nombre: setlistTitle,
- descripcion: `Setlist generado automáticamente a partir del audio en directo de ${albumTitle || 'Concierto en Vivo'}`,
- tipoFormato: 'directo',
+ descripcion: `Setlist generado automáticamente a partir del audio en directo de ${albumTitle ||'Concierto en Vivo'}`,
+ tipoFormato:'directo',
  duracionTotalEstimadaMinutos: totalMinutos,
  fechaCreacion: new Date().toISOString().split('T')[0],
  fechaUltimaEdicion: new Date().toISOString().split('T')[0],
@@ -1201,15 +1201,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  // Persist to Supabase Backend
  const token = localStorage.getItem('bakandeya_token');
  fetch('/api/setlists', {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json',
- ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ method:'POST',
+ headers: {'Content-Type':'application/json',
+ ...(token ? {'Authorization': `Bearer ${token}` } : {})
  },
  body: JSON.stringify(newSetlist)
  }).catch(err => console.warn('Could not persist direct setlist to Supabase API:', err));
 
- alert(`¡Setlist "${setlistTitle}" creado con éxito en tu Gestor de Repertorio/Setlists!`);
+ alert(`¡Setlist"${setlistTitle}" creado con éxito en tu Gestor de Repertorio/Setlists!`);
  } catch (err) {
  console.warn('Error saving setlist:', err);
  alert('Error al guardar el setlist.');
@@ -1218,7 +1217,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  const handleSaveToCatalog = () => {
  if (!generatedResult) return;
- onSaveAlbumToCatalog(albumTitle || 'Directo en Vivo', generatedResult.tracks);
+ onSaveAlbumToCatalog(albumTitle ||'Directo en Vivo', generatedResult.tracks);
  setSavedSuccessMsg(true);
  setTimeout(() => setSavedSuccessMsg(false), 4000);
  };
@@ -1229,14 +1228,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div
  className={`relative w-full max-w-5xl my-auto rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] '
- : 'bg-[var(--surface)] text-[var(--ink-3)] '
+ ?'bg-white text-[var(--ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-3)]'
  } max-h-[92vh] flex flex-col`}
  >
  {/* Modal Header */}
  <div
  className={`p-6 border-b flex items-start justify-between ${
- isStitchLight ? 'bg-amber-500/10 ' : 'bg-amber-500/10 '
+ isStitchLight ?'bg-amber-500/10' :'bg-amber-500/10'
  }`}
  >
  <div className="flex items-center gap-3">
@@ -1258,7 +1257,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={onClose}
  className={`p-2 rounded-[var(--r-s)] transition-colors ${
- isStitchLight ? 'hover:bg-[var(--sunken)] text-[var(--ink-2)]' : 'hover:bg-[var(--surface)] text-[var(--ink-3)]'
+ isStitchLight ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]' :'hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  >
  <X className="w-5 h-5" />
@@ -1279,7 +1278,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Step 1: Input & Parameters */}
  <div
  className={`p-5 rounded-[var(--r-m)] space-y-4 ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-slate-950/60 '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-slate-950/60'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -1299,8 +1298,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onClick={() => setCookieModalOpen(true)}
  className={`text-[11px] font-medium flex items-center gap-1 transition-colors ${
  hasYoutubeCookies
- ? 'text-emerald-400 hover:text-emerald-300'
- : 'text-amber-400 hover:text-amber-300 hover:underline'
+ ?'text-emerald-400 hover:text-emerald-300'
+ :'text-amber-400 hover:text-amber-300 hover:underline'
  }`}
  title="Configura las cookies del canal de la banda para permitir descargas directas en servidor"
  >
@@ -1324,8 +1323,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => setYoutubeUrl(e.target.value)}
  className={`w-full px-3 py-2 text-sm rounded-[var(--r-s)] focus:outline-none focus:ring-2 focus:ring-amber-500 ${
  isStitchLight
- ? 'bg-white text-[var(--ink)]'
- : 'bg-[var(--surface)] text-[var(--ink-3)]'
+ ?'bg-white text-[var(--ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  />
  </div>
@@ -1339,7 +1338,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  accept="video/*,audio/*"
  onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
  className={`w-full text-xs text-[var(--ink-3)] file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-white hover:file:bg-amber-600 ${
- isStitchLight ? 'bg-white ' : 'bg-[var(--surface)] '
+ isStitchLight ?'bg-white' :'bg-[var(--surface)]'
  }`}
  />
  </div>
@@ -1353,7 +1352,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  type="checkbox"
  checked={useAi}
  onChange={(e) => setUseAi(e.target.checked)}
- className="w-4 h-4 text-amber-500 rounded focus:ring-amber-500 bg-[var(--surface)] "
+ className="w-4 h-4 text-amber-500 rounded focus:ring-amber-500 bg-[var(--surface)]"
  />
  <div>
  <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
@@ -1441,11 +1440,11 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  title="Configurar cookies de la cuenta de YouTube para descargar automáticamente en el servidor sin bloqueos"
  >
  <Lock className="w-3.5 h-3.5 text-amber-400" />
- <span>{hasYoutubeCookies ? '🔐 Sesión YouTube Activa' : '🔐 Vincular Sesión de la Banda'}</span>
+ <span>{hasYoutubeCookies ?'🔐 Sesión YouTube Activa' :'🔐 Vincular Sesión de la Banda'}</span>
  </button>
 
  <a
- href={`https://cobalt.tools/#${encodeURIComponent(youtubeUrl || '')}`}
+ href={`https://cobalt.tools/#${encodeURIComponent(youtubeUrl ||'')}`}
  target="_blank"
  rel="noopener noreferrer"
  className="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-all text-xs shadow-md"
@@ -1468,7 +1467,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  <label className="px-3.5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-[var(--r-s)] cursor-pointer flex items-center justify-center gap-1.5 transition-all text-xs shadow-md">
  <Upload className="w-4 h-4" />
- <span>{isLinkingLocalFile ? 'Subiendo...' : '📁 Adjuntar Archivo Local'}</span>
+ <span>{isLinkingLocalFile ?'Subiendo...' :'📁 Adjuntar Archivo Local'}</span>
  <input
  type="file"
  accept="audio/*,video/*"
@@ -1500,7 +1499,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  )}
 
- <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-[var(--surface)]/60 p-3.5 rounded-[var(--r-m)] ">
+ <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-[var(--surface)]/60 p-3.5 rounded-[var(--r-m)]">
  <div>
  <h3 className="text-base font-extrabold flex items-center gap-2">
  <Layers className="w-5 h-5 text-amber-500" />
@@ -1513,14 +1512,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  <div className="flex flex-wrap items-center gap-2">
  {/* Undo & Redo Controls */}
- <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-[var(--r-s)] ">
+ <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-[var(--r-s)]">
  <button
  onClick={handleUndo}
  disabled={history.length === 0}
  className={`px-2 py-1 text-xs font-bold rounded flex items-center gap-1 transition-all ${
  history.length > 0
- ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 cursor-pointer'
- : 'text-[var(--ink-2)] cursor-not-allowed opacity-50'
+ ?'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 cursor-pointer'
+ :'text-[var(--ink-2)] cursor-not-allowed opacity-50'
  }`}
  title="Deshacer última acción (Ctrl+Z)"
  >
@@ -1538,8 +1537,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  disabled={redoStack.length === 0}
  className={`px-2 py-1 text-xs font-bold rounded flex items-center gap-1 transition-all ${
  redoStack.length > 0
- ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 cursor-pointer'
- : 'text-[var(--ink-2)] cursor-not-allowed opacity-50'
+ ?'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 cursor-pointer'
+ :'text-[var(--ink-2)] cursor-not-allowed opacity-50'
  }`}
  title="Rehacer acción cancelada (Ctrl+Y / Ctrl+Shift+Z)"
  >
@@ -1556,8 +1555,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => setAlbumTitle(e.target.value)}
  className={`px-2.5 py-1 text-xs font-bold rounded ${
  isStitchLight
- ? 'bg-white text-[var(--ink)]'
- : 'bg-slate-950 text-[var(--ink-3)]'
+ ?'bg-white text-[var(--ink)]'
+ :'bg-slate-950 text-[var(--ink-3)]'
  }`}
  />
  </div>
@@ -1577,11 +1576,11 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-sky-600/30 text-sky-200 hover:bg-sky-600/50 flex items-center gap-1.5 transition-all shadow-sm"
  title="Analiza la envolvente de audio para detectar con precisión el ataque musical de cada tema, descartando ruidos, charla o aplausos"
  >
- <Target className={`w-3.5 h-3.5 text-sky-400 ${isDetectingCues ? 'animate-spin' : ''}`} />
- <span>{isDetectingCues ? 'Detectando CUEs...' : '🎯 Autodetectar CUEs de Inicio'}</span>
+ <Target className={`w-3.5 h-3.5 text-sky-400 ${isDetectingCues ?'animate-spin' :''}`} />
+ <span>{isDetectingCues ?'Detectando CUEs...' :'🎯 Autodetectar CUEs de Inicio'}</span>
  </button>
 
- {tracks.some((t) => t.type === 'musica' && typeof t.cueIn === 'number' && t.cueIn > 0.2) && (
+ {tracks.some((t) => t.type ==='musica' && typeof t.cueIn ==='number' && t.cueIn > 0.2) && (
  <button
  onClick={handleSnapAllTracksToCues}
  className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-sky-500 text-slate-950 hover:bg-sky-400 shadow-md flex items-center gap-1.5 font-bold animate-pulse"
@@ -1598,8 +1597,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-purple-600/30 text-purple-200 hover:bg-purple-600/50 flex items-center gap-1.5 transition-all"
  title="Identificar automáticamente si cada trozo es una canción o un discurso"
  >
- <Wand2 className={`w-3.5 h-3.5 text-purple-400 ${isClassifying ? 'animate-spin' : ''}`} />
- {isClassifying ? 'Clasificando...' : '⚡ Auto-Clasificar (Música/Diálogo)'}
+ <Wand2 className={`w-3.5 h-3.5 text-purple-400 ${isClassifying ?'animate-spin' :''}`} />
+ {isClassifying ?'Clasificando...' :'⚡ Auto-Clasificar (Música/Diálogo)'}
  </button>
 
  <button
@@ -1608,12 +1607,12 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-emerald-600/30 text-emerald-200 hover:bg-emerald-600/50 flex items-center gap-1.5 transition-all disabled:opacity-50"
  title="Transcribir automáticamente todo el concierto (letras, acordes y speeches) usando Gemini IA"
  >
- <Sparkles className={`w-3.5 h-3.5 text-emerald-400 ${isTranscribingAll ? 'animate-spin' : ''}`} />
+ <Sparkles className={`w-3.5 h-3.5 text-emerald-400 ${isTranscribingAll ?'animate-spin' :''}`} />
  {isTranscribingAll
  ? `Transcribiendo (${transcribeAllProgress?.current}/${transcribeAllProgress?.total})...`
  : selectedIndices.length > 0
  ? `🎤 Transcribir Seleccionadas (${selectedIndices.length})`
- : '🎤 Transcribir Todo el Concierto'}
+ :'🎤 Transcribir Todo el Concierto'}
  </button>
 
  <button
@@ -1622,7 +1621,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  title="Mostrar u ocultar los editores de cifrado y letras de todas las canciones"
  >
  <Music2 className="w-3.5 h-3.5 text-amber-400" />
- {expandAllChords ? '🙈 Plegar Cifrados' : '📖 Desplegar Todos los Cifrados'}
+ {expandAllChords ?'🙈 Plegar Cifrados' :'📖 Desplegar Todos los Cifrados'}
  </button>
 
  {selectedIndices.length >= 2 && (
@@ -1645,7 +1644,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {/* Banner suggestion for Pista 1 if it's currently set as song */}
- {tracks.length > 0 && tracks[0].type === 'musica' && (
+ {tracks.length > 0 && tracks[0].type ==='musica' && (
  <div className="p-3 bg-purple-950/40 rounded-[var(--r-m)] flex flex-wrap items-center justify-between gap-3 text-xs text-purple-200 shadow-sm animate-fade-in">
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
@@ -1655,9 +1654,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  <button
  onClick={() => {
- handleUpdateTrack(1, 'type', 'dialogo');
+ handleUpdateTrack(1,'type','dialogo');
  if (tracks[0].title.startsWith('Pista 1') || tracks[0].title.startsWith('Tema 1')) {
- handleUpdateTrack(1, 'title', 'Presentación e Intro del Concierto');
+ handleUpdateTrack(1,'title','Presentación e Intro del Concierto');
  }
  }}
  className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-[var(--r-s)] text-xs shrink-0 shadow transition-all flex items-center gap-1"
@@ -1681,15 +1680,15 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  const totalSecs = Math.max(...tracks.map((t) => t.end), 1);
  return tracks.map((tr) => {
  const pct = Math.max(1, (tr.duration / totalSecs) * 100);
- const isSong = tr.type === 'musica';
+ const isSong = tr.type ==='musica';
  const isExpanded = expandedChordsIndex === tr.index;
  return (
  <div
  key={tr.index}
  style={{ width: `${pct}%` }}
- onClick={() => tr.type === 'musica' && setExpandedChordsIndex(isExpanded ? null : tr.index)}
+ onClick={() => tr.type ==='musica' && setExpandedChordsIndex(isExpanded ? null : tr.index)}
  className={`h-full rounded relative group cursor-pointer transition-all flex items-center justify-center text-[10px] font-mono font-bold truncate px-1 ${
- isSong ? 'bg-amber-500/80 hover:bg-amber-400 text-slate-950' : 'bg-purple-600/80 hover:bg-purple-500 text-white'
+ isSong ?'bg-amber-500/80 hover:bg-amber-400 text-slate-950' :'bg-purple-600/80 hover:bg-purple-500 text-white'
  }`}
  title={`#${tr.index} ${tr.title} (${formatSeconds(tr.duration)})`}
  >
@@ -1740,14 +1739,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  key={track.index}
  className={`p-3.5 rounded-[var(--r-m)] transition-all space-y-2 ${
  isSelected
- ? 'bg-amber-500/15 ring-1 ring-amber-500/50'
- : track.type === 'musica'
+ ?'bg-amber-500/15 ring-1 ring-amber-500/50'
+ : track.type ==='musica'
  ? isStitchLight
- ? 'bg-amber-500/5 hover:'
- : 'bg-amber-950/20 /20 hover:/40'
+ ?'bg-amber-500/5 hover:'
+ :'bg-amber-950/20 /20 hover:/40'
  : isStitchLight
- ? 'bg-purple-500/5 border-purple-200 hover:border-purple-300'
- : 'bg-purple-950/20 border-purple-500/20 hover:border-purple-500/40'
+ ?'bg-purple-500/5 border-purple-200 hover:border-purple-300'
+ :'bg-purple-950/20 border-purple-500/20 hover:border-purple-500/40'
  }`}
  >
  {/* Top Row: Track Controls, Type, Timestamps, and Actions */}
@@ -1767,25 +1766,25 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  )}
  </button>
 
- <span className="w-7 text-center font-mono font-black text-xs text-[var(--ink-3)] bg-[var(--surface)]/90 px-1.5 py-0.5 rounded ">
- #{String(track.index).padStart(2, '0')}
+ <span className="w-7 text-center font-mono font-black text-xs text-[var(--ink-3)] bg-[var(--surface)]/90 px-1.5 py-0.5 rounded">
+ #{String(track.index).padStart(2,'0')}
  </span>
 
  <select
  value={track.type}
  onChange={(e) => {
- const newType = e.target.value as 'musica' | 'dialogo';
- handleUpdateTrack(track.index, 'type', newType);
- if (newType === 'dialogo' && (track.title.startsWith('Tema ') || track.title.startsWith('Pista '))) {
- handleUpdateTrack(track.index, 'title', `Presentación / Speech ${track.index}`);
- } else if (newType === 'musica' && (track.title.startsWith('Presentación') || track.title.startsWith('Speech'))) {
- handleUpdateTrack(track.index, 'title', `Tema ${track.index}`);
+ const newType = e.target.value as'musica' |'dialogo';
+ handleUpdateTrack(track.index,'type', newType);
+ if (newType ==='dialogo' && (track.title.startsWith('Tema') || track.title.startsWith('Pista'))) {
+ handleUpdateTrack(track.index,'title', `Presentación / Speech ${track.index}`);
+ } else if (newType ==='musica' && (track.title.startsWith('Presentación') || track.title.startsWith('Speech'))) {
+ handleUpdateTrack(track.index,'title', `Tema ${track.index}`);
  }
  }}
  className={`text-xs font-black px-2.5 py-1 rounded-[var(--r-s)] transition-all cursor-pointer ${
- track.type === 'musica'
- ? 'bg-amber-500/20 text-amber-300 /50 hover:bg-amber-500/30'
- : 'bg-purple-500/20 text-purple-300 border-purple-500/50 hover:bg-purple-500/30'
+ track.type ==='musica'
+ ?'bg-amber-500/20 text-amber-300 /50 hover:bg-amber-500/30'
+ :'bg-purple-500/20 text-purple-300 border-purple-500/50 hover:bg-purple-500/30'
  }`}
  title="Haz clic para alternar entre Canción y Speech/Presentación"
  >
@@ -1797,12 +1796,12 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Timestamps & Actions */}
  <div className="flex flex-wrap items-center gap-2">
  {/* Timestamps */}
- <div className="flex items-center gap-1.5 text-xs font-mono bg-slate-950/80 px-2 py-1 rounded-[var(--r-s)] ">
+ <div className="flex items-center gap-1.5 text-xs font-mono bg-slate-950/80 px-2 py-1 rounded-[var(--r-s)]">
  <span className="text-[var(--ink-3)] text-[11px]">Inicio:</span>
  <input
  type="text"
  value={formatSeconds(track.start)}
- onChange={(e) => handleUpdateTrack(track.index, 'start', parseTimeToSeconds(e.target.value))}
+ onChange={(e) => handleUpdateTrack(track.index,'start', parseTimeToSeconds(e.target.value))}
  className="w-14 px-1 py-0.5 text-center bg-[var(--surface)] rounded text-amber-400 text-xs font-bold"
  title="Tiempo de inicio (MM:SS)"
  />
@@ -1810,7 +1809,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <input
  type="text"
  value={formatSeconds(track.end)}
- onChange={(e) => handleUpdateTrack(track.index, 'end', parseTimeToSeconds(e.target.value))}
+ onChange={(e) => handleUpdateTrack(track.index,'end', parseTimeToSeconds(e.target.value))}
  className="w-14 px-1 py-0.5 text-center bg-[var(--surface)] rounded text-amber-400 text-xs font-bold"
  title="Tiempo de fin (MM:SS)"
  />
@@ -1818,7 +1817,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {/* CUE In detected badge & snap buttons */}
- {typeof track.cueIn === 'number' && track.cueIn > 0.1 && (
+ {typeof track.cueIn ==='number' && track.cueIn > 0.1 && (
  <div className="flex items-center gap-1.5 bg-sky-950/70 text-sky-200 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono shadow-sm">
  <Target className="w-3.5 h-3.5 text-sky-400 shrink-0" />
  <span className="text-[11px]">
@@ -1855,8 +1854,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  disabled={isLoadingPreview}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all ${
  isPlayingThis
- ? 'bg-amber-500 text-slate-950 animate-pulse'
- : 'bg-[var(--surface)] hover:bg-amber-500 hover:text-slate-950 text-[var(--ink-3)] '
+ ?'bg-amber-500 text-slate-950 animate-pulse'
+ :'bg-[var(--surface)] hover:bg-amber-500 hover:text-slate-950 text-[var(--ink-3)]'
  }`}
  title="Reproducir este trozo para escucharlo y clasificarlo"
  >
@@ -1892,7 +1891,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {idx < tracks.length - 1 && (
  <button
  onClick={() => handleMergeWithNext(track.index)}
- className="p-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-400 "
+ className="p-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-400"
  title={`Fusionar con el siguiente (#${track.index + 1})`}
  >
  <Combine className="w-3.5 h-3.5" />
@@ -1900,14 +1899,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  )}
 
  <button
- onClick={() => handleMoveTrack(track.index, 'up')}
+ onClick={() => handleMoveTrack(track.index,'up')}
  className="p-1 rounded hover:bg-[var(--surface)] text-[var(--ink-3)]"
  title="Mover arriba"
  >
  <ArrowUp className="w-3.5 h-3.5" />
  </button>
  <button
- onClick={() => handleMoveTrack(track.index, 'down')}
+ onClick={() => handleMoveTrack(track.index,'down')}
  className="p-1 rounded hover:bg-[var(--surface)] text-[var(--ink-3)]"
  title="Mover abajo"
  >
@@ -1928,13 +1927,13 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div className="pt-2.5 space-y-2">
  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
  <div className="flex items-center gap-1.5 shrink-0">
- {track.type === 'musica' ? (
+ {track.type ==='musica' ? (
  <Music2 className="w-4 h-4 text-amber-400" />
  ) : (
  <span className="text-base">🗣️</span>
  )}
  <label className="text-xs font-black tracking-wide uppercase text-[var(--ink-3)]">
- {track.type === 'musica' ? 'Nombre del Tema:' : 'Nombre del Speech:'}
+ {track.type ==='musica' ?'Nombre del Tema:' :'Nombre del Speech:'}
  </label>
  </div>
 
@@ -1942,16 +1941,16 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <input
  type="text"
  value={track.title}
- onChange={(e) => handleUpdateTrack(track.index, 'title', e.target.value)}
+ onChange={(e) => handleUpdateTrack(track.index,'title', e.target.value)}
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] focus:'
- : track.type === 'musica'
- ? 'bg-slate-950/90 /40 text-amber-100 placeholder-slate-500 focus: focus:ring-1 focus:ring-amber-400'
- : 'bg-slate-950/90 border-purple-500/40 text-purple-100 placeholder-slate-500 focus:border-purple-400 focus:ring-1 focus:ring-purple-400'
+ ?'bg-white text-[var(--ink)] focus:'
+ : track.type ==='musica'
+ ?'bg-slate-950/90 /40 text-amber-100 placeholder-slate-500 focus: focus:ring-1 focus:ring-amber-400'
+ :'bg-slate-950/90 border-purple-500/40 text-purple-100 placeholder-slate-500 focus:border-purple-400 focus:ring-1 focus:ring-purple-400'
  }`}
  placeholder={
- track.type === 'musica'
+ track.type ==='musica'
  ? `Ej: Tema ${track.index} (o escribe el nombre de la canción)...`
  : `Ej: Presentación de la banda / Saludo al público / Anécdota...`
  }
@@ -1959,7 +1958,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {track.title && (
  <button
  type="button"
- onClick={() => handleUpdateTrack(track.index, 'title', '')}
+ onClick={() => handleUpdateTrack(track.index,'title','')}
  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink-3)] p-0.5"
  title="Limpiar nombre"
  >
@@ -1972,13 +1971,13 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Quick Presets for Songs and Speeches */}
  <div className="flex flex-wrap items-center gap-1.5 pl-0 sm:pl-6 text-[11px]">
  <span className="text-[var(--ink-2)] text-[10px] font-semibold">Sugerencias rápidas:</span>
- {track.type === 'dialogo' ? (
+ {track.type ==='dialogo' ? (
  <>
- {['Presentación de la Banda', 'Saludo al Público', 'Anécdota / Historia', 'Agradecimientos', 'Presentación del Tema', 'Despedida / Bises'].map((preset) => (
+ {['Presentación de la Banda','Saludo al Público','Anécdota / Historia','Agradecimientos','Presentación del Tema','Despedida / Bises'].map((preset) => (
  <button
  key={preset}
  type="button"
- onClick={() => handleUpdateTrack(track.index, 'title', preset)}
+ onClick={() => handleUpdateTrack(track.index,'title', preset)}
  className="px-2 py-0.5 rounded bg-purple-950/60 hover:bg-purple-800/60 text-purple-300 text-[10px] font-medium transition-all"
  >
  + {preset}
@@ -1998,15 +1997,15 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </>
  ) : (
  <>
- {['Intro Instrumental', 'Solo / Jam', 'Acústico', 'Fin de Concierto / Outro', 'Bis / Encore'].map((preset) => (
+ {['Intro Instrumental','Solo / Jam','Acústico','Fin de Concierto / Outro','Bis / Encore'].map((preset) => (
  <button
  key={preset}
  type="button"
  onClick={() => {
  if (track.title && !track.title.includes(preset)) {
- handleUpdateTrack(track.index, 'title', `${track.title} (${preset})`);
+ handleUpdateTrack(track.index,'title', `${track.title} (${preset})`);
  } else {
- handleUpdateTrack(track.index, 'title', `${preset} ${track.index}`);
+ handleUpdateTrack(track.index,'title', `${preset} ${track.index}`);
  }
  }}
  className="px-2 py-0.5 rounded bg-amber-950/60 hover:bg-amber-800/60 text-amber-300 text-[10px] font-medium transition-all"
@@ -2020,15 +2019,15 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {/* Song Chords & Lyrics Control Row */}
- {track.type === 'musica' && (
+ {track.type ==='musica' && (
  <div className="pl-9 pt-1.5 space-y-2 border-t /60 mt-2">
  <div className="flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-2 text-xs">
  <span className="text-[var(--ink-3)] font-semibold text-[11px]">Ton:</span>
  <input
  type="text"
- value={track.tonalidad || 'Mim'}
- onChange={(e) => handleUpdateTrack(track.index, 'tonalidad', e.target.value)}
+ value={track.tonalidad ||'Mim'}
+ onChange={(e) => handleUpdateTrack(track.index,'tonalidad', e.target.value)}
  className="w-14 px-2 py-0.5 text-center bg-slate-950 rounded text-amber-400 font-bold text-xs"
  placeholder="Mim"
  />
@@ -2036,7 +2035,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <input
  type="number"
  value={track.bpm || 120}
- onChange={(e) => handleUpdateTrack(track.index, 'bpm', parseInt(e.target.value) || 120)}
+ onChange={(e) => handleUpdateTrack(track.index,'bpm', parseInt(e.target.value) || 120)}
  className="w-14 px-2 py-0.5 text-center bg-slate-950 rounded text-amber-400 font-bold text-xs"
  placeholder="120"
  />
@@ -2045,7 +2044,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <Check className="w-3 h-3" /> Cifrado & Letra Listos
  </span>
  ) : (
- <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[var(--surface)] text-[var(--ink-3)] ">
+ <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[var(--surface)] text-[var(--ink-3)]">
  Sin cifrado aún
  </span>
  )}
@@ -2058,8 +2057,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className="px-2.5 py-1 text-[11px] font-bold rounded-[var(--r-s)] bg-amber-500/20 text-amber-300 hover:bg-amber-500/40 flex items-center gap-1.5 transition-all"
  title="Generar o actualizar automáticamente letra transcrita con cifrado de acordes con Gemini AI"
  >
- <Sparkles className={`w-3 h-3 text-amber-400 ${transcribingChordsIndex === track.index ? 'animate-spin' : ''}`} />
- {transcribingChordsIndex === track.index ? 'Transcribiendo...' : '✨ Re-Transcribir Letra y Acordes'}
+ <Sparkles className={`w-3 h-3 text-amber-400 ${transcribingChordsIndex === track.index ?'animate-spin' :''}`} />
+ {transcribingChordsIndex === track.index ?'Transcribiendo...' :'✨ Re-Transcribir Letra y Acordes'}
  </button>
 
  <button
@@ -2067,7 +2066,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className="px-2.5 py-1 text-[11px] font-bold rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] flex items-center gap-1"
  >
  <Music2 className="w-3 h-3 text-amber-400" />
- {expandedChordsIndex === track.index || expandAllChords ? 'Ocultar Cifrado' : '🎼 Ver/Editar Cifrado'}
+ {expandedChordsIndex === track.index || expandAllChords ?'Ocultar Cifrado' :'🎼 Ver/Editar Cifrado'}
  {expandedChordsIndex === track.index || expandAllChords ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
  </button>
  </div>
@@ -2082,7 +2081,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div className="truncate italic flex items-center gap-2">
  <Music2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
  <span className="font-bold text-amber-300 not-italic">Cifrado:</span>
- <span className="truncate">"{track.lyricsWithChords.split('\n').filter(Boolean).slice(0, 2).join(' / ')}"</span>
+ <span className="truncate">"{track.lyricsWithChords.split('\n').filter(Boolean).slice(0, 2).join(' /')}"</span>
  </div>
  <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-md font-sans font-bold shrink-0 flex items-center gap-1">
  Ver completo ➔
@@ -2100,8 +2099,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <span className="text-[10px] text-[var(--ink-2)]">Usa [Acorde] antes de la palabra o líneas superiores de acordes</span>
  </div>
  <textarea
- value={track.lyricsWithChords || ''}
- onChange={(e) => handleUpdateTrack(track.index, 'lyricsWithChords', e.target.value)}
+ value={track.lyricsWithChords ||''}
+ onChange={(e) => handleUpdateTrack(track.index,'lyricsWithChords', e.target.value)}
  placeholder="[Intro]&#10;[Mim] [Do] [Sol] [Re]&#10;&#10;[Verso 1]&#10;[Mim]En la noche del concierto [Do]cantamos juntos..."
  rows={8}
  className="w-full p-3 font-mono text-xs rounded-[var(--r-s)] bg-[var(--surface)] text-amber-100 placeholder-slate-600 focus:outline-none focus: leading-relaxed"
@@ -2112,7 +2111,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  )}
 
  {/* Speech Transcription row */}
- {track.type === 'dialogo' && (
+ {track.type ==='dialogo' && (
  <div className="pl-9 pt-2 space-y-1.5 border-t border-purple-500/20 mt-2">
  <div className="flex items-center justify-between text-xs">
  <span className="text-[11px] font-bold text-purple-300 flex items-center gap-1.5">
@@ -2124,12 +2123,12 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className="px-2.5 py-0.5 text-[10px] font-bold rounded bg-purple-600/30 text-purple-300 hover:bg-purple-600/50 flex items-center gap-1 transition-all"
  >
  <Sparkles className="w-3 h-3 text-purple-400" />
- {transcribingIndex === track.index ? 'Transcribiendo...' : 'Re-Transcribir Speech'}
+ {transcribingIndex === track.index ?'Transcribiendo...' :'Re-Transcribir Speech'}
  </button>
  </div>
  <textarea
- value={track.speechTranscription || ''}
- onChange={(e) => handleUpdateTrack(track.index, 'speechTranscription', e.target.value)}
+ value={track.speechTranscription ||''}
+ onChange={(e) => handleUpdateTrack(track.index,'speechTranscription', e.target.value)}
  placeholder="[Intro musical / Palabras del artista al público]..."
  rows={2}
  className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-slate-950 text-purple-100 placeholder-purple-400/50 focus:outline-none focus:border-purple-500 leading-relaxed font-sans"
@@ -2147,7 +2146,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  <div>
  <span className="text-xs font-black text-amber-400 block">
- Reproductor de Tramo: #{activeSnippet.trackIndex} "{track.title}"
+ Reproductor de Tramo: #{activeSnippet.trackIndex}"{track.title}"
  </span>
  <span className="text-[10px] text-[var(--ink-3)] font-mono">
  Línea de tiempo: {formatSeconds(activeSnippet.start)} ➔ {formatSeconds(activeSnippet.end)}
@@ -2293,7 +2292,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className="px-4 py-1.5 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20"
  >
  {snippetIsPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
- {snippetIsPlaying ? 'Pausar' : 'Reproducir'}
+ {snippetIsPlaying ?'Pausar' :'Reproducir'}
  </button>
 
  <button
@@ -2313,7 +2312,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  key={spd}
  onClick={() => handleChangeSnippetSpeed(spd)}
  className={`px-1.5 py-0.5 rounded font-bold ${
- snippetSpeed === spd ? 'bg-amber-500 text-slate-950' : 'text-[var(--ink-3)] hover:text-white'
+ snippetSpeed === spd ?'bg-amber-500 text-slate-950' :'text-[var(--ink-3)] hover:text-white'
  }`}
  >
  {spd}x
@@ -2378,7 +2377,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </a>
 
  <a
- href={generatedResult.deliverablePath.replace('/index.html', '/repertoire.cue')}
+ href={generatedResult.deliverablePath.replace('/index.html','/repertoire.cue')}
  download="repertoire.cue"
  target="_blank"
  rel="noreferrer"
@@ -2397,7 +2396,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  </div>
 
- <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t ">
+ <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t">
  <p className="text-xs text-[var(--ink-3)]">
  ¿Deseas agregar formalmente este nuevo Álbum con todos sus temas a la Discografía de la Banda?
  </p>
@@ -2540,7 +2539,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div>
  <h3 className="text-base font-extrabold text-[var(--ink-3)] flex items-center gap-2">
  <span>Nombrar Temas y Speeches</span>
- <span className="text-xs font-mono font-normal px-2 py-0.5 rounded-full bg-[var(--surface)] text-[var(--ink-3)] ">
+ <span className="text-xs font-mono font-normal px-2 py-0.5 rounded-full bg-[var(--surface)] text-[var(--ink-3)]">
  {tracks.length} cortes
  </span>
  </h3>
@@ -2563,9 +2562,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  type="button"
  onClick={() => setQuickNamingActiveTab('table')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all ${
- quickNamingActiveTab === 'table'
- ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
- : 'bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink-3)]'
+ quickNamingActiveTab ==='table'
+ ?'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
+ :'bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink-3)]'
  }`}
  >
  <Sliders className="w-3.5 h-3.5" />
@@ -2576,9 +2575,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  type="button"
  onClick={() => setQuickNamingActiveTab('paste')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all ${
- quickNamingActiveTab === 'paste'
- ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
- : 'bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink-3)]'
+ quickNamingActiveTab ==='paste'
+ ?'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
+ :'bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink-3)]'
  }`}
  >
  <FileText className="w-3.5 h-3.5" />
@@ -2587,13 +2586,13 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {/* Tab 1: Quick Table */}
- {quickNamingActiveTab === 'table' && (
+ {quickNamingActiveTab ==='table' && (
  <div className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[300px]">
  <div className="text-[11px] text-[var(--ink-3)] bg-slate-950/60 p-2.5 rounded-[var(--r-m)] flex items-center justify-between">
  <span>💡 Edita directamente el título de cada corte o cambia su tipo entre 🎵 Canción y 🗣️ Speech. Pulsa Tab para avanzar al siguiente.</span>
  <div className="flex items-center gap-2 text-[10px] font-mono shrink-0">
- <span className="text-amber-400">🎵 {tracks.filter((t) => t.type === 'musica').length} temas</span>
- <span className="text-purple-400">🗣️ {tracks.filter((t) => t.type === 'dialogo').length} speeches</span>
+ <span className="text-amber-400">🎵 {tracks.filter((t) => t.type ==='musica').length} temas</span>
+ <span className="text-purple-400">🗣️ {tracks.filter((t) => t.type ==='dialogo').length} speeches</span>
  </div>
  </div>
 
@@ -2602,36 +2601,36 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div
  key={`quick-rename-${tr.index}`}
  className={`p-2.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center gap-2.5 ${
- tr.type === 'musica'
- ? 'bg-amber-950/20 /20 hover:/40'
- : 'bg-purple-950/20 border-purple-500/20 hover:border-purple-500/40'
+ tr.type ==='musica'
+ ?'bg-amber-950/20 /20 hover:/40'
+ :'bg-purple-950/20 border-purple-500/20 hover:border-purple-500/40'
  }`}
  >
  {/* Index + Type Toggle Button */}
  <div className="flex items-center gap-2 shrink-0">
- <span className="w-7 text-center font-mono font-black text-xs text-[var(--ink-3)] bg-slate-950 px-1.5 py-1 rounded ">
- #{String(tr.index).padStart(2, '0')}
+ <span className="w-7 text-center font-mono font-black text-xs text-[var(--ink-3)] bg-slate-950 px-1.5 py-1 rounded">
+ #{String(tr.index).padStart(2,'0')}
  </span>
 
  <button
  type="button"
  onClick={() => {
- const newType = tr.type === 'musica' ? 'dialogo' : 'musica';
- handleUpdateTrack(tr.index, 'type', newType);
- if (newType === 'dialogo' && (tr.title.startsWith('Tema ') || tr.title.startsWith('Pista '))) {
- handleUpdateTrack(tr.index, 'title', `Presentación / Speech ${tr.index}`);
- } else if (newType === 'musica' && (tr.title.startsWith('Presentación') || tr.title.startsWith('Speech'))) {
- handleUpdateTrack(tr.index, 'title', `Tema ${tr.index}`);
+ const newType = tr.type ==='musica' ?'dialogo' :'musica';
+ handleUpdateTrack(tr.index,'type', newType);
+ if (newType ==='dialogo' && (tr.title.startsWith('Tema') || tr.title.startsWith('Pista'))) {
+ handleUpdateTrack(tr.index,'title', `Presentación / Speech ${tr.index}`);
+ } else if (newType ==='musica' && (tr.title.startsWith('Presentación') || tr.title.startsWith('Speech'))) {
+ handleUpdateTrack(tr.index,'title', `Tema ${tr.index}`);
  }
  }}
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
- tr.type === 'musica'
- ? 'bg-amber-500/20 text-amber-300 /40 hover:bg-amber-500/30'
- : 'bg-purple-500/20 text-purple-300 border-purple-500/40 hover:bg-purple-500/30'
+ tr.type ==='musica'
+ ?'bg-amber-500/20 text-amber-300 /40 hover:bg-amber-500/30'
+ :'bg-purple-500/20 text-purple-300 border-purple-500/40 hover:bg-purple-500/30'
  }`}
  title="Haz clic para alternar entre Canción y Speech"
  >
- {tr.type === 'musica' ? '🎵 Canción' : '🗣️ Speech'}
+ {tr.type ==='musica' ?'🎵 Canción' :'🗣️ Speech'}
  </button>
 
  <span className="text-[11px] font-mono text-[var(--ink-3)]">
@@ -2644,18 +2643,18 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <input
  type="text"
  value={tr.title}
- onChange={(e) => handleUpdateTrack(tr.index, 'title', e.target.value)}
- placeholder={tr.type === 'musica' ? 'Nombre del tema...' : 'Nombre de la presentación o speech...'}
+ onChange={(e) => handleUpdateTrack(tr.index,'title', e.target.value)}
+ placeholder={tr.type ==='musica' ?'Nombre del tema...' :'Nombre de la presentación o speech...'}
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
- tr.type === 'musica'
- ? 'bg-slate-950 /30 text-amber-100 focus:'
- : 'bg-slate-950 border-purple-500/30 text-purple-100 focus:border-purple-500'
+ tr.type ==='musica'
+ ?'bg-slate-950 /30 text-amber-100 focus:'
+ :'bg-slate-950 border-purple-500/30 text-purple-100 focus:border-purple-500'
  }`}
  />
  {tr.title && (
  <button
  type="button"
- onClick={() => handleUpdateTrack(tr.index, 'title', '')}
+ onClick={() => handleUpdateTrack(tr.index,'title','')}
  className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink-3)]"
  >
  <X className="w-3 h-3" />
@@ -2665,25 +2664,25 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Quick Presets Per Row */}
  <div className="flex items-center gap-1 shrink-0">
- {tr.type === 'dialogo' ? (
+ {tr.type ==='dialogo' ? (
  <>
  <button
  type="button"
- onClick={() => handleUpdateTrack(tr.index, 'title', 'Presentación de la Banda')}
+ onClick={() => handleUpdateTrack(tr.index,'title','Presentación de la Banda')}
  className="px-1.5 py-0.5 rounded bg-purple-950 hover:bg-purple-800 text-purple-300 text-[10px]"
  >
  Banda
  </button>
  <button
  type="button"
- onClick={() => handleUpdateTrack(tr.index, 'title', 'Saludo al Público')}
+ onClick={() => handleUpdateTrack(tr.index,'title','Saludo al Público')}
  className="px-1.5 py-0.5 rounded bg-purple-950 hover:bg-purple-800 text-purple-300 text-[10px]"
  >
  Saludo
  </button>
  <button
  type="button"
- onClick={() => handleUpdateTrack(tr.index, 'title', 'Despedida / Bises')}
+ onClick={() => handleUpdateTrack(tr.index,'title','Despedida / Bises')}
  className="px-1.5 py-0.5 rounded bg-purple-950 hover:bg-purple-800 text-purple-300 text-[10px]"
  >
  Despedida
@@ -2694,8 +2693,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  type="button"
  onClick={() => {
- const base = tr.title.replace(/\s*\((?:Intro|Outro|Acústico)\)/gi, '');
- handleUpdateTrack(tr.index, 'title', `${base} (Intro)`);
+ const base = tr.title.replace(/\s*\((?:Intro|Outro|Acústico)\)/gi,'');
+ handleUpdateTrack(tr.index,'title', `${base} (Intro)`);
  }}
  className="px-1.5 py-0.5 rounded bg-amber-950 hover:bg-amber-800 text-amber-300 text-[10px]"
  >
@@ -2704,8 +2703,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  type="button"
  onClick={() => {
- const base = tr.title.replace(/\s*\((?:Intro|Outro|Acústico)\)/gi, '');
- handleUpdateTrack(tr.index, 'title', `${base} (Acústico)`);
+ const base = tr.title.replace(/\s*\((?:Intro|Outro|Acústico)\)/gi,'');
+ handleUpdateTrack(tr.index,'title', `${base} (Acústico)`);
  }}
  className="px-1.5 py-0.5 rounded bg-amber-950 hover:bg-amber-800 text-amber-300 text-[10px]"
  >
@@ -2714,8 +2713,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  type="button"
  onClick={() => {
- const base = tr.title.replace(/\s*\((?:Intro|Outro|Acústico)\)/gi, '');
- handleUpdateTrack(tr.index, 'title', `${base} (Outro)`);
+ const base = tr.title.replace(/\s*\((?:Intro|Outro|Acústico)\)/gi,'');
+ handleUpdateTrack(tr.index,'title', `${base} (Outro)`);
  }}
  className="px-1.5 py-0.5 rounded bg-amber-950 hover:bg-amber-800 text-amber-300 text-[10px]"
  >
@@ -2731,7 +2730,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  )}
 
  {/* Tab 2: Batch Paste */}
- {quickNamingActiveTab === 'paste' && (
+ {quickNamingActiveTab ==='paste' && (
  <div className="flex-1 overflow-y-auto space-y-3 min-h-[300px]">
  <div className="p-3.5 rounded-[var(--r-m)] bg-slate-950 text-xs text-[var(--ink-3)] space-y-2">
  <p className="font-bold text-sky-400 flex items-center gap-1.5">
@@ -2739,7 +2738,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  Pega el Setlist o Lista de Canciones y Speeches (una por línea)
  </p>
  <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
- Copia la lista desde tu WhatsApp, notas o papel de escenario y pégala aquí. El asistente asignará cada línea a la pista correspondiente (#1, #2, #3...) y limpiará automáticamente números iniciales ("1.", "01 -", etc.).
+ Copia la lista desde tu WhatsApp, notas o papel de escenario y pégala aquí. El asistente asignará cada línea a la pista correspondiente (#1, #2, #3...) y limpiará automáticamente números iniciales ("1.","01 -", etc.).
  </p>
  <p className="text-[11px] text-purple-300">
  💡 Si una línea contiene palabras como <em>"speech"</em>, <em>"presentación"</em>, <em>"saludo"</em>, <em>"charla"</em> o <em>"agradecimientos"</em>, la clasificará automáticamente como Speech.
@@ -2756,10 +2755,10 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  <div className="flex items-center justify-between text-xs text-[var(--ink-3)]">
  <span>
- Líneas detectadas:{' '}
+ Líneas detectadas:{''}
  <strong className="text-sky-400">
  {batchPastedText.split('\n').filter((l) => l.trim().length > 0).length}
- </strong>{' '}
+ </strong>{''}
  / Cortes en concierto: <strong className="text-amber-400">{tracks.length}</strong>
  </span>
 

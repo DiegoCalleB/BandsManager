@@ -1,8 +1,8 @@
-import React from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { NavGroupDef, NavItemId, NAV_ITEMS } from '../../config/navGroups';
-import { hasModuleAccess } from '../../utils/planPermissions';
-import { NavItemButton } from './NavItemButton';
+import React from'react';
+import { ChevronDown, ChevronUp } from'lucide-react';
+import { NavGroupDef, NavItemId, NAV_ITEMS } from'../../config/navGroups';
+import { hasModuleAccess } from'../../utils/planPermissions';
+import { NavItemButton } from'./NavItemButton';
 
 interface NavGroupSectionProps {
  group: NavGroupDef;
@@ -14,7 +14,7 @@ interface NavGroupSectionProps {
  isOpen: boolean;
  onToggleOpen: () => void;
  t: (key: string, fallback: string) => string;
- variant: 'desktop' | 'mobile';
+ variant:'desktop' |'mobile';
  /** Contenido extra (no-navegación, ej. accesos a Metrónomo/Afinador) mostrado
  * al final del grupo, solo mientras está abierto. */
  children?: React.ReactNode;
@@ -38,7 +38,7 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
  .filter((item) => (!item.adminOnly || isAdmin) && hasModuleAccess(currentActiveBandPlan, item.id));
  if (items.length === 0) return null;
 
- const headerPadding = variant === 'desktop' ? 'px-3' : 'px-3.5';
+ const headerPadding = variant ==='desktop' ?'px-3' :'px-3.5';
 
  const isGroupActive = items.some((i) => i.id === currentView);
 
@@ -65,7 +65,7 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
  type="button"
  onClick={handleHeaderClick}
  className={`w-full flex items-center justify-between ${headerPadding} py-1.5 text-[11px] font-semibold transition-colors cursor-pointer ${
- isGroupActive ? 'text-[var(--acc-ink)]' : 'text-[var(--ink-3)] hover:text-[var(--ink-2)]'
+ isGroupActive ?'text-[var(--acc-ink)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'
  }`}
  aria-expanded={isOpen}
  >
@@ -78,7 +78,7 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
  tabIndex={0}
  onClick={handleChevronClick}
  className="p-1 -mr-1 rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors"
- title={isOpen ? 'Plegar sección' : 'Desplegar sección'}
+ title={isOpen ?'Plegar sección' :'Desplegar sección'}
  >
  {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
  </span>
@@ -86,7 +86,7 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
 
  {isOpen && (
  <>
- <div className={variant === 'desktop' ? 'flex flex-col gap-0.5' : 'flex flex-col gap-1'}>
+ <div className={variant ==='desktop' ?'flex flex-col gap-0.5' :'flex flex-col gap-1'}>
  {items.map((item) => (
  <NavItemButton
  key={item.id}

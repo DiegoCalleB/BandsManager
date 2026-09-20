@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { ShieldCheck, Sparkles, X, Lock, Check, ExternalLink, ArrowRight } from 'lucide-react';
-import { PlanDefinition, getPlanDefinition, normalizePlan, getPlanLimits } from '../utils/planPermissions';
-import { CheckoutButton } from './CheckoutButton';
-import { User } from '../types';
-import { ModalPortal } from './common/ModalPortal';
+import React, { useState } from'react';
+import { ShieldCheck, Sparkles, X, Lock, Check, ExternalLink, ArrowRight } from'lucide-react';
+import { PlanDefinition, getPlanDefinition, normalizePlan, getPlanLimits } from'../utils/planPermissions';
+import { CheckoutButton } from'./CheckoutButton';
+import { User } from'../types';
+import { ModalPortal } from'./common/ModalPortal';
 
 interface PlanLimitModalProps {
  isOpen: boolean;
@@ -11,7 +11,7 @@ interface PlanLimitModalProps {
  onNavigateToPlanes: () => void;
  currentUser?: User;
  activeBandName?: string;
- resourceType: 'leads' | 'medios' | 'fans' | 'songs' | 'bands';
+ resourceType:'leads' |'medios' |'fans' |'songs' |'bands';
  currentCount: number;
 }
 
@@ -24,22 +24,22 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  resourceType,
  currentCount
 }) => {
- const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
+ const [billingPeriod, setBillingPeriod] = useState<'monthly' |'annual'>('monthly');
 
  if (!isOpen) return null;
 
- const currentPlan = normalizePlan(currentUser?.plan || 'ensayo');
+ const currentPlan = normalizePlan(currentUser?.plan ||'ensayo');
  const currentPlanDef = getPlanDefinition(currentPlan);
 
- const resourceLabels: Record<string, { singular: string; plural: string; suggestedPlan: 'local' | 'de_gira' | 'cabeza_de_cartel' }> = {
- leads: { singular: 'sala de conciertos', plural: 'salas de conciertos', suggestedPlan: 'de_gira' },
- medios: { singular: 'contacto de prensa', plural: 'contactos de prensa', suggestedPlan: 'de_gira' },
- fans: { singular: 'fan', plural: 'fans', suggestedPlan: 'local' },
- songs: { singular: 'canción', plural: 'canciones', suggestedPlan: 'local' },
- bands: { singular: 'banda o proyecto', plural: 'bandas o proyectos', suggestedPlan: 'cabeza_de_cartel' }
+ const resourceLabels: Record<string, { singular: string; plural: string; suggestedPlan:'local' |'de_gira' |'cabeza_de_cartel' }> = {
+ leads: { singular:'sala de conciertos', plural:'salas de conciertos', suggestedPlan:'de_gira' },
+ medios: { singular:'contacto de prensa', plural:'contactos de prensa', suggestedPlan:'de_gira' },
+ fans: { singular:'fan', plural:'fans', suggestedPlan:'local' },
+ songs: { singular:'canción', plural:'canciones', suggestedPlan:'local' },
+ bands: { singular:'banda o proyecto', plural:'bandas o proyectos', suggestedPlan:'cabeza_de_cartel' }
  };
 
- const info = resourceLabels[resourceType] || { singular: 'registro', plural: 'registros', suggestedPlan: 'de_gira' };
+ const info = resourceLabels[resourceType] || { singular:'registro', plural:'registros', suggestedPlan:'de_gira' };
  const targetPlanDef = getPlanDefinition(info.suggestedPlan);
 
  return (

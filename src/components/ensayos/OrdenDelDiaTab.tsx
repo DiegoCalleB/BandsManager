@@ -1,14 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from'react';
 import { 
  Plus, Disc3, Clock, CheckSquare, Square, Trash2, ArrowUp, ArrowDown, 
  Sparkles, Coffee, Play, Music, Flame, Edit3, CheckCircle2, AlertCircle, X,
  Layers, Volume2, ListOrdered, GripVertical, Search, Star, Undo2, FolderInput,
  FlameKindling
-} from 'lucide-react';
-import { Rehearsal, RehearsalAgendaItem, RehearsalObjective, Song, Setlist, Concert, ThemeColors } from '../../types';
-import { formatSongTitle } from '../../utils/formatSongTitle';
-import { formatSecondsToMmSs } from '../../utils/repertorioUtils';
-import { ModalPortal } from '../common/ModalPortal';
+} from'lucide-react';
+import { Rehearsal, RehearsalAgendaItem, RehearsalObjective, Song, Setlist, Concert, ThemeColors } from'../../types';
+import { formatSongTitle } from'../../utils/formatSongTitle';
+import { formatSecondsToMmSs } from'../../utils/repertorioUtils';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface OrdenDelDiaTabProps {
  rehearsal: Rehearsal;
@@ -21,18 +21,18 @@ interface OrdenDelDiaTabProps {
 }
 
 const BLOCK_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
- cancion: { label: 'Canción de Repertorio', icon: '🎵', bg: 'bg-amber-500/10', text: 'text-amber-400', border: '/20' },
- calentamiento: { label: 'Calentamiento / Sonido', icon: '🔥', bg: 'bg-orange-500/10', text: 'text-orange-400', border: 'border-orange-500/20' },
- pausa: { label: 'Pausa / Descanso / Birra', icon: '☕', bg: 'bg-neutral-800', text: 'text-[var(--ink-3)]', border: '' },
- seccion_especifica: { label: 'Sección Específica (Solo, Coros, Intro)', icon: '🎯', bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/20' },
- improvisacion: { label: 'Jam / Improvisación / Riff', icon: '🎸', bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
- outro: { label: 'Repaso Final / Feedback', icon: '🏁', bg: 'bg-sky-500/10', text: 'text-sky-400', border: 'border-sky-500/20' },
+ cancion: { label:'Canción de Repertorio', icon:'🎵', bg:'bg-amber-500/10', text:'text-amber-400', border:'/20' },
+ calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-orange-500/10', text:'text-orange-400', border:'border-orange-500/20' },
+ pausa: { label:'Pausa / Descanso / Birra', icon:'☕', bg:'bg-neutral-800', text:'text-[var(--ink-3)]', border:'' },
+ seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-purple-500/10', text:'text-purple-400', border:'border-purple-500/20' },
+ improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-emerald-500/10', text:'text-emerald-400', border:'border-emerald-500/20' },
+ outro: { label:'Repaso Final / Feedback', icon:'🏁', bg:'bg-sky-500/10', text:'text-sky-400', border:'border-sky-500/20' },
 };
 
 // 1x1 transparent drag ghost image
-const TRANSPARENT_DRAG_IMAGE = typeof window !== 'undefined' ? new window.Image() : null;
+const TRANSPARENT_DRAG_IMAGE = typeof window !=='undefined' ? new window.Image() : null;
 if (TRANSPARENT_DRAG_IMAGE) {
- TRANSPARENT_DRAG_IMAGE.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7';
+ TRANSPARENT_DRAG_IMAGE.src ='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7';
 }
 
 export function OrdenDelDiaTab({
@@ -74,34 +74,34 @@ export function OrdenDelDiaTab({
 
  // Estadísticas del orden del día
  const totalMinutosEstimados = agenda.reduce((acc, item) => acc + (item.duracionEstimadaMin || 0), 0);
- const cancionesCount = agenda.filter(item => item.tipo === 'cancion').length;
- const pausasCount = agenda.filter(item => item.tipo === 'pausa').length;
+ const cancionesCount = agenda.filter(item => item.tipo ==='cancion').length;
+ const pausasCount = agenda.filter(item => item.tipo ==='pausa').length;
 
  // Lista de álbumes para el filtro del modal
  const albumsList = useMemo(() => {
  const set = new Set<string>();
  songs.forEach(s => {
  const alb = s.albumDisco || s.album;
- set.add(alb || 'Singles / Sin Disco');
+ set.add(alb ||'Singles / Sin Disco');
  });
  return ['todos', ...Array.from(set)];
  }, [songs]);
 
  // Existing songs in agenda
  const existingSongIdsInAgenda = useMemo(() => {
- return new Set(agenda.filter(a => a.tipo === 'cancion' && a.songId).map(a => a.songId!));
+ return new Set(agenda.filter(a => a.tipo ==='cancion' && a.songId).map(a => a.songId!));
  }, [agenda]);
 
  // Canciones filtradas en el modal
  const filteredSongs = useMemo(() => {
  return songs.filter(s => {
- const matchSearch = searchSongQuery === '' ||
+ const matchSearch = searchSongQuery ==='' ||
  s.titulo.toLowerCase().includes(searchSongQuery.toLowerCase()) ||
  (s.tonalidad && s.tonalidad.toLowerCase().includes(searchSongQuery.toLowerCase())) ||
  (s.genero && s.genero.toLowerCase().includes(searchSongQuery.toLowerCase()));
  const matchFav = !onlyFavorites || !!s.favoritoGeneral;
- const alb = s.albumDisco || s.album || 'Singles / Sin Disco';
- const matchAlbum = selectedAlbumFilter === 'todos' || alb === selectedAlbumFilter;
+ const alb = s.albumDisco || s.album ||'Singles / Sin Disco';
+ const matchAlbum = selectedAlbumFilter ==='todos' || alb === selectedAlbumFilter;
  return matchSearch && matchFav && matchAlbum;
  });
  }, [songs, searchSongQuery, onlyFavorites, selectedAlbumFilter]);
@@ -161,8 +161,8 @@ export function OrdenDelDiaTab({
  };
 
  // Agenda mutations
- const handleMoveItem = (index: number, direction: 'up' | 'down') => {
- const targetIndex = direction === 'up' ? index - 1 : index + 1;
+ const handleMoveItem = (index: number, direction:'up' |'down') => {
+ const targetIndex = direction ==='up' ? index - 1 : index + 1;
  if (targetIndex < 0 || targetIndex >= agenda.length) return;
  
  setHistoryStack(prev => [...prev, agenda]);
@@ -217,12 +217,12 @@ export function OrdenDelDiaTab({
  const estMin = s?.duracionSegundos ? Math.ceil(s.duracionSegundos / 60) + 3 : 7;
  return {
  id: `ag-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
- tipo: 'cancion',
- titulo: s?.titulo || 'Canción',
+ tipo:'cancion',
+ titulo: s?.titulo ||'Canción',
  songId: sId,
  duracionEstimadaMin: estMin,
- prioridad: 'media',
- enfoque: s?.tonalidad ? `Tonalidad: ${s.tonalidad} • BPM: ${s.bpm || '--'}` : ''
+ prioridad:'media',
+ enfoque: s?.tonalidad ? `Tonalidad: ${s.tonalidad} • BPM: ${s.bpm ||'--'}` :''
  };
  });
 
@@ -235,14 +235,14 @@ export function OrdenDelDiaTab({
  const handleConfirmAddBlock = (e: React.FormEvent) => {
  e.preventDefault();
  setHistoryStack(prev => [...prev, agenda]);
- const titulo = blockTitulo.trim() || BLOCK_TYPES[blockTipo]?.label || 'Bloque';
+ const titulo = blockTitulo.trim() || BLOCK_TYPES[blockTipo]?.label ||'Bloque';
  const newItem: RehearsalAgendaItem = {
  id: `ag-${Date.now()}`,
  tipo: blockTipo,
  titulo,
  duracionEstimadaMin: Number(blockDuracion) || 15,
  enfoque: blockEnfoque.trim() || undefined,
- prioridad: 'media'
+ prioridad:'media'
  };
  onUpdateRehearsal({ agenda: [...agenda, newItem] });
  setBlockTitulo('');
@@ -264,30 +264,30 @@ export function OrdenDelDiaTab({
  if (replace || agenda.length === 0) {
  items.push({
  id: `ag-warmup-${Date.now()}`,
- tipo: 'calentamiento',
- titulo: 'Calentamiento & Prueba de Sonido',
+ tipo:'calentamiento',
+ titulo:'Calentamiento & Prueba de Sonido',
  duracionEstimadaMin: 15,
- enfoque: 'Chequeo de afinación y niveles de monitores'
+ enfoque:'Chequeo de afinación y niveles de monitores'
  });
  }
 
  setlist.items.forEach((it, idx) => {
- if (it.tipoItem === 'cancion' || it.songId) {
+ if (it.tipoItem ==='cancion' || it.songId) {
  const s = songs.find(x => x.id === it.songId);
  items.push({
  id: `ag-st-${idx}-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
- tipo: 'cancion',
- titulo: s?.titulo || it.tituloCustom || 'Canción',
+ tipo:'cancion',
+ titulo: s?.titulo || it.tituloCustom ||'Canción',
  songId: it.songId,
  duracionEstimadaMin: s?.duracionSegundos ? Math.ceil(s.duracionSegundos / 60) + 3 : 7,
  enfoque: `Repertorio: ${setlist.nombre}`,
- prioridad: 'media'
+ prioridad:'media'
  });
  } else {
  items.push({
  id: `ag-pausa-${idx}-${Date.now()}`,
- tipo: 'pausa',
- titulo: it.tituloCustom || 'Pausa / Intermedio',
+ tipo:'pausa',
+ titulo: it.tituloCustom ||'Pausa / Intermedio',
  duracionEstimadaMin: 10
  });
  }
@@ -296,8 +296,8 @@ export function OrdenDelDiaTab({
  if (replace || agenda.length === 0) {
  items.push({
  id: `ag-outro-${Date.now()}`,
- tipo: 'outro',
- titulo: 'Repaso Final & Valoración',
+ tipo:'outro',
+ titulo:'Repaso Final & Valoración',
  duracionEstimadaMin: 10
  });
  }
@@ -399,8 +399,8 @@ export function OrdenDelDiaTab({
  key={obj.id}
  className={`flex items-start justify-between gap-2 p-2.5 rounded-[var(--r-m)] transition-all ${
  obj.completado
- ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
- : 'bg-[var(--surface)] border-[var(--surface)] text-zinc-200 hover:'
+ ?'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+ :'bg-[var(--surface)] border-[var(--surface)] text-zinc-200 hover:'
  }`}
  >
  <button
@@ -413,7 +413,7 @@ export function OrdenDelDiaTab({
  ) : (
  <Square className="w-4 h-4 text-neutral-500 shrink-0 mt-0.5" />
  )}
- <span className={`text-xs ${obj.completado ? 'line-through opacity-70' : ''}`}>
+ <span className={`text-xs ${obj.completado ?'line-through opacity-70' :''}`}>
  {obj.texto}
  </span>
  </button>
@@ -437,7 +437,7 @@ export function OrdenDelDiaTab({
  value={nuevoObjTexto}
  onChange={e => setNuevoObjTexto(e.target.value)}
  onKeyDown={e => {
- if (e.key === 'Enter') {
+ if (e.key ==='Enter') {
  e.preventDefault();
  handleAddObjetivo();
  }
@@ -566,14 +566,14 @@ export function OrdenDelDiaTab({
  }}
  className={`p-3 sm:p-4 rounded-[var(--r-m)] transition-all ${
  isDragging
- ? 'opacity-30 scale-[0.98]'
+ ?'opacity-30 scale-[0.98]'
  : isDragOver
- ? ' border-2 scale-[1.01] bg-amber-500/10 shadow-lg'
- : item.evaluacion === 'bordada'
- ? 'bg-[#141915] border-emerald-500/30 hover:border-emerald-500/50'
- : item.evaluacion === 'repetir'
- ? 'bg-[#1a1414] border-rose-500/30 hover:border-rose-500/50'
- : 'bg-[#141413] border-[#262522] hover:'
+ ?' border-2 scale-[1.01] bg-amber-500/10 shadow-lg'
+ : item.evaluacion ==='bordada'
+ ?'bg-[#141915] border-emerald-500/30 hover:border-emerald-500/50'
+ : item.evaluacion ==='repetir'
+ ?'bg-[#1a1414] border-rose-500/30 hover:border-rose-500/50'
+ :'bg-[#141413] border-[#262522] hover:'
  }`}
  >
  <div className="flex items-start justify-between gap-3">
@@ -603,28 +603,28 @@ export function OrdenDelDiaTab({
 
  {/* Song state info from catalog */}
  {matchedSong?.tonalidad && (
- <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-amber-300/90 ">
+ <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-amber-300/90">
  {matchedSong.tonalidad}
  </span>
  )}
  {matchedSong?.bpm && (
- <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-[var(--ink-3)] ">
+ <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-[var(--ink-3)]">
  {matchedSong.bpm} BPM
  </span>
  )}
 
  {/* Evaluation badge if set */}
- {item.evaluacion === 'bordada' && (
+ {item.evaluacion ==='bordada' && (
  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300">
  🟢 Bordada
  </span>
  )}
- {item.evaluacion === 'regular' && (
+ {item.evaluacion ==='regular' && (
  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300">
  🟡 Regular
  </span>
  )}
- {item.evaluacion === 'repetir' && (
+ {item.evaluacion ==='repetir' && (
  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300">
  🔴 Repetir
  </span>
@@ -636,7 +636,7 @@ export function OrdenDelDiaTab({
  <input
  type="text"
  placeholder="Enfoque: ej. solo de guitarra, compenetrar coros, dinamismo..."
- value={item.enfoque || ''}
+ value={item.enfoque ||''}
  onChange={e => handleUpdateAgendaItem(item.id, { enfoque: e.target.value })}
  className="w-full text-xs font-mono text-[var(--ink-2)] bg-transparent border-b border-transparent hover: focus: outline-none transition-colors"
  />
@@ -668,7 +668,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  disabled={idx === 0}
- onClick={() => handleMoveItem(idx, 'up')}
+ onClick={() => handleMoveItem(idx,'up')}
  className="p-1 text-neutral-500 hover:text-white disabled:opacity-20 disabled:hover:text-neutral-500 cursor-pointer"
  title="Subir posición"
  >
@@ -677,7 +677,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  disabled={idx === agenda.length - 1}
- onClick={() => handleMoveItem(idx, 'down')}
+ onClick={() => handleMoveItem(idx,'down')}
  className="p-1 text-neutral-500 hover:text-white disabled:opacity-20 disabled:hover:text-neutral-500 cursor-pointer"
  title="Bajar posición"
  >
@@ -749,7 +749,7 @@ export function OrdenDelDiaTab({
  className="text-[10px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer border-[#2a2825] bg-[#1a1918] text-amber-300 font-bold"
  >
  {albumsList.map(alb => (
- <option key={alb} value={alb}>{alb === 'todos' ? 'Todos los álbumes' : alb}</option>
+ <option key={alb} value={alb}>{alb ==='todos' ?'Todos los álbumes' : alb}</option>
  ))}
  </select>
 
@@ -758,11 +758,11 @@ export function OrdenDelDiaTab({
  onClick={() => setOnlyFavorites(p => !p)}
  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold cursor-pointer transition-colors ${
  onlyFavorites
- ? 'bg-amber-500/20 text-amber-300'
- : 'bg-[#1a1918] text-[var(--ink-2)] border-[#2a2825] hover:text-white'
+ ?'bg-amber-500/20 text-amber-300'
+ :'bg-[#1a1918] text-[var(--ink-2)] border-[#2a2825] hover:text-white'
  }`}
  >
- <Star className={`w-3 h-3 ${onlyFavorites ? 'fill-amber-400 text-amber-400' : ''}`} />
+ <Star className={`w-3 h-3 ${onlyFavorites ?'fill-amber-400 text-amber-400' :''}`} />
  <span>Solo Favoritos</span>
  </button>
 
@@ -804,15 +804,15 @@ export function OrdenDelDiaTab({
  onClick={() => toggleSongSelection(s.id)}
  className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
  isSelected
- ? 'bg-amber-400/15 /50 text-amber-300'
- : 'bg-[var(--surface)] border-[var(--surface)] hover:bg-[#1e1d1b] hover:'
+ ?'bg-amber-400/15 /50 text-amber-300'
+ :'bg-[var(--surface)] border-[var(--surface)] hover:bg-[#1e1d1b] hover:'
  }`}
  >
  {/* Number in selection order */}
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-mono text-xs font-black transition-all ${
  isSelected
- ? 'bg-amber-400 text-[var(--surface)] shadow-sm scale-105'
- : ' text-neutral-500'
+ ?'bg-amber-400 text-[var(--surface)] shadow-sm scale-105'
+ :' text-neutral-500'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>
@@ -833,7 +833,7 @@ export function OrdenDelDiaTab({
  )}
  </div>
  <div className="text-[10px] text-[var(--ink-2)] font-mono truncate">
- {(s.albumDisco || s.album || 'Sin álbum')} · {s.tonalidad || '—'} · {s.bpm ? `${s.bpm} BPM · ` : ''}{formatSecondsToMmSs(s.duracionSegundos || 0)}
+ {(s.albumDisco || s.album ||'Sin álbum')} · {s.tonalidad ||'—'} · {s.bpm ? `${s.bpm} BPM · ` :''}{formatSecondsToMmSs(s.duracionSegundos || 0)}
  </div>
  </div>
  </button>
@@ -847,7 +847,7 @@ export function OrdenDelDiaTab({
  <span className="text-[10px] font-mono text-[var(--ink-2)]">
  {selectedSongIds.length > 0
  ? `${selectedSongIds.length} temas seleccionados en orden · ~${Math.ceil(selectedDurationSeconds / 60)} min`
- : 'Ninguna canción seleccionada'}
+ :'Ninguna canción seleccionada'}
  </span>
  <div className="flex gap-2">
  <button
@@ -864,7 +864,7 @@ export function OrdenDelDiaTab({
  className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-amber-400 hover:bg-amber-300 disabled:opacity-40 disabled:cursor-not-allowed text-[var(--surface)] transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
  >
  <Plus className="w-4 h-4 stroke-[3]" />
- <span>Añadir {selectedSongIds.length > 0 ? `${selectedSongIds.length} Canciones en Orden` : 'Canciones'}</span>
+ <span>Añadir {selectedSongIds.length > 0 ? `${selectedSongIds.length} Canciones en Orden` :'Canciones'}</span>
  </button>
  </div>
  </div>
@@ -901,7 +901,7 @@ export function OrdenDelDiaTab({
 
  <div className="space-y-2 max-h-60 overflow-y-auto">
  {setlists.map(st => {
- const count = st.items?.filter(it => it.tipoItem === 'cancion' || it.songId).length || 0;
+ const count = st.items?.filter(it => it.tipoItem ==='cancion' || it.songId).length || 0;
  return (
  <div
  key={st.id}
@@ -910,7 +910,7 @@ export function OrdenDelDiaTab({
  <div>
  <p className="text-xs font-bold text-zinc-100">{st.nombre}</p>
  <p className="text-[10px] font-mono text-[var(--ink-2)]">
- {count} canciones · {st.tipoFormato || 'Repertorio'}
+ {count} canciones · {st.tipoFormato ||'Repertorio'}
  </p>
  </div>
  <div className="flex gap-1.5">
@@ -974,7 +974,7 @@ export function OrdenDelDiaTab({
  Tipo de Bloque
  </label>
  <div className="grid grid-cols-2 gap-2">
- {Object.entries(BLOCK_TYPES).filter(([k]) => k !== 'cancion').map(([key, def]) => (
+ {Object.entries(BLOCK_TYPES).filter(([k]) => k !=='cancion').map(([key, def]) => (
  <button
  key={key}
  type="button"
@@ -984,8 +984,8 @@ export function OrdenDelDiaTab({
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-2 text-xs font-mono transition-all cursor-pointer ${
  blockTipo === key
- ? 'bg-amber-400/20 /40 text-amber-300 font-bold'
- : 'bg-[var(--surface)] border-[var(--surface)] text-[var(--ink-2)] hover:'
+ ?'bg-amber-400/20 /40 text-amber-300 font-bold'
+ :'bg-[var(--surface)] border-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <span>{def.icon}</span>

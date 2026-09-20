@@ -1,7 +1,7 @@
-import React from 'react';
-import { Lead } from '../../types';
+import React from'react';
+import { Lead } from'../../types';
 
-export type LeadTemperature = 'caliente' | 'seguimiento' | 'frio' | 'neutral';
+export type LeadTemperature ='caliente' |'seguimiento' |'frio' |'neutral';
 
 export interface LeadHealthInfo {
  type: LeadTemperature;
@@ -47,33 +47,33 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
  // 1. 🔥 Lead Caliente: Sala que respondió o tuvo contacto en los últimos 3 días O en negociación / interesado activo
  if (
  (daysSinceLastActivity !== null && daysSinceLastActivity <= 3) ||
- lead.estado === 'interesado' ||
- lead.estado === 'negociando'
+ lead.estado ==='interesado' ||
+ lead.estado ==='negociando'
  ) {
  const desc = daysSinceLastActivity !== null 
- ? (daysSinceLastActivity === 0 ? 'Actividad hoy' : `Actividad hace ${daysSinceLastActivity}d`)
- : 'Negociación / Respuesta activa';
+ ? (daysSinceLastActivity === 0 ?'Actividad hoy' : `Actividad hace ${daysSinceLastActivity}d`)
+ :'Negociación / Respuesta activa';
  return {
- type: 'caliente',
- label: '🔥 Lead Caliente',
- badgeClass: 'bg-amber-500/20 text-amber-300 font-bold',
- icon: '🔥',
+ type:'caliente',
+ label:'🔥 Lead Caliente',
+ badgeClass:'bg-amber-500/20 text-amber-300 font-bold',
+ icon:'🔥',
  description: desc
  };
  }
 
  // 2. ⏳ Seguimiento Necesario: Más de 7 días sin respuesta tras enviar el pitch
  if (
- lead.estado === 'esperando_respuesta' ||
- (lead.fecha_envio && !lead.fecha_ultima_respuesta && lead.estado !== 'no_interesado')
+ lead.estado ==='esperando_respuesta' ||
+ (lead.fecha_envio && !lead.fecha_ultima_respuesta && lead.estado !=='no_interesado')
  ) {
  const days = daysSincePitch ?? daysSinceLastActivity ?? 7;
  if (days >= 7) {
  return {
- type: 'seguimiento',
- label: '⏳ Seguimiento Necesario',
- badgeClass: 'bg-amber-500/20 text-amber-400 font-bold',
- icon: '⏳',
+ type:'seguimiento',
+ label:'⏳ Seguimiento Necesario',
+ badgeClass:'bg-amber-500/20 text-amber-400 font-bold',
+ icon:'⏳',
  description: `Enviado hace ${days}d sin respuesta`
  };
  }
@@ -86,34 +86,34 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
  ) {
  const days = daysSinceLastActivity ?? daysSincePitch ?? 14;
  return {
- type: 'frio',
- label: '🧊 Lead Frío',
- badgeClass: 'bg-sky-500/20 text-sky-300 font-medium',
- icon: '🧊',
+ type:'frio',
+ label:'🧊 Lead Frío',
+ badgeClass:'bg-sky-500/20 text-sky-300 font-medium',
+ icon:'🧊',
  description: `Sin interacción desde hace ${days}d`
  };
  }
 
  // Default / Nuevo / Pendiente
  return {
- type: 'neutral',
- label: '✨ Activo',
- badgeClass: 'bg-zinc-800/80 text-zinc-300 font-medium',
- icon: '✨',
- description: 'En seguimiento regular'
+ type:'neutral',
+ label:'✨ Activo',
+ badgeClass:'bg-zinc-800/80 text-zinc-300 font-medium',
+ icon:'✨',
+ description:'En seguimiento regular'
  };
 }
 
 interface LeadHealthBadgeProps {
  lead: Lead;
  showDescription?: boolean;
- size?: 'sm' | 'md';
+ size?:'sm' |'md';
 }
 
 export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({
  lead,
  showDescription = false,
- size = 'md'
+ size ='md'
 }) => {
  const health = getLeadHealth(lead);
 

@@ -1,33 +1,33 @@
-import React, { useState } from 'react';
-import { ShieldCheck, Check } from 'lucide-react';
+import React, { useState } from'react';
+import { ShieldCheck, Check } from'lucide-react';
 
 interface VerifiedBadgeProps {
  isVerified?: boolean;
- size?: 'sm' | 'md' | 'lg';
+ size?:'sm' |'md' |'lg';
  showLabel?: boolean;
  className?: string;
 }
 
 export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
  isVerified = true,
- size = 'md',
+ size ='md',
  showLabel = false,
- className = ''
+ className =''
 }) => {
  const [showTooltip, setShowTooltip] = useState(false);
 
  if (!isVerified) return null;
 
  const sizeClasses = {
- sm: 'w-4 h-4 text-[10px]',
- md: 'w-5 h-5 text-xs',
- lg: 'w-6 h-6 text-sm'
+ sm:'w-4 h-4 text-[10px]',
+ md:'w-5 h-5 text-xs',
+ lg:'w-6 h-6 text-sm'
  };
 
  const iconSizes = {
- sm: 'w-3 h-3',
- md: 'w-3.5 h-3.5',
- lg: 'w-4 h-4'
+ sm:'w-3 h-3',
+ md:'w-3.5 h-3.5',
+ lg:'w-4 h-4'
  };
 
  return (

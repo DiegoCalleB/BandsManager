@@ -1,64 +1,64 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig } from '../types';
-import DirectionsCard from './DirectionsCard';
-import { apiFetch } from '../utils/api';
-import { uploadFileToServer } from '../utils/audioStorage';
-import { useSavedFilters } from '../hooks/useSavedFilters';
-import { useCityChips } from '../hooks/useCityChips';
-import { useInteractionLog } from '../hooks/useInteractionLog';
-import { useEmailTemplates, TemplateCategory } from '../hooks/useEmailTemplates';
-import { useGmailIntegration } from '../hooks/useGmailIntegration';
-import { useNegotiationSimulation } from '../hooks/useNegotiationSimulation';
+import React, { useState, useEffect, useMemo } from'react';
+import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig } from'../types';
+import DirectionsCard from'./DirectionsCard';
+import { apiFetch } from'../utils/api';
+import { uploadFileToServer } from'../utils/audioStorage';
+import { useSavedFilters } from'../hooks/useSavedFilters';
+import { useCityChips } from'../hooks/useCityChips';
+import { useInteractionLog } from'../hooks/useInteractionLog';
+import { useEmailTemplates, TemplateCategory } from'../hooks/useEmailTemplates';
+import { useGmailIntegration } from'../hooks/useGmailIntegration';
+import { useNegotiationSimulation } from'../hooks/useNegotiationSimulation';
 import {
  Target, Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, RotateCcw,
  MapPin, Users, Bot, MessageSquare, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
  PlusCircle, Newspaper, Tv, Headphones, Globe, FileText, Plus, SlidersHorizontal, Map as MapIcon, List, LayoutGrid,
  Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet, Copy
-} from 'lucide-react';
-import { VenueMap } from './VenueMap';
-import { AddLeadModal } from './booking/AddLeadModal';
-import { GooglePlacesExplorerModal } from './booking/GooglePlacesExplorerModal';
-import { CRMContactEnricherModal } from './booking/CRMContactEnricherModal';
-import { ExcelImportModal } from './booking/ExcelImportModal';
-import { ExportLeadsModal } from './booking/ExportLeadsModal';
-import { LeadDuplicatesModal } from './booking/LeadDuplicatesModal';
-import { findDuplicateLeads } from '../utils/duplicateLeads';
-import { TemplateConfigSection } from './booking/TemplateConfigSection';
-import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
-import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
-import { LeadsTable } from './booking/LeadsTable';
-import { VenueDetailPanel } from './booking/VenueDetailPanel';
-import { MobileBottomSheet } from './booking/MobileBottomSheet';
-import { isLeadVerificado } from '../utils/leadReliability';
-import { leadMatchesCampaignCity, leadMatchesCampaignCapacity, leadMatchesCampaignDates } from '../utils/campaignMatch';
-import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
-import { BookingCampaign } from '../types';
-import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
-import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
-import { useModuleTutorial } from '../hooks/useModuleTutorial';
-import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
-import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+} from'lucide-react';
+import { VenueMap } from'./VenueMap';
+import { AddLeadModal } from'./booking/AddLeadModal';
+import { GooglePlacesExplorerModal } from'./booking/GooglePlacesExplorerModal';
+import { CRMContactEnricherModal } from'./booking/CRMContactEnricherModal';
+import { ExcelImportModal } from'./booking/ExcelImportModal';
+import { ExportLeadsModal } from'./booking/ExportLeadsModal';
+import { LeadDuplicatesModal } from'./booking/LeadDuplicatesModal';
+import { findDuplicateLeads } from'../utils/duplicateLeads';
+import { TemplateConfigSection } from'./booking/TemplateConfigSection';
+import { ExampleThreadsSection } from'./booking/ExampleThreadsSection';
+import { NegotiationSimulationModal } from'./booking/NegotiationSimulationModal';
+import { LeadsTable } from'./booking/LeadsTable';
+import { VenueDetailPanel } from'./booking/VenueDetailPanel';
+import { MobileBottomSheet } from'./booking/MobileBottomSheet';
+import { isLeadVerificado } from'../utils/leadReliability';
+import { leadMatchesCampaignCity, leadMatchesCampaignCapacity, leadMatchesCampaignDates } from'../utils/campaignMatch';
+import { AgentAutonomySettingsModal } from'./dashboard/AgentAutonomySettingsModal';
+import { BookingCampaign } from'../types';
+import { BulkLeadsActionBar } from'./booking/BulkLeadsActionBar';
+import { BulkProgressModal, BulkProgressItem } from'./booking/BulkProgressModal';
+import { useModuleTutorial } from'../hooks/useModuleTutorial';
+import { ModuleTutorialTrigger } from'./common/ModuleTutorialTrigger';
+import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
 const matchesMedioType = (l: Lead, filter: string): boolean => {
- if (!filter || filter === 'todos') return true;
- const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
- if (filter === 'radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
- if (filter === 'tv' || filter === 'television') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
- if (filter === 'prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
- if (filter === 'redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
- if (filter === 'podcast' || filter === 'podcasts') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
+ if (!filter || filter ==='todos') return true;
+ const txt = `${l.genero ||''} ${l.nombre_sala ||''} ${l.tipo ||''} ${l.icono ||''} ${l.notas ||''} ${l.contexto_extra ||''}`.toLowerCase();
+ if (filter ==='radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
+ if (filter ==='tv' || filter ==='television') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
+ if (filter ==='prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
+ if (filter ==='redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
+ if (filter ==='podcast' || filter ==='podcasts') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
  return true;
 };
 
 const matchesGruposType = (l: Lead, filter: string): boolean => {
- if (!filter || filter === 'todos') return true;
+ if (!filter || filter ==='todos') return true;
  const norm = normalizeType(l.tipo);
  if (norm === filter) return true;
- const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
- if (filter === 'grupo') return norm === 'grupo' || txt.includes('grupo') || txt.includes('banda') || txt.includes('artista') || txt.includes('co-booking') || txt.includes('músico') || txt.includes('musico') || txt.includes('🎸');
- if (filter === 'agencia') return norm === 'agencia' || txt.includes('agencia') || txt.includes('agency') || txt.includes('booking') || txt.includes('promotora') || txt.includes('💼');
- if (filter === 'manager') return norm === 'manager' || txt.includes('manager') || txt.includes('mánager') || txt.includes('management') || txt.includes('representante') || txt.includes('👔');
- if (filter === 'productora') return norm === 'productora' || txt.includes('productora') || txt.includes('producciones') || txt.includes('production') || txt.includes('eventos') || txt.includes('🎬');
- if (filter === 'sello') return norm === 'sello' || txt.includes('sello') || txt.includes('discográfica') || txt.includes('discografica') || txt.includes('record') || txt.includes('label') || txt.includes('💿');
+ const txt = `${l.genero ||''} ${l.nombre_sala ||''} ${l.tipo ||''} ${l.icono ||''} ${l.notas ||''} ${l.contexto_extra ||''}`.toLowerCase();
+ if (filter ==='grupo') return norm ==='grupo' || txt.includes('grupo') || txt.includes('banda') || txt.includes('artista') || txt.includes('co-booking') || txt.includes('músico') || txt.includes('musico') || txt.includes('🎸');
+ if (filter ==='agencia') return norm ==='agencia' || txt.includes('agencia') || txt.includes('agency') || txt.includes('booking') || txt.includes('promotora') || txt.includes('💼');
+ if (filter ==='manager') return norm ==='manager' || txt.includes('manager') || txt.includes('mánager') || txt.includes('management') || txt.includes('representante') || txt.includes('👔');
+ if (filter ==='productora') return norm ==='productora' || txt.includes('productora') || txt.includes('producciones') || txt.includes('production') || txt.includes('eventos') || txt.includes('🎬');
+ if (filter ==='sello') return norm ==='sello' || txt.includes('sello') || txt.includes('discográfica') || txt.includes('discografica') || txt.includes('record') || txt.includes('label') || txt.includes('💿');
  return true;
 };
 
@@ -69,11 +69,11 @@ interface BookingCRMProps {
  onAddLead?: (lead: Lead) => void;
  onDeleteLead?: (id: string) => void;
  onBulkDeleteLeads?: (ids: string[]) => void;
- initialSection?: 'salas' | 'medios' | 'grupos';
- onSectionChange?: (section: 'salas' | 'medios' | 'grupos' | 'bandas') => void;
+ initialSection?:'salas' |'medios' |'grupos';
+ onSectionChange?: (section:'salas' |'medios' |'grupos' |'bandas') => void;
  onNavigate?: (view: any, options?: any) => void;
  bandsCount?: number;
- initialStatusFilter?: LeadStatus | 'todos';
+ initialStatusFilter?: LeadStatus |'todos';
  initialSelectedLeadId?: string;
  epkConfig?: Partial<EPKConfig>;
  onUpdateEpkConfig?: (newConfig: Partial<EPKConfig>) => void;
@@ -89,8 +89,8 @@ import {
  normalizeType,
  autoDetectVenueAddress,
  VENUE_ADDRESS_DATABASE
-} from '../utils/bookingUtils';
-import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
+} from'../utils/bookingUtils';
+import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from'../utils/leadStatusPresentation';
 
 export { 
  normalizeStatus, 
@@ -106,11 +106,11 @@ export default function BookingCRM({
  onAddLead, 
  onDeleteLead,
  onBulkDeleteLeads,
- initialSection = 'salas',
+ initialSection ='salas',
  onSectionChange,
  onNavigate,
  bandsCount,
- initialStatusFilter = 'todos',
+ initialStatusFilter ='todos',
  initialSelectedLeadId,
  epkConfig,
  onUpdateEpkConfig,
@@ -121,10 +121,10 @@ export default function BookingCRM({
  onCampaignChange
 }: BookingCRMProps) {
  const bookingTutorial = useModuleTutorial('booking');
- const effectiveBandName = bandName || 'Tu Banda';
- const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
+ const effectiveBandName = bandName ||'Tu Banda';
+ const [sectionTab, setSectionTab] = useState<'salas' |'medios' |'grupos'>(initialSection ||'salas');
 
- const handleSelectSectionTab = (tab: 'salas' | 'medios' | 'grupos') => {
+ const handleSelectSectionTab = (tab:'salas' |'medios' |'grupos') => {
  setSectionTab(tab);
  setTypeFilter('todos');
  onSectionChange?.(tab);
@@ -164,14 +164,14 @@ export default function BookingCRM({
  setSelectedLead(found);
  setTimeout(() => {
  if (interventionPanelRef.current) {
- interventionPanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ interventionPanelRef.current.scrollIntoView({ behavior:'smooth', block:'start' });
  }
  }, 150);
  }
  }
  }, [initialSelectedLeadId, leads]);
 
- const [viewMode, setViewMode] = useState<'grid' | 'table' | 'map'>('table');
+ const [viewMode, setViewMode] = useState<'grid' |'table' |'map'>('table');
 
  const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
  const [bulkProgressState, setBulkProgressState] = useState<{
@@ -184,7 +184,7 @@ export default function BookingCRM({
  isCompleted: boolean;
  }>({
  isOpen: false,
- title: '',
+ title:'',
  items: [],
  currentIndex: 0,
  totalCount: 0,
@@ -243,7 +243,7 @@ export default function BookingCRM({
  useEffect(() => {
  if (activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
  setFilterByCampaign(true);
- if (sectionTab === 'salas') {
+ if (sectionTab ==='salas') {
  setSelectedCityFilter('');
  setMinCapacityFilter(0);
  setTypeFilter('todos');
@@ -266,7 +266,7 @@ export default function BookingCRM({
  // Automatically detect & save address when a lead is selected
  useEffect(() => {
  if (selectedLead && !selectedLead.direccion && selectedLead.nombre_sala) {
- const detected = autoDetectVenueAddress(selectedLead.nombre_sala, selectedLead.ciudad || '');
+ const detected = autoDetectVenueAddress(selectedLead.nombre_sala, selectedLead.ciudad ||'');
  if (detected) {
  onUpdateLead(selectedLead.id, { direccion: detected });
  setSelectedLead(prev => prev ? { ...prev, direccion: detected } : null);
@@ -296,10 +296,10 @@ export default function BookingCRM({
  setIsDispatchingEmails(true);
  try {
  const data = await apiFetch('/api/trigger-agent', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
- agentName: 'enviador',
- params: { id: leadId, trigger_type: 'usuario_manual' }
+ agentName:'enviador',
+ params: { id: leadId, trigger_type:'usuario_manual' }
  })
  });
 
@@ -308,38 +308,38 @@ export default function BookingCRM({
  } catch (_) {}
 
  if (data.dispatchedCount > 0) {
- alert(`¡Agente Enviador ejecutado con éxito! ${data.message || ''}`);
- } else if (data.results && data.results.some((r: any) => r.status === 'error')) {
- const errMsgs = data.results.filter((r: any) => r.status === 'error').map((r: any) => `${r.nombre_sala}: ${r.error}`).join('\n');
- alert(`Aviso del Agente Enviador:\n${data.message || ''}\n\nDetalles:\n${errMsgs}`);
+ alert(`¡Agente Enviador ejecutado con éxito! ${data.message ||''}`);
+ } else if (data.results && data.results.some((r: any) => r.status ==='error')) {
+ const errMsgs = data.results.filter((r: any) => r.status ==='error').map((r: any) => `${r.nombre_sala}: ${r.error}`).join('\n');
+ alert(`Aviso del Agente Enviador:\n${data.message ||''}\n\nDetalles:\n${errMsgs}`);
  } else {
- alert(data.message || 'No se encontraron correos aprobados pendientes de despacho.');
+ alert(data.message ||'No se encontraron correos aprobados pendientes de despacho.');
  }
  } catch (err: any) {
  console.error('Error al ejecutar Agente Enviador:', err);
- alert(`Error al ejecutar el Agente Enviador: ${err.message || 'Error de conexión'}`);
+ alert(`Error al ejecutar el Agente Enviador: ${err.message ||'Error de conexión'}`);
  } finally {
  setIsDispatchingEmails(false);
  }
  };
  const [isAddingLeadModalOpen, setIsAddingLeadModalOpen] = useState(false);
  const [newLeadData, setNewLeadData] = useState({
- nombre_sala: '',
- ciudad: '',
- region: 'Nacional',
- direccion: '',
+ nombre_sala:'',
+ ciudad:'',
+ region:'Nacional',
+ direccion:'',
  aforo: 0,
- tipo: 'medio' as LeadType,
- email_contacto: '',
- telefono: '',
- website: '',
- instagram: '',
- fuente: '',
- genero: 'Radio',
- notas: '',
- pitch_generado: '',
- icono: '📻',
- imagen_url: ''
+ tipo:'medio' as LeadType,
+ email_contacto:'',
+ telefono:'',
+ website:'',
+ instagram:'',
+ fuente:'',
+ genero:'Radio',
+ notas:'',
+ pitch_generado:'',
+ icono:'📻',
+ imagen_url:''
  });
 
  const [isUploadingLeadLogo, setIsUploadingLeadLogo] = useState(false);
@@ -352,7 +352,7 @@ export default function BookingCRM({
  try {
  setIsUploadingLeadLogo(true);
  const targetBandId = currentBandId;
- const url = await uploadFileToServer(file, { bandId: targetBandId, category: 'leads' });
+ const url = await uploadFileToServer(file, { bandId: targetBandId, category:'leads' });
  if (url) {
  if (isEdit) {
  setEditedLeadInfo(prev => ({ ...prev, imagen_url: url }));
@@ -387,7 +387,7 @@ export default function BookingCRM({
 
 
  // Email thread and manual dispatch states
- const [activeTab, setActiveTab] = useState<'info' | 'emails'>('info');
+ const [activeTab, setActiveTab] = useState<'info' |'emails'>('info');
  const [manualEmailBody, setManualEmailBody] = useState('');
  const [manualEmailSubject, setManualEmailSubject] = useState('');
  const [manualEmailSender, setManualEmailSender] = useState('Bakandeya Agent Manager IA');
@@ -422,8 +422,8 @@ export default function BookingCRM({
  setEnrichStatusMsg('Buscando y autocompletando direcciones exactas para salas y festivales...');
  try {
  const res = await apiFetch('/api/leads/enrich-addresses', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' }
+ method:'POST',
+ headers: {'Content-Type':'application/json' }
  });
  // apiFetch devuelve el JSON ya parseado (y lanza si la respuesta no fue 2xx).
  const data = res as any;
@@ -457,7 +457,7 @@ export default function BookingCRM({
 
  const isMedioOIndustria = (t: any) => {
  const norm = normalizeType(t);
- return norm === 'medio' || norm === 'productora';
+ return norm ==='medio' || norm ==='productora';
  };
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
@@ -465,7 +465,7 @@ export default function BookingCRM({
  // Filter leads by active section tab
  const sectionLeads = useMemo(() => {
  const seen = new Set<string>();
- const isGruposType = (norm: string) => ['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(norm);
+ const isGruposType = (norm: string) => ['grupo','agencia','manager','productora','sello'].includes(norm);
  return (leads || []).filter(lead => {
  if (!lead) return false;
  const leadKey = lead.id ? String(lead.id).trim() : null;
@@ -473,9 +473,9 @@ export default function BookingCRM({
  if (leadKey) seen.add(leadKey);
 
  const norm = normalizeType(lead.tipo);
- if (sectionTab === 'medios') return norm === 'medio';
- if (sectionTab === 'grupos') return isGruposType(norm);
- return norm !== 'medio' && !isGruposType(norm);
+ if (sectionTab ==='medios') return norm ==='medio';
+ if (sectionTab ==='grupos') return isGruposType(norm);
+ return norm !=='medio' && !isGruposType(norm);
  });
  }, [leads, sectionTab]);
 
@@ -486,31 +486,31 @@ export default function BookingCRM({
  if (seen.has(leadKey)) return false;
  seen.add(leadKey);
 
- if (sectionTab === 'salas' && filterByCampaign && activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
+ if (sectionTab ==='salas' && filterByCampaign && activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
  // El filtrado por aforo, fechas y ciudad de campaña solo aplica a recintos y festivales (salas),
  // ya que los medios de comunicación y bandas no tienen aforo ni fechas de evento en campaña.
  if (!leadMatchesCampaignCity(lead, activeCampaign) || !leadMatchesCampaignCapacity(lead, activeCampaign) || !leadMatchesCampaignDates(lead, activeCampaign)) return false;
  }
 
- const matchesSearch = (lead.nombre_sala || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
- (lead.ciudad || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
- (lead.region || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+ const matchesSearch = (lead.nombre_sala ||'').toLowerCase().includes(searchTerm.toLowerCase()) || 
+ (lead.ciudad ||'').toLowerCase().includes(searchTerm.toLowerCase()) ||
+ (lead.region ||'').toLowerCase().includes(searchTerm.toLowerCase()) ||
  (lead.email_contacto && lead.email_contacto.toLowerCase().includes(searchTerm.toLowerCase()));
  const normSt = normalizeStatus(lead.estado);
- const matchesStatus = statusFilter === 'todos' || 
+ const matchesStatus = statusFilter ==='todos' || 
  normSt === statusFilter || 
- (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado);
+ (statusFilter ==='pendiente_aprobacion' && normSt ==='nuevo' && !!lead.pitch_generado);
 
- const matchesType = typeFilter === 'todos'
+ const matchesType = typeFilter ==='todos'
  ? true
- : sectionTab === 'medios'
+ : sectionTab ==='medios'
  ? matchesMedioType(lead, typeFilter)
- : sectionTab === 'grupos'
+ : sectionTab ==='grupos'
  ? matchesGruposType(lead, typeFilter)
  : normalizeType(lead.tipo) === typeFilter;
  const matchesCity = !selectedCityFilter || 
- (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) || 
- (lead.region || '').toLowerCase().includes(selectedCityFilter.toLowerCase());
+ (lead.ciudad ||'').toLowerCase().includes(selectedCityFilter.toLowerCase()) || 
+ (lead.region ||'').toLowerCase().includes(selectedCityFilter.toLowerCase());
  const matchesCapacity = !minCapacityFilter || ((lead.aforo || 0) >= minCapacityFilter);
  return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity;
  });
@@ -527,11 +527,7 @@ export default function BookingCRM({
  setModalScrapeError('');
  setModalScrapeSuccessMsg('');
 
- const steps = [
-"Buscando sitio oficial y directorio de salas...",
-"Extrayendo emails de programación y prensa...",
-"Obteniendo teléfono y datos de ubicación...",
-"Consolidando ficha encontrada..."
+ const steps = ["Buscando sitio oficial y directorio de salas...","Extrayendo emails de programación y prensa...","Obteniendo teléfono y datos de ubicación...","Consolidando ficha encontrada..."
  ];
 
  let stepIdx = 0;
@@ -544,8 +540,8 @@ export default function BookingCRM({
 
  try {
  const res = await apiFetch('/api/scrape-contact', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  nombre_sala: newLeadData.nombre_sala,
  ciudad: newLeadData.ciudad,
@@ -558,7 +554,7 @@ export default function BookingCRM({
  if (res.ok) {
  const resData = await res.json();
  if (resData.success && resData.data) {
- const getVal = (f: any) => typeof f === 'object' && f !== null ? f.valor : (f || '');
+ const getVal = (f: any) => typeof f ==='object' && f !== null ? f.valor : (f ||'');
  const emailVal = getVal(resData.data.email_contacto);
  const telVal = getVal(resData.data.telefono);
  const webVal = getVal(resData.data.website);
@@ -580,14 +576,14 @@ export default function BookingCRM({
  genero: generoVal || prev.genero,
  imagen_url: imgVal || prev.imagen_url,
  icono: iconVal || prev.icono,
- notas: prev.notas ? `${prev.notas} | Scout: ${resData.data.source_info || 'IA Grounding'}` : `Scout IA: ${resData.data.source_info || 'IA Grounding'}`
+ notas: prev.notas ? `${prev.notas} | Scout: ${resData.data.source_info ||'IA Grounding'}` : `Scout IA: ${resData.data.source_info ||'IA Grounding'}`
  }));
 
  setModalScrapeSuccessMsg(
- `¡Éxito! Email: ${emailVal || 'No hallado'} | Tel: ${telVal || 'No hallado'} | Web: ${webVal || 'No hallado'}`
+ `¡Éxito! Email: ${emailVal ||'No hallado'} | Tel: ${telVal ||'No hallado'} | Web: ${webVal ||'No hallado'}`
  );
  } else {
- setModalScrapeError(resData.error || 'No se pudieron recuperar datos con la IA Scout.');
+ setModalScrapeError(resData.error ||'No se pudieron recuperar datos con la IA Scout.');
  }
  } else {
  const errJson = await res.json().catch(() => null);
@@ -595,7 +591,7 @@ export default function BookingCRM({
  }
  } catch (err: any) {
  clearInterval(interval);
- setModalScrapeError(err.message || 'Error de conexión con el Agente Scout.');
+ setModalScrapeError(err.message ||'Error de conexión con el Agente Scout.');
  } finally {
  setIsModalScraping(false);
  }
@@ -608,10 +604,7 @@ export default function BookingCRM({
  setScrapingLeadError(null);
  setScrapedDataForLead(null);
 
- const steps = [
-"Buscando sitio oficial de la sala / medio...",
-"Rastreando contactos de programación y teléfono...",
-"Consolidando nivel de confianza de datos..."
+ const steps = ["Buscando sitio oficial de la sala / medio...","Rastreando contactos de programación y teléfono...","Consolidando nivel de confianza de datos..."
  ];
 
  let stepIdx = 0;
@@ -624,8 +617,8 @@ export default function BookingCRM({
 
  try {
  const res = await apiFetch('/api/scrape-contact', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  leadId: selectedLead.id,
  nombre_sala: selectedLead.nombre_sala,
@@ -641,7 +634,7 @@ export default function BookingCRM({
  if (resData.success && resData.data) {
  setScrapedDataForLead(resData.data);
  } else {
- setScrapingLeadError(resData.error || 'No se lograron extraer datos de contacto.');
+ setScrapingLeadError(resData.error ||'No se lograron extraer datos de contacto.');
  }
  } else {
  const errJson = await res.json().catch(() => null);
@@ -649,7 +642,7 @@ export default function BookingCRM({
  }
  } catch (err: any) {
  clearInterval(interval);
- setScrapingLeadError(err.message || 'Fallo de conexión con Agente Scout.');
+ setScrapingLeadError(err.message ||'Fallo de conexión con Agente Scout.');
  } finally {
  setIsScrapingLead(false);
  }
@@ -657,7 +650,7 @@ export default function BookingCRM({
 
  const handleApplyScrapedToSelectedLead = () => {
  if (!selectedLead || !scrapedDataForLead) return;
- const getVal = (f: any) => typeof f === 'object' && f !== null ? f.valor : (f || '');
+ const getVal = (f: any) => typeof f ==='object' && f !== null ? f.valor : (f ||'');
 
  const emailVal = getVal(scrapedDataForLead.email_contacto);
  const telVal = getVal(scrapedDataForLead.telefono);
@@ -671,8 +664,8 @@ export default function BookingCRM({
  const iconVal = getVal(scrapedDataForLead.icono);
 
  const today = new Date().toISOString().split('T')[0];
- const sourceSummary = typeof scrapedDataForLead.source_info === 'string' ? scrapedDataForLead.source_info : 'Rastreo web Agente Scout';
- const updatedNotes = `*** [${today}] Ficha enriquecida vía Agente Scout. ${sourceSummary} ***\n${selectedLead.notas || ''}`;
+ const sourceSummary = typeof scrapedDataForLead.source_info ==='string' ? scrapedDataForLead.source_info :'Rastreo web Agente Scout';
+ const updatedNotes = `*** [${today}] Ficha enriquecida vía Agente Scout. ${sourceSummary} ***\n${selectedLead.notas ||''}`;
 
  const updatedFields: Partial<Lead> = {
  email_contacto: emailVal || selectedLead.email_contacto,
@@ -703,23 +696,23 @@ export default function BookingCRM({
  const createdLead: Lead = {
  id: `lead-${Date.now()}`,
  nombre_sala: newLeadData.nombre_sala,
- ciudad: newLeadData.ciudad || 'Nacional',
- region: newLeadData.region || 'Nacional',
+ ciudad: newLeadData.ciudad ||'Nacional',
+ region: newLeadData.region ||'Nacional',
  aforo: newLeadData.aforo || 0,
- genero: newLeadData.genero || (sectionTab === 'medios' ? 'Radio' : 'Música en directo'),
- tipo: sectionTab === 'medios' ? 'medio' : newLeadData.tipo,
- email_contacto: newLeadData.email_contacto || '',
- telefono: newLeadData.telefono || '',
- instagram: newLeadData.instagram || '',
- website: newLeadData.website || '',
- icono: newLeadData.icono || (sectionTab === 'medios' ? '📻' : '🏛️'),
- imagen_url: newLeadData.imagen_url || '',
- fuente: 'Alta Manual CRM',
- estado: 'nuevo',
- pitch_generado: newLeadData.pitch_generado || (sectionTab === 'medios' 
+ genero: newLeadData.genero || (sectionTab ==='medios' ?'Radio' :'Música en directo'),
+ tipo: sectionTab ==='medios' ?'medio' : newLeadData.tipo,
+ email_contacto: newLeadData.email_contacto ||'',
+ telefono: newLeadData.telefono ||'',
+ instagram: newLeadData.instagram ||'',
+ website: newLeadData.website ||'',
+ icono: newLeadData.icono || (sectionTab ==='medios' ?'📻' :'🏛️'),
+ imagen_url: newLeadData.imagen_url ||'',
+ fuente:'Alta Manual CRM',
+ estado:'nuevo',
+ pitch_generado: newLeadData.pitch_generado || (sectionTab ==='medios' 
  ? `Asunto: Nota de Prensa: ${effectiveBandName} presenta su directo\n\nEstimada redacción / equipo de ${newLeadData.nombre_sala},\n\nOs remitimos la información de la propuesta musical de ${effectiveBandName}...`
  : `Asunto: Propuesta de concierto: ${effectiveBandName} en ${newLeadData.nombre_sala}\n\nHola equipo de booking,\n\nSomos la banda ${effectiveBandName}...`),
- notas: newLeadData.notas || `Añadido desde la sección ${sectionTab === 'medios' ? 'Medios' : 'Salas'} el ${new Date().toISOString().split('T')[0]}`
+ notas: newLeadData.notas || `Añadido desde la sección ${sectionTab ==='medios' ?'Medios' :'Salas'} el ${new Date().toISOString().split('T')[0]}`
  };
 
  if (onAddLead) {
@@ -743,38 +736,38 @@ export default function BookingCRM({
 
  const handleOpenLead = (lead: Lead) => {
  setSelectedLead(lead);
- setEditedPitch(lead.pitch_generado || '');
+ setEditedPitch(lead.pitch_generado ||'');
  setIsEditingPitch(false);
  setIsEditingLeadInfo(false);
  setIsRejecting(false);
  setRejectionNotes('');
  
  // Automatically switch to emails tab for negotiating or interested leads, else info
- setActiveTab(lead.estado === 'negociando' || lead.estado === 'interesado' ? 'emails' : 'info');
+ setActiveTab(lead.estado ==='negociando' || lead.estado ==='interesado' ?'emails' :'info');
  setManualEmailBody('');
  setManualEmailSubject(lead.hilo_emails && lead.hilo_emails.length > 0 ? `RE: ${lead.hilo_emails[lead.hilo_emails.length - 1].asunto}` : `Propuesta de concierto: ${effectiveBandName}`);
  setManualEmailStatus('');
 
  setTimeout(() => {
- interventionPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ interventionPanelRef.current?.scrollIntoView({ behavior:'smooth', block:'start' });
  }, 100);
  };
 
  const handleStartEditLeadInfo = () => {
  if (!selectedLead) return;
  setEditedLeadInfo({
- nombre_sala: selectedLead.nombre_sala || '',
- contacto_nombre: selectedLead.contacto_nombre || '',
- email_contacto: selectedLead.email_contacto || '',
- telefono: selectedLead.telefono || '',
- website: selectedLead.website || '',
- instagram: selectedLead.instagram || '',
- ciudad: selectedLead.ciudad || '',
- region: selectedLead.region || '',
+ nombre_sala: selectedLead.nombre_sala ||'',
+ contacto_nombre: selectedLead.contacto_nombre ||'',
+ email_contacto: selectedLead.email_contacto ||'',
+ telefono: selectedLead.telefono ||'',
+ website: selectedLead.website ||'',
+ instagram: selectedLead.instagram ||'',
+ ciudad: selectedLead.ciudad ||'',
+ region: selectedLead.region ||'',
  aforo: selectedLead.aforo || 0,
- genero: selectedLead.genero || '',
- notas: selectedLead.notas || '',
- contexto_extra: selectedLead.contexto_extra || ''
+ genero: selectedLead.genero ||'',
+ notas: selectedLead.notas ||'',
+ contexto_extra: selectedLead.contexto_extra ||''
  });
  setIsEditingLeadInfo(true);
  };
@@ -790,12 +783,12 @@ export default function BookingCRM({
  if (!selectedLead || !manualEmailBody) return;
 
  const now = new Date();
- const fechaStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+ const fechaStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
  
  const newMsg = {
  id: `em-manual-${Date.now()}`,
  fecha: fechaStr,
- remitente: 'banda' as const,
+ remitente:'banda' as const,
  remitente_nombre: manualEmailSender,
  asunto: manualEmailSubject || `Contacto directo de ${effectiveBandName}`,
  mensaje: manualEmailBody
@@ -806,12 +799,12 @@ export default function BookingCRM({
  
  // Move status to negotiating if it was new/pending/approved/sent
  let nuevoEstado = selectedLead.estado;
- if (selectedLead.estado === 'nuevo' || selectedLead.estado === 'pendiente_aprobacion' || selectedLead.estado === 'aprobado' || selectedLead.estado === 'esperando_respuesta') {
- nuevoEstado = 'negociando';
+ if (selectedLead.estado ==='nuevo' || selectedLead.estado ==='pendiente_aprobacion' || selectedLead.estado ==='aprobado' || selectedLead.estado ==='esperando_respuesta') {
+ nuevoEstado ='negociando';
  }
 
  const today = new Date().toISOString().split('T')[0];
- const nuevaNota = `*** [${today}] Correo personal manual enviado por ${manualEmailSender}: "${manualEmailSubject}" ***\n` + (selectedLead.notas || '');
+ const nuevaNota = `*** [${today}] Correo personal manual enviado por ${manualEmailSender}:"${manualEmailSubject}" ***\n` + (selectedLead.notas ||'');
 
  onUpdateLead(selectedLead.id, {
  hilo_emails: nuevoHilo,
@@ -836,18 +829,18 @@ export default function BookingCRM({
  const handleSimulateIncomingEmail = () => {
  if (!selectedLead) return;
  
- let simSender = 'Programación';
- let simBody = '';
+ let simSender ='Programación';
+ let simBody ='';
  
  const lowercaseName = selectedLead.nombre_sala.toLowerCase();
- if (selectedLead.id === 'lead-14' || lowercaseName.includes('hebe')) {
- simSender = 'Kike (Programación Sala Hebe)';
- simBody = '¡Buenas! He estado pensando lo de la fecha doble con la banda local que propusisteis. Me parece de lujo, los chavales de"Vallekas Ska" están buscando bolo para noviembre y seguro que entre los dos llenamos el Hebe. El viernes 13 de Noviembre sigue libre. ¿Cerramos ese día con un 75% de taquilla para vosotros si llegamos a las 100 entradas? Ya me decís y os paso el contrato.';
- } else if (selectedLead.id === 'lead-4' || lowercaseName.includes('viña')) {
- simSender = 'Producción Artística (Viña Rock)';
- simBody = 'Hola, gracias por pasarnos los detalles. El caché de 4.500€ entra en vuestros rangos para el escenario de Mestizaje. El slot de las 18:30 del viernes está libre. Confirmadnos si vuestro rider técnico incluye los sintetizadores listos para línea balanceada o si necesitáis cajas DI adicionales del festival. ¡Cerremos trato!';
- } else if (selectedLead.id === 'lead-6' || lowercaseName.includes('razzmatazz')) {
- simSender = 'Xavi (Booking Razzmatazz)';
+ if (selectedLead.id ==='lead-14' || lowercaseName.includes('hebe')) {
+ simSender ='Kike (Programación Sala Hebe)';
+ simBody ='¡Buenas! He estado pensando lo de la fecha doble con la banda local que propusisteis. Me parece de lujo, los chavales de"Vallekas Ska" están buscando bolo para noviembre y seguro que entre los dos llenamos el Hebe. El viernes 13 de Noviembre sigue libre. ¿Cerramos ese día con un 75% de taquilla para vosotros si llegamos a las 100 entradas? Ya me decís y os paso el contrato.';
+ } else if (selectedLead.id ==='lead-4' || lowercaseName.includes('viña')) {
+ simSender ='Producción Artística (Viña Rock)';
+ simBody ='Hola, gracias por pasarnos los detalles. El caché de 4.500€ entra en vuestros rangos para el escenario de Mestizaje. El slot de las 18:30 del viernes está libre. Confirmadnos si vuestro rider técnico incluye los sintetizadores listos para línea balanceada o si necesitáis cajas DI adicionales del festival. ¡Cerremos trato!';
+ } else if (selectedLead.id ==='lead-6' || lowercaseName.includes('razzmatazz')) {
+ simSender ='Xavi (Booking Razzmatazz)';
  simBody = `Buenas, nos parece perfecto el acuerdo de taquilla al 80/20 con un mínimo de 150 entradas garantizadas. La fecha del sábado 5 de Diciembre queda reservada para ${effectiveBandName}. Decidme a qué email enviamos el borrador del contrato de sala. ¡Un saludo!`;
  } else {
  simSender = `Programador (${selectedLead.nombre_sala})`;
@@ -855,7 +848,7 @@ export default function BookingCRM({
  }
 
  const now = new Date();
- const fechaStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+ const fechaStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
  const subject = selectedLead.hilo_emails && selectedLead.hilo_emails.length > 0 
  ? `RE: ${selectedLead.hilo_emails[selectedLead.hilo_emails.length - 1].asunto}` 
  : `Re: Propuesta de concierto - ${effectiveBandName}`;
@@ -863,7 +856,7 @@ export default function BookingCRM({
  const newMsg = {
  id: `em-sim-${Date.now()}`,
  fecha: fechaStr,
- remitente: 'sala' as const,
+ remitente:'sala' as const,
  remitente_nombre: simSender,
  asunto: subject,
  mensaje: simBody
@@ -873,12 +866,12 @@ export default function BookingCRM({
  const nuevoHilo = [...currentHilo, newMsg];
  
  let nuevoEstado = selectedLead.estado;
- if (selectedLead.estado === 'nuevo' || selectedLead.estado === 'pendiente_aprobacion' || selectedLead.estado === 'aprobado' || selectedLead.estado === 'esperando_respuesta') {
- nuevoEstado = 'negociando';
+ if (selectedLead.estado ==='nuevo' || selectedLead.estado ==='pendiente_aprobacion' || selectedLead.estado ==='aprobado' || selectedLead.estado ==='esperando_respuesta') {
+ nuevoEstado ='negociando';
  }
 
  const today = new Date().toISOString().split('T')[0];
- const nuevaNota = `*** [${today}] Correo de simulación entrante recibido de ${simSender} ***\n` + (selectedLead.notas || '');
+ const nuevaNota = `*** [${today}] Correo de simulación entrante recibido de ${simSender} ***\n` + (selectedLead.notas ||'');
 
  onUpdateLead(selectedLead.id, {
  hilo_emails: nuevoHilo,
@@ -911,13 +904,13 @@ export default function BookingCRM({
  const handleApproveLead = () => {
  if (!selectedLead) return;
  const today = new Date().toISOString().split('T')[0];
- const updatedNotes = `*** [${today}] Correo de presentación APROBADO manualmente para envío automático ***\n${selectedLead.notas || ''}`;
+ const updatedNotes = `*** [${today}] Correo de presentación APROBADO manualmente para envío automático ***\n${selectedLead.notas ||''}`;
 
  onUpdateLead(selectedLead.id, {
- estado: 'aprobado',
+ estado:'aprobado',
  pitch_generado: editedPitch,
  notas: updatedNotes
- }, 'pendiente_aprobacion');
+ },'pendiente_aprobacion');
 
  setSelectedLead(null);
  };
@@ -925,12 +918,12 @@ export default function BookingCRM({
  const handleRejectLead = () => {
  if (!selectedLead || !rejectionNotes) return;
  const today = new Date().toISOString().split('T')[0];
- const updatedNotes = `*** [${today}] RECHAZADO EN PANEL DE REVISIÓN: "${rejectionNotes}" ***\n${selectedLead.notas || ''}`;
+ const updatedNotes = `*** [${today}] RECHAZADO EN PANEL DE REVISIÓN:"${rejectionNotes}" ***\n${selectedLead.notas ||''}`;
  
  onUpdateLead(selectedLead.id, {
- estado: 'nuevo',
+ estado:'nuevo',
  notas: updatedNotes
- }, 'pendiente_aprobacion');
+ },'pendiente_aprobacion');
 
  setSelectedLead(null);
  };
@@ -938,31 +931,31 @@ export default function BookingCRM({
  const handleCorrectStatus = (newStatus: LeadStatus) => {
  if (!selectedLead) return;
  const today = new Date().toISOString().split('T')[0];
- const correctionMsg = `*** [${today}] Clasificación corregida a '${newStatus}' manualmente ***\n`;
+ const correctionMsg = `*** [${today}] Clasificación corregida a'${newStatus}' manualmente ***\n`;
  
  onUpdateLead(selectedLead.id, {
  estado: newStatus,
- notas: correctionMsg + (selectedLead.notas || '')
+ notas: correctionMsg + (selectedLead.notas ||'')
  }, selectedLead.estado);
 
- setSelectedLead(prev => prev ? { ...prev, estado: newStatus, notas: correctionMsg + (prev.notas || '') } : null);
+ setSelectedLead(prev => prev ? { ...prev, estado: newStatus, notas: correctionMsg + (prev.notas ||'') } : null);
  };
 
 
- const subCardBg = isStitchLight ? 'bg-[var(--bg)]/60' : 'bg-[var(--surface)]';
- const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]';
- const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]';
- const textMuted = isStitchLight ? 'text-[var(--ink-3)]' : 'text-[var(--ink-3)]';
- const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCityFilter ? 1 : 0) + (statusFilter !== 'todos' ? 1 : 0) + (typeFilter !== 'todos' ? 1 : 0) + (minCapacityFilter > 0 ? 1 : 0) + (onlyFavoritesFilter ? 1 : 0) + (onlyVerifiedFilter ? 1 : 0) + (activeSavedFilterId ? 1 : 0);
+ const subCardBg = isStitchLight ?'bg-[var(--bg)]/60' :'bg-[var(--surface)]';
+ const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
+ const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
+ const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-3)]';
+ const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCityFilter ? 1 : 0) + (statusFilter !=='todos' ? 1 : 0) + (typeFilter !=='todos' ? 1 : 0) + (minCapacityFilter > 0 ? 1 : 0) + (onlyFavoritesFilter ? 1 : 0) + (onlyVerifiedFilter ? 1 : 0) + (activeSavedFilterId ? 1 : 0);
 
  return (
  <div data-modulo="booking" className="space-y-4 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden">
  
  {/* 2. LEADS CRM WORKSPACE */}
- <div className={`grid grid-cols-1 ${selectedLead ? 'lg:grid-cols-3 gap-8' : 'w-full'} items-start transition-all duration-300`}>
+ <div className={`grid grid-cols-1 ${selectedLead ?'lg:grid-cols-3 gap-8' :'w-full'} items-start transition-all duration-300`}>
  
  {/* LEADS LIST AREA (Takes 100% width when no lead is selected, or 2/3 when detail panel is open) */}
- <div className={`${selectedLead ? 'lg:col-span-2' : 'w-full lg:col-span-3'} space-y-4 transition-all duration-300`}>
+ <div className={`${selectedLead ?'lg:col-span-2' :'w-full lg:col-span-3'} space-y-4 transition-all duration-300`}>
  <div className="space-y-3 sm:space-y-4">
  
  {/* Header: Tabs + Unified Action Buttons */}
@@ -975,17 +968,17 @@ export default function BookingCRM({
  type="button"
  onClick={() => handleSelectSectionTab('salas')}
  className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
- sectionTab === 'salas'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ sectionTab ==='salas'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  <Building2 className="w-3.5 h-3.5 shrink-0" />
  <span>Escenarios</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
- sectionTab === 'salas' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
+ sectionTab ==='salas' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-3)]'
  }`}>
- {leads.filter(l => !normalizeType(l.tipo).includes('medio') && !['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(normalizeType(l.tipo))).length}
+ {leads.filter(l => !normalizeType(l.tipo).includes('medio') && !['grupo','agencia','manager','productora','sello'].includes(normalizeType(l.tipo))).length}
  </span>
  </button>
 
@@ -994,17 +987,17 @@ export default function BookingCRM({
  type="button"
  onClick={() => handleSelectSectionTab('medios')}
  className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
- sectionTab === 'medios'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ sectionTab ==='medios'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  <Radio className="w-3.5 h-3.5 shrink-0" />
  <span>Medios y Prensa</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
- sectionTab === 'medios' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
+ sectionTab ==='medios' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-3)]'
  }`}>
- {leads.filter(l => normalizeType(l.tipo) === 'medio').length}
+ {leads.filter(l => normalizeType(l.tipo) ==='medio').length}
  </span>
  </button>
 
@@ -1013,17 +1006,17 @@ export default function BookingCRM({
  type="button"
  onClick={() => handleSelectSectionTab('grupos')}
  className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
- sectionTab === 'grupos'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ sectionTab ==='grupos'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  <Briefcase className="w-3.5 h-3.5 shrink-0" />
  <span>Management & Productoras</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
- sectionTab === 'grupos' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
+ sectionTab ==='grupos' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-3)]'
  }`}>
- {leads.filter(l => ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some(t => normalizeType(l.tipo).includes(t))).length}
+ {leads.filter(l => ['agencia','manager','productora','sello','promotora','management'].some(t => normalizeType(l.tipo).includes(t))).length}
  </span>
  </button>
 
@@ -1042,7 +1035,7 @@ export default function BookingCRM({
  >
  <Users className="w-3.5 h-3.5 shrink-0 text-[var(--acc-ink)]" />
  <span>Grupos</span>
- {typeof bandsCount === 'number' && bandsCount > 0 && (
+ {typeof bandsCount ==='number' && bandsCount > 0 && (
  <span className="text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums bg-[var(--sunken)] text-[var(--ink-3)]">
  {bandsCount}
  </span>
@@ -1057,22 +1050,22 @@ export default function BookingCRM({
  type="button"
  onClick={() => {
  setNewLeadData({
- nombre_sala: '',
- ciudad: '',
- region: 'Nacional',
- direccion: '',
+ nombre_sala:'',
+ ciudad:'',
+ region:'Nacional',
+ direccion:'',
  aforo: 0,
- tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
- email_contacto: '',
- telefono: '',
- website: '',
- instagram: '',
- fuente: '',
- genero: sectionTab === 'medios' ? 'Radio' : sectionTab === 'grupos' ? 'Management / Booking' : 'Balkan / Ska',
- notas: '',
- pitch_generado: '',
- icono: sectionTab === 'medios' ? '📻' : sectionTab === 'grupos' ? '💼' : '🏛️',
- imagen_url: ''
+ tipo: sectionTab ==='medios' ?'medio' : sectionTab ==='grupos' ?'productora' :'sala',
+ email_contacto:'',
+ telefono:'',
+ website:'',
+ instagram:'',
+ fuente:'',
+ genero: sectionTab ==='medios' ?'Radio' : sectionTab ==='grupos' ?'Management / Booking' :'Balkan / Ska',
+ notas:'',
+ pitch_generado:'',
+ icono: sectionTab ==='medios' ?'📻' : sectionTab ==='grupos' ?'💼' :'🏛️',
+ imagen_url:''
  });
  setIsAddingLeadModalOpen(true);
  }}
@@ -1080,7 +1073,7 @@ export default function BookingCRM({
  title="Añadir contacto"
  >
  <PlusCircle className="w-3.5 h-3.5" />
- <span>Añadir {sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'contacto' : 'escenario'}</span>
+ <span>Añadir {sectionTab ==='medios' ?'medio' : sectionTab ==='grupos' ?'contacto' :'escenario'}</span>
  </button>
 
  <ModuleTutorialTrigger
@@ -1106,17 +1099,17 @@ export default function BookingCRM({
  onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
  isMobileToolsOpen
- ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
- : 'bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)]'
+ ?'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ :'bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Herramientas, Scout, Excel y Agentes IA"
  >
  <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
  <span className="hidden sm:inline">Herramientas e IA</span>
  <span className="sm:hidden">Herramientas</span>
- {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
+ {leads.filter(l => !l.email_contacto || l.email_contacto.trim() ==='').length > 0 && (
  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-semibold tabular-nums">
- {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length}
+ {leads.filter(l => !l.email_contacto || l.email_contacto.trim() ==='').length}
  </span>
  )}
  {duplicateGroupsCount > 0 && (
@@ -1158,7 +1151,7 @@ export default function BookingCRM({
  >
  <span className="flex items-center gap-2">
  {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" /> : <Send className="w-4 h-4 text-emerald-400" />}
- <span>{isDispatchingEmails ? 'Despachando correos...' : `Agente Enviador (${leads.filter(l => ['aprobado', 'aprobado_propuesta', 'aprobado_respuesta'].includes(l.estado)).length} en cola de envío)`}</span>
+ <span>{isDispatchingEmails ?'Despachando correos...' : `Agente Enviador (${leads.filter(l => ['aprobado','aprobado_propuesta','aprobado_respuesta'].includes(l.estado)).length} en cola de envío)`}</span>
  </span>
  <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
  </button>
@@ -1206,7 +1199,7 @@ export default function BookingCRM({
  </span>
  {duplicateGroupsCount > 0 ? (
  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)] text-[var(--acc-ink)]">
- {duplicateGroupsCount} {duplicateGroupsCount === 1 ? 'grupo' : 'grupos'}
+ {duplicateGroupsCount} {duplicateGroupsCount === 1 ?'grupo' :'grupos'}
  </span>
  ) : (
  <span className="text-[10px] text-zinc-400 font-normal">0 duplicados</span>
@@ -1223,7 +1216,7 @@ export default function BookingCRM({
  >
  <span className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-indigo-400" />
- Agente Enriquecedor de Contactos ({leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length} sin email)
+ Agente Enriquecedor de Contactos ({leads.filter(l => !l.email_contacto || l.email_contacto.trim() ==='').length} sin email)
  </span>
  <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
  </button>
@@ -1265,7 +1258,7 @@ export default function BookingCRM({
  className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border-zinc-700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
  >
  <MapPin className="w-3.5 h-3.5 text-zinc-400" />
- <span>{isEnrichingAddresses ? 'Rellenando direcciones...' : 'Autocompletar Direcciones'}</span>
+ <span>{isEnrichingAddresses ?'Rellenando direcciones...' :'Autocompletar Direcciones'}</span>
  </button>
  </div>
  </div>
@@ -1280,10 +1273,10 @@ export default function BookingCRM({
  <input
  id="crm-search"
  type="text"
- placeholder={sectionTab === 'medios' ? "🔍 Buscar medio..." : sectionTab === 'grupos' ? "🔍 Buscar management..." : "🔍 Buscar escenario..."}
+ placeholder={sectionTab ==='medios' ?"🔍 Buscar medio..." : sectionTab ==='grupos' ?"🔍 Buscar management..." :"🔍 Buscar escenario..."}
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
- className={`w-full rounded-[var(--r-m)] pl-9 ${searchTerm ? 'pr-8' : 'pr-3'} py-2 text-xs font-semibold font-sans transition-colors bg-[var(--sunken)] text-[var(--ink)] focus:ring-2 focus:ring-[var(--acc)]/40 placeholder:text-[var(--ink-3)]`}
+ className={`w-full rounded-[var(--r-m)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-2 text-xs font-semibold font-sans transition-colors bg-[var(--sunken)] text-[var(--ink)] focus:ring-2 focus:ring-[var(--acc)]/40 placeholder:text-[var(--ink-3)]`}
  />
  {searchTerm && (
  <button
@@ -1306,12 +1299,12 @@ export default function BookingCRM({
  onChange={(e) => setTypeFilter(e.target.value as any)}
  aria-label="Filtrar por tipo"
  className={`px-3 py-2 pr-7 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors cursor-pointer appearance-none ${
- typeFilter !== 'todos'
- ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
- : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ typeFilter !=='todos'
+ ?'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
- {sectionTab === 'medios' ? (
+ {sectionTab ==='medios' ? (
  <>
  <option value="todos">🌟 Todos los medios ({sectionLeads.length})</option>
  <option value="radio">📻 Radios</option>
@@ -1320,7 +1313,7 @@ export default function BookingCRM({
  <option value="redes">📱 Redes</option>
  <option value="podcast">🎙️ Podcasts</option>
  </>
- ) : sectionTab === 'grupos' ? (
+ ) : sectionTab ==='grupos' ? (
  <>
  <option value="todos">🌟 Todas las entidades ({sectionLeads.length})</option>
  <option value="grupo">🎸 Grupos</option>
@@ -1332,10 +1325,10 @@ export default function BookingCRM({
  ) : (
  <>
  <option value="todos">🌟 Tipo: Todos ({sectionLeads.length})</option>
- <option value="sala">🏛️ Salas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'sala').length})</option>
- <option value="festival">🎪 Festivales ({sectionLeads.filter(l => normalizeType(l.tipo) === 'festival').length})</option>
- <option value="discoteca">🪩 Discotecas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'discoteca').length})</option>
- <option value="ayuntamiento">🎆 Ayuntamientos ({sectionLeads.filter(l => normalizeType(l.tipo) === 'ayuntamiento').length})</option>
+ <option value="sala">🏛️ Salas ({sectionLeads.filter(l => normalizeType(l.tipo) ==='sala').length})</option>
+ <option value="festival">🎪 Festivales ({sectionLeads.filter(l => normalizeType(l.tipo) ==='festival').length})</option>
+ <option value="discoteca">🪩 Discotecas ({sectionLeads.filter(l => normalizeType(l.tipo) ==='discoteca').length})</option>
+ <option value="ayuntamiento">🎆 Ayuntamientos ({sectionLeads.filter(l => normalizeType(l.tipo) ==='ayuntamiento').length})</option>
  </>
  )}
  </select>
@@ -1349,8 +1342,8 @@ export default function BookingCRM({
  onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
  className={`flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-bold transition-colors shrink-0 cursor-pointer ${
  activeFiltersCount > 0 || isMobileFiltersOpen
- ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
- : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ ?'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Filtros avanzados y búsquedas guardadas"
  >
@@ -1371,13 +1364,13 @@ export default function BookingCRM({
  onClick={() => setFilterByCampaign(!filterByCampaign)}
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer ${
  filterByCampaign
- ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
- : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ ?'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
- title={filterByCampaign ? "Quitar filtro de campaña (ver todas las salas)" : "Filtrar únicamente salas objetivo de la campaña"}
+ title={filterByCampaign ?"Quitar filtro de campaña (ver todas las salas)" :"Filtrar únicamente salas objetivo de la campaña"}
  >
  <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
- <span className="hidden sm:inline">{filterByCampaign ? 'Filtro Campaña' : 'Filtrar Campaña'}</span>
+ <span className="hidden sm:inline">{filterByCampaign ?'Filtro Campaña' :'Filtrar Campaña'}</span>
  {filterByCampaign && (
  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] text-[10px] font-semibold tabular-nums">
  {filteredLeads.length}
@@ -1394,9 +1387,9 @@ export default function BookingCRM({
  type="button"
  onClick={() => setViewMode('grid')}
  className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
- viewMode === 'grid'
- ? 'bg-[var(--acc)] text-[var(--on-acc)]'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ viewMode ==='grid'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Tarjetas"
  >
@@ -1408,9 +1401,9 @@ export default function BookingCRM({
  type="button"
  onClick={() => setViewMode('table')}
  className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
- viewMode === 'table'
- ? 'bg-[var(--acc)] text-[var(--on-acc)]'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ viewMode ==='table'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Detalles / Tabla"
  >
@@ -1422,13 +1415,13 @@ export default function BookingCRM({
  type="button"
  onClick={() => setViewMode('map')}
  className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
- viewMode === 'map'
- ? 'bg-[var(--acc)] text-[var(--on-acc)]'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ viewMode ==='map'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Mapa GPS Interactivo"
  >
- <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-[var(--on-acc)]' : 'text-[var(--ink-3)]'}`} />
+ <MapIcon className={`w-3.5 h-3.5 ${viewMode ==='map' ?'text-[var(--on-acc)]' :'text-[var(--ink-3)]'}`} />
  <span>Mapa</span>
  </button>
  </div>
@@ -1441,11 +1434,11 @@ export default function BookingCRM({
  {enrichStatusMsg && (
  <div className={`p-2.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between gap-2 animate-fadeIn ${
  enrichStatusMsg.includes('¡Éxito!')
- ? 'bg-[var(--ok-soft)] text-[var(--ok)]'
- : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+ ?'bg-[var(--ok-soft)] text-[var(--ok)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2">
- <MapPin className={`w-4 h-4 shrink-0 animate-bounce ${enrichStatusMsg.includes('¡Éxito!') ? 'text-[var(--ok)]' : 'text-[var(--ink-3)]'}`} />
+ <MapPin className={`w-4 h-4 shrink-0 animate-bounce ${enrichStatusMsg.includes('¡Éxito!') ?'text-[var(--ok)]' :'text-[var(--ink-3)]'}`} />
  <span>{enrichStatusMsg}</span>
  </div>
  <button 
@@ -1484,8 +1477,8 @@ export default function BookingCRM({
  onClick={() => setOnlyFavoritesFilter(!onlyFavoritesFilter)}
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyFavoritesFilter
- ? 'bg-amber-500/20 text-amber-300 /50'
- : 'bg-black/40 text-[var(--ink-2)] hover:text-white'
+ ?'bg-amber-500/20 text-amber-300 /50'
+ :'bg-black/40 text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <span>⭐ Favoritos</span>
@@ -1497,8 +1490,8 @@ export default function BookingCRM({
  onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyVerifiedFilter
- ? 'bg-sky-500/20 text-sky-300 border-sky-500/50'
- : 'bg-black/40 text-[var(--ink-2)] hover:text-white'
+ ?'bg-sky-500/20 text-sky-300 border-sky-500/50'
+ :'bg-black/40 text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <span>✔ Verificados</span>
@@ -1510,7 +1503,7 @@ export default function BookingCRM({
  <input
  type="number"
  placeholder="Ej: 300"
- value={minCapacityFilter || ''}
+ value={minCapacityFilter ||''}
  onChange={(e) => setMinCapacityFilter(Number(e.target.value) || 0)}
  className="w-16 bg-transparent text-[var(--acc)] font-bold focus:outline-none"
  />
@@ -1576,8 +1569,8 @@ export default function BookingCRM({
  key={sf.id}
  className={`group relative shrink-0 flex items-center rounded-full transition-all cursor-pointer ${
  isActive
- ? 'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold shadow-xs'
- : 'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-800 text-neutral-300'
+ ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold shadow-xs'
+ :'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-800 text-neutral-300'
  }`}
  >
  <button
@@ -1611,30 +1604,30 @@ export default function BookingCRM({
  <div className="space-y-1.5">
  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Tipo de espacio / contacto</p>
  <div className="flex items-center gap-1.5 flex-wrap">
- {(sectionTab === 'medios'
+ {(sectionTab ==='medios'
  ? [
- { key: 'todos', label: '🌟 Todos' },
- { key: 'radio', label: '📻 Radio' },
- { key: 'tv', label: '📺 TV' },
- { key: 'prensa', label: '📰 Prensa' },
- { key: 'redes', label: '📱 Redes' },
- { key: 'podcast', label: '🎙️ Podcasts' }
+ { key:'todos', label:'🌟 Todos' },
+ { key:'radio', label:'📻 Radio' },
+ { key:'tv', label:'📺 TV' },
+ { key:'prensa', label:'📰 Prensa' },
+ { key:'redes', label:'📱 Redes' },
+ { key:'podcast', label:'🎙️ Podcasts' }
  ] as const
- : sectionTab === 'grupos'
+ : sectionTab ==='grupos'
  ? [
- { key: 'todos', label: '🌟 Todos' },
- { key: 'productora', label: '🎬 Productoras' },
- { key: 'manager', label: '👔 Mánagers' },
- { key: 'agencia', label: '💼 Agencias' },
- { key: 'sello', label: '💿 Sellos' },
- { key: 'grupo', label: '🎸 Grupos' }
+ { key:'todos', label:'🌟 Todos' },
+ { key:'productora', label:'🎬 Productoras' },
+ { key:'manager', label:'👔 Mánagers' },
+ { key:'agencia', label:'💼 Agencias' },
+ { key:'sello', label:'💿 Sellos' },
+ { key:'grupo', label:'🎸 Grupos' }
  ] as const
  : [
- { key: 'todos', label: '🌟 Todos' },
- { key: 'sala', label: '🏛️ Salas' },
- { key: 'festival', label: '🎪 Festivales' },
- { key: 'discoteca', label: '🪩 Discotecas' },
- { key: 'ayuntamiento', label: '🎆 Ayuntamientos' }
+ { key:'todos', label:'🌟 Todos' },
+ { key:'sala', label:'🏛️ Salas' },
+ { key:'festival', label:'🎪 Festivales' },
+ { key:'discoteca', label:'🪩 Discotecas' },
+ { key:'ayuntamiento', label:'🎆 Ayuntamientos' }
  ] as const
  ).map(t => (
  <button
@@ -1643,8 +1636,8 @@ export default function BookingCRM({
  onClick={() => setTypeFilter(t.key)}
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
  typeFilter === t.key
- ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
- : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ :'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
  }`}
  >
  {t.label}
@@ -1672,9 +1665,9 @@ export default function BookingCRM({
  type="button"
  onClick={() => setSelectedCityFilter('')}
  className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-all cursor-pointer ${
- selectedCityFilter === ''
- ? 'bg-[var(--surface)] text-[var(--acc)] font-bold'
- : 'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
+ selectedCityFilter ===''
+ ?'bg-[var(--surface)] text-[var(--acc)] font-bold'
+ :'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
  }`}
  >
  Todas ({activeLeadsForSection.length})
@@ -1686,11 +1679,11 @@ export default function BookingCRM({
  <button
  key={cityName}
  type="button"
- onClick={() => setSelectedCityFilter(isSelected ? '' : cityName)}
+ onClick={() => setSelectedCityFilter(isSelected ?'' : cityName)}
  className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
- ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold border-[var(--acc)]/50'
- : 'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)] font-bold border-[var(--acc)]/50'
+ :'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
  }`}
  >
  <span>{cityName}</span>
@@ -1733,7 +1726,7 @@ export default function BookingCRM({
  <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
- {typeFilter !== 'todos' && (
+ {typeFilter !=='todos' && (
  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
  🏛️ {typeFilter}
  <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
@@ -1759,7 +1752,7 @@ export default function BookingCRM({
  )}
  {activeSavedFilterId && (
  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/50 shrink-0">
- 📌 {savedFilters.find(f => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
+ 📌 {savedFilters.find(f => f.id === activeSavedFilterId)?.nombre ||'Búsqueda guardada'}
  <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
@@ -1776,20 +1769,20 @@ export default function BookingCRM({
  {/* Main Status Tabs Bar (Clean, no-scrollbar, single row) */}
  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
  {([
- { key: 'todos', label: 'Todos' },
- { key: 'nuevo', label: 'Por contactar' },
- { key: 'esperando_respuesta', label: 'Contactados' },
- { key: 'respondido', label: 'En conversación' },
- { key: 'negociando', label: 'Negociando' },
- { key: 'confirmado', label: 'Confirmados 🎉' },
- { key: 'aplazado', label: 'Aplazados ⏳' },
- { key: 'no_interesado', label: 'Descartados' }
+ { key:'todos', label:'Todos' },
+ { key:'nuevo', label:'Por contactar' },
+ { key:'esperando_respuesta', label:'Contactados' },
+ { key:'respondido', label:'En conversación' },
+ { key:'negociando', label:'Negociando' },
+ { key:'confirmado', label:'Confirmados 🎉' },
+ { key:'aplazado', label:'Aplazados ⏳' },
+ { key:'no_interesado', label:'Descartados' }
  ] as const).map(tab => {
- const count = tab.key === 'todos' 
+ const count = tab.key ==='todos' 
  ? sectionLeads.length 
  : sectionLeads.filter(l => {
  const norm = normalizeStatus(l.estado);
- if (tab.key === 'esperando_respuesta') return norm === 'esperando_respuesta' || norm === 'enviado';
+ if (tab.key ==='esperando_respuesta') return norm ==='esperando_respuesta' || norm ==='enviado';
  return norm === tab.key;
  }).length;
  const isSelected = statusFilter === tab.key;
@@ -1801,15 +1794,15 @@ export default function BookingCRM({
  onClick={() => setStatusFilter(tab.key)}
  className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-colors shrink-0 cursor-pointer flex items-center gap-1.5 ${
  isSelected
- ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--sunken)]'
+ ?'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--sunken)]'
  }`}
  >
  <span>{tab.label}</span>
  <span className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
  isSelected 
- ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' 
- : 'bg-black/10 text-[var(--ink-3)]'
+ ?'bg-[var(--acc)]/25 text-[var(--acc-ink)]' 
+ :'bg-black/10 text-[var(--ink-3)]'
  }`}>
  {count}
  </span>
@@ -1844,13 +1837,13 @@ export default function BookingCRM({
  const initialItems: BulkProgressItem[] = selectedList.map(l => ({
  id: l.id,
  name: l.nombre_sala,
- status: 'pending'
+ status:'pending'
  }));
 
  setBulkProgressState({
  isOpen: true,
- title: 'Generando Pitches con IA Agéntica',
- subtitle: 'Redactando propuestas personalizadas basadas en el ADN de la banda',
+ title:'Generando Pitches con IA Agéntica',
+ subtitle:'Redactando propuestas personalizadas basadas en el ADN de la banda',
  items: initialItems,
  currentIndex: 0,
  totalCount: initialItems.length,
@@ -1861,13 +1854,13 @@ export default function BookingCRM({
 
  for (let i = 0; i < selectedList.length; i++) {
  const targetLead = selectedList[i];
- updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Contactando Agente Redactor...' };
+ updatedItems[i] = { ...updatedItems[i], status:'in_progress', detail:'Contactando Agente Redactor...' };
  setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
 
  try {
  const campaignIsActive = Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true));
  const res = await apiFetch(`/api/leads/${targetLead.id}/regenerate-pitch`, {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  activeCampaign: campaignIsActive ? activeCampaign : undefined
  })
@@ -1876,19 +1869,19 @@ export default function BookingCRM({
  if (res.success && res.newPitchText) {
  onUpdateLead(targetLead.id, {
  pitch_generado: res.newPitchText,
- estado: 'pendiente_aprobacion'
+ estado:'pendiente_aprobacion'
  });
  updatedItems[i] = {
  ...updatedItems[i],
- status: 'success',
- detail: res.simulated ? 'Propuesta lista (motor local ADN)' : 'Propuesta redactada'
+ status:'success',
+ detail: res.simulated ?'Propuesta lista (motor local ADN)' :'Propuesta redactada'
  };
 
  } else {
- updatedItems[i] = { ...updatedItems[i], status: 'error', detail: res.error || 'No se pudo generar la propuesta' };
+ updatedItems[i] = { ...updatedItems[i], status:'error', detail: res.error ||'No se pudo generar la propuesta' };
  }
  } catch (err: any) {
- updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error al generar' };
+ updatedItems[i] = { ...updatedItems[i], status:'error', detail: err.message ||'Error al generar' };
  }
 
  setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
@@ -1903,13 +1896,13 @@ export default function BookingCRM({
  const initialItems: BulkProgressItem[] = selectedList.map(l => ({
  id: l.id,
  name: l.nombre_sala,
- status: 'pending'
+ status:'pending'
  }));
 
  setBulkProgressState({
  isOpen: true,
- title: 'Enriquecimiento Masivo con Agente Scout',
- subtitle: 'Buscando datos de contacto, aforo, dirección y redes',
+ title:'Enriquecimiento Masivo con Agente Scout',
+ subtitle:'Buscando datos de contacto, aforo, dirección y redes',
  items: initialItems,
  currentIndex: 0,
  totalCount: initialItems.length,
@@ -1920,15 +1913,15 @@ export default function BookingCRM({
 
  for (let i = 0; i < selectedList.length; i++) {
  const targetLead = selectedList[i];
- updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Buscando datos...' };
+ updatedItems[i] = { ...updatedItems[i], status:'in_progress', detail:'Buscando datos...' };
  setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
 
  try {
  const res = await apiFetch(`/api/leads/enrich-lead`, {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  name: targetLead.nombre_sala,
- city: targetLead.ciudad || 'España'
+ city: targetLead.ciudad ||'España'
  })
  });
 
@@ -1944,15 +1937,15 @@ export default function BookingCRM({
 
  if (Object.keys(updates).length > 0) {
  onUpdateLead(targetLead.id, updates);
- updatedItems[i] = { ...updatedItems[i], status: 'success', detail: `Actualizado: ${Object.keys(updates).join(', ')}` };
+ updatedItems[i] = { ...updatedItems[i], status:'success', detail: `Actualizado: ${Object.keys(updates).join(',')}` };
  } else {
- updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Ficha al día' };
+ updatedItems[i] = { ...updatedItems[i], status:'success', detail:'Ficha al día' };
  }
  } else {
- updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Sin datos nuevos' };
+ updatedItems[i] = { ...updatedItems[i], status:'success', detail:'Sin datos nuevos' };
  }
  } catch (err: any) {
- updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error en búsqueda' };
+ updatedItems[i] = { ...updatedItems[i], status:'error', detail: err.message ||'Error en búsqueda' };
  }
 
  setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
@@ -1976,7 +1969,7 @@ export default function BookingCRM({
  />
 
  {/* Main Display Area: Map vs List */}
- {viewMode === 'map' ? (
+ {viewMode ==='map' ? (
  <VenueMap
  leads={filteredLeads}
  selectedLead={selectedLead}
@@ -1994,7 +1987,7 @@ export default function BookingCRM({
  onSelectLead={handleOpenLead}
  onUpdateLead={onUpdateLead}
  onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
- viewMode={viewMode === 'grid' ? 'grid' : 'table'}
+ viewMode={viewMode ==='grid' ?'grid' :'table'}
  getStatusBadgeClass={getStatusBadgeClass}
  getStatusLabel={getStatusLabel}
  normalizeType={normalizeType}
@@ -2089,11 +2082,11 @@ export default function BookingCRM({
  }}
  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
  isTemplatesSectionOpen
- ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
- : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ ?'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
- <span>{isTemplatesSectionOpen ? 'Plegar' : 'Configurar'}</span>
+ <span>{isTemplatesSectionOpen ?'Plegar' :'Configurar'}</span>
  {isTemplatesSectionOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
  </button>
  </div>
@@ -2101,25 +2094,25 @@ export default function BookingCRM({
 
  {isTemplatesSectionOpen && (
  <div className="mt-5 pt-4 border-t border-zinc-800/80 space-y-6">
- <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
+ <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <div>
- <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'}`}>
+ <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>
  Pautas diferenciadas por categoría
  </h4>
  </div>
 
  {/* Template Tab Selector (7 Categories) */}
  <div className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${
- isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)]'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'
  }`}>
  {[
- { id: 'salas', label: '🏛️ Salas', icon: Building2 },
- { id: 'festivales', label: '🎪 Festivales', icon: Tent },
- { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
- { id: 'medios', label: '📻 Medios', icon: Radio },
- { id: 'grupos', label: '🎸 Grupos', icon: Users },
- { id: 'managements', label: '💼 Managements', icon: Briefcase },
- { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark }
+ { id:'salas', label:'🏛️ Salas', icon: Building2 },
+ { id:'festivales', label:'🎪 Festivales', icon: Tent },
+ { id:'discotecas', label:'🪩 Discotecas', icon: Disc3 },
+ { id:'medios', label:'📻 Medios', icon: Radio },
+ { id:'grupos', label:'🎸 Grupos', icon: Users },
+ { id:'managements', label:'💼 Managements', icon: Briefcase },
+ { id:'ayuntamientos', label:'🎉 Ayuntamientos', icon: Landmark }
  ].map((tab) => {
  const isActive = templateTab === tab.id;
  const IconComp = tab.icon;
@@ -2132,11 +2125,11 @@ export default function BookingCRM({
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
  ? isStitchLight
- ? 'bg-white text-sky-400 shadow-sm'
- : 'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
+ ?'bg-white text-sky-400 shadow-sm'
+ :'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
  : isStitchLight
- ? 'text-[var(--ink-2)] hover:text-[var(--ink)]'
- : 'text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <IconComp className="w-3.5 h-3.5" />
@@ -2153,15 +2146,15 @@ export default function BookingCRM({
  return (
  <>
  <div className={`p-3 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between ${
- templateTab === 'medios'
- ? isStitchLight ? 'bg-rose-500/15 text-rose-400' : 'bg-rose-500/15 text-rose-400'
- : templateTab === 'grupos'
- ? isStitchLight ? (isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]') : 'bg-[#10b981]/15/30 text-[#10b981]'
- : templateTab === 'discotecas'
- ? isStitchLight ? 'bg-purple-50 text-purple-900' : 'bg-purple-500/10 text-purple-300'
- : templateTab === 'ayuntamientos'
- ? isStitchLight ? 'bg-amber-50 text-amber-900' : 'bg-amber-500/10 text-amber-300'
- : isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-sky-500/15 text-sky-400'
+ templateTab ==='medios'
+ ? isStitchLight ?'bg-rose-500/15 text-rose-400' :'bg-rose-500/15 text-rose-400'
+ : templateTab ==='grupos'
+ ? isStitchLight ? (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[#10b981]/15 text-[#10b981]') :'bg-[#10b981]/15/30 text-[#10b981]'
+ : templateTab ==='discotecas'
+ ? isStitchLight ?'bg-purple-50 text-purple-900' :'bg-purple-500/10 text-purple-300'
+ : templateTab ==='ayuntamientos'
+ ? isStitchLight ?'bg-amber-50 text-amber-900' :'bg-amber-500/10 text-amber-300'
+ : isStitchLight ?'bg-sky-500/15 text-sky-400' :'bg-sky-500/15 text-sky-400'
  }`}>
  <div>
  <strong>{activeTemplate.title}</strong>
@@ -2182,7 +2175,7 @@ export default function BookingCRM({
  )}
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-neutral-300'}`}>Asunto del Email por Defecto</label>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'}`}>Asunto del Email por Defecto</label>
  <input
  id="template-subject"
  type="text"
@@ -2190,14 +2183,14 @@ export default function BookingCRM({
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-neutral-300'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
  <textarea
  id="template-body"
  rows={8}
@@ -2205,15 +2198,15 @@ export default function BookingCRM({
  onChange={(e) => activeTemplate.setBody(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
  />
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${isStitchLight ? 'text-sky-400' : 'text-[var(--accent)]'}`}>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-sky-400' :'text-[var(--accent)]'}`}>
  <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
  </label>
  <textarea
@@ -2223,8 +2216,8 @@ export default function BookingCRM({
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] focus:-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
  />
@@ -2257,7 +2250,7 @@ export default function BookingCRM({
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
- {templateToneRating > 0 ? `${templateToneRating}/5` : 'Sin calificar'}
+ {templateToneRating > 0 ? `${templateToneRating}/5` :'Sin calificar'}
  </span>
  </div>
  <div className="flex items-center gap-1">
@@ -2267,7 +2260,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateToneRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ templateToneRating >= star ?'text-amber-400' :'text-neutral-600'
  }`}
  title={`Calificar tono y estilo: ${star}/5`}
  >
@@ -2282,7 +2275,7 @@ export default function BookingCRM({
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
- {templateContentRating > 0 ? `${templateContentRating}/5` : 'Sin calificar'}
+ {templateContentRating > 0 ? `${templateContentRating}/5` :'Sin calificar'}
  </span>
  </div>
  <div className="flex items-center gap-1">
@@ -2292,7 +2285,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateContentRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ templateContentRating >= star ?'text-amber-400' :'text-neutral-600'
  }`}
  title={`Calificar contenido y estructura: ${star}/5`}
  >
@@ -2313,7 +2306,7 @@ export default function BookingCRM({
  value={templateCustomInstruction}
  onChange={(e) => setTemplateCustomInstruction(e.target.value)}
  className="w-full rounded-[var(--r-s)] p-2.5 text-[10px] bg-[var(--surface)] text-[var(--ink)] focus: focus:outline-none font-sans leading-relaxed"
- placeholder="Ej: 'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
+ placeholder="Ej:'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
  />
  </div>
  <div className="text-[9px] text-amber-300/80 font-sans leading-tight">
@@ -2328,23 +2321,23 @@ export default function BookingCRM({
  <div className="space-y-2 pt-3 pb-2">
  <div className="flex flex-wrap gap-2 items-center">
  <span className="text-[9px] font-mono text-[var(--ink-2)]">📊 Resultados:</span>
- <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-950 text-blue-300'}`}>
+ <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ?'bg-blue-100 text-blue-700' :'bg-blue-950 text-blue-300'}`}>
  {templateStats[templateTab].totalUses} usos
  </span>
- <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ? 'bg-green-100 text-green-700' : 'bg-green-950 text-green-300') : (isStitchLight ? 'bg-yellow-100 text-yellow-700' : 'bg-yellow-950 text-yellow-300')}`}>
+ <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ?'bg-green-100 text-green-700' :'bg-green-950 text-green-300') : (isStitchLight ?'bg-yellow-100 text-yellow-700' :'bg-yellow-950 text-yellow-300')}`}>
  {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
  </span>
  </div>
  {(templateStats[templateTab].invalidEmails > 0 || templateStats[templateTab].bouncedEmails > 0) && (
  <div className="space-y-1">
  {templateStats[templateTab].invalidEmails > 0 && (
- <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-red-100 text-red-700' : 'bg-red-950 text-red-300'}`}>
+ <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-red-100 text-red-700' :'bg-red-950 text-red-300'}`}>
  <span>⚠️</span>
  <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
  </div>
  )}
  {templateStats[templateTab].bouncedEmails > 0 && (
- <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-orange-100 text-orange-700' : 'bg-orange-950 text-orange-300'}`}>
+ <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-orange-100 text-orange-700' :'bg-orange-950 text-orange-300'}`}>
  <span>📬</span>
  <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
  </div>
@@ -2363,8 +2356,8 @@ export default function BookingCRM({
  className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  title="Re-redacta la plantilla y sus pautas integrando todo el feedback histórico de valoraciones del mánager"
  >
- <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
- <span>{isOptimizingTemplate ? 'Regenerando con IA...' : '✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
+ <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ?'animate-spin' :''}`} />
+ <span>{isOptimizingTemplate ?'Regenerando con IA...' :'✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
  </button>
  <button
  id="template-btn-test"
@@ -2372,8 +2365,8 @@ export default function BookingCRM({
  disabled={isTestingPrompt}
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
- ? 'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
- : 'bg-[var(--surface)] hover:-neutral-700 text-neutral-300'
+ ?'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
+ :'bg-[var(--surface)] hover:-neutral-700 text-neutral-300'
  }`}
  >
  {isTestingPrompt ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
@@ -2384,8 +2377,8 @@ export default function BookingCRM({
  onClick={handleResetTemplate}
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
- ? 'bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink-2)]'
- : 'bg-neutral-700 hover:bg-neutral-600 text-neutral-300'
+ ?'bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink-2)]'
+ :'bg-neutral-700 hover:bg-neutral-600 text-neutral-300'
  }`}
  title="Restaurar valores por defecto de esta plantilla"
  >
@@ -2397,8 +2390,8 @@ export default function BookingCRM({
  onClick={handleSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  isStitchLight
- ? 'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md shadow-indigo-100'
- : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/10'
+ ?'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md shadow-indigo-100'
+ :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -2409,12 +2402,12 @@ export default function BookingCRM({
  {/* Test / Prompt Output side */}
  <div className={` rounded-[var(--r-m)] p-4 flex flex-col justify-between ${
  isStitchLight
- ? 'bg-[var(--bg)]'
- : 'bg-[var(--surface)]'
+ ?'bg-[var(--bg)]'
+ :'bg-[var(--surface)]'
  }`}>
  <div className="space-y-3">
- <div className={`flex items-center gap-2 pb-2 ${isStitchLight ? '-slate-200' : '-bg-[var(--surface)]'}`}>
- <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isStitchLight ? 'bg-sky-500/15' : 'bg-[var(--acc)]'}`} />
+ <div className={`flex items-center gap-2 pb-2 ${isStitchLight ?'-slate-200' :'-bg-[var(--surface)]'}`}>
+ <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isStitchLight ?'bg-sky-500/15' :'bg-[var(--acc)]'}`} />
  <h4 className={`text-[10px] font-sans uppercase tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
  </div>
  
@@ -2426,8 +2419,8 @@ export default function BookingCRM({
  <div className="space-y-3">
  <div className={`rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
  isStitchLight
- ? 'bg-white text-[var(--ink-2)] '
- : 'bg-[#1c1b1b] text-neutral-300 '
+ ?'bg-white text-[var(--ink-2)]'
+ :'bg-[#1c1b1b] text-neutral-300'
  }`}>
  {testPromptResult}
  </div>
@@ -2440,7 +2433,7 @@ export default function BookingCRM({
  </span>
  {(templateToneRating > 0 || templateContentRating > 0) && (
  <span className="text-[9px] text-amber-400 font-mono">
- Tono: {templateToneRating || '-'}/5 | Contenido: {templateContentRating || '-'}/5
+ Tono: {templateToneRating ||'-'}/5 | Contenido: {templateContentRating ||'-'}/5
  </span>
  )}
  </div>
@@ -2451,7 +2444,7 @@ export default function BookingCRM({
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
- {templateToneRating > 0 ? `${templateToneRating}/5` : '⭐'}
+ {templateToneRating > 0 ? `${templateToneRating}/5` :'⭐'}
  </span>
  </div>
  <div className="flex items-center gap-1">
@@ -2461,7 +2454,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateToneRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ templateToneRating >= star ?'text-amber-400' :'text-neutral-600'
  }`}
  title={`Calificar tono: ${star}/5`}
  >
@@ -2476,7 +2469,7 @@ export default function BookingCRM({
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
- {templateContentRating > 0 ? `${templateContentRating}/5` : '⭐'}
+ {templateContentRating > 0 ? `${templateContentRating}/5` :'⭐'}
  </span>
  </div>
  <div className="flex items-center gap-1">
@@ -2486,7 +2479,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateContentRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ templateContentRating >= star ?'text-amber-400' :'text-neutral-600'
  }`}
  title={`Calificar contenido: ${star}/5`}
  >
@@ -2503,7 +2496,7 @@ export default function BookingCRM({
  disabled={isOptimizingTemplate}
  className="w-full py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
- <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
+ <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ?'animate-spin' :''}`} />
  <span>Re-generar plantilla usando estas valoraciones ✨</span>
  </button>
  </div>
@@ -2511,10 +2504,10 @@ export default function BookingCRM({
  ) : (
  <div className={`border-2 border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
  isStitchLight
- ? ' text-[var(--ink-3)]'
- : ' text-neutral-600'
+ ?' text-[var(--ink-3)]'
+ :' text-neutral-600'
  }`}>
- Haz clic en "Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus directrices actuales.
+ Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus directrices actuales.
  </div>
  )}
  </div>
@@ -2582,7 +2575,7 @@ export default function BookingCRM({
  isStitchLight={isStitchLight}
  existingLeads={leads}
  activeCampaign={activeCampaign}
- bandGenre={epkConfig?.genero || (currentUser as any)?.genero || ''}
+ bandGenre={epkConfig?.genero || (currentUser as any)?.genero ||''}
  bandName={effectiveBandName}
  onClose={() => setIsPlacesExplorerOpen(false)}
  onImportLeads={() => {
@@ -2615,14 +2608,14 @@ export default function BookingCRM({
  isOpen={isAgentConfigOpen}
  onClose={() => setIsAgentConfigOpen(false)}
  bandName={effectiveBandName}
- bandId={currentBandId || currentUser?.band_id || ''}
+ bandId={currentBandId || currentUser?.band_id ||''}
  currentUser={currentUser}
  isStitchLight={isStitchLight}
  onOpenTemplatesSection={() => {
  setIsTemplatesSectionOpen(true);
  setTimeout(() => {
  const el = document.getElementById('ai-template-config-section');
- if (el) el.scrollIntoView({ behavior: 'smooth' });
+ if (el) el.scrollIntoView({ behavior:'smooth' });
  }, 50);
  }}
  />

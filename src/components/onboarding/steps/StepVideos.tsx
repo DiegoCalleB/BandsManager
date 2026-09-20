@@ -1,6 +1,6 @@
-import React from 'react';
-import { Video, Youtube, Plus, Trash2, Award } from 'lucide-react';
-import { EPKVideo } from '../../../types';
+import React from'react';
+import { Video, Youtube, Plus, Trash2, Award } from'lucide-react';
+import { EPKVideo } from'../../../types';
 
 interface StepVideosProps {
  videos: EPKVideo[];
@@ -8,8 +8,8 @@ interface StepVideosProps {
  setNewVideoUrl: (url: string) => void;
  newVideoTitle: string;
  setNewVideoTitle: (title: string) => void;
- newVideoType: 'videoclip' | 'directo' | 'entrevista' | 'acustico';
- setNewVideoType: (t: 'videoclip' | 'directo' | 'entrevista' | 'acustico') => void;
+ newVideoType:'videoclip' |'directo' |'entrevista' |'acustico';
+ setNewVideoType: (t:'videoclip' |'directo' |'entrevista' |'acustico') => void;
  onAddVideo: () => void;
  onRemoveVideo: (id: string) => void;
  onToggleHighlightVideo: (id: string) => void;
@@ -80,9 +80,9 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  type="button"
  onClick={() => onToggleHighlightVideo(vid.id)}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition-colors ${
- vid.destacado ? 'text-amber-400 bg-amber-500/10' : 'text-zinc-500 hover:text-zinc-300'
+ vid.destacado ?'text-amber-400 bg-amber-500/10' :'text-zinc-500 hover:text-zinc-300'
  }`}
- title={vid.destacado ? 'Quitar destacado' : 'Marcar como vídeo principal'}
+ title={vid.destacado ?'Quitar destacado' :'Marcar como vídeo principal'}
  >
  <Award className="w-4 h-4" />
  </button>

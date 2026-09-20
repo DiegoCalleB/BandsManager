@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { BookingCampaign } from '../../types';
-import { Target, MapPin, Users, Calendar, Plus, X, Check, Search } from 'lucide-react';
+import React, { useState, useEffect } from'react';
+import { BookingCampaign } from'../../types';
+import { Target, MapPin, Users, Calendar, Plus, X, Check, Search } from'lucide-react';
 
 interface BookingCampaignPanelProps {
  onCampaignChange: (campaign: BookingCampaign | null) => void;
@@ -10,11 +10,11 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  const [activeCampaign, setActiveCampaign] = useState<BookingCampaign | null>(null);
  const [isEditing, setIsEditing] = useState(false);
  const [campaignForm, setCampaignForm] = useState<Partial<BookingCampaign>>({
- name: 'Campaña Concierto Especial',
+ name:'Campaña Concierto Especial',
  targetCities: ['Madrid'],
  minCapacity: 300,
  maxCapacity: 500,
- targetDates: ['2026-12-04', '2026-12-05', '2027-04-11', '2027-04-12'],
+ targetDates: ['2026-12-04','2026-12-05','2027-04-11','2027-04-12'],
  });
 
  useEffect(() => {
@@ -32,26 +32,26 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  }, []);
 
  const formatDateText = (dates: string[]) => {
- if (!dates || dates.length === 0) return 'Sin fechas';
+ if (!dates || dates.length === 0) return'Sin fechas';
  // Format each date nicely (e.g. 4 dic) without timezone shift
  const formatted = dates.map(d => {
- if (!d) return '';
+ if (!d) return'';
  const parts = d.split('-');
  if (parts.length === 3) {
  const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
- return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+ return date.toLocaleDateString('es-ES', { day:'numeric', month:'short' });
  }
  const date = new Date(d);
- return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+ return date.toLocaleDateString('es-ES', { day:'numeric', month:'short' });
  }).filter(Boolean);
- return formatted.join(', ');
+ return formatted.join(',');
  };
 
  const handleSave = () => {
  const dates = campaignForm.targetDates || [];
  const newCampaign: BookingCampaign = {
  id: Date.now().toString(),
- name: campaignForm.name || 'Nueva Campaña',
+ name: campaignForm.name ||'Nueva Campaña',
  targetCities: campaignForm.targetCities || [],
  minCapacity: campaignForm.minCapacity || 0,
  maxCapacity: campaignForm.maxCapacity || 0,
@@ -117,7 +117,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <label className="block text-xs text-gray-500 font-medium mb-1 uppercase tracking-wider">Ciudad/Región</label>
  <input 
  type="text" 
- value={campaignForm.targetCities?.join(', ')} 
+ value={campaignForm.targetCities?.join(',')} 
  onChange={e => setCampaignForm({...campaignForm, targetCities: e.target.value.split(',').map(s => s.trim())})}
  className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-black"
  placeholder="Ej: Madrid, Barcelona"
@@ -186,7 +186,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  newDates.sort();
  setCampaignForm({...campaignForm, targetDates: newDates});
  }
- e.target.value = ''; // reset after selection
+ e.target.value =''; // reset after selection
  }}
  className="text-xs font-semibold text-blue-900 bg-transparent border-0 p-0 focus:ring-0 cursor-pointer"
  title="Seleccionar nueva fecha para añadir"
@@ -206,7 +206,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <label className="block text-xs text-gray-500 mb-1">Desde</label>
  <input
  type="date"
- value={campaignForm.campaignStartDate || ''}
+ value={campaignForm.campaignStartDate ||''}
  onChange={e => setCampaignForm({...campaignForm, campaignStartDate: e.target.value})}
  className="w-full text-sm rounded-[var(--r-s)] focus:ring-amber-500 focus:"
  />
@@ -215,7 +215,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <label className="block text-xs text-gray-500 mb-1">Hasta</label>
  <input
  type="date"
- value={campaignForm.campaignEndDate || ''}
+ value={campaignForm.campaignEndDate ||''}
  onChange={e => setCampaignForm({...campaignForm, campaignEndDate: e.target.value})}
  className="w-full text-sm rounded-[var(--r-s)] focus:ring-amber-500 focus:"
  />
@@ -224,7 +224,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  </div>
 
- <div className="flex justify-end gap-2 mt-4 pt-4 border-t ">
+ <div className="flex justify-end gap-2 mt-4 pt-4 border-t">
  <button 
  onClick={() => setIsEditing(false)}
  className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-[var(--r-s)] font-medium"
@@ -263,7 +263,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <div className="flex flex-wrap gap-4">
  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
  <MapPin className="w-4 h-4 text-blue-300" />
- <span>{activeCampaign?.targetCities.join(', ')}</span>
+ <span>{activeCampaign?.targetCities.join(',')}</span>
  </div>
  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
  <Users className="w-4 h-4 text-orange-300" />

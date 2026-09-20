@@ -1,8 +1,8 @@
-import React from 'react';
-import { ThemeColors } from '../../types';
-import { TrendingUp, TrendingDown, DollarSign, Calculator } from 'lucide-react';
-import { FinancialSummary } from '../../utils/financeUtils';
-import { useLanguage } from '../../context/LanguageContext';
+import React from'react';
+import { ThemeColors } from'../../types';
+import { TrendingUp, TrendingDown, DollarSign, Calculator } from'lucide-react';
+import { FinancialSummary } from'../../utils/financeUtils';
+import { useLanguage } from'../../context/LanguageContext';
 
 interface FinanceSummaryCardsProps {
  colors: ThemeColors;
@@ -24,7 +24,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  >
  <div className="flex items-center justify-between mb-2">
  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
- {t('finances.total_income', 'Ingresos Totales')}
+ {t('finances.total_income','Ingresos Totales')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-500">
  <TrendingUp className="w-5 h-5" />
@@ -35,7 +35,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  </div>
  {summary.pagosPendientesIngreso > 0 && (
  <p className="text-xs text-amber-500 mt-1 font-medium">
- +{summary.pagosPendientesIngreso.toLocaleString('es-ES')} € {t('finances.pending', 'pendientes')}
+ +{summary.pagosPendientesIngreso.toLocaleString('es-ES')} € {t('finances.pending','pendientes')}
  </p>
  )}
  </div>
@@ -50,7 +50,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  >
  <div className="flex items-center justify-between mb-2">
  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
- {t('finances.total_expenses', 'Gastos Totales')}
+ {t('finances.total_expenses','Gastos Totales')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-rose-500/10 text-rose-500">
  <TrendingDown className="w-5 h-5" />
@@ -83,7 +83,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  </div>
  </div>
  <div
- className={`text-2xl font-bold ${summary.beneficioNeto >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}
+ className={`text-2xl font-bold ${summary.beneficioNeto >= 0 ?'text-emerald-500' :'text-rose-500'}`}
  >
  {summary.beneficioNeto.toLocaleString('es-ES')} €
  </div>

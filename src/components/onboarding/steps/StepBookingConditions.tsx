@@ -1,5 +1,5 @@
-import React from 'react';
-import { DollarSign, MapPin, Mail, Phone, User, Check, Car, Hotel } from 'lucide-react';
+import React from'react';
+import { DollarSign, MapPin, Mail, Phone, User, Check, Car, Hotel } from'lucide-react';
 
 interface StepBookingConditionsProps {
  cacheAcustico: number;
@@ -125,8 +125,8 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  onClick={() => setRequiereAlojamiento(!requiereAlojamiento)}
  className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all flex items-center justify-between ${
  requiereAlojamiento
- ? 'bg-amber-500/10 /30 text-amber-300'
- : 'bg-zinc-900 border-[var(--hair)] text-zinc-400'
+ ?'bg-amber-500/10 /30 text-amber-300'
+ :'bg-zinc-900 border-[var(--hair)] text-zinc-400'
  }`}
  >
  <div className="flex items-center gap-2">

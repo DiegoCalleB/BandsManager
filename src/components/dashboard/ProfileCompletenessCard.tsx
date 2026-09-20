@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { EPKConfig, Lead, Concert, Rehearsal, SocialMetric, Fan, Tour, User } from '../../types';
+import React, { useState, useEffect } from'react';
+import { EPKConfig, Lead, Concert, Rehearsal, SocialMetric, Fan, Tour, User } from'../../types';
 import { 
  Sparkles, CheckCircle2, AlertCircle, ArrowRight, ShieldCheck, 
  HelpCircle, ChevronDown, ChevronUp, Bot, FileText, Disc3, Calendar,
  Activity, Heart, Truck, X, BookOpen, Layers, Sliders, Clock, Mail, Key
-} from 'lucide-react';
-import { api } from '../../services/api';
+} from'lucide-react';
+import { api } from'../../services/api';
 
 interface ProfileCompletenessCardProps {
  epkConfig?: Partial<EPKConfig>;
@@ -32,7 +32,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  fans = [],
  tours = [],
  isStitchLight = false,
- bandName = 'Tu Banda',
+ bandName ='Tu Banda',
  currentUser,
  onNavigate,
  onOpenAutonomyModal,
@@ -141,94 +141,94 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
  return [
  {
- id: 'epk_bio',
- title: 'Biografía & Logo (EPK)',
+ id:'epk_bio',
+ title:'Biografía & Logo (EPK)',
  completed: hasBio && hasPhotoLogo,
  weight: 10,
- view: 'epk',
- missingLabel: 'Rellenar Bio & Logo',
- agentImpact: 'El Agente Redactor usa la Bio e identidad de la banda para los emails de presentación.'
+ view:'epk',
+ missingLabel:'Rellenar Bio & Logo',
+ agentImpact:'El Agente Redactor usa la Bio e identidad de la banda para los emails de presentación.'
  },
  {
- id: 'dossier_pdf',
- title: 'Dossier Promocional PDF',
+ id:'dossier_pdf',
+ title:'Dossier Promocional PDF',
  completed: hasDossierPdf,
  weight: 10,
- view: 'epk',
- missingLabel: 'Subir Dossier PDF',
- agentImpact: 'Los programadores de salas solicitan el Dossier PDF adjunto para valorar el proyecto de un vistazo.'
+ view:'epk',
+ missingLabel:'Subir Dossier PDF',
+ agentImpact:'Los programadores de salas solicitan el Dossier PDF adjunto para valorar el proyecto de un vistazo.'
  },
  {
- id: 'rider_pdf',
- title: 'Rider Técnico / Input List',
+ id:'rider_pdf',
+ title:'Rider Técnico / Input List',
  completed: hasRiderPdf,
  weight: 10,
- view: 'epk',
- missingLabel: 'Subir Rider Técnico',
- agentImpact: 'Las salas necesitan confirmar qué microfonía y líneas requiere la banda antes de reservar fecha.'
+ view:'epk',
+ missingLabel:'Subir Rider Técnico',
+ agentImpact:'Las salas necesitan confirmar qué microfonía y líneas requiere la banda antes de reservar fecha.'
  },
  {
- id: 'email_account',
- title: 'Buzón Conectado (Gmail/SMTP)',
+ id:'email_account',
+ title:'Buzón Conectado (Gmail/SMTP)',
  completed: hasEmailAccountConnected,
  weight: 12,
- view: 'profile',
- missingLabel: 'Conectar Email',
- agentImpact: 'Permite al Agente Enviador mandar propuestas y al Lector clasificar respuestas desde tu bandeja real.'
+ view:'profile',
+ missingLabel:'Conectar Email',
+ agentImpact:'Permite al Agente Enviador mandar propuestas y al Lector clasificar respuestas desde tu bandeja real.'
  },
  {
- id: 'smart_gate',
- title: 'Horarios de Envío (Smart Gate)',
+ id:'smart_gate',
+ title:'Horarios de Envío (Smart Gate)',
  completed: hasScheduleConfigured,
  weight: 10,
- view: 'profile',
- missingLabel: 'Configurar Horarios',
- agentImpact: 'Despacha correos únicamente en días y horas de máxima apertura comercial de programadores.'
+ view:'profile',
+ missingLabel:'Configurar Horarios',
+ agentImpact:'Despacha correos únicamente en días y horas de máxima apertura comercial de programadores.'
  },
  {
- id: 'negotiation_cache',
- title: 'Caché & Reglas de Negociación',
+ id:'negotiation_cache',
+ title:'Caché & Reglas de Negociación',
  completed: hasMinCacheConfigured,
  weight: 10,
- view: 'autonomy_modal',
- missingLabel: 'Fijar Caché Mínimo',
- agentImpact: 'El Agente Mánager negocia fechas y presupuestos respetando el caché mínimo fijado por la banda.'
+ view:'autonomy_modal',
+ missingLabel:'Fijar Caché Mínimo',
+ agentImpact:'El Agente Mánager negocia fechas y presupuestos respetando el caché mínimo fijado por la banda.'
  },
  {
- id: 'tone_dna',
- title: 'Tone DNA & Identidad Vocal',
+ id:'tone_dna',
+ title:'Tone DNA & Identidad Vocal',
  completed: hasToneDna,
  weight: 10,
- view: 'bandas',
- missingLabel: 'Configurar Tone DNA',
- agentImpact: 'Define la voz, vocabulario y personalidad con la que los agentes redactan pitches y copys.'
+ view:'bandas',
+ missingLabel:'Configurar Tone DNA',
+ agentImpact:'Define la voz, vocabulario y personalidad con la que los agentes redactan pitches y copys.'
  },
  {
- id: 'leads',
- title: 'Directorio Booking & Salas',
+ id:'leads',
+ title:'Directorio Booking & Salas',
  completed: hasLeads && hasVerifiedEmails,
  weight: 10,
- view: 'booking',
- missingLabel: 'Buscar Salas con Scout',
- agentImpact: 'Scout y Redactor extraen contactos y correos de programación para las campañas.'
+ view:'booking',
+ missingLabel:'Buscar Salas con Scout',
+ agentImpact:'Scout y Redactor extraen contactos y correos de programación para las campañas.'
  },
  {
- id: 'repertorio',
- title: 'Repertorios & Discografía',
+ id:'repertorio',
+ title:'Repertorios & Discografía',
  completed: hasSongs,
  weight: 10,
- view: 'repertorio',
- missingLabel: 'Cargar Canciones',
- agentImpact: 'Permite al Mánager AI armar setlists exactos ajustados al minutaje del show (45m, 60m, 90m).'
+ view:'repertorio',
+ missingLabel:'Cargar Canciones',
+ agentImpact:'Permite al Mánager AI armar setlists exactos ajustados al minutaje del show (45m, 60m, 90m).'
  },
  {
- id: 'metrics_fans',
- title: 'Métricas de Escuchas & Fans',
+ id:'metrics_fans',
+ title:'Métricas de Escuchas & Fans',
  completed: hasMetrics || hasFans,
  weight: 8,
- view: 'reels',
- missingLabel: 'Métricas / Fans',
- agentImpact: 'El agente utiliza tus seguidores y oyentes en Spotify como argumento de venta y taquilla.'
+ view:'reels',
+ missingLabel:'Métricas / Fans',
+ agentImpact:'El agente utiliza tus seguidores y oyentes en Spotify como argumento de venta y taquilla.'
  }
  ];
  }, [epkConfig, leads, storedSongsCount, concerts, rehearsals, metrics, fans, hasScheduleConfigured, hasEmailAccountConnected, hasMinCacheConfigured, currentUser]);
@@ -239,19 +239,19 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  const completedPillarsCount = pillars.filter(p => p.completed).length;
 
  const getStatusBadge = () => {
- if (percentage >= 85) return { label: 'Entrenamiento Completo (100% Agéntico)', color: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' };
- if (percentage >= 50) return { label: 'Entrenamiento Intermedio', color: 'bg-amber-500/15 text-amber-300 /30' };
- return { label: 'Entrenamiento Inicial', color: 'bg-rose-500/15 text-rose-300 border-rose-500/30' };
+ if (percentage >= 85) return { label:'Entrenamiento Completo (100% Agéntico)', color:'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' };
+ if (percentage >= 50) return { label:'Entrenamiento Intermedio', color:'bg-amber-500/15 text-amber-300 /30' };
+ return { label:'Entrenamiento Inicial', color:'bg-rose-500/15 text-rose-300 border-rose-500/30' };
  };
 
  const handlePillarClick = (view: string) => {
- if (view === 'autonomy_modal') {
+ if (view ==='autonomy_modal') {
  if (onOpenAutonomyModal) {
  onOpenAutonomyModal();
  } else if (onNavigate) {
  onNavigate('profile');
  }
- } else if (view === 'profile') {
+ } else if (view ==='profile') {
  if (onOpenProfileModal) {
  onOpenProfileModal();
  } else if (onNavigate) {
@@ -267,8 +267,8 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  return (
  <div className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all shadow-sm ${
  isStitchLight 
- ? 'bg-white text-[var(--ink)]' 
- : 'bg-[var(--surface)] border-stone-800 text-zinc-100'
+ ?'bg-white text-[var(--ink)]' 
+ :'bg-[var(--surface)] border-stone-800 text-zinc-100'
  }`}>
  {/* Header Row */}
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-stone-800/60">
@@ -316,7 +316,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-stone-800 hover:bg-stone-700 text-amber-400 text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
  title="Expandir/colapsar checklist"
  >
- <span>{isExpanded ? 'Ocultar' : 'Ver checklist'}</span>
+ <span>{isExpanded ?'Ocultar' :'Ver checklist'}</span>
  {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
  </button>
  </div>
@@ -341,12 +341,12 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  key={`badge-${p.id}`}
  className={`inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md ${
  p.completed 
- ? 'bg-emerald-950/30 border-emerald-500/20 text-emerald-400' 
- : 'bg-stone-900 border-stone-800 text-stone-400'
+ ?'bg-emerald-950/30 border-emerald-500/20 text-emerald-400' 
+ :'bg-stone-900 border-stone-800 text-stone-400'
  }`}
  >
  {p.completed ? <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400 shrink-0" /> : <AlertCircle className="w-2.5 h-2.5 text-amber-500/80 shrink-0" />}
- <span>{p.title.split(' ')[0]}</span>
+ <span>{p.title.split('')[0]}</span>
  </span>
  ))}
  </div>
@@ -371,8 +371,8 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  onClick={() => handlePillarClick(pillar.view)}
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-1 cursor-pointer group active:scale-95 ${
  pillar.completed
- ? 'bg-emerald-950/20 border-emerald-500/20 text-emerald-300 hover:bg-emerald-950/30'
- : 'bg-amber-950/20 /20 text-amber-200 hover:bg-amber-950/30'
+ ?'bg-emerald-950/20 border-emerald-500/20 text-emerald-300 hover:bg-emerald-950/30'
+ :'bg-amber-950/20 /20 text-amber-200 hover:bg-amber-950/30'
  }`}
  >
  <div className="flex items-center justify-between gap-1">
@@ -385,9 +385,9 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  </div>
 
  <span className={`text-[9px] font-mono font-medium truncate ${
- pillar.completed ? 'text-emerald-400/80' : 'text-amber-400 group-hover:underline'
+ pillar.completed ?'text-emerald-400/80' :'text-amber-400 group-hover:underline'
  }`}>
- {pillar.completed ? 'Completado' : pillar.missingLabel}
+ {pillar.completed ?'Completado' : pillar.missingLabel}
  </span>
  </button>
  ))}
@@ -406,7 +406,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <div 
  key={`exp-${pillar.id}`}
  className={`p-2.5 rounded-[var(--r-m)] flex items-start justify-between gap-3 ${
- pillar.completed ? 'bg-[var(--surface)]/40 /80' : 'bg-amber-500/5 /20'
+ pillar.completed ?'bg-[var(--surface)]/40 /80' :'bg-amber-500/5 /20'
  }`}
  >
  <div className="space-y-0.5">

@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard, Sparkles } from 'lucide-react';
+import React, { useRef } from'react';
+import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard, Sparkles } from'lucide-react';
 
 interface StepFansPaymentsProps {
  fanCallToAction: string;
@@ -147,7 +147,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  <div className="flex items-center gap-2.5">
  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
  <span className="text-xs font-medium text-emerald-300 truncate max-w-sm">
- {leadMagnetFileName || 'Archivo_de_Regalo.mp3'}
+ {leadMagnetFileName ||'Archivo_de_Regalo.mp3'}
  </span>
  </div>
  <div className="flex items-center gap-2">

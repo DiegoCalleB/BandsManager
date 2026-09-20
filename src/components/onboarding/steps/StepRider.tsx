@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Layers, Upload, FileText, CheckCircle2, Loader2, Trash2, Check } from 'lucide-react';
+import React, { useRef } from'react';
+import { Layers, Upload, FileText, CheckCircle2, Loader2, Trash2, Check } from'lucide-react';
 
 interface StepRiderProps {
  riderTecnicoText: string;
@@ -70,8 +70,8 @@ export const StepRider: React.FC<StepRiderProps> = ({
  onClick={() => setLlevaMicrofoniaPropia(!llevaMicrofoniaPropia)}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  llevaMicrofoniaPropia
- ? 'bg-amber-500/10 /30 text-amber-300'
- : 'bg-zinc-900 border-[var(--hair)] text-zinc-400 hover:border-[var(--hair)]'
+ ?'bg-amber-500/10 /30 text-amber-300'
+ :'bg-zinc-900 border-[var(--hair)] text-zinc-400 hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -86,8 +86,8 @@ export const StepRider: React.FC<StepRiderProps> = ({
  onClick={() => setLlevaInEars(!llevaInEars)}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  llevaInEars
- ? 'bg-amber-500/10 /30 text-amber-300'
- : 'bg-zinc-900 border-[var(--hair)] text-zinc-400 hover:border-[var(--hair)]'
+ ?'bg-amber-500/10 /30 text-amber-300'
+ :'bg-zinc-900 border-[var(--hair)] text-zinc-400 hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -102,8 +102,8 @@ export const StepRider: React.FC<StepRiderProps> = ({
  onClick={() => setNecesitaBacklineBateria(!necesitaBacklineBateria)}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  necesitaBacklineBateria
- ? 'bg-amber-500/10 /30 text-amber-300'
- : 'bg-zinc-900 border-[var(--hair)] text-zinc-400 hover:border-[var(--hair)]'
+ ?'bg-amber-500/10 /30 text-amber-300'
+ :'bg-zinc-900 border-[var(--hair)] text-zinc-400 hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -134,7 +134,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <FileText className="w-6 h-6 text-emerald-400" />
  <div>
  <span className="text-xs font-semibold text-emerald-300 block">
- {riderPdfName || 'Rider_Tecnico_Oficial.pdf'}
+ {riderPdfName ||'Rider_Tecnico_Oficial.pdf'}
  </span>
  <span className="text-[10px] text-emerald-400/80">Documento listo en el EPK interactivo</span>
  </div>

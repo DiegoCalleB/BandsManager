@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { ThemeColors, SocialPost, SocialMetric } from '../types';
-import { apiFetch } from '../utils/api';
+import React, { useState, useEffect } from'react';
+import { ThemeColors, SocialPost, SocialMetric } from'../types';
+import { apiFetch } from'../utils/api';
 import { 
  Sparkles, Play, Flame, Heart, MessageCircle, Share2, Music, 
  Upload, Layers, CheckCircle2, RotateCcw, AlertCircle, RefreshCw,
  Video, Calendar, Clock, Trash2, Film, Check, ExternalLink, Gauge, ChevronRight, ChevronLeft,
  Plus, TrendingUp, LineChart, Instagram, Youtube, Edit, Table,
  Volume2, VolumeX, Maximize2, X, Star, Bookmark, ThumbsUp
-} from 'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
+} from'lucide-react';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from'recharts';
 
 interface ReelsCenterProps {
  colors: ThemeColors;
@@ -34,8 +34,8 @@ import {
  defaultScheduleDate,
  validateScheduleReadiness,
  getCadenceWarnings
-} from '../utils/reelsUtils';
-import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
+} from'../utils/reelsUtils';
+import { BandToneModal, ToneAnalysisData } from'./bandCRM/BandToneModal';
 
 export type { ReelCard, HighlightClip, OptimalTime };
 
@@ -61,8 +61,8 @@ function videoKeyDeArchivo(file: { name: string; size: number } | null): string 
 function parseRangeTimes(rangeStr?: string) {
  if (!rangeStr) return { start: 0, end: 0, duration: 0 };
  const parts = rangeStr.split('-');
- const startStr = parts[0]?.trim() || '';
- const endStr = parts[1]?.trim() || '';
+ const startStr = parts[0]?.trim() ||'';
+ const endStr = parts[1]?.trim() ||'';
  
  const parseTime = (timeStr: string) => {
  const timeParts = timeStr.split(':');
@@ -90,25 +90,25 @@ function parseRangeTimes(rangeStr?: string) {
 function formatTime(seconds: number): string {
  const mins = Math.floor(seconds / 60);
  const secs = seconds % 60;
- return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+ return `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
 }
 
 // El tono no es el mismo en cada red (Facebook más institucional, TikTok más gamberro...), así
 // que el texto que se propone para programar el post tiene que seguir a la red elegida, no
 // enseñar siempre el copy de Instagram aunque el usuario haya marcado TikTok o Facebook.
-function copyForPlatform(clip: HighlightClip | undefined | null, platform: 'Instagram' | 'TikTok' | 'YouTube' | 'Facebook'): string {
- if (!clip) return '';
- if (platform === 'TikTok') return clip.copyTikTok || clip.recommendedCopy || '';
- if (platform === 'YouTube') return clip.copyYouTube || clip.recommendedCopy || '';
- if (platform === 'Facebook') return clip.copyFacebook || clip.recommendedCopy || '';
- return clip.recommendedCopy || '';
+function copyForPlatform(clip: HighlightClip | undefined | null, platform:'Instagram' |'TikTok' |'YouTube' |'Facebook'): string {
+ if (!clip) return'';
+ if (platform ==='TikTok') return clip.copyTikTok || clip.recommendedCopy ||'';
+ if (platform ==='YouTube') return clip.copyYouTube || clip.recommendedCopy ||'';
+ if (platform ==='Facebook') return clip.copyFacebook || clip.recommendedCopy ||'';
+ return clip.recommendedCopy ||'';
 }
 
 // Qué iconos de interacción tapan el lateral derecho del vídeo en cada red: no es solo el
 // copy lo que cambia por plataforma, la propia UI de la app también se come parte del encuadre
 // de forma distinta (Instagram añade guardar, YouTube separa like/dislike, etc.), así que un
 // hookText o un subtítulo pegado al borde derecho puede quedar tapado en una red y no en otra.
-const PLATFORM_UI_ICONS: Record<'Instagram' | 'TikTok' | 'YouTube' | 'Facebook', typeof Heart[]> = {
+const PLATFORM_UI_ICONS: Record<'Instagram' |'TikTok' |'YouTube' |'Facebook', typeof Heart[]> = {
  Instagram: [Heart, MessageCircle, Share2, Bookmark],
  TikTok: [Heart, MessageCircle, Bookmark, Share2],
  YouTube: [ThumbsUp, MessageCircle, Share2],
@@ -128,12 +128,12 @@ export default function ReelsCenter({
  instagramHandle,
  hasAnySocialLink
 }: ReelsCenterProps) {
- // Tabs: 'pipeline' (existing Kanban + Writer) vs 'analyzer' (new AI Video Highlight Extractor)
- const [activeTab, setActiveTab] = useState<'pipeline' | 'analyzer'>('pipeline');
+ // Tabs:'pipeline' (existing Kanban + Writer) vs'analyzer' (new AI Video Highlight Extractor)
+ const [activeTab, setActiveTab] = useState<'pipeline' |'analyzer'>('pipeline');
 
- // Esta pantalla estaba llena de "Bakandeya" a pelo, así que cualquier otra banda veía por
+ // Esta pantalla estaba llena de"Bakandeya" a pelo, así que cualquier otra banda veía por
  // todas partes el nombre de la banda del fundador en vez del suyo.
- const nombreBanda = (bandName || '').trim() || 'tu banda';
+ const nombreBanda = (bandName ||'').trim() ||'tu banda';
 
  // Band Tone Analysis State
  const [isBakandeyaToneModalOpen, setIsBakandeyaToneModalOpen] = useState(false);
@@ -167,7 +167,7 @@ export default function ReelsCenter({
  };
 
  // Refresca solo lo guardado en Supabase (incluidas las reglas de Self-Refining Tone DNA
- // recién generadas por "Entrenar ADN de tono ahora"), sin relanzar el rastreo de redes.
+ // recién generadas por"Entrenar ADN de tono ahora"), sin relanzar el rastreo de redes.
  const handleRefreshLearnedRules = async () => {
  try {
  const res = await apiFetch('/api/bands/tone-dna');
@@ -182,7 +182,7 @@ export default function ReelsCenter({
  };
 
  // Antes esto analizaba siempre @bakandeya en Instagram, sin importar qué banda estuviera
- // usando la app: el botón "Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
+ // usando la app: el botón"Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
  // Instagram del fundador en vez de la suya propia.
  const handleAnalyzeBakandeyaTone = async () => {
  // El backend ya rastrea Instagram, TikTok, YouTube y Facebook (lee el EPK real de la banda),
@@ -197,14 +197,14 @@ export default function ReelsCenter({
  setToneAnalysisSaved(false);
  try {
  const res = await apiFetch('/api/bands/analyze-tone', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
- nombre_entidad: bandName || 'Tu Banda',
+ nombre_entidad: bandName ||'Tu Banda',
  instagram: instagramHandle,
- estilo_musical: '',
- localizacion: '',
- tipo: 'Banda / Artista Emisora',
+ estilo_musical:'',
+ localizacion:'',
+ tipo:'Banda / Artista Emisora',
  is_sender: true
  })
  });
@@ -233,16 +233,16 @@ export default function ReelsCenter({
  setSyncErrorMessage('');
  try {
  const res = await fetch('/api/posts/sync', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' }
+ method:'POST',
+ headers: {'Content-Type':'application/json' }
  });
  const data = await res.json();
  if (res.ok && data.success) {
- setSyncSuccessMessage(data.message || 'Publicaciones y Reels sincronizados con éxito.');
+ setSyncSuccessMessage(data.message ||'Publicaciones y Reels sincronizados con éxito.');
  // clear after 6 seconds
  setTimeout(() => setSyncSuccessMessage(''), 6000);
  } else {
- setSyncErrorMessage(data.error || 'Error al intentar sincronizar los Reels.');
+ setSyncErrorMessage(data.error ||'Error al intentar sincronizar los Reels.');
  }
  } catch (error) {
  console.error('Error synchronizing reels:', error);
@@ -259,7 +259,7 @@ export default function ReelsCenter({
  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
  // New AI Analyzer States
- const [inputType, setInputType] = useState<'file' | 'youtube'>('file');
+ const [inputType, setInputType] = useState<'file' |'youtube'>('file');
  const [youtubeUrl, setYoutubeUrl] = useState('');
  const [dragActive, setDragActive] = useState(false);
  const [selectedFile, setSelectedFile] = useState<{ name: string; size: number } | null>(null);
@@ -272,17 +272,17 @@ export default function ReelsCenter({
 
  useEffect(() => {
  if (isExpandedPreview) {
- document.body.style.overflow = 'hidden';
+ document.body.style.overflow ='hidden';
  setTimeout(() => {
  const modalEl = document.getElementById('theater-mode-modal');
  if (modalEl) modalEl.scrollTop = 0;
- window.scrollTo({ top: 0, behavior: 'instant' as any });
+ window.scrollTo({ top: 0, behavior:'instant' as any });
  }, 10);
  } else {
- document.body.style.overflow = '';
+ document.body.style.overflow ='';
  }
  return () => {
- document.body.style.overflow = '';
+ document.body.style.overflow ='';
  };
  }, [isExpandedPreview]);
 
@@ -308,7 +308,7 @@ export default function ReelsCenter({
  }>>([]);
 
  // Opciones de renderizado del clip físico
- const [cropMode, setCropMode] = useState<'crop' | 'blur' | 'none'>('crop');
+ const [cropMode, setCropMode] = useState<'crop' |'blur' |'none'>('crop');
  const [burnSubtitles, setBurnSubtitles] = useState(false);
  // Resaltado palabra por palabra (estilo TikTok/CapCut) en vez del subtítulo estático de siempre.
  const [karaokeSubtitles, setKaraokeSubtitles] = useState(true);
@@ -321,7 +321,7 @@ export default function ReelsCenter({
  const [selectedHighlightIndex, setSelectedHighlightIndex] = useState<number>(0);
  const [simulatedTime, setSimulatedTime] = useState<number>(0);
  const [ytLoopCount, setYtLoopCount] = useState<number>(0);
- const [draggingBoundary, setDraggingBoundary] = useState<'start' | 'end' | null>(null);
+ const [draggingBoundary, setDraggingBoundary] = useState<'start' |'end' | null>(null);
 
  // Real physical video cutting and subtitle states
  const [renderedClipUrl, setRenderedClipUrl] = useState<string | null>(null);
@@ -342,16 +342,16 @@ export default function ReelsCenter({
  // Cuándo se guardó el análisis que se está viendo, si viene recuperado de la BD en vez de
  // recién calculado. null cuando el análisis en pantalla es fresco (o no hay ninguno).
  const [loadedFromSaveAt, setLoadedFromSaveAt] = useState<string | null>(null);
- // Cómo está grabado el material: cambia qué busca la IA y cómo titula. 'auto' deja que el
+ // Cómo está grabado el material: cambia qué busca la IA y cómo titula.'auto' deja que el
  // servidor lo adivine del título/descripción reales; el usuario puede fijarlo a mano.
- const [contentType, setContentType] = useState<'auto' | 'concierto' | 'videoclip' | 'ensayo'>('auto');
+ const [contentType, setContentType] = useState<'auto' |'concierto' |'videoclip' |'ensayo'>('auto');
  const [detectedContentType, setDetectedContentType] = useState<string | null>(null);
 
  // Al escribir/pegar una URL de YouTube pedimos su ficha real (título, duración, canal,
  // si tiene subtítulos). Sin esto trabajábamos a ciegas y la línea de tiempo mentía.
  useEffect(() => {
  const videoId = getYouTubeId(youtubeUrl);
- if (inputType !== 'youtube' || !videoId) {
+ if (inputType !=='youtube' || !videoId) {
  setVideoMeta(null);
  setMetaError(null);
  setIsFetchingMeta(false);
@@ -374,7 +374,7 @@ export default function ReelsCenter({
  setVideoTopic(prev => prev.trim() ? prev : (data.meta.title || prev));
 
  // Si este vídeo ya se analizó antes, recuperamos ese análisis en vez de dejar la
- // pantalla vacía hasta que el usuario pulse "Analizar" (y sin gastar otra llamada a
+ // pantalla vacía hasta que el usuario pulse"Analizar" (y sin gastar otra llamada a
  // Gemini). Solo si no hay ya algo en pantalla: nunca se pisa un análisis en curso.
  try {
  const guardado = await apiFetch<any>(`/api/reel-analysis?youtubeUrl=${encodeURIComponent(youtubeUrl)}`);
@@ -393,14 +393,14 @@ export default function ReelsCenter({
  }
  } catch (err) {
  // Recuperar el análisis guardado es una comodidad: si falla, simplemente no aparece
- // y el flujo normal de "pegar URL y Analizar" sigue funcionando igual.
+ // y el flujo normal de"pegar URL y Analizar" sigue funcionando igual.
  console.warn('No se pudo recuperar un análisis guardado:', err);
  }
  } else {
- setMetaError(data?.error || 'No se pudo leer la ficha del vídeo.');
+ setMetaError(data?.error ||'No se pudo leer la ficha del vídeo.');
  }
  } catch (err: any) {
- if (!cancelado) setMetaError(err?.message || 'No se pudo leer la ficha del vídeo.');
+ if (!cancelado) setMetaError(err?.message ||'No se pudo leer la ficha del vídeo.');
  } finally {
  if (!cancelado) setIsFetchingMeta(false);
  }
@@ -436,7 +436,7 @@ export default function ReelsCenter({
 
  /** Duración de referencia para la línea de tiempo: la real si la conocemos. */
  const timelineDuration = React.useMemo(() => {
- if (inputType === 'file' && localVideoDuration > 0) return localVideoDuration;
+ if (inputType ==='file' && localVideoDuration > 0) return localVideoDuration;
  if (videoMeta?.durationKnown && videoMeta.duration > 0) return videoMeta.duration;
  const clip = highlights[selectedHighlightIndex];
  const { end } = parseRangeTimes(clip?.range);
@@ -451,7 +451,7 @@ export default function ReelsCenter({
  // todos los próximos Reels de la banda o es solo un ajuste puntual de este corte.
  const [clipToneRating, setClipToneRating] = useState<number>(0);
  const [clipContentRating, setClipContentRating] = useState<number>(0);
- const [clipFeedbackScope, setClipFeedbackScope] = useState<'este_reel' | 'global'>('este_reel');
+ const [clipFeedbackScope, setClipFeedbackScope] = useState<'este_reel' |'global'>('este_reel');
 
  const handleReanalyzeClip = async () => {
  const activeClip = highlights[selectedHighlightIndex];
@@ -464,8 +464,8 @@ export default function ReelsCenter({
 
  try {
  const response = await apiFetch('/api/reanalyze-clip', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  youtubeUrl,
  fileName: selectedFile?.name,
@@ -478,8 +478,8 @@ export default function ReelsCenter({
  // Para que el highlight reanalizado se actualice también en lo que ya se guardó en BD,
  // no solo en la pantalla actual.
  highlightId: activeClip.id,
- videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined,
- contentType: contentType !== 'auto' ? contentType : (detectedContentType || undefined),
+ videoKey: inputType ==='file' ? videoKeyDeArchivo(selectedFile) : undefined,
+ contentType: contentType !=='auto' ? contentType : (detectedContentType || undefined),
  tonoRating: clipToneRating || undefined,
  contenidoRating: clipContentRating || undefined,
  alcance: clipFeedbackScope
@@ -518,10 +518,10 @@ export default function ReelsCenter({
  const huboFeedback = Boolean(clipUserNote.trim() || clipToneRating || clipContentRating);
  setReanalyzeSuccessMsg(
  data.generatedByAI === false
- ? "Fragmento actualizado (la IA no estaba disponible: se ha usado una plantilla con tus notas)."
- : huboFeedback && clipFeedbackScope === 'global'
- ? "¡Análisis refinado! Este ajuste se recordará también en tus próximos Reels."
- : "¡Análisis del fragmento refinado con éxito!"
+ ?"Fragmento actualizado (la IA no estaba disponible: se ha usado una plantilla con tus notas)."
+ : huboFeedback && clipFeedbackScope ==='global'
+ ?"¡Análisis refinado! Este ajuste se recordará también en tus próximos Reels."
+ :"¡Análisis del fragmento refinado con éxito!"
  );
  setTimeout(() => setReanalyzeSuccessMsg(null), 5000);
  // Se resetea la valoración tras usarla: es feedback sobre ESA versión, no debe arrastrarse
@@ -553,20 +553,14 @@ export default function ReelsCenter({
  const { start, duration } = parseRangeTimes(activeClip.range);
  const clipId = `reel-${selectedHighlightIndex}-${Date.now()}`;
 
- const progressSteps = [
-"Descargando el vídeo de YouTube...",
-"Extrayendo la mejor pista de vídeo y audio disponible...",
-"Preparando ffmpeg...",
+ const progressSteps = ["Descargando el vídeo de YouTube...","Extrayendo la mejor pista de vídeo y audio disponible...","Preparando ffmpeg...",
 `Recortando de ${formatTime(start)} a ${formatTime(start + duration)}...`,
- cropMode === 'blur'
- ? "Componiendo fondo desenfocado en 9:16 (no se recorta a nadie)..."
- : cropMode === 'crop'
- ? "Aplicando encuadre vertical 9:16..."
- : "Manteniendo el encuadre original...",
-"Buscando la transcripción de YouTube para los subtítulos...",
- burnSubtitles ? "Incrustando los subtítulos en la imagen..." : "Generando la pista de subtítulos (.vtt)...",
-"Codificando el MP4 final...",
-"Últimos ajustes..."
+ cropMode ==='blur'
+ ?"Componiendo fondo desenfocado en 9:16 (no se recorta a nadie)..."
+ : cropMode ==='crop'
+ ?"Aplicando encuadre vertical 9:16..."
+ :"Manteniendo el encuadre original...","Buscando la transcripción de YouTube para los subtítulos...",
+ burnSubtitles ?"Incrustando los subtítulos en la imagen..." :"Generando la pista de subtítulos (.vtt)...","Codificando el MP4 final...","Últimos ajustes..."
  ];
 
  let currentStep = 0;
@@ -590,17 +584,17 @@ export default function ReelsCenter({
  burnSubtitles,
  karaokeSubtitles,
  // Flag antiguo, por si el servidor todavía no está actualizado.
- cropVertical: cropMode !== 'none'
+ cropVertical: cropMode !=='none'
  })
  });
 
  clearInterval(interval);
 
  // apiFetch ya devuelve el JSON parseado, no una Response: llamar a res.json() aquí
- // reventaba con "res.json is not a function" y res.ok era siempre undefined.
+ // reventaba con"res.json is not a function" y res.ok era siempre undefined.
  const data = res as any;
  if (!data?.success) {
- throw new Error(data?.error || "Error al codificar el clip de vídeo.");
+ throw new Error(data?.error ||"Error al codificar el clip de vídeo.");
  }
 
  // Los blobs anteriores dejan de hacer falta en cuanto llega un clip nuevo.
@@ -637,7 +631,7 @@ export default function ReelsCenter({
  setRenderedStoredPermanently(Boolean(data.storedPermanently));
 
  if (data.vttContent) {
- const vttBlob = new Blob([data.vttContent], { type: 'text/vtt' });
+ const vttBlob = new Blob([data.vttContent], { type:'text/vtt' });
  setRenderedSubUrl(URL.createObjectURL(vttBlob));
  } else {
  setRenderedSubUrl(null);
@@ -677,9 +671,9 @@ export default function ReelsCenter({
  let newStart = start;
  let newEnd = end;
 
- if (draggingBoundary === 'start') {
+ if (draggingBoundary ==='start') {
  newStart = Math.max(0, Math.min(targetSeconds, end - 1));
- } else if (draggingBoundary === 'end') {
+ } else if (draggingBoundary ==='end') {
  // No dejamos arrastrar más allá del final real del vídeo: un rango imposible
  // llegaba a ffmpeg y devolvía un recorte vacío.
  newEnd = Math.min(totalDuration, Math.max(targetSeconds, start + 1));
@@ -688,7 +682,7 @@ export default function ReelsCenter({
  const formatSecsToMMSS = (totalSecs: number) => {
  const mins = Math.floor(totalSecs / 60);
  const secs = totalSecs % 60;
- return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+ return `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
  };
 
  const newRange = `${formatSecsToMMSS(newStart)}-${formatSecsToMMSS(newEnd)}`;
@@ -725,9 +719,9 @@ export default function ReelsCenter({
  let newStart = start;
  let newEnd = end;
 
- if (draggingBoundary === 'start') {
+ if (draggingBoundary ==='start') {
  newStart = Math.max(0, Math.min(targetSeconds, end - 1));
- } else if (draggingBoundary === 'end') {
+ } else if (draggingBoundary ==='end') {
  // No dejamos arrastrar más allá del final real del vídeo: un rango imposible
  // llegaba a ffmpeg y devolvía un recorte vacío.
  newEnd = Math.min(totalDuration, Math.max(targetSeconds, start + 1));
@@ -736,7 +730,7 @@ export default function ReelsCenter({
  const formatSecsToMMSS = (totalSecs: number) => {
  const mins = Math.floor(totalSecs / 60);
  const secs = totalSecs % 60;
- return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+ return `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
  };
 
  const newRange = `${formatSecsToMMSS(newStart)}-${formatSecsToMMSS(newEnd)}`;
@@ -766,7 +760,7 @@ export default function ReelsCenter({
  useEffect(() => {
  let interval: any = null;
  const currentClip = highlights[selectedHighlightIndex];
- if (currentClip && activeTab === 'analyzer') {
+ if (currentClip && activeTab ==='analyzer') {
  const { duration } = parseRangeTimes(currentClip.range);
  setSimulatedTime(0);
  setYtLoopCount(0);
@@ -792,7 +786,7 @@ export default function ReelsCenter({
  // Close expanded preview modal when Escape is pressed
  useEffect(() => {
  const handleKeyDown = (e: KeyboardEvent) => {
- if (e.key === 'Escape' && isExpandedPreview) {
+ if (e.key ==='Escape' && isExpandedPreview) {
  setIsExpandedPreview(false);
  }
  };
@@ -802,7 +796,7 @@ export default function ReelsCenter({
  
  // Form values for Scheduling
  const [editedCopy, setEditedCopy] = useState('');
- const [selectedPlatform, setSelectedPlatform] = useState<'Instagram' | 'TikTok' | 'YouTube' | 'Facebook'>('Instagram');
+ const [selectedPlatform, setSelectedPlatform] = useState<'Instagram' |'TikTok' |'YouTube' |'Facebook'>('Instagram');
  const [scheduledDate, setScheduledDate] = useState(() => defaultScheduleDate(1));
  const [scheduledTime, setScheduledTime] = useState('20:30');
  const [isScheduling, setIsScheduling] = useState(false);
@@ -906,15 +900,15 @@ export default function ReelsCenter({
  setMetricSuccess('');
  try {
  const res = await fetch('/api/metrics/sync', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' }
+ method:'POST',
+ headers: {'Content-Type':'application/json' }
  });
  const data = await res.json();
  if (res.ok && data.success) {
  setMetricSuccess('✓ Sincronizado con éxito.');
  setTimeout(() => setMetricSuccess(''), 4000);
  } else {
- alert(data.error || 'Error al sincronizar seguidores.');
+ alert(data.error ||'Error al sincronizar seguidores.');
  }
  } catch (err) {
  console.error(err);
@@ -929,15 +923,15 @@ export default function ReelsCenter({
  setMetricSuccess('');
  try {
  const resData = await apiFetch<any>('/api/metrics/real', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' }
+ method:'POST',
+ headers: {'Content-Type':'application/json' }
  });
  if (resData && resData.success) {
  const { data, metric } = resData;
  if (data) {
- setMetricInsta(data.instagramFollowers?.toString() || '0');
- setMetricTiktok(data.tiktokFollowers?.toString() || '0');
- setMetricYoutube(data.youtubeSubscribers?.toString() || '0');
+ setMetricInsta(data.instagramFollowers?.toString() ||'0');
+ setMetricTiktok(data.tiktokFollowers?.toString() ||'0');
+ setMetricYoutube(data.youtubeSubscribers?.toString() ||'0');
  setMetricNotes(`Radar Scan. Spotify: ${data.spotifyListeners || 0}`);
  if (data.videos && data.videos.length > 0) {
  setRealVideos(data.videos);
@@ -951,11 +945,11 @@ export default function ReelsCenter({
  setMetricSuccess(`✓ Sincronización en directo realizada desde perfiles oficiales (IG: ${data?.instagramFollowers ?? 0}, TK: ${data?.tiktokFollowers ?? 0}, YT: ${data?.youtubeSubscribers ?? 0}, Spotify: ${data?.spotifyListeners ?? 0}).`);
  setTimeout(() => setMetricSuccess(''), 6000);
  } else {
- alert(resData?.error || 'Error al escanear datos reales.');
+ alert(resData?.error ||'Error al escanear datos reales.');
  }
  } catch (err: any) {
  console.error(err);
- alert(err?.message || 'Error de conexión al escanear redes reales.');
+ alert(err?.message ||'Error de conexión al escanear redes reales.');
  } finally {
  setIsScanningMetrics(false);
  }
@@ -964,23 +958,19 @@ export default function ReelsCenter({
  // Pasos reales del backend. Los de antes describían un análisis espectral y un modelo de
  // BPM que no existen en ningún sitio del código.
  const getLoadingSteps = () => {
- const firstStep = inputType === 'youtube'
- ? "Leyendo la ficha del vídeo de YouTube..."
- : "Preparando el metraje subido...";
+ const firstStep = inputType ==='youtube'
+ ?"Leyendo la ficha del vídeo de YouTube..."
+ :"Preparando el metraje subido...";
  return [
- firstStep,
- "Descargando la transcripción con marcas de tiempo (si la hay)...",
- "Midiendo el volumen del audio para localizar los subidones...",
- "Enviando el contexto real de tu banda al modelo...",
- `Buscando los mejores fragmentos de ~${videoDuration} s...`,
- "Redactando copys, hooks y hashtags..."
+ firstStep,"Descargando la transcripción con marcas de tiempo (si la hay)...","Midiendo el volumen del audio para localizar los subidones...","Enviando el contexto real de tu banda al modelo...",
+ `Buscando los mejores fragmentos de ~${videoDuration} s...`,"Redactando copys, hooks y hashtags..."
  ];
  };
 
  // Drag & Drop helper
  /**
  * Cambia el vídeo local revocando antes el blob anterior. Elegir otro archivo sin pasar por
- * el botón de "eliminar" dejaba el vídeo previo entero retenido en memoria por su object URL.
+ * el botón de"eliminar" dejaba el vídeo previo entero retenido en memoria por su object URL.
  */
  const cambiarVideoLocal = (file: File | null) => {
  setLocalVideoUrl(prev => {
@@ -1009,7 +999,7 @@ export default function ReelsCenter({
  setLocalVideoDuration(0);
  cambiarVideoLocal(file);
  // Try to auto-extract context from file name
- const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace(/-/g, " ");
+ const cleanName = file.name.replace(/\.[^/.]+$/,"").replace(/_/g,"").replace(/-/g,"");
  setVideoTopic(cleanName);
  }
  };
@@ -1023,15 +1013,15 @@ export default function ReelsCenter({
  });
  setLocalVideoDuration(0);
  cambiarVideoLocal(file);
- const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace(/-/g, " ");
+ const cleanName = file.name.replace(/\.[^/.]+$/,"").replace(/_/g,"").replace(/-/g,"");
  setVideoTopic(cleanName);
  }
  };
 
  // Trigger Highlight Extraction via backend API
  const handleAnalyzeVideo = async () => {
- if (inputType === 'file' && !selectedFile) return;
- if (inputType === 'youtube' && !youtubeUrl) return;
+ if (inputType ==='file' && !selectedFile) return;
+ if (inputType ==='youtube' && !youtubeUrl) return;
 
  // Reset physical clip and subtitle state for the new video
  setRenderedClipUrl(null);
@@ -1051,7 +1041,7 @@ export default function ReelsCenter({
  setEnergyWindows([]);
  setViralWindows([]);
  // Un análisis pedido a propósito siempre es fresco, así que no arrastramos el aviso de
- // "esto es lo que había guardado" de una vez anterior.
+ //"esto es lo que había guardado" de una vez anterior.
  setLoadedFromSaveAt(null);
  setLoadingStep(0);
  // El tipo detectado se pisa con el que devuelva este análisis nuevo; hasta entonces no
@@ -1069,23 +1059,23 @@ export default function ReelsCenter({
  }, 1500);
 
  try {
- const targetYtUrl = inputType === 'youtube' ? youtubeUrl : (youtubeUrl || undefined);
+ const targetYtUrl = inputType ==='youtube' ? youtubeUrl : (youtubeUrl || undefined);
  const res = await apiFetch('/api/analyze-video-highlights', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
- fileName: inputType === 'file' ? selectedFile?.name : undefined,
+ fileName: inputType ==='file' ? selectedFile?.name : undefined,
  youtubeUrl: targetYtUrl,
  // targetDuration = cuánto debe durar cada clip; knownDuration = cuánto dura el vídeo.
- // Antes ambas cosas viajaban en el mismo campo y la IA recibía "el vídeo dura 30 s".
+ // Antes ambas cosas viajaban en el mismo campo y la IA recibía"el vídeo dura 30 s".
  targetDuration: videoDuration,
- knownDuration: inputType === 'file'
+ knownDuration: inputType ==='file'
  ? (localVideoDuration > 0 ? localVideoDuration : undefined)
  : (videoMeta?.durationKnown ? videoMeta.duration : undefined),
  // Sin esto, un vídeo subido como archivo nunca se podía guardar ni recuperar: el
  // servidor nunca ve el archivo en sí, así que necesita esta clave para reconocerlo.
- videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined,
- contentType: contentType !== 'auto' ? contentType : undefined,
+ videoKey: inputType ==='file' ? videoKeyDeArchivo(selectedFile) : undefined,
+ contentType: contentType !=='auto' ? contentType : undefined,
  videoDuration: videoDuration,
  videoTopic: videoTopic || undefined
  })
@@ -1098,7 +1088,7 @@ export default function ReelsCenter({
  const data = res as any;
 
  if (!data?.success) {
- throw new Error(data?.error || data?.message || 'Error al procesar el vídeo en el servidor. Revisa tu sesión o inténtalo de nuevo.');
+ throw new Error(data?.error || data?.message ||'Error al procesar el vídeo en el servidor. Revisa tu sesión o inténtalo de nuevo.');
  }
 
  setHighlights(data.highlights || []);
@@ -1114,15 +1104,15 @@ export default function ReelsCenter({
  
  // Initialize editing form fields
  if (data.highlights && data.highlights.length > 0) {
- setEditedCopy(copyForPlatform(data.highlights[0], selectedPlatform) || data.highlights[0].copy || '');
+ setEditedCopy(copyForPlatform(data.highlights[0], selectedPlatform) || data.highlights[0].copy ||'');
  }
  if (data.optimalTime) {
- setScheduledDate(data.optimalTime.date || '2026-07-30');
- setScheduledTime(data.optimalTime.time || '20:30');
+ setScheduledDate(data.optimalTime.date ||'2026-07-30');
+ setScheduledTime(data.optimalTime.time ||'20:30');
  }
  } catch (err: any) {
  clearInterval(stepInterval);
- setAnalysisError(err.message || 'Error de conexión con la IA.');
+ setAnalysisError(err.message ||'Error de conexión con la IA.');
  } finally {
  setIsAnalyzing(false);
  }
@@ -1146,8 +1136,8 @@ export default function ReelsCenter({
  fecha: `${scheduledDate} ${scheduledTime}`,
  plataforma: selectedPlatform,
  contenido: editedCopy,
- estado: 'aprobado',
- responsable: 'Jon'
+ estado:'aprobado',
+ responsable:'Jon'
  };
 
  await onAddPost(newPost);
@@ -1202,7 +1192,7 @@ export default function ReelsCenter({
  };
 
  // Crop edit adjustments (Extending or trimming from left or right)
- const handleAdjustCrop = (direction: 'start_minus' | 'start_plus' | 'end_minus' | 'end_plus') => {
+ const handleAdjustCrop = (direction:'start_minus' |'start_plus' |'end_minus' |'end_plus') => {
  const currentClip = highlights[selectedHighlightIndex];
  if (!currentClip) return;
 
@@ -1210,20 +1200,20 @@ export default function ReelsCenter({
  let newStart = start;
  let newEnd = end;
 
- if (direction === 'start_minus') {
+ if (direction ==='start_minus') {
  newStart = Math.max(0, start - 1);
- } else if (direction === 'start_plus') {
+ } else if (direction ==='start_plus') {
  newStart = Math.min(end - 1, start + 1);
- } else if (direction === 'end_minus') {
+ } else if (direction ==='end_minus') {
  newEnd = Math.max(start + 1, end - 1);
- } else if (direction === 'end_plus') {
+ } else if (direction ==='end_plus') {
  newEnd = end + 1;
  }
 
  const formatSecsToMMSS = (totalSecs: number) => {
  const mins = Math.floor(totalSecs / 60);
  const secs = totalSecs % 60;
- return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+ return `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
  };
 
  const newRange = `${formatSecsToMMSS(newStart)}-${formatSecsToMMSS(newEnd)}`;
@@ -1237,16 +1227,16 @@ export default function ReelsCenter({
  };
 
  // Move existing pipeline reels
- const moveReel = (id: string, newStage: 'draft' | 'edit' | 'ready') => {
- onUpdatePost(id, { estado: newStage === 'ready' ? 'publicado' : newStage === 'edit' ? 'aprobado' : 'borrador' });
+ const moveReel = (id: string, newStage:'draft' |'edit' |'ready') => {
+ onUpdatePost(id, { estado: newStage ==='ready' ?'publicado' : newStage ==='edit' ?'aprobado' :'borrador' });
  };
 
- const handleGenerateCopy = async (style: 'hype' | 'chill') => {
+ const handleGenerateCopy = async (style:'hype' |'chill') => {
  setIsGenerating(true);
  try {
  const response = await apiFetch('/api/write-reels-copy', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({ idea: reelIdea, style })
  });
  const data = response as any;
@@ -1257,7 +1247,7 @@ export default function ReelsCenter({
  }
  } catch (err) {
  console.error(err);
- if (style === 'hype') {
+ if (style ==='hype') {
  setGeneratedCopy(`⚡️ ¡FUEGO EN EL ESCENARIO! 🔥\n\n${nombreBanda} no tiene freno: ${reelIdea}. ¡Prepárate para sudar la camiseta! 🔥🎸\n\n#MusicaEnDirecto #Directo`);
  } else {
  setGeneratedCopy(`🌊 Respirando hondo, dejando fluir el ritmo... 🍀\n\n${nombreBanda} conectando ideas en el local: ${reelIdea}. Buenas energías para el camino. ✨\n\n#MusicaEnDirecto #Local`);
@@ -1285,32 +1275,32 @@ export default function ReelsCenter({
  // Select dynamic display text for phone screen mock
  const phoneText = selectedPostInPhone
  ? selectedPostInPhone.contenido
- : (activeTab === 'analyzer' && highlights.length > 0
+ : (activeTab ==='analyzer' && highlights.length > 0
  ? editedCopy
  : generatedCopy);
 
  const phoneTitle = selectedPostInPhone
  ? `${selectedPostInPhone.plataforma} · ${selectedPostInPhone.responsable}`
- : (activeTab === 'analyzer' && highlights.length > 0
+ : (activeTab ==='analyzer' && highlights.length > 0
  ? (highlights[selectedHighlightIndex]?.title || `Reel de ${nombreBanda}`)
  : `Reels de ${nombreBanda}`);
 
  const phoneDuration = selectedPostInPhone
  ? selectedPostInPhone.fecha
- : (activeTab === 'analyzer' && highlights.length > 0
- ? (highlights[selectedHighlightIndex]?.range || '0:30')
- : '0:30');
+ : (activeTab ==='analyzer' && highlights.length > 0
+ ? (highlights[selectedHighlightIndex]?.range ||'0:30')
+ :'0:30');
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
- const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]';
- const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]';
- const textMuted = isStitchLight ? 'text-[var(--ink-3)]' : 'text-neutral-500';
+ const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
+ const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
+ const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-neutral-500';
 
  return (
- <div data-modulo="reels" className={`space-y-6 ${isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>
+ <div data-modulo="reels" className={`space-y-6 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>
  
  {/* Header con Sincronización en Excel */}
- <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
+ <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  {/* HEADER / TITULO PRINCIPAL */}
  <div className="mb-2">
  <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-zinc-100 mb-2">Medios</h1>
@@ -1332,19 +1322,19 @@ export default function ReelsCenter({
  disabled={isSyncingReels}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncingReels
- ? 'bg-neutral-800 text-neutral-500 -neutral-700 animate-pulse'
+ ?'bg-neutral-800 text-neutral-500 animate-pulse'
  : isStitchLight
- ? 'bg-indigo-600 hover:bg-indigo-700 text-white -indigo-600 shadow-sm shadow-indigo-100'
- : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
+ ?'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-100'
+ :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
  }`}
  title="Sincronizar todas las publicaciones de redes sociales"
  >
- <RefreshCw className={`w-3 h-3 ${isSyncingReels ? 'animate-spin' : ''}`} />
- {isSyncingReels ? 'Sincronizando...' : 'Actualizar en Excel'}
+ <RefreshCw className={`w-3 h-3 ${isSyncingReels ?'animate-spin' :''}`} />
+ {isSyncingReels ?'Sincronizando...' :'Actualizar en Excel'}
  </button>
  
  <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
- isStitchLight ? 'bg-indigo-50 -indigo-200 text-indigo-600' : 'bg-[#b8d6b8]/10 -[#b8d6b8]/20 text-[#b8d6b8]'
+ isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[#b8d6b8]/10 -[#b8d6b8]/20 text-[#b8d6b8]'
  }`}>
  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping shrink-0" /> Auto-sync
  </span>
@@ -1355,8 +1345,8 @@ export default function ReelsCenter({
  {syncSuccessMessage && (
  <div className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
  isStitchLight 
- ? 'bg-emerald-50 -emerald-200 text-emerald-800' 
- : 'bg-emerald-500/10 -emerald-500/20 text-emerald-400'
+ ?'bg-emerald-50 text-emerald-800' 
+ :'bg-emerald-500/10 -emerald-500/20 text-emerald-400'
  }`}>
  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
  <span className="flex-1 font-mono text-[10px]">{syncSuccessMessage}</span>
@@ -1366,8 +1356,8 @@ export default function ReelsCenter({
  {syncErrorMessage && (
  <div className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
  isStitchLight 
- ? 'bg-rose-50 -rose-200 text-rose-800' 
- : 'bg-rose-500/10 -rose-500/20 text-rose-400'
+ ?'bg-rose-50 text-rose-800' 
+ :'bg-rose-500/10 -rose-500/20 text-rose-400'
  }`}>
  <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
  <span className="flex-1 font-mono text-[10px]">{syncErrorMessage}</span>
@@ -1376,18 +1366,18 @@ export default function ReelsCenter({
  )}
 
  {/* Dynamic Segment Tab Selector */}
- <div className={`flex pb-4 mb-2 flex-wrap gap-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
+ <div className={`flex pb-4 mb-2 flex-wrap gap-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <button
  id="tab-btn-pipeline"
  onClick={() => setActiveTab('pipeline')}
  className={`px-5 py-2.5 font-mono text-[10px] tracking-widest uppercase transition-all duration-300 rounded-[var(--r-m)] cursor-pointer ${
- activeTab === 'pipeline'
+ activeTab ==='pipeline'
  ? isStitchLight
- ? 'bg-indigo-600 text-white font-black shadow-md'
- : 'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
+ ?'bg-indigo-600 text-white font-black shadow-md'
+ :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
- ? 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] -slate-200 bg-white'
- : 'text-[var(--ink-2)] hover:text-white hover:bg-[#1c1b1b]/50 -bg-[var(--surface)]'
+ ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-white'
+ :'text-[var(--ink-2)] hover:text-white hover:bg-[#1c1b1b]/50'
  }`}
  >
  Pipeline & Redactor de Copy
@@ -1396,13 +1386,13 @@ export default function ReelsCenter({
  id="tab-btn-analyzer"
  onClick={() => setActiveTab('analyzer')}
  className={`px-5 py-2.5 font-mono text-[10px] tracking-widest uppercase transition-all duration-300 rounded-[var(--r-m)] flex items-center gap-1.5 cursor-pointer ${
- activeTab === 'analyzer'
+ activeTab ==='analyzer'
  ? isStitchLight
- ? 'bg-indigo-600 text-white font-black shadow-md'
- : 'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
+ ?'bg-indigo-600 text-white font-black shadow-md'
+ :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
- ? 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] -slate-200 bg-white'
- : 'text-[var(--ink-2)] hover:text-white hover:bg-[#1c1b1b]/50 -bg-[var(--surface)]'
+ ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-white'
+ :'text-[var(--ink-2)] hover:text-white hover:bg-[#1c1b1b]/50'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5" /> Analizador de Vídeos AI
@@ -1414,13 +1404,13 @@ export default function ReelsCenter({
  {/* LEFT COLUMN: ACTIVE WORKSPACE TAB (8 columns) */}
  <div className="xl:col-span-8 space-y-6 flex flex-col justify-between min-w-0">
  
- {activeTab === 'pipeline' ? (
+ {activeTab ==='pipeline' ? (
  /* TAB 1: KANBAN PIPELINE AND COPY GENERATOR */
  <div className="space-y-6">
  {/* 1. Pipeline Kanban */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>Pipeline de Reels y Contenido</h3>
+ <div className={` pb-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
+ <h3 className={`text-sm font-bold font-display uppercase tracking-widest ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>Pipeline de Reels y Contenido</h3>
  <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
  Visualiza los vídeos grabados por la banda en la carretera y arrástralos / muévelos de etapa para coordinar la publicación.
  </p>
@@ -1428,28 +1418,27 @@ export default function ReelsCenter({
 
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {/* Borradores */}
- <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)]/60 -bg-[var(--surface)]'}`}>
+ <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
  <span className={`text-[10px] font-mono uppercase tracking-wider font-bold block pb-1.5 ${
- isStitchLight ? 'text-indigo-600 -slate-200/80' : 'text-[var(--accent)] -neutral-800'
- }`}>Borradores ({posts.filter(r => r.estado === 'borrador').length})</span>
+ isStitchLight ?'text-indigo-600 -slate-200/80' :'text-[var(--accent)]'
+ }`}>Borradores ({posts.filter(r => r.estado ==='borrador').length})</span>
  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
- {posts.filter(r => r.estado === 'borrador').map(post => (
+ {posts.filter(r => r.estado ==='borrador').map(post => (
  <div 
  key={post.id} 
  onClick={() => setSelectedPostInPhone(post)}
  className={` rounded-md p-2.5 cursor-pointer transition-all space-y-1.5 ${
- isStitchLight ? 'bg-white' : 'bg-[#1c1b1b]'
+ isStitchLight ?'bg-white' :'bg-[#1c1b1b]'
  } ${
  selectedPostInPhone?.id === post.id
- ? isStitchLight ? '-indigo-600 shadow-sm' : '-[var(--acc)]'
- : isStitchLight ? '-slate-200 hover:-indigo-300' : '-neutral-800 hover:-[#99907c]/30'
+ ? isStitchLight ?'-indigo-600 shadow-sm' :'-[var(--acc)]'
+ : isStitchLight ?'-slate-200 hover:-indigo-300' :'-neutral-800 hover:-[#99907c]/30'
  }`}
  >
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
- post.plataforma === 'Instagram' ? 'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma === 'TikTok' ? 'bg-[var(--acc)]/10 text-[var(--acc)]' :
- 'bg-neutral-800 text-neutral-300'
+ post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-neutral-800 text-neutral-300'
  }`}>
  {post.plataforma}
  </span>
@@ -1458,47 +1447,46 @@ export default function ReelsCenter({
  <p className={`text-[11px] font-medium leading-snug font-sans line-clamp-3 ${textTitle}`}>
  {post.contenido}
  </p>
- <div className={`flex justify-between items-center pt-1 ${isStitchLight ? '-slate-100' : '-bg-[var(--surface)]'}`}>
+ <div className={`flex justify-between items-center pt-1 ${isStitchLight ?'-slate-100' :'-bg-[var(--surface)]'}`}>
  <span className="text-[8px] font-mono text-neutral-500">{post.fecha}</span>
  <button 
  id={`btn-move-aprobado-${post.id}`}
- onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado: 'aprobado' }); }}
- className={`text-[8px] font-mono hover:underline cursor-pointer bg-transparent -none p-0 ${isStitchLight ? 'text-indigo-600 font-bold' : 'text-[var(--acc)]'}`}
+ onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado:'aprobado' }); }}
+ className={`text-[8px] font-mono hover:underline cursor-pointer bg-transparent -none p-0 ${isStitchLight ?'text-indigo-600 font-bold' :'text-[var(--acc)]'}`}
  >
  Aprobar →
  </button>
  </div>
  </div>
  ))}
- {posts.filter(r => r.estado === 'borrador').length === 0 && (
+ {posts.filter(r => r.estado ==='borrador').length === 0 && (
  <p className="text-[9px] font-mono text-neutral-500 text-center py-4">No hay borradores</p>
  )}
  </div>
  </div>
 
  {/* En Edición / Aprobados */}
- <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)]/60 -bg-[var(--surface)]'}`}>
+ <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
  <span className={`text-[10px] font-mono uppercase tracking-wider font-bold block pb-1.5 ${
- isStitchLight ? 'text-indigo-600 -slate-200/80' : 'text-[var(--acc)] -neutral-800'
- }`}>En Edición / Aprobados ({posts.filter(r => r.estado === 'aprobado').length})</span>
+ isStitchLight ?'text-indigo-600 -slate-200/80' :'text-[var(--acc)]'
+ }`}>En Edición / Aprobados ({posts.filter(r => r.estado ==='aprobado').length})</span>
  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
- {posts.filter(r => r.estado === 'aprobado').map(post => (
+ {posts.filter(r => r.estado ==='aprobado').map(post => (
  <div 
  key={post.id} 
  onClick={() => setSelectedPostInPhone(post)}
  className={` rounded-md p-2.5 cursor-pointer transition-all space-y-1.5 ${
- isStitchLight ? 'bg-white' : 'bg-[#1c1b1b]'
+ isStitchLight ?'bg-white' :'bg-[#1c1b1b]'
  } ${
  selectedPostInPhone?.id === post.id
- ? isStitchLight ? '-indigo-600 shadow-sm' : '-[var(--acc)]'
- : isStitchLight ? '-slate-200 hover:-indigo-300' : '-neutral-800 hover:-[var(--acc)]/40'
+ ? isStitchLight ?'-indigo-600 shadow-sm' :'-[var(--acc)]'
+ : isStitchLight ?'-slate-200 hover:-indigo-300' :'-neutral-800 hover:-[var(--acc)]/40'
  }`}
  >
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
- post.plataforma === 'Instagram' ? 'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma === 'TikTok' ? 'bg-[var(--acc)]/10 text-[var(--acc)]' :
- 'bg-neutral-800 text-neutral-300'
+ post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-neutral-800 text-neutral-300'
  }`}>
  {post.plataforma}
  </span>
@@ -1507,17 +1495,17 @@ export default function ReelsCenter({
  <p className={`text-[11px] font-medium leading-snug font-sans line-clamp-3 ${textTitle}`}>
  {post.contenido}
  </p>
- <div className={`flex justify-between items-center pt-1 ${isStitchLight ? '-slate-100' : '-bg-[var(--surface)]'}`}>
+ <div className={`flex justify-between items-center pt-1 ${isStitchLight ?'-slate-100' :'-bg-[var(--surface)]'}`}>
  <button 
  id={`btn-move-borrador-${post.id}`}
- onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado: 'borrador' }); }}
+ onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado:'borrador' }); }}
  className="text-[8px] font-mono text-neutral-500 hover:underline cursor-pointer bg-transparent -none p-0"
  >
  ← Borrador
  </button>
  <button 
  id={`btn-move-publicado-${post.id}`}
- onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado: 'publicado' }); }}
+ onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado:'publicado' }); }}
  className="text-[8px] font-mono text-emerald-500 hover:underline cursor-pointer font-bold bg-transparent -none p-0"
  >
  Publicar →
@@ -1525,35 +1513,34 @@ export default function ReelsCenter({
  </div>
  </div>
  ))}
- {posts.filter(r => r.estado === 'aprobado').length === 0 && (
+ {posts.filter(r => r.estado ==='aprobado').length === 0 && (
  <p className="text-[9px] font-mono text-neutral-500 text-center py-4">No hay reels en edición</p>
  )}
  </div>
  </div>
 
  {/* Listos / Publicados */}
- <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)]/60 -bg-[var(--surface)]'}`}>
+ <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
  <span className={`text-[10px] font-mono uppercase tracking-wider text-emerald-500 font-bold block pb-1.5 ${
- isStitchLight ? '-slate-200/80' : '-neutral-800'
- }`}>Listos / Publicados ({posts.filter(r => r.estado === 'publicado').length})</span>
+ isStitchLight ?'-slate-200/80' :'-neutral-800'
+ }`}>Listos / Publicados ({posts.filter(r => r.estado ==='publicado').length})</span>
  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
- {posts.filter(r => r.estado === 'publicado').map(post => (
+ {posts.filter(r => r.estado ==='publicado').map(post => (
  <div 
  key={post.id} 
  onClick={() => setSelectedPostInPhone(post)}
  className={` rounded-md p-2.5 cursor-pointer transition-all space-y-1.5 ${
- isStitchLight ? 'bg-white' : 'bg-[#1c1b1b]'
+ isStitchLight ?'bg-white' :'bg-[#1c1b1b]'
  } ${
  selectedPostInPhone?.id === post.id
- ? '-emerald-500'
- : isStitchLight ? '-slate-200 hover:-emerald-300' : '-neutral-800 hover:-emerald-500/30'
+ ?'-emerald-500'
+ : isStitchLight ?'-slate-200 hover:-emerald-300' :'-neutral-800 hover:-emerald-500/30'
  }`}
  >
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
- post.plataforma === 'Instagram' ? 'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma === 'TikTok' ? 'bg-[var(--acc)]/10 text-[var(--acc)]' :
- 'bg-neutral-800 text-neutral-300'
+ post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-neutral-800 text-neutral-300'
  }`}>
  {post.plataforma}
  </span>
@@ -1562,10 +1549,10 @@ export default function ReelsCenter({
  <p className={`text-[11px] font-medium leading-snug font-sans line-clamp-3 ${textTitle}`}>
  {post.contenido}
  </p>
- <div className={`flex justify-between items-center pt-1 ${isStitchLight ? '-slate-100' : '-bg-[var(--surface)]'}`}>
+ <div className={`flex justify-between items-center pt-1 ${isStitchLight ?'-slate-100' :'-bg-[var(--surface)]'}`}>
  <button 
  id={`btn-move-aprobado-back-${post.id}`}
- onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado: 'aprobado' }); }}
+ onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado:'aprobado' }); }}
  className="text-[8px] font-mono text-neutral-500 hover:underline cursor-pointer bg-transparent -none p-0"
  >
  ← Re-editar
@@ -1576,7 +1563,7 @@ export default function ReelsCenter({
  </div>
  </div>
  ))}
- {posts.filter(r => r.estado === 'publicado').length === 0 && (
+ {posts.filter(r => r.estado ==='publicado').length === 0 && (
  <p className="text-[9px] font-mono text-neutral-500 text-center py-4">No hay publicaciones completadas</p>
  )}
  </div>
@@ -1586,8 +1573,8 @@ export default function ReelsCenter({
 
  {/* 2. Structured Soul AI Writer */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--accent)]'}`}>
+ <div className={` pb-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
+ <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--accent)]'}`}>
  <Sparkles className="w-4 h-4" /> AI Reels Writer (Redacción Estructurada)
  </h3>
  <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
@@ -1606,8 +1593,8 @@ export default function ReelsCenter({
  placeholder="Ej: R-violin tocando el violín a toda velocidad o elyar ensayando con el hang pan en el camerino..."
  className={`w-full rounded-[var(--r-s)] p-3 text-xs focus:outline-none font-sans leading-relaxed ${
  isStitchLight
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500'
- : 'bg-[var(--surface)] -[#99907c]/20 text-[var(--ink)] focus:outline-none focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ :'bg-[var(--surface)] -[#99907c]/20 text-[var(--ink)] focus:outline-none focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -1621,8 +1608,8 @@ export default function ReelsCenter({
  disabled={isGenerating}
  className={`w-full py-3 font-mono font-bold text-xs uppercase tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer shadow-md hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${
  isStitchLight
- ? 'bg-indigo-600 text-white hover:bg-indigo-700'
- : 'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)]'
+ ?'bg-indigo-600 text-white hover:bg-indigo-700'
+ :'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)]'
  }`}
  >
  <Flame className="w-4 h-4" /> Balkan Hype 🎺🔥
@@ -1633,8 +1620,8 @@ export default function ReelsCenter({
  disabled={isGenerating}
  className={`w-full py-3 font-mono font-bold text-xs uppercase tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${
  isStitchLight
- ? 'bg-white -emerald-200 hover:-emerald-400 text-emerald-600'
- : 'bg-[var(--surface)] -emerald-500/30 hover:-emerald-500/50 text-emerald-400'
+ ?'bg-white hover:-emerald-400 text-emerald-600'
+ :'bg-[var(--surface)] -emerald-500/30 hover:-emerald-500/50 text-emerald-400'
  }`}
  >
  <Music className="w-4 h-4" /> Reggae Chill 🌿🕊️
@@ -1657,8 +1644,8 @@ export default function ReelsCenter({
  onChange={(e) => setGeneratedCopy(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-xs font-mono leading-relaxed focus:outline-none ${
  isStitchLight
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500'
- : 'bg-[var(--surface)] -[#99907c]/15 text-[var(--sunken)] focus:-[var(--acc)]/30'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ :'bg-[var(--surface)] -[#99907c]/15 text-[var(--sunken)] focus:-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1672,9 +1659,9 @@ export default function ReelsCenter({
  
  {/* 1. Drag & Drop & Upload Area */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>
- <Video className={`w-4 h-4 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`} /> Extraer Highlights de Vídeos de Ensayos / Directos
+ <div className={` pb-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
+ <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
+ <Video className={`w-4 h-4 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`} /> Extraer Highlights de Vídeos de Ensayos / Directos
  </h3>
  <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
  Sube tu metraje bruto en formato vídeo o pega un enlace de YouTube. Nuestro modelo buscará ganchos acústicos, transiciones y saltos rítmicos para recortar los mejores 15-60s.
@@ -1682,14 +1669,14 @@ export default function ReelsCenter({
  </div>
 
  {/* Selector de Origen de Vídeo */}
- <div className="flex gap-1.5 p-1 rounded-[var(--r-m)] w-fit" style={{ borderColor: isStitchLight ? '#e2e8f0' : '#2d2d2d' }}>
+ <div className="flex gap-1.5 p-1 rounded-[var(--r-m)] w-fit" style={{ borderColor: isStitchLight ?'#e2e8f0' :'#2d2d2d' }}>
  <button
  type="button"
  onClick={() => { setInputType('file'); setAnalysisError(null); }}
  className={`px-3.5 py-1.5 text-[10px] font-mono rounded-[var(--r-s)] transition-all cursor-pointer ${
- inputType === 'file'
- ? isStitchLight ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
- : isStitchLight ? 'text-[var(--ink-2)] hover:text-[var(--ink)]' : 'text-[var(--ink-2)] hover:text-white'
+ inputType ==='file'
+ ? isStitchLight ?'bg-indigo-600 text-white font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  📂 Archivo de Vídeo
@@ -1698,9 +1685,9 @@ export default function ReelsCenter({
  type="button"
  onClick={() => { setInputType('youtube'); setAnalysisError(null); }}
  className={`px-3.5 py-1.5 text-[10px] font-mono rounded-[var(--r-s)] transition-all cursor-pointer ${
- inputType === 'youtube'
- ? isStitchLight ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
- : isStitchLight ? 'text-[var(--ink-2)] hover:text-[var(--ink)]' : 'text-[var(--ink-2)] hover:text-white'
+ inputType ==='youtube'
+ ? isStitchLight ?'bg-indigo-600 text-white font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  📺 Enlace de YouTube
@@ -1708,7 +1695,7 @@ export default function ReelsCenter({
  </div>
 
  {/* Drag & Drop or YouTube Link Input */}
- {inputType === 'file' ? (
+ {inputType ==='file' ? (
  <div
  id="video-dropzone"
  onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
@@ -1717,10 +1704,10 @@ export default function ReelsCenter({
  onClick={() => document.getElementById('video-file-input')?.click()}
  className={` -dashed rounded-[var(--r-l)] p-8 text-center cursor-pointer transition-all ${
  dragActive
- ? isStitchLight ? '-indigo-600 bg-indigo-50/50 scale-[1.01]' : '-[var(--acc)] bg-[var(--acc)]/5 scale-[1.01]'
+ ? isStitchLight ?'-indigo-600 bg-indigo-50/50 scale-[1.01]' :'-[var(--acc)] bg-[var(--acc)]/5 scale-[1.01]'
  : selectedFile
- ? '-emerald-500/40 bg-emerald-500/[0.02]'
- : isStitchLight ? '-slate-200 hover:-indigo-400 bg-[var(--bg)]' : '-[#99907c]/25 hover:-[var(--acc)]/40 bg-[var(--surface)]/50'
+ ?'-emerald-500/40 bg-emerald-500/[0.02]'
+ : isStitchLight ?'-slate-200 hover:-indigo-400 bg-[var(--bg)]' :'-[#99907c]/25 hover:-[var(--acc)]/40 bg-[var(--surface)]/50'
  }`}
  >
  <input
@@ -1736,7 +1723,7 @@ export default function ReelsCenter({
  <CheckCircle2 className="w-6 h-6" />
  </div>
  <div>
- <p className={`text-xs font-bold ${isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]'}`}>{selectedFile.name}</p>
+ <p className={`text-xs font-bold ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`}>{selectedFile.name}</p>
  <p className="text-[10px] text-neutral-500 font-mono mt-0.5">{(selectedFile.size / (1024 * 1024)).toFixed(1)} MB</p>
  </div>
  <button
@@ -1762,12 +1749,12 @@ export default function ReelsCenter({
  ) : (
  <div className="space-y-3">
  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${
- isStitchLight ? 'bg-indigo-50 -indigo-100 text-indigo-600' : 'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
+ isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  <Upload className="w-5 h-5" />
  </div>
  <div>
- <p className={`text-xs font-bold ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--sunken)]'}`}>Suelta tu vídeo aquí o haz clic para buscar</p>
+ <p className={`text-xs font-bold ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--sunken)]'}`}>Suelta tu vídeo aquí o haz clic para buscar</p>
  <p className="text-[10px] text-neutral-500 font-mono mt-1">Soporta .mp4, .mov, .m4v (Vídeo bruto de conciertos o ensayos, máx 100MB)</p>
  </div>
  </div>
@@ -1775,16 +1762,16 @@ export default function ReelsCenter({
  </div>
  ) : (
  <div className={` rounded-[var(--r-l)] p-8 transition-all ${
- isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-[#99907c]/25 bg-[var(--surface)]/50'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-[#99907c]/25 bg-[var(--surface)]/50'
  }`}>
  <div className="space-y-4 max-w-xl mx-auto text-center">
  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${
- isStitchLight ? 'bg-indigo-50 -indigo-100 text-indigo-600' : 'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
+ isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  <Youtube className="w-5 h-5" />
  </div>
  <div>
- <p className={`text-xs font-bold ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--sunken)]'}`}>Introduce la URL del vídeo de YouTube</p>
+ <p className={`text-xs font-bold ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--sunken)]'}`}>Introduce la URL del vídeo de YouTube</p>
  <p className="text-[10px] text-neutral-500 font-mono mt-1">Extrae highlights de cualquier vídeo público de YouTube, Shorts o directo</p>
  </div>
  <div className="relative">
@@ -1796,8 +1783,8 @@ export default function ReelsCenter({
  placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
  className={`w-full rounded-[var(--r-m)] pl-3 pr-10 py-2.5 text-xs focus:outline-none font-mono ${
  isStitchLight
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500'
- : 'bg-[var(--surface)] -neutral-800 text-[var(--sunken)] focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ :'bg-[var(--surface)] text-[var(--sunken)] focus:-[var(--acc)]/50'
  }`}
  />
  {youtubeUrl && (
@@ -1837,33 +1824,33 @@ export default function ReelsCenter({
 
  {!isFetchingMeta && videoMeta && (
  <div className={`flex gap-3 items-center p-2.5 rounded-[var(--r-m)] text-left ${
- isStitchLight ? 'bg-white -slate-200' : 'bg-[var(--surface)] -neutral-800'
+ isStitchLight ?'bg-white' :'bg-[var(--surface)]'
  }`}>
  {videoMeta.thumbnail && (
  <img
  src={videoMeta.thumbnail}
  alt=""
- className="w-20 h-12 object-cover rounded-[var(--r-s)] shrink-0 -neutral-800"
+ className="w-20 h-12 object-cover rounded-[var(--r-s)] shrink-0"
  loading="lazy"
  />
  )}
  <div className="min-w-0 flex-1 space-y-1">
- <p className={`text-[11px] font-bold truncate ${isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]'}`}>
- {videoMeta.title || 'Vídeo de YouTube'}
+ <p className={`text-[11px] font-bold truncate ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`}>
+ {videoMeta.title ||'Vídeo de YouTube'}
  </p>
  <div className="flex flex-wrap gap-1.5 items-center text-[9px] font-mono">
  {videoMeta.author && <span className="text-neutral-500 truncate max-w-[120px]">{videoMeta.author}</span>}
  {videoMeta.durationKnown ? (
- <span className={`px-1.5 py-0.5 rounded font-bold ${isStitchLight ? 'bg-indigo-50 text-indigo-600' : 'bg-[var(--acc)]/10 text-[var(--acc)]'}`}>
+ <span className={`px-1.5 py-0.5 rounded font-bold ${isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--acc)]/10 text-[var(--acc)]'}`}>
  {formatTime(videoMeta.duration)}
  </span>
  ) : (
  <span className="px-1.5 py-0.5 rounded bg-neutral-800 text-[var(--ink-2)]">duración desconocida</span>
  )}
  <span className={`px-1.5 py-0.5 rounded font-bold ${
- videoMeta.hasTranscript ? 'bg-emerald-500/10 text-emerald-400' : 'bg-neutral-800 text-neutral-500'
+ videoMeta.hasTranscript ?'bg-emerald-500/10 text-emerald-400' :'bg-neutral-800 text-neutral-500'
  }`}>
- {videoMeta.hasTranscript ? `subtítulos ✓ (${videoMeta.transcriptLines})` : 'sin subtítulos'}
+ {videoMeta.hasTranscript ? `subtítulos ✓ (${videoMeta.transcriptLines})` :'sin subtítulos'}
  </span>
  </div>
  </div>
@@ -1878,7 +1865,7 @@ export default function ReelsCenter({
  <div className="space-y-1">
  <label className="block text-[9px] font-mono uppercase text-[var(--ink-2)]">
  Tipo de material
- {contentType === 'auto' && detectedContentType && (
+ {contentType ==='auto' && detectedContentType && (
  <span className="normal-case font-sans text-neutral-500"> (detectado: {detectedContentType})</span>
  )}
  </label>
@@ -1889,8 +1876,8 @@ export default function ReelsCenter({
  title="Un concierto, un videoclip y un ensayo se buscan y se titulan de forma distinta: cambia qué momentos prioriza la IA."
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${
  isStitchLight
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500'
- : 'bg-[var(--surface)] -neutral-800 text-neutral-300 focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ :'bg-[var(--surface)] text-neutral-300 focus:-[var(--acc)]/50'
  }`}
  >
  <option value="auto">Detectar automáticamente</option>
@@ -1909,8 +1896,8 @@ export default function ReelsCenter({
  placeholder="Ej: Solo de violín rápido o improvisación de loops con percusión..."
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500'
- : 'bg-[var(--surface)] -neutral-800 text-[var(--sunken)] focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ :'bg-[var(--surface)] text-[var(--sunken)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -1922,8 +1909,8 @@ export default function ReelsCenter({
  onChange={(e) => setVideoDuration(Number(e.target.value))}
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${
  isStitchLight
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500'
- : 'bg-[var(--surface)] -neutral-800 text-neutral-300 focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ :'bg-[var(--surface)] text-neutral-300 focus:-[var(--acc)]/50'
  }`}
  >
  <option value={15}>15 segundos (Ideal para Reels cortos / Stories)</option>
@@ -1934,16 +1921,16 @@ export default function ReelsCenter({
  </div>
 
  {/* Aviso de análisis recuperado: sin esto, el usuario no sabría por qué ya hay
- clips sugeridos sin haber pulsado "Analizar" en esta visita. */}
+ clips sugeridos sin haber pulsado"Analizar" en esta visita. */}
  {loadedFromSaveAt && highlights.length > 0 && !isAnalyzing && (
  <div className={`p-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 ${
- isStitchLight ? 'bg-emerald-50 -emerald-200 text-emerald-700' : 'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
+ isStitchLight ?'bg-emerald-50 text-emerald-700' :'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
  }`}>
  <CheckCircle2 className="w-4 h-4 shrink-0" />
  <span>
  Recuperado el análisis guardado de este vídeo
- ({new Date(loadedFromSaveAt).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}).
- Pulsa "Analizar highlights con IA" si quieres uno nuevo.
+ ({new Date(loadedFromSaveAt).toLocaleString('es-ES', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}).
+ Pulsa"Analizar highlights con IA" si quieres uno nuevo.
  </span>
  </div>
  )}
@@ -1953,23 +1940,23 @@ export default function ReelsCenter({
  <button
  id="btn-analyze-video"
  onClick={handleAnalyzeVideo}
- disabled={(inputType === 'file' ? !selectedFile : !youtubeUrl) || isAnalyzing}
+ disabled={(inputType ==='file' ? !selectedFile : !youtubeUrl) || isAnalyzing}
  className={`w-full py-3.5 rounded-[var(--r-m)] font-mono text-xs font-bold tracking-widest uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
- (inputType === 'file' ? selectedFile : youtubeUrl) 
+ (inputType ==='file' ? selectedFile : youtubeUrl) 
  ? isStitchLight
- ? 'bg-indigo-600 text-white shadow-md hover:bg-indigo-700'
- : 'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)] shadow-lg shadow-[var(--acc)]/10 hover:scale-[1.01]' 
- : 'bg-neutral-800 text-neutral-500 cursor-not-allowed -bg-[var(--surface)]'
+ ?'bg-indigo-600 text-white shadow-md hover:bg-indigo-700'
+ :'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)] shadow-lg shadow-[var(--acc)]/10 hover:scale-[1.01]' 
+ :'bg-neutral-800 text-neutral-500 cursor-not-allowed'
  }`}
  >
  {isAnalyzing ? (
  <>
- <RefreshCw className={`w-4 h-4 animate-spin ${isStitchLight ? 'text-white' : 'text-[var(--acc-ink)]'}`} />
+ <RefreshCw className={`w-4 h-4 animate-spin ${isStitchLight ?'text-white' :'text-[var(--acc-ink)]'}`} />
  <span>PROCESANDO METRAJE...</span>
  </>
  ) : (
  <>
- <Sparkles className={`w-4 h-4 ${isStitchLight ? 'text-white' : 'text-[var(--acc-ink)]'}`} />
+ <Sparkles className={`w-4 h-4 ${isStitchLight ?'text-white' :'text-[var(--acc-ink)]'}`} />
  <span>ANALIZAR HIGHLIGHTS CON IA</span>
  </>
  )}
@@ -1978,17 +1965,17 @@ export default function ReelsCenter({
 
  {/* Loading indicator with detailed analytical logs */}
  {isAnalyzing && (
- <div className={`p-4 rounded-[var(--r-m)] space-y-3 animate-pulse ${isStitchLight ? 'bg-[var(--sunken)] -slate-200' : 'bg-[var(--surface)]/80 -bg-[var(--surface)]'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] space-y-3 animate-pulse ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80'}`}>
  <div className="flex justify-between items-center text-[10px] font-mono">
- <span className={`font-bold ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>Estado del análisis:</span>
+ <span className={`font-bold ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>Estado del análisis:</span>
  <span className="text-[var(--ink-2)]">Paso {loadingStep + 1} de {getLoadingSteps().length}</span>
  </div>
- <p className={`text-[11px] font-mono leading-normal ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-neutral-300'}`}>
- ⚡️ <span className={isStitchLight ? 'text-indigo-500' : 'text-[var(--accent)]'}>{getLoadingSteps()[loadingStep]}</span>
+ <p className={`text-[11px] font-mono leading-normal ${isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'}`}>
+ ⚡️ <span className={isStitchLight ?'text-indigo-500' :'text-[var(--accent)]'}>{getLoadingSteps()[loadingStep]}</span>
  </p>
- <div className={`w-full h-1.5 rounded-full overflow-hidden ${isStitchLight ? 'bg-[var(--sunken)] -slate-300' : 'bg-[var(--surface)] -bg-[var(--surface)]'}`}>
+ <div className={`w-full h-1.5 rounded-full overflow-hidden ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
  <div 
- className={`h-full transition-all duration-500 ${isStitchLight ? 'bg-indigo-600' : 'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)]'}`} 
+ className={`h-full transition-all duration-500 ${isStitchLight ?'bg-indigo-600' :'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)]'}`} 
  style={{ width: `${((loadingStep + 1) / getLoadingSteps().length) * 100}%` }}
  />
  </div>
@@ -2015,8 +2002,8 @@ export default function ReelsCenter({
  {/* 2. Lighttable (Mesa de Luz con los Clips Detectados) */}
  {highlights.length > 0 && (
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-2 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>
+ <div className={` pb-2 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
+ <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Layers className="w-4 h-4" /> Mesa de Luz de Clips Sugeridos (Highlights)
  </h3>
  <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
@@ -2033,15 +2020,15 @@ export default function ReelsCenter({
  <div className="space-y-1.5">
  <div className="flex items-center justify-between">
  <span className="text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
- {conDesglose ? 'Señales medidas (volumen · arranque · montaje)' : 'Energía medida en el audio'}
+ {conDesglose ?'Señales medidas (volumen · arranque · montaje)' :'Energía medida en el audio'}
  </span>
  <span className="text-[9px] font-mono text-emerald-400">● {ventanas.length} tramos con potencial</span>
  </div>
- <div className={`relative w-full h-7 rounded-[var(--r-s)] overflow-hidden ${isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)] -bg-[var(--surface)]'}`}>
+ <div className={`relative w-full h-7 rounded-[var(--r-s)] overflow-hidden ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
  {ventanas.map((v, i) => {
  const izq = Math.max(0, Math.min(100, (v.start / timelineDuration) * 100));
  const ancho = Math.max(0.8, Math.min(100 - izq, ((v.end - v.start) / timelineDuration) * 100));
- const titulo = conDesglose && 'motivo' in v
+ const titulo = conDesglose &&'motivo' in v
  ? `${formatTime(v.start)} - ${formatTime(v.end)} · potencial ${v.score}/100\nvolumen ${(v as any).energia} · arranque ${(v as any).arranque} · montaje ${(v as any).dinamismo}\n${(v as any).motivo}`
  : `${formatTime(v.start)} - ${formatTime(v.end)} · energía ${v.score}/100`;
  return (
@@ -2052,7 +2039,7 @@ export default function ReelsCenter({
  style={{
  left: `${izq}%`,
  width: `${ancho}%`,
- background: isStitchLight ? '#4f46e5' : 'var(--acc)',
+ background: isStitchLight ?'#4f46e5' :'var(--acc)',
  opacity: 0.25 + (Math.max(0, Math.min(100, v.score)) / 100) * 0.75
  }}
  />
@@ -2068,16 +2055,16 @@ export default function ReelsCenter({
  const ancho = Math.max(0.8, Math.min(100 - izq, ((end - start) / timelineDuration) * 100));
  return (
  <div
- className="absolute top-0 bottom-0 -2 -emerald-400 rounded-sm pointer-events-none"
- style={{ left: `${izq}%`, width: `${ancho}%`, boxShadow: '0 0 0 1px rgba(16,185,129,0.6) inset' }}
+ className="absolute top-0 bottom-0 -2 rounded-sm pointer-events-none"
+ style={{ left: `${izq}%`, width: `${ancho}%`, boxShadow:'0 0 0 1px rgba(16,185,129,0.6) inset' }}
  />
  );
  })()}
  </div>
  <p className="text-[9px] font-mono text-neutral-600 leading-tight">
  {conDesglose
- ? 'Cuanto más intenso, más potencial combinado (volumen + arranque + montaje). El recuadro verde es el corte seleccionado.'
- : 'Cuanto más intenso, más suena la banda en ese punto. El recuadro verde es el corte seleccionado.'}
+ ?'Cuanto más intenso, más potencial combinado (volumen + arranque + montaje). El recuadro verde es el corte seleccionado.'
+ :'Cuanto más intenso, más suena la banda en ese punto. El recuadro verde es el corte seleccionado.'}
  </p>
  {(() => {
  // El motivo de la ventana que coincide con el corte seleccionado, para no obligar a
@@ -2088,8 +2075,7 @@ export default function ReelsCenter({
  const ventana = (viralWindows as any[]).find(v => Math.abs(v.start - start) <= 2);
  if (!ventana?.motivo) return null;
  return (
- <p className={`text-[10px] font-sans italic leading-snug pt-0.5 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>
- "{ventana.motivo}"
+ <p className={`text-[10px] font-sans italic leading-snug pt-0.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>"{ventana.motivo}"
  </p>
  );
  })()}
@@ -2108,25 +2094,25 @@ export default function ReelsCenter({
  className={` rounded-[var(--r-m)] p-3.5 cursor-pointer transition-all space-y-3 relative group overflow-hidden ${
  isSelected 
  ? isStitchLight
- ? '-indigo-600 bg-indigo-50/20 shadow-md'
- : '-[var(--acc)] bg-[var(--acc)]/5 shadow-lg shadow-[var(--acc)]/5' 
+ ?'-indigo-600 bg-indigo-50/20 shadow-md'
+ :'-[var(--acc)] bg-[var(--acc)]/5 shadow-lg shadow-[var(--acc)]/5' 
  : isStitchLight
- ? '-slate-200 bg-white hover:-indigo-300 hover:bg-[var(--bg)]/50'
- : '-neutral-800/80 bg-[var(--surface)]/60 hover:-neutral-700 hover:bg-[var(--surface)]/90'
+ ?'-slate-200 bg-white hover:-indigo-300 hover:bg-[var(--bg)]/50'
+ :'-neutral-800/80 bg-[var(--surface)]/60 hover:-neutral-700 hover:bg-[var(--surface)]/90'
  }`}
  >
  {/* Simulated miniature video thumbnail track design */}
  <div className={`w-full h-20 rounded-[var(--r-s)] relative flex flex-col justify-between p-2 overflow-hidden ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -bg-[var(--surface)]'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}>
  {/* Waveforms illustration background */}
  <div className="absolute inset-x-0 bottom-0 h-8 flex items-end gap-[2px] opacity-25 px-1">
  {[35, 45, 60, 20, 80, 50, 95, 30, 45, 75, 25, 40, 60, 80, 25, 50, 70, 90, 40, 20, 45, 80, 60].map((h, i) => (
- <div key={i} className={`flex-1 ${isStitchLight ? 'bg-indigo-600' : 'bg-[var(--acc)]'}`} style={{ height: `${isSelected ? h : h * 0.7}%` }} />
+ <div key={i} className={`flex-1 ${isStitchLight ?'bg-indigo-600' :'bg-[var(--acc)]'}`} style={{ height: `${isSelected ? h : h * 0.7}%` }} />
  ))}
  </div>
  <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded self-start z-10 ${
- isStitchLight ? 'bg-indigo-600 text-white' : 'bg-[var(--acc)] text-[var(--acc-ink)]'
+ isStitchLight ?'bg-indigo-600 text-white' :'bg-[var(--acc)] text-[var(--acc-ink)]'
  }`}>
  {clip.range}
  </span>
@@ -2142,7 +2128,7 @@ export default function ReelsCenter({
 
  <div className="space-y-1.5">
  <h4 className={`text-[11px] font-bold font-sans line-clamp-1 flex items-center gap-1 transition-colors ${
- isStitchLight ? 'text-[var(--ink)] group-hover:text-indigo-600' : 'text-[var(--sunken)] group-hover:text-[var(--acc)]'
+ isStitchLight ?'text-[var(--ink)] group-hover:text-indigo-600' :'text-[var(--sunken)] group-hover:text-[var(--acc)]'
  }`}>
  {clip.title}
  </h4>
@@ -2152,16 +2138,16 @@ export default function ReelsCenter({
  </div>
 
  {/* Virality score meter */}
- <div className={`space-y-1 pt-1.5 ${isStitchLight ? '-slate-100' : '-bg-[var(--surface)]'}`}>
+ <div className={`space-y-1 pt-1.5 ${isStitchLight ?'-slate-100' :'-bg-[var(--surface)]'}`}>
  <div className="flex justify-between items-center text-[9px] font-mono text-[var(--ink-2)]">
  <span className="flex items-center gap-1">
- <Flame className={`w-3 h-3 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--accent)]'}`} /> Virality Score:
+ <Flame className={`w-3 h-3 ${isStitchLight ?'text-indigo-600' :'text-[var(--accent)]'}`} /> Virality Score:
  </span>
- <span className={`font-bold ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>{clip.virality}%</span>
+ <span className={`font-bold ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>{clip.virality}%</span>
  </div>
- <div className={`w-full h-1 rounded-full overflow-hidden ${isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)]'}`}>
+ <div className={`w-full h-1 rounded-full overflow-hidden ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
  <div 
- className={`h-full ${isStitchLight ? 'bg-indigo-600' : 'bg-[var(--acc)]'}`} 
+ className={`h-full ${isStitchLight ?'bg-indigo-600' :'bg-[var(--acc)]'}`} 
  style={{ width: `${clip.virality}%` }}
  />
  </div>
@@ -2176,8 +2162,8 @@ export default function ReelsCenter({
  {/* 3. Editor & Scheduler Form for Selected Highlight */}
  {highlights.length > 0 && (
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-2 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>
+ <div className={` pb-2 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
+ <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Calendar className="w-4 h-4" /> Personalizar Publicación y Programar en Calendario
  </h3>
  <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
@@ -2193,13 +2179,13 @@ export default function ReelsCenter({
  
  {/* Selected Clip summary header */}
  <div className={`p-3 rounded-[var(--r-m)] flex justify-between items-center gap-3 ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -bg-[var(--surface)]'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}>
  <div className="space-y-0.5 flex-1">
  <span className="text-[9px] font-mono text-[var(--ink-2)] uppercase">TÍTULO DEL CORTE (EDITABLE):</span>
  <input
  type="text"
- value={highlights[selectedHighlightIndex]?.title || ''}
+ value={highlights[selectedHighlightIndex]?.title ||''}
  onChange={(e) => {
  const val = e.target.value;
  setHighlights(prev => prev.map((clip, idx) => 
@@ -2212,8 +2198,8 @@ export default function ReelsCenter({
  </div>
  <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded shrink-0 ${
  isStitchLight 
- ? 'bg-indigo-50 -indigo-100 text-indigo-600' 
- : 'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
+ ?'bg-indigo-50 text-indigo-600' 
+ :'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  {highlights[selectedHighlightIndex]?.range}
  </span>
@@ -2221,11 +2207,11 @@ export default function ReelsCenter({
 
  {/* AI Re-analyzer & User Notes Panel */}
  <div className={`p-3.5 rounded-[var(--r-l)] space-y-3 ${
- isStitchLight ? 'bg-indigo-50/40 -indigo-100' : 'bg-[var(--surface)]/90 -[var(--acc)]/20'
+ isStitchLight ?'bg-indigo-50/40' :'bg-[var(--surface)]/90 -[var(--acc)]/20'
  }`}>
  <div className="flex justify-between items-center flex-wrap gap-2">
  <div className="flex items-center gap-2">
- <Sparkles className={`w-4 h-4 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`} />
+ <Sparkles className={`w-4 h-4 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`} />
  <span className={`text-xs font-mono font-bold uppercase tracking-wider ${textTitle}`}>
  Reanalizar y Refinar Fragmento con IA
  </span>
@@ -2236,14 +2222,14 @@ export default function ReelsCenter({
  disabled={isReanalyzingClip}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
  isReanalyzingClip
- ? 'bg-neutral-800 text-[var(--ink-2)] cursor-not-allowed animate-pulse'
+ ?'bg-neutral-800 text-[var(--ink-2)] cursor-not-allowed animate-pulse'
  : isStitchLight
- ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
- : 'bg-[var(--acc)] hover:bg-[#e0b83f] text-[var(--surface)]'
+ ?'bg-indigo-600 hover:bg-indigo-700 text-white'
+ :'bg-[var(--acc)] hover:bg-[#e0b83f] text-[var(--surface)]'
  }`}
  >
- <Sparkles className={`w-3.5 h-3.5 ${isReanalyzingClip ? 'animate-spin' : ''}`} />
- {isReanalyzingClip ? 'Reanalizando...' : 'Reanalizar Corte con IA'}
+ <Sparkles className={`w-3.5 h-3.5 ${isReanalyzingClip ?'animate-spin' :''}`} />
+ {isReanalyzingClip ?'Reanalizando...' :'Reanalizar Corte con IA'}
  </button>
  </div>
 
@@ -2258,8 +2244,8 @@ export default function ReelsCenter({
  placeholder="Ej: En este tramo del 0:15 al 0:45 sólo toca el bajo Jon y la batería, no hay violín..."
  className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs font-sans focus:outline-none ${
  isStitchLight
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500'
- : 'bg-[var(--surface)] -neutral-800 text-[var(--sunken)] focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ :'bg-[var(--surface)] text-[var(--sunken)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2268,7 +2254,7 @@ export default function ReelsCenter({
  estrellas + comentario ya existente arriba, y decidir si se recuerda para siempre
  o es solo un ajuste puntual de este corte. */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
- <div className={`p-2 rounded-[var(--r-m)] space-y-1 ${isStitchLight ? 'bg-white -slate-200' : 'bg-[var(--surface)] -neutral-800'}`}>
+ <div className={`p-2 rounded-[var(--r-m)] space-y-1 ${isStitchLight ?'bg-white' :'bg-[var(--surface)]'}`}>
  <span className="text-[9px] font-mono uppercase tracking-wider text-[var(--ink-2)] block">Tono (versión anterior)</span>
  <div className="flex items-center gap-0.5">
  {[1, 2, 3, 4, 5].map((star) => (
@@ -2276,7 +2262,7 @@ export default function ReelsCenter({
  key={`clip-tone-${star}`}
  type="button"
  onClick={() => setClipToneRating(clipToneRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${clipToneRating >= star ? 'text-[var(--acc)]' : 'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${clipToneRating >= star ?'text-[var(--acc)]' :'text-neutral-700 hover:text-neutral-500'}`}
  title={`Valorar el tono: ${star}/5`}
  >
  <Star className="w-3.5 h-3.5 fill-current" />
@@ -2284,7 +2270,7 @@ export default function ReelsCenter({
  ))}
  </div>
  </div>
- <div className={`p-2 rounded-[var(--r-m)] space-y-1 ${isStitchLight ? 'bg-white -slate-200' : 'bg-[var(--surface)] -neutral-800'}`}>
+ <div className={`p-2 rounded-[var(--r-m)] space-y-1 ${isStitchLight ?'bg-white' :'bg-[var(--surface)]'}`}>
  <span className="text-[9px] font-mono uppercase tracking-wider text-[var(--ink-2)] block">Contenido (versión anterior)</span>
  <div className="flex items-center gap-0.5">
  {[1, 2, 3, 4, 5].map((star) => (
@@ -2292,7 +2278,7 @@ export default function ReelsCenter({
  key={`clip-content-${star}`}
  type="button"
  onClick={() => setClipContentRating(clipContentRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${clipContentRating >= star ? 'text-[var(--acc)]' : 'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${clipContentRating >= star ?'text-[var(--acc)]' :'text-neutral-700 hover:text-neutral-500'}`}
  title={`Valorar el contenido: ${star}/5`}
  >
  <Star className="w-3.5 h-3.5 fill-current" />
@@ -2308,9 +2294,9 @@ export default function ReelsCenter({
  type="button"
  onClick={() => setClipFeedbackScope('este_reel')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
- clipFeedbackScope === 'este_reel'
- ? 'bg-neutral-700 text-white font-bold'
- : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+ clipFeedbackScope ==='este_reel'
+ ?'bg-neutral-700 text-white font-bold'
+ :'bg-transparent text-neutral-500 hover:text-neutral-300'
  }`}
  >
  Solo este corte
@@ -2319,9 +2305,9 @@ export default function ReelsCenter({
  type="button"
  onClick={() => setClipFeedbackScope('global')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all flex items-center gap-1 ${
- clipFeedbackScope === 'global'
- ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
- : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+ clipFeedbackScope ==='global'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
+ :'bg-transparent text-neutral-500 hover:text-neutral-300'
  }`}
  title="La IA recordará esta corrección también para futuros Reels de la banda"
  >
@@ -2338,7 +2324,7 @@ export default function ReelsCenter({
 
  {highlights[selectedHighlightIndex]?.reason && (
  <div className={`p-2.5 rounded-[var(--r-m)] text-[11px] font-sans leading-relaxed ${
- isStitchLight ? 'bg-white/80 -indigo-100 text-[var(--ink-2)]' : 'bg-black/40 -neutral-800 text-neutral-300'
+ isStitchLight ?'bg-white/80 text-[var(--ink-2)]' :'bg-black/40 text-neutral-300'
  }`}>
  <span className="font-mono text-[9px] uppercase font-bold text-[var(--ink-2)] block mb-0.5">Diagnóstico IA del Fragmento:</span>
  <p>{highlights[selectedHighlightIndex]?.reason}</p>
@@ -2356,8 +2342,8 @@ export default function ReelsCenter({
  onChange={(e) => setEditedCopy(e.target.value)}
  className={`w-full rounded-[var(--r-m)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${
  isStitchLight 
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500' 
- : 'bg-[var(--surface)] -neutral-800 text-[var(--sunken)] focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500' 
+ :'bg-[var(--surface)] text-[var(--sunken)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2366,13 +2352,13 @@ export default function ReelsCenter({
  {optimalTime && (
  <div className={`p-3 rounded-[var(--r-m)] flex gap-3 items-start text-[11px] leading-relaxed ${
  isStitchLight 
- ? 'bg-indigo-50/30 -indigo-100 text-[var(--ink-2)]' 
- : 'bg-[var(--acc)]/5 -[var(--acc)]/15 text-neutral-300'
+ ?'bg-indigo-50/30 text-[var(--ink-2)]' 
+ :'bg-[var(--acc)]/5 -[var(--acc)]/15 text-neutral-300'
  }`}>
- <Clock className={`w-4.5 h-4.5 mt-0.5 shrink-0 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`} />
+ <Clock className={`w-4.5 h-4.5 mt-0.5 shrink-0 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`} />
  <div className="space-y-0.5">
- <span className={`font-mono text-[9px] uppercase font-bold tracking-wider ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>¿Por qué este horario?</span>
- <p className={`font-sans ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}>{optimalTime.reason}</p>
+ <span className={`font-mono text-[9px] uppercase font-bold tracking-wider ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>¿Por qué este horario?</span>
+ <p className={`font-sans ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>{optimalTime.reason}</p>
  </div>
  </div>
  )}
@@ -2386,27 +2372,27 @@ export default function ReelsCenter({
  <span className="block text-[10px] uppercase font-mono text-[var(--ink-2)]">Plataforma Objetivo</span>
  <div className="grid grid-cols-2 gap-2">
  {[
- { id: 'Instagram', name: 'Instagram Reels' },
- { id: 'TikTok', name: 'TikTok Video' },
- { id: 'YouTube', name: 'YouTube Shorts' },
- { id: 'Facebook', name: 'Facebook' }
+ { id:'Instagram', name:'Instagram Reels' },
+ { id:'TikTok', name:'TikTok Video' },
+ { id:'YouTube', name:'YouTube Shorts' },
+ { id:'Facebook', name:'Facebook' }
  ].map((plat) => (
  <button
  type="button"
  key={plat.id}
  onClick={() => {
- const nuevaPlataforma = plat.id as 'Instagram' | 'TikTok' | 'YouTube' | 'Facebook';
+ const nuevaPlataforma = plat.id as'Instagram' |'TikTok' |'YouTube' |'Facebook';
  setSelectedPlatform(nuevaPlataforma);
  setEditedCopy(copyForPlatform(highlights[selectedHighlightIndex], nuevaPlataforma));
  }}
  className={`py-2 px-2 rounded-[var(--r-s)] text-[10px] font-mono text-center transition-all cursor-pointer ${
  selectedPlatform === plat.id
  ? isStitchLight
- ? 'bg-indigo-600 -indigo-600 text-white font-black'
- : 'bg-[var(--acc)] -[var(--acc)] text-[var(--acc-ink)] font-black'
+ ?'bg-indigo-600 text-white font-black'
+ :'bg-[var(--acc)] -[var(--acc)] text-[var(--acc-ink)] font-black'
  : isStitchLight
- ? '-slate-200 hover:-indigo-200 bg-white text-[var(--ink-2)]'
- : '-neutral-800 hover:-neutral-700 bg-[var(--surface)]/60 text-[var(--ink-2)]'
+ ?'-slate-200 hover:-indigo-200 bg-white text-[var(--ink-2)]'
+ :'-neutral-800 hover:-neutral-700 bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}
  >
  {plat.name}
@@ -2425,8 +2411,8 @@ export default function ReelsCenter({
  onChange={(e) => setScheduledDate(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-mono focus:outline-none ${
  isStitchLight 
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500' 
- : 'bg-[var(--surface)] -neutral-800 focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500' 
+ :'bg-[var(--surface)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2438,8 +2424,8 @@ export default function ReelsCenter({
  onChange={(e) => setScheduledTime(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-mono focus:outline-none ${
  isStitchLight 
- ? 'bg-white -slate-200 text-[var(--ink)] focus:-indigo-500' 
- : 'bg-[var(--surface)] -neutral-800 focus:-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:-indigo-500' 
+ :'bg-[var(--surface)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2452,10 +2438,10 @@ export default function ReelsCenter({
  disabled={isScheduling}
  className={`w-full py-3.5 rounded-[var(--r-m)] font-mono text-xs font-bold tracking-widest uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isScheduling
- ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
+ ?'bg-neutral-800 text-neutral-500 cursor-not-allowed'
  : isStitchLight
- ? 'bg-indigo-600 hover:bg-indigo-700 text-white font-black shadow-md'
- : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-black shadow-lg shadow-[var(--acc)]/15'
+ ?'bg-indigo-600 hover:bg-indigo-700 text-white font-black shadow-md'
+ :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-black shadow-lg shadow-[var(--acc)]/15'
  }`}
  >
  {isScheduling ? (
@@ -2506,9 +2492,9 @@ export default function ReelsCenter({
 
  {/* 4. Calendario de Publicaciones de la Banda List */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-2 flex justify-between items-center ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
+ <div className={` pb-2 flex justify-between items-center ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <div>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>
+ <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Calendar className="w-4 h-4" /> Calendario de Publicaciones de la Banda ({posts.length})
  </h3>
  <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
@@ -2516,7 +2502,7 @@ export default function ReelsCenter({
  </p>
  </div>
  <span className={`text-[8px] font-mono px-2 py-0.5 rounded uppercase ${
- isStitchLight ? '-slate-200 text-[var(--ink-3)] bg-[var(--bg)]' : '-neutral-800 text-neutral-500'
+ isStitchLight ?'-slate-200 text-[var(--ink-3)] bg-[var(--bg)]' :'-neutral-800 text-neutral-500'
  }`}>
  Live Database
  </span>
@@ -2533,16 +2519,15 @@ export default function ReelsCenter({
  key={post.id} 
  className={` rounded-[var(--r-m)] p-3 flex flex-col md:flex-row justify-between gap-3 items-stretch transition-all ${
  isStitchLight 
- ? 'bg-[var(--bg)]/50 -slate-200 hover:-indigo-300' 
- : 'bg-[var(--surface)]/60 -bg-[var(--surface)] hover:-neutral-800'
+ ?'bg-[var(--bg)]/50 hover:-indigo-300' 
+ :'bg-[var(--surface)]/60 hover:-neutral-800'
  }`}
  >
  <div className="space-y-2 flex-1">
  <div className="flex items-center gap-2 flex-wrap">
  <span className={`text-[8px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
- post.plataforma === 'Instagram' ? 'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma === 'TikTok' ? 'bg-[var(--acc)]/10 text-[var(--acc)]' :
- 'bg-neutral-800 text-neutral-300'
+ post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-neutral-800 text-neutral-300'
  }`}>
  {post.plataforma}
  </span>
@@ -2553,20 +2538,20 @@ export default function ReelsCenter({
  {post.estado}
  </span>
  </div>
- <p className={`text-xs line-clamp-3 leading-relaxed font-sans font-medium ${isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]'}`}>
+ <p className={`text-xs line-clamp-3 leading-relaxed font-sans font-medium ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`}>
  {post.contenido}
  </p>
  </div>
  
  <div className={`flex md:flex-col justify-end items-end gap-2 md: md: pt-2.5 md:pt-0 md:pl-4 shrink-0 ${
- isStitchLight ? '-slate-200' : '-bg-[var(--surface)]'
+ isStitchLight ?'-slate-200' :'-bg-[var(--surface)]'
  }`}>
- <span className="text-[8px] font-mono text-neutral-500">Responsable: {post.responsable || 'Community Manager'}</span>
+ <span className="text-[8px] font-mono text-neutral-500">Responsable: {post.responsable ||'Community Manager'}</span>
  <button
  id={`delete-post-${post.id}`}
  onClick={async () => {
  if (confirm(`¿Seguro que deseas eliminar esta publicación del calendario de ${nombreBanda}?`)) {
- await onUpdatePost(post.id, { estado: 'borrador' }); // or we can handle direct deletion or mock update
+ await onUpdatePost(post.id, { estado:'borrador' }); // or we can handle direct deletion or mock update
  alert('Publicación desactivada/movida a borrador.');
  }
  }}
@@ -2591,21 +2576,21 @@ export default function ReelsCenter({
  <div className={`xl:col-span-4 rounded-[var(--r-m)] p-5 flex flex-col justify-between select-none ${colors.card}`}>
  
  <div className="space-y-3">
- <div className={` pb-2 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
- <h3 className={`text-xs font-mono uppercase tracking-widest ${isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}`}>Vista Previa en Redes</h3>
+ <div className={` pb-2 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
+ <h3 className={`text-xs font-mono uppercase tracking-widest ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>Vista Previa en Redes</h3>
  <p className="text-[9px] text-neutral-500 font-mono mt-0.5">Visualiza cómo se verá la copia y el contenido en directo</p>
  </div>
 
  {/* Smart Phone Shell Frame */}
  <div className={`mx-auto w-[240px] h-[450px] rounded-[30px] -[6px] relative overflow-hidden flex flex-col justify-between ${
- isStitchLight ? '-slate-300 bg-white shadow-xl' : '-neutral-800 bg-[var(--sunken)] shadow-[0_12px_40px_rgba(0,0,0,0.8)]'
+ isStitchLight ?'-slate-300 bg-white shadow-xl' :'-neutral-800 bg-[var(--sunken)] shadow-[0_12px_40px_rgba(0,0,0,0.8)]'
  }`}>
  
  {/* Speaker & camera notch mockup */}
  <div className={`absolute top-2 left-1/2 -translate-x-1/2 w-20 h-4 rounded-full z-20 flex items-center justify-center ${
- isStitchLight ? 'bg-[var(--sunken)]' : 'bg-neutral-800'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-neutral-800'
  }`}>
- <span className={`w-2 h-2 rounded-full ${isStitchLight ? 'bg-slate-300' : 'bg-[var(--surface)]'}`} />
+ <span className={`w-2 h-2 rounded-full ${isStitchLight ?'bg-slate-300' :'bg-[var(--surface)]'}`} />
  </div>
 
  {/* Dynamic Video Mockup Content with Analog Synth pattern as background */}
@@ -2615,14 +2600,14 @@ export default function ReelsCenter({
  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[var(--sunken)]/90 pointer-events-none z-0" />
  
  {/* Real Media Player Background or Fallback Wave Illustration */}
- {activeTab === 'analyzer' && inputType === 'youtube' && getYouTubeId(youtubeUrl) && !isExpandedPreview ? (
+ {activeTab ==='analyzer' && inputType ==='youtube' && getYouTubeId(youtubeUrl) && !isExpandedPreview ? (
  (() => {
  const { start, end } = parseRangeTimes(phoneDuration);
  if (renderedClipUrl) {
  return (
  <div className="absolute inset-0 z-[-1] overflow-hidden bg-black">
  <video
- key={`mini-rendered-${renderedClipUrl}-${isPreviewMuted ? 'muted' : 'unmuted'}`}
+ key={`mini-rendered-${renderedClipUrl}-${isPreviewMuted ?'muted' :'unmuted'}`}
  src={renderedClipUrl}
  autoPlay
  muted={isPreviewMuted}
@@ -2634,7 +2619,7 @@ export default function ReelsCenter({
  const cur = video.currentTime;
  if (subtitleCues && subtitleCues.length > 0) {
  const activeCue = subtitleCues.find(cue => cur >= cue.start && cur <= cue.end);
- setCurrentSubtitleText(activeCue ? activeCue.text : '');
+ setCurrentSubtitleText(activeCue ? activeCue.text :'');
  }
  }}
  >
@@ -2664,7 +2649,7 @@ export default function ReelsCenter({
  return (
  <div className="absolute inset-0 z-[-1] overflow-hidden bg-black">
  <iframe
- key={`${getYouTubeId(youtubeUrl)}-${start}-${end}-${isPreviewMuted ? 'muted' : 'unmuted'}-${ytLoopCount}`}
+ key={`${getYouTubeId(youtubeUrl)}-${start}-${end}-${isPreviewMuted ?'muted' :'unmuted'}-${ytLoopCount}`}
  src={`https://www.youtube.com/embed/${getYouTubeId(youtubeUrl)}?start=${start}&end=${end}&autoplay=1&mute=${isPreviewMuted ? 1 : 0}&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(youtubeUrl)}&showinfo=0&rel=0&iv_load_policy=3`}
  className="absolute w-[280%] h-full left-1/2 -translate-x-1/2 object-cover pointer-events-none opacity-80"
  allow="autoplay; encrypted-media"
@@ -2674,10 +2659,10 @@ export default function ReelsCenter({
  </div>
  );
  })()
- ) : activeTab === 'analyzer' && inputType === 'file' && localVideoUrl && !isExpandedPreview ? (
+ ) : activeTab ==='analyzer' && inputType ==='file' && localVideoUrl && !isExpandedPreview ? (
  <div className="absolute inset-0 z-[-1] overflow-hidden bg-black">
  <video
- key={`${localVideoUrl}-${isPreviewMuted ? 'muted' : 'unmuted'}`}
+ key={`${localVideoUrl}-${isPreviewMuted ?'muted' :'unmuted'}`}
  src={localVideoUrl}
  autoPlay
  muted={isPreviewMuted}
@@ -2711,24 +2696,24 @@ export default function ReelsCenter({
  /* Vintage Audio Wave / Synth Illustration behind */
  <div className="absolute inset-0 bg-cover bg-center opacity-35 z-[-1] flex flex-col items-center justify-center p-4">
  <div className={`w-full h-full -dashed rounded-[var(--r-m)] flex flex-col items-center justify-center gap-3 ${
- isStitchLight ? '-indigo-100' : '-neutral-700/30'
+ isStitchLight ?'-indigo-100' :'-neutral-700/30'
  }`}>
  <div className="flex gap-4">
  <div className={`w-10 h-10 rounded-full -dashed flex items-center justify-center text-[8px] font-mono ${
- isStitchLight ? '-indigo-300 text-indigo-400' : '-[var(--acc)]/50 text-[var(--acc)]/70'
+ isStitchLight ?'-indigo-300 text-indigo-400' :'-[var(--acc)]/50 text-[var(--acc)]/70'
  }`}>VOL</div>
  <div className={`w-10 h-10 rounded-full -dashed flex items-center justify-center text-[8px] font-mono ${
- isStitchLight ? '-emerald-300 text-emerald-400' : '-[var(--accent)]/50 text-[var(--accent)]/70'
+ isStitchLight ?'-emerald-300 text-emerald-400' :'-[var(--accent)]/50 text-[var(--accent)]/70'
  }`}>SKA</div>
  </div>
  <span className={`text-[9px] font-mono uppercase tracking-widest text-center animate-pulse ${
- isStitchLight ? 'text-indigo-400' : 'text-[var(--ink-2)]'
+ isStitchLight ?'text-indigo-400' :'text-[var(--ink-2)]'
  }`}>
- {activeTab === 'analyzer' && highlights.length > 0 ? '[ HIGHLIGHT CLIP ACTIVE ]' : '[ Balkan Analog Synth ]'}
+ {activeTab ==='analyzer' && highlights.length > 0 ?'[ HIGHLIGHT CLIP ACTIVE ]' :'[ Balkan Analog Synth ]'}
  </span>
  {phoneDuration && (
  <span className={`text-[10px] font-mono py-0.5 px-2 rounded-full font-bold ${
- isStitchLight ? 'bg-indigo-50 -indigo-100 text-indigo-600' : 'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
+ isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  {phoneDuration}
  </span>
@@ -2740,9 +2725,9 @@ export default function ReelsCenter({
  {/* Top Status Header */}
  <div className="flex justify-between items-center z-10">
  <span className={`text-[9px] font-mono tracking-wider font-bold ${
- isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'
+ isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'
  }`}>
- {activeTab === 'analyzer' ? 'AI ANALYZER REEL' : 'REELS PREVIEW'}
+ {activeTab ==='analyzer' ?'AI ANALYZER REEL' :'REELS PREVIEW'}
  </span>
  <div className="flex gap-1">
  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
@@ -2751,7 +2736,7 @@ export default function ReelsCenter({
  </div>
 
  {/* Floating Action Badges Column */}
- {activeTab === 'analyzer' && ((inputType === 'youtube' && getYouTubeId(youtubeUrl)) || (inputType === 'file' && localVideoUrl)) && (
+ {activeTab ==='analyzer' && ((inputType ==='youtube' && getYouTubeId(youtubeUrl)) || (inputType ==='file' && localVideoUrl)) && (
  <div className="absolute top-12 right-3 z-30 flex flex-col gap-2">
  {/* Sound Toggle */}
  <button
@@ -2787,15 +2772,15 @@ export default function ReelsCenter({
  )}
 
  {/* Play Button Overlay (hidden when playing a real video to keep the clip clean) */}
- {!(activeTab === 'analyzer' && (
- (inputType === 'youtube' && getYouTubeId(youtubeUrl)) ||
- (inputType === 'file' && localVideoUrl)
+ {!(activeTab ==='analyzer' && (
+ (inputType ==='youtube' && getYouTubeId(youtubeUrl)) ||
+ (inputType ==='file' && localVideoUrl)
  )) && (
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
  <div className={`w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center text-[var(--acc)] shadow-lg animate-pulse ${
- isStitchLight ? 'bg-white/40 -slate-200' : 'bg-white/10 -white/20'
+ isStitchLight ?'bg-white/40' :'bg-white/10 -white/20'
  }`}>
- <Play className={`w-6 h-6 ml-0.5 ${isStitchLight ? 'fill-indigo-600 text-indigo-600' : 'fill-[var(--acc)] text-[var(--acc)]'}`} />
+ <Play className={`w-6 h-6 ml-0.5 ${isStitchLight ?'fill-indigo-600 text-indigo-600' :'fill-[var(--acc)] text-[var(--acc)]'}`} />
  </div>
  </div>
  )}
@@ -2826,11 +2811,11 @@ export default function ReelsCenter({
  <div className="z-10 space-y-2 mt-auto">
  <div className="flex items-center gap-1.5">
  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-mono font-bold ${
- isStitchLight ? 'bg-indigo-50 -indigo-200 text-indigo-600' : 'bg-[var(--acc)]/20 -[var(--acc)] text-[var(--acc)]'
+ isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--acc)]/20 -[var(--acc)] text-[var(--acc)]'
  }`}>{nombreBanda.charAt(0).toUpperCase()}</span>
  <div>
  <span className="text-[9px] font-bold text-white block truncate max-w-[90px]">{instagramHandle || nombreBanda}</span>
- <span className={`text-[7px] font-mono block ${isStitchLight ? 'text-indigo-200' : 'text-[var(--accent)]'}`}>{nombreBanda}</span>
+ <span className={`text-[7px] font-mono block ${isStitchLight ?'text-indigo-200' :'text-[var(--accent)]'}`}>{nombreBanda}</span>
  </div>
  </div>
 
@@ -2846,22 +2831,22 @@ export default function ReelsCenter({
  </p>
 
  {/* Slim, elegant progress timeline of the highlight clip */}
- {activeTab === 'analyzer' && highlights[selectedHighlightIndex] && (() => {
+ {activeTab ==='analyzer' && highlights[selectedHighlightIndex] && (() => {
  const { start, end, duration } = parseRangeTimes(highlights[selectedHighlightIndex]?.range);
  if (duration > 0) {
  const pct = (simulatedTime / duration) * 100;
  return (
  <div className={`p-1.5 rounded-[var(--r-m)] space-y-1 ${
- isStitchLight ? 'bg-white/90 -indigo-200/40 text-neutral-800' : 'bg-black/75 -white/10 text-[var(--sunken)]'
+ isStitchLight ?'bg-white/90 -indigo-200/40 text-neutral-800' :'bg-black/75 -white/10 text-[var(--sunken)]'
  }`}>
  <div className="flex justify-between items-center text-[7.5px] font-mono font-bold">
- <span className={isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'}>⏱️ REC CORTE</span>
+ <span className={isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}>⏱️ REC CORTE</span>
  <span className="font-mono">{formatTime(start + simulatedTime)} / {formatTime(end)}</span>
  </div>
  <div className="relative w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
  <div 
  className={`absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-linear ${
- isStitchLight ? 'bg-indigo-600' : 'bg-gradient-to-r from-amber-500 to-[var(--acc)]'
+ isStitchLight ?'bg-indigo-600' :'bg-gradient-to-r from-amber-500 to-[var(--acc)]'
  }`}
  style={{ width: `${pct}%` }}
  />
@@ -2879,7 +2864,7 @@ export default function ReelsCenter({
 
  {/* Track label scrolling simulation */}
  <div className={`flex items-center gap-1 text-[8px] font-mono py-1 px-1.5 rounded-full max-w-[140px] truncate ${
- isStitchLight ? 'text-indigo-400 bg-white/10 -indigo-200/20' : 'text-[var(--acc)] bg-black/40 -neutral-800/50'
+ isStitchLight ?'text-indigo-400 bg-white/10 -indigo-200/20' :'text-[var(--acc)] bg-black/40 -neutral-800/50'
  }`}>
  <Music className="w-2.5 h-2.5 shrink-0" />
  <span className="animate-marquee whitespace-nowrap">{videoMeta?.title || `Audio original · ${nombreBanda}`}</span>
@@ -2888,7 +2873,7 @@ export default function ReelsCenter({
  </div>
 
  {/* Simulated Upload Status Queue */}
- <div className={`space-y-2 pt-4 mt-4 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
+ <div className={`space-y-2 pt-4 mt-4 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <div className="flex justify-between items-center">
  <span className="text-[9px] font-mono text-[var(--ink-2)]">Canal de Emisión</span>
  <button
@@ -2896,7 +2881,7 @@ export default function ReelsCenter({
  onClick={handleSimulateUpload}
  disabled={uploadProgress !== null}
  className={`text-[9px] font-mono hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-40 bg-transparent -none ${
- isStitchLight ? 'text-indigo-600' : 'text-[var(--acc)]'
+ isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'
  }`}
  >
  <Upload className="w-3 h-3" /> Subir Directo
@@ -2909,9 +2894,9 @@ export default function ReelsCenter({
  <span>Transmitiendo a APIs de Redes Sociales...</span>
  <span>{uploadProgress}%</span>
  </div>
- <div className={`w-full h-1.5 rounded-full overflow-hidden ${isStitchLight ? 'bg-[var(--sunken)] -slate-300' : 'bg-[var(--surface)] -bg-[var(--surface)]'}`}>
+ <div className={`w-full h-1.5 rounded-full overflow-hidden ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
  <div 
- className={`h-full transition-all duration-200 ${isStitchLight ? 'bg-indigo-600' : 'bg-[var(--acc)]'}`} 
+ className={`h-full transition-all duration-200 ${isStitchLight ?'bg-indigo-600' :'bg-[var(--acc)]'}`} 
  style={{ width: `${uploadProgress}%` }}
  />
  </div>
@@ -2948,7 +2933,7 @@ export default function ReelsCenter({
  e.stopPropagation();
  setIsExpandedPreview(false);
  }}
- className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-neutral-800 -neutral-700 text-neutral-300 hover:text-white transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center backdrop-blur-sm"
+ className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-neutral-800 text-neutral-300 hover:text-white transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center backdrop-blur-sm"
  title="Cerrar modo cine (ESC o Click fuera)"
  >
  <X className="w-6 h-6" />
@@ -2957,7 +2942,7 @@ export default function ReelsCenter({
  {/* Mobile sticky top header bar */}
  <div 
  onClick={(e) => e.stopPropagation()}
- className="w-full max-w-6xl mb-2 flex items-center justify-between p-3 rounded-[var(--r-l)] bg-[var(--surface)] -neutral-800 lg:hidden shrink-0 shadow-lg"
+ className="w-full max-w-6xl mb-2 flex items-center justify-between p-3 rounded-[var(--r-l)] bg-[var(--surface)] lg:hidden shrink-0 shadow-lg"
  >
  <div className="flex items-center gap-2">
  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -2965,7 +2950,7 @@ export default function ReelsCenter({
  </div>
  <button
  onClick={() => setIsExpandedPreview(false)}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 text-amber-400 hover:text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer -neutral-700"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 text-amber-400 hover:text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer"
  >
  <X className="w-4 h-4" /> <span>Cerrar</span>
  </button>
@@ -2973,11 +2958,11 @@ export default function ReelsCenter({
 
  <div 
  onClick={(e) => e.stopPropagation()}
- className="relative w-full max-w-6xl bg-[var(--surface)] -neutral-800 rounded-3xl shadow-2xl flex flex-col lg:flex-row h-auto lg:h-[90vh] lg:max-h-[90vh] overflow-visible lg:overflow-hidden"
+ className="relative w-full max-w-6xl bg-[var(--surface)] rounded-3xl shadow-2xl flex flex-col lg:flex-row h-auto lg:h-[90vh] lg:max-h-[90vh] overflow-visible lg:overflow-hidden"
  >
  
  {/* Left Column: Huge 9:16 vertical smartphone screen mockup */}
- <div className="w-full lg:w-[460px] bg-[var(--surface)]/80 p-6 flex flex-col items-center justify-center lg: lg: -neutral-800 relative select-none shrink-0">
+ <div className="w-full lg:w-[460px] bg-[var(--surface)]/80 p-6 flex flex-col items-center justify-center lg: lg: relative select-none shrink-0">
  <div className="absolute top-4 left-6 flex items-center gap-2">
  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
  <span className="text-[10px] font-mono text-[var(--ink-2)] font-bold uppercase tracking-wider">MODO CINE ACTIVO</span>
@@ -2987,7 +2972,7 @@ export default function ReelsCenter({
  <button
  id="btn-close-theater-mobile"
  onClick={() => setIsExpandedPreview(false)}
- className="absolute top-3 right-4 z-50 p-2.5 rounded-full bg-neutral-800/80 hover:bg-neutral-800 -neutral-700 text-[var(--ink-2)] hover:text-white transition-all cursor-pointer lg:hidden"
+ className="absolute top-3 right-4 z-50 p-2.5 rounded-full bg-neutral-800/80 hover:bg-neutral-800 text-[var(--ink-2)] hover:text-white transition-all cursor-pointer lg:hidden"
  title="Cerrar modo cine"
  >
  <X className="w-5 h-5" />
@@ -3002,14 +2987,14 @@ export default function ReelsCenter({
  </div>
 
  {/* Video / Player */}
- {inputType === 'youtube' && getYouTubeId(youtubeUrl) ? (
+ {inputType ==='youtube' && getYouTubeId(youtubeUrl) ? (
  (() => {
  const { start, end } = parseRangeTimes(phoneDuration);
  if (renderedClipUrl) {
  return (
  <div className="absolute inset-0 z-0 overflow-hidden bg-black">
  <video
- key={`expanded-rendered-${renderedClipUrl}-${isPreviewMuted ? 'muted' : 'unmuted'}`}
+ key={`expanded-rendered-${renderedClipUrl}-${isPreviewMuted ?'muted' :'unmuted'}`}
  src={renderedClipUrl}
  autoPlay
  muted={isPreviewMuted}
@@ -3022,7 +3007,7 @@ export default function ReelsCenter({
  const cur = video.currentTime;
  if (subtitleCues && subtitleCues.length > 0) {
  const activeCue = subtitleCues.find(cue => cur >= cue.start && cur <= cue.end);
- setCurrentSubtitleText(activeCue ? activeCue.text : '');
+ setCurrentSubtitleText(activeCue ? activeCue.text :'');
  }
  }}
  >
@@ -3052,7 +3037,7 @@ export default function ReelsCenter({
  return (
  <div className="absolute inset-0 z-0 overflow-hidden bg-black">
  <iframe
- key={`expanded-yt-${getYouTubeId(youtubeUrl)}-${start}-${end}-${isPreviewMuted ? 'muted' : 'unmuted'}-${ytLoopCount}`}
+ key={`expanded-yt-${getYouTubeId(youtubeUrl)}-${start}-${end}-${isPreviewMuted ?'muted' :'unmuted'}-${ytLoopCount}`}
  src={`https://www.youtube.com/embed/${getYouTubeId(youtubeUrl)}?start=${start}&end=${end}&autoplay=1&mute=${isPreviewMuted ? 1 : 0}&controls=1&modestbranding=1&loop=1&playlist=${getYouTubeId(youtubeUrl)}&showinfo=0&rel=0&iv_load_policy=3`}
  className="absolute w-[280%] h-full left-1/2 -translate-x-1/2 object-cover"
  allow="autoplay; encrypted-media; picture-in-picture"
@@ -3062,10 +3047,10 @@ export default function ReelsCenter({
  </div>
  );
  })()
- ) : inputType === 'file' && localVideoUrl ? (
+ ) : inputType ==='file' && localVideoUrl ? (
  <div className="absolute inset-0 z-0 overflow-hidden bg-black">
  <video
- key={`expanded-file-${localVideoUrl}-${isPreviewMuted ? 'muted' : 'unmuted'}`}
+ key={`expanded-file-${localVideoUrl}-${isPreviewMuted ?'muted' :'unmuted'}`}
  src={localVideoUrl}
  autoPlay
  muted={isPreviewMuted}
@@ -3141,7 +3126,7 @@ export default function ReelsCenter({
  )}
 
  <p className="text-[9px] text-[var(--sunken)] line-clamp-3 leading-normal font-sans">
- {editedCopy || (highlights[selectedHighlightIndex]?.recommendedCopy || '')}
+ {editedCopy || (highlights[selectedHighlightIndex]?.recommendedCopy ||'')}
  </p>
 
  {/* Slim, elegant progress timeline of the highlight clip inside expanded modal */}
@@ -3185,7 +3170,7 @@ export default function ReelsCenter({
  <button
  id="expanded-mute-btn"
  onClick={() => setIsPreviewMuted(!isPreviewMuted)}
- className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] -neutral-800 text-neutral-300 hover:text-white hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all cursor-pointer shadow-lg select-none text-xs font-mono font-bold"
+ className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-neutral-300 hover:text-white hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all cursor-pointer shadow-lg select-none text-xs font-mono font-bold"
  >
  {isPreviewMuted ? (
  <>
@@ -3214,11 +3199,11 @@ export default function ReelsCenter({
  Highlight de Alto Impacto
  </span>
  <span className="px-2 py-0.5 rounded text-[9px] font-mono font-extrabold uppercase bg-sky-500/15 text-sky-400 -sky-500/20 tracking-wider">
- {highlights[selectedHighlightIndex]?.range || 'N/D'}
+ {highlights[selectedHighlightIndex]?.range ||'N/D'}
  </span>
  </div>
  <h2 className="text-xl md:text-2xl font-bold text-white font-sans tracking-tight">
- {highlights[selectedHighlightIndex]?.title || 'Clip sin título'}
+ {highlights[selectedHighlightIndex]?.title ||'Clip sin título'}
  </h2>
  </div>
  
@@ -3238,12 +3223,12 @@ export default function ReelsCenter({
  <div className="space-y-1">
  <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block">Por qué este momento es viral</span>
  <p className="text-xs text-neutral-300 leading-relaxed max-w-xl">
- {highlights[selectedHighlightIndex]?.description || 'La IA está analizando los ganchos emocionales de este intervalo.'}
+ {highlights[selectedHighlightIndex]?.description ||'La IA está analizando los ganchos emocionales de este intervalo.'}
  </p>
  </div>
  
  {/* Viral Progress Gauge */}
- <div className="flex items-center gap-3 shrink-0 bg-[var(--surface)] p-3 rounded-[var(--r-m)] -neutral-800">
+ <div className="flex items-center gap-3 shrink-0 bg-[var(--surface)] p-3 rounded-[var(--r-m)]">
  <div className="relative w-12 h-12 flex items-center justify-center">
  <svg className="w-full h-full transform -rotate-90">
  <circle
@@ -3298,7 +3283,7 @@ export default function ReelsCenter({
  const formatSecsToMMSS = (totalSecs: number) => {
  const mins = Math.floor(totalSecs / 60);
  const secs = totalSecs % 60;
- return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+ return `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
  };
 
  const newRange = `${formatSecsToMMSS(finalStart)}-${formatSecsToMMSS(finalEnd)}`;
@@ -3368,12 +3353,12 @@ export default function ReelsCenter({
  <div 
  id="interactive-timeline-container"
  onClick={handleTimelineClick}
- className="relative w-full h-10 bg-[var(--surface)] rounded-[var(--r-m)] overflow-hidden -neutral-800 flex items-center cursor-pointer group hover:-neutral-700 transition-colors touch-none"
+ className="relative w-full h-10 bg-[var(--surface)] rounded-[var(--r-m)] overflow-hidden flex items-center cursor-pointer group hover:-neutral-700 transition-colors touch-none"
  title="Haz click para ajustar el inicio o fin del recorte aquí"
  >
  {/* Visual highlight segment on the timeline */}
  <div 
- className="absolute top-1 bottom-1 bg-amber-500/20 -amber-500 rounded-md flex items-center justify-between px-2 shadow-[0_0_15px_rgba(245,158,11,0.15)] group-hover:bg-amber-500/25 transition-all touch-none"
+ className="absolute top-1 bottom-1 bg-amber-500/20 rounded-md flex items-center justify-between px-2 shadow-[0_0_15px_rgba(245,158,11,0.15)] group-hover:bg-amber-500/25 transition-all touch-none"
  style={{ left: `${startPct}%`, width: `${activeWidth}%` }}
  >
  {/* Left Grab Handle (Start) */}
@@ -3389,7 +3374,7 @@ export default function ReelsCenter({
  }}
  title="Arrastrar para ajustar el inicio (Izquierda)"
  >
- <div className="w-1.5 h-6 bg-amber-400 group-hover/lhandle:bg-white rounded-full -bg-[var(--surface)] transition-all shadow-md group-hover/lhandle:scale-y-110" />
+ <div className="w-1.5 h-6 bg-amber-400 group-hover/lhandle:bg-white rounded-full transition-all shadow-md group-hover/lhandle:scale-y-110" />
  </div>
 
  <span className="text-[8px] font-mono text-amber-300 font-extrabold tracking-tight select-none pointer-events-none pl-1">START</span>
@@ -3409,7 +3394,7 @@ export default function ReelsCenter({
  }}
  title="Arrastrar para ajustar el fin (Derecha)"
  >
- <div className="w-1.5 h-6 bg-amber-400 group-hover/rhandle:bg-white rounded-full -bg-[var(--surface)] transition-all shadow-md group-hover/rhandle:scale-y-110" />
+ <div className="w-1.5 h-6 bg-amber-400 group-hover/rhandle:bg-white rounded-full transition-all shadow-md group-hover/rhandle:scale-y-110" />
  </div>
  </div>
 
@@ -3419,7 +3404,7 @@ export default function ReelsCenter({
  style={{ left: `${playheadPct}%` }}
  >
  <div className="absolute -top-1 -left-1 w-2.5 h-2.5 rounded-full bg-red-500" />
- <div className="absolute top-1/2 -translate-y-1/2 left-2 bg-[var(--surface)] -neutral-800 rounded px-1.5 py-0.5 text-[8.5px] font-mono text-white whitespace-nowrap shadow-xl">
+ <div className="absolute top-1/2 -translate-y-1/2 left-2 bg-[var(--surface)] rounded px-1.5 py-0.5 text-[8.5px] font-mono text-white whitespace-nowrap shadow-xl">
  {formatTime(start + simulatedTime)}
  </div>
  </div>
@@ -3442,14 +3427,14 @@ export default function ReelsCenter({
  </div>
 
  {/* Controles Interactivos de Edición de Crop */}
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 -neutral-850">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
  {/* Ajustar Inicio (Izquierda) */}
  <div className="space-y-1.5 text-left">
  <div className="flex justify-between items-center">
  <span className="text-[10.5px] font-mono text-[var(--ink-2)] font-extrabold uppercase tracking-wider flex items-center gap-1">
  <span>⬅️ Ajustar Inicio (Izquierda)</span>
  </span>
- <span className="text-[10px] font-mono text-white font-bold bg-[var(--surface)] px-2 py-0.5 rounded -neutral-800">
+ <span className="text-[10px] font-mono text-white font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
  {formatTime(start)}
  </span>
  </div>
@@ -3458,7 +3443,7 @@ export default function ReelsCenter({
  id="btn-crop-start-minus"
  type="button"
  onClick={() => handleAdjustCrop('start_minus')}
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] -neutral-800 hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 cursor-pointer"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 cursor-pointer"
  title="Mover inicio 1 segundo atrás (extender por la izquierda)"
  >
  <ChevronLeft className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -3469,7 +3454,7 @@ export default function ReelsCenter({
  type="button"
  disabled={start >= end - 1}
  onClick={() => handleAdjustCrop('start_plus')}
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] -neutral-800 hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
  title="Mover inicio 1 segundo adelante (recortar por la izquierda)"
  >
  <span>+1s (Recortar)</span>
@@ -3484,7 +3469,7 @@ export default function ReelsCenter({
  <span className="text-[10.5px] font-mono text-[var(--ink-2)] font-extrabold uppercase tracking-wider flex items-center gap-1">
  <span>➡️ Ajustar Fin (Derecha)</span>
  </span>
- <span className="text-[10px] font-mono text-white font-bold bg-[var(--surface)] px-2 py-0.5 rounded -neutral-800">
+ <span className="text-[10px] font-mono text-white font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
  {formatTime(end)}
  </span>
  </div>
@@ -3494,7 +3479,7 @@ export default function ReelsCenter({
  type="button"
  disabled={end <= start + 1}
  onClick={() => handleAdjustCrop('end_minus')}
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] -neutral-800 hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
  title="Mover fin 1 segundo atrás (recortar por la derecha)"
  >
  <ChevronLeft className="w-4 h-4 text-amber-500 shrink-0" />
@@ -3504,7 +3489,7 @@ export default function ReelsCenter({
  id="btn-crop-end-plus"
  type="button"
  onClick={() => handleAdjustCrop('end_plus')}
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] -neutral-800 hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 cursor-pointer"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 cursor-pointer"
  title="Mover fin 1 segundo adelante (extender por la derecha)"
  >
  <span>+1s (Extender)</span>
@@ -3515,7 +3500,7 @@ export default function ReelsCenter({
  </div>
 
  {/* Extra informational feedback with nice indicators */}
- <div className="bg-[var(--surface)]/50 p-3 rounded-[var(--r-m)] -neutral-850 text-[11px] text-[var(--ink-2)] leading-relaxed font-sans space-y-1">
+ <div className="bg-[var(--surface)]/50 p-3 rounded-[var(--r-m)] text-[11px] text-[var(--ink-2)] leading-relaxed font-sans space-y-1">
  <p>
  🚀 <strong>¿Por qué dura exactamente esto?</strong> Los primeros segundos de un video son vitales para retener al espectador. Este recorte fue calculado por el algoritmo de IA basándose en los picos de intensidad acústica y velocidad de habla de la banda, asegurando una retención óptima.
  </p>
@@ -3546,9 +3531,9 @@ export default function ReelsCenter({
  <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Encuadre vertical</span>
  <div className="grid grid-cols-3 gap-1">
  {([
- { valor: 'crop' as const, etiqueta: 'Recortar', ayuda: 'Recorta los laterales. Encuadre cerrado: puede dejar fuera a parte de la banda.' },
- { valor: 'blur' as const, etiqueta: 'Fondo blur', ayuda: 'Mete el vídeo entero centrado sobre un fondo desenfocado. No se pierde a nadie.' },
- { valor: 'none' as const, etiqueta: 'Original', ayuda: 'Deja el encuadre horizontal tal cual.' }
+ { valor:'crop' as const, etiqueta:'Recortar', ayuda:'Recorta los laterales. Encuadre cerrado: puede dejar fuera a parte de la banda.' },
+ { valor:'blur' as const, etiqueta:'Fondo blur', ayuda:'Mete el vídeo entero centrado sobre un fondo desenfocado. No se pierde a nadie.' },
+ { valor:'none' as const, etiqueta:'Original', ayuda:'Deja el encuadre horizontal tal cual.' }
  ]).map(opcion => (
  <button
  key={opcion.valor}
@@ -3558,8 +3543,8 @@ export default function ReelsCenter({
  disabled={isCuttingVideo}
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-[9.5px] font-mono font-bold cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
  cropMode === opcion.valor
- ? 'bg-[var(--acc)] text-[var(--acc-ink)]'
- : 'bg-[var(--surface)] -neutral-800 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  {opcion.etiqueta}
@@ -3575,16 +3560,16 @@ export default function ReelsCenter({
  onClick={() => setBurnSubtitles(v => !v)}
  disabled={isCuttingVideo || (videoMeta ? !videoMeta.hasTranscript : false)}
  title={videoMeta && !videoMeta.hasTranscript
- ? 'Este vídeo no tiene transcripción en YouTube, así que no hay nada que incrustar.'
- : 'Graba los subtítulos dentro de la imagen, que es como se ven en Reels y TikTok sin activar nada.'}
+ ?'Este vídeo no tiene transcripción en YouTube, así que no hay nada que incrustar.'
+ :'Graba los subtítulos dentro de la imagen, que es como se ven en Reels y TikTok sin activar nada.'}
  className={`w-full px-3 py-1.5 rounded-[var(--r-s)] text-[9.5px] font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
  burnSubtitles
- ? 'bg-emerald-500/15 -emerald-500/40 text-emerald-300'
- : 'bg-[var(--surface)] -neutral-800 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ ?'bg-emerald-500/15 -emerald-500/40 text-emerald-300'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  {burnSubtitles ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5 opacity-40" />}
- <span>{burnSubtitles ? 'Incrustados en el vídeo' : 'Solo pista .vtt aparte'}</span>
+ <span>{burnSubtitles ?'Incrustados en el vídeo' :'Solo pista .vtt aparte'}</span>
  </button>
  {videoMeta && !videoMeta.hasTranscript && (
  <p className="text-[9px] font-mono text-neutral-600 leading-tight">Este vídeo no tiene transcripción en YouTube.</p>
@@ -3597,12 +3582,12 @@ export default function ReelsCenter({
  title="Resalta cada palabra según se pronuncia, como en TikTok/CapCut, en vez de enseñar la línea entera fija."
  className={`w-full px-3 py-1.5 rounded-[var(--r-s)] text-[9.5px] font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
  karaokeSubtitles
- ? 'bg-[var(--acc)]/15 -[var(--acc)]/40 text-[var(--acc)]'
- : 'bg-[var(--surface)] -neutral-800 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ ?'bg-[var(--acc)]/15 -[var(--acc)]/40 text-[var(--acc)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  {karaokeSubtitles ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5 opacity-40" />}
- <span>{karaokeSubtitles ? 'Resaltado palabra a palabra' : 'Línea fija clásica'}</span>
+ <span>{karaokeSubtitles ?'Resaltado palabra a palabra' :'Línea fija clásica'}</span>
  </button>
  )}
  </div>
@@ -3610,7 +3595,7 @@ export default function ReelsCenter({
 
  {/* Rendering State indicators */}
  {isCuttingVideo ? (
- <div className="bg-[var(--surface)]/80 p-4 rounded-[var(--r-m)] -neutral-800 space-y-3 animate-pulse">
+ <div className="bg-[var(--surface)]/80 p-4 rounded-[var(--r-m)] space-y-3 animate-pulse">
  <div className="flex items-center gap-3">
  <RefreshCw className="w-5 h-5 text-[var(--acc)] animate-spin" />
  <span className="text-xs font-mono font-extrabold text-[var(--sunken)]">
@@ -3621,7 +3606,7 @@ export default function ReelsCenter({
  ⚡ {cuttingProgressText}
  </p>
  <div className="w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
- <div className="h-full bg-gradient-to-r from-[var(--acc)] to-emerald-500 animate-pulse" style={{ width: '75%' }}></div>
+ <div className="h-full bg-gradient-to-r from-[var(--acc)] to-emerald-500 animate-pulse" style={{ width:'75%' }}></div>
  </div>
  </div>
  ) : renderedClipUrl ? (
@@ -3635,7 +3620,7 @@ export default function ReelsCenter({
  </div>
  <div className="flex gap-1 shrink-0">
  <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[#10b981]/15 text-[#10b981] font-extrabold -emerald-500/30">
- {cropMode === 'none' ? 'ORIGINAL' : cropMode === 'blur' ? '9:16 BLUR' : '9:16'}
+ {cropMode ==='none' ?'ORIGINAL' : cropMode ==='blur' ?'9:16 BLUR' :'9:16'}
  </span>
  {renderedBurnedSubs && (
  <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[var(--acc)]/15 text-[var(--acc)] font-extrabold -[var(--acc)]/30">
@@ -3646,20 +3631,20 @@ export default function ReelsCenter({
  </div>
 
  <p className="text-[11px] text-neutral-300">
- Clip listo{renderedClipSize > 0 ? ` (${(renderedClipSize / (1024 * 1024)).toFixed(1)} MB)` : ''}. Se está reproduciendo en el simulador de la izquierda y puedes descargarlo ya.
+ Clip listo{renderedClipSize > 0 ? ` (${(renderedClipSize / (1024 * 1024)).toFixed(1)} MB)` :''}. Se está reproduciendo en el simulador de la izquierda y puedes descargarlo ya.
  </p>
 
  {/* Sin esto, el usuario no sabe si el clip va a seguir ahí mañana o solo hasta el
  próximo despliegue del servidor. */}
  <div className={`p-2 rounded-[var(--r-s)] text-[10px] font-mono flex items-center gap-2 ${
  renderedStoredPermanently
- ? 'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
- : 'bg-amber-500/10 -amber-500/20 text-amber-300'
+ ?'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
+ :'bg-amber-500/10 -amber-500/20 text-amber-300'
  }`}>
  <span>
  {renderedStoredPermanently
- ? '☁️ Guardado de forma permanente. Seguirá disponible aunque pase el tiempo.'
- : '⚠️ Guardado solo temporalmente en el servidor. Descárgalo antes de que se reinicie o se despliegue una nueva versión.'}
+ ?'☁️ Guardado de forma permanente. Seguirá disponible aunque pase el tiempo.'
+ :'⚠️ Guardado solo temporalmente en el servidor. Descárgalo antes de que se reinicie o se despliegue una nueva versión.'}
  </span>
  </div>
 
@@ -3672,9 +3657,9 @@ export default function ReelsCenter({
  <div className="flex flex-col sm:flex-row gap-2 pt-1">
  <a
  href={renderedClipUrl}
- download={`${(bandName || 'reel').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'reel'}-${highlights[selectedHighlightIndex]?.range?.replace(/[^0-9]/g, '') || 'clip'}.mp4`}
+ download={`${(bandName ||'reel').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') ||'reel'}-${highlights[selectedHighlightIndex]?.range?.replace(/[^0-9]/g,'') ||'clip'}.mp4`}
  rel="noreferrer noopener"
- className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] -neutral-800 hover:-neutral-700 text-[11px] font-mono font-bold text-[var(--acc)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+ className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:-neutral-700 text-[11px] font-mono font-bold text-[var(--acc)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
  >
  <ExternalLink className="w-3.5 h-3.5" />
  <span>Descargar MP4</span>
@@ -3685,7 +3670,7 @@ export default function ReelsCenter({
  href={renderedSubUrl}
  download="subtitulos.vtt"
  rel="noreferrer noopener"
- className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] -neutral-800 hover:-neutral-700 text-[11px] font-mono font-bold text-emerald-300 flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+ className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:-neutral-700 text-[11px] font-mono font-bold text-emerald-300 flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
  >
  <ExternalLink className="w-3.5 h-3.5" />
  <span>Descargar .VTT</span>
@@ -3727,7 +3712,7 @@ export default function ReelsCenter({
 
  {/* Subtitles timing preview list */}
  {subtitleCues.length > 0 && (
- <div className="bg-[var(--surface)]/40 p-4 rounded-[var(--r-m)] -neutral-850 space-y-2.5">
+ <div className="bg-[var(--surface)]/40 p-4 rounded-[var(--r-m)] space-y-2.5">
  <div className="flex justify-between items-center -neutral-800/50 pb-1.5">
  <span className="text-[9.5px] font-mono font-extrabold uppercase text-[var(--ink-2)] tracking-wider">
  Pista de Subtítulos Generada ({subtitleCues.length} líneas)
@@ -3740,8 +3725,7 @@ export default function ReelsCenter({
  <span className="text-[8.5px] font-mono text-[var(--acc)] font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded shrink-0">
  {cue.start.toFixed(1)}s
  </span>
- <p className="text-neutral-300 font-sans italic leading-tight">
- "{cue.text}"
+ <p className="text-neutral-300 font-sans italic leading-tight">"{cue.text}"
  </p>
  </div>
  ))}
@@ -3751,7 +3735,7 @@ export default function ReelsCenter({
 
  {/* Word-level exact offsets preview */}
  {wordOffsets.length > 0 && (
- <div className="bg-[var(--surface)]/40 p-4 rounded-[var(--r-m)] -neutral-850 space-y-2.5 mt-3">
+ <div className="bg-[var(--surface)]/40 p-4 rounded-[var(--r-m)] space-y-2.5 mt-3">
  <div className="flex justify-between items-center -neutral-800/50 pb-1.5">
  <span className="text-[9.5px] font-mono font-extrabold uppercase text-[var(--ink-2)] tracking-wider flex items-center gap-1">
  <span>⚡ Offsets de Palabras Sincronizados ({wordOffsets.length})</span>
@@ -3786,10 +3770,10 @@ export default function ReelsCenter({
  const clip = highlights[selectedHighlightIndex];
  if (!clip) return null;
  const variantes = [
- { etiqueta: 'Instagram', texto: clip.recommendedCopy },
- { etiqueta: 'TikTok', texto: clip.copyTikTok },
- { etiqueta: 'YouTube Shorts', texto: clip.copyYouTube },
- { etiqueta: 'Facebook', texto: clip.copyFacebook }
+ { etiqueta:'Instagram', texto: clip.recommendedCopy },
+ { etiqueta:'TikTok', texto: clip.copyTikTok },
+ { etiqueta:'YouTube Shorts', texto: clip.copyYouTube },
+ { etiqueta:'Facebook', texto: clip.copyFacebook }
  ].filter(v => v.texto && v.texto.trim());
 
  if (!clip.hookText && !clip.cta && variantes.length < 2 && !(clip.hashtags || []).length) return null;
@@ -3805,8 +3789,8 @@ export default function ReelsCenter({
  <p className="flex-1 text-sm font-black text-[var(--acc)] leading-tight">"{clip.hookText}"</p>
  <button
  type="button"
- onClick={() => handleCopyToClipboard(clip.hookText || '')}
- className="shrink-0 px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)] -neutral-800 text-[9px] font-mono text-[var(--ink-2)] hover:text-[var(--sunken)] cursor-pointer"
+ onClick={() => handleCopyToClipboard(clip.hookText ||'')}
+ className="shrink-0 px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[9px] font-mono text-[var(--ink-2)] hover:text-[var(--sunken)] cursor-pointer"
  >
  Copiar
  </button>
@@ -3831,12 +3815,12 @@ export default function ReelsCenter({
  <button
  key={v.etiqueta}
  type="button"
- onClick={() => setEditedCopy(v.texto || '')}
+ onClick={() => setEditedCopy(v.texto ||'')}
  title={v.texto}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[9.5px] font-mono font-bold cursor-pointer transition-all ${
  editedCopy === v.texto
- ? 'bg-[var(--acc)] text-[var(--acc-ink)]'
- : 'bg-[var(--surface)] -neutral-800 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  {v.etiqueta}
@@ -3852,7 +3836,7 @@ export default function ReelsCenter({
  <span className="text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Hashtags sugeridos</span>
  <button
  type="button"
- onClick={() => setEditedCopy(prev => `${prev.trimEnd()}\n\n${(clip.hashtags || []).join(' ')}`.trim())}
+ onClick={() => setEditedCopy(prev => `${prev.trimEnd()}\n\n${(clip.hashtags || []).join('')}`.trim())}
  className="text-[9px] font-mono text-[var(--acc)] hover:underline cursor-pointer bg-transparent -none"
  >
  Añadir todos al copy
@@ -3860,7 +3844,7 @@ export default function ReelsCenter({
  </div>
  <div className="flex flex-wrap gap-1">
  {(clip.hashtags || []).map((tag, i) => (
- <span key={`${tag}-${i}`} className="px-1.5 py-0.5 rounded bg-[var(--surface)] -neutral-800 text-[9px] font-mono text-[var(--ink-2)]">
+ <span key={`${tag}-${i}`} className="px-1.5 py-0.5 rounded bg-[var(--surface)] text-[9px] font-mono text-[var(--ink-2)]">
  {tag}
  </span>
  ))}
@@ -3881,7 +3865,7 @@ export default function ReelsCenter({
  <button
  id="btn-copy-text"
  type="button"
- onClick={() => handleCopyToClipboard(editedCopy || '')}
+ onClick={() => handleCopyToClipboard(editedCopy ||'')}
  className="text-xs font-mono text-[var(--acc)] hover:underline flex items-center gap-1 cursor-pointer bg-transparent -none py-1 px-2 rounded-[var(--r-s)] hover:bg-neutral-800"
  >
  {copySuccess ? (
@@ -3904,7 +3888,7 @@ export default function ReelsCenter({
  onChange={(e) => setEditedCopy(e.target.value)}
  rows={7}
  placeholder="Escribe el copy para tus redes sociales..."
- className="w-full text-xs font-sans bg-[var(--surface)] -neutral-800 rounded-[var(--r-m)] p-4 text-[var(--sunken)] focus:outline-none focus:-neutral-700 leading-relaxed font-normal shadow-inner"
+ className="w-full text-xs font-sans bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-[var(--sunken)] focus:outline-none focus:-neutral-700 leading-relaxed font-normal shadow-inner"
  />
  <p className="text-[9.5px] font-mono text-neutral-500">
  * Puedes editar este texto libremente antes de programarlo. Se actualizará en tiempo real en la pantalla del simulador de la izquierda.
@@ -3919,11 +3903,11 @@ export default function ReelsCenter({
  id="modal-platform-select"
  value={selectedPlatform}
  onChange={(e) => {
- const nuevaPlataforma = e.target.value as 'Instagram' | 'TikTok' | 'YouTube' | 'Facebook';
+ const nuevaPlataforma = e.target.value as'Instagram' |'TikTok' |'YouTube' |'Facebook';
  setSelectedPlatform(nuevaPlataforma);
  setEditedCopy(copyForPlatform(highlights[selectedHighlightIndex], nuevaPlataforma));
  }}
- className="w-full text-xs font-mono bg-[var(--surface)] -neutral-800 rounded-[var(--r-s)] p-2 text-white focus:outline-none cursor-pointer"
+ className="w-full text-xs font-mono bg-[var(--surface)] rounded-[var(--r-s)] p-2 text-white focus:outline-none cursor-pointer"
  >
  <option value="Instagram">Instagram Reel</option>
  <option value="TikTok">TikTok Video</option>
@@ -3939,7 +3923,7 @@ export default function ReelsCenter({
  type="date"
  value={scheduledDate}
  onChange={(e) => setScheduledDate(e.target.value)}
- className="w-full text-xs font-mono bg-[var(--surface)] -neutral-800 rounded-[var(--r-s)] p-2 text-white focus:outline-none cursor-pointer"
+ className="w-full text-xs font-mono bg-[var(--surface)] rounded-[var(--r-s)] p-2 text-white focus:outline-none cursor-pointer"
  />
  </div>
 
@@ -3950,7 +3934,7 @@ export default function ReelsCenter({
  type="time"
  value={scheduledTime}
  onChange={(e) => setScheduledTime(e.target.value)}
- className="w-full text-xs font-mono bg-[var(--surface)] -neutral-800 rounded-[var(--r-s)] p-2 text-white focus:outline-none cursor-pointer"
+ className="w-full text-xs font-mono bg-[var(--surface)] rounded-[var(--r-s)] p-2 text-white focus:outline-none cursor-pointer"
  />
  </div>
  </div>
@@ -3965,7 +3949,7 @@ export default function ReelsCenter({
  </div>
 
  {/* Success / Error states and main schedule action */}
- <div className="mt-6 pt-4 -neutral-850 flex flex-col sm:flex-row items-center justify-between gap-4">
+ <div className="mt-6 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
  <div className="text-left">
  {schedulingSuccess ? (
  <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold font-mono">
@@ -4000,7 +3984,7 @@ export default function ReelsCenter({
  id="btn-modal-cancel"
  type="button"
  onClick={() => setIsExpandedPreview(false)}
- className="flex-1 sm:flex-none px-5 py-2.5 rounded-[var(--r-m)] -neutral-800 text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 text-xs font-mono font-bold transition-all cursor-pointer"
+ className="flex-1 sm:flex-none px-5 py-2.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 text-xs font-mono font-bold transition-all cursor-pointer"
  >
  Salir de Modo Cine
  </button>
@@ -4014,7 +3998,7 @@ export default function ReelsCenter({
  disabled={isScheduling || !editedCopy.trim()}
  className="flex-1 sm:flex-none px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] text-black hover:bg-[#ffc634] active:scale-95 transition-all cursor-pointer text-xs font-mono font-bold disabled:opacity-40"
  >
- {isScheduling ? 'Guardando...' : 'Aprobar y Programar Post'}
+ {isScheduling ?'Guardando...' :'Aprobar y Programar Post'}
  </button>
  </div>
  </div>
@@ -4030,12 +4014,12 @@ export default function ReelsCenter({
  isOpen={isBakandeyaToneModalOpen}
  onClose={() => setIsBakandeyaToneModalOpen(false)}
  band={{
- id: instagramHandle || '',
- nombre_banda: bandName || 'Tu Banda',
- estilo_musical: '',
- localizacion: '',
- estado_relacion: 'colegas_aliados',
- ultimo_contacto: 'Hoy'
+ id: instagramHandle ||'',
+ nombre_banda: bandName ||'Tu Banda',
+ estilo_musical:'',
+ localizacion:'',
+ estado_relacion:'colegas_aliados',
+ ultimo_contacto:'Hoy'
  }}
  toneData={bakandeyaToneData}
  isLoading={isAnalyzingBakandeyaTone}

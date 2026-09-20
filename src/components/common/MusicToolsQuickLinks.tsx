@@ -1,20 +1,20 @@
-import React from 'react';
-import { Clock, Guitar } from 'lucide-react';
+import React from'react';
+import { Clock, Guitar } from'lucide-react';
 
 interface MusicToolsQuickLinksProps {
- variant: 'desktop' | 'mobile';
+ variant:'desktop' |'mobile';
  onOpenMetronome: () => void;
  onOpenTuner: () => void;
 }
 
 /**
- * Accesos directos a Metrónomo y Afinador, mostrados dentro del grupo "Música" del
- * menú (en vez de en un bloque "Herramientas" siempre visible aparte): son
+ * Accesos directos a Metrónomo y Afinador, mostrados dentro del grupo"Música" del
+ * menú (en vez de en un bloque"Herramientas" siempre visible aparte): son
  * herramientas de músico, tienen sentido junto a Repertorio/Calendario, y solo
  * ocupan espacio cuando ese grupo está abierto.
  */
 export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ variant, onOpenMetronome, onOpenTuner }) => {
- if (variant === 'desktop') {
+ if (variant ==='desktop') {
  return (
  <div className="grid grid-cols-2 gap-1.5 px-3 pb-1.5 pt-0.5">
  <button

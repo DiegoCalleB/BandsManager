@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from'react';
 import {
  Music,
  Sparkles,
@@ -17,23 +17,23 @@ import {
  ChevronDown,
  ChevronUp,
  Sliders
-} from 'lucide-react';
+} from'lucide-react';
 import { 
  FanFormLanguage, 
  DEFAULT_FAN_FORM_LANGUAGE, 
  FAN_FORM_LANGUAGES, 
  isFanFormLanguage,
  idiomasDisponiblesParaConcierto
-} from '../i18n/fansTranslations';
+} from'../i18n/fansTranslations';
 import { 
  getMusiciansTranslations, 
  MusiciansLandingDict 
-} from '../i18n/musiciansTranslations';
+} from'../i18n/musiciansTranslations';
 
 export const PublicMusiciansLanding: React.FC = () => {
  // 1. Detect language from query params or browser
  const initialLang = useMemo<FanFormLanguage>(() => {
- if (typeof window === 'undefined') return DEFAULT_FAN_FORM_LANGUAGE;
+ if (typeof window ==='undefined') return DEFAULT_FAN_FORM_LANGUAGE;
  const params = new URLSearchParams(window.location.search);
  const langParam = params.get('lang')?.toLowerCase();
  if (isFanFormLanguage(langParam)) return langParam;
@@ -47,9 +47,9 @@ export const PublicMusiciansLanding: React.FC = () => {
  // - Si el idioma es italiano ('it'): Italia (🇮🇹), UK (🇬🇧) y España (🇪🇸).
  // - Si es español ('es') o inglés ('en'): España (🇪🇸) y UK (🇬🇧).
  // - Si es checo ('cs'): Chequia (🇨🇿), UK (🇬🇧) y España (🇪🇸).
- const baseLangForFlags = (currentLang === 'it' || currentLang === 'cs')
+ const baseLangForFlags = (currentLang ==='it' || currentLang ==='cs')
  ? currentLang
- : ((initialLang === 'it' || initialLang === 'cs') ? initialLang : currentLang);
+ : ((initialLang ==='it' || initialLang ==='cs') ? initialLang : currentLang);
  const availableCodes = useMemo(() => idiomasDisponiblesParaConcierto(baseLangForFlags), [baseLangForFlags]);
  const availableLanguages = useMemo(() => {
  return FAN_FORM_LANGUAGES.filter(l => availableCodes.includes(l.code))
@@ -58,26 +58,26 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  // Contextual params (if opened from another band's fan page)
  const originInfo = useMemo(() => {
- if (typeof window === 'undefined') return { fromBand: '', fromConcert: '' };
+ if (typeof window ==='undefined') return { fromBand:'', fromConcert:'' };
  const params = new URLSearchParams(window.location.search);
  return {
- fromBand: params.get('from_band') || params.get('band') || '',
- fromConcert: params.get('from_concert') || params.get('concert') || ''
+ fromBand: params.get('from_band') || params.get('band') ||'',
+ fromConcert: params.get('from_concert') || params.get('concert') ||''
  };
  }, []);
 
  // Form State
  const [formData, setFormData] = useState({
- nombreBanda: '',
- nombreContacto: '',
- email: '',
- instagram: '',
- telefono: '',
- ciudad: '',
- genero: '',
- enlaceMusica: '',
- interesPrincipal: '',
- notas: '',
+ nombreBanda:'',
+ nombreContacto:'',
+ email:'',
+ instagram:'',
+ telefono:'',
+ ciudad:'',
+ genero:'',
+ enlaceMusica:'',
+ interesPrincipal:'',
+ notas:'',
  consentimiento: false
  });
 
@@ -88,10 +88,10 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  const handleLanguageChange = (lang: FanFormLanguage) => {
  setCurrentLang(lang);
- if (typeof window !== 'undefined') {
+ if (typeof window !=='undefined') {
  const url = new URL(window.location.href);
  url.searchParams.set('lang', lang);
- window.history.replaceState({}, '', url.toString());
+ window.history.replaceState({},'', url.toString());
  }
  };
 
@@ -114,8 +114,8 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  try {
  const response = await fetch('/api/public/musicians-waitlist', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  ...formData,
  idioma: currentLang,
@@ -132,8 +132,8 @@ export const PublicMusiciansLanding: React.FC = () => {
  }
 
  setSubmitted(true);
- if (typeof window !== 'undefined') {
- window.scrollTo({ top: 0, behavior: 'smooth' });
+ if (typeof window !=='undefined') {
+ window.scrollTo({ top: 0, behavior:'smooth' });
  }
  } catch (err: any) {
  console.error('Error enviando registro de músico:', err);
@@ -144,12 +144,12 @@ export const PublicMusiciansLanding: React.FC = () => {
  };
 
  const handleBackToOrigin = () => {
- if (typeof window !== 'undefined') {
+ if (typeof window !=='undefined') {
  if (originInfo.fromBand) {
- const clean = originInfo.fromBand.replace(/^(band|reg)-/, '');
+ const clean = originInfo.fromBand.replace(/^(band|reg)-/,'');
  window.location.href = `/fans?band=${encodeURIComponent(clean)}&lang=${currentLang}`;
  } else {
- window.location.href = '/';
+ window.location.href ='/';
  }
  }
  };
@@ -172,7 +172,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  src="/bandmanageriodefinitiva.jpeg"
  alt="BandManager.io Logo"
  className="w-full h-full object-contain rounded-[10px]"
- onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
+ onError={(e) => { (e.currentTarget as HTMLImageElement).src ='/logo_bandmanager_official.svg'; }}
  />
  </div>
  <div>
@@ -194,8 +194,8 @@ export const PublicMusiciansLanding: React.FC = () => {
  onClick={() => handleLanguageChange(lang.code)}
  className={`w-8 h-8 rounded-[var(--r-s)] text-base flex items-center justify-center transition-all ${
  currentLang === lang.code
- ? 'bg-amber-500/20 text-[var(--acc)] /50 shadow-inner scale-105'
- : 'bg-[var(--surface)]/60 /80 hover: opacity-70 hover:opacity-100'
+ ?'bg-amber-500/20 text-[var(--acc)] /50 shadow-inner scale-105'
+ :'bg-[var(--surface)]/60 /80 hover: opacity-70 hover:opacity-100'
  }`}
  title={lang.label}
  aria-label={lang.label}
@@ -215,7 +215,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <div className="flex items-center gap-2">
  <Radio className="w-4 h-4 text-amber-400 animate-pulse" />
  <span>
- {t.badgeFromBand.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/, '').toUpperCase())}
+ {t.badgeFromBand.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/,'').toUpperCase())}
  </span>
  </div>
  <button
@@ -223,7 +223,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  className="text-[11px] underline hover:text-white flex items-center gap-1 font-bold"
  >
  <ArrowLeft className="w-3 h-3" />
- {t.backToOrigin.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/, ''))}
+ {t.backToOrigin.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/,''))}
  </button>
  </div>
  )}
@@ -239,7 +239,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  src="/bandmanageriodefinitiva.jpeg"
  alt="BandManager.io"
  className="w-full h-full object-contain rounded-[var(--r-m)]"
- onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
+ onError={(e) => { (e.currentTarget as HTMLImageElement).src ='/logo_bandmanager_official.svg'; }}
  />
  </div>
  </div>
@@ -251,7 +251,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
 
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white max-w-3xl mx-auto leading-[1.15]">
- {t.heroTitle}{' '}
+ {t.heroTitle}{''}
  <span className="bg-gradient-to-r from-[var(--acc)] via-amber-300 to-yellow-500 bg-clip-text text-transparent">
  {t.heroHighlight}
  </span>
@@ -308,7 +308,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <Rocket className="w-5 h-5" />
  </div>
  <p className="text-[var(--ink-3)] text-xs sm:text-sm leading-relaxed">
- <span className="text-amber-400 font-bold">{t.roadmapTeaserLead}</span>{' '}
+ <span className="text-amber-400 font-bold">{t.roadmapTeaserLead}</span>{''}
  {t.roadmapTeaserText}
  </p>
  </section>
@@ -329,7 +329,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  {t.successTitle}
  </h2>
  <p className="text-amber-400 font-mono text-sm font-bold">
- {t.successSubtitle.replace('{bandName}', formData.nombreBanda || 'tu banda')}
+ {t.successSubtitle.replace('{bandName}', formData.nombreBanda ||'tu banda')}
  </p>
  <p className="text-[var(--ink-3)] text-sm max-w-lg mx-auto leading-relaxed">
  {t.successMessage}
@@ -342,7 +342,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  onClick={handleBackToOrigin}
  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-neutral-800 text-white font-mono text-xs font-bold transition"
  >
- {t.successBackToBand.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/, ''))}
+ {t.successBackToBand.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/,''))}
  </button>
  )}
  <a

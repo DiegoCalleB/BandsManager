@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Settings, Sparkles, RefreshCw, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Star, Landmark } from 'lucide-react';
-import { ThemeColors } from '../../types';
-import { ExampleThreadsSection } from './ExampleThreadsSection';
+import React, { useState } from'react';
+import { Settings, Sparkles, RefreshCw, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Star, Landmark } from'lucide-react';
+import { ThemeColors } from'../../types';
+import { ExampleThreadsSection } from'./ExampleThreadsSection';
 
-export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
+export type TemplateCategory ='salas' |'festivales' |'discotecas' |'medios' |'grupos' |'managements' |'ayuntamientos';
 
 export interface ActiveTemplateData {
  title: string;
@@ -77,16 +77,16 @@ export function TemplateConfigSection({
  <div className={`${colors.card} p-5 space-y-6`}>
  <div
  className={`pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 border-b ${
- isStitchLight ? '' : 'border-[#99907c]/15'
+ isStitchLight ?'' :'border-[#99907c]/15'
  }`}
  >
  <div>
  <h3
  className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-2 ${
- isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'
+ isStitchLight ?'text-sky-400' :'text-[var(--acc)]'
  }`}
  >
- <Settings className={`w-4 h-4 ${isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'}`} />{' '}
+ <Settings className={`w-4 h-4 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`} />{''}
  Configuración de Plantillas y Pautas AI por Categoría (Redactor)
  </h3>
  <p className={`text-[10px] font-sans mt-1 ${textSub}`}>
@@ -97,17 +97,17 @@ export function TemplateConfigSection({
  {/* Template Tab Selector (7 Categories) */}
  <div
  className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${
- isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)]'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'
  }`}
  >
  {[
- { id: 'salas', label: '🏛️ Salas', icon: Building2 },
- { id: 'festivales', label: '🎪 Festivales', icon: Tent },
- { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
- { id: 'medios', label: '📻 Medios', icon: Radio },
- { id: 'grupos', label: '🎸 Grupos', icon: Users },
- { id: 'managements', label: '💼 Managements', icon: Briefcase },
- { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark },
+ { id:'salas', label:'🏛️ Salas', icon: Building2 },
+ { id:'festivales', label:'🎪 Festivales', icon: Tent },
+ { id:'discotecas', label:'🪩 Discotecas', icon: Disc3 },
+ { id:'medios', label:'📻 Medios', icon: Radio },
+ { id:'grupos', label:'🎸 Grupos', icon: Users },
+ { id:'managements', label:'💼 Managements', icon: Briefcase },
+ { id:'ayuntamientos', label:'🎉 Ayuntamientos', icon: Landmark },
  ].map((tab) => {
  const isActive = templateTab === tab.id;
  const IconComp = tab.icon;
@@ -120,11 +120,11 @@ export function TemplateConfigSection({
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
  ? isStitchLight
- ? 'bg-white text-sky-400 shadow-sm'
- : 'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
+ ?'bg-white text-sky-400 shadow-sm'
+ :'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
  : isStitchLight
- ? 'text-[var(--ink-2)] hover:text-[var(--ink)]'
- : 'text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <IconComp className="w-3.5 h-3.5" />
@@ -138,19 +138,19 @@ export function TemplateConfigSection({
  {/* Category Notice Banner */}
  <div
  className={`p-3 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between ${
- templateTab === 'medios'
- ? 'bg-rose-500/15 text-rose-400'
- : templateTab === 'grupos'
+ templateTab ==='medios'
+ ?'bg-rose-500/15 text-rose-400'
+ : templateTab ==='grupos'
  ? isStitchLight
- ? 'bg-emerald-100 text-emerald-700'
- : 'bg-[#10b981]/15 text-[#10b981]'
- : templateTab === 'discotecas'
+ ?'bg-emerald-100 text-emerald-700'
+ :'bg-[#10b981]/15 text-[#10b981]'
+ : templateTab ==='discotecas'
  ? isStitchLight
- ? 'bg-purple-50 text-purple-900'
- : 'bg-purple-500/10 text-purple-300'
+ ?'bg-purple-50 text-purple-900'
+ :'bg-purple-500/10 text-purple-300'
  : isStitchLight
- ? 'bg-sky-500/15 text-sky-400'
- : 'bg-sky-500/15 text-sky-400'
+ ?'bg-sky-500/15 text-sky-400'
+ :'bg-sky-500/15 text-sky-400'
  }`}
  >
  <div>
@@ -171,7 +171,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] uppercase font-sans tracking-wider ${
- isStitchLight ? 'text-[var(--ink-2)]' : 'text-neutral-300'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'
  }`}
  >
  Asunto del Email por Defecto
@@ -183,8 +183,8 @@ export function TemplateConfigSection({
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -192,7 +192,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] uppercase font-sans tracking-wider ${
- isStitchLight ? 'text-[var(--ink-2)]' : 'text-neutral-300'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'
  }`}
  >
  Cuerpo de la Plantilla de Correo de Presentación
@@ -204,8 +204,8 @@ export function TemplateConfigSection({
  onChange={(e) => activeTemplate.setBody(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
+ ?'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
  />
@@ -214,7 +214,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${
- isStitchLight ? 'text-sky-400' : 'text-[var(--accent)]'
+ isStitchLight ?'text-sky-400' :'text-[var(--accent)]'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
@@ -226,8 +226,8 @@ export function TemplateConfigSection({
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] focus:border-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--accent)]/50'
+ ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--accent)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
  />
@@ -261,7 +261,7 @@ export function TemplateConfigSection({
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
- {toneRating > 0 ? `${toneRating}/5` : 'Sin calificar'}
+ {toneRating > 0 ? `${toneRating}/5` :'Sin calificar'}
  </span>
  </div>
  <div className="flex items-center gap-1">
@@ -271,7 +271,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={() => setToneRating(toneRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- toneRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ toneRating >= star ?'text-amber-400' :'text-neutral-600'
  }`}
  title={`Calificar tono y estilo: ${star}/5`}
  >
@@ -286,7 +286,7 @@ export function TemplateConfigSection({
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
- {contentRating > 0 ? `${contentRating}/5` : 'Sin calificar'}
+ {contentRating > 0 ? `${contentRating}/5` :'Sin calificar'}
  </span>
  </div>
  <div className="flex items-center gap-1">
@@ -296,7 +296,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={() => setContentRating(contentRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- contentRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ contentRating >= star ?'text-amber-400' :'text-neutral-600'
  }`}
  title={`Calificar contenido y estructura: ${star}/5`}
  >
@@ -318,7 +318,7 @@ export function TemplateConfigSection({
  value={customInstruction}
  onChange={(e) => setCustomInstruction(e.target.value)}
  className="w-full rounded-[var(--r-s)] p-2.5 text-[10px] bg-[var(--surface)] text-[var(--ink)] focus: focus:outline-none font-sans leading-relaxed"
- placeholder="Ej: 'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
+ placeholder="Ej:'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
  />
  </div>
 
@@ -337,8 +337,8 @@ export function TemplateConfigSection({
  disabled={isOptimizingTemplate}
  className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
- <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
- <span>{isOptimizingTemplate ? 'Regenerando con IA...' : '✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
+ <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ?'animate-spin' :''}`} />
+ <span>{isOptimizingTemplate ?'Regenerando con IA...' :'✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
  </button>
  )}
  <button
@@ -347,11 +347,11 @@ export function TemplateConfigSection({
  disabled={isTestingPrompt}
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
- ? 'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)] '
- : 'bg-[var(--surface)] hover: text-neutral-300 '
+ ?'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
+ :'bg-[var(--surface)] hover: text-neutral-300'
  }`}
  >
- <RefreshCw className={`w-3.5 h-3.5 ${isTestingPrompt ? 'animate-spin' : ''}`} />
+ <RefreshCw className={`w-3.5 h-3.5 ${isTestingPrompt ?'animate-spin' :''}`} />
  <span>Probar Prompt</span>
  </button>
  <button
@@ -359,8 +359,8 @@ export function TemplateConfigSection({
  onClick={onSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  isStitchLight
- ? 'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md shadow-indigo-100'
- : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/10'
+ ?'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md shadow-indigo-100'
+ :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -371,18 +371,18 @@ export function TemplateConfigSection({
  {/* Test / Prompt Output side */}
  <div
  className={`border rounded-[var(--r-m)] p-4 flex flex-col justify-between ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)] '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-3">
  <div
  className={`flex items-center gap-2 pb-2 border-b ${
- isStitchLight ? '' : 'border-[var(--surface)]'
+ isStitchLight ?'' :'border-[var(--surface)]'
  }`}
  >
  <span
  className={`w-1.5 h-1.5 rounded-full animate-pulse ${
- isStitchLight ? 'bg-sky-500/15' : 'bg-[var(--acc)]'
+ isStitchLight ?'bg-sky-500/15' :'bg-[var(--acc)]'
  }`}
  />
  <h4 className={`text-[10px] font-sans uppercase tracking-widest ${textSub}`}>
@@ -392,7 +392,7 @@ export function TemplateConfigSection({
 
  <div className={`text-[10px] leading-relaxed font-sans ${textSub}`}>
  Cuando el agente de Supabase <strong>"Redactor"</strong> corre, lee estas plantillas y
- pautas, las mezcla con los detalles del contacto capturado por el{' '}
+ pautas, las mezcla con los detalles del contacto capturado por el{''}
  <strong>"Scout"</strong> (aforo, ubicación, género, redes) y genera un borrador adaptado
  para que lo revises en esta misma pantalla.
  </div>
@@ -402,8 +402,8 @@ export function TemplateConfigSection({
  <div
  className={`border rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
  isStitchLight
- ? 'bg-white text-[var(--ink-2)] '
- : 'bg-[#1c1b1b] text-neutral-300 '
+ ?'bg-white text-[var(--ink-2)]'
+ :'bg-[#1c1b1b] text-neutral-300'
  }`}
  >
  {testPromptResult}
@@ -417,7 +417,7 @@ export function TemplateConfigSection({
  </span>
  {(toneRating > 0 || contentRating > 0) && (
  <span className="text-[9px] text-amber-400 font-mono">
- Tono: {toneRating || '-'}/5 | Contenido: {contentRating || '-'}/5
+ Tono: {toneRating ||'-'}/5 | Contenido: {contentRating ||'-'}/5
  </span>
  )}
  </div>
@@ -428,7 +428,7 @@ export function TemplateConfigSection({
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
- {toneRating > 0 ? `${toneRating}/5` : '⭐'}
+ {toneRating > 0 ? `${toneRating}/5` :'⭐'}
  </span>
  </div>
  <div className="flex items-center gap-1">
@@ -438,7 +438,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={() => setToneRating(toneRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- toneRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ toneRating >= star ?'text-amber-400' :'text-neutral-600'
  }`}
  title={`Calificar tono: ${star}/5`}
  >
@@ -453,7 +453,7 @@ export function TemplateConfigSection({
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
- {contentRating > 0 ? `${contentRating}/5` : '⭐'}
+ {contentRating > 0 ? `${contentRating}/5` :'⭐'}
  </span>
  </div>
  <div className="flex items-center gap-1">
@@ -463,7 +463,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={() => setContentRating(contentRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- contentRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ contentRating >= star ?'text-amber-400' :'text-neutral-600'
  }`}
  title={`Calificar contenido: ${star}/5`}
  >
@@ -481,7 +481,7 @@ export function TemplateConfigSection({
  disabled={isOptimizingTemplate}
  className="w-full py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
- <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
+ <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ?'animate-spin' :''}`} />
  <span>Re-generar plantilla usando estas valoraciones ✨</span>
  </button>
  )}
@@ -491,11 +491,11 @@ export function TemplateConfigSection({
  <div
  className={`border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
  isStitchLight
- ? ' text-[var(--ink-3)]'
- : ' text-neutral-600'
+ ?' text-[var(--ink-3)]'
+ :' text-neutral-600'
  }`}
  >
- Haz clic en "Probar Prompt" a la izquierda para simular el resultado de generación
+ Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación
  del Redactor AI basado en tus directrices actuales.
  </div>
  )}

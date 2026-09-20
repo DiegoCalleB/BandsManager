@@ -1,42 +1,42 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React from'react';
+import { motion } from'motion/react';
 import { 
  Sun, CloudSun, Cloud, CloudRain, CloudLightning, 
  Snowflake, CloudFog, Wind, Droplets, Thermometer,
  AlertTriangle, CloudDrizzle, Zap
-} from 'lucide-react';
-import { EventWeatherData, WeatherAlert } from '../../services/weatherService';
+} from'lucide-react';
+import { EventWeatherData, WeatherAlert } from'../../services/weatherService';
 
-export type WeatherIconType = EventWeatherData['iconType'] | 'wind' | 'alert' | 'thermometer';
+export type WeatherIconType = EventWeatherData['iconType'] |'wind' |'alert' |'thermometer';
 
 interface AnimatedWeatherIconProps {
  iconType?: WeatherIconType;
- size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+ size?:'xs' |'sm' |'md' |'lg' |'xl';
  className?: string;
  isAlert?: boolean;
- severity?: 'warning' | 'danger';
+ severity?:'warning' |'danger';
 }
 
 export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
- iconType = 'sun',
- size = 'md',
- className = '',
+ iconType ='sun',
+ size ='md',
+ className ='',
  isAlert = false,
  severity
 }) => {
  // Configuración de tamaños
  const sizeMap = {
- xs: { box: 'w-5 h-5', icon: 'w-3 h-3', sub: 'w-2 h-2' },
- sm: { box: 'w-7 h-7', icon: 'w-4 h-4', sub: 'w-2.5 h-2.5' },
- md: { box: 'w-10 h-10', icon: 'w-6 h-6', sub: 'w-3.5 h-3.5' },
- lg: { box: 'w-14 h-14', icon: 'w-8 h-8', sub: 'w-4 h-4' },
- xl: { box: 'w-20 h-20', icon: 'w-12 h-12', sub: 'w-6 h-6' },
+ xs: { box:'w-5 h-5', icon:'w-3 h-3', sub:'w-2 h-2' },
+ sm: { box:'w-7 h-7', icon:'w-4 h-4', sub:'w-2.5 h-2.5' },
+ md: { box:'w-10 h-10', icon:'w-6 h-6', sub:'w-3.5 h-3.5' },
+ lg: { box:'w-14 h-14', icon:'w-8 h-8', sub:'w-4 h-4' },
+ xl: { box:'w-20 h-20', icon:'w-12 h-12', sub:'w-6 h-6' },
  };
 
  const currentSize = sizeMap[size];
 
  switch (iconType) {
- case 'sun':
+ case'sun':
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
  {/* Resplandor áureo con micro-pulso */}
@@ -48,7 +48,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 3.5, 
  repeat: Infinity, 
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className="absolute inset-0 rounded-full bg-amber-400/25 blur-sm"
  />
@@ -58,7 +58,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 20, 
  repeat: Infinity, 
- ease: "linear" 
+ ease:"linear" 
  }}
  className="relative z-10 flex items-center justify-center text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
  >
@@ -67,7 +67,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  </div>
  );
 
- case 'cloud-sun':
+ case'cloud-sun':
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
  {/* Sol asomándose por detrás con rotación suave */}
@@ -80,7 +80,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 5, 
  repeat: Infinity, 
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className="absolute top-0 right-0 z-0 text-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
  >
@@ -95,7 +95,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 4, 
  repeat: Infinity, 
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className="relative z-10 text-amber-200/95 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
  >
@@ -104,7 +104,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  </div>
  );
 
- case 'cloud':
+ case'cloud':
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
  {/* Sombra de nube detrás */}
@@ -116,7 +116,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 4.5, 
  repeat: Infinity, 
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className="absolute -top-0.5 -right-0.5 text-[var(--ink-2)]/40 blur-[1px]"
  >
@@ -131,7 +131,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 4, 
  repeat: Infinity, 
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className="relative z-10 text-[var(--ink-3)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
  >
@@ -140,25 +140,25 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  </div>
  );
 
- case 'rain':
+ case'rain':
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
  {/* Resplandor acuático suave */}
  <motion.div
  animate={{ opacity: [0.2, 0.45, 0.2] }}
- transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+ transition={{ duration: 2.5, repeat: Infinity, ease:"easeInOut" }}
  className="absolute inset-0 rounded-full bg-sky-500/15 blur-sm"
  />
  {/* Nube con lluvia */}
  <motion.div
  animate={{ y: [-0.5, 0.5, -0.5] }}
- transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+ transition={{ duration: 2, repeat: Infinity, ease:"easeInOut" }}
  className="relative z-10 text-sky-400 drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]"
  >
  <CloudRain className={currentSize.icon} />
  </motion.div>
  {/* Microgotas adicionales cayendo para reforzar dinamismo visual */}
- {size !== 'xs' && (
+ {size !=='xs' && (
  <div className="absolute -bottom-1 flex gap-1 justify-center w-full z-20 pointer-events-none">
  <motion.div
  animate={{ 
@@ -168,7 +168,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 0.9, 
  repeat: Infinity, 
- ease: "easeIn",
+ ease:"easeIn",
  delay: 0.1 
  }}
  className="w-0.5 h-1.5 rounded-full bg-sky-300"
@@ -181,7 +181,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 1.1, 
  repeat: Infinity, 
- ease: "easeIn",
+ ease:"easeIn",
  delay: 0.5 
  }}
  className="w-0.5 h-1.5 rounded-full bg-sky-400"
@@ -191,7 +191,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  </div>
  );
 
- case 'lightning':
+ case'lightning':
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
  {/* Resplandor de relámpago con flash estroboscópico sutil */}
@@ -204,7 +204,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  duration: 2.4, 
  repeat: Infinity, 
  times: [0, 0.08, 0.15, 0.22, 1],
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className="absolute inset-0 rounded-full bg-yellow-400/30 blur-md"
  />
@@ -212,17 +212,14 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  <motion.div
  animate={{ 
  y: [-0.5, 0.5, -0.5],
- filter: [
- 'brightness(1)', 
- 'brightness(1.5) drop-shadow(0 0 10px rgba(250,204,21,0.8))', 
- 'brightness(1)'
+ filter: ['brightness(1)','brightness(1.5) drop-shadow(0 0 10px rgba(250,204,21,0.8))','brightness(1)'
  ]
  }}
  transition={{ 
  duration: 2.4, 
  repeat: Infinity, 
  times: [0, 0.1, 1],
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className="relative z-10 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]"
  >
@@ -231,7 +228,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  </div>
  );
 
- case 'snow':
+ case'snow':
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
  {/* Halo gélido */}
@@ -240,7 +237,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  scale: [0.9, 1.1, 0.9],
  opacity: [0.2, 0.5, 0.2]
  }}
- transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+ transition={{ duration: 4, repeat: Infinity, ease:"easeInOut" }}
  className="absolute inset-0 rounded-full bg-cyan-400/20 blur-sm"
  />
  {/* Copo de nieve girando y flotando con suavidad */}
@@ -250,8 +247,8 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  y: [-1.5, 1.5, -1.5]
  }}
  transition={{ 
- rotate: { duration: 12, repeat: Infinity, ease: "linear" },
- y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+ rotate: { duration: 12, repeat: Infinity, ease:"linear" },
+ y: { duration: 3, repeat: Infinity, ease:"easeInOut" }
  }}
  className="relative z-10 text-cyan-300 drop-shadow-[0_0_8px_rgba(103,232,249,0.6)]"
  >
@@ -260,7 +257,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  </div>
  );
 
- case 'fog':
+ case'fog':
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
  {/* Bruma oscilante horizontal */}
@@ -272,7 +269,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 4.5, 
  repeat: Infinity, 
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className="relative z-10 text-[var(--ink-3)] drop-shadow-[0_0_6px_rgba(148,163,184,0.3)]"
  >
@@ -281,7 +278,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  </div>
  );
 
- case 'wind':
+ case'wind':
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
  {/* Ráfaga con vaivén dinámico y aceleración */}
@@ -293,10 +290,10 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 2.2, 
  repeat: Infinity, 
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity === 'danger' ? 'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.5)]' : 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]'
+ severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.5)]' :'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]'
  }`}
  >
  <Wind className={currentSize.icon} />
@@ -304,7 +301,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  </div>
  );
 
- case 'thermometer':
+ case'thermometer':
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
  <motion.div
@@ -314,17 +311,17 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 2, 
  repeat: Infinity, 
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity === 'danger' ? 'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' : 'text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
+ severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
  }`}
  >
  <Thermometer className={currentSize.icon} />
  </motion.div>
  </div>
  );
- case 'alert':
+ case'alert':
  default:
  return (
  <div className={`relative flex items-center justify-center ${currentSize.box} ${className}`}>
@@ -336,10 +333,10 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  transition={{ 
  duration: 1.5, 
  repeat: Infinity, 
- ease: "easeInOut" 
+ ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity === 'danger' ? 'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' : 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]'
+ severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]'
  }`}
  >
  <AlertTriangle className={currentSize.icon} />
@@ -361,35 +358,35 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
  alert,
  compact = false
 }) => {
- const isDanger = alert.severity === 'danger';
+ const isDanger = alert.severity ==='danger';
 
  // Configuración temática por tipo de fenómeno
  const getBadgeStyle = () => {
  switch (alert.icon) {
- case 'lightning':
+ case'lightning':
  return {
- bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-yellow-500/20 /50 text-yellow-300',
- glow: isDanger ? 'shadow-[0_0_8px_rgba(244,63,94,0.3)]' : 'shadow-[0_0_8px_rgba(234,179,8,0.3)]'
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-yellow-500/20 /50 text-yellow-300',
+ glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(234,179,8,0.3)]'
  };
- case 'rain':
+ case'rain':
  return {
- bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-sky-500/20 border-sky-500/50 text-sky-300',
- glow: isDanger ? 'shadow-[0_0_8px_rgba(244,63,94,0.3)]' : 'shadow-[0_0_8px_rgba(14,165,233,0.3)]'
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-sky-500/20 border-sky-500/50 text-sky-300',
+ glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(14,165,233,0.3)]'
  };
- case 'snow':
+ case'snow':
  return {
- bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-cyan-500/20 border-cyan-500/50 text-cyan-300',
- glow: isDanger ? 'shadow-[0_0_8px_rgba(244,63,94,0.3)]' : 'shadow-[0_0_8px_rgba(6,182,212,0.3)]'
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-cyan-500/20 border-cyan-500/50 text-cyan-300',
+ glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(6,182,212,0.3)]'
  };
- case 'wind':
+ case'wind':
  return {
- bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-amber-500/20 /50 text-amber-300',
- glow: isDanger ? 'shadow-[0_0_8px_rgba(244,63,94,0.3)]' : 'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-amber-500/20 /50 text-amber-300',
+ glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  default:
  return {
- bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-amber-500/20 /50 text-amber-300',
- glow: isDanger ? 'shadow-[0_0_8px_rgba(244,63,94,0.3)]' : 'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-amber-500/20 /50 text-amber-300',
+ glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  }
  };

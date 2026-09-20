@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, List, Grid, CalendarDays, ArrowRight, Music, Users, MapPin, Clock, Sparkles } from 'lucide-react';
-import { Concert, Rehearsal, ThemeColors } from '../../../types';
-import { CalendarWidgetViewMode } from '../../../types/dashboardWidgets';
+import React, { useState } from'react';
+import { Calendar, ChevronLeft, ChevronRight, List, Grid, CalendarDays, ArrowRight, Music, Users, MapPin, Clock, Sparkles } from'lucide-react';
+import { Concert, Rehearsal, ThemeColors } from'../../../types';
+import { CalendarWidgetViewMode } from'../../../types/dashboardWidgets';
 
 export interface CalendarWidgetProps {
  concerts: Concert[];
@@ -9,31 +9,31 @@ export interface CalendarWidgetProps {
  activeBandName?: string;
  colors: ThemeColors;
  isStitchLight?: boolean;
- agendaFilterMode: 'active' | 'all';
- onSetAgendaFilterMode: (mode: 'active' | 'all') => void;
+ agendaFilterMode:'active' |'all';
+ onSetAgendaFilterMode: (mode:'active' |'all') => void;
  onNavigate?: (view: string, options?: any) => void;
  viewMode?: CalendarWidgetViewMode;
  onChangeViewMode?: (mode: CalendarWidgetViewMode) => void;
- filterType?: 'all' | 'concierto' | 'ensayo';
- onChangeFilterType?: (type: 'all' | 'concierto' | 'ensayo') => void;
+ filterType?:'all' |'concierto' |'ensayo';
+ onChangeFilterType?: (type:'all' |'concierto' |'ensayo') => void;
  isEditMode?: boolean;
 }
 
 export function CalendarWidget({
  concerts,
  rehearsals,
- activeBandName = 'Banda',
+ activeBandName ='Banda',
  agendaFilterMode,
  onSetAgendaFilterMode,
  onNavigate,
- viewMode: initialViewMode = 'list',
+ viewMode: initialViewMode ='list',
  onChangeViewMode,
- filterType: initialFilterType = 'all',
+ filterType: initialFilterType ='all',
  onChangeFilterType,
  isEditMode = false
 }: CalendarWidgetProps) {
  const [internalViewMode, setInternalViewMode] = useState<CalendarWidgetViewMode>(initialViewMode);
- const [internalFilterType, setInternalFilterType] = useState<'all' | 'concierto' | 'ensayo'>(initialFilterType);
+ const [internalFilterType, setInternalFilterType] = useState<'all' |'concierto' |'ensayo'>(initialFilterType);
  
  // State for mini_month view mode navigation
  const [currentMonthDate, setCurrentMonthDate] = useState<Date>(new Date());
@@ -47,33 +47,33 @@ export function CalendarWidget({
  else setInternalViewMode(mode);
  };
 
- const handleSetFilterType = (type: 'all' | 'concierto' | 'ensayo') => {
+ const handleSetFilterType = (type:'all' |'concierto' |'ensayo') => {
  if (onChangeFilterType) onChangeFilterType(type);
  else setInternalFilterType(type);
  };
 
- // Filter concerts & rehearsals according to agendaFilterMode ('all' vs 'active')
+ // Filter concerts & rehearsals according to agendaFilterMode ('all' vs'active')
  const displayConcerts = React.useMemo(() => {
- if (agendaFilterMode === 'active') {
+ if (agendaFilterMode ==='active') {
  return concerts.filter(c => {
  if (!c.band_id && !c.bandName) return true;
- const bId = (c.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
- const bName = (c.bandName || '').trim().toLowerCase();
- const activeName = (activeBandName || '').trim().toLowerCase();
- return bId === 'bakandeya' || (bName && activeName && bName === activeName);
+ const bId = (c.band_id ||'').replace(/^(band|reg)-/,'').toLowerCase();
+ const bName = (c.bandName ||'').trim().toLowerCase();
+ const activeName = (activeBandName ||'').trim().toLowerCase();
+ return bId ==='bakandeya' || (bName && activeName && bName === activeName);
  });
  }
  return concerts;
  }, [concerts, agendaFilterMode, activeBandName]);
 
  const displayRehearsals = React.useMemo(() => {
- if (agendaFilterMode === 'active') {
+ if (agendaFilterMode ==='active') {
  return rehearsals.filter(r => {
  if (!r.band_id && !r.bandName) return true;
- const rId = (r.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
- const rName = (r.bandName || '').trim().toLowerCase();
- const activeName = (activeBandName || '').trim().toLowerCase();
- return rId === 'bakandeya' || (rName && activeName && rName === activeName);
+ const rId = (r.band_id ||'').replace(/^(band|reg)-/,'').toLowerCase();
+ const rName = (r.bandName ||'').trim().toLowerCase();
+ const activeName = (activeBandName ||'').trim().toLowerCase();
+ return rId ==='bakandeya' || (rName && activeName && rName === activeName);
  });
  }
  return rehearsals;
@@ -83,7 +83,7 @@ export function CalendarWidget({
  const todayStr = new Date().toISOString().split('T')[0];
  const upcomingEvents: Array<{
  id: string;
- type: 'concierto' | 'ensayo';
+ type:'concierto' |'ensayo';
  title: string;
  dateStr: string;
  day: string;
@@ -95,51 +95,51 @@ export function CalendarWidget({
  details?: string;
  }> = [];
 
- const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+ const monthNames = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 
- if (filterType === 'all' || filterType === 'concierto') {
+ if (filterType ==='all' || filterType ==='concierto') {
  displayConcerts.forEach(c => {
  const parts = c.fecha ? c.fecha.split('-') : [];
- const day = parts[2] || '15';
+ const day = parts[2] ||'15';
  const monthIdx = parts[1] ? parseInt(parts[1], 10) - 1 : 7;
- const month = monthNames[monthIdx] || 'AGO';
+ const month = monthNames[monthIdx] ||'AGO';
 
  upcomingEvents.push({
  id: c.id,
- type: 'concierto',
- title: c.sala || c.ciudad || 'Concierto en Vivo',
+ type:'concierto',
+ title: c.sala || c.ciudad ||'Concierto en Vivo',
  dateStr: c.fecha,
  day,
  month,
  time: (c as any).hora || undefined,
- location: [c.sala, c.ciudad].filter(Boolean).join(' • ') || 'Por determinar',
- badge: c.contrato_firmado ? 'Contrato Firmado' : 'Programado',
+ location: [c.sala, c.ciudad].filter(Boolean).join(' •') ||'Por determinar',
+ badge: c.contrato_firmado ?'Contrato Firmado' :'Programado',
  bandName: (c as any).bandName || activeBandName,
  details: c.cache ? `Caché: ${c.cache}€` : undefined
  });
  });
  }
 
- if (filterType === 'all' || filterType === 'ensayo') {
+ if (filterType ==='all' || filterType ==='ensayo') {
  displayRehearsals.forEach(r => {
- if (r.fecha && r.fecha < todayStr && r.estado === 'completado') return;
+ if (r.fecha && r.fecha < todayStr && r.estado ==='completado') return;
  const parts = r.fecha ? r.fecha.split('-') : [];
- const day = parts[2] || '10';
+ const day = parts[2] ||'10';
  const monthIdx = parts[1] ? parseInt(parts[1], 10) - 1 : 7;
- const month = monthNames[monthIdx] || 'AGO';
+ const month = monthNames[monthIdx] ||'AGO';
 
  upcomingEvents.push({
  id: r.id,
- type: 'ensayo',
- title: r.lugar ? `Ensayo en ${r.lugar}` : 'Ensayo General',
+ type:'ensayo',
+ title: r.lugar ? `Ensayo en ${r.lugar}` :'Ensayo General',
  dateStr: r.fecha,
  day,
  month,
- time: r.hora || '18:00',
- location: r.lugar || 'Local de Ensayo',
- badge: r.estado === 'completado' ? 'Completado' : 'Programado',
+ time: r.hora ||'18:00',
+ location: r.lugar ||'Local de Ensayo',
+ badge: r.estado ==='completado' ?'Completado' :'Programado',
  bandName: (r as any).bandName || activeBandName,
- details: `Horario: ${r.hora || '18:00'}`
+ details: `Horario: ${r.hora ||'18:00'}`
  });
  });
  }
@@ -164,7 +164,7 @@ export function CalendarWidget({
  eventsByDayMap.set(evt.dateStr, list);
  });
 
- const fullMonthName = currentMonthDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+ const fullMonthName = currentMonthDate.toLocaleDateString('es-ES', { month:'long', year:'numeric' });
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] transition-all space-y-4">
@@ -179,7 +179,7 @@ export function CalendarWidget({
  Agenda
  </h3>
  <p className="text-xs text-[var(--ink-3)]">
- {agendaFilterMode === 'all' ? 'Eventos de todas las bandas' : `Eventos de ${activeBandName}`}
+ {agendaFilterMode ==='all' ?'Eventos de todas las bandas' : `Eventos de ${activeBandName}`}
  </p>
  </div>
  </div>
@@ -192,9 +192,9 @@ export function CalendarWidget({
  type="button"
  onClick={() => handleSetViewMode('list')}
  className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
- viewMode === 'list'
- ? 'bg-[var(--acc)] text-[var(--on-acc)]'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ viewMode ==='list'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Vista Lista Próximos"
  >
@@ -205,9 +205,9 @@ export function CalendarWidget({
  type="button"
  onClick={() => handleSetViewMode('mini_month')}
  className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
- viewMode === 'mini_month'
- ? 'bg-[var(--acc)] text-[var(--on-acc)]'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ viewMode ==='mini_month'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Vista Mensual Compacta"
  >
@@ -218,9 +218,9 @@ export function CalendarWidget({
  type="button"
  onClick={() => handleSetViewMode('weekly_grid')}
  className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
- viewMode === 'weekly_grid'
- ? 'bg-[var(--acc)] text-[var(--on-acc)]'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ viewMode ==='weekly_grid'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Vista Agenda Semanal"
  >
@@ -233,16 +233,16 @@ export function CalendarWidget({
  {onSetAgendaFilterMode && (
  <button
  type="button"
- onClick={() => onSetAgendaFilterMode(agendaFilterMode === 'all' ? 'active' : 'all')}
+ onClick={() => onSetAgendaFilterMode(agendaFilterMode ==='all' ?'active' :'all')}
  className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
- agendaFilterMode === 'all'
- ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
- : 'bg-[var(--sunken)] text-[var(--ink-2)] font-medium'
+ agendaFilterMode ==='all'
+ ?'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] font-medium'
  }`}
- title={agendaFilterMode === 'all' ? 'Ver solo eventos de la banda activa' : 'Ver eventos de todas las bandas'}
+ title={agendaFilterMode ==='all' ?'Ver solo eventos de la banda activa' :'Ver eventos de todas las bandas'}
  >
  <Users className="w-3 h-3" />
- <span>{agendaFilterMode === 'all' ? 'Todas las bandas' : (activeBandName || 'Banda activa')}</span>
+ <span>{agendaFilterMode ==='all' ?'Todas las bandas' : (activeBandName ||'Banda activa')}</span>
  </button>
  )}
 
@@ -252,9 +252,9 @@ export function CalendarWidget({
  type="button"
  onClick={() => handleSetFilterType('all')}
  className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
- filterType === 'all'
- ? 'bg-[var(--sunken)] text-[var(--acc-ink)] font-semibold'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ filterType ==='all'
+ ?'bg-[var(--sunken)] text-[var(--acc-ink)] font-semibold'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  Todos
@@ -263,9 +263,9 @@ export function CalendarWidget({
  type="button"
  onClick={() => handleSetFilterType('concierto')}
  className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
- filterType === 'concierto'
- ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ filterType ==='concierto'
+ ?'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  Bolos
@@ -274,9 +274,9 @@ export function CalendarWidget({
  type="button"
  onClick={() => handleSetFilterType('ensayo')}
  className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
- filterType === 'ensayo'
- ? 'bg-[var(--ok-soft)] text-[var(--ok)] font-semibold'
- : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ filterType ==='ensayo'
+ ?'bg-[var(--ok-soft)] text-[var(--ok)] font-semibold'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  Ensayos
@@ -298,7 +298,7 @@ export function CalendarWidget({
  </div>
 
  {/* VISTA 1: LISTA PRÓXIMAS FECHAS */}
- {viewMode === 'list' && (
+ {viewMode ==='list' && (
  <>
  {upcomingEvents.length > 0 ? (
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -320,9 +320,9 @@ export function CalendarWidget({
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className={`text-[9px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold uppercase tracking-wide ${
- item.type === 'concierto'
- ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
- : 'bg-[var(--ok-soft)] text-[var(--ok)]'
+ item.type ==='concierto'
+ ?'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ :'bg-[var(--ok-soft)] text-[var(--ok)]'
  }`}>
  {item.type}
  </span>
@@ -356,10 +356,10 @@ export function CalendarWidget({
  )}
 
  {/* VISTA 2: CALENDARIO MENSUAL COMPACTO */}
- {viewMode === 'mini_month' && (
+ {viewMode ==='mini_month' && (
  <div className="space-y-3">
  {/* Calendar Controls */}
- <div className="flex items-center justify-between bg-[var(--surface)] p-2.5 rounded-[var(--r-m)] ">
+ <div className="flex items-center justify-between bg-[var(--surface)] p-2.5 rounded-[var(--r-m)]">
  <button
  type="button"
  onClick={() => setCurrentMonthDate(new Date(year, month - 1, 1))}
@@ -381,7 +381,7 @@ export function CalendarWidget({
 
  {/* Grid of days */}
  <div className="grid grid-cols-7 gap-1 text-center font-mono text-xs">
- {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map(d => (
+ {['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d => (
  <div key={d} className="text-[10px] text-neutral-500 font-bold py-1 uppercase">{d}</div>
  ))}
 
@@ -393,15 +393,15 @@ export function CalendarWidget({
  {/* Days of current month */}
  {Array.from({ length: totalDays }).map((_, i) => {
  const dayNum = i + 1;
- const dayPadded = String(dayNum).padStart(2, '0');
- const monthPadded = String(month + 1).padStart(2, '0');
+ const dayPadded = String(dayNum).padStart(2,'0');
+ const monthPadded = String(month + 1).padStart(2,'0');
  const dateKey = `${year}-${monthPadded}-${dayPadded}`;
  const dayEvents = eventsByDayMap.get(dateKey) || [];
  const isToday = dateKey === todayStr;
  const isSelected = selectedDayStr === dateKey;
 
- const hasConcert = dayEvents.some(e => e.type === 'concierto');
- const hasRehearsal = dayEvents.some(e => e.type === 'ensayo');
+ const hasConcert = dayEvents.some(e => e.type ==='concierto');
+ const hasRehearsal = dayEvents.some(e => e.type ==='ensayo');
 
  return (
  <button
@@ -410,12 +410,12 @@ export function CalendarWidget({
  onClick={() => setSelectedDayStr(dateKey === selectedDayStr ? null : dateKey)}
  className={`p-1.5 min-h-[38px] rounded-[var(--r-s)] text-xs flex flex-col items-center justify-between transition-all cursor-pointer relative ${
  isSelected
- ? 'bg-amber-500/20 text-amber-200 font-bold shadow-xs'
+ ?'bg-amber-500/20 text-amber-200 font-bold shadow-xs'
  : isToday
- ? 'bg-stone-800 /40 text-amber-400 font-black'
+ ?'bg-stone-800 /40 text-amber-400 font-black'
  : dayEvents.length > 0
- ? 'bg-[var(--surface)] /80 text-[var(--sunken)] hover:/30'
- : 'bg-[var(--surface)]/50 /40 text-[var(--ink-2)] hover:bg-stone-900'
+ ?'bg-[var(--surface)] /80 text-[var(--sunken)] hover:/30'
+ :'bg-[var(--surface)]/50 /40 text-[var(--ink-2)] hover:bg-stone-900'
  }`}
  >
  <span className="leading-none">{dayNum}</span>
@@ -433,7 +433,7 @@ export function CalendarWidget({
  {/* Details for selected day if clicked */}
  {selectedDayStr && (
  <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-mono space-y-2">
- <div className="flex items-center justify-between text-[var(--ink-3)] pb-1.5 border-b ">
+ <div className="flex items-center justify-between text-[var(--ink-3)] pb-1.5 border-b">
  <span className="font-bold text-amber-300">Eventos para {selectedDayStr}:</span>
  <button type="button" onClick={() => setSelectedDayStr(null)} className="text-neutral-500 hover:text-[var(--ink-3)]">✕</button>
  </div>
@@ -446,7 +446,7 @@ export function CalendarWidget({
  >
  <div>
  <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
- evt.type === 'concierto' ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'
+ evt.type ==='concierto' ?'bg-amber-500/20 text-amber-300' :'bg-emerald-500/20 text-emerald-300'
  }`}>
  {evt.type}
  </span>
@@ -465,7 +465,7 @@ export function CalendarWidget({
  )}
 
  {/* VISTA 3: AGENDA SEMANAL COMPACTA */}
- {viewMode === 'weekly_grid' && (
+ {viewMode ==='weekly_grid' && (
  <div className="space-y-3">
  <p className="text-xs font-mono text-[var(--ink-2)]">Próximos 7 días de actividad programada:</p>
  <div className="grid grid-cols-1 sm:grid-cols-7 gap-2">
@@ -473,7 +473,7 @@ export function CalendarWidget({
  const date = new Date();
  date.setDate(date.getDate() + idx);
  const dateStr = date.toISOString().split('T')[0];
- const dayName = date.toLocaleDateString('es-ES', { weekday: 'short' });
+ const dayName = date.toLocaleDateString('es-ES', { weekday:'short' });
  const dayNum = date.getDate();
  const dayEvts = eventsByDayMap.get(dateStr) || [];
 
@@ -482,11 +482,11 @@ export function CalendarWidget({
  key={dateStr}
  className={`p-2.5 rounded-[var(--r-m)] text-xs font-mono flex flex-col justify-between min-h-[90px] transition-all ${
  dayEvts.length > 0
- ? 'bg-[var(--surface)] /40'
- : 'bg-[var(--surface)]/60 '
+ ?'bg-[var(--surface)] /40'
+ :'bg-[var(--surface)]/60'
  }`}
  >
- <div className="flex items-center justify-between pb-1 border-b ">
+ <div className="flex items-center justify-between pb-1 border-b">
  <span className="uppercase text-[10px] text-[var(--ink-2)] font-bold">{dayName}</span>
  <span className="font-bold text-amber-400">{dayNum}</span>
  </div>
@@ -497,7 +497,7 @@ export function CalendarWidget({
  key={e.id}
  onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: e.id, selectedDate: e.dateStr })}
  className={`text-[9px] p-1 rounded font-bold truncate cursor-pointer ${
- e.type === 'concierto' ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'
+ e.type ==='concierto' ?'bg-amber-500/20 text-amber-300' :'bg-emerald-500/20 text-emerald-300'
  }`}
  title={`${e.type.toUpperCase()}: ${e.title}`}
  >

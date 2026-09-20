@@ -1,13 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from '../context/LanguageContext';
-import { Globe, ChevronDown, Check } from 'lucide-react';
+import React, { useState, useRef, useEffect } from'react';
+import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from'../context/LanguageContext';
+import { Globe, ChevronDown, Check } from'lucide-react';
 
 interface LanguageSelectorProps {
  compact?: boolean;
  className?: string;
 }
 
-export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = false, className = '' }) => {
+export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = false, className ='' }) => {
  const { language, setLanguage } = useLanguage();
  const [isOpen, setIsOpen] = useState(false);
  const dropdownRef = useRef<HTMLDivElement>(null);
@@ -31,15 +31,15 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = fa
  onClick={() => setIsOpen(!isOpen)}
  className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-medium transition-all duration-200 cursor-pointer active:scale-95 ${
  isOpen
- ? 'bg-amber-500/20 text-amber-300 /40 shadow-xs'
- : 'bg-[#1A1918] text-[var(--ink-3)] border-[var(--surface)] hover:bg-[var(--surface)] hover:text-white'
+ ?'bg-amber-500/20 text-amber-300 /40 shadow-xs'
+ :'bg-[#1A1918] text-[var(--ink-3)] border-[var(--surface)] hover:bg-[var(--surface)] hover:text-white'
  }`}
  title="Cambiar idioma / Change language"
  >
  <span className="text-sm leading-none">{currentLangObj.flag}</span>
  {!compact && <span className="font-sans font-bold text-xs">{currentLangObj.label}</span>}
  <span className="text-[10px] uppercase text-amber-400/90 font-mono">({currentLangObj.code})</span>
- <ChevronDown className={`w-3.5 h-3.5 text-[var(--ink-2)] transition-transform duration-200 ${isOpen ? 'rotate-180 text-amber-400' : ''}`} />
+ <ChevronDown className={`w-3.5 h-3.5 text-[var(--ink-2)] transition-transform duration-200 ${isOpen ?'rotate-180 text-amber-400' :''}`} />
  </button>
 
  {isOpen && (
@@ -66,8 +66,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = fa
  }}
  className={`w-full flex items-center justify-between px-3 py-2 text-xs font-sans text-left transition-colors cursor-pointer ${
  isSelected
- ? 'bg-amber-500/15 text-amber-300 font-bold'
- : 'text-[var(--ink-3)] hover:bg-[#1A1918] hover:text-white'
+ ?'bg-amber-500/15 text-amber-300 font-bold'
+ :'text-[var(--ink-3)] hover:bg-[#1A1918] hover:text-white'
  }`}
  >
  <div className="flex items-center gap-2.5">

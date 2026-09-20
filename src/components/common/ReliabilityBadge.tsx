@@ -1,41 +1,41 @@
-import React, { useState } from 'react';
-import { Target, CheckCircle2, AlertCircle } from 'lucide-react';
-import { calculateLeadReliability } from '../../utils/leadReliability';
-import { Lead, BandContact } from '../../types';
+import React, { useState } from'react';
+import { Target, CheckCircle2, AlertCircle } from'lucide-react';
+import { calculateLeadReliability } from'../../utils/leadReliability';
+import { Lead, BandContact } from'../../types';
 
 interface ReliabilityBadgeProps {
  item: Lead | BandContact;
- size?: 'sm' | 'md';
+ size?:'sm' |'md';
  showDetails?: boolean;
  className?: string;
 }
 
 export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  item,
- size = 'md',
+ size ='md',
  showDetails = false,
- className = ''
+ className =''
 }) => {
  const [showTooltip, setShowTooltip] = useState(false);
  const { score, details } = calculateLeadReliability(item);
 
  // Color coding
- let badgeColor = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
- let barColor = 'bg-emerald-400';
- let levelText = 'Fiabilidad Alta';
+ let badgeColor ='bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+ let barColor ='bg-emerald-400';
+ let levelText ='Fiabilidad Alta';
 
  if (score < 50) {
- badgeColor = 'bg-amber-500/15 text-amber-300 /30';
- barColor = 'bg-amber-400';
- levelText = 'Fiabilidad Media';
+ badgeColor ='bg-amber-500/15 text-amber-300 /30';
+ barColor ='bg-amber-400';
+ levelText ='Fiabilidad Media';
  }
  if (score < 30) {
- badgeColor = 'bg-red-500/15 text-red-300 border-red-500/30';
- barColor = 'bg-red-400';
- levelText = 'Fiabilidad Baja';
+ badgeColor ='bg-red-500/15 text-red-300 border-red-500/30';
+ barColor ='bg-red-400';
+ levelText ='Fiabilidad Baja';
  }
 
- const isSmall = size === 'sm';
+ const isSmall = size ==='sm';
 
  return (
  <div 
@@ -45,10 +45,10 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  >
  <div 
  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] font-mono font-semibold transition-all cursor-help ${badgeColor} ${
- isSmall ? 'text-[10px]' : 'text-xs'
+ isSmall ?'text-[10px]' :'text-xs'
  }`}
  >
- <Target className={isSmall ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
+ <Target className={isSmall ?'w-3 h-3' :'w-3.5 h-3.5'} />
  <span>{score}% Fiabilidad</span>
  </div>
 
@@ -60,7 +60,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  <Target className="w-3.5 h-3.5 text-amber-400" />
  Autodetector de Fiabilidad
  </span>
- <span className={`font-mono font-bold text-xs ${score >= 50 ? 'text-emerald-400' : 'text-amber-400'}`}>
+ <span className={`font-mono font-bold text-xs ${score >= 50 ?'text-emerald-400' :'text-amber-400'}`}>
  {score}%
  </span>
  </div>

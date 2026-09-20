@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from'react';
 import {
  AtSign,
  Mail,
@@ -16,16 +16,16 @@ import {
  ChevronDown,
  ChevronUp,
  Info
-} from 'lucide-react';
-import QRCode from 'react-qr-code';
-import { EPKConfig } from '../../types';
-import { EPKBlockWrapper } from './EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta, UNIFIED_PLATFORMS } from './epkBlocks';
+} from'lucide-react';
+import QRCode from'react-qr-code';
+import { EPKConfig } from'../../types';
+import { EPKBlockWrapper } from'./EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta, UNIFIED_PLATFORMS } from'./epkBlocks';
 import {
  buildEmailSignatureHtml,
  buildEmailSignaturePlainText,
  copyRichSignatureToClipboard
-} from '../../utils/emailFormatter';
+} from'../../utils/emailFormatter';
 
 interface EPKFirmaQRBlockProps {
  config: EPKConfig;
@@ -56,9 +56,9 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  onSave,
  isAllView = false
 }) => {
- const [copiadoFirma, setCopiadoFirma] = useState<false | 'rich' | 'html' | 'text'>(false);
+ const [copiadoFirma, setCopiadoFirma] = useState<false |'rich' |'html' |'text'>(false);
  const [showInstructions, setShowInstructions] = useState(false);
- const [instructionTab, setInstructionTab] = useState<'gmail' | 'outlook' | 'apple'>('gmail');
+ const [instructionTab, setInstructionTab] = useState<'gmail' |'outlook' |'apple'>('gmail');
 
  const handleCopyRichSignature = async () => {
  const success = await copyRichSignatureToClipboard({
@@ -78,7 +78,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  isBakandeya,
  publicEpkUrl
  });
- if (typeof navigator !== 'undefined' && navigator.clipboard) {
+ if (typeof navigator !=='undefined' && navigator.clipboard) {
  await navigator.clipboard.writeText(html);
  setCopiadoFirma('html');
  setTimeout(() => setCopiadoFirma(false), 3000);
@@ -91,7 +91,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  isBakandeya,
  publicEpkUrl
  });
- if (typeof navigator !== 'undefined' && navigator.clipboard) {
+ if (typeof navigator !=='undefined' && navigator.clipboard) {
  await navigator.clipboard.writeText(text);
  setCopiadoFirma('text');
  setTimeout(() => setCopiadoFirma(false), 3000);
@@ -123,7 +123,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <label className="text-xs font-bold text-[var(--ink-3)]">Nombre del Remitente</label>
  <input
  type="text"
- value={config.firmaEmail?.nombreRemitente || ''}
+ value={config.firmaEmail?.nombreRemitente ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -139,7 +139,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <label className="text-xs font-bold text-[var(--ink-3)]">Cargo / Puesto</label>
  <input
  type="text"
- value={config.firmaEmail?.cargo || ''}
+ value={config.firmaEmail?.cargo ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -155,7 +155,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <label className="text-xs font-bold text-[var(--ink-3)]">Teléfono de Contacto</label>
  <input
  type="text"
- value={config.firmaEmail?.telefono || ''}
+ value={config.firmaEmail?.telefono ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -171,7 +171,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <label className="text-xs font-bold text-[var(--ink-3)]">Email Oficial</label>
  <input
  type="email"
- value={config.firmaEmail?.email || ''}
+ value={config.firmaEmail?.email ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -191,7 +191,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </p>
  <input
  type="text"
- value={config.firmaEmail?.textoPie || ''}
+ value={config.firmaEmail?.textoPie ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -275,7 +275,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  key={key}
  className="px-2 py-0.5 rounded bg-slate-950 text-[10px] font-mono text-[var(--ink-3)] flex items-center gap-1"
  >
- <span>{platform?.icon || '🔗'}</span>
+ <span>{platform?.icon ||'🔗'}</span>
  <span className="font-semibold">{platform?.label || key}</span>
  </span>
  );
@@ -296,13 +296,13 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </div>
 
  <div className="bg-white text-[var(--ink)] p-4 sm:p-5 rounded-[var(--r-l)] shadow-md space-y-3 font-sans text-xs">
- <p className="text-[var(--ink-3)] italic text-[11px] pb-2 border-b ">
+ <p className="text-[var(--ink-3)] italic text-[11px] pb-2 border-b">
  ... [Cuerpo del correo redactado para la sala o festival] ...
  </p>
 
  <div className="pt-1 space-y-2">
  <div className="flex items-start gap-3">
- {config.logoUrl && config.logoUrl.trim() !== '' ? (
+ {config.logoUrl && config.logoUrl.trim() !=='' ? (
  <img
  src={config.logoUrl}
  alt="Logo"
@@ -322,10 +322,10 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
  <div className="space-y-0.5 flex-1 min-w-0">
  <h4 className="font-bold text-[var(--ink)] text-sm leading-tight truncate">
- {config.firmaEmail?.nombreRemitente || config.contactoBooking?.nombre || (isBakandeya ? 'Booking & Management' : 'Booking & Management Team')}
+ {config.firmaEmail?.nombreRemitente || config.contactoBooking?.nombre || (isBakandeya ?'Booking & Management' :'Booking & Management Team')}
  </h4>
  <p className="text-[var(--ink-2)] font-medium text-xs truncate">
- {config.firmaEmail?.cargo || 'Booking & Management Team'}
+ {config.firmaEmail?.cargo ||'Booking & Management Team'}
  </p>
  {config.firmaEmail?.textoPie && (
  <p className="text-[var(--ink-2)] text-[11px] italic truncate">
@@ -348,7 +348,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  {(config.firmaEmail?.adjuntarDossierPorDefecto ?? true) && (
  <div className="pt-2 pb-1">
  <a
- href={publicEpkUrl || '#'}
+ href={publicEpkUrl ||'#'}
  target="_blank"
  rel="noopener noreferrer"
  className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-white rounded-[var(--r-s)] text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer group"
@@ -357,7 +357,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <span>
  {config.dossierPdfName
  ? `Ver Dossier Oficial (${config.dossierPdfName})`
- : 'Ver Dossier Oficial & EPK Online'}
+ :'Ver Dossier Oficial & EPK Online'}
  </span>
  <ExternalLink className="w-3 h-3 text-[var(--ink-3)]" />
  </a>
@@ -368,9 +368,9 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  {(config.firmaEmail?.incluirIconosRedes ?? true) && (() => {
  const combinedRedes: Record<string, string> = {
  ...(isBakandeya ? {
- instagram: 'https://instagram.com/bakandeya_oficial',
- youtube: 'https://youtube.com/@bakandeya_oficial',
- tiktok: 'https://tiktok.com/@bakandeya_oficial'
+ instagram:'https://instagram.com/bakandeya_oficial',
+ youtube:'https://youtube.com/@bakandeya_oficial',
+ tiktok:'https://tiktok.com/@bakandeya_oficial'
  } : {}),
  ...(config.enlacesRedes || {}),
  ...(config.firmaEmail?.redesSociales || {})
@@ -378,49 +378,49 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
  const badgesMap: Record<string, { label: string; badgeUrl: string }> = {
  instagram: {
- label: 'Instagram',
- badgeUrl: 'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white'
+ label:'Instagram',
+ badgeUrl:'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white'
  },
  facebook: {
- label: 'Facebook',
- badgeUrl: 'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white'
+ label:'Facebook',
+ badgeUrl:'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white'
  },
  tiktok: {
- label: 'TikTok',
- badgeUrl: 'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white'
+ label:'TikTok',
+ badgeUrl:'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white'
  },
  youtube: {
- label: 'YouTube',
- badgeUrl: 'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white'
+ label:'YouTube',
+ badgeUrl:'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white'
  },
  spotify: {
- label: 'Spotify',
- badgeUrl: 'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white'
+ label:'Spotify',
+ badgeUrl:'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white'
  },
  applemusic: {
- label: 'Apple Music',
- badgeUrl: 'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white'
+ label:'Apple Music',
+ badgeUrl:'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white'
  },
  bandcamp: {
- label: 'Bandcamp',
- badgeUrl: 'https://img.shields.io/badge/Bandcamp-629AA9?style=for-the-badge&logo=bandcamp&logoColor=white'
+ label:'Bandcamp',
+ badgeUrl:'https://img.shields.io/badge/Bandcamp-629AA9?style=for-the-badge&logo=bandcamp&logoColor=white'
  },
  website: {
- label: 'Web Oficial',
- badgeUrl: 'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white'
+ label:'Web Oficial',
+ badgeUrl:'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white'
  },
  whatsapp: {
- label: 'WhatsApp',
- badgeUrl: 'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white'
+ label:'WhatsApp',
+ badgeUrl:'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white'
  },
  twitter: {
- label: 'X / Twitter',
- badgeUrl: 'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white'
+ label:'X / Twitter',
+ badgeUrl:'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white'
  }
  };
 
  const filteredEntries = Object.entries(combinedRedes)
- .filter(([net, url]) => url && String(url).trim() !== '' && !['revolut', 'paypal', 'bizum', 'iban', 'cash'].includes(net.toLowerCase()));
+ .filter(([net, url]) => url && String(url).trim() !=='' && !['revolut','paypal','bizum','iban','cash'].includes(net.toLowerCase()));
 
  if (filteredEntries.length === 0) return null;
 
@@ -433,9 +433,9 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  badgeUrl: `https://img.shields.io/badge/${encodeURIComponent(net)}-475569?style=for-the-badge`
  };
 
- const rawUrl = String(url || '');
+ const rawUrl = String(url ||'');
  const href = rawUrl.startsWith('http') || rawUrl.startsWith('+')
- ? (rawUrl.startsWith('+') ? `https://wa.me/${rawUrl.replace(/\+/g, '')}` : rawUrl)
+ ? (rawUrl.startsWith('+') ? `https://wa.me/${rawUrl.replace(/\+/g,'')}` : rawUrl)
  : `https://${rawUrl}`;
 
  return (
@@ -474,13 +474,13 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  id="copy-rich-signature-btn"
  onClick={handleCopyRichSignature}
  className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md ${
- copiadoFirma === 'rich'
- ? 'bg-emerald-500 text-slate-950 ring-2 ring-emerald-400'
- : 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 shadow-amber-500/10'
+ copiadoFirma ==='rich'
+ ?'bg-emerald-500 text-slate-950 ring-2 ring-emerald-400'
+ :'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 shadow-amber-500/10'
  }`}
  title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"
  >
- {copiadoFirma === 'rich' ? (
+ {copiadoFirma ==='rich' ? (
  <>
  <Check className="w-4 h-4 stroke-[3]" />
  <span>¡Firma Formateada Copiada!</span>
@@ -499,14 +499,14 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  id="copy-html-signature-btn"
  onClick={handleCopyHtmlCode}
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
- copiadoFirma === 'html'
- ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
- : 'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
+ copiadoFirma ==='html'
+ ?'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+ :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
  }`}
  title="Copiar el código fuente HTML puro de la firma"
  >
- {copiadoFirma === 'html' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Code className="w-3.5 h-3.5 text-amber-400" />}
- <span>{copiadoFirma === 'html' ? '¡HTML Copiado!' : 'HTML'}</span>
+ {copiadoFirma ==='html' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Code className="w-3.5 h-3.5 text-amber-400" />}
+ <span>{copiadoFirma ==='html' ?'¡HTML Copiado!' :'HTML'}</span>
  </button>
 
  <button
@@ -514,14 +514,14 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  id="copy-plain-signature-btn"
  onClick={handleCopyPlainText}
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
- copiadoFirma === 'text'
- ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
- : 'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
+ copiadoFirma ==='text'
+ ?'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+ :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
  }`}
  title="Copiar versión en texto plano"
  >
- {copiadoFirma === 'text' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <FileText className="w-3.5 h-3.5 text-[var(--ink-3)]" />}
- <span>{copiadoFirma === 'text' ? '¡Texto Copiado!' : 'Texto'}</span>
+ {copiadoFirma ==='text' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <FileText className="w-3.5 h-3.5 text-[var(--ink-3)]" />}
+ <span>{copiadoFirma ==='text' ?'¡Texto Copiado!' :'Texto'}</span>
  </button>
  </div>
  </div>
@@ -531,13 +531,13 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <div className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-300 text-xs flex items-start gap-2 animate-fadeIn">
  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
  <div className="leading-snug">
- {copiadoFirma === 'rich' && (
+ {copiadoFirma ==='rich' && (
  <span><strong>¡Firma visual copiada!</strong> Ahora ve a los ajustes de firma de tu correo (Gmail, Outlook, Apple Mail...) y pulsa <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-amber-300 font-mono text-[10px]">Ctrl + V</kbd> (o <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-amber-300 font-mono text-[10px]">Cmd + V</kbd>) para pegarla con todos sus enlaces y logos.</span>
  )}
- {copiadoFirma === 'html' && (
+ {copiadoFirma ==='html' && (
  <span><strong>¡Código HTML copiado!</strong> Puedes pegarlo en clientes de correo o editores que admitan código HTML directo.</span>
  )}
- {copiadoFirma === 'text' && (
+ {copiadoFirma ==='text' && (
  <span><strong>¡Texto plano copiado!</strong> Ideal para clientes en modo texto o terminal.</span>
  )}
  </div>
@@ -566,9 +566,9 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  type="button"
  onClick={() => setInstructionTab('gmail')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
- instructionTab === 'gmail'
- ? 'bg-amber-500/20 text-amber-300'
- : 'text-[var(--ink-3)] hover:text-white'
+ instructionTab ==='gmail'
+ ?'bg-amber-500/20 text-amber-300'
+ :'text-[var(--ink-3)] hover:text-white'
  }`}
  >
  🔴 Gmail
@@ -577,9 +577,9 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  type="button"
  onClick={() => setInstructionTab('outlook')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
- instructionTab === 'outlook'
- ? 'bg-amber-500/20 text-amber-300'
- : 'text-[var(--ink-3)] hover:text-white'
+ instructionTab ==='outlook'
+ ?'bg-amber-500/20 text-amber-300'
+ :'text-[var(--ink-3)] hover:text-white'
  }`}
  >
  🔵 Outlook / Microsoft 365
@@ -588,9 +588,9 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  type="button"
  onClick={() => setInstructionTab('apple')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
- instructionTab === 'apple'
- ? 'bg-amber-500/20 text-amber-300'
- : 'text-[var(--ink-3)] hover:text-white'
+ instructionTab ==='apple'
+ ?'bg-amber-500/20 text-amber-300'
+ :'text-[var(--ink-3)] hover:text-white'
  }`}
  >
  ⚪ Apple Mail / Mac
@@ -598,7 +598,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </div>
 
  {/* Contenido según tab */}
- {instructionTab === 'gmail' && (
+ {instructionTab ==='gmail' && (
  <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-3)] pl-1 leading-relaxed">
  <li>Haz clic arriba en <strong>"Copiar Firma Formateada"</strong>.</li>
  <li>Abre tu Gmail y pulsa en la rueda de <strong>Ajustes (⚙️)</strong> &gt; <strong>Ver todos los ajustes</strong>.</li>
@@ -608,7 +608,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </ol>
  )}
 
- {instructionTab === 'outlook' && (
+ {instructionTab ==='outlook' && (
  <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-3)] pl-1 leading-relaxed">
  <li>Haz clic arriba en <strong>"Copiar Firma Formateada"</strong>.</li>
  <li>En Outlook Web o App, entra en <strong>Configuración (⚙️)</strong> &gt; <strong>Correo</strong> &gt; <strong>Redactar y responder</strong>.</li>
@@ -617,7 +617,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </ol>
  )}
 
- {instructionTab === 'apple' && (
+ {instructionTab ==='apple' && (
  <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-3)] pl-1 leading-relaxed">
  <li>Haz clic arriba en <strong>"Copiar Firma Formateada"</strong>.</li>
  <li>En la app Mail de Mac, ve al menú superior <strong>Mail</strong> &gt; <strong>Ajustes...</strong> &gt; <strong>Firmas</strong>.</li>
@@ -644,7 +644,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  QR directo a vuestro dossier público para incluir en cartelería, carpetas físicas de prensa o tarjetas de contacto.
  </p>
 
- <div className="p-4 bg-white rounded-[var(--r-l)] inline-block shadow-xl border-4 ">
+ <div className="p-4 bg-white rounded-[var(--r-l)] inline-block shadow-xl border-4">
  <QRCode value={publicEpkUrl} size={150} />
  </div>
 
@@ -659,7 +659,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className="flex-1 px-3 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 hover:bg-amber-400 transition cursor-pointer"
  >
  {copiado ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
- {copiado ? '¡Copiado!' : 'Copiar Enlace'}
+ {copiado ?'¡Copiado!' :'Copiar Enlace'}
  </button>
  <a
  href={publicEpkUrl}

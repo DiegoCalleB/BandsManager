@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { X, Search, Sparkles, MapPin, Music, UserPlus, CheckCircle2, AlertCircle } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
-import { BandContact, BookingCampaign } from '../../types';
-import { apiFetch } from '../../utils/api';
+import React, { useState, useEffect } from'react';
+import { X, Search, Sparkles, MapPin, Music, UserPlus, CheckCircle2, AlertCircle } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
+import { BandContact, BookingCampaign } from'../../types';
+import { apiFetch } from'../../utils/api';
 
 interface AIBandScoutModalProps {
  isOpen: boolean;
@@ -32,7 +32,7 @@ export function AIBandScoutModal({
  if (isOpen) {
  if (activeCampaign && activeCampaign.targetCities.length > 0) {
  // If the campaign is in Madrid, we probably want bands from OUTSIDE Madrid
- // as the user mentioned "bandas conocidillas fuera de madrid para invitarles a venir"
+ // as the user mentioned"bandas conocidillas fuera de madrid para invitarles a venir"
  const mainCity = activeCampaign.targetCities[0].toLowerCase();
  if (mainCity.includes('madrid')) {
  setCity('Barcelona, Valencia o Bilbao'); // Default suggestion outside
@@ -64,8 +64,8 @@ export function AIBandScoutModal({
 
  try {
  const response = await apiFetch('/api/bands/ai-scout', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({ city, genre, count })
  });
  if (response && response.bands) {
@@ -74,7 +74,7 @@ export function AIBandScoutModal({
  setSelectedBands(new Set(response.bands.map((_: any, i: number) => i)));
  }
  } catch (err: any) {
- setError(err.message || 'Error al buscar bandas con IA.');
+ setError(err.message ||'Error al buscar bandas con IA.');
  } finally {
  setIsSearching(false);
  }
@@ -98,11 +98,11 @@ export function AIBandScoutModal({
  onClose();
  };
 
- const bgColor = isStitchLight ? "bg-white" : "bg-[#1a1a1a]";
- const textColor = isStitchLight ? "text-[var(--ink)]" : "text-white";
- const subtextColor = isStitchLight ? "text-[var(--ink-2)]" : "text-gray-400";
- const inputBg = isStitchLight ? "bg-[var(--bg)]" : "bg-[#2a2a2a]";
- const borderColor = isStitchLight ? "" : "border-[#333]";
+ const bgColor = isStitchLight ?"bg-white" :"bg-[#1a1a1a]";
+ const textColor = isStitchLight ?"text-[var(--ink)]" :"text-white";
+ const subtextColor = isStitchLight ?"text-[var(--ink-2)]" :"text-gray-400";
+ const inputBg = isStitchLight ?"bg-[var(--bg)]" :"bg-[#2a2a2a]";
+ const borderColor = isStitchLight ?"" :"border-[#333]";
 
  return (
  <ModalPortal>
@@ -132,7 +132,7 @@ export function AIBandScoutModal({
  <div>
  <p className={`text-sm font-medium ${textColor}`}>Contexto de tu Campaña Activa</p>
  <p className={`text-xs ${subtextColor} mt-1`}>
- Buscando llenar un aforo de {activeCampaign.minCapacity}-{activeCampaign.maxCapacity} en {activeCampaign.targetCities.join(', ')}. 
+ Buscando llenar un aforo de {activeCampaign.minCapacity}-{activeCampaign.maxCapacity} en {activeCampaign.targetCities.join(',')}. 
  Busca bandas de <strong>otras ciudades</strong> para invitarlas a Madrid y luego devolverles la visita (Date Swap).
  </p>
  </div>
@@ -227,12 +227,12 @@ export function AIBandScoutModal({
  onClick={() => toggleSelection(idx)}
  className={`p-4 rounded-[var(--r-m)] border-2 transition-all cursor-pointer flex items-center justify-between
  ${selectedBands.has(idx) 
- ? ' bg-amber-500/5' 
+ ?' bg-amber-500/5' 
  : `${borderColor} ${inputBg} opacity-70 hover:opacity-100`}`}
  >
  <div className="flex items-center gap-4">
  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0
- ${selectedBands.has(idx) ? 'bg-amber-500 text-white' : 'border-2 '}`}>
+ ${selectedBands.has(idx) ?'bg-amber-500 text-white' :'border-2'}`}>
  {selectedBands.has(idx) && <CheckCircle2 className="w-4 h-4" />}
  </div>
  

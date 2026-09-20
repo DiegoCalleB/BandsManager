@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from'react';
 import { 
  Mic, Square, Play, Pause, Trash2, Sparkles, Share2, Copy, Check, 
  Upload, FileAudio, Music, ListChecks, MessageSquare, AlertCircle, RefreshCw, Send
-} from 'lucide-react';
-import { Rehearsal, RehearsalRecording, RehearsalActa, Song, ThemeColors } from '../../types';
-import { formatTime } from './EnsayoCronometro';
+} from'lucide-react';
+import { Rehearsal, RehearsalRecording, RehearsalActa, Song, ThemeColors } from'../../types';
+import { formatTime } from'./EnsayoCronometro';
 
 interface GrabacionActaTabProps {
  rehearsal: Rehearsal;
@@ -26,7 +26,7 @@ export function GrabacionActaTab({
  const [isRecording, setIsRecording] = useState(false);
  const [recordDuration, setRecordDuration] = useState(0);
  const [recordingBlobUrl, setRecordingBlobUrl] = useState<string | null>(null);
- const [recordingTag, setRecordingTag] = useState<'toma_completa' | 'idea_riff' | 'nota_voz_debate' | 'fragmento'>('toma_completa');
+ const [recordingTag, setRecordingTag] = useState<'toma_completa' |'idea_riff' |'nota_voz_debate' |'fragmento'>('toma_completa');
  const [recordingTitle, setRecordingTitle] = useState('');
 
  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -45,7 +45,7 @@ export function GrabacionActaTab({
  useEffect(() => {
  return () => {
  if (recordTimerRef.current) clearInterval(recordTimerRef.current);
- if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+ if (mediaRecorderRef.current && mediaRecorderRef.current.state ==='recording') {
  mediaRecorderRef.current.stop();
  }
  };
@@ -66,7 +66,7 @@ export function GrabacionActaTab({
  };
 
  mediaRecorder.onstop = () => {
- const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+ const audioBlob = new Blob(audioChunksRef.current, { type:'audio/webm' });
  const audioUrl = URL.createObjectURL(audioBlob);
  setRecordingBlobUrl(audioUrl);
  // Stop audio tracks
@@ -90,7 +90,7 @@ export function GrabacionActaTab({
 
  // Handle Stop Audio Recording
  const stopRecording = () => {
- if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+ if (mediaRecorderRef.current && mediaRecorderRef.current.state ==='recording') {
  mediaRecorderRef.current.stop();
  }
  setIsRecording(false);
@@ -106,7 +106,7 @@ export function GrabacionActaTab({
  if (!recordingBlobUrl) return;
  const newRecording: RehearsalRecording = {
  id: `rec-${Date.now()}`,
- titulo: recordingTitle.trim() || `Toma Ensayo ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
+ titulo: recordingTitle.trim() || `Toma Ensayo ${new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })}`,
  audioUrl: recordingBlobUrl,
  duracionSeg: recordDuration || 30,
  duracionSegundos: recordDuration || 30,
@@ -128,16 +128,16 @@ export function GrabacionActaTab({
  const audioUrl = URL.createObjectURL(file);
  const newRecording: RehearsalRecording = {
  id: `rec-${Date.now()}`,
- titulo: file.name.replace(/\.[^/.]+$/, ''),
+ titulo: file.name.replace(/\.[^/.]+$/,''),
  audioUrl,
  duracionSeg: 180,
  duracionSegundos: 180, // Estimado
- tipo: 'toma_completa',
+ tipo:'toma_completa',
  grabadoEn: new Date().toISOString()
  };
 
  onUpdateRehearsal({ grabaciones: [newRecording, ...recordings] });
- e.target.value = '';
+ e.target.value ='';
  };
 
  // Delete Recording
@@ -154,18 +154,18 @@ export function GrabacionActaTab({
  const agenda = rehearsal.agenda || [];
  const objetivos = rehearsal.objetivos || [];
 
- const bordadas = agenda.filter(a => a.evaluacion === 'bordada').map(a => a.titulo);
- const repetir = agenda.filter(a => a.evaluacion === 'repetir').map(a => a.titulo);
- const regulares = agenda.filter(a => a.evaluacion === 'regular').map(a => a.titulo);
+ const bordadas = agenda.filter(a => a.evaluacion ==='bordada').map(a => a.titulo);
+ const repetir = agenda.filter(a => a.evaluacion ==='repetir').map(a => a.titulo);
+ const regulares = agenda.filter(a => a.evaluacion ==='regular').map(a => a.titulo);
 
  const nuevaActa: RehearsalActa = {
  resumenEjecutivo: `Ensayo muy productivo de ${rehearsal.duracionEstimadaMin || 120} min en ${rehearsal.lugar}. Se repasaron ${agenda.length} bloques del repertorio con especial solidez en las secciones rítmicas.`,
  cancionesDestacadas: bordadas.length > 0 ? bordadas : ['Buen empaste general del repertorio'],
  cancionesAPulir: repetir.length > 0 ? repetir : regulares.length > 0 ? regulares : ['Mantener la consistencia en los cambios de dinámica'],
  deberesPorMiembro: [
- { miembro: 'Batería y Bajo', tarea: 'Afinar el corte rítmico en la entrada del segundo estribillo.' },
- { miembro: 'Guitarra', tarea: 'Revisar la ganancia del solo para que no tape los coros.' },
- { miembro: 'Voz / Coros', tarea: 'Memorizar la segunda estrofa del tema nuevo.' }
+ { miembro:'Batería y Bajo', tarea:'Afinar el corte rítmico en la entrada del segundo estribillo.' },
+ { miembro:'Guitarra', tarea:'Revisar la ganancia del solo para que no tape los coros.' },
+ { miembro:'Voz / Coros', tarea:'Memorizar la segunda estrofa del tema nuevo.' }
  ],
  generadoEn: new Date().toISOString()
  };
@@ -357,7 +357,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {rec.titulo}
  </span>
  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-amber-300 uppercase">
- {rec.tipo.replace('_', ' ')}
+ {rec.tipo.replace('_','')}
  </span>
  </div>
 
@@ -413,7 +413,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  ) : (
  <>
  <Sparkles className="w-3.5 h-3.5" />
- <span>{acta ? 'Regenerar Acta con IA' : 'Generar Acta con IA'}</span>
+ <span>{acta ?'Regenerar Acta con IA' :'Generar Acta con IA'}</span>
  </>
  )}
  </button>
@@ -425,7 +425,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  title="Copiar formato listo para WhatsApp"
  >
  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
- <span>{copied ? '¡Copiado!' : 'Copiar para WhatsApp'}</span>
+ <span>{copied ?'¡Copiado!' :'Copiar para WhatsApp'}</span>
  </button>
  )}
  </div>
@@ -434,7 +434,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {/* Display Acta Content */}
  {!acta ? (
  <div className="p-8 text-center text-neutral-500 text-xs space-y-2 border-dashed border-[#262522] rounded-[var(--r-m)]">
- <p>Pulsa "Generar Acta con IA" para obtener un resumen estructurado del ensayo listo para compartir.</p>
+ <p>Pulsa"Generar Acta con IA" para obtener un resumen estructurado del ensayo listo para compartir.</p>
  </div>
  ) : (
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

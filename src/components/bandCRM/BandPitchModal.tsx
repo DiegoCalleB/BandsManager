@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { BandContact } from '../../types';
-import { Repeat, X, Check, Copy, MessageCircle, Send } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { BandContact } from'../../types';
+import { Repeat, X, Check, Copy, MessageCircle, Send } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface BandPitchModalProps {
  isOpen: boolean;
@@ -9,8 +9,8 @@ interface BandPitchModalProps {
  band: BandContact | null;
  isStitchLight?: boolean;
  activeCampaign?: any;
- proposedBakandeyaCity: 'Madrid' | 'Sevilla' | 'Ambas';
- setProposedBakandeyaCity: (val: 'Madrid' | 'Sevilla' | 'Ambas') => void;
+ proposedBakandeyaCity:'Madrid' |'Sevilla' |'Ambas';
+ setProposedBakandeyaCity: (val:'Madrid' |'Sevilla' |'Ambas') => void;
  proposedVenueBakandeya: string;
  setProposedVenueBakandeya: (val: string) => void;
  proposedMonth: string;
@@ -44,7 +44,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#1c1b1b] text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[#1c1b1b] text-[var(--sunken)]'
  }`}>
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
@@ -68,7 +68,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  <label className="block text-[10px] text-[var(--ink-2)] uppercase mb-1">Ciudad de Bakandeya</label>
  <select
  value={proposedBakandeyaCity}
- onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
+ onChange={(e) => setProposedBakandeyaCity(e.target.value as'Madrid' |'Sevilla' |'Ambas')}
  className="w-full bg-neutral-800 text-white px-2 py-1 rounded-[var(--r-s)] text-[10px]"
  >
  <option value="Madrid">Madrid</option>
@@ -128,13 +128,13 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] rounded-[var(--r-m)] font-mono text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
  >
  {copiedPitch ? <Check className="w-4 h-4 text-[#10b981]" /> : <Copy className="w-4 h-4" />}
- <span>{copiedPitch ? '¡Copiado!' : 'Copiar Texto'}</span>
+ <span>{copiedPitch ?'¡Copiado!' :'Copiar Texto'}</span>
  </button>
 
  {/* WhatsApp Link if phone is present */}
  {band.telefono && (
  <a
- href={`https://wa.me/${band.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(pitchText)}`}
+ href={`https://wa.me/${band.telefono.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(pitchText)}`}
  target="_blank"
  rel="noreferrer"
  className="px-2 py-1 bg-[#10b981]/15 hover:bg-[#10b981]/15 text-white font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"

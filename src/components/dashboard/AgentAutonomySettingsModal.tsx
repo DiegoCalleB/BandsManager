@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from'react';
 import {
  Bot, ShieldCheck, Sliders, CheckCircle2, AlertTriangle, X, Sparkles,
  Send, FileEdit, Clock, Euro, Calendar, Lock, ShieldAlert, ArrowRight, Save, Loader2,
  Radio, Mail, FileText, Check, Globe, RefreshCw, Activity, Terminal, ExternalLink,
  ChevronRight, Volume2, Music, CheckSquare, Square, AtSign, UserCheck, Download,
  MessageSquare, ThumbsUp, ThumbsDown, HelpCircle, Brain
-} from 'lucide-react';
-import { api } from '../../services/api';
-import { apiFetch } from '../../utils/api';
-import { BandSchedule } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
-import { EmailAccountConfig } from '../EmailAccountConfig';
+} from'lucide-react';
+import { api } from'../../services/api';
+import { apiFetch } from'../../utils/api';
+import { BandSchedule } from'../../types';
+import { ModalPortal } from'../common/ModalPortal';
+import { EmailAccountConfig } from'../EmailAccountConfig';
 
 const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
- salas: '🏛️ Salas',
- festivales: '🎪 Festivales',
- discotecas: '🪩 Discotecas',
- medios: '📻 Medios',
- grupos: '🎸 Grupos',
- managements: '💼 Managements',
- ayuntamientos: '🎉 Ayuntamientos'
+ salas:'🏛️ Salas',
+ festivales:'🎪 Festivales',
+ discotecas:'🪩 Discotecas',
+ medios:'📻 Medios',
+ grupos:'🎸 Grupos',
+ managements:'💼 Managements',
+ ayuntamientos:'🎉 Ayuntamientos'
 };
 
 interface LearnedRuleBucket {
@@ -29,8 +29,8 @@ interface LearnedRuleBucket {
  terminos_a_evitar?: string[];
 }
 
-export type DispatchAutonomyLevel = 'draft_only' | 'scheduled_window' | 'autonomous_first_contact';
-export type NegotiationDepthLevel = 'outreach_only' | 'filter_conditions' | 'advanced_negotiation';
+export type DispatchAutonomyLevel ='draft_only' |'scheduled_window' |'autonomous_first_contact';
+export type NegotiationDepthLevel ='outreach_only' |'filter_conditions' |'advanced_negotiation';
 
 export interface AgentAutonomyConfig {
  dispatchLevel: DispatchAutonomyLevel;
@@ -59,7 +59,7 @@ export interface AgentAutonomyConfig {
  agentSenderEmail?: string;
  agentSenderName?: string;
  agentReplyToEmail?: string;
- dispatchMode?: 'draft_gmail' | 'direct_send';
+ dispatchMode?:'draft_gmail' |'direct_send';
 }
 
 interface AgentAutonomySettingsModalProps {
@@ -73,7 +73,7 @@ interface AgentAutonomySettingsModalProps {
  onSaveConfig?: (config: AgentAutonomyConfig) => void;
  onOpenTemplatesSection?: () => void;
  // Navega a Gestión de Banda (BandCRM), donde vive de verdad el ADN de Tono (BandToneModal) y
- // el EPK - antes esta modal tenía sus propios campos "Tono"/"Biografía"/"EPK" en la pestaña
+ // el EPK - antes esta modal tenía sus propios campos"Tono"/"Biografía"/"EPK" en la pestaña
  // Tono & Identidad que parecían configurar el Redactor pero no llegaban a persistirse ni a
  // leerse en ningún sitio (dbUpsertAutonomyConfig los descartaba y bandDna.ts nunca los leía).
  // Opcional porque no todos los sitios desde los que se abre esta modal saben navegar fuera de
@@ -82,23 +82,23 @@ interface AgentAutonomySettingsModalProps {
 }
 
 const TIMEZONES = [
- { value: 'Europe/Madrid', label: 'Europe/Madrid (Madrid, Barcelona, París) [UTC+1/UTC+2]' },
- { value: 'America/Mexico_City', label: 'America/Mexico_City (Ciudad de México) [UTC-6]' },
- { value: 'America/Bogota', label: 'America/Bogota (Bogotá, Lima, Quito) [UTC-5]' },
- { value: 'America/Argentina/Buenos_Aires', label: 'America/Argentina/Buenos_Aires (Buenos Aires) [UTC-3]' },
- { value: 'America/Santiago', label: 'America/Santiago (Santiago de Chile) [UTC-3/UTC-4]' },
- { value: 'America/New_York', label: 'America/New_York (Nueva York, Miami) [UTC-5/UTC-4]' },
- { value: 'Europe/London', label: 'Europe/London (Londres, Dublín, Lisboa) [UTC+0/UTC+1]' }
+ { value:'Europe/Madrid', label:'Europe/Madrid (Madrid, Barcelona, París) [UTC+1/UTC+2]' },
+ { value:'America/Mexico_City', label:'America/Mexico_City (Ciudad de México) [UTC-6]' },
+ { value:'America/Bogota', label:'America/Bogota (Bogotá, Lima, Quito) [UTC-5]' },
+ { value:'America/Argentina/Buenos_Aires', label:'America/Argentina/Buenos_Aires (Buenos Aires) [UTC-3]' },
+ { value:'America/Santiago', label:'America/Santiago (Santiago de Chile) [UTC-3/UTC-4]' },
+ { value:'America/New_York', label:'America/New_York (Nueva York, Miami) [UTC-5/UTC-4]' },
+ { value:'Europe/London', label:'Europe/London (Londres, Dublín, Lisboa) [UTC+0/UTC+1]' }
 ];
 
 export const DAYS_OF_WEEK = [
- { id: 1, name: 'Lunes', short: 'Lun', initial: 'L', description: 'Planificación semanal de salas', recommended: false },
- { id: 2, name: 'Martes', short: 'Mar', initial: 'M', description: '⭐ Día Top (+45% respuestas)', recommended: true, badge: '🔥 Top Booking' },
- { id: 3, name: 'Miércoles', short: 'Mié', initial: 'X', description: '⭐ Día Top (Máxima atención de programadores)', recommended: true, badge: '🔥 Top Booking' },
- { id: 4, name: 'Jueves', short: 'Jue', initial: 'J', description: '⭐ Día Top (Cierre de fechas y agenda)', recommended: true, badge: '🔥 Top Booking' },
- { id: 5, name: 'Viernes', short: 'Vie', initial: 'V', description: 'Moderado (Salas en producción de directos)', recommended: false },
- { id: 6, name: 'Sábado', short: 'Sáb', initial: 'S', description: 'Bajo (Conciertos en vivo)', recommended: false },
- { id: 7, name: 'Domingo', short: 'Dom', initial: 'D', description: 'Bajo (Descanso y cierre)', recommended: false }
+ { id: 1, name:'Lunes', short:'Lun', initial:'L', description:'Planificación semanal de salas', recommended: false },
+ { id: 2, name:'Martes', short:'Mar', initial:'M', description:'⭐ Día Top (+45% respuestas)', recommended: true, badge:'🔥 Top Booking' },
+ { id: 3, name:'Miércoles', short:'Mié', initial:'X', description:'⭐ Día Top (Máxima atención de programadores)', recommended: true, badge:'🔥 Top Booking' },
+ { id: 4, name:'Jueves', short:'Jue', initial:'J', description:'⭐ Día Top (Cierre de fechas y agenda)', recommended: true, badge:'🔥 Top Booking' },
+ { id: 5, name:'Viernes', short:'Vie', initial:'V', description:'Moderado (Salas en producción de directos)', recommended: false },
+ { id: 6, name:'Sábado', short:'Sáb', initial:'S', description:'Bajo (Conciertos en vivo)', recommended: false },
+ { id: 7, name:'Domingo', short:'Dom', initial:'D', description:'Bajo (Descanso y cierre)', recommended: false }
 ];
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
@@ -106,8 +106,8 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i);
 export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProps> = ({
  isOpen,
  onClose,
- bandName = 'Tu Banda',
- bandId = 'band-bakandeya',
+ bandName ='Tu Banda',
+ bandId ='band-bakandeya',
  currentUser,
  isStitchLight = false,
  initialConfig,
@@ -116,7 +116,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onOpenBandProfile
 }) => {
  // Navigation Tabs
- const [activeTab, setActiveTab] = useState<'autonomy' | 'email_dispatch' | 'schedules' | 'tone' | 'response_strategies' | 'audit_logs'>('autonomy');
+ const [activeTab, setActiveTab] = useState<'autonomy' |'email_dispatch' |'schedules' |'tone' |'response_strategies' |'audit_logs'>('autonomy');
  const [auditLogs, setAuditLogs] = useState<any[]>([]);
  const [loadingAuditLogs, setLoadingAuditLogs] = useState<boolean>(false);
  const [auditAgentFilter, setAuditAgentFilter] = useState<string>('all');
@@ -139,19 +139,19 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  const handleExportAuditLogsCSV = () => {
  if (!auditLogs || auditLogs.length === 0) return;
- const headers = ['Fecha', 'Agente', 'Motor', 'Disparado Por', 'Email Usuario', 'Estado', 'Mensaje', 'Conteo Afectados', 'Duración (ms)'];
+ const headers = ['Fecha','Agente','Motor','Disparado Por','Email Usuario','Estado','Mensaje','Conteo Afectados','Duración (ms)'];
  const rows = auditLogs.map(l => [
  `"${new Date(l.created_at).toLocaleString('es-ES')}"`,
- `"${l.agente || ''}"`,
- `"${l.motor || ''}"`,
- `"${l.disparado_por_tipo || ''}"`,
- `"${l.usuario_email || l.usuario_id || ''}"`,
- `"${l.estado || ''}"`,
- `"${(l.mensaje || '').replace(/"/g, '""')}"`,
+ `"${l.agente ||''}"`,
+ `"${l.motor ||''}"`,
+ `"${l.disparado_por_tipo ||''}"`,
+ `"${l.usuario_email || l.usuario_id ||''}"`,
+ `"${l.estado ||''}"`,
+ `"${(l.mensaje ||'').replace(/"/g,'""')}"`,
  l.conteo_afectados || 0,
  l.duracion_ms || 0
  ]);
- const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+ const csvContent ='data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
  const encodedUri = encodeURI(csvContent);
  const link = document.createElement('a');
  link.setAttribute('href', encodedUri);
@@ -162,27 +162,27 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  };
 
  useEffect(() => {
- if (activeTab === 'audit_logs') {
+ if (activeTab ==='audit_logs') {
  loadAuditLogs();
  }
  }, [activeTab, bandId]);
 
  // RBAC Permission Check
- const isAdmin = !currentUser || currentUser?.role === 'admin' || currentUser?.role === 'manager' || currentUser?.role === 'leader' || currentUser?.role === 'director';
+ const isAdmin = !currentUser || currentUser?.role ==='admin' || currentUser?.role ==='manager' || currentUser?.role ==='leader' || currentUser?.role ==='director';
 
  // State: Autonomy Settings
  const [config, setConfig] = useState<AgentAutonomyConfig>({
- dispatchLevel: initialConfig?.dispatchLevel || 'draft_only',
- negotiationDepth: initialConfig?.negotiationDepth || 'filter_conditions',
+ dispatchLevel: initialConfig?.dispatchLevel ||'draft_only',
+ negotiationDepth: initialConfig?.negotiationDepth ||'filter_conditions',
  minCacheByType: initialConfig?.minCacheByType || {},
  negotiationStartCacheByType: initialConfig?.negotiationStartCacheByType || {},
  autoDeclineUnderMinCache: initialConfig?.autoDeclineUnderMinCache ?? false,
  notifyOnEveryProposal: initialConfig?.notifyOnEveryProposal ?? true,
  requireHumanForFinalSignOff: true,
- agentSenderEmail: initialConfig?.agentSenderEmail || '',
+ agentSenderEmail: initialConfig?.agentSenderEmail ||'',
  agentSenderName: initialConfig?.agentSenderName || `${bandName} Management`,
- agentReplyToEmail: initialConfig?.agentReplyToEmail || '',
- dispatchMode: initialConfig?.dispatchMode || 'draft_gmail'
+ agentReplyToEmail: initialConfig?.agentReplyToEmail ||'',
+ dispatchMode: initialConfig?.dispatchMode ||'draft_gmail'
  });
 
  // Indicador (punto verde en la pestaña) de si la banda tiene YA una bandeja conectada -
@@ -210,7 +210,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  // State: Response Strategies (guía condicional del Contestador por tipo de respuesta
  // detectada en el mensaje entrante de la sala - ver server/services/replyDrafting.ts)
- type ResponseTone = 'neutral' | 'enthusiastic' | 'cautious';
+ type ResponseTone ='neutral' |'enthusiastic' |'cautious';
  interface ResponseStrategyForm {
  guidancePrompt: string;
  tone: ResponseTone;
@@ -218,32 +218,32 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }
  const RESPONSE_TYPES: Array<{ key: string; label: string; description: string; icon: React.ReactNode; defaultTone: ResponseTone }> = [
  {
- key: 'price_negotiation',
- label: 'Negociación de Precio',
- description: 'La sala pregunta por caché, presupuesto, tarifa o condiciones económicas.',
+ key:'price_negotiation',
+ label:'Negociación de Precio',
+ description:'La sala pregunta por caché, presupuesto, tarifa o condiciones económicas.',
  icon: <Euro className="w-4 h-4" />,
- defaultTone: 'neutral'
+ defaultTone:'neutral'
  },
  {
- key: 'confirmation',
- label: 'Confirmación',
- description: 'La sala confirma, aprueba o expresa interés claro en seguir adelante.',
+ key:'confirmation',
+ label:'Confirmación',
+ description:'La sala confirma, aprueba o expresa interés claro en seguir adelante.',
  icon: <ThumbsUp className="w-4 h-4" />,
- defaultTone: 'enthusiastic'
+ defaultTone:'enthusiastic'
  },
  {
- key: 'rejection',
- label: 'Rechazo',
- description: 'La sala declina la propuesta o indica que no tiene disponibilidad.',
+ key:'rejection',
+ label:'Rechazo',
+ description:'La sala declina la propuesta o indica que no tiene disponibilidad.',
  icon: <ThumbsDown className="w-4 h-4" />,
- defaultTone: 'cautious'
+ defaultTone:'cautious'
  },
  {
- key: 'follow_up',
- label: 'Pregunta de Seguimiento',
- description: 'La sala pide más información, fechas o detalles concretos.',
+ key:'follow_up',
+ label:'Pregunta de Seguimiento',
+ description:'La sala pide más información, fechas o detalles concretos.',
  icon: <HelpCircle className="w-4 h-4" />,
- defaultTone: 'neutral'
+ defaultTone:'neutral'
  }
  ];
  const [responseStrategies, setResponseStrategies] = useState<Record<string, ResponseStrategyForm>>({});
@@ -262,17 +262,17 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  // - toneTrained: dna_expresion.tono_comunicacion o vocabulario_clave rellenados en ADN de Tono
  // (mismo endpoint que ya se consulta para learnedResponseRules, un campo más).
  // - templateCustomized: category_pitch_templates tiene customInstruction no vacío en alguna
- // categoría - a diferencia de "guidelines" (que SIEMPRE viene pre-rellenado de fábrica en
+ // categoría - a diferencia de"guidelines" (que SIEMPRE viene pre-rellenado de fábrica en
  // DEFAULT_CATEGORY_TEMPLATES), customInstruction empieza vacío en las 7 categorías y solo se
  // rellena si el mánager escribe algo, así que es una señal fiable de personalización real.
- // No incluye "hilos de ejemplo": comprobarlo de verdad requeriría una llamada por categoría (7
+ // No incluye"hilos de ejemplo": comprobarlo de verdad requeriría una llamada por categoría (7
  // peticiones) solo para un checkbox - mejor un aviso (ya añadido arriba) que un dato a medias.
  const [startupChecklist, setStartupChecklist] = useState({ toneTrained: false, templateCustomized: false });
 
  const getStrategyOrDefault = (typeKey: string): ResponseStrategyForm => {
  const found = responseStrategies[typeKey];
- const defaultTone = RESPONSE_TYPES.find(t => t.key === typeKey)?.defaultTone || 'neutral';
- return found || { guidancePrompt: '', tone: defaultTone, mentionLinks: true };
+ const defaultTone = RESPONSE_TYPES.find(t => t.key === typeKey)?.defaultTone ||'neutral';
+ return found || { guidancePrompt:'', tone: defaultTone, mentionLinks: true };
  };
 
  const updateStrategyField = <K extends keyof ResponseStrategyForm>(typeKey: string, field: K, value: ResponseStrategyForm[K]) => {
@@ -306,7 +306,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  if (Object.keys(toSave).length > 0) {
  await api.updateResponseStrategies(toSave);
  }
- // Un 404 aquí solo significa "todavía no había nada guardado para esta banda" (primera
+ // Un 404 aquí solo significa"todavía no había nada guardado para esta banda" (primera
  // vez que se abre esta pestaña) - no es un fallo real, así que no debe tumbar el guardado
  // de arriba ni mostrarse como error al mánager.
  await Promise.all(toDelete.map((key) => api.deleteResponseStrategy(key).catch((err: any) => {
@@ -370,8 +370,8 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  try {
  const appState = await api.getState().catch(() => null);
  if (isMounted && appState?.bands) {
- const cleanTarget = (targetBand || '').replace(/^(band|reg)-/, '').toLowerCase();
- const currentBandObj = appState.bands.find(b => (b.id || '').replace(/^(band|reg)-/, '').toLowerCase() === cleanTarget);
+ const cleanTarget = (targetBand ||'').replace(/^(band|reg)-/,'').toLowerCase();
+ const currentBandObj = appState.bands.find(b => (b.id ||'').replace(/^(band|reg)-/,'').toLowerCase() === cleanTarget);
  if (currentBandObj) {
  const defaultEmail = currentBandObj.email || currentBandObj.contacto_booking?.email;
  if (defaultEmail) {
@@ -395,7 +395,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  // 3b. Fetch reglas aprendidas de respuestas (Self-Refining Tone DNA) - mismo endpoint
  // que ya usa BandToneModal.tsx, solo nos quedamos con la parte de respuestas. De paso,
- // reutilizamos la misma llamada para la señal "ADN de voz entrenado" de la checklist.
+ // reutilizamos la misma llamada para la señal"ADN de voz entrenado" de la checklist.
  const toneDnaRes = await apiFetch('/api/bands/tone-dna').catch(() => null);
  if (isMounted && toneDnaRes?.data?.reglas_por_categoria_respuesta) {
  setLearnedResponseRules(toneDnaRes.data.reglas_por_categoria_respuesta);
@@ -406,7 +406,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  (Array.isArray(toneDnaData?.vocabulario_clave) && toneDnaData.vocabulario_clave.length > 0)
  );
 
- // 3c. Fetch plantillas de categoría, solo para la señal "plantilla personalizada" de la
+ // 3c. Fetch plantillas de categoría, solo para la señal"plantilla personalizada" de la
  // checklist: customInstruction empieza vacío en las 7 categorías por defecto (a
  // diferencia de guidelines, que ya viene pre-rellenado de fábrica), así que si alguna
  // tiene contenido es que el mánager escribió una instrucción propia de verdad.
@@ -547,13 +547,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
  <div className={`border rounded-[var(--r-l)] w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden shadow-2xl flex flex-col my-auto animate-in zoom-in-95 duration-200 ${
  isStitchLight 
- ? 'bg-white text-[var(--ink)]' 
- : 'bg-[var(--surface)] /30 text-zinc-100'
+ ?'bg-white text-[var(--ink)]' 
+ :'bg-[var(--surface)] /30 text-zinc-100'
  }`}>
  
  {/* Modal Header */}
  <div className={`p-4 sm:p-5 border-b flex items-center justify-between shrink-0 ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[#141312] '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[#141312]'
  }`}>
  <div className="flex items-center gap-3">
  <div className="p-2.5 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-amber-400">
@@ -593,15 +593,15 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Tab Navigation */}
  <div className={`flex border-b px-4 sm:px-5 gap-2 shrink-0 overflow-x-auto ${
- isStitchLight ? 'bg-[var(--sunken)]/60 ' : 'bg-[var(--surface)]/60 '
+ isStitchLight ?'bg-[var(--sunken)]/60' :'bg-[var(--surface)]/60'
  }`}>
  <button
  type="button"
  onClick={() => setActiveTab('autonomy')}
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'autonomy'
- ? ' text-amber-400'
- : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
+ activeTab ==='autonomy'
+ ?' text-amber-400'
+ :'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Sliders className="w-4 h-4" />
@@ -612,9 +612,9 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={() => setActiveTab('response_strategies')}
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'response_strategies'
- ? ' text-amber-400'
- : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
+ activeTab ==='response_strategies'
+ ?' text-amber-400'
+ :'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <MessageSquare className="w-4 h-4 text-purple-400" />
@@ -625,9 +625,9 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={() => setActiveTab('email_dispatch')}
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'email_dispatch'
- ? ' text-amber-400'
- : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
+ activeTab ==='email_dispatch'
+ ?' text-amber-400'
+ :'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Mail className="w-4 h-4 text-sky-400" />
@@ -641,9 +641,9 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={() => setActiveTab('schedules')}
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'schedules'
- ? ' text-amber-400'
- : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
+ activeTab ==='schedules'
+ ?' text-amber-400'
+ :'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Clock className="w-4 h-4" />
@@ -654,9 +654,9 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={() => setActiveTab('tone')}
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'tone'
- ? ' text-amber-400'
- : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
+ activeTab ==='tone'
+ ?' text-amber-400'
+ :'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Sparkles className="w-4 h-4" />
@@ -667,9 +667,9 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={() => setActiveTab('audit_logs')}
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'audit_logs'
- ? 'border-emerald-400 text-emerald-400'
- : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
+ activeTab ==='audit_logs'
+ ?'border-emerald-400 text-emerald-400'
+ :'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Activity className="w-4 h-4 text-emerald-400" />
@@ -696,7 +696,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
 
  {/* TAB 1: AUTONOMÍA & LÍNEAS ROJAS */}
- {activeTab === 'autonomy' && (
+ {activeTab ==='autonomy' && (
  <div className="space-y-6">
  {/* Checklist de arranque: solo se muestra mientras falte algo por hacer - una vez
  todo listo desaparece sola, para no molestar a un mánager que ya lo configuró
@@ -715,7 +715,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('email_dispatch')}
  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
  >
- <span className={`text-[11px] font-sans flex items-center gap-1.5 ${emailAccountConnected ? 'text-neutral-500 line-through' : 'text-[var(--sunken)]'}`}>
+ <span className={`text-[11px] font-sans flex items-center gap-1.5 ${emailAccountConnected ?'text-neutral-500 line-through' :'text-[var(--sunken)]'}`}>
  {emailAccountConnected ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full shrink-0" />}
  Conectar el buzón de la banda
  </span>
@@ -726,7 +726,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('tone')}
  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
  >
- <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.toneTrained ? 'text-neutral-500 line-through' : 'text-[var(--sunken)]'}`}>
+ <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.toneTrained ?'text-neutral-500 line-through' :'text-[var(--sunken)]'}`}>
  {startupChecklist.toneTrained ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full shrink-0" />}
  Entrenar el ADN de voz de la banda
  </span>
@@ -737,7 +737,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('tone')}
  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
  >
- <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.templateCustomized ? 'text-neutral-500 line-through' : 'text-[var(--sunken)]'}`}>
+ <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.templateCustomized ?'text-neutral-500 line-through' :'text-[var(--sunken)]'}`}>
  {startupChecklist.templateCustomized ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full shrink-0" />}
  Personalizar al menos una plantilla de categoría
  </span>
@@ -772,13 +772,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  disabled={!isAdmin}
- onClick={() => setConfig({ ...config, dispatchLevel: 'draft_only' })}
+ onClick={() => setConfig({ ...config, dispatchLevel:'draft_only' })}
  className={`p-4 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-3 ${
- !isAdmin ? 'opacity-80 cursor-default' : 'cursor-pointer'
+ !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
- config.dispatchLevel === 'draft_only'
- ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
+ config.dispatchLevel ==='draft_only'
+ ?'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -804,13 +804,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  disabled={!isAdmin}
- onClick={() => setConfig({ ...config, dispatchLevel: 'scheduled_window' })}
+ onClick={() => setConfig({ ...config, dispatchLevel:'scheduled_window' })}
  className={`p-4 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-3 ${
- !isAdmin ? 'opacity-80 cursor-default' : 'cursor-pointer'
+ !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
- config.dispatchLevel === 'scheduled_window'
- ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
+ config.dispatchLevel ==='scheduled_window'
+ ?'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -836,13 +836,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  disabled={!isAdmin}
- onClick={() => setConfig({ ...config, dispatchLevel: 'autonomous_first_contact' })}
+ onClick={() => setConfig({ ...config, dispatchLevel:'autonomous_first_contact' })}
  className={`p-4 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-3 ${
- !isAdmin ? 'opacity-80 cursor-default' : 'cursor-pointer'
+ !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
- config.dispatchLevel === 'autonomous_first_contact'
- ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
+ config.dispatchLevel ==='autonomous_first_contact'
+ ?'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -879,18 +879,18 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  disabled={!isAdmin}
- onClick={() => setConfig({ ...config, negotiationDepth: 'outreach_only' })}
+ onClick={() => setConfig({ ...config, negotiationDepth:'outreach_only' })}
  className={`p-4 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-3 ${
- !isAdmin ? 'opacity-80 cursor-default' : 'cursor-pointer'
+ !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
- config.negotiationDepth === 'outreach_only'
- ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
+ config.negotiationDepth ==='outreach_only'
+ ?'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
  <span className="text-[9px] font-mono uppercase tracking-widest font-bold text-amber-400">Nivel A</span>
- <h5 className="text-sm font-bold font-display text-zinc-100">Solo "Llamada a la puerta"</h5>
+ <h5 className="text-sm font-bold font-display text-zinc-100">Solo"Llamada a la puerta"</h5>
  <p className="text-[11px] text-[var(--ink-2)] font-sans leading-snug">
  El agente solo saluda y envía el Dossier EPK. En cuanto la sala responde con dudas de precio o fecha, el bot se detiene.
  </p>
@@ -900,13 +900,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  disabled={!isAdmin}
- onClick={() => setConfig({ ...config, negotiationDepth: 'filter_conditions' })}
+ onClick={() => setConfig({ ...config, negotiationDepth:'filter_conditions' })}
  className={`p-4 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-3 ${
- !isAdmin ? 'opacity-80 cursor-default' : 'cursor-pointer'
+ !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
- config.negotiationDepth === 'filter_conditions'
- ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
+ config.negotiationDepth ==='filter_conditions'
+ ?'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -921,13 +921,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  disabled={!isAdmin}
- onClick={() => setConfig({ ...config, negotiationDepth: 'advanced_negotiation' })}
+ onClick={() => setConfig({ ...config, negotiationDepth:'advanced_negotiation' })}
  className={`p-4 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-3 ${
- !isAdmin ? 'opacity-80 cursor-default' : 'cursor-pointer'
+ !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
- config.negotiationDepth === 'advanced_negotiation'
- ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
+ config.negotiationDepth ==='advanced_negotiation'
+ ?'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -952,7 +952,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </p>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
- {(['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos'] as const).map((type) => (
+ {(['salas','festivales','discotecas','ayuntamientos','medios','grupos'] as const).map((type) => (
  <div key={type} className="space-y-1.5">
  <label className="text-xs font-mono text-[var(--ink-2)] font-semibold block">
  {RESPONSE_LEARNED_CATEGORY_LABELS[type]}
@@ -961,7 +961,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <input
  type="number"
  disabled={!isAdmin}
- value={config.minCacheByType?.[type] || ''}
+ value={config.minCacheByType?.[type] ||''}
  onChange={(e) => {
  const val = e.target.value ? Number(e.target.value) : undefined;
  setConfig({
@@ -989,10 +989,10 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  Si la sala pregunta directamente por el caché, el agente responderá con esta cifra en vez del mínimo real, dejando margen para negociar a la baja sin bajar nunca del mínimo. Déjalo vacío para que el agente no mencione cifras salvo que le pregunten.
  </p>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
- {(['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos'] as const).map((type) => {
+ {(['salas','festivales','discotecas','ayuntamientos','medios','grupos'] as const).map((type) => {
  const minVal = config.minCacheByType?.[type];
  const negStartVal = config.negotiationStartCacheByType?.[type];
- const isBelowMin = typeof minVal === 'number' && typeof negStartVal === 'number' && negStartVal < minVal;
+ const isBelowMin = typeof minVal ==='number' && typeof negStartVal ==='number' && negStartVal < minVal;
  return (
  <div key={type} className="space-y-1.5">
  <label className="text-xs font-mono text-[var(--ink-2)] font-semibold block">
@@ -1002,7 +1002,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <input
  type="number"
  disabled={!isAdmin}
- value={negStartVal || ''}
+ value={negStartVal ||''}
  onChange={(e) => {
  const val = e.target.value ? Number(e.target.value) : undefined;
  setConfig({
@@ -1013,7 +1013,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }
  });
  }}
- className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-mono focus:border-sky-500 focus:outline-none disabled:opacity-60 ${isBelowMin ? 'border-red-600' : ''}`}
+ className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-mono focus:border-sky-500 focus:outline-none disabled:opacity-60 ${isBelowMin ?'border-red-600' :''}`}
  placeholder="—"
  />
  <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">€</span>
@@ -1053,7 +1053,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  )}
 
  {/* TAB 3: EMAIL & BUZÓN DE DESPACHO */}
- {activeTab === 'email_dispatch' && (
+ {activeTab ==='email_dispatch' && (
  <div className="space-y-6">
  {/* Header Info */}
  <div className="p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-sky-500/10 to-indigo-500/10 text-sky-300 text-xs flex items-start gap-3">
@@ -1081,7 +1081,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <input
  type="email"
  disabled={!isAdmin}
- value={config.agentSenderEmail || ''}
+ value={config.agentSenderEmail ||''}
  onChange={(e) => setConfig({ ...config, agentSenderEmail: e.target.value })}
  className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60"
  placeholder="ej: booking@tubanda.com o mibanda@gmail.com"
@@ -1098,7 +1098,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <input
  type="text"
  disabled={!isAdmin}
- value={config.agentSenderName || ''}
+ value={config.agentSenderName ||''}
  onChange={(e) => setConfig({ ...config, agentSenderName: e.target.value })}
  className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-sans focus: focus:outline-none disabled:opacity-60"
  placeholder={`ej: ${bandName} Booking & Management`}
@@ -1115,7 +1115,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <input
  type="email"
  disabled={!isAdmin}
- value={config.agentReplyToEmail || ''}
+ value={config.agentReplyToEmail ||''}
  onChange={(e) => setConfig({ ...config, agentReplyToEmail: e.target.value })}
  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60"
  placeholder="ej: contacto@tubanda.com (si es diferente al remitente)"
@@ -1140,13 +1140,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  disabled={!isAdmin}
- onClick={() => setConfig({ ...config, dispatchMode: 'draft_gmail' })}
+ onClick={() => setConfig({ ...config, dispatchMode:'draft_gmail' })}
  className={`p-4 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-3 ${
- !isAdmin ? 'opacity-80 cursor-default' : 'cursor-pointer'
+ !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
- config.dispatchMode !== 'direct_send'
- ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
+ config.dispatchMode !=='direct_send'
+ ?'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -1158,7 +1158,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  <h5 className="text-sm font-bold font-display text-zinc-100">Crear Borrador en Gmail</h5>
  <p className="text-[11px] text-[var(--ink-2)] font-sans leading-snug">
- El agente prepara el correo en la carpeta "Borradores" de tu Gmail con sala, asunto, pitch y dossier adjunto. Puedes abrirlo, darle tu toque y pulsar Enviar desde Gmail o desde el CRM.
+ El agente prepara el correo en la carpeta"Borradores" de tu Gmail con sala, asunto, pitch y dossier adjunto. Puedes abrirlo, darle tu toque y pulsar Enviar desde Gmail o desde el CRM.
  </p>
  </div>
  </button>
@@ -1166,13 +1166,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  disabled={!isAdmin}
- onClick={() => setConfig({ ...config, dispatchMode: 'direct_send' })}
+ onClick={() => setConfig({ ...config, dispatchMode:'direct_send' })}
  className={`p-4 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-3 ${
- !isAdmin ? 'opacity-80 cursor-default' : 'cursor-pointer'
+ !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
- config.dispatchMode === 'direct_send'
- ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
+ config.dispatchMode ==='direct_send'
+ ?'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -1184,7 +1184,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  <h5 className="text-sm font-bold font-display text-zinc-100">Envío Directo tras Aprobación</h5>
  <p className="text-[11px] text-[var(--ink-2)] font-sans leading-snug">
- Tras pulsar "Aprobar Propuesta" o "Aprobar Respuesta" en el CRM, el agente despacha el correo directamente al email de la sala respetando las ventanas horarias comerciales.
+ Tras pulsar"Aprobar Propuesta" o"Aprobar Respuesta" en el CRM, el agente despacha el correo directamente al email de la sala respetando las ventanas horarias comerciales.
  </p>
  </div>
  </button>
@@ -1195,11 +1195,11 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  )}
 
  {/* TAB 4: HORARIOS & WORKFLOWS */}
- {activeTab === 'schedules' && (
+ {activeTab ==='schedules' && (
  <div className="space-y-6">
  
  {/* Presets & Actions */}
- <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] ">
+ <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]">
  <div className="flex items-center gap-2">
  <Clock className="w-4 h-4 text-amber-400" />
  <span className="text-xs font-mono font-bold text-zinc-200">Ventanas de Ejecución Comercial:</span>
@@ -1351,18 +1351,18 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  disabled={!isAdmin}
  onClick={() => toggleDiaEnviador(day.id)}
  className={`p-2.5 rounded-[var(--r-m)] text-left flex flex-col justify-between gap-1 transition-all ${
- !isAdmin ? 'cursor-default' : 'cursor-pointer active:scale-95'
+ !isAdmin ?'cursor-default' :'cursor-pointer active:scale-95'
  } ${
  isSelected
- ? 'bg-amber-500/15 text-amber-200 shadow-sm shadow-amber-500/10 ring-1 ring-amber-500/30'
- : 'bg-[var(--surface)]/90 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
+ ?'bg-amber-500/15 text-amber-200 shadow-sm shadow-amber-500/10 ring-1 ring-amber-500/30'
+ :'bg-[var(--surface)]/90 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center justify-between w-full">
- <span className={`text-xs font-mono font-bold ${isSelected ? 'text-amber-300' : 'text-zinc-300'}`}>
+ <span className={`text-xs font-mono font-bold ${isSelected ?'text-amber-300' :'text-zinc-300'}`}>
  {day.short}
  </span>
- <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-amber-400' : 'bg-neutral-700'}`} />
+ <span className={`w-2 h-2 rounded-full ${isSelected ?'bg-amber-400' :'bg-neutral-700'}`} />
  </div>
  <span className="text-[11px] font-sans font-medium leading-tight truncate">
  {day.name}
@@ -1415,7 +1415,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {HOURS.map((hour) => {
  const isSelected = horasEnviador.includes(hour);
  const isPrimeTime = hour >= 10 && hour <= 13;
- const formatted = `${String(hour).padStart(2, '0')}:00`;
+ const formatted = `${String(hour).padStart(2,'0')}:00`;
  return (
  <button
  key={`enviador-${hour}`}
@@ -1423,13 +1423,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  disabled={!isAdmin}
  onClick={() => toggleHoraEnviador(hour)}
  className={`p-2 rounded-[var(--r-s)] text-center font-mono text-[11px] font-bold transition-all ${
- !isAdmin ? 'cursor-default' : 'cursor-pointer active:scale-95'
+ !isAdmin ?'cursor-default' :'cursor-pointer active:scale-95'
  } ${
  isSelected
- ? 'bg-amber-500 text-stone-950 shadow-sm font-black'
+ ?'bg-amber-500 text-stone-950 shadow-sm font-black'
  : isPrimeTime
- ? 'bg-[var(--surface)] text-amber-300/90 hover:text-white hover:bg-neutral-800'
- : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
+ ?'bg-[var(--surface)] text-amber-300/90 hover:text-white hover:bg-neutral-800'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
  }`}
  >
  {formatted}
@@ -1499,7 +1499,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
- <span className={`w-2.5 h-2.5 rounded-full ${horasEnviador.length > 0 && diasEnviador.length > 0 ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+ <span className={`w-2.5 h-2.5 rounded-full ${horasEnviador.length > 0 && diasEnviador.length > 0 ?'bg-emerald-400' :'bg-amber-400'}`} />
  <div>
  <div className="text-xs font-mono font-bold text-zinc-100">Agente Enviador (Gmail API)</div>
  <div className="text-[10px] text-[var(--ink-2)] font-sans">
@@ -1508,7 +1508,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  </div>
  <span className="text-[10px] font-mono text-zinc-300 bg-zinc-800 px-2 py-0.5 rounded font-bold">
- {horasEnviador.length > 0 && diasEnviador.length > 0 ? 'Programado' : 'Pausado'}
+ {horasEnviador.length > 0 && diasEnviador.length > 0 ?'Programado' :'Pausado'}
  </span>
  </div>
 
@@ -1533,7 +1533,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  )}
 
  {/* TAB 5: TONO & IDENTIDAD
- Antes esta pestaña tenía sus propios campos "Tono", "Biografía" y "URL del EPK"
+ Antes esta pestaña tenía sus propios campos"Tono","Biografía" y"URL del EPK"
  que parecían configurar al Redactor pero no hacían nada real: dbUpsertAutonomyConfig
  los descartaba al guardar (ni siquiera llegaban a Supabase) y bandDna.ts - el código
  que de verdad construye los prompts de pitch/respuesta - nunca los leía. Un mánager
@@ -1541,7 +1541,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  ningún efecto. El tono real se entrena en ADN de Tono (BandToneModal, dentro de
  Gestión de Banda) y la biografía/EPK en la configuración del propio EPK - esta
  pestaña ahora solo señala hacia ahí en vez de duplicar una configuración fantasma. */}
- {activeTab === 'tone' && (
+ {activeTab ==='tone' && (
  <div className="space-y-6">
  <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/10 text-amber-300 text-xs flex items-start gap-3">
  <Sparkles className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
@@ -1610,7 +1610,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* TAB 2: ESTRATEGIAS DE RESPUESTA (guía condicional del Contestador según el tipo
  de mensaje que la sala responda - ver server/services/replyDrafting.ts) */}
- {activeTab === 'response_strategies' && (
+ {activeTab ==='response_strategies' && (
  <div className="space-y-6">
  <div className="p-3.5 rounded-[var(--r-m)] bg-purple-500/10 text-purple-300 text-xs flex items-start gap-3">
  <MessageSquare className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
@@ -1637,7 +1637,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  Lo que el sistema ya ha aprendido solo de tus respuestas reales
  </span>
  <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
- Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice "sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio. Si una regla concreta no encaja, puedes quitarla desde <strong className="text-sky-200">ADN de Tono → Reglas Aprendidas de tus Respuestas</strong> (ahí también se pueden borrar o añadir a mano).
+ Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice"sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio. Si una regla concreta no encaja, puedes quitarla desde <strong className="text-sky-200">ADN de Tono → Reglas Aprendidas de tus Respuestas</strong> (ahí también se pueden borrar o añadir a mano).
  </p>
  </div>
  </div>
@@ -1728,15 +1728,15 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  disabled={!isAdmin}
  rows={2}
  value={strategy.guidancePrompt}
- onChange={(e) => updateStrategyField(type.key, 'guidancePrompt', e.target.value)}
+ onChange={(e) => updateStrategyField(type.key,'guidancePrompt', e.target.value)}
  placeholder={`Ej: ${
- type.key === 'price_negotiation'
- ? 'Menciona que somos flexibles con taquilla compartida, pero no des cifras concretas por email.'
- : type.key === 'confirmation'
- ? 'Pide directamente los datos técnicos del rider y el horario de la prueba de sonido.'
- : type.key === 'rejection'
- ? 'Pregunta si hay otras fechas disponibles más adelante en la temporada.'
- : 'Responde de forma breve y concreta a lo que pregunten, sin extenderte.'
+ type.key ==='price_negotiation'
+ ?'Menciona que somos flexibles con taquilla compartida, pero no des cifras concretas por email.'
+ : type.key ==='confirmation'
+ ?'Pide directamente los datos técnicos del rider y el horario de la prueba de sonido.'
+ : type.key ==='rejection'
+ ?'Pregunta si hay otras fechas disponibles más adelante en la temporada.'
+ :'Responde de forma breve y concreta a lo que pregunten, sin extenderte.'
  }`}
  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-sans focus:border-purple-500 focus:outline-none disabled:opacity-60 resize-none"
  />
@@ -1749,21 +1749,21 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="space-y-1 flex-1">
  <label className="text-[10px] font-mono text-neutral-500 font-semibold block">Tono</label>
  <div className="flex gap-1.5">
- {(['neutral', 'enthusiastic', 'cautious'] as ResponseTone[]).map((toneOption) => (
+ {(['neutral','enthusiastic','cautious'] as ResponseTone[]).map((toneOption) => (
  <button
  key={toneOption}
  type="button"
  disabled={!isAdmin}
- onClick={() => updateStrategyField(type.key, 'tone', toneOption)}
+ onClick={() => updateStrategyField(type.key,'tone', toneOption)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all ${
- !isAdmin ? 'cursor-default' : 'cursor-pointer'
+ !isAdmin ?'cursor-default' :'cursor-pointer'
  } ${
  strategy.tone === toneOption
- ? 'bg-purple-500/20 border-purple-500 text-purple-200'
- : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-zinc-200'
+ ?'bg-purple-500/20 border-purple-500 text-purple-200'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
- {toneOption === 'neutral' ? 'Neutral' : toneOption === 'enthusiastic' ? 'Entusiasta' : 'Prudente'}
+ {toneOption ==='neutral' ?'Neutral' : toneOption ==='enthusiastic' ?'Entusiasta' :'Prudente'}
  </button>
  ))}
  </div>
@@ -1774,7 +1774,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="checkbox"
  disabled={!isAdmin}
  checked={strategy.mentionLinks}
- onChange={(e) => updateStrategyField(type.key, 'mentionLinks', e.target.checked)}
+ onChange={(e) => updateStrategyField(type.key,'mentionLinks', e.target.checked)}
  className="rounded bg-[var(--surface)] text-purple-500 focus:ring-purple-500 disabled:opacity-60"
  />
  <span>Mencionar enlace al Dossier/EPK si procede</span>
@@ -1796,7 +1796,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  className="ml-auto px-4 py-2 rounded-[var(--r-m)] bg-purple-500 hover:bg-purple-400 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 transition-all"
  >
  {isSavingStrategies ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
- <span>{isSavingStrategies ? 'Guardando...' : 'Guardar Estrategias de Respuesta'}</span>
+ <span>{isSavingStrategies ?'Guardando...' :'Guardar Estrategias de Respuesta'}</span>
  </button>
  </div>
  )}
@@ -1804,7 +1804,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  )}
 
  {/* TAB 6: AUDITORÍA & TRAZABILIDAD */}
- {activeTab === 'audit_logs' && (
+ {activeTab ==='audit_logs' && (
  <div className="space-y-4">
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
  <div>
@@ -1832,7 +1832,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  disabled={loadingAuditLogs}
  className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 cursor-pointer"
  >
- <RefreshCw className={`w-3.5 h-3.5 ${loadingAuditLogs ? 'animate-spin' : ''}`} />
+ <RefreshCw className={`w-3.5 h-3.5 ${loadingAuditLogs ?'animate-spin' :''}`} />
  <span>Refrescar</span>
  </button>
  </div>
@@ -1842,11 +1842,11 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] font-mono">
  <span className="text-[var(--ink-2)] text-[10px] uppercase font-bold mr-1">Filtrar:</span>
  {[
- { id: 'all', label: 'Todos' },
- { id: 'scout', label: 'Scout' },
- { id: 'redactor', label: 'Redactor' },
- { id: 'enviador', label: 'Enviador' },
- { id: 'lector', label: 'Lector' }
+ { id:'all', label:'Todos' },
+ { id:'scout', label:'Scout' },
+ { id:'redactor', label:'Redactor' },
+ { id:'enviador', label:'Enviador' },
+ { id:'lector', label:'Lector' }
  ].map(f => (
  <button
  key={f.id}
@@ -1854,8 +1854,8 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setAuditAgentFilter(f.id)}
  className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-bold ${
  auditAgentFilter === f.id
- ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-xs'
- : 'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ ?'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-xs'
+ :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  {f.label}
@@ -1876,14 +1876,14 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  ) : (
  <div className="space-y-2.5 max-h-[48vh] overflow-y-auto pr-1">
  {auditLogs
- .filter(l => auditAgentFilter === 'all' || (l.agente || '').toLowerCase().includes(auditAgentFilter))
+ .filter(l => auditAgentFilter ==='all' || (l.agente ||'').toLowerCase().includes(auditAgentFilter))
  .map((log) => {
- const isSuccess = log.estado === 'success';
- const isError = log.estado === 'error';
+ const isSuccess = log.estado ==='success';
+ const isError = log.estado ==='error';
  const affectedCount = log.conteo_afectados || (log.leads_afectados ? log.leads_afectados.length : 0);
  const formattedDate = new Date(log.created_at).toLocaleString('es-ES', {
- day: '2-digit', month: '2-digit', year: 'numeric',
- hour: '2-digit', minute: '2-digit', second: '2-digit'
+ day:'2-digit', month:'2-digit', year:'numeric',
+ hour:'2-digit', minute:'2-digit', second:'2-digit'
  });
 
  return (
@@ -1894,18 +1894,17 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-2">
  <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${
- log.agente === 'enviador' ? 'bg-amber-500/10 text-amber-300' :
- log.agente === 'scout' ? 'bg-sky-500/10 text-sky-300' :
- log.agente === 'redactor' ? 'bg-purple-500/10 text-purple-300' :
- 'bg-emerald-500/10 text-emerald-300'
+ log.agente ==='enviador' ?'bg-amber-500/10 text-amber-300' :
+ log.agente ==='scout' ?'bg-sky-500/10 text-sky-300' :
+ log.agente ==='redactor' ?'bg-purple-500/10 text-purple-300' :'bg-emerald-500/10 text-emerald-300'
  }`}>
  Agente {log.agente}
  </span>
- <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-[var(--ink-3)] ">
- {log.motor || 'supabase_edge'}
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-[var(--ink-3)]">
+ {log.motor ||'supabase_edge'}
  </span>
- <span className={`text-[10px] font-mono font-bold ${isSuccess ? 'text-emerald-400' : isError ? 'text-rose-400' : 'text-amber-400'}`}>
- {isSuccess ? '✓ Éxito' : isError ? '✕ Fallo' : '⚠ Aviso'}
+ <span className={`text-[10px] font-mono font-bold ${isSuccess ?'text-emerald-400' : isError ?'text-rose-400' :'text-amber-400'}`}>
+ {isSuccess ?'✓ Éxito' : isError ?'✕ Fallo' :'⚠ Aviso'}
  </span>
  </div>
 
@@ -1925,7 +1924,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t /60 text-[10px] font-mono text-[var(--ink-2)]">
  <div className="flex items-center gap-1.5">
  <UserCheck className="w-3 h-3 text-neutral-500" />
- <span>Disparado por: <strong className="text-[var(--sunken)]">{log.usuario_email || log.usuario_id || 'Sistema'}</strong> ({log.disparado_por_tipo})</span>
+ <span>Disparado por: <strong className="text-[var(--sunken)]">{log.usuario_email || log.usuario_id ||'Sistema'}</strong> ({log.disparado_por_tipo})</span>
  </div>
  {affectedCount > 0 && (
  <span className="text-amber-300/90 font-bold">
@@ -1944,17 +1943,17 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {log.leads_afectados.map((item: any, idx: number) => (
  <div key={idx} className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/70 text-[11px] font-mono flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-2 min-w-0">
- <span className="text-amber-400 font-bold">🏛️ {item.nombre_sala || 'Sala sin nombre'}</span>
+ <span className="text-amber-400 font-bold">🏛️ {item.nombre_sala ||'Sala sin nombre'}</span>
  {item.email_contacto && (
  <span className="text-[var(--ink-2)] text-[10px] truncate max-w-[200px]">&lt;{item.email_contacto}&gt;</span>
  )}
  </div>
  <div className="flex items-center gap-2 shrink-0">
- <span className="px-1.5 py-0.5 rounded text-[9px] bg-neutral-800 text-[var(--ink-3)] ">
+ <span className="px-1.5 py-0.5 rounded text-[9px] bg-neutral-800 text-[var(--ink-3)]">
  ID: {item.id}
  </span>
  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-300">
- {item.estado_anterior || 'aprobado'} ➔ {item.estado_nuevo || 'contactado'}
+ {item.estado_anterior ||'aprobado'} ➔ {item.estado_nuevo ||'contactado'}
  </span>
  </div>
  </div>
@@ -1974,7 +1973,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Modal Footer */}
  <div className={`p-4 border-t flex flex-wrap items-center justify-between gap-3 shrink-0 ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[#141312] '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[#141312]'
  }`}>
  <div className="flex items-center gap-2 text-xs font-mono text-[var(--ink-2)]">
  <ShieldCheck className="w-4 h-4 text-emerald-400" />

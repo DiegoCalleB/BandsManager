@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { BandRelationshipStatus } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { BandRelationshipStatus } from'../../types';
+import { ModalPortal } from'../common/ModalPortal';
 import { 
  CheckSquare, MinusSquare, Square, X, ChevronDown, Sparkles, Download, 
  Trash2, Star, CheckCircle2, Repeat, Clock, ArrowRight, 
  Users, ShieldAlert
-} from 'lucide-react';
+} from'lucide-react';
 
 interface BulkBandActionBarProps {
  selectedCount: number;
@@ -22,12 +22,12 @@ interface BulkBandActionBarProps {
 }
 
 const BAND_STATUS_OPTIONS: { status: BandRelationshipStatus; label: string; color: string; icon: any }[] = [
- { status: 'sin_contactar', label: 'Sin Contactar', color: 'bg-zinc-700/40 text-zinc-300 border-zinc-600', icon: Clock },
- { status: 'intercambio_propuesto', label: 'Intercambio Propuesto', color: 'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Repeat },
- { status: 'pendiente_respuesta', label: 'Pendiente Respuesta', color: 'bg-amber-500/20 text-amber-300 /40', icon: Clock },
- { status: 'concierto_agendado', label: 'Concierto / Bolo Agendado', color: 'bg-emerald-500/30 text-emerald-200 border-emerald-400', icon: CheckCircle2 },
- { status: 'colegas_aliados', label: 'Colegas / Aliados de Gira', color: 'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: Users },
- { status: 'no_disponible', label: 'No Disponible / Descartado', color: 'bg-rose-500/20 text-rose-300 border-rose-500/40', icon: ShieldAlert },
+ { status:'sin_contactar', label:'Sin Contactar', color:'bg-zinc-700/40 text-zinc-300 border-zinc-600', icon: Clock },
+ { status:'intercambio_propuesto', label:'Intercambio Propuesto', color:'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Repeat },
+ { status:'pendiente_respuesta', label:'Pendiente Respuesta', color:'bg-amber-500/20 text-amber-300 /40', icon: Clock },
+ { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-emerald-500/30 text-emerald-200 border-emerald-400', icon: CheckCircle2 },
+ { status:'colegas_aliados', label:'Colegas / Aliados de Gira', color:'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: Users },
+ { status:'no_disponible', label:'No Disponible / Descartado', color:'bg-rose-500/20 text-rose-300 border-rose-500/40', icon: ShieldAlert },
 ];
 
 export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
@@ -55,8 +55,8 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  id="bulk-band-action-bar"
  className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] shadow-xl backdrop-blur-md p-2.5 sm:p-3 transition-all animate-slide-up ${
  isStitchLight
- ? 'bg-white/95 /60 text-[var(--ink)] shadow-slate-300/60'
- : 'bg-[#151311]/95 border-[var(--acc)]/50 text-white shadow-black/80'
+ ?'bg-white/95 /60 text-[var(--ink)] shadow-slate-300/60'
+ :'bg-[#151311]/95 border-[var(--acc)]/50 text-white shadow-black/80'
  }`}
  >
  <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
@@ -68,9 +68,9 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAll}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer shrink-0 ${
- isStitchLight ? 'hover:bg-[var(--sunken)] text-amber-700' : 'hover:bg-zinc-800 text-[var(--acc)]'
+ isStitchLight ?'hover:bg-[var(--sunken)] text-amber-700' :'hover:bg-zinc-800 text-[var(--acc)]'
  }`}
- title={isAllSelected ? 'Deseleccionar todo' : `Seleccionar las ${totalFilteredCount} bandas`}
+ title={isAllSelected ?'Deseleccionar todo' : `Seleccionar las ${totalFilteredCount} bandas`}
  >
  {isAllSelected ? (
  <CheckSquare className="w-5 h-5" />
@@ -87,7 +87,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  </span>
  <div className="leading-tight">
  <div className="text-xs font-bold font-display flex items-center gap-1.5 flex-wrap">
- <span>{selectedCount} {selectedCount === 1 ? 'banda seleccionada' : 'bandas seleccionadas'}</span>
+ <span>{selectedCount} {selectedCount === 1 ?'banda seleccionada' :'bandas seleccionadas'}</span>
  {!isAllSelected && totalFilteredCount > selectedCount && (
  <button
  type="button"
@@ -108,7 +108,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`md:hidden p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- isStitchLight ? 'text-[var(--ink-3)] hover:bg-[var(--sunken)]' : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-white'
  }`}
  title="Cerrar selección"
  >
@@ -126,14 +126,14 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ? 'bg-amber-100 hover:bg-amber-200 text-amber-900'
- : 'bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 /50 text-amber-200'
+ ?'bg-amber-100 hover:bg-amber-200 text-amber-900'
+ :'bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 /50 text-amber-200'
  }`}
  title="Cambiar estado de relación de las bandas seleccionadas"
  >
  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
  <span>Estado</span>
- <ChevronDown className={`w-3.5 h-3.5 text-amber-400 transition-transform ${isStatusDropdownOpen ? 'rotate-180' : ''}`} />
+ <ChevronDown className={`w-3.5 h-3.5 text-amber-400 transition-transform ${isStatusDropdownOpen ?'rotate-180' :''}`} />
  </button>
 
  {/* Status Dropdown Menu (Opens downwards) */}
@@ -145,11 +145,11 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  />
  <div className={`absolute top-full mt-2 right-0 z-50 w-60 rounded-[var(--r-l)] shadow-2xl p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${
  isStitchLight
- ? 'bg-white shadow-slate-400/50'
- : 'bg-[#181614] border-zinc-700 shadow-black/90'
+ ?'bg-white shadow-slate-400/50'
+ :'bg-[#181614] border-zinc-700 shadow-black/90'
  }`}>
  <div className={`px-2 py-1 text-[10px] font-mono uppercase font-bold border-b ${
- isStitchLight ? 'text-[var(--ink-2)] ' : 'text-zinc-400 border-zinc-800'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-zinc-400 border-zinc-800'
  }`}>
  Mover {selectedCount} bandas a:
  </div>
@@ -164,7 +164,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  setIsStatusDropdownOpen(false);
  }}
  className={`w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer ${
- isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-zinc-800'
+ isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-zinc-800'
  } ${opt.color}`}
  >
  <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -183,8 +183,8 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  onClick={onBulkGeneratePitch}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ? 'bg-purple-100 hover:bg-purple-200 border-purple-300 text-purple-900'
- : 'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-purple-500/50 text-purple-200'
+ ?'bg-purple-100 hover:bg-purple-200 border-purple-300 text-purple-900'
+ :'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-purple-500/50 text-purple-200'
  }`}
  title="Redactar propuestas de intercambio (Date Swaps) con IA"
  >
@@ -199,8 +199,8 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  onClick={() => onBulkToggleFavorite(true)}
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
  isStitchLight
- ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-amber-600'
- : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-amber-300'
+ ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-amber-600'
+ :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-amber-300'
  }`}
  title="Marcar bandas como favoritas"
  >
@@ -213,8 +213,8 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  onClick={onBulkExportCsv}
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-semibold transition-all flex items-center gap-1 cursor-pointer ${
  isStitchLight
- ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
+ ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
  }`}
  title="Exportar bandas seleccionadas a CSV"
  >
@@ -237,7 +237,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`hidden md:flex p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
- isStitchLight ? 'text-[var(--ink-3)] hover:bg-[var(--sunken)]' : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-white'
  }`}
  title="Deseleccionar todo"
  >

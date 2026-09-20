@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from'react';
 import { 
  X, Download, Printer, Sparkles, Check, Image as ImageIcon,
  FileCode, FileText, Layers, ShieldCheck, Palette
-} from 'lucide-react';
-import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
+} from'lucide-react';
+import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from'../utils/qrExport';
 
 interface QrExportModalProps {
  isOpen: boolean;
@@ -26,9 +26,9 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  dateCity,
  url,
  logoUrl,
- defaultCta = '¡ESCANEA CON LA CÁMARA DE TU MÓVIL!'
+ defaultCta ='¡ESCANEA CON LA CÁMARA DE TU MÓVIL!'
 }) => {
- const [selectedFormat, setSelectedFormat] = useState<'svg' | 'png-4k' | 'poster-a4' | 'badge'>('poster-a4');
+ const [selectedFormat, setSelectedFormat] = useState<'svg' |'png-4k' |'poster-a4' |'badge'>('poster-a4');
  const [customCta, setCustomCta] = useState(defaultCta);
  const [includeLogo, setIncludeLogo] = useState(Boolean(logoUrl));
  const [isExporting, setIsExporting] = useState(false);
@@ -36,32 +36,32 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
  if (!isOpen) return null;
 
- const baseFilename = `qr-${(bandName || 'banda').toLowerCase().replace(/[^a-z0-9]/g, '-')}${concertTitle ? `-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}` : ''}`;
+ const baseFilename = `qr-${(bandName ||'banda').toLowerCase().replace(/[^a-z0-9]/g,'-')}${concertTitle ? `-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g,'-')}` :''}`;
 
  const handleDownload = async () => {
  setIsExporting(true);
  setExportSuccess(null);
  try {
- if (selectedFormat === 'svg') {
+ if (selectedFormat ==='svg') {
  await downloadQrAsSvg({
  svgElementId,
  filename: `${baseFilename}-vectorial`,
  logoUrl: includeLogo ? logoUrl : undefined
  });
  setExportSuccess('¡Archivo SVG vectorial descargado en máxima calidad!');
- } else if (selectedFormat === 'png-4k') {
+ } else if (selectedFormat ==='png-4k') {
  await downloadQrAsHighResPng({
  svgElementId,
  filename: baseFilename,
- template: 'qr-only',
+ template:'qr-only',
  logoUrl: includeLogo ? logoUrl : undefined
  });
  setExportSuccess('¡Imagen PNG Ultra HD (4K / 300 DPI) descargada!');
- } else if (selectedFormat === 'poster-a4') {
+ } else if (selectedFormat ==='poster-a4') {
  await downloadQrAsHighResPng({
  svgElementId,
  filename: `${baseFilename}-cartel-a4`,
- template: 'poster-a4',
+ template:'poster-a4',
  bandName,
  concertTitle,
  dateCity,
@@ -70,11 +70,11 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  ctaText: customCta
  });
  setExportSuccess('¡Cartel A4 en alta resolución (300 DPI) descargado!');
- } else if (selectedFormat === 'badge') {
+ } else if (selectedFormat ==='badge') {
  await downloadQrAsHighResPng({
  svgElementId,
  filename: `${baseFilename}-tarjeta`,
- template: 'badge-card',
+ template:'badge-card',
  bandName,
  concertTitle,
  url,
@@ -139,9 +139,9 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  type="button"
  onClick={() => setSelectedFormat('poster-a4')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
- selectedFormat === 'poster-a4'
- ? 'bg-amber-500/10 text-white shadow-lg'
- : 'bg-slate-950 text-[var(--ink-3)] hover:'
+ selectedFormat ==='poster-a4'
+ ?'bg-amber-500/10 text-white shadow-lg'
+ :'bg-slate-950 text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -162,9 +162,9 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  type="button"
  onClick={() => setSelectedFormat('svg')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
- selectedFormat === 'svg'
- ? 'bg-amber-500/10 text-white shadow-lg'
- : 'bg-slate-950 text-[var(--ink-3)] hover:'
+ selectedFormat ==='svg'
+ ?'bg-amber-500/10 text-white shadow-lg'
+ :'bg-slate-950 text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -185,9 +185,9 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  type="button"
  onClick={() => setSelectedFormat('png-4k')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
- selectedFormat === 'png-4k'
- ? 'bg-amber-500/10 text-white shadow-lg'
- : 'bg-slate-950 text-[var(--ink-3)] hover:'
+ selectedFormat ==='png-4k'
+ ?'bg-amber-500/10 text-white shadow-lg'
+ :'bg-slate-950 text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -208,9 +208,9 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  type="button"
  onClick={() => setSelectedFormat('badge')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
- selectedFormat === 'badge'
- ? 'bg-amber-500/10 text-white shadow-lg'
- : 'bg-slate-950 text-[var(--ink-3)] hover:'
+ selectedFormat ==='badge'
+ ?'bg-amber-500/10 text-white shadow-lg'
+ :'bg-slate-950 text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -235,7 +235,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  2. Personalización:
  </label>
 
- {selectedFormat === 'poster-a4' && (
+ {selectedFormat ==='poster-a4' && (
  <div className="space-y-1.5">
  <label className="text-[11px] font-mono text-[var(--ink-3)]">Texto de llamada a la acción (Titular):</label>
  <input
@@ -284,7 +284,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  className="w-full sm:flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-lg disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
- {isExporting ? 'Generando archivo en Alta Resolución...' : 'Descargar Archivo en Alta Resolución'}
+ {isExporting ?'Generando archivo en Alta Resolución...' :'Descargar Archivo en Alta Resolución'}
  </button>
 
  <button

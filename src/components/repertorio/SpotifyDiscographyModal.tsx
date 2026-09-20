@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Song, ThemeColors } from '../../types';
+import React, { useState, useEffect, useRef } from'react';
+import { Song, ThemeColors } from'../../types';
 import { 
  Music, Disc, Search, Check, X, ExternalLink, Play, Pause, 
  Sparkles, CheckSquare, Square, Layers, RefreshCw, AlertCircle, 
  Radio, ListMusic, ChevronDown, ChevronUp, ShieldCheck
-} from 'lucide-react';
-import { apiFetch } from '../../utils/api';
-import { saveSongsToLocalStorageSafely } from '../../utils/audioStorage';
+} from'lucide-react';
+import { apiFetch } from'../../utils/api';
+import { saveSongsToLocalStorageSafely } from'../../utils/audioStorage';
 
 interface SpotifyTrack {
  id: string;
@@ -27,7 +27,7 @@ interface SpotifyTrack {
 interface SpotifyAlbum {
  id: string;
  name: string;
- albumType: 'album' | 'single' | 'compilation';
+ albumType:'album' |'single' |'compilation';
  releaseDate: string;
  releaseYear: string;
  totalTracks: number;
@@ -63,7 +63,7 @@ interface SpotifyDiscographyModalProps {
 export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = ({
  isOpen,
  onClose,
- bandName = '',
+ bandName ='',
  existingSongs = [],
  colors,
  isStitchLight,
@@ -79,7 +79,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
  const [selectedAlbumIds, setSelectedAlbumIds] = useState<Record<string, boolean>>({});
  const [expandedAlbumIds, setExpandedAlbumIds] = useState<Record<string, boolean>>({});
- const [filterType, setFilterType] = useState<'todos' | 'album' | 'single'>('todos');
+ const [filterType, setFilterType] = useState<'todos' |'album' |'single'>('todos');
 
  const [overwriteDuplicates, setOverwriteDuplicates] = useState(false);
  const [updateEpkUrl, setUpdateEpkUrl] = useState(true);
@@ -91,7 +91,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  // Initial fetch when modal opens
  useEffect(() => {
  if (isOpen) {
- const initialQuery = bandName || '';
+ const initialQuery = bandName ||'';
  setSearchQuery(initialQuery);
  handleFetchDiscography(initialQuery);
  } else {
@@ -123,7 +123,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  if (!streamUrl) {
  setLoadingPreviewTrackId(track.id);
  try {
- const artist = artistProfile?.name || bandName || '';
+ const artist = artistProfile?.name || bandName ||'';
  const res = await apiFetch(`/api/spotify/preview?artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(track.name)}`);
  if (res && res.previewUrl) {
  streamUrl = res.previewUrl;
@@ -137,7 +137,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  }
 
  if (!streamUrl) {
- setErrorMsg(`No se encontró snippet de audio de 30s para "${track.name}".`);
+ setErrorMsg(`No se encontró snippet de audio de 30s para"${track.name}".`);
  return;
  }
 
@@ -172,7 +172,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  const data = await apiFetch(`/api/spotify/artist-discography?query=${encodeURIComponent(q)}`);
 
  if (!data || !data.success || !data.discography) {
- throw new Error(data?.error || 'No se pudo encontrar la discografía en Spotify.');
+ throw new Error(data?.error ||'No se pudo encontrar la discografía en Spotify.');
  }
 
  const { artist, albums: fetchedAlbums } = data.discography;
@@ -192,7 +192,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  setExpandedAlbumIds(initialExpanded);
  } catch (err: any) {
  console.error('Error fetching Spotify discography:', err);
- setErrorMsg(err.message || 'Error al conectar con Spotify.');
+ setErrorMsg(err.message ||'Error al conectar con Spotify.');
  setArtistProfile(null);
  setAlbums([]);
  } finally {
@@ -223,8 +223,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  };
 
  const filteredAlbums = albums.filter((alb) => {
- if (filterType === 'album') return alb.albumType === 'album';
- if (filterType === 'single') return alb.albumType === 'single';
+ if (filterType ==='album') return alb.albumType ==='album';
+ if (filterType ==='single') return alb.albumType ==='single';
  return true;
  });
 
@@ -246,8 +246,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
 
  try {
  const data = await apiFetch('/api/spotify/import-discography', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  artist: artistProfile,
  selectedAlbums: selected,
@@ -259,7 +259,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  });
 
  if (!data || !data.success) {
- throw new Error(data?.error || 'Error al guardar la discografía en la base de datos.');
+ throw new Error(data?.error ||'Error al guardar la discografía en la base de datos.');
  }
 
  // Update local storage and app state
@@ -271,7 +271,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  onClose();
  } catch (err: any) {
  console.error('Error importing Spotify discography:', err);
- setErrorMsg(err.message || 'Error al importar las canciones.');
+ setErrorMsg(err.message ||'Error al importar las canciones.');
  } finally {
  setIsImporting(false);
  }
@@ -284,8 +284,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden transition-all ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)]'
- : 'bg-[var(--surface)] text-white'
+ ?'bg-[var(--bg)] text-[var(--ink)]'
+ :'bg-[var(--surface)] text-white'
  }`}
  >
  {/* Header Modal Bar */}
@@ -336,8 +336,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  placeholder="Nombre de tu banda o URL de Spotify (https://open.spotify.com/artist/...)"
  className={`w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#1db954] transition-all ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] placeholder:text-[var(--ink-3)]'
- : 'bg-[var(--surface)] text-white placeholder:text-neutral-500'
+ ?'bg-white text-[var(--ink)] placeholder:text-[var(--ink-3)]'
+ :'bg-[var(--surface)] text-white placeholder:text-neutral-500'
  }`}
  />
  </div>
@@ -372,8 +372,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <div
  className={`p-4 rounded-[var(--r-l)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all ${
  isStitchLight
- ? 'bg-white shadow-sm'
- : 'bg-[var(--surface)]/90 '
+ ?'bg-white shadow-sm'
+ :'bg-[var(--surface)]/90'
  }`}
  >
  <div className="flex items-center gap-3.5">
@@ -403,7 +403,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  {artistProfile.genres?.length > 0 && (
  <>
  <span>•</span>
- <span className="capitalize">{artistProfile.genres.slice(0, 2).join(', ')}</span>
+ <span className="capitalize">{artistProfile.genres.slice(0, 2).join(',')}</span>
  </>
  )}
  </div>
@@ -444,12 +444,12 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
  <div className="flex items-center gap-2 flex-wrap">
  {/* Category Filter */}
- <div className={`p-1 rounded-full flex items-center gap-1 ${isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-[var(--surface)] '}`}>
+ <div className={`p-1 rounded-full flex items-center gap-1 ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
  <button
  type="button"
  onClick={() => setFilterType('todos')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType === 'todos' ? 'bg-[#1db954] text-black shadow' : 'text-[var(--ink-2)] hover:text-white'
+ filterType ==='todos' ?'bg-[#1db954] text-black shadow' :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  Todos ({albums.length})
@@ -458,19 +458,19 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  type="button"
  onClick={() => setFilterType('album')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType === 'album' ? 'bg-[#1db954] text-black shadow' : 'text-[var(--ink-2)] hover:text-white'
+ filterType ==='album' ?'bg-[#1db954] text-black shadow' :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
- Álbumes ({albums.filter((a) => a.albumType === 'album').length})
+ Álbumes ({albums.filter((a) => a.albumType ==='album').length})
  </button>
  <button
  type="button"
  onClick={() => setFilterType('single')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType === 'single' ? 'bg-[#1db954] text-black shadow' : 'text-[var(--ink-2)] hover:text-white'
+ filterType ==='single' ?'bg-[#1db954] text-black shadow' :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
- Singles y EPs ({albums.filter((a) => a.albumType === 'single').length})
+ Singles y EPs ({albums.filter((a) => a.albumType ==='single').length})
  </button>
  </div>
 
@@ -511,11 +511,11 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`rounded-[var(--r-l)] transition-all overflow-hidden ${
  isSelected
  ? isStitchLight
- ? 'border-[#1db954] bg-white shadow-md'
- : 'border-[#1db954]/50 bg-[var(--surface)]/90 shadow-lg'
+ ?'border-[#1db954] bg-white shadow-md'
+ :'border-[#1db954]/50 bg-[var(--surface)]/90 shadow-lg'
  : isStitchLight
- ? ' bg-white/70 opacity-60'
- : ' bg-[var(--surface)]/40 opacity-60'
+ ?' bg-white/70 opacity-60'
+ :' bg-[var(--surface)]/40 opacity-60'
  }`}
  >
  {/* Album Header Bar */}
@@ -550,19 +550,19 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <h4 className="text-base font-display font-black truncate">{album.name}</h4>
  <span
  className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
- album.albumType === 'album'
- ? 'bg-indigo-500/20 text-indigo-400'
- : 'bg-emerald-500/20 text-emerald-400'
+ album.albumType ==='album'
+ ?'bg-indigo-500/20 text-indigo-400'
+ :'bg-emerald-500/20 text-emerald-400'
  }`}
  >
- {album.albumType === 'album' ? 'Álbum' : 'Single / EP'}
+ {album.albumType ==='album' ?'Álbum' :'Single / EP'}
  </span>
  {album.releaseYear && (
  <span className="text-xs font-mono opacity-60">{album.releaseYear}</span>
  )}
  </div>
  <p className="text-xs font-mono opacity-70 mt-0.5">
- {album.tracks.length} {album.tracks.length === 1 ? 'canción' : 'canciones'}
+ {album.tracks.length} {album.tracks.length === 1 ?'canción' :'canciones'}
  </p>
  </div>
  </div>
@@ -583,7 +583,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  onClick={() => toggleExpandAlbum(album.id)}
  className="px-3 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] hover:bg-white/10 text-xs font-mono font-bold flex items-center gap-1 cursor-pointer transition"
  >
- <span>{isExpanded ? 'Ocultar Pistas' : 'Ver Pistas'}</span>
+ <span>{isExpanded ?'Ocultar Pistas' :'Ver Pistas'}</span>
  {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
  </button>
  </div>
@@ -606,8 +606,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  key={track.id}
  className={`px-3 py-2 rounded-[var(--r-m)] flex items-center justify-between gap-3 text-xs font-mono transition-all ${
  isPlaying
- ? 'bg-[#1db954]/20 border-[#1db954]/40 text-white'
- : 'hover:bg-white/5 text-[var(--ink-3)]'
+ ?'bg-[#1db954]/20 border-[#1db954]/40 text-white'
+ :'hover:bg-white/5 text-[var(--ink-3)]'
  }`}
  >
  <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -620,10 +620,10 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  onClick={() => togglePlayTrackPreview(track, album.name)}
  className={`p-1.5 rounded-full transition-all cursor-pointer ${
  isPlaying
- ? 'bg-[#1db954] text-black shadow-md'
- : 'bg-white/10 hover:bg-[#1db954] hover:text-black text-[var(--ink-3)]'
+ ?'bg-[#1db954] text-black shadow-md'
+ :'bg-white/10 hover:bg-[#1db954] hover:text-black text-[var(--ink-3)]'
  }`}
- title={isPlaying ? 'Pausar preview' : 'Reproducir preview 30s de Spotify/Deezer'}
+ title={isPlaying ?'Pausar preview' :'Reproducir preview 30s de Spotify/Deezer'}
  disabled={loadingPreviewTrackId === track.id}
  >
  {loadingPreviewTrackId === track.id ? (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from'react';
 import {
  ImageIcon,
  FileDown,
@@ -7,10 +7,10 @@ import {
  Download,
  Trash2,
  Loader2
-} from 'lucide-react';
-import { EPKConfig } from '../../types';
-import { EPKBlockWrapper } from './EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+} from'lucide-react';
+import { EPKConfig } from'../../types';
+import { EPKBlockWrapper } from'./EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
 
 interface EPKArchivosBlockProps {
  config: EPKConfig;
@@ -69,7 +69,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
  <div className="flex flex-col sm:flex-row items-center gap-4">
  <div className="relative shrink-0">
- {config.logoUrl && config.logoUrl.trim() !== '' ? (
+ {config.logoUrl && config.logoUrl.trim() !=='' ? (
  <img
  src={config.logoUrl}
  alt="Logo de la banda"
@@ -93,7 +93,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <div className="flex items-center gap-2">
  <label className="flex-1 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 transition shadow-md">
  {isUploadingLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
- <span>{isUploadingLogo ? 'Subiendo Logo...' : 'Subir Logo (PNG/JPG)'}</span>
+ <span>{isUploadingLogo ?'Subiendo Logo...' :'Subir Logo (PNG/JPG)'}</span>
  <input
  type="file"
  accept="image/*"
@@ -106,7 +106,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  {config.logoUrl && (
  <button
  type="button"
- onClick={() => setConfig({ ...config, logoUrl: '' })}
+ onClick={() => setConfig({ ...config, logoUrl:'' })}
  className="p-2.5 bg-[var(--surface)] hover:bg-red-500/20 text-[var(--ink-3)] hover:text-red-400 rounded-[var(--r-m)] transition cursor-pointer"
  title="Eliminar logo"
  >
@@ -119,7 +119,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <label className="text-[11px] font-semibold text-[var(--ink-3)]">O introduce URL de la imagen:</label>
  <input
  type="text"
- value={config.logoUrl || ''}
+ value={config.logoUrl ||''}
  onChange={e => setConfig({ ...config, logoUrl: e.target.value })}
  placeholder="https://ejemplo.com/logo.jpg"
  className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-mono text-slate-200 outline-none"
@@ -144,7 +144,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </div>
  <div className="truncate">
  <p className="font-bold text-xs text-white truncate">
- {config.dossierPdfName || 'Dossier_Oficial.pdf'}
+ {config.dossierPdfName ||'Dossier_Oficial.pdf'}
  </p>
  <p className="text-[10px] text-amber-400 font-medium">Documento adjunto almacenado</p>
  </div>
@@ -152,7 +152,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
  <button
  type="button"
- onClick={() => setConfig({ ...config, dossierPdfUrl: '', dossierPdfName: '' })}
+ onClick={() => setConfig({ ...config, dossierPdfUrl:'', dossierPdfName:'' })}
  className="p-2 bg-[var(--surface)] hover:bg-red-500/20 text-[var(--ink-3)] hover:text-red-400 rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
  title="Eliminar dossier"
  >
@@ -194,7 +194,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
  <label className="inline-flex cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition shadow-md">
  {isUploadingDossier ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
- <span>{isUploadingDossier ? 'Subiendo Documento...' : 'Seleccionar PDF / Dossier'}</span>
+ <span>{isUploadingDossier ?'Subiendo Documento...' :'Seleccionar PDF / Dossier'}</span>
  <input
  type="file"
  accept=".pdf,.doc,.docx,.txt"
@@ -212,12 +212,12 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </label>
  <input
  type="text"
- value={config.dossierPdfUrl || ''}
+ value={config.dossierPdfUrl ||''}
  onChange={e =>
  setConfig({
  ...config,
  dossierPdfUrl: e.target.value,
- dossierPdfName: e.target.value ? config.dossierPdfName || 'Enlace Dossier' : ''
+ dossierPdfName: e.target.value ? config.dossierPdfName ||'Enlace Dossier' :''
  })
  }
  placeholder="https://drive.google.com/file/d/..."
@@ -250,13 +250,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <FileDown className="w-5 h-5" />
  </div>
  <div className="min-w-0">
- <p className="text-xs font-bold text-white truncate">{config.riderPdfName || 'Archivo subido'}</p>
+ <p className="text-xs font-bold text-white truncate">{config.riderPdfName ||'Archivo subido'}</p>
  <p className="text-[10px] text-[var(--ink-3)] truncate mt-0.5">PDF guardado correctamente</p>
  </div>
  </div>
  <button
  type="button"
- onClick={() => setConfig({ ...config, riderPdfUrl: '', riderPdfName: '' })}
+ onClick={() => setConfig({ ...config, riderPdfUrl:'', riderPdfName:'' })}
  className="p-1.5 hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-red-400 rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
  title="Eliminar PDF"
  >
@@ -296,7 +296,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
  <label className="inline-flex cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition shadow-md">
  {isUploadingRider ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
- <span>{isUploadingRider ? 'Subiendo Documento...' : 'Seleccionar PDF / Rider'}</span>
+ <span>{isUploadingRider ?'Subiendo Documento...' :'Seleccionar PDF / Rider'}</span>
  <input
  type="file"
  accept=".pdf,.doc,.docx"
@@ -311,7 +311,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <div className="pt-2 space-y-1">
  <label className="text-[11px] font-semibold text-[var(--ink-3)]">Rider Técnico (Texto)</label>
  <textarea
- value={config.riderTecnico || ''}
+ value={config.riderTecnico ||''}
  onChange={e => setConfig({ ...config, riderTecnico: e.target.value })}
  placeholder="Canales, microfonía, DIs, etc..."
  rows={4}
@@ -331,11 +331,11 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </p>
  <label
  className={`cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs inline-flex items-center justify-center gap-2 transition shadow-md ${
- subiendoGaleria ? 'opacity-70 pointer-events-none' : ''
+ subiendoGaleria ?'opacity-70 pointer-events-none' :''
  }`}
  >
  {subiendoGaleria ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
- <span>{subiendoGaleria ? 'Subiendo fotos...' : '+ Subir fotos (puedes elegir varias a la vez)'}</span>
+ <span>{subiendoGaleria ?'Subiendo fotos...' :'+ Subir fotos (puedes elegir varias a la vez)'}</span>
  <input
  type="file"
  accept="image/*"
@@ -345,7 +345,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  onChange={e => {
  const files = e.target.files;
  if (files && files.length > 0) subirFotosGaleria(files);
- e.target.value = '';
+ e.target.value ='';
  }}
  />
  </label>
@@ -355,7 +355,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </div>
  ) : (
  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
- {(config.bandPhotos || []).filter(url => Boolean(url && url.trim() !== '')).map((url, idx) => (
+ {(config.bandPhotos || []).filter(url => Boolean(url && url.trim() !=='')).map((url, idx) => (
  <div
  key={url + idx}
  className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden bg-slate-950"

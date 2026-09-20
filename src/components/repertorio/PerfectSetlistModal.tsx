@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
-import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
-import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
+import React, { useState, useEffect } from'react';
+import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from'lucide-react';
+import { IndexChange, adjustPosition1 } from'../../utils/setlistActionPositionAdjust';
+import { EnergyChart, EnergyChartPoint, EnergyChartZone } from'./EnergyChart';
 
-/** Feedback opcional que el usuario deja al pedir un plan (nuevo o "Regenerar"): valorar con
+/** Feedback opcional que el usuario deja al pedir un plan (nuevo o"Regenerar"): valorar con
  * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los
  * pitches de booking. `alcance` decide si esto queda como memoria para futuros setlists o es solo
  * un ajuste puntual para este intento. */
@@ -11,10 +11,10 @@ export interface SetlistFeedbackInput {
  intensidad_rating?: number;
  contenido_rating?: number;
  comentario?: string;
- alcance?: 'este_setlist' | 'global';
+ alcance?:'este_setlist' |'global';
 }
 
-export type PerfectSetlistActionType = 'reorder' | 'remove_song' | 'add_song' | 'add_block';
+export type PerfectSetlistActionType ='reorder' |'remove_song' |'add_song' |'add_block';
 
 export interface PerfectSetlistAction {
  type: PerfectSetlistActionType;
@@ -48,11 +48,11 @@ interface PerfectSetlistModalProps {
  /** Pide un plan nuevo. La PRIMERA vez, generarlo con éxito duplica el setlist activo antes de
  * que se pueda aplicar ninguna acción (lo gestiona el padre) — el original nunca se toca. Las
  * siguientes veces ("Regenerar") reutilizan esa misma copia en vez de crear otra — pasar
- * `true` (botón "Nueva copia") fuerza duplicar de nuevo aunque ya exista una. */
+ * `true` (botón"Nueva copia") fuerza duplicar de nuevo aunque ya exista una. */
  onGenerate: (forceNewCopy?: boolean, feedback?: SetlistFeedbackInput) => void;
  /** Ejecuta la acción concreta (reordena/quita/añade canción o bloque) contra el setlist activo
  * (la copia). `sourceKey` identifica esta acción para que su propio botón se convierta en
- * "Deshacer" mientras siga siendo la más reciente, igual que en el Análisis IA. */
+ *"Deshacer" mientras siga siendo la más reciente, igual que en el Análisis IA. */
  onApplyAction: (action: PerfectSetlistAction, sourceKey: string) => void;
  canUndo?: boolean;
  onUndo?: () => void;
@@ -71,32 +71,32 @@ interface PerfectSetlistModalProps {
 }
 
 const BLOCK_TYPE_LABELS: Record<string, string> = {
- chapa: 'Chapa / discurso con público',
- descanso: 'Pausa / descanso',
- bis: 'Bis',
- bloque_header: 'Bloque / sección',
- interludio: 'Interludio',
- presentacion: 'Presentación de la banda',
- beatbox: 'Solo de batería/percusión',
- intro_tema: 'Intro / historia del tema',
- solo_performance: 'Solo instrumental',
- cambio_instrumento: 'Cambio de instrumento',
- otro: 'Bloque'
+ chapa:'Chapa / discurso con público',
+ descanso:'Pausa / descanso',
+ bis:'Bis',
+ bloque_header:'Bloque / sección',
+ interludio:'Interludio',
+ presentacion:'Presentación de la banda',
+ beatbox:'Solo de batería/percusión',
+ intro_tema:'Intro / historia del tema',
+ solo_performance:'Solo instrumental',
+ cambio_instrumento:'Cambio de instrumento',
+ otro:'Bloque'
 };
 
 /** Qué desplazamiento sufre el resto del array de items al ejecutar esta acción — se usa para
  * reajustar las posiciones de las demás acciones pendientes justo después de aplicar esta. */
 function changeFromAction(a: PerfectSetlistAction): IndexChange | null {
  switch (a.type) {
- case 'reorder':
+ case'reorder':
  return a.from_position != null && a.to_position != null
- ? { type: 'move', from: a.from_position - 1, to: a.to_position - 1 }
+ ? { type:'move', from: a.from_position - 1, to: a.to_position - 1 }
  : null;
- case 'remove_song':
- return a.item_position != null ? { type: 'remove', at: a.item_position - 1 } : null;
- case 'add_song':
- case 'add_block':
- return a.insert_at_position != null ? { type: 'insert', at: a.insert_at_position - 1 } : null;
+ case'remove_song':
+ return a.item_position != null ? { type:'remove', at: a.item_position - 1 } : null;
+ case'add_song':
+ case'add_block':
+ return a.insert_at_position != null ? { type:'insert', at: a.insert_at_position - 1 } : null;
  default:
  return null;
  }
@@ -124,21 +124,21 @@ function adjustActionAfterChange(a: PerfectSetlistAction, change: IndexChange): 
 
 function describeAction(a: PerfectSetlistAction): { icon: string; label: string } {
  switch (a.type) {
- case 'reorder':
- return { icon: '↕️', label: `Reordenar: mover la posición ${a.from_position} a la ${a.to_position}` };
- case 'remove_song':
- return { icon: '➖', label: `Quitar del setlist: "${a.song_title || 'canción'}"` };
- case 'add_song':
- return { icon: '➕', label: `Añadir del catálogo: "${a.song_title || 'canción'}" en la posición ${a.insert_at_position}` };
- case 'add_block':
- return { icon: '📋', label: `Añadir bloque "${a.title}" (${BLOCK_TYPE_LABELS[a.block_type || ''] || a.block_type}) en la posición ${a.insert_at_position}` };
+ case'reorder':
+ return { icon:'↕️', label: `Reordenar: mover la posición ${a.from_position} a la ${a.to_position}` };
+ case'remove_song':
+ return { icon:'➖', label: `Quitar del setlist:"${a.song_title ||'canción'}"` };
+ case'add_song':
+ return { icon:'➕', label: `Añadir del catálogo:"${a.song_title ||'canción'}" en la posición ${a.insert_at_position}` };
+ case'add_block':
+ return { icon:'📋', label: `Añadir bloque"${a.title}" (${BLOCK_TYPE_LABELS[a.block_type ||''] || a.block_type}) en la posición ${a.insert_at_position}` };
  default:
- return { icon: '•', label: 'Acción' };
+ return { icon:'•', label:'Acción' };
  }
 }
 
 export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, plan, error, onGenerate, onApplyAction, canUndo = false, onUndo, undoSourceKey = null, chartData, yDomain, zonasEnergia, onReorder, onEnergyChange }: PerfectSetlistModalProps) {
- // Copia local de las acciones del plan que SÍ se reajusta tras cada "Aplicar" — el plan en sí
+ // Copia local de las acciones del plan que SÍ se reajusta tras cada"Aplicar" — el plan en sí
  // (prop) se queda fijo con las posiciones de cuando se generó, pero aplicar una acción cambia el
  // array real del setlist, y las demás acciones pendientes seguían apuntando a la posición VIEJA.
  // Antes esto hacía que solo se pudiera aplicar una con confianza: la segunda podía mover/quitar
@@ -148,19 +148,19 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  const [liveActions, setLiveActions] = useState<PerfectSetlistAction[] | null>(null);
  const [appliedActionIndices, setAppliedActionIndices] = useState<Set<number>>(new Set());
  const [invalidActionIndices, setInvalidActionIndices] = useState<Set<number>>(new Set());
- // Foto de liveActions/invalidActionIndices justo ANTES de la última acción aplicada — "Deshacer"
+ // Foto de liveActions/invalidActionIndices justo ANTES de la última acción aplicada —"Deshacer"
  // no solo debe revertir el setlist real (eso ya lo hace onUndo), también debe devolver las
  // demás acciones pendientes a las posiciones que tenían antes de que ESTA las reajustara. Un
  // solo nivel, igual que el propio snapshot de undo del setlist (solo la más reciente es deshacible).
  const [preApplySnapshot, setPreApplySnapshot] = useState<{ liveActions: PerfectSetlistAction[]; invalidActionIndices: Set<number> } | null>(null);
 
- // Feedback opcional para la próxima generación (nueva o "Regenerar") — mismo patrón que ya usan
+ // Feedback opcional para la próxima generación (nueva o"Regenerar") — mismo patrón que ya usan
  // los Reels y los pitches de booking: valorar + comentar, y decidir si se recuerda para siempre
  // o es solo un ajuste puntual de este intento.
  const [intensidadRating, setIntensidadRating] = useState(0);
  const [contenidoRating, setContenidoRating] = useState(0);
  const [comentarioFeedback, setComentarioFeedback] = useState('');
- const [feedbackScope, setFeedbackScope] = useState<'este_setlist' | 'global'>('este_setlist');
+ const [feedbackScope, setFeedbackScope] = useState<'este_setlist' |'global'>('este_setlist');
 
  useEffect(() => {
  setLiveActions(plan ? plan.actions : null);
@@ -184,7 +184,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  const handleGenerateWithFeedback = (forceNewCopy?: boolean) => {
  onGenerate(forceNewCopy, currentFeedback());
  // Igual que en Reels/pitches: tras pedir el plan, se limpia el formulario de feedback —
- // ya quedó aplicado a este intento y, si el alcance era "global", ya quedó guardado como memoria.
+ // ya quedó aplicado a este intento y, si el alcance era"global", ya quedó guardado como memoria.
  setIntensidadRating(0);
  setContenidoRating(0);
  setComentarioFeedback('');
@@ -320,7 +320,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
  {plan && liveActions && (
  <div className="space-y-4">
- <div className="bg-neutral-800 rounded-[var(--r-s)] p-3 ">
+ <div className="bg-neutral-800 rounded-[var(--r-s)] p-3">
  <p className="text-xs text-[var(--ink-2)] mb-1.5">🪄 Resumen del plan</p>
  <p className="text-sm text-[var(--sunken)]">{plan.summary}</p>
  </div>
@@ -340,7 +340,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  const isInvalid = invalidActionIndices.has(idx);
 
  return (
- <div key={idx} className={`rounded-[var(--r-s)] p-3 flex items-start gap-2.5 ${isInvalid ? 'bg-[var(--surface)] opacity-50' : 'bg-neutral-800 '}`}>
+ <div key={idx} className={`rounded-[var(--r-s)] p-3 flex items-start gap-2.5 ${isInvalid ?'bg-[var(--surface)] opacity-50' :'bg-neutral-800'}`}>
  <span className="text-sm mt-0.5">{icon}</span>
  <div className="flex-1">
  <p className="text-sm font-medium text-[var(--sunken)]">{label}</p>
@@ -392,7 +392,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  key={`intensidad-${star}`}
  type="button"
  onClick={() => setIntensidadRating(intensidadRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ? 'text-amber-400' : 'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ?'text-amber-400' :'text-neutral-700 hover:text-neutral-500'}`}
  title={`Valorar la intensidad/energía: ${star}/5`}
  >
  <Star className="w-3 h-3 fill-current" />
@@ -406,7 +406,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  key={`contenido-${star}`}
  type="button"
  onClick={() => setContenidoRating(contenidoRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ? 'text-amber-400' : 'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ?'text-amber-400' :'text-neutral-700 hover:text-neutral-500'}`}
  title={`Valorar el contenido/selección de temas: ${star}/5`}
  >
  <Star className="w-3 h-3 fill-current" />
@@ -418,7 +418,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  rows={2}
  value={comentarioFeedback}
  onChange={(e) => setComentarioFeedback(e.target.value)}
- placeholder="Ej: 'Evita más de una balada seguida', 'el bis siempre un tema conocido'..."
+ placeholder="Ej:'Evita más de una balada seguida','el bis siempre un tema conocido'..."
  className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-[11px] text-[var(--sunken)] placeholder-neutral-500 font-sans focus:outline-none focus:"
  />
  <div className="flex items-center gap-1.5 text-[10px] font-mono">
@@ -427,7 +427,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  type="button"
  onClick={() => setFeedbackScope('este_setlist')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
- feedbackScope === 'este_setlist' ? 'bg-neutral-700 text-white font-bold' : 'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
+ feedbackScope ==='este_setlist' ?'bg-neutral-700 text-white font-bold' :'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
  }`}
  >
  Solo este plan
@@ -436,7 +436,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  type="button"
  onClick={() => setFeedbackScope('global')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all flex items-center gap-1 ${
- feedbackScope === 'global' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
+ feedbackScope ==='global' ?'bg-amber-500/20 text-amber-300 font-bold' :'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
  }`}
  title="La IA recordará esta corrección también para futuros setlists de la banda"
  >

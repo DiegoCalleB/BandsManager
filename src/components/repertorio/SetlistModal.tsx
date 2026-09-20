@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { X, Layers, Check } from 'lucide-react';
-import { Setlist, ThemeColors } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState, useEffect } from'react';
+import { X, Layers, Check } from'lucide-react';
+import { Setlist, ThemeColors } from'../../types';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface SetlistModalProps {
  isOpen: boolean;
@@ -26,9 +26,9 @@ export function SetlistModal({
 
  useEffect(() => {
  if (setlistToEdit) {
- setNombre(setlistToEdit.nombre || '');
- setDescripcion(setlistToEdit.descripcion || '');
- setTipoFormato(setlistToEdit.tipoFormato || 'festival');
+ setNombre(setlistToEdit.nombre ||'');
+ setDescripcion(setlistToEdit.descripcion ||'');
+ setTipoFormato(setlistToEdit.tipoFormato ||'festival');
  } else {
  setNombre('Festival Verano 2026');
  setDescripcion('Repertorio optimizado para directo de alta energía');
@@ -60,7 +60,7 @@ export function SetlistModal({
  <div className="flex items-center gap-2">
  <Layers className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-sm font-bold font-mono uppercase text-white">
- {setlistToEdit ? 'Editar Repertorio' : 'Crear Nuevo Repertorio desde Cero'}
+ {setlistToEdit ?'Editar Repertorio' :'Crear Nuevo Repertorio desde Cero'}
  </h3>
  </div>
  <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white cursor-pointer">
@@ -78,7 +78,7 @@ export function SetlistModal({
  onChange={(e) => setNombre(e.target.value)}
  placeholder="ej. Festival Rumba & Rock 2026"
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none focus:border-[var(--acc)] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -89,7 +89,7 @@ export function SetlistModal({
  value={tipoFormato}
  onChange={(e) => setTipoFormato(e.target.value as any)}
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none focus:border-[var(--acc)] cursor-pointer ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  >
  <option value="festival">🔥 Festival (45-60m Caña Directa)</option>
@@ -108,7 +108,7 @@ export function SetlistModal({
  onChange={(e) => setDescripcion(e.target.value)}
  placeholder="ej. Setlist pensado para festivales con ritmo alto sin pausas..."
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none focus:border-[var(--acc)] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -126,7 +126,7 @@ export function SetlistModal({
  className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[#e0b840] text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
  >
  <Check className="w-4 h-4 stroke-[3]" />
- <span>{setlistToEdit ? 'Guardar Cambios' : 'Crear Repertorio'}</span>
+ <span>{setlistToEdit ?'Guardar Cambios' :'Crear Repertorio'}</span>
  </button>
  </div>
  </form>

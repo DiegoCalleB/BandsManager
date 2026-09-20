@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { X, Download, FileSpreadsheet, FileCode, Filter, Layers, CheckSquare } from 'lucide-react';
-import { Lead } from '../../types';
+import React, { useState } from'react';
+import { X, Download, FileSpreadsheet, FileCode, Filter, Layers, CheckSquare } from'lucide-react';
+import { Lead } from'../../types';
 
 interface ExportLeadsModalProps {
  isOpen: boolean;
@@ -17,10 +17,10 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  allLeads,
  filteredLeads,
  selectedLeadIds = [],
- bandName = 'Banda'
+ bandName ='Banda'
 }) => {
- const [exportScope, setExportScope] = useState<'filtered' | 'all' | 'selected'>('filtered');
- const [exportFormat, setExportFormat] = useState<'csv' | 'json'>('csv');
+ const [exportScope, setExportScope] = useState<'filtered' |'all' |'selected'>('filtered');
+ const [exportFormat, setExportFormat] = useState<'csv' |'json'>('csv');
  const [includeNotes, setIncludeNotes] = useState(true);
  const [includePitch, setIncludePitch] = useState(true);
 
@@ -29,18 +29,18 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  const selectedLeads = allLeads.filter(l => selectedLeadIds.includes(l.id));
 
  const getTargetLeads = () => {
- if (exportScope === 'selected' && selectedLeads.length > 0) {
+ if (exportScope ==='selected' && selectedLeads.length > 0) {
  return selectedLeads;
  }
- if (exportScope === 'all') {
+ if (exportScope ==='all') {
  return allLeads;
  }
  return filteredLeads;
  };
 
  const cleanCsvCell = (val: any) => {
- if (val === undefined || val === null) return '""';
- const str = String(val).replace(/"/g, '""').replace(/\r?\n/g, ' ');
+ if (val === undefined || val === null) return'""';
+ const str = String(val).replace(/"/g,'""').replace(/\r?\n/g,'');
  return `"${str}"`;
  };
 
@@ -62,31 +62,17 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  return;
  }
 
- const cleanBandName = bandName.replace(/[^a-zA-Z0-9_-]/g, '_') || 'Banda';
+ const cleanBandName = bandName.replace(/[^a-zA-Z0-9_-]/g,'_') ||'Banda';
  const dateStr = new Date().toISOString().slice(0, 10);
  const filename = `${cleanBandName}_Leads_${exportScope}_${dateStr}.${exportFormat}`;
 
- if (exportFormat === 'json') {
+ if (exportFormat ==='json') {
  const jsonContent = JSON.stringify(leadsToExport, null, 2);
- const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
+ const blob = new Blob([jsonContent], { type:'application/json;charset=utf-8;' });
  downloadBlob(blob, filename);
  } else {
  // CSV format with UTF-8 BOM (\uFEFF) for Excel compatibility on Windows
- const headers = [
- 'ID',
- 'Nombre / Sala',
- 'Ciudad',
- 'Región / Provincia',
- 'Dirección',
- 'Aforo',
- 'Tipo',
- 'Estado CRM',
- 'Email Contacto',
- 'Teléfono',
- 'Web',
- 'Instagram',
- 'Género / Estilo',
- 'Fuente'
+ const headers = ['ID','Nombre / Sala','Ciudad','Región / Provincia','Dirección','Aforo','Tipo','Estado CRM','Email Contacto','Teléfono','Web','Instagram','Género / Estilo','Fuente'
  ];
 
  if (includePitch) headers.push('Pitch Generado');
@@ -116,8 +102,8 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  return row.join(',');
  });
 
- const csvString = '\uFEFF' + [headers.join(','), ...rows].join('\n');
- const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+ const csvString ='\uFEFF' + [headers.join(','), ...rows].join('\n');
+ const blob = new Blob([csvString], { type:'text/csv;charset=utf-8;' });
  downloadBlob(blob, filename);
  }
 
@@ -159,12 +145,12 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="button"
  onClick={() => setExportScope('filtered')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
- exportScope === 'filtered'
- ? 'bg-amber-500/20 /60 text-white'
- : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ exportScope ==='filtered'
+ ?'bg-amber-500/20 /60 text-white'
+ :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
- <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'filtered' ? 'text-amber-400' : 'text-zinc-500'}`} />
+ <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='filtered' ?'text-amber-400' :'text-zinc-500'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Contactos a la vista con filtro actual</span>
@@ -183,12 +169,12 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="button"
  onClick={() => setExportScope('all')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
- exportScope === 'all'
- ? 'bg-amber-500/20 /60 text-white'
- : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ exportScope ==='all'
+ ?'bg-amber-500/20 /60 text-white'
+ :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
- <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'all' ? 'text-amber-400' : 'text-zinc-500'}`} />
+ <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='all' ?'text-amber-400' :'text-zinc-500'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Todos los contactos del CRM</span>
@@ -208,12 +194,12 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="button"
  onClick={() => setExportScope('selected')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
- exportScope === 'selected'
- ? 'bg-amber-500/20 /60 text-white'
- : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ exportScope ==='selected'
+ ?'bg-amber-500/20 /60 text-white'
+ :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
- <CheckSquare className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'selected' ? 'text-amber-400' : 'text-zinc-500'}`} />
+ <CheckSquare className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='selected' ?'text-amber-400' :'text-zinc-500'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Solo contactos seleccionados</span>
@@ -240,9 +226,9 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="button"
  onClick={() => setExportFormat('csv')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
- exportFormat === 'csv'
- ? 'bg-emerald-500/20 border-emerald-500/60 text-emerald-200 font-bold'
- : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ exportFormat ==='csv'
+ ?'bg-emerald-500/20 border-emerald-500/60 text-emerald-200 font-bold'
+ :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
  <FileSpreadsheet className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -256,9 +242,9 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="button"
  onClick={() => setExportFormat('json')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
- exportFormat === 'json'
- ? 'bg-sky-500/20 border-sky-500/60 text-sky-200 font-bold'
- : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ exportFormat ==='json'
+ ?'bg-sky-500/20 border-sky-500/60 text-sky-200 font-bold'
+ :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
  <FileCode className="w-4 h-4 text-sky-400 shrink-0" />
@@ -271,7 +257,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  </div>
 
  {/* 3. CSV Options */}
- {exportFormat === 'csv' && (
+ {exportFormat ==='csv' && (
  <div className="p-3 rounded-[var(--r-m)] bg-zinc-900/80 border-zinc-800 space-y-2">
  <span className="text-[11px] font-bold text-zinc-300 block">Campos adicionales en CSV:</span>
  <div className="flex items-center gap-4 text-xs">
@@ -314,7 +300,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  className="px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-amber-500 hover:bg-amber-400 text-zinc-950 flex items-center gap-2 shadow-lg shadow-amber-500/10 transition cursor-pointer disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
- <span>Descargar {targetCount} {targetCount === 1 ? 'contacto' : 'contactos'}</span>
+ <span>Descargar {targetCount} {targetCount === 1 ?'contacto' :'contactos'}</span>
  </button>
  </div>
  </div>

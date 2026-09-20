@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move, Printer, Share2, Download } from 'lucide-react';
-import html2canvas from 'html2canvas';
-import { api } from '../../services/api';
-import { titlesMatch } from '../../utils/songTitleMatch';
-import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
-import { PacingWarning } from '../../utils/energyPacingUtils';
-import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
+import React, { useState, useEffect, useRef } from'react';
+import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move, Printer, Share2, Download } from'lucide-react';
+import html2canvas from'html2canvas';
+import { api } from'../../services/api';
+import { titlesMatch } from'../../utils/songTitleMatch';
+import { EnergyChart, EnergyChartPoint, EnergyChartZone } from'./EnergyChart';
+import { PacingWarning } from'../../utils/energyPacingUtils';
+import { IndexChange, adjustPosition1 } from'../../utils/setlistActionPositionAdjust';
 
 interface SetlistAIAnalysisModalProps {
  isOpen: boolean;
@@ -24,29 +24,29 @@ interface SetlistAIAnalysisModalProps {
  yDomain?: [number, number];
  zonasEnergia?: EnergyChartZone[];
  /** Avisos del análisis básico (heurístico) del setlist activo — se muestran aquí igual que en
- * el editor de setlist, con su botón "Aplicar" cuando hay un reordenamiento determinista
+ * el editor de setlist, con su botón"Aplicar" cuando hay un reordenamiento determinista
  * disponible, para no obligar a cerrar el modal solo para aplicar una sugerencia. */
  warnings?: PacingWarning[];
- /** Reordena el setlist (usado tanto por el botón "Aplicar" de los avisos/sugerencias como por
+ /** Reordena el setlist (usado tanto por el botón"Aplicar" de los avisos/sugerencias como por
  * arrastrar un punto en el mini-gráfico de aquí dentro). Si se omite, el mini-gráfico queda solo
- * de lectura. `sourceKey` identifica qué acción lo pidió (p.ej. "ai-suggestion-2") — así ESE
- * botón concreto puede saber si es el que "Deshacer" revertiría ahora mismo. */
+ * de lectura. `sourceKey` identifica qué acción lo pidió (p.ej."ai-suggestion-2") — así ESE
+ * botón concreto puede saber si es el que"Deshacer" revertiría ahora mismo. */
  onReorder?: (fromIndex: number, toIndex: number, sourceKey?: string) => void;
  /** Arrastrar un punto en vertical cambia su energía (1-20) directamente desde este mini-gráfico. */
  onEnergyChange?: (point: EnergyChartPoint, newScore: number) => void;
  /** true si hay un último reordenamiento (desde aquí o desde el editor de fondo) que se puede
- * deshacer. Se muestra un botón "Deshacer" en el modal para no obligar a cerrarlo solo para eso. */
+ * deshacer. Se muestra un botón"Deshacer" en el modal para no obligar a cerrarlo solo para eso. */
  canUndo?: boolean;
  onUndo?: () => void;
- /** sourceKey de la acción que dejó el snapshot que "Deshacer" revertiría ahora — null si no hay
- * nada que deshacer. Permite que el botón "Aplicar" de UNA sugerencia concreta se convierta en
- * "Deshacer" solo mientras siga siendo la acción más reciente (la única que un snapshot de un
+ /** sourceKey de la acción que dejó el snapshot que"Deshacer" revertiría ahora — null si no hay
+ * nada que deshacer. Permite que el botón"Aplicar" de UNA sugerencia concreta se convierta en
+ *"Deshacer" solo mientras siga siendo la acción más reciente (la única que un snapshot de un
  * solo nivel puede revertir de verdad). */
  undoSourceKey?: string | null;
 }
 
 interface Suggestion {
- priority: 'high' | 'medium' | 'low';
+ priority:'high' |'medium' |'low';
  category: string;
  title: string;
  issue: string;
@@ -76,7 +76,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  const [exportingImage, setExportingImage] = useState(false);
 
  // Al abrir, si ya hay un análisis guardado para este setlist, mostrarlo directamente en vez
- // de forzar al usuario a pulsar "Iniciar Análisis IA" solo para ver lo que ya se calculó.
+ // de forzar al usuario a pulsar"Iniciar Análisis IA" solo para ver lo que ya se calculó.
  useEffect(() => {
  if (isOpen) {
  setAnalysis(initialAnalysis ?? null);
@@ -85,7 +85,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  // eslint-disable-next-line react-hooks/exhaustive-deps
  }, [isOpen, setlistId]);
 
- // Copia local de las sugerencias que SÍ se reajusta tras cada "Aplicar" — aplicar una sugerencia
+ // Copia local de las sugerencias que SÍ se reajusta tras cada"Aplicar" — aplicar una sugerencia
  // cambia el orden real del setlist, y las demás sugerencias pendientes seguían apuntando a la
  // posición de CUANDO se generó el análisis. Antes eso hacía que solo se pudiera aplicar una con
  // confianza: la segunda podía mover la canción equivocada sin avisar. Ahora se reajustan las
@@ -114,7 +114,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  onReorder(reorder.from_position - 1, reorder.to_position - 1, sourceKey);
  setAppliedSuggestionIndices(prev => new Set(prev).add(idx));
 
- const change: IndexChange = { type: 'move', from: reorder.from_position - 1, to: reorder.to_position - 1 };
+ const change: IndexChange = { type:'move', from: reorder.from_position - 1, to: reorder.to_position - 1 };
  const next = [...liveSuggestions];
  const nextInvalid = new Set(invalidSuggestionIndices);
  for (let i = 0; i < next.length; i++) {
@@ -187,7 +187,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  // Contenedor con scroll propio del modal (overflow-y-auto) — al lanzar un (re)análisis se hace
  // scroll a top aquí, para que el usuario vea el estado de progreso desde arriba en vez de
  // quedarse mirando donde estuviera desplazado (normalmente abajo del todo, tras pulsar
- // "Reanalizar" al final de un análisis anterior).
+ //"Reanalizar" al final de un análisis anterior).
  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
  /** Serializa el SVG del gráfico ya renderizado a un data: URI, listo para <img src="..."> o para dibujar en un canvas. Null si el gráfico no está montado (p.ej. setlist vacío). */
@@ -195,7 +195,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  const svgEl = chartContainerRef.current?.querySelector('svg');
  if (!svgEl) return null;
  const clone = svgEl.cloneNode(true) as SVGSVGElement;
- clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+ clone.setAttribute('xmlns','http://www.w3.org/2000/svg');
  if (!clone.getAttribute('width')) clone.setAttribute('width', String(svgEl.clientWidth || 600));
  if (!clone.getAttribute('height')) clone.setAttribute('height', String(svgEl.clientHeight || 200));
  const svgString = new XMLSerializer().serializeToString(clone);
@@ -215,10 +215,10 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  canvas.height = img.height * scale;
  const ctx = canvas.getContext('2d');
  if (!ctx) return resolve(null);
- ctx.fillStyle = '#0a0a0a';
+ ctx.fillStyle ='#0a0a0a';
  ctx.fillRect(0, 0, canvas.width, canvas.height);
  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
- canvas.toBlob((blob) => resolve(blob), 'image/png');
+ canvas.toBlob((blob) => resolve(blob),'image/png');
  };
  img.onerror = () => resolve(null);
  img.src = svgDataUrl;
@@ -228,17 +228,17 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  const handleAnalyze = async () => {
  setLoading(true);
  setError(null);
- scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+ scrollContainerRef.current?.scrollTo({ top: 0, behavior:'smooth' });
  try {
  const result = await api.analyzeSetlistWithAI(setlistId);
  if (result.success && result.analysis) {
  setAnalysis(result.analysis);
  onAnalysisComplete?.(result.analysis);
  } else {
- setError(result.error || 'Error al analizar el setlist');
+ setError(result.error ||'Error al analizar el setlist');
  }
  } catch (err: any) {
- setError(err.message || 'Error desconocido');
+ setError(err.message ||'Error desconocido');
  } finally {
  setLoading(false);
  }
@@ -248,26 +248,26 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  const getPriorityIcon = (priority: string) => {
  switch (priority) {
- case 'high': return '🔴';
- case 'medium': return '🟠';
- case 'low': return '🟡';
- default: return '⚪';
+ case'high': return'🔴';
+ case'medium': return'🟠';
+ case'low': return'🟡';
+ default: return'⚪';
  }
  };
 
  const getCategoryIcon = (category: string) => {
  switch (category) {
- case 'pacing': return '⏱️';
- case 'narrative': return '📖';
- case 'psychology': return '🧠';
- case 'recovery': return '💨';
- case 'contrast': return '⚡';
- default: return '📌';
+ case'pacing': return'⏱️';
+ case'narrative': return'📖';
+ case'psychology': return'🧠';
+ case'recovery': return'💨';
+ case'contrast': return'⚡';
+ default: return'📌';
  }
  };
 
  const escapeHtml = (text: string) =>
- text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+ text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
  // Exporta el análisis a una hoja imprimible/PDF (mismo patrón que la Hoja de Escenario del
  // repertorio: una ventana nueva con HTML autocontenido + window.print()). El gráfico se
@@ -276,7 +276,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  // ninguna dependencia nueva, un SVG se sirve tal cual como imagen.
  const handlePrintAnalysis = () => {
  if (!analysis) return;
- const printWindow = window.open('', '_blank');
+ const printWindow = window.open('','_blank');
  if (!printWindow) return;
 
  const chartSvgUrl = getChartSvgDataUrl();
@@ -291,7 +291,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">🔍 Problema:</strong> ${escapeHtml(sugg.issue)}</p>
  <p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">💡 Sugerencia:</strong> ${escapeHtml(sugg.suggestion)}</p>
  <p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">⭐ Impacto:</strong> ${escapeHtml(sugg.impact)}</p>
- ${sugg.songs_involved?.length ? `<p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">🎵 Canciones:</strong> ${escapeHtml(sugg.songs_involved.join(', '))}</p>` : ''}
+ ${sugg.songs_involved?.length ? `<p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">🎵 Canciones:</strong> ${escapeHtml(sugg.songs_involved.join(','))}</p>` :''}
  </div>
  `).join('');
 
@@ -334,7 +334,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div class="score-bar-bg"><div class="score-bar-fill" style="width:${analysis.overallScore}%;"></div></div>
  </div>
 
- ${chartSvgUrl ? `<div class="chart-box"><img src="${chartSvgUrl}" alt="Mapa de Energía" /></div>` : ''}
+ ${chartSvgUrl ? `<div class="chart-box"><img src="${chartSvgUrl}" alt="Mapa de Energía" /></div>` :''}
 
  <div class="info-box">
  <p class="label">📖 Arco Narrativo</p>
@@ -350,7 +350,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div class="strengths">
  <p class="label" style="color:#10b981;">✓ Fortalezas</p>
  <ul>${analysis.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
- </div>` : ''}
+ </div>` :''}
 
  <h2 style="font-size:16px; margin-bottom:10px;">⚡ Sugerencias (${analysis.suggestions.length})</h2>
  ${suggestionsHtml}
@@ -359,7 +359,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div class="improvements">
  <p class="label" style="color:#f59e0b;">🎯 Áreas de Mejora</p>
  <ul>${analysis.areasForImprovement.map(a => `<li>${escapeHtml(a)}</li>`).join('')}</ul>
- </div>` : ''}
+ </div>` :''}
 
  <div class="footer">Análisis IA exportado • BandManager.io</div>
 
@@ -378,12 +378,10 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  .map(s => `• ${s.title}: ${s.suggestion}`)
  .join('\n');
  return [
- `🧠 Análisis IA — ${setlistName || 'Setlist'}`,
- `Score: ${a.overallScore}/100`,
- '',
- `📖 ${a.narrativeArc}`,
- '',
- topSuggestions ? `Top sugerencias:\n${topSuggestions}` : ''
+ `🧠 Análisis IA — ${setlistName ||'Setlist'}`,
+ `Score: ${a.overallScore}/100`,'',
+ `📖 ${a.narrativeArc}`,'',
+ topSuggestions ? `Top sugerencias:\n${topSuggestions}` :''
  ].filter(Boolean).join('\n');
  };
 
@@ -393,11 +391,11 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  const getFullAnalysisImageBlob = async (): Promise<Blob | null> => {
  if (!analysisContentRef.current) return null;
  const canvas = await html2canvas(analysisContentRef.current, {
- backgroundColor: '#171717',
+ backgroundColor:'#171717',
  scale: 2,
  useCORS: true
  });
- return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), 'image/png'));
+ return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob),'image/png'));
  };
 
  const downloadBlob = (blob: Blob, filename: string) => {
@@ -425,7 +423,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  // Compartir: usa la Web Share API nativa cuando el navegador la soporta con archivos (Chrome
  // y Safari en móvil, principalmente) para adjuntar directamente la imagen completa del
  // análisis + texto resumen a WhatsApp/Telegram/Mail/lo que sea — es el propio sistema el que
- // ofrece las apps instaladas, no hay forma de "elegir WhatsApp" desde web sin ese selector
+ // ofrece las apps instaladas, no hay forma de"elegir WhatsApp" desde web sin ese selector
  // nativo. En escritorio esa API casi nunca soporta archivos, así que ahí se descarga la
  // imagen directamente y se abre wa.me con el texto para poder adjuntarla a mano.
  const handleShareAnalysis = async () => {
@@ -434,17 +432,17 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  try {
  const text = buildShareText(analysis);
  const imageBlob = await getFullAnalysisImageBlob();
- const shareTitle = `Análisis IA — ${setlistName || 'Setlist'}`;
+ const shareTitle = `Análisis IA — ${setlistName ||'Setlist'}`;
 
- if (imageBlob && typeof navigator.share === 'function') {
- const file = new File([imageBlob], `analisis-ia-${setlistId}.png`, { type: 'image/png' });
- const canShareFiles = typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] });
+ if (imageBlob && typeof navigator.share ==='function') {
+ const file = new File([imageBlob], `analisis-ia-${setlistId}.png`, { type:'image/png' });
+ const canShareFiles = typeof navigator.canShare ==='function' && navigator.canShare({ files: [file] });
  if (canShareFiles) {
  await navigator.share({ title: shareTitle, text, files: [file] });
  return;
  }
  }
- if (typeof navigator.share === 'function') {
+ if (typeof navigator.share ==='function') {
  // Sin soporte de archivos pero sí de texto (algunos navegadores) — igual de válido.
  try {
  await navigator.share({ title: shareTitle, text });
@@ -456,11 +454,11 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  // Fallback de escritorio: descarga la imagen y abre WhatsApp Web con el texto — wa.me no
  // admite adjuntar archivos por URL, así que la imagen hay que arrastrarla a mano al chat.
  if (imageBlob) downloadBlob(imageBlob, `analisis-ia-${setlistId}.png`);
- window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+ window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');
  } catch (err: any) {
  // AbortError = el usuario cerró el selector de compartir sin elegir nada: no es un fallo.
- if (err?.name !== 'AbortError') {
- window.open(`https://wa.me/?text=${encodeURIComponent(buildShareText(analysis))}`, '_blank');
+ if (err?.name !=='AbortError') {
+ window.open(`https://wa.me/?text=${encodeURIComponent(buildShareText(analysis))}`,'_blank');
  }
  } finally {
  setSharing(false);
@@ -486,7 +484,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div ref={analysisContentRef}>
  {/* Header + Mapa de Energía en un único bloque sticky: así ambos quedan fijos arriba al
  hacer scroll por las sugerencias, sin depender de calcular a mano la altura del
- header para un segundo "top" (frágil — ya se rompió una vez al hacer el header más
+ header para un segundo"top" (frágil — ya se rompió una vez al hacer el header más
  compacto). Un solo contenedor sticky con top-0 no necesita ningún offset. */}
  <div className="sticky top-0 z-10 bg-[var(--surface)]">
  {/* Header — arrastrable por si hace falta apartar el modal */}
@@ -553,17 +551,17 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <span
  key={i}
  className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 transition ${
- w.type === 'warning'
- ? 'bg-amber-500/10 text-amber-300 /30'
- : w.type === 'success'
- ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
- : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
- } ${isHighlighted ? 'ring-2 ring-white/60' : ''}`}
- style={{ cursor: hasSongs ? 'pointer' : 'default' }}
+ w.type ==='warning'
+ ?'bg-amber-500/10 text-amber-300 /30'
+ : w.type ==='success'
+ ?'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+ :'bg-sky-500/10 text-sky-300 border-sky-500/30'
+ } ${isHighlighted ?'ring-2 ring-white/60' :''}`}
+ style={{ cursor: hasSongs ?'pointer' :'default' }}
  onMouseEnter={() => { if (hasSongs) onHighlightSongs?.(w.songTitles!); }}
  onMouseLeave={() => onHighlightSongs?.([])}
  onClick={() => { if (hasSongs) onHighlightSongs?.(isHighlighted ? [] : w.songTitles!); }}
- title={hasSongs ? `Resalta: ${w.songTitles!.join(', ')}` : undefined}
+ title={hasSongs ? `Resalta: ${w.songTitles!.join(',')}` : undefined}
  >
  <span>{w.icon}</span>
  <span>{w.message}</span>
@@ -630,7 +628,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {analysis && (
  <div className="space-y-6">
  {/* Score */}
- <div className="bg-neutral-800 rounded-[var(--r-s)] p-3 ">
+ <div className="bg-neutral-800 rounded-[var(--r-s)] p-3">
  <div className="flex items-center justify-between mb-2">
  <span className="text-sm text-[var(--ink-3)] font-medium">Score General</span>
  <span className="text-lg font-bold text-purple-400">{analysis.overallScore}/100</span>
@@ -644,13 +642,13 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  </div>
 
  {/* Narrative Arc */}
- <div className="bg-neutral-800 rounded-[var(--r-s)] p-3 ">
+ <div className="bg-neutral-800 rounded-[var(--r-s)] p-3">
  <p className="text-xs text-[var(--ink-2)] mb-1.5">📖 Arco Narrativo</p>
  <p className="text-sm text-[var(--sunken)]">{analysis.narrativeArc}</p>
  </div>
 
  {/* Psychological Flow */}
- <div className="bg-neutral-800 rounded-[var(--r-s)] p-3 ">
+ <div className="bg-neutral-800 rounded-[var(--r-s)] p-3">
  <p className="text-xs text-[var(--ink-2)] mb-1.5">🧠 Flujo Psicológico</p>
  <p className="text-sm text-[var(--sunken)]">{analysis.psychologicalFlow}</p>
  </div>
@@ -684,10 +682,10 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  key={idx}
  className={`rounded-[var(--r-s)] p-3 transition cursor-pointer ${
  isInvalid
- ? 'bg-[var(--surface)] opacity-50'
+ ?'bg-[var(--surface)] opacity-50'
  : isHighlighted
- ? 'bg-purple-900/30 border-purple-500/50 ring-2 ring-purple-400/30'
- : 'bg-neutral-800 hover:'
+ ?'bg-purple-900/30 border-purple-500/50 ring-2 ring-purple-400/30'
+ :'bg-neutral-800 hover:'
  }`}
  onMouseEnter={() => {
  if (sugg.songs_involved?.length) {
@@ -716,7 +714,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  );
  }
  // Mientras esta aplicación siga siendo la más reciente, el propio
- // botón "Aplicar" se convierte en "Deshacer" — no hace falta ir a
+ // botón"Aplicar" se convierte en"Deshacer" — no hace falta ir a
  // buscar el botón genérico de arriba para revertir justo esto.
  if (undoSourceKey === sourceKey) {
  return (
@@ -772,7 +770,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {sugg.songs_involved && sugg.songs_involved.length > 0 && (
  <div>
  <p className="text-[var(--ink-2)]">🎵 Canciones:</p>
- <p className="text-[var(--ink-3)]">{sugg.songs_involved.join(', ')}</p>
+ <p className="text-[var(--ink-3)]">{sugg.songs_involved.join(',')}</p>
  </div>
  )}
  </div>
@@ -784,7 +782,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  {/* Areas for Improvement */}
  {analysis.areasForImprovement.length > 0 && (
- <div className="bg-amber-900/20 rounded-[var(--r-s)] p-3 ">
+ <div className="bg-amber-900/20 rounded-[var(--r-s)] p-3">
  <p className="text-xs font-medium text-amber-300 mb-1.5">🎯 Áreas de Mejora</p>
  <ul className="space-y-1">
  {analysis.areasForImprovement.map((area, idx) => (

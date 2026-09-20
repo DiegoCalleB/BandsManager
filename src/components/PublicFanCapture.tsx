@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Sparkles, Heart, CheckCircle2, Download, Copy, Check, ShieldCheck, Mail, User, MapPin, Music } from 'lucide-react';
-import { sanitizeConcertDisplayName } from '../utils/fanUtils';
+import React, { useState, useEffect } from'react';
+import { Sparkles, Heart, CheckCircle2, Download, Copy, Check, ShieldCheck, Mail, User, MapPin, Music } from'lucide-react';
+import { sanitizeConcertDisplayName } from'../utils/fanUtils';
 
 export const PublicFanCapture: React.FC = () => {
  const [nombre, setNombre] = useState('');
@@ -16,13 +16,13 @@ export const PublicFanCapture: React.FC = () => {
  const [submitted, setSubmitted] = useState(false);
  const [incentivoData, setIncentivoData] = useState<any>(null);
  const [copiedCode, setCopiedCode] = useState(false);
- const [bandInfo, setBandInfo] = useState<{ name: string; logoUrl: string }>({ name: '', logoUrl: '' });
+ const [bandInfo, setBandInfo] = useState<{ name: string; logoUrl: string }>({ name:'', logoUrl:'' });
 
  useEffect(() => {
  const params = new URLSearchParams(window.location.search);
- const cId = params.get('concertId') || params.get('cId') || '';
- const cName = params.get('concertName') || params.get('cName') || '';
- const bandId = params.get('band_id') || params.get('band') || '';
+ const cId = params.get('concertId') || params.get('cId') ||'';
+ const cName = params.get('concertName') || params.get('cName') ||'';
+ const bandId = params.get('band_id') || params.get('band') ||'';
 
  if (cId) setConciertoOrigenId(cId);
  if (cName) {
@@ -33,14 +33,14 @@ export const PublicFanCapture: React.FC = () => {
  setComoConocio("En directo / Concierto");
  }
 
- fetch(`/api/public/epk${bandId ? `?band_id=${encodeURIComponent(bandId)}` : ''}`)
+ fetch(`/api/public/epk${bandId ? `?band_id=${encodeURIComponent(bandId)}` :''}`)
  .then(res => res.json())
  .then(data => {
  if (data?.bandName) {
- const isBkn = (data.bandId || '').includes('bakandeya') || data.bandName.toLowerCase().includes('bakandeya');
+ const isBkn = (data.bandId ||'').includes('bakandeya') || data.bandName.toLowerCase().includes('bakandeya');
  setBandInfo({
  name: data.bandName,
- logoUrl: data.epkConfig?.logoUrl || (isBkn ? '/logo_bakandeya.jpg' : '')
+ logoUrl: data.epkConfig?.logoUrl || (isBkn ?'/logo_bakandeya.jpg' :'')
  });
  }
  })
@@ -65,8 +65,8 @@ export const PublicFanCapture: React.FC = () => {
 
  try {
  const res = await fetch('/api/public/fans', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  nombre,
  email,
@@ -82,7 +82,7 @@ export const PublicFanCapture: React.FC = () => {
  setLoading(false);
 
  if (!res.ok) {
- setErrorMsg(data.error || 'Ocurrió un error al guardar tu registro.');
+ setErrorMsg(data.error ||'Ocurrió un error al guardar tu registro.');
  return;
  }
 
@@ -113,7 +113,7 @@ export const PublicFanCapture: React.FC = () => {
  {bandInfo.logoUrl ? (
  <img
  src={bandInfo.logoUrl}
- alt={bandInfo.name || "Logo"}
+ alt={bandInfo.name ||"Logo"}
  className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover border-2 shadow-xl shadow-amber-500/20"
  />
  ) : (
@@ -127,7 +127,7 @@ export const PublicFanCapture: React.FC = () => {
  </div>
 
  <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white uppercase">
- {bandInfo.name ? `¡SÚMATE A LA FAMILIA DE ${bandInfo.name.toUpperCase()}!` : '¡SÚMATE A NUESTRA COMUNIDAD!'}
+ {bandInfo.name ? `¡SÚMATE A LA FAMILIA DE ${bandInfo.name.toUpperCase()}!` :'¡SÚMATE A NUESTRA COMUNIDAD!'}
  </h1>
  <p className="text-[var(--ink-3)] text-sm max-w-xs mx-auto">
  {conciertoOrigenNombre ? (
@@ -245,7 +245,7 @@ export const PublicFanCapture: React.FC = () => {
  </div>
 
  <div className="space-y-2">
- <h2 className="text-xl font-black text-white">¡MUCHAS GRACIAS, {nombre.split(' ')[0].toUpperCase()}!</h2>
+ <h2 className="text-xl font-black text-white">¡MUCHAS GRACIAS, {nombre.split('')[0].toUpperCase()}!</h2>
  <p className="text-[var(--ink-3)] text-sm leading-relaxed">
  ¡Ya estás apuntado! Te avisaremos por correo de próximas fechas y novedades.
  </p>

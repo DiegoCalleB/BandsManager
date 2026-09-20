@@ -1,4 +1,4 @@
-import React from 'react';
+import React from'react';
 import {
  ArrowUp,
  ArrowDown,
@@ -12,16 +12,16 @@ import {
  Briefcase,
  Layers,
  Palette
-} from 'lucide-react';
-import { EPKConfig, EPKSectionId, EPKTemplateId } from '../../types';
-import { EPKBlockWrapper } from './EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+} from'lucide-react';
+import { EPKConfig, EPKSectionId, EPKTemplateId } from'../../types';
+import { EPKBlockWrapper } from'./EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
 import {
  EPK_TEMPLATES,
  EPK_SECTIONS_META,
  DEFAULT_EPK_SECTIONS_ORDER,
  getAllSectionsWithVisibility
-} from './epkTemplates';
+} from'./epkTemplates';
 
 interface EPKPlantillasBlockProps {
  config: Partial<EPKConfig>;
@@ -44,16 +44,16 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  onSave,
  isAllView = false
 }) => {
- const meta = EPK_BLOCKS.find(b => b.id === 'plantillas') || EPK_BLOCKS[0];
- const currentTemplate: EPKTemplateId = config.plantilla || 'stage';
+ const meta = EPK_BLOCKS.find(b => b.id ==='plantillas') || EPK_BLOCKS[0];
+ const currentTemplate: EPKTemplateId = config.plantilla ||'stage';
  const sectionsList = getAllSectionsWithVisibility(config);
 
  const handleSelectTemplate = (templateId: EPKTemplateId) => {
  onChange({ plantilla: templateId });
  };
 
- const handleMoveSection = (index: number, direction: 'up' | 'down') => {
- const targetIndex = direction === 'up' ? index - 1 : index + 1;
+ const handleMoveSection = (index: number, direction:'up' |'down') => {
+ const targetIndex = direction ==='up' ? index - 1 : index + 1;
  if (targetIndex < 0 || targetIndex >= sectionsList.length) return;
 
  const newSections = [...sectionsList];
@@ -83,33 +83,13 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  };
 
  const handlePresetMusicFirst = () => {
- const musicFirstOrder: EPKSectionId[] = [
- 'musica',
- 'videos',
- 'escucha',
- 'conciertos',
- 'bio',
- 'miembros',
- 'cifras',
- 'prensa',
- 'datos',
- 'galeria'
+ const musicFirstOrder: EPKSectionId[] = ['musica','videos','escucha','conciertos','bio','miembros','cifras','prensa','datos','galeria'
  ];
  onChange({ ordenSecciones: musicFirstOrder });
  };
 
  const handlePresetPromoterFirst = () => {
- const promoterFirstOrder: EPKSectionId[] = [
- 'datos',
- 'videos',
- 'bio',
- 'conciertos',
- 'musica',
- 'miembros',
- 'cifras',
- 'prensa',
- 'escucha',
- 'galeria'
+ const promoterFirstOrder: EPKSectionId[] = ['datos','videos','bio','conciertos','musica','miembros','cifras','prensa','escucha','galeria'
  ];
  onChange({ ordenSecciones: promoterFirstOrder });
  };
@@ -166,8 +146,8 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  onClick={() => handleSelectTemplate(tpl.id)}
  className={`text-left rounded-[var(--r-m)] sm:rounded-[var(--r-l)] transition relative overflow-hidden flex flex-col justify-between p-2.5 sm:p-4 cursor-pointer ${
  isSelected
- ? 'bg-[#221f1c] ring-2 ring-amber-500/20 shadow-lg'
- : 'bg-stone-900/70 border-stone-800 hover:border-stone-700 hover:bg-stone-900'
+ ?'bg-[#221f1c] ring-2 ring-amber-500/20 shadow-lg'
+ :'bg-stone-900/70 border-stone-800 hover:border-stone-700 hover:bg-stone-900'
  }`}
  >
  {/* PREVIEW MINIATURA GRÁFICA */}
@@ -193,7 +173,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <div className="space-y-1 sm:space-y-1.5 flex-1 min-w-0">
  <div className="flex items-center justify-between gap-1">
  <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
- <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isSelected ? 'text-amber-400' : 'text-stone-400'}`} />
+ <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isSelected ?'text-amber-400' :'text-stone-400'}`} />
  <span className="text-xs font-bold text-white font-mono truncate">{tpl.name}</span>
  </div>
  {isSelected && (
@@ -215,11 +195,11 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <span
  className={`block w-full py-0.5 sm:py-1 text-center rounded-md sm:rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-bold font-mono transition ${
  isSelected
- ? 'bg-amber-500/20 text-amber-300'
- : 'bg-stone-800 text-stone-400 hover:text-stone-200'
+ ?'bg-amber-500/20 text-amber-300'
+ :'bg-stone-800 text-stone-400 hover:text-stone-200'
  }`}
  >
- {isSelected ? '✓ Activa' : 'Elegir'}
+ {isSelected ?'✓ Activa' :'Elegir'}
  </span>
  </div>
  </button>
@@ -289,8 +269,8 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  key={item.id}
  className={`flex items-center justify-between gap-3 p-3 rounded-[var(--r-m)] transition ${
  item.isVisible
- ? 'bg-[#151413] border-stone-800/90 text-stone-200'
- : 'bg-stone-950/60 border-stone-900 text-stone-500 opacity-60'
+ ?'bg-[#151413] border-stone-800/90 text-stone-200'
+ :'bg-stone-950/60 border-stone-900 text-stone-500 opacity-60'
  }`}
  >
  {/* ÍNDICE Y METADATOS */}
@@ -301,8 +281,8 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <div
  className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
  item.isVisible
- ? 'bg-amber-500/10 /20 text-amber-400'
- : 'bg-stone-900 border-stone-800 text-stone-600'
+ ?'bg-amber-500/10 /20 text-amber-400'
+ :'bg-stone-900 border-stone-800 text-stone-600'
  }`}
  >
  <Icon className="w-4 h-4" />
@@ -335,10 +315,10 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  onClick={() => handleToggleVisibility(item.id)}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
  item.isVisible
- ? 'bg-stone-900 hover:bg-stone-800 text-stone-300 border-stone-800'
- : 'bg-rose-950/40 text-rose-400 border-rose-900/60 hover:bg-rose-900/60'
+ ?'bg-stone-900 hover:bg-stone-800 text-stone-300 border-stone-800'
+ :'bg-rose-950/40 text-rose-400 border-rose-900/60 hover:bg-rose-900/60'
  }`}
- title={item.isVisible ? 'Ocultar esta sección en el EPK' : 'Mostrar esta sección en el EPK'}
+ title={item.isVisible ?'Ocultar esta sección en el EPK' :'Mostrar esta sección en el EPK'}
  >
  {item.isVisible ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
  </button>
@@ -346,12 +326,12 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  {/* SUBIR */}
  <button
  type="button"
- onClick={() => handleMoveSection(index, 'up')}
+ onClick={() => handleMoveSection(index,'up')}
  disabled={isFirst}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
  isFirst
- ? 'opacity-30 cursor-not-allowed bg-stone-950 border-stone-900 text-stone-600'
- : 'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-white border-stone-800 cursor-pointer'
+ ?'opacity-30 cursor-not-allowed bg-stone-950 border-stone-900 text-stone-600'
+ :'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-white border-stone-800 cursor-pointer'
  }`}
  title="Subir posición"
  >
@@ -361,12 +341,12 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  {/* BAJAR */}
  <button
  type="button"
- onClick={() => handleMoveSection(index, 'down')}
+ onClick={() => handleMoveSection(index,'down')}
  disabled={isLast}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
  isLast
- ? 'opacity-30 cursor-not-allowed bg-stone-950 border-stone-900 text-stone-600'
- : 'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-white border-stone-800 cursor-pointer'
+ ?'opacity-30 cursor-not-allowed bg-stone-950 border-stone-900 text-stone-600'
+ :'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-white border-stone-800 cursor-pointer'
  }`}
  title="Bajar posición"
  >

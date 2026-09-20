@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Sparkles, X, RotateCcw, Check, Zap } from 'lucide-react';
-import { BAND_STYLE_PRESETS, ROCK_SYMBOLS, cleanToNormalText } from '../../utils/bandNameStyler';
+import React, { useState } from'react';
+import { Sparkles, X, RotateCcw, Check, Zap } from'lucide-react';
+import { BAND_STYLE_PRESETS, ROCK_SYMBOLS, cleanToNormalText } from'../../utils/bandNameStyler';
 
 interface BandNameStylerHelperProps {
  value: string;
@@ -11,13 +11,13 @@ interface BandNameStylerHelperProps {
 export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  value,
  onChange,
- className = '',
+ className ='',
 }) => {
  const [isOpen, setIsOpen] = useState(false);
  const [copiedNotification, setCopiedNotification] = useState(false);
 
  const handleApplyPreset = (applyFn: (input: string) => string) => {
- const raw = value || 'Mi Banda';
+ const raw = value ||'Mi Banda';
  const transformed = applyFn(raw);
  onChange(transformed);
  setCopiedNotification(true);
@@ -25,7 +25,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  };
 
  const handleInsertSymbol = (symbol: string) => {
- onChange((value || '') + symbol);
+ onChange((value ||'') + symbol);
  setCopiedNotification(true);
  setTimeout(() => setCopiedNotification(false), 1200);
  };

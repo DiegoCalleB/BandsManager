@@ -1,4 +1,4 @@
-import React from 'react';
+import React from'react';
 import {
  FileText,
  Info,
@@ -11,10 +11,10 @@ import {
  User as UserIcon,
  Users,
  Globe
-} from 'lucide-react';
-import { EPKConfig, BandMember } from '../../types';
-import { EPKBlockWrapper } from './EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+} from'lucide-react';
+import { EPKConfig, BandMember } from'../../types';
+import { EPKBlockWrapper } from'./EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
 
 interface EPKPerfilBlockProps {
  config: EPKConfig;
@@ -71,16 +71,16 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  config.biografia.trim().length >= 80 &&
  !config.biografia.toLowerCase().includes('por definir') &&
  !config.biografia.includes('Propuesta musical en directo')
- ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
- : 'bg-amber-500/10 text-amber-300 /20'
+ ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+ :'bg-amber-500/10 text-amber-300 /20'
  }`}
  >
  {config.biografia &&
  config.biografia.trim().length >= 80 &&
  !config.biografia.toLowerCase().includes('por definir') &&
  !config.biografia.includes('Propuesta musical en directo')
- ? '✓ Bio Lista'
- : 'Mínimo 80 caracteres'}
+ ?'✓ Bio Lista'
+ :'Mínimo 80 caracteres'}
  </span>
  </div>
  <div className="space-y-1.5">
@@ -101,15 +101,14 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  rows={6}
  value={config.biografia}
  onChange={e => setConfig({ ...config, biografia: e.target.value })}
- placeholder={
- 'Ejemplo de estructura (sustituid por lo vuestro):\n\n[Nombre de la banda] es [una frase que os define + vuestro género/sonido propio].\n\nEn directo, [qué ocurre encima del escenario: instrumentación, energía, qué se lleva el público].\n\nCon [X años/conciertos] a la espalda, hemos tocado en [salas/festivales relevantes] y compartido escenario con [referencias, si aplica].'
+ placeholder={'Ejemplo de estructura (sustituid por lo vuestro):\n\n[Nombre de la banda] es [una frase que os define + vuestro género/sonido propio].\n\nEn directo, [qué ocurre encima del escenario: instrumentación, energía, qué se lleva el público].\n\nCon [X años/conciertos] a la espalda, hemos tocado en [salas/festivales relevantes] y compartido escenario con [referencias, si aplica].'
  }
  className="w-full bg-slate-950 focus: rounded-[var(--r-m)] p-3 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed placeholder:text-[var(--ink-2)]"
  />
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
  <span>Mínimo 80 caracteres para completar el perfil</span>
- <span className={(config.biografia || '').trim().length >= 80 ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
- {(config.biografia || '').trim().length} / 80 min.
+ <span className={(config.biografia ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-amber-400 font-bold'}>
+ {(config.biografia ||'').trim().length} / 80 min.
  </span>
  </div>
  </div>
@@ -128,16 +127,16 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  (config.dossierTextoExtra &&
  config.dossierTextoExtra.trim().length >= 80 &&
  !config.dossierTextoExtra.toLowerCase().includes('por definir'))
- ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
- : 'bg-amber-500/10 text-amber-300 /20'
+ ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+ :'bg-amber-500/10 text-amber-300 /20'
  }`}
  >
  {(config.dossierPdfUrl && config.dossierPdfUrl.trim().length > 5) ||
  (config.dossierTextoExtra &&
  config.dossierTextoExtra.trim().length >= 80 &&
  !config.dossierTextoExtra.toLowerCase().includes('por definir'))
- ? '✓ Listo'
- : 'Mín. 80 car. o PDF'}
+ ?'✓ Listo'
+ :'Mín. 80 car. o PDF'}
  </span>
  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full hidden sm:inline">
  Uso Interno
@@ -155,15 +154,15 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <div className="space-y-1.5">
  <textarea
  rows={5}
- value={config.dossierTextoExtra || ''}
+ value={config.dossierTextoExtra ||''}
  onChange={e => setConfig({ ...config, dossierTextoExtra: e.target.value })}
  placeholder="Ejemplo: La banda cuenta con 4 integrantes (voz, guitarra, bajo y batería). Formato versátil para salas y festivales según aforo y requisitos técnicos. Ofrecemos un show potente y enérgico de 90 minutos concebido para hacer vibrar al público..."
  className="w-full bg-slate-950 focus: rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed font-sans"
  />
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
  <span>Mínimo 80 caracteres para marcar como completado (si no hay PDF)</span>
- <span className={(config.dossierTextoExtra || '').trim().length >= 80 ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
- {(config.dossierTextoExtra || '').trim().length} / 80 min.
+ <span className={(config.dossierTextoExtra ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-amber-400 font-bold'}>
+ {(config.dossierTextoExtra ||'').trim().length} / 80 min.
  </span>
  </div>
  </div>
@@ -202,8 +201,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <div className="w-16 h-16 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center relative">
  {subiendoFotoMiembro === m.id ? (
  <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
- ) : m.fotoUrl && m.fotoUrl.trim() !== '' ? (
- <img src={m.fotoUrl} alt={m.nombre || 'Miembro'} className="w-full h-full object-cover" />
+ ) : m.fotoUrl && m.fotoUrl.trim() !=='' ? (
+ <img src={m.fotoUrl} alt={m.nombre ||'Miembro'} className="w-full h-full object-cover" />
  ) : (
  <div className="flex flex-col items-center justify-center p-1 text-center">
  <Upload className="w-4 h-4 text-[var(--ink-2)] group-hover:text-amber-400 transition mb-0.5" />
@@ -218,7 +217,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  onChange={e => {
  const f = e.target.files?.[0];
  if (f) subirFotoMiembro(m.id, f);
- e.target.value = '';
+ e.target.value ='';
  }}
  />
  </label>
@@ -253,7 +252,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  </label>
  <textarea
  rows={2}
- value={m.bio || ''}
+ value={m.bio ||''}
  onChange={e => editarMiembro(m.id, { bio: e.target.value })}
  placeholder="Trayectoria o rol en directo..."
  className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-slate-200 focus: outline-none placeholder:text-[var(--ink-2)] leading-relaxed"
@@ -267,7 +266,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <Instagram className="w-3.5 h-3.5 text-[var(--ink-2)] absolute left-2.5 top-1/2 -translate-y-1/2" />
  <input
  type="text"
- value={m.instagram || ''}
+ value={m.instagram ||''}
  onChange={e => editarMiembro(m.id, { instagram: e.target.value })}
  placeholder="@usuario o https://instagram.com/usuario"
  className="w-full bg-[var(--surface)] rounded-[var(--r-s)] pl-8 pr-3 py-1.5 text-xs text-slate-200 focus: outline-none"
@@ -291,7 +290,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <label className="text-xs font-semibold text-[var(--ink-3)]">Nombre / Cargo Mánager</label>
  <input
  type="text"
- value={config.contactoBooking?.nombre || ''}
+ value={config.contactoBooking?.nombre ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -306,7 +305,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <label className="text-xs font-semibold text-[var(--ink-3)]">Email de Contacto</label>
  <input
  type="email"
- value={config.contactoBooking?.email || ''}
+ value={config.contactoBooking?.email ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -321,7 +320,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <label className="text-xs font-semibold text-[var(--ink-3)]">Teléfono Mánager</label>
  <input
  type="text"
- value={config.contactoBooking?.telefono || ''}
+ value={config.contactoBooking?.telefono ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -349,7 +348,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <input
  type="url"
  placeholder="https://www.tubanda.com"
- value={config.enlacesRedes?.website || ''}
+ value={config.enlacesRedes?.website ||''}
  onChange={e => {
  const updatedVal = e.target.value;
  setConfig(prev => {
@@ -387,7 +386,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
- {unifiedPlatforms.filter(item => item.key !== 'website').map(item => (
+ {unifiedPlatforms.filter(item => item.key !=='website').map(item => (
  <div key={item.key} className="space-y-1">
  <label className="text-[11px] font-semibold text-[var(--ink-3)] flex items-center gap-1">
  <span>{item.icon}</span>
@@ -396,7 +395,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <input
  type="text"
  placeholder={item.placeholder}
- value={(config.enlacesRedes as any)?.[item.key] || ''}
+ value={(config.enlacesRedes as any)?.[item.key] ||''}
  onChange={e => {
  const updatedVal = e.target.value;
  setConfig(prev => {

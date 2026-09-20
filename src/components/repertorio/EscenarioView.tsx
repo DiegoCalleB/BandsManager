@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from'react';
 
-const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-import { Song, Setlist, SetlistItem } from '../../types';
+const SILENT_AUDIO_URI ='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+import { Song, Setlist, SetlistItem } from'../../types';
 import { 
  Printer, Music, Mic, Radio, SkipBack, SkipForward, Play, Pause, Repeat, Heart,
  Activity, Footprints, Zap, FileText, WifiOff, Check, ChevronDown, ChevronUp
-} from 'lucide-react';
-import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from '../RepertorioSetlists';
-import { cacheActiveStageSetlist } from '../../utils/stageOfflineCache';
-import { formatSongTitle } from '../../utils/formatSongTitle';
+} from'lucide-react';
+import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from'../RepertorioSetlists';
+import { cacheActiveStageSetlist } from'../../utils/stageOfflineCache';
+import { formatSongTitle } from'../../utils/formatSongTitle';
 
 interface EscenarioViewProps {
  activeSetlist: Setlist | null;
@@ -43,9 +43,9 @@ interface EscenarioViewProps {
  setShowShowItemModal: (val: boolean) => void;
  formatItemDuration: (item: SetlistItem) => string;
  /** true cuando este componente se embebe dentro de la pestaña Repertorio (ver
- * RepertorioSetlists.tsx, toggle "Reproducir concierto") en vez de vivir en su propia pestaña
- * — oculta el selector de repertorio, el botón "Imprimir/Exportar" y la lista de solo lectura
- * de temas, porque Repertorio ya tiene su propio selector, su propio "Imprimir/Exportar" y su
+ * RepertorioSetlists.tsx, toggle"Reproducir concierto") en vez de vivir en su propia pestaña
+ * — oculta el selector de repertorio, el botón"Imprimir/Exportar" y la lista de solo lectura
+ * de temas, porque Repertorio ya tiene su propio selector, su propio"Imprimir/Exportar" y su
  * propia lista (editable, con arrastre) — mostrarlos dos veces sería puro ruido. Solo se queda
  * la consola del reproductor (metadata, controles, barra de progreso, atajos). */
  embedded?: boolean;
@@ -86,11 +86,11 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  embedded = false
 }) => {
  const currentStageItem = (stagePlayingIndex !== null && activeSetlist) ? activeSetlist.items[stagePlayingIndex] : null;
- const currentStageSong = currentStageItem && currentStageItem.tipoItem === 'cancion'
+ const currentStageSong = currentStageItem && currentStageItem.tipoItem ==='cancion'
  ? songs.find(s => s.id === currentStageItem.songId)
  : null;
  const nextStageItem = (stagePlayingIndex !== null && activeSetlist) ? activeSetlist.items[stagePlayingIndex + 1] : null;
- const nextStageSong = nextStageItem && nextStageItem.tipoItem === 'cancion'
+ const nextStageSong = nextStageItem && nextStageItem.tipoItem ==='cancion'
  ? songs.find(s => s.id === nextStageItem.songId)
  : null;
  const isCurrentSongFavorited = currentStageSong?.favoritoGeneral || false;
@@ -102,10 +102,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  const [showPedalShortcuts, setShowPedalShortcuts] = useState(false);
 
  // Offline Stage Mode & Local Cache
- const [isOnline, setIsOnline] = useState(() => typeof navigator !== 'undefined' ? navigator.onLine : true);
+ const [isOnline, setIsOnline] = useState(() => typeof navigator !=='undefined' ? navigator.onLine : true);
  const [isCached, setIsCached] = useState(false);
  const [showChordsPanel, setShowChordsPanel] = useState(false);
- const [chordsFontSize, setChordsFontSize] = useState<'sm' | 'base' | 'lg' | 'xl'>('base');
+ const [chordsFontSize, setChordsFontSize] = useState<'sm' |'base' |'lg' |'xl'>('base');
 
  useEffect(() => {
  const handleOnline = () => setIsOnline(true);
@@ -139,16 +139,16 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  useEffect(() => {
  const handleKeyDown = (e: KeyboardEvent) => {
  // Avoid triggering when user is typing in an input or textarea
- if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+ if (['INPUT','TEXTAREA','SELECT'].includes((e.target as HTMLElement)?.tagName)) {
  return;
  }
- if (e.key === 'PageDown' || e.key === 'ArrowRight' || e.key === ']') {
+ if (e.key ==='PageDown' || e.key ==='ArrowRight' || e.key ===']') {
  e.preventDefault();
  handleStageNext();
- } else if (e.key === 'PageUp' || e.key === 'ArrowLeft' || e.key === '[') {
+ } else if (e.key ==='PageUp' || e.key ==='ArrowLeft' || e.key ==='[') {
  e.preventDefault();
  handleStagePrev();
- } else if (e.code === 'Space' && e.target === document.body) {
+ } else if (e.code ==='Space' && e.target === document.body) {
  e.preventDefault();
  toggleStagePlayPause();
  }
@@ -181,12 +181,12 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  ) : null}
  </div>
  <h2 className="text-xl sm:text-2xl font-black font-mono text-white mt-1">
- {activeSetlist ? activeSetlist.nombre : 'Sin Setlist Seleccionado'}
+ {activeSetlist ? activeSetlist.nombre :'Sin Setlist Seleccionado'}
  </h2>
  </div>
 
  {/* Selector de repertorio + Imprimir/Exportar: Repertorio ya tiene los suyos propios
- (sidebar de setlists + menú "⋯") cuando este reproductor va embebido ahí — mostrarlos
+ (sidebar de setlists + menú"⋯") cuando este reproductor va embebido ahí — mostrarlos
  aquí también sería un control duplicado en la misma pantalla. */}
  {!embedded && (
  <div className="flex items-center gap-2">
@@ -243,7 +243,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {currentStageSong?.portadaUrl ? (
  <img src={currentStageSong.portadaUrl} alt={currentStageSong.titulo} className="w-full h-full object-cover" />
  ) : stagePlayingIndex !== null ? (
- currentStageItem?.tipoItem === 'cancion' ? (
+ currentStageItem?.tipoItem ==='cancion' ? (
  <Music className="w-6 h-6 text-[#1ed760] animate-bounce" />
  ) : (
  <Mic className="w-6 h-6 text-sky-400 animate-pulse" />
@@ -258,7 +258,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <span>
  {stagePlayingIndex !== null 
  ? `En Directo (${stagePlayingIndex + 1}/${activeSetlist.items.length})`
- : 'Reproductor de Concierto'}
+ :'Reproductor de Concierto'}
  </span>
  {stageResolvedUrl ? (
  <span className="px-2 py-0.5 rounded-full text-[9px] bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/30 font-bold">
@@ -279,22 +279,22 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div className="text-base sm:text-lg font-extrabold font-mono text-white truncate max-w-xs sm:max-w-md flex items-center gap-2">
  <span>
  {currentStageItem
- ? (currentStageItem.tipoItem === 'cancion'
- ? (currentStageSong ? formatSongTitle(currentStageSong.titulo) : 'Canción')
- : currentStageItem.tituloCustom || 'Interludio / Presentación')
- : 'Listos para iniciar el concierto'}
+ ? (currentStageItem.tipoItem ==='cancion'
+ ? (currentStageSong ? formatSongTitle(currentStageSong.titulo) :'Canción')
+ : currentStageItem.tituloCustom ||'Interludio / Presentación')
+ :'Listos para iniciar el concierto'}
  </span>
  </div>
 
  {currentStageSong && (
  <div className="text-xs font-mono text-zinc-400 flex items-center gap-2 mt-0.5 flex-wrap">
- <span className="font-bold text-white">{currentStageSong.tonalidad || 'Am'}</span>
+ <span className="font-bold text-white">{currentStageSong.tonalidad ||'Am'}</span>
  <span>•</span>
  <span className="flex items-center gap-1.5 font-bold text-amber-300">
  <span className={`w-2 h-2 rounded-full transition-all duration-75 ${
  stageIsPlaying 
- ? (metronomeTick ? 'bg-amber-400 scale-125 shadow-[0_0_8px_#f59e0b]' : 'bg-amber-950 scale-90')
- : 'bg-zinc-600'
+ ? (metronomeTick ?'bg-amber-400 scale-125 shadow-[0_0_8px_#f59e0b]' :'bg-amber-950 scale-90')
+ :'bg-zinc-600'
  }`} />
  {currentStageSong.bpm || 120} BPM
  </span>
@@ -314,8 +314,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
  className={`p-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
  showPedalShortcuts
- ? 'bg-amber-500/20 text-amber-300 /40'
- : 'bg-[var(--surface)] hover:bg-neutral-800 text-zinc-400 border-zinc-700'
+ ?'bg-amber-500/20 text-amber-300 /40'
+ :'bg-[var(--surface)] hover:bg-neutral-800 text-zinc-400 border-zinc-700'
  }`}
  title="Atajos de teclado / Pedal Bluetooth para pasar canciones sin manos"
  >
@@ -328,31 +328,31 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <button
  onClick={() => toggleFavoriteSong(currentStageSong.id)}
  className="p-2.5 rounded-full hover:bg-zinc-800 transition-all cursor-pointer group flex items-center justify-center shrink-0 ml-1"
- title={isCurrentSongFavorited ? "Quitar de tus temas favoritos" : "Guardar en tus favoritos (Spotify)"}
+ title={isCurrentSongFavorited ?"Quitar de tus temas favoritos" :"Guardar en tus favoritos (Spotify)"}
  >
  <Heart 
  className={`w-5 h-5 transition-all transform group-active:scale-125 ${
  isCurrentSongFavorited 
- ? 'fill-[#1db954] text-[#1db954] drop-shadow-[0_0_8px_rgba(29,185,84,0.5)] scale-110' 
- : 'text-zinc-400 group-hover:text-white'
+ ?'fill-[#1db954] text-[#1db954] drop-shadow-[0_0_8px_rgba(29,185,84,0.5)] scale-110' 
+ :'text-zinc-400 group-hover:text-white'
  }`}
  />
  </button>
  )}
 
  {/* Modify Audio Button for Show Items in Stage Mode */}
- {currentStageItem && currentStageItem.tipoItem !== 'cancion' && (
+ {currentStageItem && currentStageItem.tipoItem !=='cancion' && (
  <button
  onClick={() => {
  setEditingShowItem(currentStageItem);
- setShowItemAudioUrl(currentStageItem.audioUrl || '');
+ setShowItemAudioUrl(currentStageItem.audioUrl ||'');
  setShowShowItemModal(true);
  }}
  className="px-3 py-1.5 rounded-[var(--r-m)] bg-sky-950/80 hover:bg-sky-900 text-sky-300 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ml-1 hover:scale-105 shadow-md"
  title="Grabar o subir audio para esta presentación / interludio"
  >
  <Mic className="w-4 h-4 text-sky-400" />
- <span className="hidden sm:inline">{currentStageItem.audioUrl ? 'Modificar Audio' : '+ Subir / Grabar Audio'}</span>
+ <span className="hidden sm:inline">{currentStageItem.audioUrl ?'Modificar Audio' :'+ Subir / Grabar Audio'}</span>
  </button>
  )}
  </div>
@@ -372,7 +372,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <button
  onClick={toggleStagePlayPause}
  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold flex items-center justify-center shadow-xl shadow-[#1db954]/25 cursor-pointer hover:scale-105 active:scale-95 transition-all"
- title={stageIsPlaying ? "Pausar show" : "Iniciar directo"}
+ title={stageIsPlaying ?"Pausar show" :"Iniciar directo"}
  >
  {stageIsPlaying ? (
  <Pause className="w-6 h-6 fill-current" />
@@ -395,10 +395,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setStageAutoplayNext(!stageAutoplayNext)}
  className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  stageAutoplayNext
- ? 'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/50 shadow-sm'
- : 'bg-[#282828] text-zinc-400 border-transparent hover:text-white'
+ ?'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/50 shadow-sm'
+ :'bg-[#282828] text-zinc-400 border-transparent hover:text-white'
  }`}
- title={stageAutoplayNext ? "Autoplay continuo activado" : "Autoplay desactivado"}
+ title={stageAutoplayNext ?"Autoplay continuo activado" :"Autoplay desactivado"}
  >
  <Repeat className="w-4 h-4" />
  </button>
@@ -409,10 +409,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setStageCrossfadeEnabled(!stageCrossfadeEnabled)}
  className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all text-base ${
  stageCrossfadeEnabled
- ? 'bg-sky-500/20 text-sky-300 shadow-sm'
- : 'bg-[#282828] text-zinc-400 border-transparent hover:text-white'
+ ?'bg-sky-500/20 text-sky-300 shadow-sm'
+ :'bg-[#282828] text-zinc-400 border-transparent hover:text-white'
  }`}
- title={stageCrossfadeEnabled ? "Fundido entre canciones activado (5s)" : "Fundido entre canciones desactivado (corte directo)"}
+ title={stageCrossfadeEnabled ?"Fundido entre canciones activado (5s)" :"Fundido entre canciones desactivado (corte directo)"}
  >
  🔀
  </button>
@@ -424,7 +424,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div className="flex justify-between items-center text-[11px] font-mono text-zinc-400 font-bold px-0.5">
  <span>{formatSecondsToMmSs(stageCurrentTime)}</span>
  <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-mono">
- {stageIsPlaying ? '• EN REPRODUCCIÓN' : 'PAUSADO'}
+ {stageIsPlaying ?'• EN REPRODUCCIÓN' :'PAUSADO'}
  </span>
  <span>{formatSecondsToMmSs(stageItemDuration)}</span>
  </div>
@@ -434,7 +434,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div 
  className="absolute inset-0 opacity-20 pointer-events-none"
  style={{
- backgroundImage: 'repeating-linear-gradient(90deg, #ffffff 0px, #ffffff 1.5px, transparent 1.5px, transparent 7px)'
+ backgroundImage:'repeating-linear-gradient(90deg, #ffffff 0px, #ffffff 1.5px, transparent 1.5px, transparent 7px)'
  }}
  />
 
@@ -445,7 +445,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div 
  className="absolute inset-0 opacity-40 pointer-events-none" 
  style={{
- backgroundImage: 'repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0, 0, 0, 0.5) 3px, rgba(0, 0, 0, 0.5) 6px)'
+ backgroundImage:'repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0, 0, 0, 0.5) 3px, rgba(0, 0, 0, 0.5) 6px)'
  }}
  />
  <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-white shadow-[0_0_8px_rgba(0,0,0,0.15)] opacity-90" />
@@ -494,8 +494,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
  className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer ${
  showPedalShortcuts 
- ? 'bg-amber-500/20 text-amber-300' 
- : 'bg-[var(--surface)] text-zinc-400 hover:text-white border-[var(--hair)]'
+ ?'bg-amber-500/20 text-amber-300' 
+ :'bg-[var(--surface)] text-zinc-400 hover:text-white border-[var(--hair)]'
  }`}
  >
  <Footprints className="w-3.5 h-3.5" />
@@ -507,12 +507,12 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setShowChordsPanel(!showChordsPanel)}
  className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
  showChordsPanel 
- ? 'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/50 shadow-sm' 
- : 'bg-[var(--surface)] text-zinc-300 hover:text-white border-[var(--hair)]'
+ ?'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/50 shadow-sm' 
+ :'bg-[var(--surface)] text-zinc-300 hover:text-white border-[var(--hair)]'
  }`}
  >
  <FileText className="w-3.5 h-3.5 text-[#1ed760]" />
- <span>{showChordsPanel ? 'Ocultar Letra/Acordes' : '📜 Letra y Acordes en Directo'}</span>
+ <span>{showChordsPanel ?'Ocultar Letra/Acordes' :'📜 Letra y Acordes en Directo'}</span>
  </button>
  </div>
 
@@ -539,7 +539,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div className="flex items-center gap-2">
  <FileText className="w-4 h-4 text-[#1ed760]" />
  <h4 className="font-mono text-sm font-black text-white">
- {currentStageSong ? formatSongTitle(currentStageSong.titulo) : 'Sin tema seleccionado'}
+ {currentStageSong ? formatSongTitle(currentStageSong.titulo) :'Sin tema seleccionado'}
  </h4>
  {currentStageSong?.afinacion && (
  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
@@ -554,28 +554,28 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <button
  type="button"
  onClick={() => setChordsFontSize('sm')}
- className={`px-2 py-0.5 rounded ${chordsFontSize === 'sm' ? 'bg-[#1ed760] text-black font-bold' : 'bg-zinc-800 text-zinc-300'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='sm' ?'bg-[#1ed760] text-black font-bold' :'bg-zinc-800 text-zinc-300'}`}
  >
  A-
  </button>
  <button
  type="button"
  onClick={() => setChordsFontSize('base')}
- className={`px-2 py-0.5 rounded ${chordsFontSize === 'base' ? 'bg-[#1ed760] text-black font-bold' : 'bg-zinc-800 text-zinc-300'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='base' ?'bg-[#1ed760] text-black font-bold' :'bg-zinc-800 text-zinc-300'}`}
  >
  A
  </button>
  <button
  type="button"
  onClick={() => setChordsFontSize('lg')}
- className={`px-2 py-0.5 rounded ${chordsFontSize === 'lg' ? 'bg-[#1ed760] text-black font-bold' : 'bg-zinc-800 text-zinc-300'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='lg' ?'bg-[#1ed760] text-black font-bold' :'bg-zinc-800 text-zinc-300'}`}
  >
  A+
  </button>
  <button
  type="button"
  onClick={() => setChordsFontSize('xl')}
- className={`px-2 py-0.5 rounded ${chordsFontSize === 'xl' ? 'bg-[#1ed760] text-black font-bold' : 'bg-zinc-800 text-zinc-300'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='xl' ?'bg-[#1ed760] text-black font-bold' :'bg-zinc-800 text-zinc-300'}`}
  >
  A++
  </button>
@@ -587,9 +587,9 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div className="max-h-[380px] overflow-y-auto pr-1">
  <pre 
  className={`font-mono text-zinc-100 whitespace-pre-wrap select-text leading-relaxed ${
- chordsFontSize === 'sm' ? 'text-xs' :
- chordsFontSize === 'base' ? 'text-sm' :
- chordsFontSize === 'lg' ? 'text-base' : 'text-lg font-bold'
+ chordsFontSize ==='sm' ?'text-xs' :
+ chordsFontSize ==='base' ?'text-sm' :
+ chordsFontSize ==='lg' ?'text-base' :'text-lg font-bold'
  }`}
  >
  {currentStageSong.cifradoTexto}
@@ -629,7 +629,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </div>
 
  {activeSetlist.items.map((it, idx) => {
- if (it.tipoItem === 'cancion' && it.songId) {
+ if (it.tipoItem ==='cancion' && it.songId) {
  const s = songs.find(x => x.id === it.songId);
  if (!s) return null;
 
@@ -641,8 +641,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  key={it.id}
  className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isSelectedThis
- ? 'bg-[#1db954]/15 border-l-4 border-[#1db954] text-white' 
- : 'hover:bg-zinc-800/60 text-zinc-300'
+ ?'bg-[#1db954]/15 border-l-4 border-[#1db954] text-white' 
+ :'hover:bg-zinc-800/60 text-zinc-300'
  }`}
  >
  <div className="col-span-1 flex items-center gap-2">
@@ -653,10 +653,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  }}
  className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  isPlayingThis
- ? 'bg-[#1db954] text-black font-bold scale-105 shadow-md' 
- : 'bg-[#282828] text-[#1db954] hover:bg-[#1db954] hover:text-black'
+ ?'bg-[#1db954] text-black font-bold scale-105 shadow-md' 
+ :'bg-[#282828] text-[#1db954] hover:bg-[#1db954] hover:text-black'
  }`}
- title={isPlayingThis ? 'Pausar' : 'Reproducir este tema'}
+ title={isPlayingThis ?'Pausar' :'Reproducir este tema'}
  >
  {isPlayingThis ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
  </button>
@@ -684,12 +684,12 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  <div className="col-span-2 text-center">
  <span className="px-2.5 py-1 bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/30 rounded-md text-xs font-mono font-black">
- {s.tonalidad || 'Am'}
+ {s.tonalidad ||'Am'}
  </span>
  </div>
 
  <div className="col-span-1 text-center font-mono text-xs text-zinc-400 font-bold">
- {s.bpm || '—'}
+ {s.bpm ||'—'}
  </div>
 
  <div className="col-span-2 text-right font-mono text-xs text-zinc-300 font-bold">
@@ -697,14 +697,14 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </div>
  </div>
  );
- } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
+ } else if (it.tipoItem ==='bloque' && it.bloqueSubtipo ==='header') {
  return (
  <div
  key={it.id}
  className="py-3 px-4 bg-gradient-to-r from-[#1db954]/20 via-[var(--surface)] to-[var(--sunken)] border-l-4 border-[#1db954] rounded-[var(--r-m)] font-mono text-[#1ed760] font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 my-2 shadow-md"
  >
  <span className="text-sm">⚡</span>
- <span>{it.tituloCustom || 'SECCIÓN DEL SHOW'}</span>
+ <span>{it.tituloCustom ||'SECCIÓN DEL SHOW'}</span>
  </div>
  );
  } else {
@@ -718,8 +718,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  key={it.id}
  className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isSelectedThis 
- ? 'bg-sky-500/15 border-l-4 border-sky-400 text-white' 
- : 'hover:bg-zinc-800/60 text-zinc-300'
+ ?'bg-sky-500/15 border-l-4 border-sky-400 text-white' 
+ :'hover:bg-zinc-800/60 text-zinc-300'
  }`}
  onClick={() => {
  setStagePlayingIndex(idx);
@@ -739,10 +739,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  }}
  className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  isPlayingThis 
- ? 'bg-sky-400 text-black font-bold scale-105 shadow-md' 
- : 'bg-[#282828] text-sky-400 hover:bg-sky-400 hover:text-black'
+ ?'bg-sky-400 text-black font-bold scale-105 shadow-md' 
+ :'bg-[#282828] text-sky-400 hover:bg-sky-400 hover:text-black'
  }`}
- title={isPlayingThis ? 'Pausar' : 'Reproducir discurso / audio'}
+ title={isPlayingThis ?'Pausar' :'Reproducir discurso / audio'}
  >
  {isPlayingThis ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
  </button>
@@ -753,7 +753,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div>
  <div className="flex items-center gap-2 flex-wrap">
  <span className="text-sm font-bold font-mono text-white">
- {typeConfig.icon} {it.tituloCustom || 'Interludio / Evento del Show'}
+ {typeConfig.icon} {it.tituloCustom ||'Interludio / Evento del Show'}
  </span>
  {it.audioUrl && (
  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-bold flex items-center gap-1">
@@ -772,14 +772,14 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={(e) => {
  e.stopPropagation();
  setEditingShowItem(it);
- setShowItemAudioUrl(it.audioUrl || '');
+ setShowItemAudioUrl(it.audioUrl ||'');
  setShowShowItemModal(true);
  }}
  className="px-2 py-1 rounded-[var(--r-s)] bg-sky-950/70 hover:bg-sky-900 text-sky-300 text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer hover:scale-105 shrink-0 self-start sm:self-auto"
  title="Modificar Audio o Grabación de este evento"
  >
  <Mic className="w-3 h-3 text-sky-400" />
- <span>{it.audioUrl ? 'Modificar Audio' : '+ Audio'}</span>
+ <span>{it.audioUrl ?'Modificar Audio' :'+ Audio'}</span>
  </button>
  </div>
 

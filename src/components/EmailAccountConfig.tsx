@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, Save, Loader2, CheckCircle2, AlertCircle, Info, KeyRound, RefreshCw, Sparkles, Unlink } from 'lucide-react';
-import { api } from '../services/api';
-import { BandEmailAccountStatus } from '../types';
+import React, { useState, useEffect } from'react';
+import { Mail, Save, Loader2, CheckCircle2, AlertCircle, Info, KeyRound, RefreshCw, Sparkles, Unlink } from'lucide-react';
+import { api } from'../services/api';
+import { BandEmailAccountStatus } from'../types';
 
 interface EmailAccountConfigProps {
  bandId: string;
  isStitchLight?: boolean;
 }
 
-type Provider = 'gmail' | 'outlook' | 'other';
+type Provider ='gmail' |'outlook' |'other';
 
-// Host/puerto conocidos por proveedor - la banda no tiene que buscarlos. 'other' se rellena
+// Host/puerto conocidos por proveedor - la banda no tiene que buscarlos.'other' se rellena
 // a mano (dominio propio / cualquier hosting de correo).
-const PROVIDER_PRESETS: Record<Exclude<Provider, 'other'>, { smtp_host: string; smtp_port: number; smtp_secure: boolean; imap_host: string; imap_port: number; label: string; helpUrl: string }> = {
+const PROVIDER_PRESETS: Record<Exclude<Provider,'other'>, { smtp_host: string; smtp_port: number; smtp_secure: boolean; imap_host: string; imap_port: number; label: string; helpUrl: string }> = {
  gmail: {
- smtp_host: 'smtp.gmail.com', smtp_port: 465, smtp_secure: true,
- imap_host: 'imap.gmail.com', imap_port: 993,
- label: 'Gmail',
- helpUrl: 'https://support.google.com/accounts/answer/185833'
+ smtp_host:'smtp.gmail.com', smtp_port: 465, smtp_secure: true,
+ imap_host:'imap.gmail.com', imap_port: 993,
+ label:'Gmail',
+ helpUrl:'https://support.google.com/accounts/answer/185833'
  },
  outlook: {
- smtp_host: 'smtp.office365.com', smtp_port: 587, smtp_secure: false,
- imap_host: 'outlook.office365.com', imap_port: 993,
- label: 'Outlook / Microsoft 365',
- helpUrl: 'https://support.microsoft.com/es-es/account-billing/usar-contrase%C3%B1as-de-aplicaci%C3%B3n-en-cuentas-de-microsoft-como-la-autenticaci%C3%B3n-en-dos-pasos-e5e4e6f9-2c4a-4a5b-9a3f-0d2b2a0c8b6a'
+ smtp_host:'smtp.office365.com', smtp_port: 587, smtp_secure: false,
+ imap_host:'outlook.office365.com', imap_port: 993,
+ label:'Outlook / Microsoft 365',
+ helpUrl:'https://support.microsoft.com/es-es/account-billing/usar-contrase%C3%B1as-de-aplicaci%C3%B3n-en-cuentas-de-microsoft-como-la-autenticaci%C3%B3n-en-dos-pasos-e5e4e6f9-2c4a-4a5b-9a3f-0d2b2a0c8b6a'
  }
 };
 
 export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, isStitchLight = false }) => {
  const [loading, setLoading] = useState<boolean>(true);
  const [saving, setSaving] = useState<boolean>(false);
- const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+ const [feedback, setFeedback] = useState<{ type:'success' |'error'; message: string } | null>(null);
  const [status, setStatus] = useState<BandEmailAccountStatus>({ connected: false });
  const [editing, setEditing] = useState<boolean>(false);
 
@@ -50,7 +50,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  const [gmailOAuthLoading, setGmailOAuthLoading] = useState(true);
  const [gmailOAuthConnecting, setGmailOAuthConnecting] = useState(false);
  const [gmailOAuthDisconnecting, setGmailOAuthDisconnecting] = useState(false);
- const [gmailOAuthFeedback, setGmailOAuthFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+ const [gmailOAuthFeedback, setGmailOAuthFeedback] = useState<{ type:'success' |'error'; message: string } | null>(null);
 
  useEffect(() => {
  if (!bandId) return;
@@ -78,19 +78,19 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  const resultado = params.get('gmail_oauth');
  if (!resultado) return;
 
- if (resultado === 'conectado') {
- setGmailOAuthFeedback({ type: 'success', message: '¡Gmail conectado! El Agente Enviador ya puede crear borradores sin pedir contraseña.' });
+ if (resultado ==='conectado') {
+ setGmailOAuthFeedback({ type:'success', message:'¡Gmail conectado! El Agente Enviador ya puede crear borradores sin pedir contraseña.' });
  api.getGmailOAuthStatus().then((data) => setGmailOAuthStatus(data || { connected: false })).catch(() => {});
  } else {
- const motivo = params.get('motivo') || 'error_desconocido';
- setGmailOAuthFeedback({ type: 'error', message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.` });
+ const motivo = params.get('motivo') ||'error_desconocido';
+ setGmailOAuthFeedback({ type:'error', message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.` });
  }
  setTimeout(() => setGmailOAuthFeedback(null), 6000);
 
  params.delete('gmail_oauth');
  params.delete('motivo');
  const nuevaQuery = params.toString();
- window.history.replaceState({}, '', window.location.pathname + (nuevaQuery ? `?${nuevaQuery}` : ''));
+ window.history.replaceState({},'', window.location.pathname + (nuevaQuery ? `?${nuevaQuery}` :''));
  }, []);
 
  const handleConnectGmailOAuth = async () => {
@@ -101,7 +101,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  window.location.href = url;
  } catch (err: any) {
  console.error('Error iniciando la conexión de Gmail OAuth:', err);
- setGmailOAuthFeedback({ type: 'error', message: err?.message || 'No se pudo iniciar la conexión con Google.' });
+ setGmailOAuthFeedback({ type:'error', message: err?.message ||'No se pudo iniciar la conexión con Google.' });
  setGmailOAuthConnecting(false);
  }
  };
@@ -112,11 +112,11 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  try {
  await api.disconnectGmailOAuth();
  setGmailOAuthStatus({ connected: false });
- setGmailOAuthFeedback({ type: 'success', message: 'Gmail desconectado.' });
+ setGmailOAuthFeedback({ type:'success', message:'Gmail desconectado.' });
  setTimeout(() => setGmailOAuthFeedback(null), 4000);
  } catch (err: any) {
  console.error('Error desconectando Gmail OAuth:', err);
- setGmailOAuthFeedback({ type: 'error', message: err?.message || 'No se pudo desconectar Gmail.' });
+ setGmailOAuthFeedback({ type:'error', message: err?.message ||'No se pudo desconectar Gmail.' });
  } finally {
  setGmailOAuthDisconnecting(false);
  }
@@ -149,10 +149,10 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  }, [bandId]);
 
  // Al elegir Gmail/Outlook se autorrellenan host/puerto y se ocultan los campos manuales;
- // 'other' los deja vacíos para que la banda los introduzca a mano.
+ //'other' los deja vacíos para que la banda los introduzca a mano.
  const handleProviderChange = (next: Provider) => {
  setProvider(next);
- if (next !== 'other') {
+ if (next !=='other') {
  const preset = PROVIDER_PRESETS[next];
  setSmtpHost(preset.smtp_host);
  setSmtpPort(preset.smtp_port);
@@ -167,11 +167,11 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
 
  const handleSave = async () => {
  if (!email || !appPassword || !smtpHost || !imapHost) {
- setFeedback({ type: 'error', message: 'Rellena email, contraseña de aplicación y los datos de servidor antes de guardar.' });
+ setFeedback({ type:'error', message:'Rellena email, contraseña de aplicación y los datos de servidor antes de guardar.' });
  return;
  }
  if (!bandId) {
- setFeedback({ type: 'error', message: 'No hay ninguna banda activa para conectar esta cuenta de email.' });
+ setFeedback({ type:'error', message:'No hay ninguna banda activa para conectar esta cuenta de email.' });
  return;
  }
  setSaving(true);
@@ -191,11 +191,11 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  setStatus({ connected: true, ...(saved?.data || {}) });
  setAppPassword('');
  setEditing(false);
- setFeedback({ type: 'success', message: '¡Cuenta de email conectada! El Agente Enviador ya puede usarla para enviar y leer correo real.' });
+ setFeedback({ type:'success', message:'¡Cuenta de email conectada! El Agente Enviador ya puede usarla para enviar y leer correo real.' });
  setTimeout(() => setFeedback(null), 5000);
  } catch (err: any) {
  console.error('Error guardando la cuenta de email:', err);
- setFeedback({ type: 'error', message: err?.message || 'Ocurrió un error al guardar la cuenta de email.' });
+ setFeedback({ type:'error', message: err?.message ||'Ocurrió un error al guardar la cuenta de email.' });
  } finally {
  setSaving(false);
  }
@@ -203,15 +203,15 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
 
  const inputClass = `w-full p-2.5 rounded-[var(--r-m)] text-xs font-mono transition-all outline-none ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:border-indigo-500'
- : 'bg-[var(--surface)] text-[var(--sunken)] focus:border-sky-500/60'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:border-indigo-500'
+ :'bg-[var(--surface)] text-[var(--sunken)] focus:border-sky-500/60'
  }`;
- const labelClass = 'text-xs font-mono font-semibold text-[var(--ink-3)] flex items-center gap-2';
+ const labelClass ='text-xs font-mono font-semibold text-[var(--ink-3)] flex items-center gap-2';
 
  if (loading) {
  return (
  <div className={`p-6 rounded-[var(--r-l)] flex items-center justify-center gap-3 ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)]/60 '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'
  }`}>
  <Loader2 className="w-5 h-5 animate-spin text-sky-400" />
  <span className="text-xs font-mono text-[var(--ink-2)]">Comprobando cuenta de email conectada...</span>
@@ -222,8 +222,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  return (
  <div className={`space-y-5 p-5 sm:p-6 rounded-[var(--r-l)] transition-all ${
  isStitchLight
- ? 'bg-white shadow-sm'
- : 'bg-[var(--surface)]/70 text-white'
+ ?'bg-white shadow-sm'
+ :'bg-[var(--surface)]/70 text-white'
  }`}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b /60">
  <div className="flex items-center gap-2">
@@ -252,7 +252,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  Solo para Gmail; Outlook y otros proveedores siguen usando el formulario SMTP/IMAP de
  abajo. */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${
- isStitchLight ? 'bg-sky-50/60 border-sky-200' : 'bg-sky-500/5 border-sky-500/20'
+ isStitchLight ?'bg-sky-50/60 border-sky-200' :'bg-sky-500/5 border-sky-500/20'
  }`}>
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-sky-400 shrink-0" />
@@ -270,7 +270,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
  ) : gmailOAuthStatus.connected ? (
  <div className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 ${
- isStitchLight ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
+ isStitchLight ?'bg-emerald-50 border-emerald-200 text-emerald-900' :'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
@@ -296,17 +296,17 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-sky-500 hover:bg-sky-400 text-[var(--surface)] font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
  >
  {gmailOAuthConnecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
- <span>{gmailOAuthConnecting ? 'Redirigiendo a Google...' : 'Conectar con Google'}</span>
+ <span>{gmailOAuthConnecting ?'Redirigiendo a Google...' :'Conectar con Google'}</span>
  </button>
  )}
 
  {gmailOAuthFeedback && (
  <div className={`p-2.5 rounded-[var(--r-s)] text-[11px] flex items-center gap-2 animate-fadeIn ${
- gmailOAuthFeedback.type === 'success'
- ? 'bg-emerald-500/10 text-emerald-300'
- : 'bg-rose-500/10 text-rose-300'
+ gmailOAuthFeedback.type ==='success'
+ ?'bg-emerald-500/10 text-emerald-300'
+ :'bg-rose-500/10 text-rose-300'
  }`}>
- {gmailOAuthFeedback.type === 'success' ? (
+ {gmailOAuthFeedback.type ==='success' ? (
  <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
  ) : (
  <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-400" />
@@ -325,12 +325,12 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  {status.connected && !editing ? (
  <div className="space-y-3">
  <div className={`p-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 ${
- isStitchLight ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
+ isStitchLight ?'bg-emerald-50 border-emerald-200 text-emerald-900' :'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
  <span className="truncate">
- <strong>{status.email}</strong> ({PROVIDER_PRESETS[status.provider as 'gmail' | 'outlook']?.label || 'Otro proveedor'})
+ <strong>{status.email}</strong> ({PROVIDER_PRESETS[status.provider as'gmail' |'outlook']?.label ||'Otro proveedor'})
  </span>
  </div>
  <button
@@ -350,20 +350,20 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  <span>Proveedor</span>
  </label>
  <div className="grid grid-cols-3 gap-2">
- {(['gmail', 'outlook', 'other'] as Provider[]).map((p) => (
+ {(['gmail','outlook','other'] as Provider[]).map((p) => (
  <button
  key={p}
  type="button"
  onClick={() => handleProviderChange(p)}
  className={`p-2.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  provider === p
- ? 'bg-sky-500/20 border-sky-400/80 text-sky-200 shadow-sm shadow-sky-900/30'
+ ?'bg-sky-500/20 border-sky-400/80 text-sky-200 shadow-sm shadow-sky-900/30'
  : isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- : 'bg-[var(--surface)]/80 /80 text-[var(--ink-2)] hover:bg-neutral-800/50 hover:text-[var(--sunken)]'
+ ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ :'bg-[var(--surface)]/80 /80 text-[var(--ink-2)] hover:bg-neutral-800/50 hover:text-[var(--sunken)]'
  }`}
  >
- {p === 'gmail' ? 'Gmail' : p === 'outlook' ? 'Outlook' : 'Otro (manual)'}
+ {p ==='gmail' ?'Gmail' : p ==='outlook' ?'Outlook' :'Otro (manual)'}
  </button>
  ))}
  </div>
@@ -400,12 +400,12 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
 
  <div className={`p-3 rounded-[var(--r-m)] text-[11px] flex items-start gap-2 ${
- isStitchLight ? 'bg-indigo-50/80 border-indigo-100 text-indigo-950' : 'bg-[var(--surface)] text-[var(--ink-2)]'
+ isStitchLight ?'bg-indigo-50/80 border-indigo-100 text-indigo-950' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-sky-400" />
  <span>
  No es la contraseña normal de la cuenta: es una contraseña de aplicación de un solo uso que genera el propio
- proveedor (requiere verificación en dos pasos activada). {provider !== 'other' && (
+ proveedor (requiere verificación en dos pasos activada). {provider !=='other' && (
  <a href={PROVIDER_PRESETS[provider].helpUrl} target="_blank" rel="noreferrer" className="underline text-sky-400 hover:text-sky-300">
  Cómo generarla en {PROVIDER_PRESETS[provider].label}
  </a>
@@ -413,7 +413,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </span>
  </div>
 
- {provider === 'other' && (
+ {provider ==='other' && (
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t /60">
  <div className="space-y-2">
  <label className={labelClass}><span>Servidor SMTP (envío)</span></label>
@@ -440,11 +440,11 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
 
  {feedback && (
  <div className={`p-3 rounded-[var(--r-m)] text-xs flex items-center gap-2 animate-fadeIn ${
- feedback.type === 'success'
- ? 'bg-emerald-500/10 text-emerald-300'
- : 'bg-rose-500/10 text-rose-300'
+ feedback.type ==='success'
+ ?'bg-emerald-500/10 text-emerald-300'
+ :'bg-rose-500/10 text-rose-300'
  }`}>
- {feedback.type === 'success' ? (
+ {feedback.type ==='success' ? (
  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
  ) : (
  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />

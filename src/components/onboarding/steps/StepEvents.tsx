@@ -1,13 +1,13 @@
-import React from 'react';
-import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from 'lucide-react';
-import { QuickEventItem } from '../types';
+import React from'react';
+import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from'lucide-react';
+import { QuickEventItem } from'../types';
 
 interface StepEventsProps {
  events: QuickEventItem[];
  newEventTitle: string;
  setNewEventTitle: (v: string) => void;
- newEventType: 'concierto' | 'festival' | 'ensayo' | 'privado';
- setNewEventType: (v: 'concierto' | 'festival' | 'ensayo' | 'privado') => void;
+ newEventType:'concierto' |'festival' |'ensayo' |'privado';
+ setNewEventType: (v:'concierto' |'festival' |'ensayo' |'privado') => void;
  newEventDate: string;
  setNewEventDate: (v: string) => void;
  newEventTime: string;
@@ -62,13 +62,13 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  >
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-bold text-xs ${
- ev.tipo === 'ensayo' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'
+ ev.tipo ==='ensayo' ?'bg-blue-500/10 text-blue-400' :'bg-amber-500/10 text-amber-400'
  }`}>
  <span className="text-[9px] uppercase font-semibold">
- {ev.fecha ? new Date(ev.fecha).toLocaleDateString('es-ES', { month: 'short' }) : 'DÍA'}
+ {ev.fecha ? new Date(ev.fecha).toLocaleDateString('es-ES', { month:'short' }) :'DÍA'}
  </span>
  <span className="text-sm leading-none">
- {ev.fecha ? new Date(ev.fecha).getDate() : '--'}
+ {ev.fecha ? new Date(ev.fecha).getDate() :'--'}
  </span>
  </div>
  <div>

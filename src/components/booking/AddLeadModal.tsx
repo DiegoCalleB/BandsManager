@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { X, Building2, Radio, Sparkles, Loader2, Upload, Search, Briefcase } from 'lucide-react';
-import { LeadType } from '../../types';
-import { apiFetch } from '../../utils/api';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { X, Building2, Radio, Sparkles, Loader2, Upload, Search, Briefcase } from'lucide-react';
+import { LeadType } from'../../types';
+import { apiFetch } from'../../utils/api';
+import { ModalPortal } from'../common/ModalPortal';
 
 export interface NewLeadDataState {
  nombre_sala: string;
@@ -27,7 +27,7 @@ export interface NewLeadDataState {
 
 interface AddLeadModalProps {
  isOpen: boolean;
- sectionTab: 'salas' | 'medios' | 'grupos';
+ sectionTab:'salas' |'medios' |'grupos';
  isStitchLight: boolean;
  textSub: string;
  newLeadData: NewLeadDataState;
@@ -69,7 +69,7 @@ export function AddLeadModal({
  setIsSearchingLogo(true);
  try {
  const res = await apiFetch('/api/leads/ai-lookup', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  nombre_sala: newLeadData.nombre_sala,
  ciudad: newLeadData.ciudad
@@ -96,28 +96,28 @@ export function AddLeadModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  className={`w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#18181b] text-[var(--ink)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[#18181b] text-[var(--ink)]'
  }`}
  >
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
- {sectionTab === 'medios' ? (
+ {sectionTab ==='medios' ? (
  <Radio className="w-5 h-5 text-rose-400" />
- ) : sectionTab === 'grupos' ? (
+ ) : sectionTab ==='grupos' ? (
  <Briefcase className="w-5 h-5 text-amber-400" />
  ) : (
  <Building2 className="w-5 h-5 text-[#d1b375]/80" />
  )}
  <h3
  className={`text-sm font-bold font-display uppercase tracking-widest ${
- isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'
+ isStitchLight ?'text-sky-400' :'text-[var(--acc)]'
  }`}
  >
- {sectionTab === 'medios'
- ? 'Nuevo Medio o Prensa'
- : sectionTab === 'grupos'
- ? 'Nuevo Contacto de Industria'
- : 'Nueva Sala o Festival'}
+ {sectionTab ==='medios'
+ ?'Nuevo Medio o Prensa'
+ : sectionTab ==='grupos'
+ ?'Nuevo Contacto de Industria'
+ :'Nueva Sala o Festival'}
  </h3>
  </div>
  <button
@@ -132,11 +132,11 @@ export function AddLeadModal({
  <div>
  <div className="flex justify-between items-center mb-1">
  <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
- {sectionTab === 'medios'
- ? 'Nombre del Medio / Revista *'
- : sectionTab === 'grupos'
- ? 'Nombre de la Entidad / Contacto *'
- : 'Nombre de la Sala / Festival *'}
+ {sectionTab ==='medios'
+ ?'Nombre del Medio / Revista *'
+ : sectionTab ==='grupos'
+ ?'Nombre de la Entidad / Contacto *'
+ :'Nombre de la Sala / Festival *'}
  </label>
  <button
  type="button"
@@ -144,8 +144,8 @@ export function AddLeadModal({
  disabled={isModalScraping || !newLeadData.nombre_sala}
  className={`px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
- ? 'bg-[#d1b375]/15 hover:bg-[#d1b375]/15 text-[#d1b375] disabled:opacity-50'
- : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'
+ ?'bg-[#d1b375]/15 hover:bg-[#d1b375]/15 text-[#d1b375] disabled:opacity-50'
+ :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'
  }`}
  title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
  >
@@ -154,23 +154,23 @@ export function AddLeadModal({
  ) : (
  <Sparkles className="w-3 h-3 text-[#d1b375]/80 dark:text-[var(--acc)]" />
  )}
- <span>{isModalScraping ? 'Buscando datos...' : '✨ Autocompletar con IA Scout'}</span>
+ <span>{isModalScraping ?'Buscando datos...' :'✨ Autocompletar con IA Scout'}</span>
  </button>
  </div>
  <input
  type="text"
  required
  placeholder={
- sectionTab === 'medios'
- ? 'Ej. Radio 3, Mondosonoro, MariskalRock'
- : 'Ej. Sala El Sol, Festival Cabo de Plata'
+ sectionTab ==='medios'
+ ?'Ej. Radio 3, Mondosonoro, MariskalRock'
+ :'Ej. Sala El Sol, Festival Cabo de Plata'
  }
  value={newLeadData.nombre_sala}
  onChange={e => setNewLeadData(prev => ({ ...prev, nombre_sala: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -189,11 +189,11 @@ export function AddLeadModal({
  className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all cursor-pointer disabled:opacity-50"
  >
  <Sparkles className="w-3 h-3 text-amber-400" />
- <span>{isSearchingLogo ? 'Buscando...' : '🔍 Buscar Logo'}</span>
+ <span>{isSearchingLogo ?'Buscando...' :'🔍 Buscar Logo'}</span>
  </button>
  <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-zinc-700">
  <Upload className="w-3 h-3 text-[var(--acc)]" />
- <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir Logo'}</span>
+ <span>{isUploadingLeadLogo ?'Subiendo...' :'Subir Logo'}</span>
  <input
  type="file"
  accept="image/*"
@@ -228,7 +228,7 @@ export function AddLeadModal({
  </div>
  <button
  type="button"
- onClick={() => setNewLeadData(prev => ({ ...prev, imagen_url: '' }))}
+ onClick={() => setNewLeadData(prev => ({ ...prev, imagen_url:'' }))}
  className="text-[10px] text-rose-400 hover:underline px-2 py-1 cursor-pointer"
  >
  Quitar
@@ -238,7 +238,7 @@ export function AddLeadModal({
  <div className="space-y-1.5">
  <p className="text-[9px] text-zinc-400">Selecciona un emoji característico:</p>
  <div className="flex flex-wrap gap-1.5">
- {['📻', '📰', '🌐', '🎙️', '📺', '🏛️', '🎪', '🪩', '🎸', '💼', '🎆', '⚡', '🔥'].map(
+ {['📻','📰','🌐','🎙️','📺','🏛️','🎪','🪩','🎸','💼','🎆','⚡','🔥'].map(
  emoji => (
  <button
  key={emoji}
@@ -246,8 +246,8 @@ export function AddLeadModal({
  onClick={() => setNewLeadData(prev => ({ ...prev, icono: emoji }))}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  newLeadData.icono === emoji
- ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold scale-110 shadow-md border-[var(--acc)]'
- : 'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold scale-110 shadow-md border-[var(--acc)]'
+ :'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700'
  }`}
  >
  {emoji}
@@ -263,7 +263,7 @@ export function AddLeadModal({
  {isModalScraping && (
  <div
  className={`p-2.5 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 animate-pulse ${
- isStitchLight ? 'bg-[#d1b375]/15 text-[#d1b375]' : 'bg-[#1f1a10]/30 text-[#d1b375]'
+ isStitchLight ?'bg-[#d1b375]/15 text-[#d1b375]' :'bg-[#1f1a10]/30 text-[#d1b375]'
  }`}
  >
  <Loader2 className="w-4 h-4 animate-spin text-[#d1b375]/80 shrink-0" />
@@ -290,12 +290,12 @@ export function AddLeadModal({
  <input
  type="text"
  placeholder="Ej. Calle San Vicente Ferrer 33"
- value={newLeadData.direccion || ''}
+ value={newLeadData.direccion ||''}
  onChange={e => setNewLeadData(prev => ({ ...prev, direccion: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -312,8 +312,8 @@ export function AddLeadModal({
  onChange={e => setNewLeadData(prev => ({ ...prev, ciudad: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -328,8 +328,8 @@ export function AddLeadModal({
  onChange={e => setNewLeadData(prev => ({ ...prev, region: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -347,8 +347,8 @@ export function AddLeadModal({
  onChange={e => setNewLeadData(prev => ({ ...prev, email_contacto: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -360,12 +360,12 @@ export function AddLeadModal({
  <input
  type="email"
  placeholder="info@magnetikproducciones.com"
- value={newLeadData.email_secundario || ''}
+ value={newLeadData.email_secundario ||''}
  onChange={e => setNewLeadData(prev => ({ ...prev, email_secundario: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -373,16 +373,16 @@ export function AddLeadModal({
 
  <div>
  <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
- {sectionTab === 'medios' ? 'Tipo de Medio' : sectionTab === 'grupos' ? 'Tipo de Organización' : 'Tipo de Espacio'}
+ {sectionTab ==='medios' ?'Tipo de Medio' : sectionTab ==='grupos' ?'Tipo de Organización' :'Tipo de Espacio'}
  </label>
- {sectionTab === 'medios' ? (
+ {sectionTab ==='medios' ? (
  <select
  value={newLeadData.genero}
  onChange={e => setNewLeadData(prev => ({ ...prev, genero: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  >
  <option value="Radio">Radio / Programa</option>
@@ -399,8 +399,8 @@ export function AddLeadModal({
  }
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  >
  <option value="sala">Sala de Conciertos</option>
@@ -415,7 +415,7 @@ export function AddLeadModal({
  )}
  </div>
 
- {(newLeadData.tipo === 'agencia' || newLeadData.tipo === 'manager' || newLeadData.tipo === 'productora' || newLeadData.tipo === 'sello' || newLeadData.tipo === 'grupo' || sectionTab === 'grupos') && (
+ {(newLeadData.tipo ==='agencia' || newLeadData.tipo ==='manager' || newLeadData.tipo ==='productora' || newLeadData.tipo ==='sello' || newLeadData.tipo ==='grupo' || sectionTab ==='grupos') && (
  <div>
  <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
  Róster de Artistas / Bandas Representadas
@@ -423,12 +423,12 @@ export function AddLeadModal({
  <input
  type="text"
  placeholder="Ej. Ska-P, Boikot, Zoo, La Raíz..."
- value={newLeadData.roster || ''}
+ value={newLeadData.roster ||''}
  onChange={e => setNewLeadData(prev => ({ ...prev, roster: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -436,23 +436,23 @@ export function AddLeadModal({
 
  <div>
  <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
- {sectionTab === 'medios'
- ? 'Nota de Prensa / Propuesta de Presentación'
- : 'Propuesta de Concierto'}
+ {sectionTab ==='medios'
+ ?'Nota de Prensa / Propuesta de Presentación'
+ :'Propuesta de Concierto'}
  </label>
  <textarea
  rows={3}
  placeholder={
- sectionTab === 'medios'
- ? 'Escribe o personaliza el texto de presentación...'
- : 'Propuesta de fecha, condiciones de taquilla, etc.'
+ sectionTab ==='medios'
+ ?'Escribe o personaliza el texto de presentación...'
+ :'Propuesta de fecha, condiciones de taquilla, etc.'
  }
  value={newLeadData.pitch_generado}
  onChange={e => setNewLeadData(prev => ({ ...prev, pitch_generado: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] p-3 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -468,8 +468,8 @@ export function AddLeadModal({
  onChange={e => setNewLeadData(prev => ({ ...prev, notas: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -480,8 +480,8 @@ export function AddLeadModal({
  onClick={onClose}
  className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
  isStitchLight
- ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- : 'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
+ ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ :'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
  }`}
  >
  Cancelar
@@ -490,11 +490,11 @@ export function AddLeadModal({
  type="submit"
  className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg ${
  isStitchLight
- ? 'bg-sky-500 hover:bg-sky-400 text-white'
- : 'bg-[var(--acc)] hover:bg-[#e2ba40] text-[var(--acc-ink)]'
+ ?'bg-sky-500 hover:bg-sky-400 text-white'
+ :'bg-[var(--acc)] hover:bg-[#e2ba40] text-[var(--acc-ink)]'
  }`}
  >
- {sectionTab === 'medios' ? 'Guardar Medio' : sectionTab === 'grupos' ? 'Guardar Contacto' : 'Guardar Sala'}
+ {sectionTab ==='medios' ?'Guardar Medio' : sectionTab ==='grupos' ?'Guardar Contacto' :'Guardar Sala'}
  </button>
  </div>
  </form>

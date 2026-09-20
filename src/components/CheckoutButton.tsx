@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Sparkles, CreditCard, Loader2 } from 'lucide-react';
-import { ThemeColors } from '../types';
-import { api } from '../services/api';
+import React, { useState } from'react';
+import { Sparkles, CreditCard, Loader2 } from'lucide-react';
+import { ThemeColors } from'../types';
+import { api } from'../services/api';
 
 interface CheckoutButtonProps {
  planId: string;
- billingInterval?: 'monthly' | 'annual';
+ billingInterval?:'monthly' |'annual';
  bandId?: string;
  userEmail?: string;
  className?: string;
@@ -15,10 +15,10 @@ interface CheckoutButtonProps {
 
 export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
  planId,
- billingInterval = 'monthly',
+ billingInterval ='monthly',
  bandId,
  userEmail,
- className = '',
+ className ='',
  children,
  colors
 }) => {
@@ -26,7 +26,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
  const handleCheckout = async () => {
- if (planId === 'ensayo') {
+ if (planId ==='ensayo') {
  alert('¡Plan Gratuito activado con éxito!');
  return;
  }
@@ -59,12 +59,12 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
  await api.startCheckout({
  planId,
  billingInterval,
- bandId: effectiveBandId || 'default',
+ bandId: effectiveBandId ||'default',
  userEmail: (effectiveEmail && effectiveEmail.includes('@')) ? effectiveEmail : undefined,
  });
  } catch (error: any) {
  console.error('Checkout error:', error);
- setErrorMessage(error.message || 'Error desconocido al procesar el pago');
+ setErrorMessage(error.message ||'Error desconocido al procesar el pago');
  } finally {
  setIsLoading(false);
  }

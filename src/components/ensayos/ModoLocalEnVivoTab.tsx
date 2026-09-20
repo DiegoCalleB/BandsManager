@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from'react';
 import { 
  Play, Pause, ChevronLeft, ChevronRight, Disc3, Clock, Sparkles, 
  Volume2, VolumeX, CheckCircle2, AlertCircle, RotateCcw, ThumbsUp,
  Flame, Music, Maximize2, Minimize2, FileText, CheckSquare, List,
  BookOpen, Sliders, Type, ArrowDown, Edit3, X, Eye
-} from 'lucide-react';
-import { Rehearsal, RehearsalAgendaItem, Song, ThemeColors, SongSubstituteGuide } from '../../types';
-import { formatTime } from './EnsayoCronometro';
+} from'lucide-react';
+import { Rehearsal, RehearsalAgendaItem, Song, ThemeColors, SongSubstituteGuide } from'../../types';
+import { formatTime } from'./EnsayoCronometro';
 import { 
  processChordText, 
  extractUniqueChords, 
  GUITAR_CHORD_DATABASE, 
  GuitarChordShape, 
  transposeChordToken 
-} from '../../utils/chordUtils';
-import { SongChordsViewerModal } from '../SongChordsViewerModal';
+} from'../../utils/chordUtils';
+import { SongChordsViewerModal } from'../SongChordsViewerModal';
 
 interface ModoLocalEnVivoTabProps {
  rehearsal: Rehearsal;
@@ -37,8 +37,8 @@ export function ModoLocalEnVivoTab({
  const currentItem = agenda[activeIndex] || null;
  const currentSong = currentItem?.songId ? songs.find(s => s.id === currentItem.songId) : null;
 
- // View Mode: 'escenario' (metrics, structure, notes) vs 'atril' (chords & lyrics teleprompter)
- const [viewMode, setViewMode] = useState<'escenario' | 'atril'>('escenario');
+ // View Mode:'escenario' (metrics, structure, notes) vs'atril' (chords & lyrics teleprompter)
+ const [viewMode, setViewMode] = useState<'escenario' |'atril'>('escenario');
 
  // Fullscreen state
  const [isFullscreen, setIsFullscreen] = useState(false);
@@ -53,7 +53,7 @@ export function ModoLocalEnVivoTab({
  // Metronome State
  const [bpm, setBpm] = useState(currentSong?.bpm || 120);
  const [isMetronomeActive, setIsMetronomeActive] = useState(false);
- const [timeSignature, setTimeSignature] = useState<'4/4' | '3/4' | '6/8' | '2/4'>('4/4');
+ const [timeSignature, setTimeSignature] = useState<'4/4' |'3/4' |'6/8' |'2/4'>('4/4');
  const [currentBeat, setCurrentBeat] = useState(0);
 
  // Web Audio Context for Metronome
@@ -64,7 +64,7 @@ export function ModoLocalEnVivoTab({
 
  // Atril Mode State: Transpose, Notation, Font Size, Auto-Scroll, Diagrams
  const [transpose, setTranspose] = useState<number>(0);
- const [notation, setNotation] = useState<'ES' | 'EN'>('ES');
+ const [notation, setNotation] = useState<'ES' |'EN'>('ES');
  const [fontSizeIndex, setFontSizeIndex] = useState<number>(1); // 0=sm, 1=md, 2=lg, 3=xl
  const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(false);
  const [scrollSpeed, setScrollSpeed] = useState<number>(1); // 1, 2, 3
@@ -78,7 +78,7 @@ export function ModoLocalEnVivoTab({
  const touchStartY = useRef<number | null>(null);
  const touchDeltaX = useRef<number>(0);
  const touchDeltaY = useRef<number>(0);
- const [swipeToast, setSwipeToast] = useState<{ text: string; dir: 'left' | 'right' } | null>(null);
+ const [swipeToast, setSwipeToast] = useState<{ text: string; dir:'left' |'right' } | null>(null);
 
  const handleTouchStart = (e: React.TouchEvent) => {
  if (e.touches.length !== 1) return;
@@ -105,13 +105,13 @@ export function ModoLocalEnVivoTab({
  // Swipe Left -> Next Song
  const nextIdx = activeIndex + 1;
  setActiveIndex(nextIdx);
- setSwipeToast({ text: `Pista ${nextIdx + 1}: ${agenda[nextIdx]?.titulo || ''}`, dir: 'left' });
+ setSwipeToast({ text: `Pista ${nextIdx + 1}: ${agenda[nextIdx]?.titulo ||''}`, dir:'left' });
  setTimeout(() => setSwipeToast(null), 1000);
  } else if (dx > 0 && activeIndex > 0) {
  // Swipe Right -> Previous Song
  const prevIdx = activeIndex - 1;
  setActiveIndex(prevIdx);
- setSwipeToast({ text: `Pista ${prevIdx + 1}: ${agenda[prevIdx]?.titulo || ''}`, dir: 'right' });
+ setSwipeToast({ text: `Pista ${prevIdx + 1}: ${agenda[prevIdx]?.titulo ||''}`, dir:'right' });
  setTimeout(() => setSwipeToast(null), 1000);
  }
  }
@@ -125,19 +125,19 @@ export function ModoLocalEnVivoTab({
  // Keyboard navigation (pedals, arrows, space)
  useEffect(() => {
  const handleKeyDown = (e: KeyboardEvent) => {
- if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
+ if (['INPUT','TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
 
- if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+ if (e.key ==='ArrowRight' || e.key ==='PageDown') {
  if (activeIndex < agenda.length - 1) {
  e.preventDefault();
  setActiveIndex(prev => prev + 1);
  }
- } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+ } else if (e.key ==='ArrowLeft' || e.key ==='PageUp') {
  if (activeIndex > 0) {
  e.preventDefault();
  setActiveIndex(prev => prev - 1);
  }
- } else if (e.key === ' ' && viewMode === 'atril') {
+ } else if (e.key ==='' && viewMode ==='atril') {
  e.preventDefault();
  setIsAutoScrolling(prev => !prev);
  }
@@ -148,11 +148,7 @@ export function ModoLocalEnVivoTab({
  }, [activeIndex, agenda.length, viewMode]);
 
  // Font sizes classes for Atril mode
- const FONT_SIZE_CLASSES = [
- 'text-xs sm:text-sm leading-relaxed',
- 'text-sm sm:text-base leading-relaxed',
- 'text-base sm:text-xl leading-relaxed',
- 'text-lg sm:text-2xl leading-loose font-medium'
+ const FONT_SIZE_CLASSES = ['text-xs sm:text-sm leading-relaxed','text-sm sm:text-base leading-relaxed','text-base sm:text-xl leading-relaxed','text-lg sm:text-2xl leading-loose font-medium'
  ];
 
  // Wake Lock handler to prevent phone screen from turning off in rehearsals
@@ -202,7 +198,7 @@ export function ModoLocalEnVivoTab({
  }, [isTrackTimerActive]);
 
  // Metronome Scheduler
- const beatsPerBar = timeSignature === '3/4' ? 3 : timeSignature === '6/8' ? 6 : timeSignature === '2/4' ? 2 : 4;
+ const beatsPerBar = timeSignature ==='3/4' ? 3 : timeSignature ==='6/8' ? 6 : timeSignature ==='2/4' ? 2 : 4;
 
  const playClick = (time: number, isAccent: boolean) => {
  if (!audioCtxRef.current) return;
@@ -231,7 +227,7 @@ export function ModoLocalEnVivoTab({
  const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
  audioCtxRef.current = new AudioCtx();
  }
- if (audioCtxRef.current.state === 'suspended') {
+ if (audioCtxRef.current.state ==='suspended') {
  audioCtxRef.current.resume();
  }
 
@@ -261,7 +257,7 @@ export function ModoLocalEnVivoTab({
  // Auto-scroll effect for Atril Mode
  useEffect(() => {
  let scrollInterval: any = null;
- if (isAutoScrolling && viewMode === 'atril') {
+ if (isAutoScrolling && viewMode ==='atril') {
  scrollInterval = setInterval(() => {
  if (atrilScrollRef.current) {
  const { scrollTop, scrollHeight, clientHeight } = atrilScrollRef.current;
@@ -299,7 +295,7 @@ export function ModoLocalEnVivoTab({
  };
 
  // Evaluation Handler
- const handleSetEvaluation = (evaluacion: 'bordada' | 'regular' | 'repetir') => {
+ const handleSetEvaluation = (evaluacion:'bordada' |'regular' |'repetir') => {
  if (!currentItem) return;
  const newAgenda = agenda.map(a =>
  a.id === currentItem.id ? { ...a, evaluacion } : a
@@ -337,7 +333,7 @@ export function ModoLocalEnVivoTab({
  <Disc3 className="w-12 h-12 text-neutral-600 mx-auto animate-spin-slow" />
  <h3 className="text-base font-bold text-zinc-200">No hay temas en el orden del día</h3>
  <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
- Ve a la pestaña "1. Orden del Día" para añadir canciones y bloques antes de activar el modo local.
+ Ve a la pestaña"1. Orden del Día" para añadir canciones y bloques antes de activar el modo local.
  </p>
  </div>
  );
@@ -346,10 +342,10 @@ export function ModoLocalEnVivoTab({
  // Get structure pills
  const estructuraPills = currentSong?.guiaSustituto?.estructura
  ? currentSong.guiaSustituto.estructura.split(',').map(s => s.trim())
- : ['Intro', 'Estrofa 1', 'Estribillo', 'Estrofa 2', 'Solo', 'Estribillo Final', 'Outro'];
+ : ['Intro','Estrofa 1','Estribillo','Estrofa 2','Solo','Estribillo Final','Outro'];
 
  // Current chord text
- const rawChordText = currentSong?.cifradoTexto || getSampleCifrado(currentSong?.titulo || currentItem?.titulo || 'Tema');
+ const rawChordText = currentSong?.cifradoTexto || getSampleCifrado(currentSong?.titulo || currentItem?.titulo ||'Tema');
  const uniqueChords = extractUniqueChords(rawChordText);
 
  return (
@@ -360,24 +356,24 @@ export function ModoLocalEnVivoTab({
  onTouchEnd={handleTouchEnd}
  className={`animate-fade-in select-none ${
  isFullscreen 
- ? 'fixed inset-0 z-50 bg-[#090908] h-[100dvh] max-h-[100dvh] w-screen max-w-full overflow-hidden flex flex-col p-2 sm:p-3 justify-between' 
- : 'space-y-4'
+ ?'fixed inset-0 z-50 bg-[#090908] h-[100dvh] max-h-[100dvh] w-screen max-w-full overflow-hidden flex flex-col p-2 sm:p-3 justify-between' 
+ :'space-y-4'
  }`}
  >
  {/* Swipe Feedback Toast */}
  {swipeToast && (
  <div className={`fixed top-16 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-[var(--r-l)] font-mono text-xs font-bold shadow-2xl flex items-center gap-2 animate-in fade-in zoom-in-95 duration-150 ${
- swipeToast.dir === 'left' 
- ? 'bg-amber-400 text-[var(--surface)] shadow-amber-400/20' 
- : 'bg-emerald-400 text-[var(--surface)] border-emerald-300 shadow-emerald-400/20'
+ swipeToast.dir ==='left' 
+ ?'bg-amber-400 text-[var(--surface)] shadow-amber-400/20' 
+ :'bg-emerald-400 text-[var(--surface)] border-emerald-300 shadow-emerald-400/20'
  }`}>
- <span>{swipeToast.dir === 'left' ? '⏩' : '⏪'}</span>
+ <span>{swipeToast.dir ==='left' ?'⏩' :'⏪'}</span>
  <span>{swipeToast.text}</span>
  </div>
  )}
 
  {/* Top Session Progress Bar & Track Selector Carousel */}
- <div className={`flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-[var(--r-l)] bg-[#141413] border-[#262522] ${isFullscreen ? 'shrink-0 mb-1.5' : ''}`}>
+ <div className={`flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-[var(--r-l)] bg-[#141413] border-[#262522] ${isFullscreen ?'shrink-0 mb-1.5' :''}`}>
  <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 px-1 scrollbar-none flex-1">
  {agenda.map((item, idx) => {
  const isCurrent = idx === activeIndex;
@@ -387,19 +383,19 @@ export function ModoLocalEnVivoTab({
  onClick={() => setActiveIndex(idx)}
  className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-[var(--r-m)] font-mono text-xs whitespace-nowrap transition-all cursor-pointer ${
  isCurrent
- ? 'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20 scale-102'
- : item.evaluacion === 'bordada'
- ? 'bg-emerald-500/20 text-emerald-300'
- : item.evaluacion === 'repetir'
- ? 'bg-rose-500/20 text-rose-300'
- : 'bg-[#1a1918] text-[var(--ink-2)] hover:text-white border-[#2a2825]'
+ ?'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20 scale-102'
+ : item.evaluacion ==='bordada'
+ ?'bg-emerald-500/20 text-emerald-300'
+ : item.evaluacion ==='repetir'
+ ?'bg-rose-500/20 text-rose-300'
+ :'bg-[#1a1918] text-[var(--ink-2)] hover:text-white border-[#2a2825]'
  }`}
  >
  <span>{idx + 1}.</span>
  <span className="truncate max-w-[90px] sm:max-w-[140px]">{item.titulo}</span>
- {item.evaluacion === 'bordada' && <span>🟢</span>}
- {item.evaluacion === 'regular' && <span>🟡</span>}
- {item.evaluacion === 'repetir' && <span>🔴</span>}
+ {item.evaluacion ==='bordada' && <span>🟢</span>}
+ {item.evaluacion ==='regular' && <span>🟡</span>}
+ {item.evaluacion ==='repetir' && <span>🔴</span>}
  </button>
  );
  })}
@@ -412,9 +408,9 @@ export function ModoLocalEnVivoTab({
  <button
  onClick={() => setViewMode('escenario')}
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
- viewMode === 'escenario'
- ? 'bg-amber-400 text-[var(--surface)] shadow-sm'
- : 'text-[var(--ink-2)] hover:text-white'
+ viewMode ==='escenario'
+ ?'bg-amber-400 text-[var(--surface)] shadow-sm'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  title="Vista Escenario & Estructura"
  >
@@ -425,9 +421,9 @@ export function ModoLocalEnVivoTab({
  <button
  onClick={() => setViewMode('atril')}
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
- viewMode === 'atril'
- ? 'bg-amber-400 text-[var(--surface)] shadow-sm'
- : 'text-[var(--ink-2)] hover:text-white'
+ viewMode ==='atril'
+ ?'bg-amber-400 text-[var(--surface)] shadow-sm'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  title="Modo Atril / Acordes & Letra (Teleprompter)"
  >
@@ -440,7 +436,7 @@ export function ModoLocalEnVivoTab({
  <button
  onClick={toggleFullscreen}
  className="p-2 rounded-[var(--r-m)] bg-[#1c1b19] border-[#2e2d2a] text-[var(--ink-3)] hover:text-white hover:/40 transition-all cursor-pointer"
- title={isFullscreen ? 'Salir de pantalla completa' : 'Ver a pantalla completa'}
+ title={isFullscreen ?'Salir de pantalla completa' :'Ver a pantalla completa'}
  >
  {isFullscreen ? <Minimize2 className="w-4 h-4 text-amber-400" /> : <Maximize2 className="w-4 h-4" />}
  </button>
@@ -448,7 +444,7 @@ export function ModoLocalEnVivoTab({
  </div>
 
  {/* VIEW MODE 1: FICHA DE ESCENARIO & DINÁMICA */}
- {viewMode === 'escenario' && (
+ {viewMode ==='escenario' && (
  <div className="p-4 sm:p-7 rounded-3xl bg-gradient-to-b from-[var(--surface)] via-[var(--bg)] to-[#0d0d0c] border-2 /30 shadow-2xl relative overflow-hidden space-y-6">
  {/* Subtle stage spotlight effect */}
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-amber-500/10 blur-3xl pointer-events-none" />
@@ -461,7 +457,7 @@ export function ModoLocalEnVivoTab({
  Pista {activeIndex + 1} de {agenda.length}
  </span>
  <span className="text-xs font-mono text-[var(--ink-2)] uppercase">
- {currentItem?.tipo.replace('_', ' ')}
+ {currentItem?.tipo.replace('_','')}
  </span>
  </div>
  <h1 className="text-2xl sm:text-4xl lg:text-5xl font-display font-black text-white tracking-tight truncate">
@@ -476,7 +472,7 @@ export function ModoLocalEnVivoTab({
  Tonalidad
  </span>
  <span className="text-lg sm:text-3xl font-mono font-black text-amber-400">
- {currentSong?.tonalidad || '—'}
+ {currentSong?.tonalidad ||'—'}
  </span>
  </div>
 
@@ -549,7 +545,7 @@ export function ModoLocalEnVivoTab({
  <textarea
  rows={2}
  placeholder="Escribe anotaciones para la banda (ej. entrada con slap, cuidar coros, acento al final)..."
- value={currentItem?.enfoque || ''}
+ value={currentItem?.enfoque ||''}
  onChange={e => handleUpdateCurrentNote(e.target.value)}
  className="w-full bg-transparent text-sm text-zinc-100 font-mono outline-none resize-none border-b border-transparent focus: transition-colors"
  />
@@ -561,8 +557,8 @@ export function ModoLocalEnVivoTab({
  <Music className="w-3.5 h-3.5 text-amber-400" /> Afinación & Arreglos
  </label>
  <p className="text-xs text-[var(--ink-3)] font-mono">
- {currentSong?.afinacion ? `Afinación: ${currentSong.afinacion}` : 'Afinación estándar (E A D G B E)'}
- {currentSong?.guiaSustituto?.capoTraste ? ` • Capo: ${currentSong.guiaSustituto.capoTraste}` : ''}
+ {currentSong?.afinacion ? `Afinación: ${currentSong.afinacion}` :'Afinación estándar (E A D G B E)'}
+ {currentSong?.guiaSustituto?.capoTraste ? ` • Capo: ${currentSong.guiaSustituto.capoTraste}` :''}
  </p>
  {currentSong?.guiaSustituto?.progresionClave && (
  <p className="text-xs text-amber-300 font-mono truncate">
@@ -570,8 +566,7 @@ export function ModoLocalEnVivoTab({
  </p>
  )}
  {currentSong?.notasInternas && (
- <p className="text-xs text-[var(--ink-2)] italic line-clamp-2">
- "{currentSong.notasInternas}"
+ <p className="text-xs text-[var(--ink-2)] italic line-clamp-2">"{currentSong.notasInternas}"
  </p>
  )}
  </div>
@@ -585,25 +580,25 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsMetronomeActive(!isMetronomeActive)}
  className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-m)] font-mono font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md ${
  isMetronomeActive
- ? 'bg-rose-500 text-white hover:bg-rose-400 shadow-rose-500/20'
- : 'bg-emerald-500 text-[var(--surface)] hover:bg-emerald-400 shadow-emerald-500/20'
+ ?'bg-rose-500 text-white hover:bg-rose-400 shadow-rose-500/20'
+ :'bg-emerald-500 text-[var(--surface)] hover:bg-emerald-400 shadow-emerald-500/20'
  }`}
  >
  {isMetronomeActive ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
- <span>{isMetronomeActive ? 'Parar Clic' : 'Activar Clic'}</span>
+ <span>{isMetronomeActive ?'Parar Clic' :'Activar Clic'}</span>
  </button>
 
  {/* Visual Beat Indicator Dots */}
- <div className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] ">
+ <div className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)]">
  {Array.from({ length: beatsPerBar }).map((_, bIdx) => (
  <div
  key={bIdx}
  className={`w-3 h-3 rounded-full transition-all duration-75 ${
  isMetronomeActive && currentBeat === bIdx
  ? bIdx === 0
- ? 'bg-rose-500 scale-125 shadow-lg shadow-rose-500/50'
- : 'bg-amber-400 scale-125 shadow-lg shadow-amber-400/50'
- : 'bg-neutral-700'
+ ?'bg-rose-500 scale-125 shadow-lg shadow-rose-500/50'
+ :'bg-amber-400 scale-125 shadow-lg shadow-amber-400/50'
+ :'bg-neutral-700'
  }`}
  />
  ))}
@@ -662,9 +657,9 @@ export function ModoLocalEnVivoTab({
  <button
  onClick={() => handleSetEvaluation('bordada')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
- currentItem?.evaluacion === 'bordada'
- ? 'bg-emerald-500 text-[var(--surface)] shadow-md shadow-emerald-500/20'
- : 'bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25'
+ currentItem?.evaluacion ==='bordada'
+ ?'bg-emerald-500 text-[var(--surface)] shadow-md shadow-emerald-500/20'
+ :'bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25'
  }`}
  >
  <span>🟢</span>
@@ -674,9 +669,9 @@ export function ModoLocalEnVivoTab({
  <button
  onClick={() => handleSetEvaluation('regular')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
- currentItem?.evaluacion === 'regular'
- ? 'bg-amber-400 text-[var(--surface)] shadow-md shadow-amber-400/20'
- : 'bg-amber-400/15 text-amber-300 hover:bg-amber-400/25'
+ currentItem?.evaluacion ==='regular'
+ ?'bg-amber-400 text-[var(--surface)] shadow-md shadow-amber-400/20'
+ :'bg-amber-400/15 text-amber-300 hover:bg-amber-400/25'
  }`}
  >
  <span>🟡</span>
@@ -686,9 +681,9 @@ export function ModoLocalEnVivoTab({
  <button
  onClick={() => handleSetEvaluation('repetir')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
- currentItem?.evaluacion === 'repetir'
- ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
- : 'bg-rose-500/15 text-rose-300 hover:bg-rose-500/25'
+ currentItem?.evaluacion ==='repetir'
+ ?'bg-rose-500 text-white shadow-md shadow-rose-500/20'
+ :'bg-rose-500/15 text-rose-300 hover:bg-rose-500/25'
  }`}
  >
  <span>🔴</span>
@@ -721,8 +716,8 @@ export function ModoLocalEnVivoTab({
  )}
 
  {/* VIEW MODE 2: MODO ATRIL COMPLETO (TELEPROMPTER / CIFRADO & LETRA) */}
- {viewMode === 'atril' && (
- <div className={`flex flex-col ${isFullscreen ? 'flex-1 min-h-0 overflow-hidden space-y-2' : 'space-y-4'}`}>
+ {viewMode ==='atril' && (
+ <div className={`flex flex-col ${isFullscreen ?'flex-1 min-h-0 overflow-hidden space-y-2' :'space-y-4'}`}>
  {/* Atril Control Toolbar (100% Mobile Responsive) */}
  <div className="p-2 sm:p-3.5 rounded-[var(--r-l)] bg-[#161514] border-[#2c2a27] shadow-xl flex flex-wrap items-center justify-between gap-2 shrink-0">
  {/* Left: Metronome click & Tempo pulse */}
@@ -731,8 +726,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsMetronomeActive(!isMetronomeActive)}
  className={`p-2 rounded-[var(--r-m)] font-mono text-xs font-bold cursor-pointer transition-all ${
  isMetronomeActive
- ? 'bg-rose-500 text-white'
- : 'bg-emerald-500 text-[var(--surface)]'
+ ?'bg-rose-500 text-white'
+ :'bg-emerald-500 text-[var(--surface)]'
  }`}
  title="Metrónomo Clic"
  >
@@ -745,10 +740,10 @@ export function ModoLocalEnVivoTab({
  <div
  className={`w-2.5 h-2.5 rounded-full transition-all ${
  isMetronomeActive && currentBeat === 0
- ? 'bg-rose-500 scale-125'
+ ?'bg-rose-500 scale-125'
  : isMetronomeActive
- ? 'bg-amber-400'
- : 'bg-neutral-700'
+ ?'bg-amber-400'
+ :'bg-neutral-700'
  }`}
  />
  </div>
@@ -760,12 +755,12 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold cursor-pointer transition-all ${
  isAutoScrolling
- ? 'bg-amber-400 text-[var(--surface)] animate-pulse'
- : 'bg-neutral-800 text-[var(--ink-3)] hover:text-white'
+ ?'bg-amber-400 text-[var(--surface)] animate-pulse'
+ :'bg-neutral-800 text-[var(--ink-3)] hover:text-white'
  }`}
  >
  {isAutoScrolling ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
- <span>{isAutoScrolling ? 'Pausar' : 'Auto-Scroll'}</span>
+ <span>{isAutoScrolling ?'Pausar' :'Auto-Scroll'}</span>
  </button>
 
  {/* Speed Switcher */}
@@ -776,8 +771,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => setScrollSpeed(spd)}
  className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold cursor-pointer ${
  scrollSpeed === spd
- ? 'bg-amber-400/20 text-amber-300'
- : 'text-neutral-500 hover:text-[var(--ink-3)]'
+ ?'bg-amber-400/20 text-amber-300'
+ :'text-neutral-500 hover:text-[var(--ink-3)]'
  }`}
  >
  {spd}x
@@ -800,7 +795,7 @@ export function ModoLocalEnVivoTab({
  -1
  </button>
  <span className="text-xs font-mono font-bold text-amber-400 px-1">
- {transpose === 0 ? 'Orig' : transpose > 0 ? `+${transpose}` : transpose}
+ {transpose === 0 ?'Orig' : transpose > 0 ? `+${transpose}` : transpose}
  </span>
  <button
  onClick={() => setTranspose(t => t + 1)}
@@ -812,7 +807,7 @@ export function ModoLocalEnVivoTab({
 
  {/* Notation ES/EN */}
  <button
- onClick={() => setNotation(n => (n === 'ES' ? 'EN' : 'ES'))}
+ onClick={() => setNotation(n => (n ==='ES' ?'EN' :'ES'))}
  className="px-2 py-1.5 rounded-[var(--r-m)] bg-[#1f1e1c] border-[#33312c] text-xs font-mono text-[var(--ink-3)] hover:text-white font-bold cursor-pointer"
  title="Cambiar notación Do-Re-Mi vs C-D-E"
  >
@@ -842,8 +837,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => setShowChordDiagrams(!showChordDiagrams)}
  className={`p-2 rounded-[var(--r-m)] text-xs font-mono cursor-pointer transition-all ${
  showChordDiagrams
- ? 'bg-amber-400/20 text-amber-300 /40'
- : 'bg-[#1f1e1c] text-[var(--ink-2)] border-[#33312c] hover:text-white'
+ ?'bg-amber-400/20 text-amber-300 /40'
+ :'bg-[#1f1e1c] text-[var(--ink-2)] border-[#33312c] hover:text-white'
  }`}
  title="Ver diagramas de acordes de guitarra"
  >
@@ -884,7 +879,7 @@ export function ModoLocalEnVivoTab({
  )}
 
  {/* Teleprompter Chords Sheet Card */}
- <div className={`rounded-[var(--r-l)] sm:rounded-3xl bg-[#0f0f0e] border-2 border-[#262522] shadow-2xl p-3.5 sm:p-6 relative flex flex-col ${isFullscreen ? 'flex-1 min-h-0 overflow-hidden' : ''}`}>
+ <div className={`rounded-[var(--r-l)] sm:rounded-3xl bg-[#0f0f0e] border-2 border-[#262522] shadow-2xl p-3.5 sm:p-6 relative flex flex-col ${isFullscreen ?'flex-1 min-h-0 overflow-hidden' :''}`}>
  {/* Header Song Info */}
  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#242321] pb-3 mb-3 shrink-0">
  <div className="space-y-0.5">
@@ -903,10 +898,10 @@ export function ModoLocalEnVivoTab({
 
  <div className="flex items-center gap-2 text-xs font-mono">
  <span className="px-2 py-1 rounded-[var(--r-m)] bg-[#1c1b1a] border-[#2e2d2a] text-amber-400 font-bold">
- Tonalidad: {currentSong?.tonalidad || 'Am'}
+ Tonalidad: {currentSong?.tonalidad ||'Am'}
  </span>
  <span className="px-2 py-1 rounded-[var(--r-m)] bg-[#1c1b1a] border-[#2e2d2a] text-zinc-300">
- {currentSong?.afinacion || 'Standard E'}
+ {currentSong?.afinacion ||'Standard E'}
  </span>
  <span className="px-2 py-1 rounded-[var(--r-m)] bg-[#1c1b1a] border-[#2e2d2a] text-[var(--ink-2)]">
  ⏱ {formatTime(trackSeconds)}
@@ -917,7 +912,7 @@ export function ModoLocalEnVivoTab({
  {/* Scrollable Chord Content Container */}
  <div
  ref={atrilScrollRef}
- className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-neutral-800 space-y-1 font-mono select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? 'flex-1 min-h-0' : 'max-h-[60vh]'}`}
+ className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-neutral-800 space-y-1 font-mono select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ?'flex-1 min-h-0' :'max-h-[60vh]'}`}
  >
  {renderFormattedChords(rawChordText, transpose, notation)}
  </div>
@@ -928,9 +923,9 @@ export function ModoLocalEnVivoTab({
  <button
  onClick={() => handleSetEvaluation('bordada')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
- currentItem?.evaluacion === 'bordada'
- ? 'bg-emerald-500 text-[var(--surface)] font-black'
- : 'bg-emerald-500/15 text-emerald-300'
+ currentItem?.evaluacion ==='bordada'
+ ?'bg-emerald-500 text-[var(--surface)] font-black'
+ :'bg-emerald-500/15 text-emerald-300'
  }`}
  >
  <span>🟢 Bordada</span>
@@ -939,9 +934,9 @@ export function ModoLocalEnVivoTab({
  <button
  onClick={() => handleSetEvaluation('regular')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
- currentItem?.evaluacion === 'regular'
- ? 'bg-amber-400 text-[var(--surface)] font-black'
- : 'bg-amber-400/15 text-amber-300'
+ currentItem?.evaluacion ==='regular'
+ ?'bg-amber-400 text-[var(--surface)] font-black'
+ :'bg-amber-400/15 text-amber-300'
  }`}
  >
  <span>🟡 Regular</span>
@@ -950,9 +945,9 @@ export function ModoLocalEnVivoTab({
  <button
  onClick={() => handleSetEvaluation('repetir')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
- currentItem?.evaluacion === 'repetir'
- ? 'bg-rose-500 text-white font-black'
- : 'bg-rose-500/15 text-rose-300'
+ currentItem?.evaluacion ==='repetir'
+ ?'bg-rose-500 text-white font-black'
+ :'bg-rose-500/15 text-rose-300'
  }`}
  >
  <span>🔴 Repetir</span>
@@ -1004,7 +999,7 @@ export function ModoLocalEnVivoTab({
 }
 
 // RENDER CHORDS WITH HIGHLIGHTING & SECTION BADGES
-function renderFormattedChords(text: string, transpose: number, notation: 'ES' | 'EN') {
+function renderFormattedChords(text: string, transpose: number, notation:'ES' |'EN') {
  if (!text) return null;
 
  const lines = text.split('\n');
@@ -1060,7 +1055,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  </div>
  )}
  <div className="grid grid-cols-6 gap-0.5 my-0.5 text-[var(--ink-2)] border-b pb-0.5 text-[7px]">
- {['E', 'A', 'D', 'G', 'B', 'E'].map((s, i) => (
+ {['E','A','D','G','B','E'].map((s, i) => (
  <span key={i} className="text-center">{s}</span>
  ))}
  </div>
@@ -1069,9 +1064,9 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  {shape.frets.map((fret, stringIdx) => (
  <div key={stringIdx} className="flex flex-col items-center">
  <span className={`font-bold ${
- fret === -1 ? 'text-rose-400' : fret === 0 ? 'text-emerald-400' : 'text-amber-300'
+ fret === -1 ?'text-rose-400' : fret === 0 ?'text-emerald-400' :'text-amber-300'
  }`}>
- {fret === -1 ? 'x' : fret === 0 ? 'o' : fret}
+ {fret === -1 ?'x' : fret === 0 ?'o' : fret}
  </span>
  </div>
  ))}

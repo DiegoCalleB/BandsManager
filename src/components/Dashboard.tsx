@@ -1,30 +1,30 @@
-import React, { useState, useRef } from 'react';
-import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost } from '../types';
-import { useLanguage } from '../context/LanguageContext';
-import { isSameBandId } from '../utils/bandUtils';
-import DirectionsCard from './DirectionsCard';
-import { AddLeadModal } from './dashboard/AddLeadModal';
-import { ProfileCompletenessCard } from './dashboard/ProfileCompletenessCard';
-import { AiSupportWidget, AiUsageCard } from './dashboard/AiUsageSupportWidget';
-import { EmailTemplatesModal } from './dashboard/EmailTemplatesModal';
-import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
-import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
-import { DashboardWidgetGrid } from './dashboard/DashboardWidgetGrid';
-import { MobileBottomSheet } from './booking/MobileBottomSheet';
-import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
-import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
-import { normalizePlan, hasModuleAccess } from '../utils/planPermissions';
+import React, { useState, useRef } from'react';
+import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost } from'../types';
+import { useLanguage } from'../context/LanguageContext';
+import { isSameBandId } from'../utils/bandUtils';
+import DirectionsCard from'./DirectionsCard';
+import { AddLeadModal } from'./dashboard/AddLeadModal';
+import { ProfileCompletenessCard } from'./dashboard/ProfileCompletenessCard';
+import { AiSupportWidget, AiUsageCard } from'./dashboard/AiUsageSupportWidget';
+import { EmailTemplatesModal } from'./dashboard/EmailTemplatesModal';
+import { AgentAutonomySettingsModal } from'./dashboard/AgentAutonomySettingsModal';
+import { SocialAndFansGrowthChart } from'./dashboard/SocialAndFansGrowthChart';
+import { DashboardWidgetGrid } from'./dashboard/DashboardWidgetGrid';
+import { MobileBottomSheet } from'./booking/MobileBottomSheet';
+import { autoDetectVenueAddress, normalizeStatus, normalizeType } from'../utils/bookingUtils';
+import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from'../utils/leadStatusPresentation';
+import { normalizePlan, hasModuleAccess } from'../utils/planPermissions';
 import { 
  Search, MapPin, Music, Mic, DoorClosed, Globe, Phone, Instagram, 
  Plus, X, Calendar, AlertCircle, Sparkles, Loader2, Check, RefreshCw, 
  Database, Bot, Activity, ArrowRight, CheckCircle2, Radio, Building2,
  Clock, CheckCircle, Hourglass, Send, Users, ShieldCheck, Play, Navigation,
  FileText, BookOpen, Disc3, Truck, Heart, Info, Copy, Sliders, Gift, Crown, QrCode
-} from 'lucide-react';
+} from'lucide-react';
 
 export type NavigationOptions = {
- sectionTab?: 'salas' | 'medios' | 'grupos';
- statusFilter?: LeadStatus | 'todos' | string;
+ sectionTab?:'salas' |'medios' |'grupos';
+ statusFilter?: LeadStatus |'todos' | string;
  selectedLeadId?: string;
  selectedEventId?: string;
  selectedDate?: string;
@@ -61,7 +61,7 @@ const isMedio = (l?: Lead | null) => {
 const isManagement = (l?: Lead | null) => {
  if (!l || !l.tipo) return false;
  const s = String(l.tipo).trim().toLowerCase();
- return ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some(t => s.includes(t));
+ return ['agencia','manager','productora','sello','promotora','management'].some(t => s.includes(t));
 };
 
 export default function Dashboard({ 
@@ -93,13 +93,13 @@ export default function Dashboard({
  const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
  const [syncLoading, setSyncLoading] = useState(false);
 
- // Band view filter state: 'all' (Todas las bandas asignadas por defecto) vs 'active' (Solo la banda activa)
- const [agendaFilterMode, setAgendaFilterMode] = useState<'active' | 'all'>('all');
+ // Band view filter state:'all' (Todas las bandas asignadas por defecto) vs'active' (Solo la banda activa)
+ const [agendaFilterMode, setAgendaFilterMode] = useState<'active' |'all'>('all');
 
  const isPromo = isPromoPlanProp ?? (
- normalizePlan(currentUser?.plan) === 'promo' ||
- normalizePlan(currentUser?.plan) === 'promo_plus' ||
- Boolean(availableBands && availableBands.find(b => (b.band_id === currentBandId || (b as any).id === currentBandId) && (normalizePlan((b as any).plan) === 'promo' || normalizePlan((b as any).plan) === 'promo_plus')))
+ normalizePlan(currentUser?.plan) ==='promo' ||
+ normalizePlan(currentUser?.plan) ==='promo_plus' ||
+ Boolean(availableBands && availableBands.find(b => (b.band_id === currentBandId || (b as any).id === currentBandId) && (normalizePlan((b as any).plan) ==='promo' || normalizePlan((b as any).plan) ==='promo_plus')))
  );
 
  // Scraper states
@@ -156,13 +156,7 @@ export default function Dashboard({
  setScrapingError(null);
  setScrapedData(null);
  
- const steps = [
-"Conectando con el Agente Scout...",
-"Buscando perfiles oficiales en la web...",
-"Extrayendo datos de Instagram y directorios...",
-"Buscando datos de aforo y estilo musical...",
-"Filtrando y validando emails de booking...",
-"Consolidando resultados..."
+ const steps = ["Conectando con el Agente Scout...","Buscando perfiles oficiales en la web...","Extrayendo datos de Instagram y directorios...","Buscando datos de aforo y estilo musical...","Filtrando y validando emails de booking...","Consolidando resultados..."
  ];
  
  let currentStep = 0;
@@ -177,8 +171,8 @@ export default function Dashboard({
 
  try {
  const response = await fetch('/api/scrape-contact', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  leadId: lead.id,
  nombre_sala: lead.nombre_sala,
@@ -197,24 +191,24 @@ export default function Dashboard({
  if (resData.success && resData.data) {
  setScrapedData(resData.data);
  } else {
- throw new Error(resData.error || 'No se pudieron extraer datos de contacto.');
+ throw new Error(resData.error ||'No se pudieron extraer datos de contacto.');
  }
  } catch (err: any) {
  clearInterval(interval);
- setScrapingError(err.message || 'Error en el proceso de raspado.');
+ setScrapingError(err.message ||'Error en el proceso de raspado.');
  } finally {
  setIsScraping(false);
  }
  };
 
- const getScrapedVal = (field: any) => typeof field === 'object' && field !== null ? field.valor : field;
- const getScrapedConf = (field: any) => typeof field === 'object' && field !== null ? (field.confianza || 'baja') : 'alta';
+ const getScrapedVal = (field: any) => typeof field ==='object' && field !== null ? field.valor : field;
+ const getScrapedConf = (field: any) => typeof field ==='object' && field !== null ? (field.confianza ||'baja') :'alta';
 
  const handleApplyScrapedData = (lead: Lead) => {
  if (!scrapedData) return;
  const today = new Date().toISOString().split('T')[0];
- const sourceSummary = typeof scrapedData.source_info === 'string' ? scrapedData.source_info : 'Scout Scraper Grounding';
- const updatedNotes = `*** [${today}] Datos enriquecidos vía Scout Scraper. ${sourceSummary} ***\n${lead.notas || ''}`;
+ const sourceSummary = typeof scrapedData.source_info ==='string' ? scrapedData.source_info :'Scout Scraper Grounding';
+ const updatedNotes = `*** [${today}] Datos enriquecidos vía Scout Scraper. ${sourceSummary} ***\n${lead.notas ||''}`;
  
  const emailVal = getScrapedVal(scrapedData.email_contacto);
  const telVal = getScrapedVal(scrapedData.telefono);
@@ -235,7 +229,7 @@ export default function Dashboard({
  aforo: (aforoVal && !isNaN(Number(aforoVal))) ? Number(aforoVal) : lead.aforo,
  region: regionVal || lead.region,
  genero: generoVal || lead.genero,
- contexto_extra: (contextoVal && typeof contextoVal === 'string' && contextoVal.trim()) ? contextoVal.trim() : lead.contexto_extra,
+ contexto_extra: (contextoVal && typeof contextoVal ==='string' && contextoVal.trim()) ? contextoVal.trim() : lead.contexto_extra,
  notas: updatedNotes
  };
 
@@ -257,12 +251,12 @@ export default function Dashboard({
  genero: newGenero,
  tipo: newTipo,
  email_contacto: newEmail,
- telefono: '',
+ telefono:'',
  instagram: newInstagram,
- fuente: 'Ingreso Manual (Jon)',
- estado: 'nuevo',
- pitch_generado: '',
- notas: newNotas || 'Añadido manualmente desde el dashboard.'
+ fuente:'Ingreso Manual (Jon)',
+ estado:'nuevo',
+ pitch_generado:'',
+ notas: newNotas ||'Añadido manualmente desde el dashboard.'
  };
 
  onAddLead(newLeadItem);
@@ -287,16 +281,16 @@ export default function Dashboard({
  const filteredLeads = leads.filter(lead => {
  const matchesSearch = lead.nombre_sala.toLowerCase().includes(searchTerm.toLowerCase()) || 
  lead.ciudad.toLowerCase().includes(searchTerm.toLowerCase());
- const matchesCity = cityFilter === 'todos' || lead.ciudad === cityFilter;
- const matchesGenre = genreFilter === 'todos' || lead.genero === genreFilter;
+ const matchesCity = cityFilter ==='todos' || lead.ciudad === cityFilter;
+ const matchesGenre = genreFilter ==='todos' || lead.genero === genreFilter;
  return matchesSearch && matchesCity && matchesGenre;
  });
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
- const subCardBg = isStitchLight ? 'bg-[var(--bg)]/80 text-[var(--ink)]' : 'bg-[#1A1918] text-zinc-100';
- const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]';
- const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]';
- const textMuted = isStitchLight ? 'text-[var(--ink-3)]' : 'text-neutral-500';
+ const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[#1A1918] text-zinc-100';
+ const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
+ const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
+ const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-neutral-500';
 
  // Calculate real metrics from leads
  const isMedio = (l: Lead) => {
@@ -305,28 +299,28 @@ export default function Dashboard({
  return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
  };
 
- const pendingApprovalCount = leads.filter(l => l.estado === 'pendiente_aprobacion' || (l.pitch_generado && l.estado === 'nuevo')).length;
- const sentCount = leads.filter(l => l.estado === 'esperando_respuesta').length;
- const interestedCount = leads.filter(l => l.estado === 'interesado' || l.estado === 'negociando').length;
- const approvedCount = leads.filter(l => l.estado === 'aprobado').length;
+ const pendingApprovalCount = leads.filter(l => l.estado ==='pendiente_aprobacion' || (l.pitch_generado && l.estado ==='nuevo')).length;
+ const sentCount = leads.filter(l => l.estado ==='esperando_respuesta').length;
+ const interestedCount = leads.filter(l => l.estado ==='interesado' || l.estado ==='negociando').length;
+ const approvedCount = leads.filter(l => l.estado ==='aprobado').length;
  const mediosCount = leads.filter(l => isMedio(l)).length;
 
  const now = new Date();
- const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+ const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 
- const activeBandId = currentBandId || currentUser?.band_id || '';
- const activeBandName = bandName || currentUser?.bandName || 'Tu Banda';
+ const activeBandId = currentBandId || currentUser?.band_id ||'';
+ const activeBandName = bandName || currentUser?.bandName ||'Tu Banda';
 
  const activeBandConcerts = React.useMemo(() => {
  return concerts.filter(c => {
- if (!c.band_id) return isSameBandId(activeBandId, "band-bakandeya");
+ if (!c.band_id) return isSameBandId(activeBandId,"band-bakandeya");
  return isSameBandId(c.band_id, activeBandId);
  });
  }, [concerts, activeBandId]);
 
  const activeBandRehearsals = React.useMemo(() => {
  return rehearsals.filter(r => {
- if (!r.band_id) return isSameBandId(activeBandId, "band-bakandeya");
+ if (!r.band_id) return isSameBandId(activeBandId,"band-bakandeya");
  return isSameBandId(r.band_id, activeBandId);
  });
  }, [rehearsals, activeBandId]);
@@ -334,14 +328,14 @@ export default function Dashboard({
 
  // Filter concerts & rehearsals based on agendaFilterMode
  const filteredConcerts = concerts.filter(c => {
- if (agendaFilterMode === 'all') return true;
- if (!c.band_id) return isSameBandId(activeBandId, 'band-bakandeya');
+ if (agendaFilterMode ==='all') return true;
+ if (!c.band_id) return isSameBandId(activeBandId,'band-bakandeya');
  return isSameBandId(c.band_id, activeBandId);
  });
 
  const filteredRehearsals = rehearsals.filter(r => {
- if (agendaFilterMode === 'all') return true;
- if (!r.band_id) return isSameBandId(activeBandId, 'band-bakandeya');
+ if (agendaFilterMode ==='all') return true;
+ if (!r.band_id) return isSameBandId(activeBandId,'band-bakandeya');
  return isSameBandId(r.band_id, activeBandId);
  });
 
@@ -350,7 +344,7 @@ export default function Dashboard({
  if (explicitBandName) return explicitBandName;
  if (!bandId || isSameBandId(bandId, activeBandId)) return activeBandName;
  const match = (availableBands || []).find(b => isSameBandId(b.band_id, bandId) || isSameBandId((b as any).id, bandId));
- return match?.bandName || match?.name || (isSameBandId(bandId, 'band-bakandeya') ? 'Bakandeya' : 'Banda');
+ return match?.bandName || match?.name || (isSameBandId(bandId,'band-bakandeya') ?'Bakandeya' :'Banda');
  };
 
  const hasMultipleBands = (availableBands && availableBands.length > 1) || 
@@ -360,7 +354,7 @@ export default function Dashboard({
  // Build upcoming agenda dates
  const upcomingEvents: Array<{
  id: string;
- type: 'concierto' | 'ensayo';
+ type:'concierto' |'ensayo';
  title: string;
  dateStr: string;
  day: string;
@@ -377,13 +371,13 @@ export default function Dashboard({
  filteredConcerts.forEach(c => {
  if (c.fecha && c.fecha < todayStr) return;
  const parts = c.fecha ? c.fecha.split('-') : [];
- const day = parts[2] || '15';
- const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
- const month = parts[1] ? monthNames[parseInt(parts[1], 10) - 1] || 'AGO' : 'AGO';
+ const day = parts[2] ||'15';
+ const monthNames = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+ const month = parts[1] ? monthNames[parseInt(parts[1], 10) - 1] ||'AGO' :'AGO';
 
  upcomingEvents.push({
  id: c.id,
- type: 'concierto',
+ type:'concierto',
  title: `Concierto: ${c.sala}`,
  dateStr: c.fecha,
  day,
@@ -391,11 +385,11 @@ export default function Dashboard({
  location: c.sala ? `${c.sala} (${c.ciudad})` : c.ciudad,
  locationQuery: c.direccion || `${c.sala}, ${c.ciudad}`,
  address: c.direccion,
- badge: c.contrato_firmado ? 'Contrato Firmado' : 'Confirmado',
+ badge: c.contrato_firmado ?'Contrato Firmado' :'Confirmado',
  bandName: getEventBandName(c.band_id, c.bandName),
  details: isPromo
- ? (c.aforo_total ? `Aforo: ${c.aforo_total} pax` : 'Concierto confirmado')
- : `Caché: ${c.cache ? `${c.cache}€` : 'A convenir'} • Aforo: ${c.aforo_total || 500} pax`
+ ? (c.aforo_total ? `Aforo: ${c.aforo_total} pax` :'Concierto confirmado')
+ : `Caché: ${c.cache ? `${c.cache}€` :'A convenir'} • Aforo: ${c.aforo_total || 500} pax`
  });
  });
 
@@ -403,23 +397,23 @@ export default function Dashboard({
  filteredRehearsals.forEach(r => {
  if (r.fecha && r.fecha < todayStr) return;
  const parts = r.fecha ? r.fecha.split('-') : [];
- const day = parts[2] || '10';
- const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
- const month = parts[1] ? monthNames[parseInt(parts[1], 10) - 1] || 'AGO' : 'AGO';
+ const day = parts[2] ||'10';
+ const monthNames = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+ const month = parts[1] ? monthNames[parseInt(parts[1], 10) - 1] ||'AGO' :'AGO';
 
  upcomingEvents.push({
  id: r.id,
- type: 'ensayo',
+ type:'ensayo',
  title: r.lugar ? `Ensayo en ${r.lugar}` : `Ensayo General`,
  dateStr: r.fecha,
  day,
  month,
- location: r.lugar || 'Local de Ensayo',
- locationQuery: `${r.lugar || 'Local de Ensayo'}, Madrid`,
+ location: r.lugar ||'Local de Ensayo',
+ locationQuery: `${r.lugar ||'Local de Ensayo'}, Madrid`,
  address: undefined,
- badge: r.estado === 'completado' ? 'Completado' : 'Programado',
+ badge: r.estado ==='completado' ?'Completado' :'Programado',
  bandName: getEventBandName(r.band_id, r.bandName),
- details: `Horario: ${r.hora || '18:00'} • Asistentes: ${r.asistentes ? (Array.isArray(r.asistentes) ? r.asistentes.join(', ') : r.asistentes) : 'Todos'}`
+ details: `Horario: ${r.hora ||'18:00'} • Asistentes: ${r.asistentes ? (Array.isArray(r.asistentes) ? r.asistentes.join(',') : r.asistentes) :'Todos'}`
  });
  });
 
@@ -430,12 +424,12 @@ export default function Dashboard({
  upcomingEvents.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
 
  // Calculate urgent leads that need response or approval
- const urgentRepliesNeeded = leads.filter(l => l.estado === 'interesado' || l.estado === 'negociando');
- const urgentApprovalsNeeded = leads.filter(l => l.estado === 'pendiente_aprobacion' || (l.pitch_generado && l.estado === 'nuevo'));
+ const urgentRepliesNeeded = leads.filter(l => l.estado ==='interesado' || l.estado ==='negociando');
+ const urgentApprovalsNeeded = leads.filter(l => l.estado ==='pendiente_aprobacion' || (l.pitch_generado && l.estado ==='nuevo'));
 
  // Plan Promo (fase beta, festivales): el dashboard completo enseña CRM, caché, agentes IA,
  // reels y upsells de plan por todas partes — demasiadas cosas para intentar taparlas una a
- // una sin dejarse alguna (ya pasó: la sección de "Acciones Rápidas" y el botón flotante de
+ // una sin dejarse alguna (ya pasó: la sección de"Acciones Rápidas" y el botón flotante de
  // Agente IA se colaban). Así que en vez de parchear el dashboard grande, Promo tiene su
  // propio resumen reducido, aparte, que solo usa lo que ese plan permite: EPK, calendario y fans.
  if (false && isPromo) {
@@ -443,13 +437,13 @@ export default function Dashboard({
  const maxPromoFans = 250;
 
  return (
- <div className={`space-y-6 ${isStitchLight ? "text-[var(--ink)]" : "text-zinc-100"} font-sans w-full max-w-full overflow-x-hidden`}>
+ <div className={`space-y-6 ${isStitchLight ?"text-[var(--ink)]" :"text-zinc-100"} font-sans w-full max-w-full overflow-x-hidden`}>
  <div className="mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
  <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Dashboard</h1>
  <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">
  Panel de {activeBandName}
- {agendaFilterMode === 'all' && hasMultipleBands && (
+ {agendaFilterMode ==='all' && hasMultipleBands && (
  <span className="ml-2 text-amber-400 lowercase font-normal">(vista global de todas tus bandas)</span>
  )}
  </p>
@@ -471,7 +465,7 @@ export default function Dashboard({
  <BookOpen className="w-4 h-4 text-purple-400" />
  <span>Dossier EPK</span>
  </button>
- {hasModuleAccess(currentUser?.plan, "repertorio") && (
+ {hasModuleAccess(currentUser?.plan,"repertorio") && (
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("repertorio")}
@@ -494,7 +488,7 @@ export default function Dashboard({
 
  {/* 1. SECCIÓN PRINCIPAL AL INICIO: PRÓXIMAS FECHAS Y AGENDA */}
  <div className="p-6 rounded-[var(--r-l)] bg-[#18181b]/90 shadow-sm space-y-4">
- <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b ">
+ <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
  <Calendar className="w-5 h-5" />
@@ -504,8 +498,8 @@ export default function Dashboard({
  Próximas Fechas y Agenda
  </h3>
  <p className="text-xs font-mono text-[var(--ink-2)]">
- {agendaFilterMode === 'all' 
- ? 'Conciertos y ensayos de todas tus bandas asignadas.' 
+ {agendaFilterMode ==='all' 
+ ?'Conciertos y ensayos de todas tus bandas asignadas.' 
  : `Conciertos y ensayos programados para ${activeBandName}.`}
  </p>
  </div>
@@ -514,15 +508,15 @@ export default function Dashboard({
  <div className="flex items-center gap-2.5 flex-wrap">
  {/* Band Filter Mode Toggle */}
  <div className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 ${
- isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-stone-900 border-stone-800'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-stone-900 border-stone-800'
  }`}>
  <button
  id="dashboard-promo-agenda-all-bands-btn"
  onClick={() => setAgendaFilterMode('all')}
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
- agendaFilterMode === 'all'
- ? 'bg-amber-500 text-stone-950 font-black shadow-xs'
- : 'text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ agendaFilterMode ==='all'
+ ?'bg-amber-500 text-stone-950 font-black shadow-xs'
+ :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  title="Ver eventos de todas las bandas"
  >
@@ -535,9 +529,9 @@ export default function Dashboard({
  id="dashboard-promo-agenda-active-band-btn"
  onClick={() => setAgendaFilterMode('active')}
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
- agendaFilterMode === 'active'
- ? 'bg-amber-500 text-stone-950 font-black shadow-xs'
- : 'text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ agendaFilterMode ==='active'
+ ?'bg-amber-500 text-stone-950 font-black shadow-xs'
+ :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  title={`Ver solo eventos de ${activeBandName}`}
  >
@@ -567,7 +561,7 @@ export default function Dashboard({
  className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
  >
  <div className="flex items-start gap-3.5">
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-[#1c1b1b] text-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm ">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-[#1c1b1b] text-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm">
  <span className="text-lg font-mono font-black leading-none text-amber-400">
  {item.day}
  </span>
@@ -579,13 +573,13 @@ export default function Dashboard({
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
- item.type === 'concierto'
- ? 'bg-amber-500/20 text-amber-300'
- : 'bg-emerald-500/20 text-emerald-300'
+ item.type ==='concierto'
+ ?'bg-amber-500/20 text-amber-300'
+ :'bg-emerald-500/20 text-emerald-300'
  }`}>
  {item.type}
  </span>
- {(agendaFilterMode === 'all' || hasMultipleBands) && item.bandName && (
+ {(agendaFilterMode ==='all' || hasMultipleBands) && item.bandName && (
  <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold bg-stone-800/80 text-amber-300/90 truncate max-w-[120px] flex items-center gap-1">
  <Music className="w-2.5 h-2.5 text-amber-400 shrink-0" />
  <span className="truncate">{item.bandName}</span>
@@ -638,7 +632,7 @@ export default function Dashboard({
  {/* Card 1: Códigos QR & Captura de Fans */}
  <div className="p-5 rounded-[var(--r-l)] bg-[#18181b]/90 shadow-sm flex flex-col justify-between space-y-4 hover:/40 transition-all">
  <div>
- <div className="flex items-center justify-between pb-3 border-b ">
+ <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
  <QrCode className="w-5 h-5" />
@@ -676,7 +670,7 @@ export default function Dashboard({
  {/* Card 2: Dossier EPK Digital */}
  <div className="p-5 rounded-[var(--r-l)] bg-[#18181b]/90 shadow-sm flex flex-col justify-between space-y-4 hover:border-purple-500/40 transition-all">
  <div>
- <div className="flex items-center justify-between pb-3 border-b ">
+ <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400">
  <BookOpen className="w-5 h-5" />
@@ -840,7 +834,7 @@ export default function Dashboard({
  isOpen={isAutonomyModalOpen}
  onClose={() => setIsAutonomyModalOpen(false)}
  bandName={activeBandName}
- bandId={currentBandId || currentUser?.band_id || ''}
+ bandId={currentBandId || currentUser?.band_id ||''}
  currentUser={currentUser}
  isStitchLight={isStitchLight}
  onOpenTemplatesSection={() => {

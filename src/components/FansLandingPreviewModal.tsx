@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from'react';
 import { 
  X, Smartphone, Monitor, Globe2, Sparkles, RefreshCw, 
  Eye, CheckCircle2, Calendar, FileText
-} from 'lucide-react';
-import { FansLanding } from './FansLanding';
-import { Concert, EPKConfig } from '../types';
-import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, FAN_FORM_TRANSLATIONS, interpolate } from '../i18n/fansTranslations';
+} from'lucide-react';
+import { FansLanding } from'./FansLanding';
+import { Concert, EPKConfig } from'../types';
+import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, FAN_FORM_TRANSLATIONS, interpolate } from'../i18n/fansTranslations';
 
 interface FansLandingPreviewModalProps {
  isOpen: boolean;
@@ -30,20 +30,20 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  initialConcertId,
  initialLanguage = DEFAULT_FAN_FORM_LANGUAGE
 }) => {
- const [deviceMode, setDeviceMode] = useState<'mobile' | 'desktop'>('mobile');
+ const [deviceMode, setDeviceMode] = useState<'mobile' |'desktop'>('mobile');
  const [selectedLanguage, setSelectedLanguage] = useState<FanFormLanguage>(initialLanguage);
- const [selectedConcertId, setSelectedConcertId] = useState<string>(initialConcertId || '');
- const [previewScreen, setPreviewScreen] = useState<'form' | 'success'>('form');
+ const [selectedConcertId, setSelectedConcertId] = useState<string>(initialConcertId ||'');
+ const [previewScreen, setPreviewScreen] = useState<'form' |'success'>('form');
  const [simKey, setSimKey] = useState<number>(0);
 
  if (!isOpen) return null;
 
  const dict = FAN_FORM_TRANSLATIONS[selectedLanguage] || FAN_FORM_TRANSLATIONS.es;
  const t = (key: keyof typeof dict, vars?: Record<string, string | undefined>) =>
- vars ? interpolate(dict[key] || '', vars) : (dict[key] || '');
+ vars ? interpolate(dict[key] ||'', vars) : (dict[key] ||'');
 
  const selectedConcert = concerts.find(c => c.id === selectedConcertId) || null;
- const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
+ const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ?'Bakandeya' :'Tu Banda');
 
  const handleReset = () => {
  setSimKey(prev => prev + 1);
@@ -73,7 +73,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </span>
  </div>
  <p className="text-[10px] text-[var(--ink-2)] font-mono truncate hidden sm:block">
- {effectiveBandName} • {selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : 'Bio / Enlace General'}
+ {effectiveBandName} • {selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` :'Bio / Enlace General'}
  </p>
  </div>
  </div>
@@ -86,9 +86,9 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setPreviewScreen('form')}
  className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
- previewScreen === 'form'
- ? 'bg-amber-500 text-slate-950 shadow-md font-extrabold'
- : 'text-[var(--ink-2)] hover:text-white'
+ previewScreen ==='form'
+ ?'bg-amber-500 text-slate-950 shadow-md font-extrabold'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <FileText className="w-3.5 h-3.5" />
@@ -98,9 +98,9 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setPreviewScreen('success')}
  className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
- previewScreen === 'success'
- ? 'bg-emerald-500 text-slate-950 shadow-md font-extrabold'
- : 'text-[var(--ink-2)] hover:text-white'
+ previewScreen ==='success'
+ ?'bg-emerald-500 text-slate-950 shadow-md font-extrabold'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <CheckCircle2 className="w-3.5 h-3.5" />
@@ -114,9 +114,9 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setDeviceMode('mobile')}
  className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
- deviceMode === 'mobile'
- ? 'bg-neutral-800 text-amber-300'
- : 'text-[var(--ink-2)] hover:text-white'
+ deviceMode ==='mobile'
+ ?'bg-neutral-800 text-amber-300'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  title={t('previewMobile')}
  >
@@ -127,9 +127,9 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setDeviceMode('desktop')}
  className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
- deviceMode === 'desktop'
- ? 'bg-neutral-800 text-amber-300'
- : 'text-[var(--ink-2)] hover:text-white'
+ deviceMode ==='desktop'
+ ?'bg-neutral-800 text-amber-300'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  title={t('previewDesktop')}
  >
@@ -148,8 +148,8 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setSelectedLanguage(l.code)}
  className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-mono transition-all cursor-pointer ${
  selectedLanguage === l.code
- ? 'bg-amber-500/20 text-amber-300 font-bold shadow-inner'
- : 'text-[var(--ink-2)] hover:text-white opacity-75 hover:opacity-100'
+ ?'bg-amber-500/20 text-amber-300 font-bold shadow-inner'
+ :'text-[var(--ink-2)] hover:text-white opacity-75 hover:opacity-100'
  }`}
  title={l.label}
  >
@@ -213,9 +213,9 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setPreviewScreen('form')}
  className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all ${
- previewScreen === 'form'
- ? 'bg-amber-500 text-slate-950'
- : 'text-[var(--ink-2)]'
+ previewScreen ==='form'
+ ?'bg-amber-500 text-slate-950'
+ :'text-[var(--ink-2)]'
  }`}
  >
  {t('previewTabForm')}
@@ -224,9 +224,9 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setPreviewScreen('success')}
  className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all ${
- previewScreen === 'success'
- ? 'bg-emerald-500 text-slate-950'
- : 'text-[var(--ink-2)]'
+ previewScreen ==='success'
+ ?'bg-emerald-500 text-slate-950'
+ :'text-[var(--ink-2)]'
  }`}
  >
  {t('previewTabSuccess')}
@@ -239,7 +239,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setDeviceMode('mobile')}
  className={`p-1 rounded text-xs transition-all ${
- deviceMode === 'mobile' ? 'bg-neutral-800 text-amber-300' : 'text-[var(--ink-2)]'
+ deviceMode ==='mobile' ?'bg-neutral-800 text-amber-300' :'text-[var(--ink-2)]'
  }`}
  >
  <Smartphone className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setDeviceMode('desktop')}
  className={`p-1 rounded text-xs transition-all ${
- deviceMode === 'desktop' ? 'bg-neutral-800 text-amber-300' : 'text-[var(--ink-2)]'
+ deviceMode ==='desktop' ?'bg-neutral-800 text-amber-300' :'text-[var(--ink-2)]'
  }`}
  >
  <Monitor className="w-3.5 h-3.5" />
@@ -264,8 +264,8 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setSelectedLanguage(l.code)}
  className={`px-1.5 py-0.5 rounded text-[11px] font-mono ${
  selectedLanguage === l.code
- ? 'bg-amber-500/20 text-amber-300 font-bold'
- : 'text-[var(--ink-2)] opacity-60'
+ ?'bg-amber-500/20 text-amber-300 font-bold'
+ :'text-[var(--ink-2)] opacity-60'
  }`}
  >
  {l.flag}
@@ -276,7 +276,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
 
  {/* ÁREA DE VISUALIZACIÓN / SIMULADOR CENTRADO */}
  <main className="w-full flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[var(--surface)] via-[#100f0f] to-[#0a0a0a]">
- {deviceMode === 'mobile' ? (
+ {deviceMode ==='mobile' ? (
  /* MOCKUP ELEGANTE DE SMARTPHONE */
  <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-all duration-200">
  {/* Chasis exterior del smartphone */}
@@ -297,7 +297,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  previewLanguage={selectedLanguage}
  previewConfig={epkConfig}
  previewConcert={selectedConcert}
- previewConcertName={selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : ''}
+ previewConcertName={selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` :''}
  previewView={previewScreen}
  onClosePreview={onClose}
  />
@@ -318,7 +318,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
  </div>
  <div className="bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1 text-[var(--ink-2)] text-[11px] flex-1 max-w-md text-center truncate font-mono">
- https://bandmanager.io/unete{selectedConcert ? `/${selectedConcert.ciudad.toLowerCase()}-${selectedConcert.sala.toLowerCase().replace(/\s+/g, '-')}` : ''}?lang={selectedLanguage}
+ https://bandmanager.io/unete{selectedConcert ? `/${selectedConcert.ciudad.toLowerCase()}-${selectedConcert.sala.toLowerCase().replace(/\s+/g,'-')}` :''}?lang={selectedLanguage}
  </div>
  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
  HTTPS
@@ -336,7 +336,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  previewLanguage={selectedLanguage}
  previewConfig={epkConfig}
  previewConcert={selectedConcert}
- previewConcertName={selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : ''}
+ previewConcertName={selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` :''}
  previewView={previewScreen}
  onClosePreview={onClose}
  />

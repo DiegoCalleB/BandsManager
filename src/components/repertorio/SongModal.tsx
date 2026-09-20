@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
-import { X, Upload, Disc3, CheckCircle2, Music, Users, Plus, ChevronDown, ChevronUp } from 'lucide-react';
-import { ThemeColors, Song } from '../../types';
-import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
-import { formatSongTitle } from '../../utils/formatSongTitle';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState, useRef } from'react';
+import { X, Upload, Disc3, CheckCircle2, Music, Users, Plus, ChevronDown, ChevronUp } from'lucide-react';
+import { ThemeColors, Song } from'../../types';
+import { BandMemberOption, resolveBandMembers, getSongMemberNote } from'../../utils/repertorioUtils';
+import { formatSongTitle } from'../../utils/formatSongTitle';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface SongModalProps {
  isOpen: boolean;
@@ -26,11 +26,11 @@ export function SongModal({
  onClose,
  onSave,
  albumsList = [],
- defaultAlbum = '',
- defaultAlbumForNewSong = '',
+ defaultAlbum ='',
+ defaultAlbumForNewSong ='',
  bandMembers = []
 }: SongModalProps) {
- const effectiveDefaultAlbum = defaultAlbumForNewSong || defaultAlbum || '';
+ const effectiveDefaultAlbum = defaultAlbumForNewSong || defaultAlbum ||'';
  const resolvedMembers = resolveBandMembers(bandMembers, editingSong?.notasMiembros);
 
  const [minutos, setMinutos] = useState<number>(() =>
@@ -41,15 +41,15 @@ export function SongModal({
  );
  const [detectedDurationMsg, setDetectedDurationMsg] = useState<string>('');
  const [selectedAlbum, setSelectedAlbum] = useState<string>(() => {
- const albumVal = editingSong?.albumDisco || editingSong?.album || effectiveDefaultAlbum || '';
- if (!albumVal) return '';
- return albumsList.includes(albumVal) ? albumVal : '__CUSTOM__';
+ const albumVal = editingSong?.albumDisco || editingSong?.album || effectiveDefaultAlbum ||'';
+ if (!albumVal) return'';
+ return albumsList.includes(albumVal) ? albumVal :'__CUSTOM__';
  });
  const [customAlbumInput, setCustomAlbumInput] = useState<string>(() => {
- const albumVal = editingSong?.albumDisco || editingSong?.album || effectiveDefaultAlbum || '';
- return albumsList.includes(albumVal) ? '' : albumVal;
+ const albumVal = editingSong?.albumDisco || editingSong?.album || effectiveDefaultAlbum ||'';
+ return albumsList.includes(albumVal) ?'' : albumVal;
  });
- const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || (editingSong as any)?.audioUrl || '');
+ const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || (editingSong as any)?.audioUrl ||'');
  const [audioFileName, setAudioFileName] = useState<string>('');
 
  // Member notes state
@@ -97,17 +97,17 @@ export function SongModal({
  };
  };
 
- const finalAlbumValue = selectedAlbum === '__CUSTOM__' ? customAlbumInput : selectedAlbum;
+ const finalAlbumValue = selectedAlbum ==='__CUSTOM__' ? customAlbumInput : selectedAlbum;
 
  // La energía se almacena como número (1-20). Mapeamos el valor guardado al tramo
  // más cercano de los cuatro que ofrece el selector.
  const energiaDefault = (() => {
  const raw = Number(editingSong?.energia);
- if (!editingSong || !Number.isFinite(raw) || raw <= 0) return '18';
- if (raw <= 8) return '6';
- if (raw <= 14) return '12';
- if (raw <= 18) return '18';
- return '20';
+ if (!editingSong || !Number.isFinite(raw) || raw <= 0) return'18';
+ if (raw <= 8) return'6';
+ if (raw <= 14) return'12';
+ if (raw <= 18) return'18';
+ return'20';
  })();
 
  return (
@@ -118,7 +118,7 @@ export function SongModal({
  <div className="flex items-center gap-2">
  <Music className="w-5 h-5 text-[#1db954]" />
  <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
- {editingSong ? 'Editar Canción' : 'Añadir Nueva Canción al Catálogo'}
+ {editingSong ?'Editar Canción' :'Añadir Nueva Canción al Catálogo'}
  </h3>
  </div>
  <button onClick={onClose} className="text-[var(--ink-2)] hover:text-white cursor-pointer p-1">
@@ -127,13 +127,13 @@ export function SongModal({
  </div>
 
  <form onSubmit={onSave} className="space-y-3 text-[10px] font-mono flex flex-col flex-1 overflow-hidden pt-3">
- <input type="hidden" name="audioPrincipalUrl" value={audioFileName ? '' : audioFileUrl} />
+ <input type="hidden" name="audioPrincipalUrl" value={audioFileName ?'' : audioFileUrl} />
  <input type="hidden" name="albumDisco" value={finalAlbumValue} />
 
  <div className="space-y-3 overflow-y-auto pr-1 flex-1 pb-2">
  {/* Audio File Upload Box with Auto Duration Detection */}
  <div className={`p-3 rounded-[var(--r-m)] border-dashed transition-all ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)]/90 '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/90'
  }`}>
  <div className="flex items-center justify-between gap-2">
  <div className="flex items-center gap-2">
@@ -178,14 +178,14 @@ export function SongModal({
  name="titulo"
  type="text"
  required
- defaultValue={editingSong ? formatSongTitle(editingSong.titulo) : ''}
+ defaultValue={editingSong ? formatSongTitle(editingSong.titulo) :''}
  onBlur={(e) => {
  if (e.target.value) {
  e.target.value = formatSongTitle(e.target.value);
  }
  }}
  className={`w-full p-2.5 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="ej. Brisa y Cacharros"
  />
@@ -204,9 +204,9 @@ export function SongModal({
  <input
  name="tonalidad"
  type="text"
- defaultValue={editingSong?.tonalidad || ''}
+ defaultValue={editingSong?.tonalidad ||''}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="ej. Lam / Am"
  />
@@ -226,7 +226,7 @@ export function SongModal({
  type="number"
  defaultValue={editingSong?.bpm || 120}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="ej. 128"
  />
@@ -242,7 +242,7 @@ export function SongModal({
  value={minutos}
  onChange={(e) => setMinutos(parseInt(e.target.value) || 0)}
  className={`w-1/2 p-2 rounded-[var(--r-s)] focus:outline-none text-center font-bold text-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="Min"
  />
@@ -255,7 +255,7 @@ export function SongModal({
  value={segundos}
  onChange={(e) => setSegundos(parseInt(e.target.value) || 0)}
  className={`w-1/2 p-2 rounded-[var(--r-s)] focus:outline-none text-center font-bold text-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="Seg"
  />
@@ -273,24 +273,24 @@ export function SongModal({
  value={selectedAlbum}
  onChange={(e) => setSelectedAlbum(e.target.value)}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[#1db954]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[#1db954]'
  }`}
  >
  <option value="">Sin Disco (Single)</option>
- {albumsList.filter(a => a && a !== 'todos' && a !== 'Singles / Sin Disco').map((alb) => (
+ {albumsList.filter(a => a && a !=='todos' && a !=='Singles / Sin Disco').map((alb) => (
  <option key={alb} value={alb}>💿 {alb}</option>
  ))}
  <option value="__CUSTOM__">+ Nuevo Álbum (Escribir nombre)...</option>
  </select>
 
- {selectedAlbum === '__CUSTOM__' && (
+ {selectedAlbum ==='__CUSTOM__' && (
  <input
  type="text"
  value={customAlbumInput}
  onChange={(e) => setCustomAlbumInput(e.target.value)}
  placeholder="Escribe el nombre del nuevo disco..."
  className={`w-full mt-1.5 p-2 rounded-[var(--r-s)] focus:outline-none border-[#1db954]/50 ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  )}
@@ -301,9 +301,9 @@ export function SongModal({
  <input
  name="genero"
  type="text"
- defaultValue={editingSong?.genero || ''}
+ defaultValue={editingSong?.genero ||''}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="ej. Rock Rumba"
  />
@@ -315,9 +315,9 @@ export function SongModal({
  <label className="block text-[var(--ink-2)] mb-1">Tipo de Tema</label>
  <select
  name="tipo"
- defaultValue={editingSong?.tipo || 'propio'}
+ defaultValue={editingSong?.tipo ||'propio'}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  >
  <option value="propio">Propio / Original</option>
@@ -330,9 +330,9 @@ export function SongModal({
  <label className="block text-[var(--ink-2)] mb-1">Estado de Madurez</label>
  <select
  name="estadoTema"
- defaultValue={editingSong?.estadoTema || 'listo'}
+ defaultValue={editingSong?.estadoTema ||'listo'}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  >
  <option value="listo">⚡ Listo para Directo</option>
@@ -352,7 +352,7 @@ export function SongModal({
  name="energia"
  defaultValue={energiaDefault}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  >
  <option value="20">💣 Explosiva / Clímax (Hit)</option>
@@ -367,9 +367,9 @@ export function SongModal({
  <input
  name="cantantePrincipal"
  type="text"
- defaultValue={editingSong?.cantantePrincipal || ''}
+ defaultValue={editingSong?.cantantePrincipal ||''}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="ej. Voz Principal"
  />
@@ -382,9 +382,9 @@ export function SongModal({
  <input
  name="afinacion"
  type="text"
- defaultValue={editingSong?.afinacion || 'E Standard'}
+ defaultValue={editingSong?.afinacion ||'E Standard'}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="ej. Drop D, Eb Standard"
  />
@@ -395,9 +395,9 @@ export function SongModal({
  <input
  name="enlaceAcordes"
  type="url"
- defaultValue={editingSong?.enlaceAcordes || ''}
+ defaultValue={editingSong?.enlaceAcordes ||''}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="https://drive.google.com/..."
  />
@@ -409,9 +409,9 @@ export function SongModal({
  <textarea
  name="notasInternas"
  rows={2}
- defaultValue={editingSong?.notasInternas || ''}
+ defaultValue={editingSong?.notasInternas ||''}
  className={`w-full p-2.5 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  placeholder="ej. Intro solo con viento, estribillo fuerte..."
  />
@@ -421,13 +421,13 @@ export function SongModal({
  <input type="hidden" name="notasMiembrosJson" value={JSON.stringify(memberNotesState)} />
  
  <div className={`rounded-[var(--r-m)] transition-all overflow-hidden ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)]/90 '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/90'
  }`}>
  <button
  type="button"
  onClick={() => setShowMemberNotesSection(p => !p)}
  className={`w-full p-3 flex items-center justify-between font-mono text-xs font-bold uppercase transition-colors cursor-pointer ${
- isStitchLight ? 'hover:bg-[var(--sunken)] text-[var(--ink)]' : 'hover:bg-neutral-800 text-[#1db954]'
+ isStitchLight ?'hover:bg-[var(--sunken)] text-[var(--ink)]' :'hover:bg-neutral-800 text-[#1db954]'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -450,10 +450,10 @@ export function SongModal({
  <input
  name="notasRepertorio"
  type="text"
- defaultValue={editingSong?.notasRepertorio || ''}
+ defaultValue={editingSong?.notasRepertorio ||''}
  placeholder="ej. Entrar directos sin intro..."
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none text-xs ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -467,7 +467,7 @@ export function SongModal({
  <span className="font-bold text-white flex items-center gap-1.5">
  <span
  className="w-2 h-2 rounded-full inline-block"
- style={{ backgroundColor: member.avatarColor || '#6366f1' }}
+ style={{ backgroundColor: member.avatarColor ||'#6366f1' }}
  />
  {member.name}
  <span className="text-[var(--ink-2)] font-normal">({member.instrument})</span>
@@ -475,11 +475,11 @@ export function SongModal({
  </div>
  <input
  type="text"
- value={memberNotesState[memberKey] || ''}
+ value={memberNotesState[memberKey] ||''}
  onChange={(e) => handleMemberNoteChange(member.name, e.target.value)}
  placeholder={`Notas específicas para ${member.name} (${member.instrument})...`}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none text-xs ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>

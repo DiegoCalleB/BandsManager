@@ -1,8 +1,8 @@
-import React from 'react';
-import { ThemeColors } from '../../types';
-import { BookingMetrics } from '../../utils/bookingUtils';
-import { Building2, CheckCircle2, MessageSquare, TrendingUp } from 'lucide-react';
-import { useLanguage } from '../../context/LanguageContext';
+import React from'react';
+import { ThemeColors } from'../../types';
+import { BookingMetrics } from'../../utils/bookingUtils';
+import { Building2, CheckCircle2, MessageSquare, TrendingUp } from'lucide-react';
+import { useLanguage } from'../../context/LanguageContext';
 
 interface BookingMetricsCardsProps {
  colors: ThemeColors;
@@ -24,7 +24,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  >
  <div className="flex items-center justify-between mb-2">
  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-3)]">
- {t('booking.total_leads', 'Total Leads / Salas')}
+ {t('booking.total_leads','Total Leads / Salas')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-indigo-500/10 text-indigo-500">
  <Building2 className="w-5 h-5" />
@@ -33,7 +33,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <div className="text-2xl font-bold" style={{ color: colors.text }}>
  {metrics.totalLeads}
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-1">{t('booking.in_pipeline', 'En pipeline activo')}</p>
+ <p className="text-xs text-[var(--ink-3)] mt-1">{t('booking.in_pipeline','En pipeline activo')}</p>
  </div>
 
  <div
@@ -46,7 +46,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  >
  <div className="flex items-center justify-between mb-2">
  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-3)]">
- {t('booking.approved_dates', 'Fechas Aprobadas')}
+ {t('booking.approved_dates','Fechas Aprobadas')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-500">
  <CheckCircle2 className="w-5 h-5" />
@@ -56,7 +56,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  {metrics.leadsPorEstado['aprobado'] || 0}
  </div>
  <p className="text-xs text-[var(--ink-3)] mt-1">
- {t('booking.conversion_rate', 'Tasa conversión')}: <span className="text-emerald-400 font-semibold">{metrics.tasaConversion}%</span>
+ {t('booking.conversion_rate','Tasa conversión')}: <span className="text-emerald-400 font-semibold">{metrics.tasaConversion}%</span>
  </p>
  </div>
 

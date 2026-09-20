@@ -1,25 +1,25 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from'react';
 import {
  Users, Heart, QrCode, Download, Search, Plus, Trash2, Sparkles,
  Copy, Check, FileSpreadsheet, ShieldCheck, Mail, MapPin, Calendar, ExternalLink,
  Filter, LayoutGrid, List, Map as MapIcon, X, TrendingUp, Printer, Share2, MessageCircle,
  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram, FileCode, Layers, Eye,
  MoreHorizontal, Settings2
-} from 'lucide-react';
-import QRCode from 'react-qr-code';
-import * as XLSX from 'xlsx';
-import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from '../types';
-import { THEMES } from '../utils/theme';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { ReelsMetricsView } from './reels/ReelsMetricsView';
-import { FansCommunityView } from './fans/FansCommunityView';
-import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '../i18n/fansTranslations';
-import { QrExportModal } from './QrExportModal';
-import { FansLandingPreviewModal } from './FansLandingPreviewModal';
-import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
-import { useModuleTutorial } from '../hooks/useModuleTutorial';
-import { ModuleTutorialModal } from './common/ModuleTutorialModal';
-import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+} from'lucide-react';
+import QRCode from'react-qr-code';
+import * as XLSX from'xlsx';
+import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from'../types';
+import { THEMES } from'../utils/theme';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from'recharts';
+import { ReelsMetricsView } from'./reels/ReelsMetricsView';
+import { FansCommunityView } from'./fans/FansCommunityView';
+import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from'../i18n/fansTranslations';
+import { QrExportModal } from'./QrExportModal';
+import { FansLandingPreviewModal } from'./FansLandingPreviewModal';
+import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from'../utils/qrExport';
+import { useModuleTutorial } from'../hooks/useModuleTutorial';
+import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
+import { ModuleTutorialTrigger } from'./common/ModuleTutorialTrigger';
 
 interface FansPanelProps {
  fans: Fan[];
@@ -43,13 +43,13 @@ interface FansPanelProps {
  isSyncingMetrics?: boolean;
  colors?: ThemeColors;
  isStitchLight?: boolean;
- onNavigate?: (view: 'epk') => void;
+ onNavigate?: (view:'epk') => void;
  isPromo?: boolean;
  onUpdateConcert?: (id: string, updates: Partial<Concert>) => void;
  initialConcertId?: string;
 }
 
-const COLORS = ['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
+const COLORS = ['#f59e0b','#10b981','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#64748b'];
 
 export const FansPanel: React.FC<FansPanelProps> = ({
  fans = [],
@@ -78,19 +78,19 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onUpdateConcert,
  initialConcertId
 }) => {
- const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
- const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
- const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
+ const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ?'Bakandeya' :'Tu Banda');
+ const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ?'/logo_bakandeya_bueno_sin_fondo.png' :'');
+ const cleanBandId = (currentBandId ||'').toLowerCase().replace(/^(band|reg)-/,'') ||'banda';
  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('fans');
- const [activeTab, setActiveTab] = useState<'metrics' | 'fans' | 'qr' | 'dashboard'>(
- initialConcertId || isPromo ? 'qr' : 'metrics'
+ const [activeTab, setActiveTab] = useState<'metrics' |'fans' |'qr' |'dashboard'>(
+ initialConcertId || isPromo ?'qr' :'metrics'
  );
- const [viewMode, setViewMode] = useState<'feed' | 'grid' | 'table' | 'map'>('feed');
+ const [viewMode, setViewMode] = useState<'feed' |'grid' |'table' |'map'>('feed');
  const [searchQuery, setSearchQuery] = useState('');
  const [filterOrigen, setFilterOrigen] = useState<string>('');
  const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
  const [selectedNivelFilter, setSelectedNivelFilter] = useState<string>('');
- const [selectedConcertId, setSelectedConcertId] = useState<string>(initialConcertId || '');
+ const [selectedConcertId, setSelectedConcertId] = useState<string>(initialConcertId ||'');
  const [savedToConcertFeedback, setSavedToConcertFeedback] = useState(false);
  const [clickStats, setClickStats] = useState<Record<string, number>>({});
 
@@ -119,9 +119,9 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  }
  try {
  const saved = localStorage.getItem('bakandeya_custom_cities');
- return saved ? JSON.parse(saved) : ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
+ return saved ? JSON.parse(saved) : ['Madrid','Sevilla','Barcelona','Málaga','Valencia','Granada','Cádiz'];
  } catch {
- return ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
+ return ['Madrid','Sevilla','Barcelona','Málaga','Valencia','Granada','Cádiz'];
  }
  });
 
@@ -167,11 +167,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  // Incentive state. Antes, mientras una banda no configuraba su propio incentivo, este
  // formulario mostraba (y podía llegar a guardar) un enlace de descarga real de Bakandeya y un
  // código de descuento con su nombre — datos inventados de una banda concreta colándose como
- // "valor por defecto" en el panel de cualquier otra.
+ //"valor por defecto" en el panel de cualquier otra.
  const [incentivo, setIncentivo] = useState(epkConfig?.incentivoFans || {
- mensajeAgradecimiento: "¡Muchas gracias por unirte a la familia de la banda!",
- enlaceDescarga: "",
- codigoDescuento: ""
+ mensajeAgradecimiento:"¡Muchas gracias por unirte a la familia de la banda!",
+ enlaceDescarga:"",
+ codigoDescuento:""
  });
  const [savedIncentive, setSavedIncentive] = useState(false);
 
@@ -202,7 +202,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  const [newCancionFavorita, setNewCancionFavorita] = useState('');
  const [newInstagram, setNewInstagram] = useState('');
  const [newMensaje, setNewMensaje] = useState('');
- const [newNivel, setNewNivel] = useState<'fiel' | 'superfan' | 'fundador' | 'backstage'>('fiel');
+ const [newNivel, setNewNivel] = useState<'fiel' |'superfan' |'fundador' |'backstage'>('fiel');
 
  const filteredFans = useMemo(() => {
  return fans.filter(f => {
@@ -212,7 +212,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  (f.conciertoOrigenNombre && f.conciertoOrigenNombre.toLowerCase().includes(searchQuery.toLowerCase()));
  
  const matchFilter = filterOrigen 
- ? (f.conciertoOrigenId === filterOrigen || (filterOrigen === 'Otros' && !f.conciertoOrigenId))
+ ? (f.conciertoOrigenId === filterOrigen || (filterOrigen ==='Otros' && !f.conciertoOrigenId))
  : true;
 
  const matchCity = selectedCityFilter
@@ -233,28 +233,28 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  const counts: Record<string, number> = {};
  
  fans.forEach(f => {
- let raw = (f.comoConocio || f.conciertoOrigenNombre || '').trim();
+ let raw = (f.comoConocio || f.conciertoOrigenNombre ||'').trim();
  if (!raw) {
- if (f.conciertoOrigenId) raw = 'Concierto en Directo';
- else raw = 'Registro Directo / QR';
+ if (f.conciertoOrigenId) raw ='Concierto en Directo';
+ else raw ='Registro Directo / QR';
  }
 
  let category = raw;
  const lower = raw.toLowerCase();
  if (lower.includes('sala') || lower.includes('concierto') || lower.includes('festival') || lower.includes('directo') || lower.includes('bolo') || lower.includes('caracol') || lower.includes('viña')) {
- category = 'Conciertos / Directo';
+ category ='Conciertos / Directo';
  } else if (lower.includes('insta') || lower.includes('ig')) {
- category = 'Instagram';
+ category ='Instagram';
  } else if (lower.includes('tik')) {
- category = 'TikTok';
+ category ='TikTok';
  } else if (lower.includes('qr') || lower.includes('escenario')) {
- category = 'Escaneo QR';
+ category ='Escaneo QR';
  } else if (lower.includes('amigo') || lower.includes('boca')) {
- category = 'Boca a Boca / Amigos';
+ category ='Boca a Boca / Amigos';
  } else if (lower.includes('spot') || lower.includes('you') || lower.includes('web')) {
- category = 'Web / Streaming';
+ category ='Web / Streaming';
  } else if (lower.includes('manual')) {
- category = 'Registro Manual';
+ category ='Registro Manual';
  }
 
  counts[category] = (counts[category] || 0) + 1;
@@ -274,20 +274,20 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  const monthMap: Record<string, number> = {};
  fans.forEach(f => {
- const month = f.fechaCaptura ? f.fechaCaptura.substring(0, 7) : '2026-05';
+ const month = f.fechaCaptura ? f.fechaCaptura.substring(0, 7) :'2026-05';
  monthMap[month] = (monthMap[month] || 0) + 1;
  });
 
  const sortedMonths = Object.keys(monthMap).sort();
  let runningTotal = 0;
- const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+ const monthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
  return sortedMonths.map(month => {
  const newCount = monthMap[month];
  runningTotal += newCount;
  const [y, m] = month.split('-');
  const mIdx = m ? parseInt(m, 10) - 1 : 0;
- const label = `${monthNames[mIdx] || m} '${y ? y.slice(2) : '26'}`;
+ const label = `${monthNames[mIdx] || m}'${y ? y.slice(2) :'26'}`;
  return {
  month,
  date: label,
@@ -313,17 +313,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  ID: f.id,
  Nombre: f.nombre,
  Email: f.email,
- Ciudad: f.ciudad || '',
- Origen: f.comoConocio || f.conciertoOrigenNombre || '',
- 'Concierto ID': f.conciertoOrigenId || '',
- 'Fecha Registro': f.fechaCaptura,
- 'Consentimiento RGPD': f.consentimientoRGPD ? 'SÍ' : 'NO'
+ Ciudad: f.ciudad ||'',
+ Origen: f.comoConocio || f.conciertoOrigenNombre ||'','Concierto ID': f.conciertoOrigenId ||'','Fecha Registro': f.fechaCaptura,'Consentimiento RGPD': f.consentimientoRGPD ?'SÍ' :'NO'
  }));
 
  const worksheet = XLSX.utils.json_to_sheet(dataToExport);
  const workbook = XLSX.utils.book_new();
  XLSX.utils.book_append_sheet(workbook, worksheet, `Fans ${effectiveBandName}`);
- XLSX.writeFile(workbook, `Fans_${effectiveBandName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
+ XLSX.writeFile(workbook, `Fans_${effectiveBandName.replace(/\s+/g,'_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
  };
 
  const handleManualAddSubmit = (e: React.FormEvent) => {
@@ -337,7 +334,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  ciudad: newCiudad.trim() || undefined,
  comoConocio: newOrigen,
  cancionFavorita: newCancionFavorita.trim() || undefined,
- instagram: newInstagram.trim().replace(/^@/, '') || undefined,
+ instagram: newInstagram.trim().replace(/^@/,'') || undefined,
  mensaje: newMensaje.trim() || undefined,
  nivelFan: newNivel,
  reacciones: { likes: 1, fire: 0, applause: 0, guitars: 0 },
@@ -361,14 +358,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  const selectedConcert = concerts.find(c => c.id === selectedConcertId);
  const [customSlug, setCustomSlug] = useState('');
  const [useCustomDomain, setUseCustomDomain] = useState(true); // Default to clean custom domain like bandmanager.io
- const defaultDomain = 'bandmanager.io';
+ const defaultDomain ='bandmanager.io';
  const [customDomain, setCustomDomain] = useState(defaultDomain);
  const [routePrefix, setRoutePrefix] = useState('unete');
  const [qrLanguage, setQrLanguage] = useState<FanFormLanguage>(DEFAULT_FAN_FORM_LANGUAGE);
 
  useEffect(() => {
  if (selectedConcert) {
- const defaultSlug = `${selectedConcert.ciudad}-${selectedConcert.sala}`.toLowerCase().replace(/[^a-z0-9]/g, '-');
+ const defaultSlug = `${selectedConcert.ciudad}-${selectedConcert.sala}`.toLowerCase().replace(/[^a-z0-9]/g,'-');
  setCustomSlug(defaultSlug);
  // Precarga el idioma guardado en el concierto; el manager siempre puede cambiarlo a mano abajo.
  setQrLanguage(isFanFormLanguage(selectedConcert.idioma) ? selectedConcert.idioma : DEFAULT_FAN_FORM_LANGUAGE);
@@ -379,15 +376,15 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  // Build clean target URL
  const rawDomain = useCustomDomain 
- ? (customDomain.trim().startsWith('http') ? customDomain.trim() : `https://${customDomain.trim().replace(/\/$/, '')}`)
- : (typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io');
+ ? (customDomain.trim().startsWith('http') ? customDomain.trim() : `https://${customDomain.trim().replace(/\/$/,'')}`)
+ : (typeof window !=='undefined' ? window.location.origin :'https://bandmanager.io');
 
- const cleanPrefix = routePrefix.trim().replace(/^\/+|\/+$/g, '');
- const cleanSlugVal = customSlug.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, '');
+ const cleanPrefix = routePrefix.trim().replace(/^\/+|\/+$/g,'');
+ const cleanSlugVal = customSlug.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-_]/g,'');
 
  const pathFormatted = cleanSlugVal 
  ? (cleanPrefix ? `/${cleanPrefix}/${cleanSlugVal}` : `/${cleanSlugVal}`)
- : (cleanPrefix ? `/${cleanPrefix}` : '/unete');
+ : (cleanPrefix ? `/${cleanPrefix}` :'/unete');
 
  const qrQueryParams: string[] = [];
  if (currentBandId) qrQueryParams.push(`band=${encodeURIComponent(currentBandId)}`);
@@ -399,7 +396,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  qrQueryParams.push(`concertId=${encodeURIComponent(selectedConcert.id)}`);
  qrQueryParams.push(`concertName=${encodeURIComponent(`${selectedConcert.sala} (${selectedConcert.ciudad})`)}`);
  }
- const qrConcertUrl = `${rawDomain}${pathFormatted}${qrQueryParams.length ? `?${qrQueryParams.join('&')}` : ''}`;
+ const qrConcertUrl = `${rawDomain}${pathFormatted}${qrQueryParams.length ? `?${qrQueryParams.join('&')}` :''}`;
 
  const copyLink = () => {
  navigator.clipboard.writeText(qrConcertUrl);
@@ -417,7 +414,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  const handleShareWhatsApp = () => {
  const concertTitle = selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : effectiveBandName;
  const text = `¡Únete a ${effectiveBandName} en ${concertTitle}! 🎶 Escanea o entra en el enlace para recibir sorpresas exclusivas y estar al día:\n\n${qrConcertUrl}`;
- window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+ window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');
  };
 
  const handleShareNative = async () => {
@@ -425,7 +422,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  try {
  await navigator.share({
  title: `Únete a ${effectiveBandName}`,
- text: 'Escanea o entra para unirte a nuestra comunidad.',
+ text:'Escanea o entra para unirte a nuestra comunidad.',
  url: qrConcertUrl,
  });
  } catch (err) {
@@ -448,8 +445,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  try {
  const concertTitle = selectedConcert ? `${selectedConcert.sala}` : effectiveBandName;
  await downloadQrAsSvg({
- svgElementId: 'qr-code-svg-container',
- filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}-vectorial`,
+ svgElementId:'qr-code-svg-container',
+ filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g,'-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g,'-')}-vectorial`,
  logoUrl: effectiveBandLogo
  });
  } catch (err) {
@@ -464,9 +461,9 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  try {
  const concertTitle = selectedConcert ? `${selectedConcert.sala}` : effectiveBandName;
  await downloadQrAsHighResPng({
- svgElementId: 'qr-code-svg-container',
- filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}-4k`,
- template: 'qr-only',
+ svgElementId:'qr-code-svg-container',
+ filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g,'-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g,'-')}-4k`,
+ template:'qr-only',
  logoUrl: effectiveBandLogo
  });
  } catch (err) {
@@ -481,13 +478,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  const dateCity = selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : undefined;
  
  printHighQualityFlyer({
- svgElementId: 'qr-code-svg-container',
+ svgElementId:'qr-code-svg-container',
  bandName: effectiveBandName,
  concertTitle,
  dateCity,
  url: qrConcertUrl,
  logoUrl: effectiveBandLogo,
- ctaText: '¡ESCANEA CON LA CÁMARA DE TU MÓVIL!',
+ ctaText:'¡ESCANEA CON LA CÁMARA DE TU MÓVIL!',
  subtitle: `Únete a la comunidad oficial de ${effectiveBandName} para acceder a canciones inéditas, sorpresas exclusivas y descuentos en merchandising.`
  });
  };
@@ -576,7 +573,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  id="tab-btn-fans-metrics"
  onClick={() => setActiveTab('metrics')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'metrics' ? ' text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='metrics' ?' text-amber-400 font-bold bg-amber-500/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
  >
  <TrendingUp className="w-4 h-4 text-amber-500" /> 1. Seguimiento & Métricas de Redes
  </button>
@@ -584,27 +581,27 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  id="tab-btn-fans-qr"
  onClick={() => setActiveTab('qr')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'qr' ? ' text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='qr' ?' text-amber-400 font-bold bg-amber-500/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
  >
- <QrCode className="w-4 h-4 text-amber-500" /> {isPromo ? '1' : '2'}. Captura en Vivo & QR
+ <QrCode className="w-4 h-4 text-amber-500" /> {isPromo ?'1' :'2'}. Captura en Vivo & QR
  </button>
  <button
  id="tab-btn-fans-dashboard"
  onClick={() => setActiveTab('dashboard')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'dashboard' ? ' text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='dashboard' ?' text-amber-400 font-bold bg-amber-500/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
  >
- <Heart className="w-4 h-4 text-amber-500" /> {isPromo ? '2' : '3'}. Dashboard & Analítica
+ <Heart className="w-4 h-4 text-amber-500" /> {isPromo ?'2' :'3'}. Dashboard & Analítica
  </button>
  <button
  id="tab-btn-fans-directory"
  onClick={() => setActiveTab('fans')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'fans' ? ' text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='fans' ?' text-amber-400 font-bold bg-amber-500/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
  >
- <Users className="w-4 h-4 text-amber-500" /> {isPromo ? '3' : '4'}. Comunidad & Red Social ({fans.length})
+ <Users className="w-4 h-4 text-amber-500" /> {isPromo ?'3' :'4'}. Comunidad & Red Social ({fans.length})
  </button>
  </div>
 
- {activeTab === 'dashboard' && (
+ {activeTab ==='dashboard' && (
  <div className="space-y-6">
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
@@ -646,7 +643,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  .map(([key, count]) => (
  <div key={key} className="px-3 py-1.5 rounded-[var(--r-m)] bg-slate-950 text-xs font-mono flex items-center gap-2">
  <span className="font-semibold text-slate-200 uppercase">{key}:</span>
- <span className="font-black text-amber-400">{count} {count === 1 ? 'clic' : 'clics'}</span>
+ <span className="font-black text-amber-400">{count} {count === 1 ?'clic' :'clics'}</span>
  </div>
  ))}
  </div>
@@ -680,12 +677,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </linearGradient>
  </defs>
  <XAxis dataKey="date" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
- <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} domain={[0, 'auto']} />
+ <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} domain={[0,'auto']} />
  <Tooltip 
- contentStyle={{backgroundColor: '#0f172a', borderColor: '#334155', fontSize: '12px', borderRadius: '12px', color: '#fff'}}
+ contentStyle={{backgroundColor:'#0f172a', borderColor:'#334155', fontSize:'12px', borderRadius:'12px', color:'#fff'}}
  formatter={(val: any, name: any) => [
- name === 'total' ? `${val} fans acumulados` : `${val} nuevos capturados`,
- name === 'total' ? 'Comunidad Total' : 'Capturados en el mes'
+ name ==='total' ? `${val} fans acumulados` : `${val} nuevos capturados`,
+ name ==='total' ?'Comunidad Total' :'Capturados en el mes'
  ]}
  />
  <Area 
@@ -733,7 +730,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  ))}
  </Pie>
  <Tooltip 
- contentStyle={{backgroundColor: '#0f172a', borderColor: '#334155', fontSize: '12px', borderRadius: '12px', color: '#fff'}}
+ contentStyle={{backgroundColor:'#0f172a', borderColor:'#334155', fontSize:'12px', borderRadius:'12px', color:'#fff'}}
  formatter={(val: any, name: any) => [`${val} fans (${Math.round((val / (fans.length || 1)) * 100)}%)`, name]}
  />
  </PieChart>
@@ -765,7 +762,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  )}
 
- {activeTab === 'fans' && (
+ {activeTab ==='fans' && (
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 space-y-5">
  {/* Configurable City Tabs Bar */}
  <div className="space-y-2 border-b pb-4">
@@ -789,9 +786,9 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setSelectedCityFilter('')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
- selectedCityFilter === ''
- ? 'bg-amber-500 text-slate-950 shadow-md'
- : 'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] '
+ selectedCityFilter ===''
+ ?'bg-amber-500 text-slate-950 shadow-md'
+ :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  >
  Todas ({fans.length})
@@ -806,13 +803,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setSelectedCityFilter(city)}
  className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  isSelected
- ? 'bg-amber-500 text-slate-950 shadow-md'
- : 'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] '
+ ?'bg-amber-500 text-slate-950 shadow-md'
+ :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  >
  <span>{city}</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
- isSelected ? 'bg-slate-950/20 text-slate-950' : 'bg-[var(--surface)] text-amber-400'
+ isSelected ?'bg-slate-950/20 text-slate-950' :'bg-[var(--surface)] text-amber-400'
  }`}>
  {count}
  </span>
@@ -820,7 +817,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={(e) => handleRemoveCityTab(city, e)}
  className={`p-0.5 rounded-full hover:bg-rose-500/30 transition opacity-60 group-hover/city:opacity-100 ${
- isSelected ? 'hover:text-rose-950 text-slate-950' : 'hover:text-rose-300 text-[var(--ink-3)]'
+ isSelected ?'hover:text-rose-950 text-slate-950' :'hover:text-rose-300 text-[var(--ink-3)]'
  }`}
  title={`Eliminar pestaña ${city}`}
  >
@@ -911,12 +908,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  <div className="flex items-center gap-2">
  {/* View Switcher */}
- <div className="flex items-center gap-1 p-1 bg-slate-950 rounded-[var(--r-m)] ">
+ <div className="flex items-center gap-1 p-1 bg-slate-950 rounded-[var(--r-m)]">
  <button
  type="button"
  onClick={() => setViewMode('feed')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- viewMode === 'feed' ? 'bg-amber-500 text-slate-950' : 'text-[var(--ink-3)] hover:text-white'
+ viewMode ==='feed' ?'bg-amber-500 text-slate-950' :'text-[var(--ink-3)] hover:text-white'
  }`}
  title="Muro Social & Comunidad"
  >
@@ -927,7 +924,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setViewMode('grid')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- viewMode === 'grid' ? 'bg-amber-500 text-slate-950' : 'text-[var(--ink-3)] hover:text-white'
+ viewMode ==='grid' ?'bg-amber-500 text-slate-950' :'text-[var(--ink-3)] hover:text-white'
  }`}
  title="Vista en Tarjetas"
  >
@@ -938,7 +935,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setViewMode('table')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- viewMode === 'table' ? 'bg-amber-500 text-slate-950' : 'text-[var(--ink-3)] hover:text-white'
+ viewMode ==='table' ?'bg-amber-500 text-slate-950' :'text-[var(--ink-3)] hover:text-white'
  }`}
  title="Vista en Detalles / Tabla"
  >
@@ -949,7 +946,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setViewMode('map')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- viewMode === 'map' ? 'bg-amber-500 text-slate-950' : 'text-[var(--ink-3)] hover:text-white'
+ viewMode ==='map' ?'bg-amber-500 text-slate-950' :'text-[var(--ink-3)] hover:text-white'
  }`}
  title="Vista en Mapa por Ciudades"
  >
@@ -964,7 +961,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  </div>
 
- {viewMode === 'feed' && (
+ {viewMode ==='feed' && (
  <FansCommunityView
  fans={filteredFans}
  concerts={concerts}
@@ -979,10 +976,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  )}
 
- {viewMode === 'grid' && (
+ {viewMode ==='grid' && (
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
  {filteredFans.length === 0 ? (
- <div className="col-span-full p-8 text-center text-[var(--ink-2)] font-mono bg-slate-950/50 rounded-[var(--r-m)] ">
+ <div className="col-span-full p-8 text-center text-[var(--ink-2)] font-mono bg-slate-950/50 rounded-[var(--r-m)]">
  No hay fans registrados que coincidan con los filtros aplicados.
  </div>
  ) : (
@@ -1017,17 +1014,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <span className="text-[var(--ink-2)] text-[9px] block uppercase">Ciudad</span>
  <span className="text-slate-200 flex items-center gap-1 font-semibold">
  <MapPin className="w-3 h-3 text-amber-500 shrink-0" />
- <span className="truncate">{fan.ciudad || 'No especificada'}</span>
+ <span className="truncate">{fan.ciudad ||'No especificada'}</span>
  </span>
  </div>
  <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
  <span className="text-[var(--ink-2)] text-[9px] block uppercase">Origen / Canal</span>
- <span className="text-amber-400 truncate block font-semibold">{fan.comoConocio || fan.conciertoOrigenNombre || 'Directo'}</span>
+ <span className="text-amber-400 truncate block font-semibold">{fan.comoConocio || fan.conciertoOrigenNombre ||'Directo'}</span>
  </div>
  </div>
 
  <div className="flex items-center justify-between text-[10px] font-mono text-[var(--ink-2)] pt-1">
- <span>Registrado: {fan.fechaCaptura || 'Reciente'}</span>
+ <span>Registrado: {fan.fechaCaptura ||'Reciente'}</span>
  {fan.consentimientoRGPD && (
  <span className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full">
  <Check className="w-3 h-3" /> RGPD Ok
@@ -1040,7 +1037,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  )}
 
- {viewMode === 'map' && (
+ {viewMode ==='map' && (
  <div className="space-y-4">
  <div className="bg-slate-950 rounded-[var(--r-l)] p-4 text-xs font-mono text-[var(--ink-3)]">
  <div className="flex items-center gap-2 text-amber-400 font-bold mb-3">
@@ -1050,7 +1047,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
  {Object.entries(
  filteredFans.reduce((acc, f) => {
- const city = f.ciudad || 'Ciudad no indicada';
+ const city = f.ciudad ||'Ciudad no indicada';
  acc[city] = (acc[city] || 0) + 1;
  return acc;
  }, {} as Record<string, number>)
@@ -1063,7 +1060,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <span className="font-bold text-white truncate">{city}</span>
  </div>
  <span className="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
- {count} {count === 1 ? 'fan' : 'fans'}
+ {count} {count === 1 ?'fan' :'fans'}
  </span>
  </div>
  ))}
@@ -1072,7 +1069,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  )}
 
- {viewMode === 'table' && (
+ {viewMode ==='table' && (
  <div className="overflow-x-auto">
  <table className="w-full text-left text-xs text-[var(--ink-3)]">
  <thead className="bg-slate-950 text-amber-400 uppercase font-bold border-b font-mono">
@@ -1113,17 +1110,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  )}
  </td>
  <td className="p-3 font-mono text-[10px] text-[var(--ink-3)] uppercase tracking-wider">
- {fan.comoConocio || '-'}
+ {fan.comoConocio ||'-'}
  </td>
  <td className="p-3 text-[11px] text-emerald-400 font-mono">
- {fan.conciertoOrigenNombre || '-'}
+ {fan.conciertoOrigenNombre ||'-'}
  </td>
  <td className="p-3 text-center">
  {fan.consentimientoRGPD ? (
  <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-emerald-500/10 text-emerald-400">
  <Check className="w-3.5 h-3.5" />
  </span>
- ) : '-'}
+ ) :'-'}
  </td>
  <td className="p-3 text-right">
  <button
@@ -1147,7 +1144,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  )}
 
- {activeTab === 'qr' && (
+ {activeTab ==='qr' && (
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 lg:p-8 space-y-5">
  <div className="space-y-1 border-b pb-4">
  <h3 className="text-xl font-black text-white flex items-center gap-2 font-display">
@@ -1204,7 +1201,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {selectedConcert ? selectedConcert.sala : `Únete a ${effectiveBandName}`}
  </h4>
  <p className="text-xs text-[var(--ink-3)] font-mono">
- {selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : 'Escanea para conseguir tema exclusivo y descuentos'}
+ {selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` :'Escanea para conseguir tema exclusivo y descuentos'}
  </p>
  </div>
 
@@ -1215,7 +1212,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={handleCopyQrUrl}
  className="shrink-0 text-[11px] text-amber-400 hover:underline font-mono cursor-pointer"
  >
- {copiedQrUrl ? '¡Copiado!' : 'Copiar'}
+ {copiedQrUrl ?'¡Copiado!' :'Copiar'}
  </button>
  </div>
 
@@ -1294,7 +1291,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => { setShowQrMoreMenu(false); setShowFansPreviewModal(true); }}
  className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-3)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
  >
- <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar formulario "Únete"
+ <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar formulario"Únete"
  </button>
  </div>
  </>
@@ -1313,7 +1310,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <span className="flex items-center gap-1.5">
  <Settings2 className="w-3.5 h-3.5" /> Personalización avanzada (recompensa, dominio, idioma)
  </span>
- <span>{showAdvancedQrConfig ? '▲' : '▼'}</span>
+ <span>{showAdvancedQrConfig ?'▲' :'▼'}</span>
  </button>
 
  {showAdvancedQrConfig && (
@@ -1397,8 +1394,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </label>
  <p className="text-[11px] text-[var(--ink-3)] font-mono">
  {epkConfig?.donacionRevolut?.habilitado !== false && epkConfig?.donacionRevolut?.revolutTag
- ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público "Únete" y en la pantalla de confirmación.`
- : 'Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios.'}
+ ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público"Únete" y en la pantalla de confirmación.`
+ :'Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios.'}
  </p>
  <button
  type="button"
@@ -1421,8 +1418,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setUseCustomDomain(true)}
  className={`p-2.5 rounded-[var(--r-m)] text-left font-mono transition flex flex-col gap-1 ${
  useCustomDomain
- ? 'bg-amber-500/15 text-amber-300 font-bold'
- : 'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ ?'bg-amber-500/15 text-amber-300 font-bold'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <span>🌐 Dominio Web Oficial</span>
@@ -1433,8 +1430,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setUseCustomDomain(false)}
  className={`p-2.5 rounded-[var(--r-m)] text-left font-mono transition flex flex-col gap-1 ${
  !useCustomDomain
- ? 'bg-amber-500/15 text-amber-300 font-bold'
- : 'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ ?'bg-amber-500/15 text-amber-300 font-bold'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <span>🧪 Servidor Dev</span>
@@ -1446,7 +1443,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="space-y-1">
  <label className="text-[11px] font-mono text-[var(--ink-3)]">Dominio del Proyecto:</label>
  <div className="flex items-center gap-2">
- <span className="text-xs font-mono text-[var(--ink-2)] bg-[var(--surface)] px-3 py-2.5 rounded-[var(--r-s)] ">https://</span>
+ <span className="text-xs font-mono text-[var(--ink-2)] bg-[var(--surface)] px-3 py-2.5 rounded-[var(--r-s)]">https://</span>
  <input
  type="text"
  value={customDomain}
@@ -1466,7 +1463,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <input
  type="text"
  value={routePrefix}
- onChange={e => setRoutePrefix(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
+ onChange={e => setRoutePrefix(e.target.value.toLowerCase().replace(/[^a-z0-9]/g,''))}
  className="w-16 bg-transparent text-amber-400 text-xs font-mono py-2.5 font-bold outline-none"
  placeholder="unete"
  />
@@ -1475,7 +1472,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <input
  type="text"
  value={customSlug}
- onChange={e => setCustomSlug(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''))}
+ onChange={e => setCustomSlug(e.target.value.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-_]/g,''))}
  placeholder="ej. madrid-sala-siroco"
  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-2.5 text-xs text-white outline-none font-mono"
  />
@@ -1495,8 +1492,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setQrLanguage(l.code)}
  className={`py-2 px-2 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors ${
  qrLanguage === l.code
- ? 'bg-amber-500/15 /50 text-amber-300'
- : 'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ ?'bg-amber-500/15 /50 text-amber-300'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <span>{l.flag}</span>
@@ -1520,14 +1517,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  }}
  className={`w-full py-2.5 px-3 font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-md ${
  savedToConcertFeedback
- ? 'bg-emerald-500 text-slate-950'
- : 'bg-amber-500 hover:bg-amber-400 text-slate-950'
+ ?'bg-emerald-500 text-slate-950'
+ :'bg-amber-500 hover:bg-amber-400 text-slate-950'
  }`}
  >
  <CheckCircle2 className="w-4 h-4" />
  {savedToConcertFeedback
- ? '¡QR Asignado a este Concierto en el Calendario!'
- : '💾 Asignar este QR a este Concierto en el Calendario'}
+ ?'¡QR Asignado a este Concierto en el Calendario!'
+ :'💾 Asignar este QR a este Concierto en el Calendario'}
  </button>
  </div>
  )}
@@ -1552,7 +1549,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
 
 
- {activeTab === 'metrics' && (
+ {activeTab ==='metrics' && (
  <div className="space-y-6">
  <ReelsMetricsView
  colors={colors || THEMES.indie_velvet}
@@ -1691,7 +1688,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  </div>
 
- <div className="pt-2 flex justify-end gap-3 border-t ">
+ <div className="pt-2 flex justify-end gap-3 border-t">
  <button
  type="button"
  onClick={() => setShowAddModal(false)}

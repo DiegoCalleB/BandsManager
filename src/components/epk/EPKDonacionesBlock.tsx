@@ -1,4 +1,4 @@
-import React from 'react';
+import React from'react';
 import {
  Heart,
  Eye,
@@ -10,12 +10,12 @@ import {
  ExternalLink,
  Sparkles,
  Loader2
-} from 'lucide-react';
-import { EPKConfig, BandMember } from '../../types';
-import { EPKBlockWrapper } from './EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
-import { PayPalLogo, BizumLogo } from '../SocialPlatformsList';
-import { tieneTraduccion, traduccionDesactualizada } from '../../utils/epkTraducciones';
+} from'lucide-react';
+import { EPKConfig, BandMember } from'../../types';
+import { EPKBlockWrapper } from'./EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
+import { PayPalLogo, BizumLogo } from'../SocialPlatformsList';
+import { tieneTraduccion, traduccionDesactualizada } from'../../utils/epkTraducciones';
 
 interface EPKDonacionesBlockProps {
  config: EPKConfig;
@@ -24,8 +24,8 @@ interface EPKDonacionesBlockProps {
  idiomasDestino: Array<{ code: string; label: string; flag: string }>;
  traduciendo: string | null;
  traducirConIA: (codigoIdioma: string) => void;
- editarTraduccion: (codigoIdioma: string, campo: 'biografia' | 'textoPie', valor: string) => void;
- editarTraduccionMiembro: (codigoIdioma: string, miembroId: string, campo: 'rol' | 'bio', valor: string) => void;
+ editarTraduccion: (codigoIdioma: string, campo:'biografia' |'textoPie', valor: string) => void;
+ editarTraduccionMiembro: (codigoIdioma: string, miembroId: string, campo:'rol' |'bio', valor: string) => void;
  errorTraduccion: string | null;
  avisoTraduccion: string | null;
  publicEpkUrl: string;
@@ -117,18 +117,18 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <span className="text-[10px] text-[var(--ink-2)] font-mono">revolut.me/</span>
  <input
  type="text"
- value={config.donacionRevolut?.revolutTag || ''}
+ value={config.donacionRevolut?.revolutTag ||''}
  onChange={e => {
  const cleanTag = e.target.value
- .replace(/^@/, '')
- .replace(/^https?:\/\/revolut\.me\//i, '')
- .replace(/^revolut\.me\//i, '')
+ .replace(/^@/,'')
+ .replace(/^https?:\/\/revolut\.me\//i,'')
+ .replace(/^revolut\.me\//i,'')
  .trim();
  const generatedUrl = cleanTag
  ? cleanTag.startsWith('http')
  ? cleanTag
  : `https://revolut.me/${cleanTag}`
- : '';
+ :'';
  setConfig(prev => ({
  ...prev,
  donacionRevolut: {
@@ -157,18 +157,18 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <span className="text-[10px] text-[var(--ink-2)] font-mono">paypal.me/</span>
  <input
  type="text"
- value={config.donacionRevolut?.paypalUser || ''}
+ value={config.donacionRevolut?.paypalUser ||''}
  onChange={e => {
  const cleanUser = e.target.value
- .replace(/^@/, '')
- .replace(/^https?:\/\/paypal\.me\//i, '')
- .replace(/^paypal\.me\//i, '')
+ .replace(/^@/,'')
+ .replace(/^https?:\/\/paypal\.me\//i,'')
+ .replace(/^paypal\.me\//i,'')
  .trim();
  const generatedUrl = cleanUser
  ? cleanUser.startsWith('http')
  ? cleanUser
  : `https://paypal.me/${cleanUser}`
- : '';
+ :'';
  setConfig(prev => ({
  ...prev,
  donacionRevolut: {
@@ -198,9 +198,9 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <span className="text-[10px] text-[var(--ink-2)] font-mono">TLF:</span>
  <input
  type="text"
- value={config.donacionRevolut?.bizumTelefono || ''}
+ value={config.donacionRevolut?.bizumTelefono ||''}
  onChange={e => {
- const num = e.target.value.replace(/[^0-9+\s-]/g, '');
+ const num = e.target.value.replace(/[^0-9+\s-]/g,'');
  setConfig(prev => ({
  ...prev,
  donacionRevolut: { ...prev.donacionRevolut, bizumTelefono: num },
@@ -222,13 +222,13 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  onClick={() =>
  setConfig({
  ...config,
- donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'revolut' }
+ donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto:'revolut' }
  })
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
- (config.donacionRevolut?.metodoPorDefecto || 'revolut') === 'revolut'
- ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
- : 'bg-slate-950 text-[var(--ink-3)] hover:text-white'
+ (config.donacionRevolut?.metodoPorDefecto ||'revolut') ==='revolut'
+ ?'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
+ :'bg-slate-950 text-[var(--ink-3)] hover:text-white'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-sky-400" />
@@ -239,13 +239,13 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  onClick={() =>
  setConfig({
  ...config,
- donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'paypal' }
+ donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto:'paypal' }
  })
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
- config.donacionRevolut?.metodoPorDefecto === 'paypal'
- ? 'bg-blue-500/20 border-blue-500 text-blue-300 shadow-sm'
- : 'bg-slate-950 text-[var(--ink-3)] hover:text-white'
+ config.donacionRevolut?.metodoPorDefecto ==='paypal'
+ ?'bg-blue-500/20 border-blue-500 text-blue-300 shadow-sm'
+ :'bg-slate-950 text-[var(--ink-3)] hover:text-white'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-blue-400" />
@@ -256,13 +256,13 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  onClick={() =>
  setConfig({
  ...config,
- donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'bizum' }
+ donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto:'bizum' }
  })
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
- config.donacionRevolut?.metodoPorDefecto === 'bizum'
- ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-sm'
- : 'bg-slate-950 text-[var(--ink-3)] hover:text-white'
+ config.donacionRevolut?.metodoPorDefecto ==='bizum'
+ ?'bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-sm'
+ :'bg-slate-950 text-[var(--ink-3)] hover:text-white'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -275,7 +275,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <label className="text-xs font-semibold text-[var(--ink-3)]">Título de la tarjeta</label>
  <input
  type="text"
- value={config.donacionRevolut?.titulo || ''}
+ value={config.donacionRevolut?.titulo ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -291,7 +291,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <label className="text-xs font-semibold text-[var(--ink-3)]">Descripción del destino</label>
  <textarea
  rows={2}
- value={config.donacionRevolut?.descripcion || ''}
+ value={config.donacionRevolut?.descripcion ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -330,15 +330,14 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <div className="min-w-0 flex-1">
  <div className="flex items-center justify-between gap-2">
  <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
- {config.donacionRevolut?.titulo || 'Colabora con la banda'}
+ {config.donacionRevolut?.titulo ||'Colabora con la banda'}
  </h3>
  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-bold shrink-0">
  Contribución
  </span>
  </div>
  <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
- {config.donacionRevolut?.descripcion ||
- 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'}
+ {config.donacionRevolut?.descripcion ||'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'}
  </p>
  </div>
  </div>
@@ -423,8 +422,8 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </>
  ) : (
  <>
- <Sparkles className="w-3.5 h-3.5" />{' '}
- {hayTraduccion ? 'Volver a traducir' : 'Traducir con IA'}
+ <Sparkles className="w-3.5 h-3.5" />{''}
+ {hayTraduccion ?'Volver a traducir' :'Traducir con IA'}
  </>
  )}
  </button>
@@ -444,19 +443,19 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <div className="space-y-4">
  {[
  {
- campo: 'biografia' as const,
- etiqueta: 'Biografía',
+ campo:'biografia' as const,
+ etiqueta:'Biografía',
  original: config.biografia,
  filas: 5
  },
  {
- campo: 'textoPie' as const,
- etiqueta: 'Lema / Subtítulo',
+ campo:'textoPie' as const,
+ etiqueta:'Lema / Subtítulo',
  original: config.firmaEmail?.textoPie,
  filas: 2
  }
  ]
- .filter(f => (f.original || '').trim())
+ .filter(f => (f.original ||'').trim())
  .map(f => (
  <div key={f.campo} className="grid grid-cols-1 lg:grid-cols-2 gap-3">
  <div>
@@ -472,7 +471,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  {f.etiqueta} — {idioma.label}
  </label>
  <textarea
- value={traduccion?.[f.campo] || ''}
+ value={traduccion?.[f.campo] ||''}
  onChange={e => editarTraduccion(idioma.code, f.campo, e.target.value)}
  rows={f.filas}
  className="w-full bg-[var(--surface)] rounded-[var(--r-s)] p-3 text-xs text-white focus: focus:outline-none"
@@ -481,37 +480,37 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
  ))}
 
- {miembros.filter(m => (m.rol || '').trim() || (m.bio || '').trim()).length > 0 && (
- <div className="space-y-3 pt-2 border-t ">
+ {miembros.filter(m => (m.rol ||'').trim() || (m.bio ||'').trim()).length > 0 && (
+ <div className="space-y-3 pt-2 border-t">
  <p className="text-[10px] uppercase tracking-wider text-[var(--ink-2)] font-semibold">
  Formación
  </p>
  {miembros
- .filter(m => (m.rol || '').trim() || (m.bio || '').trim())
+ .filter(m => (m.rol ||'').trim() || (m.bio ||'').trim())
  .map(m => (
  <div key={m.id} className="bg-[var(--surface)]/60 rounded-[var(--r-s)] p-3 space-y-2">
- <p className="text-xs font-bold text-white">{m.nombre || 'Sin nombre'}</p>
- {(m.rol || '').trim() && (
+ <p className="text-xs font-bold text-white">{m.nombre ||'Sin nombre'}</p>
+ {(m.rol ||'').trim() && (
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
  <div className="text-[11px] text-[var(--ink-2)] pt-1.5">{m.rol}</div>
  <input
  type="text"
- value={traduccion?.miembros?.[m.id]?.rol || ''}
+ value={traduccion?.miembros?.[m.id]?.rol ||''}
  onChange={e =>
- editarTraduccionMiembro(idioma.code, m.id, 'rol', e.target.value)
+ editarTraduccionMiembro(idioma.code, m.id,'rol', e.target.value)
  }
  placeholder={`Instrumento en ${idioma.label}`}
  className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-white focus: focus:outline-none"
  />
  </div>
  )}
- {(m.bio || '').trim() && (
+ {(m.bio ||'').trim() && (
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
  <div className="text-[11px] text-[var(--ink-2)]">{m.bio}</div>
  <textarea
- value={traduccion?.miembros?.[m.id]?.bio || ''}
+ value={traduccion?.miembros?.[m.id]?.bio ||''}
  onChange={e =>
- editarTraduccionMiembro(idioma.code, m.id, 'bio', e.target.value)
+ editarTraduccionMiembro(idioma.code, m.id,'bio', e.target.value)
  }
  rows={2}
  placeholder={`Trayectoria en ${idioma.label}`}

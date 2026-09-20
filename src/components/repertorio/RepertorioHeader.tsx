@@ -1,11 +1,11 @@
-import React from 'react';
-import { ThemeColors } from '../../types';
-import { Music, Layers, Search, Plus, Sparkles, Printer } from 'lucide-react';
+import React from'react';
+import { ThemeColors } from'../../types';
+import { Music, Layers, Search, Plus, Sparkles, Printer } from'lucide-react';
 
 interface RepertorioHeaderProps {
  colors: ThemeColors;
- activeTab: 'canciones' | 'setlists';
- setActiveTab: (tab: 'canciones' | 'setlists') => void;
+ activeTab:'canciones' |'setlists';
+ setActiveTab: (tab:'canciones' |'setlists') => void;
  searchQuery: string;
  setSearchQuery: (query: string) => void;
  songCount: number;
@@ -57,11 +57,11 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  id="tab-btn-canciones"
  onClick={() => setActiveTab('canciones')}
  className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-all ${
- activeTab === 'canciones' ? 'shadow-sm' : 'hover:opacity-80'
+ activeTab ==='canciones' ?'shadow-sm' :'hover:opacity-80'
  }`}
  style={{
- backgroundColor: activeTab === 'canciones' ? colors.primary : 'transparent',
- color: activeTab === 'canciones' ? '#ffffff' : colors.text,
+ backgroundColor: activeTab ==='canciones' ? colors.primary :'transparent',
+ color: activeTab ==='canciones' ?'#ffffff' : colors.text,
  }}
  >
  <Music className="w-4 h-4" />
@@ -71,11 +71,11 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  id="tab-btn-setlists"
  onClick={() => setActiveTab('setlists')}
  className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-all ${
- activeTab === 'setlists' ? 'shadow-sm' : 'hover:opacity-80'
+ activeTab ==='setlists' ?'shadow-sm' :'hover:opacity-80'
  }`}
  style={{
- backgroundColor: activeTab === 'setlists' ? colors.primary : 'transparent',
- color: activeTab === 'setlists' ? '#ffffff' : colors.text,
+ backgroundColor: activeTab ==='setlists' ? colors.primary :'transparent',
+ color: activeTab ==='setlists' ?'#ffffff' : colors.text,
  }}
  >
  <Layers className="w-4 h-4" />
@@ -84,7 +84,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  </div>
 
  {/* Action Button */}
- {activeTab === 'canciones' ? (
+ {activeTab ==='canciones' ? (
  <button
  id="btn-nueva-cancion"
  onClick={onOpenNewSongModal}

@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { BookingCampaign, PitchTemplateCategory } from '../../types';
-import { HolidayDateWarning } from '../common/HolidayDateWarning';
+import React, { useState } from'react';
+import { BookingCampaign, PitchTemplateCategory } from'../../types';
+import { HolidayDateWarning } from'../common/HolidayDateWarning';
 import {
  Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Sparkles,
  ChevronRight, Compass, ArrowRight, ShieldCheck, Flame,
  Building2, Tent, Disc3, Radio, Briefcase, Landmark
-} from 'lucide-react';
+} from'lucide-react';
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
 // caso de uso está editando dentro de la campaña.
 const PITCH_CATEGORIES: { id: PitchTemplateCategory; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
- { id: 'salas', label: '🏛️ Salas', icon: Building2 },
- { id: 'festivales', label: '🎪 Festivales', icon: Tent },
- { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
- { id: 'medios', label: '📻 Medios', icon: Radio },
- { id: 'grupos', label: '🎸 Grupos', icon: Users },
- { id: 'managements', label: '💼 Managements', icon: Briefcase },
- { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark },
+ { id:'salas', label:'🏛️ Salas', icon: Building2 },
+ { id:'festivales', label:'🎪 Festivales', icon: Tent },
+ { id:'discotecas', label:'🪩 Discotecas', icon: Disc3 },
+ { id:'medios', label:'📻 Medios', icon: Radio },
+ { id:'grupos', label:'🎸 Grupos', icon: Users },
+ { id:'managements', label:'💼 Managements', icon: Briefcase },
+ { id:'ayuntamientos', label:'🎉 Ayuntamientos', icon: Landmark },
 ];
 
 interface CampaignManagerModalProps {
@@ -44,14 +44,14 @@ export function CampaignManagerModal({
  const [isEditing, setIsEditing] = useState(false);
  const [editingCampaignId, setEditingCampaignId] = useState<string | null>(null);
  const [formData, setFormData] = useState<Partial<BookingCampaign>>({
- name: '',
+ name:'',
  targetCities: ['Madrid'],
  minCapacity: 300,
  maxCapacity: 500,
- targetDates: ['2026-12-04', '2026-12-05'],
- notes: '',
+ targetDates: ['2026-12-04','2026-12-05'],
+ notes:'',
  customPitchTemplates: {},
- color: '#8b5cf6',
+ color:'#8b5cf6',
  isActive: true
  });
  const [newCityInput, setNewCityInput] = useState('');
@@ -62,14 +62,14 @@ export function CampaignManagerModal({
  const handleStartCreate = () => {
  setEditingCampaignId(null);
  setFormData({
- name: 'Nueva Campaña ' + new Date().getFullYear(),
+ name:'Nueva Campaña' + new Date().getFullYear(),
  targetCities: ['Madrid'],
  minCapacity: 250,
  maxCapacity: 500,
- targetDates: ['2026-12-04', '2026-12-05'],
- notes: 'Búsqueda de salas y fechas para la gira.',
+ targetDates: ['2026-12-04','2026-12-05'],
+ notes:'Búsqueda de salas y fechas para la gira.',
  customPitchTemplates: {},
- color: '#8b5cf6',
+ color:'#8b5cf6',
  isActive: true
  });
  setActivePitchCategory('salas');
@@ -84,10 +84,10 @@ export function CampaignManagerModal({
  minCapacity: camp.minCapacity || 0,
  maxCapacity: camp.maxCapacity || 0,
  targetDates: [...(camp.targetDates || [])],
- targetDatesText: camp.targetDatesText || '',
- notes: camp.notes || '',
+ targetDatesText: camp.targetDatesText ||'',
+ notes: camp.notes ||'',
  customPitchTemplates: { ...(camp.customPitchTemplates || {}) },
- color: camp.color || '#8b5cf6',
+ color: camp.color ||'#8b5cf6',
  isActive: camp.isActive
  });
  setActivePitchCategory('salas');
@@ -101,10 +101,10 @@ export function CampaignManagerModal({
  const parts = d.split('-');
  if (parts.length === 3) {
  const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
- return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+ return date.toLocaleDateString('es-ES', { day:'numeric', month:'short' });
  }
  return d;
- }).join(', ');
+ }).join(',');
 
  const payload = {
  id: editingCampaignId || undefined,
@@ -114,9 +114,9 @@ export function CampaignManagerModal({
  maxCapacity: Number(formData.maxCapacity || 0),
  targetDates: dates,
  targetDatesText: formattedDatesText,
- notes: formData.notes || '',
+ notes: formData.notes ||'',
  customPitchTemplates: formData.customPitchTemplates || {},
- color: formData.color || '#8b5cf6',
+ color: formData.color ||'#8b5cf6',
  isActive: formData.isActive ?? true
  };
 
@@ -165,7 +165,7 @@ export function CampaignManagerModal({
  });
  };
 
- const filledPitchCategoriesCount = Object.values(formData.customPitchTemplates || {}).filter(v => (v || '').trim()).length;
+ const filledPitchCategoriesCount = Object.values(formData.customPitchTemplates || {}).filter(v => (v ||'').trim()).length;
 
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
@@ -202,9 +202,9 @@ export function CampaignManagerModal({
  {isEditing ? (
  /* Editing / Creation Form */
  <div className="space-y-4">
- <div className="flex items-center justify-between pb-3 border-b ">
+ <div className="flex items-center justify-between pb-3 border-b">
  <span className="text-xs font-mono font-bold uppercase tracking-wider text-purple-400">
- {editingCampaignId ? '✎ Editar Campaña' : '➕ Crear Nueva Campaña'}
+ {editingCampaignId ?'✎ Editar Campaña' :'➕ Crear Nueva Campaña'}
  </span>
  <button
  onClick={() => setIsEditing(false)}
@@ -222,7 +222,7 @@ export function CampaignManagerModal({
  </label>
  <input
  type="text"
- value={formData.name || ''}
+ value={formData.name ||''}
  onChange={e => setFormData({ ...formData, name: e.target.value })}
  placeholder="Ej: Campaña Diciembre 2026"
  className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-zinc-100 placeholder-neutral-500 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
@@ -233,13 +233,13 @@ export function CampaignManagerModal({
  Color en Calendario
  </label>
  <div className="flex items-center gap-2 mt-1">
- {['#8b5cf6', '#f59e0b', '#06b6d4', '#10b981', '#ec4899', '#3b82f6'].map(col => (
+ {['#8b5cf6','#f59e0b','#06b6d4','#10b981','#ec4899','#3b82f6'].map(col => (
  <button
  key={col}
  type="button"
  onClick={() => setFormData({ ...formData, color: col })}
  className={`w-7 h-7 rounded-[var(--r-s)] transition-transform cursor-pointer ${
- formData.color === col ? 'scale-110 border-[var(--hair)] ring-2 ring-white/40' : 'border-transparent opacity-70 hover:opacity-100'
+ formData.color === col ?'scale-110 border-[var(--hair)] ring-2 ring-white/40' :'border-transparent opacity-70 hover:opacity-100'
  }`}
  style={{ backgroundColor: col }}
  />
@@ -276,14 +276,14 @@ export function CampaignManagerModal({
  type="text"
  value={newCityInput}
  onChange={e => setNewCityInput(e.target.value)}
- onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddCity(); } }}
+ onKeyDown={e => { if (e.key ==='Enter') { e.preventDefault(); handleAddCity(); } }}
  placeholder="Añadir ciudad (ej. Barcelona) y pulsar Enter"
  className="flex-1 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-1.5 text-xs text-zinc-100 placeholder-neutral-500 focus:border-sky-500"
  />
  <button
  type="button"
  onClick={handleAddCity}
- className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-zinc-200 text-xs font-mono font-bold rounded-[var(--r-m)] "
+ className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-zinc-200 text-xs font-mono font-bold rounded-[var(--r-m)]"
  >
  + Añadir
  </button>
@@ -362,7 +362,7 @@ export function CampaignManagerModal({
  type="date"
  onChange={(e) => {
  handleAddDate(e.target.value);
- e.target.value = '';
+ e.target.value ='';
  }}
  className="bg-transparent text-xs font-mono text-purple-200 border-0 p-0 focus:ring-0 cursor-pointer"
  />
@@ -381,7 +381,7 @@ export function CampaignManagerModal({
  </label>
  <textarea
  rows={2}
- value={formData.notes || ''}
+ value={formData.notes ||''}
  onChange={e => setFormData({ ...formData, notes: e.target.value })}
  placeholder="Ej: Intercambio con bandas de ska/mestizaje locales para compartir backline y taquilla al 50%."
  className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-zinc-100 placeholder-neutral-500 focus:border-purple-500"
@@ -400,7 +400,7 @@ export function CampaignManagerModal({
  </label>
  <div className="flex flex-wrap gap-1.5 mb-2">
  {PITCH_CATEGORIES.map(cat => {
- const hasContent = !!(formData.customPitchTemplates?.[cat.id] || '').trim();
+ const hasContent = !!(formData.customPitchTemplates?.[cat.id] ||'').trim();
  const isSelected = activePitchCategory === cat.id;
  return (
  <button
@@ -409,8 +409,8 @@ export function CampaignManagerModal({
  onClick={() => setActivePitchCategory(cat.id)}
  className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors ${
  isSelected
- ? 'bg-purple-600/30 text-purple-200 border-purple-500/60'
- : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:'
+ ?'bg-purple-600/30 text-purple-200 border-purple-500/60'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:'
  }`}
  >
  <cat.icon className="w-3 h-3" />
@@ -423,9 +423,9 @@ export function CampaignManagerModal({
  <textarea
  key={activePitchCategory}
  rows={3}
- value={formData.customPitchTemplates?.[activePitchCategory] || ''}
+ value={formData.customPitchTemplates?.[activePitchCategory] ||''}
  onChange={e => handlePitchTemplateChange(activePitchCategory, e.target.value)}
- placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para "${PITCH_CATEGORIES.find(c => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
+ placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para"${PITCH_CATEGORIES.find(c => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
  className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-zinc-100 placeholder-neutral-500 focus:border-purple-500"
  />
  <p className="text-[11px] text-[var(--ink-2)] italic mt-1">
@@ -434,7 +434,7 @@ export function CampaignManagerModal({
  </div>
 
  {/* Action buttons */}
- <div className="flex justify-end gap-2 pt-3 border-t ">
+ <div className="flex justify-end gap-2 pt-3 border-t">
  <button
  type="button"
  onClick={() => setIsEditing(false)}
@@ -474,13 +474,13 @@ export function CampaignManagerModal({
  onClick={() => onSetActiveCampaign(null)}
  className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
  !activeCampaign
- ? 'bg-neutral-800/90 shadow-md ring-1 ring-amber-400/30'
- : 'bg-[#161514] hover: text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ ?'bg-neutral-800/90 shadow-md ring-1 ring-amber-400/30'
+ :'bg-[#161514] hover: text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <div className="flex items-center gap-3">
  <div className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center ${
- !activeCampaign ? 'bg-amber-400/20 text-amber-300' : 'bg-neutral-800 text-neutral-500'
+ !activeCampaign ?'bg-amber-400/20 text-amber-300' :'bg-neutral-800 text-neutral-500'
  }`}>
  <Compass className="w-4 h-4" />
  </div>
@@ -513,14 +513,14 @@ export function CampaignManagerModal({
  <div className="space-y-3">
  {campaigns.map(camp => {
  const isActive = activeCampaign?.id === camp.id;
- const themeColor = camp.color || '#8b5cf6';
+ const themeColor = camp.color ||'#8b5cf6';
  return (
  <div
  key={camp.id}
  className={`p-4 rounded-[var(--r-m)] transition-all relative overflow-hidden ${
  isActive
- ? 'bg-[#1c1a19] border-purple-500/60 shadow-lg ring-1 ring-purple-500/30'
- : 'bg-[#151413] hover:'
+ ?'bg-[#1c1a19] border-purple-500/60 shadow-lg ring-1 ring-purple-500/30'
+ :'bg-[#151413] hover:'
  }`}
  >
  {/* Left accent stripe */}
@@ -558,7 +558,7 @@ export function CampaignManagerModal({
  <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ink-3)] pt-0.5">
  <span className="flex items-center gap-1 text-sky-300">
  <MapPin className="w-3.5 h-3.5 text-sky-400" />
- {camp.targetCities?.join(', ') || 'Cualquier ciudad'}
+ {camp.targetCities?.join(',') ||'Cualquier ciudad'}
  </span>
  <span className="flex items-center gap-1 text-amber-300">
  <Users className="w-3.5 h-3.5 text-amber-400" />
@@ -566,12 +566,12 @@ export function CampaignManagerModal({
  </span>
  <span className="flex items-center gap-1 text-pink-300">
  <Calendar className="w-3.5 h-3.5 text-pink-400" />
- {camp.targetDates?.length || 0} fechas ({camp.targetDatesText || 'Sin definir'})
+ {camp.targetDates?.length || 0} fechas ({camp.targetDatesText ||'Sin definir'})
  </span>
- {Object.values(camp.customPitchTemplates || {}).some(v => (v || '').trim()) && (
+ {Object.values(camp.customPitchTemplates || {}).some(v => (v ||'').trim()) && (
  <span className="flex items-center gap-1 text-purple-300">
  <Sparkles className="w-3.5 h-3.5 text-purple-400" />
- {Object.values(camp.customPitchTemplates || {}).filter(v => (v || '').trim()).length} plantilla(s) propia(s)
+ {Object.values(camp.customPitchTemplates || {}).filter(v => (v ||'').trim()).length} plantilla(s) propia(s)
  </span>
  )}
  </div>
@@ -602,7 +602,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => onSetActiveCampaign(null)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-neutral-800 text-[var(--ink-3)] hover:bg-neutral-700 "
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-neutral-800 text-[var(--ink-3)] hover:bg-neutral-700"
  >
  Desactivar
  </button>
@@ -629,7 +629,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => {
- if (window.confirm(`¿Eliminar la campaña "${camp.name}"?`)) {
+ if (window.confirm(`¿Eliminar la campaña"${camp.name}"?`)) {
  onDeleteCampaign(camp.id);
  }
  }}

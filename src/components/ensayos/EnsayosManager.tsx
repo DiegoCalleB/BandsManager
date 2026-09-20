@@ -1,16 +1,16 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from'react';
 import { 
  Calendar, Clock, MapPin, Users, Plus, Disc3, Mic, ListOrdered, 
  Radio, CheckCircle2, ChevronDown, History, Sparkles, Filter, Edit3, Trash2
-} from 'lucide-react';
-import { Rehearsal, Song, Setlist, Concert, ThemeColors } from '../../types';
-import { EnsayoCronometro } from './EnsayoCronometro';
-import { OrdenDelDiaTab } from './OrdenDelDiaTab';
-import { ModoLocalEnVivoTab } from './ModoLocalEnVivoTab';
-import { GrabacionActaTab } from './GrabacionActaTab';
-import { ConvocarEnsayoModal } from './ConvocarEnsayoModal';
-import { api } from '../../services/api';
-import { SAMPLER_SONGS, SAMPLER_SETLISTS } from '../../config/sampleRepertoire';
+} from'lucide-react';
+import { Rehearsal, Song, Setlist, Concert, ThemeColors } from'../../types';
+import { EnsayoCronometro } from'./EnsayoCronometro';
+import { OrdenDelDiaTab } from'./OrdenDelDiaTab';
+import { ModoLocalEnVivoTab } from'./ModoLocalEnVivoTab';
+import { GrabacionActaTab } from'./GrabacionActaTab';
+import { ConvocarEnsayoModal } from'./ConvocarEnsayoModal';
+import { api } from'../../services/api';
+import { SAMPLER_SONGS, SAMPLER_SETLISTS } from'../../config/sampleRepertoire';
 
 interface EnsayosManagerProps {
  rehearsals: Rehearsal[];
@@ -88,7 +88,7 @@ export function EnsayosManager({
  const nextRehearsal = useMemo(() => {
  const todayStr = new Date().toISOString().split('T')[0];
  const upcoming = sortedRehearsals
- .filter(r => r.fecha >= todayStr && r.estado !== 'completado')
+ .filter(r => r.fecha >= todayStr && r.estado !=='completado')
  .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
  return upcoming[0] || sortedRehearsals[0] || null;
  }, [sortedRehearsals]);
@@ -102,8 +102,7 @@ export function EnsayosManager({
  }, [sortedRehearsals, selectedRehearsalId, nextRehearsal]);
 
  // View tabs
- const [activeTab, setActiveTab] = useState<'orden_del_dia' | 'modo_local' | 'grabacion_acta'>(
- 'orden_del_dia'
+ const [activeTab, setActiveTab] = useState<'orden_del_dia' |'modo_local' |'grabacion_acta'>('orden_del_dia'
  );
 
  // Modal
@@ -183,13 +182,13 @@ export function EnsayosManager({
  {/* Session Selector Dropdown */}
  <div className="relative">
  <select
- value={currentRehearsal?.id || ''}
+ value={currentRehearsal?.id ||''}
  onChange={e => setSelectedRehearsalId(e.target.value)}
  className="appearance-none bg-[#1c1b1a] border-[#2e2d2a] text-zinc-100 px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-mono font-bold hover: focus: outline-none cursor-pointer"
  >
  {sortedRehearsals.map(r => (
  <option key={r.id} value={r.id}>
- {r.fecha} • {r.lugar} ({r.hora || '19:30'}) {r.estado === 'completado' ? '✓' : ''}
+ {r.fecha} • {r.lugar} ({r.hora ||'19:30'}) {r.estado ==='completado' ?'✓' :''}
  </option>
  ))}
  </select>
@@ -199,18 +198,18 @@ export function EnsayosManager({
  {/* Status Badge */}
  <span
  className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
- currentRehearsal?.estado === 'completado'
- ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
- : currentRehearsal?.estado === 'en_curso'
- ? 'bg-amber-400/20 text-amber-300 /40 animate-pulse'
- : 'bg-neutral-800 text-[var(--ink-3)] '
+ currentRehearsal?.estado ==='completado'
+ ?'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+ : currentRehearsal?.estado ==='en_curso'
+ ?'bg-amber-400/20 text-amber-300 /40 animate-pulse'
+ :'bg-neutral-800 text-[var(--ink-3)]'
  }`}
  >
- {currentRehearsal?.estado === 'completado'
- ? '✓ Ensayo Finalizado'
- : currentRehearsal?.estado === 'en_curso'
- ? '● Ensayo en Curso'
- : '📅 Ensayo Programado'}
+ {currentRehearsal?.estado ==='completado'
+ ?'✓ Ensayo Finalizado'
+ : currentRehearsal?.estado ==='en_curso'
+ ?'● Ensayo en Curso'
+ :'📅 Ensayo Programado'}
  </span>
 
  {/* Edit Rehearsal */}
@@ -232,19 +231,19 @@ export function EnsayosManager({
  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[var(--ink-3)]">
  <span className="flex items-center gap-1.5 text-zinc-100 font-bold">
  <Calendar className="w-4 h-4 text-amber-400" />
- {currentRehearsal?.fecha} ({currentRehearsal?.hora || '19:30'} - {currentRehearsal?.horaFin || '21:30'})
+ {currentRehearsal?.fecha} ({currentRehearsal?.hora ||'19:30'} - {currentRehearsal?.horaFin ||'21:30'})
  </span>
 
  <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
  <MapPin className="w-3.5 h-3.5 text-neutral-500" />
- {currentRehearsal?.lugar || 'Local de ensayo'}
+ {currentRehearsal?.lugar ||'Local de ensayo'}
  </span>
 
  {currentRehearsal?.convocados_nombres && (
  <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
  <Users className="w-3.5 h-3.5 text-neutral-500" />
  {Array.isArray(currentRehearsal.convocados_nombres)
- ? currentRehearsal.convocados_nombres.join(', ')
+ ? currentRehearsal.convocados_nombres.join(',')
  : String(currentRehearsal.convocados_nombres)}
  </span>
  )}
@@ -280,9 +279,9 @@ export function EnsayosManager({
  <button
  onClick={() => setActiveTab('orden_del_dia')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
- activeTab === 'orden_del_dia'
- ? 'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- : 'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
+ activeTab ==='orden_del_dia'
+ ?'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
+ :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
  }`}
  >
  <ListOrdered className="w-4 h-4 shrink-0" />
@@ -293,9 +292,9 @@ export function EnsayosManager({
  <button
  onClick={() => setActiveTab('modo_local')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
- activeTab === 'modo_local'
- ? 'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- : 'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
+ activeTab ==='modo_local'
+ ?'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
+ :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
  }`}
  >
  <Radio className="w-4 h-4 shrink-0" />
@@ -306,9 +305,9 @@ export function EnsayosManager({
  <button
  onClick={() => setActiveTab('grabacion_acta')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
- activeTab === 'grabacion_acta'
- ? 'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- : 'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
+ activeTab ==='grabacion_acta'
+ ?'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
+ :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
  }`}
  >
  <Mic className="w-4 h-4 shrink-0" />
@@ -319,7 +318,7 @@ export function EnsayosManager({
  </div>
 
  {/* Tab Content */}
- {currentRehearsal && activeTab === 'orden_del_dia' && (
+ {currentRehearsal && activeTab ==='orden_del_dia' && (
  <OrdenDelDiaTab
  rehearsal={currentRehearsal}
  onUpdateRehearsal={handleUpdateRehearsal}
@@ -331,7 +330,7 @@ export function EnsayosManager({
  />
  )}
 
- {currentRehearsal && activeTab === 'modo_local' && (
+ {currentRehearsal && activeTab ==='modo_local' && (
  <ModoLocalEnVivoTab
  rehearsal={currentRehearsal}
  onUpdateRehearsal={handleUpdateRehearsal}
@@ -341,7 +340,7 @@ export function EnsayosManager({
  />
  )}
 
- {currentRehearsal && activeTab === 'grabacion_acta' && (
+ {currentRehearsal && activeTab ==='grabacion_acta' && (
  <GrabacionActaTab
  rehearsal={currentRehearsal}
  onUpdateRehearsal={handleUpdateRehearsal}

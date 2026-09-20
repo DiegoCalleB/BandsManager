@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Wand2, X, Sparkles, RefreshCw, Play, Download, Music, Radio } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
-import { Song } from '../../types';
+import React, { useState } from'react';
+import { Wand2, X, Sparkles, RefreshCw, Play, Download, Music, Radio } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
+import { Song } from'../../types';
 
 interface SongStudioAiMusicModalProps {
  isOpen: boolean;
@@ -17,7 +17,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  onAddGeneratedAudio
 }) => {
  const [prompt, setPrompt] = useState(
- song ? `Soundtrack or background vibe for song "${song.titulo}" (${song.tonalidad || 'C'}, ${song.bpm || 120} BPM)` : 'Epic energetic rock soundtrack for indie band'
+ song ? `Soundtrack or background vibe for song"${song.titulo}" (${song.tonalidad ||'C'}, ${song.bpm || 120} BPM)` :'Epic energetic rock soundtrack for indie band'
  );
  const [style, setStyle] = useState('rock independiente / alternativo');
  const [isGenerating, setIsGenerating] = useState(false);
@@ -35,18 +35,18 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
  try {
  const res = await fetch('/api/ai-music/generate', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  prompt,
  style,
- lyrics: song?.notasInternas || song?.titulo || 'Bakandeya independent spirit'
+ lyrics: song?.notasInternas || song?.titulo ||'Bakandeya independent spirit'
  })
  });
 
  const data = await res.json();
  if (!res.ok || !data.success) {
- throw new Error(data.error || 'Error al generar la música con IA');
+ throw new Error(data.error ||'Error al generar la música con IA');
  }
 
  // Convert base64 audio to Blob URL
@@ -56,14 +56,14 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  byteNumbers[i] = byteCharacters.charCodeAt(i);
  }
  const byteArray = new Uint8Array(byteNumbers);
- const blob = new Blob([byteArray], { type: data.mimeType || 'audio/wav' });
+ const blob = new Blob([byteArray], { type: data.mimeType ||'audio/wav' });
  const audioUrl = URL.createObjectURL(blob);
 
  setGeneratedAudioUrl(audioUrl);
- setGeneratedLyrics(data.lyrics || '');
+ setGeneratedLyrics(data.lyrics ||'');
  } catch (err: any) {
  console.error(err);
- setError(err.message || 'Error de conexión con el motor de audio Lyria AI');
+ setError(err.message ||'Error de conexión con el motor de audio Lyria AI');
  } finally {
  setIsGenerating(false);
  }
@@ -138,7 +138,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  </span>
  <a
  href={generatedAudioUrl}
- download={`soundtrack-${song?.titulo || 'band'}.wav`}
+ download={`soundtrack-${song?.titulo ||'band'}.wav`}
  className="px-3 py-1 bg-amber-500 text-black text-xs font-bold rounded-[var(--r-s)] flex items-center gap-1 hover:bg-amber-400 transition"
  >
  <Download className="w-3.5 h-3.5" /> Descargar WAV

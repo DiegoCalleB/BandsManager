@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from'react';
 import {
  X,
  Upload,
@@ -15,11 +15,11 @@ import {
  Check,
  Image as ImageIcon,
  Plus
-} from 'lucide-react';
-import { Song, ThemeColors } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
-import { uploadFileToServer } from '../../utils/audioStorage';
-import { formatSecondsToMmSs } from '../../utils/repertorioUtils';
+} from'lucide-react';
+import { Song, ThemeColors } from'../../types';
+import { ModalPortal } from'../common/ModalPortal';
+import { uploadFileToServer } from'../../utils/audioStorage';
+import { formatSecondsToMmSs } from'../../utils/repertorioUtils';
 
 interface BulkAlbumAudioUploaderModalProps {
  isOpen: boolean;
@@ -43,17 +43,17 @@ interface UploadMatchItem {
  fileSizeFormatted: string;
  durationSeconds: number;
  matchedSongId: string | null; // null if unassigned or if creating new
- status: 'idle' | 'uploading' | 'transcribing' | 'success' | 'error';
+ status:'idle' |'uploading' |'transcribing' |'success' |'error';
  uploadedUrl?: string;
  errorMsg?: string;
- chordsSource?: 'audio_real' | 'ia_sin_audio' | 'plantilla_generica';
+ chordsSource?:'audio_real' |'ia_sin_audio' |'plantilla_generica';
  esAproximado?: boolean;
 }
 
 export function BulkAlbumAudioUploaderModal({
  isOpen,
  onClose,
- albumName: initialAlbumName = '',
+ albumName: initialAlbumName ='',
  albumSongs = [],
  colors,
  isStitchLight,
@@ -61,7 +61,7 @@ export function BulkAlbumAudioUploaderModal({
  isNewAlbumMode = false,
  onSaveUpdatedSongs
 }: BulkAlbumAudioUploaderModalProps) {
- const [currentAlbumName, setCurrentAlbumName] = useState<string>(initialAlbumName || '');
+ const [currentAlbumName, setCurrentAlbumName] = useState<string>(initialAlbumName ||'');
  const [coverFile, setCoverFile] = useState<File | null>(null);
  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string>('');
  const [items, setItems] = useState<UploadMatchItem[]>([]);
@@ -70,10 +70,10 @@ export function BulkAlbumAudioUploaderModal({
  const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number; currentName: string }>({
  current: 0,
  total: 0,
- currentName: ''
+ currentName:''
  });
  const [playingItemIndex, setPlayingItemIndex] = useState<number | null>(null);
- const [feedbackMsg, setFeedbackMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+ const [feedbackMsg, setFeedbackMsg] = useState<{ type:'success' |'error'; text: string } | null>(null);
 
  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
  const fileInputRef = useRef<HTMLInputElement>(null);
@@ -131,27 +131,27 @@ export function BulkAlbumAudioUploaderModal({
 
  // Helper to format file size
  const formatBytes = (bytes: number): string => {
- if (bytes === 0) return '0 B';
+ if (bytes === 0) return'0 B';
  const k = 1024;
- const sizes = ['B', 'KB', 'MB', 'GB'];
+ const sizes = ['B','KB','MB','GB'];
  const i = Math.floor(Math.log(bytes) / Math.log(k));
- return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+ return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) +'' + sizes[i];
  };
 
  // Helper to clean up filenames into clean song titles
  const cleanFileNameToTitle = (filename: string): { title: string; trackNumber: number } => {
- const rawNoExt = filename.replace(/\.[^/.]+$/, '');
+ const rawNoExt = filename.replace(/\.[^/.]+$/,'');
  let trackNumber = 1;
 
- // Detect leading track number: e.g. "01 - Title", "01. Title", "01_Title", "1 Title"
+ // Detect leading track number: e.g."01 - Title","01. Title","01_Title","1 Title"
  const leadNumMatch = rawNoExt.match(/^0?(\d+)[\s._-]+(.+)$/);
  if (leadNumMatch) {
  trackNumber = parseInt(leadNumMatch[1], 10) || 1;
- const cleanTitle = leadNumMatch[2].replace(/[-_]+/g, ' ').trim();
+ const cleanTitle = leadNumMatch[2].replace(/[-_]+/g,'').trim();
  return { title: cleanTitle.charAt(0).toUpperCase() + cleanTitle.slice(1), trackNumber };
  }
 
- const cleanTitle = rawNoExt.replace(/[-_]+/g, ' ').trim();
+ const cleanTitle = rawNoExt.replace(/[-_]+/g,'').trim();
  return { title: cleanTitle.charAt(0).toUpperCase() + cleanTitle.slice(1), trackNumber: 1 };
  };
 
@@ -161,9 +161,9 @@ export function BulkAlbumAudioUploaderModal({
  songs: Song[],
  alreadyAssignedSongIds: Set<string>
  ): string | null => {
- const cleanName = fileName.toLowerCase().replace(/\.[^/.]+$/, '');
+ const cleanName = fileName.toLowerCase().replace(/\.[^/.]+$/,'');
 
- // 1. Try track number regex match: e.g. "01 - Song", "1. Song", "track 02", "01_Song"
+ // 1. Try track number regex match: e.g."01 - Song","1. Song","track 02","01_Song"
  const numMatch = cleanName.match(/^(?:track\s*[-_]?)?0?(\d+)/i) || cleanName.match(/(?:[-_]|\s)0?(\d+)$/);
  if (numMatch && numMatch[1]) {
  const trackNum = parseInt(numMatch[1], 10);
@@ -204,8 +204,8 @@ export function BulkAlbumAudioUploaderModal({
 
  if (rawFiles.length === 0) {
  setFeedbackMsg({
- type: 'error',
- text: 'Por favor selecciona archivos de audio válidos (.mp3, .wav, .m4a, .flac, etc.).'
+ type:'error',
+ text:'Por favor selecciona archivos de audio válidos (.mp3, .wav, .m4a, .flac, etc.).'
  });
  return;
  }
@@ -214,7 +214,7 @@ export function BulkAlbumAudioUploaderModal({
  setFeedbackMsg(null);
 
  // Sort files naturally by name/track number
- rawFiles.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+ rawFiles.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity:'base' }));
 
  const assignedSet = new Set<string>();
  const newItems: UploadMatchItem[] = [];
@@ -259,7 +259,7 @@ export function BulkAlbumAudioUploaderModal({
  fileSizeFormatted: formatBytes(file.size),
  durationSeconds: durationSec,
  matchedSongId,
- status: 'idle'
+ status:'idle'
  });
  }
 
@@ -299,20 +299,20 @@ export function BulkAlbumAudioUploaderModal({
  };
 
  const handleStartUpload = async () => {
- const finalAlbumTitle = currentAlbumName.trim() || 'Nuevo Álbum';
+ const finalAlbumTitle = currentAlbumName.trim() ||'Nuevo Álbum';
 
  if (items.length === 0) {
  setFeedbackMsg({
- type: 'error',
- text: 'Debes arrastrar o seleccionar los archivos de audio del disco.'
+ type:'error',
+ text:'Debes arrastrar o seleccionar los archivos de audio del disco.'
  });
  return;
  }
 
  if (!bandId) {
  setFeedbackMsg({
- type: 'error',
- text: 'No hay ninguna banda activa para subir este álbum.'
+ type:'error',
+ text:'No hay ninguna banda activa para subir este álbum.'
  });
  return;
  }
@@ -321,8 +321,8 @@ export function BulkAlbumAudioUploaderModal({
  const validMatches = items.filter((it) => it.matchedSongId !== null);
  if (validMatches.length === 0) {
  setFeedbackMsg({
- type: 'error',
- text: 'Debes emparejar al menos un archivo de audio con una canción existente.'
+ type:'error',
+ text:'Debes emparejar al menos un archivo de audio con una canción existente.'
  });
  return;
  }
@@ -333,8 +333,7 @@ export function BulkAlbumAudioUploaderModal({
  setFeedbackMsg(null);
 
  const token = localStorage.getItem('bakandeya_token');
- const headers: Record<string, string> = {
- 'Content-Type': 'application/json',
+ const headers: Record<string, string> = {'Content-Type':'application/json',
  ...(token ? { Authorization: `Bearer ${token}` } : {})
  };
 
@@ -344,8 +343,8 @@ export function BulkAlbumAudioUploaderModal({
  try {
  uploadedCoverUrl = await uploadFileToServer(coverFile, {
  bandId: bandId,
- category: 'portada',
- folder: `portadas/${finalAlbumTitle.replace(/[^a-zA-Z0-9_-]/g, '_')}`
+ category:'portada',
+ folder: `portadas/${finalAlbumTitle.replace(/[^a-zA-Z0-9_-]/g,'_')}`
  });
  } catch (covErr) {
  console.warn('Cover upload fallback:', covErr);
@@ -368,15 +367,15 @@ export function BulkAlbumAudioUploaderModal({
  });
 
  setItems((prev) =>
- prev.map((it, idx) => (idx === i ? { ...it, status: 'uploading' } : it))
+ prev.map((it, idx) => (idx === i ? { ...it, status:'uploading' } : it))
  );
 
  try {
  // Upload audio file to backend / Supabase Storage
  const uploadedUrl = await uploadFileToServer(item.file, {
  bandId: bandId,
- category: 'audio',
- folder: `discografia/${finalAlbumTitle.replace(/[^a-zA-Z0-9_-]/g, '_')}`
+ category:'audio',
+ folder: `discografia/${finalAlbumTitle.replace(/[^a-zA-Z0-9_-]/g,'_')}`
  });
 
  const newDurationFormatted = formatSecondsToMmSs(item.durationSeconds);
@@ -396,23 +395,23 @@ export function BulkAlbumAudioUploaderModal({
  duracionMinutos: newDurationMins,
  audioPrincipalUrl: uploadedUrl,
  portadaUrl: uploadedCoverUrl || undefined,
- estadoTema: 'listo',
+ estadoTema:'listo',
  bpm: 120,
- tonalidad: 'Am',
+ tonalidad:'Am',
  audioIdeas: [
  {
  id: `idea_master_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
- titulo: 'Audio Máster Completo (Estudio)',
- seccion: 'general',
+ titulo:'Audio Máster Completo (Estudio)',
+ seccion:'general',
  audioUrl: uploadedUrl,
- subidoPor: 'Subida Disco',
+ subidoPor:'Subida Disco',
  fecha: new Date().toISOString()
  }
  ]
  };
 
  const postRes = await fetch('/api/songs', {
- method: 'POST',
+ method:'POST',
  headers,
  body: JSON.stringify(newSong)
  });
@@ -423,11 +422,11 @@ export function BulkAlbumAudioUploaderModal({
  newlyCreatedSongs.push(savedSong);
  successCount++;
  setItems((prev) =>
- prev.map((it, idx) => (idx === i ? { ...it, status: 'transcribing', uploadedUrl } : it))
+ prev.map((it, idx) => (idx === i ? { ...it, status:'transcribing', uploadedUrl } : it))
  );
  try {
  const chordRes = await fetch('/api/generate-song-chords', {
- method: 'POST',
+ method:'POST',
  headers,
  body: JSON.stringify({
  songId: savedSong.id,
@@ -443,7 +442,7 @@ export function BulkAlbumAudioUploaderModal({
  idx === i
  ? {
  ...it,
- status: 'success',
+ status:'success',
  uploadedUrl,
  chordsSource: chordData?.chordsSource,
  esAproximado: chordData?.esAproximado
@@ -454,7 +453,7 @@ export function BulkAlbumAudioUploaderModal({
  } catch (chordErr) {
  console.warn('No se pudieron analizar los acordes de', savedSong.titulo, chordErr);
  setItems((prev) =>
- prev.map((it, idx) => (idx === i ? { ...it, status: 'success', uploadedUrl } : it))
+ prev.map((it, idx) => (idx === i ? { ...it, status:'success', uploadedUrl } : it))
  );
  }
  } else {
@@ -474,10 +473,10 @@ export function BulkAlbumAudioUploaderModal({
  audioIdeas: [
  {
  id: `idea_master_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
- titulo: 'Audio Máster Completo (Estudio)',
- seccion: 'general',
+ titulo:'Audio Máster Completo (Estudio)',
+ seccion:'general',
  audioUrl: uploadedUrl,
- subidoPor: 'Subida Disco',
+ subidoPor:'Subida Disco',
  fecha: new Date().toISOString()
  },
  ...(targetSong.audioIdeas || []).filter(
@@ -487,7 +486,7 @@ export function BulkAlbumAudioUploaderModal({
  };
 
  const putRes = await fetch(`/api/songs/${encodeURIComponent(updatedSong.id)}`, {
- method: 'PUT',
+ method:'PUT',
  headers,
  body: JSON.stringify(updatedSong)
  });
@@ -498,11 +497,11 @@ export function BulkAlbumAudioUploaderModal({
  updatedSongsMap.set(finalSaved.id, finalSaved);
  successCount++;
  setItems((prev) =>
- prev.map((it, idx) => (idx === i ? { ...it, status: 'transcribing', uploadedUrl } : it))
+ prev.map((it, idx) => (idx === i ? { ...it, status:'transcribing', uploadedUrl } : it))
  );
  try {
  const chordRes = await fetch('/api/generate-song-chords', {
- method: 'POST',
+ method:'POST',
  headers,
  body: JSON.stringify({
  songId: finalSaved.id,
@@ -518,7 +517,7 @@ export function BulkAlbumAudioUploaderModal({
  idx === i
  ? {
  ...it,
- status: 'success',
+ status:'success',
  uploadedUrl,
  chordsSource: chordData?.chordsSource,
  esAproximado: chordData?.esAproximado
@@ -529,7 +528,7 @@ export function BulkAlbumAudioUploaderModal({
  } catch (chordErr) {
  console.warn('No se pudieron analizar los acordes de', finalSaved.titulo, chordErr);
  setItems((prev) =>
- prev.map((it, idx) => (idx === i ? { ...it, status: 'success', uploadedUrl } : it))
+ prev.map((it, idx) => (idx === i ? { ...it, status:'success', uploadedUrl } : it))
  );
  }
  } else {
@@ -541,7 +540,7 @@ export function BulkAlbumAudioUploaderModal({
  console.error(`Error uploading track ${item.fileName}:`, err);
  setItems((prev) =>
  prev.map((it, idx) =>
- idx === i ? { ...it, status: 'error', errorMsg: err?.message || 'Error al subir' } : it
+ idx === i ? { ...it, status:'error', errorMsg: err?.message ||'Error al subir' } : it
  )
  );
  }
@@ -557,8 +556,8 @@ export function BulkAlbumAudioUploaderModal({
  }
 
  setFeedbackMsg({
- type: 'success',
- text: `¡${successCount} pistas completas guardadas con éxito en el álbum "${finalAlbumTitle}"!`
+ type:'success',
+ text: `¡${successCount} pistas completas guardadas con éxito en el álbum"${finalAlbumTitle}"!`
  });
  };
 
@@ -567,8 +566,8 @@ export function BulkAlbumAudioUploaderModal({
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden ${
  isStitchLight
- ? 'bg-white text-[var(--ink)]'
- : 'bg-[#141414] text-white'
+ ?'bg-white text-[var(--ink)]'
+ :'bg-[#141414] text-white'
  }`}
  >
  {/* Modal Header */}
@@ -579,12 +578,12 @@ export function BulkAlbumAudioUploaderModal({
  </div>
  <div>
  <h3 className="text-xl sm:text-2xl font-display font-black tracking-tight flex items-center gap-2">
- <span>{isCreatingBrandNewAlbum ? 'Crear Álbum desde Carpeta / MP3s' : 'Subir Canciones Completas del Disco'}</span>
+ <span>{isCreatingBrandNewAlbum ?'Crear Álbum desde Carpeta / MP3s' :'Subir Canciones Completas del Disco'}</span>
  </h3>
  <p className="text-xs font-mono opacity-60 mt-0.5 flex items-center gap-1.5">
  <Disc3 className="w-3.5 h-3.5 text-[#1db954]" />
  <span className="font-bold text-[#1db954]">
- {currentAlbumName || 'Nuevo Álbum'}
+ {currentAlbumName ||'Nuevo Álbum'}
  </span>
  <span>• {isCreatingBrandNewAlbum ? `${items.length} pistas seleccionadas` : `${albumSongs.length} temas en catálogo`}</span>
  </p>
@@ -617,8 +616,8 @@ export function BulkAlbumAudioUploaderModal({
  placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut..."
  className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] focus:border-emerald-500'
- : 'bg-[var(--surface)] text-white focus:border-[#1db954]'
+ ?'bg-white text-[var(--ink)] focus:border-emerald-500'
+ :'bg-[var(--surface)] text-white focus:border-[#1db954]'
  }`}
  />
  </div>
@@ -639,14 +638,14 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => coverInputRef.current?.click()}
  className={`w-full py-2.5 px-3 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs font-mono font-bold cursor-pointer transition ${
  coverPreviewUrl
- ? 'border-emerald-400 text-emerald-400 bg-emerald-500/10'
+ ?'border-emerald-400 text-emerald-400 bg-emerald-500/10'
  : isStitchLight
- ? ' bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
- : ' bg-[var(--surface)] hover:bg-white/5 text-[var(--ink-3)]'
+ ?' bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
+ :' bg-[var(--surface)] hover:bg-white/5 text-[var(--ink-3)]'
  }`}
  >
  <ImageIcon className="w-4 h-4" />
- <span>{coverFile ? coverFile.name.substring(0, 15) + '...' : 'Subir Portada'}</span>
+ <span>{coverFile ? coverFile.name.substring(0, 15) +'...' :'Subir Portada'}</span>
  </button>
  </div>
  </div>
@@ -660,11 +659,11 @@ export function BulkAlbumAudioUploaderModal({
  className={`p-8 border-2 border-dashed rounded-3xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
  items.length > 0
  ? isStitchLight
- ? 'border-emerald-300 bg-emerald-50/30'
- : 'border-[#1db954]/30 bg-[#1db954]/5'
+ ?'border-emerald-300 bg-emerald-50/30'
+ :'border-[#1db954]/30 bg-[#1db954]/5'
  : isStitchLight
- ? ' hover:border-emerald-500 hover:bg-[var(--bg)]'
- : ' hover:border-[#1db954] hover:bg-white/5'
+ ?' hover:border-emerald-500 hover:bg-[var(--bg)]'
+ :' hover:border-[#1db954] hover:bg-white/5'
  }`}
  >
  <input
@@ -688,7 +687,7 @@ export function BulkAlbumAudioUploaderModal({
  <p className="text-base font-bold">
  {items.length > 0
  ? `${items.length} archivos de audio cargados`
- : 'Arrastra aquí todos los archivos de audio del disco'}
+ :'Arrastra aquí todos los archivos de audio del disco'}
  </p>
  <p className="text-xs font-mono opacity-60 mt-1">
  o haz clic para explorar tu carpeta de música (MP3, WAV, FLAC, M4A)
@@ -700,12 +699,12 @@ export function BulkAlbumAudioUploaderModal({
  {feedbackMsg && (
  <div
  className={`p-4 rounded-[var(--r-l)] flex items-center gap-3 text-xs font-mono ${
- feedbackMsg.type === 'success'
- ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
- : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+ feedbackMsg.type ==='success'
+ ?'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+ :'bg-rose-500/10 border-rose-500/30 text-rose-400'
  }`}
  >
- {feedbackMsg.type === 'success' ? (
+ {feedbackMsg.type ==='success' ? (
  <CheckCircle2 className="w-4 h-4 shrink-0" />
  ) : (
  <AlertCircle className="w-4 h-4 shrink-0" />
@@ -741,8 +740,8 @@ export function BulkAlbumAudioUploaderModal({
  {items.length > 0 && (
  <div className="space-y-3">
  <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] px-1">
- <span>{isCreatingBrandNewAlbum ? 'Pistas del Nuevo Álbum' : 'Archivos de Audio & Asignación'}</span>
- <span>{items.length} {items.length === 1 ? 'pista' : 'pistas'}</span>
+ <span>{isCreatingBrandNewAlbum ?'Pistas del Nuevo Álbum' :'Archivos de Audio & Asignación'}</span>
+ <span>{items.length} {items.length === 1 ?'pista' :'pistas'}</span>
  </div>
 
  <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
@@ -753,13 +752,13 @@ export function BulkAlbumAudioUploaderModal({
  <div
  key={item.id || idx}
  className={`p-3.5 rounded-[var(--r-l)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 ${
- item.status === 'success'
- ? 'border-emerald-500/40 bg-emerald-500/10'
- : item.status === 'error'
- ? 'border-rose-500/40 bg-rose-500/10'
+ item.status ==='success'
+ ?'border-emerald-500/40 bg-emerald-500/10'
+ : item.status ==='error'
+ ?'border-rose-500/40 bg-rose-500/10'
  : isStitchLight
- ? 'bg-[var(--bg)] '
- : 'bg-[var(--surface)]/90 '
+ ?'bg-[var(--bg)]'
+ :'bg-[var(--surface)]/90'
  }`}
  >
  {/* Left: Audio file preview & details */}
@@ -769,10 +768,10 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => togglePlayAudio(idx)}
  className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-all cursor-pointer ${
  isPlaying
- ? 'bg-[#1db954] text-black shadow-md'
- : 'bg-white/10 hover:bg-[#1db954] hover:text-black text-[var(--ink-3)]'
+ ?'bg-[#1db954] text-black shadow-md'
+ :'bg-white/10 hover:bg-[#1db954] hover:text-black text-[var(--ink-3)]'
  }`}
- title={isPlaying ? 'Pausar audio' : 'Escuchar previo'}
+ title={isPlaying ?'Pausar audio' :'Escuchar previo'}
  >
  {isPlaying ? (
  <Pause className="w-4 h-4 fill-current" />
@@ -793,8 +792,8 @@ export function BulkAlbumAudioUploaderModal({
  onChange={(e) => handleTitleChange(idx, e.target.value)}
  className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full ${
  isStitchLight
- ? 'bg-white text-[var(--ink)]'
- : 'bg-black text-white'
+ ?'bg-white text-[var(--ink)]'
+ :'bg-black text-white'
  }`}
  placeholder="Título de la canción"
  />
@@ -815,54 +814,54 @@ export function BulkAlbumAudioUploaderModal({
  {!isCreatingBrandNewAlbum && (
  <div className="flex items-center gap-2 min-w-0 md:w-[320px]">
  <select
- value={item.matchedSongId || ''}
- disabled={isUploading || item.status === 'success'}
+ value={item.matchedSongId ||''}
+ disabled={isUploading || item.status ==='success'}
  onChange={(e) => handleAssignChange(idx, e.target.value)}
  className={`w-full text-xs font-mono rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
  item.matchedSongId
  ? isStitchLight
- ? 'bg-white border-emerald-400 text-[var(--ink)] font-bold'
- : 'bg-black border-[#1db954]/50 text-white font-bold'
+ ?'bg-white border-emerald-400 text-[var(--ink)] font-bold'
+ :'bg-black border-[#1db954]/50 text-white font-bold'
  : isStitchLight
- ? 'bg-white text-[var(--ink-2)]'
- : 'bg-black text-[var(--ink-2)]'
+ ?'bg-white text-[var(--ink-2)]'
+ :'bg-black text-[var(--ink-2)]'
  }`}
  >
  <option value="">-- No asignar a ninguna --</option>
  {albumSongs.map((s, sIdx) => (
  <option key={s.id} value={s.id}>
- Pista {s.ordenAlbum || sIdx + 1}: {s.titulo} ({s.duracion || '3:30'})
+ Pista {s.ordenAlbum || sIdx + 1}: {s.titulo} ({s.duracion ||'3:30'})
  </option>
  ))}
  </select>
 
  {/* Status Icon */}
- {item.status === 'success' && (
+ {item.status ==='success' && (
  <span
  className={`p-1 ${
- item.chordsSource === 'plantilla_generica'
- ? 'text-amber-400'
- : 'text-emerald-400'
+ item.chordsSource ==='plantilla_generica'
+ ?'text-amber-400'
+ :'text-emerald-400'
  }`}
  title={
- item.chordsSource === 'plantilla_generica'
- ? 'Cifrado de plantilla: revísalo antes de usar'
- : item.chordsSource === 'audio_real'
- ? 'Transcritos del audio real'
+ item.chordsSource ==='plantilla_generica'
+ ?'Cifrado de plantilla: revísalo antes de usar'
+ : item.chordsSource ==='audio_real'
+ ?'Transcritos del audio real'
  : item.esAproximado
- ? 'Acordes aproximados: verifícalos'
- : 'Cifrado propuesto por IA'
+ ?'Acordes aproximados: verifícalos'
+ :'Cifrado propuesto por IA'
  }
  >
  <Check className="w-4 h-4" />
  </span>
  )}
- {item.status === 'uploading' && (
+ {item.status ==='uploading' && (
  <span className="p-1 text-emerald-400" title="Subiendo...">
  <RefreshCw className="w-4 h-4 animate-spin" />
  </span>
  )}
- {item.status === 'transcribing' && (
+ {item.status ==='transcribing' && (
  <span className="p-1 text-purple-400" title="Analizando letra y acordes con IA...">
  <RefreshCw className="w-4 h-4 animate-spin" />
  </span>
@@ -873,35 +872,35 @@ export function BulkAlbumAudioUploaderModal({
  {/* Status Icon for New Album */}
  {isCreatingBrandNewAlbum && (
  <div className="flex items-center justify-end">
- {item.status === 'success' && (
+ {item.status ==='success' && (
  <span
  className={`px-2 py-1 rounded text-[11px] font-mono flex items-center gap-1 ${
- item.chordsSource === 'plantilla_generica'
- ? 'bg-amber-500/20 text-amber-400'
- : 'bg-emerald-500/20 text-emerald-400'
+ item.chordsSource ==='plantilla_generica'
+ ?'bg-amber-500/20 text-amber-400'
+ :'bg-emerald-500/20 text-emerald-400'
  }`}
  title={
- item.chordsSource === 'plantilla_generica'
- ? 'Cifrado de plantilla: revísalo antes de usar'
- : item.chordsSource === 'audio_real'
- ? 'Transcritos del audio real'
+ item.chordsSource ==='plantilla_generica'
+ ?'Cifrado de plantilla: revísalo antes de usar'
+ : item.chordsSource ==='audio_real'
+ ?'Transcritos del audio real'
  : item.esAproximado
- ? 'Acordes aproximados: verifícalos'
- : 'Cifrado propuesto por IA'
+ ?'Acordes aproximados: verifícalos'
+ :'Cifrado propuesto por IA'
  }
  >
- <Check className="w-3.5 h-3.5" />{' '}
- {item.chordsSource === 'plantilla_generica'
- ? '⚠️ Plantilla'
- : 'Guardado'}
+ <Check className="w-3.5 h-3.5" />{''}
+ {item.chordsSource ==='plantilla_generica'
+ ?'⚠️ Plantilla'
+ :'Guardado'}
  </span>
  )}
- {item.status === 'uploading' && (
+ {item.status ==='uploading' && (
  <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-[11px] font-mono flex items-center gap-1">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Subiendo
  </span>
  )}
- {item.status === 'transcribing' && (
+ {item.status ==='transcribing' && (
  <span className="px-2 py-1 rounded bg-purple-500/10 text-purple-300 text-[11px] font-mono flex items-center gap-1">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Analizando acordes (IA)
  </span>

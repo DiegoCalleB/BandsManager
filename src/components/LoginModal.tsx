@@ -1,26 +1,26 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
-import { User as UserType } from '../types';
-import { signInWithGoogleIdentity } from '../utils/googleAuth';
-import { guardarCookieDeSesion } from '../utils/sessionCookie';
-import { BandNameStylerHelper } from './common/BandNameStylerHelper';
-import { ModalPortal } from './common/ModalPortal';
-import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
+import React, { useState, useEffect, useRef } from'react';
+import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from'lucide-react';
+import { User as UserType } from'../types';
+import { signInWithGoogleIdentity } from'../utils/googleAuth';
+import { guardarCookieDeSesion } from'../utils/sessionCookie';
+import { BandNameStylerHelper } from'./common/BandNameStylerHelper';
+import { ModalPortal } from'./common/ModalPortal';
+import { useLanguage, SUPPORTED_LANGUAGES } from'../context/LanguageContext';
 
 interface LoginModalProps {
  onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
  isStitchLight?: boolean;
 }
 
-type ViewState = 'login' | 'register' | 'plans' | 'activate' | 'reset-password';
+type ViewState ='login' |'register' |'plans' |'activate' |'reset-password';
 
 // El poster tiene que ser un fotograma real del propio vídeo YA recortado (mismo encuadre,
 // misma proporción 720x1024): el JPEG de marca genérico es un render cuadrado sin recortar,
-// así que al arrancar el vídeo la imagen "saltaba" a otro encuadre.
-const LOGIN_POSTER = '/login-animation-poster.jpg';
+// así que al arrancar el vídeo la imagen"saltaba" a otro encuadre.
+const LOGIN_POSTER ='/login-animation-poster.jpg';
 
 // Network Information API: no estandarizada en todos los navegadores (Safari/Firefox no la
-// tienen), por eso el chequeo es "opt-out": si no existe o no se puede leer, se asume conexión
+// tienen), por eso el chequeo es"opt-out": si no existe o no se puede leer, se asume conexión
 // buena y se intenta el vídeo igualmente - degradar solo cuando hay evidencia real de que la
 // red va mal (2G/slow-2g o modo Ahorro de Datos activado).
 function tieneConexionMala(): boolean {
@@ -28,7 +28,7 @@ function tieneConexionMala(): boolean {
  const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
  if (!conn) return false;
  if (conn.saveData) return true;
- return conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g';
+ return conn.effectiveType ==='slow-2g' || conn.effectiveType ==='2g';
  } catch {
  return false;
  }
@@ -66,7 +66,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  // --- Remember Me State ---
  const [rememberMe, setRememberMe] = useState(() => {
- return localStorage.getItem('bakandeya_remember_me') !== 'false';
+ return localStorage.getItem('bakandeya_remember_me') !=='false';
  });
 
  // On mount, prefill username and emails if stored in localStorage
@@ -119,23 +119,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  try {
  const response = await fetch('/api/auth/check-invitation', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({ email: activateEmail.trim() })
  });
 
  const data = await response.json().catch(() => ({}));
 
  if (!response.ok) {
- throw new Error(data.error || 'No se encontró ninguna invitación');
+ throw new Error(data.error ||'No se encontró ninguna invitación');
  }
 
- setActivateName(data.name || '');
- setActivateUsername(data.username || data.email?.split('@')[0] || '');
+ setActivateName(data.name ||'');
+ setActivateUsername(data.username || data.email?.split('@')[0] ||'');
  setActivateBandsFound(data.bands || []);
  setActivateStep(2);
  } catch (err: any) {
- setError(err.message || 'Error al comprobar invitación');
+ setError(err.message ||'Error al comprobar invitación');
  } finally {
  setLoading(false);
  }
@@ -154,8 +154,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  try {
  const response = await fetch('/api/auth/activate-member', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  email: activateEmail.trim().toLowerCase(),
  username: activateUsername.trim().toLowerCase(),
@@ -167,7 +167,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  const data = await response.json().catch(() => ({}));
 
  if (!response.ok) {
- throw new Error(data.error || 'Error al completar el registro');
+ throw new Error(data.error ||'Error al completar el registro');
  }
 
  if (data.token) {
@@ -177,7 +177,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  onLoginSuccess(data.user, data.token, data.availableBands);
  } catch (err: any) {
- setError(err.message || 'Error al activar tu cuenta');
+ setError(err.message ||'Error al activar tu cuenta');
  } finally {
  setLoading(false);
  }
@@ -196,25 +196,25 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  try {
  const response = await fetch('/api/auth/login', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({ username: username.trim(), password })
  });
 
  const data = await response.json().catch(() => ({}));
 
  if (!response.ok) {
- throw new Error(data.error || 'Fallo en la autenticación');
+ throw new Error(data.error ||'Fallo en la autenticación');
  }
 
  // Handle Remember Me preference
  localStorage.setItem('bakandeya_last_login_email', username.trim());
  if (rememberMe) {
  localStorage.setItem('bakandeya_remembered_username', username.trim());
- localStorage.setItem('bakandeya_remember_me', 'true');
+ localStorage.setItem('bakandeya_remember_me','true');
  } else {
  localStorage.removeItem('bakandeya_remembered_username');
- localStorage.setItem('bakandeya_remember_me', 'false');
+ localStorage.setItem('bakandeya_remember_me','false');
  }
 
  if (data.token) {
@@ -224,7 +224,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  onLoginSuccess(data.user, data.token, data.availableBands);
  } catch (err: any) {
- setError(err.message || 'Error al conectar con el servidor.');
+ setError(err.message ||'Error al conectar con el servidor.');
  } finally {
  setLoading(false);
  }
@@ -244,22 +244,22 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  try {
  const response = await fetch('/api/auth/reset-password/request', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({ emailOrUsername: resetEmailOrUsername.trim() })
  });
 
  const data = await response.json().catch(() => ({}));
 
  if (!response.ok) {
- throw new Error(data.error || 'No se pudo procesar la solicitud.');
+ throw new Error(data.error ||'No se pudo procesar la solicitud.');
  }
 
  setResetMaskedEmail(data.emailMasked);
- setResetSuccessMsg(data.message || 'Código de recuperación generado.');
+ setResetSuccessMsg(data.message ||'Código de recuperación generado.');
  setResetStep(2);
  } catch (err: any) {
- setError(err.message || 'Error al solicitar el restablecimiento');
+ setError(err.message ||'Error al solicitar el restablecimiento');
  } finally {
  setLoading(false);
  }
@@ -285,8 +285,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  try {
  const response = await fetch('/api/auth/reset-password/confirm', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  emailOrUsername: resetEmailOrUsername.trim(),
  code: resetCode.trim(),
@@ -297,7 +297,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  const data = await response.json().catch(() => ({}));
 
  if (!response.ok) {
- throw new Error(data.error || 'Error al restablecer la contraseña.');
+ throw new Error(data.error ||'Error al restablecer la contraseña.');
  }
 
  setUsername(resetEmailOrUsername.trim());
@@ -306,13 +306,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  setView('login');
  setResetSuccessMsg('¡Contraseña restablecida con éxito! Ya puedes iniciar sesión.');
  } catch (err: any) {
- setError(err.message || 'Error al confirmar la nueva contraseña');
+ setError(err.message ||'Error al confirmar la nueva contraseña');
  } finally {
  setLoading(false);
  }
  };
 
- const [featureCategory, setFeatureCategory] = useState<'all' | 'booking' | 'media' | 'finance'>('all');
+ const [featureCategory, setFeatureCategory] = useState<'all' |'booking' |'media' |'finance'>('all');
 
  // --- Register Submit ---
  const handleRegisterSubmit = (e: React.FormEvent) => {
@@ -325,26 +325,26 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  handlePlanSelect('promo');
  };
 
- const handlePlanSelect = async (planKey: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string) => {
+ const handlePlanSelect = async (planKey:'ensayo' |'local' |'de_gira' |'cabeza_de_cartel' | string) => {
  setLoading(true);
  setError(null);
 
  const planNamesMap: Record<string, string> = {
- ensayo: 'Ensayo (Gratis)',
- local: 'Local (12€/mes)',
- de_gira: 'De Gira (29€/mes)',
- cabeza_de_cartel: 'Cabeza de Cartel (79€/mes)'
+ ensayo:'Ensayo (Gratis)',
+ local:'Local (12€/mes)',
+ de_gira:'De Gira (29€/mes)',
+ cabeza_de_cartel:'Cabeza de Cartel (79€/mes)'
  };
 
  try {
  const response = await fetch('/api/auth/register', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  leaderName: regLeaderName.trim(),
- bandName: regBandName.trim() || 'Nueva Banda',
+ bandName: regBandName.trim() ||'Nueva Banda',
  email: regEmail.trim() || `banda_${Date.now()}@bandmanager.app`,
- password: regPassword || '123456',
+ password: regPassword ||'123456',
  plan: planKey
  })
  });
@@ -352,7 +352,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  const data = await response.json().catch(() => ({}));
 
  if (!response.ok) {
- throw new Error(data.error || 'Fallo en la creación de cuenta');
+ throw new Error(data.error ||'Fallo en la creación de cuenta');
  }
 
  if (data.token) {
@@ -366,14 +366,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  // Fallback local session if offline
  onLoginSuccess({
  id: `user-${Date.now()}`,
- username: regEmail.trim() || regBandName.trim() || 'banda',
- name: regLeaderName.trim() || 'Miembro',
- bandName: regBandName.trim() || 'Nueva Banda',
+ username: regEmail.trim() || regBandName.trim() ||'banda',
+ name: regLeaderName.trim() ||'Miembro',
+ bandName: regBandName.trim() ||'Nueva Banda',
  email: regEmail.trim(),
- role: 'leader',
+ role:'leader',
  plan: planKey,
  createdAt: new Date().toISOString()
- }, 'mock_token_after_register');
+ },'mock_token_after_register');
  } finally {
  setLoading(false);
  }
@@ -388,20 +388,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  if (!googleUser) return; // User closed or cancelled popup
 
  const email = googleUser.email;
- const displayName = (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : (googleUser.name || email.split('@')[0]);
+ const displayName = (view ==='register' && regLeaderName.trim()) ? regLeaderName.trim() : (googleUser.name || email.split('@')[0]);
 
  // Call backend API /api/auth/google
  try {
  const response = await fetch('/api/auth/google', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  email,
  name: displayName,
  uid: googleUser.sub,
  accessToken: googleUser.accessToken,
- bandName: (view === 'register' && regBandName.trim()) ? regBandName.trim() : undefined,
- leaderName: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : undefined
+ bandName: (view ==='register' && regBandName.trim()) ? regBandName.trim() : undefined,
+ leaderName: (view ==='register' && regLeaderName.trim()) ? regLeaderName.trim() : undefined
  })
  });
 
@@ -421,16 +421,16 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  id: googleUser.sub || `user-${Date.now()}`,
  username: email,
  name: displayName,
- bandName: (view === 'register' && regBandName.trim()) || 'Mi Banda',
+ bandName: (view ==='register' && regBandName.trim()) ||'Mi Banda',
  email: email,
- role: 'leader',
- plan: 'promo',
+ role:'leader',
+ plan:'promo',
  createdAt: new Date().toISOString()
  };
- onLoginSuccess(fallbackUser, googleUser.accessToken || '');
+ onLoginSuccess(fallbackUser, googleUser.accessToken ||'');
  } catch (err: any) {
  console.error("Error al iniciar sesión con Google:", err);
- setError(err.message || 'Error al conectar con Google OAuth.');
+ setError(err.message ||'Error al conectar con Google OAuth.');
  } finally {
  setLoading(false);
  }
@@ -457,20 +457,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  if (pass.length >= 8) score += 1;
  if (/[0-9]/.test(pass) && /[^A-Za-z0-9]/.test(pass)) score += 1;
 
- const labels = ['Contraseña básica', 'Seguridad media', 'Muy segura'];
- const colors = ['bg-rose-500', 'bg-amber-400', 'bg-emerald-400'];
- const textColors = ['text-rose-400', 'text-amber-400', 'text-emerald-400'];
+ const labels = ['Contraseña básica','Seguridad media','Muy segura'];
+ const colors = ['bg-rose-500','bg-amber-400','bg-emerald-400'];
+ const textColors = ['text-rose-400','text-amber-400','text-emerald-400'];
 
  return (
  <div className="space-y-1.5 pt-1 px-0.5">
  <div className="flex gap-1 h-1 w-full bg-neutral-800/80 rounded-full overflow-hidden">
- <div className={`h-full transition-all duration-300 ${score >= 1 ? colors[0] : 'bg-transparent'} w-1/3`} />
- <div className={`h-full transition-all duration-300 ${score >= 2 ? colors[1] : 'bg-transparent'} w-1/3`} />
- <div className={`h-full transition-all duration-300 ${score >= 3 ? colors[2] : 'bg-transparent'} w-1/3`} />
+ <div className={`h-full transition-all duration-300 ${score >= 1 ? colors[0] :'bg-transparent'} w-1/3`} />
+ <div className={`h-full transition-all duration-300 ${score >= 2 ? colors[1] :'bg-transparent'} w-1/3`} />
+ <div className={`h-full transition-all duration-300 ${score >= 3 ? colors[2] :'bg-transparent'} w-1/3`} />
  </div>
  <div className="flex justify-between items-center text-[11px]">
  <span className={`font-medium ${textColors[Math.max(0, score - 1)]}`}>{labels[Math.max(0, score - 1)]}</span>
- <span className="text-neutral-500">{pass.length < 6 ? 'Mínimo 6 caracteres' : '✓ Longitud OK'}</span>
+ <span className="text-neutral-500">{pass.length < 6 ?'Mínimo 6 caracteres' :'✓ Longitud OK'}</span>
  </div>
  </div>
  );
@@ -485,7 +485,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  className="w-full flex items-center justify-center gap-2.5 py-3 bg-[#131317]/80 hover:bg-[#1f1f26] rounded-[var(--r-l)] text-sm font-medium text-[var(--sunken)] hover:text-white transition-all shadow-inner cursor-pointer disabled:opacity-50"
  >
  <GoogleIcon />
- <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
+ <span>{loading ?'Conectando...' :'Continuar con Google'}</span>
  </button>
  </div>
  );
@@ -494,7 +494,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <ModalPortal isOpen={true}>
  <div className="fixed inset-0 z-[9999] p-4 bg-[#09090b] text-[var(--sunken)] overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div className="min-h-full flex items-center justify-center py-6 md:py-8">
- <div className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view === 'plans' ? 'max-w-6xl' : 'max-w-md space-y-6'}`}>
+ <div className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view ==='plans' ?'max-w-6xl' :'max-w-md space-y-6'}`}>
  
  {/* Soft Golden Background Ambient Glow */}
  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-[var(--acc)]/8 rounded-full blur-[110px] pointer-events-none" />
@@ -511,8 +511,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  onClick={() => setAppLang(l.code)}
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
- ? 'bg-[var(--acc)] text-[var(--surface)] font-bold shadow-xs scale-105'
- : 'text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800'
+ ?'bg-[var(--acc)] text-[var(--surface)] font-bold shadow-xs scale-105'
+ :'text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800'
  }`}
  title={l.label}
  >
@@ -525,7 +525,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  </div>
 
  {/* --- ERROR ALERT --- */}
- {error && view !== 'plans' && (
+ {error && view !=='plans' && (
  <div className="w-full p-3.5 bg-rose-500/10 rounded-[var(--r-l)] text-xs text-rose-300 flex flex-col gap-2 animate-in fade-in duration-200">
  <div className="flex items-start gap-2">
  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
@@ -553,7 +553,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  {/* =========================================
  LOGIN VIEW
  ========================================= */}
- {view === 'login' && (
+ {view ==='login' && (
  <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/95 border-[var(--acc)]/30 rounded-3xl backdrop-blur-xl shadow-[0_24px_70px_rgba(0,0,0,0.7)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  
  {/* INTEGRATED LOGO INSIDE CARD */}
@@ -612,7 +612,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="relative flex items-center">
  <Lock className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
  <input
- type={showPassword ? 'text' : 'password'}
+ type={showPassword ?'text' :'password'}
  value={password}
  onChange={(e) => setPassword(e.target.value)}
  placeholder="Contraseña"
@@ -631,7 +631,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  {/* Recordar contraseña & Restablecer contraseña */}
  <div className="flex items-center justify-between text-xs text-[var(--ink-2)] px-1 pt-0.5">
  <label className="flex items-center gap-2 cursor-pointer select-none text-[var(--ink-3)] hover:text-white transition-colors">
- <div className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ? 'bg-[var(--acc)] border-[var(--acc)] text-[var(--surface)] shadow-[0_0_10px_rgba(242,202,80,0.4)]' : 'bg-[#17171f] /80'}`}>
+ <div className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ?'bg-[var(--acc)] border-[var(--acc)] text-[var(--surface)] shadow-[0_0_10px_rgba(242,202,80,0.4)]' :'bg-[#17171f] /80'}`}>
  <input
  type="checkbox"
  checked={rememberMe}
@@ -648,7 +648,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  setError(null);
  setResetSuccessMsg(null);
  setResetStep(1);
- setResetEmailOrUsername(username || '');
+ setResetEmailOrUsername(username ||'');
  setView('reset-password');
  }}
  className="text-[var(--acc)] hover:underline font-medium cursor-pointer"
@@ -722,7 +722,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  {/* =========================================
  RESET PASSWORD VIEW
  ========================================= */}
- {view === 'reset-password' && (
+ {view ==='reset-password' && (
  <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  <div className="flex items-center gap-2.5 mb-2">
  <button
@@ -740,8 +740,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <h2 className="text-base font-bold text-[var(--sunken)]">Restablecer contraseña</h2>
  <p className="text-xs text-[var(--ink-2)] leading-tight">
  {resetStep === 1 
- ? 'Introduce tu correo o usuario para recuperar tu acceso.'
- : `Introduce el código para ${resetMaskedEmail || 'tu cuenta'} y tu nueva contraseña.`}
+ ?'Introduce tu correo o usuario para recuperar tu acceso.'
+ : `Introduce el código para ${resetMaskedEmail ||'tu cuenta'} y tu nueva contraseña.`}
  </p>
  </div>
  </div>
@@ -809,7 +809,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="relative flex items-center">
  <Lock className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
  <input
- type={showResetNewPassword ? 'text' : 'password'}
+ type={showResetNewPassword ?'text' :'password'}
  value={resetNewPassword}
  onChange={(e) => setResetNewPassword(e.target.value)}
  placeholder="Nueva contraseña (mín. 6 caracteres)"
@@ -831,7 +831,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="relative flex items-center">
  <Lock className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
  <input
- type={showResetNewPassword ? 'text' : 'password'}
+ type={showResetNewPassword ?'text' :'password'}
  value={resetConfirmPassword}
  onChange={(e) => setResetConfirmPassword(e.target.value)}
  placeholder="Repite la nueva contraseña"
@@ -896,7 +896,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  {/* =========================================
  REGISTER VIEW
  ========================================= */}
- {view === 'register' && (
+ {view ==='register' && (
  <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  <form onSubmit={handleRegisterSubmit} className="w-full space-y-3.5">
  <div className="relative flex items-center">
@@ -948,7 +948,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="relative flex items-center">
  <Lock className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
  <input
- type={showRegPassword ? 'text' : 'password'}
+ type={showRegPassword ?'text' :'password'}
  value={regPassword}
  onChange={(e) => setRegPassword(e.target.value)}
  placeholder="Contraseña"
@@ -984,7 +984,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="relative mt-6 mb-2">
  <div className="absolute inset-0 flex items-center">
- <div className="w-full border-t "></div>
+ <div className="w-full border-t"></div>
  </div>
  <div className="relative flex justify-center text-xs">
  <span className="px-2 bg-[#09090b] text-neutral-500">O regístrate con</span>
@@ -995,7 +995,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="text-center mt-8">
  <p className="text-sm text-[var(--ink-2)]">
- ¿Ya tienes cuenta?{' '}
+ ¿Ya tienes cuenta?{''}
  <button onClick={() => setView('login')} className="text-[var(--acc)] hover:underline font-medium cursor-pointer">
  Inicia sesión
  </button>
@@ -1007,7 +1007,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  {/* =========================================
  ACTIVATE ACCOUNT VIEW (NEW!)
  ========================================= */}
- {view === 'activate' && (
+ {view ==='activate' && (
  <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  {activateStep === 1 ? (
  <div className="space-y-4">
@@ -1069,7 +1069,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="relative mt-5 mb-2">
  <div className="absolute inset-0 flex items-center">
- <div className="w-full border-t "></div>
+ <div className="w-full border-t"></div>
  </div>
  <div className="relative flex justify-center text-xs">
  <span className="px-2 bg-[#09090b] text-neutral-500">O comprobar con</span>
@@ -1087,7 +1087,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <ul className="list-disc pl-4 space-y-0.5 text-left max-h-24 overflow-y-auto">
  {activateBandsFound.map((b, idx) => (
  <li key={idx} className="text-[var(--ink-3)]">
- <span className="font-semibold text-[var(--sunken)]">{b.bandName}</span> ({b.role === 'leader' ? 'Director' : 'Músico'})
+ <span className="font-semibold text-[var(--sunken)]">{b.bandName}</span> ({b.role ==='leader' ?'Director' :'Músico'})
  </li>
  ))}
  </ul>
@@ -1125,7 +1125,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="relative flex items-center">
  <Lock className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
  <input
- type={showActivatePassword ? 'text' : 'password'}
+ type={showActivatePassword ?'text' :'password'}
  value={activatePassword}
  onChange={(e) => setActivatePassword(e.target.value)}
  placeholder="Crea tu contraseña"
@@ -1159,7 +1159,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="relative mt-5 mb-2">
  <div className="absolute inset-0 flex items-center">
- <div className="w-full border-t "></div>
+ <div className="w-full border-t"></div>
  </div>
  <div className="relative flex justify-center text-xs">
  <span className="px-2 bg-[#09090b] text-neutral-500">O activar con tu cuenta de Google</span>
@@ -1172,7 +1172,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="text-center mt-8">
  <p className="text-sm text-[var(--ink-2)]">
- ¿Prefieres iniciar sesión?{' '}
+ ¿Prefieres iniciar sesión?{''}
  <button 
  type="button"
  onClick={() => {
@@ -1191,7 +1191,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  {/* =========================================
  PLANS VIEW
  ========================================= */}
- {view === 'plans' && (
+ {view ==='plans' && (
  <div className="w-full max-w-md animate-in zoom-in-95 duration-300 py-6">
  <div className="text-center mb-6 space-y-3">
  <div className="flex items-center justify-between px-2">
@@ -1206,7 +1206,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  </div>
 
  <h1 className="text-2xl font-bold text-[var(--sunken)] tracking-tight">
- Plan Promo para <span className="text-[var(--acc)]">{regBandName || 'tu Banda'}</span>
+ Plan Promo para <span className="text-[var(--acc)]">{regBandName ||'tu Banda'}</span>
  </h1>
  <p className="text-[var(--ink-2)] text-xs">
  Acceso gratuito a Dossier (EPK), Captación de Fans con QR y Calendario.
@@ -1246,7 +1246,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  disabled={loading}
  className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all cursor-pointer shadow-md disabled:opacity-50"
  >
- {loading ? 'Creando cuenta...' : 'Crear mi Dossier y QR Gratis'}
+ {loading ?'Creando cuenta...' :'Crear mi Dossier y QR Gratis'}
  </button>
  </div>
  </div>

@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import L from 'leaflet';
-import 'leaflet.markercluster';
-import { BandContact, BandRelationshipStatus } from '../types';
-import { MapPin, Navigation, Check, Loader2, Layers, Music, Handshake, Repeat, Zap, Clock, Radio, X } from 'lucide-react';
-import { escapeHtml } from '../utils/escapeHtml';
+import React, { useEffect, useRef, useState } from'react';
+import L from'leaflet';
+import'leaflet.markercluster';
+import { BandContact, BandRelationshipStatus } from'../types';
+import { MapPin, Navigation, Check, Loader2, Layers, Music, Handshake, Repeat, Zap, Clock, Radio, X } from'lucide-react';
+import { escapeHtml } from'../utils/escapeHtml';
 
 interface BandMapProps {
  bands: BandContact[];
@@ -11,123 +11,42 @@ interface BandMapProps {
  isStitchLight?: boolean;
 }
 
-type MapStyleKey = 'voyager' | 'satellite' | 'osm' | 'positron' | 'dark';
+type MapStyleKey ='voyager' |'satellite' |'osm' |'positron' |'dark';
 
 const MAP_STYLES: Record<MapStyleKey, { name: string; url: string; attr: string }> = {
  voyager: {
- name: '🗺️ Callejero Claro (Recomendado)',
- url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
- attr: '&copy; OpenStreetMap &copy; CARTO'
+ name:'🗺️ Callejero Claro (Recomendado)',
+ url:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+ attr:'&copy; OpenStreetMap &copy; CARTO'
  },
  satellite: {
- name: '🛰️ Satélite Híbrido',
- url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
- attr: '&copy; Esri World Imagery'
+ name:'🛰️ Satélite Híbrido',
+ url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+ attr:'&copy; Esri World Imagery'
  },
  osm: {
- name: '🏙️ OpenStreetMap Detallado',
- url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
- attr: '&copy; OpenStreetMap'
+ name:'🏙️ OpenStreetMap Detallado',
+ url:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+ attr:'&copy; OpenStreetMap'
  },
  positron: {
- name: '⚪ Gris Minimalista',
- url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
- attr: '&copy; CARTO'
+ name:'⚪ Gris Minimalista',
+ url:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+ attr:'&copy; CARTO'
  },
  dark: {
- name: '🌙 Oscuro Nocturno',
- url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
- attr: '&copy; CARTO'
+ name:'🌙 Oscuro Nocturno',
+ url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+ attr:'&copy; CARTO'
  }
 };
 
 // Pre-loaded coordinates dictionary for Spanish cities, towns, and provinces
-const SPANISH_CITIES_GEO: Record<string, [number, number]> = {
- 'Ávila': [40.6565, -4.6818],
- 'Avila': [40.6565, -4.6818],
- 'Madrid': [40.4168, -3.7038],
- 'Barcelona': [41.3851, 2.1734],
- 'Valencia': [39.4699, -0.3763],
- 'Sevilla': [37.3891, -5.9845],
- 'Zaragoza': [41.6488, -0.8896],
- 'Málaga': [36.7213, -4.4214],
- 'Malaga': [36.7213, -4.4214],
- 'Murcia': [37.9922, -1.1307],
- 'Palma': [39.5696, 2.6502],
- 'Las Palmas': [28.1235, -15.4363],
- 'Bilbao': [43.2630, -2.9350],
- 'Alicante': [38.3452, -0.4810],
- 'Córdoba': [37.8882, -4.7794],
- 'Cordoba': [37.8882, -4.7794],
- 'Valladolid': [41.6523, -4.7245],
- 'Vigo': [42.2406, -8.7207],
- 'Gijón': [43.5357, -5.6615],
- 'Gijon': [43.5357, -5.6615],
- 'Granada': [37.1773, -3.5986],
- 'A Coruña': [43.3623, -8.4115],
- 'Coruña': [43.3623, -8.4115],
- 'Vitoria': [42.8467, -2.6716],
- 'Vitoria-Gasteiz': [42.8467, -2.6716],
- 'Badajoz': [38.8794, -6.9706],
- 'Oviedo': [43.3614, -5.8593],
- 'San Sebastián': [43.3183, -1.9812],
- 'San Sebastian': [43.3183, -1.9812],
- 'Donostia': [43.3183, -1.9812],
- 'Pamplona': [42.8125, -1.6458],
- 'Santander': [43.4623, -3.8099],
- 'Burgos': [42.3440, -3.6969],
- 'Salamanca': [40.9701, -5.6635],
- 'Albacete': [38.9942, -1.8585],
- 'Logroño': [42.4650, -2.4456],
- 'Logrono': [42.4650, -2.4456],
- 'Cáceres': [39.4753, -6.3723],
- 'Caceres': [39.4753, -6.3723],
- 'León': [42.5987, -5.5671],
- 'Leon': [42.5987, -5.5671],
- 'Cádiz': [36.5271, -6.2886],
- 'Cadiz': [36.5271, -6.2886],
- 'Jaén': [37.7796, -3.7849],
- 'Jaen': [37.7796, -3.7849],
- 'Ourense': [42.3358, -7.8639],
- 'Lugo': [43.0099, -7.5560],
- 'Girona': [41.9794, 2.8214],
- 'Toledo': [39.8628, -4.0273],
- 'Huelva': [37.2614, -6.9447],
- 'Guadalajara': [40.6327, -3.1682],
- 'Ciudad Real': [38.9863, -3.9273],
- 'Zamora': [41.5063, -5.7446],
- 'Segovia': [40.9429, -4.1088],
- 'Cuenca': [40.0704, -2.1374],
- 'Huesca': [42.1361, -0.4087],
- 'Teruel': [40.3456, -1.1072],
- 'Soria': [41.7640, -2.4688],
- 'Almería': [36.8340, -2.4637],
- 'Almeria': [36.8340, -2.4637],
- 'Pontevedra': [42.4310, -8.6444],
- 'Castellón': [39.9864, -0.0513],
- 'Castellon': [39.9864, -0.0513],
- 'Tarragona': [41.1189, 1.2445],
- 'Reus': [41.1561, 1.1069],
- 'Ontinyent': [38.8228, -0.6067],
- 'Terrassa': [41.5632, 2.0089],
- 'Sabadell': [41.5463, 2.1086],
- 'Badalona': [41.4500, 2.2472],
- 'Hospitalet': [41.3597, 2.1003],
- 'Jerez': [36.6850, -6.1261],
- 'Algeciras': [36.1308, -5.4488],
- 'Merida': [38.9161, -6.3437],
- 'Mérida': [38.9161, -6.3437],
- 'Santiago': [42.8782, -8.5448],
- 'Santiago de Compostela': [42.8782, -8.5448],
- 'Andalucía': [37.5443, -4.7278],
- 'Cataluña': [41.8205, 1.8401],
- 'Galicia': [42.5751, -8.1339],
- 'Comunidad de Madrid': [40.4168, -3.7038],
- 'País Vasco': [43.0000, -2.6000]
+const SPANISH_CITIES_GEO: Record<string, [number, number]> = {'Ávila': [40.6565, -4.6818],'Avila': [40.6565, -4.6818],'Madrid': [40.4168, -3.7038],'Barcelona': [41.3851, 2.1734],'Valencia': [39.4699, -0.3763],'Sevilla': [37.3891, -5.9845],'Zaragoza': [41.6488, -0.8896],'Málaga': [36.7213, -4.4214],'Malaga': [36.7213, -4.4214],'Murcia': [37.9922, -1.1307],'Palma': [39.5696, 2.6502],'Las Palmas': [28.1235, -15.4363],'Bilbao': [43.2630, -2.9350],'Alicante': [38.3452, -0.4810],'Córdoba': [37.8882, -4.7794],'Cordoba': [37.8882, -4.7794],'Valladolid': [41.6523, -4.7245],'Vigo': [42.2406, -8.7207],'Gijón': [43.5357, -5.6615],'Gijon': [43.5357, -5.6615],'Granada': [37.1773, -3.5986],'A Coruña': [43.3623, -8.4115],'Coruña': [43.3623, -8.4115],'Vitoria': [42.8467, -2.6716],'Vitoria-Gasteiz': [42.8467, -2.6716],'Badajoz': [38.8794, -6.9706],'Oviedo': [43.3614, -5.8593],'San Sebastián': [43.3183, -1.9812],'San Sebastian': [43.3183, -1.9812],'Donostia': [43.3183, -1.9812],'Pamplona': [42.8125, -1.6458],'Santander': [43.4623, -3.8099],'Burgos': [42.3440, -3.6969],'Salamanca': [40.9701, -5.6635],'Albacete': [38.9942, -1.8585],'Logroño': [42.4650, -2.4456],'Logrono': [42.4650, -2.4456],'Cáceres': [39.4753, -6.3723],'Caceres': [39.4753, -6.3723],'León': [42.5987, -5.5671],'Leon': [42.5987, -5.5671],'Cádiz': [36.5271, -6.2886],'Cadiz': [36.5271, -6.2886],'Jaén': [37.7796, -3.7849],'Jaen': [37.7796, -3.7849],'Ourense': [42.3358, -7.8639],'Lugo': [43.0099, -7.5560],'Girona': [41.9794, 2.8214],'Toledo': [39.8628, -4.0273],'Huelva': [37.2614, -6.9447],'Guadalajara': [40.6327, -3.1682],'Ciudad Real': [38.9863, -3.9273],'Zamora': [41.5063, -5.7446],'Segovia': [40.9429, -4.1088],'Cuenca': [40.0704, -2.1374],'Huesca': [42.1361, -0.4087],'Teruel': [40.3456, -1.1072],'Soria': [41.7640, -2.4688],'Almería': [36.8340, -2.4637],'Almeria': [36.8340, -2.4637],'Pontevedra': [42.4310, -8.6444],'Castellón': [39.9864, -0.0513],'Castellon': [39.9864, -0.0513],'Tarragona': [41.1189, 1.2445],'Reus': [41.1561, 1.1069],'Ontinyent': [38.8228, -0.6067],'Terrassa': [41.5632, 2.0089],'Sabadell': [41.5463, 2.1086],'Badalona': [41.4500, 2.2472],'Hospitalet': [41.3597, 2.1003],'Jerez': [36.6850, -6.1261],'Algeciras': [36.1308, -5.4488],'Merida': [38.9161, -6.3437],'Mérida': [38.9161, -6.3437],'Santiago': [42.8782, -8.5448],'Santiago de Compostela': [42.8782, -8.5448],'Andalucía': [37.5443, -4.7278],'Cataluña': [41.8205, 1.8401],'Galicia': [42.5751, -8.1339],'Comunidad de Madrid': [40.4168, -3.7038],'País Vasco': [43.0000, -2.6000]
 };
 
 function resolveBandCoordinates(band: BandContact, index: number): [number, number] {
- const rawLoc = (band.localizacion || band.ciudad_origen_swap || '').trim();
+ const rawLoc = (band.localizacion || band.ciudad_origen_swap ||'').trim();
 
  if (SPANISH_CITIES_GEO[rawLoc]) {
  return offsetCoords(SPANISH_CITIES_GEO[rawLoc], index);
@@ -141,9 +60,9 @@ function resolveBandCoordinates(band: BandContact, index: number): [number, numb
  }
  }
 
- const normLoc = rawLoc.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+ const normLoc = rawLoc.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
  for (const [key, coords] of Object.entries(SPANISH_CITIES_GEO)) {
- const normKey = key.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+ const normKey = key.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
  if (normLoc.includes(normKey) || normKey.includes(normLoc)) {
  return offsetCoords(coords, index);
  }
@@ -170,19 +89,19 @@ const GEO_CACHE: Record<string, [number, number]> = {};
 
 function getStatusBadgeConfig(status: BandRelationshipStatus) {
  switch (status) {
- case 'colegas_aliados':
- return { text: '🤝 Colegas / Aliados', color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)' };
- case 'concierto_agendado':
- return { text: '⚡ Concierto Agendado', color: '#d1b375', bg: 'rgba(209, 179, 117, 0.15)' };
- case 'intercambio_propuesto':
- return { text: '🔄 Date Swap Propuesto', color: '#0284c7', bg: 'rgba(2, 132, 199, 0.15)' };
- case 'pendiente_respuesta':
- return { text: '⏳ Pendiente Respuesta', color: '#d946ef', bg: 'rgba(217, 70, 239, 0.15)' };
- case 'no_disponible':
- return { text: '❌ No Disponible', color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.15)' };
- case 'sin_contactar':
+ case'colegas_aliados':
+ return { text:'🤝 Colegas / Aliados', color:'#10b981', bg:'rgba(16, 185, 129, 0.15)' };
+ case'concierto_agendado':
+ return { text:'⚡ Concierto Agendado', color:'#d1b375', bg:'rgba(209, 179, 117, 0.15)' };
+ case'intercambio_propuesto':
+ return { text:'🔄 Date Swap Propuesto', color:'#0284c7', bg:'rgba(2, 132, 199, 0.15)' };
+ case'pendiente_respuesta':
+ return { text:'⏳ Pendiente Respuesta', color:'#d946ef', bg:'rgba(217, 70, 239, 0.15)' };
+ case'no_disponible':
+ return { text:'❌ No Disponible', color:'#f43f5e', bg:'rgba(244, 63, 94, 0.15)' };
+ case'sin_contactar':
  default:
- return { text: '📡 Sin Contactar', color: '#a3a3a3', bg: 'rgba(163, 163, 163, 0.15)' };
+ return { text:'📡 Sin Contactar', color:'#a3a3a3', bg:'rgba(163, 163, 163, 0.15)' };
  }
 }
 
@@ -212,7 +131,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  zoomControl: false
  });
 
- L.control.zoom({ position: 'bottomright' }).addTo(map);
+ L.control.zoom({ position:'bottomright' }).addTo(map);
 
  const currentPreset = MAP_STYLES[mapStyle];
  const layer = L.tileLayer(currentPreset.url, {
@@ -230,8 +149,8 @@ export const BandMap: React.FC<BandMapProps> = ({
  iconCreateFunction: (cluster: any) => {
  const count = cluster.getChildCount();
  const size = 42;
- const bgColor = 'var(--acc)';
- const textColor = 'var(--acc-ink)';
+ const bgColor ='var(--acc)';
+ const textColor ='var(--acc-ink)';
 
  return L.divIcon({
  html: `
@@ -249,12 +168,11 @@ export const BandMap: React.FC<BandMapProps> = ({
  display: flex;
  align-items: center;
  justify-content: center;
- cursor: pointer;
- ">
+ cursor: pointer;">
  ${count}
  </div>
  `,
- className: 'custom-cluster-badge',
+ className:'custom-cluster-badge',
  iconSize: [size, size],
  iconAnchor: [size / 2, size / 2]
  });
@@ -325,7 +243,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  const query = `${band.nombre_banda}, ${band.localizacion}, España`;
  try {
  const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`, {
- headers: { 'Accept-Language': 'es' }
+ headers: {'Accept-Language':'es' }
  });
  const data = await res.json();
  if (data && data[0]) {
@@ -374,8 +292,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  border-radius: 50%;
  object-fit: cover;
  border: 1px solid white;
- margin-right: 4px;
- " />
+ margin-right: 4px;" />
  ` : `
  <div style="
  width: 22px;
@@ -387,14 +304,13 @@ export const BandMap: React.FC<BandMapProps> = ({
  align-items: center;
  justify-content: center;
  font-size: 11px;
- margin-right: 4px;
- ">
- ${escapeHtml(band.icono || '🎸')}
+ margin-right: 4px;">
+ ${escapeHtml(band.icono ||'🎸')}
  </div>
  `;
 
  const customIcon = L.divIcon({
- className: 'custom-band-pin',
+ className:'custom-band-pin',
  html: `
  <div style="
  position: relative;
@@ -402,8 +318,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  align-items: center;
  gap: 6px;
  cursor: pointer;
- transform: translate(-10px, -15px);
- ">
+ transform: translate(-10px, -15px);">
  <div style="
  display: inline-flex;
  align-items: center;
@@ -412,15 +327,13 @@ export const BandMap: React.FC<BandMapProps> = ({
  border-radius: 20px;
  padding: 3px 8px 3px 4px;
  box-shadow: 0 4px 14px rgba(0,0,0,0.5);
- white-space: nowrap;
- ">
+ white-space: nowrap;">
  ${bandIconHtml}
  <span style="
  font-family: system-ui, sans-serif;
  font-size: 11px;
  font-weight: 700;
- color: #f5f5f5;
- ">
+ color: #f5f5f5;">
  ${escapeHtml(band.nombre_banda)}
  </span>
  </div>
@@ -433,7 +346,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  const marker = L.marker(pos, { icon: customIcon });
 
  const popupHtml = document.createElement('div');
- popupHtml.className = 'font-sans p-1 min-w-[220px] text-zinc-800';
+ popupHtml.className ='font-sans p-1 min-w-[220px] text-zinc-800';
  popupHtml.innerHTML = `
  <div style="font-family: system-ui, sans-serif;">
  <div style="font-size: 14px; font-weight: 800; color: #09090b; margin-bottom: 2px;">
@@ -454,8 +367,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  font-weight: 700;
  padding: 2px 8px;
  border-radius: 6px;
- display: inline-block;
- ">
+ display: inline-block;">
  ${badgeCfg.text}
  </span>
  </div>
@@ -463,12 +375,12 @@ export const BandMap: React.FC<BandMapProps> = ({
  <div style="font-size: 11px; color: #27272a; margin-bottom: 4px;">
  👤 <strong>Contacto:</strong> ${escapeHtml(band.contacto_nombre)}
  </div>
- ` : ''}
+ ` :''}
  ${band.email ? `
  <div style="font-size: 10px; font-family: monospace; color: #0284c7; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis;">
  ✉️ ${escapeHtml(band.email)}
  </div>
- ` : ''}
+ ` :''}
  <div style="margin-top: 10px;">
  <button id="pop-band-select-${band.id}" style="
  width: 100%;
@@ -484,8 +396,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  display: flex;
  align-items: center;
  justify-content: center;
- gap: 4px;
- ">
+ gap: 4px;">
  📋 Ver Ficha Técnica
  </button>
  </div>
@@ -531,20 +442,20 @@ export const BandMap: React.FC<BandMapProps> = ({
  };
 
  return (
- <div className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden shadow-lg ">
+ <div className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden shadow-lg">
  {/* Map Element */}
  <div ref={mapRef} className="w-full h-full z-0" />
 
  {/* Header Overlay */}
  <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
  <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] backdrop-blur-md shadow-md flex items-center gap-2 font-mono text-xs ${
- isStitchLight ? 'bg-white/90 text-[var(--ink)]' : 'bg-zinc-900/90 text-zinc-100'
+ isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-zinc-900/90 text-zinc-100'
  }`}>
  <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
  <div>
  <span className="font-bold">Mapa de Bandas Amigas</span>
  <span className="ml-2 text-[10px] opacity-75">
- ({bands.length} {bands.length === 1 ? 'banda' : 'bandas'})
+ ({bands.length} {bands.length === 1 ?'banda' :'bandas'})
  </span>
  </div>
  </div>
@@ -561,7 +472,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <button
  onClick={() => setShowStyleMenu(!showStyleMenu)}
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
- isStitchLight ? 'bg-white/95 text-[var(--ink)]' : 'bg-zinc-900/95 text-zinc-200'
+ isStitchLight ?'bg-white/95 text-[var(--ink)]' :'bg-zinc-900/95 text-zinc-200'
  }`}
  >
  <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -578,7 +489,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  setShowStyleMenu(false);
  }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
- mapStyle === key ? 'bg-[var(--acc)] text-[var(--acc-ink)]' : 'hover:bg-zinc-800 text-zinc-300'
+ mapStyle === key ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'hover:bg-zinc-800 text-zinc-300'
  }`}
  >
  <span>{MAP_STYLES[key].name}</span>
@@ -592,7 +503,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <button
  onClick={handleRecenter}
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
- isStitchLight ? 'bg-white/90 text-[var(--ink)]' : 'bg-zinc-900/90 text-zinc-200'
+ isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-zinc-900/90 text-zinc-200'
  }`}
  >
  <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />

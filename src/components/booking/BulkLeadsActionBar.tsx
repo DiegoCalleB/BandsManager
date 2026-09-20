@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Lead, LeadStatus } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { Lead, LeadStatus } from'../../types';
+import { ModalPortal } from'../common/ModalPortal';
 import { 
  CheckSquare, MinusSquare, Square, X, ChevronDown, Sparkles, Search, Download, 
  Trash2, Star, CheckCircle2, Send, Clock, ArrowRight, 
  MessageSquare, ShieldAlert
-} from 'lucide-react';
+} from'lucide-react';
 
 interface BulkLeadsActionBarProps {
  selectedCount: number;
@@ -19,21 +19,21 @@ interface BulkLeadsActionBarProps {
  onBulkToggleFavorite: (isFav: boolean) => void;
  onBulkExportCsv: () => void;
  onBulkDelete: () => void;
- sectionTab?: 'salas' | 'medios' | 'grupos';
+ sectionTab?:'salas' |'medios' |'grupos';
  isStitchLight?: boolean;
 }
 
 const STATUS_OPTIONS: { status: LeadStatus; label: string; color: string; icon: any }[] = [
- { status: 'nuevo', label: 'Nuevo Lead', color: 'bg-blue-500/20 text-blue-300 border-blue-500/40', icon: Sparkles },
- { status: 'pendiente_aprobacion', label: 'Pendiente Aprobación', color: 'bg-amber-500/20 text-amber-300 /40', icon: Clock },
- { status: 'aprobado', label: 'Aprobado (Listo para envío)', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40', icon: CheckCircle2 },
- { status: 'esperando_respuesta', label: 'Esperando Respuesta', color: 'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Send },
- { status: 'contactado', label: 'Contactado', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40', icon: MessageSquare },
- { status: 'respondido', label: 'Respondido / Conversación', color: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40', icon: MessageSquare },
- { status: 'negociando', label: 'Negociando Caché / Fecha', color: 'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: ArrowRight },
- { status: 'confirmado', label: 'Confirmado (Cerrado)', color: 'bg-emerald-500/30 text-emerald-200 border-emerald-400', icon: CheckCircle2 },
- { status: 'aplazado', label: 'Aplazado (Próxima temp.)', color: 'bg-zinc-700/50 text-zinc-300 border-zinc-600', icon: Clock },
- { status: 'no_interesado', label: 'No Interesado / Descartado', color: 'bg-rose-500/20 text-rose-300 border-rose-500/40', icon: ShieldAlert },
+ { status:'nuevo', label:'Nuevo Lead', color:'bg-blue-500/20 text-blue-300 border-blue-500/40', icon: Sparkles },
+ { status:'pendiente_aprobacion', label:'Pendiente Aprobación', color:'bg-amber-500/20 text-amber-300 /40', icon: Clock },
+ { status:'aprobado', label:'Aprobado (Listo para envío)', color:'bg-emerald-500/20 text-emerald-300 border-emerald-500/40', icon: CheckCircle2 },
+ { status:'esperando_respuesta', label:'Esperando Respuesta', color:'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Send },
+ { status:'contactado', label:'Contactado', color:'bg-cyan-500/20 text-cyan-300 border-cyan-500/40', icon: MessageSquare },
+ { status:'respondido', label:'Respondido / Conversación', color:'bg-indigo-500/20 text-indigo-300 border-indigo-500/40', icon: MessageSquare },
+ { status:'negociando', label:'Negociando Caché / Fecha', color:'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: ArrowRight },
+ { status:'confirmado', label:'Confirmado (Cerrado)', color:'bg-emerald-500/30 text-emerald-200 border-emerald-400', icon: CheckCircle2 },
+ { status:'aplazado', label:'Aplazado (Próxima temp.)', color:'bg-zinc-700/50 text-zinc-300 border-zinc-600', icon: Clock },
+ { status:'no_interesado', label:'No Interesado / Descartado', color:'bg-rose-500/20 text-rose-300 border-rose-500/40', icon: ShieldAlert },
 ];
 
 export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
@@ -48,7 +48,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onBulkToggleFavorite,
  onBulkExportCsv,
  onBulkDelete,
- sectionTab = 'salas',
+ sectionTab ='salas',
  isStitchLight = false,
 }) => {
  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
@@ -56,7 +56,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
 
  if (selectedCount === 0) return null;
 
- const itemLabel = sectionTab === 'medios' ? 'medios' : sectionTab === 'grupos' ? 'bandas' : 'salas';
+ const itemLabel = sectionTab ==='medios' ?'medios' : sectionTab ==='grupos' ?'bandas' :'salas';
 
  return (
  <>
@@ -65,8 +65,8 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  id="bulk-leads-action-bar"
  className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] shadow-xl backdrop-blur-md p-2.5 sm:p-3 transition-all animate-slide-up ${
  isStitchLight
- ? 'bg-white/95 /60 text-[var(--ink)] shadow-slate-300/60'
- : 'bg-[#151311]/95 border-[var(--acc)]/50 text-white shadow-black/80'
+ ?'bg-white/95 /60 text-[var(--ink)] shadow-slate-300/60'
+ :'bg-[#151311]/95 border-[var(--acc)]/50 text-white shadow-black/80'
  }`}
  >
  <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
@@ -78,9 +78,9 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAll}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer shrink-0 ${
- isStitchLight ? 'hover:bg-[var(--sunken)] text-amber-700' : 'hover:bg-zinc-800 text-[var(--acc)]'
+ isStitchLight ?'hover:bg-[var(--sunken)] text-amber-700' :'hover:bg-zinc-800 text-[var(--acc)]'
  }`}
- title={isAllSelected ? 'Deseleccionar todo' : `Seleccionar las ${totalFilteredCount} ${itemLabel}`}
+ title={isAllSelected ?'Deseleccionar todo' : `Seleccionar las ${totalFilteredCount} ${itemLabel}`}
  >
  {isAllSelected ? (
  <CheckSquare className="w-5 h-5" />
@@ -97,7 +97,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  </span>
  <div className="leading-tight">
  <div className="text-xs font-bold font-display flex items-center gap-1.5 flex-wrap">
- <span>{selectedCount} {itemLabel} {selectedCount === 1 ? 'seleccionada' : 'seleccionadas'}</span>
+ <span>{selectedCount} {itemLabel} {selectedCount === 1 ?'seleccionada' :'seleccionadas'}</span>
  {!isAllSelected && totalFilteredCount > selectedCount && (
  <button
  type="button"
@@ -118,7 +118,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`md:hidden p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- isStitchLight ? 'text-[var(--ink-3)] hover:bg-[var(--sunken)]' : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-white'
  }`}
  title="Cerrar selección"
  >
@@ -136,14 +136,14 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ? 'bg-amber-100 hover:bg-amber-200 text-amber-900'
- : 'bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 /50 text-amber-200'
+ ?'bg-amber-100 hover:bg-amber-200 text-amber-900'
+ :'bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 /50 text-amber-200'
  }`}
  title="Cambiar el estado de todos los seleccionados"
  >
  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
  <span>Estado</span>
- <ChevronDown className={`w-3.5 h-3.5 text-amber-400 transition-transform ${isStatusDropdownOpen ? 'rotate-180' : ''}`} />
+ <ChevronDown className={`w-3.5 h-3.5 text-amber-400 transition-transform ${isStatusDropdownOpen ?'rotate-180' :''}`} />
  </button>
 
  {/* Status Dropdown Menu (Opens downwards) */}
@@ -155,11 +155,11 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  />
  <div className={`absolute top-full mt-2 right-0 z-50 w-64 rounded-[var(--r-l)] shadow-2xl p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${
  isStitchLight
- ? 'bg-white shadow-slate-400/50'
- : 'bg-[#181614] border-zinc-700 shadow-black/90'
+ ?'bg-white shadow-slate-400/50'
+ :'bg-[#181614] border-zinc-700 shadow-black/90'
  }`}>
  <div className={`px-2 py-1 text-[10px] font-mono uppercase font-bold border-b ${
- isStitchLight ? 'text-[var(--ink-2)] ' : 'text-zinc-400 border-zinc-800'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-zinc-400 border-zinc-800'
  }`}>
  Mover {selectedCount} {itemLabel} a:
  </div>
@@ -174,7 +174,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  setIsStatusDropdownOpen(false);
  }}
  className={`w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer ${
- isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-zinc-800'
+ isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-zinc-800'
  } ${opt.color}`}
  >
  <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -193,8 +193,8 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onClick={onBulkGeneratePitches}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ? 'bg-purple-100 hover:bg-purple-200 border-purple-300 text-purple-900'
- : 'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-purple-500/50 text-purple-200'
+ ?'bg-purple-100 hover:bg-purple-200 border-purple-300 text-purple-900'
+ :'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-purple-500/50 text-purple-200'
  }`}
  title="Generar propuestas de pitch con IA para todos los seleccionados"
  >
@@ -209,8 +209,8 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onClick={onBulkEnrich}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ? 'bg-sky-100 hover:bg-sky-200 border-sky-300 text-sky-900'
- : 'bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800 border-sky-500/50 text-sky-200'
+ ?'bg-sky-100 hover:bg-sky-200 border-sky-300 text-sky-900'
+ :'bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800 border-sky-500/50 text-sky-200'
  }`}
  title="Buscar y enriquecer teléfonos, emails y redes con Scout IA"
  >
@@ -225,8 +225,8 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onClick={() => onBulkToggleFavorite(true)}
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
  isStitchLight
- ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-amber-600'
- : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-amber-300'
+ ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-amber-600'
+ :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-amber-300'
  }`}
  title="Marcar como favoritos"
  >
@@ -239,8 +239,8 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onClick={onBulkExportCsv}
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-semibold transition-all flex items-center gap-1 cursor-pointer ${
  isStitchLight
- ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
+ ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
  }`}
  title="Exportar selección a CSV"
  >
@@ -263,7 +263,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`hidden md:flex p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
- isStitchLight ? 'text-[var(--ink-3)] hover:bg-[var(--sunken)]' : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-white'
  }`}
  title="Deseleccionar todo"
  >

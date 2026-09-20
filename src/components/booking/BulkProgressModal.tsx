@@ -1,11 +1,11 @@
-import React from 'react';
-import { Sparkles, CheckCircle2, AlertTriangle, X, Loader2 } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React from'react';
+import { Sparkles, CheckCircle2, AlertTriangle, X, Loader2 } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
 
 export interface BulkProgressItem {
  id: string;
  name: string;
- status: 'pending' | 'processing' | 'in_progress' | 'success' | 'error';
+ status:'pending' |'processing' |'in_progress' |'success' |'error';
  message?: string;
  detail?: string;
 }
@@ -36,8 +36,8 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  if (!isOpen) return null;
 
  const percentage = totalCount > 0 ? Math.round(((currentIndex + (isCompleted ? 1 : 0)) / totalCount) * 100) : 0;
- const successCount = items.filter(i => i.status === 'success').length;
- const errorCount = items.filter(i => i.status === 'error').length;
+ const successCount = items.filter(i => i.status ==='success').length;
+ const errorCount = items.filter(i => i.status ==='error').length;
 
  return (
  <ModalPortal isOpen={isOpen} onClose={isCompleted ? onClose : undefined}>
@@ -59,7 +59,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  {title}
  </h3>
  <p className="text-xs text-zinc-400 font-mono">
- {subtitle || (isCompleted ? 'Proceso completado' : `Procesando ${currentIndex + 1} de ${totalCount}...`)}
+ {subtitle || (isCompleted ?'Proceso completado' : `Procesando ${currentIndex + 1} de ${totalCount}...`)}
  </p>
  </div>
  </div>
@@ -86,8 +86,8 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <div
  className={`h-full transition-all duration-300 rounded-full ${
  isCompleted 
- ? 'bg-gradient-to-r from-emerald-500 to-teal-400' 
- : 'bg-gradient-to-r from-amber-500 via-[var(--acc)] to-yellow-300'
+ ?'bg-gradient-to-r from-emerald-500 to-teal-400' 
+ :'bg-gradient-to-r from-amber-500 via-[var(--acc)] to-yellow-300'
  }`}
  style={{ width: `${Math.min(100, Math.max(0, percentage))}%` }}
  />
@@ -113,16 +113,16 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  {items.map((item, idx) => (
  <div key={item.id || idx} className="pt-2 first:pt-0 flex items-center justify-between gap-2 text-xs font-mono">
  <div className="flex items-center gap-2 min-w-0 flex-1">
- {item.status === 'processing' && (
+ {item.status ==='processing' && (
  <Loader2 className="w-3.5 h-3.5 text-amber-400 animate-spin shrink-0" />
  )}
- {item.status === 'success' && (
+ {item.status ==='success' && (
  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
  )}
- {item.status === 'error' && (
+ {item.status ==='error' && (
  <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
  )}
- {item.status === 'pending' && (
+ {item.status ==='pending' && (
  <div className="w-3.5 h-3.5 rounded-full border-zinc-600 shrink-0" />
  )}
  <span className="text-zinc-200 truncate font-semibold">
@@ -131,14 +131,14 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  <span className={`text-[11px] shrink-0 truncate max-w-[180px] ${
- item.status === 'processing' ? 'text-amber-400' :
- item.status === 'success' ? 'text-emerald-400' :
- item.status === 'error' ? 'text-rose-400' : 'text-zinc-500'
+ item.status ==='processing' ?'text-amber-400' :
+ item.status ==='success' ?'text-emerald-400' :
+ item.status ==='error' ?'text-rose-400' :'text-zinc-500'
  }`}>
  {item.message || (
- item.status === 'processing' ? 'Procesando...' :
- item.status === 'success' ? 'Listo' :
- item.status === 'error' ? 'Error' : 'En cola'
+ item.status ==='processing' ?'Procesando...' :
+ item.status ==='success' ?'Listo' :
+ item.status ==='error' ?'Error' :'En cola'
  )}
  </span>
  </div>

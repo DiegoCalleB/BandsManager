@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from'react';
 import { 
  ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell 
-} from 'recharts';
-import { Disc3, Building2, DollarSign, Users, ArrowRight, Zap, TrendingUp, Sparkles, Filter } from 'lucide-react';
-import { Lead, Concert, Fan, ThemeColors } from '../../../types';
-import { getEnergyInfo } from '../../../utils/energyPacingUtils';
+} from'recharts';
+import { Disc3, Building2, DollarSign, Users, ArrowRight, Zap, TrendingUp, Sparkles, Filter } from'lucide-react';
+import { Lead, Concert, Fan, ThemeColors } from'../../../types';
+import { getEnergyInfo } from'../../../utils/energyPacingUtils';
 
 export interface ChartWidgetProps {
  leads?: Lead[];
@@ -15,11 +15,11 @@ export interface ChartWidgetProps {
  colors?: ThemeColors;
  isStitchLight?: boolean;
  onNavigate?: (view: string, options?: any) => void;
- heightMode?: 'compact' | 'normal' | 'tall';
+ heightMode?:'compact' |'normal' |'tall';
 }
 
 /* 1. GRÁFICO DE ENERGÍA DE REPERTORIO & SETLIST */
-export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }: ChartWidgetProps) {
  // Try to load setlists and songs from localStorage
  let setlistsList: any[] = [];
  let songsList: any[] = [];
@@ -38,7 +38,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
  } catch {}
 
  const [selectedSetlistId, setSelectedSetlistId] = useState<string>(() => {
- return setlistsList[0]?.id || 'default_demo_setlist';
+ return setlistsList[0]?.id ||'default_demo_setlist';
  });
 
  // Prepare chart data for active setlist or fallback demo setlist
@@ -65,7 +65,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
  title: item.title || matchedSong?.titulo || `Tema ${idx + 1}`,
  energy: energyVal,
  bpm: item.bpm || matchedSong?.bpm || 120,
- keyStr: item.tonalidad || matchedSong?.tonalidad || 'Am',
+ keyStr: item.tonalidad || matchedSong?.tonalidad ||'Am',
  label: energyInfo.label,
  hexColor: energyInfo.hexColor,
  durationMin: item.duracion_segundos ? Math.round(item.duracion_segundos / 60) : 4
@@ -80,7 +80,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
  title: song.titulo || `Canción ${idx + 1}`,
  energy: energyVal,
  bpm: song.bpm || 120,
- keyStr: song.tonalidad || 'C',
+ keyStr: song.tonalidad ||'C',
  label: energyInfo.label,
  hexColor: energyInfo.hexColor,
  durationMin: 4
@@ -89,15 +89,15 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
  } else {
  // Standard default setlist for immediate demo
  const demoItems = [
- { title: 'Intro / Apertura', energy: 16, bpm: 135, keyStr: 'Em', dur: 3 },
- { title: 'Fuego en la Noche', energy: 18, bpm: 142, keyStr: 'Am', dur: 4 },
- { title: 'Camino Sagrado', energy: 14, bpm: 118, keyStr: 'Dm', dur: 4 },
- { title: 'Mar de Dudas', energy: 8, bpm: 90, keyStr: 'G', dur: 5 },
- { title: 'Viento del Sur (Acústico)', energy: 6, bpm: 85, keyStr: 'C', dur: 4 },
- { title: 'Resurrección (In Crescendo)', energy: 15, bpm: 128, keyStr: 'Em', dur: 5 },
- { title: 'Gritando al Viento', energy: 19, bpm: 150, keyStr: 'Bm', dur: 4 },
- { title: 'Clímax Final', energy: 20, bpm: 155, keyStr: 'E', dur: 6 },
- { title: 'Bis: Himno de la Banda', energy: 17, bpm: 138, keyStr: 'A', dur: 5 }
+ { title:'Intro / Apertura', energy: 16, bpm: 135, keyStr:'Em', dur: 3 },
+ { title:'Fuego en la Noche', energy: 18, bpm: 142, keyStr:'Am', dur: 4 },
+ { title:'Camino Sagrado', energy: 14, bpm: 118, keyStr:'Dm', dur: 4 },
+ { title:'Mar de Dudas', energy: 8, bpm: 90, keyStr:'G', dur: 5 },
+ { title:'Viento del Sur (Acústico)', energy: 6, bpm: 85, keyStr:'C', dur: 4 },
+ { title:'Resurrección (In Crescendo)', energy: 15, bpm: 128, keyStr:'Em', dur: 5 },
+ { title:'Gritando al Viento', energy: 19, bpm: 150, keyStr:'Bm', dur: 4 },
+ { title:'Clímax Final', energy: 20, bpm: 155, keyStr:'E', dur: 6 },
+ { title:'Bis: Himno de la Banda', energy: 17, bpm: 138, keyStr:'A', dur: 5 }
  ];
  chartData = demoItems.map((item, idx) => {
  const energyInfo = getEnergyInfo(item.energy);
@@ -116,11 +116,11 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
 
  const avgEnergy = chartData.length > 0 
  ? (chartData.reduce((acc, curr) => acc + curr.energy, 0) / chartData.length).toFixed(1)
- : '12.0';
+ :'12.0';
  const totalDuration = chartData.reduce((acc, curr) => acc + curr.durationMin, 0);
 
  // Height container class based on heightMode
- const minHeightClass = heightMode === 'compact' ? 'h-[220px]' : heightMode === 'tall' ? 'h-[380px]' : 'h-[290px]';
+ const minHeightClass = heightMode ==='compact' ?'h-[220px]' : heightMode ==='tall' ?'h-[380px]' :'h-[290px]';
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
@@ -135,7 +135,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
  Energía del repertorio
  </h3>
  <p className="text-[11px] text-[var(--ink-3)]">
- {activeSetlist ? activeSetlist.nombre || 'Setlist activo' : 'Perfil de ritmo del bolo'}
+ {activeSetlist ? activeSetlist.nombre ||'Setlist activo' :'Perfil de ritmo del bolo'}
  </p>
  </div>
  </div>
@@ -149,7 +149,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
  className="bg-[var(--sunken)] text-[var(--acc-ink)] text-[11px] font-semibold rounded-[var(--r-s)] px-2.5 py-1 pr-6 cursor-pointer outline-none focus:ring-2 focus:ring-[var(--acc)]"
  >
  {setlistsList.map(s => (
- <option key={s.id} value={s.id}>{s.nombre || 'Setlist sin nombre'}</option>
+ <option key={s.id} value={s.id}>{s.nombre ||'Setlist sin nombre'}</option>
  ))}
  </select>
  </div>
@@ -202,7 +202,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
  fontFamily="monospace"
  tickFormatter={(val, idx) => {
  const title = chartData[idx]?.title;
- return title && title.length > 8 ? `${val}. ${title.substring(0, 6)}..` : `${val}. ${title || ''}`;
+ return title && title.length > 8 ? `${val}. ${title.substring(0, 6)}..` : `${val}. ${title ||''}`;
  }}
  />
  <YAxis stroke="#71717a" fontSize={10} domain={[0, 20]} ticks={[5, 10, 15, 20]} />
@@ -231,8 +231,8 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
  strokeWidth={3} 
  fillOpacity={1} 
  fill="url(#energyGradient)" 
- dot={{ r: 4, fill: '#f59e0b', strokeWidth: 2, stroke: '#18181b' }}
- activeDot={{ r: 6, fill: '#8b5cf6', stroke: '#ffffff', strokeWidth: 2 }}
+ dot={{ r: 4, fill:'#f59e0b', strokeWidth: 2, stroke:'#18181b' }}
+ activeDot={{ r: 6, fill:'#8b5cf6', stroke:'#ffffff', strokeWidth: 2 }}
  />
  </AreaChart>
  </ResponsiveContainer>
@@ -242,31 +242,31 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
 }
 
 /* 2. GRÁFICO DE EMBUDO Y CONVERSIÓN DE BOOKING */
-export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='normal' }: ChartWidgetProps) {
  const counts = {
- nuevo: leads.filter(l => l.estado === 'nuevo').length,
- contactado: leads.filter(l => l.estado === 'contactado' || l.estado === 'esperando_respuesta').length,
- aprobacion: leads.filter(l => l.estado === 'pendiente_aprobacion').length,
- negociando: leads.filter(l => l.estado === 'respondido' || l.estado === 'interesado' || l.estado === 'negociando').length,
- confirmado: leads.filter(l => l.estado === 'confirmado').length,
+ nuevo: leads.filter(l => l.estado ==='nuevo').length,
+ contactado: leads.filter(l => l.estado ==='contactado' || l.estado ==='esperando_respuesta').length,
+ aprobacion: leads.filter(l => l.estado ==='pendiente_aprobacion').length,
+ negociando: leads.filter(l => l.estado ==='respondido' || l.estado ==='interesado' || l.estado ==='negociando').length,
+ confirmado: leads.filter(l => l.estado ==='confirmado').length,
  };
 
  const funnelData = [
- { name: 'Nuevos', count: counts.nuevo, color: '#38bdf8' },
- { name: 'Contactados', count: counts.contactado, color: '#818cf8' },
- { name: 'Por Aprobar', count: counts.aprobacion, color: '#c084fc' },
- { name: 'Negociando', count: counts.negociando, color: '#f59e0b' },
- { name: 'Confirmados', count: counts.confirmado, color: '#10b981' }
+ { name:'Nuevos', count: counts.nuevo, color:'#38bdf8' },
+ { name:'Contactados', count: counts.contactado, color:'#818cf8' },
+ { name:'Por Aprobar', count: counts.aprobacion, color:'#c084fc' },
+ { name:'Negociando', count: counts.negociando, color:'#f59e0b' },
+ { name:'Confirmados', count: counts.confirmado, color:'#10b981' }
  ];
 
  const total = leads.length || 1;
  const conversionRate = ((counts.confirmado / total) * 100).toFixed(1);
 
- const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
+ const minHeightClass = heightMode ==='compact' ?'h-[200px]' : heightMode ==='tall' ?'h-[360px]' :'h-[270px]';
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- <div className="flex items-center justify-between pb-2.5 border-b ">
+ <div className="flex items-center justify-between pb-2.5 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-sky-500/15 text-sky-400 shrink-0">
  <Building2 className="w-5 h-5" />
@@ -337,26 +337,26 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
 }
 
 /* 3. GRÁFICO DE FINANZAS Y CACHÉ POR CONCIERTO */
-export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='normal' }: ChartWidgetProps) {
  // Aggregate revenue and average cache
  const defaultMonths = [
- { month: 'Ene', ingresos: 1200, gastos: 450, cacheMedio: 1200 },
- { month: 'Feb', ingresos: 1800, gastos: 600, cacheMedio: 1500 },
- { month: 'Mar', ingresos: 2400, gastos: 800, cacheMedio: 1800 },
- { month: 'Abr', ingresos: 3100, gastos: 950, cacheMedio: 2000 },
- { month: 'May', ingresos: 4200, gastos: 1200, cacheMedio: 2200 },
- { month: 'Jun', ingresos: 5800, gastos: 1600, cacheMedio: 2500 },
+ { month:'Ene', ingresos: 1200, gastos: 450, cacheMedio: 1200 },
+ { month:'Feb', ingresos: 1800, gastos: 600, cacheMedio: 1500 },
+ { month:'Mar', ingresos: 2400, gastos: 800, cacheMedio: 1800 },
+ { month:'Abr', ingresos: 3100, gastos: 950, cacheMedio: 2000 },
+ { month:'May', ingresos: 4200, gastos: 1200, cacheMedio: 2200 },
+ { month:'Jun', ingresos: 5800, gastos: 1600, cacheMedio: 2500 },
  ];
 
  const totalIngresos = defaultMonths.reduce((acc, m) => acc + m.ingresos, 0);
  const totalGastos = defaultMonths.reduce((acc, m) => acc + m.gastos, 0);
  const beneficio = totalIngresos - totalGastos;
 
- const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
+ const minHeightClass = heightMode ==='compact' ?'h-[200px]' : heightMode ==='tall' ?'h-[360px]' :'h-[270px]';
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- <div className="flex items-center justify-between pb-2.5 border-b ">
+ <div className="flex items-center justify-between pb-2.5 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/15 text-emerald-400 shrink-0">
  <DollarSign className="w-5 h-5" />
@@ -426,21 +426,21 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
 }
 
 /* 4. GRÁFICO DE CRECIMIENTO DE FANS & SOCIAL */
-export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='normal' }: ChartWidgetProps) {
  const fansCount = fans.length;
  const growthData = [
- { mes: 'Ene', fans: Math.max(5, Math.round(fansCount * 0.2)), qrScans: 12 },
- { mes: 'Feb', fans: Math.max(12, Math.round(fansCount * 0.4)), qrScans: 28 },
- { mes: 'Mar', fans: Math.max(25, Math.round(fansCount * 0.6)), qrScans: 45 },
- { mes: 'Abr', fans: Math.max(40, Math.round(fansCount * 0.8)), qrScans: 62 },
- { mes: 'May', fans: Math.max(60, fansCount || 85), qrScans: 90 }
+ { mes:'Ene', fans: Math.max(5, Math.round(fansCount * 0.2)), qrScans: 12 },
+ { mes:'Feb', fans: Math.max(12, Math.round(fansCount * 0.4)), qrScans: 28 },
+ { mes:'Mar', fans: Math.max(25, Math.round(fansCount * 0.6)), qrScans: 45 },
+ { mes:'Abr', fans: Math.max(40, Math.round(fansCount * 0.8)), qrScans: 62 },
+ { mes:'May', fans: Math.max(60, fansCount || 85), qrScans: 90 }
  ];
 
- const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
+ const minHeightClass = heightMode ==='compact' ?'h-[200px]' : heightMode ==='tall' ?'h-[360px]' :'h-[270px]';
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- <div className="flex items-center justify-between pb-2.5 border-b ">
+ <div className="flex items-center justify-between pb-2.5 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400 shrink-0">
  <Users className="w-5 h-5" />

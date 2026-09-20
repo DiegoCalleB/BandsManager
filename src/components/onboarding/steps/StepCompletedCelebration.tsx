@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from'react';
 import { 
  Sparkles, CheckCircle2, Globe, Heart, ExternalLink, 
  Copy, Check, ArrowRight, Disc3, Layers, Calendar, Users 
-} from 'lucide-react';
+} from'lucide-react';
 
 interface StepCompletedCelebrationProps {
  bandName: string;
@@ -31,9 +31,9 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  const epkUrl = `${window.location.origin}/epk`;
  const fansUrl = `${window.location.origin}/fans`;
 
- const copyToClipboard = (text: string, type: 'epk' | 'fans') => {
+ const copyToClipboard = (text: string, type:'epk' |'fans') => {
  navigator.clipboard.writeText(text);
- if (type === 'epk') {
+ if (type ==='epk') {
  setCopiedEpk(true);
  setTimeout(() => setCopiedEpk(false), 2500);
  } else {
@@ -51,7 +51,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
 
  <div>
  <h3 className="text-2xl font-bold text-white mb-1">
- ¡Perfil y Dossier de {bandName || 'tu Banda'} Listos!
+ ¡Perfil y Dossier de {bandName ||'tu Banda'} Listos!
  </h3>
  <p className="text-sm text-zinc-400 max-w-md mx-auto">
  Tus dos portales públicos interactivos ya están completamente operativos y sincronizados con tus datos.
@@ -105,7 +105,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  </a>
  <button
  type="button"
- onClick={() => copyToClipboard(epkUrl, 'epk')}
+ onClick={() => copyToClipboard(epkUrl,'epk')}
  className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace EPK"
  >
@@ -141,7 +141,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  </a>
  <button
  type="button"
- onClick={() => copyToClipboard(fansUrl, 'fans')}
+ onClick={() => copyToClipboard(fansUrl,'fans')}
  className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace Fans"
  >

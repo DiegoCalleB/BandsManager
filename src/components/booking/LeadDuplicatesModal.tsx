@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from'react';
 import {
  X,
  Copy,
@@ -15,17 +15,17 @@ import {
  ExternalLink,
  ShieldCheck,
  Check
-} from 'lucide-react';
-import { Lead } from '../../types';
+} from'lucide-react';
+import { Lead } from'../../types';
 import {
  findDuplicateLeads,
  DuplicateGroup,
  DuplicateMatchReason,
  mergeTwoLeads,
  calculateLeadCompletenessScore
-} from '../../utils/duplicateLeads';
-import { ModalPortal } from '../common/ModalPortal';
-import { apiFetch } from '../../utils/api';
+} from'../../utils/duplicateLeads';
+import { ModalPortal } from'../common/ModalPortal';
+import { apiFetch } from'../../utils/api';
 
 interface LeadDuplicatesModalProps {
  isOpen: boolean;
@@ -58,7 +58,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  const duplicateGroups = useMemo(() => {
  return rawGroups.filter(g => {
  if (ignoredGroupIds.has(g.id)) return false;
- if (selectedFilter === 'all') return true;
+ if (selectedFilter ==='all') return true;
  return g.matchReason === selectedFilter;
  });
  }, [rawGroups, ignoredGroupIds, selectedFilter]);
@@ -87,7 +87,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  // 1. Actualizar el lead principal en el backend
  await apiFetch(`/api/leads/${mergedLead.id}`, {
- method: 'PUT',
+ method:'PUT',
  body: JSON.stringify(mergedLead)
  });
  onUpdateLead?.(mergedLead);
@@ -97,13 +97,13 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  if (idsToDelete.length > 0) {
  try {
  await apiFetch('/api/leads/bulk-delete', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({ ids: idsToDelete })
  });
  } catch {
  // Fallback a borrado individual si bulk falla
  for (const id of idsToDelete) {
- await apiFetch(`/api/leads/${id}`, { method: 'DELETE' });
+ await apiFetch(`/api/leads/${id}`, { method:'DELETE' });
  }
  }
 
@@ -112,7 +112,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  setIgnoredGroupIds(prev => new Set(prev).add(group.id));
  window.dispatchEvent(new CustomEvent('app-data-updated'));
- setSuccessMessage(`Sala "${mergedLead.nombre_sala}" fusionada con éxito.`);
+ setSuccessMessage(`Sala"${mergedLead.nombre_sala}" fusionada con éxito.`);
  setTimeout(() => setSuccessMessage(null), 3500);
  } catch (err: any) {
  console.error('Error al fusionar grupo:', err);
@@ -124,14 +124,14 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  // Eliminar un lead individual duplicado
  const handleDeleteSingleLead = async (leadId: string, leadName: string) => {
- if (!confirm(`¿Seguro que deseas eliminar el registro duplicado "${leadName}"?`)) return;
+ if (!confirm(`¿Seguro que deseas eliminar el registro duplicado"${leadName}"?`)) return;
 
  setIsProcessing(true);
  try {
- await apiFetch(`/api/leads/${leadId}`, { method: 'DELETE' });
+ await apiFetch(`/api/leads/${leadId}`, { method:'DELETE' });
  onDeleteLead?.(leadId);
  window.dispatchEvent(new CustomEvent('app-data-updated'));
- setSuccessMessage(`Registro "${leadName}" eliminado.`);
+ setSuccessMessage(`Registro"${leadName}" eliminado.`);
  setTimeout(() => setSuccessMessage(null), 3000);
  } catch (err) {
  console.error('Error deleting lead:', err);
@@ -163,7 +163,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  }
 
  await apiFetch(`/api/leads/${mergedLead.id}`, {
- method: 'PUT',
+ method:'PUT',
  body: JSON.stringify(mergedLead)
  });
  onUpdateLead?.(mergedLead);
@@ -172,12 +172,12 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  if (idsToDelete.length > 0) {
  try {
  await apiFetch('/api/leads/bulk-delete', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({ ids: idsToDelete })
  });
  } catch {
  for (const id of idsToDelete) {
- await apiFetch(`/api/leads/${id}`, { method: 'DELETE' });
+ await apiFetch(`/api/leads/${id}`, { method:'DELETE' });
  }
  }
  idsToDelete.forEach(id => onDeleteLead?.(id));
@@ -198,10 +198,10 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  const reasonCounts = {
  all: rawGroups.length,
- same_email: rawGroups.filter(g => g.matchReason === 'same_email').length,
- same_name_and_city: rawGroups.filter(g => g.matchReason === 'same_name_and_city').length,
- similar_name_same_city: rawGroups.filter(g => g.matchReason === 'similar_name_same_city').length,
- same_website: rawGroups.filter(g => g.matchReason === 'same_website').length,
+ same_email: rawGroups.filter(g => g.matchReason ==='same_email').length,
+ same_name_and_city: rawGroups.filter(g => g.matchReason ==='same_name_and_city').length,
+ similar_name_same_city: rawGroups.filter(g => g.matchReason ==='similar_name_same_city').length,
+ same_website: rawGroups.filter(g => g.matchReason ==='same_website').length,
  };
 
  return (
@@ -210,16 +210,16 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden transition-all ${
  isStitchLight
- ? 'bg-white text-[var(--ink)]'
- : 'bg-[#16161a] text-zinc-100'
+ ?'bg-white text-[var(--ink)]'
+ :'bg-[#16161a] text-zinc-100'
  }`}
  >
  {/* Header */}
  <div
  className={`p-4 sm:p-5 border-b flex items-center justify-between shrink-0 ${
  isStitchLight
- ? 'bg-[var(--bg)] '
- : 'bg-[var(--surface)] '
+ ?'bg-[var(--bg)]'
+ :'bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center gap-3">
@@ -232,10 +232,10 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  Detector y Limpiador de Duplicados
  </h2>
  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-500/15 text-amber-300">
- {duplicateGroups.length} {duplicateGroups.length === 1 ? 'grupo' : 'grupos'}
+ {duplicateGroups.length} {duplicateGroups.length === 1 ?'grupo' :'grupos'}
  </span>
  </div>
- <p className={`text-xs mt-0.5 ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-zinc-400'}`}>
+ <p className={`text-xs mt-0.5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-zinc-400'}`}>
  Detecta salas y contactos repetidos por email idéntico, nombre y ciudad, o dominios coincidentes.
  </p>
  </div>
@@ -246,8 +246,8 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={onClose}
  className={`p-2 rounded-[var(--r-m)] transition-colors cursor-pointer ${
  isStitchLight
- ? 'hover:bg-[var(--sunken)] text-[var(--ink-2)] '
- : 'hover:bg-neutral-800 text-zinc-400 hover:text-white '
+ ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ :'hover:bg-neutral-800 text-zinc-400 hover:text-white'
  }`}
  >
  <X className="w-5 h-5" />
@@ -265,7 +265,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  {/* Controls & Filter Bar */}
  <div
  className={`p-3 sm:px-5 border-b flex flex-wrap items-center justify-between gap-2.5 shrink-0 ${
- isStitchLight ? 'bg-[var(--sunken)]/60 ' : 'bg-[var(--surface)]/40 '
+ isStitchLight ?'bg-[var(--sunken)]/60' :'bg-[var(--surface)]/40'
  }`}
  >
  {/* Filter Pills */}
@@ -274,11 +274,11 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  onClick={() => setSelectedFilter('all')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
- selectedFilter === 'all'
- ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ selectedFilter ==='all'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ? 'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- : 'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
  }`}
  >
  Todos ({reasonCounts.all})
@@ -288,11 +288,11 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  onClick={() => setSelectedFilter('same_email')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
- selectedFilter === 'same_email'
- ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ selectedFilter ==='same_email'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ? 'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- : 'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
  }`}
  >
  Mismo Email ({reasonCounts.same_email})
@@ -303,11 +303,11 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  onClick={() => setSelectedFilter('same_name_and_city')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
- selectedFilter === 'same_name_and_city'
- ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ selectedFilter ==='same_name_and_city'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ? 'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- : 'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
  }`}
  >
  Mismo Nombre y Ciudad ({reasonCounts.same_name_and_city})
@@ -318,11 +318,11 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  onClick={() => setSelectedFilter('similar_name_same_city')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
- selectedFilter === 'similar_name_same_city'
- ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ selectedFilter ==='similar_name_same_city'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ? 'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- : 'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
  }`}
  >
  Nombre Similar ({reasonCounts.similar_name_same_city})
@@ -333,11 +333,11 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  onClick={() => setSelectedFilter('same_website')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
- selectedFilter === 'same_website'
- ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ selectedFilter ==='same_website'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ? 'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- : 'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
  }`}
  >
  Misma Web ({reasonCounts.same_website})
@@ -379,8 +379,8 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  key={group.id}
  className={`rounded-[var(--r-l)] p-4 transition-all ${
  isStitchLight
- ? 'bg-[var(--bg)]/70 shadow-xs'
- : 'bg-[var(--surface)]/60 /90'
+ ?'bg-[var(--bg)]/70 shadow-xs'
+ :'bg-[var(--surface)]/60 /90'
  }`}
  >
  {/* Group Top Info */}
@@ -416,11 +416,11 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`rounded-[var(--r-m)] p-3.5 flex flex-col justify-between transition-all ${
  isSuggested
  ? isStitchLight
- ? 'bg-amber-50/60 '
- : 'bg-[#1e1c15] /50 shadow-xs'
+ ?'bg-amber-50/60'
+ :'bg-[#1e1c15] /50 shadow-xs'
  : isStitchLight
- ? 'bg-white '
- : 'bg-[var(--surface)] '
+ ?'bg-white'
+ :'bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -438,13 +438,13 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  </div>
  <div className="flex items-center gap-1 text-xs text-zinc-400 mt-0.5">
  <MapPin className="w-3 h-3 text-zinc-500 shrink-0" />
- <span>{lead.ciudad || 'Sin ciudad'}</span>
+ <span>{lead.ciudad ||'Sin ciudad'}</span>
  {lead.region && <span>· {lead.region}</span>}
  </div>
  </div>
 
  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-neutral-800 text-zinc-300 capitalize shrink-0">
- {lead.estado || 'nuevo'}
+ {lead.estado ||'nuevo'}
  </span>
  </div>
 
@@ -495,8 +495,8 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => handleMergeGroup(group, lead.id)}
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
  isSuggested
- ? 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)]'
- : 'bg-neutral-800 hover:bg-neutral-700 text-zinc-200 '
+ ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)]'
+ :'bg-neutral-800 hover:bg-neutral-700 text-zinc-200'
  }`}
  title="Conserva este lead y añade todos los teléfonos, notas y datos de los demás"
  >
@@ -527,8 +527,8 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <div
  className={`p-3 sm:px-5 border-t flex items-center justify-between text-xs ${
  isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink-2)]'
- : 'bg-[var(--surface)] text-zinc-400'
+ ?'bg-[var(--bg)] text-[var(--ink-2)]'
+ :'bg-[var(--surface)] text-zinc-400'
  }`}
  >
  <span>
@@ -537,7 +537,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-m)] font-medium bg-neutral-800 hover:bg-neutral-700 text-zinc-200 transition cursor-pointer "
+ className="px-4 py-1.5 rounded-[var(--r-m)] font-medium bg-neutral-800 hover:bg-neutral-700 text-zinc-200 transition cursor-pointer"
  >
  Cerrar
  </button>

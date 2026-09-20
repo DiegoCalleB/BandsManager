@@ -1,9 +1,9 @@
-import React from 'react';
+import React from'react';
 import { 
  Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, ArrowRight, 
  CheckCircle2, Clock, AlertCircle, Sparkles, QrCode, Disc3, ShieldCheck
-} from 'lucide-react';
-import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../../types';
+} from'lucide-react';
+import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from'../../../types';
 
 export interface ModuleWidgetProps {
  leads?: Lead[];
@@ -22,9 +22,9 @@ export interface ModuleWidgetProps {
 
 /* 1. CRM PIPELINE WIDGET */
 export function CrmPipelineWidget({ leads = [], onNavigate, isStitchLight }: ModuleWidgetProps) {
- const urgentRepliesNeeded = leads.filter(l => l.estado === 'interesado' || l.estado === 'negociando');
- const urgentApprovalsNeeded = leads.filter(l => l.estado === 'pendiente_aprobacion' || (l.pitch_generado && l.estado === 'nuevo'));
- const confirmedShows = leads.filter(l => l.estado === 'confirmado');
+ const urgentRepliesNeeded = leads.filter(l => l.estado ==='interesado' || l.estado ==='negociando');
+ const urgentApprovalsNeeded = leads.filter(l => l.estado ==='pendiente_aprobacion' || (l.pitch_generado && l.estado ==='nuevo'));
+ const confirmedShows = leads.filter(l => l.estado ==='confirmado');
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
@@ -88,7 +88,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b ">
+ <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400">
  <Music className="w-5 h-5" />
@@ -112,7 +112,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
  )}
  </div>
 
- <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)] ">
+ <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)]">
  <div className="flex items-center gap-3">
  <Disc3 className="w-8 h-8 text-purple-400 animate-spin-slow shrink-0" />
  <div>
@@ -134,7 +134,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b ">
+ <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/15 text-emerald-400">
  <DollarSign className="w-5 h-5" />
@@ -176,7 +176,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
 export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b ">
+ <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
  <Users className="w-5 h-5" />
@@ -222,7 +222,7 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
 export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b ">
+ <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400">
  <BookOpen className="w-5 h-5" />
@@ -266,11 +266,11 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
 
 /* 6. AI AGENT WIDGET */
 export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWidgetProps) {
- const pendingApprovals = leads.filter(l => l.estado === 'pendiente_aprobacion').length;
+ const pendingApprovals = leads.filter(l => l.estado ==='pendiente_aprobacion').length;
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b ">
+ <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
  <Bot className="w-5 h-5" />
@@ -311,7 +311,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
 export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) {
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b ">
+ <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-sky-500/15 text-sky-400">
  <Truck className="w-5 h-5" />

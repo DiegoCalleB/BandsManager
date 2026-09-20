@@ -1,6 +1,6 @@
-import React from 'react';
-import { Trash2, FolderMinus, X } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React from'react';
+import { Trash2, FolderMinus, X } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
 
 export interface ConfirmDeleteAlbumData {
  albumName: string;
@@ -46,7 +46,7 @@ export function ConfirmDeleteAlbumModal({
  </div>
 
  <p className="text-xs text-[var(--ink-3)] leading-relaxed bg-neutral-800/60 p-3 rounded-[var(--r-m)] border-[var(--hair)]">
- Este disco contiene <strong className="text-white font-bold">{data.songCount} {data.songCount === 1 ? 'canción' : 'canciones'}</strong>. Selecciona la opción que prefieras para las canciones:
+ Este disco contiene <strong className="text-white font-bold">{data.songCount} {data.songCount === 1 ?'canción' :'canciones'}</strong>. Selecciona la opción que prefieras para las canciones:
  </p>
 
  <div className="space-y-2.5 pt-1">
@@ -64,7 +64,7 @@ export function ConfirmDeleteAlbumModal({
  <div>
  <div className="text-xs font-bold text-amber-300">Desvincular canciones (Recomendado)</div>
  <div className="text-[11px] text-amber-200/70 mt-0.5">
- Elimina el disco de la discografía pero mantiene sus canciones en el catálogo como "Sin Disco".
+ Elimina el disco de la discografía pero mantiene sus canciones en el catálogo como"Sin Disco".
  </div>
  </div>
  </button>

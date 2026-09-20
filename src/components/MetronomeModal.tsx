@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { X, Play, Pause, Disc, Zap, Volume2, VolumeX, Music, Clock } from 'lucide-react';
-import { Song, ThemeColors } from '../types';
-import { ModalPortal } from './common/ModalPortal';
+import React, { useState, useEffect, useRef } from'react';
+import { X, Play, Pause, Disc, Zap, Volume2, VolumeX, Music, Clock } from'lucide-react';
+import { Song, ThemeColors } from'../types';
+import { ModalPortal } from'./common/ModalPortal';
 
 interface MetronomeModalProps {
  isOpen: boolean;
@@ -100,7 +100,7 @@ export function MetronomeModal({
  gain.gain.value = volume * 0.6;
  }
 
- osc.type = 'sine';
+ osc.type ='sine';
 
  // Fast exponential decay for clean click sound
  gain.gain.setValueAtTime(gain.gain.value, time);
@@ -143,7 +143,7 @@ export function MetronomeModal({
  if (!audioCtxRef.current) {
  audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
  }
- if (audioCtxRef.current.state === 'suspended') {
+ if (audioCtxRef.current.state ==='suspended') {
  audioCtxRef.current.resume();
  }
 
@@ -236,7 +236,7 @@ export function MetronomeModal({
  <option value="">-- Seleccionar Canción --</option>
  {songs.map(song => (
  <option key={song.id} value={song.id}>
- {song.titulo} {song.bpm ? `(${song.bpm} BPM)` : '(Sin BPM definido)'}
+ {song.titulo} {song.bpm ? `(${song.bpm} BPM)` :'(Sin BPM definido)'}
  </option>
  ))}
  </select>
@@ -308,7 +308,7 @@ export function MetronomeModal({
  Compás ({timeSignature}/4):
  </span>
  <span className="font-mono text-amber-300 font-bold">
- Golpe {isPlaying ? currentBeat + 1 : '-'} / {timeSignature}
+ Golpe {isPlaying ? currentBeat + 1 :'-'} / {timeSignature}
  </span>
  </div>
 
@@ -323,9 +323,9 @@ export function MetronomeModal({
  className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-mono font-bold text-sm transition-all duration-75 ${
  isActive
  ? isAccent
- ? 'bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/50 scale-105'
- : 'bg-emerald-400 text-slate-950 border-emerald-300 shadow-lg shadow-emerald-500/50 scale-105'
- : 'bg-white/5 text-neutral-500 border-[var(--hair)]'
+ ?'bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/50 scale-105'
+ :'bg-emerald-400 text-slate-950 border-emerald-300 shadow-lg shadow-emerald-500/50 scale-105'
+ :'bg-white/5 text-neutral-500 border-[var(--hair)]'
  }`}
  >
  {idx + 1}
@@ -349,8 +349,8 @@ export function MetronomeModal({
  onClick={() => setTimeSignature(sig)}
  className={`py-1 text-xs font-bold rounded-[var(--r-s)] transition-colors cursor-pointer ${
  timeSignature === sig
- ? 'bg-amber-500 text-slate-950'
- : 'bg-black/40 text-[var(--ink-3)] hover:bg-white/10'
+ ?'bg-amber-500 text-slate-950'
+ :'bg-black/40 text-[var(--ink-3)] hover:bg-white/10'
  }`}
  >
  {sig}/4
@@ -378,19 +378,19 @@ export function MetronomeModal({
  </span>
  <div className="flex items-center gap-1.5 flex-wrap">
  {[
- { label: 'Balada (75)', val: 75 },
- { label: 'Pop/Mid (105)', val: 105 },
- { label: 'Ska/Disco (124)', val: 124 },
- { label: 'Rock (140)', val: 140 },
- { label: 'Punk (165)', val: 165 },
+ { label:'Balada (75)', val: 75 },
+ { label:'Pop/Mid (105)', val: 105 },
+ { label:'Ska/Disco (124)', val: 124 },
+ { label:'Rock (140)', val: 140 },
+ { label:'Punk (165)', val: 165 },
  ].map(p => (
  <button
  key={p.val}
  onClick={() => setBpm(p.val)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium cursor-pointer transition-colors ${
  bpm === p.val
- ? 'bg-amber-500/20 /50 text-amber-300 font-bold'
- : 'bg-white/5 border-[var(--hair)] text-[var(--ink-3)] hover:bg-white/10'
+ ?'bg-amber-500/20 /50 text-amber-300 font-bold'
+ :'bg-white/5 border-[var(--hair)] text-[var(--ink-3)] hover:bg-white/10'
  }`}
  >
  {p.label}
@@ -405,8 +405,8 @@ export function MetronomeModal({
  onClick={togglePlay}
  className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 shadow-xl transition-all cursor-pointer active:scale-98 ${
  isPlaying
- ? 'bg-rose-500 hover:bg-rose-600 text-white shadow-rose-500/25'
- : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-amber-500/25'
+ ?'bg-rose-500 hover:bg-rose-600 text-white shadow-rose-500/25'
+ :'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-amber-500/25'
  }`}
  >
  {isPlaying ? (

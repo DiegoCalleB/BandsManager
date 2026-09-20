@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from'react';
 import {
  Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame,
  Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle,
  Lock as LockIcon, ExternalLink, BookOpen, ChevronRight, ChevronDown, ChevronUp,
  Copy, Users, Headphones, MapPin, Share2, Play, Pause, Volume2, Ticket
-} from 'lucide-react';
-import { SocialPlatformsList, SocialLinks, PayPalLogo, BizumLogo } from './SocialPlatformsList';
-import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
-import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate, idiomasDisponiblesParaConcierto } from '../i18n/fansTranslations';
-import { renderBold } from '../utils/richText';
-import { safeUrl } from '../utils/safeUrl';
-import { sanitizeConcertDisplayName } from '../utils/fanUtils';
+} from'lucide-react';
+import { SocialPlatformsList, SocialLinks, PayPalLogo, BizumLogo } from'./SocialPlatformsList';
+import { useFanFormLanguage } from'../hooks/useFanFormLanguage';
+import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate, idiomasDisponiblesParaConcierto } from'../i18n/fansTranslations';
+import { renderBold } from'../utils/richText';
+import { safeUrl } from'../utils/safeUrl';
+import { sanitizeConcertDisplayName } from'../utils/fanUtils';
 
-import { Concert, EPKConfig, BandMember } from '../types';
+import { Concert, EPKConfig, BandMember } from'../types';
 
 export interface FansLandingProps {
  currentBandId?: string;
@@ -23,12 +23,12 @@ export interface FansLandingProps {
  previewConfig?: Partial<EPKConfig>;
  previewConcert?: Concert | null;
  previewConcertName?: string;
- previewView?: 'form' | 'success';
+ previewView?:'form' |'success';
  onClosePreview?: () => void;
 }
 
-const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ code, className = "w-4 h-3" }) => {
- if (code === 'es') {
+const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ code, className ="w-4 h-3" }) => {
+ if (code ==='es') {
  return (
  <svg className={`${className} rounded-xs shadow-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
  <path fill="#c60b1e" d="M0 0h640v480H0z"/>
@@ -36,7 +36,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
  </svg>
  );
  }
- if (code === 'en') {
+ if (code ==='en') {
  return (
  <svg className={`${className} rounded-xs shadow-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
  <path fill="#012169" d="M0 0h640v480H0z"/>
@@ -47,7 +47,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
  </svg>
  );
  }
- if (code === 'it') {
+ if (code ==='it') {
  return (
  <svg className={`${className} rounded-xs shadow-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
  <path fill="#009246" d="M0 0h213.3v480H0z"/>
@@ -56,7 +56,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
  </svg>
  );
  }
- if (code === 'cs') {
+ if (code ==='cs') {
  return (
  <svg className={`${className} rounded-xs shadow-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
  <path fill="#d7141a" d="M0 0h640v480H0z"/>
@@ -78,12 +78,12 @@ const FanFormLanguageSwitcher: React.FC<{ language: FanFormLanguage; onChange: (
  title={l.label}
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  language === l.code
- ? 'bg-amber-500/20 /60 text-amber-300 shadow-sm scale-105'
- : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover: hover:text-white opacity-80 hover:opacity-100'
+ ?'bg-amber-500/20 /60 text-amber-300 shadow-sm scale-105'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover: hover:text-white opacity-80 hover:opacity-100'
  }`}
  >
  <FlagIcon code={l.code} className="w-4 h-3 shrink-0" />
- <span className="uppercase">{l.code === 'en' ? 'GB' : l.code.toUpperCase()}</span>
+ <span className="uppercase">{l.code ==='en' ?'GB' : l.code.toUpperCase()}</span>
  </button>
  ))}
  </div>
@@ -98,18 +98,18 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  previewConfig,
  previewConcert,
  previewConcertName,
- previewView = 'form',
+ previewView ='form',
  onClosePreview
 }) => {
- const [activeTab, setActiveTab] = useState<'redes' | 'form'>('redes');
+ const [activeTab, setActiveTab] = useState<'redes' |'form'>('redes');
  const [formData, setFormData] = useState({
- nombre: '',
- email: '',
- ciudad: '',
- comoConocio: '',
- cancionFavorita: '',
- mensaje: '',
- instagram: '',
+ nombre:'',
+ email:'',
+ ciudad:'',
+ comoConocio:'',
+ cancionFavorita:'',
+ mensaje:'',
+ instagram:'',
  consentimiento: false,
  });
  
@@ -122,9 +122,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  const [isConcertLink, setIsConcertLink] = useState(Boolean(previewConcert || previewConcertName));
  const [language, setLanguage] = useFanFormLanguage(isPreview ? previewLanguage : undefined);
 
- // El idioma "del concierto": el que trae el QR (o el de la previsualización), capturado una
+ // El idioma"del concierto": el que trae el QR (o el de la previsualización), capturado una
  // sola vez al montar. A propósito NO seguimos a `language` según el fan va tocando el
- // selector: si es-tiquetara "English" en un show en Praga, tomar ahí el ancla habría hecho
+ // selector: si es-tiquetara"English" en un show en Praga, tomar ahí el ancla habría hecho
  // desaparecer el checo del selector (es/en da solo 2 idiomas). El idioma de fondo del
  // concierto se queda fijo; solo decide QUÉ 2-3 banderas se ofrecen, no cuál está activa.
  const [conciertoLanguage, setConciertoLanguage] = useState<FanFormLanguage>(() => language);
@@ -147,20 +147,20 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  // Si se solicita previsualizar directamente la pantalla de éxito
  useEffect(() => {
- if (isPreview && previewView === 'success') {
+ if (isPreview && previewView ==='success') {
  // La previsualización debe reflejar lo que el fan verá de verdad: si la banda no ha
  // rellenado descarga/cupón en el apartado QR, aquí tampoco se inventan (antes se colaban
  // los valores de Bakandeya y la banda creía tener un incentivo configurado).
  const inc = previewConfig?.incentivoFans || {
- mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!'
+ mensajeAgradecimiento:'¡Gracias por unirte a nuestra comunidad oficial!'
  };
  setSuccessData({
  success: true,
- message: inc.mensajeAgradecimiento || '¡Bienvenido a la comunidad!',
+ message: inc.mensajeAgradecimiento ||'¡Bienvenido a la comunidad!',
  incentivo: inc,
  isSimulated: true
  });
- } else if (isPreview && previewView === 'form') {
+ } else if (isPreview && previewView ==='form') {
  setSuccessData(null);
  }
  }, [isPreview, previewView, previewConfig]);
@@ -170,11 +170,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  vars ? interpolate(dict[key], vars) : dict[key];
 
  const DEFAULT_BAKANDEYA_SOCIALS: SocialLinks = {
- instagram: "https://instagram.com/bakandeya_oficial",
- spotify: "https://open.spotify.com/artist/bakandeya",
- youtube: "https://youtube.com/@bakandeya_oficial",
- tiktok: "https://tiktok.com/@bakandeya_oficial",
- website: "https://bandmanager.io"
+ instagram:"https://instagram.com/bakandeya_oficial",
+ spotify:"https://open.spotify.com/artist/bakandeya",
+ youtube:"https://youtube.com/@bakandeya_oficial",
+ tiktok:"https://tiktok.com/@bakandeya_oficial",
+ website:"https://bandmanager.io"
  };
 
  const [resolvedBandId, setResolvedBandId] = useState<string>('band-active');
@@ -193,11 +193,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  paypalUrl?: string;
  bizumTelefono?: string;
  ibanCuenta?: string;
- metodoPorDefecto?: 'revolut' | 'paypal' | 'bizum' | 'iban';
+ metodoPorDefecto?:'revolut' |'paypal' |'bizum' |'iban';
  titulo?: string;
  descripcion?: string;
  } | null>(null);
- const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal' | 'bizum' | 'iban'>('revolut');
+ const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' |'paypal' |'bizum' |'iban'>('revolut');
  const [copiedBizum, setCopiedBizum] = useState(false);
  const [miembros, setMiembros] = useState<BandMember[]>([]);
  const [upcomingConcerts, setUpcomingConcerts] = useState<Concert[]>([]);
@@ -237,7 +237,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  } else {
  audioPreviewRef.current.play().then(() => {
  setIsPlayingAudioPreview(true);
- trackClick('audio_preview', '', 'landing');
+ trackClick('audio_preview','','landing');
  }).catch((err) => {
  console.warn("Error playing audio preview:", err);
  setIsPlayingAudioPreview(false);
@@ -246,17 +246,17 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  };
 
  const handleShareWithFriend = async () => {
- const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+ const currentUrl = typeof window !=='undefined' ? window.location.href :'';
  const shareMessage = `¡Únete a la comunidad de ${bandName} para escuchar temas inéditos y conseguir descuentos exclusivos! 🎸 ${currentUrl}`;
  
- if (typeof navigator !== 'undefined' && navigator.share) {
+ if (typeof navigator !=='undefined' && navigator.share) {
  try {
  await navigator.share({
  title: `Comunidad Oficial de ${bandName}`,
  text: `¡Únete a la comunidad de ${bandName} para escuchar temas inéditos y conseguir descuentos! 🎸`,
  url: currentUrl,
  });
- trackClick('share_native', currentUrl, 'success');
+ trackClick('share_native', currentUrl,'success');
  return;
  } catch (err) {
  // Fallback to clipboard copy if cancelled or unsupported
@@ -267,7 +267,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  await navigator.clipboard.writeText(shareMessage);
  setCopiedShareLink(true);
  setTimeout(() => setCopiedShareLink(false), 2500);
- trackClick('share_copy', currentUrl, 'success');
+ trackClick('share_copy', currentUrl,'success');
  } catch {}
  };
 
@@ -276,15 +276,15 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  setClickCounts(prev => ({ ...prev, [key]: (prev[key] || 0) + 1 }));
  try {
  fetch('/api/public/track-click', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  band_id: resolvedBandId,
  platform: key,
  button_type: key,
  concert_id: concertId || previewConcert?.id || undefined,
  concert_date: previewConcert?.fecha || undefined,
- context: context || (activeTab === 'form' ? 'form' : 'redes')
+ context: context || (activeTab ==='form' ?'form' :'redes')
  }),
  keepalive: true
  }).catch(() => {});
@@ -293,10 +293,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  useEffect(() => {
  if (isPreview && previewConfig) {
- // Sin esto, resolvedBandId se quedaba en el valor inicial 'band-bakandeya' durante toda
+ // Sin esto, resolvedBandId se quedaba en el valor inicial'band-bakandeya' durante toda
  // la previsualización (el resto de estado sí se pisa con los datos de la banda real más
  // abajo) — y el enlace al Dossier/EPK, que se construye a partir de resolvedBandId, llevaba
- // a cualquier banda que abriera "Previsualizar Formulario" al EPK público de Bakandeya.
+ // a cualquier banda que abriera"Previsualizar Formulario" al EPK público de Bakandeya.
  if (initialBandId) setResolvedBandId(initialBandId);
  if (initialBandName) setBandName(initialBandName);
  if (initialBandLogo || previewConfig.logoUrl) {
@@ -338,36 +338,36 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  const params = new URLSearchParams(window.location.search);
  const queryBand = params.get('band_id') || params.get('band') || params.get('b');
  
- let storedBandId = '';
- let storedBandName = '';
- let storedBandLogo = '';
+ let storedBandId ='';
+ let storedBandName ='';
+ let storedBandLogo ='';
  try {
  const storedUser = localStorage.getItem('bakandeya_user') || localStorage.getItem('band_manager_user') || localStorage.getItem('band_manager_current_user');
  if (storedUser) {
  const parsed = JSON.parse(storedUser);
- storedBandId = parsed.band_id || parsed.bandId || '';
- storedBandName = parsed.bandName || parsed.name || '';
- storedBandLogo = parsed.logoUrl || parsed.logo_url || '';
+ storedBandId = parsed.band_id || parsed.bandId ||'';
+ storedBandName = parsed.bandName || parsed.name ||'';
+ storedBandLogo = parsed.logoUrl || parsed.logo_url ||'';
  }
  if (!storedBandId) {
- storedBandId = localStorage.getItem('band_manager_active_band_id') || '';
+ storedBandId = localStorage.getItem('band_manager_active_band_id') ||'';
  }
  } catch {}
 
  // Priority: 1. URL query param, 2. Props (if explicitly passed and differs from generic), 3. Logged-in stored user.
- const targetBandId = (queryBand || initialBandId || storedBandId || '').toLowerCase();
- const cleanId = targetBandId.replace(/^(band|reg)-/, '');
+ const targetBandId = (queryBand || initialBandId || storedBandId ||'').toLowerCase();
+ const cleanId = targetBandId.replace(/^(band|reg)-/,'');
  setResolvedBandId(targetBandId);
 
  // Initial fallback name & logo
- if (cleanId === 'bakandeya') {
+ if (cleanId ==='bakandeya') {
  setBandName('Bakandeya');
  setLogoUrl('/logo_bakandeya.jpg');
  setSocialLinks(DEFAULT_BAKANDEYA_SOCIALS);
  setContactoBooking(null);
  setMiembros([]);
  } else if (queryBand) {
- const formatted = cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+ const formatted = cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
  setBandName(formatted);
  setLogoUrl(null);
  setSocialLinks(undefined);
@@ -377,12 +377,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  setBandName(initialBandName);
  if (initialBandLogo) setLogoUrl(initialBandLogo);
  setMiembros([]);
- } else if (storedBandName && cleanId !== 'bakandeya') {
+ } else if (storedBandName && cleanId !=='bakandeya') {
  setBandName(storedBandName);
  if (storedBandLogo) setLogoUrl(storedBandLogo);
  setMiembros([]);
  } else if (cleanId) {
- const formatted = cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+ const formatted = cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
  setBandName(formatted);
  setLogoUrl(null);
  setMiembros([]);
@@ -401,7 +401,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  if (data.logoUrl || data.epkConfig?.logoUrl) {
  setLogoUrl(data.logoUrl || data.epkConfig.logoUrl);
  setImgError(false);
- } else if (cleanId === 'bakandeya') {
+ } else if (cleanId ==='bakandeya') {
  setLogoUrl('/logo_bakandeya.jpg');
  setImgError(false);
  } else {
@@ -410,7 +410,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  
  if (data.epkConfig?.enlacesRedes && Object.keys(data.epkConfig.enlacesRedes).length > 0) {
  setSocialLinks(data.epkConfig.enlacesRedes);
- } else if (cleanId === 'bakandeya') {
+ } else if (cleanId ==='bakandeya') {
  setSocialLinks(DEFAULT_BAKANDEYA_SOCIALS);
  }
 
@@ -434,18 +434,18 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  }
  } else if (data.epkConfig?.enlacesRedes?.revolut || data.epkConfig?.enlacesRedes?.paypal || data.epkConfig?.enlacesRedes?.bizum) {
  const rawRev = data.epkConfig.enlacesRedes.revolut?.trim();
- const revUrl = rawRev ? (rawRev.startsWith('http') ? rawRev : `https://revolut.me/${rawRev.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : undefined;
+ const revUrl = rawRev ? (rawRev.startsWith('http') ? rawRev : `https://revolut.me/${rawRev.replace(/^@/,'').replace(/^revolut\.me\//,'')}`) : undefined;
  const rawPay = data.epkConfig.enlacesRedes.paypal?.trim();
- const payUrl = rawPay ? (rawPay.startsWith('http') ? rawPay : `https://paypal.me/${rawPay.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : undefined;
+ const payUrl = rawPay ? (rawPay.startsWith('http') ? rawPay : `https://paypal.me/${rawPay.replace(/^@/,'').replace(/^paypal\.me\//,'')}`) : undefined;
  const rawBiz = data.epkConfig.enlacesRedes.bizum?.trim();
  setDonacionRevolut({
  habilitado: true,
  revolutUrl: revUrl,
- revolutTag: rawRev ? rawRev.replace(/^https?:\/\//, '').replace(/^revolut\.me\//, '').replace(/^@/, '') : undefined,
+ revolutTag: rawRev ? rawRev.replace(/^https?:\/\//,'').replace(/^revolut\.me\//,'').replace(/^@/,'') : undefined,
  paypalUrl: payUrl,
- paypalUser: rawPay ? rawPay.replace(/^https?:\/\//, '').replace(/^paypal\.me\//, '').replace(/^@/, '') : undefined,
+ paypalUser: rawPay ? rawPay.replace(/^https?:\/\//,'').replace(/^paypal\.me\//,'').replace(/^@/,'') : undefined,
  bizumTelefono: rawBiz,
- metodoPorDefecto: revUrl ? 'revolut' : (payUrl ? 'paypal' : 'bizum')
+ metodoPorDefecto: revUrl ?'revolut' : (payUrl ?'paypal' :'bizum')
  });
  } else {
  setDonacionRevolut(null);
@@ -460,8 +460,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  habilitado: true,
  cancionId: songWithAudio.id,
  tituloTema: songWithAudio.titulo,
- subtitulo: 'Dale al play para escuchar cómo sonamos',
- audioUrl: songWithAudio.audioPrincipalUrl || (songWithAudio.audioIdeas && songWithAudio.audioIdeas[0]?.audioUrl) || ''
+ subtitulo:'Dale al play para escuchar cómo sonamos',
+ audioUrl: songWithAudio.audioPrincipalUrl || (songWithAudio.audioIdeas && songWithAudio.audioIdeas[0]?.audioUrl) ||''
  });
  }
  }
@@ -478,22 +478,22 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  useEffect(() => {
  const pathParts = window.location.pathname.split('/').filter(Boolean);
- let slug = '';
+ let slug ='';
 
  if (pathParts.length > 1) {
  slug = pathParts[1];
- } else if (pathParts.length === 1 && !['unete', 'fans', 'directo', 'bakandeya', 'app'].includes(pathParts[0])) {
+ } else if (pathParts.length === 1 && !['unete','fans','directo','bakandeya','app'].includes(pathParts[0])) {
  slug = pathParts[0];
  }
 
- // Solo asumimos "vengo de un concierto" cuando el enlace realmente identifica uno
+ // Solo asumimos"vengo de un concierto" cuando el enlace realmente identifica uno
  // (slug de concierto o parámetros concertId/concertName en la URL). Un enlace genérico
- // (/unete, /fans, bio de Instagram...) no debe precontestar "¿Cómo nos conociste?" ni
- // mostrar el mensaje de "gracias por venir al concierto".
- if (slug && slug !== 'directo') {
- const formattedName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+ // (/unete, /fans, bio de Instagram...) no debe precontestar"¿Cómo nos conociste?" ni
+ // mostrar el mensaje de"gracias por venir al concierto".
+ if (slug && slug !=='directo') {
+ const formattedName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
  setConcertName(sanitizeConcertDisplayName(formattedName));
- setFormData(prev => ({ ...prev, comoConocio: 'Concierto' }));
+ setFormData(prev => ({ ...prev, comoConocio:'Concierto' }));
  setIsConcertLink(true);
  }
 
@@ -504,39 +504,39 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  if (cid) setConcertId(cid);
  if (cname) {
  setConcertName(sanitizeConcertDisplayName(cname));
- setFormData(prev => ({ ...prev, comoConocio: 'Concierto' }));
+ setFormData(prev => ({ ...prev, comoConocio:'Concierto' }));
  setIsConcertLink(true);
  }
  }, []);
 
  // safeUrl() al final: donacionRevolut.revolutUrl/paypalUrl es texto libre editado por el admin
  // de la banda y se renderiza como href en esta página pública sin sesión — sin filtrar el
- // esquema, un valor tipo "javascript:..." se ejecutaría en el navegador de cualquier fan.
- const rawRevolutTag = donacionRevolut?.revolutTag?.replace(/^@/, '').replace(/^revolut\.me\//i, '').trim() || '';
- const rawRevolutUrl = donacionRevolut?.revolutUrl?.trim() || '';
- const rawSocialRevolut = socialLinks?.revolut?.trim() || '';
+ // esquema, un valor tipo"javascript:..." se ejecutaría en el navegador de cualquier fan.
+ const rawRevolutTag = donacionRevolut?.revolutTag?.replace(/^@/,'').replace(/^revolut\.me\//i,'').trim() ||'';
+ const rawRevolutUrl = donacionRevolut?.revolutUrl?.trim() ||'';
+ const rawSocialRevolut = socialLinks?.revolut?.trim() ||'';
  const revolutUrl = safeUrl(
  rawRevolutUrl ||
- (rawRevolutTag ? (rawRevolutTag.startsWith('http') ? rawRevolutTag : `https://revolut.me/${rawRevolutTag}`) : '') ||
- (rawSocialRevolut ? (rawSocialRevolut.startsWith('http') ? rawSocialRevolut : `https://revolut.me/${rawSocialRevolut.replace(/^@/, '').replace(/^revolut\.me\//i, '')}`) : '')
- ) || '';
+ (rawRevolutTag ? (rawRevolutTag.startsWith('http') ? rawRevolutTag : `https://revolut.me/${rawRevolutTag}`) :'') ||
+ (rawSocialRevolut ? (rawSocialRevolut.startsWith('http') ? rawSocialRevolut : `https://revolut.me/${rawSocialRevolut.replace(/^@/,'').replace(/^revolut\.me\//i,'')}`) :'')
+ ) ||'';
 
- const rawPaypalUser = donacionRevolut?.paypalUser?.replace(/^@/, '').replace(/^paypal\.me\//i, '').trim() || '';
- const rawPaypalUrl = donacionRevolut?.paypalUrl?.trim() || '';
- const rawSocialPaypal = socialLinks?.paypal?.trim() || '';
+ const rawPaypalUser = donacionRevolut?.paypalUser?.replace(/^@/,'').replace(/^paypal\.me\//i,'').trim() ||'';
+ const rawPaypalUrl = donacionRevolut?.paypalUrl?.trim() ||'';
+ const rawSocialPaypal = socialLinks?.paypal?.trim() ||'';
  const paypalUrl = safeUrl(
  rawPaypalUrl ||
- (rawPaypalUser ? (rawPaypalUser.startsWith('http') ? rawPaypalUser : `https://paypal.me/${rawPaypalUser}`) : '') ||
- (rawSocialPaypal ? (rawSocialPaypal.startsWith('http') ? rawSocialPaypal : `https://paypal.me/${rawSocialPaypal.replace(/^@/, '').replace(/^paypal\.me\//i, '')}`) : '')
- ) || '';
+ (rawPaypalUser ? (rawPaypalUser.startsWith('http') ? rawPaypalUser : `https://paypal.me/${rawPaypalUser}`) :'') ||
+ (rawSocialPaypal ? (rawSocialPaypal.startsWith('http') ? rawSocialPaypal : `https://paypal.me/${rawSocialPaypal.replace(/^@/,'').replace(/^paypal\.me\//i,'')}`) :'')
+ ) ||'';
 
- const bizumPhone = (donacionRevolut?.bizumTelefono || socialLinks?.bizum || '').trim();
+ const bizumPhone = (donacionRevolut?.bizumTelefono || socialLinks?.bizum ||'').trim();
 
- const rawHandle = revolutUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
- const revolutDisplay = rawHandle || (rawRevolutTag ? `revolut.me/${rawRevolutTag}` : '');
+ const rawHandle = revolutUrl.replace(/^https?:\/\//,'').replace(/\/$/,'');
+ const revolutDisplay = rawHandle || (rawRevolutTag ? `revolut.me/${rawRevolutTag}` :'');
 
- const rawPaypalHandle = paypalUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
- const paypalDisplay = rawPaypalHandle || (rawPaypalUser ? `paypal.me/${rawPaypalUser}` : '');
+ const rawPaypalHandle = paypalUrl.replace(/^https?:\/\//,'').replace(/\/$/,'');
+ const paypalDisplay = rawPaypalHandle || (rawPaypalUser ? `paypal.me/${rawPaypalUser}` :'');
 
  const hasRevolut = Boolean(revolutUrl);
  const hasPaypal = Boolean(paypalUrl);
@@ -544,7 +544,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  const handleCopyBizum = (contextType: string) => {
  if (!bizumPhone) return;
- const cleanPhone = bizumPhone.replace(/[\s-]/g, '');
+ const cleanPhone = bizumPhone.replace(/[\s-]/g,'');
  if (navigator.clipboard && navigator.clipboard.writeText) {
  navigator.clipboard.writeText(cleanPhone).catch(() => {});
  }
@@ -558,26 +558,26 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  // Lleva &lang= con el idioma del concierto: así quien entra al EPK desde un Únete de Italia
  // lo ve en italiano por defecto, no en español. EpkLanguage y FanFormLanguage comparten
  // exactamente los mismos códigos (es/en/it/cs), así que conciertoLanguage vale tal cual.
- const epkUrl = (typeof window !== 'undefined'
+ const epkUrl = (typeof window !=='undefined'
  ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre') || window.location.origin.includes('run.app')
  ? `${window.location.origin}/epk`
- : 'https://bandmanager.io/epk')
- : 'https://bandmanager.io/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
+ :'https://bandmanager.io/epk')
+ :'https://bandmanager.io/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
 
- const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
+ const renderRevolutCard = (contextType:'redes' |'form' |'success' ='redes') => {
  if ((!revolutUrl && !paypalUrl && !hasBizum) || donacionRevolut?.habilitado === false) return null;
 
- const isSuccessScreen = contextType === 'success';
- const isFormScreen = contextType === 'form';
+ const isSuccessScreen = contextType ==='success';
+ const isFormScreen = contextType ==='form';
 
  const customTitle = donacionRevolut?.titulo?.trim();
  const isDefaultSpanishTitle =
  !customTitle ||
- customTitle === 'Colabora con una aportación económica' ||
- customTitle === 'Colabora con la banda' ||
- customTitle === 'Apoyo Económico & Donaciones';
+ customTitle ==='Colabora con una aportación económica' ||
+ customTitle ==='Colabora con la banda' ||
+ customTitle ==='Apoyo Económico & Donaciones';
 
- const label = (language === 'es' && !isDefaultSpanishTitle)
+ const label = (language ==='es' && !isDefaultSpanishTitle)
  ? customTitle
  : (isSuccessScreen
  ? t('revolutSuccessPrompt', { bandName })
@@ -589,7 +589,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  customDesc.includes('Tu aportación directa nos ayuda a financiar') ||
  customDesc.includes('financiar furgoneta de gira');
 
- const descText = (language === 'es' && !isDefaultSpanishDesc)
+ const descText = (language ==='es' && !isDefaultSpanishDesc)
  ? customDesc
  : (isSuccessScreen
  ? t('revolutSuccessPrompt', { bandName })
@@ -600,10 +600,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  const bizumClicks = clickCounts['bizum'] || 0;
  const totalClicks = revolutClicks + paypalClicks + bizumClicks;
 
- const preferredMethodSetting = (donacionRevolut?.metodoPorDefecto as 'revolut' | 'paypal' | 'bizum') || 'revolut';
+ const preferredMethodSetting = (donacionRevolut?.metodoPorDefecto as'revolut' |'paypal' |'bizum') ||'revolut';
  
  // Lista de métodos disponibles
- const availableMethods: Array<'revolut' | 'paypal' | 'bizum'> = [];
+ const availableMethods: Array<'revolut' |'paypal' |'bizum'> = [];
  if (hasRevolut) availableMethods.push('revolut');
  if (hasPaypal) availableMethods.push('paypal');
  if (hasBizum) availableMethods.push('bizum');
@@ -614,9 +614,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  const secondaryMethods = availableMethods.filter(m => m !== primaryMethod);
 
- const renderPaymentButton = (method: 'revolut' | 'paypal' | 'bizum', variant: 'full' | 'half') => {
- const isFull = variant === 'full';
- if (method === 'revolut') {
+ const renderPaymentButton = (method:'revolut' |'paypal' |'bizum', variant:'full' |'half') => {
+ const isFull = variant ==='full';
+ if (method ==='revolut') {
  return (
  <a
  key={`revolut-${variant}`}
@@ -624,30 +624,30 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => trackClick('revolut', revolutUrl, contextType)}
- className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] hover:/60 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow' : ''}`}
+ className={`group relative w-full flex items-center justify-center ${isFull ?'gap-3.5 p-4 min-h-[64px]' :'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] hover:/60 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ?'animate-donate-cta-glow' :''}`}
  >
  <span
  className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen"
  aria-hidden="true"
  />
- <div className={`${isFull ? 'w-8 h-8 sm:w-9 sm:h-9 p-1.5' : 'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-white text-black flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}>
+ <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-white text-black flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}>
  <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
  <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
  </svg>
  </div>
  <div className="text-center min-w-0">
- <span className={`${isFull ? 'text-sm sm:text-base' : 'text-xs'} font-extrabold text-white group-hover:text-amber-300 transition-colors block truncate leading-tight`}>
+ <span className={`${isFull ?'text-sm sm:text-base' :'text-xs'} font-extrabold text-white group-hover:text-amber-300 transition-colors block truncate leading-tight`}>
  Revolut
  </span>
- <span className={`${isFull ? 'text-xs' : 'text-[10px]'} text-[var(--ink-2)] font-mono block truncate group-hover:text-[var(--sunken)] leading-tight`}>
- {revolutDisplay.replace(/^revolut\.me\//, '@')}
+ <span className={`${isFull ?'text-xs' :'text-[10px]'} text-[var(--ink-2)] font-mono block truncate group-hover:text-[var(--sunken)] leading-tight`}>
+ {revolutDisplay.replace(/^revolut\.me\//,'@')}
  </span>
  </div>
  </a>
  );
  }
 
- if (method === 'paypal') {
+ if (method ==='paypal') {
  return (
  <a
  key={`paypal-${variant}`}
@@ -655,47 +655,47 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => trackClick('paypal', paypalUrl, contextType)}
- className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[#003087] hover:bg-[#00266e] hover:border-sky-300 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow-delayed' : ''}`}
+ className={`group relative w-full flex items-center justify-center ${isFull ?'gap-3.5 p-4 min-h-[64px]' :'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[#003087] hover:bg-[#00266e] hover:border-sky-300 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ?'animate-donate-cta-glow-delayed' :''}`}
  >
  <span
  className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"
  aria-hidden="true"
  />
- <div className={`${isFull ? 'w-8 h-8 sm:w-9 sm:h-9 p-1.5' : 'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-white text-[#003087] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}>
+ <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-white text-[#003087] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}>
  <PayPalLogo className="w-full h-full" />
  </div>
  <div className="text-center min-w-0">
- <span className={`${isFull ? 'text-sm sm:text-base' : 'text-xs'} font-extrabold text-white group-hover:text-amber-300 transition-colors block truncate leading-tight`}>
+ <span className={`${isFull ?'text-sm sm:text-base' :'text-xs'} font-extrabold text-white group-hover:text-amber-300 transition-colors block truncate leading-tight`}>
  PayPal
  </span>
- <span className={`${isFull ? 'text-xs' : 'text-[10px]'} text-sky-200 font-mono block truncate group-hover:text-white leading-tight`}>
- {paypalDisplay.replace(/^paypal\.me\//, '@')}
+ <span className={`${isFull ?'text-xs' :'text-[10px]'} text-sky-200 font-mono block truncate group-hover:text-white leading-tight`}>
+ {paypalDisplay.replace(/^paypal\.me\//,'@')}
  </span>
  </div>
  </a>
  );
  }
 
- if (method === 'bizum') {
+ if (method ==='bizum') {
  return (
  <button
  key={`bizum-${variant}`}
  type="button"
  onClick={() => handleCopyBizum(contextType)}
- className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-emerald-950/90 hover:bg-emerald-900/90 hover:border-emerald-400 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow' : ''}`}
+ className={`group relative w-full flex items-center justify-center ${isFull ?'gap-3.5 p-4 min-h-[64px]' :'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-emerald-950/90 hover:bg-emerald-900/90 hover:border-emerald-400 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ?'animate-donate-cta-glow' :''}`}
  >
  <span
  className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-emerald-300/15 to-transparent animate-donate-sheen"
  aria-hidden="true"
  />
- <div className={`${isFull ? 'w-8 h-8 sm:w-9 sm:h-9 p-1.5' : 'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-emerald-500 text-[var(--surface)] flex items-center justify-center shrink-0 shadow font-bold group-hover:scale-105 transition-transform`}>
+ <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-emerald-500 text-[var(--surface)] flex items-center justify-center shrink-0 shadow font-bold group-hover:scale-105 transition-transform`}>
  <BizumLogo className="w-full h-full" />
  </div>
  <div className="text-center min-w-0">
- <span className={`${isFull ? 'text-sm sm:text-base' : 'text-xs'} font-extrabold text-emerald-200 group-hover:text-white transition-colors block truncate leading-tight`}>
+ <span className={`${isFull ?'text-sm sm:text-base' :'text-xs'} font-extrabold text-emerald-200 group-hover:text-white transition-colors block truncate leading-tight`}>
  Bizum
  </span>
- <span className={`${isFull ? 'text-xs' : 'text-[10px]'} text-emerald-400 font-mono block truncate group-hover:text-emerald-300 leading-tight`}>
+ <span className={`${isFull ?'text-xs' :'text-[10px]'} text-emerald-400 font-mono block truncate group-hover:text-emerald-300 leading-tight`}>
  {bizumPhone}
  </span>
  </div>
@@ -712,7 +712,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  };
 
  return (
- <div className={isSuccessScreen ? 'pt-3 border-t text-left' : isFormScreen ? 'pt-2' : 'pt-1.5'}>
+ <div className={isSuccessScreen ?'pt-3 border-t text-left' : isFormScreen ?'pt-2' :'pt-1.5'}>
  <div className="relative rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)]/95 via-[var(--surface)]/90 to-[var(--surface)]/95 hover:/60 p-3.5 sm:p-4 shadow-2xl transition-all duration-300 text-left overflow-hidden">
  {/* Halo ambiental sutil */}
  <div className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-full bg-amber-500/10 blur-2xl" aria-hidden="true" />
@@ -722,10 +722,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
  <img
  src="/Screenshot_20260824_164054_Google.jpg"
- alt={t('revolutBadge') || 'Colaboración'}
+ alt={t('revolutBadge') ||'Colaboración'}
  className="w-full h-full object-cover scale-110 group-hover:scale-115 transition-transform duration-300"
  onError={(e) => {
- (e.currentTarget as HTMLElement).style.display = 'none';
+ (e.currentTarget as HTMLElement).style.display ='none';
  }}
  />
  </div>
@@ -735,7 +735,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  {label}
  </h3>
  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-bold shrink-0">
- {t('revolutBadge') || 'Contribución'}
+ {t('revolutBadge') ||'Contribución'}
  </span>
  </div>
  <p className="text-[11px] text-[var(--ink-3)]/90 leading-relaxed mt-1">
@@ -757,20 +757,20 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  {/* Botones de Pasarelas / Métodos de Pago */}
  <div className="pt-3">
  {availableMethods.length === 1 && (
- renderPaymentButton(availableMethods[0], 'full')
+ renderPaymentButton(availableMethods[0],'full')
  )}
 
  {availableMethods.length === 2 && (
  <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
- {availableMethods.map(m => renderPaymentButton(m, 'half'))}
+ {availableMethods.map(m => renderPaymentButton(m,'half'))}
  </div>
  )}
 
  {availableMethods.length === 3 && (
  <div className="space-y-2.5">
- {primaryMethod && renderPaymentButton(primaryMethod, 'full')}
+ {primaryMethod && renderPaymentButton(primaryMethod,'full')}
  <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
- {secondaryMethods.map(m => renderPaymentButton(m, 'half'))}
+ {secondaryMethods.map(m => renderPaymentButton(m,'half'))}
  </div>
  </div>
  )}
@@ -780,10 +780,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="pt-2.5 flex items-center justify-between text-[10px] text-neutral-500">
  <span className="flex items-center gap-1">
  <LockIcon className="w-3 h-3 text-neutral-500 shrink-0" />
- <span>{t('revolutSecureDirect') || 'Pago seguro y directo a la banda · Sin intermediarios'}</span>
+ <span>{t('revolutSecureDirect') ||'Pago seguro y directo a la banda · Sin intermediarios'}</span>
  </span>
  {totalClicks > 0 && (
- <span className="text-[9px] font-mono text-neutral-500 bg-[var(--surface)] px-1.5 py-0.5 rounded ">
+ <span className="text-[9px] font-mono text-neutral-500 bg-[var(--surface)] px-1.5 py-0.5 rounded">
  {totalClicks} {totalClicks === 1 ? t('clickSingular') : t('clickPlural')}
  </span>
  )}
@@ -808,11 +808,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  setTimeout(() => {
  setLoading(false);
  const inc = previewConfig?.incentivoFans || {
- mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!'
+ mensajeAgradecimiento:'¡Gracias por unirte a nuestra comunidad oficial!'
  };
  setSuccessData({
  success: true,
- message: inc.mensajeAgradecimiento || '¡Bienvenido a la comunidad!',
+ message: inc.mensajeAgradecimiento ||'¡Bienvenido a la comunidad!',
  incentivo: inc,
  isSimulated: true
  });
@@ -822,8 +822,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  
  try {
  const res = await fetch('/api/public/fans', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  band_id: resolvedBandId,
  nombre: formData.nombre,
@@ -854,13 +854,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  const incentivo = successData.incentivo || {};
  // Solo hay bloque de beneficios si la banda ha rellenado de verdad la descarga o el cupón
  // en el apartado QR; una cadena vacía o con espacios no cuenta como incentivo configurado.
- const enlaceDescargaFan = safeUrl(typeof incentivo.enlaceDescarga === 'string' ? incentivo.enlaceDescarga.trim() : '');
- const codigoDescuentoFan = typeof incentivo.codigoDescuento === 'string' ? incentivo.codigoDescuento.trim() : '';
+ const enlaceDescargaFan = safeUrl(typeof incentivo.enlaceDescarga ==='string' ? incentivo.enlaceDescarga.trim() :'');
+ const codigoDescuentoFan = typeof incentivo.codigoDescuento ==='string' ? incentivo.codigoDescuento.trim() :'';
  const tieneBeneficios = Boolean(enlaceDescargaFan || codigoDescuentoFan);
  
  return (
- <div className={`${isPreview ? 'min-h-full p-2 sm:p-4' : 'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[var(--bg)] flex items-start justify-center`}>
- <div className={`max-w-md w-full bg-[var(--surface)] rounded-[var(--r-l)] ${isPreview ? 'p-4 sm:p-6' : 'p-6 sm:p-8'} text-center space-y-5 shadow-2xl relative overflow-hidden`}>
+ <div className={`${isPreview ?'min-h-full p-2 sm:p-4' :'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[var(--bg)] flex items-start justify-center`}>
+ <div className={`max-w-md w-full bg-[var(--surface)] rounded-[var(--r-l)] ${isPreview ?'p-4 sm:p-6' :'p-6 sm:p-8'} text-center space-y-5 shadow-2xl relative overflow-hidden`}>
  <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600" />
  
  {isPreview && (
@@ -874,13 +874,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  onClick={() => {
  setSuccessData(null);
  setFormData({
- nombre: '',
- email: '',
- ciudad: '',
- comoConocio: isConcertLink ? 'Concierto' : '',
- cancionFavorita: '',
- mensaje: '',
- instagram: '',
+ nombre:'',
+ email:'',
+ ciudad:'',
+ comoConocio: isConcertLink ?'Concierto' :'',
+ cancionFavorita:'',
+ mensaje:'',
+ instagram:'',
  consentimiento: false,
  });
  }}
@@ -905,7 +905,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <p className="text-[var(--ink-3)] font-mono text-sm leading-relaxed max-w-xs mx-auto">
  {successData.alreadyRegistered
  ? successData.message
- : ((incentivo.mensajeAgradecimiento && language === 'es') || !t('registeredDefaultMessage', { bandName })
+ : ((incentivo.mensajeAgradecimiento && language ==='es') || !t('registeredDefaultMessage', { bandName })
  ? (incentivo.mensajeAgradecimiento || t('registeredDefaultMessage', { bandName }))
  : t('registeredDefaultMessage', { bandName }))}
  </p>
@@ -945,11 +945,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-left space-y-3 shadow-lg">
  <div className="flex items-center justify-between">
  <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5 uppercase tracking-wider">
- <Share2 className="w-3.5 h-3.5" /> {t('shareWithFriend') || 'Pásaselo a un colega'}
+ <Share2 className="w-3.5 h-3.5" /> {t('shareWithFriend') ||'Pásaselo a un colega'}
  </span>
  </div>
  <p className="text-[11px] text-[var(--ink-3)] font-mono leading-relaxed">
- {t('shareCardPrompt') || '¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos.'}
+ {t('shareCardPrompt') ||'¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos.'}
  </p>
  <div className="grid grid-cols-2 gap-2 pt-1">
  <button
@@ -959,19 +959,19 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  >
  {copiedShareLink ? (
  <>
- <Check className="w-3.5 h-3.5 text-slate-950" /> {t('shareCopied') || '¡Copiado!'}
+ <Check className="w-3.5 h-3.5 text-slate-950" /> {t('shareCopied') ||'¡Copiado!'}
  </>
  ) : (
  <>
- <Share2 className="w-3.5 h-3.5 text-slate-950" /> {t('shareWithFriend') || 'Compartir'}
+ <Share2 className="w-3.5 h-3.5 text-slate-950" /> {t('shareWithFriend') ||'Compartir'}
  </>
  )}
  </button>
  <a
- href={`https://api.whatsapp.com/send?text=${encodeURIComponent(t('whatsappShareMessage', { bandName, url: typeof window !== 'undefined' ? window.location.href : '' }) || `¡Ey! Échale un ojo a ${bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}
+ href={`https://api.whatsapp.com/send?text=${encodeURIComponent(t('whatsappShareMessage', { bandName, url: typeof window !=='undefined' ? window.location.href :'' }) || `¡Ey! Échale un ojo a ${bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: ${typeof window !=='undefined' ? window.location.href :''}`)}`}
  target="_blank"
  rel="noopener noreferrer"
- onClick={() => trackClick('whatsapp_share', '', 'success')}
+ onClick={() => trackClick('whatsapp_share','','success')}
  className="py-2.5 px-3 rounded-[var(--r-s)] bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95 text-center"
  >
  <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
@@ -981,13 +981,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Official Social Links in Success View */}
  {socialLinks && Object.values(socialLinks).some(Boolean) && (
- <div className="pt-2 border-t ">
+ <div className="pt-2 border-t">
  <SocialPlatformsList
  links={socialLinks}
  variant="grid"
  title={t('followUsPlatforms')}
  language={language}
- onPlatformClick={(plat, url) => trackClick(plat, url, 'success')}
+ onPlatformClick={(plat, url) => trackClick(plat, url,'success')}
  clickCounts={clickCounts}
  showClickCounts={true}
  />
@@ -1000,7 +1000,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  href={epkUrl}
  target="_blank"
  rel="noopener noreferrer"
- onClick={() => trackClick('epk', epkUrl, 'success')}
+ onClick={() => trackClick('epk', epkUrl,'success')}
  className="text-xs font-mono text-amber-400/90 hover:text-amber-300 underline font-bold transition-colors inline-flex items-center gap-1"
  >
  {t('epkSuccessLink', { bandName })} <ExternalLink className="w-3 h-3" />
@@ -1027,7 +1027,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </p>
  <div className="space-y-1.5 pt-1">
  {contactoBooking.email && (
- <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] ">
+ <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
  <a
  href={`mailto:${contactoBooking.email}?subject=${encodeURIComponent(t('bookingEmailSubject', { bandName }))}`}
  className="flex items-center gap-2 text-xs font-mono text-amber-300 hover:text-amber-200 truncate flex-1"
@@ -1038,16 +1038,16 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </div>
  )}
  {contactoBooking.telefono && (
- <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] ">
+ <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
  <a
- href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
+ href={`tel:${contactoBooking.telefono.replace(/\s+/g,'')}`}
  className="flex items-center gap-2 text-xs font-mono text-emerald-300 hover:text-emerald-200 truncate flex-1"
  >
  <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
  <span className="truncate">{contactoBooking.telefono}</span>
  </a>
  <a
- href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
+ href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
  target="_blank"
  rel="noopener noreferrer"
  className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-emerald-950/60 rounded flex items-center gap-1 shrink-0 ml-2"
@@ -1096,8 +1096,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  }
 
  return (
- <div className={`${isPreview ? 'min-h-full p-2 sm:p-4' : 'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[var(--bg)] flex items-start justify-center`}>
- <div className={`max-w-md w-full bg-[var(--surface)] rounded-[var(--r-l)] ${isPreview ? 'p-4 sm:p-6' : 'p-6 sm:p-8'} space-y-6 shadow-2xl relative overflow-hidden`}>
+ <div className={`${isPreview ?'min-h-full p-2 sm:p-4' :'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[var(--bg)] flex items-start justify-center`}>
+ <div className={`max-w-md w-full bg-[var(--surface)] rounded-[var(--r-l)] ${isPreview ?'p-4 sm:p-6' :'p-6 sm:p-8'} space-y-6 shadow-2xl relative overflow-hidden`}>
  <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-neutral-800 to-neutral-700" />
  
  <div className="text-center space-y-4 pt-2">
@@ -1149,7 +1149,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <button
  type="button"
  onClick={toggleAudioPreview}
- aria-label={isPlayingAudioPreview ? (t('audioPreviewPause') || 'Pausar audio') : (t('audioPreviewPlay') || 'Reproducir audio')}
+ aria-label={isPlayingAudioPreview ? (t('audioPreviewPause') ||'Pausar audio') : (t('audioPreviewPlay') ||'Reproducir audio')}
  className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[var(--surface)] flex items-center justify-center shrink-0 shadow-md transition-all active:scale-95"
  >
  {isPlayingAudioPreview ? (
@@ -1168,17 +1168,17 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </div>
  <p className="text-[10px] text-[var(--ink-2)] font-mono truncate">
  {isPlayingAudioPreview 
- ? (t('audioPreviewPlaying') || 'Sonando adelanto en vivo...') 
- : (audioPreviewConfig?.subtitulo?.trim() || t('audioPreviewPrompt') || 'Dale al play para escuchar cómo sonamos')}
+ ? (t('audioPreviewPlaying') ||'Sonando adelanto en vivo...') 
+ : (audioPreviewConfig?.subtitulo?.trim() || t('audioPreviewPrompt') ||'Dale al play para escuchar cómo sonamos')}
  </p>
  </div>
 
  {/* Animación de ondas de audio */}
  <div className="flex items-center gap-1 h-5 shrink-0 px-2">
- <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-5 animate-pulse' : 'h-1.5'}`} />
- <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-3 animate-bounce' : 'h-2'}`} />
- <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-4 animate-pulse' : 'h-1'}`} />
- <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-2 animate-bounce' : 'h-2.5'}`} />
+ <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-5 animate-pulse' :'h-1.5'}`} />
+ <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-3 animate-bounce' :'h-2'}`} />
+ <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-4 animate-pulse' :'h-1'}`} />
+ <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-2 animate-bounce' :'h-2.5'}`} />
  </div>
  </div>
  )}
@@ -1189,9 +1189,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  type="button" 
  onClick={() => setActiveTab('redes')}
  className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
- activeTab === 'redes' 
- ? 'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--surface)] shadow-lg shadow-amber-500/20 font-black' 
- : 'text-[var(--ink-2)] hover:text-white'
+ activeTab ==='redes' 
+ ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--surface)] shadow-lg shadow-amber-500/20 font-black' 
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <span>{t('tabFollow')}</span>
@@ -1200,9 +1200,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  type="button"
  onClick={() => setActiveTab('form')}
  className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
- activeTab === 'form'
- ? 'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--surface)] shadow-lg shadow-amber-500/20 font-black'
- : 'text-[var(--ink-2)] hover:text-white'
+ activeTab ==='form'
+ ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--surface)] shadow-lg shadow-amber-500/20 font-black'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <span>{t('tabJoin')}</span>
@@ -1210,7 +1210,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </div>
 
  {/* Tab 1: Redes Sociales */}
- {activeTab === 'redes' && (
+ {activeTab ==='redes' && (
  <div className="space-y-3.5 animate-fade-in pt-1">
  <div className="p-3.5 bg-[var(--surface)]/80 rounded-[var(--r-m)] text-center space-y-1">
  <p className="text-xs font-bold text-amber-400">{t('followHelpTitle')}</p>
@@ -1224,17 +1224,17 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  variant="grid"
  showTitle={false}
  language={language}
- onPlatformClick={(plat, url) => trackClick(plat, url, 'redes')}
+ onPlatformClick={(plat, url) => trackClick(plat, url,'redes')}
  clickCounts={clickCounts}
  showClickCounts={true}
  />
 
- {/* Acceso a "Conócenos" / EPK / Dossier público con las caras de los miembros de la banda */}
+ {/* Acceso a"Conócenos" / EPK / Dossier público con las caras de los miembros de la banda */}
  <a
  href={epkUrl}
  target="_blank"
  rel="noopener noreferrer"
- onClick={() => trackClick('epk', epkUrl, 'redes')}
+ onClick={() => trackClick('epk', epkUrl,'redes')}
  className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--surface)] hover:/80 transition-all duration-300 shadow-xl hover:shadow-amber-500/10 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
  >
  {logoUrl && !imgError && (
@@ -1267,10 +1267,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </div>
  <div className="relative min-w-0 flex-1">
  <span className="text-sm font-bold text-white group-hover:text-amber-300 transition block truncate tracking-tight">
- {t('epkCardTitle') || `Conócenos · ${bandName || 'La Banda'}`}
+ {t('epkCardTitle') || `Conócenos · ${bandName ||'La Banda'}`}
  </span>
  <span className="text-[11px] text-[var(--ink-3)] font-mono block truncate mt-0.5">
- {t('epkCardSubtitle') || 'Historia, miembros, fotos y dossier'}
+ {t('epkCardSubtitle') ||'Historia, miembros, fotos y dossier'}
  </span>
  </div>
 
@@ -1281,12 +1281,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div
  key={m.id || idx}
  className="w-7 h-7 rounded-full border-2 border-[var(--surface)] bg-neutral-800 flex items-center justify-center text-[10px] font-bold text-amber-300 overflow-hidden shadow-sm"
- title={`${m.nombre}${m.rol ? ` (${m.rol})` : ''}`}
+ title={`${m.nombre}${m.rol ? ` (${m.rol})` :''}`}
  >
  {m.fotoUrl ? (
  <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" />
  ) : (
- <span>{(m.nombre || 'M').slice(0, 2).toUpperCase()}</span>
+ <span>{(m.nombre ||'M').slice(0, 2).toUpperCase()}</span>
  )}
  </div>
  ))}
@@ -1309,13 +1309,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2.5 shadow-xl text-left">
  <div className="flex items-center justify-between">
  <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5 uppercase tracking-wider">
- <Calendar className="w-3.5 h-3.5" /> {t('upcomingShowsTitle') || 'Próximos Conciertos'}
+ <Calendar className="w-3.5 h-3.5" /> {t('upcomingShowsTitle') ||'Próximos Conciertos'}
  </span>
  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-bold">
- {upcomingConcerts.length} {upcomingConcerts.length === 1 ? 'fecha' : 'fechas'}
+ {upcomingConcerts.length} {upcomingConcerts.length === 1 ?'fecha' :'fechas'}
  </span>
  </div>
- <div className={`space-y-1.5 ${showAllConcerts ? 'max-h-64 overflow-y-auto pr-0.5' : ''}`}>
+ <div className={`space-y-1.5 ${showAllConcerts ?'max-h-64 overflow-y-auto pr-0.5' :''}`}>
  {(showAllConcerts ? upcomingConcerts : upcomingConcerts.slice(0, 3)).map(c => (
  <div key={c.id} className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono space-y-1.5">
  <div className="flex items-center justify-between">
@@ -1330,7 +1330,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </span>
  </div>
  {(c.entradasUrl || c.entradasLugarFisico) && (
- <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t ">
+ <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t">
  {c.entradasUrl && (
  <a
  href={c.entradasUrl}
@@ -1380,7 +1380,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  )}
 
  {/* Tab 2: Formulario de Registro */}
- {activeTab === 'form' && (
+ {activeTab ==='form' && (
  <form onSubmit={handleSubmit} className="space-y-4 pt-1 animate-fade-in text-left">
  {error && (
  <div className="p-3 bg-rose-500/10 text-rose-400 text-xs font-mono rounded-[var(--r-m)] text-center">
@@ -1419,7 +1419,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  onClick={() => setShowOptionalFields(!showOptionalFields)}
  className="w-full py-2 px-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:/40 text-[var(--ink-2)] hover:text-amber-300 text-xs font-mono flex items-center justify-between transition-colors"
  >
- <span>{showOptionalFields ? '– Ocultar detalles adicionales' : '+ Añadir ciudad, canción o mensaje (opcional)'}</span>
+ <span>{showOptionalFields ?'– Ocultar detalles adicionales' :'+ Añadir ciudad, canción o mensaje (opcional)'}</span>
  {showOptionalFields ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
  </button>
  </div>
@@ -1537,7 +1537,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  variant="pills"
  showTitle={false}
  language={language}
- onPlatformClick={(plat, url) => trackClick(plat, url, 'form')}
+ onPlatformClick={(plat, url) => trackClick(plat, url,'form')}
  clickCounts={clickCounts}
  showClickCounts={true}
  />
@@ -1582,7 +1582,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  {contactoBooking.telefono && (
  <div className="flex items-center justify-between p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:border-emerald-500/40 transition-colors">
  <a
- href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
+ href={`tel:${contactoBooking.telefono.replace(/\s+/g,'')}`}
  className="flex items-center gap-2.5 text-xs font-mono text-emerald-300 hover:text-emerald-200 transition-colors truncate flex-1 font-bold"
  >
  <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -1590,7 +1590,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </a>
  <div className="flex items-center shrink-0 ml-2">
  <a
- href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
+ href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
  target="_blank"
  rel="noopener noreferrer"
  className="px-2.5 py-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/60 hover:bg-emerald-950 rounded transition-colors flex items-center gap-1.5 font-bold"

@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { captureFrontendError } from '../utils/errorTracking';
+import React, { ReactNode } from'react';
+import { AlertTriangle, RefreshCw } from'lucide-react';
+import { captureFrontendError } from'../utils/errorTracking';
 
 interface Props {
  children: ReactNode;
@@ -34,7 +34,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
  console.error('ErrorBoundary caught an error:', error, errorInfo);
  captureFrontendError(error, {
  componentStack: errorInfo.componentStack,
- fallbackTitle: this.props.fallbackTitle || 'Global ErrorBoundary',
+ fallbackTitle: this.props.fallbackTitle ||'Global ErrorBoundary',
  });
  }
 
@@ -49,11 +49,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
  <div className="flex items-center gap-3 text-amber-400">
  <AlertTriangle className="w-8 h-8 shrink-0 text-amber-500" />
  <h3 className="text-lg font-bold">
- {this.props.fallbackTitle || 'Ha ocurrido un error al cargar este módulo'}
+ {this.props.fallbackTitle ||'Ha ocurrido un error al cargar este módulo'}
  </h3>
  </div>
  <p className="text-xs text-[var(--ink-3)] leading-relaxed font-mono bg-slate-950 p-3 rounded-[var(--r-m)] overflow-x-auto">
- {this.state.error?.message || 'Error no especificado en la renderización.'}
+ {this.state.error?.message ||'Error no especificado en la renderización.'}
  </p>
  <div className="flex items-center gap-3 pt-2">
  <button

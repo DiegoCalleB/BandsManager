@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon } from 'lucide-react';
-import { Song, ThemeColors } from '../../types';
-import { formatSongTitle } from '../../utils/formatSongTitle';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon } from'lucide-react';
+import { Song, ThemeColors } from'../../types';
+import { formatSongTitle } from'../../utils/formatSongTitle';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface AssignSongsToAlbumModalProps {
  isOpen: boolean;
@@ -28,7 +28,7 @@ export function AssignSongsToAlbumModal({
  onClose,
  onSaveAlbumSongs,
 }: AssignSongsToAlbumModalProps) {
- const currentAlbumSongs = songs.filter(s => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
+ const currentAlbumSongs = songs.filter(s => (s.albumDisco ||'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set(currentAlbumSongs.map(s => s.id)));
  const [search, setSearch] = useState('');
  const [customAlbumName, setCustomAlbumName] = useState(albumName);
@@ -64,7 +64,7 @@ export function AssignSongsToAlbumModal({
  if (file) {
  const reader = new FileReader();
  reader.onloadend = () => {
- if (typeof reader.result === 'string') {
+ if (typeof reader.result ==='string') {
  setCoverUrl(reader.result);
  }
  };
@@ -74,7 +74,7 @@ export function AssignSongsToAlbumModal({
 
  const handleSave = (e: React.FormEvent) => {
  e.preventDefault();
- const finalAlbumName = customAlbumName.trim() || albumName || 'Nuevo Álbum';
+ const finalAlbumName = customAlbumName.trim() || albumName ||'Nuevo Álbum';
  onSaveAlbumSongs(finalAlbumName, Array.from(selectedIds), {
  año: albumYear,
  portadaUrl: coverUrl,
@@ -92,7 +92,7 @@ export function AssignSongsToAlbumModal({
  <div className="flex items-center gap-2">
  <Disc3 className="w-5 h-5 text-[#1db954]" />
  <h3 className="text-sm font-bold font-mono uppercase text-white">
- {albumName ? `Editar Disco: ${albumName}` : 'Crear Nuevo Disco / Lanzamiento'}
+ {albumName ? `Editar Disco: ${albumName}` :'Crear Nuevo Disco / Lanzamiento'}
  </h3>
  </div>
  <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white cursor-pointer">
@@ -112,7 +112,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setCustomAlbumName(e.target.value)}
  placeholder="ej. Lanzamiento Verano 2026"
  className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -125,7 +125,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setAlbumYear(e.target.value)}
  placeholder="ej. 2026"
  className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -138,7 +138,7 @@ export function AssignSongsToAlbumModal({
  value={albumType}
  onChange={(e) => setAlbumType(e.target.value)}
  className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  >
  <option value="Álbum Estudio">Álbum Estudio</option>
@@ -158,7 +158,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setCoverUrl(e.target.value)}
  placeholder="https://... o sube imagen"
  className={`flex-1 p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  <label className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-[var(--r-m)] cursor-pointer shrink-0 border-[var(--hair)] flex items-center gap-1 text-xs">
@@ -177,7 +177,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setDescription(e.target.value)}
  placeholder="Notas sobre la producción, estudio de grabación, concepto..."
  className={`w-full p-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -199,7 +199,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setSearch(e.target.value)}
  placeholder="Buscar canción en el catálogo para incluir..."
  className={`w-full pl-9 pr-3 py-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -213,15 +213,15 @@ export function AssignSongsToAlbumModal({
  onClick={() => toggleSong(song.id)}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition-all ${
  isSelected
- ? 'bg-[#1db954]/20 border-[#1db954]/50 text-white'
+ ?'bg-[#1db954]/20 border-[#1db954]/50 text-white'
  : isStitchLight
- ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- : 'bg-neutral-800/60 hover:bg-neutral-800 border-[var(--hair)] text-[var(--ink-3)]'
+ ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
+ :'bg-neutral-800/60 hover:bg-neutral-800 border-[var(--hair)] text-[var(--ink-3)]'
  }`}
  >
  <div className="flex items-center gap-3 truncate pr-2">
  <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 ${
- isSelected ? 'bg-[#1db954] text-black' : 'bg-neutral-700 text-[var(--ink-2)]'
+ isSelected ?'bg-[#1db954] text-black' :'bg-neutral-700 text-[var(--ink-2)]'
  }`}>
  {isSelected ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Plus className="w-3.5 h-3.5" />}
  </div>
@@ -231,7 +231,7 @@ export function AssignSongsToAlbumModal({
  {song.tonalidad && <span className="text-[10px] text-[#1db954] font-mono">({song.tonalidad})</span>}
  </div>
  <div className="text-[10px] text-neutral-500 truncate">
- {song.albumDisco ? `Álbum actual: ${song.albumDisco}` : 'Sin álbum asignado'}
+ {song.albumDisco ? `Álbum actual: ${song.albumDisco}` :'Sin álbum asignado'}
  </div>
  </div>
  </div>

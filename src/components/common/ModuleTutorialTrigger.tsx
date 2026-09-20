@@ -1,27 +1,27 @@
-import React from 'react';
-import { HelpCircle } from 'lucide-react';
-import { ModuleTutorialId } from '../../types/tutorial';
+import React from'react';
+import { HelpCircle } from'lucide-react';
+import { ModuleTutorialId } from'../../types/tutorial';
 
 interface ModuleTutorialTriggerProps {
  moduleId?: ModuleTutorialId;
  onClick?: () => void;
  onOpen?: () => void;
  label?: string;
- variant?: 'compact' | 'pill' | 'button';
+ variant?:'compact' |'pill' |'button';
  className?: string;
 }
 
 export const ModuleTutorialTrigger: React.FC<ModuleTutorialTriggerProps> = ({
- moduleId = 'booking',
+ moduleId ='booking',
  onClick,
  onOpen,
- label = 'Guía rápida',
- variant = 'pill',
- className = ''
+ label ='Guía rápida',
+ variant ='pill',
+ className =''
 }) => {
  const handleClick = onClick || onOpen || (() => {});
 
- if (variant === 'compact') {
+ if (variant ==='compact') {
  return (
  <button
  id={`tutorial-trigger-compact-${moduleId}`}

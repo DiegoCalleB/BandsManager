@@ -1,7 +1,7 @@
-import React from 'react';
-import { X } from 'lucide-react';
-import { ThemeColors, Setlist, Concert, Rehearsal } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
+import React from'react';
+import { X } from'lucide-react';
+import { ThemeColors, Setlist, Concert, Rehearsal } from'../../types';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface AssignSetlistModalProps {
  assigningSetlist: Setlist | null;
@@ -42,7 +42,7 @@ export function AssignSetlistModal({
  </div>
 
  <p className="text-[10px] text-[var(--ink-3)] font-sans">
- Selecciona el concierto o ensayo al que deseas vincular el repertorio{' '}
+ Selecciona el concierto o ensayo al que deseas vincular el repertorio{''}
  <strong className="text-[#d1b375] font-mono">"{assigningSetlist.nombre}"</strong>:
  </p>
 
@@ -56,8 +56,8 @@ export function AssignSetlistModal({
  key={c.id}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
  selectedConcertToAssign === c.id
- ? ' bg-[#d1b375]/15'
- : ' bg-[var(--surface)]/60'
+ ?' bg-[#d1b375]/15'
+ :' bg-[var(--surface)]/60'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -86,8 +86,8 @@ export function AssignSetlistModal({
  key={r.id}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
  selectedConcertToAssign === r.id
- ? 'border-emerald-400 bg-[#10b981]/15'
- : ' bg-[var(--surface)]/60'
+ ?'border-emerald-400 bg-[#10b981]/15'
+ :' bg-[var(--surface)]/60'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -119,7 +119,7 @@ export function AssignSetlistModal({
  onClick={onSave}
  disabled={!selectedConcertToAssign}
  className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold disabled:opacity-40 ${
- isStitchLight ? 'bg-sky-500/15 text-white' : 'bg-[var(--acc)] text-black'
+ isStitchLight ?'bg-sky-500/15 text-white' :'bg-[var(--acc)] text-black'
  }`}
  >
  Guardar Asignación

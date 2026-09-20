@@ -1,31 +1,31 @@
-import { SongStudioCubaseHelpModal } from "./song_studio/SongStudioCubaseHelpModal";
-import { SongStudioDeleteConfirmModal } from "./song_studio/SongStudioDeleteConfirmModal";
-import { SongStudioAiGeneratorModal } from "./song_studio/SongStudioAiGeneratorModal";
-import { SongStudioAiMusicModal } from "./song_studio/SongStudioAiMusicModal";
-import { SongStudioAiComposerModal } from "./song_studio/SongStudioAiComposerModal";
-import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset, exportMasterMixAudioBlob, computeAutoBalanceVolumes } from "../utils/audioLatency";
-import React, { useState, useRef, useEffect } from 'react';
+import { SongStudioCubaseHelpModal } from"./song_studio/SongStudioCubaseHelpModal";
+import { SongStudioDeleteConfirmModal } from"./song_studio/SongStudioDeleteConfirmModal";
+import { SongStudioAiGeneratorModal } from"./song_studio/SongStudioAiGeneratorModal";
+import { SongStudioAiMusicModal } from"./song_studio/SongStudioAiMusicModal";
+import { SongStudioAiComposerModal } from"./song_studio/SongStudioAiComposerModal";
+import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset, exportMasterMixAudioBlob, computeAutoBalanceVolumes } from"../utils/audioLatency";
+import React, { useState, useRef, useEffect } from'react';
 
-const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-import { motion, AnimatePresence } from 'motion/react';
-import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle, User } from '../types';
-import { uploadFileToServer, resolveAudioUrl, getAudioBlobFromUrl, saveAudioToStorage } from '../utils/audioStorage';
-import { apiFetch } from '../utils/api';
-import { separateAudioIntoStems, IsolatedStemResult } from '../utils/stemSeparator';
-import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
-import WaveformTrack from './WaveformTrack';
-import { SongChordsViewerModal } from './SongChordsViewerModal';
-import PracticeModePanel from './PracticeModePanel';
-import { ShareModal } from './ShareModal';
-import { ModalPortal } from './common/ModalPortal';
-import { useStudioShareModal } from '../hooks/useStudioShareModal';
-import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
-import { useIdeaComments } from '../hooks/useIdeaComments';
-import { useModuleTutorial } from '../hooks/useModuleTutorial';
-import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
-import { getSongIrisStemIdea } from '../utils/irisTracks';
-import { ModuleTutorialModal } from './common/ModuleTutorialModal';
-import { formatSongTitle } from '../utils/formatSongTitle';
+const SILENT_AUDIO_URI ='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+import { motion, AnimatePresence } from'motion/react';
+import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle, User } from'../types';
+import { uploadFileToServer, resolveAudioUrl, getAudioBlobFromUrl, saveAudioToStorage } from'../utils/audioStorage';
+import { apiFetch } from'../utils/api';
+import { separateAudioIntoStems, IsolatedStemResult } from'../utils/stemSeparator';
+import { generateAccompanimentAudioBlob } from'../utils/accompanimentSynth';
+import WaveformTrack from'./WaveformTrack';
+import { SongChordsViewerModal } from'./SongChordsViewerModal';
+import PracticeModePanel from'./PracticeModePanel';
+import { ShareModal } from'./ShareModal';
+import { ModalPortal } from'./common/ModalPortal';
+import { useStudioShareModal } from'../hooks/useStudioShareModal';
+import { useAccompanimentGenerator } from'../hooks/useAccompanimentGenerator';
+import { useIdeaComments } from'../hooks/useIdeaComments';
+import { useModuleTutorial } from'../hooks/useModuleTutorial';
+import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from'../utils/repertorioUtils';
+import { getSongIrisStemIdea } from'../utils/irisTracks';
+import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
+import { formatSongTitle } from'../utils/formatSongTitle';
 import { 
  X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
  ThumbsUp, Plus, Music, User as UserIcon, Sparkles, Trash2, Send, Disc,
@@ -34,7 +34,7 @@ import {
  Maximize2, Minimize2, Cpu, Activity, Info, CheckCircle2, AlertCircle,
  FileAudio, HardDrive, Clock, Timer, CreditCard, Key, ExternalLink,
  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database, MoreVertical, GripVertical
-} from 'lucide-react';
+} from'lucide-react';
 
 
 
@@ -45,7 +45,7 @@ const LiveMicWaveformCanvas: React.FC<{
  isRecording: boolean;
  color?: string;
  height?: number;
-}> = ({ stream, audioCtx, isRecording, color = '#ef4444', height = 48 }) => {
+}> = ({ stream, audioCtx, isRecording, color ='#ef4444', height = 48 }) => {
  const canvasRef = useRef<HTMLCanvasElement>(null);
 
  useEffect(() => {
@@ -59,7 +59,7 @@ const LiveMicWaveformCanvas: React.FC<{
 
  let ctxToUse = audioCtx;
  let createdLocalCtx = false;
- if (!ctxToUse || ctxToUse.state === 'closed') {
+ if (!ctxToUse || ctxToUse.state ==='closed') {
  const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
  if (AudioCtxClass) {
  ctxToUse = new AudioCtxClass();
@@ -108,7 +108,7 @@ const LiveMicWaveformCanvas: React.FC<{
  ctx.clearRect(0, 0, width, ch);
 
  // Grid background
- ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+ ctx.fillStyle ='rgba(0, 0, 0, 0.4)';
  ctx.fillRect(0, 0, width, ch);
 
  const barWidth = width / maxBars;
@@ -121,13 +121,13 @@ const LiveMicWaveformCanvas: React.FC<{
  const y = centerY - barH / 2;
 
  const isCurrentPoint = i === historyBars.length - 1;
- ctx.fillStyle = isCurrentPoint ? '#ffffff' : (val > 0.6 ? '#f59e0b' : color);
+ ctx.fillStyle = isCurrentPoint ?'#ffffff' : (val > 0.6 ?'#f59e0b' : color);
  ctx.fillRect(x, y, Math.max(1.5, barWidth - 1), barH);
  }
 
  // Live recording line cursor
  const currentX = (historyBars.length / maxBars) * width;
- ctx.strokeStyle = '#ffffff';
+ ctx.strokeStyle ='#ffffff';
  ctx.lineWidth = 2;
  ctx.beginPath();
  ctx.moveTo(currentX, 0);
@@ -159,7 +159,7 @@ const LiveMicWaveformCanvas: React.FC<{
 
 // Guiño de marca a Iris mientras se procesa: un rayo de luz blanco entra en el prisma y sale
 // descompuesto en el arcoíris de 6 colores — la misma paleta que colorea las pistas del mezclador.
-const IRIS_PRISM_RAY_COLORS = ['#ff6b6b', '#ffab4a', '#ffe066', '#6fe89a', '#5b9dff', '#c084fc'];
+const IRIS_PRISM_RAY_COLORS = ['#ff6b6b','#ffab4a','#ffe066','#6fe89a','#5b9dff','#c084fc'];
 const IrisPrismBanner: React.FC = () => {
  return (
  <div className="w-full aspect-video flex items-center justify-center overflow-hidden rounded-[var(--r-m)] bg-black border-[var(--hair)]">
@@ -189,57 +189,54 @@ interface SongStudioModalProps {
 
 // Coste aproximado por canción de cada motor de Iris, solo para orientar al usuario (no viene de
 // una factura real reconciliada) — ajustar aquí si Diego consigue cifras reales del proveedor cloud.
-const IRIS_ENGINE_COST_EUR: Record<'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
- 'mvsep-mdx23': 0.08,
- 'demucs': 0.03,
- 'dsp-server': 0
+const IRIS_ENGINE_COST_EUR: Record<'mvsep-mdx23' |'demucs' |'dsp-server', number> = {'mvsep-mdx23': 0.08,'demucs': 0.03,'dsp-server': 0
 };
-const formatEurEstimate = (n: number) => n.toFixed(2).replace('.', ',');
+const formatEurEstimate = (n: number) => n.toFixed(2).replace('.',',');
 
 // Guiño a Iris (diosa del arcoíris): cada pista se colorea recorriendo el arcoíris en orden
 // (rojo, naranja, amarillo, verde, azul, violeta). Por defecto sigue la posición en la
-// lista, pero en cuanto el usuario reordena pistas a mano, cada una "congela" su color en
+// lista, pero en cuanto el usuario reordena pistas a mano, cada una"congela" su color en
 // tr.colorHue para que se lo lleve consigo al moverse — a partir de ahí el arcoíris ya no sale
 // perfectamente en orden, y eso es justo lo esperado: gana la posición que elige el usuario.
 const RAINBOW_HUE_STEPS = [355, 28, 50, 135, 215, 280]; // Rojo, Naranja, Amarillo, Verde, Azul, Violeta
-// Convierte HSL a hex para poder seguir usando el truco de "hex + 2 dígitos de alpha" que ya
-// usa WaveformTrack internamente (color + '40', color + '50'...) sin tener que tocar ese componente.
+// Convierte HSL a hex para poder seguir usando el truco de"hex + 2 dígitos de alpha" que ya
+// usa WaveformTrack internamente (color +'40', color +'50'...) sin tener que tocar ese componente.
 const hslToHex = (h: number, s: number, l: number): string => {
  const sat = s / 100, light = l / 100;
  const k = (n: number) => (n + h / 30) % 12;
  const a = sat * Math.min(light, 1 - light);
  const f = (n: number) => light - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
- const toHex = (x: number) => Math.round(255 * x).toString(16).padStart(2, '0');
+ const toHex = (x: number) => Math.round(255 * x).toString(16).padStart(2,'0');
  return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
 };
 const getTrackRainbowColor = (tr: AudioTrack, fallbackIndex: number, alphaHex?: string): string => {
- const hue = typeof tr.colorHue === 'number' ? tr.colorHue : RAINBOW_HUE_STEPS[fallbackIndex % RAINBOW_HUE_STEPS.length];
+ const hue = typeof tr.colorHue ==='number' ? tr.colorHue : RAINBOW_HUE_STEPS[fallbackIndex % RAINBOW_HUE_STEPS.length];
  const hex = hslToHex(hue, 60, 68);
  return alphaHex ? `${hex}${alphaHex}` : hex;
 };
 
 const SECCIONES_TEMA: { key: SongAudioIdea['seccion']; label: string; icon: string; color: string }[] = [
- { key: 'general', label: 'Idea General / Demo', icon: '🎵', color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30' },
- { key: 'intro', label: 'Intro', icon: '🚀', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
- { key: 'verso', label: 'Verso / Estrofa', icon: '📝', color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
- { key: 'estribillo', label: 'Estribillo / Chorus', icon: '🔥', color: 'bg-amber-500/10 text-amber-400 /30' },
- { key: 'puente', label: 'Puente / Bridge', icon: '🌉', color: 'bg-purple-500/10 text-purple-400 border-purple-500/30' },
- { key: 'solo', label: 'Solo / Arreglo', icon: '🎸', color: 'bg-rose-500/10 text-rose-400 border-rose-500/30' },
- { key: 'outro', label: 'Outro / Final', icon: '🏁', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30' }
+ { key:'general', label:'Idea General / Demo', icon:'🎵', color:'bg-indigo-500/10 text-indigo-400 border-indigo-500/30' },
+ { key:'intro', label:'Intro', icon:'🚀', color:'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
+ { key:'verso', label:'Verso / Estrofa', icon:'📝', color:'bg-blue-500/10 text-blue-400 border-blue-500/30' },
+ { key:'estribillo', label:'Estribillo / Chorus', icon:'🔥', color:'bg-amber-500/10 text-amber-400 /30' },
+ { key:'puente', label:'Puente / Bridge', icon:'🌉', color:'bg-purple-500/10 text-purple-400 border-purple-500/30' },
+ { key:'solo', label:'Solo / Arreglo', icon:'🎸', color:'bg-rose-500/10 text-rose-400 border-rose-500/30' },
+ { key:'outro', label:'Outro / Final', icon:'🏁', color:'bg-cyan-500/10 text-cyan-400 border-cyan-500/30' }
 ];
 
 // Galería de presets de estilo para el generador de pista con IA: en vez de una caja de texto en
 // blanco (parálisis de decisión), un punto de partida de un clic con nombre + descripción de una
 // línea, igual que las tarjetas de estilo de herramientas tipo Moisés/Suno Studio.
 const AI_TRACK_STYLE_PRESETS: { key: string; label: string; icon: string; description: string; style: string }[] = [
- { key: 'rock', label: 'Rock Clásico', icon: '🎸', description: 'Riffs con guitarra distorsionada, bien pegado a la base rítmica.', style: 'Rock clásico, guitarra con distorsión moderada, riff pegado a la batería' },
- { key: 'balada', label: 'Balada Suave', icon: '🌊', description: 'Arreglo melódico y espacioso, dinámica contenida.', style: 'Balada suave, arreglo melódico y espacioso, dinámica contenida y emotiva' },
- { key: 'funk', label: 'Funk Groove', icon: '🕺', description: 'Patrón sincopado y percusivo, mucho groove.', style: 'Funk groove, patrón rítmico sincopado, muy percusivo y bailable' },
- { key: 'ska', label: 'Ska / Balkan', icon: '🎷', description: 'Vientos y ritmo saltarín, energía festiva.', style: 'Ska / Balkan, ritmo saltarín off-beat, energía festiva de fanfarria' },
- { key: 'pop', label: 'Pop Moderno', icon: '🌆', description: 'Producción limpia, ganchos melódicos directos.', style: 'Pop moderno, producción limpia y comercial, ganchos melódicos directos' },
- { key: 'punk', label: 'Punk Energético', icon: '🤘', description: 'Rápido, crudo, acordes potentes.', style: 'Punk rock energético, tempo rápido, acordes potentes, sonido crudo' },
- { key: 'synth', label: 'Synth Atmosférico', icon: '🎹', description: 'Texturas electrónicas, pads y capas.', style: 'Synth atmosférico, texturas electrónicas, pads envolventes y capas' },
- { key: 'orquestal', label: 'Cuerdas Orquestales', icon: '🎻', description: 'Arreglo sinfónico con dramatismo.', style: 'Cuerdas orquestales, arreglo sinfónico con dramatismo y amplitud' }
+ { key:'rock', label:'Rock Clásico', icon:'🎸', description:'Riffs con guitarra distorsionada, bien pegado a la base rítmica.', style:'Rock clásico, guitarra con distorsión moderada, riff pegado a la batería' },
+ { key:'balada', label:'Balada Suave', icon:'🌊', description:'Arreglo melódico y espacioso, dinámica contenida.', style:'Balada suave, arreglo melódico y espacioso, dinámica contenida y emotiva' },
+ { key:'funk', label:'Funk Groove', icon:'🕺', description:'Patrón sincopado y percusivo, mucho groove.', style:'Funk groove, patrón rítmico sincopado, muy percusivo y bailable' },
+ { key:'ska', label:'Ska / Balkan', icon:'🎷', description:'Vientos y ritmo saltarín, energía festiva.', style:'Ska / Balkan, ritmo saltarín off-beat, energía festiva de fanfarria' },
+ { key:'pop', label:'Pop Moderno', icon:'🌆', description:'Producción limpia, ganchos melódicos directos.', style:'Pop moderno, producción limpia y comercial, ganchos melódicos directos' },
+ { key:'punk', label:'Punk Energético', icon:'🤘', description:'Rápido, crudo, acordes potentes.', style:'Punk rock energético, tempo rápido, acordes potentes, sonido crudo' },
+ { key:'synth', label:'Synth Atmosférico', icon:'🎹', description:'Texturas electrónicas, pads y capas.', style:'Synth atmosférico, texturas electrónicas, pads envolventes y capas' },
+ { key:'orquestal', label:'Cuerdas Orquestales', icon:'🎻', description:'Arreglo sinfónico con dramatismo.', style:'Cuerdas orquestales, arreglo sinfónico con dramatismo y amplitud' }
 ];
 
 // Helper to standardise tracks array from idea
@@ -250,7 +247,7 @@ export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
  // Fallback single track
  return [{
  id: `${idea.id}-track-1`,
- nombre: idea.titulo || 'Pista Principal',
+ nombre: idea.titulo ||'Pista Principal',
  audioUrl: idea.audioUrl,
  autor: idea.subidoPor,
  instrumento: idea.instrumento,
@@ -266,7 +263,7 @@ export default function SongStudioModal({
  isStitchLight = false,
  onClose,
  onUpdateSong,
- currentUsername = 'Tu Nombre',
+ currentUsername ='Tu Nombre',
  currentUser,
  initialOpenIrisModal = false
 }: SongStudioModalProps) {
@@ -346,12 +343,12 @@ export default function SongStudioModal({
  const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
  const [editingTrackName, setEditingTrackName] = useState('');
  const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
- const [selectedStemEngine, setSelectedStemEngine] = useState<'mvsep-mdx23' | 'demucs' | 'dsp-server'>('demucs');
+ const [selectedStemEngine, setSelectedStemEngine] = useState<'mvsep-mdx23' |'demucs' |'dsp-server'>('demucs');
  const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
- const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
+ const [moisesTab, setMoisesTab] = useState<'stems' |'how_it_works' |'upload'>('stems');
  const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
 
- // Auto-abrir modal de separación de pistas con Iris al pulsar el acceso directo "Procesar con Iris"
+ // Auto-abrir modal de separación de pistas con Iris al pulsar el acceso directo"Procesar con Iris"
  useEffect(() => {
  if (initialOpenIrisModal) {
  const existingIrisIdea = getSongIrisStemIdea(song);
@@ -363,9 +360,9 @@ export default function SongStudioModal({
  const fallbackIdea: SongAudioIdea = {
  id: `idea-main-${song.id || Date.now()}`,
  titulo: `Maqueta Principal (${song.titulo})`,
- audioUrl: song.audioPrincipalUrl || (song as any).audioUrl || '',
- subidoPor: currentUsername || 'Banda',
- seccion: 'general',
+ audioUrl: song.audioPrincipalUrl || (song as any).audioUrl ||'',
+ subidoPor: currentUsername ||'Banda',
+ seccion:'general',
  fecha: new Date().toLocaleDateString('es-ES')
  };
  setShowMoisesStemsModal(fallbackIdea);
@@ -378,7 +375,7 @@ export default function SongStudioModal({
  // sobre qué idea había pulsado el usuario el botón.
  const [showAiTrackGenModal, setShowAiTrackGenModal] = useState<SongAudioIdea | null>(null);
  const [aiTrackGenInstrument, setAiTrackGenInstrument] = useState<string>('Guitarra Solista');
- const [aiTrackGenMode, setAiTrackGenMode] = useState<'presets' | 'custom'>('presets');
+ const [aiTrackGenMode, setAiTrackGenMode] = useState<'presets' |'custom'>('presets');
  const [aiTrackGenStyle, setAiTrackGenStyle] = useState<string>(AI_TRACK_STYLE_PRESETS[0].style);
  const [aiTrackGenPrompt, setAiTrackGenPrompt] = useState<string>('');
  // Segundo de la canción en el que debe empezar a sonar la pista generada — Lyria solo genera
@@ -402,7 +399,7 @@ export default function SongStudioModal({
  songTitle: string;
  ideaTitle: string;
  targetIdea?: SongAudioIdea;
- stage: 'preparing' | 'demucs' | 'persisting' | 'completed' | 'error';
+ stage:'preparing' |'demucs' |'persisting' |'completed' |'error';
  progressPct: number;
  /** El usuario minimizó el modal para seguir trabajando mientras Iris separa en segundo
  * plano — el proceso sigue corriendo igual (vive en este mismo componente, no en el modal),
@@ -418,12 +415,12 @@ export default function SongStudioModal({
  degraded?: boolean;
  degradedReason?: string;
  separationEngine?: string;
- engineChoice?: 'mvsep-mdx23' | 'demucs' | 'dsp-server';
+ engineChoice?:'mvsep-mdx23' |'demucs' |'dsp-server';
  stemsAdded?: number;
  stemsInfo?: Array<{ instrument: string; trackName: string; formato: string; tamano: string; audioUrl?: string }>;
  errorMessage?: string;
  errorDetail?: string;
- errorProvider?: 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system';
+ errorProvider?:'replicate' |'gemini' |'ffmpeg' |'supabase' |'network' |'system';
  errorType?: string;
  errorTitle?: string;
  actionAdvice?: string;
@@ -457,10 +454,10 @@ export default function SongStudioModal({
 
  if (resultado.startsWith('indexeddb:') || resultado.startsWith('blob:') || resultado.startsWith('data:')) {
  const blob = await getAudioBlobFromUrl(rawUrl);
- const ext = blob.type.includes('wav') ? 'wav' : blob.type.includes('flac') ? 'flac' : 'mp3';
- const file = new File([blob], `input-audio-idea-${Date.now()}.${ext}`, { type: blob.type || 'audio/mpeg' });
+ const ext = blob.type.includes('wav') ?'wav' : blob.type.includes('flac') ?'flac' :'mp3';
+ const file = new File([blob], `input-audio-idea-${Date.now()}.${ext}`, { type: blob.type ||'audio/mpeg' });
  const bandIdToUse = localStorage.getItem('bandmanager_band_id') || undefined;
- const uploadedUrl = await uploadFileToServer(file, { category: 'stems', folder: 'inputs', bandId: bandIdToUse });
+ const uploadedUrl = await uploadFileToServer(file, { category:'stems', folder:'inputs', bandId: bandIdToUse });
  if (uploadedUrl && (uploadedUrl.startsWith('http://') || uploadedUrl.startsWith('https://') || uploadedUrl.startsWith('/'))) {
  resultado = uploadedUrl;
  }
@@ -471,23 +468,22 @@ export default function SongStudioModal({
  return resultado;
  };
 
- // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
- const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server') => {
+ // Separación de pistas con IA (motor propio"Iris", con dos niveles de calidad + fallback local)
+ const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?:'mvsep-mdx23' |'demucs' |'dsp-server') => {
  setIsSeparatingStemsAi(true);
  setSeparationElapsedSeconds(0);
  const engineToUse = overrideEngine || selectedStemEngine;
 
  const stepInitText =
- engineToUse === 'mvsep-mdx23' ? "Iniciando Iris Studio (red neuronal de máxima calidad)..." :
- engineToUse === 'demucs' ? 'Iniciando Iris Cloud (red neuronal en la nube)...' :
- 'Iniciando Iris Básico (procesamiento local, gratis)...';
+ engineToUse ==='mvsep-mdx23' ?"Iniciando Iris Studio (red neuronal de máxima calidad)..." :
+ engineToUse ==='demucs' ?'Iniciando Iris Cloud (red neuronal en la nube)...' :'Iniciando Iris Básico (procesamiento local, gratis)...';
 
  setStemProgressModal({
  isOpen: true,
  songTitle: song.titulo,
  ideaTitle: targetIdea.titulo,
  targetIdea,
- stage: 'preparing',
+ stage:'preparing',
  progressPct: 15,
  currentStepText: stepInitText,
  engineChoice: engineToUse
@@ -502,15 +498,15 @@ export default function SongStudioModal({
  // por el mismo valor y la barra no retrocede (ver demucsStartedAt más arriba).
  const progressTimer = setInterval(() => {
  setStemProgressModal(prev => {
- if (!prev || prev.stage === 'completed' || prev.stage === 'error') return prev;
- if (prev.stage === 'preparing') {
+ if (!prev || prev.stage ==='completed' || prev.stage ==='error') return prev;
+ if (prev.stage ==='preparing') {
  return { ...prev, progressPct: Math.min(prev.progressPct + 3, 30) };
  }
- if (prev.stage === 'demucs') {
+ if (prev.stage ==='demucs') {
  const elapsedSec = prev.demucsStartedAt ? (Date.now() - prev.demucsStartedAt) / 1000 : 0;
  return { ...prev, progressPct: Math.min(45 + elapsedSec / 3, 88) };
  }
- if (prev.stage === 'persisting') {
+ if (prev.stage ==='persisting') {
  return { ...prev, progressPct: Math.min(prev.progressPct + 1, 96) };
  }
  return prev;
@@ -520,33 +516,33 @@ export default function SongStudioModal({
  try {
  setStemProgressModal(prev => prev ? {
  ...prev,
- stage: 'preparing',
+ stage:'preparing',
  progressPct: 25,
- currentStepText: engineToUse !== 'dsp-server'
- ? 'Verificando el audio y enviándolo a la nube...'
- : 'Preparando espectro de audio en el motor local...'
+ currentStepText: engineToUse !=='dsp-server'
+ ?'Verificando el audio y enviándolo a la nube...'
+ :'Preparando espectro de audio en el motor local...'
  } : null);
 
  const sendableAudioUrl = await resolverAudioUrlParaSubida(targetIdea.audioUrl);
 
  const stepProcessingText =
- engineToUse === 'mvsep-mdx23'
- ? "Iris Studio aislando pistas vocales e instrumentales..."
- : engineToUse === 'demucs'
- ? 'Iris Cloud aislando Voz, Batería, Bajo, Guitarras...'
- : 'Iris Básico realizando filtrado de frecuencias (gratis)...';
+ engineToUse ==='mvsep-mdx23'
+ ?"Iris Studio aislando pistas vocales e instrumentales..."
+ : engineToUse ==='demucs'
+ ?'Iris Cloud aislando Voz, Batería, Bajo, Guitarras...'
+ :'Iris Básico realizando filtrado de frecuencias (gratis)...';
 
  setStemProgressModal(prev => prev ? {
  ...prev,
- stage: 'demucs',
+ stage:'demucs',
  progressPct: 45,
  demucsStartedAt: Date.now(),
  currentStepText: stepProcessingText
  } : null);
 
  const kickoff = await apiFetch('/api/ai-stem-separation', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  songTitle: song.titulo,
  sectionName: targetIdea.seccion,
@@ -562,53 +558,52 @@ export default function SongStudioModal({
  // El servidor responde al instante (202) y sigue procesando en segundo plano para no
  // chocar con el límite de ~5 minutos de conexión inactiva del proxy de Railway. Hacemos
  // polling ligero del resultado en vez de mantener esta petición abierta varios minutos.
- if (kickoff?.status === 'processing') {
+ if (kickoff?.status ==='processing') {
  const pollStartedAt = Date.now();
  const maxWaitMs = 20 * 60 * 1000; // El job sigue vivo en el servidor aunque dejemos de esperar aquí
  const engineLabel =
- engineToUse === 'mvsep-mdx23' ? "Iris Studio" :
- engineToUse === 'demucs' ? 'Iris Cloud' :
- 'Iris Básico';
+ engineToUse ==='mvsep-mdx23' ?"Iris Studio" :
+ engineToUse ==='demucs' ?'Iris Cloud' :'Iris Básico';
  while (true) {
  await new Promise(r => setTimeout(r, 4000));
  const elapsedSec = Math.round((Date.now() - pollStartedAt) / 1000);
  // Fases explicativas: qué está pasando realmente en cada tramo de tiempo de la GPU en
  // la nube (no es una barra ficticia: refleja subida, cold-start del contenedor e inferencia).
  const phaseText =
- engineToUse === 'dsp-server'
+ engineToUse ==='dsp-server'
  ? `${stepProcessingText} (${elapsedSec}s transcurridos)`
  : elapsedSec < 12
  ? `📤 Subiendo tu audio a ${engineLabel}... (${elapsedSec}s)`
  : elapsedSec < 40
- ? `🧊 Arrancando el motor — si llevaba un rato sin usarse, tarda hasta ~1 min en "despertar"... (${elapsedSec}s)`
+ ? `🧊 Arrancando el motor — si llevaba un rato sin usarse, tarda hasta ~1 min en"despertar"... (${elapsedSec}s)`
  : `🎛️ ${engineLabel} separando voz, batería, bajo, guitarras, teclados y arreglos por frecuencia... (${elapsedSec}s transcurridos, puede tardar varios minutos)`;
  setStemProgressModal(prev => prev ? {
  ...prev,
- stage: 'demucs',
+ stage:'demucs',
  currentStepText: phaseText
  } : null);
 
  const statusRes = await apiFetch(
  `/api/ai-stem-separation/status?songHash=${encodeURIComponent(kickoff.songHash)}&engine=${encodeURIComponent(kickoff.engine)}`
  );
- if (statusRes?.status === 'completed') {
+ if (statusRes?.status ==='completed') {
  data = statusRes;
  break;
  }
  if (Date.now() - pollStartedAt > maxWaitMs) {
  throw new Error('La separación sigue procesándose en el servidor tras 20 minutos. Cierra esta ventana e inténtalo de nuevo en un rato: el resultado quedará guardado y no se repetirá el gasto en GPU.');
  }
- // statusRes.status === 'processing' o 'not_found' (aún no escrito en caché): seguimos esperando.
- // Un estado 'failed' hace que apiFetch lance ApiRequestError automáticamente (respuesta no-2xx),
+ // statusRes.status ==='processing' o'not_found' (aún no escrito en caché): seguimos esperando.
+ // Un estado'failed' hace que apiFetch lance ApiRequestError automáticamente (respuesta no-2xx),
  // que cae de forma natural en el catch de más abajo con el mismo formato de error enriquecido.
  }
  }
 
  setStemProgressModal(prev => prev ? {
  ...prev,
- stage: 'persisting',
+ stage:'persisting',
  progressPct: 92,
- currentStepText: 'Sincronizando pistas aisladas MP3 HQ en la nube...'
+ currentStepText:'Sincronizando pistas aisladas MP3 HQ en la nube...'
  } : null);
 
  const existing = getIdeaTracks(targetIdea);
@@ -616,7 +611,7 @@ export default function SongStudioModal({
  let newTracks = existing.filter(t => 
  t.audioUrl !== targetIdea.audioUrl && 
  t.id !== `${targetIdea.id}-track-1` && 
- t.nombre !== 'Pista Principal' &&
+ t.nombre !=='Pista Principal' &&
  t.nombre !== targetIdea.titulo &&
  !!t.instrumento
  );
@@ -624,29 +619,29 @@ export default function SongStudioModal({
 
  if (data.stems && Array.isArray(data.stems) && data.stems.length > 0) {
  const engineAuthor = data.degraded
- ? 'Iris Básico (Modo Degradado)'
+ ?'Iris Básico (Modo Degradado)'
  : data.separationEngine?.includes('MVSEP')
- ? 'Iris Studio'
+ ?'Iris Studio'
  : data.isNeural
- ? 'Iris Cloud'
- : 'Iris Básico (gratis)';
+ ?'Iris Cloud'
+ :'Iris Básico (gratis)';
  data.stems.forEach((st: any) => {
  if (!st.audioUrl) return;
 
- const instClean = (st.instrument || '').toLowerCase();
+ const instClean = (st.instrument ||'').toLowerCase();
  const existingIdx = newTracks.findIndex(t => 
  (t.instrumento && t.instrumento.toLowerCase() === instClean) ||
  (t.nombre && t.nombre.toLowerCase().includes(instClean)) ||
- (instClean === 'voz' && t.nombre.toLowerCase().includes('voz')) ||
- (instClean === 'batería' && (t.nombre.toLowerCase().includes('batería') || t.nombre.toLowerCase().includes('bateria'))) ||
- (instClean === 'bajo' && t.nombre.toLowerCase().includes('bajo')) ||
- (instClean === 'guitarras' && t.nombre.toLowerCase().includes('guitarra')) ||
- (instClean === 'teclados' && (t.nombre.toLowerCase().includes('teclado') || t.nombre.toLowerCase().includes('piano'))) ||
- (instClean === 'arreglos' && t.nombre.toLowerCase().includes('arreglo'))
+ (instClean ==='voz' && t.nombre.toLowerCase().includes('voz')) ||
+ (instClean ==='batería' && (t.nombre.toLowerCase().includes('batería') || t.nombre.toLowerCase().includes('bateria'))) ||
+ (instClean ==='bajo' && t.nombre.toLowerCase().includes('bajo')) ||
+ (instClean ==='guitarras' && t.nombre.toLowerCase().includes('guitarra')) ||
+ (instClean ==='teclados' && (t.nombre.toLowerCase().includes('teclado') || t.nombre.toLowerCase().includes('piano'))) ||
+ (instClean ==='arreglos' && t.nombre.toLowerCase().includes('arreglo'))
  );
 
- const fmt = st.formato || (st.audioUrl.toLowerCase().includes('.wav') ? 'WAV' : 'MP3');
- const sz = st.tamano || '2.5 MB';
+ const fmt = st.formato || (st.audioUrl.toLowerCase().includes('.wav') ?'WAV' :'MP3');
+ const sz = st.tamano ||'2.5 MB';
 
  if (existingIdx >= 0) {
  newTracks[existingIdx] = {
@@ -690,8 +685,8 @@ export default function SongStudioModal({
  renderedStems.map(async (stemRes) => {
  let uploadedUrl = stemRes.audioUrl;
  try {
- const wavFile = new File([stemRes.audioBlob], `stem-${stemRes.instrument.toLowerCase()}-${Date.now()}.wav`, { type: 'audio/wav' });
- uploadedUrl = await uploadFileToServer(wavFile, { category: 'stems', folder: 'separated' });
+ const wavFile = new File([stemRes.audioBlob], `stem-${stemRes.instrument.toLowerCase()}-${Date.now()}.wav`, { type:'audio/wav' });
+ uploadedUrl = await uploadFileToServer(wavFile, { category:'stems', folder:'separated' });
  } catch (upErr) {
  console.warn("Using IndexedDB fallback for stem upload:", upErr);
  try {
@@ -708,10 +703,10 @@ export default function SongStudioModal({
  id: `stem-ai-${stemRes.instrument.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
  nombre: stemRes.trackName,
  audioUrl: uploadedUrl,
- autor: 'Anti-Phase AI Engine',
+ autor:'Anti-Phase AI Engine',
  instrumento: stemRes.instrument,
- formato: stemRes.formato || 'WAV',
- tamano: stemRes.tamano || '3.2 MB',
+ formato: stemRes.formato ||'WAV',
+ tamano: stemRes.tamano ||'3.2 MB',
  fecha: new Date().toISOString().split('T')[0],
  volumen: stemRes.recommendedVolume || 1,
  muted: false
@@ -730,7 +725,7 @@ export default function SongStudioModal({
  // análisis falla para alguna pista, se queda con su volumen por defecto sin bloquear nada.
  setStemProgressModal(prev => prev ? {
  ...prev,
- currentStepText: 'Analizando volumen real de cada pista para una mezcla inicial equilibrada...'
+ currentStepText:'Analizando volumen real de cada pista para una mezcla inicial equilibrada...'
  } : null);
  try {
  const autoBalanceVolumes = await computeAutoBalanceVolumes(
@@ -745,8 +740,8 @@ export default function SongStudioModal({
  }
 
  const finalSeparationEngine = data.degraded
- ? 'Iris Básico (modo degradado)'
- : engineToUse === 'mvsep-mdx23' ? 'Iris Studio' : engineToUse === 'demucs' ? 'Iris Cloud' : 'Iris Básico';
+ ?'Iris Básico (modo degradado)'
+ : engineToUse ==='mvsep-mdx23' ?'Iris Studio' : engineToUse ==='demucs' ?'Iris Cloud' :'Iris Básico';
  const existingIndex = (song.audioIdeas || []).findIndex(i => i.id === targetIdea.id);
  let updatedIdeas = song.audioIdeas ? [...song.audioIdeas] : [];
  const updatedIdeaContent: SongAudioIdea = {
@@ -765,10 +760,10 @@ export default function SongStudioModal({
  onUpdateSong({ ...song, audioIdeas: updatedIdeas });
 
  const stemsInfo = newTracks.map(t => ({
- instrument: t.instrumento || 'Pista',
+ instrument: t.instrumento ||'Pista',
  trackName: t.nombre,
- formato: t.formato || (t.audioUrl?.toLowerCase().includes('.wav') ? 'WAV' : 'MP3'),
- tamano: t.tamano || '2.5 MB',
+ formato: t.formato || (t.audioUrl?.toLowerCase().includes('.wav') ?'WAV' :'MP3'),
+ tamano: t.tamano ||'2.5 MB',
  audioUrl: t.audioUrl
  }));
 
@@ -779,11 +774,11 @@ export default function SongStudioModal({
  songTitle: song.titulo,
  ideaTitle: targetIdea.titulo,
  targetIdea,
- stage: 'completed',
+ stage:'completed',
  progressPct: 100,
  currentStepText: data.degraded
- ? '¡Pistas procesadas en Modo Degradado (DSP básico) y montadas en el mezclador!'
- : '¡Pistas aisladas montadas en el mezclador con éxito!',
+ ?'¡Pistas procesadas en Modo Degradado (DSP básico) y montadas en el mezclador!'
+ :'¡Pistas aisladas montadas en el mezclador con éxito!',
  isNeural: !!data.isNeural,
  engineUsed: data.engineUsed,
  degraded: !!data.degraded,
@@ -800,97 +795,94 @@ export default function SongStudioModal({
  clearInterval(elapsedTimer);
  console.error("Error en separación de stems por IA:", err);
  const data = err?.data || {};
- const errMsg = String(data.message || data.error || err?.message || "");
+ const errMsg = String(data.message || data.error || err?.message ||"");
 
  // Diferenciar el proveedor origen del error (Replicate, Gemini API Key, Librería FFmpeg, Supabase, etc.)
- const errorProvider: 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system' = data.provider || (
- data.errorType?.startsWith('gemini_') || errMsg.includes('GEMINI_API_KEY') || errMsg.includes('Gemini') || errMsg.includes('GoogleGenAI') ? 'gemini' :
- data.errorType?.startsWith('ffmpeg_') || errMsg.includes('ffmpeg') || errMsg.includes('fluent-ffmpeg') ? 'ffmpeg' :
- data.errorType?.startsWith('supabase_') || errMsg.includes('supabase') || errMsg.includes('storage') ? 'supabase' :
- (engineToUse !== 'dsp-server' || data.engine === 'replicate' || data.engine === 'mvsep-mdx23' || data.engine === 'demucs' || errMsg.includes('replicate') || errMsg.includes('r8_')) ? 'replicate' :
- 'system'
+ const errorProvider:'replicate' |'gemini' |'ffmpeg' |'supabase' |'network' |'system' = data.provider || (
+ data.errorType?.startsWith('gemini_') || errMsg.includes('GEMINI_API_KEY') || errMsg.includes('Gemini') || errMsg.includes('GoogleGenAI') ?'gemini' :
+ data.errorType?.startsWith('ffmpeg_') || errMsg.includes('ffmpeg') || errMsg.includes('fluent-ffmpeg') ?'ffmpeg' :
+ data.errorType?.startsWith('supabase_') || errMsg.includes('supabase') || errMsg.includes('storage') ?'supabase' :
+ (engineToUse !=='dsp-server' || data.engine ==='replicate' || data.engine ==='mvsep-mdx23' || data.engine ==='demucs' || errMsg.includes('replicate') || errMsg.includes('r8_')) ?'replicate' :'system'
  );
 
  // Determinar el tipo específico de error
  let errorType = data.errorType;
  if (!errorType) {
- if (errorProvider === 'gemini') {
+ if (errorProvider ==='gemini') {
  if (errMsg.includes('key') && (errMsg.includes('not valid') || errMsg.includes('API_KEY_INVALID') || err?.status === 400 || err?.status === 401)) {
- errorType = 'gemini_auth_invalid';
+ errorType ='gemini_auth_invalid';
  } else if (errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED') || err?.status === 429) {
- errorType = 'gemini_quota_exceeded';
+ errorType ='gemini_quota_exceeded';
  } else if (errMsg.includes('model') || errMsg.includes('NOT_FOUND') || err?.status === 404) {
- errorType = 'gemini_model_unavailable';
+ errorType ='gemini_model_unavailable';
  } else {
- errorType = 'gemini_generic';
+ errorType ='gemini_generic';
  }
- } else if (errorProvider === 'ffmpeg') {
+ } else if (errorProvider ==='ffmpeg') {
  if (errMsg.includes('codec') || errMsg.includes('Invalid data') || err?.status === 422) {
- errorType = 'ffmpeg_codec_unsupported';
+ errorType ='ffmpeg_codec_unsupported';
  } else if (errMsg.includes('missing') || errMsg.includes('not found')) {
- errorType = 'ffmpeg_missing';
+ errorType ='ffmpeg_missing';
  } else {
- errorType = 'ffmpeg_processing_error';
+ errorType ='ffmpeg_processing_error';
  }
- } else if (errorProvider === 'supabase') {
+ } else if (errorProvider ==='supabase') {
  if (errMsg.includes('credentials') || errMsg.includes('URL') || errMsg.includes('KEY')) {
- errorType = 'supabase_credentials_missing';
+ errorType ='supabase_credentials_missing';
  } else {
- errorType = 'supabase_storage_error';
+ errorType ='supabase_storage_error';
  }
  } else {
  errorType = (
- err?.status === 401 ? 'auth_invalid' :
- err?.status === 402 ? 'billing_required' :
- err?.status === 422 ? 'audio_unsupported' :
- err?.status === 429 ? 'rate_limit' :
- err?.status === 504 ? 'timeout' :
- err?.status >= 500 ? 'server_error' : 'generic'
+ err?.status === 401 ?'auth_invalid' :
+ err?.status === 402 ?'billing_required' :
+ err?.status === 422 ?'audio_unsupported' :
+ err?.status === 429 ?'rate_limit' :
+ err?.status === 504 ?'timeout' :
+ err?.status >= 500 ?'server_error' :'generic'
  );
  }
  }
 
  // Títulos diferenciados por proveedor y tipo
  const errorTitle = data.errorTitle || (
- errorType === 'gemini_key_missing' ? 'Clave GEMINI_API_KEY No Configurada' :
- errorType === 'gemini_auth_invalid' ? 'Clave GEMINI_API_KEY Inválida o Revocada' :
- errorType === 'gemini_quota_exceeded' ? 'Cuota de Gemini API Excedida (HTTP 429)' :
- errorType === 'gemini_model_unavailable' ? 'Modelo de Gemini no Accesible en tu Región' :
- errorType === 'gemini_safety_block' ? 'Bloqueo de Seguridad en Gemini AI' :
- errorType === 'gemini_generic' ? 'Error en la API de Google Gemini' :
- errorType === 'ffmpeg_missing' ? 'Librería FFmpeg no Instalada en Servidor' :
- errorType === 'ffmpeg_codec_unsupported' ? 'Formato de Audio Incompatible con FFmpeg' :
- errorType === 'ffmpeg_processing_error' ? 'Error en Filtros Espectrales FFmpeg' :
- errorType === 'supabase_credentials_missing' ? 'Credenciales de Supabase no Configuradas' :
- errorType === 'supabase_storage_error' ? 'Error de Almacenamiento en Supabase Storage' :
- errorType === 'billing_required' ? 'Saldo o Facturación Requerida en el Servicio de IA (HTTP 402)' :
- errorType === 'auth_invalid' ? 'Token de Acceso Inválido o Expirado (HTTP 401)' :
- errorType === 'token_missing' ? 'Token de Acceso No Configurado' :
- errorType === 'audio_unsupported' ? 'Formato de Audio Rechazado por el Servicio de IA (HTTP 422)' :
- errorType === 'rate_limit' ? 'Límite de Peticiones Alcanzado (HTTP 429)' :
- errorType === 'timeout' ? 'Tiempo de Espera en la Nube Excedido (>120s)' :
- errorType === 'gpu_failure' ? 'Fallo en el Contenedor de Procesamiento en la Nube' :
- errorType === 'server_error' ? 'Fallo Temporal en la Infraestructura de IA' :
- 'Inconveniente en la Separación de Pistas'
+ errorType ==='gemini_key_missing' ?'Clave GEMINI_API_KEY No Configurada' :
+ errorType ==='gemini_auth_invalid' ?'Clave GEMINI_API_KEY Inválida o Revocada' :
+ errorType ==='gemini_quota_exceeded' ?'Cuota de Gemini API Excedida (HTTP 429)' :
+ errorType ==='gemini_model_unavailable' ?'Modelo de Gemini no Accesible en tu Región' :
+ errorType ==='gemini_safety_block' ?'Bloqueo de Seguridad en Gemini AI' :
+ errorType ==='gemini_generic' ?'Error en la API de Google Gemini' :
+ errorType ==='ffmpeg_missing' ?'Librería FFmpeg no Instalada en Servidor' :
+ errorType ==='ffmpeg_codec_unsupported' ?'Formato de Audio Incompatible con FFmpeg' :
+ errorType ==='ffmpeg_processing_error' ?'Error en Filtros Espectrales FFmpeg' :
+ errorType ==='supabase_credentials_missing' ?'Credenciales de Supabase no Configuradas' :
+ errorType ==='supabase_storage_error' ?'Error de Almacenamiento en Supabase Storage' :
+ errorType ==='billing_required' ?'Saldo o Facturación Requerida en el Servicio de IA (HTTP 402)' :
+ errorType ==='auth_invalid' ?'Token de Acceso Inválido o Expirado (HTTP 401)' :
+ errorType ==='token_missing' ?'Token de Acceso No Configurado' :
+ errorType ==='audio_unsupported' ?'Formato de Audio Rechazado por el Servicio de IA (HTTP 422)' :
+ errorType ==='rate_limit' ?'Límite de Peticiones Alcanzado (HTTP 429)' :
+ errorType ==='timeout' ?'Tiempo de Espera en la Nube Excedido (>120s)' :
+ errorType ==='gpu_failure' ?'Fallo en el Contenedor de Procesamiento en la Nube' :
+ errorType ==='server_error' ?'Fallo Temporal en la Infraestructura de IA' :'Inconveniente en la Separación de Pistas'
  );
 
- const specificMsg = data.message || data.error || errMsg || 'No se pudo conectar con el servidor de IA.';
+ const specificMsg = data.message || data.error || errMsg ||'No se pudo conectar con el servidor de IA.';
 
  // Consejo / Acción guiada según el origen exacto
  const actionAdvice = data.actionAdvice || (
- errorType === 'gemini_key_missing' ? 'Añade tu clave GEMINI_API_KEY en los ajustes del proyecto o variables de entorno.' :
- errorType === 'gemini_auth_invalid' ? 'Verifica tu API Key en Google AI Studio (https://aistudio.google.com/app/apikey) y actualízala.' :
- errorType === 'gemini_quota_exceeded' ? 'Has superado el ratio de llamadas de tu cuenta en Gemini. Espera 60s o utiliza el plan de pago.' :
- errorType === 'gemini_model_unavailable' ? 'El modelo solicitado no está activo para tu clave. Se usará el análisis local de respaldo.' :
- errorType === 'ffmpeg_codec_unsupported' ? 'Exporta tu pista a MP3 estándar o WAV PCM 16-bit / 44.1kHz antes de subirla.' :
- errorType === 'ffmpeg_missing' ? 'Verifica la instalación de ffmpeg-static en el servidor backend de Railway.' :
- errorType === 'supabase_credentials_missing' ? 'Asegúrate de que SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY estén definidas en Railway.' :
- errorType === 'billing_required' ? 'Tu cuenta de Replicate requiere añadir saldo en replicate.com/account/billing o utilizar el Motor DSP local gratuito.' :
- errorType === 'auth_invalid' ? 'Comprueba que tu API Token comience por r8_ y esté activo en replicate.com/account/api-tokens.' :
- errorType === 'token_missing' ? 'Configura la variable REPLICATE_API_TOKEN en los ajustes de tu proyecto.' :
- errorType === 'rate_limit' ? 'Espera 30-60 segundos antes de enviar una nueva solicitud o utiliza el Motor DSP local.' :
- errorType === 'timeout' ? 'La máquina GPU tardó en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.' :
- 'Puedes reintentar o usar la separación con el Motor DSP local que procesa el audio en el propio servidor.'
+ errorType ==='gemini_key_missing' ?'Añade tu clave GEMINI_API_KEY en los ajustes del proyecto o variables de entorno.' :
+ errorType ==='gemini_auth_invalid' ?'Verifica tu API Key en Google AI Studio (https://aistudio.google.com/app/apikey) y actualízala.' :
+ errorType ==='gemini_quota_exceeded' ?'Has superado el ratio de llamadas de tu cuenta en Gemini. Espera 60s o utiliza el plan de pago.' :
+ errorType ==='gemini_model_unavailable' ?'El modelo solicitado no está activo para tu clave. Se usará el análisis local de respaldo.' :
+ errorType ==='ffmpeg_codec_unsupported' ?'Exporta tu pista a MP3 estándar o WAV PCM 16-bit / 44.1kHz antes de subirla.' :
+ errorType ==='ffmpeg_missing' ?'Verifica la instalación de ffmpeg-static en el servidor backend de Railway.' :
+ errorType ==='supabase_credentials_missing' ?'Asegúrate de que SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY estén definidas en Railway.' :
+ errorType ==='billing_required' ?'Tu cuenta de Replicate requiere añadir saldo en replicate.com/account/billing o utilizar el Motor DSP local gratuito.' :
+ errorType ==='auth_invalid' ?'Comprueba que tu API Token comience por r8_ y esté activo en replicate.com/account/api-tokens.' :
+ errorType ==='token_missing' ?'Configura la variable REPLICATE_API_TOKEN en los ajustes de tu proyecto.' :
+ errorType ==='rate_limit' ?'Espera 30-60 segundos antes de enviar una nueva solicitud o utiliza el Motor DSP local.' :
+ errorType ==='timeout' ?'La máquina GPU tardó en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.' :'Puedes reintentar o usar la separación con el Motor DSP local que procesa el audio en el propio servidor.'
  );
  const detailInfo = data.details || data.errorDetail;
 
@@ -902,15 +894,15 @@ export default function SongStudioModal({
  songTitle: song.titulo,
  ideaTitle: targetIdea.titulo,
  targetIdea,
- stage: 'error',
+ stage:'error',
  progressPct: 0,
- currentStepText: 'Error al procesar la separación.',
+ currentStepText:'Error al procesar la separación.',
  errorProvider,
  errorType,
  errorTitle,
- errorMessage: typeof specificMsg === 'string' ? specificMsg : JSON.stringify(specificMsg),
+ errorMessage: typeof specificMsg ==='string' ? specificMsg : JSON.stringify(specificMsg),
  actionAdvice,
- errorDetail: detailInfo && detailInfo !== specificMsg ? (typeof detailInfo === 'string' ? detailInfo : JSON.stringify(detailInfo, null, 2)) : undefined,
+ errorDetail: detailInfo && detailInfo !== specificMsg ? (typeof detailInfo ==='string' ? detailInfo : JSON.stringify(detailInfo, null, 2)) : undefined,
  engineChoice: engineToUse
  });
  } finally {
@@ -921,7 +913,7 @@ export default function SongStudioModal({
  // AI Custom Instrument Track Generator Handler — genera y deja en previsualización, NUNCA
  // compromete directo al mezclador: la IA generativa a veces devuelve algo que no encaja, y
  // forzar al usuario a escucharlo ya integrado en su mezcla (o peor, tener que deshacerlo a mano)
- // es peor experiencia que dejarle escuchar antes y decidir "Añadir" o "Descartar".
+ // es peor experiencia que dejarle escuchar antes y decidir"Añadir" o"Descartar".
  const handleGenerateAiInstrumentTrack = async (targetIdea: SongAudioIdea) => {
  if (!aiTrackGenInstrument) return;
  setAiTrackGenError(null);
@@ -932,10 +924,10 @@ export default function SongStudioModal({
  // Audio real de la idea para que el motor (MusicGen) pueda ESCUCHAR melodía/acordes/ritmo
  // en vez de adivinar desde una descripción de texto — mismo saneado que ya hace la
  // separación de stems para blobs/IndexedDB, que Replicate no puede ir a buscar por sí solo.
- // idea.audioUrl es "la pista principal o legacy" y puede estar vacío en ideas que solo
+ // idea.audioUrl es"la pista principal o legacy" y puede estar vacío en ideas que solo
  // tienen pistas separadas (stems) o grabaciones multipista — sin este fallback, esas ideas
  // se iban derechas a Lyria (solo texto) sin que se notara por qué.
- const originalSourceAudioUrl = targetIdea.audioUrl || getIdeaTracks(targetIdea)[0]?.audioUrl || '';
+ const originalSourceAudioUrl = targetIdea.audioUrl || getIdeaTracks(targetIdea)[0]?.audioUrl ||'';
  let sourceAudioUrl: string | undefined = originalSourceAudioUrl || undefined;
  try {
  if (sourceAudioUrl) {
@@ -943,10 +935,10 @@ export default function SongStudioModal({
  if (resolved) sourceAudioUrl = resolved;
  if (sourceAudioUrl.startsWith('indexeddb:') || sourceAudioUrl.startsWith('blob:') || sourceAudioUrl.startsWith('data:')) {
  const blob = await getAudioBlobFromUrl(originalSourceAudioUrl);
- const ext = blob.type.includes('wav') ? 'wav' : blob.type.includes('flac') ? 'flac' : 'mp3';
- const file = new File([blob], `source-audio-${Date.now()}.${ext}`, { type: blob.type || 'audio/mpeg' });
+ const ext = blob.type.includes('wav') ?'wav' : blob.type.includes('flac') ?'flac' :'mp3';
+ const file = new File([blob], `source-audio-${Date.now()}.${ext}`, { type: blob.type ||'audio/mpeg' });
  const bandIdToUse = localStorage.getItem('bandmanager_band_id') || undefined;
- const uploadedUrl = await uploadFileToServer(file, { category: 'stems', folder: 'inputs', bandId: bandIdToUse });
+ const uploadedUrl = await uploadFileToServer(file, { category:'stems', folder:'inputs', bandId: bandIdToUse });
  if (uploadedUrl && (uploadedUrl.startsWith('http://') || uploadedUrl.startsWith('https://') || uploadedUrl.startsWith('/'))) {
  sourceAudioUrl = uploadedUrl;
  }
@@ -958,8 +950,8 @@ export default function SongStudioModal({
  }
 
  const data = await apiFetch('/api/ai-generate-instrument-track', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  instrument: aiTrackGenInstrument,
  songTitle: song.titulo,
@@ -967,14 +959,14 @@ export default function SongStudioModal({
  bpm: song.bpm,
  key: song.tonalidad,
  genero: song.genero,
- style: aiTrackGenMode === 'presets' ? aiTrackGenStyle : undefined,
- contextPrompt: aiTrackGenMode === 'custom' ? aiTrackGenPrompt : undefined,
+ style: aiTrackGenMode ==='presets' ? aiTrackGenStyle : undefined,
+ contextPrompt: aiTrackGenMode ==='custom' ? aiTrackGenPrompt : undefined,
  targetDurationSec: song.duracionSegundos || undefined,
  sourceAudioUrl
  })
  });
 
- const generatedAudioUrl = data.audioUrl || (data.audioBase64 ? `data:${data.mimeType || 'audio/wav'};base64,${data.audioBase64}` : null);
+ const generatedAudioUrl = data.audioUrl || (data.audioBase64 ? `data:${data.mimeType ||'audio/wav'};base64,${data.audioBase64}` : null);
  if (!generatedAudioUrl) {
  throw new Error('La IA no devolvió audio esta vez (puede pasar con Lyria/MusicGen). Prueba a regenerar o cambia el estilo/instrucción.');
  }
@@ -982,11 +974,11 @@ export default function SongStudioModal({
  setAiTrackGenPreview({
  audioUrl: generatedAudioUrl,
  trackName: data.trackName || `Pista IA: ${aiTrackGenInstrument}`,
- arrangementNotes: data.arrangementNotes || 'Generado en armonía con la tonalidad y BPM.'
+ arrangementNotes: data.arrangementNotes ||'Generado en armonía con la tonalidad y BPM.'
  });
  } catch (err: any) {
  console.error("Error al generar pista por IA:", err);
- setAiTrackGenError(err?.message || 'No se pudo generar la pista de instrumento. Inténtalo de nuevo.');
+ setAiTrackGenError(err?.message ||'No se pudo generar la pista de instrumento. Inténtalo de nuevo.');
  } finally {
  setIsGeneratingAiTrack(false);
  }
@@ -999,7 +991,7 @@ export default function SongStudioModal({
  id: `ai-track-${Date.now()}`,
  nombre: aiTrackGenPreview.trackName,
  audioUrl: aiTrackGenPreview.audioUrl,
- autor: 'IA Lyria & Gemini',
+ autor:'IA Lyria & Gemini',
  instrumento: aiTrackGenInstrument,
  fecha: new Date().toISOString().split('T')[0],
  volumen: 1,
@@ -1102,7 +1094,7 @@ export default function SongStudioModal({
  } catch (e) {}
 
  try {
- if (!studioAudioCtxRef.current || studioAudioCtxRef.current.state === 'closed') {
+ if (!studioAudioCtxRef.current || studioAudioCtxRef.current.state ==='closed') {
  const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
  if (AudioCtxClass) {
  studioAudioCtxRef.current = new AudioCtxClass();
@@ -1112,7 +1104,7 @@ export default function SongStudioModal({
  const ctx = studioAudioCtxRef.current;
  if (!ctx) return;
 
- if (ctx.state === 'suspended') {
+ if (ctx.state ==='suspended') {
  ctx.resume().catch(() => {});
  }
 
@@ -1137,7 +1129,7 @@ export default function SongStudioModal({
  // Only apply simulated frequency isolation filter if track shares the exact original unseparated mix file
  // If it's a dedicated stem file (Demucs v4, FFmpeg isolated stem, or uploaded WAV), let it play in full 20Hz-20kHz studio fidelity!
  let stemFilter: BiquadFilterNode | null = null;
- const inst = (tr.instrumento || tr.nombre || '').toLowerCase();
+ const inst = (tr.instrumento || tr.nombre ||'').toLowerCase();
  const isDedicatedStem = (
  (el.src && (el.src.includes('/stems/') || el.src.includes('stem-') || el.src.includes('replicate.delivery') || el.src.startsWith('blob:'))) ||
  (tr.audioUrl && (tr.audioUrl.includes('/stems/') || tr.audioUrl.includes('stem-') || tr.audioUrl.includes('replicate.delivery') || tr.audioUrl.startsWith('blob:')))
@@ -1147,18 +1139,18 @@ export default function SongStudioModal({
  if (inst.includes('voz') || inst.includes('vocal')) {
  // Gentle vocal contour only for unseparated base mix
  stemFilter = ctx.createBiquadFilter();
- stemFilter.type = 'peaking';
+ stemFilter.type ='peaking';
  stemFilter.frequency.value = 1500;
  stemFilter.Q.value = 1.2;
  stemFilter.gain.value = 6;
  } else if (inst.includes('batería') || inst.includes('bateria') || inst.includes('drum')) {
  stemFilter = ctx.createBiquadFilter();
- stemFilter.type = 'highpass';
+ stemFilter.type ='highpass';
  stemFilter.frequency.value = 1200;
  stemFilter.Q.value = 0.7;
  } else if (inst.includes('bajo') || inst.includes('bass')) {
  stemFilter = ctx.createBiquadFilter();
- stemFilter.type = 'lowpass';
+ stemFilter.type ='lowpass';
  stemFilter.frequency.value = 240;
  stemFilter.Q.value = 1.0;
  }
@@ -1166,20 +1158,20 @@ export default function SongStudioModal({
 
  // 1. Low Shelf Filter (Graves < 150Hz)
  const eqLow = ctx.createBiquadFilter();
- eqLow.type = 'lowshelf';
+ eqLow.type ='lowshelf';
  eqLow.frequency.value = 150;
  eqLow.gain.value = tr.eqLow ?? 0;
 
  // 2. Peaking Filter (Medios 1000Hz)
  const eqMid = ctx.createBiquadFilter();
- eqMid.type = 'peaking';
+ eqMid.type ='peaking';
  eqMid.frequency.value = 1000;
  eqMid.Q.value = 1.0;
  eqMid.gain.value = tr.eqMid ?? 0;
 
  // 3. High Shelf Filter (Agudos > 3500Hz)
  const eqHigh = ctx.createBiquadFilter();
- eqHigh.type = 'highshelf';
+ eqHigh.type ='highshelf';
  eqHigh.frequency.value = 3500;
  eqHigh.gain.value = tr.eqHigh ?? 0;
 
@@ -1228,7 +1220,7 @@ export default function SongStudioModal({
  if (dsp.eqMid) dsp.eqMid.gain.setTargetAtTime(tr.eqMid ?? 0, now, 0.015);
  if (dsp.eqHigh) dsp.eqHigh.gain.setTargetAtTime(tr.eqHigh ?? 0, now, 0.015);
 
- if (dsp.panNode && 'pan' in dsp.panNode) {
+ if (dsp.panNode &&'pan' in dsp.panNode) {
  (dsp.panNode as StereoPannerNode).pan.setTargetAtTime(tr.pan ?? 0, now, 0.015);
  }
  } else {
@@ -1249,7 +1241,7 @@ export default function SongStudioModal({
  if (AudioCtxClass) studioAudioCtxRef.current = new AudioCtxClass();
  }
  const ctx = studioAudioCtxRef.current;
- if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {});
+ if (ctx && ctx.state ==='suspended') ctx.resume().catch(() => {});
 
  const songBpm = bpm > 40 && bpm < 240 ? bpm : (song.bpm || 120);
  const beatIntervalMs = Math.max(300, Math.min(1200, (60 / songBpm) * 1000));
@@ -1259,7 +1251,7 @@ export default function SongStudioModal({
  if (!ctx) return;
  const osc = ctx.createOscillator();
  const gain = ctx.createGain();
- osc.type = 'sine';
+ osc.type ='sine';
  osc.frequency.setValueAtTime(freq, ctx.currentTime);
  gain.gain.setValueAtTime(0.3, ctx.currentTime);
  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
@@ -1334,7 +1326,7 @@ export default function SongStudioModal({
  // --- NEW IDEA AI BASE GENERATION STATE ---
  const [genAiOnNewIdea, setGenAiOnNewIdea] = useState<boolean>(false);
  const [newIdeaBpm, setNewIdeaBpm] = useState<number>(song.bpm || 120);
- const [newIdeaKey, setNewIdeaKey] = useState<string>(song.tonalidad || 'Do');
+ const [newIdeaKey, setNewIdeaKey] = useState<string>(song.tonalidad ||'Do');
  const [newIdeaStyle, setNewIdeaStyle] = useState<DrumPatternStyle>('rock');
  const [newIdeaIncludeDrums, setNewIdeaIncludeDrums] = useState<boolean>(true);
  const [newIdeaIncludeBass, setNewIdeaIncludeBass] = useState<boolean>(true);
@@ -1342,7 +1334,7 @@ export default function SongStudioModal({
  // --- SONG ORIGINAL BASE TRACK STATE ---
  const [useSongBaseTrack, setUseSongBaseTrack] = useState<boolean>(false);
  const [selectedSongBaseUrl, setSelectedSongBaseUrl] = useState<string>(
- song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || ''
+ song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) ||''
  );
 
  useEffect(() => {
@@ -1423,7 +1415,7 @@ export default function SongStudioModal({
 
  const ideasList = song.audioIdeas || [];
 
- const filteredIdeas = activeSectionFilter === 'todas' 
+ const filteredIdeas = activeSectionFilter ==='todas' 
  ? ideasList 
  : ideasList.filter(i => i.seccion === activeSectionFilter);
 
@@ -1445,17 +1437,17 @@ export default function SongStudioModal({
 
  // Format seconds to M:SS
  const formatTime = (secs: number) => {
- if (!secs || isNaN(secs) || !isFinite(secs) || secs < 0) return '0:00';
+ if (!secs || isNaN(secs) || !isFinite(secs) || secs < 0) return'0:00';
  const m = Math.floor(secs / 60);
  const s = Math.floor(secs % 60);
- return `${m}:${s < 10 ? '0' : ''}${s}`;
+ return `${m}:${s < 10 ?'0' :''}${s}`;
  };
 
  // Bajo ~1s siguen siendo micro-correcciones de latencia (+Nms); por encima es una pista (p.ej.
  // IA) colocada deliberadamente más adelante en la canción, así que se lee mejor como timestamp.
  const formatDesfase = (ms?: number) => {
  const val = ms || 0;
- if (val === 0) return '0ms';
+ if (val === 0) return'0ms';
  if (Math.abs(val) >= 1000) {
  return val < 0 ? `empieza en ${formatTime(-val / 1000)}` : `+${(val / 1000).toFixed(1)}s`;
  }
@@ -1756,7 +1748,7 @@ export default function SongStudioModal({
  const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
  if (AudioCtx) studioAudioCtxRef.current = new AudioCtx();
  }
- if (studioAudioCtxRef.current && studioAudioCtxRef.current.state === 'suspended') {
+ if (studioAudioCtxRef.current && studioAudioCtxRef.current.state ==='suspended') {
  studioAudioCtxRef.current.resume().catch((e) => console.warn("AudioContext resume warning:", e));
  }
  } catch (e) {
@@ -1815,7 +1807,7 @@ export default function SongStudioModal({
  } catch (_) {}
  }
 
- if (resolvedUrl && !resolvedUrl.startsWith('indexeddb:') && (!el.src || el.src === '' || el.src.endsWith('undefined') || (!el.src.includes(resolvedUrl) && el.src !== resolvedUrl))) {
+ if (resolvedUrl && !resolvedUrl.startsWith('indexeddb:') && (!el.src || el.src ==='' || el.src.endsWith('undefined') || (!el.src.includes(resolvedUrl) && el.src !== resolvedUrl))) {
  el.src = resolvedUrl;
  }
 
@@ -1841,7 +1833,7 @@ export default function SongStudioModal({
  updateTrackAudioDSP(tr.id, el, tr, hasSoloTrack);
 
  // Ensure audio element play is triggered
- if (el.src && el.src !== '' && !el.src.endsWith('undefined') && !el.src.startsWith('indexeddb:')) {
+ if (el.src && el.src !=='' && !el.src.endsWith('undefined') && !el.src.startsWith('indexeddb:')) {
  if (!pendingPlayPromiseRefs.current[tr.id]) {
  const p = el.play();
  if (p !== undefined) {
@@ -1941,7 +1933,7 @@ export default function SongStudioModal({
  const activeEl = document.activeElement;
  if (activeEl) {
  const tagName = activeEl.tagName.toUpperCase();
- if (tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT' || (activeEl as HTMLElement).isContentEditable) {
+ if (tagName ==='INPUT' || tagName ==='TEXTAREA' || tagName ==='SELECT' || (activeEl as HTMLElement).isContentEditable) {
  return;
  }
  }
@@ -1950,7 +1942,7 @@ export default function SongStudioModal({
 
  // If currently recording an overdub track, pressing R, Space, or Stop keys finishes recording
  if (isRecordingTrack) {
- if (['Space', 'Numpad0', 'Digit0', 'KeyR', 'NumpadMultiply', 'KeyP', 'Escape', 'Home', 'NumpadEnter'].includes(e.code) || e.key === 'Home') {
+ if (['Space','Numpad0','Digit0','KeyR','NumpadMultiply','KeyP','Escape','Home','NumpadEnter'].includes(e.code) || e.key ==='Home') {
  e.preventDefault();
  stopRecordingTrackOverdub();
  return;
@@ -1958,49 +1950,49 @@ export default function SongStudioModal({
  }
 
  // [Espacio]: Alternar Reproducir / Pausar Transport
- if (e.code === 'Space') {
+ if (e.code ==='Space') {
  e.preventDefault();
  if (activeIdea) {
  togglePlayIdea(activeIdea);
  }
  }
  // [Numpad0 / Digit0 / Home / Escape / Enter]: Detener e ir a inicio (Stop & Rewind)
- else if (e.code === 'Numpad0' || e.code === 'Digit0' || e.key === 'Home' || e.code === 'NumpadEnter') {
+ else if (e.code ==='Numpad0' || e.code ==='Digit0' || e.key ==='Home' || e.code ==='NumpadEnter') {
  e.preventDefault();
  if (activeIdea) {
  handleStopIdea(activeIdea);
  }
  }
  // [KeyP]: Pausar en posición actual
- else if (e.code === 'KeyP') {
+ else if (e.code ==='KeyP') {
  e.preventDefault();
  if (activeIdea) {
  handlePauseIdea(activeIdea);
  }
  }
  // [KeyL / Slash]: Alternar Bucle (Loop)
- else if (e.code === 'KeyL' || e.code === 'Slash') {
+ else if (e.code ==='KeyL' || e.code ==='Slash') {
  e.preventDefault();
  if (activeIdea) {
  toggleIdeaLoop(activeIdea);
  }
  }
  // [KeyI]: Fijar Cue In / Loop Start en la posición actual
- else if (e.code === 'KeyI') {
+ else if (e.code ==='KeyI') {
  e.preventDefault();
  if (activeIdea) {
  setIdeaCueIn(activeIdea);
  }
  }
  // [KeyO]: Fijar Cue Out / Loop End en la posición actual
- else if (e.code === 'KeyO') {
+ else if (e.code ==='KeyO') {
  e.preventDefault();
  if (activeIdea) {
  setIdeaCueOut(activeIdea);
  }
  }
  // [KeyR / NumpadMultiply]: Iniciar grabación overdub
- else if (e.code === 'KeyR' || e.code === 'NumpadMultiply') {
+ else if (e.code ==='KeyR' || e.code ==='NumpadMultiply') {
  e.preventDefault();
  if (activeIdea) {
  startRecordingTrackOverdub(activeIdea);
@@ -2009,12 +2001,12 @@ export default function SongStudioModal({
  }
  }
  // [KeyN]: Abrir/Cerrar formulario de Nueva Idea
- else if (e.code === 'KeyN') {
+ else if (e.code ==='KeyN') {
  e.preventDefault();
  setShowAddIdea(prev => !prev);
  }
  // [Flecha Izquierda]: Retroceder 5s (o 15s con Shift)
- else if (e.code === 'ArrowLeft') {
+ else if (e.code ==='ArrowLeft') {
  e.preventDefault();
  if (activeIdea) {
  const cur = currentTimeMap[activeIdea.id] || 0;
@@ -2023,7 +2015,7 @@ export default function SongStudioModal({
  }
  }
  // [Flecha Derecha]: Avanzar 5s (o 15s con Shift)
- else if (e.code === 'ArrowRight') {
+ else if (e.code ==='ArrowRight') {
  e.preventDefault();
  if (activeIdea) {
  const cur = currentTimeMap[activeIdea.id] || 0;
@@ -2033,7 +2025,7 @@ export default function SongStudioModal({
  }
  }
  // [KeyM]: Alternar Silencio (Mute) en la idea activa
- else if (e.code === 'KeyM') {
+ else if (e.code ==='KeyM') {
  e.preventDefault();
  if (activeIdea) {
  const tracks = getIdeaTracks(activeIdea);
@@ -2043,7 +2035,7 @@ export default function SongStudioModal({
  }
  }
  // [KeyS]: Alternar Solo en la primera pista
- else if (e.code === 'KeyS') {
+ else if (e.code ==='KeyS') {
  e.preventDefault();
  if (activeIdea) {
  const tracks = getIdeaTracks(activeIdea);
@@ -2053,7 +2045,7 @@ export default function SongStudioModal({
  }
  }
  // [KeyK or ?]: Abrir / Cerrar guía de atajos Cubase
- else if (e.code === 'KeyK' || e.key === '?') {
+ else if (e.code ==='KeyK' || e.key ==='?') {
  e.preventDefault();
  setShowCubaseHelp(prev => !prev);
  }
@@ -2184,12 +2176,12 @@ export default function SongStudioModal({
  };
 
  // Handle Track EQ Change (low, mid, high: -12dB to +12dB)
- const handleTrackEqChange = (idea: SongAudioIdea, trackId: string, band: 'low' | 'mid' | 'high', value: number) => {
+ const handleTrackEqChange = (idea: SongAudioIdea, trackId: string, band:'low' |'mid' |'high', value: number) => {
  const tracks = getIdeaTracks(idea);
  const updatedTracks = tracks.map(tr => {
  if (tr.id !== trackId) return tr;
- if (band === 'low') return { ...tr, eqLow: value };
- if (band === 'mid') return { ...tr, eqMid: value };
+ if (band ==='low') return { ...tr, eqLow: value };
+ if (band ==='mid') return { ...tr, eqMid: value };
  return { ...tr, eqHigh: value };
  });
  const hasSolo = updatedTracks.some(t => t.solo);
@@ -2233,15 +2225,15 @@ export default function SongStudioModal({
  const downloadUrl = URL.createObjectURL(wavBlob);
  const link = document.createElement('a');
  link.href = downloadUrl;
- const safeTitle = (idea.titulo || 'mezcla_master').toLowerCase().replace(/\s+/g, '_');
- link.download = `${song.titulo || 'cancion'}_${safeTitle}_master.wav`;
+ const safeTitle = (idea.titulo ||'mezcla_master').toLowerCase().replace(/\s+/g,'_');
+ link.download = `${song.titulo ||'cancion'}_${safeTitle}_master.wav`;
  document.body.appendChild(link);
  link.click();
  document.body.removeChild(link);
  setTimeout(() => URL.revokeObjectURL(downloadUrl), 5000);
  } catch (err: any) {
  console.error("Error al exportar la mezcla máster:", err);
- alert("No se pudo exportar la mezcla máster: " + (err.message || err));
+ alert("No se pudo exportar la mezcla máster:" + (err.message || err));
  } finally {
  setIsExportingMaster(false);
  }
@@ -2265,8 +2257,8 @@ export default function SongStudioModal({
 
  if (tracks.length <= 1) {
  setConfirmDeleteModal({
- title: 'Eliminar Idea Completa',
- description: `Esta pista es la única de la idea "${idea.titulo}". ¿Deseas eliminar la idea completa del tema?`,
+ title:'Eliminar Idea Completa',
+ description: `Esta pista es la única de la idea"${idea.titulo}". ¿Deseas eliminar la idea completa del tema?`,
  onConfirm: () => {
  handleDeleteIdea(undefined, idea.id, true);
  }
@@ -2275,8 +2267,8 @@ export default function SongStudioModal({
  }
 
  setConfirmDeleteModal({
- title: 'Eliminar Pista de Audio',
- description: `¿Deseas eliminar la pista "${track?.nombre || 'Pista'}" de la mezcla de "${idea.titulo}"?`,
+ title:'Eliminar Pista de Audio',
+ description: `¿Deseas eliminar la pista"${track?.nombre ||'Pista'}" de la mezcla de"${idea.titulo}"?`,
  onConfirm: () => {
  const el = trackAudioRefs.current[trackId];
  if (el) el.pause();
@@ -2292,13 +2284,13 @@ export default function SongStudioModal({
  });
  };
 
- // Reordenar pistas a mano (guiño a Iris: al mover, cada pista "congela" su color de arcoíris
+ // Reordenar pistas a mano (guiño a Iris: al mover, cada pista"congela" su color de arcoíris
  // actual en colorHue para que se lo lleve consigo — a partir de ahí el orden visual del
  // arcoíris ya no será perfecto, pero cada pista mantiene su identidad de color).
  const stampTrackColors = (tracks: AudioTrack[]): AudioTrack[] =>
  tracks.map((t, i) => ({
  ...t,
- colorHue: typeof t.colorHue === 'number' ? t.colorHue : RAINBOW_HUE_STEPS[i % RAINBOW_HUE_STEPS.length]
+ colorHue: typeof t.colorHue ==='number' ? t.colorHue : RAINBOW_HUE_STEPS[i % RAINBOW_HUE_STEPS.length]
  }));
 
  const reorderIdeaTracks = (idea: SongAudioIdea, fromIndex: number, toIndex: number) => {
@@ -2313,10 +2305,10 @@ export default function SongStudioModal({
  onUpdateSong({ ...song, audioIdeas: updatedIdeas });
  };
 
- const handleMoveTrack = (idea: SongAudioIdea, trackId: string, direction: 'up' | 'down') => {
+ const handleMoveTrack = (idea: SongAudioIdea, trackId: string, direction:'up' |'down') => {
  const tracks = getIdeaTracks(idea);
  const fromIndex = tracks.findIndex(t => t.id === trackId);
- reorderIdeaTracks(idea, fromIndex, direction === 'up' ? fromIndex - 1 : fromIndex + 1);
+ reorderIdeaTracks(idea, fromIndex, direction ==='up' ? fromIndex - 1 : fromIndex + 1);
  };
 
  // Arrastrar y soltar para reordenar pistas — mismo sistema (handle GripVertical + HTML5 drag)
@@ -2351,7 +2343,7 @@ export default function SongStudioModal({
  const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
  if (AudioCtxClass) studioAudioCtxRef.current = new AudioCtxClass();
  }
- if (studioAudioCtxRef.current && studioAudioCtxRef.current.state === 'suspended') {
+ if (studioAudioCtxRef.current && studioAudioCtxRef.current.state ==='suspended') {
  await studioAudioCtxRef.current.resume();
  }
  } catch (e) {
@@ -2374,9 +2366,9 @@ export default function SongStudioModal({
  }
 
  const recorderOptions: MediaRecorderOptions = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
- ? { mimeType: 'audio/webm;codecs=opus', audioBitsPerSecond: 256000 }
+ ? { mimeType:'audio/webm;codecs=opus', audioBitsPerSecond: 256000 }
  : MediaRecorder.isTypeSupported('audio/mp4')
- ? { mimeType: 'audio/mp4', audioBitsPerSecond: 256000 }
+ ? { mimeType:'audio/mp4', audioBitsPerSecond: 256000 }
  : { audioBitsPerSecond: 256000 };
 
  const mediaRecorder = new MediaRecorder(streamToRecord, recorderOptions);
@@ -2396,12 +2388,12 @@ export default function SongStudioModal({
  tracks.forEach(tr => {
  const resolvedUrl = resolvedAudioUrls[tr.id] || tr.audioUrl;
  let el = trackAudioRefs.current[tr.id];
- if (!el && resolvedUrl && typeof resolvedUrl === 'string' && !resolvedUrl.startsWith('indexeddb:') && !resolvedUrl.endsWith('undefined')) {
+ if (!el && resolvedUrl && typeof resolvedUrl ==='string' && !resolvedUrl.startsWith('indexeddb:') && !resolvedUrl.endsWith('undefined')) {
  el = new Audio(resolvedUrl || SILENT_AUDIO_URI);
  trackAudioRefs.current[tr.id] = el;
  }
  if (el) {
- if (resolvedUrl && typeof resolvedUrl === 'string' && !resolvedUrl.startsWith('indexeddb:') && !resolvedUrl.endsWith('undefined')) {
+ if (resolvedUrl && typeof resolvedUrl ==='string' && !resolvedUrl.startsWith('indexeddb:') && !resolvedUrl.endsWith('undefined')) {
  if (!el.src || !el.src.includes(resolvedUrl)) {
  el.src = resolvedUrl;
  }
@@ -2416,7 +2408,7 @@ export default function SongStudioModal({
  // 3. Play backing track audio FIRST so sound is emitted before mic recording captures performance
  const playPromises = activeBackingTracks.map(tr => {
  const resolvedUrl = resolvedAudioUrls[tr.id] || tr.audioUrl;
- if (resolvedUrl && typeof resolvedUrl === 'string' && resolvedUrl.trim() !== '' && !resolvedUrl.endsWith('undefined') && !resolvedUrl.startsWith('indexeddb:')) {
+ if (resolvedUrl && typeof resolvedUrl ==='string' && resolvedUrl.trim() !=='' && !resolvedUrl.endsWith('undefined') && !resolvedUrl.startsWith('indexeddb:')) {
  let el = trackAudioRefs.current[tr.id];
  if (!el) {
  el = new Audio(resolvedUrl || SILENT_AUDIO_URI);
@@ -2484,7 +2476,7 @@ export default function SongStudioModal({
  }
  rawStream.getTracks().forEach(track => track.stop());
 
- const rawAudioBlob = new Blob(trackAudioChunksRef.current, { type: 'audio/webm' });
+ const rawAudioBlob = new Blob(trackAudioChunksRef.current, { type:'audio/webm' });
 
  try {
  setIsUploading(true);
@@ -2519,7 +2511,7 @@ export default function SongStudioModal({
  if (useCleanDSPFilter) {
  finalBlob = await cleanAudioBlobOffline(finalBlob);
  }
- const file = new File([finalBlob], `track-${Date.now()}.wav`, { type: 'audio/wav' });
+ const file = new File([finalBlob], `track-${Date.now()}.wav`, { type:'audio/wav' });
  const serverUrl = await uploadFileToServer(file);
  const trackName = newTrackName.trim() || `Pista ${tracks.length + 1}`;
  const instrument = newTrackInstrument.trim() || undefined;
@@ -2538,12 +2530,12 @@ export default function SongStudioModal({
  clearInterval(trackRecordingTimerRef.current);
  }
  console.warn("Microphone access for overdub not available:", err?.message || err);
- alert("No se pudo acceder al micrófono para grabar la pista (" + (err?.message || "comprueba los permisos del navegador") + ").");
+ alert("No se pudo acceder al micrófono para grabar la pista (" + (err?.message ||"comprueba los permisos del navegador") +").");
  }
  };
 
  const stopRecordingTrackOverdub = () => {
- if (trackMediaRecorderRef.current && trackMediaRecorderRef.current.state !== 'inactive') {
+ if (trackMediaRecorderRef.current && trackMediaRecorderRef.current.state !=='inactive') {
  trackMediaRecorderRef.current.stop();
  }
  setIsRecordingTrack(false);
@@ -2582,7 +2574,7 @@ export default function SongStudioModal({
  setCleaningTrackId(track.id);
  const rawBlob = await getAudioBlobFromUrl(track.audioUrl);
  const cleanedBlob = await cleanAudioBlobOffline(rawBlob);
- const cleanedFile = new File([cleanedBlob], `clean-${track.nombre || 'pista'}-${Date.now()}.wav`, { type: 'audio/wav' });
+ const cleanedFile = new File([cleanedBlob], `clean-${track.nombre ||'pista'}-${Date.now()}.wav`, { type:'audio/wav' });
  const serverUrl = await uploadFileToServer(cleanedFile);
 
  const tracks = getIdeaTracks(idea);
@@ -2601,7 +2593,7 @@ export default function SongStudioModal({
  try {
  setIsUploading(true);
  const serverUrl = await uploadFileToServer(file);
- const fileNameClean = file.name ? file.name.replace(/\.[^/.]+$/, "") : "";
+ const fileNameClean = file.name ? file.name.replace(/\.[^/.]+$/,"") :"";
  const existingTracks = getIdeaTracks(idea);
  const trackName = newTrackName.trim() || fileNameClean || `Pista ${existingTracks.length + 1}`;
  const instrument = newTrackInstrument.trim() || undefined;
@@ -2691,14 +2683,14 @@ export default function SongStudioModal({
  if (cleanPipeline) cleanPipeline.cleanup();
  rawStream.getTracks().forEach(track => track.stop());
 
- const rawBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+ const rawBlob = new Blob(audioChunksRef.current, { type:'audio/webm' });
  try {
  setIsUploading(true);
  let finalBlob = rawBlob;
  if (useCleanDSPFilter) {
  finalBlob = await cleanAudioBlobOffline(rawBlob);
  }
- const file = new File([finalBlob], `recording-${Date.now()}.wav`, { type: 'audio/wav' });
+ const file = new File([finalBlob], `recording-${Date.now()}.wav`, { type:'audio/wav' });
  const url = await uploadFileToServer(file);
  setRecordedAudioUrl(url);
  resolveFn(url);
@@ -2720,12 +2712,12 @@ export default function SongStudioModal({
  }, 1000);
  } catch (err: any) {
  console.warn("Microphone capture warning:", err?.message || err);
- alert("No se pudo acceder al micrófono (" + (err?.message || "comprueba los permisos del navegador") + ").");
+ alert("No se pudo acceder al micrófono (" + (err?.message ||"comprueba los permisos del navegador") +").");
  }
  };
 
  const stopRecording = () => {
- if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+ if (mediaRecorderRef.current && mediaRecorderRef.current.state !=='inactive') {
  mediaRecorderRef.current.stop();
  }
  setIsRecording(false);
@@ -2742,7 +2734,7 @@ export default function SongStudioModal({
  stopRecording();
  }
 
- let primaryAudioUrl = recordedAudioUrl || '';
+ let primaryAudioUrl = recordedAudioUrl ||'';
 
  // If recording promise is pending or just completed, await it
  if (!primaryAudioUrl && recordingPromiseRef.current) {
@@ -2770,7 +2762,7 @@ export default function SongStudioModal({
  secondaryBaseTrack = {
  url: selectedSongBaseUrl,
  label: `🎵 Base: Tema Original (${song.titulo})`,
- instrument: 'Tema Base'
+ instrument:'Tema Base'
  };
  }
 
@@ -2778,10 +2770,10 @@ export default function SongStudioModal({
  const sectionInfo = SECCIONES_TEMA.find(s => s.key === ideaSection);
  const sectionLabel = sectionInfo?.label || ideaSection;
  const autoTitle = selectedAudioFile 
- ? selectedAudioFile.name.replace(/\.[^/.]+$/, "") 
+ ? selectedAudioFile.name.replace(/\.[^/.]+$/,"") 
  : (useSongBaseTrack && primaryAudioUrl === selectedSongBaseUrl)
  ? `Idea sobre ${song.titulo} (${sectionLabel})`
- : `Idea ${sectionLabel} - ${new Date().toLocaleDateString([], { day: '2-digit', month: '2-digit' })} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+ : `Idea ${sectionLabel} - ${new Date().toLocaleDateString([], { day:'2-digit', month:'2-digit' })} ${new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })}`;
 
  const finalTitle = ideaTitle.trim() || autoTitle;
 
@@ -2795,18 +2787,18 @@ export default function SongStudioModal({
  includeBass: newIdeaIncludeBass,
  drumPattern: newIdeaStyle
  });
- const aiFile = new File([aiWavBlob], `base-ia-${newIdeaStyle}-${Date.now()}.wav`, { type: 'audio/wav' });
+ const aiFile = new File([aiWavBlob], `base-ia-${newIdeaStyle}-${Date.now()}.wav`, { type:'audio/wav' });
  const aiServerUrl = await uploadFileToServer(aiFile);
 
  const parts = [];
  if (newIdeaIncludeDrums) parts.push('Batería');
  if (newIdeaIncludeBass) parts.push('Bajo');
- const aiTrackLabel = `Ref AI: ${parts.join(' + ') || 'IA Synth'} (${newIdeaStyle.toUpperCase()} - ${newIdeaKey})`;
+ const aiTrackLabel = `Ref AI: ${parts.join(' +') ||'IA Synth'} (${newIdeaStyle.toUpperCase()} - ${newIdeaKey})`;
 
  const aiTrackInfo = {
  url: aiServerUrl,
  label: aiTrackLabel,
- instrument: parts.join(' + ') || 'IA Synth'
+ instrument: parts.join(' +') ||'IA Synth'
  };
 
  if (useSongBaseTrack && selectedSongBaseUrl) {
@@ -2844,7 +2836,7 @@ export default function SongStudioModal({
  customTitle?: string,
  secondaryBaseTrack?: { url: string; label: string; instrument: string }
  ) => {
- const finalTitle = customTitle || ideaTitle.trim() || `Idea (${ideaSection.toUpperCase()}) ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+ const finalTitle = customTitle || ideaTitle.trim() || `Idea (${ideaSection.toUpperCase()}) ${new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })}`;
 
  const isPrimaryBaseTrack = useSongBaseTrack && audioDataUrl === selectedSongBaseUrl;
 
@@ -2854,11 +2846,11 @@ export default function SongStudioModal({
  nombre: isPrimaryBaseTrack
  ? `🎵 Base: ${song.titulo} (Tema Original)`
  : secondaryAiTrack || secondaryBaseTrack
- ? 'Pista 1 (Grabación/Idea)' 
- : 'Pista 1 (Base)',
+ ?'Pista 1 (Grabación/Idea)' 
+ :'Pista 1 (Base)',
  audioUrl: audioDataUrl,
- autor: isPrimaryBaseTrack ? 'Tema Original' : (ideaUploader || currentUsername),
- instrumento: isPrimaryBaseTrack ? 'Tema Base' : (ideaInstrument.trim() || undefined),
+ autor: isPrimaryBaseTrack ?'Tema Original' : (ideaUploader || currentUsername),
+ instrumento: isPrimaryBaseTrack ?'Tema Base' : (ideaInstrument.trim() || undefined),
  fecha: new Date().toISOString().split('T')[0],
  volumen: 1,
  muted: false
@@ -2870,7 +2862,7 @@ export default function SongStudioModal({
  id: `track-${Date.now()}-base`,
  nombre: secondaryBaseTrack.label,
  audioUrl: secondaryBaseTrack.url,
- autor: 'Tema Original',
+ autor:'Tema Original',
  instrumento: secondaryBaseTrack.instrument,
  fecha: new Date().toISOString().split('T')[0],
  volumen: 0.9,
@@ -2883,7 +2875,7 @@ export default function SongStudioModal({
  id: `track-${Date.now()}-ai`,
  nombre: secondaryAiTrack.label,
  audioUrl: secondaryAiTrack.url,
- autor: 'IA Synthesizer',
+ autor:'IA Synthesizer',
  instrumento: secondaryAiTrack.instrument,
  fecha: new Date().toISOString().split('T')[0],
  volumen: 0.85,
@@ -2975,8 +2967,8 @@ export default function SongStudioModal({
 
  const idea = (song.audioIdeas || []).find(i => i.id === ideaId);
  setConfirmDeleteModal({
- title: 'Eliminar Idea de Audio',
- description: `¿Estás seguro de que deseas eliminar la idea "${idea?.titulo || 'sin título'}"? Se borrarán todas las pistas y comentarios asociados.`,
+ title:'Eliminar Idea de Audio',
+ description: `¿Estás seguro de que deseas eliminar la idea"${idea?.titulo ||'sin título'}"? Se borrarán todas las pistas y comentarios asociados.`,
  onConfirm: executeDelete
  });
  };
@@ -2990,7 +2982,7 @@ export default function SongStudioModal({
  const original = ideas.find(i => i.id === ideaId);
  if (!original) return;
 
- const baseTitle = original.titulo.replace(/\s+\(v\d+\)$/i, '');
+ const baseTitle = original.titulo.replace(/\s+\(v\d+\)$/i,'');
  const versionCount = ideas.filter(i => i.titulo === baseTitle || i.titulo.startsWith(`${baseTitle} (v`)).length;
  const newIdeaId = `idea-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
  const clonedTracks: AudioTrack[] = getIdeaTracks(original).map((t, idx) => ({
@@ -3015,8 +3007,8 @@ export default function SongStudioModal({
  // Delete comment from idea
  const handleDeleteComment = (idea: SongAudioIdea, commentId: string) => {
  setConfirmDeleteModal({
- title: 'Eliminar Comentario',
- description: '¿Deseas eliminar este comentario?',
+ title:'Eliminar Comentario',
+ description:'¿Deseas eliminar este comentario?',
  onConfirm: () => {
  const updatedComments = (idea.comentarios || []).filter(c => c.id !== commentId);
  const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? { ...i, comentarios: updatedComments } : i);
@@ -3028,7 +3020,7 @@ export default function SongStudioModal({
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
  <div className={`fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center overflow-y-auto overscroll-contain animate-in fade-in duration-200 ${
- isFullScreen ? 'p-0' : 'p-2 sm:p-4'
+ isFullScreen ?'p-0' :'p-2 sm:p-4'
  }`}>
  {countInCountdown !== null && (
  <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-black font-mono font-black px-6 py-3 rounded-[var(--r-l)] shadow-2xl flex items-center gap-3 border-2 animate-pulse">
@@ -3044,10 +3036,10 @@ export default function SongStudioModal({
  )}
  <div className={`w-full ${
  isFullScreen 
- ? 'fixed inset-0 z-[9999] w-screen h-screen max-w-none max-h-none rounded-none m-0 shadow-none border-none' 
- : 'max-w-4xl rounded-[var(--r-l)] shadow-2xl overflow-hidden my-auto max-h-[92vh]'
+ ?'fixed inset-0 z-[9999] w-screen h-screen max-w-none max-h-none rounded-none m-0 shadow-none border-none' 
+ :'max-w-4xl rounded-[var(--r-l)] shadow-2xl overflow-hidden my-auto max-h-[92vh]'
  } flex flex-col ${
- isStitchLight ? 'bg-[var(--surface)] text-[var(--ink-3)]' : 'bg-[#0f0f15] border-zinc-800 text-zinc-100'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink-3)]' :'bg-[#0f0f15] border-zinc-800 text-zinc-100'
  }`}>
  
  {/* Header Bar */}
@@ -3060,12 +3052,12 @@ export default function SongStudioModal({
  <div className="flex items-center gap-2 flex-wrap">
  <h2
  className="text-xl font-bold tracking-tight text-white"
- title={`⏱️ ${song.duracion} · 🎵 ${song.tonalidad} · ⚡ ${song.bpm} BPM${song.afinacion ? ` · 🎸 ${song.afinacion}` : ''}`}
+ title={`⏱️ ${song.duracion} · 🎵 ${song.tonalidad} · ⚡ ${song.bpm} BPM${song.afinacion ? ` · 🎸 ${song.afinacion}` :''}`}
  >
  {formatSongTitle(song.titulo)}
  </h2>
  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 uppercase font-semibold">
- {song.estadoTema || 'componiendo'}
+ {song.estadoTema ||'componiendo'}
  </span>
  {song.favoritoGeneral && (
  <span className="text-amber-400" title="Tema favorito">
@@ -3084,7 +3076,7 @@ export default function SongStudioModal({
  const levelInfo = READINESS_LEVELS.find(l => l.value === myReadiness);
  return (
  <select
- value={myReadiness || ''}
+ value={myReadiness ||''}
  onChange={(e) => {
  const val = e.target.value as ReadinessLevel;
  if (!val) return;
@@ -3092,7 +3084,7 @@ export default function SongStudioModal({
  }}
  title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
  className={`hidden sm:inline-block px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold cursor-pointer outline-none ${
- levelInfo ? levelInfo.colorClass : 'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]'
+ levelInfo ? levelInfo.colorClass :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
  <option value="" disabled>Mi preparación...</option>
@@ -3122,8 +3114,8 @@ export default function SongStudioModal({
  onClick={() => { setShowToolsMenu(false); onUpdateSong({ ...song, favoritoGeneral: !song.favoritoGeneral }); }}
  className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-amber-300 flex items-center gap-2"
  >
- <Sparkles className={`w-4 h-4 text-amber-400 ${song.favoritoGeneral ? 'fill-amber-400' : ''}`} />
- {song.favoritoGeneral ? 'Quitar de Favoritos' : 'Marcar como Favorito'}
+ <Sparkles className={`w-4 h-4 text-amber-400 ${song.favoritoGeneral ?'fill-amber-400' :''}`} />
+ {song.favoritoGeneral ?'Quitar de Favoritos' :'Marcar como Favorito'}
  </button>
  {/* Mi preparación: solo en móvil, en escritorio ya se ve en la cabecera */}
  <div className="sm:hidden px-1 pb-1">
@@ -3134,7 +3126,7 @@ export default function SongStudioModal({
  const levelInfo = READINESS_LEVELS.find(l => l.value === myReadiness);
  return (
  <select
- value={myReadiness || ''}
+ value={myReadiness ||''}
  onChange={(e) => {
  const val = e.target.value as ReadinessLevel;
  if (!val) return;
@@ -3142,7 +3134,7 @@ export default function SongStudioModal({
  }}
  title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold cursor-pointer outline-none ${
- levelInfo ? levelInfo.colorClass : 'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]'
+ levelInfo ? levelInfo.colorClass :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
  <option value="" disabled>Mi preparación...</option>
@@ -3229,10 +3221,10 @@ export default function SongStudioModal({
  onClick={toggleIsFullScreen}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isFullScreen
- ? 'bg-amber-500 text-zinc-950 shadow-lg font-black hover:bg-amber-400'
- : 'bg-white/10 hover:bg-white/20 text-white border-[var(--hair)]'
+ ?'bg-amber-500 text-zinc-950 shadow-lg font-black hover:bg-amber-400'
+ :'bg-white/10 hover:bg-white/20 text-white border-[var(--hair)]'
  }`}
- title={isFullScreen ? "Salir de Pantalla Completa" : "Poner Modo Studio en Pantalla Completa"}
+ title={isFullScreen ?"Salir de Pantalla Completa" :"Poner Modo Studio en Pantalla Completa"}
  >
  {isFullScreen ? (
  <>
@@ -3260,7 +3252,7 @@ export default function SongStudioModal({
  {/* Content Body */}
  <div className="p-2.5 sm:p-6 overflow-y-auto space-y-2.5 sm:space-y-6 flex-1">
 
- {/* Sleek Top Action Bar: "Atajos" y "Cargar Tema Original" viven ya en Herramientas
+ {/* Sleek Top Action Bar:"Atajos" y"Cargar Tema Original" viven ya en Herramientas
  y en el propio formulario de nueva idea — un único botón de acción aquí basta */}
  <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-zinc-900/80 rounded-[var(--r-l)] border-[var(--hair)] shadow-md">
  <span className="text-xs font-mono font-bold text-[var(--ink-3)] uppercase tracking-wider flex items-center gap-1.5">
@@ -3284,9 +3276,9 @@ export default function SongStudioModal({
  {showAddIdea && (
  <motion.div
  initial={{ opacity: 0, height: 0, y: -10 }}
- animate={{ opacity: 1, height: 'auto', y: 0 }}
+ animate={{ opacity: 1, height:'auto', y: 0 }}
  exit={{ opacity: 0, height: 0, y: -10 }}
- transition={{ duration: 0.25, ease: 'easeInOut' }}
+ transition={{ duration: 0.25, ease:'easeInOut' }}
  className="overflow-hidden"
  >
  <div className="p-5 rounded-[var(--r-l)] bg-emerald-950/20 space-y-4">
@@ -3362,19 +3354,19 @@ export default function SongStudioModal({
  const next = !useSongBaseTrack;
  setUseSongBaseTrack(next);
  if (next && !selectedSongBaseUrl) {
- setSelectedSongBaseUrl(song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || '');
+ setSelectedSongBaseUrl(song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) ||'');
  }
  }}
  className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-all text-left ${
  useSongBaseTrack 
- ? ' bg-amber-950/50 text-amber-200 shadow-lg ring-1 ring-amber-500/60' 
- : '/30 hover: bg-amber-950/20 text-amber-300 hover:bg-amber-950/40'
+ ?' bg-amber-950/50 text-amber-200 shadow-lg ring-1 ring-amber-500/60' 
+ :'/30 hover: bg-amber-950/20 text-amber-300 hover:bg-amber-950/40'
  }`}
  >
- <Disc className={`w-5 h-5 text-amber-400 ${useSongBaseTrack ? 'animate-spin-slow' : ''}`} />
+ <Disc className={`w-5 h-5 text-amber-400 ${useSongBaseTrack ?'animate-spin-slow' :''}`} />
  <span className="text-xs font-bold text-center">Tema Original</span>
  <span className="text-[10px] text-amber-300/80 text-center font-mono">
- {useSongBaseTrack ? '✓ Base Cargada' : `Usar "${song.titulo}"`}
+ {useSongBaseTrack ?'✓ Base Cargada' : `Usar"${song.titulo}"`}
  </span>
  </button>
 
@@ -3382,7 +3374,7 @@ export default function SongStudioModal({
  <label className="p-3 rounded-[var(--r-m)] border-dashed hover:border-emerald-500 bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all">
  <Upload className="w-5 h-5 text-emerald-400" />
  <span className="text-xs font-semibold text-white text-center">
- {selectedAudioFile ? selectedAudioFile.name : 'Subir Archivo'}
+ {selectedAudioFile ? selectedAudioFile.name :'Subir Archivo'}
  </span>
  <span className="text-[10px] text-[var(--ink-2)]">MP3, WAV, M4A</span>
  <input
@@ -3461,14 +3453,14 @@ export default function SongStudioModal({
  onClick={() => setGenAiOnNewIdea(!genAiOnNewIdea)}
  className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-all text-left ${
  genAiOnNewIdea 
- ? 'border-purple-500 bg-purple-900/40 text-purple-200 shadow-lg' 
- : 'border-purple-500/40 hover:border-purple-400 bg-purple-950/20 text-purple-300 hover:bg-purple-950/40'
+ ?'border-purple-500 bg-purple-900/40 text-purple-200 shadow-lg' 
+ :'border-purple-500/40 hover:border-purple-400 bg-purple-950/20 text-purple-300 hover:bg-purple-950/40'
  }`}
  >
  <Wand2 className="w-5 h-5 text-purple-400 animate-bounce" />
  <span className="text-xs font-bold text-center">Base IA (Batería + Bajo)</span>
  <span className="text-[10px] text-purple-300/80 text-center font-mono">
- {genAiOnNewIdea ? '✓ Activado' : 'Generar Sintética'}
+ {genAiOnNewIdea ?'✓ Activado' :'Generar Sintética'}
  </span>
  </button>
  </div>
@@ -3482,12 +3474,12 @@ export default function SongStudioModal({
  </div>
  <div>
  <span className="font-bold text-white block text-sm">
- Pista Base Creada sobre: "{song.titulo}"
+ Pista Base Creada sobre:"{song.titulo}"
  </span>
  <span className="text-[10px] text-amber-300/80 block mt-0.5 font-sans">
  {selectedAudioFile || recordedAudioUrl || driveAudioUrl
- ? '⚡ Se cargará el tema original como Pista Base de fondo para sonar sincronizado junto a tu idea/grabación.'
- : '⚡ Se cargará la pista original en la idea para que puedas usar el botón "+ Pista" o "Grabar encima (Mic)" e improvisar sobre el tema.'}
+ ?'⚡ Se cargará el tema original como Pista Base de fondo para sonar sincronizado junto a tu idea/grabación.'
+ :'⚡ Se cargará la pista original en la idea para que puedas usar el botón"+ Pista" o"Grabar encima (Mic)" e improvisar sobre el tema.'}
  </span>
  </div>
  </div>
@@ -3523,7 +3515,7 @@ export default function SongStudioModal({
  Ajustes de la Base IA (Batería + Bajo)
  </span>
  <span className="text-[10px] font-mono text-purple-400/80 bg-purple-900/50 px-2 py-0.5 rounded">
- {selectedAudioFile || recordedAudioUrl || driveAudioUrl ? 'Se añadirá como Pista 2' : 'Será la Pista Principal'}
+ {selectedAudioFile || recordedAudioUrl || driveAudioUrl ?'Se añadirá como Pista 2' :'Será la Pista Principal'}
  </span>
  </div>
 
@@ -3620,7 +3612,7 @@ export default function SongStudioModal({
  </span>
  ) : isRecording ? (
  <span className="text-rose-400 font-bold flex items-center gap-1 animate-pulse">
- <Mic className="w-4 h-4" /> Grabando micro ({Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2, '0')})...
+ <Mic className="w-4 h-4" /> Grabando micro ({Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2,'0')})...
  </span>
  ) : recordedAudioUrl ? (
  <span className="text-emerald-400 font-bold flex items-center gap-1">
@@ -3660,7 +3652,7 @@ export default function SongStudioModal({
  disabled={isUploading}
  className="px-4 py-2 rounded-[var(--r-m)] bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-zinc-950 font-bold text-xs uppercase tracking-wider"
  >
- {isUploading ? 'Guardando en Servidor...' : 'Guardar Idea'}
+ {isUploading ?'Guardando en Servidor...' :'Guardar Idea'}
  </button>
  </div>
  </div>
@@ -3673,14 +3665,14 @@ export default function SongStudioModal({
  <div className="p-8 rounded-[var(--r-l)] border-dashed border-[var(--hair)] text-center space-y-3">
  <Sparkles className="w-8 h-8 text-neutral-600 mx-auto" />
  <p className="text-sm text-[var(--ink-2)] font-mono">
- {activeSectionFilter === 'todas'
- ? 'Aún no hay ideas de audio subidas para este tema.'
- : `No hay propuestas grabadas para la sección "${activeSectionFilter}".`}
+ {activeSectionFilter ==='todas'
+ ?'Aún no hay ideas de audio subidas para este tema.'
+ : `No hay propuestas grabadas para la sección"${activeSectionFilter}".`}
  </p>
  <button
  type="button"
  onClick={() => {
- if (activeSectionFilter !== 'todas') setIdeaSection(activeSectionFilter as any);
+ if (activeSectionFilter !=='todas') setIdeaSection(activeSectionFilter as any);
  setShowAddIdea(true);
  }}
  className="px-4 py-2 rounded-[var(--r-m)] bg-white/10 hover:bg-white/20 text-xs text-white font-bold transition-all cursor-pointer"
@@ -3701,7 +3693,7 @@ export default function SongStudioModal({
  const hasVoted = votes.includes(currentUsername);
  const tracks = getIdeaTracks(idea);
  const isAddingTrack = addingTrackIdeaId === idea.id;
- // Con una sola idea en el catálogo no hay nada que "priorizar" plegando —
+ // Con una sola idea en el catálogo no hay nada que"priorizar" plegando —
  // se abre directa, sin necesidad de tocar el chevron para empezar a trabajar.
  const isIdeaExpanded = filteredIdeas.length === 1 || expandedIdeaIds.has(idea.id);
 
@@ -3714,18 +3706,18 @@ export default function SongStudioModal({
  transition={{ duration: 0.25 }}
  className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all space-y-4 ${
  isPlaying 
- ? 'bg-indigo-950/30 border-indigo-500/50 shadow-2xl ring-1 ring-indigo-500/30' 
- : 'bg-white/5 border-[var(--hair)] hover:border-[var(--hair)]'
+ ?'bg-indigo-950/30 border-indigo-500/50 shadow-2xl ring-1 ring-indigo-500/30' 
+ :'bg-white/5 border-[var(--hair)] hover:border-[var(--hair)]'
  }`}
  >
  {/* Idea Header: solo lo esencial siempre visible — escuchar, ver de qué va, y un
- menú de "más opciones" para todo lo demás. El resto se revela al expandir. */}
+ menú de"más opciones" para todo lo demás. El resto se revela al expandir. */}
  <div className="flex items-center justify-between gap-2 pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2 flex-wrap min-w-0">
  <button
  type="button"
  onClick={() => toggleIdeaExpanded(idea.id)}
- title={isIdeaExpanded ? 'Plegar idea' : 'Expandir idea'}
+ title={isIdeaExpanded ?'Plegar idea' :'Expandir idea'}
  className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white hover:bg-white/10 transition-all cursor-pointer shrink-0"
  >
  {isIdeaExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -3737,19 +3729,19 @@ export default function SongStudioModal({
  <h4 className="text-base font-bold text-white flex items-center gap-2 flex-wrap">
  {idea.titulo}
  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">
- {tracks.length} {tracks.length === 1 ? 'pista' : 'pistas separadas'}
+ {tracks.length} {tracks.length === 1 ?'pista' :'pistas separadas'}
  </span>
  {isPlaying && (
  <div className="flex items-end gap-0.5 h-4 px-2 py-0.5 rounded bg-emerald-500/20">
- <motion.span animate={{ height: ['25%', '90%', '40%', '100%', '30%'] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} className="w-1 bg-emerald-400 rounded-full" />
- <motion.span animate={{ height: ['80%', '30%', '95%', '40%', '70%'] }} transition={{ repeat: Infinity, duration: 0.7, ease: "easeInOut" }} className="w-1 bg-emerald-400 rounded-full" />
- <motion.span animate={{ height: ['40%', '100%', '30%', '80%', '20%'] }} transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }} className="w-1 bg-emerald-400 rounded-full" />
+ <motion.span animate={{ height: ['25%','90%','40%','100%','30%'] }} transition={{ repeat: Infinity, duration: 0.6, ease:"easeInOut" }} className="w-1 bg-emerald-400 rounded-full" />
+ <motion.span animate={{ height: ['80%','30%','95%','40%','70%'] }} transition={{ repeat: Infinity, duration: 0.7, ease:"easeInOut" }} className="w-1 bg-emerald-400 rounded-full" />
+ <motion.span animate={{ height: ['40%','100%','30%','80%','20%'] }} transition={{ repeat: Infinity, duration: 0.5, ease:"easeInOut" }} className="w-1 bg-emerald-400 rounded-full" />
  </div>
  )}
  </h4>
  <span className="text-[11px] text-[var(--ink-2)] font-mono flex items-center gap-1 mt-0.5 truncate">
  <UserIcon className="w-3 h-3 text-indigo-400 shrink-0" />
- {idea.subidoPor} {idea.instrumento ? `(${idea.instrumento})` : ''} • {idea.fecha}
+ {idea.subidoPor} {idea.instrumento ? `(${idea.instrumento})` :''} • {idea.fecha}
  </span>
  </div>
  </div>
@@ -3760,7 +3752,7 @@ export default function SongStudioModal({
  type="button"
  onClick={() => togglePlayIdea(idea)}
  className={`p-2 rounded-[var(--r-m)] flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer ${
- isPlaying ? 'bg-amber-500 text-zinc-950' : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
+ isPlaying ?'bg-amber-500 text-zinc-950' :'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
  }`}
  title="Play / Pausa"
  >
@@ -3792,7 +3784,7 @@ export default function SongStudioModal({
  disabled={isExportingMaster}
  className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-indigo-300 flex items-center gap-2 disabled:opacity-50"
  >
- <Disc className={`w-4 h-4 text-indigo-400 ${isExportingMaster ? 'animate-spin' : ''}`} /> Exportar mezcla (.WAV)
+ <Disc className={`w-4 h-4 text-indigo-400 ${isExportingMaster ?'animate-spin' :''}`} /> Exportar mezcla (.WAV)
  </button>
  <button
  type="button"
@@ -3821,7 +3813,7 @@ export default function SongStudioModal({
  setOpenIdeaActionsMenuId(null);
  setShowGenModalForIdea(idea);
  setGenBpm(song.bpm || 120);
- setGenKey(song.tonalidad || 'Do');
+ setGenKey(song.tonalidad ||'Do');
  }}
  className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-purple-300 flex items-center gap-2"
  >
@@ -3843,13 +3835,12 @@ export default function SongStudioModal({
  {isIdeaExpanded && (
  <>
  {idea.notas && (
- <p className="text-xs text-[var(--ink-3)] italic bg-black/20 p-2.5 rounded-[var(--r-m)] border-[var(--hair)]">
- "{idea.notas}"
+ <p className="text-xs text-[var(--ink-3)] italic bg-black/20 p-2.5 rounded-[var(--r-m)] border-[var(--hair)]">"{idea.notas}"
  </p>
  )}
 
  {/* Separar Stems / Añadir Pista: se revelan solo al expandir la idea.
- Una vez ya hay stems separados, "Separar Stems" deja paso a "Comparar
+ Una vez ya hay stems separados,"Separar Stems" deja paso a"Comparar
  Motor" (en la cabecera del mezclador) — no hace falta tenerlo doblado aquí. */}
  <div className="flex items-center gap-2 flex-wrap justify-end">
  {!idea.stemEngineUsed && (
@@ -3861,8 +3852,8 @@ export default function SongStudioModal({
  className="px-3 py-1.5 hover:bg-amber-400/20 text-zinc-950 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer disabled:opacity-50"
  title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
  >
- <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
- <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar con Iris'}</span>
+ <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ?'animate-spin text-zinc-950' :'text-zinc-950'}`} />
+ <span>{isSeparatingStemsAi ?'Separando...' :'🎛️ Separar con Iris'}</span>
  </button>
  <button
  type="button"
@@ -3906,13 +3897,13 @@ export default function SongStudioModal({
  onClick={() => togglePlayIdea(idea)}
  className={`px-4 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-bold text-xs shadow-lg transition-all active:scale-95 cursor-pointer ${
  isPlaying
- ? 'bg-amber-500 text-zinc-950 font-black'
- : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
+ ?'bg-amber-500 text-zinc-950 font-black'
+ :'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
  }`}
  title="Play / Pausa (Espacio)"
  >
  {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
- <span>{isPlaying ? 'Pausa' : 'Reproducir'}</span>
+ <span>{isPlaying ?'Pausa' :'Reproducir'}</span>
  </button>
 
  {/* Stop / Rewind to 0:00 */}
@@ -3935,19 +3926,19 @@ export default function SongStudioModal({
  onClick={() => toggleIdeaLoop(idea)}
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isLoopEnabled
- ? 'bg-purple-600 text-white border-purple-400 shadow-md ring-1 ring-purple-400/50'
- : 'bg-white/5 hover:bg-white/10 text-[var(--ink-2)] border-[var(--hair)]'
+ ?'bg-purple-600 text-white border-purple-400 shadow-md ring-1 ring-purple-400/50'
+ :'bg-white/5 hover:bg-white/10 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  title="Bucle ON/OFF (Atajo: L)"
  >
  <Repeat className="w-3.5 h-3.5" />
- <span>{isLoopEnabled ? 'Bucle ON' : 'Bucle'}</span>
+ <span>{isLoopEnabled ?'Bucle ON' :'Bucle'}</span>
  </button>
  );
  })()}
  </div>
 
- {/* Extra Tools & Stems Actions: "+ Base Rítmica IA" vive en el menú ⋮ de la
+ {/* Extra Tools & Stems Actions:"+ Base Rítmica IA" vive en el menú ⋮ de la
  idea (es una acción ocasional, no algo que hace falta tener siempre a mano) */}
  <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
  {selectedSongBaseUrl && !tracks.some(t => t.audioUrl === selectedSongBaseUrl) && (
@@ -3957,8 +3948,7 @@ export default function SongStudioModal({
  saveNewTrackToIdea(
  idea,
  selectedSongBaseUrl,
- `🎵 Base: ${song.titulo} (Original)`,
- 'Tema Base'
+ `🎵 Base: ${song.titulo} (Original)`,'Tema Base'
  );
  }}
  className="px-2.5 py-1.5 rounded-[var(--r-m)] bg-amber-950/60 hover:bg-amber-900 text-amber-300 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
@@ -3979,7 +3969,7 @@ export default function SongStudioModal({
  ) : (
  <span className="w-2 h-2 rounded-full bg-neutral-500" />
  )}
- {isPlaying ? 'Reproduciendo...' : 'Detenido'}
+ {isPlaying ?'Reproduciendo...' :'Detenido'}
  </span>
 
  <div className="text-emerald-400 font-bold font-mono">
@@ -4043,8 +4033,8 @@ export default function SongStudioModal({
  {idea.stemEngineUsed && (
  <span className={`hidden sm:flex px-2 py-0.5 rounded text-[10px] font-mono items-center gap-1 font-bold ${
  idea.stemDegraded
- ? 'bg-amber-950/70 text-amber-300'
- : 'bg-purple-950/70 text-purple-300'
+ ?'bg-amber-950/70 text-amber-300'
+ :'bg-purple-950/70 text-purple-300'
  }`}>
  <Sparkles className="w-3 h-3 text-amber-400" />
  <span>Motor: {idea.stemEngineUsed.split('(')[0].trim()}</span>
@@ -4099,16 +4089,16 @@ export default function SongStudioModal({
  onDrop={(e) => { e.preventDefault(); handleDropTrack(idea, idx); }}
  className={`rounded-[var(--r-m)] overflow-hidden transition-all ${
  isDraggingThisTrack
- ? 'opacity-30 scale-[0.98] border-dashed border-indigo-400'
+ ?'opacity-30 scale-[0.98] border-dashed border-indigo-400'
  : isDragOverThisTrack
- ? 'border-indigo-400 ring-2 ring-indigo-400/50 bg-indigo-500/10'
+ ?'border-indigo-400 ring-2 ring-indigo-400/50 bg-indigo-500/10'
  : isMuted
- ? 'bg-red-950/20 border-red-900/40 opacity-50 grayscale-[30%]'
+ ?'bg-red-950/20 border-red-900/40 opacity-50 grayscale-[30%]'
  : isSolo
- ? 'bg-amber-500/10 /80 ring-1 ring-amber-400/40 border-l-4 border-l-amber-400 shadow-lg shadow-amber-950/30'
+ ?'bg-amber-500/10 /80 ring-1 ring-amber-400/40 border-l-4 border-l-amber-400 shadow-lg shadow-amber-950/30'
  : hasSoloInIdea
- ? 'bg-black/50 /80 opacity-40 grayscale-[50%]'
- : 'bg-white/5 border-[var(--hair)] hover:border-[var(--hair)]'
+ ?'bg-black/50 /80 opacity-40 grayscale-[50%]'
+ :'bg-white/5 border-[var(--hair)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-stretch">
@@ -4138,8 +4128,8 @@ export default function SongStudioModal({
  <span
  className="w-4 h-4 rounded font-mono text-[9px] font-bold flex items-center justify-center shrink-0"
  style={{
- backgroundColor: getTrackRainbowColor(tr, idx, '30'),
- borderColor: getTrackRainbowColor(tr, idx, '80'),
+ backgroundColor: getTrackRainbowColor(tr, idx,'30'),
+ borderColor: getTrackRainbowColor(tr, idx,'80'),
  color: getTrackRainbowColor(tr, idx)
  }}
  >
@@ -4152,7 +4142,7 @@ export default function SongStudioModal({
  type="text"
  value={editingTrackName}
  onChange={(e) => setEditingTrackName(e.target.value)}
- onKeyDown={(e) => e.key === 'Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)}
+ onKeyDown={(e) => e.key ==='Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)}
  className="w-full min-w-0 px-1.5 py-0.5 rounded bg-black border-indigo-500 text-[11px] text-white font-bold"
  autoFocus
  />
@@ -4189,8 +4179,8 @@ export default function SongStudioModal({
  onClick={() => handleToggleMuteTrack(idea, tr.id)}
  className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-black cursor-pointer transition-all shrink-0 ${
  isMuted
- ? 'bg-red-600 text-white border-red-500 shadow-[0_0_10px_rgba(220,38,38,0.7)] ring-1 ring-red-400/50'
- : 'bg-neutral-800/90 text-[var(--ink-2)] /80 hover:text-white hover:bg-neutral-700'
+ ?'bg-red-600 text-white border-red-500 shadow-[0_0_10px_rgba(220,38,38,0.7)] ring-1 ring-red-400/50'
+ :'bg-neutral-800/90 text-[var(--ink-2)] /80 hover:text-white hover:bg-neutral-700'
  }`}
  title="Mute (M) - Silenciar pista"
  >
@@ -4201,8 +4191,8 @@ export default function SongStudioModal({
  onClick={() => handleToggleSoloTrack(idea, tr.id)}
  className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-black cursor-pointer transition-all shrink-0 ${
  isSolo
- ? 'bg-amber-400 text-black shadow-[0_0_12px_rgba(251,191,36,0.8)] ring-1 ring-amber-300/60'
- : 'bg-neutral-800/90 text-[var(--ink-2)] /80 hover:text-white hover:bg-neutral-700'
+ ?'bg-amber-400 text-black shadow-[0_0_12px_rgba(251,191,36,0.8)] ring-1 ring-amber-300/60'
+ :'bg-neutral-800/90 text-[var(--ink-2)] /80 hover:text-white hover:bg-neutral-700'
  }`}
  title="Solo (S) - Aísla esta pista en exclusiva (Cubase style)"
  >
@@ -4231,10 +4221,10 @@ export default function SongStudioModal({
  onClick={() => setExpandedTrackSettingsId(expandedTrackSettingsId === tr.id ? null : tr.id)}
  className={`relative p-1 rounded cursor-pointer transition-all shrink-0 ${
  expandedTrackSettingsId === tr.id
- ? 'bg-purple-500/30 text-purple-300 border-purple-500/50'
- : 'bg-white/5 text-[var(--ink-3)] border-[var(--hair)] hover:bg-white/10'
+ ?'bg-purple-500/30 text-purple-300 border-purple-500/50'
+ :'bg-white/5 text-[var(--ink-3)] border-[var(--hair)] hover:bg-white/10'
  }`}
- title={`Ajustes de Pista: Paneo, Ecualizador 3 Bandas y Ajuste de Latencia${(tr.desfaseMs || 0) !== 0 ? ` · ${formatDesfase(tr.desfaseMs)}` : ''}`}
+ title={`Ajustes de Pista: Paneo, Ecualizador 3 Bandas y Ajuste de Latencia${(tr.desfaseMs || 0) !== 0 ? ` · ${formatDesfase(tr.desfaseMs)}` :''}`}
  >
  <Sliders className="w-2.5 h-2.5 text-purple-300" />
  {(tr.desfaseMs || 0) !== 0 && (
@@ -4274,7 +4264,7 @@ export default function SongStudioModal({
  {/* Row 1: Paneo Estéreo & Limpiar Zumbidos */}
  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-purple-500/10 pb-2">
  {/* Stereo Pan Slider */}
- <div className="flex items-center gap-2 flex-1 min-w-[200px]" title={`Paneo: ${tr.pan ? (tr.pan < 0 ? `L ${Math.round(Math.abs(tr.pan)*100)}%` : `R ${Math.round(tr.pan*100)}%`) : 'Centro'}`}>
+ <div className="flex items-center gap-2 flex-1 min-w-[200px]" title={`Paneo: ${tr.pan ? (tr.pan < 0 ? `L ${Math.round(Math.abs(tr.pan)*100)}%` : `R ${Math.round(tr.pan*100)}%`) :'Centro'}`}>
  <span className="text-[var(--ink-2)] font-bold shrink-0">🎧 Paneo Estéreo:</span>
  <span className="text-[9px] font-bold text-[var(--ink-2)]">L</span>
  <input
@@ -4288,7 +4278,7 @@ export default function SongStudioModal({
  />
  <span className="text-[9px] font-bold text-[var(--ink-2)]">R</span>
  <span className="text-[9px] text-purple-300 font-bold shrink-0 min-w-[36px] text-right">
- {tr.pan ? (tr.pan < 0 ? `L${Math.round(Math.abs(tr.pan)*100)}` : `R${Math.round(tr.pan*100)}`) : 'C'}
+ {tr.pan ? (tr.pan < 0 ? `L${Math.round(Math.abs(tr.pan)*100)}` : `R${Math.round(tr.pan*100)}`) :'C'}
  </span>
  </div>
 
@@ -4299,12 +4289,12 @@ export default function SongStudioModal({
  disabled={cleaningTrackId === tr.id}
  className={`px-2 py-1 rounded-[var(--r-s)] font-bold cursor-pointer transition-all shrink-0 flex items-center gap-1 ${
  cleaningTrackId === tr.id
- ? 'bg-amber-500/30 text-amber-300 /50 animate-pulse'
- : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+ ?'bg-amber-500/30 text-amber-300 /50 animate-pulse'
+ :'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
  }`}
  title="Limpiar ruido de fondo y zumbidos de esta pista con Filtro Studio DSP (High-Pass 80Hz + Notch)"
  >
- <span>{cleaningTrackId === tr.id ? '🧹 Limpiando...' : '🧹 Filtro Zumbidos'}</span>
+ <span>{cleaningTrackId === tr.id ?'🧹 Limpiando...' :'🧹 Filtro Zumbidos'}</span>
  </button>
  </div>
 
@@ -4323,7 +4313,7 @@ export default function SongStudioModal({
  max={12}
  step={1}
  value={tr.eqLow ?? 0}
- onChange={(e) => handleTrackEqChange(idea, tr.id, 'low', parseFloat(e.target.value))}
+ onChange={(e) => handleTrackEqChange(idea, tr.id,'low', parseFloat(e.target.value))}
  className="w-full accent-purple-400 h-1 bg-[var(--surface)] rounded cursor-pointer"
  />
  </div>
@@ -4339,7 +4329,7 @@ export default function SongStudioModal({
  max={12}
  step={1}
  value={tr.eqMid ?? 0}
- onChange={(e) => handleTrackEqChange(idea, tr.id, 'mid', parseFloat(e.target.value))}
+ onChange={(e) => handleTrackEqChange(idea, tr.id,'mid', parseFloat(e.target.value))}
  className="w-full accent-purple-400 h-1 bg-[var(--surface)] rounded cursor-pointer"
  />
  </div>
@@ -4355,7 +4345,7 @@ export default function SongStudioModal({
  max={12}
  step={1}
  value={tr.eqHigh ?? 0}
- onChange={(e) => handleTrackEqChange(idea, tr.id, 'high', parseFloat(e.target.value))}
+ onChange={(e) => handleTrackEqChange(idea, tr.id,'high', parseFloat(e.target.value))}
  className="w-full accent-purple-400 h-1 bg-[var(--surface)] rounded cursor-pointer"
  />
  </div>
@@ -4364,9 +4354,9 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => {
- handleTrackEqChange(idea, tr.id, 'low', 0);
- handleTrackEqChange(idea, tr.id, 'mid', 0);
- handleTrackEqChange(idea, tr.id, 'high', 0);
+ handleTrackEqChange(idea, tr.id,'low', 0);
+ handleTrackEqChange(idea, tr.id,'mid', 0);
+ handleTrackEqChange(idea, tr.id,'high', 0);
  }}
  className="px-1.5 py-0.5 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-[8px] cursor-pointer shrink-0 self-end sm:self-center"
  title="Resetear EQ a 0dB"
@@ -4461,7 +4451,7 @@ export default function SongStudioModal({
  <span className="text-[var(--ink-2)] font-bold mr-1">Orden:</span>
  <button
  type="button"
- onClick={() => handleMoveTrack(idea, tr.id, 'up')}
+ onClick={() => handleMoveTrack(idea, tr.id,'up')}
  disabled={idx === 0}
  className="px-1.5 py-1 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-[var(--ink-3)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
  title="Subir pista"
@@ -4470,7 +4460,7 @@ export default function SongStudioModal({
  </button>
  <button
  type="button"
- onClick={() => handleMoveTrack(idea, tr.id, 'down')}
+ onClick={() => handleMoveTrack(idea, tr.id,'down')}
  disabled={idx === tracks.length - 1}
  className="px-1.5 py-1 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-[var(--ink-3)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
  title="Bajar pista"
@@ -4605,7 +4595,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(120)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 120 ? 'bg-amber-500 text-black font-bold' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 120 ?'bg-amber-500 text-black font-bold' :'bg-white/10 hover:bg-white/20 text-white'}`}
  title="Recorte estándar para altavoces o auriculares de cable en PC (120ms)"
  >
  PC (120ms)
@@ -4613,7 +4603,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(240)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 240 ? 'bg-amber-500 text-black font-bold' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 240 ?'bg-amber-500 text-black font-bold' :'bg-white/10 hover:bg-white/20 text-white'}`}
  title="Recorte para teléfonos móviles y tablets (240ms)"
  >
  Móvil (240ms)
@@ -4621,7 +4611,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(300)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 300 ? 'bg-amber-500 text-black font-bold' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 300 ?'bg-amber-500 text-black font-bold' :'bg-white/10 hover:bg-white/20 text-white'}`}
  title="Recorte para auriculares Bluetooth tipo AirPods o Sony (300ms)"
  >
  Bluetooth (300ms)
@@ -4629,7 +4619,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(0)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 0 ? 'bg-rose-500 text-white font-bold' : 'bg-rose-500/20 text-rose-300'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 0 ?'bg-rose-500 text-white font-bold' :'bg-rose-500/20 text-rose-300'}`}
  title="Sin recorte (0ms)"
  >
  0ms
@@ -4698,10 +4688,10 @@ export default function SongStudioModal({
  </div>
 
  {/* Option 2: Upload audio file */}
- <label className={`p-3 rounded-[var(--r-m)] border-dashed hover:border-sky-400 bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
- <Upload className={`w-5 h-5 text-sky-400 ${isUploading ? 'animate-bounce' : ''}`} />
+ <label className={`p-3 rounded-[var(--r-m)] border-dashed hover:border-sky-400 bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all ${isUploading ?'opacity-50 pointer-events-none' :''}`}>
+ <Upload className={`w-5 h-5 text-sky-400 ${isUploading ?'animate-bounce' :''}`} />
  <span className="text-xs font-semibold text-white">
- {isUploading ? "Subiendo pista..." : "Subir Archivo de Pista"}
+ {isUploading ?"Subiendo pista..." :"Subir Archivo de Pista"}
  </span>
  <span className="text-[9px] text-[var(--ink-2)]">MP3, WAV, M4A, WEBM, OGG</span>
  <input
@@ -4712,7 +4702,7 @@ export default function SongStudioModal({
  onChange={(e) => {
  if (e.target.files && e.target.files[0]) {
  const file = e.target.files[0];
- e.target.value = '';
+ e.target.value ='';
  handleUploadTrackFile(idea, file);
  }
  }}
@@ -4727,17 +4717,16 @@ export default function SongStudioModal({
  saveNewTrackToIdea(
  idea,
  selectedSongBaseUrl,
- `🎵 Base: ${song.titulo} (Original)`,
- 'Tema Base'
+ `🎵 Base: ${song.titulo} (Original)`,'Tema Base'
  );
  setAddingTrackIdeaId(null);
  }}
  className="p-3 rounded-[var(--r-m)] bg-amber-950/30 hover:bg-amber-950/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all text-amber-200 shadow-md active:scale-95"
- title={`Importar la pista base del tema "${song.titulo}" directamente a esta mezcla multipista`}
+ title={`Importar la pista base del tema"${song.titulo}" directamente a esta mezcla multipista`}
  >
  <Disc className="w-5 h-5 text-amber-400 animate-spin-slow" />
  <span className="text-xs font-bold text-center">Base Tema Original</span>
- <span className="text-[9px] text-amber-300/80 font-mono text-center">Usar "{song.titulo}"</span>
+ <span className="text-[9px] text-amber-300/80 font-mono text-center">Usar"{song.titulo}"</span>
  </button>
  )}
  </div>
@@ -4751,11 +4740,11 @@ export default function SongStudioModal({
  onClick={() => handleToggleVote(idea.id)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  hasVoted 
- ? 'bg-emerald-500/20 text-emerald-300' 
- : 'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:text-white hover:bg-white/10'
+ ?'bg-emerald-500/20 text-emerald-300' 
+ :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:text-white hover:bg-white/10'
  }`}
  >
- <ThumbsUp className={`w-3.5 h-3.5 ${hasVoted ? 'fill-current' : ''}`} />
+ <ThumbsUp className={`w-3.5 h-3.5 ${hasVoted ?'fill-current' :''}`} />
  <span>Me gusta ({votes.length})</span>
  </button>
 
@@ -4775,13 +4764,13 @@ export default function SongStudioModal({
  }}
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
  song.audioPrincipalUrl === idea.audioUrl
- ? 'bg-amber-500/20 text-amber-300'
- : 'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:text-amber-300 hover:bg-white/10'
+ ?'bg-amber-500/20 text-amber-300'
+ :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:text-amber-300 hover:bg-white/10'
  }`}
  title="Establecer esta idea como la Maqueta Principal del tema"
  >
  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
- <span>{song.audioPrincipalUrl === idea.audioUrl ? 'Maqueta Principal' : 'Hacer Maqueta Principal'}</span>
+ <span>{song.audioPrincipalUrl === idea.audioUrl ?'Maqueta Principal' :'Hacer Maqueta Principal'}</span>
  </button>
  </div>
 
@@ -4847,7 +4836,7 @@ export default function SongStudioModal({
 
  {getIdeaTracks(idea).length > 1 && (
  <select
- value={commentTrackTagMap[idea.id] || ''}
+ value={commentTrackTagMap[idea.id] ||''}
  onChange={(e) => setCommentTrackTagMap(prev => ({ ...prev, [idea.id]: e.target.value || null }))}
  title="Referir este comentario a una pista concreta"
  className="px-2 py-1 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 border-[var(--hair)] text-[10px] font-mono text-emerald-400 font-bold cursor-pointer outline-none"
@@ -4861,9 +4850,9 @@ export default function SongStudioModal({
 
  <input
  type="text"
- value={commentTextMap[idea.id] || ''}
+ value={commentTextMap[idea.id] ||''}
  onChange={(e) => setCommentTextMap(prev => ({ ...prev, [idea.id]: e.target.value }))}
- onKeyDown={(e) => e.key === 'Enter' && handleAddComment(idea)}
+ onKeyDown={(e) => e.key ==='Enter' && handleAddComment(idea)}
  placeholder="Escribe tu crítica o sugerencia..."
  className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-black/40 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-indigo-500"
  />
@@ -4905,7 +4894,7 @@ export default function SongStudioModal({
  type="button"
  onClick={() => togglePlayIdea(activeIdea)}
  className={`p-2.5 rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer shrink-0 ${
- isPlaying ? 'bg-amber-500 text-zinc-950' : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
+ isPlaying ?'bg-amber-500 text-zinc-950' :'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
  }`}
  title="Play / Pausa"
  >
@@ -5139,19 +5128,19 @@ export default function SongStudioModal({
  const newIdea: SongAudioIdea = {
  id: `idea-${Date.now()}`,
  titulo: title,
- seccion: 'general',
+ seccion:'general',
  audioUrl: audioUrl,
- fecha: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
- subidoPor: currentUsername || 'AI Lyria Engine',
- instrumento: 'Soundtrack IA',
+ fecha: new Date().toLocaleDateString('es-ES', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+ subidoPor: currentUsername ||'AI Lyria Engine',
+ instrumento:'Soundtrack IA',
  comentarios: [],
  pistas: [
  {
  id: `track-${Date.now()}-1`,
  nombre: title,
  audioUrl: audioUrl,
- autor: 'Lyria AI',
- instrumento: 'Soundtrack / Jingle',
+ autor:'Lyria AI',
+ instrumento:'Soundtrack / Jingle',
  fecha: new Date().toLocaleDateString('es-ES'),
  volumen: 1,
  muted: false
@@ -5216,9 +5205,9 @@ export default function SongStudioModal({
  type="button"
  onClick={() => setMoisesTab('stems')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
- moisesTab === 'stems'
- ? 'bg-amber-500 text-zinc-950 font-black shadow-md'
- : 'bg-white/5 hover:bg-white/10 text-[var(--ink-3)]'
+ moisesTab ==='stems'
+ ?'bg-amber-500 text-zinc-950 font-black shadow-md'
+ :'bg-white/5 hover:bg-white/10 text-[var(--ink-3)]'
  }`}
  >
  <Sliders className="w-3.5 h-3.5" />
@@ -5229,9 +5218,9 @@ export default function SongStudioModal({
  type="button"
  onClick={() => setMoisesTab('how_it_works')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
- moisesTab === 'how_it_works'
- ? 'bg-indigo-500 text-white font-black shadow-md'
- : 'bg-white/5 hover:bg-white/10 text-[var(--ink-3)]'
+ moisesTab ==='how_it_works'
+ ?'bg-indigo-500 text-white font-black shadow-md'
+ :'bg-white/5 hover:bg-white/10 text-[var(--ink-3)]'
  }`}
  >
  <Cpu className="w-3.5 h-3.5" />
@@ -5242,9 +5231,9 @@ export default function SongStudioModal({
  type="button"
  onClick={() => setMoisesTab('upload')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
- moisesTab === 'upload'
- ? 'bg-emerald-500 text-zinc-950 font-black shadow-md'
- : 'bg-white/5 hover:bg-white/10 text-[var(--ink-3)]'
+ moisesTab ==='upload'
+ ?'bg-emerald-500 text-zinc-950 font-black shadow-md'
+ :'bg-white/5 hover:bg-white/10 text-[var(--ink-3)]'
  }`}
  >
  <Upload className="w-3.5 h-3.5" />
@@ -5253,7 +5242,7 @@ export default function SongStudioModal({
  </div>
 
  {/* TAB 1: CANALES DE PISTAS SEPARADAS & HABILITACIÓN */}
- {moisesTab === 'stems' && (
+ {moisesTab ==='stems' && (
  <div className="space-y-4 text-xs text-[var(--ink-3)] leading-relaxed">
  <p className="text-[var(--ink-3)] font-sans">
  BandManager crea canales de pistas independientes (Voz, Batería, Bajo, Guitarras) para controlar el volumen, silenciar (Mute) o dejar en Solo cada instrumento en tus ensayos y composición.
@@ -5314,15 +5303,15 @@ export default function SongStudioModal({
  <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Iris Espectro:
  </span>
  <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${
- selectedStemEngine === 'mvsep-mdx23'
- ? 'bg-amber-500/10 text-amber-300 /30'
- : selectedStemEngine === 'demucs'
- ? 'bg-purple-500/10 text-purple-300 border-purple-500/30'
- : 'bg-blue-500/10 text-blue-300 border-blue-500/30'
+ selectedStemEngine ==='mvsep-mdx23'
+ ?'bg-amber-500/10 text-amber-300 /30'
+ : selectedStemEngine ==='demucs'
+ ?'bg-purple-500/10 text-purple-300 border-purple-500/30'
+ :'bg-blue-500/10 text-blue-300 border-blue-500/30'
  }`}>
- {selectedStemEngine === 'mvsep-mdx23' && "✨ Iris Studio"}
- {selectedStemEngine === 'demucs' && '⚡ Iris Cloud'}
- {selectedStemEngine === 'dsp-server' && '⚙️ Iris Básico (gratis)'}
+ {selectedStemEngine ==='mvsep-mdx23' &&"✨ Iris Studio"}
+ {selectedStemEngine ==='demucs' &&'⚡ Iris Cloud'}
+ {selectedStemEngine ==='dsp-server' &&'⚙️ Iris Básico (gratis)'}
  </span>
  </div>
 
@@ -5332,9 +5321,9 @@ export default function SongStudioModal({
  type="button"
  onClick={() => setSelectedStemEngine('mvsep-mdx23')}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
- selectedStemEngine === 'mvsep-mdx23'
- ? 'bg-amber-950/60 text-amber-200 ring-1 ring-amber-500/50 shadow-lg shadow-amber-950/50'
- : 'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ selectedStemEngine ==='mvsep-mdx23'
+ ?'bg-amber-950/60 text-amber-200 ring-1 ring-amber-500/50 shadow-lg shadow-amber-950/50'
+ :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -5358,9 +5347,9 @@ export default function SongStudioModal({
  type="button"
  onClick={() => setSelectedStemEngine('demucs')}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
- selectedStemEngine === 'demucs'
- ? 'bg-purple-950/60 border-purple-500 text-purple-200 ring-1 ring-purple-500/50 shadow-lg shadow-purple-950/50'
- : 'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ selectedStemEngine ==='demucs'
+ ?'bg-purple-950/60 border-purple-500 text-purple-200 ring-1 ring-purple-500/50 shadow-lg shadow-purple-950/50'
+ :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -5384,9 +5373,9 @@ export default function SongStudioModal({
  type="button"
  onClick={() => setSelectedStemEngine('dsp-server')}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
- selectedStemEngine === 'dsp-server'
- ? 'bg-blue-950/60 border-blue-500 text-blue-200 ring-1 ring-blue-500/50 shadow-lg shadow-blue-950/50'
- : 'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ selectedStemEngine ==='dsp-server'
+ ?'bg-blue-950/60 border-blue-500 text-blue-200 ring-1 ring-blue-500/50 shadow-lg shadow-blue-950/50'
+ :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -5422,26 +5411,26 @@ export default function SongStudioModal({
  }
  }}
  className={`w-full py-3 rounded-[var(--r-m)] font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center flex items-center justify-center gap-2 ${
- selectedStemEngine === 'mvsep-mdx23'
- ? 'bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white shadow-amber-900/30'
- : selectedStemEngine === 'demucs'
- ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white shadow-purple-900/30'
- : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-blue-900/30'
+ selectedStemEngine ==='mvsep-mdx23'
+ ?'bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white shadow-amber-900/30'
+ : selectedStemEngine ==='demucs'
+ ?'bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white shadow-purple-900/30'
+ :'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-blue-900/30'
  }`}
  >
- {selectedStemEngine === 'mvsep-mdx23' && (
+ {selectedStemEngine ==='mvsep-mdx23' && (
  <>
  <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
  <span>✨ Separar con Iris Studio</span>
  </>
  )}
- {selectedStemEngine === 'demucs' && (
+ {selectedStemEngine ==='demucs' && (
  <>
  <Sparkles className="w-4 h-4 text-purple-300 animate-pulse" />
  <span>⚡ Separar con Iris Cloud</span>
  </>
  )}
- {selectedStemEngine === 'dsp-server' && (
+ {selectedStemEngine ==='dsp-server' && (
  <>
  <Cpu className="w-4 h-4 text-cyan-200" />
  <span>⚙️ Separar con Iris Básico (gratis)</span>
@@ -5452,7 +5441,7 @@ export default function SongStudioModal({
  )}
 
  {/* TAB 2: ¿CÓMO FUNCIONA IRIS? */}
- {moisesTab === 'how_it_works' && (
+ {moisesTab ==='how_it_works' && (
  <div className="space-y-4 text-xs text-[var(--ink-3)] leading-relaxed font-sans">
  <div className="p-3.5 rounded-[var(--r-m)] bg-indigo-950/40 text-indigo-200 space-y-2">
  <h4 className="font-bold text-white text-sm flex items-center gap-2 font-mono">
@@ -5482,7 +5471,7 @@ export default function SongStudioModal({
  <div className="p-3 rounded-[var(--r-m)] bg-black/50 border-[var(--hair)] space-y-1">
  <span className="font-bold text-purple-300 block">3. Máscaras de Fase Compleja & Estimación Tímbrica:</span>
  <p className="text-[var(--ink-2)] font-sans">
- El modelo predice una "máscara" espectral que multiplica el audio original para aislar la firma tímbrica de la voz o del bajo, preservando la fase original para evitar artefactos chirriantes o cancelación de fase.
+ El modelo predice una"máscara" espectral que multiplica el audio original para aislar la firma tímbrica de la voz o del bajo, preservando la fase original para evitar artefactos chirriantes o cancelación de fase.
  </p>
  </div>
 
@@ -5501,7 +5490,7 @@ export default function SongStudioModal({
  )}
 
  {/* TAB 3: SUBIR PISTAS YA SEPARADAS EN OTRO PROGRAMA */}
- {moisesTab === 'upload' && (
+ {moisesTab ==='upload' && (
  <div className="space-y-4 text-xs text-[var(--ink-3)] leading-relaxed font-sans">
  <div className="p-3.5 rounded-[var(--r-m)] bg-emerald-950/40 text-emerald-200 space-y-1">
  <h4 className="font-bold text-white text-sm flex items-center gap-2 font-mono">
@@ -5544,9 +5533,9 @@ export default function SongStudioModal({
 
  const newTrack: AudioTrack = {
  id: `stem-file-${uploadingStemInstrument.toLowerCase()}-${Date.now()}`,
- nombre: `Pista (${uploadingStemInstrument}): ${file.name.replace(/\.[^/.]+$/, '')}`,
+ nombre: `Pista (${uploadingStemInstrument}): ${file.name.replace(/\.[^/.]+$/,'')}`,
  audioUrl: uploadedUrl,
- autor: 'Importado (pista externa)',
+ autor:'Importado (pista externa)',
  instrumento: uploadingStemInstrument,
  fecha: new Date().toISOString().split('T')[0],
  volumen: 1,
@@ -5559,7 +5548,7 @@ export default function SongStudioModal({
 
  onUpdateSong({ ...song, audioIdeas: updatedIdeas });
  setShowMoisesStemsModal(null);
- alert(`¡Pista de Stem "${file.name}" cargada con éxito en la mezcla!`);
+ alert(`¡Pista de Stem"${file.name}" cargada con éxito en la mezcla!`);
  } catch (err) {
  console.error("Error al subir archivo Stem:", err);
  alert("Ocurrió un error al cargar el archivo de audio Stem.");
@@ -5665,7 +5654,7 @@ export default function SongStudioModal({
  </button>
 
  <p className="text-[10px] text-[var(--ink-2)] font-sans mt-1">
- Dale al play, escucha la canción y pulsa "Marcar este punto" justo donde quieras que entre — Lyria genera clips fieles al contexto de ~30s, así que elige la sección donde mejor encaje (ej. el puente) en vez de forzar una canción entera.
+ Dale al play, escucha la canción y pulsa"Marcar este punto" justo donde quieras que entre — Lyria genera clips fieles al contexto de ~30s, así que elige la sección donde mejor encaje (ej. el puente) en vez de forzar una canción entera.
  </p>
  </div>
 
@@ -5675,7 +5664,7 @@ export default function SongStudioModal({
  type="button"
  onClick={() => setAiTrackGenMode('presets')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-mono text-[11px] font-bold transition-all ${
- aiTrackGenMode === 'presets' ? 'bg-purple-500/30 text-purple-200' : 'text-[var(--ink-2)] hover:text-white'
+ aiTrackGenMode ==='presets' ?'bg-purple-500/30 text-purple-200' :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  Presets
@@ -5684,14 +5673,14 @@ export default function SongStudioModal({
  type="button"
  onClick={() => setAiTrackGenMode('custom')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-mono text-[11px] font-bold transition-all ${
- aiTrackGenMode === 'custom' ? 'bg-purple-500/30 text-purple-200' : 'text-[var(--ink-2)] hover:text-white'
+ aiTrackGenMode ==='custom' ?'bg-purple-500/30 text-purple-200' :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  Personalizado
  </button>
  </div>
 
- {aiTrackGenMode === 'presets' ? (
+ {aiTrackGenMode ==='presets' ? (
  <div className="grid grid-cols-2 gap-2">
  {AI_TRACK_STYLE_PRESETS.map(preset => (
  <button
@@ -5700,8 +5689,8 @@ export default function SongStudioModal({
  onClick={() => setAiTrackGenStyle(preset.style)}
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all flex flex-col gap-0.5 ${
  aiTrackGenStyle === preset.style
- ? 'bg-purple-950/60 border-purple-500 ring-1 ring-purple-500/50'
- : 'bg-black/40 border-[var(--hair)] hover:border-[var(--hair)]'
+ ?'bg-purple-950/60 border-purple-500 ring-1 ring-purple-500/50'
+ :'bg-black/40 border-[var(--hair)] hover:border-[var(--hair)]'
  }`}
  >
  <span className="font-bold text-[11px] text-white flex items-center gap-1.5">
@@ -5774,7 +5763,7 @@ export default function SongStudioModal({
  ) : (
  <>
  <Wand2 className="w-4 h-4" />
- <span>{aiTrackGenPreview ? 'Regenerar' : 'Generar Pista con IA'}</span>
+ <span>{aiTrackGenPreview ?'Regenerar' :'Generar Pista con IA'}</span>
  </>
  )}
  </button>
@@ -5790,7 +5779,7 @@ export default function SongStudioModal({
 
  {/* Guiño de marca: rayo blanco entrando en el prisma de Iris, saliendo en arcoíris.
  -mx-6 cancela el padding del modal para que ocupe todo el ancho, de borde a borde. */}
- {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
+ {stemProgressModal.stage !=='completed' && stemProgressModal.stage !=='error' && (
  <div className="-mx-6">
  <IrisPrismBanner />
  </div>
@@ -5800,36 +5789,36 @@ export default function SongStudioModal({
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center relative ${
- stemProgressModal.stage === 'completed'
- ? 'bg-emerald-500/20 border-emerald-500/50'
- : stemProgressModal.stage === 'error'
- ? stemProgressModal.errorType === 'billing_required'
- ? 'bg-amber-500/20 /50'
- : stemProgressModal.errorType === 'rate_limit'
- ? 'bg-sky-500/20 border-sky-500/50'
- : stemProgressModal.errorType === 'timeout'
- ? 'bg-purple-500/20 border-purple-500/50'
- : stemProgressModal.errorType === 'audio_unsupported'
- ? 'bg-orange-500/20 border-orange-500/50'
- : stemProgressModal.errorType === 'gpu_failure'
- ? 'bg-fuchsia-500/20 border-fuchsia-500/50'
- : 'bg-rose-500/20 border-rose-500/50'
- : 'bg-amber-500/20 /50'
+ stemProgressModal.stage ==='completed'
+ ?'bg-emerald-500/20 border-emerald-500/50'
+ : stemProgressModal.stage ==='error'
+ ? stemProgressModal.errorType ==='billing_required'
+ ?'bg-amber-500/20 /50'
+ : stemProgressModal.errorType ==='rate_limit'
+ ?'bg-sky-500/20 border-sky-500/50'
+ : stemProgressModal.errorType ==='timeout'
+ ?'bg-purple-500/20 border-purple-500/50'
+ : stemProgressModal.errorType ==='audio_unsupported'
+ ?'bg-orange-500/20 border-orange-500/50'
+ : stemProgressModal.errorType ==='gpu_failure'
+ ?'bg-fuchsia-500/20 border-fuchsia-500/50'
+ :'bg-rose-500/20 border-rose-500/50'
+ :'bg-amber-500/20 /50'
  }`}>
- {stemProgressModal.stage === 'completed' ? (
+ {stemProgressModal.stage ==='completed' ? (
  <CheckCircle2 className="w-6 h-6 text-emerald-400" />
- ) : stemProgressModal.stage === 'error' ? (
- stemProgressModal.errorType === 'billing_required' ? (
+ ) : stemProgressModal.stage ==='error' ? (
+ stemProgressModal.errorType ==='billing_required' ? (
  <CreditCard className="w-5 h-5 text-amber-400" />
- ) : stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing' ? (
+ ) : stemProgressModal.errorType ==='auth_invalid' || stemProgressModal.errorType ==='token_missing' ? (
  <Key className="w-5 h-5 text-rose-400" />
- ) : stemProgressModal.errorType === 'audio_unsupported' ? (
+ ) : stemProgressModal.errorType ==='audio_unsupported' ? (
  <FileAudio className="w-5 h-5 text-orange-400" />
- ) : stemProgressModal.errorType === 'rate_limit' ? (
+ ) : stemProgressModal.errorType ==='rate_limit' ? (
  <Clock className="w-5 h-5 text-sky-400" />
- ) : stemProgressModal.errorType === 'timeout' ? (
+ ) : stemProgressModal.errorType ==='timeout' ? (
  <Timer className="w-5 h-5 text-purple-400" />
- ) : stemProgressModal.errorType === 'gpu_failure' ? (
+ ) : stemProgressModal.errorType ==='gpu_failure' ? (
  <Cpu className="w-5 h-5 text-fuchsia-400" />
  ) : (
  <AlertCircle className="w-5 h-5 text-rose-400" />
@@ -5840,11 +5829,11 @@ export default function SongStudioModal({
  </div>
  <div>
  <h3 className="font-mono font-bold text-sm text-white flex items-center gap-2">
- {stemProgressModal.stage === 'completed'
- ? '¡Separación de Pistas Completada!'
- : stemProgressModal.stage === 'error'
- ? stemProgressModal.errorTitle || 'Error en la Separación'
- : 'Iris está separando tus pistas'}
+ {stemProgressModal.stage ==='completed'
+ ?'¡Separación de Pistas Completada!'
+ : stemProgressModal.stage ==='error'
+ ? stemProgressModal.errorTitle ||'Error en la Separación'
+ :'Iris está separando tus pistas'}
  </h3>
  <p className="text-[11px] text-[var(--ink-2)] font-sans">
  {stemProgressModal.ideaTitle} • <span className="text-amber-300">{stemProgressModal.songTitle}</span>
@@ -5852,55 +5841,55 @@ export default function SongStudioModal({
  </div>
  </div>
 
- {stemProgressModal.stage === 'error' ? (
+ {stemProgressModal.stage ==='error' ? (
  <span className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-bold flex items-center gap-1.5 ${
- stemProgressModal.errorType === 'billing_required'
- ? 'bg-amber-500/20 text-amber-300 /40'
- : stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing'
- ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
- : stemProgressModal.errorType === 'audio_unsupported'
- ? 'bg-orange-500/20 text-orange-300 border-orange-500/40'
- : stemProgressModal.errorType === 'rate_limit'
- ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
- : stemProgressModal.errorType === 'timeout'
- ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
- : stemProgressModal.errorType === 'gpu_failure'
- ? 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/40'
- : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+ stemProgressModal.errorType ==='billing_required'
+ ?'bg-amber-500/20 text-amber-300 /40'
+ : stemProgressModal.errorType ==='auth_invalid' || stemProgressModal.errorType ==='token_missing'
+ ?'bg-rose-500/20 text-rose-300 border-rose-500/40'
+ : stemProgressModal.errorType ==='audio_unsupported'
+ ?'bg-orange-500/20 text-orange-300 border-orange-500/40'
+ : stemProgressModal.errorType ==='rate_limit'
+ ?'bg-sky-500/20 text-sky-300 border-sky-500/40'
+ : stemProgressModal.errorType ==='timeout'
+ ?'bg-purple-500/20 text-purple-300 border-purple-500/40'
+ : stemProgressModal.errorType ==='gpu_failure'
+ ?'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/40'
+ :'bg-rose-500/20 text-rose-300 border-rose-500/40'
  }`}>
- {stemProgressModal.errorType === 'billing_required'
- ? '💳 HTTP 402 Saldo'
- : stemProgressModal.errorType === 'auth_invalid'
- ? '🔑 HTTP 401 Auth'
- : stemProgressModal.errorType === 'token_missing'
- ? '⚙️ Sin Token'
- : stemProgressModal.errorType === 'audio_unsupported'
- ? '🎵 HTTP 422 Audio'
- : stemProgressModal.errorType === 'rate_limit'
- ? '⏳ HTTP 429 Límite'
- : stemProgressModal.errorType === 'timeout'
- ? '⏱️ Timeout >120s'
- : stemProgressModal.errorType === 'gpu_failure'
- ? '⚡ Worker GPU'
- : stemProgressModal.errorType === 'server_error'
- ? '☁️ Error del Servicio'
- : '⚠️ Error'}
+ {stemProgressModal.errorType ==='billing_required'
+ ?'💳 HTTP 402 Saldo'
+ : stemProgressModal.errorType ==='auth_invalid'
+ ?'🔑 HTTP 401 Auth'
+ : stemProgressModal.errorType ==='token_missing'
+ ?'⚙️ Sin Token'
+ : stemProgressModal.errorType ==='audio_unsupported'
+ ?'🎵 HTTP 422 Audio'
+ : stemProgressModal.errorType ==='rate_limit'
+ ?'⏳ HTTP 429 Límite'
+ : stemProgressModal.errorType ==='timeout'
+ ?'⏱️ Timeout >120s'
+ : stemProgressModal.errorType ==='gpu_failure'
+ ?'⚡ Worker GPU'
+ : stemProgressModal.errorType ==='server_error'
+ ?'☁️ Error del Servicio'
+ :'⚠️ Error'}
  </span>
- ) : stemProgressModal.stage !== 'completed' && (
+ ) : stemProgressModal.stage !=='completed' && (
  <div className="flex items-center gap-2">
  <span className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-bold flex items-center gap-1.5 animate-pulse ${
- stemProgressModal.engineChoice === 'mvsep-mdx23'
- ? 'bg-amber-500/20 text-amber-300 /40'
- : stemProgressModal.engineChoice === 'demucs'
- ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
- : 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+ stemProgressModal.engineChoice ==='mvsep-mdx23'
+ ?'bg-amber-500/20 text-amber-300 /40'
+ : stemProgressModal.engineChoice ==='demucs'
+ ?'bg-purple-500/20 text-purple-300 border-purple-500/40'
+ :'bg-blue-500/20 text-blue-300 border-blue-500/40'
  }`}>
  <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
- {stemProgressModal.engineChoice === 'mvsep-mdx23'
- ? '✨ Iris Studio'
- : stemProgressModal.engineChoice === 'demucs'
- ? '⚡ Iris Cloud'
- : '⚙️ Iris Básico'}
+ {stemProgressModal.engineChoice ==='mvsep-mdx23'
+ ?'✨ Iris Studio'
+ : stemProgressModal.engineChoice ==='demucs'
+ ?'⚡ Iris Cloud'
+ :'⚙️ Iris Básico'}
  </span>
  <button
  type="button"
@@ -5915,7 +5904,7 @@ export default function SongStudioModal({
  </div>
 
  {/* Content for Processing States */}
- {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
+ {stemProgressModal.stage !=='completed' && stemProgressModal.stage !=='error' && (
  <div className="space-y-4">
  
  {/* Live Elapsed Time Monitor */}
@@ -5946,11 +5935,11 @@ export default function SongStudioModal({
  {/* Animated Equalizer Visualizer */}
  <div className="p-3.5 rounded-[var(--r-m)] bg-black/60 border-[var(--hair)] flex items-center justify-between">
  <div className="flex items-center gap-1.5 h-8">
- <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_100ms]" style={{ height: '60%', backgroundColor: IRIS_PRISM_RAY_COLORS[0] }} />
- <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_300ms]" style={{ height: '90%', backgroundColor: IRIS_PRISM_RAY_COLORS[1] }} />
- <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_200ms]" style={{ height: '40%', backgroundColor: IRIS_PRISM_RAY_COLORS[2] }} />
- <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_400ms]" style={{ height: '100%', backgroundColor: IRIS_PRISM_RAY_COLORS[4] }} />
- <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_150ms]" style={{ height: '75%', backgroundColor: IRIS_PRISM_RAY_COLORS[5] }} />
+ <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_100ms]" style={{ height:'60%', backgroundColor: IRIS_PRISM_RAY_COLORS[0] }} />
+ <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_300ms]" style={{ height:'90%', backgroundColor: IRIS_PRISM_RAY_COLORS[1] }} />
+ <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_200ms]" style={{ height:'40%', backgroundColor: IRIS_PRISM_RAY_COLORS[2] }} />
+ <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_400ms]" style={{ height:'100%', backgroundColor: IRIS_PRISM_RAY_COLORS[4] }} />
+ <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_150ms]" style={{ height:'75%', backgroundColor: IRIS_PRISM_RAY_COLORS[5] }} />
  </div>
  <div className="text-right">
  <p className="text-xs font-mono font-bold text-amber-200 animate-pulse">
@@ -5965,11 +5954,11 @@ export default function SongStudioModal({
  {/* Step Checklist */}
  <div className="space-y-2 font-mono text-[11px] pt-1">
  <div className={`p-2.5 rounded-[var(--r-s)] flex items-center gap-2.5 transition-all ${
- stemProgressModal.stage === 'preparing' 
- ? 'bg-amber-950/40 /50 text-amber-200' 
- : 'bg-zinc-900/60 border-[var(--hair)] text-[var(--ink-2)]'
+ stemProgressModal.stage ==='preparing' 
+ ?'bg-amber-950/40 /50 text-amber-200' 
+ :'bg-zinc-900/60 border-[var(--hair)] text-[var(--ink-2)]'
  }`}>
- {stemProgressModal.stage === 'preparing' ? (
+ {stemProgressModal.stage ==='preparing' ? (
  <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400 shrink-0" />
  ) : (
  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
@@ -5978,32 +5967,32 @@ export default function SongStudioModal({
  </div>
 
  <div className={`p-2.5 rounded-[var(--r-s)] flex items-center gap-2.5 transition-all ${
- stemProgressModal.stage === 'demucs' 
- ? 'bg-purple-950/40 border-purple-500/50 text-purple-200' 
- : stemProgressModal.stage === 'persisting'
- ? 'bg-zinc-900/60 border-[var(--hair)] text-[var(--ink-2)]'
- : 'bg-zinc-900/30 border-[var(--hair)] text-neutral-600'
+ stemProgressModal.stage ==='demucs' 
+ ?'bg-purple-950/40 border-purple-500/50 text-purple-200' 
+ : stemProgressModal.stage ==='persisting'
+ ?'bg-zinc-900/60 border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-zinc-900/30 border-[var(--hair)] text-neutral-600'
  }`}>
- {stemProgressModal.stage === 'demucs' ? (
+ {stemProgressModal.stage ==='demucs' ? (
  <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-400 shrink-0" />
- ) : stemProgressModal.stage === 'persisting' ? (
+ ) : stemProgressModal.stage ==='persisting' ? (
  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
  ) : (
  <div className="w-3.5 h-3.5 rounded-full shrink-0" />
  )}
  <span>
- {stemProgressModal.engineChoice !== 'dsp-server' || stemProgressModal.isNeural
- ? '2. Inferencia Neuronal en la Nube'
- : '2. Procesamiento de Señal en el Servidor Local'}
+ {stemProgressModal.engineChoice !=='dsp-server' || stemProgressModal.isNeural
+ ?'2. Inferencia Neuronal en la Nube'
+ :'2. Procesamiento de Señal en el Servidor Local'}
  </span>
  </div>
 
  <div className={`p-2.5 rounded-[var(--r-s)] flex items-center gap-2.5 transition-all ${
- stemProgressModal.stage === 'persisting' 
- ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-200' 
- : 'bg-zinc-900/30 border-[var(--hair)] text-neutral-600'
+ stemProgressModal.stage ==='persisting' 
+ ?'bg-emerald-950/40 border-emerald-500/50 text-emerald-200' 
+ :'bg-zinc-900/30 border-[var(--hair)] text-neutral-600'
  }`}>
- {stemProgressModal.stage === 'persisting' ? (
+ {stemProgressModal.stage ==='persisting' ? (
  <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-400 shrink-0" />
  ) : (
  <div className="w-3.5 h-3.5 rounded-full shrink-0" />
@@ -6016,7 +6005,7 @@ export default function SongStudioModal({
  )}
 
  {/* Completed State */}
- {stemProgressModal.stage === 'completed' && (
+ {stemProgressModal.stage ==='completed' && (
  <div className="space-y-4">
  {stemProgressModal.degraded ? (
  <div className="p-4 rounded-[var(--r-m)] bg-amber-950/60 text-amber-200 space-y-2">
@@ -6025,7 +6014,7 @@ export default function SongStudioModal({
  <span>⚠️ Modo Degradado Activo (Filtros DSP Básicos)</span>
  </div>
  <p className="text-[11px] text-[var(--sunken)] font-sans leading-relaxed">
- {stemProgressModal.degradedReason || 'El motor neuronal no estaba disponible en este momento. Las pistas se han generado con Iris Básico (filtrado por frecuencias de señal).'}
+ {stemProgressModal.degradedReason ||'El motor neuronal no estaba disponible en este momento. Las pistas se han generado con Iris Básico (filtrado por frecuencias de señal).'}
  </p>
  <div className="pt-1 text-[10px] font-mono text-amber-300">
  💡 Para separación de calidad de estudio, comprueba la configuración del proveedor de IA en Ajustes.
@@ -6040,18 +6029,18 @@ export default function SongStudioModal({
  </div>
  <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
  stemProgressModal.isNeural
- ? 'bg-purple-950/80 text-purple-300 border-purple-500/40'
- : 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
+ ?'bg-purple-950/80 text-purple-300 border-purple-500/40'
+ :'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
  }`}>
- {stemProgressModal.isNeural ? '🧠 Red Neuronal en la Nube' : '⚙️ Motor Local'}
+ {stemProgressModal.isNeural ?'🧠 Red Neuronal en la Nube' :'⚙️ Motor Local'}
  </span>
  </div>
  <p className="text-[11px] text-[var(--ink-3)] font-sans leading-relaxed">
- Procesado con <strong className="text-white bg-black/40 px-1.5 py-0.5 rounded border-[var(--hair)]">{stemProgressModal.separationEngine || 'Iris'}</strong>. Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, fader de volumen y ecualizador en el mezclador.
+ Procesado con <strong className="text-white bg-black/40 px-1.5 py-0.5 rounded border-[var(--hair)]">{stemProgressModal.separationEngine ||'Iris'}</strong>. Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, fader de volumen y ecualizador en el mezclador.
  </p>
  {stemProgressModal.engineChoice && (
  <p className="text-[10px] text-emerald-400/70 font-mono">
- 💶 Coste estimado: {IRIS_ENGINE_COST_EUR[stemProgressModal.engineChoice] > 0 ? `~${formatEurEstimate(IRIS_ENGINE_COST_EUR[stemProgressModal.engineChoice])}€` : 'gratis'}
+ 💶 Coste estimado: {IRIS_ENGINE_COST_EUR[stemProgressModal.engineChoice] > 0 ? `~${formatEurEstimate(IRIS_ENGINE_COST_EUR[stemProgressModal.engineChoice])}€` :'gratis'}
  </p>
  )}
  </div>
@@ -6072,15 +6061,15 @@ export default function SongStudioModal({
  <div className="grid grid-cols-3 gap-2 text-[10px] pt-1">
  <div className="p-2 rounded bg-black/40 border-[var(--hair)] text-center">
  <span className="text-[var(--ink-2)] block">📥 Prelectura</span>
- <span className="font-bold text-white">{stemProgressModal.timingBreakdown.preloadSec || '0.1s'}</span>
+ <span className="font-bold text-white">{stemProgressModal.timingBreakdown.preloadSec ||'0.1s'}</span>
  </div>
  <div className="p-2 rounded bg-purple-950/40 text-center">
  <span className="text-purple-300 block">⚡ GPU Inferencia</span>
- <span className="font-bold text-purple-200">{stemProgressModal.timingBreakdown.gpuInferenceSec || 'GPU Cloud'}</span>
+ <span className="font-bold text-purple-200">{stemProgressModal.timingBreakdown.gpuInferenceSec ||'GPU Cloud'}</span>
  </div>
  <div className="p-2 rounded bg-emerald-950/40 text-center">
  <span className="text-emerald-300 block">☁️ Supabase</span>
- <span className="font-bold text-emerald-200">{stemProgressModal.timingBreakdown.stemsPersistenceSec || 'Stems OK'}</span>
+ <span className="font-bold text-emerald-200">{stemProgressModal.timingBreakdown.stemsPersistenceSec ||'Stems OK'}</span>
  </div>
  </div>
  ) : (
@@ -6126,17 +6115,17 @@ export default function SongStudioModal({
  type="button"
  onClick={() => {
  const idea = stemProgressModal.targetIdea;
- if (idea) handlePerformAiStemSeparation(idea, 'mvsep-mdx23');
+ if (idea) handlePerformAiStemSeparation(idea,'mvsep-mdx23');
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1 ${
- stemProgressModal.engineChoice === 'mvsep-mdx23'
- ? 'bg-amber-500/20 /60 text-amber-200 ring-1 ring-amber-400/40'
- : 'bg-zinc-900/90 border-[var(--hair)] text-[var(--ink-3)] hover:/50 hover:bg-zinc-800'
+ stemProgressModal.engineChoice ==='mvsep-mdx23'
+ ?'bg-amber-500/20 /60 text-amber-200 ring-1 ring-amber-400/40'
+ :'bg-zinc-900/90 border-[var(--hair)] text-[var(--ink-3)] hover:/50 hover:bg-zinc-800'
  }`}
  >
  <div className="flex items-center justify-between">
  <span className="font-bold text-xs text-white">✨ Iris Studio</span>
- {stemProgressModal.engineChoice === 'mvsep-mdx23' && (
+ {stemProgressModal.engineChoice ==='mvsep-mdx23' && (
  <span className="text-[9px] px-1 py-0.2 rounded bg-amber-400 text-zinc-950 font-black">ACTIVO</span>
  )}
  </div>
@@ -6148,17 +6137,17 @@ export default function SongStudioModal({
  type="button"
  onClick={() => {
  const idea = stemProgressModal.targetIdea;
- if (idea) handlePerformAiStemSeparation(idea, 'demucs');
+ if (idea) handlePerformAiStemSeparation(idea,'demucs');
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1 ${
- stemProgressModal.engineChoice === 'demucs'
- ? 'bg-purple-500/20 border-purple-500/60 text-purple-200 ring-1 ring-purple-400/40'
- : 'bg-zinc-900/90 border-[var(--hair)] text-[var(--ink-3)] hover:border-purple-400/50 hover:bg-zinc-800'
+ stemProgressModal.engineChoice ==='demucs'
+ ?'bg-purple-500/20 border-purple-500/60 text-purple-200 ring-1 ring-purple-400/40'
+ :'bg-zinc-900/90 border-[var(--hair)] text-[var(--ink-3)] hover:border-purple-400/50 hover:bg-zinc-800'
  }`}
  >
  <div className="flex items-center justify-between">
  <span className="font-bold text-xs text-white">⚡ Iris Cloud</span>
- {stemProgressModal.engineChoice === 'demucs' && (
+ {stemProgressModal.engineChoice ==='demucs' && (
  <span className="text-[9px] px-1 py-0.2 rounded bg-purple-400 text-zinc-950 font-black">ACTIVO</span>
  )}
  </div>
@@ -6170,17 +6159,17 @@ export default function SongStudioModal({
  type="button"
  onClick={() => {
  const idea = stemProgressModal.targetIdea;
- if (idea) handlePerformAiStemSeparation(idea, 'dsp-server');
+ if (idea) handlePerformAiStemSeparation(idea,'dsp-server');
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1 ${
- stemProgressModal.engineChoice === 'dsp-server'
- ? 'bg-emerald-500/20 border-emerald-500/60 text-emerald-200 ring-1 ring-emerald-400/40'
- : 'bg-zinc-900/90 border-[var(--hair)] text-[var(--ink-3)] hover:border-emerald-400/50 hover:bg-zinc-800'
+ stemProgressModal.engineChoice ==='dsp-server'
+ ?'bg-emerald-500/20 border-emerald-500/60 text-emerald-200 ring-1 ring-emerald-400/40'
+ :'bg-zinc-900/90 border-[var(--hair)] text-[var(--ink-3)] hover:border-emerald-400/50 hover:bg-zinc-800'
  }`}
  >
  <div className="flex items-center justify-between">
  <span className="font-bold text-xs text-white">⚙️ Iris Básico</span>
- {stemProgressModal.engineChoice === 'dsp-server' && (
+ {stemProgressModal.engineChoice ==='dsp-server' && (
  <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-400 text-zinc-950 font-black">ACTIVO</span>
  )}
  </div>
@@ -6202,80 +6191,80 @@ export default function SongStudioModal({
  )}
 
  {/* Error State */}
- {stemProgressModal.stage === 'error' && (
+ {stemProgressModal.stage ==='error' && (
  <div className="space-y-3.5">
  {/* Provider Origin Badge */}
  <div className="flex items-center justify-between">
  <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold ${
- stemProgressModal.errorProvider === 'replicate'
- ? 'bg-purple-950/70 border-purple-500/50 text-purple-200'
- : stemProgressModal.errorProvider === 'gemini'
- ? 'bg-sky-950/70 border-sky-500/50 text-sky-200'
- : stemProgressModal.errorProvider === 'ffmpeg'
- ? 'bg-emerald-950/70 border-emerald-500/50 text-emerald-200'
- : stemProgressModal.errorProvider === 'supabase'
- ? 'bg-amber-950/70 /50 text-amber-200'
- : 'bg-zinc-900 border-zinc-700 text-zinc-300'
+ stemProgressModal.errorProvider ==='replicate'
+ ?'bg-purple-950/70 border-purple-500/50 text-purple-200'
+ : stemProgressModal.errorProvider ==='gemini'
+ ?'bg-sky-950/70 border-sky-500/50 text-sky-200'
+ : stemProgressModal.errorProvider ==='ffmpeg'
+ ?'bg-emerald-950/70 border-emerald-500/50 text-emerald-200'
+ : stemProgressModal.errorProvider ==='supabase'
+ ?'bg-amber-950/70 /50 text-amber-200'
+ :'bg-zinc-900 border-zinc-700 text-zinc-300'
  }`}>
- {stemProgressModal.errorProvider === 'replicate' && <Cpu className="w-3.5 h-3.5 text-purple-400" />}
- {stemProgressModal.errorProvider === 'gemini' && <Bot className="w-3.5 h-3.5 text-sky-400" />}
- {stemProgressModal.errorProvider === 'ffmpeg' && <Sliders className="w-3.5 h-3.5 text-emerald-400" />}
- {stemProgressModal.errorProvider === 'supabase' && <Database className="w-3.5 h-3.5 text-amber-400" />}
- {(!stemProgressModal.errorProvider || stemProgressModal.errorProvider === 'system' || stemProgressModal.errorProvider === 'network') && (
+ {stemProgressModal.errorProvider ==='replicate' && <Cpu className="w-3.5 h-3.5 text-purple-400" />}
+ {stemProgressModal.errorProvider ==='gemini' && <Bot className="w-3.5 h-3.5 text-sky-400" />}
+ {stemProgressModal.errorProvider ==='ffmpeg' && <Sliders className="w-3.5 h-3.5 text-emerald-400" />}
+ {stemProgressModal.errorProvider ==='supabase' && <Database className="w-3.5 h-3.5 text-amber-400" />}
+ {(!stemProgressModal.errorProvider || stemProgressModal.errorProvider ==='system' || stemProgressModal.errorProvider ==='network') && (
  <AlertCircle className="w-3.5 h-3.5 text-zinc-400" />
  )}
  <span>
- {stemProgressModal.errorProvider === 'replicate' && 'Origen: Proveedor de IA en la Nube'}
- {stemProgressModal.errorProvider === 'gemini' && 'Origen: Google Gemini API (GenAI)'}
- {stemProgressModal.errorProvider === 'ffmpeg' && 'Origen: Librería Local FFmpeg (Motor DSP)'}
- {stemProgressModal.errorProvider === 'supabase' && 'Origen: Supabase Storage (Almacenamiento)'}
- {(!stemProgressModal.errorProvider || stemProgressModal.errorProvider === 'system' || stemProgressModal.errorProvider === 'network') && 'Origen: Sistema Local'}
+ {stemProgressModal.errorProvider ==='replicate' &&'Origen: Proveedor de IA en la Nube'}
+ {stemProgressModal.errorProvider ==='gemini' &&'Origen: Google Gemini API (GenAI)'}
+ {stemProgressModal.errorProvider ==='ffmpeg' &&'Origen: Librería Local FFmpeg (Motor DSP)'}
+ {stemProgressModal.errorProvider ==='supabase' &&'Origen: Supabase Storage (Almacenamiento)'}
+ {(!stemProgressModal.errorProvider || stemProgressModal.errorProvider ==='system' || stemProgressModal.errorProvider ==='network') &&'Origen: Sistema Local'}
  </span>
  </div>
 
  <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">
- {stemProgressModal.errorType || 'ERROR'}
+ {stemProgressModal.errorType ||'ERROR'}
  </span>
  </div>
 
  {/* Error Banner */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-2 transition-all ${
- stemProgressModal.errorType === 'billing_required'
- ? 'bg-amber-950/40 /50 text-amber-200'
- : stemProgressModal.errorType === 'rate_limit' || stemProgressModal.errorType === 'gemini_quota_exceeded'
- ? 'bg-sky-950/40 border-sky-500/50 text-sky-200'
- : stemProgressModal.errorType === 'timeout'
- ? 'bg-purple-950/40 border-purple-500/50 text-purple-200'
- : stemProgressModal.errorType === 'audio_unsupported' || stemProgressModal.errorType === 'ffmpeg_codec_unsupported'
- ? 'bg-orange-950/40 border-orange-500/50 text-orange-200'
- : stemProgressModal.errorType === 'gpu_failure'
- ? 'bg-fuchsia-950/40 border-fuchsia-500/50 text-fuchsia-200'
- : stemProgressModal.errorType === 'server_error'
- ? 'bg-[var(--surface)]/90 /50 text-[var(--ink-3)]'
- : stemProgressModal.errorProvider === 'gemini'
- ? 'bg-blue-950/50 border-blue-500/40 text-blue-200'
- : 'bg-rose-950/50 border-rose-500/40 text-rose-200'
+ stemProgressModal.errorType ==='billing_required'
+ ?'bg-amber-950/40 /50 text-amber-200'
+ : stemProgressModal.errorType ==='rate_limit' || stemProgressModal.errorType ==='gemini_quota_exceeded'
+ ?'bg-sky-950/40 border-sky-500/50 text-sky-200'
+ : stemProgressModal.errorType ==='timeout'
+ ?'bg-purple-950/40 border-purple-500/50 text-purple-200'
+ : stemProgressModal.errorType ==='audio_unsupported' || stemProgressModal.errorType ==='ffmpeg_codec_unsupported'
+ ?'bg-orange-950/40 border-orange-500/50 text-orange-200'
+ : stemProgressModal.errorType ==='gpu_failure'
+ ?'bg-fuchsia-950/40 border-fuchsia-500/50 text-fuchsia-200'
+ : stemProgressModal.errorType ==='server_error'
+ ?'bg-[var(--surface)]/90 /50 text-[var(--ink-3)]'
+ : stemProgressModal.errorProvider ==='gemini'
+ ?'bg-blue-950/50 border-blue-500/40 text-blue-200'
+ :'bg-rose-950/50 border-rose-500/40 text-rose-200'
  }`}>
  <div className="flex items-center gap-2 font-mono font-bold text-xs">
- {stemProgressModal.errorType === 'billing_required' ? (
+ {stemProgressModal.errorType ==='billing_required' ? (
  <CreditCard className="w-4 h-4 text-amber-400 shrink-0" />
- ) : stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing' || stemProgressModal.errorType === 'gemini_key_missing' || stemProgressModal.errorType === 'gemini_auth_invalid' ? (
+ ) : stemProgressModal.errorType ==='auth_invalid' || stemProgressModal.errorType ==='token_missing' || stemProgressModal.errorType ==='gemini_key_missing' || stemProgressModal.errorType ==='gemini_auth_invalid' ? (
  <Key className="w-4 h-4 text-rose-400 shrink-0" />
- ) : stemProgressModal.errorType === 'audio_unsupported' || stemProgressModal.errorType === 'ffmpeg_codec_unsupported' ? (
+ ) : stemProgressModal.errorType ==='audio_unsupported' || stemProgressModal.errorType ==='ffmpeg_codec_unsupported' ? (
  <FileAudio className="w-4 h-4 text-orange-400 shrink-0" />
- ) : stemProgressModal.errorType === 'rate_limit' || stemProgressModal.errorType === 'gemini_quota_exceeded' ? (
+ ) : stemProgressModal.errorType ==='rate_limit' || stemProgressModal.errorType ==='gemini_quota_exceeded' ? (
  <Clock className="w-4 h-4 text-sky-400 shrink-0" />
- ) : stemProgressModal.errorType === 'timeout' ? (
+ ) : stemProgressModal.errorType ==='timeout' ? (
  <Timer className="w-4 h-4 text-purple-400 shrink-0" />
- ) : stemProgressModal.errorType === 'gpu_failure' ? (
+ ) : stemProgressModal.errorType ==='gpu_failure' ? (
  <Cpu className="w-4 h-4 text-fuchsia-400 shrink-0" />
  ) : (
  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
  )}
- <span>{stemProgressModal.errorTitle || 'Diagnóstico del Error'}</span>
+ <span>{stemProgressModal.errorTitle ||'Diagnóstico del Error'}</span>
  </div>
  <p className="text-[12px] text-[var(--sunken)] font-sans leading-relaxed whitespace-pre-wrap break-words font-medium">
- {stemProgressModal.errorMessage || 'No se pudo completar la separación de pistas.'}
+ {stemProgressModal.errorMessage ||'No se pudo completar la separación de pistas.'}
  </p>
  </div>
 
@@ -6295,7 +6284,7 @@ export default function SongStudioModal({
  {/* Primary Action Buttons Based on Error Provider & Type */}
  <div className="space-y-2">
  {/* Replicate Specific Actions */}
- {stemProgressModal.errorProvider === 'replicate' && stemProgressModal.errorType === 'billing_required' && (
+ {stemProgressModal.errorProvider ==='replicate' && stemProgressModal.errorType ==='billing_required' && (
  <a
  href="https://replicate.com/account/billing"
  target="_blank"
@@ -6308,7 +6297,7 @@ export default function SongStudioModal({
  </a>
  )}
 
- {stemProgressModal.errorProvider === 'replicate' && (stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing') && (
+ {stemProgressModal.errorProvider ==='replicate' && (stemProgressModal.errorType ==='auth_invalid' || stemProgressModal.errorType ==='token_missing') && (
  <a
  href="https://replicate.com/account/api-tokens"
  target="_blank"
@@ -6321,12 +6310,12 @@ export default function SongStudioModal({
  </a>
  )}
 
- {stemProgressModal.errorProvider === 'replicate' && (stemProgressModal.errorType === 'rate_limit' || stemProgressModal.errorType === 'timeout' || stemProgressModal.errorType === 'gpu_failure') && (
+ {stemProgressModal.errorProvider ==='replicate' && (stemProgressModal.errorType ==='rate_limit' || stemProgressModal.errorType ==='timeout' || stemProgressModal.errorType ==='gpu_failure') && (
  <button
  type="button"
  onClick={() => {
  const idea = stemProgressModal.targetIdea;
- if (idea) handlePerformAiStemSeparation(idea, stemProgressModal.engineChoice || 'demucs');
+ if (idea) handlePerformAiStemSeparation(idea, stemProgressModal.engineChoice ||'demucs');
  }}
  className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
  >
@@ -6335,7 +6324,7 @@ export default function SongStudioModal({
  </button>
  )}
 
- {stemProgressModal.errorProvider === 'replicate' && stemProgressModal.errorType === 'server_error' && (
+ {stemProgressModal.errorProvider ==='replicate' && stemProgressModal.errorType ==='server_error' && (
  <a
  href="https://replicatestatus.com"
  target="_blank"
@@ -6349,7 +6338,7 @@ export default function SongStudioModal({
  )}
 
  {/* Gemini API Specific Actions */}
- {stemProgressModal.errorProvider === 'gemini' && (stemProgressModal.errorType === 'gemini_key_missing' || stemProgressModal.errorType === 'gemini_auth_invalid') && (
+ {stemProgressModal.errorProvider ==='gemini' && (stemProgressModal.errorType ==='gemini_key_missing' || stemProgressModal.errorType ==='gemini_auth_invalid') && (
  <a
  href="https://aistudio.google.com/app/apikey"
  target="_blank"
@@ -6362,7 +6351,7 @@ export default function SongStudioModal({
  </a>
  )}
 
- {stemProgressModal.errorProvider === 'gemini' && stemProgressModal.errorType === 'gemini_quota_exceeded' && (
+ {stemProgressModal.errorProvider ==='gemini' && stemProgressModal.errorType ==='gemini_quota_exceeded' && (
  <a
  href="https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas"
  target="_blank"
@@ -6383,10 +6372,10 @@ export default function SongStudioModal({
  onClick={() => {
  const idea = stemProgressModal.targetIdea;
  if (idea) {
- if (stemProgressModal.engineChoice === 'dsp-server') {
- handlePerformAiStemSeparation(idea, 'mvsep-mdx23');
+ if (stemProgressModal.engineChoice ==='dsp-server') {
+ handlePerformAiStemSeparation(idea,'mvsep-mdx23');
  } else {
- handlePerformAiStemSeparation(idea, 'dsp-server');
+ handlePerformAiStemSeparation(idea,'dsp-server');
  }
  }
  }}
@@ -6394,9 +6383,9 @@ export default function SongStudioModal({
  >
  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
  <span>
- {stemProgressModal.engineChoice === 'dsp-server'
- ? 'Probar con Iris Studio'
- : 'Separar con Iris Básico (Gratis)'}
+ {stemProgressModal.engineChoice ==='dsp-server'
+ ?'Probar con Iris Studio'
+ :'Separar con Iris Básico (Gratis)'}
  </span>
  </button>
  )}
@@ -6419,7 +6408,7 @@ export default function SongStudioModal({
  className="text-[11px] font-mono text-[var(--ink-2)] hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
  >
  {showStemErrorDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
- <span>{showStemErrorDetails ? 'Ocultar diagnóstico técnico' : 'Ver diagnóstico técnico detallado (logs / error)'}</span>
+ <span>{showStemErrorDetails ?'Ocultar diagnóstico técnico' :'Ver diagnóstico técnico detallado (logs / error)'}</span>
  </button>
  {showStemErrorDetails && (
  <div className="mt-2 p-3 rounded-[var(--r-m)] bg-black/80 border-[var(--hair)] font-mono text-[11px] text-[var(--ink-3)] space-y-2 animate-in fade-in duration-150">
@@ -6428,14 +6417,14 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => {
- navigator.clipboard.writeText(stemProgressModal.errorDetail || '');
+ navigator.clipboard.writeText(stemProgressModal.errorDetail ||'');
  setCopiedStemError(true);
  setTimeout(() => setCopiedStemError(false), 2000);
  }}
  className="flex items-center gap-1 text-[10px] text-amber-300 hover:text-amber-200 transition-colors cursor-pointer"
  >
  <Copy className="w-3 h-3" />
- <span>{copiedStemError ? '¡Copiado!' : 'Copiar'}</span>
+ <span>{copiedStemError ?'¡Copiado!' :'Copiar'}</span>
  </button>
  </div>
  <div className="max-h-40 overflow-y-auto whitespace-pre-wrap break-all text-[10px] text-[var(--ink-2)] font-mono leading-relaxed select-all">
@@ -6458,20 +6447,20 @@ export default function SongStudioModal({
  esté haciendo en ese momento (escribiendo, con el móvil en el bolsillo...). En vez de
  eso, la píldora cambia de color y parpadea para avisar, y él decide cuándo mirarla. */}
  {stemProgressModal && stemProgressModal.isOpen && stemProgressModal.minimized && (() => {
- const terminado = stemProgressModal.stage === 'completed' || stemProgressModal.stage === 'error';
- const esError = stemProgressModal.stage === 'error';
+ const terminado = stemProgressModal.stage ==='completed' || stemProgressModal.stage ==='error';
+ const esError = stemProgressModal.stage ==='error';
  return (
  <button
  type="button"
  onClick={() => setStemProgressModal(prev => prev ? { ...prev, minimized: false } : null)}
  className={`fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-[var(--r-l)] bg-zinc-950/95 backdrop-blur-md shadow-2xl p-3 text-left cursor-pointer transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200 ${
  !terminado
- ? 'border /40 hover:/70'
+ ?'border /40 hover:/70'
  : esError
- ? 'border-2 border-rose-500/70 hover:border-rose-400 animate-pulse'
- : 'border-2 border-emerald-500/70 hover:border-emerald-400 animate-pulse'
+ ?'border-2 border-rose-500/70 hover:border-rose-400 animate-pulse'
+ :'border-2 border-emerald-500/70 hover:border-emerald-400 animate-pulse'
  }`}
- title={terminado ? 'Iris ha terminado — toca para ver el resultado' : 'Reabrir el progreso de Iris'}
+ title={terminado ?'Iris ha terminado — toca para ver el resultado' :'Reabrir el progreso de Iris'}
  >
  <div className="flex items-center gap-2">
  {!terminado ? (
@@ -6482,8 +6471,8 @@ export default function SongStudioModal({
  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
  )}
  <div className="min-w-0 flex-1">
- <p className={`text-[11px] font-mono font-bold truncate ${!terminado ? 'text-white' : esError ? 'text-rose-300' : 'text-emerald-300'}`}>
- {!terminado ? 'Iris separando pistas…' : esError ? '¡Iris ha tenido un error!' : '¡Pistas listas!'}
+ <p className={`text-[11px] font-mono font-bold truncate ${!terminado ?'text-white' : esError ?'text-rose-300' :'text-emerald-300'}`}>
+ {!terminado ?'Iris separando pistas…' : esError ?'¡Iris ha tenido un error!' :'¡Pistas listas!'}
  </p>
  <p className="text-[10px] font-mono text-[var(--ink-2)] truncate">{stemProgressModal.ideaTitle}</p>
  </div>
@@ -6495,7 +6484,7 @@ export default function SongStudioModal({
  <div className="mt-2 w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border-[var(--hair)]">
  <div
  className={`h-full rounded-full transition-all duration-300 ${
- !terminado ? 'bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400' : esError ? 'bg-rose-500' : 'bg-emerald-400'
+ !terminado ?'bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400' : esError ?'bg-rose-500' :'bg-emerald-400'
  }`}
  style={{ width: `${terminado ? 100 : Math.max(5, stemProgressModal.progressPct)}%` }}
  />

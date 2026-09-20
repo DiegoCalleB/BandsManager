@@ -1,10 +1,10 @@
-import React from 'react';
-import { Wand2, X, Sparkles, RefreshCw } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
-import { SongAudioIdea, DrumPatternStyle } from '../../types';
+import React from'react';
+import { Wand2, X, Sparkles, RefreshCw } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
+import { SongAudioIdea, DrumPatternStyle } from'../../types';
 
 interface SongStudioAiGeneratorModalProps {
- // Solo se usa como "hay idea seleccionada o no", pero el estado real es la idea completa.
+ // Solo se usa como"hay idea seleccionada o no", pero el estado real es la idea completa.
  showGenModalForIdea: SongAudioIdea | null;
  onClose: () => void;
  genBpm: number;
@@ -112,7 +112,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <label className="text-xs font-mono text-[var(--ink-2)] block">Instrumentos a incluir:</label>
  <div className="grid grid-cols-2 gap-3">
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeDrums ? 'bg-purple-900/30 border-purple-500 text-white' : 'bg-black/40 text-[var(--ink-2)]'
+ includeDrums ?'bg-purple-900/30 border-purple-500 text-white' :'bg-black/40 text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"
@@ -124,7 +124,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  </label>
 
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeBass ? 'bg-purple-900/30 border-purple-500 text-white' : 'bg-black/40 text-[var(--ink-2)]'
+ includeBass ?'bg-purple-900/30 border-purple-500 text-white' :'bg-black/40 text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"
@@ -142,15 +142,15 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <div>
  <label className="text-xs font-mono text-[var(--ink-2)] block mb-1">Patrón Rítmico de Batería</label>
  <div className="grid grid-cols-4 gap-2">
- {(['rock', 'pop', 'funk', 'reggae', 'ska', 'cumbia', 'punk'] as const).map(style => (
+ {(['rock','pop','funk','reggae','ska','cumbia','punk'] as const).map(style => (
  <button
  key={style}
  type="button"
  onClick={() => setDrumStyle(style)}
  className={`py-2 px-1 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
  drumStyle === style
- ? 'bg-purple-600 text-white shadow-lg'
- : 'bg-black/40 text-[var(--ink-2)] hover:text-white'
+ ?'bg-purple-600 text-white shadow-lg'
+ :'bg-black/40 text-[var(--ink-2)] hover:text-white'
  }`}
  >
  {style}

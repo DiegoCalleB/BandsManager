@@ -1,6 +1,6 @@
-import React from 'react';
-import { X, Keyboard } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React from'react';
+import { X, Keyboard } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface SongStudioCubaseHelpModalProps {
  onClose: () => void;

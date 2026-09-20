@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useEffect, useState } from'react';
+import { createPortal } from'react-dom';
 
 interface ModalPortalProps {
  children: React.ReactNode;
@@ -28,16 +28,16 @@ export const ModalPortal: React.FC<ModalPortalProps> = ({
  }, []);
 
  useEffect(() => {
- if (!isOpen || !lockScroll || typeof document === 'undefined') return;
+ if (!isOpen || !lockScroll || typeof document ==='undefined') return;
 
  const originalOverflow = document.body.style.overflow;
  const originalTouchAction = document.body.style.touchAction;
 
  // Prevent background scrolling while modal is open on mobile and desktop
- document.body.style.overflow = 'hidden';
+ document.body.style.overflow ='hidden';
 
  const handleKeyDown = (e: KeyboardEvent) => {
- if (e.key === 'Escape' && onClose) {
+ if (e.key ==='Escape' && onClose) {
  onClose();
  }
  };
@@ -51,7 +51,7 @@ export const ModalPortal: React.FC<ModalPortalProps> = ({
  };
  }, [isOpen, lockScroll, onClose]);
 
- if (!mounted || !isOpen || typeof document === 'undefined') {
+ if (!mounted || !isOpen || typeof document ==='undefined') {
  return null;
  }
 

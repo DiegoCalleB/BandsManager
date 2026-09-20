@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Lead, LeadStatus, LeadType, InteractionLog, Setlist } from '../../types';
-import { LeadHealthBadge } from './LeadHealthBadge';
-import { VerifiedBadge } from '../common/VerifiedBadge';
-import { LeadAvatar } from './LeadAvatar';
-import { ReliabilityBadge } from '../common/ReliabilityBadge';
-import { FavoriteButton } from '../common/FavoriteButton';
-import { isLeadVerificado } from '../../utils/leadReliability';
-import DirectionsCard from '../DirectionsCard';
-import { apiFetch } from '../../utils/api';
-import { api } from '../../services/api';
-import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
-import { BoloConfirmadoSetlistModal } from './BoloConfirmadoSetlistModal';
-import { formatFestivalDateRange, toIsoDateString } from '../../utils/festivalDateFormat';
-import { HolidayDateWarning } from '../common/HolidayDateWarning';
+import React, { useState, useEffect } from'react';
+import { Lead, LeadStatus, LeadType, InteractionLog, Setlist } from'../../types';
+import { LeadHealthBadge } from'./LeadHealthBadge';
+import { VerifiedBadge } from'../common/VerifiedBadge';
+import { LeadAvatar } from'./LeadAvatar';
+import { ReliabilityBadge } from'../common/ReliabilityBadge';
+import { FavoriteButton } from'../common/FavoriteButton';
+import { isLeadVerificado } from'../../utils/leadReliability';
+import DirectionsCard from'../DirectionsCard';
+import { apiFetch } from'../../utils/api';
+import { api } from'../../services/api';
+import { MultiModelPitchComparatorModal } from'./MultiModelPitchComparatorModal';
+import { BoloConfirmadoSetlistModal } from'./BoloConfirmadoSetlistModal';
+import { formatFestivalDateRange, toIsoDateString } from'../../utils/festivalDateFormat';
+import { HolidayDateWarning } from'../common/HolidayDateWarning';
 import {
  Edit3,
  X,
@@ -37,7 +37,7 @@ import {
  Undo2,
  RotateCcw,
  Layers
-} from 'lucide-react';
+} from'lucide-react';
 
 interface VenueDetailPanelProps {
  selectedLead: Lead | null;
@@ -50,7 +50,7 @@ interface VenueDetailPanelProps {
  normalizeStatus: (status: string) => LeadStatus;
  normalizeType: (type?: string) => string;
  autoDetectVenueAddress: (venueName: string, city: string) => string;
- sectionTab: 'salas' | 'medios' | 'grupos';
+ sectionTab:'salas' |'medios' |'grupos';
  isStitchLight?: boolean;
  activeCampaign?: any;
  onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
@@ -75,7 +75,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  isUploadingLeadLogo = false
 }) => {
  // Active Tab inside panel
- const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'bitacora'>('info');
+ const [activeTab, setActiveTab] = useState<'info' |'emails' |'bitacora'>('info');
 
  // Edit Lead State
  const [isEditingLeadInfo, setIsEditingLeadInfo] = useState(false);
@@ -87,17 +87,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  // Pitch Editing & Feedback State
  const [isEditingPitch, setIsEditingPitch] = useState(false);
- const [editedPitch, setEditedPitch] = useState(selectedLead?.pitch_generado || '');
+ const [editedPitch, setEditedPitch] = useState(selectedLead?.pitch_generado ||'');
  const [toneRating, setToneRating] = useState<number>(0);
  const [contentRating, setContentRating] = useState<number>(0);
  const [feedbackComment, setFeedbackComment] = useState<string>('');
- const [feedbackScope, setFeedbackScope] = useState<'este_pitch' | 'global'>('este_pitch');
+ const [feedbackScope, setFeedbackScope] = useState<'este_pitch' |'global'>('este_pitch');
  const [isRegeneratingPitch, setIsRegeneratingPitch] = useState(false);
  const [isRevertingPitch, setIsRevertingPitch] = useState(false);
  const [feedbackSuccessMsg, setFeedbackSuccessMsg] = useState<string | null>(null);
  const [showFeedbackHistory, setShowFeedbackHistory] = useState(false);
  const [showMultiModelModal, setShowMultiModelModal] = useState(false);
- const [selectedAiModel, setSelectedAiModel] = useState<'gemini' | 'deepseek'>('gemini');
+ const [selectedAiModel, setSelectedAiModel] = useState<'gemini' |'deepseek'>('gemini');
 
  // Bolo Confirmado -> Setlist Optimization Modal
  const [showBoloConfirmadoModal, setShowBoloConfirmadoModal] = useState(false);
@@ -123,7 +123,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  try {
  setIsExtractingDates(true);
  const res: any = await apiFetch('/api/leads/enrich-lead', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({ leadId: selectedLead.id, force: true })
  });
  if (res?.lead) {
@@ -148,7 +148,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  // Historial real de conversación (lead_messages, escrito por el Enviador/Lector) - independiente
  // de selectedLead.hilo_emails, que solo lo rellena el sync manual de Gmail del cliente. Sin esto,
  // los pitches enviados de verdad y las respuestas detectadas automáticamente nunca aparecían aquí.
- const [leadMessages, setLeadMessages] = useState<Array<{ id: string; remitente: 'banda' | 'sala'; remitente_nombre: string; asunto: string; mensaje: string; fecha: string }>>([]);
+ const [leadMessages, setLeadMessages] = useState<Array<{ id: string; remitente:'banda' |'sala'; remitente_nombre: string; asunto: string; mensaje: string; fecha: string }>>([]);
 
  useEffect(() => {
  if (!selectedLead?.id) { setLeadMessages([]); return; }
@@ -163,8 +163,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  // aproximada, y ordenado cronológicamente - una banda puede tener las dos fuentes a la vez si
  // sincronizó Gmail a mano alguna vez además de dejar que los agentes trabajen.
  const hiloCompleto = React.useMemo(() => {
- const manual = (selectedLead?.hilo_emails || []).map((m: any) => ({ ...m, _origen: 'manual' as const }));
- const real = leadMessages.map((m) => ({ ...m, _origen: 'real' as const }));
+ const manual = (selectedLead?.hilo_emails || []).map((m: any) => ({ ...m, _origen:'manual' as const }));
+ const real = leadMessages.map((m) => ({ ...m, _origen:'real' as const }));
  const todos = [...real, ...manual].filter((m, idx, arr) =>
  arr.findIndex((o) => o.mensaje === m.mensaje && o.remitente === m.remitente) === idx
  );
@@ -173,14 +173,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  // Clean helper for values like #ERROR!
  const cleanVal = (val?: string) => {
- if (!val || val.includes('#ERROR!') || val.includes('#N/A') || val.includes('#VALUE!')) return '';
+ if (!val || val.includes('#ERROR!') || val.includes('#N/A') || val.includes('#VALUE!')) return'';
  return val;
  };
 
  // Sync state when selected lead changes or pitch updates
  useEffect(() => {
  if (!selectedLead) return;
- setEditedPitch(selectedLead.pitch_generado || '');
+ setEditedPitch(selectedLead.pitch_generado ||'');
  setEditedLeadInfo({
  ...selectedLead,
  telefono: cleanVal(selectedLead.telefono),
@@ -195,14 +195,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  // una sala nueva cambiaba cuántos hooks se ejecutaban entre un render y el siguiente.
  if (!selectedLead) return null;
 
- const handleRegeneratePitchWithFeedback = async (targetProvider?: 'gemini' | 'deepseek') => {
+ const handleRegeneratePitchWithFeedback = async (targetProvider?:'gemini' |'deepseek') => {
  setIsRegeneratingPitch(true);
  setFeedbackSuccessMsg(null);
  const providerToUse = targetProvider || selectedAiModel;
  try {
- const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
- const headers: Record<string, string> = {
- 'Content-Type': 'application/json'
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') ||'';
+ const headers: Record<string, string> = {'Content-Type':'application/json'
  };
  if (token) {
  headers['Authorization'] = `Bearer ${token}`;
@@ -215,7 +214,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  ? `/api/leads/${selectedLead.id}/regenerate-reply`
  : `/api/leads/${selectedLead.id}/regenerate-pitch`;
  const res = await fetch(endpoint, {
- method: 'POST',
+ method:'POST',
  headers,
  body: JSON.stringify({
  tono_rating: toneRating || undefined,
@@ -227,7 +226,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  })
  });
 
- const data = await res.json().catch(() => ({ success: false, error: 'Respuesta inválida del servidor' }));
+ const data = await res.json().catch(() => ({ success: false, error:'Respuesta inválida del servidor' }));
  if (res.ok && data.success && data.newPitchText) {
  setEditedPitch(data.newPitchText);
  setIsEditingPitch(false);
@@ -246,19 +245,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setToneRating(0);
  setContentRating(0);
  setFeedbackComment('');
- const modelLabel = providerToUse === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
- if (feedbackScope === 'global') {
+ const modelLabel = providerToUse ==='deepseek' ?'DeepSeek V3' :'Gemini 3.7 Flash';
+ if (feedbackScope ==='global') {
  setFeedbackSuccessMsg(`¡Pitch reescrito con ${modelLabel}! Aprendizaje guardado en la memoria global.`);
  } else {
  setFeedbackSuccessMsg(`¡Pitch reescrito con ${modelLabel} aplicando tus notas a esta sala!`);
  }
  setTimeout(() => setFeedbackSuccessMsg(null), 4500);
  } else {
- alert(data.error || 'No se pudo regenerar el pitch.');
+ alert(data.error ||'No se pudo regenerar el pitch.');
  }
  } catch (err: any) {
  console.error('Error al regenerar pitch:', err);
- alert(`Error de conexión al reescribir el pitch con IA: ${err.message || 'Verifica la conexión'}`);
+ alert(`Error de conexión al reescribir el pitch con IA: ${err.message ||'Verifica la conexión'}`);
  } finally {
  setIsRegeneratingPitch(false);
  }
@@ -268,21 +267,20 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  if (!selectedLead) return;
  setIsRevertingPitch(true);
  try {
- const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
- const headers: Record<string, string> = {
- 'Content-Type': 'application/json'
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') ||'';
+ const headers: Record<string, string> = {'Content-Type':'application/json'
  };
  if (token) {
  headers['Authorization'] = `Bearer ${token}`;
  headers['x-auth-token'] = token;
  }
  const res = await fetch(`/api/leads/${selectedLead.id}/revert-pitch`, {
- method: 'POST',
+ method:'POST',
  headers,
  body: JSON.stringify({ logId: targetLogId })
  });
 
- const data = await res.json().catch(() => ({ success: false, error: 'Respuesta inválida del servidor' }));
+ const data = await res.json().catch(() => ({ success: false, error:'Respuesta inválida del servidor' }));
  if (res.ok && data.success && data.restoredPitch !== undefined) {
  const restored = data.restoredPitch;
  setEditedPitch(restored);
@@ -305,7 +303,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setFeedbackSuccessMsg('↩️ Entrenamiento deshecho: Se ha restaurado el pitch anterior.');
  setTimeout(() => setFeedbackSuccessMsg(null), 5000);
  } else {
- alert(data.error || 'No se pudo restaurar el pitch anterior.');
+ alert(data.error ||'No se pudo restaurar el pitch anterior.');
  }
  } catch (err) {
  console.error('Error al deshacer entrenamiento del pitch:', err);
@@ -321,7 +319,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setEnrichStatusMsg('Investigando y completando datos oficiales sin inventar...');
  try {
  const res = await apiFetch('/api/leads/enrich-lead', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  leadId: selectedLead.id,
  force: true
@@ -333,12 +331,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setEnrichStatusMsg('✨ ¡Datos completados y verificados con éxito!');
  setTimeout(() => setEnrichStatusMsg(null), 4000);
  } else {
- setEnrichStatusMsg(res.error || 'No se encontraron datos nuevos verificables.');
+ setEnrichStatusMsg(res.error ||'No se encontraron datos nuevos verificables.');
  setTimeout(() => setEnrichStatusMsg(null), 4000);
  }
  } catch (err: any) {
  console.error('Error enriqueciendo lead:', err);
- setEnrichStatusMsg(err.message || 'Error al completar datos.');
+ setEnrichStatusMsg(err.message ||'Error al completar datos.');
  setTimeout(() => setEnrichStatusMsg(null), 4000);
  } finally {
  setIsEnrichingLead(false);
@@ -346,12 +344,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  };
 
  const handleAutoSearchLogo = async () => {
- const venueName = (editedLeadInfo.nombre_sala || selectedLead.nombre_sala || '').trim();
+ const venueName = (editedLeadInfo.nombre_sala || selectedLead.nombre_sala ||'').trim();
  if (!venueName) return;
  setIsSearchingLogo(true);
  try {
  const res = await apiFetch('/api/leads/ai-lookup', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  nombre_sala: venueName,
  ciudad: editedLeadInfo.ciudad || selectedLead.ciudad,
@@ -394,7 +392,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  };
 
  const handleCorrectStatus = (newStatus: LeadStatus) => {
- if (newStatus === 'confirmado') {
+ if (newStatus ==='confirmado') {
  setShowBoloConfirmadoModal(true);
  return;
  }
@@ -411,48 +409,48 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  // 1. Si se generó un nuevo setlist automático a medida, guardarlo
  if (data.newSetlist) {
  await apiFetch('/api/setlists', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify(data.newSetlist)
  }).catch(err => console.warn('Error guardando setlist generado:', err));
  }
 
  // 2. Crear el concierto en el calendario con la vinculación al setlist y al bolo
- const isFestival = selectedLead.tipo === 'festival' || selectedLead.tipo === 'ayuntamiento';
+ const isFestival = selectedLead.tipo ==='festival' || selectedLead.tipo ==='ayuntamiento';
  const newConcert = {
  id: `concert-crm-${selectedLead.id}-${Date.now()}`,
  fecha: data.concertDate,
- ciudad: selectedLead.ciudad || 'Ciudad por definir',
+ ciudad: selectedLead.ciudad ||'Ciudad por definir',
  sala: selectedLead.nombre_sala,
- direccion: selectedLead.direccion || '',
+ direccion: selectedLead.direccion ||'',
  cache: data.cacheAmount || 0,
  aforo_vendido: 0,
  aforo_total: selectedLead.aforo || 0,
  contrato_firmado: true,
- estado_pago: 'pendiente',
+ estado_pago:'pendiente',
  notas: `Bolo confirmado desde el CRM. Lead: ${selectedLead.nombre_sala}`,
- tipo: isFestival ? 'festival' : 'sala',
+ tipo: isFestival ?'festival' :'sala',
  setlistId: data.setlistId
  };
 
  await apiFetch('/api/concerts', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify(newConcert)
  }).catch(err => console.warn('Error creando concierto:', err));
 
  // 3. Actualizar estado del lead en Supabase
- onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+ onUpdateLead(selectedLead.id, { estado:'confirmado' });
  setShowBoloConfirmadoModal(false);
  setFeedbackBoloMsg('🎉 ¡Bolo confirmado y repertorio asignado en el calendario!');
  setTimeout(() => setFeedbackBoloMsg(null), 5000);
  } catch (err) {
  console.error('Error al confirmar bolo con setlist:', err);
- onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+ onUpdateLead(selectedLead.id, { estado:'confirmado' });
  setShowBoloConfirmadoModal(false);
  }
  };
 
  const handleConfirmWithoutSetlist = () => {
- onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+ onUpdateLead(selectedLead.id, { estado:'confirmado' });
  setShowBoloConfirmadoModal(false);
  setFeedbackBoloMsg('🎉 Concierto marcado como confirmado en el CRM.');
  setTimeout(() => setFeedbackBoloMsg(null), 4000);
@@ -461,57 +459,57 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  // hiloCompleto (lead_messages real + hilo_emails manual) es la señal fiable de que ya hubo
  // conversación con la sala - antes solo se miraba hilo_emails (el campo legado que solo rellena
  // el sync manual de Gmail) y el estado, así que un lead cuya respuesta el Lector auto-redactó
- // (estado 'pendiente_aprobacion', ver server/services/lectorAgent.ts) dejaba de detectarse como
- // "en fase de respuesta" y el botón "Aprobar" mandaba aprobado_propuesta en vez de
- // aprobado_respuesta, haciendo que el Enviador lo tratase como pitch nuevo (asunto sin "Re:",
- // vuelta a 'contactado' en vez de 'negociando').
- const isReplyStage = hiloCompleto.length > 0 || selectedLead.estado === 'respondido' || selectedLead.estado === 'negociando';
+ // (estado'pendiente_aprobacion', ver server/services/lectorAgent.ts) dejaba de detectarse como
+ //"en fase de respuesta" y el botón"Aprobar" mandaba aprobado_propuesta en vez de
+ // aprobado_respuesta, haciendo que el Enviador lo tratase como pitch nuevo (asunto sin"Re:",
+ // vuelta a'contactado' en vez de'negociando').
+ const isReplyStage = hiloCompleto.length > 0 || selectedLead.estado ==='respondido' || selectedLead.estado ==='negociando';
 
  // Al aprobar se dispara el Agente Enviador en el servidor para este lead concreto
  // (POST /api/trigger-agent, el mismo endpoint que usa el scheduler) en vez de crear el
  // borrador desde el navegador: el servidor ya sabe elegir entre la API de Gmail por OAuth
  // (sin contraseña, sin popup - ver server/services/gmailApiClient.ts) y el camino IMAP con
  // contraseña de aplicación para Outlook (server/services/agentEngine.ts). Así el botón
- // "Aprobar" y el Agente Enviador programado comparten una sola implementación, sin duplicar
+ //"Aprobar" y el Agente Enviador programado comparten una sola implementación, sin duplicar
  // lógica ni depender de Firebase/popup en el cliente. Si falla (sin email de contacto, sin
  // ninguna cuenta conectada...), el lead cae de todos modos en el estado de aprobado clásico
  // para no perder la aprobación humana.
  const createDraftAndApprove = async (pitchText: string, alsoSavePitch: boolean) => {
- const approvalState = isReplyStage ? 'aprobado_respuesta' : 'aprobado_propuesta';
+ const approvalState = isReplyStage ?'aprobado_respuesta' :'aprobado_propuesta';
 
  setIsCreatingDraft(true);
  setDraftError(null);
 
  // El Enviador (server/services/agentEngine.ts), cuando se dispara para un lead concreto como
- // aquí, lo busca por id SIN filtrar por estado - decide si es respuesta (asunto "Re:",
- // pasa a 'negociando' al enviar) mirando lead.estado === 'aprobado_respuesta' en Supabase EN
+ // aquí, lo busca por id SIN filtrar por estado - decide si es respuesta (asunto"Re:",
+ // pasa a'negociando' al enviar) mirando lead.estado ==='aprobado_respuesta' en Supabase EN
  // ESE MOMENTO. Antes esto solo se guardaba si la petición fallaba, así que en el camino
- // normal el Enviador seguía viendo el estado anterior (p.ej. 'pendiente_aprobacion') y
+ // normal el Enviador seguía viendo el estado anterior (p.ej.'pendiente_aprobacion') y
  // trataba cualquier respuesta aprobada como si fuera un pitch nuevo. Hace falta escribirlo
  // (y esperar a que el PATCH llegue a Supabase) ANTES de disparar el agente.
  const updates: Partial<Lead> = { estado: approvalState };
  if (alsoSavePitch) updates.pitch_generado = pitchText;
  await onUpdateLead(selectedLead.id, updates);
 
- let draftError = '';
+ let draftError ='';
  try {
  const data = await apiFetch('/api/trigger-agent', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
- agentName: 'enviador',
- params: { id: selectedLead.id, trigger_type: 'usuario_manual' }
+ agentName:'enviador',
+ params: { id: selectedLead.id, trigger_type:'usuario_manual' }
  })
  });
 
  const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === selectedLead.id) : null;
- if (leadResult?.status === 'borrador' || leadResult?.status === 'enviado') {
- onUpdateLead(selectedLead.id, { estado: 'borrador_creado' });
+ if (leadResult?.status ==='borrador' || leadResult?.status ==='enviado') {
+ onUpdateLead(selectedLead.id, { estado:'borrador_creado' });
  } else {
- draftError = leadResult?.error || data.message || 'No se pudo crear el borrador.';
+ draftError = leadResult?.error || data.message ||'No se pudo crear el borrador.';
  }
  } catch (err: any) {
  console.error('Error aprobando lead:', err);
- draftError = err.message || 'Error al aprobar el lead.';
+ draftError = err.message ||'Error al aprobar el lead.';
  }
 
  if (draftError) {
@@ -529,14 +527,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  };
 
  const handleApprovePitchDirectly = () => {
- void createDraftAndApprove(selectedLead.pitch_generado || '', false);
+ void createDraftAndApprove(selectedLead.pitch_generado ||'', false);
  };
 
  const handleAddInteractionLog = (e: React.FormEvent) => {
  e.preventDefault();
  if (!interactionNotes.trim()) return;
 
- const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);
+ const nowStr = new Date().toISOString().replace('T','').slice(0, 16);
  const newLog: InteractionLog = {
  id: `log-${Date.now()}`,
  fecha: nowStr,
@@ -550,12 +548,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  const updatedLogs = [newLog, ...existingLogs];
 
  let newStatus = selectedLead.estado;
- if (interactionResultado === 'Interesado') {
- newStatus = 'negociando';
- } else if (interactionResultado === 'Acuerdo cerrado') {
- newStatus = 'confirmado';
- } else if (interactionResultado === 'Rechazado') {
- newStatus = 'no_interesado';
+ if (interactionResultado ==='Interesado') {
+ newStatus ='negociando';
+ } else if (interactionResultado ==='Acuerdo cerrado') {
+ newStatus ='confirmado';
+ } else if (interactionResultado ==='Rechazado') {
+ newStatus ='no_interesado';
  }
 
  onUpdateLead(selectedLead.id, {
@@ -581,7 +579,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  }
  };
 
- const phoneClean = selectedLead.telefono ? selectedLead.telefono.replace(/\D/g, '') : '';
+ const phoneClean = selectedLead.telefono ? selectedLead.telefono.replace(/\D/g,'') :'';
 
  return (
  <div className="w-full space-y-5 relative">
@@ -619,12 +617,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <VerifiedBadge isVerified={isLeadVerificado(selectedLead)} size="md" showLabel={true} />
  </div>
  <p className="text-xs sm:text-sm font-sans mt-0.5 text-zinc-300">
- {selectedLead.ciudad} • {selectedLead.genero || 'Variado'} •{' '}
+ {selectedLead.ciudad} • {selectedLead.genero ||'Variado'} •{''}
  {selectedLead.roster
  ? `Róster: ${selectedLead.roster}`
- : (['agencia', 'manager', 'productora', 'sello'].includes(String(selectedLead.tipo || '').toLowerCase())
- ? 'Agencia de Booking'
- : (selectedLead.aforo ? `${selectedLead.aforo} pax` : 'Aforo n/d'))}
+ : (['agencia','manager','productora','sello'].includes(String(selectedLead.tipo ||'').toLowerCase())
+ ?'Agencia de Booking'
+ : (selectedLead.aforo ? `${selectedLead.aforo} pax` :'Aforo n/d'))}
  </p>
  {selectedLead.festival_start_date && selectedLead.festival_end_date && (
  <div className="space-y-1 mt-1">
@@ -683,7 +681,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex items-center gap-1.5 bg-[var(--bg)] px-2.5 py-1 rounded-[var(--r-m)]">
  <span className="text-[10px] text-amber-400 font-mono font-bold uppercase">Tipo:</span>
  <select
- value={String(selectedLead.tipo || 'sala').toLowerCase()}
+ value={String(selectedLead.tipo ||'sala').toLowerCase()}
  onChange={(e) => {
  const newType = e.target.value as LeadType;
  onUpdateLead(selectedLead.id, { tipo: newType });
@@ -765,11 +763,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* Agent Workflow & Sub-status Banner (Option A 2-Dimensional Model) */}
  {(() => {
- const rawStatus = String(selectedLead.estado || '');
- const isPending = rawStatus === 'pendiente_aprobacion' || (rawStatus === 'nuevo' && !!selectedLead.pitch_generado && !selectedLead.fecha_envio);
- const isDraftCreated = rawStatus === 'borrador_creado';
+ const rawStatus = String(selectedLead.estado ||'');
+ const isPending = rawStatus ==='pendiente_aprobacion' || (rawStatus ==='nuevo' && !!selectedLead.pitch_generado && !selectedLead.fecha_envio);
+ const isDraftCreated = rawStatus ==='borrador_creado';
  const isApproved = rawStatus.startsWith('aprobado');
- const isSent = normalizeStatus(rawStatus) === 'esperando_respuesta';
+ const isSent = normalizeStatus(rawStatus) ==='esperando_respuesta';
 
  if (isPending) {
  return (
@@ -780,10 +778,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
  <div className="min-w-0">
  <p className="text-xs font-bold text-amber-300">
- {isReplyStage ? '💬 Respuesta redactada por IA — Pendiente de aprobación' : '✉️ Pitch inicial redactado por IA — Pendiente de aprobación'}
+ {isReplyStage ?'💬 Respuesta redactada por IA — Pendiente de aprobación' :'✉️ Pitch inicial redactado por IA — Pendiente de aprobación'}
  </p>
  <p className="text-[10px] text-zinc-400 truncate">
- {isReplyStage ? 'Revisa el borrador para responder a la sala y autorizar su envío.' : 'Revisa la propuesta inicial para autorizar al agente de envíos.'}
+ {isReplyStage ?'Revisa el borrador para responder a la sala y autorizar su envío.' :'Revisa la propuesta inicial para autorizar al agente de envíos.'}
  </p>
  </div>
  </div>
@@ -794,7 +792,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
- <span>{isCreatingDraft ? 'Creando borrador...' : 'Aprobar'}</span>
+ <span>{isCreatingDraft ?'Creando borrador...' :'Aprobar'}</span>
  </button>
  </div>
  );
@@ -823,12 +821,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0 ml-1" />
  <div className="min-w-0">
  <p className="text-xs font-bold text-emerald-300">
- 🚀 {rawStatus === 'aprobado_respuesta' ? 'Respuesta Aprobada' : 'Propuesta Aprobada'} — En cola del Agente Enviador
+ 🚀 {rawStatus ==='aprobado_respuesta' ?'Respuesta Aprobada' :'Propuesta Aprobada'} — En cola del Agente Enviador
  </p>
  <p className="text-[10px] text-zinc-400">
  {draftError
  ? `No se pudo crear el borrador en Gmail (${draftError}). El lead quedó en cola para el Agente Enviador por email.`
- : 'El agente despachará este correo respetando las normas de envío y rate-limiting.'}
+ :'El agente despachará este correo respetando las normas de envío y rate-limiting.'}
  </p>
  </div>
  </div>
@@ -840,20 +838,20 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setDraftError(null);
  try {
  const data = await apiFetch('/api/trigger-agent', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
- agentName: 'enviador',
- params: { id: selectedLead.id, trigger_type: 'usuario_manual' }
+ agentName:'enviador',
+ params: { id: selectedLead.id, trigger_type:'usuario_manual' }
  })
  });
  const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === selectedLead.id) : null;
- if (leadResult?.status === 'borrador' || leadResult?.status === 'enviado') {
- onUpdateLead(selectedLead.id, { estado: leadResult?.status === 'enviado' ? (leadResult?.estado_nuevo || 'contactado') : 'borrador_creado' });
+ if (leadResult?.status ==='borrador' || leadResult?.status ==='enviado') {
+ onUpdateLead(selectedLead.id, { estado: leadResult?.status ==='enviado' ? (leadResult?.estado_nuevo ||'contactado') :'borrador_creado' });
  } else if (leadResult?.error || data.message) {
  setDraftError(leadResult?.error || data.message);
  }
  } catch (err: any) {
- setDraftError(err.message || 'Error al despachar el correo.');
+ setDraftError(err.message ||'Error al despachar el correo.');
  } finally {
  setIsCreatingDraft(false);
  }
@@ -862,7 +860,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  title="Forzar el despacho inmediato de este correo por el Agente Enviador"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
- <span>{isCreatingDraft ? 'Enviando...' : 'Despachar Ahora'}</span>
+ <span>{isCreatingDraft ?'Enviando...' :'Despachar Ahora'}</span>
  </button>
  </div>
  );
@@ -873,7 +871,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="p-2 bg-sky-500/10 rounded-[var(--r-m)] flex items-center gap-2 text-xs text-sky-300">
  <span className="w-2 h-2 rounded-full bg-sky-400 shrink-0 ml-1" />
  <span className="text-[11px] font-medium">
- 📬 Email enviado el {selectedLead.fecha_envio || 'recientemente'} • Agente a la espera de respuesta de la sala
+ 📬 Email enviado el {selectedLead.fecha_envio ||'recientemente'} • Agente a la espera de respuesta de la sala
  </span>
  </div>
  );
@@ -906,8 +904,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="px-2.5 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-[10px] rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  title="Scout Enriquecedor: Completa emails, webs y datos faltantes sin alucinaciones"
  >
- <Sparkles className={`w-3 h-3 text-amber-400 ${isEnrichingLead ? 'animate-spin' : ''}`} />
- <span>{isEnrichingLead ? 'Completando...' : 'Scout Enriquecedor'}</span>
+ <Sparkles className={`w-3 h-3 text-amber-400 ${isEnrichingLead ?'animate-spin' :''}`} />
+ <span>{isEnrichingLead ?'Completando...' :'Scout Enriquecedor'}</span>
  </button>
  </div>
  </div>
@@ -947,7 +945,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {/* ROSTER / ARTISTAS REPRESENTADOS (Si aplica) */}
- {(selectedLead.roster || ['agencia', 'manager', 'productora', 'sello', 'grupo'].includes(String(selectedLead.tipo || '').toLowerCase())) && (
+ {(selectedLead.roster || ['agencia','manager','productora','sello','grupo'].includes(String(selectedLead.tipo ||'').toLowerCase())) && (
  <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-2">
  <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
  <span>🎸</span> Róster de Artistas & Servicios de Representación
@@ -970,9 +968,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => setActiveTab('info')}
  className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 cursor-pointer ${
- activeTab === 'info'
- ? 'border-b-2 border-[var(--acc)] text-[var(--acc)]'
- : 'text-zinc-400 hover:text-zinc-200'
+ activeTab ==='info'
+ ?'border-b-2 border-[var(--acc)] text-[var(--acc)]'
+ :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
  Propuesta / Pitch
@@ -982,9 +980,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => setActiveTab('emails')}
  className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
- activeTab === 'emails'
- ? 'border-b-2 border-[var(--acc)] text-[var(--acc)]'
- : 'text-zinc-400 hover:text-zinc-200'
+ activeTab ==='emails'
+ ?'border-b-2 border-[var(--acc)] text-[var(--acc)]'
+ :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
  <Mail className="w-3.5 h-3.5" />
@@ -1000,9 +998,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => setActiveTab('bitacora')}
  className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
- activeTab === 'bitacora'
- ? 'border-b-2 border-[var(--acc)] text-[var(--acc)]'
- : 'text-zinc-400 hover:text-zinc-200'
+ activeTab ==='bitacora'
+ ?'border-b-2 border-[var(--acc)] text-[var(--acc)]'
+ :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
  <History className="w-3.5 h-3.5" />
@@ -1011,7 +1009,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {/* TAB 1: PITCH & DIRECT EDITING FORM */}
- {activeTab === 'info' && (
+ {activeTab ==='info' && (
  <div className="space-y-4">
  {/* Edit Form Modal/Inline */}
  {isEditingLeadInfo && (
@@ -1044,7 +1042,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </label>
  <input
  type="text"
- value={editedLeadInfo.nombre_sala || ''}
+ value={editedLeadInfo.nombre_sala ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, nombre_sala: e.target.value })
  }
@@ -1057,7 +1055,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  Tipo / Categoría de Lead
  </label>
  <select
- value={String(editedLeadInfo.tipo || 'sala').toLowerCase()}
+ value={String(editedLeadInfo.tipo ||'sala').toLowerCase()}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, tipo: e.target.value as LeadType })
  }
@@ -1091,12 +1089,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all cursor-pointer disabled:opacity-50"
  >
  <Sparkles className="w-3 h-3 text-amber-400" />
- <span>{isSearchingLogo ? 'Buscando...' : '🔍 Buscar Logo'}</span>
+ <span>{isSearchingLogo ?'Buscando...' :'🔍 Buscar Logo'}</span>
  </button>
  {onLeadLogoUpload && (
  <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-zinc-700">
  <Upload className="w-3 h-3 text-amber-400" />
- <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir Logo'}</span>
+ <span>{isUploadingLeadLogo ?'Subiendo...' :'Subir Logo'}</span>
  <input
  type="file"
  accept="image/*"
@@ -1117,14 +1115,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
  </div>
 
- {editedLeadInfo.imagen_url && editedLeadInfo.imagen_url.trim() !== '' ? (
+ {editedLeadInfo.imagen_url && editedLeadInfo.imagen_url.trim() !=='' ? (
  <div className="flex items-center gap-3 p-2 bg-zinc-950 rounded-[var(--r-s)] border-zinc-800">
  <img
  src={editedLeadInfo.imagen_url}
  alt="Logo"
  className="w-10 h-10 rounded-[var(--r-s)] object-contain bg-zinc-900 shrink-0"
  onError={(e) => {
- e.currentTarget.style.display = 'none';
+ e.currentTarget.style.display ='none';
  }}
  />
  <div className="flex-1 min-w-0">
@@ -1135,7 +1133,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
  <button
  type="button"
- onClick={() => setEditedLeadInfo(prev => ({ ...prev, imagen_url: '' }))}
+ onClick={() => setEditedLeadInfo(prev => ({ ...prev, imagen_url:'' }))}
  className="text-[10px] text-rose-400 hover:underline px-2 py-1 cursor-pointer"
  >
  Quitar
@@ -1145,7 +1143,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="space-y-1.5">
  <p className="text-[9px] text-zinc-400">O selecciona un emoji característico:</p>
  <div className="flex flex-wrap gap-1.5">
- {['📻', '📰', '🌐', '🎙️', '📺', '🏛️', '🎪', '🪩', '🎸', '💼', '🎆', '⚡', '🔥'].map(
+ {['📻','📰','🌐','🎙️','📺','🏛️','🎪','🪩','🎸','💼','🎆','⚡','🔥'].map(
  emoji => (
  <button
  key={emoji}
@@ -1153,8 +1151,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setEditedLeadInfo(prev => ({ ...prev, icono: emoji }))}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  editedLeadInfo.icono === emoji
- ? 'bg-amber-500 text-black font-bold scale-110 shadow-md '
- : 'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700'
+ ?'bg-amber-500 text-black font-bold scale-110 shadow-md'
+ :'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700'
  }`}
  >
  {emoji}
@@ -1174,7 +1172,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="text"
  placeholder="Ej. Calle San Vicente Ferrer 33, 28004 Madrid"
- value={editedLeadInfo.direccion || ''}
+ value={editedLeadInfo.direccion ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, direccion: e.target.value })
  }
@@ -1190,7 +1188,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="text"
  placeholder="Ej. Madrid"
- value={editedLeadInfo.ciudad || ''}
+ value={editedLeadInfo.ciudad ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, ciudad: e.target.value })
  }
@@ -1204,7 +1202,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="text"
  placeholder="Ej. Comunidad de Madrid"
- value={editedLeadInfo.region || ''}
+ value={editedLeadInfo.region ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, region: e.target.value })
  }
@@ -1221,7 +1219,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="text"
  placeholder="Ej. Carlos (Programador)"
- value={editedLeadInfo.contacto_nombre || ''}
+ value={editedLeadInfo.contacto_nombre ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, contacto_nombre: e.target.value })
  }
@@ -1235,7 +1233,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="email"
  placeholder="info@salanazcaconciertos.com"
- value={editedLeadInfo.email_contacto || ''}
+ value={editedLeadInfo.email_contacto ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, email_contacto: e.target.value })
  }
@@ -1251,7 +1249,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="email"
  placeholder="info@magnetikproducciones.com (o varios separados por coma)"
- value={editedLeadInfo.email_secundario || ''}
+ value={editedLeadInfo.email_secundario ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, email_secundario: e.target.value })
  }
@@ -1267,7 +1265,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="text"
  placeholder="Ej. +34 612 345 678"
- value={editedLeadInfo.telefono || ''}
+ value={editedLeadInfo.telefono ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, telefono: e.target.value })
  }
@@ -1297,7 +1295,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="text"
  placeholder="Ej. Ska-P, Boikot, Zoo, La Raíz..."
- value={editedLeadInfo.roster || ''}
+ value={editedLeadInfo.roster ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, roster: e.target.value })
  }
@@ -1318,7 +1316,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  title="Buscar fechas del festival automáticamente con IA y base de datos de festivales"
  >
  <Sparkles className="w-3 h-3 text-amber-400" />
- <span>{isExtractingDates ? 'Buscando fechas...' : '⚡ Rellenar Fechas con IA'}</span>
+ <span>{isExtractingDates ?'Buscando fechas...' :'⚡ Rellenar Fechas con IA'}</span>
  </button>
  </div>
  <div className="grid grid-cols-2 gap-2">
@@ -1359,7 +1357,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="url"
  placeholder="https://..."
- value={editedLeadInfo.website || ''}
+ value={editedLeadInfo.website ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, website: e.target.value })
  }
@@ -1373,7 +1371,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <input
  type="text"
  placeholder="@salaeltren"
- value={editedLeadInfo.instagram || ''}
+ value={editedLeadInfo.instagram ||''}
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, instagram: e.target.value })
  }
@@ -1389,7 +1387,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-3 border-zinc-800">
  <div className="flex items-center justify-between flex-wrap gap-2">
  <span className="text-xs font-bold font-sans uppercase text-amber-400 tracking-wider">
- {isReplyStage ? '💬 Respuesta Redactada por IA' : '✉️ Propuesta de Pitch Redactada'}
+ {isReplyStage ?'💬 Respuesta Redactada por IA' :'✉️ Propuesta de Pitch Redactada'}
  </span>
  <div className="flex items-center gap-1.5 flex-wrap">
  <button
@@ -1408,10 +1406,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-[11px] text-zinc-200 font-sans flex items-center gap-1 cursor-pointer"
  >
  <Copy className="w-3 h-3" />
- <span>{copiedPitch ? '¡Copiado!' : 'Copiar'}</span>
+ <span>{copiedPitch ?'¡Copiado!' :'Copiar'}</span>
  </button>
 
- {selectedLead.estado === 'pendiente_aprobacion' || selectedLead.estado === 'nuevo' ? (
+ {selectedLead.estado ==='pendiente_aprobacion' || selectedLead.estado ==='nuevo' ? (
  <button
  type="button"
  onClick={handleApprovePitchDirectly}
@@ -1419,7 +1417,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded text-xs flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
- <span>{isCreatingDraft ? 'Creando borrador...' : (isReplyStage ? 'Aprobar Respuesta' : 'Aprobar Pitch')}</span>
+ <span>{isCreatingDraft ?'Creando borrador...' : (isReplyStage ?'Aprobar Respuesta' :'Aprobar Pitch')}</span>
  </button>
  ) : null}
  </div>
@@ -1436,7 +1434,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  Campaña: {activeCampaign.name}
  </span>
  <span className="text-[10px] text-purple-300/80 truncate block">
- Fechas objetivo: {activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) ? activeCampaign.targetDates.join(', ') : 'Próximos meses')} · Aforo: {activeCampaign.minCapacity || 0}-{activeCampaign.maxCapacity || 'sin límite'} pax
+ Fechas objetivo: {activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) ? activeCampaign.targetDates.join(',') :'Próximos meses')} · Aforo: {activeCampaign.minCapacity || 0}-{activeCampaign.maxCapacity ||'sin límite'} pax
  </span>
  </div>
  </div>
@@ -1472,7 +1470,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="w-full p-3 bg-black/60 rounded-[var(--r-m)] text-xs text-zinc-100 font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
  />
  <div className="flex items-center justify-between gap-2">
- <span className="text-[10px] text-zinc-500 font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa 'Regenerar' con estrellas/comentario y marca 'Solo para esta sala' en vez de editar aquí.">
+ <span className="text-[10px] text-zinc-500 font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa'Regenerar' con estrellas/comentario y marca'Solo para esta sala' en vez de editar aquí.">
  ✏️ Esta edición se usará también para entrenar al Redactor
  </span>
  <div className="flex gap-2 shrink-0">
@@ -1494,12 +1492,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  ) : (
  <div
  onClick={() => {
- setEditedPitch(editedPitch || selectedLead.pitch_generado || '');
+ setEditedPitch(editedPitch || selectedLead.pitch_generado ||'');
  setIsEditingPitch(true);
  }}
  className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] border-zinc-800 text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed cursor-pointer hover:/40 transition-colors group relative"
  >
- {editedPitch || selectedLead.pitch_generado || 'Sin pitch generado.'}
+ {editedPitch || selectedLead.pitch_generado ||'Sin pitch generado.'}
  <span className="absolute bottom-2 right-2 text-[10px] text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity font-bold">
  Clic para editar ✏️
  </span>
@@ -1524,7 +1522,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setShowFeedbackHistory(!showFeedbackHistory)}
  className="text-[10px] text-amber-400/80 hover:text-amber-300 underline font-mono cursor-pointer"
  >
- {showFeedbackHistory ? 'Ocultar historial' : `Historial (${selectedLead.historial_feedback_pitch.length})`}
+ {showFeedbackHistory ?'Ocultar historial' : `Historial (${selectedLead.historial_feedback_pitch.length})`}
  </button>
  )}
  </div>
@@ -1541,7 +1539,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => setToneRating(star)}
  className={`p-1 rounded hover:bg-zinc-800 transition-colors cursor-pointer ${
- toneRating >= star ? 'text-amber-400' : 'text-zinc-600'
+ toneRating >= star ?'text-amber-400' :'text-zinc-600'
  }`}
  title={`Calificar tono: ${star}/5`}
  >
@@ -1549,7 +1547,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </button>
  ))}
  <span className="text-[10px] font-mono text-zinc-400 ml-1">
- {toneRating > 0 ? `${toneRating}/5` : 'Sin calificar'}
+ {toneRating > 0 ? `${toneRating}/5` :'Sin calificar'}
  </span>
  </div>
  </div>
@@ -1564,7 +1562,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => setContentRating(star)}
  className={`p-1 rounded hover:bg-zinc-800 transition-colors cursor-pointer ${
- contentRating >= star ? 'text-amber-400' : 'text-zinc-600'
+ contentRating >= star ?'text-amber-400' :'text-zinc-600'
  }`}
  title={`Calificar contenido: ${star}/5`}
  >
@@ -1572,7 +1570,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </button>
  ))}
  <span className="text-[10px] font-mono text-zinc-400 ml-1">
- {contentRating > 0 ? `${contentRating}/5` : 'Sin calificar'}
+ {contentRating > 0 ? `${contentRating}/5` :'Sin calificar'}
  </span>
  </div>
  </div>
@@ -1588,7 +1586,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  rows={2}
  value={feedbackComment}
  onChange={(e) => setFeedbackComment(e.target.value)}
- placeholder="Ej: 'Menciona que tocamos en el Viña Rock', 'Hazlo más corto y directo', 'Insiste en fecha para un sábado'..."
+ placeholder="Ej:'Menciona que tocamos en el Viña Rock','Hazlo más corto y directo','Insiste en fecha para un sábado'..."
  className="w-full p-2.5 bg-black/60 rounded-[var(--r-s)] text-xs text-zinc-200 placeholder-zinc-500 font-sans focus:outline-none focus:"
  />
  </div>
@@ -1602,15 +1600,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <label
  onClick={() => setFeedbackScope('este_pitch')}
  className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
- feedbackScope === 'este_pitch'
- ? 'bg-amber-500/15 /60 text-amber-200'
- : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+ feedbackScope ==='este_pitch'
+ ?'bg-amber-500/15 /60 text-amber-200'
+ :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
  }`}
  >
  <input
  type="radio"
  name="feedbackScope"
- checked={feedbackScope === 'este_pitch'}
+ checked={feedbackScope ==='este_pitch'}
  onChange={() => setFeedbackScope('este_pitch')}
  className="mt-0.5 accent-amber-500 shrink-0"
  />
@@ -1623,15 +1621,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <label
  onClick={() => setFeedbackScope('global')}
  className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
- feedbackScope === 'global'
- ? 'bg-amber-500/15 /60 text-amber-200'
- : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+ feedbackScope ==='global'
+ ?'bg-amber-500/15 /60 text-amber-200'
+ :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
  }`}
  >
  <input
  type="radio"
  name="feedbackScope"
- checked={feedbackScope === 'global'}
+ checked={feedbackScope ==='global'}
  onChange={() => setFeedbackScope('global')}
  className="mt-0.5 accent-amber-500 shrink-0"
  />
@@ -1661,8 +1659,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </span>
  <div className="flex items-center gap-1.5 flex-wrap">
  {[
- { id: 'deepseek' as const, name: 'DeepSeek V3 (Recomendado)', cost: '~0,00014 €', icon: '🚀' },
- { id: 'gemini' as const, name: 'Gemini Flash (Free Tier)', cost: '~0,00018 €', icon: '⚡' }
+ { id:'deepseek' as const, name:'DeepSeek V3 (Recomendado)', cost:'~0,00014 €', icon:'🚀' },
+ { id:'gemini' as const, name:'Gemini Flash (Free Tier)', cost:'~0,00018 €', icon:'⚡' }
  ].map(m => {
  const isSelected = selectedAiModel === m.id;
  return (
@@ -1672,8 +1670,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setSelectedAiModel(m.id)}
  className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isSelected
- ? 'bg-amber-500/20 text-amber-300 /50 shadow-sm'
- : 'bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:border-zinc-700'
+ ?'bg-amber-500/20 text-amber-300 /50 shadow-sm'
+ :'bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:border-zinc-700'
  }`}
  title={`Coste aproximado por pitch: ${m.cost}`}
  >
@@ -1716,12 +1714,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {isRegeneratingPitch ? (
  <>
  <Loader2 className="w-4 h-4 animate-spin" />
- <span>Entrenando {selectedAiModel === 'deepseek' ? 'DeepSeek' : 'Gemini'}...</span>
+ <span>Entrenando {selectedAiModel ==='deepseek' ?'DeepSeek' :'Gemini'}...</span>
  </>
  ) : (
  <>
  <RefreshCw className="w-4 h-4" />
- <span>Reescribir con {selectedAiModel === 'deepseek' ? 'DeepSeek V3' : 'Gemini Flash'}</span>
+ <span>Reescribir con {selectedAiModel ==='deepseek' ?'DeepSeek V3' :'Gemini Flash'}</span>
  </>
  )}
  </button>
@@ -1737,13 +1735,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {selectedLead.historial_feedback_pitch.map((log) => (
  <div key={log.id} className={`p-2.5 rounded-[var(--r-s)] text-[11px] space-y-1.5 transition-all ${
  log.deshecho 
- ? 'bg-black/30 border-zinc-800/50 opacity-60' 
- : 'bg-black/50 border-zinc-800/80'
+ ?'bg-black/30 border-zinc-800/50 opacity-60' 
+ :'bg-black/50 border-zinc-800/80'
  }`}>
  <div className="flex items-center justify-between text-zinc-400 text-[10px] font-mono">
  <span>{new Date(log.fecha).toLocaleString()}</span>
  <div className="flex items-center gap-2">
- {log.alcance === 'global' ? (
+ {log.alcance ==='global' ? (
  <span className="px-1.5 py-0.5 bg-amber-500/20 text-amber-300 rounded text-[9px] font-bold flex items-center gap-1">
  <Sparkles className="w-2.5 h-2.5 text-amber-400" />
  Memoria Global
@@ -1753,7 +1751,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  Solo este pitch
  </span>
  )}
- <span>Tono: {log.tono_rating ? `${log.tono_rating}/5` : '-'} | Contenido: {log.contenido_rating ? `${log.contenido_rating}/5` : '-'}</span>
+ <span>Tono: {log.tono_rating ? `${log.tono_rating}/5` :'-'} | Contenido: {log.contenido_rating ? `${log.contenido_rating}/5` :'-'}</span>
  {log.deshecho && (
  <span className="px-1.5 py-0.5 bg-amber-950/60 text-amber-400 rounded text-[9px] font-bold">
  [Deshecho]
@@ -1795,7 +1793,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* TAB 2: EMAIL THREAD & REPLY SIMULATION */}
- {activeTab === 'emails' && (
+ {activeTab ==='emails' && (
  <div className="space-y-3">
  {hiloCompleto.length === 0 ? (
  <div className="p-6 text-center rounded-[var(--r-m)] bg-[#1A1918] border-zinc-800 text-zinc-400 text-xs italic">
@@ -1806,14 +1804,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div
  key={msg.id}
  className={`p-3.5 rounded-[var(--r-m)] space-y-1.5 text-xs font-sans ${
- msg.remitente === 'sala'
- ? 'bg-amber-950/20 /40 text-amber-100'
- : 'bg-[var(--bg)] border-zinc-800 text-zinc-200'
+ msg.remitente ==='sala'
+ ?'bg-amber-950/20 /40 text-amber-100'
+ :'bg-[var(--bg)] border-zinc-800 text-zinc-200'
  }`}
  >
  <div className="flex items-center justify-between font-bold text-[11px]">
- <span className={msg.remitente === 'sala' ? 'text-amber-400' : 'text-sky-400'}>
- {msg.remitente_nombre} ({msg.remitente === 'sala' ? 'Programador' : 'Bakandeya'})
+ <span className={msg.remitente ==='sala' ?'text-amber-400' :'text-sky-400'}>
+ {msg.remitente_nombre} ({msg.remitente ==='sala' ?'Programador' :'Bakandeya'})
  </span>
  <span className="text-zinc-500 text-[10px] font-mono">{msg.fecha}</span>
  </div>
@@ -1826,7 +1824,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* TAB 3: CONTACT BITÁCORA */}
- {activeTab === 'bitacora' && (
+ {activeTab ==='bitacora' && (
  <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
@@ -1848,26 +1846,26 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex flex-wrap items-center justify-between gap-2">
  {/* Interaction Type Selector */}
  <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-s)] border-zinc-800">
- {(['Llamada', 'WhatsApp', 'Email', 'Reunión', 'Otro'] as const).map((type) => (
+ {(['Llamada','WhatsApp','Email','Reunión','Otro'] as const).map((type) => (
  <button
  key={type}
  type="button"
  onClick={() => setInteractionType(type)}
  className={`px-2 py-1 rounded text-[10px] font-bold transition-all cursor-pointer ${
  interactionType === type
- ? 'bg-[var(--acc)] text-black font-bold shadow-xs'
- : 'text-[var(--ink-2)] hover:text-white'
+ ?'bg-[var(--acc)] text-black font-bold shadow-xs'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
- {type === 'Llamada'
- ? '📞'
- : type === 'WhatsApp'
- ? '💬'
- : type === 'Email'
- ? '✉️'
- : type === 'Reunión'
- ? '🤝'
- : '📝'}{' '}
+ {type ==='Llamada'
+ ?'📞'
+ : type ==='WhatsApp'
+ ?'💬'
+ : type ==='Email'
+ ?'✉️'
+ : type ==='Reunión'
+ ?'🤝'
+ :'📝'}{''}
  {type}
  </button>
  ))}
@@ -1890,13 +1888,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </span>
  <div className="flex flex-wrap gap-1">
  {(
- [
- 'Interesado',
- 'Enviar propuesta',
- 'Seguimiento pendiente',
- 'Acuerdo cerrado',
- 'Rechazado',
- 'Info recibida'
+ ['Interesado','Enviar propuesta','Seguimiento pendiente','Acuerdo cerrado','Rechazado','Info recibida'
  ] as const
  ).map((res) => (
  <button
@@ -1905,12 +1897,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setInteractionResultado(res)}
  className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all cursor-pointer ${
  interactionResultado === res
- ? res === 'Interesado' || res === 'Acuerdo cerrado'
- ? 'bg-emerald-500/30 text-emerald-300 font-bold'
- : res === 'Rechazado'
- ? 'bg-rose-500/30 text-rose-300 font-bold'
- : 'bg-sky-500/30 text-sky-300 font-bold'
- : 'bg-zinc-900 text-[var(--ink-2)] hover:text-white border-zinc-800'
+ ? res ==='Interesado' || res ==='Acuerdo cerrado'
+ ?'bg-emerald-500/30 text-emerald-300 font-bold'
+ : res ==='Rechazado'
+ ?'bg-rose-500/30 text-rose-300 font-bold'
+ :'bg-sky-500/30 text-sky-300 font-bold'
+ :'bg-zinc-900 text-[var(--ink-2)] hover:text-white border-zinc-800'
  }`}
  >
  {res}
@@ -1953,17 +1945,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1.5 font-bold">
  <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-amber-300">
- {log.tipo === 'Llamada'
- ? '📞 Llamada'
- : log.tipo === 'WhatsApp'
- ? '💬 WhatsApp'
- : log.tipo === 'Email'
- ? '✉️ Email'
- : log.tipo === 'Reunión'
- ? '🤝 Reunión'
- : '📝 Nota'}
+ {log.tipo ==='Llamada'
+ ?'📞 Llamada'
+ : log.tipo ==='WhatsApp'
+ ?'💬 WhatsApp'
+ : log.tipo ==='Email'
+ ?'✉️ Email'
+ : log.tipo ==='Reunión'
+ ?'🤝 Reunión'
+ :'📝 Nota'}
  </span>
- <span className="text-zinc-400">{log.autor || 'Agente'}</span>
+ <span className="text-zinc-400">{log.autor ||'Agente'}</span>
  </div>
  <div className="flex items-center gap-2">
  <span className="text-zinc-500 font-mono">{log.fecha}</span>
@@ -1982,11 +1974,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div>
  <span
  className={`inline-block text-[9px] px-1.5 py-0.2 rounded font-bold ${
- log.resultado === 'Interesado' || log.resultado === 'Acuerdo cerrado'
- ? 'bg-emerald-500/20 text-emerald-400'
- : log.resultado === 'Rechazado'
- ? 'bg-rose-500/20 text-rose-400'
- : 'bg-sky-500/20 text-sky-400'
+ log.resultado ==='Interesado' || log.resultado ==='Acuerdo cerrado'
+ ?'bg-emerald-500/20 text-emerald-400'
+ : log.resultado ==='Rechazado'
+ ?'bg-rose-500/20 text-rose-400'
+ :'bg-sky-500/20 text-sky-400'
  }`}
  >
  {log.resultado}
@@ -2015,7 +2007,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setEditedPitch(text);
  selectedLead.pitch_generado = text;
  onUpdateLead(selectedLead.id, { pitch_generado: text });
- const label = providerName === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
+ const label = providerName ==='deepseek' ?'DeepSeek V3' :'Gemini 3.7 Flash';
  setFeedbackSuccessMsg(`¡Propuesta de ${label} seleccionada y aplicada a la sala!`);
  setTimeout(() => setFeedbackSuccessMsg(null), 5000);
  }}

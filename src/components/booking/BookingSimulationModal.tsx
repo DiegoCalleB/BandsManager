@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Lead, ThemeColors } from '../../types';
-import { apiFetch } from '../../utils/api';
-import { Bot, Sparkles, X, Play, CheckCircle2 } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { Lead, ThemeColors } from'../../types';
+import { apiFetch } from'../../utils/api';
+import { Bot, Sparkles, X, Play, CheckCircle2 } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface BookingSimulationModalProps {
  colors: ThemeColors;
@@ -22,7 +22,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  onClose,
  onCommit,
 }) => {
- const [simulationRole, setSimulationRole] = useState<'sala' | 'banda'>('sala');
+ const [simulationRole, setSimulationRole] = useState<'sala' |'banda'>('sala');
  const [simulationScenario, setSimulationScenario] = useState('taquilla');
  const [simulationSenderName, setSimulationSenderName] = useState(
  `Programador de ${lead.nombre_sala}`
@@ -30,10 +30,9 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  const [simulationSubject, setSimulationSubject] = useState(
  lead.hilo_emails && lead.hilo_emails.length > 0
  ? `RE: ${lead.hilo_emails[lead.hilo_emails.length - 1].asunto}`
- : 'Re: Propuesta de concierto - Bakandeya'
+ :'Re: Propuesta de concierto - Bakandeya'
  );
- const [simulationCustomInstruction, setSimulationCustomInstruction] = useState(
- 'La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.'
+ const [simulationCustomInstruction, setSimulationCustomInstruction] = useState('La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.'
  );
  const [simulationMessage, setSimulationMessage] = useState('');
  const [isGenerating, setIsGenerating] = useState(false);
@@ -43,8 +42,8 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  setIsGenerating(true);
  try {
  const res = await apiFetch('/api/generate-simulated-email', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  leadId: lead.id,
  role: simulationRole,
@@ -119,12 +118,12 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <select
  value={simulationRole}
  onChange={(e) => {
- const role = e.target.value as 'sala' | 'banda';
+ const role = e.target.value as'sala' |'banda';
  setSimulationRole(role);
  setSimulationSenderName(
- role === 'sala'
+ role ==='sala'
  ? `Programador de ${lead.nombre_sala}`
- : 'Booking Bakandeya'
+ :'Booking Bakandeya'
  );
  }}
  className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-slate-200 outline-none"

@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Lead, Setlist, Song, ThemeColors } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState, useEffect, useMemo } from'react';
+import { Lead, Setlist, Song, ThemeColors } from'../../types';
+import { ModalPortal } from'../common/ModalPortal';
 import { 
  findBestSetlistMatch, 
  generateAutoSetlistForConcert, 
  calculateSetlistDurationSec 
-} from '../../utils/setlistOptimization';
-import { apiFetch } from '../../utils/api';
+} from'../../utils/setlistOptimization';
+import { apiFetch } from'../../utils/api';
 import { 
  X, Calendar, Clock, Music, Sparkles, Check, ChevronRight, Zap, CheckCircle2 
-} from 'lucide-react';
+} from'lucide-react';
 
 interface BoloConfirmadoSetlistModalProps {
  isOpen: boolean;
@@ -42,9 +42,9 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
 
  // Event details
  const isFestival = useMemo(() => {
- const t = (lead.tipo || '').toLowerCase();
- const n = (lead.nombre_sala || '').toLowerCase();
- return t === 'festival' || t === 'ayuntamiento' || n.includes('fest');
+ const t = (lead.tipo ||'').toLowerCase();
+ const n = (lead.nombre_sala ||'').toLowerCase();
+ return t ==='festival' || t ==='ayuntamiento' || n.includes('fest');
  }, [lead]);
 
  const [targetDurationMin, setTargetDurationMin] = useState<number>(() => isFestival ? 50 : 75);
@@ -111,7 +111,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
 
  // Compute best match whenever duration or setlists change
  const bestMatch = useMemo(() => {
- return findBestSetlistMatch(setlists, songs, targetDurationMin, isFestival ? 'festival' : 'sala');
+ return findBestSetlistMatch(setlists, songs, targetDurationMin, isFestival ?'festival' :'sala');
  }, [setlists, songs, targetDurationMin, isFestival]);
 
  // Pre-select best match
@@ -134,7 +134,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  const newSetlist: Setlist = {
  id: newSetlistId,
  nombre: auto.nombre,
- tipoFormato: isFestival ? 'festival' : 'sala_larga',
+ tipoFormato: isFestival ?'festival' :'sala_larga',
  items: auto.items,
  fechaCreacion: nowIso,
  fechaUltimaEdicion: nowIso
@@ -150,7 +150,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  await onConfirmWithSetlist({
  concertDate,
  cacheAmount: cacheAmount ? Number(cacheAmount) : undefined,
- setlistId: selectedSetlistId || (bestMatch ? bestMatch.setlist.id : '')
+ setlistId: selectedSetlistId || (bestMatch ? bestMatch.setlist.id :'')
  });
  }
  } catch (err) {
@@ -176,7 +176,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  {lead.nombre_sala}
  </h3>
  <p className="text-xs text-zinc-400 font-mono">
- {lead.ciudad} {lead.region ? `• ${lead.region}` : ''}
+ {lead.ciudad} {lead.region ? `• ${lead.region}` :''}
  </p>
  </div>
  <button
@@ -234,8 +234,8 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  }}
  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-all cursor-pointer text-center ${
  targetDurationMin === mins
- ? 'bg-[#1db954]/20 border-[#1ed760] text-[#1ed760] shadow-sm'
- : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
+ ?'bg-[#1db954]/20 border-[#1ed760] text-[#1ed760] shadow-sm'
+ :'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
  }`}
  >
  {mins} min
@@ -255,10 +255,10 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="button"
  onClick={() => setGenerateNewSetlist(!generateNewSetlist)}
  className={`text-[11px] underline decoration-dotted transition-colors ${
- generateNewSetlist ? 'text-[#1ed760] font-bold' : 'text-zinc-400 hover:text-white'
+ generateNewSetlist ?'text-[#1ed760] font-bold' :'text-zinc-400 hover:text-white'
  }`}
  >
- {generateNewSetlist ? '← Elegir de mis setlists' : '⚡ Crear setlist a medida'}
+ {generateNewSetlist ?'← Elegir de mis setlists' :'⚡ Crear setlist a medida'}
  </button>
  </div>
 
@@ -272,8 +272,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  <Zap className="w-4 h-4 text-[#1ed760]" />
  <span>Se creará un nuevo setlist automático:</span>
  </div>
- <p className="text-[11px] font-mono text-zinc-300">
- "Bolo {lead.nombre_sala} ({targetDurationMin} min)" seleccionando canciones de tu catálogo según la energía requerida.
+ <p className="text-[11px] font-mono text-zinc-300">"Bolo {lead.nombre_sala} ({targetDurationMin} min)" seleccionando canciones de tu catálogo según la energía requerida.
  </p>
  </div>
  ) : setlists.length === 0 ? (
@@ -304,15 +303,15 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  }}
  className={`p-3 rounded-[var(--r-l)] transition-all cursor-pointer flex items-center justify-between gap-2 ${
  isSelected
- ? 'bg-amber-500/15 /80 shadow-md'
+ ?'bg-amber-500/15 /80 shadow-md'
  : isOptimal
- ? 'bg-emerald-500/10 border-emerald-500/40 hover:bg-emerald-500/15'
- : 'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700'
+ ?'bg-emerald-500/10 border-emerald-500/40 hover:bg-emerald-500/15'
+ :'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700'
  }`}
  >
  <div className="space-y-0.5">
  <div className="flex items-center gap-2">
- <Music className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-400' : 'text-zinc-400'}`} />
+ <Music className={`w-3.5 h-3.5 ${isSelected ?'text-amber-400' :'text-zinc-400'}`} />
  <span className="font-mono text-xs font-bold text-white">
  {st.nombre}
  </span>
@@ -329,7 +328,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
 
  <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
- isSelected ? ' bg-amber-400 text-black' : 'border-zinc-700'
+ isSelected ?' bg-amber-400 text-black' :'border-zinc-700'
  }`}>
  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
  </div>
@@ -349,7 +348,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-[#1ed760] text-black font-mono font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
  >
  <Check className="w-4 h-4 stroke-[3]" />
- <span>{isSubmitting ? 'Guardando...' : 'Confirmar Bolo y Asignar Setlist'}</span>
+ <span>{isSubmitting ?'Guardando...' :'Confirmar Bolo y Asignar Setlist'}</span>
  </button>
 
  <button

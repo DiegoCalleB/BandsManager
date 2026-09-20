@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import * as XLSX from 'xlsx';
+import React, { useState, useRef } from'react';
+import * as XLSX from'xlsx';
 import {
  FileSpreadsheet,
  Upload,
@@ -18,10 +18,10 @@ import {
  Check,
  Search,
  Filter
-} from 'lucide-react';
-import { Lead, LeadType } from '../../types';
-import { apiFetch } from '../../utils/api';
-import { ModalPortal } from '../common/ModalPortal';
+} from'lucide-react';
+import { Lead, LeadType } from'../../types';
+import { apiFetch } from'../../utils/api';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface ExcelImportModalProps {
  isOpen: boolean;
@@ -68,14 +68,14 @@ interface ParsedRow {
 }
 
 const CATEGORY_OPTIONS: { id: LeadType; label: string; icon: string }[] = [
- { id: 'sala', label: 'Sala / Teatro', icon: '🏛️' },
- { id: 'ayuntamiento', label: 'Ayuntamiento / Fiestas', icon: '🏛️' },
- { id: 'festival', label: 'Festival / Feria', icon: '🎪' },
- { id: 'discoteca', label: 'Discoteca / Club', icon: '🪩' },
- { id: 'grupo', label: 'Grupo / Banda', icon: '🎸' },
- { id: 'agencia', label: 'Agencia / Booking', icon: '💼' },
- { id: 'sello', label: 'Sello Discográfico', icon: '💿' },
- { id: 'medio', label: 'Medio / Radio', icon: '📻' }
+ { id:'sala', label:'Sala / Teatro', icon:'🏛️' },
+ { id:'ayuntamiento', label:'Ayuntamiento / Fiestas', icon:'🏛️' },
+ { id:'festival', label:'Festival / Feria', icon:'🎪' },
+ { id:'discoteca', label:'Discoteca / Club', icon:'🪩' },
+ { id:'grupo', label:'Grupo / Banda', icon:'🎸' },
+ { id:'agencia', label:'Agencia / Booking', icon:'💼' },
+ { id:'sello', label:'Sello Discográfico', icon:'💿' },
+ { id:'medio', label:'Medio / Radio', icon:'📻' }
 ];
 
 export function ExcelImportModal({
@@ -96,19 +96,19 @@ export function ExcelImportModal({
 
  // Mapping
  const [mapping, setMapping] = useState<ColumnMapping>({
- nombre_sala: '',
- ciudad: '',
- region: '',
- direccion: '',
- aforo: '',
- tipo: '',
- email_contacto: '',
- telefono: '',
- instagram: '',
- website: '',
- contacto_nombre: '',
- genero: '',
- notas: ''
+ nombre_sala:'',
+ ciudad:'',
+ region:'',
+ direccion:'',
+ aforo:'',
+ tipo:'',
+ email_contacto:'',
+ telefono:'',
+ instagram:'',
+ website:'',
+ contacto_nombre:'',
+ genero:'',
+ notas:''
  });
 
  // Parsed and validated rows
@@ -130,21 +130,21 @@ export function ExcelImportModal({
 
  // Auto-detect columns based on common names
  const autoDetectColumns = (headers: string[]) => {
- const clean = (s: string) => s.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+ const clean = (s: string) => s.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
  const newMapping: ColumnMapping = {
- nombre_sala: '',
- ciudad: '',
- region: '',
- direccion: '',
- aforo: '',
- tipo: '',
- email_contacto: '',
- telefono: '',
- instagram: '',
- website: '',
- contacto_nombre: '',
- genero: '',
- notas: ''
+ nombre_sala:'',
+ ciudad:'',
+ region:'',
+ direccion:'',
+ aforo:'',
+ tipo:'',
+ email_contacto:'',
+ telefono:'',
+ instagram:'',
+ website:'',
+ contacto_nombre:'',
+ genero:'',
+ notas:''
  };
 
  headers.forEach(h => {
@@ -187,7 +187,7 @@ export function ExcelImportModal({
  setFileName(file.name);
 
  const buffer = await file.arrayBuffer();
- const wb = XLSX.read(buffer, { type: 'array' });
+ const wb = XLSX.read(buffer, { type:'array' });
  setWorkbook(wb);
  setSheetNames(wb.SheetNames);
 
@@ -208,7 +208,7 @@ export function ExcelImportModal({
  const ws = wb.Sheets[sheetName];
  if (!ws) return;
 
- const data: Record<string, any>[] = XLSX.utils.sheet_to_json(ws, { defval: '' });
+ const data: Record<string, any>[] = XLSX.utils.sheet_to_json(ws, { defval:'' });
  if (data.length === 0) {
  alert('La hoja seleccionada está vacía.');
  return;
@@ -244,44 +244,44 @@ export function ExcelImportModal({
  // Build parsed rows from raw rows and column mapping
  const buildParsedRows = () => {
  if (!mapping.nombre_sala) {
- alert('Debes asignar al menos la columna correspondiente al "Nombre de la Sala / Contacto / Banda".');
+ alert('Debes asignar al menos la columna correspondiente al"Nombre de la Sala / Contacto / Banda".');
  return;
  }
 
  const existingMap = new Set<string>();
  existingLeads.forEach(l => {
- const key = `${(l.nombre_sala || '').toLowerCase().trim()}|${(l.ciudad || '').toLowerCase().trim()}`;
+ const key = `${(l.nombre_sala ||'').toLowerCase().trim()}|${(l.ciudad ||'').toLowerCase().trim()}`;
  existingMap.add(key);
- existingMap.add((l.nombre_sala || '').toLowerCase().trim());
+ existingMap.add((l.nombre_sala ||'').toLowerCase().trim());
  });
 
  const parsed: ParsedRow[] = rawRows.map((row, idx) => {
- const name = String(row[mapping.nombre_sala] || '').trim();
- const city = mapping.ciudad ? String(row[mapping.ciudad] || '').trim() : 'España';
- const region = mapping.region ? String(row[mapping.region] || '').trim() : 'España';
- const address = mapping.direccion ? String(row[mapping.direccion] || '').trim() : '';
- const email = mapping.email_contacto ? String(row[mapping.email_contacto] || '').trim() : '';
- const phone = mapping.telefono ? String(row[mapping.telefono] || '').trim() : '';
- const rawIg = mapping.instagram ? String(row[mapping.instagram] || '').trim() : '';
- const rawWeb = mapping.website ? String(row[mapping.website] || '').trim() : '';
+ const name = String(row[mapping.nombre_sala] ||'').trim();
+ const city = mapping.ciudad ? String(row[mapping.ciudad] ||'').trim() :'España';
+ const region = mapping.region ? String(row[mapping.region] ||'').trim() :'España';
+ const address = mapping.direccion ? String(row[mapping.direccion] ||'').trim() :'';
+ const email = mapping.email_contacto ? String(row[mapping.email_contacto] ||'').trim() :'';
+ const phone = mapping.telefono ? String(row[mapping.telefono] ||'').trim() :'';
+ const rawIg = mapping.instagram ? String(row[mapping.instagram] ||'').trim() :'';
+ const rawWeb = mapping.website ? String(row[mapping.website] ||'').trim() :'';
  
  const cleanField = (val: string) => {
  const lower = val.toLowerCase();
- if (lower.startsWith('asunto:') || lower.startsWith('re:') || lower.startsWith('fw:') || lower.startsWith('¡buenas') || lower.includes('bakandeya') || lower === '0' || lower === 'null') return '';
- if (val.includes('\n') || (val.includes(' ') && !val.includes('http'))) return '';
+ if (lower.startsWith('asunto:') || lower.startsWith('re:') || lower.startsWith('fw:') || lower.startsWith('¡buenas') || lower.includes('bakandeya') || lower ==='0' || lower ==='null') return'';
+ if (val.includes('\n') || (val.includes('') && !val.includes('http'))) return'';
  return val;
  };
 
  const ig = cleanField(rawIg);
  const web = cleanField(rawWeb);
- const contact = mapping.contacto_nombre ? String(row[mapping.contacto_nombre] || '').trim() : '';
- const genre = mapping.genero ? String(row[mapping.genero] || '').trim() : 'Música en Directo / Variado';
- const notes = mapping.notas ? String(row[mapping.notas] || '').trim() : '';
+ const contact = mapping.contacto_nombre ? String(row[mapping.contacto_nombre] ||'').trim() :'';
+ const genre = mapping.genero ? String(row[mapping.genero] ||'').trim() :'Música en Directo / Variado';
+ const notes = mapping.notas ? String(row[mapping.notas] ||'').trim() :'';
  
  const rawAforo = mapping.aforo ? row[mapping.aforo] : null;
  let aforo = 0;
  if (rawAforo) {
- const num = parseInt(String(rawAforo).replace(/[^0-9]/g, ''), 10);
+ const num = parseInt(String(rawAforo).replace(/[^0-9]/g,''), 10);
  if (!isNaN(num)) aforo = num;
  }
 
@@ -289,15 +289,15 @@ export function ExcelImportModal({
  let resolvedType: LeadType = defaultCategory;
  if (mapping.tipo && row[mapping.tipo]) {
  const rawTipo = String(row[mapping.tipo]).toLowerCase().trim();
- if (rawTipo.includes('ayuntamiento') || rawTipo.includes('ayto') || rawTipo.includes('institucion') || rawTipo.includes('festejo') || rawTipo.includes('cultura')) resolvedType = 'ayuntamiento';
- else if (rawTipo.includes('discoteca') || rawTipo.includes('club')) resolvedType = 'discoteca';
- else if (rawTipo.includes('teatro')) resolvedType = 'sala';
- else if (rawTipo.includes('festival') || rawTipo.includes('feria') || rawTipo.includes('ciclo')) resolvedType = 'festival';
- else if (rawTipo.includes('grupo') || rawTipo.includes('banda') || rawTipo.includes('artista')) resolvedType = 'grupo';
- else if (rawTipo.includes('agencia') || rawTipo.includes('management') || rawTipo.includes('manager') || rawTipo.includes('promotor')) resolvedType = 'agencia';
- else if (rawTipo.includes('sello') || rawTipo.includes('discografica')) resolvedType = 'sello';
- else if (rawTipo.includes('medio') || rawTipo.includes('prensa') || rawTipo.includes('radio') || rawTipo.includes('podcast')) resolvedType = 'medio';
- else resolvedType = 'sala';
+ if (rawTipo.includes('ayuntamiento') || rawTipo.includes('ayto') || rawTipo.includes('institucion') || rawTipo.includes('festejo') || rawTipo.includes('cultura')) resolvedType ='ayuntamiento';
+ else if (rawTipo.includes('discoteca') || rawTipo.includes('club')) resolvedType ='discoteca';
+ else if (rawTipo.includes('teatro')) resolvedType ='sala';
+ else if (rawTipo.includes('festival') || rawTipo.includes('feria') || rawTipo.includes('ciclo')) resolvedType ='festival';
+ else if (rawTipo.includes('grupo') || rawTipo.includes('banda') || rawTipo.includes('artista')) resolvedType ='grupo';
+ else if (rawTipo.includes('agencia') || rawTipo.includes('management') || rawTipo.includes('manager') || rawTipo.includes('promotor')) resolvedType ='agencia';
+ else if (rawTipo.includes('sello') || rawTipo.includes('discografica')) resolvedType ='sello';
+ else if (rawTipo.includes('medio') || rawTipo.includes('prensa') || rawTipo.includes('radio') || rawTipo.includes('podcast')) resolvedType ='medio';
+ else resolvedType ='sala';
  }
 
  const isDup = existingMap.has(`${name.toLowerCase()}|${city.toLowerCase()}`) || existingMap.has(name.toLowerCase());
@@ -305,10 +305,10 @@ export function ExcelImportModal({
  return {
  id: `row-${idx}`,
  nombre_sala: name,
- ciudad: city || 'España',
- region: region || 'España',
+ ciudad: city ||'España',
+ region: region ||'España',
  direccion: address,
- aforo: aforo || (resolvedType === 'sala' ? 250 : 0),
+ aforo: aforo || (resolvedType ==='sala' ? 250 : 0),
  tipo: resolvedType,
  email_contacto: email,
  telefono: phone,
@@ -341,72 +341,20 @@ export function ExcelImportModal({
 
  const handleDownloadTemplate = () => {
  const templateData = [
- {
- "Nombre Sala / Contacto": "Sala El Sol",
- "Ciudad": "Madrid",
- "Región": "Comunidad de Madrid",
- "Dirección": "Calle Jardines 3",
- "Aforo": 300,
- "Tipo": "sala",
- "Email Contacto": "conciertos@salaelsol.com",
- "Teléfono": "915326490",
- "Instagram": "@salaelsol",
- "Sitio Web": "https://salaelsol.com",
- "Contacto / Responsable": "Programación Musical",
- "Estilo / Género": "Rock / Indie / Pop",
- "Notas": "Disponen de equipo de sonido completo y técnico de PA."
+ {"Nombre Sala / Contacto":"Sala El Sol","Ciudad":"Madrid","Región":"Comunidad de Madrid","Dirección":"Calle Jardines 3","Aforo": 300,"Tipo":"sala","Email Contacto":"conciertos@salaelsol.com","Teléfono":"915326490","Instagram":"@salaelsol","Sitio Web":"https://salaelsol.com","Contacto / Responsable":"Programación Musical","Estilo / Género":"Rock / Indie / Pop","Notas":"Disponen de equipo de sonido completo y técnico de PA."
  },
- {
- "Nombre Sala / Contacto": "Ayuntamiento de Alcorcón - Concejalía de Fiestas",
- "Ciudad": "Alcorcón",
- "Región": "Madrid",
- "Dirección": "Plaza de España 1",
- "Aforo": 5000,
- "Tipo": "ayuntamiento",
- "Email Contacto": "festejos@ayto-alcorcon.es",
- "Teléfono": "916648100",
- "Instagram": "@aytoalcorcon",
- "Sitio Web": "https://ayto-alcorcon.es",
- "Contacto / Responsable": "Concejal de Festejos",
- "Estilo / Género": "Fiestas Patronales / Conciertos",
- "Notas": "Conciertos de fiestas patronales en septiembre en el recinto ferial."
+ {"Nombre Sala / Contacto":"Ayuntamiento de Alcorcón - Concejalía de Fiestas","Ciudad":"Alcorcón","Región":"Madrid","Dirección":"Plaza de España 1","Aforo": 5000,"Tipo":"ayuntamiento","Email Contacto":"festejos@ayto-alcorcon.es","Teléfono":"916648100","Instagram":"@aytoalcorcon","Sitio Web":"https://ayto-alcorcon.es","Contacto / Responsable":"Concejal de Festejos","Estilo / Género":"Fiestas Patronales / Conciertos","Notas":"Conciertos de fiestas patronales en septiembre en el recinto ferial."
  },
- {
- "Nombre Sala / Contacto": "Arde Bogotá",
- "Ciudad": "Cartagena",
- "Región": "Murcia",
- "Dirección": "",
- "Aforo": 0,
- "Tipo": "grupo",
- "Email Contacto": "management@ardebogota.com",
- "Teléfono": "",
- "Instagram": "@balaperdida_oficial",
- "Sitio Web": "https://ardebogota.es",
- "Contacto / Responsable": "Booking / Manager",
- "Estilo / Género": "Rock Alternativo",
- "Notas": "Banda afín para intercambio de fechas y colaboraciones."
+ {"Nombre Sala / Contacto":"Arde Bogotá","Ciudad":"Cartagena","Región":"Murcia","Dirección":"","Aforo": 0,"Tipo":"grupo","Email Contacto":"management@ardebogota.com","Teléfono":"","Instagram":"@balaperdida_oficial","Sitio Web":"https://ardebogota.es","Contacto / Responsable":"Booking / Manager","Estilo / Género":"Rock Alternativo","Notas":"Banda afín para intercambio de fechas y colaboraciones."
  },
- {
- "Nombre Sala / Contacto": "Festival Sonorama Ribera",
- "Ciudad": "Aranda de Duero",
- "Región": "Burgos",
- "Dirección": "Recinto Ferial",
- "Aforo": 25000,
- "Tipo": "festival",
- "Email Contacto": "booking@sonorama-aranda.com",
- "Teléfono": "",
- "Instagram": "@sonoramaribera",
- "Sitio Web": "https://sonorama-aranda.com",
- "Contacto / Responsable": "Comité de Programación",
- "Estilo / Género": "Indie / Pop / Rock",
- "Notas": "Festival referente en agosto."
+ {"Nombre Sala / Contacto":"Festival Sonorama Ribera","Ciudad":"Aranda de Duero","Región":"Burgos","Dirección":"Recinto Ferial","Aforo": 25000,"Tipo":"festival","Email Contacto":"booking@sonorama-aranda.com","Teléfono":"","Instagram":"@sonoramaribera","Sitio Web":"https://sonorama-aranda.com","Contacto / Responsable":"Comité de Programación","Estilo / Género":"Indie / Pop / Rock","Notas":"Festival referente en agosto."
  }
  ];
 
  const ws = XLSX.utils.json_to_sheet(templateData);
  const wb = XLSX.utils.book_new();
- XLSX.utils.book_append_sheet(wb, ws, "Salas_BandManager");
- XLSX.writeFile(wb, "plantilla_importacion_salas_bandmanager.xlsx");
+ XLSX.utils.book_append_sheet(wb, ws,"Salas_BandManager");
+ XLSX.writeFile(wb,"plantilla_importacion_salas_bandmanager.xlsx");
  };
 
  // Submit and Save to Backend / Supabase
@@ -435,28 +383,28 @@ export function ExcelImportModal({
  contacto_nombre: r.contacto_nombre,
  genero: r.genero,
  notas: r.notas,
- fuente: `Importación Excel (${fileName || 'Archivo'})`,
- estado: 'nuevo'
+ fuente: `Importación Excel (${fileName ||'Archivo'})`,
+ estado:'nuevo'
  }));
 
  const res = await apiFetch('/api/leads/import-excel', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  leads: leadsPayload,
  updateDuplicates,
- sourceName: `Excel: ${fileName || 'Listado de Banda'}`
+ sourceName: `Excel: ${fileName ||'Listado de Banda'}`
  })
  });
 
  if (res.success) {
  // Enriquecer con IA si se solicitó
  if (enrichMissingWithAi && Array.isArray(res.leads) && res.leads.length > 0) {
- const leadsToEnrich = res.leads.filter((l: Lead) => !l.email_contacto || l.email_contacto.trim() === '');
+ const leadsToEnrich = res.leads.filter((l: Lead) => !l.email_contacto || l.email_contacto.trim() ==='');
  if (leadsToEnrich.length > 0) {
  setImportStatusMsg(`⚡ Enriqueciendo ${leadsToEnrich.length} contactos sin email con el Agente de IA...`);
  try {
  await apiFetch('/api/leads/extract-emails', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  places: leadsToEnrich.slice(0, 10).map((l: Lead) => ({
  place_id: l.id,
@@ -475,11 +423,11 @@ export function ExcelImportModal({
  onSuccess(res.leads || [], res.updatedCount || 0);
  onClose();
  } else {
- alert(res.error || 'Error al importar los contactos.');
+ alert(res.error ||'Error al importar los contactos.');
  }
  } catch (err: any) {
  console.error('Error importing Excel leads:', err);
- alert(err.message || 'Error de conexión al importar contactos.');
+ alert(err.message ||'Error de conexión al importar contactos.');
  } finally {
  setIsImporting(false);
  setImportStatusMsg('');
@@ -506,7 +454,7 @@ export function ExcelImportModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div
  className={`relative w-full max-w-5xl max-h-[92vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#141414] border-zinc-800 text-zinc-100'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[#141414] border-zinc-800 text-zinc-100'
  }`}
  >
  {/* MODAL HEADER */}
@@ -553,24 +501,24 @@ export function ExcelImportModal({
  {/* STEP PROGRESS INDICATOR */}
  <div className="flex items-center justify-between px-6 py-2.5 bg-zinc-950/60 border-b border-[var(--hair)] text-xs">
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ? 'bg-emerald-500 text-black' : step > 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-zinc-800 text-zinc-500'}`}>
- {step > 1 ? <Check className="w-3 h-3" /> : '1'}
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ?'bg-emerald-500 text-black' : step > 1 ?'bg-emerald-500/20 text-emerald-400' :'bg-zinc-800 text-zinc-500'}`}>
+ {step > 1 ? <Check className="w-3 h-3" /> :'1'}
  </div>
- <span className={step === 1 ? 'font-bold text-emerald-300' : 'text-zinc-400'}>1. Subir archivo</span>
- </div>
- <div className="w-8 h-px bg-zinc-800" />
- <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ? 'bg-emerald-500 text-black' : step > 2 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-zinc-800 text-zinc-500'}`}>
- {step > 2 ? <Check className="w-3 h-3" /> : '2'}
- </div>
- <span className={step === 2 ? 'font-bold text-emerald-300' : 'text-zinc-400'}>2. Mapear columnas</span>
+ <span className={step === 1 ?'font-bold text-emerald-300' :'text-zinc-400'}>1. Subir archivo</span>
  </div>
  <div className="w-8 h-px bg-zinc-800" />
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ? 'bg-emerald-500 text-black' : 'bg-zinc-800 text-zinc-500'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ?'bg-emerald-500 text-black' : step > 2 ?'bg-emerald-500/20 text-emerald-400' :'bg-zinc-800 text-zinc-500'}`}>
+ {step > 2 ? <Check className="w-3 h-3" /> :'2'}
+ </div>
+ <span className={step === 2 ?'font-bold text-emerald-300' :'text-zinc-400'}>2. Mapear columnas</span>
+ </div>
+ <div className="w-8 h-px bg-zinc-800" />
+ <div className="flex items-center gap-2">
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ?'bg-emerald-500 text-black' :'bg-zinc-800 text-zinc-500'}`}>
  3
  </div>
- <span className={step === 3 ? 'font-bold text-emerald-300' : 'text-zinc-400'}>3. Validar y Guardar</span>
+ <span className={step === 3 ?'font-bold text-emerald-300' :'text-zinc-400'}>3. Validar y Guardar</span>
  </div>
  </div>
 
@@ -672,8 +620,8 @@ export function ExcelImportModal({
  onClick={() => setDefaultCategory(cat.id)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
  defaultCategory === cat.id
- ? 'bg-amber-400 text-black font-bold shadow-xs'
- : 'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
+ ?'bg-amber-400 text-black font-bold shadow-xs'
+ :'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
  }`}
  >
  <span>{cat.icon}</span>
@@ -711,7 +659,7 @@ export function ExcelImportModal({
  onChange={e => setMapping(prev => ({ ...prev, ciudad: e.target.value }))}
  className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-zinc-950 border-zinc-800 text-zinc-100 focus:outline-none focus:border-emerald-500"
  >
- <option value="">-- No asignar (Usar 'España') --</option>
+ <option value="">-- No asignar (Usar'España') --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
  ))}
@@ -905,7 +853,7 @@ export function ExcelImportModal({
  type="button"
  onClick={() => setFilterDuplicatesOnly(!filterDuplicatesOnly)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
- filterDuplicatesOnly ? 'bg-amber-500 text-black font-bold' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+ filterDuplicatesOnly ?'bg-amber-500 text-black font-bold' :'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
  }`}
  >
  <Filter className="w-3 h-3" />
@@ -989,8 +937,8 @@ export function ExcelImportModal({
  <tr
  key={row.id}
  className={`hover:bg-white/5 transition-colors ${
- row.isDuplicate ? 'bg-amber-500/5' : ''
- } ${!row.selected ? 'opacity-40' : ''}`}
+ row.isDuplicate ?'bg-amber-500/5' :''
+ } ${!row.selected ?'opacity-40' :''}`}
  >
  <td className="p-2.5">
  <input
@@ -1036,10 +984,10 @@ export function ExcelImportModal({
  )}
  </td>
  <td className="p-2.5 text-zinc-400">
- {row.telefono || row.instagram || '-'}
+ {row.telefono || row.instagram ||'-'}
  </td>
  <td className="p-2.5 font-mono text-zinc-300">
- {row.aforo > 0 ? `${row.aforo} pax` : '-'}
+ {row.aforo > 0 ? `${row.aforo} pax` :'-'}
  </td>
  <td className="p-2.5 text-right">
  <button

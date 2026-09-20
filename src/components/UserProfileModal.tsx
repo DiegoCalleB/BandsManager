@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot, Heart } from 'lucide-react';
-import { User, ThemeName } from '../types';
-import { THEMES } from '../utils/theme';
-import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
+import React, { useState, useEffect } from'react';
+import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot, Heart } from'lucide-react';
+import { User, ThemeName } from'../types';
+import { THEMES } from'../utils/theme';
+import { FONT_PRESETS, FontPresetKey } from'../utils/typography';
 import {
  PREFERENCIAS as PREFERENCIAS_ESPECTRO,
  PreferenciaTema,
  guardarPreferencia as guardarPreferenciaEspectro,
  leerPreferencia as leerPreferenciaEspectro,
  resolverTema as resolverTemaEspectro,
-} from '../utils/temaEspectro';
-import { uploadFileToServer } from '../utils/audioStorage';
-import { api, getAuthHeaders } from '../services/api';
-import { getPlanDefinition, getPlanChangeType, normalizePlan, PLANS } from '../utils/planPermissions';
-import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
-import { ModalPortal } from './common/ModalPortal';
-import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
+} from'../utils/temaEspectro';
+import { uploadFileToServer } from'../utils/audioStorage';
+import { api, getAuthHeaders } from'../services/api';
+import { getPlanDefinition, getPlanChangeType, normalizePlan, PLANS } from'../utils/planPermissions';
+import { useLanguage, SUPPORTED_LANGUAGES } from'../context/LanguageContext';
+import { ModalPortal } from'./common/ModalPortal';
+import { AgentAutonomySettingsModal } from'./dashboard/AgentAutonomySettingsModal';
 
 // Fase beta: crear un proyecto adicional desde aquí va directo al plan Promo, sin pasar por
 // este selector legacy de 3 planes de pago (mismo criterio que BandSwitcherModal.tsx y
@@ -67,18 +67,18 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onOpenProfileWizard
 }) => {
  const { language, setLanguage } = useLanguage();
- const [name, setName] = useState(currentUser.name || '');
- const [instrument, setInstrument] = useState(currentUser.instrument || '');
- const [avatarColor, setAvatarColor] = useState(currentUser.avatarColor || '#10b981');
- const [selectedMainBandId, setSelectedMainBandId] = useState(currentUser.main_band_id || currentUser.band_id || '');
- const [bandLogoUrl, setBandLogoUrl] = useState<string>(epkConfig?.logoUrl || '');
+ const [name, setName] = useState(currentUser.name ||'');
+ const [instrument, setInstrument] = useState(currentUser.instrument ||'');
+ const [avatarColor, setAvatarColor] = useState(currentUser.avatarColor ||'#10b981');
+ const [selectedMainBandId, setSelectedMainBandId] = useState(currentUser.main_band_id || currentUser.band_id ||'');
+ const [bandLogoUrl, setBandLogoUrl] = useState<string>(epkConfig?.logoUrl ||'');
 
  useEffect(() => {
  if (currentUser) {
- setName(currentUser.name || '');
- setInstrument(currentUser.instrument || '');
- setAvatarColor(currentUser.avatarColor || '#10b981');
- setSelectedMainBandId(currentUser.main_band_id || currentUser.band_id || '');
+ setName(currentUser.name ||'');
+ setInstrument(currentUser.instrument ||'');
+ setAvatarColor(currentUser.avatarColor ||'#10b981');
+ setSelectedMainBandId(currentUser.main_band_id || currentUser.band_id ||'');
  }
  }, [currentUser]);
 
@@ -103,9 +103,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const activeBandMatch = availableBands?.find(b => b.band_id === (currentUser.band_id || currentUser.main_band_id) || (b as any).id === (currentUser.band_id || currentUser.main_band_id));
  const effectivePlan = activeBandMatch?.plan || currentUser.plan;
  const currentPlanDef = getPlanDefinition(effectivePlan);
- const isHighestPlan = currentPlanDef.id === 'cabeza_de_cartel';
+ const isHighestPlan = currentPlanDef.id ==='cabeza_de_cartel';
  // Plan Promo y Promo+ (fase beta, festivales): sin agentes IA ni cambio de plan visible.
- const isPromoUser = normalizePlan(effectivePlan) === 'promo' || normalizePlan(effectivePlan) === 'promo_plus';
+ const isPromoUser = normalizePlan(effectivePlan) ==='promo' || normalizePlan(effectivePlan) ==='promo_plus';
  
  // Password change state
  const [newPassword, setNewPassword] = useState('');
@@ -124,14 +124,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }
  try {
  const userBandId = currentUser.band_id;
- const url = await uploadFileToServer(file, { bandId: userBandId, category: 'logo' });
+ const url = await uploadFileToServer(file, { bandId: userBandId, category:'logo' });
  setBandLogoUrl(url);
 
  const updatedEpk = { ...epkConfig, logoUrl: url, bandId: userBandId };
  const authHeaders = getAuthHeaders() as Record<string, string>;
  await fetch('/api/users/upload-logo', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json', ...authHeaders, 'x-band-id': userBandId },
+ method:'POST',
+ headers: {'Content-Type':'application/json', ...authHeaders,'x-band-id': userBandId },
  body: JSON.stringify({ logoUrl: url, bandId: userBandId })
  });
 
@@ -161,10 +161,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  // Band creation inside Profile Modal
  const [showCreateBandSection, setShowCreateBandSection] = useState(false);
  const [createBandName, setCreateBandName] = useState('');
- const [createBandLeaderName, setCreateBandLeaderName] = useState(currentUser.name || currentUser.username || '');
+ const [createBandLeaderName, setCreateBandLeaderName] = useState(currentUser.name || currentUser.username ||'');
  const [createBandStyle, setCreateBandStyle] = useState('');
  const [createBandLocation, setCreateBandLocation] = useState('España');
- const [createBandPlan, setCreateBandPlan] = useState<'emergente' | 'profesional' | 'elite' | 'promo' | 'promo_plus'>('profesional');
+ const [createBandPlan, setCreateBandPlan] = useState<'emergente' |'profesional' |'elite' |'promo' |'promo_plus'>('profesional');
  const [isCreatingBand, setIsCreatingBand] = useState(false);
 
  // Band deletion inside Profile Modal
@@ -180,11 +180,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  setIsCreatingBand(true);
  setError(null);
  setSuccessMsg(null);
- const effectivePlan = SIMPLE_PROMO_ONLY_BAND_CREATION ? 'promo' : createBandPlan;
+ const effectivePlan = SIMPLE_PROMO_ONLY_BAND_CREATION ?'promo' : createBandPlan;
  try {
  const res = await api.createBand({
  bandName: createBandName.trim(),
- leaderName: createBandLeaderName.trim() || currentUser.name || currentUser.username || 'Líder',
+ leaderName: createBandLeaderName.trim() || currentUser.name || currentUser.username ||'Líder',
  plan: effectivePlan,
  estilo_musical: createBandStyle.trim() || undefined,
  localizacion: createBandLocation.trim() || undefined
@@ -203,11 +203,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }
 
  // Redirect to Stripe Checkout for paid plans
- if ((effectivePlan as string) !== 'ensayo' && effectivePlan !== 'promo' && effectivePlan !== 'promo_plus' && res.band_id) {
+ if ((effectivePlan as string) !=='ensayo' && effectivePlan !=='promo' && effectivePlan !=='promo_plus' && res.band_id) {
  try {
  await api.startCheckout({
  planId: effectivePlan,
- billingInterval: 'monthly',
+ billingInterval:'monthly',
  bandId: res.band_id,
  userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : undefined
  });
@@ -220,17 +220,17 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }
  }
 
- setSuccessMsg(`¡Proyecto "${createBandName.trim()}" creado y configurado con éxito!`);
+ setSuccessMsg(`¡Proyecto"${createBandName.trim()}" creado y configurado con éxito!`);
  setShowCreateBandSection(false);
  setCreateBandName('');
  setCreateBandStyle('');
  if (onRefreshData) await onRefreshData();
  } else {
- setError((res as any)?.error || 'No se pudo crear el proyecto musical');
+ setError((res as any)?.error ||'No se pudo crear el proyecto musical');
  }
  } catch (err: any) {
  console.error('Error creating band in profile modal:', err);
- setError(err.message || 'Error al crear el nuevo proyecto');
+ setError(err.message ||'Error al crear el nuevo proyecto');
  } finally {
  setIsCreatingBand(false);
  }
@@ -250,7 +250,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  if (res.user) {
  localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
  onUpdateUser(res.user as User);
- setSelectedMainBandId(res.user.main_band_id || res.user.band_id || '');
+ setSelectedMainBandId(res.user.main_band_id || res.user.band_id ||'');
  }
  if (res.availableBands && Array.isArray(res.availableBands)) {
  setLocalAvailableBands(res.availableBands);
@@ -258,30 +258,22 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  setSuccessMsg(`"${targetBandName}" eliminada correctamente de tu cuenta.`);
  if (onRefreshData) await onRefreshData();
  } else {
- setError(res?.message || 'Error al eliminar la banda');
+ setError(res?.message ||'Error al eliminar la banda');
  }
  } catch (err: any) {
  console.error('Error deleting band in profile modal:', err);
- const rawMsg = err?.message || '';
- const isNetworkErr = rawMsg === 'Failed to fetch' || rawMsg.includes('NetworkError') || rawMsg.includes('fetch');
+ const rawMsg = err?.message ||'';
+ const isNetworkErr = rawMsg ==='Failed to fetch' || rawMsg.includes('NetworkError') || rawMsg.includes('fetch');
  const userFriendlyMsg = isNetworkErr 
- ? 'Error de conexión con el servidor. Por favor, reintenta en unos instantes.' 
- : (rawMsg || 'Error al eliminar la banda de tu usuario');
+ ?'Error de conexión con el servidor. Por favor, reintenta en unos instantes.' 
+ : (rawMsg ||'Error al eliminar la banda de tu usuario');
  setError(userFriendlyMsg);
  } finally {
  setDeletingBandId(null);
  }
  };
 
- const colors = [
- '#10b981', // Emerald
- '#3b82f6', // Blue
- '#ec4899', // Pink
- '#f59e0b', // Amber
- '#8b5cf6', // Purple
- '#06b6d4', // Cyan
- '#f97316', // Orange
- '#ef4444' // Red
+ const colors = ['#10b981', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'#f59e0b', // Amber'#8b5cf6', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
  ];
 
  const handleSubmit = async (e: React.FormEvent) => {
@@ -307,10 +299,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  await onSetMainBand(selectedMainBandId).catch((e: any) => console.warn('Could not set main band:', e));
  }
  const response = await fetch(`/api/users/${currentUser.id}`, {
- method: 'PUT',
- headers: {
- 'Content-Type': 'application/json',
- ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ method:'PUT',
+ headers: {'Content-Type':'application/json',
+ ...(token ? {'Authorization': `Bearer ${token}` } : {})
  },
  body: JSON.stringify({
  name: name.trim(),
@@ -324,7 +315,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const data = await response.json();
 
  if (!response.ok) {
- throw new Error(data.error || 'Error al actualizar el perfil');
+ throw new Error(data.error ||'Error al actualizar el perfil');
  }
 
  setSuccessMsg('¡Perfil y contraseña actualizados correctamente!');
@@ -335,7 +326,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClose();
  }, 1200);
  } catch (err: any) {
- setError(err.message || 'Error en el servidor');
+ setError(err.message ||'Error en el servidor');
  } finally {
  setLoading(false);
  }
@@ -347,27 +338,27 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div 
  className={`w-full max-w-md rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight 
- ? 'bg-white -slate-200 text-[var(--ink)]' 
- : 'bg-[var(--surface)] -neutral-800 text-[var(--sunken)]'
+ ?'bg-white text-[var(--ink)]' 
+ :'bg-[var(--surface)] text-[var(--sunken)]'
  }`}
  >
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
- isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-[var(--surface)]/60'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-neutral-800 bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-3">
  <div 
  className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shadow-inner uppercase font-mono text-sm shrink-0"
  style={{ backgroundColor: avatarColor }}
  >
- {name.slice(0, 2) || 'BK'}
+ {name.slice(0, 2) ||'BK'}
  </div>
  <div>
  <h3 className="font-bold font-display uppercase tracking-wider text-sm flex items-center gap-2">
  <span>Mi Perfil & Contraseña</span>
  </h3>
  <p className="text-[11px] text-[var(--ink-2)] font-mono flex items-center gap-1.5 flex-wrap">
- <span>@{currentUser.username} • {isAdmin ? 'Administrador' : 'Músico'}</span>
+ <span>@{currentUser.username} • {isAdmin ?'Administrador' :'Músico'}</span>
  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-300 shadow-sm">
  <Sparkles className="w-2.5 h-2.5 text-amber-400" />
  {currentPlanDef.name}
@@ -402,8 +393,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {/* Plan Suscrito & Upgrade Section */}
  <div className={`p-3.5 rounded-[var(--r-m)] relative overflow-hidden transition-all ${
  isStitchLight 
- ? 'bg-[var(--bg)] ' 
- : 'bg-gradient-to-r from-amber-950/30 via-[var(--surface)] to-[var(--surface)] /30'
+ ?'bg-[var(--bg)]' 
+ :'bg-gradient-to-r from-amber-950/30 via-[var(--surface)] to-[var(--surface)] /30'
  }`}>
  <div className="flex items-center justify-between gap-3">
  <div className="flex items-center gap-2.5">
@@ -457,7 +448,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setName(e.target.value)}
  placeholder="Tu nombre..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800 focus:-emerald-500/50'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-emerald-500/50'
  }`}
  required
  />
@@ -474,7 +465,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setInstrument(e.target.value)}
  placeholder="Ej: Violín, Percusión, Batería, Técnico de Sonido"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800 focus:-emerald-500/50'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-emerald-500/50'
  }`}
  />
  </div>
@@ -491,7 +482,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={() => setAvatarColor(c)}
  className={`w-7 h-7 rounded-full transition-transform cursor-pointer ${
- avatarColor === c ? 'scale-110 -white ring-2 ring-emerald-500' : '-transparent opacity-75 hover:opacity-100'
+ avatarColor === c ?'scale-110 -white ring-2 ring-emerald-500' :'-transparent opacity-75 hover:opacity-100'
  }`}
  style={{ backgroundColor: c }}
  />
@@ -510,7 +501,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </label>
 
  <div className={`p-3 rounded-[var(--r-m)] flex items-center justify-between gap-3 ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)] '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center gap-3">
  <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] overflow-hidden flex items-center justify-center p-1 shrink-0 relative group">
@@ -522,7 +513,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <p className="text-xs font-bold text-white">{activeBandName || currentUser.bandName || 'Tu Banda'}</p>
+ <p className="text-xs font-bold text-white">{activeBandName || currentUser.bandName ||'Tu Banda'}</p>
  {isPromoUser ? (
  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-300">
  <Sparkles className="w-2.5 h-2.5 text-amber-400" />
@@ -596,7 +587,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 cursor-pointer font-bold"
  >
  <Plus className="w-3 h-3" />
- <span>{showCreateBandSection ? 'Cerrar' : '+ Crear Proyecto'}</span>
+ <span>{showCreateBandSection ?'Cerrar' :'+ Crear Proyecto'}</span>
  </button>
  {onOpenBandSwitcher && (
  <button
@@ -617,7 +608,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {/* Creation Form Accordion */}
  {showCreateBandSection && (
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 ${
- isStitchLight ? 'bg-emerald-50/50 border-emerald-200' : 'bg-emerald-950/20 border-emerald-800/50'
+ isStitchLight ?'bg-emerald-50/50 border-emerald-200' :'bg-emerald-950/20 border-emerald-800/50'
  }`}>
  <div className="flex items-center justify-between">
  <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
@@ -643,7 +634,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandName(e.target.value)}
  placeholder="Ej. Los Nocturnos, Cuarteto Acústico..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none font-medium ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -657,7 +648,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandStyle(e.target.value)}
  placeholder="Ej. Indie Rock, Pop..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -669,7 +660,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandLocation(e.target.value)}
  placeholder="Ej. Madrid, Barcelona..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
  </div>
@@ -683,7 +674,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div>
  <label className="text-[10px] font-mono text-[var(--ink-2)] block mb-1.5">Plan Inicial del Proyecto</label>
  <div className="grid grid-cols-3 gap-1.5">
- {(['emergente', 'profesional', 'elite'] as const).map((pKey) => {
+ {(['emergente','profesional','elite'] as const).map((pKey) => {
  const planDef = getPlanDefinition(pKey);
  const isPlanSelected = createBandPlan === pKey;
  return (
@@ -693,13 +684,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClick={() => setCreateBandPlan(pKey)}
  className={`p-2 rounded-[var(--r-s)] text-left text-[11px] transition-all cursor-pointer ${
  isPlanSelected
- ? 'bg-amber-500/20 /80 text-amber-300 shadow-sm'
+ ?'bg-amber-500/20 /80 text-amber-300 shadow-sm'
  : isStitchLight
- ? 'bg-white text-[var(--ink-2)] hover:bg-[var(--bg)]'
- : 'bg-[var(--surface)] text-[var(--ink-2)] hover:'
+ ?'bg-white text-[var(--ink-2)] hover:bg-[var(--bg)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
- <p className="font-bold truncate text-[10px] uppercase">{planDef.name.split(' ')[0]}</p>
+ <p className="font-bold truncate text-[10px] uppercase">{planDef.name.split('')[0]}</p>
  <p className="text-[9px] font-mono text-amber-400/90">{planDef.price}</p>
  </button>
  );
@@ -744,7 +735,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className="p-3 rounded-[var(--r-m)] bg-rose-500/10 space-y-2 animate-in fade-in duration-200">
  <p className="text-xs font-bold text-rose-400 flex items-center gap-1.5">
  <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
- <span>¿Eliminar proyecto "{bandToDeleteInProfile.name}"?</span>
+ <span>¿Eliminar proyecto"{bandToDeleteInProfile.name}"?</span>
  </p>
  <p className="text-[11px] text-[var(--ink-3)]">
  Se desvinculará este proyecto de tu cuenta de usuario. Esta acción no se puede deshacer.
@@ -780,7 +771,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  )}
 
  <div className={`p-3 rounded-[var(--r-m)] space-y-2 ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)] '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}>
  <p className="text-[11px] text-[var(--ink-2)]">
  Selecciona tu proyecto principal por defecto o gestiona tus bandas activas:
@@ -789,17 +780,17 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {localAvailableBands && localAvailableBands.length > 0 ? (
  <div className="space-y-1.5 pt-1">
  {localAvailableBands.map((b) => {
- const isSelected = selectedMainBandId === b.band_id || (b.band_id && selectedMainBandId && selectedMainBandId.replace(/^(band|reg)-/, '') === b.band_id.replace(/^(band|reg)-/, ''));
+ const isSelected = selectedMainBandId === b.band_id || (b.band_id && selectedMainBandId && selectedMainBandId.replace(/^(band|reg)-/,'') === b.band_id.replace(/^(band|reg)-/,''));
  const isDeleting = deletingBandId === b.band_id;
  return (
  <div
  key={b.band_id}
  className={`w-full p-2.5 rounded-[var(--r-m)] flex items-center justify-between gap-3 transition-all ${
  isSelected
- ? 'bg-amber-500/15 /50 text-amber-300 shadow-sm'
+ ?'bg-amber-500/15 /50 text-amber-300 shadow-sm'
  : isStitchLight
- ? 'bg-white text-[var(--ink-2)]'
- : 'bg-[var(--surface)] text-[var(--ink-3)]'
+ ?'bg-white text-[var(--ink-2)]'
+ :'bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  >
  <button
@@ -812,7 +803,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  <div className="min-w-0">
  <p className="text-xs font-bold truncate">{b.bandName}</p>
- <p className="text-[10px] text-[var(--ink-2)] font-mono capitalize">{b.role === 'leader' ? 'Líder / Mánager' : 'Miembro'} • {getPlanDefinition(b.plan).name}</p>
+ <p className="text-[10px] text-[var(--ink-2)] font-mono capitalize">{b.role ==='leader' ?'Líder / Mánager' :'Miembro'} • {getPlanDefinition(b.plan).name}</p>
  </div>
  </button>
 
@@ -849,8 +840,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  })}
  </div>
  ) : (
- <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] ">
- <span className="text-xs font-bold text-white">{activeBandName || currentUser.bandName || 'BAKANDEYA'}</span>
+ <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
+ <span className="text-xs font-bold text-white">{activeBandName || currentUser.bandName ||'BAKANDEYA'}</span>
  <span className="text-[10px] font-mono text-amber-400">Principal</span>
  </div>
  )}
@@ -877,10 +868,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClick={() => setLanguage(lang.code)}
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 active:scale-95 ${
  isSelected
- ? 'bg-amber-500/20 /60 text-amber-300 font-bold shadow-xs'
+ ?'bg-amber-500/20 /60 text-amber-300 font-bold shadow-xs'
  : isStitchLight
- ? 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- : 'bg-[var(--surface)] text-[var(--ink-3)] hover: hover:text-white'
+ ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover: hover:text-white'
  }`}
  >
  <div className="flex items-center gap-2 min-w-0">
@@ -902,7 +893,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={() => setShowAppearance(!showAppearance)}
  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
- isStitchLight ? 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -910,8 +901,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <span className="text-xs font-mono font-semibold">Personalización Visual (Tema y Fuente)</span>
  </div>
  <div className="flex items-center gap-1 text-[11px] font-mono text-[var(--ink-2)]">
- <span>{showAppearance ? 'Ocultar' : 'Configurar'}</span>
- <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showAppearance ? 'rotate-180 text-amber-400' : ''}`} />
+ <span>{showAppearance ?'Ocultar' :'Configurar'}</span>
+ <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showAppearance ?'rotate-180 text-amber-400' :''}`} />
  </div>
  </button>
 
@@ -933,8 +924,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClick={() => onThemeChange(key as ThemeName)}
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-1.5 ${
  isSelected
- ? 'bg-amber-500/15 /50 text-amber-300 font-bold'
- : 'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ ?'bg-amber-500/15 /50 text-amber-300 font-bold'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <span className="text-[11px] font-mono truncate">{t.name}</span>
@@ -962,8 +953,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClick={() => onFontChange(p.id)}
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-0.5 ${
  isSelected
- ? 'bg-emerald-500/15 border-emerald-500/50 text-emerald-300 font-bold'
- : 'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ ?'bg-emerald-500/15 border-emerald-500/50 text-emerald-300 font-bold'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between gap-1 w-full">
@@ -987,8 +978,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  selector THEMES de arriba (ese es el sistema viejo, con colors/ThemeColors por
  prop — sigue vivo y no se toca). Este escribe directo en <html data-theme> via
  src/utils/temaEspectro.ts, asi que el cambio es instantaneo sin re-render del
- arbol: las 4.365 clases de color se resuelven solas via CSS vars. Por defecto
- 'classic' = exactamente la app de siempre; el resto son las pantallas ya
+ arbol: las 4.365 clases de color se resuelven solas via CSS vars. Por defecto'classic' = exactamente la app de siempre; el resto son las pantallas ya
  migradas (login, panel) mas el resto de la app tal cual, mientras avanza. */}
  <div className="pt-3 border-t /80">
  <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/[0.04] space-y-2.5">
@@ -1013,8 +1003,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }}
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-1.5 ${
  isSelected
- ? 'bg-amber-500/15 /50 text-amber-300 font-bold'
- : 'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ ?'bg-amber-500/15 /50 text-amber-300 font-bold'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  title={p.descripcion}
  >
@@ -1025,7 +1015,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  })}
  </div>
  <p className="text-[10px] text-neutral-500 font-mono">
- Ahora mismo: {resolverTemaEspectro(prefEspectro) === 'dark' ? 'oscuro' : resolverTemaEspectro(prefEspectro) === 'light' ? 'claro' : 'clásico'}
+ Ahora mismo: {resolverTemaEspectro(prefEspectro) ==='dark' ?'oscuro' : resolverTemaEspectro(prefEspectro) ==='light' ?'claro' :'clásico'}
  </p>
  </div>
  </div>
@@ -1041,7 +1031,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={() => setShowAgentConfig(true)}
  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
- isStitchLight ? 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -1072,7 +1062,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setNewPassword(e.target.value)}
  placeholder="Dejar en blanco para mantener la actual..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800 focus:-amber-500/50'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-amber-500/50'
  }`}
  />
  </div>
@@ -1088,7 +1078,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setConfirmPassword(e.target.value)}
  placeholder="Repite la nueva contraseña..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800 focus:-amber-500/50'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-amber-500/50'
  }`}
  />
  </div>
@@ -1096,7 +1086,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  {/* Admin Band Management Section inside Profile */}
- {(isAdmin || currentUser.role === 'leader' || currentUser.role === 'admin') && onOpenBandManagement && (
+ {(isAdmin || currentUser.role ==='leader' || currentUser.role ==='admin') && onOpenBandManagement && (
  <div className="pt-2 -neutral-800/80 space-y-2">
  <label className="text-xs font-mono font-semibold text-[var(--ink-2)] flex items-center justify-between">
  <span className="flex items-center gap-1.5">
@@ -1114,8 +1104,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }}
  className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
  isStitchLight
- ? 'bg-indigo-50 -indigo-200 hover:bg-sky-500/15 text-sky-400'
- : 'bg-indigo-950/30 -indigo-500/30 hover:-indigo-500/60 text-indigo-200'
+ ?'bg-indigo-50 hover:bg-sky-500/15 text-sky-400'
+ :'bg-indigo-950/30 -indigo-500/30 hover:-indigo-500/60 text-indigo-200'
  }`}
  >
  <div className="flex items-center gap-2.5">
@@ -1135,8 +1125,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  disabled={loading}
  className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-lg active:scale-98 ${
  isStitchLight
- ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20'
- : 'bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-amber-500/20'
+ ?'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20'
+ :'bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-amber-500/20'
  }`}
  >
  {loading ? (
@@ -1152,9 +1142,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  {/* Modal Footer */}
  <div className={`px-6 py-3 flex justify-between items-center ${
- isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-[var(--surface)]/60'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-neutral-800 bg-[var(--surface)]/60'
  }`}>
- {(isAdmin || currentUser.role === 'leader' || currentUser.role === 'admin') && onOpenBandManagement ? (
+ {(isAdmin || currentUser.role ==='leader' || currentUser.role ==='admin') && onOpenBandManagement ? (
  <button
  onClick={() => {
  onClose();
@@ -1171,7 +1161,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <button
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono -neutral-700 text-[var(--ink-3)] hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] hover:bg-neutral-800 transition-colors cursor-pointer"
  >
  Cerrar
  </button>
@@ -1183,7 +1173,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <ModalPortal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200 text-left">
  <div className={`w-full max-w-lg rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] /30 text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--sunken)]'
  }`}>
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] border-b /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
@@ -1204,7 +1194,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
- {currentUser?.estado_suscripcion === 'pago_pendiente' && (
+ {currentUser?.estado_suscripcion ==='pago_pendiente' && (
  <div className="p-3.5 rounded-[var(--r-m)] bg-rose-500/20 text-rose-200 text-xs flex items-center justify-between gap-3">
  <div className="flex items-center gap-2">
  <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
@@ -1234,12 +1224,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/15 text-amber-200 text-xs flex items-center gap-2.5">
  <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
  <span>
- Cambio programado a <strong className="uppercase font-mono text-amber-300">{currentUser.plan_pendiente.replace('_', ' ')}</strong> al finalizar el ciclo.
+ Cambio programado a <strong className="uppercase font-mono text-amber-300">{currentUser.plan_pendiente.replace('_','')}</strong> al finalizar el ciclo.
  </span>
  </div>
  )}
 
- <div className="flex items-center justify-between gap-2 p-3 rounded-[var(--r-m)] bg-[var(--surface)]/80 ">
+ <div className="flex items-center justify-between gap-2 p-3 rounded-[var(--r-m)] bg-[var(--surface)]/80">
  <div className="flex items-center gap-2">
  <CreditCard className="w-4 h-4 text-amber-400 shrink-0" />
  <span className="text-xs text-[var(--ink-3)] font-mono">Facturación & Tarjetas en Stripe:</span>
@@ -1255,10 +1245,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  if (res.success && res.url) {
  window.location.href = res.url;
  } else {
- alert(res.error || 'No se pudo abrir el portal de Stripe');
+ alert(res.error ||'No se pudo abrir el portal de Stripe');
  }
  } catch (err: any) {
- alert('Error al conectar con Stripe: ' + err.message);
+ alert('Error al conectar con Stripe:' + err.message);
  }
  }}
  className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer"
@@ -1280,8 +1270,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  key={plan.id}
  className={`p-4 rounded-[var(--r-m)] transition-all ${
  isCurrent
- ? 'bg-amber-500/10 /50 ring-1 ring-amber-500/30'
- : 'bg-[var(--surface)]/60 hover:'
+ ?'bg-amber-500/10 /50 ring-1 ring-amber-500/30'
+ :'bg-[var(--surface)]/60 hover:'
  }`}
  >
  <div className="flex items-center justify-between flex-wrap gap-2">
@@ -1325,7 +1315,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 border-t /80">
  <span className="text-[10px] font-mono text-[var(--ink-2)]">
- {isCurrent ? 'Tu plan activo' : 'Cambio de plan inmediato'}
+ {isCurrent ?'Tu plan activo' :'Cambio de plan inmediato'}
  </span>
  {isCurrent ? (
  <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 flex items-center gap-1">
@@ -1337,11 +1327,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={async () => {
  try {
- if (plan.id !== 'ensayo') {
+ if (plan.id !=='ensayo') {
  await api.startCheckout({
  planId: plan.id,
- billingInterval: 'monthly',
- bandId: currentUser.band_id || 'default',
+ billingInterval:'monthly',
+ bandId: currentUser.band_id ||'default',
  userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : undefined
  });
  setShowUpgradeModal(false);
@@ -1358,7 +1348,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  alert(`¡Plan de suscripción cambiado con éxito a ${plan.name}! Módulos activados.`);
  } catch (e: any) {
  console.error('Error al cambiar plan:', e);
- alert(e?.message || 'No se pudo cambiar el plan. Reintenta en unos instantes.');
+ alert(e?.message ||'No se pudo cambiar el plan. Reintenta en unos instantes.');
  }
  }}
  className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold font-mono text-xs transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"

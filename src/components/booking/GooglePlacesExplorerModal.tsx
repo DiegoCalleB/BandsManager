@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from'react';
 import { 
  Search, MapPin, Phone, Globe, Star, Sparkles, Check, Loader2, X, 
  PlusCircle, Building2, CheckCircle2, AlertCircle, Sliders, Users, Music2, Radio, Briefcase, Disc3, ShieldCheck,
  Ban, Trash2, RotateCcw, Target
-} from 'lucide-react';
-import { Lead, LeadType, BookingCampaign } from '../../types';
-import { apiFetch } from '../../utils/api';
-import { api } from '../../services/api';
-import { ModalPortal } from '../common/ModalPortal';
+} from'lucide-react';
+import { Lead, LeadType, BookingCampaign } from'../../types';
+import { apiFetch } from'../../utils/api';
+import { api } from'../../services/api';
+import { ModalPortal } from'../common/ModalPortal';
 
 export interface PlaceResult {
  place_id: string;
@@ -46,7 +46,7 @@ export interface DiscardedPlace {
  discarded_at: string;
 }
 
-const DISCARDED_STORAGE_KEY = 'bandmanager_scout_discarded_places';
+const DISCARDED_STORAGE_KEY ='bandmanager_scout_discarded_places';
 
 function getStoredDiscarded(): DiscardedPlace[] {
  try {
@@ -74,75 +74,73 @@ interface GooglePlacesExplorerModalProps {
  bandName?: string;
 }
 
-const QUICK_CITIES = [
- 'Madrid', 'Barcelona', 'Sevilla', 'Valencia', 'Málaga', 'Bilbao', 
- 'Granada', 'Zaragoza', 'Huelva', 'Alicante', 'Santiago', 'Vigo', 'Salamanca', 'Murcia'
+const QUICK_CITIES = ['Madrid','Barcelona','Sevilla','Valencia','Málaga','Bilbao','Granada','Zaragoza','Huelva','Alicante','Santiago','Vigo','Salamanca','Murcia'
 ];
 
 const CATEGORIES: { id: LeadType; label: string; icon: string; desc: string; placeholder: string; searchPrefix: string }[] = [
  { 
- id: 'sala', 
- label: 'Sala / Teatro', 
- icon: '🏛️', 
- desc: 'Salas de conciertos, directos y teatros con programación regular',
- placeholder: 'Ej. salas rock, cafés concierto, teatros...',
- searchPrefix: 'Salas de conciertos y recintos con música en directo'
+ id:'sala', 
+ label:'Sala / Teatro', 
+ icon:'🏛️', 
+ desc:'Salas de conciertos, directos y teatros con programación regular',
+ placeholder:'Ej. salas rock, cafés concierto, teatros...',
+ searchPrefix:'Salas de conciertos y recintos con música en directo'
  },
  { 
- id: 'ayuntamiento', 
- label: 'Ayuntamiento / Fiestas', 
- icon: '🏛️', 
- desc: 'Concejalías de festejos, fiestas patronales y cultura municipal',
- placeholder: 'Ej. festejos, fiestas patronales, concejalía de cultura...',
- searchPrefix: 'Ayuntamientos, concejalías de festejos y fiestas patronales'
+ id:'ayuntamiento', 
+ label:'Ayuntamiento / Fiestas', 
+ icon:'🏛️', 
+ desc:'Concejalías de festejos, fiestas patronales y cultura municipal',
+ placeholder:'Ej. festejos, fiestas patronales, concejalía de cultura...',
+ searchPrefix:'Ayuntamientos, concejalías de festejos y fiestas patronales'
  },
  { 
- id: 'festival', 
- label: 'Festival / Feria', 
- icon: '🎪', 
- desc: 'Festivales de música, ferias de cerveza o eventos con conciertos en vivo',
- placeholder: 'Ej. festivales indie, ferias de cerveza, fiestas gastronómicas...',
- searchPrefix: 'Festivales de música y ferias con conciertos en directo'
+ id:'festival', 
+ label:'Festival / Feria', 
+ icon:'🎪', 
+ desc:'Festivales de música, ferias de cerveza o eventos con conciertos en vivo',
+ placeholder:'Ej. festivales indie, ferias de cerveza, fiestas gastronómicas...',
+ searchPrefix:'Festivales de música y ferias con conciertos en directo'
  },
  { 
- id: 'discoteca', 
- label: 'Discoteca / Club', 
- icon: '🪩', 
- desc: 'Clubs nocturnos y salas de baile con sesiones o directo',
- placeholder: 'Ej. clubs música electrónica, salas de baile, DJs...',
- searchPrefix: 'Clubs nocturnos y discotecas con música en directo o DJs'
+ id:'discoteca', 
+ label:'Discoteca / Club', 
+ icon:'🪩', 
+ desc:'Clubs nocturnos y salas de baile con sesiones o directo',
+ placeholder:'Ej. clubs música electrónica, salas de baile, DJs...',
+ searchPrefix:'Clubs nocturnos y discotecas con música en directo o DJs'
  },
  { 
- id: 'grupo', 
- label: 'Grupo / Banda', 
- icon: '🎸', 
- desc: 'Bandas y grupos de música afines para bolos conjuntos, giras o intercambio',
- placeholder: 'Ej. bandas de rock, grupos indie, bandas locales en activo...',
- searchPrefix: 'Grupos y bandas de música en activo'
+ id:'grupo', 
+ label:'Grupo / Banda', 
+ icon:'🎸', 
+ desc:'Bandas y grupos de música afines para bolos conjuntos, giras o intercambio',
+ placeholder:'Ej. bandas de rock, grupos indie, bandas locales en activo...',
+ searchPrefix:'Grupos y bandas de música en activo'
  },
  { 
- id: 'agencia', 
- label: 'Agencia / Booking', 
- icon: '💼', 
- desc: 'Agencias de contratación, managers y promotores musicales',
- placeholder: 'Ej. agencias de contratación artística, management...',
- searchPrefix: 'Agencias de booking musical y management de bandas'
+ id:'agencia', 
+ label:'Agencia / Booking', 
+ icon:'💼', 
+ desc:'Agencias de contratación, managers y promotores musicales',
+ placeholder:'Ej. agencias de contratación artística, management...',
+ searchPrefix:'Agencias de booking musical y management de bandas'
  },
  { 
- id: 'sello', 
- label: 'Sello Discográfico', 
- icon: '💿', 
- desc: 'Discográficas y distribuidoras independientes',
- placeholder: 'Ej. sellos independientes, discográficas rock/pop/urban...',
- searchPrefix: 'Sellos discográficos y editoriales de música independiente'
+ id:'sello', 
+ label:'Sello Discográfico', 
+ icon:'💿', 
+ desc:'Discográficas y distribuidoras independientes',
+ placeholder:'Ej. sellos independientes, discográficas rock/pop/urban...',
+ searchPrefix:'Sellos discográficos y editoriales de música independiente'
  },
  { 
- id: 'medio', 
- label: 'Medio / Radio', 
- icon: '📻', 
- desc: 'Radios, podcasts, fanzines y prensa especializada',
- placeholder: 'Ej. emisoras de radio, programas musicales, fanzines...',
- searchPrefix: 'Medios de comunicación musical, programas de radio y prensa'
+ id:'medio', 
+ label:'Medio / Radio', 
+ icon:'📻', 
+ desc:'Radios, podcasts, fanzines y prensa especializada',
+ placeholder:'Ej. emisoras de radio, programas musicales, fanzines...',
+ searchPrefix:'Medios de comunicación musical, programas de radio y prensa'
  }
 ];
 
@@ -153,22 +151,22 @@ export function GooglePlacesExplorerModal({
  onImportLeads,
  activeCampaign,
  existingLeads = [],
- bandGenre = '',
- bandName = ''
+ bandGenre ='',
+ bandName =''
 }: GooglePlacesExplorerModalProps) {
  const [searchQuery, setSearchQuery] = useState('');
- const [selectedCity, setSelectedCity] = useState(activeCampaign?.targetCities[0] || '');
+ const [selectedCity, setSelectedCity] = useState(activeCampaign?.targetCities[0] ||'');
  const [selectedType, setSelectedType] = useState<LeadType>('sala');
  const [searchLimit, setSearchLimit] = useState<number>(6); // Between 1 and 10
- const [aforoMin, setAforoMin] = useState<string>(activeCampaign?.minCapacity?.toString() || '');
- const [aforoMax, setAforoMax] = useState<string>(activeCampaign?.maxCapacity?.toString() || '');
+ const [aforoMin, setAforoMin] = useState<string>(activeCampaign?.minCapacity?.toString() ||'');
+ const [aforoMax, setAforoMax] = useState<string>(activeCampaign?.maxCapacity?.toString() ||'');
 
  // Keep state synced if campaign changes while modal is open
  useEffect(() => {
  if (activeCampaign && isOpen) {
- setSelectedCity(activeCampaign.targetCities[0] || '');
- setAforoMin(activeCampaign.minCapacity?.toString() || '');
- setAforoMax(activeCampaign.maxCapacity?.toString() || '');
+ setSelectedCity(activeCampaign.targetCities[0] ||'');
+ setAforoMin(activeCampaign.minCapacity?.toString() ||'');
+ setAforoMax(activeCampaign.maxCapacity?.toString() ||'');
  }
  }, [activeCampaign, isOpen]);
 
@@ -176,7 +174,7 @@ export function GooglePlacesExplorerModal({
 
  const [isSearching, setIsSearching] = useState(false);
  const [isMassCampaignSearching, setIsMassCampaignSearching] = useState(false);
- const [massFilterTipos, setMassFilterTipos] = useState<string[]>(['sala', 'local', 'discoteca', 'teatro']);
+ const [massFilterTipos, setMassFilterTipos] = useState<string[]>(['sala','local','discoteca','teatro']);
  const [places, setPlaces] = useState<PlaceResult[]>([]);
  const [searchSource, setSearchSource] = useState('');
  const [searchError, setSearchError] = useState('');
@@ -217,7 +215,7 @@ export function GooglePlacesExplorerModal({
 
  try {
  const res = await apiFetch('/api/leads/places-search', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  query: q,
  ciudad: cityToUse,
@@ -231,7 +229,7 @@ export function GooglePlacesExplorerModal({
  if (res.success && Array.isArray(res.results)) {
  const currentDiscarded = getStoredDiscarded();
  const isDiscarded = (p: any) => {
- const normName = (p.nombre_sala || '').toLowerCase().trim();
+ const normName = (p.nombre_sala ||'').toLowerCase().trim();
  return currentDiscarded.some(d =>
  (p.place_id && d.place_id && d.place_id === p.place_id) ||
  (normName && d.nombre_sala.toLowerCase().trim() === normName)
@@ -241,7 +239,7 @@ export function GooglePlacesExplorerModal({
  const mapped: PlaceResult[] = res.results
  .filter((p: any) => !isDiscarded(p))
  .map((p: any) => {
- const normName = (p.nombre_sala || '').toLowerCase().trim();
+ const normName = (p.nombre_sala ||'').toLowerCase().trim();
  const existingMatch = existingLeads.find(l => {
  if (!l.nombre_sala) return false;
  const lNorm = l.nombre_sala.toLowerCase().trim();
@@ -269,13 +267,13 @@ export function GooglePlacesExplorerModal({
  };
  });
  setPlaces(mapped);
- setSearchSource(res.source || (res.isPlacesApi ? 'Google Places API Direct' : 'Buscador Agéntico Gemini con Grounding'));
+ setSearchSource(res.source || (res.isPlacesApi ?'Google Places API Direct' :'Buscador Agéntico Gemini con Grounding'));
  } else {
- setSearchError(res.error || 'No se encontraron resultados verificados para la búsqueda.');
+ setSearchError(res.error ||'No se encontraron resultados verificados para la búsqueda.');
  }
  } catch (err: any) {
  console.error('Error en Buscador de Salas:', err);
- setSearchError(err.message || 'Error de conexión al buscar nuevos contactos.');
+ setSearchError(err.message ||'Error de conexión al buscar nuevos contactos.');
  } finally {
  setIsSearching(false);
  }
@@ -292,10 +290,10 @@ export function GooglePlacesExplorerModal({
  try {
  const citiesToSearch = activeCampaign?.targetCities && activeCampaign.targetCities.length > 0
  ? activeCampaign.targetCities
- : (selectedCity.trim() ? [selectedCity.trim()] : ['Madrid', 'Barcelona', 'Valencia', 'Granada', 'Sevilla', 'Bilbao']);
+ : (selectedCity.trim() ? [selectedCity.trim()] : ['Madrid','Barcelona','Valencia','Granada','Sevilla','Bilbao']);
 
  const res = await apiFetch('/api/leads/campaign-mass-search', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  targetCities: citiesToSearch,
  minCapacity: aforoMin ? Number(aforoMin) : (activeCampaign?.minCapacity || undefined),
@@ -303,7 +301,7 @@ export function GooglePlacesExplorerModal({
  targetDates: activeCampaign?.targetDates,
  targetDatesText: activeCampaign?.targetDatesText,
  tipos: massFilterTipos,
- campaignName: activeCampaign?.name || 'Campaña Activa',
+ campaignName: activeCampaign?.name ||'Campaña Activa',
  campaignId: activeCampaign?.id,
  limitPerCity: 12,
  bandGenre: bandGenre || undefined,
@@ -314,7 +312,7 @@ export function GooglePlacesExplorerModal({
  if (res.success && Array.isArray(res.results)) {
  const currentDiscarded = getStoredDiscarded();
  const isDiscarded = (p: any) => {
- const normName = (p.nombre_sala || '').toLowerCase().trim();
+ const normName = (p.nombre_sala ||'').toLowerCase().trim();
  return currentDiscarded.some(d =>
  (p.place_id && d.place_id && d.place_id === p.place_id) ||
  (normName && d.nombre_sala.toLowerCase().trim() === normName)
@@ -324,7 +322,7 @@ export function GooglePlacesExplorerModal({
  const mapped: PlaceResult[] = res.results
  .filter((p: any) => !isDiscarded(p))
  .map((p: any) => {
- const normName = (p.nombre_sala || '').toLowerCase().trim();
+ const normName = (p.nombre_sala ||'').toLowerCase().trim();
  const existingMatch = existingLeads.find(l => {
  if (!l.nombre_sala) return false;
  const lNorm = l.nombre_sala.toLowerCase().trim();
@@ -352,13 +350,13 @@ export function GooglePlacesExplorerModal({
  });
 
  setPlaces(mapped);
- setSearchSource(`Scout Masivo de Campaña (${citiesToSearch.length} ciudades · Género: ${res.bandGenre || 'Banda'} · Tipos: ${massFilterTipos.join(', ')})`);
+ setSearchSource(`Scout Masivo de Campaña (${citiesToSearch.length} ciudades · Género: ${res.bandGenre ||'Banda'} · Tipos: ${massFilterTipos.join(',')})`);
  } else {
- setSearchError(res.error || 'No se obtuvieron resultados para la prospección masiva.');
+ setSearchError(res.error ||'No se obtuvieron resultados para la prospección masiva.');
  }
  } catch (err: any) {
  console.error('Error en prospección masiva de campaña:', err);
- setSearchError(err.message || 'Error al ejecutar la búsqueda masiva de recintos de campaña.');
+ setSearchError(err.message ||'Error al ejecutar la búsqueda masiva de recintos de campaña.');
  } finally {
  setIsMassCampaignSearching(false);
  }
@@ -370,7 +368,7 @@ export function GooglePlacesExplorerModal({
  place_id: place.place_id,
  nombre_sala: place.nombre_sala,
  ciudad: place.ciudad,
- tipo: String(place.tipo || ''),
+ tipo: String(place.tipo ||''),
  discarded_at: new Date().toISOString()
  };
  const updated = [
@@ -452,7 +450,7 @@ export function GooglePlacesExplorerModal({
 
  try {
  const res = await apiFetch('/api/leads/extract-emails', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  places: [
  {
@@ -472,9 +470,9 @@ export function GooglePlacesExplorerModal({
  p.place_id === placeId
  ? {
  ...p,
- email_contacto: item.email_contacto || p.email_contacto || '',
- instagram: item.instagram || p.instagram || '',
- contacto_nombre: item.contacto_nombre || p.contacto_nombre || '',
+ email_contacto: item.email_contacto || p.email_contacto ||'',
+ instagram: item.instagram || p.instagram ||'',
+ contacto_nombre: item.contacto_nombre || p.contacto_nombre ||'',
  extractingEmail: false
  }
  : p
@@ -504,11 +502,11 @@ export function GooglePlacesExplorerModal({
  for (let i = 0; i < selectedPlaces.length; i += CHUNK_SIZE) {
  const chunk = selectedPlaces.slice(i, i + CHUNK_SIZE);
  const currentProgress = Math.min(i + CHUNK_SIZE, selectedPlaces.length);
- setExtractStatus(`⚡ Investigando webs oficiales (${currentProgress}/${selectedPlaces.length}): ${chunk.map(c => c.nombre_sala).join(', ')}...`);
+ setExtractStatus(`⚡ Investigando webs oficiales (${currentProgress}/${selectedPlaces.length}): ${chunk.map(c => c.nombre_sala).join(',')}...`);
 
  try {
  const res = await apiFetch('/api/leads/extract-emails', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  places: chunk.map(p => ({
  place_id: p.place_id,
@@ -530,7 +528,7 @@ export function GooglePlacesExplorerModal({
  setPlaces(prev =>
  prev.map(p => {
  const match = emailMap.get(p.place_id) || emailMap.get(p.nombre_sala.toLowerCase().trim());
- if (match && match.email_contacto && match.email_contacto.trim() !== '') {
+ if (match && match.email_contacto && match.email_contacto.trim() !=='') {
  newFoundInChunk++;
  return {
  ...p,
@@ -555,7 +553,7 @@ export function GooglePlacesExplorerModal({
  }, 7000);
  } catch (err: any) {
  console.error('Error completando lote de contactos:', err);
- setExtractStatus(`⚠️ Enriquecimiento completado parcialmente: ${err.message || 'Verifica la conexión'}`);
+ setExtractStatus(`⚠️ Enriquecimiento completado parcialmente: ${err.message ||'Verifica la conexión'}`);
  } finally {
  setIsExtractingBatch(false);
  }
@@ -571,7 +569,7 @@ export function GooglePlacesExplorerModal({
 
  try {
  const res = await apiFetch('/api/leads/import-places', {
- method: 'POST',
+ method:'POST',
  body: JSON.stringify({
  leads: selectedPlaces
  })
@@ -588,14 +586,14 @@ export function GooglePlacesExplorerModal({
  }
  } catch (err: any) {
  console.error('Error al importar recintos:', err);
- setSearchError(`Error al guardar en el CRM: ${err.message || 'Fallo del servidor'}`);
+ setSearchError(`Error al guardar en el CRM: ${err.message ||'Fallo del servidor'}`);
  } finally {
  setIsImporting(false);
  }
  };
 
  const selectedCount = places.filter(p => p.selected).length;
- const emailsFoundCount = places.filter(p => p.email_contacto && p.email_contacto.trim() !== '').length;
+ const emailsFoundCount = places.filter(p => p.email_contacto && p.email_contacto.trim() !=='').length;
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
@@ -603,8 +601,8 @@ export function GooglePlacesExplorerModal({
  <div
  className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] '
- : 'bg-[#18181b] text-[var(--ink)] border-zinc-800'
+ ?'bg-white text-[var(--ink)]'
+ :'bg-[#18181b] text-[var(--ink)] border-zinc-800'
  }`}
  >
  {/* Header */}
@@ -672,7 +670,7 @@ export function GooglePlacesExplorerModal({
  )}
  </div>
  <p className="text-[11px] text-zinc-300 mt-0.5">
- Descubre simultáneamente todos los recintos, salas, locales y discotecas del aforo ({aforoMin || (activeCampaign?.minCapacity || '0')} - {aforoMax || (activeCampaign?.maxCapacity || '∞')} pax), adaptados a las ciudades objetivo y estilo de la banda.
+ Descubre simultáneamente todos los recintos, salas, locales y discotecas del aforo ({aforoMin || (activeCampaign?.minCapacity ||'0')} - {aforoMax || (activeCampaign?.maxCapacity ||'∞')} pax), adaptados a las ciudades objetivo y estilo de la banda.
  </p>
  </div>
  </div>
@@ -702,11 +700,11 @@ export function GooglePlacesExplorerModal({
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className="text-[10px] uppercase font-mono text-zinc-400 font-bold mr-1">Espacios a rastrear:</span>
  {[
- { id: 'sala', label: 'Salas & Recintos', icon: '🏛️' },
- { id: 'local', label: 'Locales & Bares', icon: '☕' },
- { id: 'discoteca', label: 'Discotecas & Clubs', icon: '🪩' },
- { id: 'teatro', label: 'Teatros & Auditorios', icon: '🎭' },
- { id: 'grupo', label: 'Bandas & Co-booking', icon: '🎸' }
+ { id:'sala', label:'Salas & Recintos', icon:'🏛️' },
+ { id:'local', label:'Locales & Bares', icon:'☕' },
+ { id:'discoteca', label:'Discotecas & Clubs', icon:'🪩' },
+ { id:'teatro', label:'Teatros & Auditorios', icon:'🎭' },
+ { id:'grupo', label:'Bandas & Co-booking', icon:'🎸' }
  ].map(item => {
  const isChecked = massFilterTipos.includes(item.id);
  return (
@@ -724,8 +722,8 @@ export function GooglePlacesExplorerModal({
  }}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
  isChecked
- ? 'bg-amber-400/20 text-amber-300 /50 shadow-sm'
- : 'bg-zinc-900/80 text-zinc-500 border-zinc-800 hover:text-zinc-300'
+ ?'bg-amber-400/20 text-amber-300 /50 shadow-sm'
+ :'bg-zinc-900/80 text-zinc-500 border-zinc-800 hover:text-zinc-300'
  }`}
  >
  <span>{item.icon}</span>
@@ -737,7 +735,7 @@ export function GooglePlacesExplorerModal({
 
  {activeCampaign?.targetCities && activeCampaign.targetCities.length > 0 && (
  <span className="text-[10px] text-zinc-400 font-mono">
- Ciudades ({activeCampaign.targetCities.length}): <strong className="text-zinc-200">{activeCampaign.targetCities.join(', ')}</strong>
+ Ciudades ({activeCampaign.targetCities.length}): <strong className="text-zinc-200">{activeCampaign.targetCities.join(',')}</strong>
  </span>
  )}
  </div>
@@ -789,13 +787,13 @@ export function GooglePlacesExplorerModal({
  onClick={() => handleCategoryChange(cat.id)}
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
  isSelected
- ? 'bg-[var(--acc)] text-[var(--acc-ink)] border-[var(--acc)] shadow-sm'
- : 'bg-zinc-950/60 border-zinc-800 text-zinc-300 hover:bg-zinc-800'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] border-[var(--acc)] shadow-sm'
+ :'bg-zinc-950/60 border-zinc-800 text-zinc-300 hover:bg-zinc-800'
  }`}
  title={cat.desc}
  >
  <span>{cat.icon}</span>
- <span className="truncate">{cat.label.split(' ')[0]}</span>
+ <span className="truncate">{cat.label.split('')[0]}</span>
  </button>
  );
  })}
@@ -812,7 +810,7 @@ export function GooglePlacesExplorerModal({
  type="text"
  value={selectedCity}
  onChange={e => setSelectedCity(e.target.value)}
- onKeyDown={e => e.key === 'Enter' && handleSearch()}
+ onKeyDown={e => e.key ==='Enter' && handleSearch()}
  placeholder="Ciudad (ej. Granada, Madrid...)"
  className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-zinc-950 border-zinc-800 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[var(--acc)]"
  />
@@ -834,8 +832,8 @@ export function GooglePlacesExplorerModal({
  type="text"
  value={searchQuery}
  onChange={e => setSearchQuery(e.target.value)}
- onKeyDown={e => e.key === 'Enter' && handleSearch()}
- placeholder={CATEGORIES.find(c => c.id === selectedType)?.placeholder || "Búsqueda opcional..."}
+ onKeyDown={e => e.key ==='Enter' && handleSearch()}
+ placeholder={CATEGORIES.find(c => c.id === selectedType)?.placeholder ||"Búsqueda opcional..."}
  className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-zinc-950 border-zinc-800 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[var(--acc)]"
  />
  </div>
@@ -865,7 +863,7 @@ export function GooglePlacesExplorerModal({
  className="text-[11px] text-zinc-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer font-mono"
  >
  <Sliders className="w-3.5 h-3.5 text-amber-400" />
- <span>{showAdvancedFilters ? 'Ocultar Filtros de Aforo' : 'Filtros Avanzados de Aforo'}</span>
+ <span>{showAdvancedFilters ?'Ocultar Filtros de Aforo' :'Filtros Avanzados de Aforo'}</span>
  </button>
 
  <button
@@ -875,7 +873,7 @@ export function GooglePlacesExplorerModal({
  className="px-5 py-2 bg-[var(--acc)] hover:bg-[#d8b03e] text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50 ml-auto"
  >
  {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
- <span>{isSearching ? 'Buscando...' : `Buscar ${searchLimit} Resultados`}</span>
+ <span>{isSearching ?'Buscando...' : `Buscar ${searchLimit} Resultados`}</span>
  </button>
  </div>
 
@@ -917,8 +915,8 @@ export function GooglePlacesExplorerModal({
  onClick={() => handleQuickCityClick(city)}
  className={`px-2.5 py-0.5 text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer font-medium ${
  selectedCity === city
- ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold'
- : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold'
+ :'bg-zinc-800 hover:bg-zinc-700 text-zinc-300'
  }`}
  >
  {city}
@@ -1009,8 +1007,8 @@ export function GooglePlacesExplorerModal({
  key={place.place_id}
  className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col justify-between space-y-2.5 ${
  place.selected
- ? 'bg-zinc-900 border-[var(--acc)]/50 shadow-lg'
- : 'bg-zinc-950/60 border-zinc-800/80 opacity-70'
+ ?'bg-zinc-900 border-[var(--acc)]/50 shadow-lg'
+ :'bg-zinc-950/60 border-zinc-800/80 opacity-70'
  }`}
  >
  <div className="space-y-2">
@@ -1030,7 +1028,7 @@ export function GooglePlacesExplorerModal({
  />
  ) : (
  <div className="w-10 h-10 rounded-[var(--r-s)] bg-zinc-800 border-zinc-700 flex items-center justify-center text-lg shrink-0">
- {place.icono || '🏛️'}
+ {place.icono ||'🏛️'}
  </div>
  )}
  <div className="min-w-0">
@@ -1040,7 +1038,7 @@ export function GooglePlacesExplorerModal({
  </h4>
  {place.alreadyInCrm && (
  <span className="text-[9px] px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded font-bold uppercase tracking-wider shrink-0" title="Este contacto ya existe en tu CRM de Leads">
- En CRM ({place.crmStatus || 'Registrado'})
+ En CRM ({place.crmStatus ||'Registrado'})
  </span>
  )}
  {place.capacityMatch === false && (
@@ -1083,7 +1081,7 @@ export function GooglePlacesExplorerModal({
  <div className="flex items-center gap-1.5">
  <span className="text-zinc-400 font-mono">Categoría:</span>
  <select
- value={String(place.tipo || 'sala').toLowerCase()}
+ value={String(place.tipo ||'sala').toLowerCase()}
  onChange={(e) => handlePlaceCategoryChange(place.place_id, e.target.value as LeadType)}
  className="bg-zinc-950 border-zinc-700 text-amber-300 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus: cursor-pointer"
  >
@@ -1141,7 +1139,7 @@ export function GooglePlacesExplorerModal({
  className="flex items-center gap-1 text-sky-400 hover:underline truncate max-w-[200px]"
  >
  <Globe className="w-3 h-3" />
- <span className="truncate">{place.website.replace(/^https?:\/\//, '')}</span>
+ <span className="truncate">{place.website.replace(/^https?:\/\//,'')}</span>
  </a>
  )}
  </div>
@@ -1173,7 +1171,7 @@ export function GooglePlacesExplorerModal({
  ) : (
  <Sparkles className="w-3 h-3 text-amber-400" />
  )}
- <span>{place.extractingEmail ? 'Buscando...' : '⚡ Enriquecer'}</span>
+ <span>{place.extractingEmail ?'Buscando...' :'⚡ Enriquecer'}</span>
  </button>
  </div>
  )}
@@ -1223,7 +1221,7 @@ export function GooglePlacesExplorerModal({
  <div className="min-w-0">
  <p className="font-bold text-zinc-200 truncate">{item.nombre_sala}</p>
  <p className="text-[10px] text-zinc-500 font-mono">
- {item.ciudad ? `${item.ciudad} • ` : ''}Descartada el {new Date(item.discarded_at).toLocaleDateString()}
+ {item.ciudad ? `${item.ciudad} • ` :''}Descartada el {new Date(item.discarded_at).toLocaleDateString()}
  </p>
  </div>
  <button

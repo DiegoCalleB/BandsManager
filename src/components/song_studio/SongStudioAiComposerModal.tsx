@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
-import { Song, SongAudioIdea } from '../../types';
+import React, { useState } from'react';
+import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
+import { Song, SongAudioIdea } from'../../types';
 
 interface SongStudioAiComposerModalProps {
  isOpen: boolean;
@@ -32,12 +32,11 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  setIsGenerating(true);
  setGeneratedIdea(null);
  try {
- const token = localStorage.getItem('token') || '';
+ const token = localStorage.getItem('token') ||'';
  const res = await fetch('/api/ai-composer-arrangement', {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json',
- ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ method:'POST',
+ headers: {'Content-Type':'application/json',
+ ...(token ? {'Authorization': `Bearer ${token}` } : {})
  },
  body: JSON.stringify({
  titulo: song.titulo,
@@ -56,7 +55,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  if (data.success && data.idea) {
  setGeneratedIdea(data.idea);
  } else {
- alert(data.error || 'Error al generar idea con IA.');
+ alert(data.error ||'Error al generar idea con IA.');
  }
  } catch (err) {
  console.error('Error generating AI arrangement:', err);
@@ -69,26 +68,26 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  const handleAcceptAndAddIdea = () => {
  if (!generatedIdea) return;
 
- const ideaTextContent = `📝 ARREGLO DE MÚSICO IA (${generatedIdea.instrumentoRol || estiloMusico}) [${seccionCancion} - ${tiempoMinuto}]:\n\n${generatedIdea.descripcionArreglo}\n\nTablatura / Acordes:\n${generatedIdea.tablaturaOAcordes || 'N/A'}\n\nNotas para la banda:\n${generatedIdea.notasParaBanda || 'Ninguna'}`;
+ const ideaTextContent = `📝 ARREGLO DE MÚSICO IA (${generatedIdea.instrumentoRol || estiloMusico}) [${seccionCancion} - ${tiempoMinuto}]:\n\n${generatedIdea.descripcionArreglo}\n\nTablatura / Acordes:\n${generatedIdea.tablaturaOAcordes ||'N/A'}\n\nNotas para la banda:\n${generatedIdea.notasParaBanda ||'Ninguna'}`;
 
  // Create a data url or text-based mock audio for the idea description container if no audio file
- const blob = new Blob([ideaTextContent], { type: 'text/plain;charset=utf-8' });
+ const blob = new Blob([ideaTextContent], { type:'text/plain;charset=utf-8' });
  const url = URL.createObjectURL(blob);
 
  const newIdea: SongAudioIdea = {
  id: `idea-ai-${Date.now()}`,
  titulo: generatedIdea.tituloIdea || `Idea IA (${seccionCancion} ${tiempoMinuto})`,
- seccion: (seccionCancion.toLowerCase().replace(/\s+/g, '-') as any) || 'general',
+ seccion: (seccionCancion.toLowerCase().replace(/\s+/g,'-') as any) ||'general',
  audioUrl: url,
- fecha: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
- subidoPor: currentUsername || 'Músico IA Pro',
- instrumento: generatedIdea.instrumentoRol || 'Arreglo IA',
+ fecha: new Date().toLocaleDateString('es-ES', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+ subidoPor: currentUsername ||'Músico IA Pro',
+ instrumento: generatedIdea.instrumentoRol ||'Arreglo IA',
  comentarios: [
  {
  id: `c-${Date.now()}`,
- autor: '🤖 Asistente IA',
+ autor:'🤖 Asistente IA',
  texto: ideaTextContent,
- fecha: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+ fecha: new Date().toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' })
  }
  ],
  pistas: [
@@ -96,8 +95,8 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  id: `track-${Date.now()}-1`,
  nombre: generatedIdea.tituloIdea || `${seccionCancion} (${tiempoMinuto})`,
  audioUrl: url,
- autor: 'Músico IA',
- instrumento: generatedIdea.instrumentoRol || 'Sugerencia',
+ autor:'Músico IA',
+ instrumento: generatedIdea.instrumentoRol ||'Sugerencia',
  fecha: new Date().toLocaleDateString('es-ES'),
  volumen: 1,
  muted: false
@@ -107,7 +106,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
 
  onAddIdea(newIdea);
  onClose();
- alert(`¡Idea de arreglo "${newIdea.titulo}" añadida al estudio con éxito!`);
+ alert(`¡Idea de arreglo"${newIdea.titulo}" añadida al estudio con éxito!`);
  };
 
  return (
@@ -138,7 +137,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <Wand2 className="w-3.5 h-3.5 text-indigo-400" /> Creación de Ideas Avanzadas
  </p>
  <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
- ¿Te has quedado estancado en el local de ensayo? Nuestro músico virtual analiza la tonalidad ({song.tonalidad || 'Sin definir'}), el tempo ({song.bpm} BPM) y los acordes de "{song.titulo}" para proponerte arreglos profesionales, melodías, puentes o variaciones armónicas originales.
+ ¿Te has quedado estancado en el local de ensayo? Nuestro músico virtual analiza la tonalidad ({song.tonalidad ||'Sin definir'}), el tempo ({song.bpm} BPM) y los acordes de"{song.titulo}" para proponerte arreglos profesionales, melodías, puentes o variaciones armónicas originales.
  </p>
  </div>
 
@@ -271,8 +270,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  {generatedIdea.notasParaBanda && (
  <div>
  <strong className="text-emerald-300 font-mono block text-[11px] mb-0.5">Consejo de Estudio:</strong>
- <p className="text-[11px] text-emerald-200/90 italic">
- "{generatedIdea.notasParaBanda}"
+ <p className="text-[11px] text-emerald-200/90 italic">"{generatedIdea.notasParaBanda}"
  </p>
  </div>
  )}

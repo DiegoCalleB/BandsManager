@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { X, Users, Save, Plus, Music, Sparkles, Check } from 'lucide-react';
-import { Song, ThemeColors } from '../../types';
+import React, { useState } from'react';
+import { X, Users, Save, Plus, Music, Sparkles, Check } from'lucide-react';
+import { Song, ThemeColors } from'../../types';
 import {
  BandMemberOption,
  resolveBandMembers,
@@ -9,9 +9,9 @@ import {
  getReadinessSummary,
  READINESS_LEVELS,
  ReadinessLevel
-} from '../../utils/repertorioUtils';
-import { formatSongTitle } from '../../utils/formatSongTitle';
-import { ModalPortal } from '../common/ModalPortal';
+} from'../../utils/repertorioUtils';
+import { formatSongTitle } from'../../utils/formatSongTitle';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface MemberNotesModalProps {
  isOpen: boolean;
@@ -45,12 +45,12 @@ export function MemberNotesModal({
  });
 
  const [generalRepertorioNote, setGeneralRepertorioNote] = useState<string>(
- song?.notasRepertorio || song?.notasInternas || ''
+ song?.notasRepertorio || song?.notasInternas ||''
  );
 
  // Nivel de preparación de cada miembro con esta canción de cara al próximo bolo. Vive aparte de
- // memberNotes (texto libre para imprimir) porque son dos cosas distintas: "qué debe recordar" vs
- // "¿ya se la sabe?". Clave por nombre en minúsculas, igual que memberNotes, para reutilizar el
+ // memberNotes (texto libre para imprimir) porque son dos cosas distintas:"qué debe recordar" vs
+ //"¿ya se la sabe?". Clave por nombre en minúsculas, igual que memberNotes, para reutilizar el
  // mismo patrón de lookup que ya usa este modal.
  const [memberReadiness, setMemberReadiness] = useState<Record<string, ReadinessLevel | null>>(() => {
  const initial: Record<string, ReadinessLevel | null> = {};
@@ -89,20 +89,20 @@ export function MemberNotesModal({
  const handleAddCustomMember = () => {
  if (!newMemberName.trim()) return;
  const name = newMemberName.trim();
- const inst = newMemberInstrument.trim() || 'Músico';
+ const inst = newMemberInstrument.trim() ||'Músico';
  const key = name.toLowerCase();
 
  const newMember: BandMemberOption = {
  id: `custom-${Date.now()}`,
  name,
  instrument: inst,
- avatarColor: '#14b8a6'
+ avatarColor:'#14b8a6'
  };
 
  setCustomMembers(prev => [...prev, newMember]);
  setMemberNotes(prev => ({
  ...prev,
- [key]: ''
+ [key]:''
  }));
  setNewMemberName('');
  setNewMemberInstrument('');
@@ -122,7 +122,7 @@ export function MemberNotesModal({
  });
 
  // Preparación por miembro: parte de lo que ya hubiera guardado y aplica los cambios de esta
- // sesión, incluido "quitar" un nivel marcado por error (toggle a null en handleReadinessChange).
+ // sesión, incluido"quitar" un nivel marcado por error (toggle a null en handleReadinessChange).
  const updatedNotasPorMiembro = Array.isArray(song.notasPorMiembro) ? [...song.notasPorMiembro] : [];
  allMembersToDisplay.forEach(member => {
  const key = member.name.toLowerCase();
@@ -134,7 +134,7 @@ export function MemberNotesModal({
  if (idx >= 0) {
  updatedNotasPorMiembro[idx] = { ...updatedNotasPorMiembro[idx], estadoPreparacion: estado, updatedAt: new Date().toISOString() };
  } else {
- updatedNotasPorMiembro.push({ userId: member.id, memberName: member.name, nota: '', estadoPreparacion: estado, updatedAt: new Date().toISOString() });
+ updatedNotasPorMiembro.push({ userId: member.id, memberName: member.name, nota:'', estadoPreparacion: estado, updatedAt: new Date().toISOString() });
  }
  } else if (idx >= 0) {
  const { estadoPreparacion, ...rest } = updatedNotasPorMiembro[idx];
@@ -163,17 +163,17 @@ export function MemberNotesModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden ${
- isStitchLight ? 'bg-white ' : 'bg-[var(--bg)] '
+ isStitchLight ?'bg-white' :'bg-[var(--bg)]'
  }`}>
  {/* Header */}
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)] shrink-0">
  <div className="flex items-center gap-2.5">
- <div className={`p-2 rounded-[var(--r-m)] ${isStitchLight ? 'bg-emerald-50 text-emerald-600' : 'bg-[#1db954]/10 text-[#1db954]'}`}>
+ <div className={`p-2 rounded-[var(--r-m)] ${isStitchLight ?'bg-emerald-50 text-emerald-600' :'bg-[#1db954]/10 text-[#1db954]'}`}>
  <Users className="w-5 h-5" />
  </div>
  <div>
  <h3 className={`text-base font-black font-display uppercase tracking-wider ${
- isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]'
+ isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'
  }`}>
  Notas para Repertorio por Miembro
  </h3>
@@ -201,7 +201,7 @@ export function MemberNotesModal({
  <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400">🔶 {summary.casiLista} casi</span>
  <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400">🌱 {summary.aprendiendo} aprendiendo</span>
  {summary.sinOpinar > 0 && (
- <span className="px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-500 ">{summary.sinOpinar} sin marcar</span>
+ <span className="px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-500">{summary.sinOpinar} sin marcar</span>
  )}
  </div>
  );
@@ -209,7 +209,7 @@ export function MemberNotesModal({
 
  {/* Informational Tip */}
  <div className={`p-3 rounded-[var(--r-m)] my-3 text-xs flex items-start gap-2.5 ${
- isStitchLight ? 'bg-indigo-50 border-indigo-200 text-indigo-900' : 'bg-emerald-950/40 text-emerald-300'
+ isStitchLight ?'bg-indigo-50 border-indigo-200 text-indigo-900' :'bg-emerald-950/40 text-emerald-300'
  }`}>
  <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
  <div>
@@ -224,10 +224,10 @@ export function MemberNotesModal({
  <div className="flex-1 overflow-y-auto pr-1 space-y-4 py-1">
  {/* General Repertoire Note */}
  <div className={`p-3.5 rounded-[var(--r-m)] ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)]/90 '
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/90'
  }`}>
  <label className={`block text-xs font-bold font-mono uppercase mb-1.5 ${
- isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-3)]'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-3)]'
  }`}>
  📌 Nota General para todo el Grupo (Opcional)
  </label>
@@ -237,7 +237,7 @@ export function MemberNotesModal({
  onChange={(e) => setGeneralRepertorioNote(e.target.value)}
  placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco..."
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)] focus:border-indigo-500' : 'bg-[var(--surface)] text-[var(--sunken)] focus:border-[#1db954]'
+ isStitchLight ?'bg-white text-[var(--ink)] focus:border-indigo-500' :'bg-[var(--surface)] text-[var(--sunken)] focus:border-[#1db954]'
  }`}
  />
  </div>
@@ -245,7 +245,7 @@ export function MemberNotesModal({
  <div className="space-y-3">
  <div className="flex items-center justify-between">
  <span className={`text-xs font-mono font-bold uppercase tracking-wider ${
- isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
  }`}>
  Miembros de la Banda ({allMembersToDisplay.length})
  </span>
@@ -261,7 +261,7 @@ export function MemberNotesModal({
  {/* Add Custom Member Form */}
  {showAddCustomMember && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-wrap items-center gap-2 animate-in fade-in duration-150 ${
- isStitchLight ? 'bg-indigo-50/70 border-indigo-200' : 'bg-[var(--surface)] border-[#1db954]/40'
+ isStitchLight ?'bg-indigo-50/70 border-indigo-200' :'bg-[var(--surface)] border-[#1db954]/40'
  }`}>
  <input
  type="text"
@@ -269,7 +269,7 @@ export function MemberNotesModal({
  value={newMemberName}
  onChange={(e) => setNewMemberName(e.target.value)}
  className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${
- isStitchLight ? 'bg-white ' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white' :'bg-[var(--surface)] text-white'
  }`}
  />
  <input
@@ -278,7 +278,7 @@ export function MemberNotesModal({
  value={newMemberInstrument}
  onChange={(e) => setNewMemberInstrument(e.target.value)}
  className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${
- isStitchLight ? 'bg-white ' : 'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white' :'bg-[var(--surface)] text-white'
  }`}
  />
  <div className="flex items-center gap-1.5">
@@ -303,7 +303,7 @@ export function MemberNotesModal({
  {/* List of members with textareas */}
  {allMembersToDisplay.map((member) => {
  const memberKey = member.name.toLowerCase();
- const currentNote = memberNotes[memberKey] || '';
+ const currentNote = memberNotes[memberKey] ||'';
  const hasNote = Boolean(currentNote.trim());
 
  return (
@@ -312,23 +312,23 @@ export function MemberNotesModal({
  className={`p-3.5 rounded-[var(--r-m)] transition-all ${
  hasNote
  ? isStitchLight
- ? 'bg-emerald-50/40 border-emerald-200'
- : 'bg-[var(--surface)]/90 border-emerald-500/30'
+ ?'bg-emerald-50/40 border-emerald-200'
+ :'bg-[var(--surface)]/90 border-emerald-500/30'
  : isStitchLight
- ? 'bg-[var(--bg)]/70 '
- : 'bg-[var(--surface)]/50 '
+ ?'bg-[var(--bg)]/70'
+ :'bg-[var(--surface)]/50'
  }`}
  >
  <div className="flex items-center justify-between mb-2">
  <div className="flex items-center gap-2.5">
  <div
  className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-xs text-white uppercase shadow-sm"
- style={{ backgroundColor: member.avatarColor || '#6366f1' }}
+ style={{ backgroundColor: member.avatarColor ||'#6366f1' }}
  >
  {member.name.charAt(0)}
  </div>
  <div>
- <span className={`text-sm font-bold ${isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]'}`}>
+ <span className={`text-sm font-bold ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`}>
  {member.name}
  </span>
  <span className="ml-2 text-[11px] px-2 py-0.5 rounded-md bg-white/10 text-[var(--ink-2)] font-mono">
@@ -355,7 +355,7 @@ export function MemberNotesModal({
  className={`text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] transition-all ${
  memberReadiness[memberKey] === level.value
  ? level.colorClass
- : 'bg-white/5 text-neutral-500 border-transparent hover:border-[var(--hair)]'
+ :'bg-white/5 text-neutral-500 border-transparent hover:border-[var(--hair)]'
  }`}
  >
  {level.icon} {level.label}
@@ -370,8 +370,8 @@ export function MemberNotesModal({
  placeholder={`Notas específicas para ${member.name} (${member.instrument})... ej. Entrada en compás 8, solo con sordina, cambio de afinación...`}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors ${
  isStitchLight
- ? 'bg-white text-[var(--ink)] focus:border-indigo-500'
- : 'bg-[var(--surface)] text-[var(--sunken)] focus:border-[#1db954]'
+ ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ :'bg-[var(--surface)] text-[var(--sunken)] focus:border-[#1db954]'
  }`}
  />
  </div>
@@ -394,12 +394,12 @@ export function MemberNotesModal({
  onClick={handleSave}
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer shadow-lg ${
  savedSuccess 
- ? 'bg-emerald-500 text-white' 
- : 'bg-[#1db954] hover:bg-[#1ed760] text-black'
+ ?'bg-emerald-500 text-white' 
+ :'bg-[#1db954] hover:bg-[#1ed760] text-black'
  }`}
  >
  {savedSuccess ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
- {savedSuccess ? '¡Guardado!' : 'Guardar Notas'}
+ {savedSuccess ?'¡Guardado!' :'Guardar Notas'}
  </button>
  </div>
  </div>

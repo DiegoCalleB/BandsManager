@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState } from'react';
 import { 
  Settings, Plus, RotateCcw, Save, Trash2, ArrowUp, ArrowDown, Maximize2, Minimize2, 
  Eye, Check, Calendar, Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, LayoutGrid, X,
  GripVertical, Zap, TrendingUp, Info, Smartphone, Monitor
-} from 'lucide-react';
+} from'lucide-react';
 import { 
  DashboardWidgetConfig, DEFAULT_DASHBOARD_WIDGETS, AVAILABLE_MODULE_WIDGETS, 
  WidgetType 
-} from '../../types/dashboardWidgets';
-import { CalendarWidget } from './widgets/CalendarWidget';
+} from'../../types/dashboardWidgets';
+import { CalendarWidget } from'./widgets/CalendarWidget';
 import { 
  CrmPipelineWidget, RepertorioWidget, FinancesWidget, SocialFansWidget, 
  EpkStatusWidget, AiAgentWidget, TourStatusWidget 
-} from './widgets/ModuleWidgets';
+} from'./widgets/ModuleWidgets';
 import { 
  RepertorioEnergyChartWidget, BookingFunnelChartWidget, FinancesChartWidget, SocialFansGrowthWidget 
-} from './widgets/ChartWidgets';
-import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../types';
-import { api } from '../../services/api';
-import { hasModuleAccess } from '../../utils/planPermissions';
-import { AiSupportWidget, AiUsageCard } from './AiUsageSupportWidget';
+} from'./widgets/ChartWidgets';
+import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from'../../types';
+import { api } from'../../services/api';
+import { hasModuleAccess } from'../../utils/planPermissions';
+import { AiSupportWidget, AiUsageCard } from'./AiUsageSupportWidget';
 
 export interface DashboardWidgetGridProps {
  currentUser?: any;
@@ -33,8 +33,8 @@ export interface DashboardWidgetGridProps {
  activeBandName?: string;
  colors: ThemeColors;
  isStitchLight?: boolean;
- agendaFilterMode: 'active' | 'all';
- onSetAgendaFilterMode: (mode: 'active' | 'all') => void;
+ agendaFilterMode:'active' |'all';
+ onSetAgendaFilterMode: (mode:'active' |'all') => void;
  onNavigate?: (view: string, options?: any) => void;
 }
 
@@ -103,13 +103,13 @@ export function DashboardWidgetGrid({
  // Drag and drop handlers
  const handleDragStart = (e: React.DragEvent, id: string) => {
  setDraggedWidgetId(id);
- e.dataTransfer.effectAllowed = 'move';
+ e.dataTransfer.effectAllowed ='move';
  e.dataTransfer.setData('text/plain', id);
  };
 
  const handleDragOver = (e: React.DragEvent, id: string) => {
  e.preventDefault();
- e.dataTransfer.dropEffect = 'move';
+ e.dataTransfer.dropEffect ='move';
  if (draggedWidgetId && draggedWidgetId !== id) {
  setDragOverWidgetId(id);
  }
@@ -147,8 +147,8 @@ export function DashboardWidgetGrid({
  };
 
  // Move widget up/down manually
- const handleMoveWidget = (index: number, direction: 'up' | 'down') => {
- const targetIdx = direction === 'up' ? index - 1 : index + 1;
+ const handleMoveWidget = (index: number, direction:'up' |'down') => {
+ const targetIdx = direction ==='up' ? index - 1 : index + 1;
  if (targetIdx < 0 || targetIdx >= widgets.length) return;
 
  const copy = [...widgets];
@@ -166,7 +166,7 @@ export function DashboardWidgetGrid({
  };
 
  // Change height mode (hSpan)
- const handleChangeHSpan = (id: string, newHSpan: 'compact' | 'normal' | 'tall') => {
+ const handleChangeHSpan = (id: string, newHSpan:'compact' |'normal' |'tall') => {
  const updated = widgets.map(w => w.id === id ? { ...w, hSpan: newHSpan } : w);
  updateAndSaveWidgets(updated);
  };
@@ -220,17 +220,17 @@ export function DashboardWidgetGrid({
  type,
  title: meta.title,
  wSpan: meta.defaultWSpan,
- hSpan: meta.defaultHSpan || 'normal',
+ hSpan: meta.defaultHSpan ||'normal',
  visible: true,
  order: widgets.length,
- settings: type === 'calendar' ? { calendarViewMode: 'list', calendarFilter: 'all' } : undefined
+ settings: type ==='calendar' ? { calendarViewMode:'list', calendarFilter:'all' } : undefined
  };
 
  updateAndSaveWidgets([...widgets, newWidget]);
  setIsAddModalOpen(false);
  };
 
- const categories = ['Todos', 'Música & Repertorio', 'Booking & CRM', 'Calendario & Agenda', 'Negocio & Finanzas', 'Público & Redes', 'Promoción & IA'];
+ const categories = ['Todos','Música & Repertorio','Booking & CRM','Calendario & Agenda','Negocio & Finanzas','Público & Redes','Promoción & IA'];
 
  // Filter available widgets in catalogue by module access according to current plan
  const allowedLibrary = AVAILABLE_MODULE_WIDGETS.filter(item => {
@@ -239,16 +239,16 @@ export function DashboardWidgetGrid({
  });
 
  const filteredLibrary = allowedLibrary.filter(item => {
- if (selectedCategory === 'Todos') return true;
+ if (selectedCategory ==='Todos') return true;
  return item.category === selectedCategory;
  });
 
  // Render individual widget by type
  const renderWidgetContent = (widget: DashboardWidgetConfig) => {
- const heightMode = widget.hSpan || 'normal';
+ const heightMode = widget.hSpan ||'normal';
 
  switch (widget.type) {
- case 'calendar':
+ case'calendar':
  return (
  <CalendarWidget
  concerts={concerts}
@@ -259,34 +259,34 @@ export function DashboardWidgetGrid({
  agendaFilterMode={agendaFilterMode}
  onSetAgendaFilterMode={onSetAgendaFilterMode}
  onNavigate={onNavigate}
- viewMode={widget.settings?.calendarViewMode || 'list'}
+ viewMode={widget.settings?.calendarViewMode ||'list'}
  onChangeViewMode={(mode) => handleUpdateWidgetSettings(widget.id, { calendarViewMode: mode })}
- filterType={widget.settings?.calendarFilter || 'all'}
+ filterType={widget.settings?.calendarFilter ||'all'}
  onChangeFilterType={(f) => handleUpdateWidgetSettings(widget.id, { calendarFilter: f })}
  isEditMode={isEditMode}
  />
  );
- case 'repertorio_energy':
+ case'repertorio_energy':
  return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} />;
- case 'crm_pipeline':
+ case'crm_pipeline':
  return <CrmPipelineWidget leads={leads} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
- case 'booking_funnel_chart':
+ case'booking_funnel_chart':
  return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} />;
- case 'finances_chart':
+ case'finances_chart':
  return <FinancesChartWidget concerts={concerts} onNavigate={onNavigate} heightMode={heightMode} />;
- case 'social_fans_chart':
+ case'social_fans_chart':
  return <SocialFansGrowthWidget fans={fans} onNavigate={onNavigate} heightMode={heightMode} />;
- case 'repertorio_summary':
+ case'repertorio_summary':
  return <RepertorioWidget onNavigate={onNavigate} isStitchLight={isStitchLight} />;
- case 'finances_summary':
+ case'finances_summary':
  return <FinancesWidget concerts={concerts} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
- case 'social_fans':
+ case'social_fans':
  return <SocialFansWidget fans={fans} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
- case 'epk_status':
+ case'epk_status':
  return <EpkStatusWidget epkConfig={epkConfig} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
- case 'ai_agent_status':
+ case'ai_agent_status':
  return <AiAgentWidget leads={leads} currentUser={currentUser} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
- case 'tour_status':
+ case'tour_status':
  return <TourStatusWidget tours={tours} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
  default:
  return null;
@@ -340,12 +340,12 @@ export function DashboardWidgetGrid({
  onClick={() => setIsEditMode(!isEditMode)}
  className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-semibold transition-[filter] cursor-pointer flex items-center gap-1.5 ${
  isEditMode
- ? 'bg-[var(--acc)] text-[var(--on-acc)]'
- : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:brightness-110 hover:text-[var(--ink)]'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:brightness-110 hover:text-[var(--ink)]'
  }`}
  >
- <Settings className={`w-4 h-4 ${isEditMode ? 'text-[var(--on-acc)]' : 'text-[var(--acc-ink)]'}`} />
- <span>{isEditMode ? 'Finalizar Edición' : 'Personalizar Dashboard'}</span>
+ <Settings className={`w-4 h-4 ${isEditMode ?'text-[var(--on-acc)]' :'text-[var(--acc-ink)]'}`} />
+ <span>{isEditMode ?'Finalizar Edición' :'Personalizar Dashboard'}</span>
  </button>
 
  {isEditMode && (
@@ -401,11 +401,11 @@ export function DashboardWidgetGrid({
  <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
  {visibleWidgets.map((widget, index) => {
  // Determine grid col span class
- let colSpanClass = 'md:col-span-12';
- if (widget.wSpan === 3) colSpanClass = 'md:col-span-3';
- else if (widget.wSpan === 4) colSpanClass = 'md:col-span-4';
- else if (widget.wSpan === 6) colSpanClass = 'md:col-span-6';
- else if (widget.wSpan === 8) colSpanClass = 'md:col-span-8';
+ let colSpanClass ='md:col-span-12';
+ if (widget.wSpan === 3) colSpanClass ='md:col-span-3';
+ else if (widget.wSpan === 4) colSpanClass ='md:col-span-4';
+ else if (widget.wSpan === 6) colSpanClass ='md:col-span-6';
+ else if (widget.wSpan === 8) colSpanClass ='md:col-span-8';
 
  const isDragging = draggedWidgetId === widget.id;
  const isDragOver = dragOverWidgetId === widget.id;
@@ -420,11 +420,11 @@ export function DashboardWidgetGrid({
  onDrop={(e) => handleDrop(e, widget.id)}
  onDragEnd={handleDragEnd}
  className={`${colSpanClass} relative transition-all duration-200 ${
- isDragging ? 'opacity-40 scale-[0.98]' : ''
+ isDragging ?'opacity-40 scale-[0.98]' :''
  } ${
- isDragOver ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#121214] rounded-[var(--r-l)] bg-amber-500/10' : ''
+ isDragOver ?'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#121214] rounded-[var(--r-l)] bg-amber-500/10' :''
  } ${
- isEditMode ? 'ring-2 ring-amber-500/40 rounded-[var(--r-l)] p-1 bg-amber-500/5 hover:ring-amber-400' : ''
+ isEditMode ?'ring-2 ring-amber-500/40 rounded-[var(--r-l)] p-1 bg-amber-500/5 hover:ring-amber-400' :''
  }`}
  >
  {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
@@ -448,11 +448,11 @@ export function DashboardWidgetGrid({
  onClick={() => handleChangeWSpan(widget.id, spanVal)}
  className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
  widget.wSpan === spanVal
- ? 'bg-amber-500 text-stone-950'
- : 'text-[var(--ink-2)] hover:text-white'
+ ?'bg-amber-500 text-stone-950'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
- {spanVal === 3 ? '25%' : spanVal === 4 ? '33%' : spanVal === 6 ? '50%' : spanVal === 8 ? '66%' : '100%'}
+ {spanVal === 3 ?'25%' : spanVal === 4 ?'33%' : spanVal === 6 ?'50%' : spanVal === 8 ?'66%' :'100%'}
  </button>
  ))}
  </div>
@@ -460,18 +460,18 @@ export function DashboardWidgetGrid({
  {/* Height options */}
  <div className="flex items-center gap-0.5 bg-stone-900 border-stone-800 p-0.5 rounded-[var(--r-s)] text-[10px]">
  <span className="text-neutral-500 px-1 font-bold">Alto:</span>
- {(['compact', 'normal', 'tall'] as const).map(hVal => (
+ {(['compact','normal','tall'] as const).map(hVal => (
  <button
  key={hVal}
  type="button"
  onClick={() => handleChangeHSpan(widget.id, hVal)}
  className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
- (widget.hSpan || 'normal') === hVal
- ? 'bg-purple-500 text-white'
- : 'text-[var(--ink-2)] hover:text-white'
+ (widget.hSpan ||'normal') === hVal
+ ?'bg-purple-500 text-white'
+ :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
- {hVal === 'compact' ? 'Bajo' : hVal === 'normal' ? 'Med' : 'Alto'}
+ {hVal ==='compact' ?'Bajo' : hVal ==='normal' ?'Med' :'Alto'}
  </button>
  ))}
  </div>
@@ -480,7 +480,7 @@ export function DashboardWidgetGrid({
  <div className="flex items-center gap-0.5">
  <button
  type="button"
- onClick={() => handleMoveWidget(index, 'up')}
+ onClick={() => handleMoveWidget(index,'up')}
  disabled={index === 0}
  className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-neutral-800 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
  title="Mover arriba"
@@ -489,7 +489,7 @@ export function DashboardWidgetGrid({
  </button>
  <button
  type="button"
- onClick={() => handleMoveWidget(index, 'down')}
+ onClick={() => handleMoveWidget(index,'down')}
  disabled={index === visibleWidgets.length - 1}
  className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-neutral-800 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
  title="Mover abajo"
@@ -568,8 +568,8 @@ export function DashboardWidgetGrid({
  onClick={() => setSelectedCategory(cat)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold whitespace-nowrap cursor-pointer transition-all ${
  selectedCategory === cat
- ? 'bg-amber-500 text-stone-950 shadow-xs'
- : 'bg-neutral-800/60 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ ?'bg-amber-500 text-stone-950 shadow-xs'
+ :'bg-neutral-800/60 text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  {cat}
@@ -590,7 +590,7 @@ export function DashboardWidgetGrid({
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-2">
  <span className="text-sm font-bold text-[var(--sunken)]">{item.title}</span>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-800 text-amber-400 ">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-800 text-amber-400">
  {item.category}
  </span>
  </div>
@@ -605,7 +605,7 @@ export function DashboardWidgetGrid({
  className="px-3.5 py-2 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95 shadow-sm"
  >
  <Plus className="w-4 h-4" />
- <span>{isAlreadyAdded ? 'Añadir Otro' : 'Añadir'}</span>
+ <span>{isAlreadyAdded ?'Añadir Otro' :'Añadir'}</span>
  </button>
  </div>
  );

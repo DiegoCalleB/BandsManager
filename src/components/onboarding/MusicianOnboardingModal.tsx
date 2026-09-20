@@ -1,8 +1,8 @@
-import React from 'react';
-import { Calendar, BookOpen, Disc3, ArrowRight, Sparkles, X, CheckCircle2, Music2, ShieldCheck, Globe, Check } from 'lucide-react';
-import { NavItemId } from '../../config/navGroups';
-import { markOnboardingCompleted } from '../../utils/userPreferences';
-import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from '../../context/LanguageContext';
+import React from'react';
+import { Calendar, BookOpen, Disc3, ArrowRight, Sparkles, X, CheckCircle2, Music2, ShieldCheck, Globe, Check } from'lucide-react';
+import { NavItemId } from'../../config/navGroups';
+import { markOnboardingCompleted } from'../../utils/userPreferences';
+import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from'../../context/LanguageContext';
 
 interface MusicianOnboardingModalProps {
  isOpen: boolean;
@@ -23,7 +23,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  const handleChooseMission = (view: NavItemId) => {
  markOnboardingCompleted(undefined, { onboarding: true }, true).catch(() => {});
- if (typeof window !== 'undefined') {
+ if (typeof window !=='undefined') {
  window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
  }
  onSelectMission(view);
@@ -32,7 +32,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  const handleDismiss = () => {
  markOnboardingCompleted(undefined, { onboarding: true }, true).catch(() => {});
- if (typeof window !== 'undefined') {
+ if (typeof window !=='undefined') {
  window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
  }
  onClose();
@@ -76,8 +76,8 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  onClick={() => setAppLang(l.code)}
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
- ? 'bg-amber-400 text-stone-950 font-bold shadow-sm scale-105'
- : 'bg-neutral-800/70 hover:bg-neutral-800 text-[var(--ink-3)] border-[var(--hair)]'
+ ?'bg-amber-400 text-stone-950 font-bold shadow-sm scale-105'
+ :'bg-neutral-800/70 hover:bg-neutral-800 text-[var(--ink-3)] border-[var(--hair)]'
  }`}
  title={l.label}
  >

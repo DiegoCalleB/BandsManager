@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { Lead, LeadStatus } from '../../types';
-import { VenueDetailPanel } from './VenueDetailPanel';
-import { X, Building2 } from 'lucide-react';
+import React, { useEffect } from'react';
+import { createPortal } from'react-dom';
+import { Lead, LeadStatus } from'../../types';
+import { VenueDetailPanel } from'./VenueDetailPanel';
+import { X, Building2 } from'lucide-react';
 
 interface MobileBottomSheetProps {
  selectedLead: Lead | null;
@@ -15,7 +15,7 @@ interface MobileBottomSheetProps {
  normalizeStatus: (status: string) => LeadStatus;
  normalizeType: (type?: string) => string;
  autoDetectVenueAddress: (venueName: string, city: string) => string;
- sectionTab: 'salas' | 'medios' | 'grupos';
+ sectionTab:'salas' |'medios' |'grupos';
  isStitchLight?: boolean;
  activeCampaign?: any;
  onLeadLogoUpload?: (file: File) => void;
@@ -41,12 +41,12 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
 }) => {
  useEffect(() => {
  if (selectedLead) {
- document.body.style.overflow = 'hidden';
+ document.body.style.overflow ='hidden';
  } else {
- document.body.style.overflow = '';
+ document.body.style.overflow ='';
  }
  return () => {
- document.body.style.overflow = '';
+ document.body.style.overflow ='';
  };
  }, [selectedLead]);
 

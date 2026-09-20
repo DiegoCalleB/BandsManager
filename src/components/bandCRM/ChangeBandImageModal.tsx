@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { X, Upload, Sparkles, Link as LinkIcon, Trash2, Camera, Loader2, Check } from 'lucide-react';
-import { BandContact } from '../../types';
-import { apiFetch } from '../../utils/api';
-import { uploadFileToServer } from '../../utils/audioStorage';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { X, Upload, Sparkles, Link as LinkIcon, Trash2, Camera, Loader2, Check } from'lucide-react';
+import { BandContact } from'../../types';
+import { apiFetch } from'../../utils/api';
+import { uploadFileToServer } from'../../utils/audioStorage';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface ChangeBandImageModalProps {
  band: BandContact | null;
@@ -22,7 +22,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  const [isSearching, setIsSearching] = useState(false);
  const [customUrl, setCustomUrl] = useState('');
  const [showUrlInput, setShowUrlInput] = useState(false);
- const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+ const [statusMsg, setStatusMsg] = useState<{ type:'success' |'error'; text: string } | null>(null);
 
  if (!isOpen || !band) return null;
 
@@ -33,17 +33,17 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  setStatusMsg(null);
 
  try {
- const uploadedUrl = await uploadFileToServer(file, { category: 'grupos' });
+ const uploadedUrl = await uploadFileToServer(file, { category:'grupos' });
  if (uploadedUrl) {
  onUpdateBand(band.id, { imagen_url: uploadedUrl });
- setStatusMsg({ type: 'success', text: '¡Imagen subida con éxito!' });
+ setStatusMsg({ type:'success', text:'¡Imagen subida con éxito!' });
  setTimeout(() => onClose(), 600);
  } else {
- setStatusMsg({ type: 'error', text: 'Error al subir la imagen' });
+ setStatusMsg({ type:'error', text:'Error al subir la imagen' });
  }
  } catch (err) {
  console.error('Error subiendo imagen:', err);
- setStatusMsg({ type: 'error', text: 'Fallo al procesar el archivo' });
+ setStatusMsg({ type:'error', text:'Fallo al procesar el archivo' });
  } finally {
  setIsUploading(false);
  }
@@ -55,8 +55,8 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
 
  try {
  const res = await apiFetch('/api/bands/ai-lookup', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:'POST',
+ headers: {'Content-Type':'application/json' },
  body: JSON.stringify({
  nombre_banda: band.nombre_banda,
  localizacion: band.localizacion,
@@ -65,7 +65,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  });
 
  if (res.success && res.data) {
- const newImg = res.data.imagen_url || '';
+ const newImg = res.data.imagen_url ||'';
  const newIcon = res.data.icono || band.icono;
  
  onUpdateBand(band.id, {
@@ -74,17 +74,17 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  });
 
  if (newImg) {
- setStatusMsg({ type: 'success', text: '¡Logo encontrado e instalado!' });
+ setStatusMsg({ type:'success', text:'¡Logo encontrado e instalado!' });
  } else {
- setStatusMsg({ type: 'error', text: 'No se encontró una imagen oficial pública' });
+ setStatusMsg({ type:'error', text:'No se encontró una imagen oficial pública' });
  }
  setTimeout(() => onClose(), 800);
  } else {
- setStatusMsg({ type: 'error', text: 'No se obtuvo respuesta de la búsqueda' });
+ setStatusMsg({ type:'error', text:'No se obtuvo respuesta de la búsqueda' });
  }
  } catch (err) {
  console.error('Error buscando logo con IA:', err);
- setStatusMsg({ type: 'error', text: 'Error en la búsqueda con IA' });
+ setStatusMsg({ type:'error', text:'Error en la búsqueda con IA' });
  } finally {
  setIsSearching(false);
  }
@@ -93,13 +93,13 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  const handleSaveCustomUrl = () => {
  if (!customUrl.trim()) return;
  onUpdateBand(band.id, { imagen_url: customUrl.trim() });
- setStatusMsg({ type: 'success', text: 'URL guardada' });
+ setStatusMsg({ type:'success', text:'URL guardada' });
  setTimeout(() => onClose(), 500);
  };
 
  const handleRemoveImage = () => {
- onUpdateBand(band.id, { imagen_url: '' });
- setStatusMsg({ type: 'success', text: 'Imagen eliminada' });
+ onUpdateBand(band.id, { imagen_url:'' });
+ setStatusMsg({ type:'success', text:'Imagen eliminada' });
  setTimeout(() => onClose(), 500);
  };
 
@@ -132,15 +132,15 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  <img src={band.imagen_url} alt={band.nombre_banda} className="w-20 h-20 rounded-[var(--r-l)] object-cover border-2 border-[var(--acc)] shadow-lg" />
  ) : (
  <div className="w-20 h-20 rounded-[var(--r-l)] bg-zinc-800 border-2 border-zinc-700 flex items-center justify-center text-3xl shadow-inner">
- {band.icono || '🎸'}
+ {band.icono ||'🎸'}
  </div>
  )}
  </div>
  </div>
 
  {statusMsg && (
- <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${statusMsg.type === 'success' ? 'bg-emerald-950/80 border-emerald-800 text-emerald-300' : 'bg-rose-950/80 border-rose-800 text-rose-300'}`}>
- {statusMsg.type === 'success' && <Check className="w-4 h-4" />}
+ <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${statusMsg.type ==='success' ?'bg-emerald-950/80 border-emerald-800 text-emerald-300' :'bg-rose-950/80 border-rose-800 text-rose-300'}`}>
+ {statusMsg.type ==='success' && <Check className="w-4 h-4" />}
  <span>{statusMsg.text}</span>
  </div>
  )}
@@ -150,7 +150,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  <div className="flex items-center gap-3">
  <div className="p-2 bg-zinc-800 text-[var(--acc)] rounded-[var(--r-s)]">{isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}</div>
  <div>
- <span className="block font-bold text-xs text-zinc-200">{isUploading ? 'Subiendo...' : 'Subir desde dispositivo'}</span>
+ <span className="block font-bold text-xs text-zinc-200">{isUploading ?'Subiendo...' :'Subir desde dispositivo'}</span>
  <span className="block text-[11px] text-zinc-400 font-sans">Formatos JPG, PNG, WEBP o SVG</span>
  </div>
  </div>

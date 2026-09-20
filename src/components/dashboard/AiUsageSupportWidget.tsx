@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Zap } from 'lucide-react';
-import { api } from '../../services/api';
+import React, { useEffect, useState } from'react';
+import { Zap } from'lucide-react';
+import { api } from'../../services/api';
 
-const KOFI_URL = 'https://ko-fi.com/bandmanager';
+const KOFI_URL ='https://ko-fi.com/bandmanager';
 /**
  * Bote de billetes/monedas neón que pidió Diego para el CTA de aportación económica: es el
- * mismo asset que ya usa FansLanding.tsx en su tarjeta "Colabora con una aportación económica"
+ * mismo asset que ya usa FansLanding.tsx en su tarjeta"Colabora con una aportación económica"
  * (public/Screenshot_20260824_164054_Google.jpg), reutilizado en vez de duplicarlo.
  */
-const BUCKET_ICON_SRC = '/Screenshot_20260824_164054_Google.jpg';
+const BUCKET_ICON_SRC ='/Screenshot_20260824_164054_Google.jpg';
 
 /**
- * A propósito no monta ningún checkout propio: ya existe uno (Stripe con "pay what you want",
+ * A propósito no monta ningún checkout propio: ya existe uno (Stripe con"pay what you want",
  * server/routes/donations.ts) pero mantener dos vías de donar a la vez es justo el patrón de
- * "flujo divergente" que este proyecto ya sufrió una vez con el login de Gmail. Ko-fi es el único
- * botón de "aportar" visible; el checkout de Stripe se queda montado y probado por si algún día
+ *"flujo divergente" que este proyecto ya sufrió una vez con el login de Gmail. Ko-fi es el único
+ * botón de"aportar" visible; el checkout de Stripe se queda montado y probado por si algún día
  * hace falta un cobro dentro de la propia app, pero no se enlaza desde ningún sitio.
  */
 function useAiDebtEur(): number | null {
@@ -32,15 +32,15 @@ function useAiDebtEur(): number | null {
 }
 
 interface AiSupportWidgetProps {
- variant: 'sidebar' | 'card';
+ variant:'sidebar' |'card';
 }
 
 /** CTA de apoyo económico a BandManager.io. Independiente de la tarjeta de consumo de IA. */
 export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => {
  const owedEur = useAiDebtEur();
- const costeLabel = owedEur === null ? '—' : `${owedEur.toFixed(2).replace('.', ',')} €`;
+ const costeLabel = owedEur === null ?'—' : `${owedEur.toFixed(2).replace('.',',')} €`;
 
- if (variant === 'sidebar') {
+ if (variant ==='sidebar') {
  return (
  <a
  href={KOFI_URL}
@@ -87,7 +87,7 @@ interface AiUsageCardProps {
 }
 
 // Por debajo de esto no merece la pena ni mostrar la tarjeta: Diego prefiere que una banda que
-// apenas ha usado IA este mes no vea un número casi a cero, en vez de "ocultar hasta que gaste".
+// apenas ha usado IA este mes no vea un número casi a cero, en vez de"ocultar hasta que gaste".
 const MIN_EUR_TO_SHOW_USAGE = 2;
 
 /** Tarjeta puramente informativa: cuánto ha gastado la banda en IA este mes. Sin CTA propio.
@@ -97,7 +97,7 @@ export const AiUsageCard: React.FC<AiUsageCardProps> = () => {
 
  if (owedEur === null || owedEur <= MIN_EUR_TO_SHOW_USAGE) return null;
 
- const costeLabel = `${owedEur.toFixed(2).replace('.', ',')} €`;
+ const costeLabel = `${owedEur.toFixed(2).replace('.',',')} €`;
 
  return (
  <div className="p-4 sm:p-5 rounded-[var(--r-l)] transition-colors flex items-center gap-3 bg-[var(--surface)] text-[var(--ink)]">

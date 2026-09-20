@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { ThemeColors, Payment } from '../../types';
-import { X, Plus } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { ThemeColors, Payment } from'../../types';
+import { X, Plus } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface AddTransactionModalProps {
  isOpen: boolean;
@@ -16,12 +16,12 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClose,
  onAddPayment,
 }) => {
- const [tipo, setTipo] = useState<'ingreso' | 'gasto'>('ingreso');
+ const [tipo, setTipo] = useState<'ingreso' |'gasto'>('ingreso');
  const [categoria, setCategoria] = useState<Payment['categoria']>('concierto');
  const [concepto, setConcepto] = useState('');
  const [importe, setImporte] = useState('');
  const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
- const [estado, setEstado] = useState<'pendiente' | 'pagado'>('pagado');
+ const [estado, setEstado] = useState<'pendiente' |'pagado'>('pagado');
  const [isSubmitting, setIsSubmitting] = useState(false);
 
  if (!isOpen) return null;
@@ -33,7 +33,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  setIsSubmitting(true);
  try {
  const newPayment: Payment = {
- id: 'pay-' + Date.now(),
+ id:'pay-' + Date.now(),
  tipo,
  categoria,
  concepto,
@@ -88,9 +88,9 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  type="button"
  onClick={() => setTipo('ingreso')}
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
- tipo === 'ingreso'
- ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
- : 'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent hover:bg-[var(--surface)]'
+ tipo ==='ingreso'
+ ?'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+ :'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent hover:bg-[var(--surface)]'
  }`}
  >
  Ingreso (+€)
@@ -99,9 +99,9 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  type="button"
  onClick={() => setTipo('gasto')}
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
- tipo === 'gasto'
- ? 'bg-rose-500/20 text-rose-400 border-rose-500'
- : 'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent hover:bg-[var(--surface)]'
+ tipo ==='gasto'
+ ?'bg-rose-500/20 text-rose-400 border-rose-500'
+ :'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent hover:bg-[var(--surface)]'
  }`}
  >
  Gasto (-€)
@@ -181,9 +181,9 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  type="button"
  onClick={() => setEstado('pagado')}
  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
- estado === 'pagado'
- ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
- : 'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent'
+ estado ==='pagado'
+ ?'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+ :'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent'
  }`}
  >
  Pagado / Completado
@@ -192,9 +192,9 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  type="button"
  onClick={() => setEstado('pendiente')}
  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
- estado === 'pendiente'
- ? 'bg-amber-500/20 text-amber-400 '
- : 'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent'
+ estado ==='pendiente'
+ ?'bg-amber-500/20 text-amber-400'
+ :'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent'
  }`}
  >
  Pendiente / Cobro futuro
@@ -208,7 +208,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  disabled={isSubmitting}
  className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50"
  >
- {isSubmitting ? 'Guardando...' : 'Guardar Transacción'}
+ {isSubmitting ?'Guardando...' :'Guardar Transacción'}
  </button>
  </div>
  </form>

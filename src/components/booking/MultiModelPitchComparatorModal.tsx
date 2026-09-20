@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Lead } from '../../types';
-import { api } from '../../services/api';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState, useEffect } from'react';
+import { Lead } from'../../types';
+import { api } from'../../services/api';
+import { ModalPortal } from'../common/ModalPortal';
 import {
  X,
  Sparkles,
@@ -19,7 +19,7 @@ import {
  TrendingDown,
  Calculator,
  HelpCircle
-} from 'lucide-react';
+} from'lucide-react';
 
 interface MultiModelPitchComparatorModalProps {
  isOpen: boolean;
@@ -48,7 +48,7 @@ interface ProposalItem {
  modelName: string;
  text: string;
  fallbackText?: string;
- status: 'success' | 'error';
+ status:'success' |'error';
  durationMs: number;
  error?: string;
  costEstimate?: CostEstimateInfo;
@@ -82,14 +82,14 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  activeCampaign
 }) => {
  const [providers, setProviders] = useState<AIProviderInfo[]>([]);
- const [selectedProviders, setSelectedProviders] = useState<string[]>(['deepseek', 'gemini']);
+ const [selectedProviders, setSelectedProviders] = useState<string[]>(['deepseek','gemini']);
  const [proposals, setProposals] = useState<ProposalItem[]>([]);
  const [isLoading, setIsLoading] = useState(false);
  const [customComment, setCustomComment] = useState('');
  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
  const [selectedProposalIndex, setSelectedProposalIndex] = useState<number | null>(null);
  const [appliedSuccess, setAppliedSuccess] = useState<string | null>(null);
- const [volumeScale, setVolumeScale] = useState<'1' | '100' | '1000'>('1');
+ const [volumeScale, setVolumeScale] = useState<'1' |'100' |'1000'>('1');
  const [showCostBreakdown, setShowCostBreakdown] = useState(true);
 
  // Load providers on mount
@@ -140,7 +140,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  }
  } catch (err: any) {
  console.error('Error generating multi-model pitch:', err);
- alert(`Error al generar propuestas con los modelos seleccionados: ${err.message || 'Verifica la conexión'}`);
+ alert(`Error al generar propuestas con los modelos seleccionados: ${err.message ||'Verifica la conexión'}`);
  } finally {
  setIsLoading(false);
  }
@@ -153,7 +153,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  };
 
  const handleChooseProposal = (proposal: ProposalItem, index: number) => {
- const textToApply = proposal.text || proposal.fallbackText || '';
+ const textToApply = proposal.text || proposal.fallbackText ||'';
  if (!textToApply) return;
  setSelectedProposalIndex(index);
  onSelectProposal(textToApply, proposal.provider);
@@ -166,21 +166,21 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  const getProviderDisplayName = (id: string) => {
  const found = providers.find(p => p.id === id);
  if (found) return found.shortName;
- if (id === 'gemini') return 'Google Gemini';
- if (id === 'deepseek') return 'DeepSeek V3';
+ if (id ==='gemini') return'Google Gemini';
+ if (id ==='deepseek') return'DeepSeek V3';
  return id.toUpperCase();
  };
 
  const getProviderIcon = (id: string) => {
- if (id === 'gemini') return '⚡';
- if (id === 'deepseek') return '🚀';
- return '🤖';
+ if (id ==='gemini') return'⚡';
+ if (id ==='deepseek') return'🚀';
+ return'🤖';
  };
 
  const getProviderBadge = (id: string) => {
- if (id === 'gemini') return 'bg-amber-500/15 text-amber-300 /30';
- if (id === 'deepseek') return 'bg-sky-500/15 text-sky-300 border-sky-500/30';
- return 'bg-zinc-800 text-zinc-300 border-zinc-700';
+ if (id ==='gemini') return'bg-amber-500/15 text-amber-300 /30';
+ if (id ==='deepseek') return'bg-sky-500/15 text-sky-300 border-sky-500/30';
+ return'bg-zinc-800 text-zinc-300 border-zinc-700';
  };
 
  const getFallbackCostEstimate = (provider: string, charCount: number): CostEstimateInfo => {
@@ -189,7 +189,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  const total = estInTokens + estOutTokens;
  let rateIn = 0.10;
  let rateOut = 0.40;
- if (provider === 'deepseek') {
+ if (provider ==='deepseek') {
  rateIn = 0.14;
  rateOut = 0.28;
  }
@@ -203,9 +203,9 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  ratePer1MOutputUsd: rateOut,
  costUsd,
  costEur,
- costEurFormatted: `${costEur.toFixed(5).replace('.', ',')} €`,
- costPer100EurFormatted: `${(costEur * 100).toFixed(3).replace('.', ',')} €`,
- costPer1000EurFormatted: `${(costEur * 1000).toFixed(2).replace('.', ',')} €`
+ costEurFormatted: `${costEur.toFixed(5).replace('.',',')} €`,
+ costPer100EurFormatted: `${(costEur * 100).toFixed(3).replace('.',',')} €`,
+ costPer1000EurFormatted: `${(costEur * 1000).toFixed(2).replace('.',',')} €`
  };
  };
 
@@ -252,10 +252,10 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="flex items-center gap-2 text-xs">
  <span className="text-zinc-400 font-mono text-[11px]">SALA DESTINO:</span>
  <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900 border-zinc-700 text-amber-300 font-bold">
- 🏟️ {lead.nombre_sala} ({lead.ciudad || 'España'})
+ 🏟️ {lead.nombre_sala} ({lead.ciudad ||'España'})
  </span>
  <span className="text-zinc-500 text-[11px]">
- • Tipo: {lead.tipo || 'sala'} • Aforo: {lead.aforo || 'N/D'}
+ • Tipo: {lead.tipo ||'sala'} • Aforo: {lead.aforo ||'N/D'}
  </span>
  </div>
 
@@ -263,8 +263,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className="text-[11px] text-zinc-400 mr-1 font-mono">Motores activos:</span>
  {[
- { id: 'deepseek', name: 'DeepSeek V3', icon: '🚀' },
- { id: 'gemini', name: 'Gemini 3.7 Flash', icon: '⚡' }
+ { id:'deepseek', name:'DeepSeek V3', icon:'🚀' },
+ { id:'gemini', name:'Gemini 3.7 Flash', icon:'⚡' }
  ].map(prov => {
  const isSelected = selectedProviders.includes(prov.id);
  return (
@@ -274,8 +274,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => handleToggleProvider(prov.id)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isSelected
- ? 'bg-amber-500/20 text-amber-300 /50'
- : 'bg-zinc-900/60 text-zinc-500 border-zinc-800 hover:border-zinc-700'
+ ?'bg-amber-500/20 text-amber-300 /50'
+ :'bg-zinc-900/60 text-zinc-500 border-zinc-800 hover:border-zinc-700'
  }`}
  >
  <span>{prov.icon}</span>
@@ -294,10 +294,10 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  type="text"
  value={customComment}
  onChange={e => setCustomComment(e.target.value)}
- placeholder="Ajuste puntual opcional: Ej. 'Destacar que tenemos 100k streams', 'Proponer viernes o sábado'..."
+ placeholder="Ajuste puntual opcional: Ej.'Destacar que tenemos 100k streams','Proponer viernes o sábado'..."
  className="w-full px-3 py-2 bg-black/60 rounded-[var(--r-m)] border-zinc-700 text-xs text-zinc-100 placeholder-zinc-500 font-sans focus:outline-none focus:"
  onKeyDown={e => {
- if (e.key === 'Enter') handleRunComparison();
+ if (e.key ==='Enter') handleRunComparison();
  }}
  />
  </div>
@@ -347,9 +347,9 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  type="button"
  onClick={() => setVolumeScale('1')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
- volumeScale === '1'
- ? 'bg-amber-500 text-black shadow-sm'
- : 'text-zinc-400 hover:text-zinc-200'
+ volumeScale ==='1'
+ ?'bg-amber-500 text-black shadow-sm'
+ :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
  1 Pitch
@@ -358,9 +358,9 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  type="button"
  onClick={() => setVolumeScale('100')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
- volumeScale === '100'
- ? 'bg-amber-500 text-black shadow-sm'
- : 'text-zinc-400 hover:text-zinc-200'
+ volumeScale ==='100'
+ ?'bg-amber-500 text-black shadow-sm'
+ :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
  100 Salas (1 Gira)
@@ -369,9 +369,9 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  type="button"
  onClick={() => setVolumeScale('1000')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
- volumeScale === '1000'
- ? 'bg-amber-500 text-black shadow-sm'
- : 'text-zinc-400 hover:text-zinc-200'
+ volumeScale ==='1000'
+ ?'bg-amber-500 text-black shadow-sm'
+ :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
  1.000 Salas (Campaña Nacional)
@@ -404,7 +404,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  ) : proposals.length === 0 ? (
  <div className="py-16 text-center space-y-3 text-zinc-500">
  <Sparkles className="w-8 h-8 mx-auto text-zinc-600" />
- <p className="text-xs">Haz clic en "Generar y Comparar Propuestas" para ver las opciones A/B y sus costes detallados.</p>
+ <p className="text-xs">Haz clic en"Generar y Comparar Propuestas" para ver las opciones A/B y sus costes detallados.</p>
  </div>
  ) : (
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
@@ -417,25 +417,25 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  // Cost for volume scale
  let displayCost = cost.costEurFormatted;
- let scaleLabel = 'por este email';
- if (volumeScale === '100') {
+ let scaleLabel ='por este email';
+ if (volumeScale ==='100') {
  displayCost = cost.costPer100EurFormatted;
- scaleLabel = 'para 100 salas';
- } else if (volumeScale === '1000') {
+ scaleLabel ='para 100 salas';
+ } else if (volumeScale ==='1000') {
  displayCost = cost.costPer1000EurFormatted;
- scaleLabel = 'para 1.000 salas';
+ scaleLabel ='para 1.000 salas';
  }
 
- const isDeepSeek = prop.provider === 'deepseek';
- const isGemini = prop.provider === 'gemini';
+ const isDeepSeek = prop.provider ==='deepseek';
+ const isGemini = prop.provider ==='gemini';
 
  return (
  <div
  key={prop.provider + idx}
  className={`flex flex-col rounded-[var(--r-m)] transition-all duration-200 ${
  isSelected
- ? 'bg-[#1e1c19] border-emerald-500/80 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/40'
- : 'bg-[#161514] border-zinc-800 hover:border-zinc-700'
+ ?'bg-[#1e1c19] border-emerald-500/80 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/40'
+ :'bg-[#161514] border-zinc-800 hover:border-zinc-700'
  }`}
  >
  {/* Model Header */}
@@ -448,7 +448,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  {getProviderDisplayName(prop.provider)}
  </span>
  <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold ${getProviderBadge(prop.provider)}`}>
- {isDeepSeek ? '🚀 Más Económico' : '⚡ Instantáneo'}
+ {isDeepSeek ?'🚀 Más Económico' :'⚡ Instantáneo'}
  </span>
  </div>
  <p className="text-[10px] text-zinc-400 font-mono">
@@ -460,7 +460,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <button
  type="button"
  onClick={() => handleCopyText(prop.text, idx)}
- disabled={prop.status === 'error'}
+ disabled={prop.status ==='error'}
  className="p-1.5 text-zinc-400 hover:text-zinc-200 rounded-[var(--r-s)] hover:bg-zinc-800 transition-colors cursor-pointer"
  title="Copiar propuesta"
  >
@@ -488,17 +488,17 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="text-right">
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
  isDeepSeek
- ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
- : 'bg-amber-500/15 text-amber-300 /30'
+ ?'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+ :'bg-amber-500/15 text-amber-300 /30'
  }`}>
- {isDeepSeek ? '10x más barato' : 'Ultra rápido'}
+ {isDeepSeek ?'10x más barato' :'Ultra rápido'}
  </span>
  </div>
  </div>
 
  {/* Proposal Body */}
  <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
- {prop.status === 'error' ? (
+ {prop.status ==='error' ? (
  <div className="space-y-2.5">
  <div className="p-2.5 bg-amber-500/10 rounded-[var(--r-m)] text-amber-200 text-xs flex items-start gap-2">
  <AlertCircle className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
@@ -541,8 +541,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  disabled={!prop.text && !prop.fallbackText}
  className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  isSelected
- ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/20'
- : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 hover:/60'
+ ?'bg-emerald-500 text-black shadow-md shadow-emerald-500/20'
+ :'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 hover:/60'
  }`}
  >
  {isSelected ? (
@@ -552,7 +552,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </>
  ) : (
  <>
- <span>{prop.status === 'error' && prop.fallbackText ? 'Elegir borrador local adaptado' : 'Elegir esta propuesta'}</span>
+ <span>{prop.status ==='error' && prop.fallbackText ?'Elegir borrador local adaptado' :'Elegir esta propuesta'}</span>
  <ArrowRight className="w-3.5 h-3.5" />
  </>
  )}

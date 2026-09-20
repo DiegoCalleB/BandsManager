@@ -1,13 +1,13 @@
-import React from 'react';
+import React from'react';
 import {
  BarChart3,
  Quote,
  Plus,
  Trash2
-} from 'lucide-react';
-import { EPKConfig } from '../../types';
-import { EPKBlockWrapper } from './EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+} from'lucide-react';
+import { EPKConfig } from'../../types';
+import { EPKBlockWrapper } from'./EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
 
 interface EPKPrensaBlockProps {
  config: EPKConfig;
@@ -45,7 +45,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  <BarChart3 className="w-5 h-5" /> Cifras Clave (Social Proof)
  </h3>
  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full">
- {config.cifrasClave?.habilitado ? '✓ Visible en EPK' : 'Oculto'}
+ {config.cifrasClave?.habilitado ?'✓ Visible en EPK' :'Oculto'}
  </span>
  </div>
  <p className="text-xs text-[var(--ink-3)]">
@@ -75,10 +75,10 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
  {(
  [
- { key: 'oyentes', label: 'Oyentes & Streams', placeholder: 'Ej: 12.400' },
- { key: 'directos', label: 'Directos & Shows', placeholder: 'Ej: 18' },
- { key: 'comunidad', label: 'Comunidad & Fans', placeholder: 'Ej: 2.100' },
- { key: 'ciudades', label: 'Ciudades en Gira', placeholder: 'Ej: 6' }
+ { key:'oyentes', label:'Oyentes & Streams', placeholder:'Ej: 12.400' },
+ { key:'directos', label:'Directos & Shows', placeholder:'Ej: 18' },
+ { key:'comunidad', label:'Comunidad & Fans', placeholder:'Ej: 2.100' },
+ { key:'ciudades', label:'Ciudades en Gira', placeholder:'Ej: 6' }
  ] as const
  ).map(campo => (
  <div key={campo.key} className="space-y-1">
@@ -87,7 +87,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  </label>
  <input
  type="text"
- value={config.cifrasClave?.[campo.key] || ''}
+ value={config.cifrasClave?.[campo.key] ||''}
  onChange={e =>
  setConfig({
  ...config,
@@ -109,7 +109,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  <Quote className="w-5 h-5" /> Reseñas y Citas de Prensa
  </h3>
  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full">
- {config.resenasPrensa?.habilitado ? '✓ Visible en EPK' : 'Oculto'}
+ {config.resenasPrensa?.habilitado ?'✓ Visible en EPK' :'Oculto'}
  </span>
  </div>
  <p className="text-xs text-[var(--ink-3)]">
@@ -183,7 +183,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  onClick={() => {
  const nuevas = [
  ...(config.resenasPrensa?.citas || []),
- { id: `cita-${Date.now()}`, texto: '', medio: '' }
+ { id: `cita-${Date.now()}`, texto:'', medio:'' }
  ];
  setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
  }}

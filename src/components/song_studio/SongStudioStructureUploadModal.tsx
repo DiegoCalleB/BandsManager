@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { X, Upload, Camera, FileText, Loader, CheckCircle, AlertCircle, Download, ShieldCheck } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
-import { Song } from '../../types';
-import { isImageDocument, isPdfDocument } from '../../utils/documentType';
+import React, { useState, useRef } from'react';
+import { X, Upload, Camera, FileText, Loader, CheckCircle, AlertCircle, Download, ShieldCheck } from'lucide-react';
+import { ModalPortal } from'../common/ModalPortal';
+import { Song } from'../../types';
+import { isImageDocument, isPdfDocument } from'../../utils/documentType';
 
 interface SongStudioStructureUploadModalProps {
  song: Song;
@@ -17,7 +17,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  isOpen,
  onClose,
  onUpdateSong,
- currentUsername = 'Usuario'
+ currentUsername ='Usuario'
 }) => {
  const [selectedFile, setSelectedFile] = useState<File | null>(null);
  const [preview, setPreview] = useState<string | null>(null);
@@ -32,13 +32,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  const [isCameraOpen, setIsCameraOpen] = useState(false);
  const [showComparison, setShowComparison] = useState(false);
 
- const ALLOWED_TYPES = [
- 'application/pdf',
- 'image/jpeg',
- 'image/png',
- 'image/webp',
- 'application/msword',
- 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+ const ALLOWED_TYPES = ['application/pdf','image/jpeg','image/png','image/webp','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'
  ];
 
  const handleFileSelect = (file: File) => {
@@ -79,18 +73,18 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
  canvasRef.current.toBlob((blob) => {
  if (blob) {
- const file = new File([blob], `estructura-${Date.now()}.jpg`, { type: 'image/jpeg' });
+ const file = new File([blob], `estructura-${Date.now()}.jpg`, { type:'image/jpeg' });
  handleFileSelect(file);
  setIsCameraOpen(false);
  stopCamera();
  }
- }, 'image/jpeg', 0.95);
+ },'image/jpeg', 0.95);
  };
 
  const startCamera = async () => {
  try {
  const stream = await navigator.mediaDevices.getUserMedia({
- video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+ video: { facingMode:'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
  });
  if (videoRef.current) {
  videoRef.current.srcObject = stream;
@@ -111,22 +105,22 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  };
 
  // Marca (o desmarca) que un humano ha comparado los acordes extraídos contra el documento
- // original y confirma que son correctos — la diferencia entre "alguien confía en esto para
- // tocarlo en directo" y "esto lo subió alguien ayer y nadie lo ha mirado todavía".
+ // original y confirma que son correctos — la diferencia entre"alguien confía en esto para
+ // tocarlo en directo" y"esto lo subió alguien ayer y nadie lo ha mirado todavía".
  const [isSavingVerified, setIsSavingVerified] = useState(false);
  const handleToggleVerified = async () => {
  const updatedSong: Song = { ...song, estructuraVerificada: !song.estructuraVerificada };
  setIsSavingVerified(true);
  onUpdateSong(updatedSong);
  try {
- const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
- const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') ||'';
+ const headers: Record<string, string> = {'Content-Type':'application/json' };
  if (token) {
  headers['Authorization'] = `Bearer ${token}`;
  headers['x-auth-token'] = token;
  }
  await fetch(`/api/songs/${song.id}`, {
- method: 'PUT',
+ method:'PUT',
  headers,
  body: JSON.stringify(updatedSong)
  });
@@ -151,7 +145,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  formData.append('songId', song.id);
 
  const response = await fetch(`/api/songs/${song.id}/upload-structure`, {
- method: 'POST',
+ method:'POST',
  body: formData
  });
 
@@ -171,10 +165,10 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  // de usarlo en directo. Cierra él cuando lo haya revisado.
  setShowComparison(true);
  } else {
- throw new Error(data.error || 'Error al procesar la estructura');
+ throw new Error(data.error ||'Error al procesar la estructura');
  }
  } catch (err) {
- const message = err instanceof Error ? err.message : 'Error desconocido';
+ const message = err instanceof Error ? err.message :'Error desconocido';
  setErrorMessage(message);
  console.error('Structure upload error:', err);
  } finally {
@@ -232,7 +226,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="p-4 rounded-[var(--r-s)] bg-purple-950/30 text-sm text-purple-200 flex items-center gap-3">
  <Loader className="w-4 h-4 animate-spin" />
  <div>
- <p className="font-semibold">{processingMessage || 'Procesando...'}</p>
+ <p className="font-semibold">{processingMessage ||'Procesando...'}</p>
  <p className="text-xs text-purple-300 mt-1">Esto puede tomar 10-30 segundos</p>
  </div>
  </div>
@@ -311,7 +305,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  {selectedFile.type.startsWith('image/') && (
  <img src={preview} alt="Preview" className="w-full max-h-64 object-contain rounded" />
  )}
- {selectedFile.type === 'application/pdf' && (
+ {selectedFile.type ==='application/pdf' && (
  <div className="bg-red-950/20 rounded p-3 text-center text-sm text-[var(--ink-3)]">
  📄 PDF - Se procesará con IA para extraer acordes
  </div>
@@ -354,18 +348,18 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <p className="font-semibold">Estructura actual guardada</p>
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 ${
  song.estructuraVerificada
- ? 'bg-emerald-500/20 text-emerald-300'
- : 'bg-amber-500/20 text-amber-300'
+ ?'bg-emerald-500/20 text-emerald-300'
+ :'bg-amber-500/20 text-amber-300'
  }`}>
  <ShieldCheck className="w-3 h-3" />
- {song.estructuraVerificada ? 'Verificado' : 'Sin verificar'}
+ {song.estructuraVerificada ?'Verificado' :'Sin verificar'}
  </span>
  </div>
  <div className="flex items-center justify-between gap-2">
  <div className="min-w-0">
- <p className="text-xs text-emerald-300 truncate">{song.estructuraDocumentoNombre || 'Documento'}</p>
+ <p className="text-xs text-emerald-300 truncate">{song.estructuraDocumentoNombre ||'Documento'}</p>
  <p className="text-xs text-[var(--ink-2)] mt-1">
- Procesado el {new Date(song.estructuraDocumentoProcesadoEn || '').toLocaleDateString('es-ES')}
+ Procesado el {new Date(song.estructuraDocumentoProcesadoEn ||'').toLocaleDateString('es-ES')}
  </p>
  </div>
  <div className="flex gap-1.5 shrink-0">
@@ -374,11 +368,11 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  onClick={() => setShowComparison(v => !v)}
  className={`px-3 py-1.5 rounded text-xs font-semibold transition flex items-center gap-1 ${
  showComparison
- ? 'bg-purple-600 hover:bg-purple-700 text-white'
- : 'bg-white/10 hover:bg-white/20 text-white'
+ ?'bg-purple-600 hover:bg-purple-700 text-white'
+ :'bg-white/10 hover:bg-white/20 text-white'
  }`}
  >
- 👁️ {showComparison ? 'Ocultar' : 'Comparar'}
+ 👁️ {showComparison ?'Ocultar' :'Comparar'}
  </button>
  <a
  href={song.estructuraDocumentoUrl}
@@ -400,14 +394,14 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  disabled={isSavingVerified}
  className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-semibold transition flex items-center justify-center gap-1.5 disabled:opacity-50 ${
  song.estructuraVerificada
- ? 'bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30'
- : 'bg-amber-600/20 text-amber-300 hover:bg-amber-600/30'
+ ?'bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30'
+ :'bg-amber-600/20 text-amber-300 hover:bg-amber-600/30'
  }`}
  >
  <ShieldCheck className="w-3.5 h-3.5" />
  {song.estructuraVerificada
- ? 'Verificado — he comparado los acordes y son correctos (clic para desmarcar)'
- : 'Marcar como verificado tras comparar con el original'}
+ ?'Verificado — he comparado los acordes y son correctos (clic para desmarcar)'
+ :'Marcar como verificado tras comparar con el original'}
  </button>
 
  {/* SIDE-BY-SIDE COMPARISON: original scanned document vs. what the AI extracted,
@@ -431,7 +425,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  />
  ) : (
  <div className="h-96 flex items-center justify-center text-xs text-[var(--ink-2)] p-4 text-center">
- Este tipo de documento no se puede previsualizar aquí. Usa "Descargar" para abrirlo.
+ Este tipo de documento no se puede previsualizar aquí. Usa"Descargar" para abrirlo.
  </div>
  )}
  </div>
@@ -440,7 +434,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
  <div className="bg-black/40 border-[var(--hair)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
  <pre className="text-[11px] font-mono text-amber-100 whitespace-pre-wrap leading-relaxed">
- {song.cifradoTexto || 'Sin acordes guardados todavía.'}
+ {song.cifradoTexto ||'Sin acordes guardados todavía.'}
  </pre>
  </div>
  </div>

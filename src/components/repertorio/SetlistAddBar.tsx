@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from'react';
 import { 
  Plus, Zap, ListPlus, Check, X, ChevronDown, Sparkles 
-} from 'lucide-react';
-import { Song, Setlist, SetlistShortcut } from '../../types';
-import { formatSongTitle } from '../../utils/formatSongTitle';
+} from'lucide-react';
+import { Song, Setlist, SetlistShortcut } from'../../types';
+import { formatSongTitle } from'../../utils/formatSongTitle';
 
 interface SetlistAddBarProps {
  activeSetlist: Setlist;
@@ -67,21 +67,21 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  const selectedItemLabel = (() => {
  if (!selectedSetlistItemId) return null;
  const sel = activeSetlist.items.find(x => x.id === selectedSetlistItemId);
- if (!sel) return 'elemento seleccionado';
- if (sel.tipoItem === 'cancion' && sel.songId) {
+ if (!sel) return'elemento seleccionado';
+ if (sel.tipoItem ==='cancion' && sel.songId) {
  const found = songs.find(s => s.id === sel.songId);
- return found ? formatSongTitle(found.titulo) : 'Canción seleccionada';
+ return found ? formatSongTitle(found.titulo) :'Canción seleccionada';
  }
- return sel.tituloCustom || 'Evento seleccionado';
+ return sel.tituloCustom ||'Evento seleccionado';
  })();
 
  const QUICK_EVENTS = [
- { label: 'Presentación Banda', icon: '🎤', type: 'presentacion', desc: 'Saludo inicial o presentación del grupo' },
- { label: 'Solo Batería / Percusión', icon: '🥁', type: 'beatbox', desc: 'Performance o ritmo solista' },
- { label: 'Intro / Historia del Tema', icon: '🗣️', type: 'intro_tema', desc: 'Narración antes de empezar' },
- { label: 'Cambio Instrumento', icon: '🔧', type: 'cambio_instrumento', desc: 'Afinación o ajuste técnico' },
- { label: 'Chapa / Charla con Público', icon: '💬', type: 'chapa', desc: 'Interacción con los asistentes' },
- { label: 'BIS Final', icon: '💣', type: 'bis', desc: 'Parón pre-bis o tema sorpresa' },
+ { label:'Presentación Banda', icon:'🎤', type:'presentacion', desc:'Saludo inicial o presentación del grupo' },
+ { label:'Solo Batería / Percusión', icon:'🥁', type:'beatbox', desc:'Performance o ritmo solista' },
+ { label:'Intro / Historia del Tema', icon:'🗣️', type:'intro_tema', desc:'Narración antes de empezar' },
+ { label:'Cambio Instrumento', icon:'🔧', type:'cambio_instrumento', desc:'Afinación o ajuste técnico' },
+ { label:'Chapa / Charla con Público', icon:'💬', type:'chapa', desc:'Interacción con los asistentes' },
+ { label:'BIS Final', icon:'💣', type:'bis', desc:'Parón pre-bis o tema sorpresa' },
  ];
 
  return (
@@ -122,22 +122,22 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <select
  onChange={(e) => {
  if (e.target.value) {
- handleAddItemToSetlist(e.target.value, 'cancion');
- e.target.value = '';
+ handleAddItemToSetlist(e.target.value,'cancion');
+ e.target.value ='';
  }
  }}
  defaultValue=""
  className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-indigo-500/50 cursor-pointer font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${
- isStitchLight ? 'bg-white text-[var(--ink)] hover:' : 'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:'
+ isStitchLight ?'bg-white text-[var(--ink)] hover:' :'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:'
  }`}
  >
  <option value="">+ Añadir 1 Tema...</option>
  {sortedSongsByAlbumAndOrder.map((s, idx) => {
- const albumLabel = s.albumDisco || s.album || 'Single';
+ const albumLabel = s.albumDisco || s.album ||'Single';
  const cleanTitle = formatSongTitle(s.titulo);
  return (
  <option key={`${s.id}-${idx}`} value={s.id}>
- [{albumLabel}] {cleanTitle} ({s.tonalidad ? `${s.tonalidad} • ` : ''}{s.duracion || '0:00'})
+ [{albumLabel}] {cleanTitle} ({s.tonalidad ? `${s.tonalidad} • ` :''}{s.duracion ||'0:00'})
  </option>
  );
  })}
@@ -150,7 +150,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  {/* Quick Block Add */}
  <button
  type="button"
- onClick={() => handleAddItemToSetlist(undefined, 'bloque_header', '⚡ Bloque Nuevo')}
+ onClick={() => handleAddItemToSetlist(undefined,'bloque_header','⚡ Bloque Nuevo')}
  className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
  title="Añadir un encabezado de bloque para estructurar el concierto"
  >
@@ -167,7 +167,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  >
  <Zap className="w-3.5 h-3.5 text-sky-400" />
  <span>Eventos & Shows</span>
- <ChevronDown className={`w-3 h-3 transition-transform ${showEventMenu ? 'rotate-180' : ''}`} />
+ <ChevronDown className={`w-3 h-3 transition-transform ${showEventMenu ?'rotate-180' :''}`} />
  </button>
  </div>
 
@@ -203,7 +203,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  </div>
 
  {/* Custom Event Trigger */}
- <div className="pt-1 border-t ">
+ <div className="pt-1 border-t">
  <button
  type="button"
  onClick={() => {
@@ -219,7 +219,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  </div>
 
  {/* Custom Band Shortcuts */}
- <div className="pt-1 border-t ">
+ <div className="pt-1 border-t">
  <div className="flex items-center justify-between px-2 py-1">
  <span className="text-[10px] uppercase tracking-wider text-teal-400 font-semibold">
  Accesos Rápidos de la Banda
@@ -253,8 +253,8 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  maxLength={30}
  autoFocus
  onKeyDown={(e) => {
- if (e.key === 'Enter') handleCreateShortcut();
- if (e.key === 'Escape') setIsAddingShortcut(false);
+ if (e.key ==='Enter') handleCreateShortcut();
+ if (e.key ==='Escape') setIsAddingShortcut(false);
  }}
  className="flex-1 min-w-0 bg-[var(--surface)] rounded-md px-2 py-1 text-xs focus:outline-none"
  />

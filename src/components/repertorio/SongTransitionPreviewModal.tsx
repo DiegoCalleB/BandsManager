@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useRef, useMemo } from'react';
+import { motion, AnimatePresence } from'motion/react';
 import {
  Play, Pause, RotateCcw, Volume2, VolumeX, Sparkles, AlertTriangle, CheckCircle2,
  ChevronLeft, ChevronRight, Sliders, ArrowRight, ArrowLeftRight, MessageSquarePlus,
  Headphones, Music, Zap, Flame, Radio, Clock, ShieldCheck, X, ThumbsUp, ThumbsDown,
  Lightbulb, Compass, ShieldAlert, Info, HelpCircle, Upload, Disc3, Layers, Scissors, Check
-} from 'lucide-react';
-import { Song, SetlistItem } from '../../types';
+} from'lucide-react';
+import { Song, SetlistItem } from'../../types';
 import {
  TransitionConfig,
  TransitionStyle,
@@ -18,15 +18,15 @@ import {
  STUDIO_SAMPLE_TRACKS,
  getSampleTrackForSong,
  StudioSampleTrack
-} from '../../utils/transitionAudioEngine';
-import { resolveAudioUrl } from '../../utils/audioStorage';
-import { playSyntheticTransition, SyntheticPlayerController } from '../../utils/transitionSynthesizer';
-import { getEnergyInfo } from '../../utils/energyPacingUtils';
+} from'../../utils/transitionAudioEngine';
+import { resolveAudioUrl } from'../../utils/audioStorage';
+import { playSyntheticTransition, SyntheticPlayerController } from'../../utils/transitionSynthesizer';
+import { getEnergyInfo } from'../../utils/energyPacingUtils';
 import {
  detectAudioCuesFromUrl,
  applyDetectedCuesToSong,
  AudioCueAnalysis
-} from '../../utils/audioCueDetector';
+} from'../../utils/audioCueDetector';
 
 interface SongTransitionPreviewModalProps {
  isOpen: boolean;
@@ -77,7 +77,7 @@ export function SongTransitionPreviewModal({
  const [currentTime, setCurrentTime] = useState(0);
  const [volume, setVolume] = useState(0.85);
  const [isMuted, setIsMuted] = useState(false);
- const [playbackMode, setPlaybackMode] = useState<'real' | 'synth'>('real');
+ const [playbackMode, setPlaybackMode] = useState<'real' |'synth'>('real');
 
  // Auto-CUE / Salto Inteligente de Silencios y Aplausos
  const [autoCueEnabled, setAutoCueEnabled] = useState<boolean>(true);
@@ -124,7 +124,7 @@ export function SongTransitionPreviewModal({
  const [liveGainB, setLiveGainB] = useState(0);
 
  // Active Tab for vertical space optimization
- const [activeTab, setActiveTab] = useState<'pros_cons' | 'metrics' | 'stagecraft'>('pros_cons');
+ const [activeTab, setActiveTab] = useState<'pros_cons' |'metrics' |'stagecraft'>('pros_cons');
 
  // Auto-play state & timers
  const autoplayTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -148,8 +148,8 @@ export function SongTransitionPreviewModal({
  }
 
  if (isMounted) {
- setResolvedBaseUrlA(finalA || '');
- setResolvedBaseUrlB(finalB || '');
+ setResolvedBaseUrlA(finalA ||'');
+ setResolvedBaseUrlB(finalB ||'');
  setSelectedSampleA(getSampleTrackForSong(songA, 0));
  setSelectedSampleB(getSampleTrackForSong(songB, 1));
  setCustomAudioUrlA(null);
@@ -159,7 +159,7 @@ export function SongTransitionPreviewModal({
  setIsLoadingAudio(false);
 
  // Pre-cargar cues existentes si la canción ya los tenía guardados
- if (typeof songA?.cueIn === 'number' || typeof songA?.cueOut === 'number') {
+ if (typeof songA?.cueIn ==='number' || typeof songA?.cueOut ==='number') {
  setCueAnalysisA({
  cueIn: songA.cueIn || 0,
  cueOut: songA.cueOut || (songA.duracionSegundos || 180),
@@ -176,7 +176,7 @@ export function SongTransitionPreviewModal({
  setCueAnalysisA(null);
  }
 
- if (typeof songB?.cueIn === 'number' || typeof songB?.cueOut === 'number') {
+ if (typeof songB?.cueIn ==='number' || typeof songB?.cueOut ==='number') {
  setCueAnalysisB({
  cueIn: songB.cueIn || 0,
  cueOut: songB.cueOut || (songB.duracionSegundos || 180),
@@ -248,16 +248,16 @@ export function SongTransitionPreviewModal({
  }, [effectiveAudioUrlA, effectiveAudioUrlB]);
 
  const audioSourceTypeA = customAudioUrlA
- ? 'custom'
+ ?'custom'
  : resolvedBaseUrlA
- ? 'maqueta'
- : 'sample';
+ ?'maqueta'
+ :'sample';
 
  const audioSourceTypeB = customAudioUrlB
- ? 'custom'
+ ?'custom'
  : resolvedBaseUrlB
- ? 'maqueta'
- : 'sample';
+ ?'maqueta'
+ :'sample';
 
  const stopPlayback = () => {
  if (autoplayTimerRef.current) {
@@ -307,7 +307,7 @@ export function SongTransitionPreviewModal({
 
  const effectiveVolume = isMuted ? 0 : volume;
 
- if (playbackMode === 'synth') {
+ if (playbackMode ==='synth') {
  // Synthetic playback mode
  setIsPlaying(true);
  startTimeRef.current = performance.now() - startOffsetSec * 1000;
@@ -355,7 +355,7 @@ export function SongTransitionPreviewModal({
 
  const effectiveCueInB = autoCueEnabled && cueAnalysisB?.cueIn && cueAnalysisB.cueIn >= 0
  ? Math.min(durB - 1, cueAnalysisB.cueIn)
- : (autoCueEnabled && typeof songB.cueIn === 'number' ? Math.min(durB - 1, songB.cueIn) : 0);
+ : (autoCueEnabled && typeof songB.cueIn ==='number' ? Math.min(durB - 1, songB.cueIn) : 0);
 
  const songAStartInAudio = Math.max(0, effectiveCueOutA - config.tailDurationSec);
  const audioACurrentTime = songAStartInAudio + startOffsetSec;
@@ -466,11 +466,11 @@ export function SongTransitionPreviewModal({
  startPlaybackAt(0);
  };
 
- const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, track: 'A' | 'B') => {
+ const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, track:'A' |'B') => {
  const file = e.target.files?.[0];
  if (!file) return;
  const blobUrl = URL.createObjectURL(file);
- if (track === 'A') {
+ if (track ==='A') {
  setCustomAudioUrlA(blobUrl);
  setCustomFileNameA(file.name);
  } else {
@@ -480,14 +480,14 @@ export function SongTransitionPreviewModal({
  stopPlayback();
  };
 
- const handleSaveCuesForSong = (track: 'A' | 'B') => {
+ const handleSaveCuesForSong = (track:'A' |'B') => {
  if (!onUpdateSong) return;
- if (track === 'A' && songA && cueAnalysisA) {
+ if (track ==='A' && songA && cueAnalysisA) {
  const updated = applyDetectedCuesToSong(songA, cueAnalysisA);
  onUpdateSong(updated);
  setSavedCueSuccessA(true);
  setTimeout(() => setSavedCueSuccessA(false), 2500);
- } else if (track === 'B' && songB && cueAnalysisB) {
+ } else if (track ==='B' && songB && cueAnalysisB) {
  const updated = applyDetectedCuesToSong(songB, cueAnalysisB);
  onUpdateSong(updated);
  setSavedCueSuccessB(true);
@@ -498,7 +498,7 @@ export function SongTransitionPreviewModal({
  const formatSec = (seconds: number) => {
  const m = Math.floor(seconds / 60);
  const s = Math.floor(seconds % 60);
- return `${m}:${s < 10 ? '0' : ''}${s}`;
+ return `${m}:${s < 10 ?'0' :''}${s}`;
  };
 
  useEffect(() => {
@@ -619,14 +619,14 @@ export function SongTransitionPreviewModal({
  type="file"
  accept="audio/*"
  className="hidden"
- onChange={(e) => handleFileUpload(e, 'A')}
+ onChange={(e) => handleFileUpload(e,'A')}
  />
  <input
  ref={fileInputRefB}
  type="file"
  accept="audio/*"
  className="hidden"
- onChange={(e) => handleFileUpload(e, 'B')}
+ onChange={(e) => handleFileUpload(e,'B')}
  />
 
  {/* Modal Scrollable Body */}
@@ -637,9 +637,9 @@ export function SongTransitionPreviewModal({
  <div
  className="md:col-span-5 p-2 rounded-[var(--r-m)] transition relative overflow-hidden flex flex-col justify-between"
  style={{
- backgroundColor: currentGains.isPlayingA ? 'rgba(30,30,36,0.95)' : 'rgba(20,20,24,0.6)',
- borderColor: currentGains.isPlayingA ? 'var(--acc)' : '#2a2a30',
- boxShadow: currentGains.isPlayingA ? '0 0 10px rgba(242,202,80,0.1)' : 'none'
+ backgroundColor: currentGains.isPlayingA ?'rgba(30,30,36,0.95)' :'rgba(20,20,24,0.6)',
+ borderColor: currentGains.isPlayingA ?'var(--acc)' :'#2a2a30',
+ boxShadow: currentGains.isPlayingA ?'0 0 10px rgba(242,202,80,0.1)' :'none'
  }}
  >
  <div>
@@ -650,7 +650,7 @@ export function SongTransitionPreviewModal({
  </span>
  <div className="flex items-center gap-1">
  <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-zinc-700 text-amber-300 font-mono text-[9px] font-semibold">
- 🎼 {itemA?.tonalidadDeseada || songA.tonalidad || 'Sin tono'}
+ 🎼 {itemA?.tonalidadDeseada || songA.tonalidad ||'Sin tono'}
  </span>
  {songA.bpm && (
  <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-zinc-700 text-sky-300 font-mono text-[9px] font-semibold">
@@ -693,7 +693,7 @@ export function SongTransitionPreviewModal({
  title="Guardar punto CUE de recorte permanentemente en el repertorio"
  >
  {savedCueSuccessA ? <Check className="w-2.5 h-2.5 text-emerald-400" /> : null}
- <span>{savedCueSuccessA ? 'Guardado' : 'Guardar CUE'}</span>
+ <span>{savedCueSuccessA ?'Guardado' :'Guardar CUE'}</span>
  </button>
  )}
  </div>
@@ -704,19 +704,19 @@ export function SongTransitionPreviewModal({
  <div className="pt-1 border-t border-zinc-800/80 space-y-1">
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1">
- {audioSourceTypeA === 'maqueta' && (
+ {audioSourceTypeA ==='maqueta' && (
  <span className="text-emerald-400 font-semibold flex items-center gap-1">
  <Radio className="w-3 h-3 animate-pulse" />
  Maqueta
  </span>
  )}
- {audioSourceTypeA === 'custom' && (
+ {audioSourceTypeA ==='custom' && (
  <span className="text-sky-400 font-semibold flex items-center gap-1 truncate max-w-[130px]">
  <Upload className="w-3 h-3 shrink-0" />
- {customFileNameA || 'Local'}
+ {customFileNameA ||'Local'}
  </span>
  )}
- {audioSourceTypeA === 'sample' && (
+ {audioSourceTypeA ==='sample' && (
  <select
  value={selectedSampleA.id}
  onChange={(e) => {
@@ -765,14 +765,14 @@ export function SongTransitionPreviewModal({
  <div
  className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
  currentGains.isCrossfading
- ? 'bg-amber-500 text-black scale-110 shadow-lg shadow-amber-500/30 animate-pulse'
- : 'bg-[#222228] text-zinc-400 border-[#33333e]'
+ ?'bg-amber-500 text-black scale-110 shadow-lg shadow-amber-500/30 animate-pulse'
+ :'bg-[#222228] text-zinc-400 border-[#33333e]'
  }`}
  >
  <ArrowRight className="w-3.5 h-3.5" />
  </div>
  <span className="text-[8px] font-mono text-zinc-500 mt-0.5 uppercase font-bold text-center">
- {config.style === 'crossfade' ? `${config.fadeDurationSec}s` : config.style === 'segue' ? '0s' : 'pausa'}
+ {config.style ==='crossfade' ? `${config.fadeDurationSec}s` : config.style ==='segue' ?'0s' :'pausa'}
  </span>
  </div>
 
@@ -780,9 +780,9 @@ export function SongTransitionPreviewModal({
  <div
  className="md:col-span-5 p-2 rounded-[var(--r-m)] transition relative overflow-hidden flex flex-col justify-between"
  style={{
- backgroundColor: currentGains.isPlayingB ? 'rgba(30,30,36,0.95)' : 'rgba(20,20,24,0.6)',
- borderColor: currentGains.isPlayingB ? 'var(--acc)' : '#2a2a30',
- boxShadow: currentGains.isPlayingB ? '0 0 10px rgba(242,202,80,0.1)' : 'none'
+ backgroundColor: currentGains.isPlayingB ?'rgba(30,30,36,0.95)' :'rgba(20,20,24,0.6)',
+ borderColor: currentGains.isPlayingB ?'var(--acc)' :'#2a2a30',
+ boxShadow: currentGains.isPlayingB ?'0 0 10px rgba(242,202,80,0.1)' :'none'
  }}
  >
  <div>
@@ -793,7 +793,7 @@ export function SongTransitionPreviewModal({
  </span>
  <div className="flex items-center gap-1">
  <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-zinc-700 text-amber-300 font-mono text-[9px] font-semibold">
- 🎼 {itemB?.tonalidadDeseada || songB.tonalidad || 'Sin tono'}
+ 🎼 {itemB?.tonalidadDeseada || songB.tonalidad ||'Sin tono'}
  </span>
  {songB.bpm && (
  <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-zinc-700 text-sky-300 font-mono text-[9px] font-semibold">
@@ -836,7 +836,7 @@ export function SongTransitionPreviewModal({
  title="Guardar punto CUE de recorte permanentemente en el repertorio"
  >
  {savedCueSuccessB ? <Check className="w-2.5 h-2.5 text-emerald-400" /> : null}
- <span>{savedCueSuccessB ? 'Guardado' : 'Guardar CUE'}</span>
+ <span>{savedCueSuccessB ?'Guardado' :'Guardar CUE'}</span>
  </button>
  )}
  </div>
@@ -847,19 +847,19 @@ export function SongTransitionPreviewModal({
  <div className="pt-1 border-t border-zinc-800/80 space-y-1">
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1">
- {audioSourceTypeB === 'maqueta' && (
+ {audioSourceTypeB ==='maqueta' && (
  <span className="text-emerald-400 font-semibold flex items-center gap-1">
  <Radio className="w-3 h-3 animate-pulse" />
  Maqueta
  </span>
  )}
- {audioSourceTypeB === 'custom' && (
+ {audioSourceTypeB ==='custom' && (
  <span className="text-sky-400 font-semibold flex items-center gap-1 truncate max-w-[130px]">
  <Upload className="w-3 h-3 shrink-0" />
- {customFileNameB || 'Local'}
+ {customFileNameB ||'Local'}
  </span>
  )}
- {audioSourceTypeB === 'sample' && (
+ {audioSourceTypeB ==='sample' && (
  <select
  value={selectedSampleB.id}
  onChange={(e) => {
@@ -918,9 +918,9 @@ export function SongTransitionPreviewModal({
  setPlaybackMode('real');
  }}
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
- playbackMode === 'real'
- ? 'bg-emerald-500 text-black shadow-sm'
- : 'text-zinc-400 hover:text-white'
+ playbackMode ==='real'
+ ?'bg-emerald-500 text-black shadow-sm'
+ :'text-zinc-400 hover:text-white'
  }`}
  >
  <Disc3 className="w-3 h-3" />
@@ -933,9 +933,9 @@ export function SongTransitionPreviewModal({
  setPlaybackMode('synth');
  }}
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
- playbackMode === 'synth'
- ? 'bg-amber-400 text-black shadow-sm'
- : 'text-zinc-400 hover:text-white'
+ playbackMode ==='synth'
+ ?'bg-amber-400 text-black shadow-sm'
+ :'text-zinc-400 hover:text-white'
  }`}
  >
  <Music className="w-3 h-3" />
@@ -952,13 +952,13 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  autoCueEnabled
- ? 'bg-amber-500/15 text-[var(--acc)] /40 shadow-sm'
- : 'bg-[#1c1c24] text-zinc-400 border-zinc-700 hover:text-zinc-200'
+ ?'bg-amber-500/15 text-[var(--acc)] /40 shadow-sm'
+ :'bg-[#1c1c24] text-zinc-400 border-zinc-700 hover:text-zinc-200'
  }`}
  title="Auto-CUE Inteligente: Detecta y salta automáticamente los huecos de silencio y aplausos al principio y final de canciones en directo"
  >
  <Scissors className="w-3 h-3" />
- <span>Auto-CUE: {autoCueEnabled ? 'ON' : 'OFF'}</span>
+ <span>Auto-CUE: {autoCueEnabled ?'ON' :'OFF'}</span>
  </button>
  </div>
 
@@ -968,12 +968,12 @@ export function SongTransitionPreviewModal({
  type="button"
  onClick={() => {
  stopPlayback();
- setConfig((c) => ({ ...c, style: 'crossfade' }));
+ setConfig((c) => ({ ...c, style:'crossfade' }));
  }}
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
- config.style === 'crossfade'
- ? 'bg-[var(--acc)] text-black shadow-sm'
- : 'text-zinc-400 hover:text-white'
+ config.style ==='crossfade'
+ ?'bg-[var(--acc)] text-black shadow-sm'
+ :'text-zinc-400 hover:text-white'
  }`}
  >
  Fundido ({config.fadeDurationSec}s)
@@ -982,12 +982,12 @@ export function SongTransitionPreviewModal({
  type="button"
  onClick={() => {
  stopPlayback();
- setConfig((c) => ({ ...c, style: 'segue' }));
+ setConfig((c) => ({ ...c, style:'segue' }));
  }}
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
- config.style === 'segue'
- ? 'bg-[var(--acc)] text-black shadow-sm'
- : 'text-zinc-400 hover:text-white'
+ config.style ==='segue'
+ ?'bg-[var(--acc)] text-black shadow-sm'
+ :'text-zinc-400 hover:text-white'
  }`}
  >
  Corte (0s)
@@ -996,19 +996,19 @@ export function SongTransitionPreviewModal({
  type="button"
  onClick={() => {
  stopPlayback();
- setConfig((c) => ({ ...c, style: 'pause' }));
+ setConfig((c) => ({ ...c, style:'pause' }));
  }}
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
- config.style === 'pause'
- ? 'bg-[var(--acc)] text-black shadow-sm'
- : 'text-zinc-400 hover:text-white'
+ config.style ==='pause'
+ ?'bg-[var(--acc)] text-black shadow-sm'
+ :'text-zinc-400 hover:text-white'
  }`}
  >
  Pausa ({config.pauseDurationSec}s)
  </button>
 
  {/* Seconds selector for crossfade */}
- {config.style === 'crossfade' && (
+ {config.style ==='crossfade' && (
  <div className="flex items-center gap-0.5 pl-1 border-l border-zinc-700">
  {[2, 3, 5, 8].map((sec) => (
  <button
@@ -1020,8 +1020,8 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-1 py-0.2 rounded font-mono text-[9px] transition cursor-pointer ${
  config.fadeDurationSec === sec
- ? 'bg-amber-500/30 text-[var(--acc)] font-bold'
- : 'text-zinc-400 hover:text-white'
+ ?'bg-amber-500/30 text-[var(--acc)] font-bold'
+ :'text-zinc-400 hover:text-white'
  }`}
  >
  {sec}s
@@ -1068,7 +1068,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Crossfade overlap highlight */}
- {config.style === 'crossfade' && (
+ {config.style ==='crossfade' && (
  <div
  className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-500/30 to-emerald-500/30 border-x /80 pointer-events-none flex items-center justify-center text-[8px] font-mono font-bold text-white/90"
  style={{
@@ -1098,7 +1098,7 @@ export function SongTransitionPreviewModal({
  type="button"
  onClick={togglePlay}
  className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[#ffe07a] text-black font-bold flex items-center justify-center shadow transition active:scale-95 cursor-pointer"
- title={isPlaying ? 'Pausar comprobación' : 'Reproducir unión'}
+ title={isPlaying ?'Pausar comprobación' :'Reproducir unión'}
  >
  {isPlaying ? <Pause className="w-3.5 h-3.5 fill-black" /> : <Play className="w-3.5 h-3.5 fill-black ml-0.5" />}
  </button>
@@ -1165,9 +1165,9 @@ export function SongTransitionPreviewModal({
  type="button"
  onClick={() => setActiveTab('pros_cons')}
  className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
- activeTab === 'pros_cons'
- ? 'bg-zinc-800 text-amber-300'
- : 'text-zinc-400 hover:text-zinc-200'
+ activeTab ==='pros_cons'
+ ?'bg-zinc-800 text-amber-300'
+ :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
  <span>Pros y Contras</span>
@@ -1180,9 +1180,9 @@ export function SongTransitionPreviewModal({
  type="button"
  onClick={() => setActiveTab('metrics')}
  className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
- activeTab === 'metrics'
- ? 'bg-zinc-800 text-amber-300'
- : 'text-zinc-400 hover:text-zinc-200'
+ activeTab ==='metrics'
+ ?'bg-zinc-800 text-amber-300'
+ :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
  <span>Métricas Armónicas</span>
@@ -1192,9 +1192,9 @@ export function SongTransitionPreviewModal({
  type="button"
  onClick={() => setActiveTab('stagecraft')}
  className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
- activeTab === 'stagecraft'
- ? 'bg-zinc-800 text-amber-300'
- : 'text-zinc-400 hover:text-zinc-200'
+ activeTab ==='stagecraft'
+ ?'bg-zinc-800 text-amber-300'
+ :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
  <span>Stagecraft ({diagnosis.stageRecommendations.length})</span>
@@ -1210,7 +1210,7 @@ export function SongTransitionPreviewModal({
 
  {/* Tab Content Container */}
  <div className="p-2 max-h-32 sm:max-h-28 overflow-y-auto">
- {activeTab === 'pros_cons' && (
+ {activeTab ==='pros_cons' && (
  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
  {/* POR QUÉ SÍ */}
  <div className="space-y-1">
@@ -1257,16 +1257,16 @@ export function SongTransitionPreviewModal({
  <div
  key={con.id}
  className={`p-1.5 rounded-[var(--r-s)] text-[10px] space-y-0.5 ${
- con.severity === 'critico'
- ? 'bg-rose-950/20 border-rose-500/40'
- : con.severity === 'aviso'
- ? 'bg-amber-950/15 /30'
- : 'bg-zinc-900/60 border-zinc-800'
+ con.severity ==='critico'
+ ?'bg-rose-950/20 border-rose-500/40'
+ : con.severity ==='aviso'
+ ?'bg-amber-950/15 /30'
+ :'bg-zinc-900/60 border-zinc-800'
  }`}
  >
  <div className="flex items-center justify-between gap-1">
  <span className={`font-bold flex items-center gap-1 truncate ${
- con.severity === 'critico' ? 'text-rose-300' : con.severity === 'aviso' ? 'text-amber-300' : 'text-zinc-300'
+ con.severity ==='critico' ?'text-rose-300' : con.severity ==='aviso' ?'text-amber-300' :'text-zinc-300'
  }`}>
  <AlertTriangle className="w-2.5 h-2.5 shrink-0" />
  {con.title}
@@ -1291,7 +1291,7 @@ export function SongTransitionPreviewModal({
  </div>
  )}
 
- {activeTab === 'metrics' && (
+ {activeTab ==='metrics' && (
  <div className="grid grid-cols-1 md:grid-cols-3 gap-1.5">
  <div className="p-2 rounded-[var(--r-s)] bg-[#15151b] border-zinc-800 space-y-0.5">
  <div className="flex items-center gap-1 text-[11px] font-bold text-amber-300">
@@ -1325,7 +1325,7 @@ export function SongTransitionPreviewModal({
  </div>
  )}
 
- {activeTab === 'stagecraft' && (
+ {activeTab ==='stagecraft' && (
  <div className="space-y-1">
  {diagnosis.stageRecommendations.map((rec, idx) => (
  <div key={idx} className="flex items-start gap-1.5 bg-black/30 p-1.5 rounded-[var(--r-s)] text-[10px]">

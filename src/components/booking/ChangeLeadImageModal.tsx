@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { X, Upload, Sparkles, Link as LinkIcon, Trash2, Camera, Loader2, Check } from 'lucide-react';
-import { Lead } from '../../types';
-import { apiFetch } from '../../utils/api';
-import { uploadFileToServer } from '../../utils/audioStorage';
-import { LeadAvatar } from './LeadAvatar';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from'react';
+import { X, Upload, Sparkles, Link as LinkIcon, Trash2, Camera, Loader2, Check } from'lucide-react';
+import { Lead } from'../../types';
+import { apiFetch } from'../../utils/api';
+import { uploadFileToServer } from'../../utils/audioStorage';
+import { LeadAvatar } from'./LeadAvatar';
+import { ModalPortal } from'../common/ModalPortal';
 
 interface ChangeLeadImageModalProps {
  lead: Lead | null;
@@ -25,7 +25,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  const [isSearching, setIsSearching] = useState(false);
  const [customUrl, setCustomUrl] = useState('');
  const [showUrlInput, setShowUrlInput] = useState(false);
- const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+ const [statusMsg, setStatusMsg] = useState<{ type:'success' |'error'; text: string } | null>(null);
 
  if (!isOpen || !lead) return null;
 
@@ -41,21 +41,21 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  uploadedUrl = (await onLeadLogoUpload(file)) || null;
  }
  if (!uploadedUrl) {
- uploadedUrl = await uploadFileToServer(file, { category: 'leads' });
+ uploadedUrl = await uploadFileToServer(file, { category:'leads' });
  }
 
  if (uploadedUrl) {
  onUpdateLead(lead.id, { imagen_url: uploadedUrl });
- setStatusMsg({ type: 'success', text: '¡Imagen subida con éxito!' });
+ setStatusMsg({ type:'success', text:'¡Imagen subida con éxito!' });
  setTimeout(() => {
  onClose();
  }, 600);
  } else {
- setStatusMsg({ type: 'error', text: 'Error al subir la imagen' });
+ setStatusMsg({ type:'error', text:'Error al subir la imagen' });
  }
  } catch (err) {
  console.error('Error subiendo imagen:', err);
- setStatusMsg({ type: 'error', text: 'Fallo al procesar el archivo' });
+ setStatusMsg({ type:'error', text:'Fallo al procesar el archivo' });
  } finally {
  setIsUploading(false);
  }
@@ -67,19 +67,18 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
 
  try {
  const res = await apiFetch('/api/leads/ai-lookup', {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json'
+ method:'POST',
+ headers: {'Content-Type':'application/json'
  },
  body: JSON.stringify({
- nombre_sala: lead.nombre_sala || (lead as any).nombre || (lead as any).nombreSala || (lead as any).name || '',
+ nombre_sala: lead.nombre_sala || (lead as any).nombre || (lead as any).nombreSala || (lead as any).name ||'',
  ciudad: lead.ciudad,
  leadId: lead.id
  })
  });
 
  if (res.success && res.data) {
- const newImg = res.data.imagen_url || '';
+ const newImg = res.data.imagen_url ||'';
  const newIcon = res.data.icono || lead.icono;
  const newWebsite = res.data.website || lead.website;
  
@@ -90,20 +89,20 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  });
 
  if (newImg) {
- setStatusMsg({ type: 'success', text: '¡Logo encontrado e instalado!' });
+ setStatusMsg({ type:'success', text:'¡Logo encontrado e instalado!' });
  } else {
- setStatusMsg({ type: 'error', text: 'No se encontró una imagen oficial pública' });
+ setStatusMsg({ type:'error', text:'No se encontró una imagen oficial pública' });
  }
 
  setTimeout(() => {
  onClose();
  }, 800);
  } else {
- setStatusMsg({ type: 'error', text: 'No se obtuvo respuesta de la búsqueda' });
+ setStatusMsg({ type:'error', text:'No se obtuvo respuesta de la búsqueda' });
  }
  } catch (err) {
  console.error('Error buscando logo con IA:', err);
- setStatusMsg({ type: 'error', text: 'Error en la búsqueda con IA' });
+ setStatusMsg({ type:'error', text:'Error en la búsqueda con IA' });
  } finally {
  setIsSearching(false);
  }
@@ -112,15 +111,15 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  const handleSaveCustomUrl = () => {
  if (!customUrl.trim()) return;
  onUpdateLead(lead.id, { imagen_url: customUrl.trim() });
- setStatusMsg({ type: 'success', text: 'URL guardada' });
+ setStatusMsg({ type:'success', text:'URL guardada' });
  setTimeout(() => {
  onClose();
  }, 500);
  };
 
  const handleRemoveImage = () => {
- onUpdateLead(lead.id, { imagen_url: '' });
- setStatusMsg({ type: 'success', text: 'Imagen eliminada' });
+ onUpdateLead(lead.id, { imagen_url:'' });
+ setStatusMsg({ type:'success', text:'Imagen eliminada' });
  setTimeout(() => {
  onClose();
  }, 500);
@@ -150,7 +149,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  Cambiar Imagen / Logo
  </h3>
  <p className="text-xs text-zinc-400 font-sans truncate">
- {lead.nombre_sala} {lead.ciudad ? `(${lead.ciudad})` : ''}
+ {lead.nombre_sala} {lead.ciudad ? `(${lead.ciudad})` :''}
  </p>
  </div>
  </div>
@@ -169,11 +168,11 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
 
  {statusMsg && (
  <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${
- statusMsg.type === 'success' 
- ? 'bg-emerald-950/80 border-emerald-800 text-emerald-300' 
- : 'bg-rose-950/80 border-rose-800 text-rose-300'
+ statusMsg.type ==='success' 
+ ?'bg-emerald-950/80 border-emerald-800 text-emerald-300' 
+ :'bg-rose-950/80 border-rose-800 text-rose-300'
  }`}>
- {statusMsg.type === 'success' && <Check className="w-4 h-4" />}
+ {statusMsg.type ==='success' && <Check className="w-4 h-4" />}
  <span>{statusMsg.text}</span>
  </div>
  )}
@@ -188,7 +187,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  </div>
  <div className="text-left">
  <span className="block font-bold text-xs text-zinc-200 group-hover:text-amber-300 transition-colors">
- {isUploading ? 'Subiendo imagen...' : 'Subir desde dispositivo'}
+ {isUploading ?'Subiendo imagen...' :'Subir desde dispositivo'}
  </span>
  <span className="block text-[11px] text-zinc-400 font-sans">
  Formatos JPG, PNG, WEBP o SVG
@@ -217,7 +216,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  </div>
  <div className="text-left">
  <span className="block font-bold text-xs text-amber-300">
- {isSearching ? 'Buscando logo oficial...' : 'Buscar Logo con IA & Google'}
+ {isSearching ?'Buscando logo oficial...' :'Buscar Logo con IA & Google'}
  </span>
  <span className="block text-[11px] text-amber-400/80 font-sans">
  Encuentra fotos de recintos o favicons oficiales
