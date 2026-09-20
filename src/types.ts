@@ -74,7 +74,7 @@ export interface BandContact {
   es_verificado?: boolean;
   fiabilidad_score?: number;
   estilo_comunicacion?: string;
-  dna_expresion?: any;
+  dna_expresion?: Record<string, unknown>;
 }
 
 export interface InteractionLog {
@@ -681,7 +681,7 @@ export interface User {
       mobile?: '1' | '2';
       desktop?: '1' | '2';
     };
-    [key: string]: any;
+    [key: string]: unknown;
   };
   // Campos reales de facturación (ver server/routes/billing.ts, que los escribe directamente
   // sobre el usuario persistido). Sin declararlos aquí, Planes.tsx y UserProfileModal.tsx los
@@ -696,7 +696,7 @@ export interface UserWithHash extends User {
   salt: string;
 }
 
-export type ThemeName = 'indie_velvet' | 'stitch_dark' | 'backstage_neon' | 'roots_ska' | 'brutalist_fuzz';
+export type ThemeName = 'indie_velvet' | 'stitch_dark' | 'backstage_neon' | 'roots_ska' | 'brutalist_fuzz' | 'classic';
 
 // Patrones de batería soportados por el sintetizador de acompañamiento (src/utils/accompanimentSynth.ts),
 // compartido entre el generador del Song Studio y las bases rítmicas propuestas por el chatbot.
@@ -875,7 +875,7 @@ export interface Setlist {
   items: SetlistItem[];
   fechaCreacion: string;
   fechaUltimaEdicion: string;
-  ai_analysis_json?: any;
+  ai_analysis_json?: Record<string, unknown>;
   ai_analysis_generated_at?: string;
 }
 
