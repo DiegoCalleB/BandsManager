@@ -39,7 +39,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  concerts = [],
  effectiveBandName,
  effectiveBandLogo,
- colors
+ colors,
  onUpdateFan,
  onDeleteFan,
  onOpenAddModal,
