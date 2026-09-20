@@ -4298,8 +4298,7 @@ export default function RepertorioSetlists({
  )}
 
  {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
- <div className={`rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden ${'bg-[var(--surface)]'bg-[var(--bg)] text-[var(--ink-2)]' :'bg-[var(--surface)]/40 /80 text-[var(--ink-2)]'
- }`}>
+ <div className="rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden bg-[var(--surface)] text-[var(--ink-2)]">
  <div className="flex items-center gap-2.5 min-w-0">
  <input
  type="checkbox"
