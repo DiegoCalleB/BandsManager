@@ -2,6 +2,7 @@ import React from'react';
 import { X } from'lucide-react';
 import { ThemeColors, Setlist, Concert, Rehearsal } from'../../types';
 import { ModalPortal } from'../common/ModalPortal';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 
 interface AssignSetlistModalProps {
  assigningSetlist: Setlist | null;
@@ -49,7 +50,11 @@ export function AssignSetlistModal({
  <div className="space-y-2 max-h-60 overflow-y-auto pr-1 text-[10px] font-mono">
  <div className="text-[10px] text-[#d1b375] uppercase font-bold pt-1">Próximos Conciertos:</div>
  {concerts.length === 0 ? (
- <div className="text-neutral-500 italic text-[10px]">No hay conciertos programados</div>
+ <div className="flex flex-col items-center justify-center py-6">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-3 font-medium text-[var(--ink)] text-[10px]">Sin conciertos</p>
+ <p className="mt-1 text-[var(--ink-2)] text-[9px] text-center">Crea uno en Calendario para asignar este setlist.</p>
+ </div>
  ) : (
  concerts.map(c => (
  <label
@@ -79,7 +84,11 @@ export function AssignSetlistModal({
 
  <div className="text-[10px] text-[var(--ok)] uppercase font-bold pt-3">Próximos Ensayos:</div>
  {rehearsals.length === 0 ? (
- <div className="text-neutral-500 italic text-[10px]">No hay ensayos programados</div>
+ <div className="flex flex-col items-center justify-center py-6">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-3 font-medium text-[var(--ink)] text-[10px]">Sin ensayos</p>
+ <p className="mt-1 text-[var(--ink-2)] text-[9px] text-center">Crea uno en Calendario para asignar este setlist.</p>
+ </div>
  ) : (
  rehearsals.map(r => (
  <label
