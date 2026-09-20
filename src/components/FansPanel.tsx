@@ -748,7 +748,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  </>
  ) : (
- <div className="flex items-center justify-center w-full h-full text-[var(--ink-2)] text-xs font-sans">No hay datos suficientes</div>
+ <div className="flex flex-col items-center justify-center w-full h-full gap-4 py-12">
+ <PublicoSilhouette animated={false} opacity={0.14} size="large" />
+ <div className="text-center">
+ <p className="text-[var(--ink-2)] text-sm font-sans">La audiencia aún no ha llegado.</p>
+ <p className="text-[var(--ink-3)] text-xs font-sans mt-1">Cultiva tu fanbase conectándote con tus seguidores.</p>
+ </div>
+ </div>
  )}
  </div>
  </div>
