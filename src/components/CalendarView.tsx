@@ -4116,7 +4116,7 @@ export default function CalendarView({
  </div>
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
- <div className={`text-[10px] font-mono uppercase tracking-widest font-bold ${isStitchLight ?'text-sky-400' :'text-[var(--accent)]'}`}>Logística de Ensayos y Conciertos</div>
+ <div className={`text-[10px] font-mono uppercase tracking-widest font-bold ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>Logística de Ensayos y Conciertos</div>
  {(selectedConcert || selectedRehearsal) && (
  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shadow-xs flex items-center gap-1">
  🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
@@ -4272,7 +4272,7 @@ export default function CalendarView({
  <span className={`font-bold font-mono ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
  </div>
  <div className="flex items-start gap-2 text-[10px]">
- <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isStitchLight ?'text-sky-400' :'text-[var(--accent)]'}`} />
+ <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`} />
  <div className="flex-1">
  <span className={`font-mono ${textSub}`}>Lugar:</span>
  <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
@@ -4654,7 +4654,7 @@ export default function CalendarView({
  activeTab ==='gear'
  ? isStitchLight
  ?'bg-orange-100 text-orange-900 font-bold'
- :'bg-orange-500/20 text-[var(--accent)] font-bold'
+ :'bg-orange-500/20 text-[var(--acc)] font-bold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -7052,7 +7052,7 @@ export default function CalendarView({
  <span className={`font-bold font-mono ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
  </div>
  <div className="flex items-start gap-2 text-[11px]">
- <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isStitchLight ?'text-sky-400' :'text-[var(--accent)]'}`} />
+ <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`} />
  <div className="flex-1 min-w-0">
  <span className={`font-mono ${textSub}`}>Lugar:</span>
  <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>

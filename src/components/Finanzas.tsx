@@ -829,7 +829,7 @@ export default function Finanzas({
  {[
  { cat:'concierto', color:'bg-indigo-500' },
  { cat:'transporte', color:'bg-[var(--acc)]' },
- { cat:'alojamiento', color:'bg-[var(--accent)]' },
+ { cat:'alojamiento', color:'bg-[var(--acc)]' },
  { cat:'comida', color:'bg-emerald-500' },
  { cat:'promo', color:'bg-rose-500' },
  { cat:'merchandising', color:'bg-cyan-500' },

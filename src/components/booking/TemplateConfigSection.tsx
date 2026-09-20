@@ -214,7 +214,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${
- isStitchLight ?'text-sky-400' :'text-[var(--accent)]'
+ isStitchLight ?'text-sky-400' :'text-[var(--acc)]'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
@@ -227,7 +227,7 @@ export function TemplateConfigSection({
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--accent)]/50'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
  />

@@ -1421,7 +1421,7 @@ export default function ReelsCenter({
  {/* Borradores */}
  <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
  <span className={`text-[10px] font-mono uppercase tracking-wider font-bold block pb-1.5 ${
- isStitchLight ?'text-indigo-600 -slate-200/80' :'text-[var(--accent)]'
+ isStitchLight ?'text-indigo-600 -slate-200/80' :'text-[var(--acc)]'
  }`}>Borradores ({posts.filter(r => r.estado ==='borrador').length})</span>
  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
  {posts.filter(r => r.estado ==='borrador').map(post => (
@@ -1438,7 +1438,7 @@ export default function ReelsCenter({
  >
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
- post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
+ post.plataforma ==='Instagram' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :
  post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-[var(--ink)]'
  }`}>
  {post.plataforma}
@@ -1489,7 +1489,7 @@ export default function ReelsCenter({
  >
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
- post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
+ post.plataforma ==='Instagram' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :
  post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-[var(--ink)]'
  }`}>
  {post.plataforma}
@@ -1546,7 +1546,7 @@ export default function ReelsCenter({
  >
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
- post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
+ post.plataforma ==='Instagram' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :
  post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-[var(--ink)]'
  }`}>
  {post.plataforma}
@@ -1584,7 +1584,7 @@ export default function ReelsCenter({
  {/* 2. Structured Soul AI Writer */}
  <div className={`${colors.card} p-5 space-y-4`}>
  <div className={` pb-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--accent)]'}`}>
+ <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Sparkles className="w-4 h-4" /> AI Reels Writer (Redacción Estructurada)
  </h3>
  <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
@@ -1981,7 +1981,7 @@ export default function ReelsCenter({
  <span className="text-[var(--ink-2)]">Paso {loadingStep + 1} de {getLoadingSteps().length}</span>
  </div>
  <p className={`text-[11px] font-mono leading-normal ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>
- ⚡️ <span className={isStitchLight ?'text-indigo-500' :'text-[var(--accent)]'}>{getLoadingSteps()[loadingStep]}</span>
+ ⚡️ <span className={isStitchLight ?'text-indigo-500' :'text-[var(--acc)]'}>{getLoadingSteps()[loadingStep]}</span>
  </p>
  <div className={`w-full h-1.5 rounded-full overflow-hidden ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
  <div 
@@ -2151,7 +2151,7 @@ export default function ReelsCenter({
  <div className={`space-y-1 pt-1.5 ${isStitchLight ?'-slate-100' :'-bg-[var(--surface)]'}`}>
  <div className="flex justify-between items-center text-[9px] font-mono text-[var(--ink-2)]">
  <span className="flex items-center gap-1">
- <Flame className={`w-3 h-3 ${isStitchLight ?'text-indigo-600' :'text-[var(--accent)]'}`} /> Virality Score:
+ <Flame className={`w-3 h-3 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`} /> Virality Score:
  </span>
  <span className={`font-bold ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>{clip.virality}%</span>
  </div>
@@ -2540,7 +2540,7 @@ export default function ReelsCenter({
  <div className="space-y-2 flex-1">
  <div className="flex items-center gap-2 flex-wrap">
  <span className={`text-[8px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
- post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
+ post.plataforma ==='Instagram' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :
  post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-[var(--ink)]'
  }`}>
  {post.plataforma}
@@ -2717,7 +2717,7 @@ export default function ReelsCenter({
  isStitchLight ?'-indigo-300 text-indigo-400' :'-[var(--acc)]/50 text-[var(--acc)]/70'
  }`}>VOL</div>
  <div className={`w-10 h-10 rounded-full -dashed flex items-center justify-center text-[8px] font-mono ${
- isStitchLight ?'-emerald-300 text-emerald-400' :'-[var(--accent)]/50 text-[var(--accent)]/70'
+ isStitchLight ?'-emerald-300 text-emerald-400' :'-[var(--accent)]/50 text-[var(--acc)]/70'
  }`}>SKA</div>
  </div>
  <span className={`text-[9px] font-mono uppercase tracking-widest text-center animate-pulse ${
@@ -2829,7 +2829,7 @@ export default function ReelsCenter({
  }`}>{nombreBanda.charAt(0).toUpperCase()}</span>
  <div>
  <span className="text-[9px] font-bold text-[var(--ink)] block truncate max-w-[90px]">{instagramHandle || nombreBanda}</span>
- <span className={`text-[7px] font-mono block ${isStitchLight ?'text-indigo-200' :'text-[var(--accent)]'}`}>{nombreBanda}</span>
+ <span className={`text-[7px] font-mono block ${isStitchLight ?'text-indigo-200' :'text-[var(--acc)]'}`}>{nombreBanda}</span>
  </div>
  </div>
 
@@ -3162,7 +3162,7 @@ export default function ReelsCenter({
  </div>
  <div className="flex justify-between text-[6.5px] font-mono text-[var(--ink-2)]">
  <span>Inicia: {formatTime(start)}</span>
- <span className="font-bold text-[var(--accent)]">Duración: {duration}s</span>
+ <span className="font-bold text-[var(--acc)]">Duración: {duration}s</span>
  <span>Termina: {formatTime(end)}</span>
  </div>
  </div>

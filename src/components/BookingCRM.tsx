@@ -2206,7 +2206,7 @@ export default function BookingCRM({
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-sky-400' :'text-[var(--accent)]'}`}>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>
  <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
  </label>
  <textarea
