@@ -686,7 +686,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  key={plan.id}
  className={`relative flex flex-col justify-between rounded-3xl p-6 transition-all duration-300 ${
  plan.isPopular
- ? 'bg-gradient-to-b from-[#1c1813] via-[#141210] to-[#0f0e0d] border-2 /80 shadow-2xl shadow-amber-500/10 lg:-translate-y-2.5 z-10'
+ ? 'bg-gradient-to-b from-[var(--surface)] via-[var(--surface)] to-[var(--sunken)] border-2 /80 shadow-2xl shadow-amber-500/10 lg:-translate-y-2.5 z-10'
  : 'bg-[#141312] border-[#262422] hover: shadow-xl'
  }`}
  >

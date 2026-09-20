@@ -280,7 +280,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  /* MOCKUP ELEGANTE DE SMARTPHONE */
  <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-all duration-200">
  {/* Chasis exterior del smartphone */}
- <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[#121110] shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.06)] border-[#3e3b37]/80">
+ <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[var(--bg)] shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.06)] border-[#3e3b37]/80">
  {/* Dynamic Island / Altavoz */}
  <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-20 h-3 bg-black rounded-full z-30 flex items-center justify-center pointer-events-none opacity-80">
  <div className="w-2 h-2 rounded-full bg-[#1b1b2f] border-[#2d2d46]" />

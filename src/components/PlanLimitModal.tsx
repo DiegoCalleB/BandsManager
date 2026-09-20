@@ -81,7 +81,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  </div>
 
  {/* Recommended plan highlight */}
- <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-b from-[#1c1a18] to-[#141312] border-2 /40 space-y-4">
+ <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)] to-[var(--surface)] border-2 /40 space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-amber-400" />

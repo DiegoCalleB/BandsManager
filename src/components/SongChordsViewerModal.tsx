@@ -497,7 +497,7 @@ export function SongChordsViewerModal({
  
  {/* SUBSTITUTE QUICK SUMMARY BANNER */}
  {guiaSustituto?.estructura && (
- <div className="bg-gradient-to-r from-purple-950/40 via-[var(--surface)] to-black p-3.5 rounded-[var(--r-m)] text-xs font-mono space-y-1.5">
+ <div className="bg-gradient-to-r from-purple-950/40 via-[var(--surface)] to-[var(--sunken)] p-3.5 rounded-[var(--r-m)] text-xs font-mono space-y-1.5">
  <div className="flex items-center justify-between text-purple-300 font-bold">
  <span className="flex items-center gap-1.5">
  <Zap className="w-4 h-4 text-amber-400" />

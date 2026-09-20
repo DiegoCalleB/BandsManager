@@ -172,7 +172,7 @@ export function CampaignManagerModal({
  <div className="bg-[var(--bg)] border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
  
  {/* Header */}
- <div className="p-5 border-b border-[#22201e] flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[#121110]">
+ <div className="p-5 border-b border-[#22201e] flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[var(--bg)]">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-purple-500/20 text-purple-300 flex items-center justify-center">
  <Target className="w-5 h-5" />

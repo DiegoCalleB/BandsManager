@@ -1507,7 +1507,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* SECCIÓN DE FEEDBACK Y ENTRENAMIENTO IA DEL PITCH (DYNAMIC FEW-SHOT & SELF-REFINING TONE DNA) */}
- <div className="mt-4 p-3.5 bg-gradient-to-br from-[var(--surface)] to-[#121110] rounded-[var(--r-m)] space-y-3">
+ <div className="mt-4 p-3.5 bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] rounded-[var(--r-m)] space-y-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-amber-400" />

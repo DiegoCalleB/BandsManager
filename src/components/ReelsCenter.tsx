@@ -2612,7 +2612,7 @@ export default function ReelsCenter({
  <div className="absolute inset-0 z-10 flex flex-col justify-between p-3 pt-8 pb-3 relative">
  
  {/* Background Decorative Pattern representing video overlay */}
- <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90 pointer-events-none z-0" />
+ <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[var(--sunken)]/90 pointer-events-none z-0" />
  
  {/* Real Media Player Background or Fallback Wave Illustration */}
  {activeTab === 'analyzer' && inputType === 'youtube' && getYouTubeId(youtubeUrl) && !isExpandedPreview ? (
@@ -3101,7 +3101,7 @@ export default function ReelsCenter({
  )}
 
  {/* Dark Gradient Overlay */}
- <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/85 pointer-events-none z-10" />
+ <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-[var(--sunken)]/85 pointer-events-none z-10" />
 
  {/* Vista previa de la plataforma: la propia UI de cada app tapa una franja distinta del
  borde derecho (guardar en Instagram/TikTok, like+dislike separados en YouTube...), así

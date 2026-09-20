@@ -383,7 +383,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {/* Bottom Section: AI Generated Minutes / Acta del Ensayo */}
- <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[#121110] border-[#2a2825] shadow-lg space-y-5">
+ <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] border-[#2a2825] shadow-lg space-y-5">
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--surface)] pb-4">
  <div className="space-y-1">
  <div className="flex items-center gap-2">

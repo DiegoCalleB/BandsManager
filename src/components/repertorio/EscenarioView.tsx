@@ -701,7 +701,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  return (
  <div
  key={it.id}
- className="py-3 px-4 bg-gradient-to-r from-[#1db954]/20 via-[#181818] to-black border-l-4 border-[#1db954] rounded-[var(--r-m)] font-mono text-[#1ed760] font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 my-2 shadow-md"
+ className="py-3 px-4 bg-gradient-to-r from-[#1db954]/20 via-[var(--surface)] to-[var(--sunken)] border-l-4 border-[#1db954] rounded-[var(--r-m)] font-mono text-[#1ed760] font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 my-2 shadow-md"
  >
  <span className="text-sm">⚡</span>
  <span>{it.tituloCustom || 'SECCIÓN DEL SHOW'}</span>

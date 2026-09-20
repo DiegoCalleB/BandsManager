@@ -408,7 +408,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="bg-gradient-to-b from-zinc-900 via-[var(--surface)] to-black rounded-[var(--r-l)] w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col my-auto max-h-[92vh]">
+ <div className="bg-gradient-to-b from-zinc-900 via-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col my-auto max-h-[92vh]">
  
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)]10 flex items-center justify-between bg-white/5 shrink-0">

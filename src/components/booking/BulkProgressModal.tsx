@@ -45,7 +45,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <div className="w-full max-w-lg bg-[#141210] border-[var(--acc)]/40 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
  
  {/* Header */}
- <div className="p-4 sm:p-5 border-b border-zinc-800 bg-gradient-to-r from-[#1e1c18] to-[#121110] flex items-center justify-between">
+ <div className="p-4 sm:p-5 border-b border-zinc-800 bg-gradient-to-r from-[var(--surface)] to-[var(--bg)] flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 flex items-center justify-center text-amber-300">
  {isCompleted ? (

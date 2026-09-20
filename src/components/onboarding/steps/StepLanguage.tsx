@@ -61,7 +61,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
  {/* Header Banner */}
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-br from-amber-500/15 via-[#181614] to-[#121110] shadow-xl shadow-amber-500/5">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-br from-amber-500/15 via-[#181614] to-[var(--bg)] shadow-xl shadow-amber-500/5">
  <div className="flex items-start gap-3.5">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
  <Globe className="w-5 h-5 text-amber-400" />

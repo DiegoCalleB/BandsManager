@@ -3475,7 +3475,7 @@ export default function SongStudioModal({
 
  {/* ORIGINAL SONG BASE TRACK BANNER & SELECTOR */}
  {useSongBaseTrack && (
- <div className="mt-3 p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-950/50 via-orange-950/30 to-black/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono text-amber-200 animate-in fade-in duration-150 shadow-md">
+ <div className="mt-3 p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-950/50 via-orange-950/30 to-[var(--sunken)]/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono text-amber-200 animate-in fade-in duration-150 shadow-md">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-s)] bg-amber-500/20 text-amber-400 shrink-0">
  <Disc className="w-5 h-5 animate-spin-slow" />

@@ -323,7 +323,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* COMPARATIVA DE COSTES ECONÓMICOS / PROYECCIÓN DE GASTO */}
- <div className="px-4 py-3 bg-gradient-to-r from-[#171614] via-[#121110] to-[#181715] border-b border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+ <div className="px-4 py-3 bg-gradient-to-r from-[var(--surface)] via-[var(--bg)] to-[var(--surface)] border-b border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div className="flex items-center gap-2">
  <Coins className="w-4 h-4 text-emerald-400 shrink-0" />
  <div>

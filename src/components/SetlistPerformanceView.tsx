@@ -425,7 +425,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  3 letras. Ahora solo quedan aquí los dos controles que hacen falta siempre a mano
  (menú y cerrar) — todo lo demás vive en el menú "⋯", y los datos pasivos (batería,
  posición, verificación) bajan a una segunda línea fina que no le roba sitio al título. */}
- <div className={`shrink-0 px-3 sm:px-4 pt-2 pb-1.5 z-20 ${glareMode ? 'bg-gradient-to-b from-white to-white/0' : 'bg-gradient-to-b from-black to-black/0'}`}>
+ <div className={`shrink-0 px-3 sm:px-4 pt-2 pb-1.5 z-20 ${glareMode ? 'bg-gradient-to-b from-white to-white/0' : 'bg-gradient-to-b from-black to-[var(--sunken)]/0'}`}>
  <div className="flex items-center justify-between gap-2">
  <div className="min-w-0 flex items-center gap-2 flex-1">
  <span className="text-lg shrink-0">{isBlock ? blockMeta!.icon : '🎤'}</span>
@@ -863,7 +863,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
 
  {/* THIN BOTTOM BAR — page dots + prev/next for touch, live transposition & teleprompter */}
- <div className={`shrink-0 px-3 sm:px-4 py-2 space-y-2 z-20 ${glareMode ? 'bg-gradient-to-t from-white to-white/0' : 'bg-gradient-to-t from-black to-black/0'}`}>
+ <div className={`shrink-0 px-3 sm:px-4 py-2 space-y-2 z-20 ${glareMode ? 'bg-gradient-to-t from-white to-white/0' : 'bg-gradient-to-t from-black to-[var(--sunken)]/0'}`}>
  {!isBlock && !showScannedSheet && currentSong?.tonalidad && (
  <div className="flex items-center justify-center gap-2 text-xs">
  <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded border-white/10">
@@ -1168,7 +1168,7 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
 
  return (
  <div className={`w-full h-full flex flex-col items-center justify-center p-6 sm:p-12 text-center overflow-y-auto ${
- glareMode ? 'bg-white' : 'bg-gradient-to-b from-indigo-950/40 via-[var(--surface)] to-black'
+ glareMode ? 'bg-white' : 'bg-gradient-to-b from-indigo-950/40 via-[var(--surface)] to-[var(--sunken)]'
  }`}>
  <span className="text-5xl sm:text-7xl mb-6">{meta.icon}</span>
  <h2 className={`text-2xl sm:text-4xl font-bold mb-6 uppercase tracking-wide ${glareMode ? 'text-black' : 'text-amber-300'}`}>

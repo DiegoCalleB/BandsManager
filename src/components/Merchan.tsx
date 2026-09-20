@@ -732,7 +732,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
  <div className="relative w-full max-w-2xl rounded-3xl bg-[#141312] border-2 /50 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
  {/* Modal Header */}
- <div className="p-5 bg-gradient-to-r from-[#1c1813] to-[#141210] border-b border-[#262422] flex items-center justify-between">
+ <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[#141210] border-b border-[#262422] flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-400 text-black flex items-center justify-center font-bold">
  <Gift className="w-5 h-5 stroke-[2.5]" />

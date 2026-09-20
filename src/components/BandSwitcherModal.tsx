@@ -551,7 +551,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  isDragged ? 'opacity-30 scale-95 border-dashed ' : ''
  } ${
  isActive
- ? 'bg-gradient-to-b from-amber-500/20 via-[var(--surface)] to-[#121110] /80 shadow-[0_0_20px_rgba(245,158,11,0.2)] ring-1 ring-amber-500/40'
+ ? 'bg-gradient-to-b from-amber-500/20 via-[var(--surface)] to-[var(--bg)] /80 shadow-[0_0_20px_rgba(245,158,11,0.2)] ring-1 ring-amber-500/40'
  : 'bg-[var(--surface)] border-[var(--hair)] hover:/70 hover:bg-[#1e1d1b] hover:shadow-lg'
  } ${switchingBandId && !isSwitching ? 'opacity-40 grayscale pointer-events-none' : ''}`}
  >

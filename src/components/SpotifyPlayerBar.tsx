@@ -539,7 +539,7 @@ export default function SpotifyPlayerBar({
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
- <div className="w-full h-full bg-gradient-to-br from-[#1db954]/30 via-zinc-800 to-black flex items-center justify-center">
+ <div className="w-full h-full bg-gradient-to-br from-[#1db954]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
  <Disc className={`w-5 h-5 ${isPlaying ? 'animate-spin-slow text-[#1db954]' : 'text-zinc-400'}`} />
  </div>
  )}
@@ -642,7 +642,7 @@ export default function SpotifyPlayerBar({
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
- <div className="w-full h-full bg-gradient-to-br from-[#1db954]/30 via-zinc-800 to-black flex items-center justify-center">
+ <div className="w-full h-full bg-gradient-to-br from-[#1db954]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
  <Disc className={`w-7 h-7 ${isPlaying ? 'animate-spin-slow text-[#1db954]' : 'text-zinc-400'}`} />
  </div>
  )}
