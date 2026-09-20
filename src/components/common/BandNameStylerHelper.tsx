@@ -43,10 +43,10 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <button
  type="button"
  onClick={() => setIsOpen(!isOpen)}
- className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 transition-all cursor-pointer shadow-xs active:scale-95"
+ className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 transition-all cursor-pointer shadow-xs active:scale-95"
  title="Estilizar nombre de la banda con fuentes Rock, estilo KoЯn y símbolos"
  >
- <Sparkles className="w-3 h-3 text-amber-400 animate-pulse" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)] animate-pulse" />
  <span>Estilos Rock & KoЯn</span>
  </button>
 
@@ -63,13 +63,13 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  {/* Header */}
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-2.5">
  <div className="flex items-center gap-2">
- <div className="w-7 h-7 rounded-[var(--r-s)] bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-xs">
+ <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] font-bold text-xs">
  Я
  </div>
  <div>
  <h4 className="text-xs font-bold font-mono text-white flex items-center gap-1.5">
  <span>Estilos de Banda & Tipografía</span>
- <Zap className="w-3 h-3 text-amber-400" />
+ <Zap className="w-3 h-3 text-[var(--acc)]" />
  </h4>
  <p className="text-[10px] text-[var(--ink-2)] font-mono">100% compatible con Supabase y móviles</p>
  </div>
@@ -95,7 +95,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <div className="space-y-1.5">
  <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] font-bold flex items-center justify-between">
  <span>Transformar Nombre Actual:</span>
- <span className="text-amber-400/80 font-normal">Clic para aplicar</span>
+ <span className="text-[var(--acc)]/80 font-normal">Clic para aplicar</span>
  </label>
 
  <div className="grid grid-cols-2 gap-2">
@@ -108,7 +108,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  onClick={() => handleApplyPreset(preset.apply)}
  className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:/60 hover:bg-[var(--surface)] text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[52px]"
  >
- <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-mono group-hover:text-amber-300">
+ <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-mono group-hover:text-[var(--acc)]/70">
  <span>{preset.label}</span>
  <span className="text-xs">{preset.icon}</span>
  </div>
@@ -133,7 +133,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  key={idx}
  type="button"
  onClick={() => handleInsertSymbol(sym)}
- className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--surface)] hover: hover:bg-amber-500/20 text-[var(--sunken)] hover:text-white font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
+ className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--surface)] hover: hover:bg-[var(--acc)]/20 text-[var(--sunken)] hover:text-white font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
  title={`Insertar ${sym}`}
  >
  {sym}

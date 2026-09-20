@@ -951,10 +951,10 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={() => setIsScoutModalOpen(true)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
  title="Scout IA: Buscar bandas para co-booking"
  >
- <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span>Scout IA</span>
  </button>
 
@@ -990,7 +990,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <span>Registro de Nuevas Bandas Clientes (registro_bandas)</span>
  </h3>
  <p className="text-xs text-[var(--ink-2)] font-mono mt-0.5">
- Tabla oficial de Supabase <span className="text-emerald-400 font-bold">registro_bandas</span> con la columna <span className="text-amber-300 font-bold">band_id</span> situándose en la extrema derecha.
+ Tabla oficial de Supabase <span className="text-emerald-400 font-bold">registro_bandas</span> con la columna <span className="text-[var(--acc)]/70 font-bold">band_id</span> situándose en la extrema derecha.
  </p>
  </div>
  <div className="flex items-center gap-2 shrink-0">
@@ -1024,7 +1024,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <th className="p-3">Estado Cuenta</th>
  <th className="p-3">Notas</th>
  <th className="p-3 font-bold text-cyan-300 bg-cyan-500/10 border-l border-cyan-500/20">user_id</th>
- <th className="p-3 text-right text-amber-300 bg-amber-500/10 border-l /20 font-bold">band_id</th>
+ <th className="p-3 text-right text-[var(--acc)]/70 bg-[var(--acc)]/10 border-l /20 font-bold">band_id</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-neutral-800/60 bg-[var(--surface)]/40 text-[var(--sunken)]">
@@ -1060,7 +1060,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <td className="p-3 text-left font-bold text-cyan-300 bg-cyan-500/5 border-l border-cyan-500/20 font-mono">
  {band.user_id ||'—'}
  </td>
- <td className="p-3 text-right font-bold text-amber-300 bg-amber-500/5 border-l /20 font-mono">
+ <td className="p-3 text-right font-bold text-[var(--acc)]/70 bg-[var(--acc)]/5 border-l /20 font-mono">
  {band.band_id || band.bandId ||'band-1'}
  </td>
  </tr>
@@ -1368,10 +1368,10 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Analyze Tone */}
  <button
  onClick={() => handleAnalyzeTone(band)}
- className="py-1.5 px-2 bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1"
+ className="py-1.5 px-2 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1"
  title="Analizar forma de expresarse y tono en redes sociales con IA Grounding"
  >
- <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Tono Redes</span>
  </button>
 
@@ -1497,10 +1497,10 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="flex items-center justify-end gap-1.5">
  <button
  onClick={() => handleAnalyzeTone(band)}
- className="px-2 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 rounded-[var(--r-s)] text-[10px] transition-all cursor-pointer flex items-center gap-1"
+ className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-s)] text-[10px] transition-all cursor-pointer flex items-center gap-1"
  title="Analizar forma de expresarse"
  >
- <Sparkles className="w-3 h-3 text-amber-400" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>Tono</span>
  </button>
 

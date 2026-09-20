@@ -638,12 +638,12 @@ export default function TourManager({
  </span>
  )}
  {vehiclesCount > 1 ? (
- <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded font-mono flex items-center gap-1" title={tour.vehiculos?.map(v => v.nombre).join(" +")}>
- <Truck className="w-3 h-3 text-amber-400" />
+ <span className="text-[10px] text-[var(--acc)]/70 bg-[var(--acc)]/10 px-2 py-0.5 rounded font-mono flex items-center gap-1" title={tour.vehiculos?.map(v => v.nombre).join(" +")}>
+ <Truck className="w-3 h-3 text-[var(--acc)]" />
  {vehiclesCount} vehículos
  </span>
  ) : tour.vehiculo ? (
- <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded font-mono flex items-center gap-1">
+ <span className="text-[10px] text-[var(--acc)]/70 bg-[var(--acc)]/10 px-2 py-0.5 rounded font-mono flex items-center gap-1">
  <Truck className="w-3 h-3" />
  {tour.vehiculo}
  </span>
@@ -709,7 +709,7 @@ export default function TourManager({
  {stop.ingresoCacheEstimated ? (
  <span className="text-emerald-400 font-bold">+{stop.ingresoCacheEstimated}€</span>
  ) : null}
- <span className="text-amber-300 font-mono text-xs font-bold">{stop.fecha}</span>
+ <span className="text-[var(--acc)]/70 font-mono text-xs font-bold">{stop.fecha}</span>
  </div>
  </div>
  <HolidayDateWarning date={stop.fecha} city={stop.ciudad} compact />
@@ -924,7 +924,7 @@ export default function TourManager({
  min="0"
  value={dietaPerPersona}
  onChange={(e) => setDietaPerPersona(Number(e.target.value))}
- className="w-16 p-1 rounded bg-black/60 border-[var(--hair)] text-xs font-mono text-center font-bold text-amber-300"
+ className="w-16 p-1 rounded bg-black/60 border-[var(--hair)] text-xs font-mono text-center font-bold text-[var(--acc)]/70"
  />
  <span className="text-[var(--ink-2)] text-xs font-mono">€</span>
  <button
@@ -964,7 +964,7 @@ export default function TourManager({
  className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] border-[var(--hair)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
  title="Aplica la suma de consumos a las distancias de todas las paradas"
  >
- <Calculator className="w-3.5 h-3.5 text-amber-400" /> Recalcular Paradas
+ <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" /> Recalcular Paradas
  </button>
  </div>
  </div>
@@ -1021,7 +1021,7 @@ export default function TourManager({
  </div>
 
  <div>
- <label className="text-[10px] font-mono text-amber-300 uppercase block mb-1">
+ <label className="text-[10px] font-mono text-[var(--acc)]/70 uppercase block mb-1">
  Consumo ({veh.tipoCombustible ==='electrico' ?'kWh/100km' :'L/100km'})
  </label>
  <input
@@ -1030,7 +1030,7 @@ export default function TourManager({
  min="0.1"
  value={veh.consumoL100km}
  onChange={e => handleUpdateVehicle(vIdx,'consumoL100km', Number(e.target.value))}
- className="w-full p-2 rounded-[var(--r-s)] bg-black/60 text-xs font-bold text-amber-300 focus:"
+ className="w-full p-2 rounded-[var(--r-s)] bg-black/60 text-xs font-bold text-[var(--acc)]/70 focus:"
  />
  </div>
 
@@ -1080,7 +1080,7 @@ export default function TourManager({
  </div>
  <div className="bg-sky-500/10 px-3 py-1.5 rounded-[var(--r-s)] text-right shrink-0">
  <span className="text-[10px] uppercase block text-sky-400 font-mono">Coste Flota Total / 100 km</span>
- <span className="text-sm font-extrabold text-amber-300">
+ <span className="text-sm font-extrabold text-[var(--acc)]/70">
  {totalFleetCostPer100Km.toFixed(2)} € / 100 km
  </span>
  </div>
@@ -1181,7 +1181,7 @@ export default function TourManager({
  </span>
  </span>
  {stop.distanciaAnteriorKm && stop.distanciaAnteriorKm > 0 ? (
- <span className="text-[9px] text-amber-300 font-normal">
+ <span className="text-[9px] text-[var(--acc)]/70 font-normal">
  {formVehiculos.length} {formVehiculos.length === 1 ?'vehículo' :'vehículos'}
  </span>
  ) : null}
@@ -1213,7 +1213,7 @@ export default function TourManager({
  />
  </div>
  <div>
- <label className="text-[10px] text-amber-300 block font-mono flex items-center justify-between">
+ <label className="text-[10px] text-[var(--acc)]/70 block font-mono flex items-center justify-between">
  <span>Gasolina Flota (€)</span>
  </label>
  <input

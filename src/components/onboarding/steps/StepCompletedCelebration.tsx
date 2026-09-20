@@ -61,7 +61,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  {/* Stats Summary Pills */}
  <div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
  <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
- <Disc3 className="w-3.5 h-3.5 text-amber-400" /> {totalSongs} Temas
+ <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalSongs} Temas
  </span>
  <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
  <Globe className="w-3.5 h-3.5 text-red-400" /> {totalVideos} Vídeos
@@ -82,10 +82,10 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <div className="p-5 rounded-[var(--r-l)] bg-zinc-900/90 shadow-lg space-y-3 relative overflow-hidden group">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <Globe className="w-5 h-5 text-amber-400" />
+ <Globe className="w-5 h-5 text-[var(--acc)]" />
  <h4 className="text-sm font-semibold text-white">Dossier EPK Online</h4>
  </div>
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-medium">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
  Para Salas y Festivales
  </span>
  </div>
@@ -99,7 +99,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  href="/epk"
  target="_blank"
  rel="noreferrer"
- className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+ className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
  >
  <ExternalLink className="w-3.5 h-3.5" /> Ver Dossier EPK
  </a>
@@ -156,7 +156,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <button
  type="button"
  onClick={onFinish}
- className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.02] transition-all"
+ className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-bold text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.02] transition-all"
  >
  Entrar a BandManager.ai <ArrowRight className="w-4 h-4" />
  </button>

@@ -159,10 +159,10 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  },
  website: {
  label:'Sitio Web',
- colorClass:'text-amber-400',
- bgClass:'bg-amber-500/10',
+ colorClass:'text-[var(--acc)]',
+ bgClass:'bg-[var(--acc)]/10',
  borderClass:'/30',
- hoverClass:'hover:bg-amber-500/20 hover:/50 hover:text-amber-300'
+ hoverClass:'hover:bg-[var(--acc)]/20 hover:/50 hover:text-[var(--acc)]/70'
  },
  revolut: {
  label:'Revolut',
@@ -288,7 +288,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  <div className="space-y-3">
  {showTitle && (
  <div className="text-center">
- <p className="text-xs text-amber-400 font-bold uppercase tracking-wider">
+ <p className="text-xs text-[var(--acc)] font-bold uppercase tracking-wider">
  {title}
  </p>
  <p className="text-[11px] text-[var(--ink-3)] mt-0.5">

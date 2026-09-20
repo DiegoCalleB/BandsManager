@@ -212,7 +212,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  const data = payload[0].payload;
  return (
  <div className="bg-stone-900 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50 max-w-[200px]">
- <div className="font-bold text-amber-400 text-sm truncate">#{data.num} {data.title}</div>
+ <div className="font-bold text-[var(--acc)] text-sm truncate">#{data.num} {data.title}</div>
  <div className="text-[11px] text-zinc-300 mt-1 space-y-0.5">
  <div>Energía: <span className="font-bold" style={{ color: data.hexColor }}>{data.energy}/20 ({data.label})</span></div>
  <div>Tempo: <span className="text-zinc-100">{data.bpm} BPM</span> | Tono: <span className="text-zinc-100">{data.keyStr}</span></div>
@@ -283,7 +283,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  <button
  type="button"
  onClick={() => onNavigate('booking')}
- className="text-xs font-mono text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Ver CRM</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -311,7 +311,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  const pct = ((data.count / total) * 100).toFixed(1);
  return (
  <div className="bg-stone-900 border-stone-700 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
- <div className="font-bold text-amber-400">{data.name}</div>
+ <div className="font-bold text-[var(--acc)]">{data.name}</div>
  <div className="text-zinc-300 mt-1">
  Cantidad: <span className="font-bold text-white">{data.count} salas</span>
  </div>
@@ -373,7 +373,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  <button
  type="button"
  onClick={() => onNavigate('finanzas')}
- className="text-xs font-mono text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Finanzas</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -388,7 +388,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  </div>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
  <span className="text-[10px] text-[var(--ink-2)] block uppercase">Neto / Beneficio</span>
- <span className="font-bold text-amber-400 text-sm">+{beneficio}€</span>
+ <span className="font-bold text-[var(--acc)] text-sm">+{beneficio}€</span>
  </div>
  </div>
 
@@ -408,7 +408,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  <div className="text-zinc-300 mt-1 space-y-0.5">
  <div>Ingresos: <span className="font-bold text-emerald-400">+{data.ingresos}€</span></div>
  <div>Gastos: <span className="font-bold text-rose-400">-{data.gastos}€</span></div>
- <div>Caché Medio: <span className="font-bold text-amber-400">{data.cacheMedio}€</span></div>
+ <div>Caché Medio: <span className="font-bold text-[var(--acc)]">{data.cacheMedio}€</span></div>
  </div>
  </div>
  );
@@ -457,7 +457,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  <button
  type="button"
  onClick={() => onNavigate('fans')}
- className="text-xs font-mono text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Captura QR</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -491,7 +491,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  <div className="font-bold text-purple-400">{data.mes}</div>
  <div className="text-zinc-300 mt-1 space-y-0.5">
  <div>Fans acumulados: <span className="font-bold text-purple-300">{data.fans}</span></div>
- <div>Escaneos QR: <span className="font-bold text-amber-400">{data.qrScans}</span></div>
+ <div>Escaneos QR: <span className="font-bold text-[var(--acc)]">{data.qrScans}</span></div>
  </div>
  </div>
  );

@@ -73,8 +73,8 @@ export function GlobalCampaignBar({
  {campaign.targetCities?.join(',') ||'Todas las ciudades'}
  </span>
  <span className="text-neutral-600">•</span>
- <span className="inline-flex items-center gap-1 text-amber-300 font-mono">
- <Users className="w-2.5 h-2.5 text-amber-400 shrink-0" />
+ <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-mono">
+ <Users className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
  {campaign.minCapacity}-{campaign.maxCapacity} pax
  </span>
  <span className="text-neutral-600">•</span>
@@ -177,8 +177,8 @@ export function GlobalCampaignBar({
  <span>{campaign.targetCities?.join(',') ||'Todas las ciudades'}</span>
  </div>
  <div className="flex items-center justify-between text-[var(--ink-3)]">
- <span className="inline-flex items-center gap-1 text-amber-300 font-mono">
- <Users className="w-3 h-3 text-amber-400 shrink-0" />
+ <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-mono">
+ <Users className="w-3 h-3 text-[var(--acc)] shrink-0" />
  {campaign.minCapacity} - {campaign.maxCapacity} pax
  </span>
  <span className="inline-flex items-center gap-1 text-pink-300 font-mono font-semibold">

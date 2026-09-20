@@ -25,7 +25,7 @@ interface BulkLeadsActionBarProps {
 
 const STATUS_OPTIONS: { status: LeadStatus; label: string; color: string; icon: any }[] = [
  { status:'nuevo', label:'Nuevo Lead', color:'bg-blue-500/20 text-blue-300 border-blue-500/40', icon: Sparkles },
- { status:'pendiente_aprobacion', label:'Pendiente Aprobación', color:'bg-amber-500/20 text-amber-300 /40', icon: Clock },
+ { status:'pendiente_aprobacion', label:'Pendiente Aprobación', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
  { status:'aprobado', label:'Aprobado (Listo para envío)', color:'bg-emerald-500/20 text-emerald-300 border-emerald-500/40', icon: CheckCircle2 },
  { status:'esperando_respuesta', label:'Esperando Respuesta', color:'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Send },
  { status:'contactado', label:'Contactado', color:'bg-cyan-500/20 text-cyan-300 border-cyan-500/40', icon: MessageSquare },
@@ -141,9 +141,9 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  }`}
  title="Cambiar el estado de todos los seleccionados"
  >
- <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Estado</span>
- <ChevronDown className={`w-3.5 h-3.5 text-amber-400 transition-transform ${isStatusDropdownOpen ?'rotate-180' :''}`} />
+ <ChevronDown className={`w-3.5 h-3.5 text-[var(--acc)] transition-transform ${isStatusDropdownOpen ?'rotate-180' :''}`} />
  </button>
 
  {/* Status Dropdown Menu (Opens downwards) */}
@@ -226,11 +226,11 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-amber-600'
- :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-amber-300'
+ :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-[var(--acc)]/70'
  }`}
  title="Marcar como favoritos"
  >
- <Star className="w-4 h-4 fill-amber-400/30 text-amber-400" />
+ <Star className="w-4 h-4 fill-amber-400/30 text-[var(--acc)]" />
  </button>
 
  {/* Export CSV */}

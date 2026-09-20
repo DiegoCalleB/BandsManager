@@ -60,10 +60,10 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  {/* AUDIO PREVIEW ADELANTO EN LANDING DE FANS & EPK */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
  <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
- <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <Music className="w-5 h-5" /> Canción / Adelanto en Audio Preview (Landing de Fans & EPK)
  </h3>
- <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full">
+ <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-full">
  Player Interactivo
  </span>
  </div>
@@ -101,7 +101,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <label className="text-xs font-semibold text-[var(--ink-3)] flex items-center justify-between">
  <span>Elegir tema de vuestro repertorio</span>
  {songs.length > 0 && (
- <span className="text-[10px] text-amber-400 font-mono">{songs.length} temas disponibles</span>
+ <span className="text-[10px] text-[var(--acc)] font-mono">{songs.length} temas disponibles</span>
  )}
  </label>
  <select
@@ -222,13 +222,13 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  </p>
  </div>
  <div className="flex items-center gap-1 h-5 shrink-0 px-2">
- <span className="w-1 h-3 bg-amber-400 rounded-full animate-pulse" />
- <span className="w-1 h-5 bg-amber-400 rounded-full animate-bounce" />
- <span className="w-1 h-2 bg-amber-400 rounded-full animate-pulse" />
+ <span className="w-1 h-3 bg-[var(--acc)]/60 rounded-full animate-pulse" />
+ <span className="w-1 h-5 bg-[var(--acc)]/60 rounded-full animate-bounce" />
+ <span className="w-1 h-2 bg-[var(--acc)]/60 rounded-full animate-pulse" />
  </div>
  </div>
  {config.audioPreview?.habilitado === false && (
- <p className="text-[11px] text-amber-400/90 font-mono text-center">
+ <p className="text-[11px] text-[var(--acc)]/90 font-mono text-center">
  ⚠️ Reproductor actualmente desactivado para los fans.
  </p>
  )}
@@ -240,15 +240,15 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
  <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
  <div className="flex items-center gap-2">
- <Share2 className="w-5 h-5 text-amber-400" />
- <h3 className="text-base sm:text-lg font-bold text-amber-400">
+ <Share2 className="w-5 h-5 text-[var(--acc)]" />
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)]">
  Vídeos de Directo ({videos.length})
  </h3>
  </div>
  <button
  type="button"
  onClick={anadirVideo}
- className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
+ className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
  >
  + Añadir vídeo
  </button>
@@ -266,7 +266,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <div
  key={v.id}
  className={`rounded-[var(--r-m)] p-3 space-y-2 ${
- v.destacado ?'/60 bg-amber-500/5' :' bg-[var(--surface)]'
+ v.destacado ?'/60 bg-[var(--acc)]/5' :' bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -276,8 +276,8 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  title={v.destacado ?'Vídeo principal' :'Marcar como principal'}
  className={`shrink-0 w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center text-sm transition cursor-pointer ${
  v.destacado
- ?'bg-amber-500 text-slate-950 font-bold'
- :' text-[var(--ink-2)] hover:text-amber-300'
+ ?'bg-[var(--acc)] text-slate-950 font-bold'
+ :' text-[var(--ink-2)] hover:text-[var(--acc)]/70'
  }`}
  >
  ★
@@ -312,7 +312,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
 
  {/* DATOS LOGÍSTICOS & GIRA (DATOS DE CONTRATACIÓN) */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b pb-3">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
  <Info className="w-5 h-5" /> Datos de Gira y Contratación
  </h3>
  <p className="text-xs text-[var(--ink-3)]">

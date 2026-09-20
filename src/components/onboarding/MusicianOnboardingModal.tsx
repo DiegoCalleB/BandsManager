@@ -46,7 +46,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  className="relative w-full max-w-2xl bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
  >
  {/* Decorative Top Ambient Glow */}
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-24 bg-amber-500/10 blur-3xl pointer-events-none" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-24 bg-[var(--acc)]/10 blur-3xl pointer-events-none" />
 
  {/* Header */}
  <div className="p-5 sm:p-6 pb-4 border-b border-[var(--hair)] relative shrink-0">
@@ -60,8 +60,8 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  </button>
 
  <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
- <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 text-[11px] font-mono font-bold tracking-wider uppercase">
- <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-mono font-bold tracking-wider uppercase">
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Primeros Pasos para Músicos</span>
  </div>
 
@@ -76,7 +76,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  onClick={() => setAppLang(l.code)}
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
- ?'bg-amber-400 text-stone-950 font-bold shadow-sm scale-105'
+ ?'bg-[var(--acc)]/60 text-stone-950 font-bold shadow-sm scale-105'
  :'bg-neutral-800/70 hover:bg-neutral-800 text-[var(--ink-3)] border-[var(--hair)]'
  }`}
  title={l.label}
@@ -105,15 +105,15 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-amber-500/5"
  >
  <div className="flex items-start gap-3.5">
- <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 shrink-0 group-hover:scale-105 transition-transform">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0 group-hover:scale-105 transition-transform">
  <Calendar className="w-5 h-5" />
  </div>
  <div className="space-y-1">
  <div className="flex items-center gap-2">
- <h3 className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors">
+ <h3 className="text-sm font-bold text-white group-hover:text-[var(--acc)] transition-colors">
  Tengo un bolo o concierto a la vista
  </h3>
- <span className="text-[9px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300">
+ <span className="text-[9px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
  Rápido
  </span>
  </div>
@@ -125,7 +125,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  <button
  type="button"
- className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-amber-500/15 group-hover:bg-amber-500 text-amber-300 group-hover:text-stone-950 text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)]/70 group-hover:text-stone-950 text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
  >
  <span>Ir al Calendario</span>
  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -199,7 +199,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  {/* Footer */}
  <div className="p-4 sm:p-5 border-t border-[var(--hair)] bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
  <div className="flex items-center gap-2 text-[11px] text-[var(--ink-2)]">
- <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
+ <ShieldCheck className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span>Tus datos y cambios se guardan automáticamente en tiempo real.</span>
  </div>
 

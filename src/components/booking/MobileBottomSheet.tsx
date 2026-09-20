@@ -67,8 +67,8 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
  {/* Header Bar */}
  <div className="w-full flex justify-between items-center pb-3 border-b border-zinc-800 mb-3 shrink-0">
  <div className="flex items-center gap-2 truncate pr-2">
- <Building2 className="w-4 h-4 text-amber-400 shrink-0" />
- <span className="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold truncate">
+ <Building2 className="w-4 h-4 text-[var(--acc)] shrink-0" />
+ <span className="text-xs font-mono uppercase tracking-widest text-[var(--acc)] font-bold truncate">
  Ficha: {selectedLead.nombre_sala}
  </span>
  </div>
@@ -76,7 +76,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="flex items-center justify-center px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition-colors cursor-pointer shadow-md text-xs font-bold shrink-0 gap-1"
+ className="flex items-center justify-center px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors cursor-pointer shadow-md text-xs font-bold shrink-0 gap-1"
  title="Cerrar ficha"
  >
  <X className="w-4 h-4" />

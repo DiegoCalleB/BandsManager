@@ -140,7 +140,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  : isSelected
  ? isStitchLight
  ?'bg-amber-50/80 text-[var(--ink)]'
- :'bg-amber-500/10 /30 text-zinc-100'
+ :'bg-[var(--acc)]/10 /30 text-zinc-100'
  : isStitchLight
  ?'bg-white hover:bg-[var(--bg)] /80 text-[var(--ink)] shadow-xs'
  :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-zinc-200 shadow-xs'
@@ -241,8 +241,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className={`p-1 rounded-full transition-all cursor-pointer shrink-0 ${
  song.favoritoGeneral
- ?'text-amber-400 hover:text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]'
- :'text-[var(--ink-2)] hover:text-amber-400 opacity-60 hover:opacity-100'
+ ?'text-[var(--acc)] hover:text-[var(--acc)]/70 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]'
+ :'text-[var(--ink-2)] hover:text-[var(--acc)] opacity-60 hover:opacity-100'
  }`}
  title={song.favoritoGeneral ?'Quitar de favoritas' :'Marcar como favorita'}
  >
@@ -276,7 +276,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  song.estadoTema ==='listo'
  ?'bg-emerald-500/15 text-emerald-300'
  : song.estadoTema ==='ensayando'
- ?'bg-amber-500/15 text-amber-300'
+ ?'bg-[var(--acc)]/15 text-[var(--acc)]/70'
  :'bg-neutral-800 text-zinc-400'
  }`}
  >
@@ -340,17 +340,17 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenStudio}
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  ideasCount > 0
- ?'bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 /40 shadow-xs'
+ ?'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-amber-200 /40 shadow-xs'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-neutral-800 hover:bg-neutral-700 text-zinc-200 /80'
  }`}
  title="Abrir Studio de Grabación Multipista & Pistas"
  >
- <Headphones className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+ <Headphones className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span className="hidden xs:inline text-xs">Studio</span>
  {ideasCount > 0 && (
- <span className="px-1.5 py-0.2 bg-amber-500/40 text-white rounded-full text-[10px] font-bold">
+ <span className="px-1.5 py-0.2 bg-[var(--acc)]/40 text-white rounded-full text-[10px] font-bold">
  {ideasCount}
  </span>
  )}
@@ -368,14 +368,14 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  hasIrisStems(song)
- ?'bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 /40 shadow-xs'
+ ?'bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-[var(--acc)]/70 /40 shadow-xs'
  : isStitchLight
  ?'bg-amber-50 hover:bg-amber-100 text-amber-900'
- :'bg-[var(--surface)] hover:bg-neutral-800 text-amber-300 /30'
+ :'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--acc)]/70 /30'
  }`}
  title={hasIrisStems(song) ?'Ver pistas e instrumentos separados con Iris' :'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
  >
- <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 animate-pulse" />
  <span className="hidden sm:inline text-xs font-mono">Iris</span>
  </button>
  )}
@@ -387,14 +387,14 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenMemberNotes}
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
  hasMemberNotes
- ?'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 /30 shadow-xs'
+ ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 /30 shadow-xs'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-neutral-800/80 hover:bg-neutral-700 text-zinc-400 hover:text-zinc-200 /70'
  }`}
  title="Ver y editar notas específicas por miembro de la banda"
  >
- <Users className={`w-3.5 h-3.5 ${hasMemberNotes ?'text-amber-400' :'text-zinc-400'}`} />
+ <Users className={`w-3.5 h-3.5 ${hasMemberNotes ?'text-[var(--acc)]' :'text-zinc-400'}`} />
  <span className="hidden md:inline text-xs">Notas</span>
  </button>
  )}
@@ -483,7 +483,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <button
  type="button"
  onClick={() => { setShowMenu(false); onOpenMemberNotes(); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-amber-500/20 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
  >
  <Users className="w-3.5 h-3.5" />
  <span>Notas por Miembro</span>
@@ -524,9 +524,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  if (onOpenIris) onOpenIris();
  else if (onOpenStudio) onOpenStudio();
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-amber-500/20 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer font-bold"
  >
- <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
  <span>{hasIrisStems(song) ?'🎛️ Ver Pistas Iris Separadas' :'✨ Procesar con Iris (IA Stems)'}</span>
  </button>
  )}

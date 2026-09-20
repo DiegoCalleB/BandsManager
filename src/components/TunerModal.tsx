@@ -505,7 +505,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <span className="truncate">{p.name}</span>
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono shrink-0 uppercase ${
  p.category ==='ukulele'
- ?'bg-amber-500/20 text-amber-300'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  : p.category ==='bass'
  ?'bg-blue-500/20 text-blue-300'
  :'bg-emerald-500/20 text-emerald-300'
@@ -533,7 +533,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  {/* Tuning needle meter bar */}
  <div className="w-full space-y-2">
  <div className="flex items-center justify-between text-[11px] font-mono text-[var(--ink-2)]">
- <span className="text-amber-400 font-bold">-50 Cents (Grave)</span>
+ <span className="text-[var(--acc)] font-bold">-50 Cents (Grave)</span>
  <span className={`font-bold ${isTunedIn ?'text-emerald-400 text-xs font-black animate-bounce' :'text-emerald-300'}`}>
  {isTunedIn ?'¡AFINADO PERFECTO!' :'0 Cents'}
  </span>
@@ -552,7 +552,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  isTunedIn 
  ?'bg-emerald-400 shadow-emerald-500/80 scale-110' 
  : currentCents < -5 
- ?'bg-amber-400 shadow-amber-500/50' 
+ ?'bg-[var(--acc)]/60 shadow-amber-500/50' 
  :'bg-rose-400 shadow-rose-500/50'
  }`}
  style={{ left: `calc(${needlePercent}% - 7px)` }}
@@ -583,7 +583,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  isTunedIn 
  ?'bg-emerald-500/20 text-emerald-300' 
  : pitch.cents < 0 
- ?'bg-amber-500/20 text-amber-300' 
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' 
  :'bg-rose-500/20 text-rose-300'
  }`}>
  {pitch.cents > 0 ? `+${pitch.cents}` : pitch.cents} Cents
@@ -626,9 +626,9 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </button>
 
  {micError && (
- <div className="mt-3 p-3 rounded-[var(--r-m)] bg-amber-500/10 w-full text-left space-y-2">
- <div className="flex items-start gap-2 text-amber-300 text-xs font-mono">
- <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
+ <div className="mt-3 p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 w-full text-left space-y-2">
+ <div className="flex items-start gap-2 text-[var(--acc)]/70 text-xs font-mono">
+ <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[var(--acc)]" />
  <p className="leading-snug">{micError}</p>
  </div>
  <div className="flex flex-wrap items-center gap-2 pt-1 border-t /20">
@@ -639,7 +639,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  togglePlayReferenceTone(currentPreset.strings[0].freq);
  }
  }}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-amber-500 text-zinc-950 font-bold text-[10px] font-mono hover:bg-amber-400 transition-colors flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-zinc-950 font-bold text-[10px] font-mono hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
  >
  <Volume2 className="w-3 h-3" />
  Afinar con Sintetizador ({currentPreset.strings[0]?.note})
@@ -660,7 +660,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <div className="space-y-2">
  <div className="flex items-center justify-between">
  <span className="text-xs font-semibold text-[var(--ink-3)] flex items-center gap-1.5">
- <Volume2 className="w-3.5 h-3.5 text-amber-400" />
+ <Volume2 className="w-3.5 h-3.5 text-[var(--acc)]" />
  Cuerdas Objetivo & Tonos de Referencia:
  </span>
  <span className="text-[10px] text-[var(--ink-2)] font-mono">Toca un tono para oírlo</span>
@@ -680,7 +680,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-xs font-mono flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
  isTonePlaying
- ?'bg-amber-500 text-zinc-950 font-black shadow-md scale-105'
+ ?'bg-[var(--acc)] text-zinc-950 font-black shadow-md scale-105'
  : isSelected
  ?'bg-emerald-500/20 text-emerald-300 border-emerald-500/60 font-bold'
  :'bg-white/5 text-[var(--ink-3)] border-[var(--hair)]5 hover:bg-white/10 hover:border-[var(--hair)]20'

@@ -539,7 +539,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
  }`}
  >
- <FileText className={`w-5 h-5 ${format ==='txt' ?'text-[#1ed760]' :'text-amber-400'}`} />
+ <FileText className={`w-5 h-5 ${format ==='txt' ?'text-[#1ed760]' :'text-[var(--acc)]'}`} />
  <div>
  <div className="text-xs font-bold">Texto TXT</div>
  <div className="text-[10px] opacity-70">Lista limpia</div>
@@ -576,7 +576,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  </span>
  </div>
  {songsWithAudio.length < targetSongs.length && (
- <span className="text-[11px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-[var(--r-s)] shrink-0">
+ <span className="text-[11px] text-[var(--acc)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-[var(--r-s)] shrink-0">
  {targetSongs.length - songsWithAudio.length} sin MP3 subido
  </span>
  )}
@@ -692,7 +692,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  </>
  ) : (
  <>
- <Copy className="w-4 h-4 text-amber-400" />
+ <Copy className="w-4 h-4 text-[var(--acc)]" />
  <span>Copiar Lista</span>
  </>
  )}

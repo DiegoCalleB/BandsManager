@@ -444,7 +444,7 @@ export default function Dashboard({
  <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">
  Panel de {activeBandName}
  {agendaFilterMode ==='all' && hasMultipleBands && (
- <span className="ml-2 text-amber-400 lowercase font-normal">(vista global de todas tus bandas)</span>
+ <span className="ml-2 text-[var(--acc)] lowercase font-normal">(vista global de todas tus bandas)</span>
  )}
  </p>
  </div>
@@ -452,9 +452,9 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("fans")}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
  >
- <QrCode className="w-4 h-4 text-amber-400" />
+ <QrCode className="w-4 h-4 text-[var(--acc)]" />
  <span>Códigos QR & Fans</span>
  </button>
  <button
@@ -478,7 +478,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("calendario")}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
  >
  <Calendar className="w-4 h-4" />
  <span>Calendario</span>
@@ -490,7 +490,7 @@ export default function Dashboard({
  <div className="p-6 rounded-[var(--r-l)] bg-[var(--surface)]/90 shadow-sm space-y-4">
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Calendar className="w-5 h-5" />
  </div>
  <div>
@@ -515,7 +515,7 @@ export default function Dashboard({
  onClick={() => setAgendaFilterMode('all')}
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode ==='all'
- ?'bg-amber-500 text-stone-950 font-black shadow-xs'
+ ?'bg-[var(--acc)] text-stone-950 font-black shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  title="Ver eventos de todas las bandas"
@@ -530,7 +530,7 @@ export default function Dashboard({
  onClick={() => setAgendaFilterMode('active')}
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode ==='active'
- ?'bg-amber-500 text-stone-950 font-black shadow-xs'
+ ?'bg-[var(--acc)] text-stone-950 font-black shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  title={`Ver solo eventos de ${activeBandName}`}
@@ -544,7 +544,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate('calendario')}
- className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Ver agenda completa</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -562,10 +562,10 @@ export default function Dashboard({
  >
  <div className="flex items-start gap-3.5">
  <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm">
- <span className="text-lg font-mono font-black leading-none text-amber-400">
+ <span className="text-lg font-mono font-black leading-none text-[var(--acc)]">
  {item.day}
  </span>
- <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-300 mt-0.5">
+ <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[var(--acc)]/70 mt-0.5">
  {item.month}
  </span>
  </div>
@@ -574,14 +574,14 @@ export default function Dashboard({
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
  item.type ==='concierto'
- ?'bg-amber-500/20 text-amber-300'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  :'bg-emerald-500/20 text-emerald-300'
  }`}>
  {item.type}
  </span>
  {(agendaFilterMode ==='all' || hasMultipleBands) && item.bandName && (
- <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold bg-stone-800/80 text-amber-300/90 truncate max-w-[120px] flex items-center gap-1">
- <Music className="w-2.5 h-2.5 text-amber-400 shrink-0" />
+ <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold bg-stone-800/80 text-[var(--acc)]/70/90 truncate max-w-[120px] flex items-center gap-1">
+ <Music className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
  <span className="truncate">{item.bandName}</span>
  </span>
  )}
@@ -603,7 +603,7 @@ export default function Dashboard({
 
  <div className="mt-3 pt-2.5 border-t text-xs font-mono text-[var(--ink-2)] flex items-center justify-between">
  <span className="truncate">{item.details}</span>
- <ArrowRight className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+ <ArrowRight className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
  </div>
  </div>
  ))}
@@ -618,7 +618,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate('calendario')}
- className="px-4 py-2 rounded-[var(--r-m)] bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Ir al Calendario</span>
@@ -634,7 +634,7 @@ export default function Dashboard({
  <div>
  <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <QrCode className="w-5 h-5" />
  </div>
  <div>
@@ -646,7 +646,7 @@ export default function Dashboard({
  </p>
  </div>
  </div>
- <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-300">
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
  {totalFansCount} / {maxPromoFans} Fans
  </span>
  </div>
@@ -659,7 +659,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("fans")}
- className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+ className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
  >
  <QrCode className="w-4 h-4" />
  <span>Gestionar QRs y Fans</span>

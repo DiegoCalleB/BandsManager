@@ -319,7 +319,7 @@ export default function Finanzas({
  <>
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
  <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Total Caché Contratado</span>
- <h4 className="text-xl font-black text-amber-400">{totalConcertCache.toLocaleString('es-ES')}€</h4>
+ <h4 className="text-xl font-black text-[var(--acc)]">{totalConcertCache.toLocaleString('es-ES')}€</h4>
  <p className="text-[10px] text-[var(--ink-2)]">{concerts.length} conciertos en catálogo</p>
  </div>
 
@@ -339,7 +339,7 @@ export default function Finanzas({
 
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
  <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Beneficio Medio / Bolo</span>
- <h4 className="text-xl font-black text-amber-300">
+ <h4 className="text-xl font-black text-[var(--acc)]/70">
  {mediaBeneficio >= 0 ? `+${Math.round(mediaBeneficio)}€` : `${Math.round(mediaBeneficio)}€`}
  </h4>
  <p className="text-[10px] text-[var(--ink-2)]">Rentabilidad media por actuación</p>
@@ -352,7 +352,7 @@ export default function Finanzas({
  {/* Concert Profitability Table */}
  <div className={`${colors.card} p-5 rounded-[var(--r-m)] space-y-4`}>
  <div className="flex items-center justify-between border-b /80 pb-3">
- <h3 className="text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+ <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-2">
  <Calculator className="w-4 h-4" /> Desglose de Gastos & Rentabilidad por Bolo
  </h3>
  <span className="text-xs text-[var(--ink-3)]">Haz clic en"Gastos" para desglosar peajes, gasolina, hotel y dietas.</span>
@@ -360,7 +360,7 @@ export default function Finanzas({
 
  <div className="overflow-x-auto">
  <table className="w-full text-left text-xs">
- <thead className="bg-slate-950/80 text-amber-400 uppercase font-bold font-mono text-[10px] border-b">
+ <thead className="bg-slate-950/80 text-[var(--acc)] uppercase font-bold font-mono text-[10px] border-b">
  <tr>
  <th className="p-3">Fecha & Bolo</th>
  <th className="p-3">Ciudad / Sala</th>
@@ -407,7 +407,7 @@ export default function Finanzas({
  } else if (beneficioNeto < 150) {
  alertBadge = {
  label:'🟡 Ajustado',
- bgColor:'bg-amber-950/80 /40 text-amber-300'
+ bgColor:'bg-amber-950/80 /40 text-[var(--acc)]/70'
  };
  }
 
@@ -435,7 +435,7 @@ export default function Finanzas({
  </span>
  )}
  </td>
- <td className="p-3 font-mono font-bold text-amber-400 text-sm">
+ <td className="p-3 font-mono font-bold text-[var(--acc)] text-sm">
  {c.cache ? `${c.cache}€` :'0€'}
  </td>
  <td className="p-3 text-[11px] text-[var(--ink-3)]">
@@ -478,7 +478,7 @@ export default function Finanzas({
  setEditingOtros(String(c.gastosDetalle?.otros || 0));
  setEditingNotasGastos(c.gastosDetalle?.notasGastos ||'');
  }}
- className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-300 font-semibold rounded-[var(--r-s)] text-[11px] flex items-center gap-1 ml-auto transition cursor-pointer"
+ className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]/70 font-semibold rounded-[var(--r-s)] text-[11px] flex items-center gap-1 ml-auto transition cursor-pointer"
  >
  <Edit3 className="w-3.5 h-3.5" /> Gastos
  </button>
@@ -504,7 +504,7 @@ export default function Finanzas({
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4 shadow-2xl">
  <div className="flex items-center justify-between border-b pb-3">
  <h3 className="text-lg font-bold text-white flex items-center gap-2">
- <Calculator className="w-5 h-5 text-amber-400" /> Desglose Real de Gastos de Bolo
+ <Calculator className="w-5 h-5 text-[var(--acc)]" /> Desglose Real de Gastos de Bolo
  </h3>
  <button
  onClick={() => setEditingConcertId(null)}
@@ -609,7 +609,7 @@ export default function Finanzas({
  }
  setEditingConcertId(null);
  }}
- className="px-4 py-2 bg-amber-500 text-slate-950 text-xs font-bold rounded-[var(--r-m)] shadow-lg"
+ className="px-4 py-2 bg-[var(--acc)] text-slate-950 text-xs font-bold rounded-[var(--r-m)] shadow-lg"
  >
  Guardar Gastos
  </button>
@@ -754,7 +754,7 @@ export default function Finanzas({
  :'bg-emerald-500/10 -emerald-500/20 text-emerald-400'
  : isStitchLight
  ?'bg-amber-50 text-amber-700 hover:bg-amber-100/50'
- :'bg-amber-500/10 -amber-500/20 text-amber-400 hover:bg-amber-500/15'
+ :'bg-[var(--acc)]/10 -amber-500/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
  }`}
  title="Hacer clic para cambiar el estado de pago"
  >

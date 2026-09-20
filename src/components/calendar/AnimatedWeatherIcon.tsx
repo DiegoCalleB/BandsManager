@@ -50,7 +50,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"easeInOut" 
  }}
- className="absolute inset-0 rounded-full bg-amber-400/25 blur-sm"
+ className="absolute inset-0 rounded-full bg-[var(--acc)]/60/25 blur-sm"
  />
  {/* Sol girando lentamente a velocidad constante y suave */}
  <motion.div
@@ -60,7 +60,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"linear" 
  }}
- className="relative z-10 flex items-center justify-center text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+ className="relative z-10 flex items-center justify-center text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
  >
  <Sun className={currentSize.icon} />
  </motion.div>
@@ -82,7 +82,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"easeInOut" 
  }}
- className="absolute top-0 right-0 z-0 text-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
+ className="absolute top-0 right-0 z-0 text-[var(--acc)] drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
  >
  <Sun className={currentSize.sub} />
  </motion.div>
@@ -293,7 +293,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.5)]' :'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]'
+ severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.5)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]'
  }`}
  >
  <Wind className={currentSize.icon} />
@@ -336,7 +336,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]'
+ severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]'
  }`}
  >
  <AlertTriangle className={currentSize.icon} />
@@ -380,12 +380,12 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
  };
  case'wind':
  return {
- bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-amber-500/20 /50 text-amber-300',
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  default:
  return {
- bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-amber-500/20 /50 text-amber-300',
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  }

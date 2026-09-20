@@ -788,7 +788,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <span>Aprobado / Confirmado</span>
  </div>
  <div className="flex items-center gap-2">
- <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
+ <span className="w-2.5 h-2.5 rounded-full bg-[var(--acc)] inline-block" />
  <span>Pendiente aprobación</span>
  </div>
  <div className="flex items-center gap-2">

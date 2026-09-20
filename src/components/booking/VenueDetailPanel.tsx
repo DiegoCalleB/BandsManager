@@ -626,7 +626,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </p>
  {selectedLead.festival_start_date && selectedLead.festival_end_date && (
  <div className="space-y-1 mt-1">
- <p className="text-xs sm:text-sm font-sans text-amber-400 flex items-center gap-1.5">
+ <p className="text-xs sm:text-sm font-sans text-[var(--acc)] flex items-center gap-1.5">
  <span className="text-lg">🎪</span>
  <span className="font-semibold">Festival/Evento:</span>
  <span>{formatFestivalDateRange(selectedLead.festival_start_date, selectedLead.festival_end_date)}</span>
@@ -679,14 +679,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex flex-wrap items-center gap-2">
  {/* Category / Type Recategorizer */}
  <div className="flex items-center gap-1.5 bg-[var(--bg)] px-2.5 py-1 rounded-[var(--r-m)]">
- <span className="text-[10px] text-amber-400 font-mono font-bold uppercase">Tipo:</span>
+ <span className="text-[10px] text-[var(--acc)] font-mono font-bold uppercase">Tipo:</span>
  <select
  value={String(selectedLead.tipo ||'sala').toLowerCase()}
  onChange={(e) => {
  const newType = e.target.value as LeadType;
  onUpdateLead(selectedLead.id, { tipo: newType });
  }}
- className="text-xs font-sans font-bold text-amber-300 bg-transparent cursor-pointer focus:outline-none"
+ className="text-xs font-sans font-bold text-[var(--acc)]/70 bg-transparent cursor-pointer focus:outline-none"
  title="Cambiar categoría / tipo de este lead"
  >
  <option value="sala" className="bg-zinc-900 text-zinc-100">🏟️ Sala de Conciertos</option>
@@ -771,13 +771,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  if (isPending) {
  return (
- <div className="p-3 bg-amber-500/10 rounded-[var(--r-m)] flex items-center justify-between gap-2.5">
+ <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] flex items-center justify-between gap-2.5">
  <div className="flex items-center gap-2.5 min-w-0">
- <div className="w-8 h-8 rounded-[var(--r-s)] bg-amber-500/20 flex items-center justify-center shrink-0">
- <Sparkles className="w-4 h-4 text-amber-400" />
+ <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center shrink-0">
+ <Sparkles className="w-4 h-4 text-[var(--acc)]" />
  </div>
  <div className="min-w-0">
- <p className="text-xs font-bold text-amber-300">
+ <p className="text-xs font-bold text-[var(--acc)]/70">
  {isReplyStage ?'💬 Respuesta redactada por IA — Pendiente de aprobación' :'✉️ Pitch inicial redactado por IA — Pendiente de aprobación'}
  </p>
  <p className="text-[10px] text-zinc-400 truncate">
@@ -789,7 +789,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={handleApprovePitchDirectly}
  disabled={isCreatingDraft}
- className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
+ className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
  <span>{isCreatingDraft ?'Creando borrador...' :'Aprobar'}</span>
@@ -889,30 +889,30 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </p>
  <div className="flex items-center gap-2 flex-wrap justify-end">
  {selectedLead.email_contacto && (
- <span className="text-xs text-amber-300 font-mono font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Principal: ${selectedLead.email_contacto}`}>
+ <span className="text-xs text-[var(--acc)]/70 font-mono font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Principal: ${selectedLead.email_contacto}`}>
  ✉️ {selectedLead.email_contacto}
  </span>
  )}
  {selectedLead.email_secundario && (
- <span className="text-xs text-amber-400/80 font-mono font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Secundario / Promotora: ${selectedLead.email_secundario}`}>
+ <span className="text-xs text-[var(--acc)]/80 font-mono font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Secundario / Promotora: ${selectedLead.email_secundario}`}>
  ✉️2 {selectedLead.email_secundario}
  </span>
  )}
  <button
  onClick={handleEnrichLead}
  disabled={isEnrichingLead}
- className="px-2.5 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-[10px] rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 text-[10px] rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  title="Scout Enriquecedor: Completa emails, webs y datos faltantes sin alucinaciones"
  >
- <Sparkles className={`w-3 h-3 text-amber-400 ${isEnrichingLead ?'animate-spin' :''}`} />
+ <Sparkles className={`w-3 h-3 text-[var(--acc)] ${isEnrichingLead ?'animate-spin' :''}`} />
  <span>{isEnrichingLead ?'Completando...' :'Scout Enriquecedor'}</span>
  </button>
  </div>
  </div>
 
  {enrichStatusMsg && (
- <div className="p-2 bg-amber-500/10 rounded-[var(--r-s)] text-amber-300 text-[11px] font-mono flex items-center gap-1.5 animate-fadeIn">
- <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+ <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--acc)]/70 text-[11px] font-mono flex items-center gap-1.5 animate-fadeIn">
+ <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
  <span>{enrichStatusMsg}</span>
  </div>
  )}
@@ -947,7 +947,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* ROSTER / ARTISTAS REPRESENTADOS (Si aplica) */}
  {(selectedLead.roster || ['agencia','manager','productora','sello','grupo'].includes(String(selectedLead.tipo ||'').toLowerCase())) && (
  <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-2">
- <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+ <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
  <span>🎸</span> Róster de Artistas & Servicios de Representación
  </p>
  {selectedLead.roster ? (
@@ -1015,7 +1015,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {isEditingLeadInfo && (
  <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--surface)] text-zinc-100 shadow-xl">
  <div className="flex justify-between items-center pb-2 border-b border-zinc-800">
- <span className="font-bold text-xs uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+ <span className="font-bold text-xs uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
  <Edit3 className="w-3.5 h-3.5" /> Editar Ficha ({selectedLead.nombre_sala})
  </span>
  <div className="flex gap-2">
@@ -1027,7 +1027,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </button>
  <button
  onClick={handleSaveLeadInfo}
- className="px-3 py-1 text-xs rounded bg-amber-500 text-black font-bold hover:bg-amber-400 cursor-pointer shadow-sm"
+ className="px-3 py-1 text-xs rounded bg-[var(--acc)] text-black font-bold hover:bg-[var(--acc)]/60 cursor-pointer shadow-sm"
  >
  Guardar
  </button>
@@ -1051,7 +1051,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  <div>
- <label className="block text-[10px] uppercase font-mono text-amber-400 font-bold mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--acc)] font-bold mb-1">
  Tipo / Categoría de Lead
  </label>
  <select
@@ -1059,7 +1059,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, tipo: e.target.value as LeadType })
  }
- className="w-full p-2 rounded bg-zinc-900 text-amber-300 font-bold focus:outline-none focus: cursor-pointer"
+ className="w-full p-2 rounded bg-zinc-900 text-[var(--acc)]/70 font-bold focus:outline-none focus: cursor-pointer"
  >
  <option value="sala">🏟️ Sala de Conciertos</option>
  <option value="festival">🎪 Festival</option>
@@ -1086,14 +1086,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={handleAutoSearchLogo}
  disabled={isSearchingLogo}
- className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all cursor-pointer disabled:opacity-50"
+ className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all cursor-pointer disabled:opacity-50"
  >
- <Sparkles className="w-3 h-3 text-amber-400" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>{isSearchingLogo ?'Buscando...' :'🔍 Buscar Logo'}</span>
  </button>
  {onLeadLogoUpload && (
  <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-zinc-700">
- <Upload className="w-3 h-3 text-amber-400" />
+ <Upload className="w-3 h-3 text-[var(--acc)]" />
  <span>{isUploadingLeadLogo ?'Subiendo...' :'Subir Logo'}</span>
  <input
  type="file"
@@ -1151,7 +1151,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setEditedLeadInfo(prev => ({ ...prev, icono: emoji }))}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  editedLeadInfo.icono === emoji
- ?'bg-amber-500 text-black font-bold scale-110 shadow-md'
+ ?'bg-[var(--acc)] text-black font-bold scale-110 shadow-md'
  :'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700'
  }`}
  >
@@ -1166,7 +1166,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* DIRECCIÓN / CALLE */}
  <div>
- <label className="block text-[10px] uppercase font-mono text-amber-400 font-bold mb-1 flex items-center gap-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
  📍 Dirección Exacta (Calle, Número...)
  </label>
  <input
@@ -1243,7 +1243,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  <div>
- <label className="block text-[10px] uppercase font-mono text-amber-400 font-bold mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--acc)] font-bold mb-1">
  ✉️ Email Secundario / Promotora / Alternativo
  </label>
  <input
@@ -1289,7 +1289,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="block text-[10px] uppercase font-mono text-amber-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--acc)] mb-1">
  Róster de Artistas / Bandas que representa
  </label>
  <input
@@ -1305,17 +1305,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <div className="space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] uppercase font-mono text-amber-400">
+ <span className="text-[10px] uppercase font-mono text-[var(--acc)]">
  🎪 Fechas del Festival (Inicio / Fin)
  </span>
  <button
  type="button"
  onClick={handleAutoExtractFestivalDates}
  disabled={isExtractingDates}
- className="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer"
  title="Buscar fechas del festival automáticamente con IA y base de datos de festivales"
  >
- <Sparkles className="w-3 h-3 text-amber-400" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>{isExtractingDates ?'Buscando fechas...' :'⚡ Rellenar Fechas con IA'}</span>
  </button>
  </div>
@@ -1334,7 +1334,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-amber-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--acc)] mb-1">
  🎪 Fin Festival (dd/mm/yyyy)
  </label>
  <input
@@ -1386,17 +1386,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* Pitch Generator Section */}
  <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-3 border-zinc-800">
  <div className="flex items-center justify-between flex-wrap gap-2">
- <span className="text-xs font-bold font-sans uppercase text-amber-400 tracking-wider">
+ <span className="text-xs font-bold font-sans uppercase text-[var(--acc)] tracking-wider">
  {isReplyStage ?'💬 Respuesta Redactada por IA' :'✉️ Propuesta de Pitch Redactada'}
  </span>
  <div className="flex items-center gap-1.5 flex-wrap">
  <button
  type="button"
  onClick={() => setShowMultiModelModal(true)}
- className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 via-sky-500/20 to-emerald-500/20 hover:from-amber-500/30 hover:to-emerald-500/30 rounded text-[11px] text-amber-300 font-bold flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
+ className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 via-sky-500/20 to-emerald-500/20 hover:from-amber-500/30 hover:to-emerald-500/30 rounded text-[11px] text-[var(--acc)]/70 font-bold flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
  title="Compara en paralelo propuestas generadas por DeepSeek V3 y Gemini Flash"
  >
- <Layers className="w-3.5 h-3.5 text-amber-400" />
+ <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Comparador A/B (DeepSeek vs Gemini) 🚀</span>
  </button>
 
@@ -1414,7 +1414,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={handleApprovePitchDirectly}
  disabled={isCreatingDraft}
- className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded text-xs flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
+ className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-bold rounded text-xs flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
  <span>{isCreatingDraft ?'Creando borrador...' : (isReplyStage ?'Aprobar Respuesta' :'Aprobar Pitch')}</span>
@@ -1482,7 +1482,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </button>
  <button
  onClick={handleSavePitch}
- className="px-3 py-1 bg-amber-500 text-black font-bold rounded text-xs hover:bg-amber-400 cursor-pointer"
+ className="px-3 py-1 bg-[var(--acc)] text-black font-bold rounded text-xs hover:bg-[var(--acc)]/60 cursor-pointer"
  >
  Guardar y Aprobar
  </button>
@@ -1498,7 +1498,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] border-zinc-800 text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed cursor-pointer hover:/40 transition-colors group relative"
  >
  {editedPitch || selectedLead.pitch_generado ||'Sin pitch generado.'}
- <span className="absolute bottom-2 right-2 text-[10px] text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity font-bold">
+ <span className="absolute bottom-2 right-2 text-[10px] text-[var(--acc)] opacity-0 group-hover:opacity-100 transition-opacity font-bold">
  Clic para editar ✏️
  </span>
  </div>
@@ -1508,10 +1508,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="mt-4 p-3.5 bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] rounded-[var(--r-m)] space-y-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <Sparkles className="w-4 h-4 text-amber-400" />
- <span className="text-xs font-bold text-amber-300 font-sans uppercase tracking-wider flex items-center gap-1.5">
+ <Sparkles className="w-4 h-4 text-[var(--acc)]" />
+ <span className="text-xs font-bold text-[var(--acc)]/70 font-sans uppercase tracking-wider flex items-center gap-1.5">
  Aprendizaje Agéntico & ADN de Tono
- <span className="text-[9px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-mono font-normal">
+ <span className="text-[9px] bg-[var(--acc)]/20 text-[var(--acc)]/70 px-1.5 py-0.5 rounded font-mono font-normal">
  Dynamic Few-Shot
  </span>
  </span>
@@ -1520,7 +1520,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={() => setShowFeedbackHistory(!showFeedbackHistory)}
- className="text-[10px] text-amber-400/80 hover:text-amber-300 underline font-mono cursor-pointer"
+ className="text-[10px] text-[var(--acc)]/80 hover:text-[var(--acc)]/70 underline font-mono cursor-pointer"
  >
  {showFeedbackHistory ?'Ocultar historial' : `Historial (${selectedLead.historial_feedback_pitch.length})`}
  </button>
@@ -1539,7 +1539,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => setToneRating(star)}
  className={`p-1 rounded hover:bg-zinc-800 transition-colors cursor-pointer ${
- toneRating >= star ?'text-amber-400' :'text-zinc-600'
+ toneRating >= star ?'text-[var(--acc)]' :'text-zinc-600'
  }`}
  title={`Calificar tono: ${star}/5`}
  >
@@ -1562,7 +1562,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => setContentRating(star)}
  className={`p-1 rounded hover:bg-zinc-800 transition-colors cursor-pointer ${
- contentRating >= star ?'text-amber-400' :'text-zinc-600'
+ contentRating >= star ?'text-[var(--acc)]' :'text-zinc-600'
  }`}
  title={`Calificar contenido: ${star}/5`}
  >
@@ -1579,7 +1579,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* Comments Area */}
  <div className="space-y-1">
  <label className="text-[11px] font-medium text-zinc-300 flex items-center gap-1">
- <MessageSquare className="w-3 h-3 text-amber-400" />
+ <MessageSquare className="w-3 h-3 text-[var(--acc)]" />
  <span>Sugerencias o comentarios para mejorar este pitch:</span>
  </label>
  <textarea
@@ -1601,7 +1601,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setFeedbackScope('este_pitch')}
  className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
  feedbackScope ==='este_pitch'
- ?'bg-amber-500/15 /60 text-amber-200'
+ ?'bg-[var(--acc)]/15 /60 text-amber-200'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
  }`}
  >
@@ -1622,7 +1622,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setFeedbackScope('global')}
  className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
  feedbackScope ==='global'
- ?'bg-amber-500/15 /60 text-amber-200'
+ ?'bg-[var(--acc)]/15 /60 text-amber-200'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
  }`}
  >
@@ -1634,8 +1634,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="mt-0.5 accent-amber-500 shrink-0"
  />
  <div className="text-[11px] leading-tight">
- <span className="font-bold text-amber-300 flex items-center gap-1">
- <Sparkles className="w-3 h-3 text-amber-400" />
+ <span className="font-bold text-[var(--acc)]/70 flex items-center gap-1">
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  Memoria general (Futuros pitches)
  </span>
  <span className="text-[10px] opacity-80">El Agente Redactor lo recordará como preferencia global.</span>
@@ -1670,7 +1670,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setSelectedAiModel(m.id)}
  className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isSelected
- ?'bg-amber-500/20 text-amber-300 /50 shadow-sm'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50 shadow-sm'
  :'bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:border-zinc-700'
  }`}
  title={`Coste aproximado por pitch: ${m.cost}`}
@@ -1693,13 +1693,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => handleRevertPitch()}
  disabled={isRevertingPitch || isRegeneratingPitch}
- className="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-amber-300 font-semibold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all font-sans"
+ className="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-[var(--acc)]/70 font-semibold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all font-sans"
  title="Deshacer el último entrenamiento y restaurar la versión del pitch anterior"
  >
  {isRevertingPitch ? (
- <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
+ <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
  ) : (
- <Undo2 className="w-3.5 h-3.5 text-amber-400" />
+ <Undo2 className="w-3.5 h-3.5 text-[var(--acc)]" />
  )}
  <span>Deshacer y volver al pitch anterior</span>
  </button>
@@ -1709,7 +1709,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => handleRegeneratePitchWithFeedback()}
  disabled={isRegeneratingPitch || isRevertingPitch}
- className="px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-black font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-black font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans"
  >
  {isRegeneratingPitch ? (
  <>
@@ -1728,7 +1728,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* History drawer if enabled */}
  {showFeedbackHistory && selectedLead.historial_feedback_pitch && selectedLead.historial_feedback_pitch.length > 0 && (
  <div className="mt-3 pt-3 border-t border-zinc-800 space-y-2">
- <span className="text-[11px] font-bold text-amber-400 font-mono block uppercase">
+ <span className="text-[11px] font-bold text-[var(--acc)] font-mono block uppercase">
  Historial de Aprendizaje e Iteraciones IA
  </span>
  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
@@ -1742,8 +1742,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <span>{new Date(log.fecha).toLocaleString()}</span>
  <div className="flex items-center gap-2">
  {log.alcance ==='global' ? (
- <span className="px-1.5 py-0.5 bg-amber-500/20 text-amber-300 rounded text-[9px] font-bold flex items-center gap-1">
- <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+ <span className="px-1.5 py-0.5 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded text-[9px] font-bold flex items-center gap-1">
+ <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
  Memoria Global
  </span>
  ) : (
@@ -1753,7 +1753,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
  <span>Tono: {log.tono_rating ? `${log.tono_rating}/5` :'-'} | Contenido: {log.contenido_rating ? `${log.contenido_rating}/5` :'-'}</span>
  {log.deshecho && (
- <span className="px-1.5 py-0.5 bg-amber-950/60 text-amber-400 rounded text-[9px] font-bold">
+ <span className="px-1.5 py-0.5 bg-amber-950/60 text-[var(--acc)] rounded text-[9px] font-bold">
  [Deshecho]
  </span>
  )}
@@ -1775,7 +1775,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => handleRevertPitch(log.id)}
  disabled={isRevertingPitch}
- className="text-[10px] text-amber-400 hover:text-amber-300 font-mono underline flex items-center gap-1 cursor-pointer shrink-0"
+ className="text-[10px] text-[var(--acc)] hover:text-[var(--acc)]/70 font-mono underline flex items-center gap-1 cursor-pointer shrink-0"
  >
  <RotateCcw className="w-3 h-3" />
  Volver a este pitch anterior
@@ -1810,7 +1810,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  }`}
  >
  <div className="flex items-center justify-between font-bold text-[11px]">
- <span className={msg.remitente ==='sala' ?'text-amber-400' :'text-sky-400'}>
+ <span className={msg.remitente ==='sala' ?'text-[var(--acc)]' :'text-sky-400'}>
  {msg.remitente_nombre} ({msg.remitente ==='sala' ?'Programador' :'Bakandeya'})
  </span>
  <span className="text-zinc-500 text-[10px] font-mono">{msg.fecha}</span>
@@ -1944,7 +1944,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  >
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1.5 font-bold">
- <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-amber-300">
+ <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-[var(--acc)]/70">
  {log.tipo ==='Llamada'
  ?'📞 Llamada'
  : log.tipo ==='WhatsApp'

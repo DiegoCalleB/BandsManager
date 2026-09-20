@@ -1125,7 +1125,7 @@ export default function BookingCRM({
  {/* EXPANDED IA TOOLS PANEL (Responsive on all screen sizes) */}
  {isMobileToolsOpen && (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-2.5 animate-in slide-in-from-top-2 duration-150 shadow-2xl">
- <div className="flex items-center justify-between text-xs font-bold text-amber-300 pb-1.5 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between text-xs font-bold text-[var(--acc)]/70 pb-1.5 border-b border-[var(--hair)]">
  <span className="flex items-center gap-1.5">
  <Wrench className="w-3.5 h-3.5" />
  Herramientas e Inteligencia Artificial
@@ -1227,10 +1227,10 @@ export default function BookingCRM({
  setIsAgentConfigOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 transition-all cursor-pointer active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-amber-200 transition-all cursor-pointer active:scale-98"
  >
  <span className="flex items-center gap-2">
- <Bot className="w-4 h-4 text-amber-400" />
+ <Bot className="w-4 h-4 text-[var(--acc)]" />
  Configurar Agentes IA (Autonomía & Tono)
  </span>
  <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1455,7 +1455,7 @@ export default function BookingCRM({
  {isMobileFiltersOpen && (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-3.5 shadow-2xl animate-in slide-in-from-top-2 duration-150">
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
- <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+ <span className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
  <Filter className="w-3.5 h-3.5" />
  Filtros y Búsquedas Avanzadas
  </span>
@@ -1477,7 +1477,7 @@ export default function BookingCRM({
  onClick={() => setOnlyFavoritesFilter(!onlyFavoritesFilter)}
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyFavoritesFilter
- ?'bg-amber-500/20 text-amber-300 /50'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
  :'bg-black/40 text-[var(--ink-2)] hover:text-white'
  }`}
  >
@@ -1654,7 +1654,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setSelectedCityFilter('')}
- className="text-[10px] text-amber-400 hover:underline cursor-pointer"
+ className="text-[10px] text-[var(--acc)] hover:underline cursor-pointer"
  >
  Ver todas
  </button>
@@ -1719,21 +1719,21 @@ export default function BookingCRM({
  {/* Active Filters Pill Bar (Responsive on all screen sizes) */}
  {activeFiltersCount > 0 && !isMobileFiltersOpen && (
  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
- <span className="text-[10px] uppercase font-bold text-amber-400 shrink-0">Filtros:</span>
+ <span className="text-[10px] uppercase font-bold text-[var(--acc)] shrink-0">Filtros:</span>
  {selectedCityFilter && (
- <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  📍 {selectedCityFilter}
  <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
  {typeFilter !=='todos' && (
- <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  🏛️ {typeFilter}
  <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
  {onlyFavoritesFilter && (
- <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  ⭐ Favoritos
  <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
@@ -1745,7 +1745,7 @@ export default function BookingCRM({
  </span>
  )}
  {minCapacityFilter > 0 && (
- <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  &gt;{minCapacityFilter} pax
  <button type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
@@ -2153,7 +2153,7 @@ export default function BookingCRM({
  : templateTab ==='discotecas'
  ? isStitchLight ?'bg-purple-50 text-purple-900' :'bg-purple-500/10 text-purple-300'
  : templateTab ==='ayuntamientos'
- ? isStitchLight ?'bg-amber-50 text-amber-900' :'bg-amber-500/10 text-amber-300'
+ ? isStitchLight ?'bg-amber-50 text-amber-900' :'bg-[var(--acc)]/10 text-[var(--acc)]/70'
  : isStitchLight ?'bg-sky-500/15 text-sky-400' :'bg-sky-500/15 text-sky-400'
  }`}>
  <div>
@@ -2168,9 +2168,9 @@ export default function BookingCRM({
  {/* Form Side */}
  <div className="space-y-4">
  {optimizationFeedbackMsg && (
- <div className="p-3 bg-amber-500/15 text-amber-200 text-[11px] rounded-[var(--r-m)] flex items-center justify-between font-sans animate-in fade-in">
+ <div className="p-3 bg-[var(--acc)]/15 text-amber-200 text-[11px] rounded-[var(--r-m)] flex items-center justify-between font-sans animate-in fade-in">
  <span>{optimizationFeedbackMsg}</span>
- <button onClick={() => setOptimizationFeedbackMsg(null)} className="text-amber-400 font-bold ml-2 hover:text-white cursor-pointer">✕</button>
+ <button onClick={() => setOptimizationFeedbackMsg(null)} className="text-[var(--acc)] font-bold ml-2 hover:text-white cursor-pointer">✕</button>
  </div>
  )}
 
@@ -2223,10 +2223,10 @@ export default function BookingCRM({
  />
  </div>
 
- <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-amber-500/10">
+ <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10">
  <div className="flex items-center justify-between">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
- <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
+ <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
+ <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
  </label>
  {(templateToneRating > 0 || templateContentRating > 0 || templateCustomInstruction) && (
  <button 
@@ -2236,7 +2236,7 @@ export default function BookingCRM({
  setTemplateContentRating(0);
  setTemplateCustomInstruction('');
  }}
- className="text-[9px] text-amber-400 font-bold hover:underline cursor-pointer"
+ className="text-[9px] text-[var(--acc)] font-bold hover:underline cursor-pointer"
  >
  Limpiar todo
  </button>
@@ -2249,7 +2249,7 @@ export default function BookingCRM({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
+ <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {templateToneRating > 0 ? `${templateToneRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -2259,8 +2259,8 @@ export default function BookingCRM({
  key={`crm-template-tone-${star}`}
  type="button"
  onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateToneRating >= star ?'text-amber-400' :'text-neutral-600'
+ className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
+ templateToneRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
  }`}
  title={`Calificar tono y estilo: ${star}/5`}
  >
@@ -2274,7 +2274,7 @@ export default function BookingCRM({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
+ <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {templateContentRating > 0 ? `${templateContentRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -2284,8 +2284,8 @@ export default function BookingCRM({
  key={`crm-template-content-${star}`}
  type="button"
  onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateContentRating >= star ?'text-amber-400' :'text-neutral-600'
+ className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
+ templateContentRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
  }`}
  title={`Calificar contenido y estructura: ${star}/5`}
  >
@@ -2297,8 +2297,8 @@ export default function BookingCRM({
  </div>
 
  <div className="space-y-1 pt-1">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
- <MessageSquare className="w-3.5 h-3.5 text-amber-400" /> Comentario o Corrección Directa
+ <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
+ <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Comentario o Corrección Directa
  </label>
  <textarea
  id="template-custom-instruction"
@@ -2309,7 +2309,7 @@ export default function BookingCRM({
  placeholder="Ej:'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
  />
  </div>
- <div className="text-[9px] text-amber-300/80 font-sans leading-tight">
+ <div className="text-[9px] text-[var(--acc)]/70/80 font-sans leading-tight">
  💡 Califica con estrellas el tono y el contenido e introduce comentarios. Al hacer clic abajo en <strong>Regenerar</strong>, la IA usará tus valoraciones para optimizar la plantilla.
  </div>
  </div>
@@ -2353,10 +2353,10 @@ export default function BookingCRM({
  type="button"
  onClick={handleOptimizeTemplate}
  disabled={isOptimizingTemplate}
- className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  title="Re-redacta la plantilla y sus pautas integrando todo el feedback histórico de valoraciones del mánager"
  >
- <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ?'animate-spin' :''}`} />
+ <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ?'animate-spin' :''}`} />
  <span>{isOptimizingTemplate ?'Regenerando con IA...' :'✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
  </button>
  <button
@@ -2426,13 +2426,13 @@ export default function BookingCRM({
  </div>
 
  {/* Valoración directa del resultado generado en la simulación */}
- <div className="p-3 bg-amber-500/10 rounded-[var(--r-m)] space-y-2">
+ <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5 font-sans">
- <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Valorar esta plantilla / resultado
+ <span className="text-[10px] font-bold text-[var(--acc)]/70 uppercase tracking-wider flex items-center gap-1.5 font-sans">
+ <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Valorar esta plantilla / resultado
  </span>
  {(templateToneRating > 0 || templateContentRating > 0) && (
- <span className="text-[9px] text-amber-400 font-mono">
+ <span className="text-[9px] text-[var(--acc)] font-mono">
  Tono: {templateToneRating ||'-'}/5 | Contenido: {templateContentRating ||'-'}/5
  </span>
  )}
@@ -2443,7 +2443,7 @@ export default function BookingCRM({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
+ <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {templateToneRating > 0 ? `${templateToneRating}/5` :'⭐'}
  </span>
  </div>
@@ -2453,8 +2453,8 @@ export default function BookingCRM({
  key={`sandbox-tone-${star}`}
  type="button"
  onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateToneRating >= star ?'text-amber-400' :'text-neutral-600'
+ className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
+ templateToneRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
  }`}
  title={`Calificar tono: ${star}/5`}
  >
@@ -2468,7 +2468,7 @@ export default function BookingCRM({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
+ <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {templateContentRating > 0 ? `${templateContentRating}/5` :'⭐'}
  </span>
  </div>
@@ -2478,8 +2478,8 @@ export default function BookingCRM({
  key={`sandbox-content-${star}`}
  type="button"
  onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateContentRating >= star ?'text-amber-400' :'text-neutral-600'
+ className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
+ templateContentRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
  }`}
  title={`Calificar contenido: ${star}/5`}
  >
@@ -2494,7 +2494,7 @@ export default function BookingCRM({
  type="button"
  onClick={handleOptimizeTemplate}
  disabled={isOptimizingTemplate}
- className="w-full py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
  <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ?'animate-spin' :''}`} />
  <span>Re-generar plantilla usando estas valoraciones ✨</span>

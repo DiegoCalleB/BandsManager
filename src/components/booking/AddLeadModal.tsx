@@ -104,7 +104,7 @@ export function AddLeadModal({
  {sectionTab ==='medios' ? (
  <Radio className="w-5 h-5 text-rose-400" />
  ) : sectionTab ==='grupos' ? (
- <Briefcase className="w-5 h-5 text-amber-400" />
+ <Briefcase className="w-5 h-5 text-[var(--acc)]" />
  ) : (
  <Building2 className="w-5 h-5 text-[#d1b375]/80" />
  )}
@@ -186,9 +186,9 @@ export function AddLeadModal({
  type="button"
  onClick={handleAutoSearchLogo}
  disabled={isSearchingLogo || !newLeadData.nombre_sala}
- className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all cursor-pointer disabled:opacity-50"
+ className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all cursor-pointer disabled:opacity-50"
  >
- <Sparkles className="w-3 h-3 text-amber-400" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>{isSearchingLogo ?'Buscando...' :'🔍 Buscar Logo'}</span>
  </button>
  <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-zinc-700">

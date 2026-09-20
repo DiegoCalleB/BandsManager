@@ -223,7 +223,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  }`}
  >
  <div className="flex items-center gap-3">
- <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Copy className="w-5 h-5" />
  </div>
  <div>
@@ -231,7 +231,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <h2 className="text-base sm:text-lg font-bold tracking-tight text-white">
  Detector y Limpiador de Duplicados
  </h2>
- <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-500/15 text-amber-300">
+ <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70">
  {duplicateGroups.length} {duplicateGroups.length === 1 ?'grupo' :'grupos'}
  </span>
  </div>
@@ -386,7 +386,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  {/* Group Top Info */}
  <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b /60">
  <div className="flex items-center gap-2">
- <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-amber-500/15 text-amber-300 flex items-center gap-1">
+ <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[var(--acc)]/15 text-[var(--acc)]/70 flex items-center gap-1">
  <AlertTriangle className="w-3 h-3" />
  {group.matchReasonLabel}
  </span>

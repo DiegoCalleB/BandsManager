@@ -112,7 +112,7 @@ export function AIBandScoutModal({
  {/* Header */}
  <div className="p-4 border-b border-black/10 flex justify-between items-center bg-gradient-to-r from-amber-500/10 to-orange-500/10">
  <div className="flex items-center gap-3">
- <div className="p-2 bg-amber-500/20 rounded-[var(--r-s)] text-amber-500">
+ <div className="p-2 bg-[var(--acc)]/20 rounded-[var(--r-s)] text-amber-500">
  <Sparkles className="w-5 h-5" />
  </div>
  <div>
@@ -127,7 +127,7 @@ export function AIBandScoutModal({
 
  <div className="p-5 flex-1 overflow-y-auto">
  {activeCampaign && (
- <div className="mb-6 p-4 bg-amber-500/10 rounded-[var(--r-m)] flex items-start gap-3">
+ <div className="mb-6 p-4 bg-[var(--acc)]/10 rounded-[var(--r-m)] flex items-start gap-3">
  <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
  <div>
  <p className={`text-sm font-medium ${textColor}`}>Contexto de tu Campaña Activa</p>
@@ -187,7 +187,7 @@ export function AIBandScoutModal({
  <button
  onClick={handleSearch}
  disabled={isSearching}
- className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+ className="px-6 py-2.5 bg-[var(--acc)] hover:bg-amber-600 text-white font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
  >
  {isSearching ? (
  <>
@@ -227,12 +227,12 @@ export function AIBandScoutModal({
  onClick={() => toggleSelection(idx)}
  className={`p-4 rounded-[var(--r-m)] border-2 transition-all cursor-pointer flex items-center justify-between
  ${selectedBands.has(idx) 
- ?' bg-amber-500/5' 
+ ?' bg-[var(--acc)]/5' 
  : `${borderColor} ${inputBg} opacity-70 hover:opacity-100`}`}
  >
  <div className="flex items-center gap-4">
  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0
- ${selectedBands.has(idx) ?'bg-amber-500 text-white' :'border-2'}`}>
+ ${selectedBands.has(idx) ?'bg-[var(--acc)] text-white' :'border-2'}`}>
  {selectedBands.has(idx) && <CheckCircle2 className="w-4 h-4" />}
  </div>
  

@@ -320,15 +320,15 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {hasGiftPending && (
  <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-500/20 via-amber-400/15 to-amber-500/10 border-2 /60 shadow-xl shadow-amber-500/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
  <div className="flex items-start sm:items-center gap-3.5">
- <div className="w-11 h-11 rounded-[var(--r-l)] bg-amber-400 text-black flex items-center justify-center shrink-0 shadow-lg shadow-amber-400/20">
+ <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-black flex items-center justify-center shrink-0 shadow-lg shadow-amber-400/20">
  <Gift className="w-6 h-6 stroke-[2.5]" />
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <span className="text-xs font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-400 text-black">
+ <span className="text-xs font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--acc)]/60 text-black">
  Regalo de Bienvenida · Plan De Gira
  </span>
- <span className="text-[10px] font-mono text-amber-300 font-bold">500 uds Vinilo Mate</span>
+ <span className="text-[10px] font-mono text-[var(--acc)]/70 font-bold">500 uds Vinilo Mate</span>
  </div>
  <p className="text-sm font-bold text-zinc-100 mt-1">
  Tienes 500 pegatinas gratis esperando. Diseña las tuyas y pídelas.
@@ -467,7 +467,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <button
  onClick={() => fileInputRef.current?.click()}
  disabled={isUploading}
- className="w-full h-24 rounded-[var(--r-s)] border-2 border-dashed hover: flex flex-col items-center justify-center gap-2 text-[var(--ink-3)] hover:text-amber-400 transition"
+ className="w-full h-24 rounded-[var(--r-s)] border-2 border-dashed hover: flex flex-col items-center justify-center gap-2 text-[var(--ink-3)] hover:text-[var(--acc)] transition"
  >
  {isUploading ? (
  <RefreshCw className="w-6 h-6 animate-spin" />
@@ -507,7 +507,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {/* Opción de recorte de fondo / rembg */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-2 ${isStitchLight ?'bg-indigo-50/60 border-indigo-100' :'bg-indigo-950/20 border-indigo-800/30'}`}>
  <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-700' :'text-indigo-400'}`}>
- <Scissors className="w-3.5 h-3.5 text-amber-400" /> Recorte de Fondo (Canvas Layering)
+ <Scissors className="w-3.5 h-3.5 text-[var(--acc)]" /> Recorte de Fondo (Canvas Layering)
  </label>
  <p className="text-[10px] font-mono text-[var(--ink-3)]">
  Aplica el arte directamente en capas sobre la tela sin redibujar la prenda.
@@ -523,7 +523,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setRemoveBgMode(m.id as any)}
  className={`py-1.5 px-1 rounded text-[10px] font-mono font-bold transition ${
  removeBgMode === m.id
- ?'bg-amber-500 text-slate-950 shadow-sm'
+ ?'bg-[var(--acc)] text-slate-950 shadow-sm'
  :'bg-[var(--surface)]/60 text-[var(--ink-3)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -734,13 +734,13 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {/* Modal Header */}
  <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[#141210] border-b border-[var(--hair)] flex items-center justify-between">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-400 text-black flex items-center justify-center font-bold">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-black flex items-center justify-center font-bold">
  <Gift className="w-5 h-5 stroke-[2.5]" />
  </div>
  <div>
  <h3 className="text-base font-black font-display uppercase tracking-wider text-zinc-100 flex items-center gap-2">
  <span>Canjear Pack de Pegatinas Gratis</span>
- <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded bg-amber-400/20 text-amber-300">
+ <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
  100 uds
  </span>
  </h3>
@@ -767,18 +767,18 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {/* 1. Previsualización del diseño elegido */}
  <div className="space-y-3">
  <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-3)] flex items-center gap-2">
- <Palette className="w-4 h-4 text-amber-400" />
+ <Palette className="w-4 h-4 text-[var(--acc)]" />
  <span>1. Previsualización del Diseño Elegido</span>
  </label>
 
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] flex flex-col sm:flex-row items-center gap-5">
  {/* Sticker Preview visual */}
  <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] border-4 border-[var(--hair)] shadow-xl p-2 flex flex-col items-center justify-center transform -rotate-3">
- <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-400 text-black font-black flex items-center justify-center text-lg font-display mb-1">
+ <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-black font-black flex items-center justify-center text-lg font-display mb-1">
  {bandInitials}
  </div>
  <span className="text-[9px] font-black font-display text-white uppercase tracking-wider">{displayBandName.toUpperCase()}</span>
- <span className="text-[7px] font-mono text-amber-400 font-bold">Oficial Vinyl</span>
+ <span className="text-[7px] font-mono text-[var(--acc)] font-bold">Oficial Vinyl</span>
  </div>
 
  <div className="flex-1 text-center sm:text-left space-y-1">
@@ -791,7 +791,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <p className="text-xs text-[var(--ink-2)]">
  Vinilo mate exterior troquelado · 8x8 cm · Resistente al agua, al sol y a fundas de guitarra.
  </p>
- <p className="text-[11px] font-mono text-amber-300/90 pt-1">
+ <p className="text-[11px] font-mono text-[var(--acc)]/70/90 pt-1">
  ✨ Cantidad asignada por tu plan: <strong>500 unidades</strong>
  </p>
  </div>
@@ -801,7 +801,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {/* 2. Formulario de dirección de envío */}
  <div className="space-y-3 pt-2">
  <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-3)] flex items-center gap-2">
- <MapPin className="w-4 h-4 text-amber-400" />
+ <MapPin className="w-4 h-4 text-[var(--acc)]" />
  <span>2. Dirección de Envío (España)</span>
  </label>
 
@@ -893,7 +893,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <h4 className="text-2xl font-black font-display uppercase tracking-wider text-zinc-100">
  ¡Pedido Recibido con Éxito!
  </h4>
- <p className="text-sm font-bold text-amber-300">
+ <p className="text-sm font-bold text-[var(--acc)]/70">
  Te avisamos cuando salga de imprenta.
  </p>
  <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto leading-relaxed">
@@ -912,7 +912,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <span className="text-[var(--ink-2)]">Pack:</span>
- <span className="text-amber-400 font-bold">500 Pegatinas Vinilo Oficial</span>
+ <span className="text-[var(--acc)] font-bold">500 Pegatinas Vinilo Oficial</span>
  </div>
  <div className="flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Coste total:</span>

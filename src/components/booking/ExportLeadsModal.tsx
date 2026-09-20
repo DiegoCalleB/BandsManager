@@ -118,7 +118,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  {/* Header */}
  <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 flex items-center justify-center text-amber-400">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]">
  <FileSpreadsheet className="w-5 h-5" />
  </div>
  <div>
@@ -136,7 +136,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
  {/* 1. Scope selection */}
  <div className="space-y-2">
- <label className="text-xs font-bold text-amber-300 uppercase tracking-wider block">
+ <label className="text-xs font-bold text-[var(--acc)]/70 uppercase tracking-wider block">
  1. ¿Qué contactos quieres exportar?
  </label>
  <div className="grid grid-cols-1 gap-2">
@@ -146,15 +146,15 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportScope('filtered')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='filtered'
- ?'bg-amber-500/20 /60 text-white'
+ ?'bg-[var(--acc)]/20 /60 text-white'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
- <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='filtered' ?'text-amber-400' :'text-zinc-500'}`} />
+ <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='filtered' ?'text-[var(--acc)]' :'text-zinc-500'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Contactos a la vista con filtro actual</span>
- <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">
+ <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
  {filteredLeads.length} contactos
  </span>
  </div>
@@ -170,11 +170,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportScope('all')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='all'
- ?'bg-amber-500/20 /60 text-white'
+ ?'bg-[var(--acc)]/20 /60 text-white'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
- <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='all' ?'text-amber-400' :'text-zinc-500'}`} />
+ <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='all' ?'text-[var(--acc)]' :'text-zinc-500'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Todos los contactos del CRM</span>
@@ -195,15 +195,15 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportScope('selected')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='selected'
- ?'bg-amber-500/20 /60 text-white'
+ ?'bg-[var(--acc)]/20 /60 text-white'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
- <CheckSquare className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='selected' ?'text-amber-400' :'text-zinc-500'}`} />
+ <CheckSquare className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='selected' ?'text-[var(--acc)]' :'text-zinc-500'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Solo contactos seleccionados</span>
- <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">
+ <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
  {selectedLeads.length} seleccionados
  </span>
  </div>
@@ -218,7 +218,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
  {/* 2. Format selection */}
  <div className="space-y-2">
- <label className="text-xs font-bold text-amber-300 uppercase tracking-wider block">
+ <label className="text-xs font-bold text-[var(--acc)]/70 uppercase tracking-wider block">
  2. Formato de descarga
  </label>
  <div className="grid grid-cols-2 gap-3">
@@ -297,7 +297,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="button"
  onClick={handleExport}
  disabled={targetCount === 0}
- className="px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-amber-500 hover:bg-amber-400 text-zinc-950 flex items-center gap-2 shadow-lg shadow-amber-500/10 transition cursor-pointer disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-zinc-950 flex items-center gap-2 shadow-lg shadow-amber-500/10 transition cursor-pointer disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
  <span>Descargar {targetCount} {targetCount === 1 ?'contacto' :'contactos'}</span>

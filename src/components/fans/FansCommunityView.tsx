@@ -161,8 +161,8 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  return {
  label:'Fan Fundador',
  icon: Star,
- bg:'bg-amber-500/15 text-amber-300 /30',
- dot:'bg-amber-400'
+ bg:'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30',
+ dot:'bg-[var(--acc)]/60'
  };
  case'superfan':
  return {
@@ -211,14 +211,14 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  className="w-12 h-12 object-contain rounded-[var(--r-m)] p-1 bg-slate-950 shrink-0" 
  />
  ) : (
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-amber-500 text-slate-950 flex items-center justify-center font-black font-display text-lg shrink-0">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)] text-slate-950 flex items-center justify-center font-black font-display text-lg shrink-0">
  {effectiveBandName[0] ||'B'}
  </div>
  )}
  <div>
  <div className="flex items-center gap-2">
- <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400">Muro Oficial de la Banda</span>
- <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/20 text-amber-300 flex items-center gap-1">
+ <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)]">Muro Oficial de la Banda</span>
+ <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
  <Megaphone className="w-2.5 h-2.5" /> Oficial
  </span>
  </div>
@@ -231,13 +231,13 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <div className="flex items-center gap-2">
  <button
  onClick={() => setShowNewPostModal(true)}
- className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-mono font-black uppercase tracking-wider rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer shadow-md active:scale-95"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 text-xs font-mono font-black uppercase tracking-wider rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer shadow-md active:scale-95"
  >
  <Send className="w-3.5 h-3.5" /> Publicar Comunicado
  </button>
  <button
  onClick={onOpenAddModal}
- className="px-4 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-400 text-xs font-mono font-bold rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer"
+ className="px-4 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] text-xs font-mono font-bold rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" /> Añadir Fan
  </button>
@@ -265,13 +265,13 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  >
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold">
+ <div className="w-10 h-10 rounded-full bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] font-bold">
  <Pin className="w-4 h-4" />
  </div>
  <div>
  <div className="flex items-center gap-2">
  <span className="font-bold text-white text-sm">{ann.autor}</span>
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-mono font-bold">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)] font-mono font-bold">
  Noticia Banda
  </span>
  </div>
@@ -344,7 +344,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  </p>
  <button
  onClick={onOpenAddModal}
- className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-mono font-bold rounded-[var(--r-m)] transition cursor-pointer"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 text-xs font-mono font-bold rounded-[var(--r-m)] transition cursor-pointer"
  >
  Registrar Primer Fan
  </button>
@@ -401,7 +401,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  href={`https://instagram.com/${fan.instagram}`}
  target="_blank"
  rel="noopener noreferrer"
- className="flex items-center gap-1 text-amber-400 hover:text-amber-300 transition"
+ className="flex items-center gap-1 text-[var(--acc)] hover:text-[var(--acc)]/70 transition"
  >
  <Instagram className="w-3 h-3" />
  @{fan.instagram}
@@ -442,8 +442,8 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
  {/* Favorite Song Badge */}
  {fan.cancionFavorita && (
- <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 rounded-[var(--r-m)] text-xs font-mono text-amber-300">
- <Music className="w-3.5 h-3.5 text-amber-400" />
+ <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-xs font-mono text-[var(--acc)]/70">
+ <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Tema favorito: <strong className="text-white">{fan.cancionFavorita}</strong></span>
  </div>
  )}
@@ -486,7 +486,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onClick={() => handleReactFan(fan.id,'fire')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.fire 
- ?'bg-amber-500/20 text-amber-300 shadow-xs font-bold' 
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 shadow-xs font-bold' 
  :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  title="Fuego / Brutal"
@@ -534,7 +534,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onUpdateFan(fan.id, { nivelFan: e.target.value as any });
  }
  }}
- className="bg-slate-950 rounded-[var(--r-s)] px-2 py-0.5 text-[10px] text-amber-400 font-mono outline-none cursor-pointer"
+ className="bg-slate-950 rounded-[var(--r-s)] px-2 py-0.5 text-[10px] text-[var(--acc)] font-mono outline-none cursor-pointer"
  >
  <option value="fiel">Oyente Fiel</option>
  <option value="superfan">Superfan</option>
@@ -605,7 +605,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  </button>
  <button
  type="submit"
- className="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono text-xs font-black uppercase tracking-wider rounded-[var(--r-m)] shadow-lg transition cursor-pointer flex items-center gap-1.5"
+ className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-mono text-xs font-black uppercase tracking-wider rounded-[var(--r-m)] shadow-lg transition cursor-pointer flex items-center gap-1.5"
  >
  <Send className="w-3.5 h-3.5" /> Publicar en el Muro
  </button>

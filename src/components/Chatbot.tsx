@@ -1805,11 +1805,11 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {/* Mode Switcher Banner (Python Agents vs Direct Gemini) */}
  <div className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono transition-colors ${
  agentsEnabled 
- ? (isStitchLight ?'bg-amber-50/80 -amber-200/80 text-amber-900' :'bg-amber-500/10 -amber-500/20 text-amber-300')
+ ? (isStitchLight ?'bg-amber-50/80 -amber-200/80 text-amber-900' :'bg-[var(--acc)]/10 -amber-500/20 text-[var(--acc)]/70')
  : (isStitchLight ?'bg-emerald-50/80 -emerald-200/80 text-emerald-900' :'bg-emerald-500/10 -emerald-500/20 text-emerald-300')
  }`}>
  <div className="flex items-center gap-2 min-w-0">
- <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ?'bg-amber-400 animate-pulse' :'bg-emerald-400'}`} />
+ <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ?'bg-[var(--acc)]/60 animate-pulse' :'bg-emerald-400'}`} />
  <span className="font-bold truncate text-[11px] uppercase tracking-wider">
  {agentsEnabled ?'⚡ Agentes Supabase Activos (Backend & Database)' :'🤖 Modo Gemini Directo (100% Autónomo)'}
  </span>
@@ -1847,7 +1847,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  }}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
  agentsEnabled
- ? (isStitchLight ?'bg-amber-200 hover:bg-[var(--acc)]/50/15 text-[#d1b375]' :'bg-amber-500/20 hover:bg-[var(--acc)]/50/15 text-[#d1b375] -amber-500/40')
+ ? (isStitchLight ?'bg-amber-200 hover:bg-[var(--acc)]/50/15 text-[#d1b375]' :'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/50/15 text-[#d1b375] -amber-500/40')
  : (isStitchLight ?'bg-emerald-200 hover:bg-[var(--surface)]/15 text-[#10b981]' :'bg-emerald-500/20 hover:bg-[var(--surface)]/15 text-[#10b981] -emerald-500/40')
  }`}
  title={agentsEnabled ?"Desactivar motor de agentes de Supabase y usar solo Gemini" :"Activar motor de agentes en Supabase"}

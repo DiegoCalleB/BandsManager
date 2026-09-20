@@ -19,15 +19,15 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
  <div className="grid grid-cols-2 gap-1.5 px-3 pb-1.5 pt-0.5">
  <button
  onClick={onOpenMetronome}
- className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-all cursor-pointer text-left active:scale-95 group"
+ className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all cursor-pointer text-left active:scale-95 group"
  title="Abrir Metrónomo WebAudio Pro"
  >
- <div className="p-1 rounded-[var(--r-s)] bg-amber-500/20 text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+ <div className="p-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)] group-hover:scale-105 transition-transform shrink-0">
  <Clock className="w-3.5 h-3.5" />
  </div>
  <div className="flex flex-col min-w-0">
  <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
- <span className="text-[9px] text-amber-400/80 font-mono truncate">Click & Tap</span>
+ <span className="text-[9px] text-[var(--acc)]/80 font-mono truncate">Click & Tap</span>
  </div>
  </button>
 
@@ -52,13 +52,13 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
  <div className="grid grid-cols-2 gap-2 px-3.5 pb-1.5 pt-0.5">
  <button
  onClick={onOpenMetronome}
- className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-all cursor-pointer text-left active:scale-95"
+ className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all cursor-pointer text-left active:scale-95"
  title="Abrir Metrónomo WebAudio Pro"
  >
- <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+ <Clock className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <div className="flex flex-col min-w-0">
  <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
- <span className="text-[9px] text-amber-400/70 font-mono truncate">Tap Tempo</span>
+ <span className="text-[9px] text-[var(--acc)]/70 font-mono truncate">Tap Tempo</span>
  </div>
  </button>
 

@@ -52,11 +52,11 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <div className="space-y-4">
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
- <Guitar className="w-4 h-4 text-amber-400" />
+ <Guitar className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-semibold text-white">Nombre del Proyecto Musical & Ubicación</h3>
  </div>
  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-neutral-800 border-[var(--hair)] text-[11px] text-[var(--ink-2)] font-mono">
- <Globe className="w-3 h-3 text-amber-400" />
+ <Globe className="w-3 h-3 text-[var(--acc)]" />
  <span>Idioma: <strong className="text-white">{language ||'Español'}</strong></span>
  </div>
  </div>
@@ -65,7 +65,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  {/* Nombre de la Banda */}
  <div>
  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
- Nombre de la Banda o Proyecto Musical <span className="text-amber-400">*</span>
+ Nombre de la Banda o Proyecto Musical <span className="text-[var(--acc)]">*</span>
  </label>
  <input
  type="text"
@@ -79,7 +79,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  {/* Ciudad Base */}
  <div>
  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
- Ciudad / Región de Origen <span className="text-amber-400">*</span>
+ Ciudad / Región de Origen <span className="text-[var(--acc)]">*</span>
  </label>
  <input
  type="text"
@@ -93,7 +93,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  {/* Género */}
  <div className="md:col-span-2">
  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
- Género / Estilo Musical <span className="text-amber-400">*</span>
+ Género / Estilo Musical <span className="text-[var(--acc)]">*</span>
  </label>
  <input
  type="text"
@@ -110,7 +110,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  onClick={() => setGenre(g)}
  className={`text-[11px] px-2.5 py-1 rounded-[var(--r-s)] transition-colors cursor-pointer ${
  genre.toLowerCase().includes(g.toLowerCase())
- ?'bg-amber-500/20 text-amber-300 /40 font-semibold'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 font-semibold'
  :'bg-zinc-800/60 text-zinc-400 border-[var(--hair)] hover:border-[var(--hair)]'
  }`}
  >
@@ -126,7 +126,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <div className="space-y-3 pt-2">
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
- <Type className="w-4 h-4 text-amber-400" />
+ <Type className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-semibold text-white">3. Estilo de Tipografía para el Nombre de la Banda</h3>
  </div>
  <span className="text-[11px] font-mono text-zinc-400">
@@ -149,7 +149,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  onClick={() => setFontStyle(f.id)}
  className={`p-3.5 rounded-[var(--r-m)] text-left transition-all relative overflow-hidden group cursor-pointer ${
  isSelected
- ?'bg-amber-500/10 /60 shadow-lg shadow-amber-500/10 ring-1 ring-amber-500/30'
+ ?'bg-[var(--acc)]/10 /60 shadow-lg shadow-amber-500/10 ring-1 ring-amber-500/30'
  :'bg-zinc-900/90 border-[var(--hair)] hover:/30 hover:bg-zinc-850'
  }`}
  >
@@ -157,14 +157,14 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <span
  className={`text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded-full ${
  isSelected
- ?'bg-amber-500 text-stone-950'
+ ?'bg-[var(--acc)] text-stone-950'
  :'bg-zinc-800 text-zinc-400 border-[var(--hair)]'
  }`}
  >
  {f.badge}
  </span>
  {isSelected && (
- <span className="flex items-center gap-1 text-[11px] font-bold text-amber-400 font-mono">
+ <span className="flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] font-mono">
  <Check className="w-3.5 h-3.5" /> Seleccionada
  </span>
  )}
@@ -173,7 +173,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  {/* Live Styled Band Name */}
  <div
  className={`text-lg sm:text-xl py-1 truncate leading-tight transition-colors ${
- isSelected ?'text-amber-300' :'text-white group-hover:text-amber-200'
+ isSelected ?'text-[var(--acc)]/70' :'text-white group-hover:text-amber-200'
  }`}
  style={{ fontFamily: f.fontFamily }}
  >
@@ -198,12 +198,12 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className="w-12 h-12 rounded-[var(--r-m)] object-cover shrink-0"
  />
  ) : (
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-amber-500/20 text-amber-300 font-bold flex items-center justify-center shrink-0 text-base">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold flex items-center justify-center shrink-0 text-base">
  {previewName.charAt(0).toUpperCase()}
  </div>
  )}
  <div className="min-w-0">
- <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold block">
+ <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--acc)] font-bold block">
  Previsualización en Dossier EPK
  </span>
  <div
@@ -220,7 +220,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
 
  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
  <span className="text-xs text-zinc-400 font-mono">
- Fuente activa: <strong className="text-amber-300">{BAND_FONT_OPTIONS.find(f => f.id === fontStyle)?.name ||'Headline Rock'}</strong>
+ Fuente activa: <strong className="text-[var(--acc)]/70">{BAND_FONT_OPTIONS.find(f => f.id === fontStyle)?.name ||'Headline Rock'}</strong>
  </span>
  </div>
  </div>
@@ -229,7 +229,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  {/* 4. SUBIDA DE LOGOTIPO OFICIAL O AVATAR */}
  <div className="pt-2 border-t border-[var(--hair)] space-y-2">
  <div className="flex items-center gap-2">
- <Camera className="w-4 h-4 text-amber-400" />
+ <Camera className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-semibold text-white">4. Logotipo Oficial o Imagen de Perfil</h3>
  </div>
 
@@ -242,7 +242,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  )}
  {isUploadingLogo && (
  <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
- <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
+ <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
  </div>
  )}
  </div>
@@ -260,7 +260,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  type="button"
  onClick={() => logoInputRef.current?.click()}
  disabled={isUploadingLogo}
- className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-semibold transition-colors cursor-pointer"
+ className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 text-xs font-semibold transition-colors cursor-pointer"
  >
  <Upload className="w-3.5 h-3.5" />
  {logoUrl ?'Cambiar Imagen / Logo' :'Subir Imagen desde el dispositivo'}

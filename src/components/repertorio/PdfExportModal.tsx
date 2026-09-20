@@ -1361,7 +1361,7 @@ export function PdfExportModal({
  }`}
  >
  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
- <div className="hidden sm:flex p-2.5 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400 shrink-0">
+ <div className="hidden sm:flex p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] shrink-0">
  <Zap className="w-5 h-5" />
  </div>
  <div className="min-w-0">
@@ -1546,10 +1546,10 @@ export function PdfExportModal({
  1 página, solo para intentar mantenerlo en una sola. */}
  <div className="flex items-center gap-2">
  <span className="text-[var(--ink-2)] font-bold flex items-center gap-1">
- <Type className="w-3.5 h-3.5 text-amber-400" /> Tamaño Títulos:
+ <Type className="w-3.5 h-3.5 text-[var(--acc)]" /> Tamaño Títulos:
  </span>
  <span
- className="px-2.5 py-1 rounded text-[11px] font-bold bg-amber-500/20 text-amber-300"
+ className="px-2.5 py-1 rounded text-[11px] font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70"
  title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio (mínimo ideal 17pt; solo baja a 15pt como último recurso si eso evita saltar a una hoja extra)."
  >
  ⚡ Automático
@@ -2060,7 +2060,7 @@ export function PdfExportModal({
  isStitchLight ?'bg-white' :'bg-[var(--surface)]'
  }`}>
  <h3 className={`text-lg font-black uppercase mb-2 flex items-center gap-2 ${isStitchLight ?'text-[var(--ink)]' :'text-white'}`}>
- <Zap className="w-5 h-5 text-amber-400" />
+ <Zap className="w-5 h-5 text-[var(--acc)]" />
  ¿Cómo prefieres el repertorio?
  </h3>
  <p className={`text-sm mb-5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
@@ -2073,7 +2073,7 @@ export function PdfExportModal({
  setSizeChoiceDialog(null);
  handlePrint('single');
  }}
- className="p-4 rounded-[var(--r-m)] border-2 /40 bg-amber-500/10 hover:bg-amber-500/20 text-left transition-colors cursor-pointer"
+ className="p-4 rounded-[var(--r-m)] border-2 /40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
  >
  <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-white'}`}>
  📄 1 sola hoja (letra más pequeña)

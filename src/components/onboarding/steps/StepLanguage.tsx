@@ -63,12 +63,12 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  {/* Header Banner */}
  <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-br from-amber-500/15 via-[#181614] to-[var(--bg)] shadow-xl shadow-amber-500/5">
  <div className="flex items-start gap-3.5">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
- <Globe className="w-5 h-5 text-amber-400" />
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center justify-center shrink-0 mt-0.5">
+ <Globe className="w-5 h-5 text-[var(--acc)]" />
  </div>
  <div className="space-y-1">
- <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-mono font-bold uppercase tracking-wider">
- <Sparkles className="w-3 h-3 text-amber-400" />
+ <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--acc)]/60/20 text-[var(--acc)]/70 text-[10px] font-mono font-bold uppercase tracking-wider">
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>Primer Paso Obligatorio / First Step</span>
  </div>
  <h3 className="text-base sm:text-lg font-bold font-display text-white">
@@ -123,11 +123,11 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  </span>
  <div>
  <div className="flex items-center gap-2">
- <h4 className={`text-sm sm:text-base font-bold transition-colors ${isSelected ?'text-amber-300' :'text-white'}`}>
+ <h4 className={`text-sm sm:text-base font-bold transition-colors ${isSelected ?'text-[var(--acc)]/70' :'text-white'}`}>
  {lang.label}
  </h4>
  {isSelected && (
- <span className="px-1.5 py-0.5 rounded bg-amber-400 text-stone-950 text-[9px] font-mono font-extrabold uppercase">
+ <span className="px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-stone-950 text-[9px] font-mono font-extrabold uppercase">
  Activo
  </span>
  )}
@@ -140,7 +140,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
 
  <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
  isSelected 
- ?'bg-amber-400 text-stone-950' 
+ ?'bg-[var(--acc)]/60 text-stone-950' 
  :'border-[var(--hair)] bg-neutral-800/40 text-transparent'
  }`}>
  <Check className="w-3.5 h-3.5 stroke-[3]" />
@@ -152,8 +152,8 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <p className="text-xs text-[var(--ink-3)] leading-snug">
  {details.description}
  </p>
- <div className="flex items-center gap-1.5 text-[11px] text-amber-300/80 font-mono">
- <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+ <div className="flex items-center gap-1.5 text-[11px] text-[var(--acc)]/70/80 font-mono">
+ <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
  <span className="truncate">{details.aiNote}</span>
  </div>
  </div>
@@ -165,7 +165,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  {/* Impact Breakdown Cards */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] flex items-start gap-2.5">
- <div className="p-2 rounded-[var(--r-s)] bg-amber-500/10 text-amber-400 shrink-0">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] shrink-0">
  <Languages className="w-4 h-4" />
  </div>
  <div>

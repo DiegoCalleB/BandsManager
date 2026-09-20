@@ -422,17 +422,17 @@ export function DashboardWidgetGrid({
  className={`${colSpanClass} relative transition-all duration-200 ${
  isDragging ?'opacity-40 scale-[0.98]' :''
  } ${
- isDragOver ?'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#121214] rounded-[var(--r-l)] bg-amber-500/10' :''
+ isDragOver ?'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#121214] rounded-[var(--r-l)] bg-[var(--acc)]/10' :''
  } ${
- isEditMode ?'ring-2 ring-amber-500/40 rounded-[var(--r-l)] p-1 bg-amber-500/5 hover:ring-amber-400' :''
+ isEditMode ?'ring-2 ring-amber-500/40 rounded-[var(--r-l)] p-1 bg-[var(--acc)]/5 hover:ring-amber-400' :''
  }`}
  >
  {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
  {isEditMode && (
  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-stone-950 p-2 rounded-t-xl mb-1 text-xs font-mono text-[var(--sunken)] shadow-md gap-2">
  <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
- <GripVertical className="w-4 h-4 text-amber-400 shrink-0" />
- <span className="font-bold text-amber-300 text-xs truncate max-w-[150px]">
+ <GripVertical className="w-4 h-4 text-[var(--acc)] shrink-0" />
+ <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">
  {widget.title || widget.type}
  </span>
  </div>
@@ -448,7 +448,7 @@ export function DashboardWidgetGrid({
  onClick={() => handleChangeWSpan(widget.id, spanVal)}
  className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
  widget.wSpan === spanVal
- ?'bg-amber-500 text-stone-950'
+ ?'bg-[var(--acc)] text-stone-950'
  :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
@@ -521,8 +521,8 @@ export function DashboardWidgetGrid({
  {/* WIDGET IMPRESCINDIBLE: APOYO A BANDMANAGER (NO SE PUEDE QUITAR) */}
  <div className="pt-2 space-y-3">
  {isEditMode && (
- <div className="px-3 py-1 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 text-[11px] font-mono font-bold flex items-center gap-1.5 w-fit">
- <Info className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+ <div className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-mono font-bold flex items-center gap-1.5 w-fit">
+ <Info className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span>Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)</span>
  </div>
  )}
@@ -537,7 +537,7 @@ export function DashboardWidgetGrid({
  {/* Header */}
  <div className="p-5 border-b flex items-center justify-between">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Plus className="w-5 h-5" />
  </div>
  <div>
@@ -568,7 +568,7 @@ export function DashboardWidgetGrid({
  onClick={() => setSelectedCategory(cat)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold whitespace-nowrap cursor-pointer transition-all ${
  selectedCategory === cat
- ?'bg-amber-500 text-stone-950 shadow-xs'
+ ?'bg-[var(--acc)] text-stone-950 shadow-xs'
  :'bg-neutral-800/60 text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
@@ -590,7 +590,7 @@ export function DashboardWidgetGrid({
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-2">
  <span className="text-sm font-bold text-[var(--sunken)]">{item.title}</span>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-800 text-amber-400">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-800 text-[var(--acc)]">
  {item.category}
  </span>
  </div>
@@ -602,7 +602,7 @@ export function DashboardWidgetGrid({
  <button
  type="button"
  onClick={() => handleAddWidget(item.type)}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95 shadow-sm"
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95 shadow-sm"
  >
  <Plus className="w-4 h-4" />
  <span>{isAlreadyAdded ?'Añadir Otro' :'Añadir'}</span>

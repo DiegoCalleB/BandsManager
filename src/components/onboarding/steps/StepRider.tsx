@@ -43,7 +43,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
- <Layers className="w-5 h-5 text-amber-400" />
+ <Layers className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-white">Rider Técnico, Stage Plot & Requerimientos</h3>
  </div>
 
@@ -70,13 +70,13 @@ export const StepRider: React.FC<StepRiderProps> = ({
  onClick={() => setLlevaMicrofoniaPropia(!llevaMicrofoniaPropia)}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  llevaMicrofoniaPropia
- ?'bg-amber-500/10 /30 text-amber-300'
+ ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
  :'bg-zinc-900 border-[var(--hair)] text-zinc-400 hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
  <span className="text-xs font-semibold">Microfonía Propia</span>
- {llevaMicrofoniaPropia && <Check className="w-3.5 h-3.5 text-amber-400" />}
+ {llevaMicrofoniaPropia && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
  </div>
  <span className="text-[10px] text-zinc-500 block mt-1">Llevamos set propio de micros</span>
  </button>
@@ -86,13 +86,13 @@ export const StepRider: React.FC<StepRiderProps> = ({
  onClick={() => setLlevaInEars(!llevaInEars)}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  llevaInEars
- ?'bg-amber-500/10 /30 text-amber-300'
+ ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
  :'bg-zinc-900 border-[var(--hair)] text-zinc-400 hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
  <span className="text-xs font-semibold">Monitoraje In-Ears</span>
- {llevaInEars && <Check className="w-3.5 h-3.5 text-amber-400" />}
+ {llevaInEars && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
  </div>
  <span className="text-[10px] text-zinc-500 block mt-1">Sistema propio de monitores</span>
  </button>
@@ -102,13 +102,13 @@ export const StepRider: React.FC<StepRiderProps> = ({
  onClick={() => setNecesitaBacklineBateria(!necesitaBacklineBateria)}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  necesitaBacklineBateria
- ?'bg-amber-500/10 /30 text-amber-300'
+ ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
  :'bg-zinc-900 border-[var(--hair)] text-zinc-400 hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
  <span className="text-xs font-semibold">Backline Sala</span>
- {necesitaBacklineBateria && <Check className="w-3.5 h-3.5 text-amber-400" />}
+ {necesitaBacklineBateria && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
  </div>
  <span className="text-[10px] text-zinc-500 block mt-1">Batería básica aportada por sala</span>
  </button>
@@ -169,7 +169,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  PDF, JPG o PNG hasta 20 MB
  </span>
  {isUploadingRider && (
- <div className="mt-2 flex items-center justify-center gap-1.5 text-xs text-amber-400">
+ <div className="mt-2 flex items-center justify-center gap-1.5 text-xs text-[var(--acc)]">
  <Loader2 className="w-3.5 h-3.5 animate-spin" /> Subiendo rider...
  </div>
  )}

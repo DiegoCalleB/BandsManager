@@ -47,11 +47,11 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  {/* Header */}
  <div className="p-4 sm:p-5 border-b border-zinc-800 bg-gradient-to-r from-[var(--surface)] to-[var(--bg)] flex items-center justify-between">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 flex items-center justify-center text-amber-300">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]/70">
  {isCompleted ? (
  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
  ) : (
- <Sparkles className="w-5 h-5 text-amber-300 animate-spin" />
+ <Sparkles className="w-5 h-5 text-[var(--acc)]/70 animate-spin" />
  )}
  </div>
  <div>
@@ -114,7 +114,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <div key={item.id || idx} className="pt-2 first:pt-0 flex items-center justify-between gap-2 text-xs font-mono">
  <div className="flex items-center gap-2 min-w-0 flex-1">
  {item.status ==='processing' && (
- <Loader2 className="w-3.5 h-3.5 text-amber-400 animate-spin shrink-0" />
+ <Loader2 className="w-3.5 h-3.5 text-[var(--acc)] animate-spin shrink-0" />
  )}
  {item.status ==='success' && (
  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
@@ -131,7 +131,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  <span className={`text-[11px] shrink-0 truncate max-w-[180px] ${
- item.status ==='processing' ?'text-amber-400' :
+ item.status ==='processing' ?'text-[var(--acc)]' :
  item.status ==='success' ?'text-emerald-400' :
  item.status ==='error' ?'text-rose-400' :'text-zinc-500'
  }`}>
@@ -160,7 +160,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)] hover:bg-amber-400 text-black shadow-md transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black shadow-md transition-colors cursor-pointer"
  >
  Cerrar y ver resultados
  </button>

@@ -75,12 +75,12 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  <div className="w-full max-w-xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
- <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 flex items-center justify-center">
+ <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center">
  <Radio className="w-5 h-5 animate-pulse" />
  </div>
  <div>
  <h3 className="text-base font-bold">Generador AI de Soundtracks & Jingles (Lyria)</h3>
- <p className="text-xs text-amber-300 font-mono">Creación de música basada en el estilo y letras de la banda</p>
+ <p className="text-xs text-[var(--acc)]/70 font-mono">Creación de música basada en el estilo y letras de la banda</p>
  </div>
  </div>
  <button
@@ -94,7 +94,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
  <div className="p-3 rounded-[var(--r-m)] bg-amber-950/20 text-xs text-amber-200 space-y-1">
  <p className="font-semibold flex items-center gap-1.5">
- <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Motor de Audio Generativo IA
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Motor de Audio Generativo IA
  </p>
  <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
  Genera bandas sonoras originales, jingles corporativos o música de fondo para teasers de redes sociales y directos usando el estilo musical, ideología y letras de tu banda.
@@ -133,13 +133,13 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  {generatedAudioUrl && (
  <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 space-y-3 animate-in fade-in duration-300">
  <div className="flex items-center justify-between">
- <span className="text-xs font-bold font-mono text-amber-400 flex items-center gap-1.5">
+ <span className="text-xs font-bold font-mono text-[var(--acc)] flex items-center gap-1.5">
  <Music className="w-4 h-4" /> Soundtrack Generado con Éxito
  </span>
  <a
  href={generatedAudioUrl}
  download={`soundtrack-${song?.titulo ||'band'}.wav`}
- className="px-3 py-1 bg-amber-500 text-black text-xs font-bold rounded-[var(--r-s)] flex items-center gap-1 hover:bg-amber-400 transition"
+ className="px-3 py-1 bg-[var(--acc)] text-black text-xs font-bold rounded-[var(--r-s)] flex items-center gap-1 hover:bg-[var(--acc)]/60 transition"
  >
  <Download className="w-3.5 h-3.5" /> Descargar WAV
  </a>
@@ -151,7 +151,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
  {generatedLyrics && (
  <div className="p-2.5 rounded-[var(--r-s)] bg-black/60 text-xs font-mono text-[var(--ink-3)] max-h-32 overflow-y-auto whitespace-pre-line">
- <p className="text-[10px] text-amber-400 font-bold uppercase mb-1">Notas / Letra generada:</p>
+ <p className="text-[10px] text-[var(--acc)] font-bold uppercase mb-1">Notas / Letra generada:</p>
  {generatedLyrics}
  </div>
  )}

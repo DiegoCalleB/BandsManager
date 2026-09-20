@@ -41,10 +41,10 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  {/* CIFRAS CLAVE / SOCIAL PROOF */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
  <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
- <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <BarChart3 className="w-5 h-5" /> Cifras Clave (Social Proof)
  </h3>
- <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full">
+ <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-full">
  {config.cifrasClave?.habilitado ?'✓ Visible en EPK' :'Oculto'}
  </span>
  </div>
@@ -105,10 +105,10 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  {/* RESEÑAS DE PRENSA */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
  <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
- <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <Quote className="w-5 h-5" /> Reseñas y Citas de Prensa
  </h3>
- <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full">
+ <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-full">
  {config.resenasPrensa?.habilitado ?'✓ Visible en EPK' :'Oculto'}
  </span>
  </div>
@@ -172,7 +172,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
  }}
  placeholder="Medio / firma (Ej: Radio 3, MondoSonoro, blog especializado...)"
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-amber-400/90 focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-[var(--acc)]/90 focus: outline-none"
  />
  </div>
  ))}
@@ -187,7 +187,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  ];
  setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
  }}
- className="w-full py-2 rounded-[var(--r-m)] border-dashed text-[var(--ink-3)] hover:text-amber-400 hover:/50 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+ className="w-full py-2 rounded-[var(--r-m)] border-dashed text-[var(--ink-3)] hover:text-[var(--acc)] hover:/50 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
  >
  <Plus className="w-4 h-4" /> Añadir Reseña de Prensa
  </button>

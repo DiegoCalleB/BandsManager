@@ -197,13 +197,13 @@ export function MetronomeModal({
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-white/5">
  <div className="flex items-center gap-2">
- <div className="p-2 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
  <Clock className="w-5 h-5 animate-pulse" />
  </div>
  <div>
  <h3 className="text-base font-bold text-white flex items-center gap-1.5">
  Metrónomo Pro
- <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300">
+ <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
  WebAudio API
  </span>
  </h3>
@@ -225,7 +225,7 @@ export function MetronomeModal({
  {songs.length > 0 && (
  <div className="bg-white/5 rounded-[var(--r-m)] p-3 border-[var(--hair)] flex flex-col gap-1.5">
  <label className="text-xs font-semibold text-[var(--ink-3)] flex items-center gap-1.5">
- <Music className="w-3.5 h-3.5 text-amber-400" />
+ <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
  Sincronizar BPM desde Repertorio:
  </label>
  <select
@@ -245,21 +245,21 @@ export function MetronomeModal({
 
  {/* Large BPM Display & Quick Adjustment */}
  <div className="flex flex-col items-center justify-center bg-black/50 border-[var(--hair)] rounded-[var(--r-l)] p-6 relative overflow-hidden">
- <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest mb-1 flex items-center gap-1">
+ <div className="text-xs font-mono font-bold text-[var(--acc)] uppercase tracking-widest mb-1 flex items-center gap-1">
  <Zap className="w-3.5 h-3.5" /> Tempo Actual
  </div>
 
  <div className="flex items-center gap-4">
  <button
  onClick={() => setBpm(b => Math.max(30, b - 5))}
- className="w-10 h-10 rounded-[var(--r-m)] bg-white/5 hover:bg-amber-500/20 hover:text-amber-300 border-[var(--hair)] font-bold text-lg text-white transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+ className="w-10 h-10 rounded-[var(--r-m)] bg-white/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 border-[var(--hair)] font-bold text-lg text-white transition-all cursor-pointer active:scale-95 flex items-center justify-center"
  title="-5 BPM"
  >
  -5
  </button>
  <button
  onClick={() => setBpm(b => Math.max(30, b - 1))}
- className="w-9 h-9 rounded-[var(--r-m)] bg-white/5 hover:bg-amber-500/20 hover:text-amber-300 border-[var(--hair)] font-bold text-sm text-white transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+ className="w-9 h-9 rounded-[var(--r-m)] bg-white/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 border-[var(--hair)] font-bold text-sm text-white transition-all cursor-pointer active:scale-95 flex items-center justify-center"
  title="-1 BPM"
  >
  -1
@@ -276,14 +276,14 @@ export function MetronomeModal({
 
  <button
  onClick={() => setBpm(b => Math.min(280, b + 1))}
- className="w-9 h-9 rounded-[var(--r-m)] bg-white/5 hover:bg-amber-500/20 hover:text-amber-300 border-[var(--hair)] font-bold text-sm text-white transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+ className="w-9 h-9 rounded-[var(--r-m)] bg-white/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 border-[var(--hair)] font-bold text-sm text-white transition-all cursor-pointer active:scale-95 flex items-center justify-center"
  title="+1 BPM"
  >
  +1
  </button>
  <button
  onClick={() => setBpm(b => Math.min(280, b + 5))}
- className="w-10 h-10 rounded-[var(--r-m)] bg-white/5 hover:bg-amber-500/20 hover:text-amber-300 border-[var(--hair)] font-bold text-lg text-white transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+ className="w-10 h-10 rounded-[var(--r-m)] bg-white/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 border-[var(--hair)] font-bold text-lg text-white transition-all cursor-pointer active:scale-95 flex items-center justify-center"
  title="+5 BPM"
  >
  +5
@@ -307,7 +307,7 @@ export function MetronomeModal({
  <span className="font-semibold flex items-center gap-1">
  Compás ({timeSignature}/4):
  </span>
- <span className="font-mono text-amber-300 font-bold">
+ <span className="font-mono text-[var(--acc)]/70 font-bold">
  Golpe {isPlaying ? currentBeat + 1 :'-'} / {timeSignature}
  </span>
  </div>
@@ -323,7 +323,7 @@ export function MetronomeModal({
  className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-mono font-bold text-sm transition-all duration-75 ${
  isActive
  ? isAccent
- ?'bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/50 scale-105'
+ ?'bg-[var(--acc)]/60 text-slate-950 shadow-lg shadow-amber-500/50 scale-105'
  :'bg-emerald-400 text-slate-950 border-emerald-300 shadow-lg shadow-emerald-500/50 scale-105'
  :'bg-white/5 text-neutral-500 border-[var(--hair)]'
  }`}
@@ -349,7 +349,7 @@ export function MetronomeModal({
  onClick={() => setTimeSignature(sig)}
  className={`py-1 text-xs font-bold rounded-[var(--r-s)] transition-colors cursor-pointer ${
  timeSignature === sig
- ?'bg-amber-500 text-slate-950'
+ ?'bg-[var(--acc)] text-slate-950'
  :'bg-black/40 text-[var(--ink-3)] hover:bg-white/10'
  }`}
  >
@@ -364,7 +364,7 @@ export function MetronomeModal({
  onClick={handleTapTempo}
  className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
  >
- <span className="text-xs font-black text-amber-300 uppercase tracking-wider group-hover:scale-105 transition-transform">
+ <span className="text-xs font-black text-[var(--acc)]/70 uppercase tracking-wider group-hover:scale-105 transition-transform">
  👆 TAP TEMPO
  </span>
  <span className="text-[10px] text-[var(--ink-2)]">Toca el ritmo 4 veces</span>
@@ -389,7 +389,7 @@ export function MetronomeModal({
  onClick={() => setBpm(p.val)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium cursor-pointer transition-colors ${
  bpm === p.val
- ?'bg-amber-500/20 /50 text-amber-300 font-bold'
+ ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 font-bold'
  :'bg-white/5 border-[var(--hair)] text-[var(--ink-3)] hover:bg-white/10'
  }`}
  >

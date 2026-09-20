@@ -240,7 +240,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
  const getStatusBadge = () => {
  if (percentage >= 85) return { label:'Entrenamiento Completo (100% Agéntico)', color:'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' };
- if (percentage >= 50) return { label:'Entrenamiento Intermedio', color:'bg-amber-500/15 text-amber-300 /30' };
+ if (percentage >= 50) return { label:'Entrenamiento Intermedio', color:'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30' };
  return { label:'Entrenamiento Inicial', color:'bg-rose-500/15 text-rose-300 border-rose-500/30' };
  };
 
@@ -273,13 +273,13 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {/* Header Row */}
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-stone-800/60">
  <div className="flex items-center gap-3">
- <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0 font-mono font-bold text-sm">
+ <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)] flex items-center justify-center shrink-0 font-mono font-bold text-sm">
  {percentage}%
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
  <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-zinc-100 flex items-center gap-1.5">
- <Bot className="w-3.5 h-3.5 text-amber-400" />
+ <Bot className="w-3.5 h-3.5 text-[var(--acc)]" />
  Entrenamiento & Preparación de Agentes IA
  </h3>
  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-semibold ${badgeInfo.color}`}>
@@ -313,7 +313,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  
  <button
  onClick={() => setIsExpanded(!isExpanded)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-stone-800 hover:bg-stone-700 text-amber-400 text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-stone-800 hover:bg-stone-700 text-[var(--acc)] text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
  title="Expandir/colapsar checklist"
  >
  <span>{isExpanded ?'Ocultar' :'Ver checklist'}</span>
@@ -352,7 +352,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  </div>
  <button
  onClick={() => setIsExpanded(true)}
- className="text-amber-400 hover:text-amber-300 font-mono text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer transition-colors"
+ className="text-[var(--acc)] hover:text-[var(--acc)]/70 font-mono text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer transition-colors"
  >
  <span>Ver detalles y configurar</span>
  <ChevronDown className="w-3 h-3" />
@@ -380,12 +380,12 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {pillar.completed ? (
  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
  ) : (
- <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+ <AlertCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  )}
  </div>
 
  <span className={`text-[9px] font-mono font-medium truncate ${
- pillar.completed ?'text-emerald-400/80' :'text-amber-400 group-hover:underline'
+ pillar.completed ?'text-emerald-400/80' :'text-[var(--acc)] group-hover:underline'
  }`}>
  {pillar.completed ?'Completado' : pillar.missingLabel}
  </span>
@@ -396,7 +396,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {/* Detailed Breakdown List */}
  <div className="pt-2 border-t border-stone-800/80 space-y-2.5">
  <div className="flex items-center justify-between">
- <h4 className="text-xs font-mono uppercase tracking-wider font-bold text-amber-400">
+ <h4 className="text-xs font-mono uppercase tracking-wider font-bold text-[var(--acc)]">
  Checklist de Configuración Agéntica ({completedPillarsCount}/{pillars.length})
  </h4>
  </div>
@@ -406,7 +406,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <div 
  key={`exp-${pillar.id}`}
  className={`p-2.5 rounded-[var(--r-m)] flex items-start justify-between gap-3 ${
- pillar.completed ?'bg-[var(--surface)]/40 /80' :'bg-amber-500/5 /20'
+ pillar.completed ?'bg-[var(--surface)]/40 /80' :'bg-[var(--acc)]/5 /20'
  }`}
  >
  <div className="space-y-0.5">
@@ -414,7 +414,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {pillar.completed ? (
  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
  ) : (
- <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+ <AlertCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  )}
  <span className="font-bold text-zinc-100 text-xs">{pillar.title}</span>
  </div>
@@ -426,7 +426,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {!pillar.completed && (
  <button
  onClick={() => handlePillarClick(pillar.view)}
- className="px-2 py-1 rounded-[var(--r-s)] bg-amber-500 text-stone-950 font-mono font-bold text-[10px] shrink-0 hover:bg-amber-400 transition-colors cursor-pointer"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-stone-950 font-mono font-bold text-[10px] shrink-0 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
  >
  Configurar
  </button>
@@ -444,7 +444,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200">
  <div className="flex justify-between items-start">
  <div className="flex items-center gap-3">
- <div className="p-2.5 bg-amber-500/20 rounded-[var(--r-m)] text-amber-400">
+ <div className="p-2.5 bg-[var(--acc)]/20 rounded-[var(--r-m)] text-[var(--acc)]">
  <Bot className="w-6 h-6" />
  </div>
  <div>
@@ -467,7 +467,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
  <div className="space-y-3 text-xs text-zinc-300 font-sans leading-relaxed">
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
- <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
+ <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
  <Bot className="w-4 h-4" /> 1. Agente Scout (Prospección de Salas & Recintos)
  </h4>
  <p className="text-[var(--ink-2)] text-xs">
@@ -476,7 +476,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  </div>
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
- <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
+ <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
  <FileText className="w-4 h-4" /> 2. Agente Redactor (Pitches Personalizados & ADN de Tono)
  </h4>
  <p className="text-[var(--ink-2)] text-xs">
@@ -485,7 +485,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  </div>
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
- <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
+ <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
  <Disc3 className="w-4 h-4" /> 3. Agente Mánager AI (Negociación de Fechas & Caché)
  </h4>
  <p className="text-[var(--ink-2)] text-xs">
@@ -494,7 +494,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  </div>
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
- <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
+ <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
  <Mail className="w-4 h-4" /> 4. Agente Lector & Enviador (Smart Gate)
  </h4>
  <p className="text-[var(--ink-2)] text-xs">
@@ -506,7 +506,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <div className="flex justify-end pt-2">
  <button
  onClick={() => setShowAuditModal(false)}
- className="px-4 py-2 rounded-[var(--r-m)] bg-amber-500 text-stone-950 font-bold font-mono text-xs hover:bg-amber-400 transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-stone-950 font-bold font-mono text-xs hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
  >
  Entendido
  </button>

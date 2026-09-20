@@ -31,7 +31,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
- <FileText className="w-5 h-5 text-amber-400" />
+ <FileText className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-white">Biografía, Slogan & Formato Directo</h3>
  </div>
 
@@ -61,7 +61,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  <button
  type="button"
  onClick={onGenerateBioAI}
- className="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-medium px-2 py-1 rounded-[var(--r-s)] bg-amber-500/10 hover:bg-amber-500/20 transition-colors"
+ className="inline-flex items-center gap-1.5 text-xs text-[var(--acc)] hover:text-[var(--acc)]/70 font-medium px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-colors"
  >
  <Sparkles className="w-3.5 h-3.5" />
  Redactar con IA / Sugerencia

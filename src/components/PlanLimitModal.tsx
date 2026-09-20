@@ -56,11 +56,11 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
 
  {/* Header */}
  <div className="flex items-start gap-4">
- <div className="p-3 rounded-[var(--r-l)] bg-amber-500/15 text-amber-400 shrink-0">
+ <div className="p-3 rounded-[var(--r-l)] bg-[var(--acc)]/15 text-[var(--acc)] shrink-0">
  <Lock className="w-7 h-7" />
  </div>
  <div>
- <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md">
+ <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/60/10 px-2 py-0.5 rounded-md">
  Límite de {currentPlanDef.name} alcanzado
  </span>
  <h3 className="text-xl font-bold font-display uppercase tracking-wide text-zinc-100 mt-1">
@@ -76,7 +76,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  <span>Tus datos actuales están 100% seguros y protegidos</span>
  </div>
  <p className="text-xs text-[var(--ink-3)] leading-relaxed">
- Puedes consultar, editar, filtrar y exportar todas tus {currentCount} {info.plural} creadas sin ninguna limitación. Para añadir nuevas {info.plural}, mejora tu plan a <strong className="text-amber-300 font-semibold">{targetPlanDef.name}</strong>.
+ Puedes consultar, editar, filtrar y exportar todas tus {currentCount} {info.plural} creadas sin ninguna limitación. Para añadir nuevas {info.plural}, mejora tu plan a <strong className="text-[var(--acc)]/70 font-semibold">{targetPlanDef.name}</strong>.
  </p>
  </div>
 
@@ -84,12 +84,12 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)] to-[var(--surface)] border-2 /40 space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <Sparkles className="w-4 h-4 text-amber-400" />
- <span className="text-sm font-bold font-display uppercase tracking-wider text-amber-300">
+ <Sparkles className="w-4 h-4 text-[var(--acc)]" />
+ <span className="text-sm font-bold font-display uppercase tracking-wider text-[var(--acc)]/70">
  Plan Recomendado: {targetPlanDef.name}
  </span>
  </div>
- <span className="text-xs font-mono text-zinc-300 font-bold bg-amber-400/20 px-2.5 py-0.5 rounded-full">
+ <span className="text-xs font-mono text-zinc-300 font-bold bg-[var(--acc)]/60/20 px-2.5 py-0.5 rounded-full">
  {targetPlanDef.badge}
  </span>
  </div>
@@ -101,7 +101,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  <ul className="space-y-1.5 text-xs text-[var(--ink-3)]">
  {targetPlanDef.features.slice(0, 3).map((feat, idx) => (
  <li key={idx} className="flex items-center gap-2">
- <Check className="w-3.5 h-3.5 text-amber-400 shrink-0 stroke-[3]" />
+ <Check className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 stroke-[3]" />
  <span>{feat}</span>
  </li>
  ))}
@@ -137,7 +137,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  onClose();
  onNavigateToPlanes();
  }}
- className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--acc)]/70 text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
  >
  <span>Ver Comparativa Completa</span>
  <ExternalLink className="w-3.5 h-3.5" />

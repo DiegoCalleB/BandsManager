@@ -505,7 +505,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <button
  onClick={onUndo}
  onMouseDown={(e) => e.stopPropagation()}
- className="px-2 py-1 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-[var(--acc)]/70 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
  title="Deshacer el último reordenamiento del setlist"
  >
  ↩️ Deshacer
@@ -552,7 +552,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  key={i}
  className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 transition ${
  w.type ==='warning'
- ?'bg-amber-500/10 text-amber-300 /30'
+ ?'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
  : w.type ==='success'
  ?'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
  :'bg-sky-500/10 text-sky-300 border-sky-500/30'
@@ -724,7 +724,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  e.stopPropagation();
  handleUndoSuggestion(idx);
  }}
- className="shrink-0 px-2 py-0.5 rounded bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-amber-900/40 hover:bg-amber-800/60 text-[var(--acc)]/70 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
  title="Deshacer este cambio de orden"
  >
  ↩️ Deshacer
@@ -783,7 +783,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {/* Areas for Improvement */}
  {analysis.areasForImprovement.length > 0 && (
  <div className="bg-amber-900/20 rounded-[var(--r-s)] p-3">
- <p className="text-xs font-medium text-amber-300 mb-1.5">🎯 Áreas de Mejora</p>
+ <p className="text-xs font-medium text-[var(--acc)]/70 mb-1.5">🎯 Áreas de Mejora</p>
  <ul className="space-y-1">
  {analysis.areasForImprovement.map((area, idx) => (
  <li key={idx} className="text-xs text-amber-200">• {area}</li>

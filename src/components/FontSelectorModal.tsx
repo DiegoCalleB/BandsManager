@@ -61,9 +61,9 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <div className={`px-6 py-3 text-xs flex items-center gap-2.5 ${
  isStitchLight ?'bg-indigo-50/70 text-indigo-900' :'bg-[var(--surface)]/40 text-[var(--ink-3)]'
  }`}>
- <Info className="w-4 h-4 text-amber-400 shrink-0" />
+ <Info className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <p className="text-[11px] leading-relaxed font-mono">
- ¿La fuente original te resultaba demasiado intensa o pesada? Prueba con <strong className="text-amber-400">Plus Jakarta Sans</strong> u <strong className="text-amber-400">Outfit</strong> para una lectura mucho más suave y ligera.
+ ¿La fuente original te resultaba demasiado intensa o pesada? Prueba con <strong className="text-[var(--acc)]">Plus Jakarta Sans</strong> u <strong className="text-[var(--acc)]">Outfit</strong> para una lectura mucho más suave y ligera.
  </p>
  </div>
 
@@ -80,7 +80,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  isSelected
  ? isStitchLight
  ?'bg-indigo-50/80 ring-2 ring-indigo-500/20 shadow-md'
- :'bg-amber-500/10 ring-2 ring-amber-500/20 shadow-lg'
+ :'bg-[var(--acc)]/10 ring-2 ring-amber-500/20 shadow-lg'
  : isStitchLight
  ?'bg-[var(--bg)] hover:-slate-300 hover:bg-[var(--sunken)]/80'
  :'bg-[var(--surface)]/60 hover:-neutral-700 hover:bg-[var(--surface)]'
@@ -110,7 +110,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <div className="flex items-center gap-2">
  {isSelected && (
  <span className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
- isStitchLight ?'bg-indigo-600 text-white' :'bg-amber-500 text-stone-950'
+ isStitchLight ?'bg-indigo-600 text-white' :'bg-[var(--acc)] text-stone-950'
  }`}>
  <Check className="w-3.5 h-3.5 stroke-[3]" />
  </span>
@@ -153,7 +153,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer shadow-sm ${
  isStitchLight 
  ?'bg-indigo-600 hover:bg-indigo-700 text-white' 
- :'bg-amber-500 hover:bg-amber-400 text-stone-950'
+ :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950'
  }`}
  >
  Aceptar & Cerrar

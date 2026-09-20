@@ -277,11 +277,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* Header */}
  <div className="flex items-center justify-between pb-3 border-b /10">
  <div className="flex items-center gap-2.5">
- <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/20 flex items-center justify-center text-amber-400">
+ <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]">
  <Sparkles className="w-4 h-4 animate-pulse" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-amber-400">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--acc)]">
  Análisis de ADN de Expresión y Tono: {band.nombre_banda}
  </h3>
  <p className="text-[10px] text-[var(--ink-2)] font-mono">
@@ -304,7 +304,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {editable && !isLoading && toneData && !isEditing && (
  <button
  onClick={onReAnalyze}
- className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-amber-400"
+ className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
  title="Volver a rastrear redes con IA (sustituye lo que haya, incluidas ediciones a mano)"
  >
  <RefreshCw className="w-4 h-4" />
@@ -313,7 +313,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {editable && !isLoading && toneData && !isEditing && (
  <button
  onClick={handleStartEdit}
- className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-amber-400"
+ className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
  title="Editar a mano"
  >
  <Pencil className="w-4 h-4" />
@@ -331,11 +331,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* Loading State */}
  {isLoading ? (
  <div className="py-12 flex flex-col items-center justify-center space-y-4 text-center">
- <div className="w-12 h-12 rounded-[var(--r-l)] bg-amber-500/10 flex items-center justify-center text-amber-400 animate-spin">
+ <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] animate-spin">
  <Radio className="w-6 h-6" />
  </div>
  <div className="space-y-1">
- <h4 className="text-xs font-bold font-mono text-amber-400 uppercase tracking-widest">
+ <h4 className="text-xs font-bold font-mono text-[var(--acc)] uppercase tracking-widest">
  Scrapeando redes sociales de {band.nombre_banda}...
  </h4>
  <p className="text-[10px] text-[var(--ink-2)] font-mono max-w-md">
@@ -483,7 +483,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px] font-mono">
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
  <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Tono General</span>
- <span className="font-bold text-amber-400 block text-xs mt-0.5">
+ <span className="font-bold text-[var(--acc)] block text-xs mt-0.5">
  {toneData.tono_comunicacion ||'No especificado'}
  </span>
  </div>
@@ -507,7 +507,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
- <MessageSquare className="w-3.5 h-3.5 text-amber-400" /> Vocabulario Clave & Muletillas
+ <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Vocabulario Clave & Muletillas
  </span>
  {toneData.emojis_frecuentes && toneData.emojis_frecuentes.length > 0 && (
  <div className="flex items-center gap-1 text-sm">
@@ -524,7 +524,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  toneData.vocabulario_clave.map((word, idx) => (
  <span
  key={idx}
- className="px-2 py-1 rounded-md text-[10px] font-mono bg-amber-500/10 text-amber-300"
+ className="px-2 py-1 rounded-md text-[10px] font-mono bg-[var(--acc)]/10 text-[var(--acc)]/70"
  >
  #{word}
  </span>
@@ -537,7 +537,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* Extracted Quotes from Reels/Posts */}
  {toneData.frases_emblematicas_extraidas && toneData.frases_emblematicas_extraidas.length > 0 && (
  <div className="pt-1.5 border-t space-y-1">
- <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-amber-400/90 block">
+ <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]/90 block">
  💬 Expresiones extraídas de sus Reels & Posts:
  </span>
  <div className="space-y-1">
@@ -591,7 +591,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* 3. Pitch Recommendation & Connection Points */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px]">
  <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${isStitchLight ?'bg-amber-50/50 text-amber-900' :'bg-amber-950/20 /40 text-amber-200'}`}>
- <span className="font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1 text-[9px]">
+ <span className="font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1 text-[9px]">
  <Flame className="w-3 h-3" /> Punto de Conexión con Bakandeya
  </span>
  <p className="font-sans leading-relaxed text-[11px]">
@@ -876,7 +876,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <p className="text-xs text-[var(--ink-2)] font-mono">No hay análisis generado para esta banda todavía.</p>
  <button
  onClick={onReAnalyze}
- className="px-4 py-2 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono font-bold text-xs uppercase tracking-wider cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 font-mono font-bold text-xs uppercase tracking-wider cursor-pointer"
  >
  Iniciar Análisis de Tono
  </button>

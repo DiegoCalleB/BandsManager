@@ -25,15 +25,15 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
- <Sparkles className="w-5 h-5 text-amber-400" />
+ <Sparkles className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-white">Agentes IA de Booking & Conexión de Correo</h3>
  </div>
 
  {/* Intro info box */}
  <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 space-y-2">
  <div className="flex items-center gap-2">
- <Bot className="w-5 h-5 text-amber-400" />
- <h4 className="text-xs font-semibold text-amber-300">
+ <Bot className="w-5 h-5 text-[var(--acc)]" />
+ <h4 className="text-xs font-semibold text-[var(--acc)]/70">
  Human-in-the-Loop: Automatización Segura de Booking
  </h4>
  </div>
@@ -47,7 +47,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  <div className="space-y-4">
  <div>
  <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center gap-1.5">
- <Mail className="w-3.5 h-3.5 text-amber-400" />
+ <Mail className="w-3.5 h-3.5 text-[var(--acc)]" />
  Email Oficial desde el que contactarás a las salas
  </label>
  <input

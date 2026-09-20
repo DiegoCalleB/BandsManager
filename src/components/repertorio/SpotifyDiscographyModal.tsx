@@ -642,7 +642,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
 
  <div className="flex items-center gap-3 shrink-0">
  {track.tonalidadEstimada && (
- <span className="px-1.5 py-0.5 rounded bg-white/5 text-[10px] text-amber-400 font-bold">
+ <span className="px-1.5 py-0.5 rounded bg-white/5 text-[10px] text-[var(--acc)] font-bold">
  {track.tonalidadEstimada}
  </span>
  )}

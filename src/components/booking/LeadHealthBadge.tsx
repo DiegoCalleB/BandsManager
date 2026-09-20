@@ -56,7 +56,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
  return {
  type:'caliente',
  label:'🔥 Lead Caliente',
- badgeClass:'bg-amber-500/20 text-amber-300 font-bold',
+ badgeClass:'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold',
  icon:'🔥',
  description: desc
  };
@@ -72,7 +72,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
  return {
  type:'seguimiento',
  label:'⏳ Seguimiento Necesario',
- badgeClass:'bg-amber-500/20 text-amber-400 font-bold',
+ badgeClass:'bg-[var(--acc)]/20 text-[var(--acc)] font-bold',
  icon:'⏳',
  description: `Enviado hace ${days}d sin respuesta`
  };

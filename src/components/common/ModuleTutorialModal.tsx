@@ -243,15 +243,15 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  targetBtn:'bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/40'
  },
  amber: {
- badgeBg:'bg-amber-500/15 text-amber-300 /30',
- iconBox:'bg-amber-500/20 text-amber-400 /30 shadow-amber-500/10',
- activeDot:'bg-amber-400 w-7',
- primaryBtn:'bg-amber-500 hover:bg-amber-400 text-stone-950 font-black shadow-amber-900/30',
- hookBorder:'/25 bg-amber-500/10 text-amber-100',
- highlightText:'text-amber-400',
- targetCard:'/40 bg-amber-500/5',
- targetBadge:'bg-amber-500/20 text-amber-300 /30',
- targetBtn:'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 /40'
+ badgeBg:'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30',
+ iconBox:'bg-[var(--acc)]/20 text-[var(--acc)] /30 shadow-amber-500/10',
+ activeDot:'bg-[var(--acc)]/60 w-7',
+ primaryBtn:'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 font-black shadow-amber-900/30',
+ hookBorder:'/25 bg-[var(--acc)]/10 text-amber-100',
+ highlightText:'text-[var(--acc)]',
+ targetCard:'/40 bg-[var(--acc)]/5',
+ targetBadge:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /30',
+ targetBtn:'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 /40'
  },
  blue: {
  badgeBg:'bg-sky-500/15 text-sky-300 border-sky-500/30',
@@ -309,13 +309,13 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  >
  {/* Corner Ping Beacon */}
  <span className="absolute -top-2 -right-2 flex h-4 w-4">
- <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
- <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500"></span>
+ <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--acc)]/60 opacity-75"></span>
+ <span className="relative inline-flex rounded-full h-4 w-4 bg-[var(--acc)]"></span>
  </span>
 
  {/* Target Tooltip Badge */}
  <div 
- className={`absolute ${targetRect.top < 36 ?'-bottom-7' :'-top-7'} left-0 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider flex items-center gap-1 shadow-lg whitespace-nowrap`}
+ className={`absolute ${targetRect.top < 36 ?'-bottom-7' :'-top-7'} left-0 px-2 py-0.5 rounded-md bg-[var(--acc)] text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider flex items-center gap-1 shadow-lg whitespace-nowrap`}
  >
  <span>👉 {currentStep.uiTarget?.label ||'Aquí'}</span>
  </div>
@@ -372,17 +372,17 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  setTimeout(() => locateTargetElement(true), 150);
  }
  }}
- className="p-1.5 px-2 rounded-[var(--r-s)] text-stone-400 hover:text-amber-300 hover:bg-stone-800/80 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono"
+ className="p-1.5 px-2 rounded-[var(--r-s)] text-stone-400 hover:text-[var(--acc)]/70 hover:bg-stone-800/80 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono"
  title={isFloatingMode ?"Expandir a tarjeta centrada" :"Fijar como tarjeta flotante en esquina para ver la pantalla"}
  >
  {isFloatingMode ? (
  <>
- <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+ <Maximize2 className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Centrar</span>
  </>
  ) : (
  <>
- <Minimize2 className="w-3.5 h-3.5 text-amber-400" />
+ <Minimize2 className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Flotante</span>
  </>
  )}
@@ -457,10 +457,10 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  <div className="flex items-center justify-between gap-2 flex-wrap">
  <div className="flex items-center gap-1.5">
  <span className="relative flex h-2 w-2">
- <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
- <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+ <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--acc)]/60 opacity-75"></span>
+ <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--acc)]"></span>
  </span>
- <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-amber-300">
+ <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-[var(--acc)]/70">
  {currentStep.uiTarget.type ==='button'
  ?'🔘 Botón en pantalla'
  : currentStep.uiTarget.type ==='tab'
@@ -484,7 +484,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  className={`text-[11px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer active:scale-95 shadow-xs ${accentStyles.targetBtn}`}
  title="Fijar modo flotante y enfocar este elemento en la pantalla"
  >
- <Target className="w-3.5 h-3.5 text-amber-400" />
+ <Target className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Señalar en pantalla</span>
  </button>
  )}
@@ -492,7 +492,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
 
  {/* Nombre del elemento simulando botón o control */}
  <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-stone-950/90 border-stone-800 text-xs shadow-inner">
- <span className="text-amber-400 font-mono font-black text-xs shrink-0">
+ <span className="text-[var(--acc)] font-mono font-black text-xs shrink-0">
  {currentStep.uiTarget.type ==='button' ?'▶' :'▪'}
  </span>
  <span className="font-bold text-white font-mono truncate">
@@ -503,11 +503,11 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  {/* Ubicación y Para qué sirve */}
  <div className="grid grid-cols-1 gap-1.5 text-[11px] font-mono text-stone-300">
  <div className="flex items-start gap-1.5 text-stone-400">
- <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+ <MapPin className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
  <span className="leading-tight"><strong className="text-stone-300 font-semibold">Dónde está:</strong> {currentStep.uiTarget.location}</span>
  </div>
  <div className="flex items-start gap-1.5 text-stone-400">
- <MousePointer className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+ <MousePointer className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
  <span className="leading-tight"><strong className="text-stone-300 font-semibold">Para qué sirve:</strong> {currentStep.uiTarget.actionHint}</span>
  </div>
  </div>

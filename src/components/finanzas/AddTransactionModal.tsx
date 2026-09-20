@@ -193,7 +193,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setEstado('pendiente')}
  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
  estado ==='pendiente'
- ?'bg-amber-500/20 text-amber-400'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]'
  :'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent'
  }`}
  >

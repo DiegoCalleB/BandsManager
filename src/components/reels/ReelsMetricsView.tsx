@@ -671,16 +671,16 @@ export function ReelsMetricsView({
  :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
- <Compass className="w-3.5 h-3.5 text-amber-400" />
+ <Compass className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Plan & Recomendaciones de Crecimiento</span>
- <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-normal">IA</span>
+ <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-normal">IA</span>
  </button>
  </div>
 
  {activeMainSection ==='growth_plan' && (
  <div className="flex items-center gap-2">
  <span className="text-[11px] font-mono text-[var(--ink-2)]">
- Estrategia personalizada para <b className="text-amber-400">{effectiveBandName}</b>
+ Estrategia personalizada para <b className="text-[var(--acc)]">{effectiveBandName}</b>
  </span>
  </div>
  )}
@@ -976,21 +976,21 @@ export function ReelsMetricsView({
  isStitchLight ?'bg-amber-50/50 shadow-sm' :'bg-[var(--surface)]/40 /30'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
- <Heart className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" /> Fans Registrados
+ <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--acc)] font-bold flex items-center gap-1.5">
+ <Heart className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/20" /> Fans Registrados
  </span>
- <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400">
+ <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]">
  100% RGPD
  </span>
  </div>
  <div>
- <div className="text-2xl font-black font-display tracking-tight text-amber-400">
+ <div className="text-2xl font-black font-display tracking-tight text-[var(--acc)]">
  {fansTotalCount.toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">Contactos en Base de Datos</div>
  </div>
  <div className="pt-2 border-t /10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
- <span>Formulario Únete: <b className="text-amber-300">{uneteFansCount}</b></span>
+ <span>Formulario Únete: <b className="text-[var(--acc)]/70">{uneteFansCount}</b></span>
  <span>Ciudades: <b className="text-white">{new Set(fans.map(f => f.ciudad).filter(Boolean)).size}</b></span>
  </div>
  </div>

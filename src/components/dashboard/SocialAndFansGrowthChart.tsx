@@ -377,7 +377,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 border-b /60">
  <div className="flex items-center gap-3">
  <div className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${
- isStitchLight ?'bg-amber-500/15 text-amber-600' :'bg-amber-500/20 text-amber-400'
+ isStitchLight ?'bg-[var(--acc)]/15 text-amber-600' :'bg-[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  <TrendingUp className="w-5 h-5" />
  </div>
@@ -405,11 +405,11 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
  isStitchLight
  ?'bg-white hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-neutral-800/80 hover:bg-neutral-700 text-amber-300'
+ :'bg-neutral-800/80 hover:bg-neutral-700 text-[var(--acc)]/70'
  }`}
  title="Ir al gestor de comunidad, muro y capturas de fans"
  >
- <Heart className="w-3.5 h-3.5 text-amber-400" />
+ <Heart className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Muro & Base de Fans ({totalFans})</span>
  </button>
 
@@ -545,22 +545,22 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  :'bg-gradient-to-br from-amber-950/30 to-[var(--surface)] /40 shadow-sm shadow-amber-950/20'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-amber-400 flex items-center gap-1">
- <Heart className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" /> Fans BBDD
+ <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
+ <Heart className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/20" /> Fans BBDD
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-mono font-bold">
  Formulario Únete
  </span>
  </div>
  <div className="my-1.5">
  <div className="flex items-baseline gap-2">
- <span className="text-2xl font-display font-black text-amber-400">
+ <span className="text-2xl font-display font-black text-[var(--acc)]">
  {totalFans}
  </span>
- <span className="text-[10px] font-mono text-amber-300/80">fans totales</span>
+ <span className="text-[10px] font-mono text-[var(--acc)]/70/80">fans totales</span>
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-3)] flex items-center justify-between gap-1 mt-1 border-t /20 pt-1">
- <span className="text-amber-300 font-bold">✨ {uneteFans} vía Únete</span>
+ <span className="text-[var(--acc)]/70 font-bold">✨ {uneteFans} vía Únete</span>
  {directoFans > 0 && <span className="text-[var(--ink-2)]">🎤 {directoFans} directo</span>}
  <span className="text-emerald-400 font-bold">✓ RGPD</span>
  </div>
@@ -589,7 +589,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all cursor-pointer ${
  isSelected
  ? isStitchLight
- ?'bg-amber-500 text-slate-950 shadow-xs'
+ ?'bg-[var(--acc)] text-slate-950 shadow-xs'
  :'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-sm shadow-amber-950/40'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -785,18 +785,18 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => toggleChannel('fans')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.fans ?'bg-amber-400 animate-pulse' :'bg-neutral-600'}`}></span>
- <Heart className="w-3 h-3 text-amber-400 fill-amber-400/30" />
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.fans ?'bg-[var(--acc)]/60 animate-pulse' :'bg-neutral-600'}`}></span>
+ <Heart className="w-3 h-3 text-[var(--acc)] fill-amber-400/30" />
  <span>Fans BD (Únete)</span>
- <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 font-mono font-black">
+ <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-mono font-black">
  {totalFans}
  </span>
- {selectedChannels.fans ? <Eye className="w-3 h-3 text-amber-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+ {selectedChannels.fans ? <Eye className="w-3 h-3 text-[var(--acc)]" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
  </button>
  <button
  type="button"
  onClick={() => selectOnlyChannel('fans')}
- className="px-1.5 py-1 text-[8px] font-mono border-l /30 hover:bg-amber-500/30 text-amber-300 cursor-pointer font-black"
+ className="px-1.5 py-1 text-[8px] font-mono border-l /30 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 cursor-pointer font-black"
  title="Aislar y ver sólo la curva de Fans registrados"
  >
  Solo
@@ -817,7 +817,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={selectAllChannels}
- className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-black font-mono text-[10px] font-bold transition-all cursor-pointer"
+ className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-mono text-[10px] font-bold transition-all cursor-pointer"
  >
  Activar todos los canales
  </button>
@@ -966,12 +966,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <ShieldCheck className="w-3.5 h-3.5" /> 100% Consentimiento RGPD ({verifiedRgpd} registros)
  </span>
  <span>•</span>
- <span className="flex items-center gap-1 text-amber-300">
+ <span className="flex items-center gap-1 text-[var(--acc)]/70">
  <Users className="w-3.5 h-3.5" /> {activeCitiesCount} ciudades con fans
  </span>
  <span>•</span>
  <span className="text-[var(--ink-2)]">
- Landing pública: <a href={bandId ? `/unete?band=${encodeURIComponent(bandId)}` :'/unete'} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-0.5">
+ Landing pública: <a href={bandId ? `/unete?band=${encodeURIComponent(bandId)}` :'/unete'} target="_blank" rel="noopener noreferrer" className="text-[var(--acc)] hover:underline inline-flex items-center gap-0.5">
  {bandId ? `/unete?band=${bandId.replace(/^(band|reg)-/,'')}` :'/unete'} <ExternalLink className="w-2.5 h-2.5" />
  </a>
  </span>

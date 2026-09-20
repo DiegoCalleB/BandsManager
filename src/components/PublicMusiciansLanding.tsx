@@ -158,7 +158,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <div className="min-h-screen bg-[var(--sunken)] text-[var(--sunken)] font-sans selection:bg-[var(--acc)] selection:text-black">
  {/* Background Ambient Glows */}
  <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
- <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[120px]" />
+ <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[var(--acc)]/10 rounded-full blur-[120px]" />
  <div className="absolute top-[40%] right-[-5%] w-[450px] h-[450px] bg-yellow-600/10 rounded-full blur-[140px]" />
  <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-amber-700/10 rounded-full blur-[140px]" />
  </div>
@@ -179,7 +179,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <span className="font-extrabold tracking-tight text-white font-mono text-base flex items-center gap-0.5">
  BandManager<span className="text-[var(--acc)]">.io</span>
  </span>
- <span className="text-[10px] font-mono text-amber-400/80 block -mt-1 tracking-wider uppercase">
+ <span className="text-[10px] font-mono text-[var(--acc)]/80 block -mt-1 tracking-wider uppercase">
  IA Agéntica para tu Banda
  </span>
  </div>
@@ -194,7 +194,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  onClick={() => handleLanguageChange(lang.code)}
  className={`w-8 h-8 rounded-[var(--r-s)] text-base flex items-center justify-center transition-all ${
  currentLang === lang.code
- ?'bg-amber-500/20 text-[var(--acc)] /50 shadow-inner scale-105'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)] /50 shadow-inner scale-105'
  :'bg-[var(--surface)]/60 /80 hover: opacity-70 hover:opacity-100'
  }`}
  title={lang.label}
@@ -211,9 +211,9 @@ export const PublicMusiciansLanding: React.FC = () => {
  <main className="relative z-10 max-w-4xl mx-auto px-4 py-8 sm:py-12 space-y-12">
  {/* Optional Origin Band Badge */}
  {originInfo.fromBand && (
- <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-amber-500/10 text-xs font-mono text-amber-300 animate-in fade-in">
+ <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-xs font-mono text-[var(--acc)]/70 animate-in fade-in">
  <div className="flex items-center gap-2">
- <Radio className="w-4 h-4 text-amber-400 animate-pulse" />
+ <Radio className="w-4 h-4 text-[var(--acc)] animate-pulse" />
  <span>
  {t.badgeFromBand.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/,'').toUpperCase())}
  </span>
@@ -244,7 +244,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
  </div>
 
- <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mt-1">
+ <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] text-xs font-mono font-bold uppercase tracking-wider mt-1">
  <Sparkles className="w-3.5 h-3.5" />
  <span>{t.badge}</span>
  </div>
@@ -265,7 +265,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  {/* FEATURE CARDS */}
  <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5 shadow-lg">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-400">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <QrCode className="w-5 h-5" />
  </div>
  <h3 className="font-bold text-white text-base font-mono">
@@ -277,7 +277,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
 
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5 shadow-lg">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-400">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <FileText className="w-5 h-5" />
  </div>
  <h3 className="font-bold text-white text-base font-mono">
@@ -289,7 +289,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
 
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5 shadow-lg">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-400">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <Music className="w-5 h-5" />
  </div>
  <h3 className="font-bold text-white text-base font-mono">
@@ -304,11 +304,11 @@ export const PublicMusiciansLanding: React.FC = () => {
  {/* ROADMAP TEASER: hype de que la plataforma sigue creciendo, sin detallar features
  concretas todavía por confirmar */}
  <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/15 flex items-center justify-center text-amber-400 shrink-0">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
  <Rocket className="w-5 h-5" />
  </div>
  <p className="text-[var(--ink-3)] text-xs sm:text-sm leading-relaxed">
- <span className="text-amber-400 font-bold">{t.roadmapTeaserLead}</span>{''}
+ <span className="text-[var(--acc)] font-bold">{t.roadmapTeaserLead}</span>{''}
  {t.roadmapTeaserText}
  </p>
  </section>
@@ -328,7 +328,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <h2 className="text-2xl sm:text-3xl font-black text-white">
  {t.successTitle}
  </h2>
- <p className="text-amber-400 font-mono text-sm font-bold">
+ <p className="text-[var(--acc)] font-mono text-sm font-bold">
  {t.successSubtitle.replace('{bandName}', formData.nombreBanda ||'tu banda')}
  </p>
  <p className="text-[var(--ink-3)] text-sm max-w-lg mx-auto leading-relaxed">
@@ -358,7 +358,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  /* EARLY ACCESS FORM */
  <div className="p-6 sm:p-10 rounded-3xl bg-[var(--surface)] shadow-2xl space-y-6">
  <div className="space-y-2 border-b pb-6 text-center sm:text-left">
- <div className="inline-flex items-center gap-2 text-amber-400 font-mono text-xs font-bold uppercase tracking-wider">
+ <div className="inline-flex items-center gap-2 text-[var(--acc)] font-mono text-xs font-bold uppercase tracking-wider">
  <Users className="w-4 h-4" />
  <span>Early Access Waitlist</span>
  </div>

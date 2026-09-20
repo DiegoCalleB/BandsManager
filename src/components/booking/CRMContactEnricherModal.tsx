@@ -81,7 +81,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  }`}>
  <div className="flex items-center justify-between pb-4 border-b">
  <div className="flex items-center gap-2">
- <div className="p-2 rounded-[var(--r-s)] bg-amber-500/10 text-amber-400">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]">
  <Sparkles className="w-5 h-5" />
  </div>
  <div>
@@ -102,7 +102,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60 /80'}`}>
  <div className="flex items-center justify-between mb-2">
  <span className="font-semibold text-neutral-300">Salas con información incompleta:</span>
- <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-bold">{incompleteLeads.length}</span>
+ <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] font-bold">{incompleteLeads.length}</span>
  </div>
  <p className="text-[var(--ink-2)] leading-relaxed">
  El asistente escaneará páginas web oficiales y directorios públicos para completar correos de booking y teléfonos de los promotores.
@@ -146,7 +146,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  type="button"
  onClick={handleStartEnrichment}
  disabled={isProcessing || incompleteLeads.length === 0}
- className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-[var(--surface)] transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--surface)] transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isProcessing ? (
  <>

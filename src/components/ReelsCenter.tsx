@@ -1309,10 +1309,10 @@ export default function ReelsCenter({
  <div className="flex gap-2.5 items-center flex-wrap">
  <button
  onClick={handleOpenToneModal}
- className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 transition-all cursor-pointer shadow-md"
+ className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-all cursor-pointer shadow-md"
  title={`Ver el tono de voz guardado de ${instagramHandle || nombreBanda}, o analizarlo si todavía no existe`}
  >
- <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
  <span>Tono de voz en redes</span>
  </button>
 
@@ -1816,7 +1816,7 @@ export default function ReelsCenter({
  )}
 
  {!isFetchingMeta && metaError && (
- <div className="p-2 rounded-[var(--r-s)] bg-amber-500/10 -amber-500/20 text-[10px] text-amber-300 font-mono text-left flex items-start gap-2">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -amber-500/20 text-[10px] text-[var(--acc)]/70 font-mono text-left flex items-start gap-2">
  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
  <span>{metaError} Puedes analizarlo igualmente, pero los rangos serán aproximados.</span>
  </div>
@@ -1992,7 +1992,7 @@ export default function ReelsCenter({
  {/* Cuando la IA no ha intervenido lo decimos: antes los cortes de respaldo se
  presentaban como si los hubiera elegido el modelo. */}
  {!analysisError && analysisNotice && (
- <div className="p-3 bg-amber-500/10 -amber-500/20 rounded-[var(--r-s)] text-amber-300 text-xs flex gap-2 items-start">
+ <div className="p-3 bg-[var(--acc)]/10 -amber-500/20 rounded-[var(--r-s)] text-[var(--acc)]/70 text-xs flex gap-2 items-start">
  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
  <span>{analysisNotice}</span>
  </div>
@@ -2475,7 +2475,7 @@ export default function ReelsCenter({
  </div>
  )}
  {scheduleWarnings.length > 0 && (
- <div className="p-2.5 bg-amber-500/10 -amber-500/30 rounded-[var(--r-s)] text-amber-400 text-[11px] font-mono mt-2 space-y-1">
+ <div className="p-2.5 bg-[var(--acc)]/10 -amber-500/30 rounded-[var(--r-s)] text-[var(--acc)] text-[11px] font-mono mt-2 space-y-1">
  {scheduleWarnings.map((aviso) => (
  <div key={aviso} className="flex items-center gap-1.5">
  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
@@ -2950,7 +2950,7 @@ export default function ReelsCenter({
  </div>
  <button
  onClick={() => setIsExpandedPreview(false)}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 text-amber-400 hover:text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 text-[var(--acc)] hover:text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer"
  >
  <X className="w-4 h-4" /> <span>Cerrar</span>
  </button>
@@ -3261,7 +3261,7 @@ export default function ReelsCenter({
  <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
  <span className="text-xs font-bold text-white">Viralidad</span>
  </div>
- <span className="text-[9px] font-mono text-amber-400 uppercase tracking-widest block font-bold">POTENCIAL MÁXIMO</span>
+ <span className="text-[9px] font-mono text-[var(--acc)] uppercase tracking-widest block font-bold">POTENCIAL MÁXIMO</span>
  </div>
  </div>
  </div>
@@ -3358,7 +3358,7 @@ export default function ReelsCenter({
  >
  {/* Visual highlight segment on the timeline */}
  <div 
- className="absolute top-1 bottom-1 bg-amber-500/20 rounded-md flex items-center justify-between px-2 shadow-[0_0_15px_rgba(245,158,11,0.15)] group-hover:bg-amber-500/25 transition-all touch-none"
+ className="absolute top-1 bottom-1 bg-[var(--acc)]/20 rounded-md flex items-center justify-between px-2 shadow-[0_0_15px_rgba(245,158,11,0.15)] group-hover:bg-[var(--acc)]/25 transition-all touch-none"
  style={{ left: `${startPct}%`, width: `${activeWidth}%` }}
  >
  {/* Left Grab Handle (Start) */}
@@ -3374,12 +3374,12 @@ export default function ReelsCenter({
  }}
  title="Arrastrar para ajustar el inicio (Izquierda)"
  >
- <div className="w-1.5 h-6 bg-amber-400 group-hover/lhandle:bg-white rounded-full transition-all shadow-md group-hover/lhandle:scale-y-110" />
+ <div className="w-1.5 h-6 bg-[var(--acc)]/60 group-hover/lhandle:bg-white rounded-full transition-all shadow-md group-hover/lhandle:scale-y-110" />
  </div>
 
- <span className="text-[8px] font-mono text-amber-300 font-extrabold tracking-tight select-none pointer-events-none pl-1">START</span>
+ <span className="text-[8px] font-mono text-[var(--acc)]/70 font-extrabold tracking-tight select-none pointer-events-none pl-1">START</span>
  <span className="text-[8px] font-mono text-amber-200 select-none hidden sm:inline pointer-events-none">Recorte ({duration}s)</span>
- <span className="text-[8px] font-mono text-amber-300 font-extrabold tracking-tight select-none pointer-events-none pr-1">END</span>
+ <span className="text-[8px] font-mono text-[var(--acc)]/70 font-extrabold tracking-tight select-none pointer-events-none pr-1">END</span>
 
  {/* Right Grab Handle (End) */}
  <div 
@@ -3394,7 +3394,7 @@ export default function ReelsCenter({
  }}
  title="Arrastrar para ajustar el fin (Derecha)"
  >
- <div className="w-1.5 h-6 bg-amber-400 group-hover/rhandle:bg-white rounded-full transition-all shadow-md group-hover/rhandle:scale-y-110" />
+ <div className="w-1.5 h-6 bg-[var(--acc)]/60 group-hover/rhandle:bg-white rounded-full transition-all shadow-md group-hover/rhandle:scale-y-110" />
  </div>
  </div>
 
@@ -3419,7 +3419,7 @@ export default function ReelsCenter({
 
  <div className="flex justify-between text-[10px] font-mono text-[var(--ink-2)] px-1">
  <span>⏱️ Inicio: <strong className="text-white font-bold">{formatTime(start)}</strong> ({start}s)</span>
- <span className="text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full font-bold">
+ <span className="text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-0.5 rounded-full font-bold">
  Duración: {duration} segundos
  </span>
  <span>⏱️ Fin: <strong className="text-white font-bold">{formatTime(end)}</strong> ({end}s)</span>
@@ -3639,7 +3639,7 @@ export default function ReelsCenter({
  <div className={`p-2 rounded-[var(--r-s)] text-[10px] font-mono flex items-center gap-2 ${
  renderedStoredPermanently
  ?'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
- :'bg-amber-500/10 -amber-500/20 text-amber-300'
+ :'bg-[var(--acc)]/10 -amber-500/20 text-[var(--acc)]/70'
  }`}>
  <span>
  {renderedStoredPermanently
@@ -3649,7 +3649,7 @@ export default function ReelsCenter({
  </div>
 
  {sinTranscripcionReal && (
- <div className="p-2 rounded-[var(--r-s)] bg-amber-500/10 -amber-500/20 text-[10px] text-amber-300 font-mono flex items-center gap-2">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -amber-500/20 text-[10px] text-[var(--acc)]/70 font-mono flex items-center gap-2">
  <span>ℹ️ Este vídeo no tiene transcripción en YouTube, así que el clip va sin subtítulos.</span>
  </div>
  )}
@@ -3968,7 +3968,7 @@ export default function ReelsCenter({
  ) : scheduleWarnings.length > 0 ? (
  <div className="space-y-1">
  {scheduleWarnings.map((aviso) => (
- <div key={aviso} className="flex items-center gap-1.5 text-amber-400 text-[11px] font-mono">
+ <div key={aviso} className="flex items-center gap-1.5 text-[var(--acc)] text-[11px] font-mono">
  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
  <span>{aviso}</span>
  </div>

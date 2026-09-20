@@ -115,7 +115,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  >
  <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
  <div className="flex items-center gap-2.5">
- <div className="p-2 bg-amber-500/10 rounded-[var(--r-m)]">
+ <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-m)]">
  <Camera className="w-5 h-5 text-[var(--acc)]" />
  </div>
  <div>
@@ -161,15 +161,15 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  type="button"
  onClick={handleAutoSearchLogo}
  disabled={isSearching || isUploading}
- className="w-full p-3 bg-amber-500/10 hover:bg-amber-500/20 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer disabled:opacity-50"
+ className="w-full p-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer disabled:opacity-50"
  >
  <div className="flex items-center gap-3">
- <div className="p-2 bg-amber-500/20 text-amber-300 rounded-[var(--r-s)]">
- {isSearching ? <Loader2 className="w-5 h-5 animate-spin text-amber-400" /> : <Sparkles className="w-5 h-5 text-amber-400" />}
+ <div className="p-2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)]">
+ {isSearching ? <Loader2 className="w-5 h-5 animate-spin text-[var(--acc)]" /> : <Sparkles className="w-5 h-5 text-[var(--acc)]" />}
  </div>
  <div className="text-left">
- <span className="block font-bold text-xs text-amber-300">Buscar Logo con IA</span>
- <span className="block text-[11px] text-amber-400/80 font-sans">Encuentra fotos o favicons oficiales</span>
+ <span className="block font-bold text-xs text-[var(--acc)]/70">Buscar Logo con IA</span>
+ <span className="block text-[11px] text-[var(--acc)]/80 font-sans">Encuentra fotos o favicons oficiales</span>
  </div>
  </div>
  </button>
@@ -182,7 +182,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  ) : (
  <div className="p-3 bg-zinc-900 border-zinc-700 rounded-[var(--r-m)] space-y-2">
  <input type="url" placeholder="https://ejemplo.com/logo.png" value={customUrl} onChange={(e) => setCustomUrl(e.target.value)} className="w-full bg-black/60 border-zinc-700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-[var(--acc)]" />
- <button onClick={handleSaveCustomUrl} disabled={!customUrl.trim()} className="px-3 py-1.5 bg-[var(--acc)] text-black font-bold text-xs rounded-[var(--r-s)] hover:bg-amber-400">Guardar</button>
+ <button onClick={handleSaveCustomUrl} disabled={!customUrl.trim()} className="px-3 py-1.5 bg-[var(--acc)] text-black font-bold text-xs rounded-[var(--r-s)] hover:bg-[var(--acc)]/60">Guardar</button>
  </div>
  )}
 

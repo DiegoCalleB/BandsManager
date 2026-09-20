@@ -104,7 +104,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
  <button
  type="button"
  onClick={() => onNavigate('repertorio')}
- className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Ver Temas</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -120,7 +120,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
  <p className="text-xs font-mono text-[var(--ink-2)]">Temas guardados en catálogo</p>
  </div>
  </div>
- <span className="text-[10px] font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-300 font-bold">
+ <span className="text-[10px] font-mono px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold">
  Iris IA Activo
  </span>
  </div>
@@ -150,7 +150,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
  <button
  type="button"
  onClick={() => onNavigate('finanzas')}
- className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Finanzas</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -178,7 +178,7 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
  <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Users className="w-5 h-5" />
  </div>
  <div>
@@ -192,7 +192,7 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
  <button
  type="button"
  onClick={() => onNavigate('fans')}
- className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Ver Fans</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -202,15 +202,15 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
 
  <div className="grid grid-cols-2 gap-3">
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]">
- <span className="text-2xl font-mono font-bold text-amber-400">{fans.length}</span>
+ <span className="text-2xl font-mono font-bold text-[var(--acc)]">{fans.length}</span>
  <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-1">Fans Registrados</p>
  </div>
  <button
  type="button"
  onClick={() => onNavigate && onNavigate('fans')}
- className="p-3 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-all flex flex-col items-center justify-center cursor-pointer"
+ className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all flex flex-col items-center justify-center cursor-pointer"
  >
- <QrCode className="w-5 h-5 text-amber-400 mb-1" />
+ <QrCode className="w-5 h-5 text-[var(--acc)] mb-1" />
  <span className="text-[11px] font-mono font-bold">Generar QR de Concierto</span>
  </button>
  </div>
@@ -238,7 +238,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
  <button
  type="button"
  onClick={() => onNavigate('epk')}
- className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Editar EPK</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -272,7 +272,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
  <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Bot className="w-5 h-5" />
  </div>
  <div>
@@ -286,7 +286,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
  <button
  type="button"
  onClick={() => onNavigate('booking')}
- className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Agentes</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -296,7 +296,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
  <div>
- <span className="text-lg font-mono font-bold text-amber-400">{pendingApprovals} Borradores</span>
+ <span className="text-lg font-mono font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
  <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Pendientes de Aprobación Humana</p>
  </div>
  <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold">
@@ -327,7 +327,7 @@ export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) 
  <button
  type="button"
  onClick={() => onNavigate('tour')}
- className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Ver Giras</span>
  <ArrowRight className="w-3.5 h-3.5" />

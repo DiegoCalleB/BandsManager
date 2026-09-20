@@ -40,7 +40,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
- <Award className="w-5 h-5 text-amber-400" />
+ <Award className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-white">Hitos, Reseñas de Prensa & Social Proof</h3>
  </div>
 
@@ -65,7 +65,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
 
  <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] space-y-1">
  <label className="block text-[11px] font-medium text-zinc-400 flex items-center gap-1">
- <Radio className="w-3.5 h-3.5 text-amber-400" /> Conciertos Realizados
+ <Radio className="w-3.5 h-3.5 text-[var(--acc)]" /> Conciertos Realizados
  </label>
  <input
  type="text"
@@ -119,7 +119,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  >
  <div>
  <p className="text-zinc-200 italic mb-1">"{q.texto}"</p>
- <span className="text-amber-400 font-semibold">— {q.medio}</span>
+ <span className="text-[var(--acc)] font-semibold">— {q.medio}</span>
  </div>
  <button
  type="button"
@@ -159,7 +159,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  type="button"
  onClick={onAddQuote}
  disabled={!newQuoteText.trim() || !newQuoteMedia.trim()}
- className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
+ className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-semibold text-xs transition-colors disabled:opacity-50"
  >
  <Plus className="w-3.5 h-3.5" /> Añadir Cita
  </button>

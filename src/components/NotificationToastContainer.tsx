@@ -27,7 +27,7 @@ export const NotificationToastContainer: React.FC<NotificationToastContainerProp
  icon = <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />;
  } else if (toast.type ==='warning') {
  bg ='bg-amber-950 /60 text-amber-100';
- icon = <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />;
+ icon = <AlertTriangle className="w-5 h-5 text-[var(--acc)] shrink-0" />;
  }
 
  return (

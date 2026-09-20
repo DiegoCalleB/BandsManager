@@ -516,7 +516,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setShowFansHeaderMenu(v => !v)}
  title="Previsualizar formulario, copiar enlace, registrar fan manual, exportar CSV o ver guía"
- className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-400 transition cursor-pointer"
+ className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] transition cursor-pointer"
  >
  <MoreHorizontal className="w-4 h-4" />
  </button>
@@ -527,14 +527,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  type="button"
  onClick={() => { setShowFansHeaderMenu(false); openTutorial(); }}
- className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-amber-300 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
+ className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
  >
- <Sparkles className="w-3.5 h-3.5 shrink-0 text-amber-400" /> Guía Rápida & Tutorial
+ <Sparkles className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" /> Guía Rápida & Tutorial
  </button>
  <button
  type="button"
  onClick={() => { setShowFansHeaderMenu(false); setShowFansPreviewModal(true); }}
- className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-amber-300 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
+ className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
  >
  <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar Formulario
  </button>
@@ -573,7 +573,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  id="tab-btn-fans-metrics"
  onClick={() => setActiveTab('metrics')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='metrics' ?' text-amber-400 font-bold bg-amber-500/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='metrics' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
  >
  <TrendingUp className="w-4 h-4 text-amber-500" /> 1. Seguimiento & Métricas de Redes
  </button>
@@ -581,21 +581,21 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  id="tab-btn-fans-qr"
  onClick={() => setActiveTab('qr')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='qr' ?' text-amber-400 font-bold bg-amber-500/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='qr' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
  >
  <QrCode className="w-4 h-4 text-amber-500" /> {isPromo ?'1' :'2'}. Captura en Vivo & QR
  </button>
  <button
  id="tab-btn-fans-dashboard"
  onClick={() => setActiveTab('dashboard')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='dashboard' ?' text-amber-400 font-bold bg-amber-500/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='dashboard' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
  >
  <Heart className="w-4 h-4 text-amber-500" /> {isPromo ?'2' :'3'}. Dashboard & Analítica
  </button>
  <button
  id="tab-btn-fans-directory"
  onClick={() => setActiveTab('fans')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='fans' ?' text-amber-400 font-bold bg-amber-500/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='fans' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-3)] hover:text-slate-200'}`}
  >
  <Users className="w-4 h-4 text-amber-500" /> {isPromo ?'3' :'4'}. Comunidad & Red Social ({fans.length})
  </button>
@@ -617,7 +617,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
  <p className="text-xs font-bold text-[var(--ink-3)] uppercase tracking-widest mb-2 font-mono">Ciudades Activas</p>
- <h3 className="text-4xl font-black text-amber-400 font-display flex items-center gap-2">
+ <h3 className="text-4xl font-black text-[var(--acc)] font-display flex items-center gap-2">
  <MapPin className="w-8 h-8" />
  {new Set(fans.map(f => f.ciudad).filter(Boolean)).size}
  </h3>
@@ -634,7 +634,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {/* Breakdown de Clics por Red Social, Métodos de Pago y Dossier */}
  {Object.keys(clickStats).length > 0 && (
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 space-y-3">
- <h4 className="text-xs font-bold text-amber-400 font-mono uppercase tracking-wider flex items-center gap-2">
+ <h4 className="text-xs font-bold text-[var(--acc)] font-mono uppercase tracking-wider flex items-center gap-2">
  <TrendingUp className="w-4 h-4" /> Impacto de Enlaces en FansLanding & QR (Por Canal y Donaciones)
  </h4>
  <div className="flex flex-wrap items-center gap-2 pt-1">
@@ -643,7 +643,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  .map(([key, count]) => (
  <div key={key} className="px-3 py-1.5 rounded-[var(--r-m)] bg-slate-950 text-xs font-mono flex items-center gap-2">
  <span className="font-semibold text-slate-200 uppercase">{key}:</span>
- <span className="font-black text-amber-400">{count} {count === 1 ?'clic' :'clics'}</span>
+ <span className="font-black text-[var(--acc)]">{count} {count === 1 ?'clic' :'clics'}</span>
  </div>
  ))}
  </div>
@@ -661,7 +661,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </p>
  <p className="text-[11px] text-[var(--ink-2)] font-mono">Curva acumulativa de la comunidad {effectiveBandName}</p>
  </div>
- <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-[var(--r-s)]">
+ <span className="text-xs font-mono font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-s)]">
  Total: {fans.length} fans
  </span>
  </div>
@@ -746,7 +746,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <span className="text-slate-200 font-bold truncate">{item.name}</span>
  </div>
  <div className="flex items-center gap-2 shrink-0">
- <span className="text-amber-400 font-bold">{item.value}</span>
+ <span className="text-[var(--acc)] font-bold">{item.value}</span>
  <span className="text-[var(--ink-2)] text-[10px]">({item.percentage}%)</span>
  </div>
  </div>
@@ -774,7 +774,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {selectedCityFilter && (
  <button
  onClick={() => setSelectedCityFilter('')}
- className="text-[11px] font-mono text-amber-400 hover:underline cursor-pointer"
+ className="text-[11px] font-mono text-[var(--acc)] hover:underline cursor-pointer"
  >
  Limpiar filtro ciudad
  </button>
@@ -787,7 +787,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setSelectedCityFilter('')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  selectedCityFilter ===''
- ?'bg-amber-500 text-slate-950 shadow-md'
+ ?'bg-[var(--acc)] text-slate-950 shadow-md'
  :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  >
@@ -803,13 +803,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setSelectedCityFilter(city)}
  className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  isSelected
- ?'bg-amber-500 text-slate-950 shadow-md'
+ ?'bg-[var(--acc)] text-slate-950 shadow-md'
  :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  >
  <span>{city}</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
- isSelected ?'bg-slate-950/20 text-slate-950' :'bg-[var(--surface)] text-amber-400'
+ isSelected ?'bg-slate-950/20 text-slate-950' :'bg-[var(--surface)] text-[var(--acc)]'
  }`}>
  {count}
  </span>
@@ -839,7 +839,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  <button
  type="submit"
- className="p-1 bg-amber-500 text-slate-950 rounded-[var(--r-s)] hover:bg-amber-400 transition cursor-pointer"
+ className="p-1 bg-[var(--acc)] text-slate-950 rounded-[var(--r-s)] hover:bg-[var(--acc)]/60 transition cursor-pointer"
  title="Guardar ciudad"
  >
  <Check className="w-3.5 h-3.5" />
@@ -856,7 +856,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  type="button"
  onClick={() => setIsAddingCity(true)}
- className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-slate-950 hover:bg-[var(--surface)] text-amber-400 border-dashed flex items-center gap-1 transition cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-slate-950 hover:bg-[var(--surface)] text-[var(--acc)] border-dashed flex items-center gap-1 transition cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Añadir ciudad</span>
@@ -913,7 +913,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setViewMode('feed')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- viewMode ==='feed' ?'bg-amber-500 text-slate-950' :'text-[var(--ink-3)] hover:text-white'
+ viewMode ==='feed' ?'bg-[var(--acc)] text-slate-950' :'text-[var(--ink-3)] hover:text-white'
  }`}
  title="Muro Social & Comunidad"
  >
@@ -924,7 +924,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setViewMode('grid')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- viewMode ==='grid' ?'bg-amber-500 text-slate-950' :'text-[var(--ink-3)] hover:text-white'
+ viewMode ==='grid' ?'bg-[var(--acc)] text-slate-950' :'text-[var(--ink-3)] hover:text-white'
  }`}
  title="Vista en Tarjetas"
  >
@@ -935,7 +935,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setViewMode('table')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- viewMode ==='table' ?'bg-amber-500 text-slate-950' :'text-[var(--ink-3)] hover:text-white'
+ viewMode ==='table' ?'bg-[var(--acc)] text-slate-950' :'text-[var(--ink-3)] hover:text-white'
  }`}
  title="Vista en Detalles / Tabla"
  >
@@ -946,7 +946,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setViewMode('map')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- viewMode ==='map' ?'bg-amber-500 text-slate-950' :'text-[var(--ink-3)] hover:text-white'
+ viewMode ==='map' ?'bg-[var(--acc)] text-slate-950' :'text-[var(--ink-3)] hover:text-white'
  }`}
  title="Vista en Mapa por Ciudades"
  >
@@ -987,7 +987,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div key={fan.id} className="bg-slate-950 hover:/50 rounded-[var(--r-l)] p-4 transition-all space-y-3 relative group">
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-500 font-bold uppercase text-sm">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-amber-500 font-bold uppercase text-sm">
  {fan.nombre.charAt(0)}
  </div>
  <div>
@@ -1019,7 +1019,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
  <span className="text-[var(--ink-2)] text-[9px] block uppercase">Origen / Canal</span>
- <span className="text-amber-400 truncate block font-semibold">{fan.comoConocio || fan.conciertoOrigenNombre ||'Directo'}</span>
+ <span className="text-[var(--acc)] truncate block font-semibold">{fan.comoConocio || fan.conciertoOrigenNombre ||'Directo'}</span>
  </div>
  </div>
 
@@ -1040,7 +1040,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {viewMode ==='map' && (
  <div className="space-y-4">
  <div className="bg-slate-950 rounded-[var(--r-l)] p-4 text-xs font-mono text-[var(--ink-3)]">
- <div className="flex items-center gap-2 text-amber-400 font-bold mb-3">
+ <div className="flex items-center gap-2 text-[var(--acc)] font-bold mb-3">
  <MapIcon className="w-4 h-4" />
  <span>Distribución Geográfica de la Comunidad de Fans por Ciudades</span>
  </div>
@@ -1059,7 +1059,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <MapPin className="w-4 h-4 text-amber-500 shrink-0" />
  <span className="font-bold text-white truncate">{city}</span>
  </div>
- <span className="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
+ <span className="bg-[var(--acc)]/20 text-[var(--acc)]/70 text-[10px] font-bold px-2 py-0.5 rounded-full">
  {count} {count === 1 ?'fan' :'fans'}
  </span>
  </div>
@@ -1072,7 +1072,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {viewMode ==='table' && (
  <div className="overflow-x-auto">
  <table className="w-full text-left text-xs text-[var(--ink-3)]">
- <thead className="bg-slate-950 text-amber-400 uppercase font-bold border-b font-mono">
+ <thead className="bg-slate-950 text-[var(--acc)] uppercase font-bold border-b font-mono">
  <tr>
  <th className="p-3">Nombre</th>
  <th className="p-3">Correo Electrónico</th>
@@ -1095,7 +1095,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <tr key={fan.id} className="hover:bg-[var(--surface)]/20 transition group">
  <td className="p-3 font-semibold text-white">
  <div className="flex items-center gap-2">
- <div className="w-6 h-6 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 font-bold uppercase text-[10px]">
+ <div className="w-6 h-6 rounded-full bg-[var(--acc)]/10 flex items-center justify-center text-amber-500 font-bold uppercase text-[10px]">
  {fan.nombre.charAt(0)}
  </div>
  {fan.nombre}
@@ -1148,7 +1148,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 lg:p-8 space-y-5">
  <div className="space-y-1 border-b pb-4">
  <h3 className="text-xl font-black text-white flex items-center gap-2 font-display">
- <QrCode className="w-6 h-6 text-amber-400" /> Generador de QR
+ <QrCode className="w-6 h-6 text-[var(--acc)]" /> Generador de QR
  </h3>
  <p className="text-xs text-[var(--ink-3)] font-mono">
  Genera el código, descárgalo o imprímelo. La recompensa al fan, el dominio y el idioma están abajo, plegados.
@@ -1157,7 +1157,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  {/* Vínculo a concierto: única decisión que cambia la URL, por eso va siempre visible */}
  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
- <label className="text-[11px] font-bold text-amber-400 uppercase font-mono tracking-wider shrink-0" title="Los fans que escaneen se registrarán con este origen en el CRM">
+ <label className="text-[11px] font-bold text-[var(--acc)] uppercase font-mono tracking-wider shrink-0" title="Los fans que escaneen se registrarán con este origen en el CRM">
  Vincular a:
  </label>
  <select
@@ -1189,7 +1189,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  </div>
  ) : (
- <div className="w-12 h-12 bg-amber-500 text-slate-950 rounded-[var(--r-m)] flex items-center justify-center border-2 shadow-xl">
+ <div className="w-12 h-12 bg-[var(--acc)] text-slate-950 rounded-[var(--r-m)] flex items-center justify-center border-2 shadow-xl">
  <Users className="w-6 h-6" />
  </div>
  )}
@@ -1206,11 +1206,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
 
  <div className="w-full flex items-center gap-2 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2">
- <span className="flex-1 min-w-0 truncate font-mono text-amber-300 text-[11px] text-left">{qrConcertUrl}</span>
+ <span className="flex-1 min-w-0 truncate font-mono text-[var(--acc)]/70 text-[11px] text-left">{qrConcertUrl}</span>
  <button
  type="button"
  onClick={handleCopyQrUrl}
- className="shrink-0 text-[11px] text-amber-400 hover:underline font-mono cursor-pointer"
+ className="shrink-0 text-[11px] text-[var(--acc)] hover:underline font-mono cursor-pointer"
  >
  {copiedQrUrl ?'¡Copiado!' :'Copiar'}
  </button>
@@ -1222,7 +1222,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  id="fans-qr-export-btn"
  type="button"
  onClick={handlePrintQr}
- className="flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-lg"
+ className="flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-lg"
  >
  <Printer className="w-4 h-4" /> Cartel A4 / PDF
  </button>
@@ -1231,7 +1231,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => setShowQrMoreMenu(v => !v)}
  title="Más opciones: SVG, PNG 4K, tarjetas, compartir, previsualizar el formulario..."
- className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-400 transition cursor-pointer"
+ className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] transition cursor-pointer"
  >
  <MoreHorizontal className="w-4 h-4" />
  </button>
@@ -1258,7 +1258,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  type="button"
  onClick={() => { setShowQrMoreMenu(false); setShowQrExportModal(true); }}
- className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-amber-300 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
+ className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
  >
  <Layers className="w-3.5 h-3.5 shrink-0" /> Más formatos (tarjeta, pegatina...)
  </button>
@@ -1305,7 +1305,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  type="button"
  onClick={() => setShowAdvancedQrConfig(v => !v)}
- className="w-full flex items-center justify-between text-xs font-bold text-[var(--ink-3)] hover:text-amber-300 uppercase font-mono tracking-wider transition cursor-pointer"
+ className="w-full flex items-center justify-between text-xs font-bold text-[var(--ink-3)] hover:text-[var(--acc)]/70 uppercase font-mono tracking-wider transition cursor-pointer"
  >
  <span className="flex items-center gap-1.5">
  <Settings2 className="w-3.5 h-3.5" /> Personalización avanzada (recompensa, dominio, idioma)
@@ -1318,8 +1318,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {/* Incentivo / Recompensa al Fan */}
  <div id="fans-incentive-section" className="bg-slate-950/80 p-5 rounded-[var(--r-l)] space-y-4">
  <div className="flex items-center justify-between">
- <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
- <Gift className="w-4 h-4 text-amber-400" />
+ <label className="text-xs font-bold text-[var(--acc)] uppercase font-mono tracking-wider flex items-center gap-2">
+ <Gift className="w-4 h-4 text-[var(--acc)]" />
  Recompensa / Incentivo para el Fan
  </label>
  {savedIncentive && (
@@ -1368,7 +1368,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  value={incentivo.codigoDescuento}
  onChange={e => setIncentivo(prev => ({ ...prev, codigoDescuento: e.target.value.toUpperCase() }))}
  placeholder="TUBANDA-FAN-10"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-2.5 text-xs text-amber-300 font-bold outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-2.5 text-xs text-[var(--acc)]/70 font-bold outline-none font-mono"
  />
  </div>
  </div>
@@ -1377,7 +1377,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  type="button"
  onClick={() => handleSaveIncentive()}
- className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold font-mono rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 text-xs font-bold font-mono rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
  >
  <Save className="w-3.5 h-3.5" /> Guardar Incentivo
  </button>
@@ -1408,7 +1408,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  {/* Ruta Limpia y Dominio */}
  <div className="bg-slate-950/80 p-5 rounded-[var(--r-l)] space-y-4">
- <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+ <label className="text-xs font-bold text-[var(--acc)] uppercase font-mono tracking-wider flex items-center gap-2">
  Ruta Limpia y Dominio Base
  </label>
 
@@ -1418,7 +1418,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setUseCustomDomain(true)}
  className={`p-2.5 rounded-[var(--r-m)] text-left font-mono transition flex flex-col gap-1 ${
  useCustomDomain
- ?'bg-amber-500/15 text-amber-300 font-bold'
+ ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold'
  :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
@@ -1430,7 +1430,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setUseCustomDomain(false)}
  className={`p-2.5 rounded-[var(--r-m)] text-left font-mono transition flex flex-col gap-1 ${
  !useCustomDomain
- ?'bg-amber-500/15 text-amber-300 font-bold'
+ ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold'
  :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
@@ -1464,7 +1464,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="text"
  value={routePrefix}
  onChange={e => setRoutePrefix(e.target.value.toLowerCase().replace(/[^a-z0-9]/g,''))}
- className="w-16 bg-transparent text-amber-400 text-xs font-mono py-2.5 font-bold outline-none"
+ className="w-16 bg-transparent text-[var(--acc)] text-xs font-mono py-2.5 font-bold outline-none"
  placeholder="unete"
  />
  <span className="text-[11px] font-mono text-[var(--ink-2)]">/</span>
@@ -1492,7 +1492,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setQrLanguage(l.code)}
  className={`py-2 px-2 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors ${
  qrLanguage === l.code
- ?'bg-amber-500/15 /50 text-amber-300'
+ ?'bg-[var(--acc)]/15 /50 text-[var(--acc)]/70'
  :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
@@ -1518,7 +1518,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  className={`w-full py-2.5 px-3 font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-md ${
  savedToConcertFeedback
  ?'bg-emerald-500 text-slate-950'
- :'bg-amber-500 hover:bg-amber-400 text-slate-950'
+ :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950'
  }`}
  >
  <CheckCircle2 className="w-4 h-4" />
@@ -1698,7 +1698,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </button>
  <button
  type="submit"
- className="px-5 py-2.5 bg-amber-500 text-slate-950 font-mono text-xs font-black uppercase tracking-widest rounded-[var(--r-m)] shadow-lg transition hover:bg-amber-400 cursor-pointer flex items-center gap-1.5"
+ className="px-5 py-2.5 bg-[var(--acc)] text-slate-950 font-mono text-xs font-black uppercase tracking-widest rounded-[var(--r-m)] shadow-lg transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
  >
  <Plus className="w-4 h-4" /> Guardar Fan
  </button>

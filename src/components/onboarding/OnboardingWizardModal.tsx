@@ -1007,7 +1007,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <div className="p-5 sm:p-6 border-b border-[var(--hair)] flex items-center justify-between bg-zinc-900/50">
  <div>
  <div className="flex items-center gap-2">
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold uppercase tracking-wider">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold uppercase tracking-wider">
  Configuración Inicial · Plan {userPlanId.toUpperCase().replace('_','')}
  </span>
  {!isCelebrationStep && (
@@ -1044,9 +1044,9 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  onClick={() => setCurrentStepIndex(idx)}
  className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs whitespace-nowrap transition-all ${
  isCurrent
- ?'bg-amber-500 text-black font-bold shadow-sm'
+ ?'bg-[var(--acc)] text-black font-bold shadow-sm'
  : isPassed
- ?'bg-amber-500/15 text-amber-300 hover:bg-amber-500/25'
+ ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 hover:bg-[var(--acc)]/25'
  :'text-zinc-500 hover:text-zinc-300'
  }`}
  >
@@ -1387,7 +1387,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={handleNextStep}
- className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-all shadow-lg shadow-amber-500/20"
+ className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-semibold text-xs transition-all shadow-lg shadow-amber-500/20"
  >
  {currentStepIndex === activeSteps.length - 1 ? (
  <>

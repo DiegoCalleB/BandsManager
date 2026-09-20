@@ -480,7 +480,7 @@ export function CampaignManagerModal({
  >
  <div className="flex items-center gap-3">
  <div className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center ${
- !activeCampaign ?'bg-amber-400/20 text-amber-300' :'bg-neutral-800 text-neutral-500'
+ !activeCampaign ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70' :'bg-neutral-800 text-neutral-500'
  }`}>
  <Compass className="w-4 h-4" />
  </div>
@@ -490,7 +490,7 @@ export function CampaignManagerModal({
  Modo General (Sin Filtro de Campaña)
  </span>
  {!activeCampaign && (
- <span className="text-[9px] font-mono font-extrabold uppercase px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300">
+ <span className="text-[9px] font-mono font-extrabold uppercase px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
  ACTIVO
  </span>
  )}
@@ -501,7 +501,7 @@ export function CampaignManagerModal({
  </div>
  </div>
  {!activeCampaign ? (
- <Check className="w-5 h-5 text-amber-400" />
+ <Check className="w-5 h-5 text-[var(--acc)]" />
  ) : (
  <span className="text-[10px] font-mono text-neutral-500 hover:text-[var(--ink-3)]">
  Seleccionar
@@ -560,8 +560,8 @@ export function CampaignManagerModal({
  <MapPin className="w-3.5 h-3.5 text-sky-400" />
  {camp.targetCities?.join(',') ||'Cualquier ciudad'}
  </span>
- <span className="flex items-center gap-1 text-amber-300">
- <Users className="w-3.5 h-3.5 text-amber-400" />
+ <span className="flex items-center gap-1 text-[var(--acc)]/70">
+ <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
  {camp.minCapacity} - {camp.maxCapacity} pax
  </span>
  <span className="flex items-center gap-1 text-pink-300">

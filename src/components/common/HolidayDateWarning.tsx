@@ -47,10 +47,10 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
 
  return (
  <span 
- className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 ${className}`}
+ className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 ${className}`}
  title={`${audit.title}: ${audit.advice}`}
  >
- <AlertTriangle className="w-3 h-3 text-amber-400 shrink-0" />
+ <AlertTriangle className="w-3 h-3 text-[var(--acc)] shrink-0" />
  <span>Festivo: {audit.holidayName}</span>
  </span>
  );
@@ -87,8 +87,8 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
 
  return (
  <div className={`p-3 rounded-[var(--r-m)] bg-amber-950/40 text-amber-200 text-xs space-y-1 ${className}`}>
- <div className="flex items-center gap-2 font-bold text-amber-300">
- <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+ <div className="flex items-center gap-2 font-bold text-[var(--acc)]/70">
+ <AlertTriangle className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span>{audit.title}</span>
  </div>
  <p className="text-[11px] text-amber-100/90 leading-relaxed">

@@ -46,7 +46,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
  <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-3)]">Pausar Mantenida</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-amber-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--acc)]/70 font-bold shadow">
  P
  </kbd>
  </div>
@@ -109,14 +109,14 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
  <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-3)]">Alternar Silencio (Mute)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-amber-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--acc)]/70 font-bold shadow">
  M
  </kbd>
  </div>
 
  <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-3)]">Alternar Solo</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-amber-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--acc)]/70 font-bold shadow">
  S
  </kbd>
  </div>

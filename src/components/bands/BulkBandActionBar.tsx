@@ -24,7 +24,7 @@ interface BulkBandActionBarProps {
 const BAND_STATUS_OPTIONS: { status: BandRelationshipStatus; label: string; color: string; icon: any }[] = [
  { status:'sin_contactar', label:'Sin Contactar', color:'bg-zinc-700/40 text-zinc-300 border-zinc-600', icon: Clock },
  { status:'intercambio_propuesto', label:'Intercambio Propuesto', color:'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Repeat },
- { status:'pendiente_respuesta', label:'Pendiente Respuesta', color:'bg-amber-500/20 text-amber-300 /40', icon: Clock },
+ { status:'pendiente_respuesta', label:'Pendiente Respuesta', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
  { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-emerald-500/30 text-emerald-200 border-emerald-400', icon: CheckCircle2 },
  { status:'colegas_aliados', label:'Colegas / Aliados de Gira', color:'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: Users },
  { status:'no_disponible', label:'No Disponible / Descartado', color:'bg-rose-500/20 text-rose-300 border-rose-500/40', icon: ShieldAlert },
@@ -131,9 +131,9 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  }`}
  title="Cambiar estado de relación de las bandas seleccionadas"
  >
- <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Estado</span>
- <ChevronDown className={`w-3.5 h-3.5 text-amber-400 transition-transform ${isStatusDropdownOpen ?'rotate-180' :''}`} />
+ <ChevronDown className={`w-3.5 h-3.5 text-[var(--acc)] transition-transform ${isStatusDropdownOpen ?'rotate-180' :''}`} />
  </button>
 
  {/* Status Dropdown Menu (Opens downwards) */}
@@ -200,11 +200,11 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-amber-600'
- :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-amber-300'
+ :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-[var(--acc)]/70'
  }`}
  title="Marcar bandas como favoritas"
  >
- <Star className="w-4 h-4 fill-amber-400/30 text-amber-400" />
+ <Star className="w-4 h-4 fill-amber-400/30 text-[var(--acc)]" />
  </button>
 
  {/* Export CSV */}

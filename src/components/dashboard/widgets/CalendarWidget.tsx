@@ -363,17 +363,17 @@ export function CalendarWidget({
  <button
  type="button"
  onClick={() => setCurrentMonthDate(new Date(year, month - 1, 1))}
- className="p-1.5 text-[var(--ink-2)] hover:text-amber-400 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
- <span className="text-sm font-mono font-bold capitalize text-amber-300">
+ <span className="text-sm font-mono font-bold capitalize text-[var(--acc)]/70">
  {fullMonthName}
  </span>
  <button
  type="button"
  onClick={() => setCurrentMonthDate(new Date(year, month + 1, 1))}
- className="p-1.5 text-[var(--ink-2)] hover:text-amber-400 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--acc)] rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
  >
  <ChevronRight className="w-4 h-4" />
  </button>
@@ -410,9 +410,9 @@ export function CalendarWidget({
  onClick={() => setSelectedDayStr(dateKey === selectedDayStr ? null : dateKey)}
  className={`p-1.5 min-h-[38px] rounded-[var(--r-s)] text-xs flex flex-col items-center justify-between transition-all cursor-pointer relative ${
  isSelected
- ?'bg-amber-500/20 text-amber-200 font-bold shadow-xs'
+ ?'bg-[var(--acc)]/20 text-amber-200 font-bold shadow-xs'
  : isToday
- ?'bg-stone-800 /40 text-amber-400 font-black'
+ ?'bg-stone-800 /40 text-[var(--acc)] font-black'
  : dayEvents.length > 0
  ?'bg-[var(--surface)] /80 text-[var(--sunken)] hover:/30'
  :'bg-[var(--surface)]/50 /40 text-[var(--ink-2)] hover:bg-stone-900'
@@ -422,7 +422,7 @@ export function CalendarWidget({
 
  {/* Indicators for events */}
  <div className="flex items-center gap-0.5 mt-1">
- {hasConcert && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-xs" title="Concierto" />}
+ {hasConcert && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 shadow-xs" title="Concierto" />}
  {hasRehearsal && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-xs" title="Ensayo" />}
  </div>
  </button>
@@ -434,7 +434,7 @@ export function CalendarWidget({
  {selectedDayStr && (
  <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-mono space-y-2">
  <div className="flex items-center justify-between text-[var(--ink-3)] pb-1.5 border-b">
- <span className="font-bold text-amber-300">Eventos para {selectedDayStr}:</span>
+ <span className="font-bold text-[var(--acc)]/70">Eventos para {selectedDayStr}:</span>
  <button type="button" onClick={() => setSelectedDayStr(null)} className="text-neutral-500 hover:text-[var(--ink-3)]">✕</button>
  </div>
  {(eventsByDayMap.get(selectedDayStr) || []).length > 0 ? (
@@ -446,7 +446,7 @@ export function CalendarWidget({
  >
  <div>
  <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
- evt.type ==='concierto' ?'bg-amber-500/20 text-amber-300' :'bg-emerald-500/20 text-emerald-300'
+ evt.type ==='concierto' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-emerald-500/20 text-emerald-300'
  }`}>
  {evt.type}
  </span>
@@ -488,7 +488,7 @@ export function CalendarWidget({
  >
  <div className="flex items-center justify-between pb-1 border-b">
  <span className="uppercase text-[10px] text-[var(--ink-2)] font-bold">{dayName}</span>
- <span className="font-bold text-amber-400">{dayNum}</span>
+ <span className="font-bold text-[var(--acc)]">{dayNum}</span>
  </div>
 
  <div className="mt-1 space-y-1">
@@ -497,7 +497,7 @@ export function CalendarWidget({
  key={e.id}
  onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: e.id, selectedDate: e.dateStr })}
  className={`text-[9px] p-1 rounded font-bold truncate cursor-pointer ${
- e.type ==='concierto' ?'bg-amber-500/20 text-amber-300' :'bg-emerald-500/20 text-emerald-300'
+ e.type ==='concierto' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-emerald-500/20 text-emerald-300'
  }`}
  title={`${e.type.toUpperCase()}: ${e.title}`}
  >

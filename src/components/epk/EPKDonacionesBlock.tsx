@@ -332,7 +332,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
  {config.donacionRevolut?.titulo ||'Colabora con la banda'}
  </h3>
- <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-bold shrink-0">
+ <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold shrink-0">
  Contribución
  </span>
  </div>
@@ -356,7 +356,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
 
  {/* EPK MULTIIDIOMA */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b pb-3">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
  <Languages className="w-5 h-5" /> Versiones del EPK en otros idiomas
  </h3>
  <div className="text-xs text-[var(--ink-3)] space-y-1">
@@ -405,7 +405,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  href={`${publicEpkUrl}&lang=${idioma.code}`}
  target="_blank"
  rel="noopener noreferrer"
- className="text-xs bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-300 font-semibold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition"
+ className="text-xs bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]/70 font-semibold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition"
  >
  <ExternalLink className="w-3.5 h-3.5" /> Ver página
  </a>
@@ -414,7 +414,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  type="button"
  onClick={() => traducirConIA(idioma.code)}
  disabled={estaTraduciendo}
- className="text-xs bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer"
+ className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer"
  >
  {estaTraduciendo ? (
  <>
@@ -431,7 +431,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
 
  {desactualizada && (
- <div className="rounded-[var(--r-s)] bg-amber-500/10 text-amber-300 p-3 text-xs flex items-start gap-2">
+ <div className="rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 p-3 text-xs flex items-start gap-2">
  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
  <span>
  Has modificado el texto en español desde la última traducción. Conviene volver a traducir para sincronizarla.

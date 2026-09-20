@@ -78,7 +78,7 @@ export function EnsayoCronometro({
  if (isCompact) {
  return (
  <div className="flex items-center gap-2 bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-m)] px-3 py-1.5 shadow-sm">
- <Clock className={`w-3.5 h-3.5 ${isActive ?'text-amber-400 animate-pulse' :'text-[var(--ink-2)]'}`} />
+ <Clock className={`w-3.5 h-3.5 ${isActive ?'text-[var(--acc)] animate-pulse' :'text-[var(--ink-2)]'}`} />
  <span className={`font-mono font-bold text-sm tracking-wider ${isOvertime ?'text-rose-400' :'text-zinc-100'}`}>
  {formatTime(seconds)}
  </span>
@@ -86,7 +86,7 @@ export function EnsayoCronometro({
  onClick={toggleTimer}
  className={`p-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  isActive
- ?'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30'
  :'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30'
  }`}
  title={isActive ?'Pausar Cronómetro' :'Iniciar Cronómetro'}
@@ -101,12 +101,12 @@ export function EnsayoCronometro({
  <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] border-[var(--hair)] shadow-lg relative overflow-hidden">
  {/* Background soft glow when running */}
  {isActive && (
- <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+ <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--acc)]/10 rounded-full blur-3xl pointer-events-none" />
  )}
 
  <div className="flex items-center justify-between gap-3 mb-3">
  <div className="flex items-center gap-2">
- <div className={`p-1.5 rounded-[var(--r-s)] ${isActive ?'bg-amber-400/15 text-amber-400' :'bg-neutral-800 text-[var(--ink-2)]'}`}>
+ <div className={`p-1.5 rounded-[var(--r-s)] ${isActive ?'bg-[var(--acc)]/60/15 text-[var(--acc)]' :'bg-neutral-800 text-[var(--ink-2)]'}`}>
  <Clock className={`w-4 h-4 ${isActive ?'animate-pulse' :''}`} />
  </div>
  <div>
@@ -130,7 +130,7 @@ export function EnsayoCronometro({
  <div className="flex items-baseline justify-between gap-4 my-2">
  <div className="flex items-baseline gap-2">
  <span className={`text-3xl sm:text-4xl font-mono font-black tracking-tight ${
- isOvertime ?'text-rose-400' : isActive ?'text-amber-400' :'text-zinc-100'
+ isOvertime ?'text-rose-400' : isActive ?'text-[var(--acc)]' :'text-zinc-100'
  }`}>
  {formatTime(seconds)}
  </span>
@@ -145,7 +145,7 @@ export function EnsayoCronometro({
  onClick={toggleTimer}
  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shadow-sm active:scale-95 ${
  isActive
- ?'bg-amber-500 text-[var(--surface)] hover:bg-amber-400 shadow-amber-500/20'
+ ?'bg-[var(--acc)] text-[var(--surface)] hover:bg-[var(--acc)]/60 shadow-amber-500/20'
  :'bg-emerald-500 text-[var(--surface)] hover:bg-emerald-400 shadow-emerald-500/20'
  }`}
  >

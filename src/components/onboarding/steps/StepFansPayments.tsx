@@ -55,7 +55,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
- <Heart className="w-5 h-5 text-amber-400" />
+ <Heart className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-white">Captación de Fans, Regalo Descargable & Pagos Directos</h3>
  </div>
 
@@ -95,8 +95,8 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  {/* Regalo / Lead Magnet Directo */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <div className="flex items-center justify-between">
- <h4 className="text-xs font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
- <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <h4 className="text-xs font-semibold text-[var(--acc)]/70 uppercase tracking-wider flex items-center gap-1.5">
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  Regalo para el Fan (Lead Magnet / Descarga Inmediata)
  </h4>
  </div>
@@ -173,7 +173,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  type="button"
  onClick={() => leadMagnetInputRef.current?.click()}
  disabled={isUploadingLeadMagnet}
- className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-medium transition-colors"
+ className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 text-xs font-medium transition-colors"
  >
  {isUploadingLeadMagnet ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
  Subir Archivo de Regalo
@@ -193,7 +193,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  {/* Métodos de Pago y Propinas Directas */}
  <div className="pt-2 border-t border-[var(--hair)] space-y-3">
  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
- <DollarSign className="w-3.5 h-3.5 text-amber-400" />
+ <DollarSign className="w-3.5 h-3.5 text-[var(--acc)]" />
  Métodos de Pago & Propinas Directas (Sin Comisiones)
  </h4>
 

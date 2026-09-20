@@ -247,7 +247,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  {canUndo && (
  <button
  onClick={onUndo}
- className="px-2 py-1 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-[var(--acc)]/70 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
  title="Deshacer el último cambio del setlist"
  >
  ↩️ Deshacer
@@ -354,7 +354,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <button
  type="button"
  onClick={() => handleUndo(idx)}
- className="shrink-0 px-2 py-0.5 rounded bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-amber-900/40 hover:bg-amber-800/60 text-[var(--acc)]/70 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
  title="Deshacer este cambio"
  >
  ↩️ Deshacer
@@ -392,7 +392,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  key={`intensidad-${star}`}
  type="button"
  onClick={() => setIntensidadRating(intensidadRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ?'text-amber-400' :'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ?'text-[var(--acc)]' :'text-neutral-700 hover:text-neutral-500'}`}
  title={`Valorar la intensidad/energía: ${star}/5`}
  >
  <Star className="w-3 h-3 fill-current" />
@@ -406,7 +406,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  key={`contenido-${star}`}
  type="button"
  onClick={() => setContenidoRating(contenidoRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ?'text-amber-400' :'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ?'text-[var(--acc)]' :'text-neutral-700 hover:text-neutral-500'}`}
  title={`Valorar el contenido/selección de temas: ${star}/5`}
  >
  <Star className="w-3 h-3 fill-current" />
@@ -436,7 +436,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  type="button"
  onClick={() => setFeedbackScope('global')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all flex items-center gap-1 ${
- feedbackScope ==='global' ?'bg-amber-500/20 text-amber-300 font-bold' :'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
+ feedbackScope ==='global' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold' :'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
  }`}
  title="La IA recordará esta corrección también para futuros setlists de la banda"
  >

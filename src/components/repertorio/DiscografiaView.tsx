@@ -374,8 +374,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  {/* Desktop title row (hidden on mobile to keep screen ultra-clean since RepertorioNavBar already provides title) */}
  <div className="hidden sm:flex items-center justify-between gap-3">
  <div className="flex items-center gap-2.5">
- <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/15 flex items-center justify-center shadow-inner shrink-0">
- <Disc3 className="w-4 h-4 text-amber-400" />
+ <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center shadow-inner shrink-0">
+ <Disc3 className="w-4 h-4 text-[var(--acc)]" />
  </div>
  <div>
  <h2 className="text-base sm:text-lg font-bold tracking-tight text-zinc-100">
@@ -427,7 +427,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-neutral-800/80'
  }`}
  >
- <Plus className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+ <Plus className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
  <span>
  <span className="text-xs font-semibold text-zinc-100 block">Disco vacío</span>
  <span className="block text-[11px] text-zinc-400 mt-0.5">Crea el disco y añade canciones después, una a una.</span>
@@ -467,9 +467,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-neutral-800/80'
  }`}
  >
- <Scissors className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+ <Scissors className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
  <span>
- <span className="text-xs font-semibold text-amber-400 block">🔴 Concierto en Vivo a Disco</span>
+ <span className="text-xs font-semibold text-[var(--acc)] block">🔴 Concierto en Vivo a Disco</span>
  <span className="block text-[11px] text-zinc-400 mt-0.5">Recorta y cataloga a partir del vídeo o audio de un concierto en vivo.</span>
  </span>
  </button>
@@ -557,7 +557,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  }`}
  title={areAllExpanded ?'Plegar todos los discos' :'Desplegar todos los discos'}
  >
- <Layers className="w-3.5 h-3.5 text-amber-400" />
+ <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
  </button>
  )}
 
@@ -665,8 +665,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 mb-1 flex-wrap">
- <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
- <Disc3 className="w-3 h-3 text-amber-400" />
+ <span className="px-2 py-0.5 rounded-md bg-[var(--acc)]/10 text-[var(--acc)]/70 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
+ <Disc3 className="w-3 h-3 text-[var(--acc)]" />
  {album ==='Singles / Sin Disco' ?'SENCILLOS & INÉDITAS' :'ÁLBUM OFICIAL'}
  </span>
  </div>
@@ -725,7 +725,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  }`}
  title="Gestionar las canciones de este álbum"
  >
- <Edit3 className="w-3.5 h-3.5 text-amber-400" />
+ <Edit3 className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span className="hidden xs:inline">Gestionar</span>
  </button>
  )}
@@ -741,11 +741,11 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-amber-50 text-amber-800 hover:bg-amber-100'
- :'bg-neutral-800/80 text-amber-300 hover:bg-neutral-700 hover:text-white'
+ :'bg-neutral-800/80 text-[var(--acc)]/70 hover:bg-neutral-700 hover:text-white'
  }`}
  title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
  >
- <Download className="w-3.5 h-3.5 text-amber-400" />
+ <Download className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span className="hidden lg:inline">Exportar</span>
  </button>
  )}
@@ -784,7 +784,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={(e) => { e.stopPropagation(); toggleAlbumExpand(album); }}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  isExpanded
- ?'bg-amber-500/15 /30 text-amber-300'
+ ?'bg-[var(--acc)]/15 /30 text-[var(--acc)]/70'
  : isStitchLight
  ?'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-slate-300'
  :'bg-neutral-800/80 text-zinc-300 hover:bg-neutral-700 hover:text-white'

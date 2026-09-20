@@ -558,7 +558,7 @@ export function ExcelImportModal({
  {/* DOWNLOAD TEMPLATE CARD */}
  <div className="w-full max-w-2xl p-4 rounded-[var(--r-m)] bg-zinc-900/60 border-[var(--hair)] flex items-center justify-between gap-4">
  <div className="flex items-center gap-3">
- <Info className="w-5 h-5 text-amber-400 shrink-0" />
+ <Info className="w-5 h-5 text-[var(--acc)] shrink-0" />
  <div className="text-xs text-zinc-300">
  <p className="font-semibold text-zinc-100">¿No tienes claro el formato?</p>
  <p className="text-zinc-400">Descarga nuestra plantilla oficial optimizada con ejemplos de salas, festivales y ayuntamientos.</p>
@@ -607,9 +607,9 @@ export function ExcelImportModal({
  </div>
 
  {/* CATEGORY DEFAULT SELECTOR */}
- <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-between flex-wrap gap-3">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-between flex-wrap gap-3">
  <div className="flex items-center gap-2 text-xs text-amber-200">
- <Building2 className="w-4 h-4 text-amber-400 shrink-0" />
+ <Building2 className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span>Categoría por defecto si el Excel no especifica tipo:</span>
  </div>
  <div className="flex items-center gap-1.5 flex-wrap">
@@ -620,7 +620,7 @@ export function ExcelImportModal({
  onClick={() => setDefaultCategory(cat.id)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
  defaultCategory === cat.id
- ?'bg-amber-400 text-black font-bold shadow-xs'
+ ?'bg-[var(--acc)]/60 text-black font-bold shadow-xs'
  :'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
  }`}
  >
@@ -829,7 +829,7 @@ export function ExcelImportModal({
  {selectedCount} de {parsedRows.length} seleccionados
  </span>
  {duplicatesCount > 0 && (
- <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold flex items-center gap-1">
+ <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold flex items-center gap-1">
  <AlertTriangle className="w-3 h-3" />
  {duplicatesCount} ya registrados en CRM
  </span>
@@ -853,7 +853,7 @@ export function ExcelImportModal({
  type="button"
  onClick={() => setFilterDuplicatesOnly(!filterDuplicatesOnly)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
- filterDuplicatesOnly ?'bg-amber-500 text-black font-bold' :'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+ filterDuplicatesOnly ?'bg-[var(--acc)] text-black font-bold' :'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
  }`}
  >
  <Filter className="w-3 h-3" />
@@ -937,7 +937,7 @@ export function ExcelImportModal({
  <tr
  key={row.id}
  className={`hover:bg-white/5 transition-colors ${
- row.isDuplicate ?'bg-amber-500/5' :''
+ row.isDuplicate ?'bg-[var(--acc)]/5' :''
  } ${!row.selected ?'opacity-40' :''}`}
  >
  <td className="p-2.5">
@@ -956,7 +956,7 @@ export function ExcelImportModal({
  <div className="flex items-center gap-1.5">
  <span>{row.nombre_sala}</span>
  {row.isDuplicate && (
- <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-amber-500/20 text-amber-300">
+ <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
  Existente
  </span>
  )}
@@ -1037,7 +1037,7 @@ export function ExcelImportModal({
 
  <div className="flex items-center gap-3">
  {importStatusMsg && (
- <span className="text-xs text-amber-300 animate-pulse font-medium">
+ <span className="text-xs text-[var(--acc)]/70 animate-pulse font-medium">
  {importStatusMsg}
  </span>
  )}

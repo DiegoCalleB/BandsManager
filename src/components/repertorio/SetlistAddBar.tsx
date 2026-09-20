@@ -88,14 +88,14 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <div className="space-y-1.5 pt-0.5">
  {/* Insertion Mode Indicator */}
  {selectedSetlistItemId && (
- <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-[var(--r-s)] bg-amber-500/10 text-amber-300 text-xs">
+ <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 text-xs">
  <div className="flex items-center gap-1.5 min-w-0">
- <span className="shrink-0 text-amber-400 font-semibold">📌 Insertando debajo de:</span>
+ <span className="shrink-0 text-[var(--acc)] font-semibold">📌 Insertando debajo de:</span>
  <span className="truncate font-medium text-white">"{selectedItemLabel}"</span>
  </div>
  <button
  onClick={() => setSelectedSetlistItemId(null)}
- className="px-2 py-0.5 rounded-md bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs whitespace-nowrap cursor-pointer transition-colors"
+ className="px-2 py-0.5 rounded-md bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-amber-200 text-xs whitespace-nowrap cursor-pointer transition-colors"
  title="Deseleccionar e insertar al final de la lista"
  >
  ✕ Deseleccionar

@@ -501,7 +501,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
 
  const chordsSourceLabel = (source: TrackChordsResult['chordsSource']) => {
  if (source ==='audio_real') return { text:'🎧 Transcrito escuchando esta pista real', tone:'text-emerald-400' };
- if (source ==='ia_sin_audio') return { text:'🤖 Propuesta de IA sin poder escuchar el audio', tone:'text-amber-400' };
+ if (source ==='ia_sin_audio') return { text:'🤖 Propuesta de IA sin poder escuchar el audio', tone:'text-[var(--acc)]' };
  return { text:'📐 Plantilla genérica (sin IA disponible)', tone:'text-[var(--ink-2)]' };
  };
 
@@ -553,7 +553,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  Tu instrumento (<strong>{currentUser?.instrument}</strong>) coincide con la pista <strong>{myTrack.nombre}</strong>.
  </div>
  ) : (
- <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-amber-500/10 text-amber-300">
+ <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70">
  No hemos podido identificar tu pista. Pídele a quien administra la banda que te asigne un instrumento (Voz, Batería, Bajo, Guitarras, Teclados o Arreglos) en Gestión de Miembros — mientras tanto puedes usar la mezcla manual de abajo.
  </div>
  )}
@@ -611,7 +611,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  title="-1 BPM"
  className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]"
  >-1</button>
- <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ?'text-amber-300' :'text-[var(--sunken)]'}`}>
+ <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ?'text-[var(--acc)]/70' :'text-[var(--sunken)]'}`}>
  {targetBpm} BPM
  </span>
  <button
@@ -679,7 +679,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  title={`Metrónomo (claqueta) — sigue el tempo de arriba, sube y baja a la vez con la canción. Ahora mismo: ${targetBpm} BPM`}
  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
  metronomeOn
- ?'bg-amber-500/20 /40 text-amber-300'
+ ?'bg-[var(--acc)]/20 /40 text-[var(--acc)]/70'
  :'bg-neutral-800 border-transparent text-[var(--ink-2)] hover:text-white'
  }`}
  >
@@ -770,7 +770,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => toggleSolo(tr.id)}
  title="Solo (aislar, solo en mi mezcla)"
- className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.solo ?'bg-amber-400 text-black' :'bg-neutral-800 text-[var(--ink-2)] hover:text-white'}`}
+ className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.solo ?'bg-[var(--acc)]/60 text-black' :'bg-neutral-800 text-[var(--ink-2)] hover:text-white'}`}
  >
  S
  </button>

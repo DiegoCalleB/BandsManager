@@ -25,7 +25,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
- <Camera className="w-5 h-5 text-amber-400" />
+ <Camera className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-white">Galería de Fotos para Prensa & EPK</h3>
  </div>
 
@@ -68,7 +68,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  className="hidden"
  />
  {isUploadingPhoto ? (
- <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
+ <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
  ) : (
  <>
  <Upload className="w-5 h-5 text-zinc-500 mb-1" />

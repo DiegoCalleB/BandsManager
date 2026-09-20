@@ -862,10 +862,10 @@ export default function SpotifyPlayerBar({
  {/* Iris Stem Separator Button */}
  <button
  onClick={() => onOpenIris ? onOpenIris(song) : onOpenStudio(song)}
- className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
+ className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-[var(--acc)]/70 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
  title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
  >
- <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
  <span className="hidden sm:inline text-[11px]">Iris</span>
  </button>
 

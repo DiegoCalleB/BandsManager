@@ -155,7 +155,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-white/80' :'bg-black/40 /80'}`}>
  <div className="flex items-center gap-1.5 text-[var(--ink-2)] text-[10px] font-mono uppercase mb-1">
- <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
+ <AlertCircle className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Cuello de Botella a Resolver</span>
  </div>
  <p className="text-xs font-mono text-amber-200 leading-snug">
@@ -219,7 +219,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
  }`}
  >
- <Calendar className="w-3.5 h-3.5 text-amber-400" />
+ <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Calendario Semanal</span>
  </button>
 
@@ -406,7 +406,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {dayPlan.recommendedPlatform ==='instagram' && <span className="text-pink-400 flex items-center gap-1"><Instagram className="w-3 h-3" /> Instagram</span>}
  {dayPlan.recommendedPlatform ==='tiktok' && <span className="text-cyan-400 flex items-center gap-1"><Video className="w-3 h-3" /> TikTok</span>}
  {dayPlan.recommendedPlatform ==='youtube' && <span className="text-red-400 flex items-center gap-1"><Youtube className="w-3 h-3" /> YouTube</span>}
- {dayPlan.recommendedPlatform ==='todas' && <span className="text-amber-400 flex items-center gap-1"><Flame className="w-3 h-3" /> Todas las Redes</span>}
+ {dayPlan.recommendedPlatform ==='todas' && <span className="text-[var(--acc)] flex items-center gap-1"><Flame className="w-3 h-3" /> Todas las Redes</span>}
  </div>
 
  <h5 className="text-xs font-bold text-[var(--sunken)] mb-1">{dayPlan.focus}</h5>
@@ -448,7 +448,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
  <div className="p-3 rounded-[var(--r-m)] bg-black/40 text-right min-w-[200px]">
  <span className="text-[9px] font-mono text-neutral-500 uppercase block">Horario Recomendado</span>
- <span className="text-xs font-mono font-bold text-amber-400 mt-0.5 block">{currentChannel.recommendedSchedule}</span>
+ <span className="text-xs font-mono font-bold text-[var(--acc)] mt-0.5 block">{currentChannel.recommendedSchedule}</span>
  </div>
  </div>
  </div>
@@ -470,7 +470,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {currentChannel.actionItems.map(action => {
  const isDone = completedActions[action.id];
  const impactColor = action.impact ==='critico' ?'bg-red-500/10 text-red-400 border-red-500/20' :
- action.impact ==='alto' ?'bg-amber-500/10 text-amber-400 /20' :'bg-blue-500/10 text-blue-400 border-blue-500/20';
+ action.impact ==='alto' ?'bg-[var(--acc)]/10 text-[var(--acc)] /20' :'bg-blue-500/10 text-blue-400 border-blue-500/20';
 
  return (
  <div
@@ -523,7 +523,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className={`p-4 rounded-[var(--r-m)] ${
  isStitchLight ?'bg-white shadow-sm' :'bg-[var(--surface)]'
  }`}>
- <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5 mb-3">
+ <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5 mb-3">
  <Flame className="w-4 h-4" />
  Ganchos Líricos & Visuales de Alto Impacto
  </h4>
@@ -563,7 +563,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div key={vIdx} className="p-3 rounded-[var(--r-s)] bg-indigo-950/20 space-y-1.5">
  <h5 className="text-xs font-bold text-white">{v.title}</h5>
  <p className="text-[11px] font-mono text-[var(--ink-3)]">{v.concept}</p>
- <div className="text-[10px] font-mono text-amber-300 bg-black/40 p-1.5 rounded">
+ <div className="text-[10px] font-mono text-[var(--acc)]/70 bg-black/40 p-1.5 rounded">
  <b>Gancho:</b> {v.hook}
  </div>
  <div className="text-[10px] font-mono text-emerald-400">

@@ -616,7 +616,7 @@ export function GooglePlacesExplorerModal({
  <h2 className="text-base font-bold font-display uppercase tracking-wider text-[var(--acc)]">
  Buscador de Salas & Nuevos Leads (Scout Descubridor)
  </h2>
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 font-mono font-bold">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]/70 font-mono font-bold">
  IA + Google Places
  </span>
  </div>
@@ -655,16 +655,16 @@ export function GooglePlacesExplorerModal({
  <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-indigo-500/10 space-y-3 shadow-md">
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
  <div className="flex items-start sm:items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-s)] bg-amber-500/20 text-amber-300 shrink-0">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  <Target className="w-5 h-5" />
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <span className="text-xs font-bold font-display uppercase tracking-wider text-amber-300">
+ <span className="text-xs font-bold font-display uppercase tracking-wider text-[var(--acc)]/70">
  Prospección Masiva de Campaña
  </span>
  {activeCampaign && (
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 font-mono">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/60/20 text-amber-200 font-mono">
  {activeCampaign.name}
  </span>
  )}
@@ -722,7 +722,7 @@ export function GooglePlacesExplorerModal({
  }}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
  isChecked
- ?'bg-amber-400/20 text-amber-300 /50 shadow-sm'
+ ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50 shadow-sm'
  :'bg-zinc-900/80 text-zinc-500 border-zinc-800 hover:text-zinc-300'
  }`}
  >
@@ -860,9 +860,9 @@ export function GooglePlacesExplorerModal({
  <button
  type="button"
  onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
- className="text-[11px] text-zinc-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer font-mono"
+ className="text-[11px] text-zinc-400 hover:text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer font-mono"
  >
- <Sliders className="w-3.5 h-3.5 text-amber-400" />
+ <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>{showAdvancedFilters ?'Ocultar Filtros de Aforo' :'Filtros Avanzados de Aforo'}</span>
  </button>
 
@@ -985,7 +985,7 @@ export function GooglePlacesExplorerModal({
  className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md"
  title="Agente Enriquecedor: Investiga las páginas oficiales y fuentes públicas sin inventar emails"
  >
- {isExtractingBatch ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-amber-300" />}
+ {isExtractingBatch ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]/70" />}
  <span>⚡ Agente Enriquecedor ({selectedCount})</span>
  </button>
 
@@ -1037,7 +1037,7 @@ export function GooglePlacesExplorerModal({
  {place.nombre_sala}
  </h4>
  {place.alreadyInCrm && (
- <span className="text-[9px] px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded font-bold uppercase tracking-wider shrink-0" title="Este contacto ya existe en tu CRM de Leads">
+ <span className="text-[9px] px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded font-bold uppercase tracking-wider shrink-0" title="Este contacto ya existe en tu CRM de Leads">
  En CRM ({place.crmStatus ||'Registrado'})
  </span>
  )}
@@ -1056,7 +1056,7 @@ export function GooglePlacesExplorerModal({
 
  <div className="flex items-center gap-1.5 shrink-0">
  {place.rating && (
- <div className="flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/10 text-amber-400 rounded-md text-[10px] font-bold">
+ <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--acc)]/10 text-[var(--acc)] rounded-md text-[10px] font-bold">
  <Star className="w-3 h-3 fill-amber-400" />
  <span>{place.rating}</span>
  {place.user_ratings_total && (
@@ -1083,7 +1083,7 @@ export function GooglePlacesExplorerModal({
  <select
  value={String(place.tipo ||'sala').toLowerCase()}
  onChange={(e) => handlePlaceCategoryChange(place.place_id, e.target.value as LeadType)}
- className="bg-zinc-950 border-zinc-700 text-amber-300 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus: cursor-pointer"
+ className="bg-zinc-950 border-zinc-700 text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus: cursor-pointer"
  >
  {CATEGORIES.map(c => (
  <option key={c.id} value={c.id}>
@@ -1095,7 +1095,7 @@ export function GooglePlacesExplorerModal({
 
  <div className="flex items-center gap-1.5">
  {place.genero && (
- <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 font-medium">
+ <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
  <Music2 className="w-2.5 h-2.5 shrink-0" />
  <span className="truncate max-w-[130px]">{place.genero}</span>
  </span>
@@ -1113,7 +1113,7 @@ export function GooglePlacesExplorerModal({
  {place.descripcion && (
  <div className="p-2 rounded-[var(--r-s)] bg-zinc-950/80 text-[11px] text-zinc-300 leading-relaxed font-sans">
  <div className="flex items-start gap-1.5">
- <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
  <p className="line-clamp-2">{place.descripcion}</p>
  </div>
  </div>
@@ -1169,7 +1169,7 @@ export function GooglePlacesExplorerModal({
  {place.extractingEmail ? (
  <Loader2 className="w-3 h-3 animate-spin text-indigo-400" />
  ) : (
- <Sparkles className="w-3 h-3 text-amber-400" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  )}
  <span>{place.extractingEmail ?'Buscando...' :'⚡ Enriquecer'}</span>
  </button>
@@ -1227,7 +1227,7 @@ export function GooglePlacesExplorerModal({
  <button
  type="button"
  onClick={() => handleRestorePlace(item.nombre_sala)}
- className="px-2.5 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 cursor-pointer shrink-0 transition-all"
+ className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 cursor-pointer shrink-0 transition-all"
  title="Volver a permitir en sugerencias futuras"
  >
  <RotateCcw className="w-3 h-3" />

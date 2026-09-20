@@ -163,7 +163,7 @@ export function TemplateConfigSection({
  {/* Form Side */}
  <div className="space-y-4">
  {optimizationFeedbackMsg && (
- <div className="p-3 bg-amber-500/15 text-amber-200 text-[11px] rounded-[var(--r-m)] font-sans animate-in fade-in">
+ <div className="p-3 bg-[var(--acc)]/15 text-amber-200 text-[11px] rounded-[var(--r-m)] font-sans animate-in fade-in">
  {optimizationFeedbackMsg}
  </div>
  )}
@@ -234,10 +234,10 @@ export function TemplateConfigSection({
  </div>
 
  {/* Evaluation & Training Box for Template */}
- <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-amber-500/10">
+ <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10">
  <div className="flex items-center justify-between">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
- <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
+ <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
+ <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
  </label>
  {(toneRating > 0 || contentRating > 0 || customInstruction) && (
  <button 
@@ -247,7 +247,7 @@ export function TemplateConfigSection({
  setContentRating(0);
  setCustomInstruction('');
  }}
- className="text-[9px] text-amber-400 font-bold hover:underline cursor-pointer"
+ className="text-[9px] text-[var(--acc)] font-bold hover:underline cursor-pointer"
  >
  Limpiar todo
  </button>
@@ -260,7 +260,7 @@ export function TemplateConfigSection({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
+ <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {toneRating > 0 ? `${toneRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -270,8 +270,8 @@ export function TemplateConfigSection({
  key={`template-tone-${star}`}
  type="button"
  onClick={() => setToneRating(toneRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- toneRating >= star ?'text-amber-400' :'text-neutral-600'
+ className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
+ toneRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
  }`}
  title={`Calificar tono y estilo: ${star}/5`}
  >
@@ -285,7 +285,7 @@ export function TemplateConfigSection({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
+ <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {contentRating > 0 ? `${contentRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -295,8 +295,8 @@ export function TemplateConfigSection({
  key={`template-content-${star}`}
  type="button"
  onClick={() => setContentRating(contentRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- contentRating >= star ?'text-amber-400' :'text-neutral-600'
+ className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
+ contentRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
  }`}
  title={`Calificar contenido y estructura: ${star}/5`}
  >
@@ -309,8 +309,8 @@ export function TemplateConfigSection({
 
  {/* Comentario / Instrucción */}
  <div className="space-y-1 pt-1">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
- <MessageSquare className="w-3.5 h-3.5 text-amber-400" /> Comentario o Corrección Directa
+ <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
+ <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Comentario o Corrección Directa
  </label>
  <textarea
  id="template-custom-instruction-standalone"
@@ -322,7 +322,7 @@ export function TemplateConfigSection({
  />
  </div>
 
- <div className="text-[9px] text-amber-300/80 font-sans leading-tight">
+ <div className="text-[9px] text-[var(--acc)]/70/80 font-sans leading-tight">
  💡 Califica con estrellas el tono y el contenido e introduce comentarios. Al hacer clic abajo en <strong>Regenerar</strong>, la IA aplicará tus valoraciones para optimizar la plantilla.
  </div>
  </div>
@@ -335,9 +335,9 @@ export function TemplateConfigSection({
  type="button"
  onClick={onOptimizeTemplate}
  disabled={isOptimizingTemplate}
- className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
- <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ?'animate-spin' :''}`} />
+ <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ?'animate-spin' :''}`} />
  <span>{isOptimizingTemplate ?'Regenerando con IA...' :'✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
  </button>
  )}
@@ -410,13 +410,13 @@ export function TemplateConfigSection({
  </div>
 
  {/* Valoración directa del resultado generado en la simulación */}
- <div className="p-3 bg-amber-500/10 rounded-[var(--r-m)] space-y-2">
+ <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5 font-sans">
- <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Valorar esta plantilla / resultado
+ <span className="text-[10px] font-bold text-[var(--acc)]/70 uppercase tracking-wider flex items-center gap-1.5 font-sans">
+ <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Valorar esta plantilla / resultado
  </span>
  {(toneRating > 0 || contentRating > 0) && (
- <span className="text-[9px] text-amber-400 font-mono">
+ <span className="text-[9px] text-[var(--acc)] font-mono">
  Tono: {toneRating ||'-'}/5 | Contenido: {contentRating ||'-'}/5
  </span>
  )}
@@ -427,7 +427,7 @@ export function TemplateConfigSection({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
+ <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {toneRating > 0 ? `${toneRating}/5` :'⭐'}
  </span>
  </div>
@@ -437,8 +437,8 @@ export function TemplateConfigSection({
  key={`template-sandbox-tone-${star}`}
  type="button"
  onClick={() => setToneRating(toneRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- toneRating >= star ?'text-amber-400' :'text-neutral-600'
+ className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
+ toneRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
  }`}
  title={`Calificar tono: ${star}/5`}
  >
@@ -452,7 +452,7 @@ export function TemplateConfigSection({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
+ <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {contentRating > 0 ? `${contentRating}/5` :'⭐'}
  </span>
  </div>
@@ -462,8 +462,8 @@ export function TemplateConfigSection({
  key={`template-sandbox-content-${star}`}
  type="button"
  onClick={() => setContentRating(contentRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- contentRating >= star ?'text-amber-400' :'text-neutral-600'
+ className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
+ contentRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
  }`}
  title={`Calificar contenido: ${star}/5`}
  >
@@ -479,7 +479,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={onOptimizeTemplate}
  disabled={isOptimizingTemplate}
- className="w-full py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
  <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ?'animate-spin' :''}`} />
  <span>Re-generar plantilla usando estas valoraciones ✨</span>

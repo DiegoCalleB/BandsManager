@@ -403,12 +403,12 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  title={isSelf ?"No puedes cambiar tu propio rol desde aquí" :"Cambiar rol del usuario"}
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold outline-none cursor-pointer transition-all ${
  u.role ==='leader'
- ?'bg-[#d1b375]/15 text-[#d1b375] -amber-500/40 hover:bg-amber-500/25'
+ ?'bg-[#d1b375]/15 text-[#d1b375] -amber-500/40 hover:bg-[var(--acc)]/25'
  :'bg-[var(--surface)] text-blue-300 -blue-500/30 hover:bg-neutral-800'
  } ${isSelf ?'opacity-70 cursor-not-allowed' :''}`}
  >
  <option value="member" className="bg-[var(--surface)] text-[var(--sunken)]">Rol: Miembro</option>
- <option value="leader" className="bg-[var(--surface)] text-amber-300">Rol: Admin</option>
+ <option value="leader" className="bg-[var(--surface)] text-[var(--acc)]/70">Rol: Admin</option>
  </select>
 
  <button
@@ -423,7 +423,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  }}
  className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-mono hover:bg-neutral-800 text-[var(--ink-3)] transition-colors flex items-center gap-1 cursor-pointer"
  >
- <Key className="w-3 h-3 text-amber-400" />
+ <Key className="w-3 h-3 text-[var(--acc)]" />
  <span>{isEditingThisUser ?'Cancelar' :'Contraseña'}</span>
  </button>
 
@@ -595,7 +595,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <button
  type="submit"
  disabled={loading}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-amber-500/10 active:scale-98"
+ className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-amber-500/10 active:scale-98"
  >
  {loading ? (
  <span>Creando miembro...</span>

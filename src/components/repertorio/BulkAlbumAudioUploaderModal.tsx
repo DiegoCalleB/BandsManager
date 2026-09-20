@@ -840,7 +840,7 @@ export function BulkAlbumAudioUploaderModal({
  <span
  className={`p-1 ${
  item.chordsSource ==='plantilla_generica'
- ?'text-amber-400'
+ ?'text-[var(--acc)]'
  :'text-emerald-400'
  }`}
  title={
@@ -876,7 +876,7 @@ export function BulkAlbumAudioUploaderModal({
  <span
  className={`px-2 py-1 rounded text-[11px] font-mono flex items-center gap-1 ${
  item.chordsSource ==='plantilla_generica'
- ?'bg-amber-500/20 text-amber-400'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]'
  :'bg-emerald-500/20 text-emerald-400'
  }`}
  title={

@@ -35,7 +35,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
- <Globe className="w-5 h-5 text-amber-400" />
+ <Globe className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-white">Redes Sociales, Web & Tienda Oficial (Merch)</h3>
  </div>
 
@@ -134,7 +134,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  {/* Merchandising & Tienda Oficial */}
  <div className="pt-3 border-t border-[var(--hair)] space-y-3">
  <div className="flex items-center gap-2">
- <ShoppingBag className="w-4 h-4 text-amber-400" />
+ <ShoppingBag className="w-4 h-4 text-[var(--acc)]" />
  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
  Tienda de Merchandising & Productos Oficiales
  </h4>

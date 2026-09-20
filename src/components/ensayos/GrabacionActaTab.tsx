@@ -207,7 +207,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-sm space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Mic className="w-5 h-5" />
  </div>
  <div>
@@ -258,7 +258,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={startRecording}
- className="px-6 py-3 rounded-[var(--r-l)] bg-amber-400 hover:bg-amber-300 text-[var(--surface)] font-mono font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 active:scale-95 transition-all"
+ className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-amber-300 text-[var(--surface)] font-mono font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 active:scale-95 transition-all"
  >
  <Mic className="w-4 h-4" />
  <span>Iniciar Grabación con Micrófono</span>
@@ -333,7 +333,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-sm space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <FileAudio className="w-4 h-4 text-amber-400" />
+ <FileAudio className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-mono font-bold text-zinc-100 uppercase">
  Tomas y Audios del Ensayo ({recordings.length})
  </h3>
@@ -356,7 +356,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <span className="text-xs font-bold text-zinc-100 truncate">
  {rec.titulo}
  </span>
- <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-amber-300 uppercase">
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-[var(--acc)]/70 uppercase">
  {rec.tipo.replace('_','')}
  </span>
  </div>
@@ -387,7 +387,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--surface)] pb-4">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
- <span className="p-1.5 rounded-[var(--r-s)] bg-amber-400/15 text-amber-400">
+ <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">
  <Sparkles className="w-4 h-4" />
  </span>
  <h3 className="text-sm font-mono font-bold text-zinc-100 uppercase tracking-wider">
@@ -403,7 +403,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  onClick={handleGenerateAIActa}
  disabled={isGeneratingActa}
- className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-amber-400 text-[var(--surface)] hover:bg-amber-300 disabled:opacity-50 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--surface)] hover:bg-amber-300 disabled:opacity-50 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer"
  >
  {isGeneratingActa ? (
  <>
@@ -440,7 +440,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
  {/* Executive Summary */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-2">
- <h4 className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+ <h4 className="text-xs font-mono font-bold text-[var(--acc)] uppercase tracking-wider flex items-center gap-1.5">
  📝 Resumen Ejecutivo
  </h4>
  <p className="text-xs text-[var(--ink-3)] leading-relaxed font-sans">
@@ -481,7 +481,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <div className="space-y-2">
  {(acta.deberesPorMiembro || []).map((d, i) => (
  <div key={i} className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)] text-xs">
- <span className="font-mono font-bold text-amber-300 block">{d.miembro}:</span>
+ <span className="font-mono font-bold text-[var(--acc)]/70 block">{d.miembro}:</span>
  <span className="text-[var(--ink-3)]">{d.tarea}</span>
  </div>
  ))}

@@ -141,7 +141,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  {/* Header */}
  <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
  <div className="flex items-center gap-2.5 min-w-0">
- <div className="p-2 bg-amber-500/10 rounded-[var(--r-m)] shrink-0">
+ <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-m)] shrink-0">
  <Camera className="w-5 h-5 text-[var(--acc)]" />
  </div>
  <div className="min-w-0">
@@ -182,11 +182,11 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  {/* Option 1: File Upload */}
  <label className="w-full p-3 bg-zinc-900 hover:bg-zinc-800 hover:/50 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group">
  <div className="flex items-center gap-3">
- <div className="p-2 bg-zinc-800 group-hover:bg-amber-500/20 text-[var(--acc)] rounded-[var(--r-s)] transition-colors">
+ <div className="p-2 bg-zinc-800 group-hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-s)] transition-colors">
  {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
  </div>
  <div className="text-left">
- <span className="block font-bold text-xs text-zinc-200 group-hover:text-amber-300 transition-colors">
+ <span className="block font-bold text-xs text-zinc-200 group-hover:text-[var(--acc)]/70 transition-colors">
  {isUploading ?'Subiendo imagen...' :'Subir desde dispositivo'}
  </span>
  <span className="block text-[11px] text-zinc-400 font-sans">
@@ -208,17 +208,17 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  type="button"
  onClick={handleAutoSearchLogo}
  disabled={isSearching || isUploading}
- className="w-full p-3 bg-amber-500/10 hover:bg-amber-500/20 hover:/60 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group disabled:opacity-50"
+ className="w-full p-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 hover:/60 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group disabled:opacity-50"
  >
  <div className="flex items-center gap-3">
- <div className="p-2 bg-amber-500/20 text-amber-300 rounded-[var(--r-s)]">
- {isSearching ? <Loader2 className="w-5 h-5 animate-spin text-amber-400" /> : <Sparkles className="w-5 h-5 text-amber-400" />}
+ <div className="p-2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)]">
+ {isSearching ? <Loader2 className="w-5 h-5 animate-spin text-[var(--acc)]" /> : <Sparkles className="w-5 h-5 text-[var(--acc)]" />}
  </div>
  <div className="text-left">
- <span className="block font-bold text-xs text-amber-300">
+ <span className="block font-bold text-xs text-[var(--acc)]/70">
  {isSearching ?'Buscando logo oficial...' :'Buscar Logo con IA & Google'}
  </span>
- <span className="block text-[11px] text-amber-400/80 font-sans">
+ <span className="block text-[11px] text-[var(--acc)]/80 font-sans">
  Encuentra fotos de recintos o favicons oficiales
  </span>
  </div>
@@ -252,7 +252,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  type="button"
  onClick={handleSaveCustomUrl}
  disabled={!customUrl.trim()}
- className="px-3 py-1.5 bg-[var(--acc)] text-black font-bold text-xs rounded-[var(--r-s)] hover:bg-amber-400 transition-colors disabled:opacity-50"
+ className="px-3 py-1.5 bg-[var(--acc)] text-black font-bold text-xs rounded-[var(--r-s)] hover:bg-[var(--acc)]/60 transition-colors disabled:opacity-50"
  >
  Guardar
  </button>

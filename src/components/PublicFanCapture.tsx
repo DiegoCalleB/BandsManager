@@ -102,7 +102,7 @@ export const PublicFanCapture: React.FC = () => {
  };
 
  return (
- <div className="min-h-screen bg-slate-950 text-[var(--ink-3)] flex flex-col items-center justify-center p-4 selection:bg-amber-500 selection:text-slate-950">
+ <div className="min-h-screen bg-slate-950 text-[var(--ink-3)] flex flex-col items-center justify-center p-4 selection:bg-[var(--acc)] selection:text-slate-950">
  {/* Background Glow */}
  <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-500/10 via-slate-950 to-slate-950 pointer-events-none" />
 
@@ -117,11 +117,11 @@ export const PublicFanCapture: React.FC = () => {
  className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover border-2 shadow-xl shadow-amber-500/20"
  />
  ) : (
- <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)] border-2 /80 flex items-center justify-center text-amber-400 shadow-xl">
+ <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)] border-2 /80 flex items-center justify-center text-[var(--acc)] shadow-xl">
  <Music className="w-10 h-10" />
  </div>
  )}
- <span className="absolute -bottom-2 -right-2 bg-amber-500 text-slate-950 p-1.5 rounded-full shadow-lg">
+ <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-slate-950 p-1.5 rounded-full shadow-lg">
  <Heart className="w-4 h-4 fill-slate-950" />
  </span>
  </div>
@@ -131,7 +131,7 @@ export const PublicFanCapture: React.FC = () => {
  </h1>
  <p className="text-[var(--ink-3)] text-sm max-w-xs mx-auto">
  {conciertoOrigenNombre ? (
- <span>Gracias por bailar con nosotros en <strong className="text-amber-400">{conciertoOrigenNombre}</strong>. Recibe información directa en tu correo.</span>
+ <span>Gracias por bailar con nosotros en <strong className="text-[var(--acc)]">{conciertoOrigenNombre}</strong>. Recibe información directa en tu correo.</span>
  ) : (
  <span>Recibe información de Bakandeya directamente en tu correo.</span>
  )}
@@ -148,7 +148,7 @@ export const PublicFanCapture: React.FC = () => {
  )}
 
  <div className="space-y-1.5">
- <label className="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+ <label className="text-xs font-bold text-[var(--acc)]/70 uppercase tracking-wider flex items-center gap-1.5">
  <User className="w-3.5 h-3.5" /> Nombre y Apellidos *
  </label>
  <input
@@ -162,7 +162,7 @@ export const PublicFanCapture: React.FC = () => {
  </div>
 
  <div className="space-y-1.5">
- <label className="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+ <label className="text-xs font-bold text-[var(--acc)]/70 uppercase tracking-wider flex items-center gap-1.5">
  <Mail className="w-3.5 h-3.5" /> Correo Electrónico *
  </label>
  <input
@@ -178,7 +178,7 @@ export const PublicFanCapture: React.FC = () => {
  <div className="grid grid-cols-2 gap-3">
  <div className="space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-3)] uppercase tracking-wider flex items-center gap-1">
- <MapPin className="w-3 h-3 text-amber-400" /> Ciudad
+ <MapPin className="w-3 h-3 text-[var(--acc)]" /> Ciudad
  </label>
  <input
  type="text"
@@ -191,7 +191,7 @@ export const PublicFanCapture: React.FC = () => {
 
  <div className="space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-3)] uppercase tracking-wider flex items-center gap-1">
- <Music className="w-3 h-3 text-amber-400" /> ¿Origen?
+ <Music className="w-3 h-3 text-[var(--acc)]" /> ¿Origen?
  </label>
  <input
  type="text"
@@ -225,7 +225,7 @@ export const PublicFanCapture: React.FC = () => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
+ className="w-full py-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-extrabold text-sm rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
  >
  {loading ? (
  <span>Guardando...</span>
@@ -240,7 +240,7 @@ export const PublicFanCapture: React.FC = () => {
  ) : (
  /* THANK YOU CARD */
  <div className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 sm:p-8 shadow-2xl space-y-6 text-center backdrop-blur-md animate-fade-in">
- <div className="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-full mx-auto flex items-center justify-center">
+ <div className="w-16 h-16 bg-[var(--acc)]/20 text-[var(--acc)] rounded-full mx-auto flex items-center justify-center">
  <CheckCircle2 className="w-8 h-8" />
  </div>
 
@@ -264,11 +264,11 @@ export const PublicFanCapture: React.FC = () => {
  className="group block p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:/40 transition-all text-left"
  >
  <div className="flex items-center gap-3">
- <div className="w-8 h-8 rounded-[var(--r-s)] bg-amber-500/10 flex items-center justify-center text-amber-400 shrink-0">
+ <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] shrink-0">
  <Music className="w-4 h-4" />
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-xs font-bold text-[var(--ink-3)] group-hover:text-amber-300 transition-colors">
+ <p className="text-xs font-bold text-[var(--ink-3)] group-hover:text-[var(--acc)]/70 transition-colors">
  ¿Eres músico o tienes una banda?
  </p>
  <p className="text-[11px] text-[var(--ink-3)]">

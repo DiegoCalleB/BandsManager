@@ -178,7 +178,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  };
 
  const getProviderBadge = (id: string) => {
- if (id ==='gemini') return'bg-amber-500/15 text-amber-300 /30';
+ if (id ==='gemini') return'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30';
  if (id ==='deepseek') return'bg-sky-500/15 text-sky-300 border-sky-500/30';
  return'bg-zinc-800 text-zinc-300 border-zinc-700';
  };
@@ -219,7 +219,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  {/* HEADER */}
  <div className="px-5 py-3.5 border-b border-zinc-800 flex items-center justify-between bg-[var(--surface)]/95 sticky top-0 z-10">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/15 flex items-center justify-center text-amber-400">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)]">
  <Layers className="w-5 h-5" />
  </div>
  <div>
@@ -227,7 +227,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <h2 className="text-base font-bold text-zinc-100 font-display">
  Comparador A/B: DeepSeek 🚀 vs. Gemini ⚡
  </h2>
- <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
  A/B Testing + Costes Reales (€)
  </span>
  </div>
@@ -251,7 +251,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  {/* Venue Badge */}
  <div className="flex items-center gap-2 text-xs">
  <span className="text-zinc-400 font-mono text-[11px]">SALA DESTINO:</span>
- <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900 border-zinc-700 text-amber-300 font-bold">
+ <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900 border-zinc-700 text-[var(--acc)]/70 font-bold">
  🏟️ {lead.nombre_sala} ({lead.ciudad ||'España'})
  </span>
  <span className="text-zinc-500 text-[11px]">
@@ -274,13 +274,13 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => handleToggleProvider(prov.id)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isSelected
- ?'bg-amber-500/20 text-amber-300 /50'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
  :'bg-zinc-900/60 text-zinc-500 border-zinc-800 hover:border-zinc-700'
  }`}
  >
  <span>{prov.icon}</span>
  <span>{prov.name}</span>
- {isSelected && <Check className="w-3 h-3 text-amber-400 ml-0.5" />}
+ {isSelected && <Check className="w-3 h-3 text-[var(--acc)] ml-0.5" />}
  </button>
  );
  })}
@@ -305,7 +305,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <button
  onClick={handleRunComparison}
  disabled={isLoading || selectedProviders.length === 0}
- className="px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-black font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans shrink-0"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-black font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans shrink-0"
  >
  {isLoading ? (
  <>
@@ -348,7 +348,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => setVolumeScale('1')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='1'
- ?'bg-amber-500 text-black shadow-sm'
+ ?'bg-[var(--acc)] text-black shadow-sm'
  :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
@@ -359,7 +359,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => setVolumeScale('100')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='100'
- ?'bg-amber-500 text-black shadow-sm'
+ ?'bg-[var(--acc)] text-black shadow-sm'
  :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
@@ -370,7 +370,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => setVolumeScale('1000')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='1000'
- ?'bg-amber-500 text-black shadow-sm'
+ ?'bg-[var(--acc)] text-black shadow-sm'
  :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
@@ -391,8 +391,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="p-4 flex-1 overflow-y-auto space-y-4">
  {isLoading ? (
  <div className="py-16 text-center space-y-4">
- <div className="inline-flex items-center justify-center p-4 bg-amber-500/10 rounded-[var(--r-l)]">
- <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+ <div className="inline-flex items-center justify-center p-4 bg-[var(--acc)]/10 rounded-[var(--r-l)]">
+ <Loader2 className="w-8 h-8 animate-spin text-[var(--acc)]" />
  </div>
  <div>
  <h3 className="text-sm font-bold text-zinc-100">Calculando propuestas y costes en paralelo...</h3>
@@ -489,7 +489,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
  isDeepSeek
  ?'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
- :'bg-amber-500/15 text-amber-300 /30'
+ :'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30'
  }`}>
  {isDeepSeek ?'10x más barato' :'Ultra rápido'}
  </span>
@@ -500,10 +500,10 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
  {prop.status ==='error' ? (
  <div className="space-y-2.5">
- <div className="p-2.5 bg-amber-500/10 rounded-[var(--r-m)] text-amber-200 text-xs flex items-start gap-2">
- <AlertCircle className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
+ <div className="p-2.5 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-amber-200 text-xs flex items-start gap-2">
+ <AlertCircle className="w-4 h-4 shrink-0 text-[var(--acc)] mt-0.5" />
  <div>
- <p className="font-bold text-amber-300">Aviso de Cuota / Saldo API</p>
+ <p className="font-bold text-[var(--acc)]/70">Aviso de Cuota / Saldo API</p>
  <p className="text-[11px] text-zinc-300 mt-0.5">{prop.error}</p>
  </div>
  </div>
@@ -531,7 +531,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  {isDeepSeek ? (
  <span className="text-sky-300">Tono: Directo y comercial</span>
  ) : (
- <span className="text-amber-300">Tono: Ágil y contextual</span>
+ <span className="text-[var(--acc)]/70">Tono: Ágil y contextual</span>
  )}
  </div>
 
@@ -542,7 +542,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  isSelected
  ?'bg-emerald-500 text-black shadow-md shadow-emerald-500/20'
- :'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 hover:/60'
+ :'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 hover:/60'
  }`}
  >
  {isSelected ? (
@@ -569,7 +569,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="mt-4 p-3.5 bg-black/50 rounded-[var(--r-m)] text-xs space-y-2">
  <div className="flex items-center justify-between">
  <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
- <Calculator className="w-3.5 h-3.5 text-amber-400" />
+ <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" />
  Resumen de Costes & ROI para la Banda
  </span>
  <span className="text-[10px] text-zinc-500 font-mono">
@@ -585,7 +585,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <th className="py-1.5 px-2">Entrada (1M tok)</th>
  <th className="py-1.5 px-2">Salida (1M tok)</th>
  <th className="py-1.5 px-2">Coste 1 Pitch</th>
- <th className="py-1.5 px-2 font-bold text-amber-300">Coste 100 Salas</th>
+ <th className="py-1.5 px-2 font-bold text-[var(--acc)]/70">Coste 100 Salas</th>
  <th className="py-1.5 px-2 font-bold text-emerald-400">Coste 1.000 Salas</th>
  </tr>
  </thead>
@@ -597,18 +597,18 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <td className="py-1.5 px-2 font-mono text-zinc-400">0,14 $ (0,13 €)</td>
  <td className="py-1.5 px-2 font-mono text-zinc-400">0,28 $ (0,26 €)</td>
  <td className="py-1.5 px-2 font-mono font-bold text-emerald-400">~0,00014 €</td>
- <td className="py-1.5 px-2 font-mono font-bold text-amber-300">~0,014 €</td>
+ <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,014 €</td>
  <td className="py-1.5 px-2 font-mono font-bold text-emerald-400">~0,14 € (Máximo ROI)</td>
  </tr>
  <tr className="hover:bg-zinc-900/40">
- <td className="py-1.5 px-2 font-bold text-amber-400 flex items-center gap-1">
+ <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
  <span>⚡</span> Google Gemini 3.7 Flash
  </td>
  <td className="py-1.5 px-2 font-mono text-zinc-400">0,10 $ (0,09 €)</td>
  <td className="py-1.5 px-2 font-mono text-zinc-400">0,40 $ (0,37 €)</td>
  <td className="py-1.5 px-2 font-mono font-bold text-emerald-400">~0,00018 €</td>
- <td className="py-1.5 px-2 font-mono font-bold text-amber-300">~0,018 €</td>
- <td className="py-1.5 px-2 font-mono font-bold text-amber-300">~0,18 € (o 0 € con Free Tier)</td>
+ <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,018 €</td>
+ <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,18 € (o 0 € con Free Tier)</td>
  </tr>
  </tbody>
  </table>
@@ -619,7 +619,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  {/* FOOTER INFO BAR */}
  <div className="px-5 py-3 border-t border-zinc-800 bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-400">
  <div className="flex items-center gap-2">
- <ShieldCheck className="w-4 h-4 text-amber-400" />
+ <ShieldCheck className="w-4 h-4 text-[var(--acc)]" />
  <span>
  <strong>Human-in-the-Loop:</strong> Tú tienes el control total. La propuesta elegida se guarda en el CRM y no se enviará sin tu aprobación expresa.
  </span>

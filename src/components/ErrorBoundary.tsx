@@ -46,7 +46,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
  if (this.state.hasError) {
  return (
  <div className="p-8 rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink-3)] space-y-4 max-w-2xl mx-auto my-8">
- <div className="flex items-center gap-3 text-amber-400">
+ <div className="flex items-center gap-3 text-[var(--acc)]">
  <AlertTriangle className="w-8 h-8 shrink-0 text-amber-500" />
  <h3 className="text-lg font-bold">
  {this.props.fallbackTitle ||'Ha ocurrido un error al cargar este módulo'}
@@ -58,7 +58,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
  <div className="flex items-center gap-3 pt-2">
  <button
  onClick={this.handleReset}
- className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-[var(--r-m)] flex items-center gap-2 transition"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 text-xs font-bold rounded-[var(--r-m)] flex items-center gap-2 transition"
  >
  <RefreshCw className="w-4 h-4" /> Reintentar Cargar Módulo
  </button>

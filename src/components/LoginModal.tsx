@@ -458,8 +458,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  if (/[0-9]/.test(pass) && /[^A-Za-z0-9]/.test(pass)) score += 1;
 
  const labels = ['Contraseña básica','Seguridad media','Muy segura'];
- const colors = ['bg-rose-500','bg-amber-400','bg-emerald-400'];
- const textColors = ['text-rose-400','text-amber-400','text-emerald-400'];
+ const colors = ['bg-rose-500','bg-[var(--acc)]/60','bg-emerald-400'];
+ const textColors = ['text-rose-400','text-[var(--acc)]','text-emerald-400'];
 
  return (
  <div className="space-y-1.5 pt-1 px-0.5">

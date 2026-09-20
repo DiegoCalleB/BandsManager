@@ -30,7 +30,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
- <Video className="w-5 h-5 text-amber-400" />
+ <Video className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-white">Vídeos de YouTube & Directos</h3>
  </div>
 
@@ -59,7 +59,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  </span>
  )}
  {vid.destacado && (
- <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-medium flex items-center gap-1">
+ <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium flex items-center gap-1">
  <Award className="w-3 h-3" /> Destacado
  </span>
  )}
@@ -68,7 +68,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  href={vid.url}
  target="_blank"
  rel="noreferrer"
- className="text-xs text-zinc-500 hover:text-amber-400 transition-colors truncate block max-w-md"
+ className="text-xs text-zinc-500 hover:text-[var(--acc)] transition-colors truncate block max-w-md"
  >
  {vid.url}
  </a>
@@ -80,7 +80,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  type="button"
  onClick={() => onToggleHighlightVideo(vid.id)}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition-colors ${
- vid.destacado ?'text-amber-400 bg-amber-500/10' :'text-zinc-500 hover:text-zinc-300'
+ vid.destacado ?'text-[var(--acc)] bg-[var(--acc)]/10' :'text-zinc-500 hover:text-zinc-300'
  }`}
  title={vid.destacado ?'Quitar destacado' :'Marcar como vídeo principal'}
  >
@@ -103,7 +103,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  {/* Add Video Form */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
- <Plus className="w-3.5 h-3.5 text-amber-400" />
+ <Plus className="w-3.5 h-3.5 text-[var(--acc)]" />
  Añadir Nuevo Vídeo (YouTube)
  </h4>
 
@@ -145,7 +145,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  type="button"
  onClick={onAddVideo}
  disabled={!newVideoUrl.trim()}
- className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
+ className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-semibold text-xs transition-colors disabled:opacity-50"
  >
  <Plus className="w-3.5 h-3.5" />
  Añadir Vídeo

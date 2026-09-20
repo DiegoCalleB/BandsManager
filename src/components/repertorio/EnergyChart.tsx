@@ -400,7 +400,7 @@ export function EnergyChart({
  para saber qué se está moviendo sin tener que leer el número de posición en el eje X. */}
  {draggingFromIndex !== null && dragAxis !=='y' && hoverIndex !== null && (
  <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-black/90 rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap">
- <span className="text-amber-300 font-bold">{chartData[draggingFromIndex]?.name}</span>
+ <span className="text-[var(--acc)]/70 font-bold">{chartData[draggingFromIndex]?.name}</span>
  {hoverIndex !== draggingFromIndex && (
  <>
  <span className="text-neutral-500"> → posición de </span>
@@ -568,7 +568,7 @@ export function EnergyChart({
  <p className="text-sky-300 mt-0.5">🥁 {d.bpm} BPM</p>
  )}
  {d.tonalidad && (
- <p className="text-amber-300 mt-0.5">🎼 {d.tonalidad}</p>
+ <p className="text-[var(--acc)]/70 mt-0.5">🎼 {d.tonalidad}</p>
  )}
  {d.variance > 0 && (
  <p className="text-sky-300 mt-0.5">

@@ -56,13 +56,13 @@ export function ConfirmDeleteAlbumModal({
  onUnassignSongs(data.albumName);
  onClose();
  }}
- className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 transition-all cursor-pointer group flex items-center gap-3"
+ className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-all cursor-pointer group flex items-center gap-3"
  >
- <div className="p-2 rounded-[var(--r-s)] bg-amber-500/20 text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)] group-hover:scale-105 transition-transform shrink-0">
  <FolderMinus className="w-5 h-5" />
  </div>
  <div>
- <div className="text-xs font-bold text-amber-300">Desvincular canciones (Recomendado)</div>
+ <div className="text-xs font-bold text-[var(--acc)]/70">Desvincular canciones (Recomendado)</div>
  <div className="text-[11px] text-amber-200/70 mt-0.5">
  Elimina el disco de la discografía pero mantiene sus canciones en el catálogo como"Sin Disco".
  </div>

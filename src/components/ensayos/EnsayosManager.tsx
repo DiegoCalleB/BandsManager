@@ -129,7 +129,7 @@ export function EnsayosManager({
  if (rehearsals.length === 0) {
  return (
  <div className="p-6 sm:p-12 max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
- <div className="w-16 h-16 rounded-3xl bg-amber-400/15 flex items-center justify-center text-amber-400 mx-auto shadow-lg shadow-amber-400/10">
+ <div className="w-16 h-16 rounded-3xl bg-[var(--acc)]/60/15 flex items-center justify-center text-[var(--acc)] mx-auto shadow-lg shadow-amber-400/10">
  <Mic className="w-8 h-8" />
  </div>
 
@@ -147,7 +147,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-amber-400 text-[var(--surface)] font-mono font-black text-sm uppercase tracking-wider hover:bg-amber-300 shadow-xl shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--surface)] font-mono font-black text-sm uppercase tracking-wider hover:bg-amber-300 shadow-xl shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-4 h-4" />
  <span>Convocar Primer Ensayo</span>
@@ -201,7 +201,7 @@ export function EnsayosManager({
  currentRehearsal?.estado ==='completado'
  ?'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
  : currentRehearsal?.estado ==='en_curso'
- ?'bg-amber-400/20 text-amber-300 /40 animate-pulse'
+ ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40 animate-pulse'
  :'bg-neutral-800 text-[var(--ink-3)]'
  }`}
  >
@@ -230,7 +230,7 @@ export function EnsayosManager({
  {/* Rehearsal Headline */}
  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[var(--ink-3)]">
  <span className="flex items-center gap-1.5 text-zinc-100 font-bold">
- <Calendar className="w-4 h-4 text-amber-400" />
+ <Calendar className="w-4 h-4 text-[var(--acc)]" />
  {currentRehearsal?.fecha} ({currentRehearsal?.hora ||'19:30'} - {currentRehearsal?.horaFin ||'21:30'})
  </span>
 
@@ -266,7 +266,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-amber-400 text-[var(--surface)] hover:bg-amber-300 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--surface)] hover:bg-amber-300 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>+ Convocar Ensayo</span>
@@ -280,7 +280,7 @@ export function EnsayosManager({
  onClick={() => setActiveTab('orden_del_dia')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab ==='orden_del_dia'
- ?'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
+ ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
  :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
  }`}
  >
@@ -293,7 +293,7 @@ export function EnsayosManager({
  onClick={() => setActiveTab('modo_local')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab ==='modo_local'
- ?'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
+ ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
  :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
  }`}
  >
@@ -306,7 +306,7 @@ export function EnsayosManager({
  onClick={() => setActiveTab('grabacion_acta')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab ==='grabacion_acta'
- ?'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
+ ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
  :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
  }`}
  >

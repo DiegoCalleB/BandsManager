@@ -204,7 +204,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
 
  <div className="space-y-1">
  <label className="text-zinc-400 flex items-center gap-1 font-bold">
- <Clock className="w-3.5 h-3.5 text-amber-400" />
+ <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
  Caché Pactado (€):
  </label>
  <input
@@ -248,7 +248,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  <div className="space-y-2 pt-1">
  <div className="flex items-center justify-between text-xs font-mono">
  <span className="text-zinc-300 font-bold flex items-center gap-1.5">
- <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  Asignación de Repertorio Óptimo:
  </span>
  <button
@@ -303,7 +303,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  }}
  className={`p-3 rounded-[var(--r-l)] transition-all cursor-pointer flex items-center justify-between gap-2 ${
  isSelected
- ?'bg-amber-500/15 /80 shadow-md'
+ ?'bg-[var(--acc)]/15 /80 shadow-md'
  : isOptimal
  ?'bg-emerald-500/10 border-emerald-500/40 hover:bg-emerald-500/15'
  :'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700'
@@ -311,7 +311,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  >
  <div className="space-y-0.5">
  <div className="flex items-center gap-2">
- <Music className={`w-3.5 h-3.5 ${isSelected ?'text-amber-400' :'text-zinc-400'}`} />
+ <Music className={`w-3.5 h-3.5 ${isSelected ?'text-[var(--acc)]' :'text-zinc-400'}`} />
  <span className="font-mono text-xs font-bold text-white">
  {st.nombre}
  </span>
@@ -328,7 +328,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
 
  <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
- isSelected ?' bg-amber-400 text-black' :'border-zinc-700'
+ isSelected ?' bg-[var(--acc)]/60 text-black' :'border-zinc-700'
  }`}>
  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
  </div>

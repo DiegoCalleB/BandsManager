@@ -89,7 +89,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  return (
  <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-6">
  <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4"></div>
- <p className="text-amber-400 font-medium">{t('cargando')}</p>
+ <p className="text-[var(--acc)] font-medium">{t('cargando')}</p>
  </div>
  );
  }
@@ -358,7 +358,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
  <div className="space-y-2.5 pt-2 text-sm">
  <div className="flex items-center gap-2.5 font-medium">
- <span className={`w-2 h-2 rounded-full ${styles.accentBtn.includes('fuchsia') ?'bg-fuchsia-400' : styles.accentBtn.includes('orange') ?'bg-orange-400' :'bg-amber-400'} shrink-0`}></span>
+ <span className={`w-2 h-2 rounded-full ${styles.accentBtn.includes('fuchsia') ?'bg-fuchsia-400' : styles.accentBtn.includes('orange') ?'bg-orange-400' :'bg-[var(--acc)]/60'} shrink-0`}></span>
  <span>{config.contactoBooking?.nombre || t('managerPorDefecto')}</span>
  </div>
  <div className="flex items-center gap-2.5 font-mono">
@@ -633,7 +633,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  {displayLogo ? (
  <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover" />
  ) : (
- <div className="w-8 h-8 rounded-full bg-[var(--surface)] flex items-center justify-center text-amber-400 font-bold text-xs">
+ <div className="w-8 h-8 rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--acc)] font-bold text-xs">
  {bandName.charAt(0).toUpperCase()}
  </div>
  )}

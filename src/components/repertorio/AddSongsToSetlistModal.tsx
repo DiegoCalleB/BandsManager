@@ -136,7 +136,7 @@ export function AddSongsToSetlistModal({
  onClick={() => setOnlyFavoritos(p => !p)}
  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold cursor-pointer transition-colors ${
  onlyFavoritos
- ?'bg-amber-500/20 text-amber-300'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white'
  }`}
  >
@@ -195,7 +195,7 @@ export function AddSongsToSetlistModal({
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-1.5">
  <span className="text-xs font-bold text-white truncate">{formatSongTitle(s.titulo)}</span>
- {s.favoritoGeneral && <Star className="w-3 h-3 text-amber-400 fill-amber-400 shrink-0" />}
+ {s.favoritoGeneral && <Star className="w-3 h-3 text-[var(--acc)] fill-amber-400 shrink-0" />}
  {alreadyInSetlist && (
  <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-neutral-700 text-[var(--ink-3)] shrink-0">
  Ya en el repertorio

@@ -113,7 +113,7 @@ export function ConvocarEnsayoModal({
  {/* Header */}
  <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Calendar className="w-5 h-5" />
  </div>
  <div>
@@ -214,7 +214,7 @@ export function ConvocarEnsayoModal({
  Repertorio / Setlist a Repasar (Opcional)
  </label>
  <div className="relative">
- <Disc3 className="w-3.5 h-3.5 absolute left-3 top-3 text-amber-400" />
+ <Disc3 className="w-3.5 h-3.5 absolute left-3 top-3 text-[var(--acc)]" />
  <select
  value={setlistId}
  onChange={e => setSetlistId(e.target.value)}
@@ -246,7 +246,7 @@ export function ConvocarEnsayoModal({
  onClick={() => toggleConvocado(u.id)}
  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono transition-all cursor-pointer ${
  isSelected
- ?'bg-amber-400/20 text-amber-300 font-bold'
+ ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-bold'
  :'bg-neutral-800/60 text-[var(--ink-2)] border-transparent hover:'
  }`}
  >
@@ -280,7 +280,7 @@ export function ConvocarEnsayoModal({
  className="flex items-center justify-between gap-2 p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)] text-xs text-zinc-200"
  >
  <div className="flex items-center gap-2">
- <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+ <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60" />
  <span>{obj.texto}</span>
  </div>
  <button
@@ -343,7 +343,7 @@ export function ConvocarEnsayoModal({
  </button>
  <button
  type="submit"
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-amber-400 text-[var(--surface)] hover:bg-amber-300 transition-all cursor-pointer shadow-md shadow-amber-400/20 active:scale-95"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)]/60 text-[var(--surface)] hover:bg-amber-300 transition-all cursor-pointer shadow-md shadow-amber-400/20 active:scale-95"
  >
  {isEditing ?'Guardar Cambios' :'Convocar Ensayo'}
  </button>

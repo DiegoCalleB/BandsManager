@@ -55,7 +55,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 shadow-xs ${
  isStitchLight 
  ?'bg-amber-100 text-amber-700' 
- :'bg-amber-500/15 text-amber-400'
+ :'bg-[var(--acc)]/15 text-[var(--acc)]'
  }`}>
  <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
  </div>
@@ -145,7 +145,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  }`}
  >
  <div className="flex items-center gap-2 min-w-0">
- <span className="text-amber-400 font-bold shrink-0">📋</span>
+ <span className="text-[var(--acc)] font-bold shrink-0">📋</span>
  <span className="font-semibold truncate text-zinc-100">
  {activeSetlist ? activeSetlist.nombre :'Seleccionar repertorio'}
  </span>
@@ -175,7 +175,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  setShowSetlistDropdown(false);
  onCreateSetlist();
  }}
- className="text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer font-bold"
+ className="text-[var(--acc)] hover:text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer font-bold"
  >
  <Plus className="w-3 h-3" /> Nuevo
  </button>
@@ -194,7 +194,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 transition cursor-pointer ${
  isSelected
- ?'bg-amber-500/15 text-amber-300 font-semibold'
+ ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-semibold'
  : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-zinc-300 hover:bg-white/5'
  }`}
  >
@@ -204,7 +204,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  {songItems.length} temas {sl.tipoFormato ? `• ${sl.tipoFormato.replace('_','')}` :''}
  </div>
  </div>
- {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+ {isSelected && <Check className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />}
  </button>
  );
  })}
@@ -219,7 +219,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  id="btn-create-setlist"
  type="button"
  onClick={onCreateSetlist}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
  title="Crear un nuevo setlist de concierto"
  >
  <Plus className="w-3.5 h-3.5" />
@@ -254,7 +254,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setCatalogoViewMode('albumes')}
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
  catalogoViewMode ==='albumes'
- ?'bg-amber-500/20 text-amber-300 shadow-xs font-bold'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 shadow-xs font-bold'
  :'text-zinc-400 hover:text-zinc-200'
  }`}
  >
@@ -289,7 +289,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  id="btn-add-song"
  type="button"
  onClick={onOpenNewSongModal}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 active:scale-95"
  >
  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
  <span>Nueva Canción</span>

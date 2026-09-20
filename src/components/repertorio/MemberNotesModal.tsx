@@ -199,7 +199,7 @@ export function MemberNotesModal({
  <span className="text-neutral-500 uppercase font-bold">Preparación de la banda:</span>
  <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">✅ {summary.lista} listos</span>
  <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400">🔶 {summary.casiLista} casi</span>
- <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400">🌱 {summary.aprendiendo} aprendiendo</span>
+ <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]">🌱 {summary.aprendiendo} aprendiendo</span>
  {summary.sinOpinar > 0 && (
  <span className="px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-500">{summary.sinOpinar} sin marcar</span>
  )}

@@ -125,7 +125,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  </>
  ) : isSomeSelected ? (
  <>
- <MinusSquare className="w-3.5 h-3.5 text-amber-400" />
+ <MinusSquare className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Seleccionar todos ({filteredLeads.length})</span>
  </>
  ) : (
@@ -136,7 +136,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  )}
  </button>
  {selectedLeadIds.length > 0 && (
- <span className="text-amber-400 font-bold bg-amber-500/15 px-2 py-0.5 rounded-md text-[11px]">
+ <span className="text-[var(--acc)] font-bold bg-[var(--acc)]/15 px-2 py-0.5 rounded-md text-[11px]">
  {selectedLeadIds.length} selecc.
  </span>
  )}
@@ -229,7 +229,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <div className="flex flex-wrap items-center gap-1.5 text-xs font-sans text-zinc-300 font-medium mt-1">
  <span className="text-zinc-200 font-semibold">{lead.ciudad ||'España'}</span>
  <span>•</span>
- <span className={lead.roster ?'text-amber-300 font-semibold' :''}>
+ <span className={lead.roster ?'text-[var(--acc)]/70 font-semibold' :''}>
  {lead.roster 
  ? `Róster: ${lead.roster}` 
  : (['agencia','manager','productora','sello'].includes(String(lead.tipo ||'').toLowerCase())
@@ -284,10 +284,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <button
  type="button"
  onClick={(e) => handleQuickApprovePitch(e, lead)}
- className="px-2.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-all cursor-pointer min-h-[38px]"
+ className="px-2.5 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-all cursor-pointer min-h-[38px]"
  title="Aprobar pitch directamente para envío"
  >
- <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span className="text-[11px]">Aprobar</span>
  </button>
  )}

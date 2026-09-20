@@ -77,7 +77,7 @@ export function ShareModal({
  const getItemIcon = () => {
  switch (itemType) {
  case'song': return <Music className="w-5 h-5 text-indigo-400" />;
- case'idea': return <Sparkles className="w-5 h-5 text-amber-400" />;
+ case'idea': return <Sparkles className="w-5 h-5 text-[var(--acc)]" />;
  case'setlist': return <Disc className="w-5 h-5 text-purple-400" />;
  case'rehearsal':
  case'concert': return <Calendar className="w-5 h-5 text-emerald-400" />;

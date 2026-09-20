@@ -62,7 +62,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  {/* BIOGRAFÍA OFICIAL / RESUMEN EJECUTIVO */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
  <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
- <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <FileText className="w-5 h-5" /> Biografía Oficial / Resumen Ejecutivo
  </h3>
  <span
@@ -72,7 +72,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  !config.biografia.toLowerCase().includes('por definir') &&
  !config.biografia.includes('Propuesta musical en directo')
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
- :'bg-amber-500/10 text-amber-300 /20'
+ :'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
  }`}
  >
  {config.biografia &&
@@ -107,7 +107,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  />
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
  <span>Mínimo 80 caracteres para completar el perfil</span>
- <span className={(config.biografia ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-amber-400 font-bold'}>
+ <span className={(config.biografia ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-[var(--acc)] font-bold'}>
  {(config.biografia ||'').trim().length} / 80 min.
  </span>
  </div>
@@ -117,7 +117,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  {/* INFORMACIÓN ADICIONAL PARA EL DOSSIER */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
  <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
- <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <Info className="w-5 h-5" /> Información Adicional y Notas del Dossier
  </h3>
  <div className="flex items-center gap-2">
@@ -128,7 +128,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  config.dossierTextoExtra.trim().length >= 80 &&
  !config.dossierTextoExtra.toLowerCase().includes('por definir'))
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
- :'bg-amber-500/10 text-amber-300 /20'
+ :'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
  }`}
  >
  {(config.dossierPdfUrl && config.dossierPdfUrl.trim().length > 5) ||
@@ -138,7 +138,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  ?'✓ Listo'
  :'Mín. 80 car. o PDF'}
  </span>
- <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full hidden sm:inline">
+ <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-full hidden sm:inline">
  Uso Interno
  </span>
  </div>
@@ -147,7 +147,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <p className="text-xs text-[var(--ink-3)] leading-relaxed">
  Escribe notas y detalles de la banda (trayectoria, integrantes, estilo, hitos, prensa, etc.) para enriquecer la documentación del proyecto.
  </p>
- <p className="text-[11px] text-amber-400/90 font-semibold bg-amber-500/5 rounded-[var(--r-s)] px-3 py-2">
+ <p className="text-[11px] text-[var(--acc)]/90 font-semibold bg-[var(--acc)]/5 rounded-[var(--r-s)] px-3 py-2">
  Nota: Este texto es para uso interno del equipo y no se muestra en la página pública del EPK.
  </p>
 
@@ -161,7 +161,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  />
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
  <span>Mínimo 80 caracteres para marcar como completado (si no hay PDF)</span>
- <span className={(config.dossierTextoExtra ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-amber-400 font-bold'}>
+ <span className={(config.dossierTextoExtra ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-[var(--acc)] font-bold'}>
  {(config.dossierTextoExtra ||'').trim().length} / 80 min.
  </span>
  </div>
@@ -172,15 +172,15 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
  <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
  <div className="flex items-center gap-2">
- <Users className="w-5 h-5 text-amber-400" />
- <h3 className="text-base sm:text-lg font-bold text-amber-400">
+ <Users className="w-5 h-5 text-[var(--acc)]" />
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)]">
  Formación de la Banda ({miembros.length})
  </h3>
  </div>
  <button
  type="button"
  onClick={anadirMiembro}
- className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
+ className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
  >
  + Añadir miembro
  </button>
@@ -200,12 +200,12 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <label className="shrink-0 cursor-pointer group" title="Subir foto del músico">
  <div className="w-16 h-16 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center relative">
  {subiendoFotoMiembro === m.id ? (
- <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
+ <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
  ) : m.fotoUrl && m.fotoUrl.trim() !=='' ? (
  <img src={m.fotoUrl} alt={m.nombre ||'Miembro'} className="w-full h-full object-cover" />
  ) : (
  <div className="flex flex-col items-center justify-center p-1 text-center">
- <Upload className="w-4 h-4 text-[var(--ink-2)] group-hover:text-amber-400 transition mb-0.5" />
+ <Upload className="w-4 h-4 text-[var(--ink-2)] group-hover:text-[var(--acc)] transition mb-0.5" />
  <span className="text-[8px] text-[var(--ink-2)] font-medium">Foto</span>
  </div>
  )}
@@ -234,7 +234,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  value={m.rol}
  onChange={e => editarMiembro(m.id, { rol: e.target.value })}
  placeholder="Instrumento / Rol (Voz, guitarra, metales...)"
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-amber-400/90 focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-[var(--acc)]/90 focus: outline-none"
  />
  </div>
  <button
@@ -280,7 +280,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
 
  {/* DATOS DE CONTACTO DE BOOKING & REDES */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b pb-3">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
  <Mail className="w-5 h-5" /> Datos de Contacto de Booking & Redes Oficiales
  </h3>
 
@@ -335,10 +335,10 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  {/* SITIO WEB OFICIAL PROPIO DE LA BANDA */}
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
  <div className="flex items-center justify-between flex-wrap gap-2">
- <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
- <Globe className="w-4 h-4 text-amber-400" /> Sitio Web Oficial Propio de la Banda (Opcional)
+ <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
+ <Globe className="w-4 h-4 text-[var(--acc)]" /> Sitio Web Oficial Propio de la Banda (Opcional)
  </label>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
  Dossier EPK + Fans Landing
  </span>
  </div>
@@ -373,7 +373,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <div className="pt-3 border-t space-y-3">
  <div className="flex items-center justify-between flex-wrap gap-2">
  <div>
- <label className="text-xs font-bold text-amber-300 uppercase flex items-center gap-1.5">
+ <label className="text-xs font-bold text-[var(--acc)]/70 uppercase flex items-center gap-1.5">
  <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes & Plataformas Oficiales
  </label>
  <p className="text-[11px] text-[var(--ink-3)]">

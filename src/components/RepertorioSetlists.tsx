@@ -97,7 +97,7 @@ export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: 
  header: { label:'Encabezado de Bloque / Sección', icon:'⚡', bg:'bg-[#d1b375]/20', text:'text-[#d1b375]', border:'border-[var(--acc)]/50' },
  presentacion: { label:'Presentación Banda / Saludo', icon:'🎤', bg:'bg-sky-500/15', text:'text-sky-400', border:'border-sky-500/30' },
  intro_tema: { label:'Intro / Historia del Tema', icon:'🗣️', bg:'bg-indigo-500/15', text:'text-indigo-400', border:'border-indigo-500/30' },
- beatbox: { label:'Performance Beatbox / Ritmo', icon:'🥁', bg:'bg-amber-500/15', text:'text-amber-400', border:'/30' },
+ beatbox: { label:'Performance Beatbox / Ritmo', icon:'🥁', bg:'bg-[var(--acc)]/15', text:'text-[var(--acc)]', border:'/30' },
  solo_performance: { label:'Solo de Instrumento / Jam', icon:'🎸', bg:'bg-purple-500/15', text:'text-purple-400', border:'border-purple-500/30' },
  cambio_instrumento: { label:'Cambio Instrumento / Afinación', icon:'🔧', bg:'bg-emerald-500/15', text:'text-emerald-400', border:'border-emerald-500/30' },
  chapa: { label:'Chapa / Discurso con el Público', icon:'💬', bg:'bg-orange-500/15', text:'text-orange-400', border:'border-orange-500/30' },
@@ -2695,7 +2695,7 @@ export default function RepertorioSetlists({
  }`}
  title="Optimizar IA: Generar el setlist perfecto con orden dinámico ideal y clímax de concierto"
  >
- <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span className="hidden sm:inline">Optimizar IA</span>
  <span className="sm:hidden">Optimizar</span>
  </button>
@@ -2837,7 +2837,7 @@ export default function RepertorioSetlists({
  >
  <span className="font-semibold text-zinc-100">⏱️ {activeSetlistMetrics.formattedTime}</span>
  <span className="text-zinc-600">·</span>
- <span className="font-bold text-amber-400">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
+ <span className="font-bold text-[var(--acc)]">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
  <span className="text-zinc-500 text-[10px]">{showSetlistStats ?'▲' :'▼'}</span>
  </button>
 
@@ -2845,7 +2845,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => setShowAssistantChooser((v) => !v)}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 hover:text-amber-200 transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-xs"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 hover:text-amber-200 transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-xs"
  title="Asistente IA del repertorio"
  >
  🧠 <span className="hidden xs:inline">Asistente IA</span>
@@ -2868,7 +2868,7 @@ export default function RepertorioSetlists({
  isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-neutral-800/80'
  }`}
  >
- <span className="text-xs font-semibold text-amber-400 flex items-center gap-1.5">📖 Ver análisis</span>
+ <span className="text-xs font-semibold text-[var(--acc)] flex items-center gap-1.5">📖 Ver análisis</span>
  <span className="block text-[11px] text-zinc-400 mt-0.5">Arco narrativo, puntuación y sugerencias explicadas.</span>
  </button>
  <button
@@ -2899,10 +2899,10 @@ export default function RepertorioSetlists({
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 font-medium">
  💬 {activeSetlistMetrics.eventCount} interludios
  </span>
- <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/10 text-amber-300 font-medium">
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
  ⚡ {activeSetlistMetrics.blockCount} bloques
  </span>
- <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 font-medium">
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-medium">
  {energyAnalysis.profileLabel}
  </span>
  </div>
@@ -2925,7 +2925,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={undoLastReorder}
- className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-[var(--acc)]/70 hover:text-amber-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
  title="Deshacer el último reordenamiento del setlist"
  >
  ↩️ Deshacer
@@ -3036,7 +3036,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowTonalidad((v) => !v)}
  className={`p-1 rounded-[var(--r-s)] transition-all cursor-pointer ${
- showTonalidad ?'bg-amber-500/20 text-amber-300' :'bg-neutral-800 text-[var(--ink-2)] hover:text-white'
+ showTonalidad ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-neutral-800 text-[var(--ink-2)] hover:text-white'
  }`}
  title={showTonalidad ?'Ocultar tonalidades del gráfico' :'Mostrar tonalidades en el gráfico'}
  >
@@ -3149,7 +3149,7 @@ export default function RepertorioSetlists({
  if (next !== point.score) handleEnergyChartDrag(point, next);
  };
  const dirBtnClass ="w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
- const reorderBtnClass = `${dirBtnClass} bg-neutral-800/80 hover:bg-neutral-700 text-amber-300/90 hover:/60`;
+ const reorderBtnClass = `${dirBtnClass} bg-neutral-800/80 hover:bg-neutral-700 text-[var(--acc)]/70/90 hover:/60`;
  const energyBtnStyle = info
  ? { color: info.hexColor, borderColor: `${info.hexColor}55`, background:'rgba(23,23,23,0.8)' }
  : undefined;
@@ -3327,7 +3327,7 @@ export default function RepertorioSetlists({
  key={i}
  className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 transition ${
  w.type ==='warning'
- ?'bg-amber-500/10 text-amber-300 /30'
+ ?'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
  : w.type ==='success'
  ?'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
  :'bg-sky-500/10 text-sky-300 border-sky-500/30'
@@ -3592,7 +3592,7 @@ export default function RepertorioSetlists({
  setEditingKeyItemId(it.id);
  }}
  className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${
- desiredKey ?'bg-amber-500/20 text-amber-400' :'bg-[var(--surface)]/15 text-[#10b981]'
+ desiredKey ?'bg-[var(--acc)]/20 text-[var(--acc)]' :'bg-[var(--surface)]/15 text-[#10b981]'
  }`}
  title={desiredKey
  ? `Original: ${song.tonalidad ||'—'} · Tocar en este repertorio: ${desiredKey}. Clic para cambiar.`
@@ -3615,7 +3615,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => handleSetTonalidadDeseada(it.id, note)}
  className={`px-1 py-1 rounded text-[10px] font-mono font-bold transition cursor-pointer ${
- desiredKey === note ?'bg-amber-500 text-black' :'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+ desiredKey === note ?'bg-[var(--acc)] text-black' :'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
  }`}
  >
  {note}
@@ -3644,7 +3644,7 @@ export default function RepertorioSetlists({
  {song.estructuraDocumentoUrl && (
  <span
  className={`text-[8px] font-mono px-1 py-0.5 rounded shrink-0 ${
- song.estructuraVerificada ?'bg-emerald-500/15 text-emerald-400' :'bg-amber-500/15 text-amber-400'
+ song.estructuraVerificada ?'bg-emerald-500/15 text-emerald-400' :'bg-[var(--acc)]/15 text-[var(--acc)]'
  }`}
  title={song.estructuraVerificada ?'Acordes verificados' :'Acordes sin verificar — revísalos antes de tocarla en directo'}
  >
@@ -3716,7 +3716,7 @@ export default function RepertorioSetlists({
  onClick={() => handleSetEnergiaManual(song, it.id, val)}
  className={`w-5 h-5 rounded text-[9px] font-mono font-bold flex items-center justify-center transition disabled:opacity-50 ${
  currentVal1a10 === val
- ?'bg-amber-500 text-black'
+ ?'bg-[var(--acc)] text-black'
  :'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
  }`}
  >
@@ -3731,7 +3731,7 @@ export default function RepertorioSetlists({
  })()}
 
  {isSelected && (
- <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500 text-black shrink-0">
+ <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-[var(--acc)] text-black shrink-0">
  📌
  </span>
  )}
@@ -3745,7 +3745,7 @@ export default function RepertorioSetlists({
  handle y el joystick del gráfico (seleccionar el punto + ◀▶) sin duplicar el control.
  AGENTS.md §6. */}
  {memberNotesCount > 0 && (
- <span className="text-amber-300 shrink-0" title={`${memberNotesCount} nota(s) de miembros`}>
+ <span className="text-[var(--acc)]/70 shrink-0" title={`${memberNotesCount} nota(s) de miembros`}>
  <Users className="w-3 h-3" />
  </span>
  )}
@@ -3795,7 +3795,7 @@ export default function RepertorioSetlists({
  setEditingSong(song);
  setShowSongModal(true);
  }}
- className="p-0.5 text-[var(--ink-2)] hover:text-amber-400 transition-colors shrink-0"
+ className="p-0.5 text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors shrink-0"
  title="Editar canción"
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -3808,7 +3808,7 @@ export default function RepertorioSetlists({
  e.stopPropagation();
  toggleExpand();
  }}
- className="p-0.5 text-[var(--ink-2)] hover:text-amber-400 transition-colors shrink-0"
+ className="p-0.5 text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors shrink-0"
  title={isExpanded ?"Ocultar detalles" :"Ver afinación, disco, cantante, acordes y notas de miembros"}
  >
  {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -3890,7 +3890,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={(e) => { e.stopPropagation(); setActiveMemberNotesSong(song); }}
  className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors ${
- memberNotesCount > 0 ?'text-amber-300 hover:text-amber-400' :'text-[var(--ink-2)] hover:text-amber-300'
+ memberNotesCount > 0 ?'text-[var(--acc)]/70 hover:text-[var(--acc)]' :'text-[var(--ink-2)] hover:text-[var(--acc)]/70'
  }`}
  >
  <Users className="w-3 h-3" /> Notas de miembros{memberNotesCount > 0 ? ` (${memberNotesCount})` :''}
@@ -3928,7 +3928,7 @@ export default function RepertorioSetlists({
  className={`border rounded-[var(--r-s)] transition-all cursor-pointer ${
  isDragging ?'opacity-40 scale-[0.98]' :''
  } ${
- isDragOver ?' border-2 scale-[1.01] bg-amber-500/10 shadow-lg' :''
+ isDragOver ?' border-2 scale-[1.01] bg-[var(--acc)]/10 shadow-lg' :''
  } ${
  isSelected
  ?'border-[var(--acc)] ring-2 ring-[var(--acc)]/30 bg-[var(--acc)]/10 shadow-md'
@@ -4010,7 +4010,7 @@ export default function RepertorioSetlists({
  <div className="flex items-center gap-2 px-2.5 py-1.5">
  {/* Drag Handle */}
  <div
- className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-amber-400 transition-colors shrink-0"
+ className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors shrink-0"
  title="Arrastrar y soltar para reordenar"
  onClick={(e) => e.stopPropagation()}
  >
@@ -4047,7 +4047,7 @@ export default function RepertorioSetlists({
  />
 
  {isSelected && (
- <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500 text-black shrink-0">
+ <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-[var(--acc)] text-black shrink-0">
  📌
  </span>
  )}
@@ -4158,7 +4158,7 @@ export default function RepertorioSetlists({
  <span>•</span>
  <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min</span>
  <span>•</span>
- <span className="text-amber-400 font-medium">{songs.filter(s => s.favoritoGeneral).length} Favoritos</span>
+ <span className="text-[var(--acc)] font-medium">{songs.filter(s => s.favoritoGeneral).length} Favoritos</span>
  </div>
  </div>
 
@@ -4180,11 +4180,11 @@ export default function RepertorioSetlists({
  onClick={() => setCatalogStatusFilter(catalogStatusFilter ==='favoritos' ?'todos' :'favoritos')}
  className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
  catalogStatusFilter ==='favoritos'
- ?'bg-amber-500/20 text-amber-300 /40 shadow-xs'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 shadow-xs'
  :'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:bg-[var(--surface)] hover:text-white'
  }`}
  >
- <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>{catalogStatusFilter ==='favoritos' ?'Solo Favoritos' :'Filtrar Favoritos'}</span>
  </button>
 
@@ -4286,10 +4286,10 @@ export default function RepertorioSetlists({
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-95 whitespace-nowrap cursor-pointer ${
  isStitchLight
  ?'bg-amber-50 hover:bg-amber-100 text-amber-900'
- :'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 /30'
+ :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
  }`}
  >
- <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Nombres Propios</span>
  </button>
 
@@ -4372,7 +4372,7 @@ export default function RepertorioSetlists({
  <span className="hidden lg:inline opacity-70">Acciones rápidas:</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-400 font-medium">Acordes</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-indigo-500/15 text-indigo-300 font-medium">Studio</span>
- <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 font-medium">Notas</span>
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-medium">Notas</span>
  <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-3)] font-medium">Editar</span>
  </div>
  </div>
@@ -4592,7 +4592,7 @@ export default function RepertorioSetlists({
  </div>
 
  <div className="p-3 bg-black/40 rounded-[var(--r-m)] space-y-2">
- <label className="block text-amber-400 font-bold text-[11px] flex items-center gap-1.5">
+ <label className="block text-[var(--acc)] font-bold text-[11px] flex items-center gap-1.5">
  <Clock className="w-3.5 h-3.5" />
  Tiempo Asignado al Evento (Minutos y Segundos) *
  </label>
