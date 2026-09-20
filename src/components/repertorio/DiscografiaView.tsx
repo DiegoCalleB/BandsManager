@@ -61,7 +61,7 @@ const formatTotalDuration = (songs: Song[]): string => {
 export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  songs = [],
  albumsList = [],
- colors
+ colors,
  bandName,
  setSongs,
  setSetlists,
@@ -354,9 +354,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  };
 
  return (
- <div
- className={`p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl transition-all ${
- 'bg-[var(--surface)]'lanzamiento' :'lanzamientos'} • {safeSongs.length} temas
+ <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl transition-all bg-[var(--surface)]">
+ <p className="text-[var(--ink-2)] text-xs">
+ {safeSongs.length > 1 ? 'lanzamientos' : 'lanzamiento'} • {safeSongs.length} temas
  </p>
  </div>
  </div>
