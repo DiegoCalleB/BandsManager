@@ -134,20 +134,20 @@ const GEO_CACHE: Record<string, [number, number]> = {};
 function getStatusBadge(estado: string) {
  switch (estado) {
  case'aprobado':
- return { text:'✓ Aprobado / Confirmado', bg:'#dcfce7', color:'#166534', border:'#86efac' };
+ return { text:'✓ Aprobado / Confirmado', bg:'#dcfce7', color:'#166534' };
  case'pendiente_aprobacion':
- return { text:'⚡ Pendiente Aprobación', bg:'#fef3c7', color:'#92400e', border:'#fde68a' };
+ return { text:'⚡ Pendiente Aprobación', bg:'#fef3c7', color:'#92400e' };
  case'interesado':
- return { text:'💡 Interesado', bg:'#dbeafe', color:'#1e40af', border:'#bfdbfe' };
+ return { text:'💡 Interesado', bg:'#dbeafe', color:'#1e40af' };
  case'negociando':
- return { text:'🤝 En Negociación', bg:'#e0e7ff', color:'#3730a3', border:'#c7d2fe' };
+ return { text:'🤝 En Negociación', bg:'#e0e7ff', color:'#3730a3' };
  case'esperando_respuesta':
- return { text:'⏳ Esperando Respuesta', bg:'#f3e8ff', color:'#6b21a8', border:'#e9d5ff' };
+ return { text:'⏳ Esperando Respuesta', bg:'#f3e8ff', color:'#6b21a8' };
  case'no_interesado':
- return { text:'❌ No Interesado', bg:'#ffe4e6', color:'#9f1239', border:'#fecdd3' };
+ return { text:'❌ No Interesado', bg:'#ffe4e6', color:'#9f1239' };
  case'nuevo':
  default:
- return { text:'🎵 Nuevo Contacto', bg:'#f1f5f9', color:'#334155', border:'#e2e8f0' };
+ return { text:'🎵 Nuevo Contacto', bg:'#f1f5f9', color:'#334155' };
  }
 }
 
@@ -238,7 +238,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  height: ${size}px;
  background-color: ${bgColor};
  color: ${textColor};
- border: 2px solid white;
  border-radius: 50%;
  box-shadow: 0 0 0 5px ${ringColor}, 0 6px 16px rgba(0,0,0,0.3);
  font-weight: 800;
@@ -406,7 +405,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  height: 22px;
  border-radius: 50%;
  object-fit: cover;
- border: 1px solid white;
  margin-right: 4px;" />
  ` : `
  <div style="
@@ -436,7 +434,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  align-items: center;
  gap: 6px;
  cursor: pointer;
- user-selectborder: none;
+ user-select: none;
  transform: translate(-10px, -15px);
  z-index: ${isSelected ? 1000 : 100};">
  <!-- Google Maps Pill Badge -->
@@ -447,7 +445,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  border-radius: 20px;
  padding: 2px 8px 2px 3px;
  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
- border: ${isSelected ? `2.5px solid ${pinColor}` :'1px solid var(--shadow-soft)'};
  white-space: nowrap;
  position: relative;
  z-index: 2;
@@ -566,7 +563,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <span style="
  background: ${statusBadge.bg};
  color: ${statusBadge.color};
- border: 1px solid ${statusBadge.border};
  font-size: 9.5px;
  font-weight: 700;
  padding: 2px 7px;
@@ -677,7 +673,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <style>{`
  .leaflet-tooltip.custom-venue-map-tooltip {
  background: #ffffff !important;
- border: 1px solid rgba(0, 0, 0, 0.12) !important;
  border-radius: 12px !important;
  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
  padding: 0 !important;
