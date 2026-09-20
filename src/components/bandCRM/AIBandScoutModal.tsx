@@ -102,7 +102,7 @@ export function AIBandScoutModal({
  const textColor = isStitchLight ?"text-[var(--ink)]" :"text-[var(--ink)]";
  const subtextColor = isStitchLight ?"text-[var(--ink-2)]" :"text-[var(--ink-2)]";
  const inputBg = isStitchLight ?"bg-[var(--bg)]" :"bg-[var(--surface)]";
- const borderColor = isStitchLight ?"" :"border-[#333]";
+ const borderColor = isStitchLight ?"" :"border-[var(--hair)]";
 
  return (
  <ModalPortal>
