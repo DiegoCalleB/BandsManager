@@ -320,16 +320,16 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
 
  {/* DAW Grid Background Lines (Visual Metronome / Beat markers) */}
  <div className="absolute inset-0 pointer-events-none opacity-15 flex justify-between px-2 z-0">
- <div className="w-px h-full bg-white/40" />
- <div className="w-px h-full bg-white/20" />
- <div className="w-px h-full bg-white/40" />
- <div className="w-px h-full bg-white/20" />
- <div className="w-px h-full bg-white/40" />
+ <div className="w-px h-full bg-[var(--ink)]/40" />
+ <div className="w-px h-full bg-[var(--ink)]/20" />
+ <div className="w-px h-full bg-[var(--ink)]/40" />
+ <div className="w-px h-full bg-[var(--ink)]/20" />
+ <div className="w-px h-full bg-[var(--ink)]/40" />
  </div>
 
  {/* Waveform Container - Proportionally scaled to track audio duration vs master duration */}
- <div 
- className="h-full relative overflow-hidden bg-black/20 border-r border-[var(--hair)] z-10"
+ <div
+ className="h-full relative overflow-hidden bg-[var(--ink)]/10 border-r border-[var(--hair)] z-10"
  style={{ width: `${trackWidthPercent}%` }}
  >
  <div className="absolute inset-0 pointer-events-none z-0">
