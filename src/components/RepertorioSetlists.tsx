@@ -4110,8 +4110,12 @@ export default function RepertorioSetlists({
  </div>
  </>
  ) : (
- <div className="text-center py-20 text-neutral-500 font-mono text-[10px]">
- Selecciona o crea un repertorio desde la barra superior para empezar.
+ <div className="flex flex-col items-center justify-center py-20">
+ <PublicoSilhouette opacity={12} size="large" />
+ <p className="mt-8 font-medium text-[var(--ink)] text-sm">Sin repertorio seleccionado</p>
+ <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
+ Selecciona o crea un repertorio desde la barra superior.
+ </p>
  </div>
  )}
  </div>
@@ -4407,8 +4411,12 @@ export default function RepertorioSetlists({
  {/* Tracklist List */}
  <div className="p-2.5 space-y-1.5">
  {filteredSongs.length === 0 ? (
- <div className="text-center py-12 text-zinc-500 font-mono text-xs">
- No se encontraron canciones con los filtros seleccionados.
+ <div className="flex flex-col items-center justify-center py-12">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin canciones con esos filtros</p>
+ <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs text-center">
+ Ajusta los filtros o añade nuevas canciones a tu catálogo.
+ </p>
  </div>
  ) : (
  filteredSongs.map((s, idx) => {
