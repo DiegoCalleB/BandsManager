@@ -354,6 +354,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  };
 
  return (
+ <div className="space-y-4">
  <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl transition-all bg-[var(--surface)]">
  <p className="text-[var(--ink-2)] text-xs">
  {safeSongs.length > 1 ? 'lanzamientos' : 'lanzamiento'} • {safeSongs.length} temas
@@ -445,7 +446,6 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </div>
  </>
  )}
- </div>
  </div>
 
  {/* Filter Pills, Search Bar, Expand All, & Mobile Create Album */}
@@ -927,6 +927,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  bandName={bandName ||"Tu Banda"}
  colors={colors}
  />
+ </div>
  </div>
  );
 };
