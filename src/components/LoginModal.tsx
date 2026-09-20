@@ -500,7 +500,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  {/* Top Language Switcher */}
  <div className="w-full flex justify-end items-center gap-1.5 mb-1 px-2 z-20">
- <div className="inline-flex items-center gap-1 p-1 rounded-[var(--r-m)] bg-[var(--surface)]/80
+ <div className="inline-flex items-center gap-1 p-1 rounded-[var(--r-m)] bg-[var(--surface)]/80">
  {SUPPORTED_LANGUAGES.map((l) => {
  const isSelected = currentAppLang === l.code;
  return (

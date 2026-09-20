@@ -1150,7 +1150,8 @@ export default function TourManager({
  value={stop.ciudad}
  onChange={e => updateStop(idx,'ciudad', e.target.value)}
  placeholder="Ciudad"
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
+ />
  </div>
  <div className="space-y-1">
  <label className="text-[10px] font-sans text-[var(--ink-2)] block">Sala / Festival</label>
@@ -1158,7 +1159,8 @@ export default function TourManager({
  value={stop.sala}
  onChange={e => updateStop(idx,'sala', e.target.value)}
  placeholder="Nombre de la sala"
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
+ />
  </div>
  <div className="space-y-1">
  <label className="text-[10px] font-sans text-[var(--ink-2)] block">Fecha</label>
@@ -1166,7 +1168,8 @@ export default function TourManager({
  type="date"
  value={stop.fecha}
  onChange={e => updateStop(idx,'fecha', e.target.value)}
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
+ />
  </div>
  <div className="space-y-1">
  <label className="text-[10px] font-sans text-[var(--ink-2)] block flex items-center justify-between">
