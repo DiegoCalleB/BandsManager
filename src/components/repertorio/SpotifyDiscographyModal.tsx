@@ -285,7 +285,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden transition-all ${
  isStitchLight
  ? 'bg-[var(--bg)] text-[var(--ink)]'
- : 'bg-[#121212] text-white'
+ : 'bg-[var(--surface)] text-white'
  }`}
  >
  {/* Header Modal Bar */}

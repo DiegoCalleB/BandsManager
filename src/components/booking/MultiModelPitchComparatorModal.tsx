@@ -246,7 +246,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* CONTROLS & VENUE BAR */}
- <div className="p-4 bg-[#11100f] border-b border-zinc-800/80 space-y-3">
+ <div className="p-4 bg-[var(--bg)] border-b border-zinc-800/80 space-y-3">
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
  {/* Venue Badge */}
  <div className="flex items-center gap-2 text-xs">
@@ -512,14 +512,14 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="flex items-center justify-between text-[10px] text-zinc-400 font-mono">
  <span>⚡ Borrador Inteligente Adaptado (Modo Local):</span>
  </div>
- <div className="p-3 bg-[#0d0c0c] rounded-[var(--r-m)] text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
+ <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
  {prop.fallbackText}
  </div>
  </div>
  )}
  </div>
  ) : (
- <div className="p-3 bg-[#0d0c0c] rounded-[var(--r-m)] text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto">
+ <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto">
  {prop.text}
  </div>
  )}

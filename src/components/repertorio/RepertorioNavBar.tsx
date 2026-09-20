@@ -141,7 +141,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`w-full px-3 py-1.5 rounded-[var(--r-m)] text-left flex items-center justify-between gap-2 text-xs font-medium transition-all cursor-pointer shadow-xs ${
  isStitchLight
  ? 'bg-white text-[var(--ink)] hover:'
- : 'bg-[#1a1a1e] text-zinc-200 hover:'
+ : 'bg-[var(--surface)] text-zinc-200 hover:'
  }`}
  >
  <div className="flex items-center gap-2 min-w-0">

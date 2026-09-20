@@ -560,7 +560,7 @@ export function DashboardWidgetGrid({
  </div>
 
  {/* Category Filter Pills */}
- <div className="p-4 border-b /80 bg-[#121214] flex gap-2 overflow-x-auto">
+ <div className="p-4 border-b /80 bg-[var(--surface)] flex gap-2 overflow-x-auto">
  {categories.map(cat => (
  <button
  key={cat}
@@ -585,7 +585,7 @@ export function DashboardWidgetGrid({
  return (
  <div
  key={item.type}
- className="p-4 rounded-[var(--r-m)] bg-[#121214] hover:/40 transition-all flex items-center justify-between gap-4"
+ className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:/40 transition-all flex items-center justify-between gap-4"
  >
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-2">
@@ -613,7 +613,7 @@ export function DashboardWidgetGrid({
  </div>
 
  {/* Footer */}
- <div className="p-4 border-t bg-[#121214] text-right">
+ <div className="p-4 border-t bg-[var(--surface)] text-right">
  <button
  type="button"
  onClick={() => setIsAddModalOpen(false)}

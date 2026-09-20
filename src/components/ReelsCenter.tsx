@@ -2598,7 +2598,7 @@ export default function ReelsCenter({
 
  {/* Smart Phone Shell Frame */}
  <div className={`mx-auto w-[240px] h-[450px] rounded-[30px] -[6px] relative overflow-hidden flex flex-col justify-between ${
- isStitchLight ? '-slate-300 bg-white shadow-xl' : '-neutral-800 bg-[#06060a] shadow-[0_12px_40px_rgba(0,0,0,0.8)]'
+ isStitchLight ? '-slate-300 bg-white shadow-xl' : '-neutral-800 bg-[var(--sunken)] shadow-[0_12px_40px_rgba(0,0,0,0.8)]'
  }`}>
  
  {/* Speaker & camera notch mockup */}

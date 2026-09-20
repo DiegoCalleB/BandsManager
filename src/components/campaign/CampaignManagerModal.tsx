@@ -169,7 +169,7 @@ export function CampaignManagerModal({
 
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
- <div className="bg-[#121110] border-[#2b2826] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+ <div className="bg-[var(--bg)] border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
  
  {/* Header */}
  <div className="p-5 border-b border-[#22201e] flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[#121110]">

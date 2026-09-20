@@ -287,7 +287,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </div>
 
  {/* Pantalla del teléfono con altura adaptativa y scroll nativo */}
- <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[#121111] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4 border-[var(--surface)] shadow-inner">
+ <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[var(--bg)] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4 border-[var(--surface)] shadow-inner">
  <FansLanding
  key={`mobile-${simKey}-${selectedLanguage}-${selectedConcertId}-${previewScreen}`}
  currentBandId={currentBandId}
@@ -309,7 +309,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </div>
  ) : (
  /* MOCKUP DE ESCRITORIO / NAVEGADOR */
- <div className="w-full max-w-4xl bg-[#121111] rounded-[var(--r-l)] shadow-2xl overflow-hidden my-auto flex flex-col h-[calc(100dvh-160px)] max-h-[740px]">
+ <div className="w-full max-w-4xl bg-[var(--bg)] rounded-[var(--r-l)] shadow-2xl overflow-hidden my-auto flex flex-col h-[calc(100dvh-160px)] max-h-[740px]">
  {/* Barra simulada de navegador */}
  <div className="bg-[var(--surface)] border-b px-4 py-2 flex items-center justify-between gap-3 text-xs font-mono shrink-0">
  <div className="flex items-center gap-1.5">

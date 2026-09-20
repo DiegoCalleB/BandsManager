@@ -359,7 +359,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
  {/* Panel de Control */}
  <div className={`lg:col-span-4 p-5 rounded-[var(--r-l)] shadow-xl space-y-6 h-fit ${
- isStitchLight ? 'bg-white ' : 'bg-[#121111] '
+ isStitchLight ? 'bg-white ' : 'bg-[var(--bg)] '
  }`}>
  
  <div className="space-y-3">
@@ -601,7 +601,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* Zona de Vista Previa y Galería */}
  <div className={`lg:col-span-8 p-6 rounded-[var(--r-l)] shadow-xl space-y-6 min-h-[500px] flex flex-col ${
- isStitchLight ? 'bg-white ' : 'bg-[#121111] '
+ isStitchLight ? 'bg-white ' : 'bg-[var(--bg)] '
  }`}>
  <div className="flex items-center justify-between">
  <h2 className={`font-mono text-xs uppercase font-bold tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-[var(--ink-3)]' : 'text-neutral-500'}`}>
@@ -638,7 +638,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {design.assetType === 'portada' || design.assetType === 'custom' ? (
  <ResolvedBgImage className="h-36 w-full bg-cover bg-center" url={displayGraphic} />
  ) : (
- <div className="h-36 w-full bg-[#121111] flex items-center justify-center p-2">
+ <div className="h-36 w-full bg-[var(--bg)] flex items-center justify-center p-2">
  <div className="w-full h-full bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url(${displayGraphic})`, filter: 'invert(1)' }} />
  </div>
  )}

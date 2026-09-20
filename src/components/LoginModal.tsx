@@ -554,7 +554,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  LOGIN VIEW
  ========================================= */}
  {view === 'login' && (
- <div className="w-full p-6 sm:p-7 bg-[#111116]/95 border-[var(--acc)]/30 rounded-3xl backdrop-blur-xl shadow-[0_24px_70px_rgba(0,0,0,0.7)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+ <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/95 border-[var(--acc)]/30 rounded-3xl backdrop-blur-xl shadow-[0_24px_70px_rgba(0,0,0,0.7)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  
  {/* INTEGRATED LOGO INSIDE CARD */}
  <div className="relative flex flex-col items-center justify-center pt-1 pb-1 text-center w-full">
@@ -678,7 +678,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="w-full border-t /80"></div>
  </div>
  <div className="relative flex justify-center text-xs">
- <span className="px-2.5 bg-[#111116] text-neutral-500 font-medium">O continuar con</span>
+ <span className="px-2.5 bg-[var(--surface)] text-neutral-500 font-medium">O continuar con</span>
  </div>
  </div>
 
@@ -723,7 +723,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  RESET PASSWORD VIEW
  ========================================= */}
  {view === 'reset-password' && (
- <div className="w-full p-6 sm:p-7 bg-[#111116]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+ <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  <div className="flex items-center gap-2.5 mb-2">
  <button
  type="button"
@@ -897,7 +897,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  REGISTER VIEW
  ========================================= */}
  {view === 'register' && (
- <div className="w-full p-6 sm:p-7 bg-[#111116]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+ <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  <form onSubmit={handleRegisterSubmit} className="w-full space-y-3.5">
  <div className="relative flex items-center">
  <User className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
@@ -1008,7 +1008,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  ACTIVATE ACCOUNT VIEW (NEW!)
  ========================================= */}
  {view === 'activate' && (
- <div className="w-full p-6 sm:p-7 bg-[#111116]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+ <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  {activateStep === 1 ? (
  <div className="space-y-4">
  <div className="text-center space-y-2 mb-4">

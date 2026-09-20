@@ -1357,7 +1357,7 @@ export function PdfExportModal({
  de verdad hace falta ver de un vistazo. */}
  <div
  className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 border-b shrink-0 ${
- isStitchLight ? ' bg-white' : ' bg-[#121111]'
+ isStitchLight ? ' bg-white' : ' bg-[var(--bg)]'
  }`}
  >
  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -1697,7 +1697,7 @@ export function PdfExportModal({
  {/* Modal Body: A4 Stage Sheet Real Preview Container */}
  <div
  className={`flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center ${
- isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[#0a0a0a]'
+ isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--sunken)]'
  }`}
  >
  {/* Authentic Real Stage Paper Sheet */}

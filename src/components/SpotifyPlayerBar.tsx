@@ -525,7 +525,7 @@ export default function SpotifyPlayerBar({
  onEnded={() => { if (activeSlotRef.current === 'B') handleEnded(); }}
  />
 
- <div className="bg-[#121212]/98 backdrop-blur-2xl border-t border-[#282828] text-white px-3.5 py-2.5 sm:px-4 sm:py-3 max-w-full shadow-2xl">
+ <div className="bg-[var(--surface)]/98 backdrop-blur-2xl border-t border-[var(--hair)] text-white px-3.5 py-2.5 sm:px-4 sm:py-3 max-w-full shadow-2xl">
  {isMinimized ? (
  /* Minimized Compact Strip: single-row bar sitting strictly above mobile bottom navbar */
  <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
@@ -871,7 +871,7 @@ export default function SpotifyPlayerBar({
  </button>
 
  {/* Volume */}
- <div className="hidden sm:flex items-center gap-1.5 pl-2 border-l border-[#282828]">
+ <div className="hidden sm:flex items-center gap-1.5 pl-2 border-l border-[var(--hair)]">
  <button
  onClick={() => setIsMuted(!isMuted)}
  className="text-[#b3b3b3] hover:text-white p-1"

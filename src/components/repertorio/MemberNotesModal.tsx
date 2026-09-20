@@ -163,7 +163,7 @@ export function MemberNotesModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden ${
- isStitchLight ? 'bg-white ' : 'bg-[#121111] '
+ isStitchLight ? 'bg-white ' : 'bg-[var(--bg)] '
  }`}>
  {/* Header */}
  <div className="flex justify-between items-center pb-3 border-b border-white/10 shrink-0">

@@ -726,7 +726,7 @@ export function SongTransitionPreviewModal({
  setSelectedSampleA(s);
  }
  }}
- className="bg-[#111116] border-zinc-800 text-[10px] rounded p-0.5 text-amber-300 focus:outline-none max-w-[160px] cursor-pointer"
+ className="bg-[var(--surface)] border-zinc-800 text-[10px] rounded p-0.5 text-amber-300 focus:outline-none max-w-[160px] cursor-pointer"
  >
  {STUDIO_SAMPLE_TRACKS.map((st) => (
  <option key={st.id} value={st.id}>
@@ -869,7 +869,7 @@ export function SongTransitionPreviewModal({
  setSelectedSampleB(s);
  }
  }}
- className="bg-[#111116] border-zinc-800 text-[10px] rounded p-0.5 text-emerald-300 focus:outline-none max-w-[160px] cursor-pointer"
+ className="bg-[var(--surface)] border-zinc-800 text-[10px] rounded p-0.5 text-emerald-300 focus:outline-none max-w-[160px] cursor-pointer"
  >
  {STUDIO_SAMPLE_TRACKS.map((st) => (
  <option key={st.id} value={st.id}>
@@ -905,7 +905,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Compact Unified Player & Waveform Timeline */}
- <div className="p-2 sm:p-2.5 rounded-[var(--r-m)] bg-[#121216] border-[#222228] space-y-1.5">
+ <div className="p-2 sm:p-2.5 rounded-[var(--r-m)] bg-[#121216] border-[var(--hair)] space-y-1.5">
  {/* Controls & Mode Ribbon Header */}
  <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
  {/* Mode Selector & Auto-CUE toggle */}

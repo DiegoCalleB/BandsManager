@@ -474,12 +474,12 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
  {/* Main Container */}
- <div className="relative w-full max-w-4xl bg-[#121110] border-[#2b2927] rounded-3xl shadow-2xl overflow-hidden flex flex-col p-6 md:p-10 text-center my-auto max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-4xl bg-[var(--bg)] border-[var(--hair)] rounded-3xl shadow-2xl overflow-hidden flex flex-col p-6 md:p-10 text-center my-auto max-h-[90vh] overflow-y-auto">
  {/* Close Button */}
  <button
  onClick={onClose}
  disabled={!!switchingBandId}
- className="absolute top-5 right-5 p-2 text-[var(--ink-2)] hover:text-white bg-[#1a1918] hover:bg-[#282624] border-[#2b2927] rounded-full transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+ className="absolute top-5 right-5 p-2 text-[var(--ink-2)] hover:text-white bg-[#1a1918] hover:bg-[#282624] border-[var(--hair)] rounded-full transition-all cursor-pointer active:scale-95 disabled:opacity-50"
  title="Cerrar"
  >
  <X className="w-5 h-5" />
@@ -552,7 +552,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  } ${
  isActive
  ? 'bg-gradient-to-b from-amber-500/20 via-[var(--surface)] to-[#121110] /80 shadow-[0_0_20px_rgba(245,158,11,0.2)] ring-1 ring-amber-500/40'
- : 'bg-[var(--surface)] border-[#2b2927] hover:/70 hover:bg-[#1e1d1b] hover:shadow-lg'
+ : 'bg-[var(--surface)] border-[var(--hair)] hover:/70 hover:bg-[#1e1d1b] hover:shadow-lg'
  } ${switchingBandId && !isSwitching ? 'opacity-40 grayscale pointer-events-none' : ''}`}
  >
  {/* Top Bar on Card: Star (Principal) + Reorder arrows on left, Delete Trash on top-right */}
@@ -745,13 +745,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </div>
 
  {/* Modal Footer */}
- <div className="mt-8 pt-4 border-t border-[#2b2927]/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
+ <div className="mt-8 pt-4 border-t border-[var(--hair)]/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
  <span className="font-mono">
  {uniqueBands.length} {uniqueBands.length === 1 ? 'proyecto disponible' : 'proyectos disponibles'}
  </span>
  <button
  onClick={onClose}
- className="px-5 py-2 rounded-[var(--r-m)] bg-[#1a1918] hover:bg-[#282624] text-[var(--ink-3)] hover:text-white border-[#2b2927] transition-all cursor-pointer font-medium"
+ className="px-5 py-2 rounded-[var(--r-m)] bg-[#1a1918] hover:bg-[#282624] text-[var(--ink-3)] hover:text-white border-[var(--hair)] transition-all cursor-pointer font-medium"
  >
  Mantener banda actual
  </button>
@@ -761,12 +761,12 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  {/* In-App Create / Add Band Modal with Full 2-Step Flow & Plans */}
  {showCreateBandModal && (
  <div className="fixed inset-0 z-[85] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-150 overflow-y-auto">
- <div className={`w-full ${createBandStep === 1 ? 'max-w-lg' : 'max-w-5xl'} rounded-3xl bg-[#11100f] text-[var(--sunken)] p-6 sm:p-8 shadow-2xl space-y-6 transition-all duration-300 my-auto`}>
+ <div className={`w-full ${createBandStep === 1 ? 'max-w-lg' : 'max-w-5xl'} rounded-3xl bg-[var(--bg)] text-[var(--sunken)] p-6 sm:p-8 shadow-2xl space-y-6 transition-all duration-300 my-auto`}>
  
  {/* Step 1: Band Details */}
  {createBandStep === 1 && (
  <div className="space-y-5">
- <div className="flex items-center justify-between border-b border-[#2b2927] pb-4">
+ <div className="flex items-center justify-between border-b border-[var(--hair)] pb-4">
  <div className="flex items-center gap-3">
  <div className="w-11 h-11 rounded-[var(--r-l)] bg-amber-500/15 flex items-center justify-center text-amber-400 shrink-0 shadow-inner">
  <Guitar className="w-6 h-6" />
@@ -852,7 +852,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </div>
  </div>
 
- <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#2b2927]">
+ <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--hair)]">
  <button
  type="button"
  onClick={() => setShowCreateBandModal(false)}
@@ -1210,7 +1210,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  ¿Estás seguro de que deseas eliminar <strong className="text-white">"{bandToDelete.name}"</strong> de tu cuenta? Perderás el acceso a sus salas, eventos y repertorio.
  </p>
 
- <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#2b2927]">
+ <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--hair)]">
  <button
  type="button"
  onClick={() => setBandToDelete(null)}

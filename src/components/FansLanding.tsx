@@ -859,7 +859,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  const tieneBeneficios = Boolean(enlaceDescargaFan || codigoDescuentoFan);
  
  return (
- <div className={`${isPreview ? 'min-h-full p-2 sm:p-4' : 'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[#121111] flex items-start justify-center`}>
+ <div className={`${isPreview ? 'min-h-full p-2 sm:p-4' : 'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[var(--bg)] flex items-start justify-center`}>
  <div className={`max-w-md w-full bg-[var(--surface)] rounded-[var(--r-l)] ${isPreview ? 'p-4 sm:p-6' : 'p-6 sm:p-8'} text-center space-y-5 shadow-2xl relative overflow-hidden`}>
  <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600" />
  
@@ -1096,7 +1096,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  }
 
  return (
- <div className={`${isPreview ? 'min-h-full p-2 sm:p-4' : 'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[#121111] flex items-start justify-center`}>
+ <div className={`${isPreview ? 'min-h-full p-2 sm:p-4' : 'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[var(--bg)] flex items-start justify-center`}>
  <div className={`max-w-md w-full bg-[var(--surface)] rounded-[var(--r-l)] ${isPreview ? 'p-4 sm:p-6' : 'p-6 sm:p-8'} space-y-6 shadow-2xl relative overflow-hidden`}>
  <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-neutral-800 to-neutral-700" />
  

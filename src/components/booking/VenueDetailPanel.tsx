@@ -680,7 +680,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <div className="flex flex-wrap items-center gap-2">
  {/* Category / Type Recategorizer */}
- <div className="flex items-center gap-1.5 bg-[#121110] px-2.5 py-1 rounded-[var(--r-m)]">
+ <div className="flex items-center gap-1.5 bg-[var(--bg)] px-2.5 py-1 rounded-[var(--r-m)]">
  <span className="text-[10px] text-amber-400 font-mono font-bold uppercase">Tipo:</span>
  <select
  value={String(selectedLead.tipo || 'sala').toLowerCase()}
@@ -705,7 +705,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {/* Status selector */}
- <div className="flex items-center gap-1.5 bg-[#121110] px-2.5 py-1 rounded-[var(--r-m)] border-zinc-800">
+ <div className="flex items-center gap-1.5 bg-[var(--bg)] px-2.5 py-1 rounded-[var(--r-m)] border-zinc-800">
  <span className={`w-2 h-2 rounded-full ${getStatusDotColor(selectedLead.estado)}`} />
  <select
  value={normalizeStatus(selectedLead.estado)}
@@ -1497,7 +1497,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setEditedPitch(editedPitch || selectedLead.pitch_generado || '');
  setIsEditingPitch(true);
  }}
- className="p-3 bg-[#121110] rounded-[var(--r-m)] border-zinc-800 text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed cursor-pointer hover:/40 transition-colors group relative"
+ className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] border-zinc-800 text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed cursor-pointer hover:/40 transition-colors group relative"
  >
  {editedPitch || selectedLead.pitch_generado || 'Sin pitch generado.'}
  <span className="absolute bottom-2 right-2 text-[10px] text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity font-bold">
@@ -1808,7 +1808,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`p-3.5 rounded-[var(--r-m)] space-y-1.5 text-xs font-sans ${
  msg.remitente === 'sala'
  ? 'bg-amber-950/20 /40 text-amber-100'
- : 'bg-[#121110] border-zinc-800 text-zinc-200'
+ : 'bg-[var(--bg)] border-zinc-800 text-zinc-200'
  }`}
  >
  <div className="flex items-center justify-between font-bold text-[11px]">
@@ -1843,7 +1843,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* Log Form */}
  <form
  onSubmit={handleAddInteractionLog}
- className="space-y-3 bg-[#121110] p-3 rounded-[var(--r-m)] border-zinc-800"
+ className="space-y-3 bg-[var(--bg)] p-3 rounded-[var(--r-m)] border-zinc-800"
  >
  <div className="flex flex-wrap items-center justify-between gap-2">
  {/* Interaction Type Selector */}
@@ -1948,7 +1948,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  (selectedLead.historial_contacto || []).map((log) => (
  <div
  key={log.id}
- className="p-2.5 rounded-[var(--r-s)] bg-[#121110] border-zinc-800 space-y-1.5 text-xs font-sans relative group"
+ className="p-2.5 rounded-[var(--r-s)] bg-[var(--bg)] border-zinc-800 space-y-1.5 text-xs font-sans relative group"
  >
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1.5 font-bold">

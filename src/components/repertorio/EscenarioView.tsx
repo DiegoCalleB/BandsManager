@@ -617,7 +617,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  arrastre, notas, popover de energía...) cuando este reproductor va embebido ahí —
  repetirla aquí sería la misma información dos veces en la misma pantalla. */}
  {!embedded && activeSetlist ? (
- <div className="bg-[#121212] border-white/5 rounded-[var(--r-l)] overflow-hidden shadow-2xl p-4 sm:p-6">
+ <div className="bg-[var(--surface)] border-white/5 rounded-[var(--r-l)] overflow-hidden shadow-2xl p-4 sm:p-6">
  <div className="overflow-x-auto">
  <div className="min-w-[650px] space-y-2">
  <div className="grid grid-cols-12 text-[11px] font-mono font-extrabold text-[#b3b3b3] uppercase pb-3 border-b border-zinc-800/80 px-3">

@@ -165,7 +165,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  ? 'bg-[#1e1c17] border-2 border-[var(--acc)] shadow-xl ring-2 ring-[var(--acc)]/25'
  : isDetailOpen
  ? 'bg-[#1A1918] border-2 border-purple-400 shadow-xl ring-1 ring-purple-400/30'
- : 'bg-[#121110] hover:bg-[#1A1918] hover:border-zinc-700 shadow-md'
+ : 'bg-[var(--bg)] hover:bg-[#1A1918] hover:border-zinc-700 shadow-md'
  }`}
  >
  {/* Header info */}

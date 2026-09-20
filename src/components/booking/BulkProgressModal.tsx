@@ -146,7 +146,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  {/* Footer */}
- <div className="p-4 border-t border-zinc-800 bg-[#121110] flex items-center justify-end gap-2">
+ <div className="p-4 border-t border-zinc-800 bg-[var(--bg)] flex items-center justify-end gap-2">
  {!isCompleted && onCancel && (
  <button
  type="button"

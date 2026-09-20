@@ -564,7 +564,7 @@ export default function Dashboard({
  <div
  key={item.id}
  onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: item.id, selectedDate: item.dateStr })}
- className="p-4 rounded-[var(--r-m)] bg-[#121214] hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
+ className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
  >
  <div className="flex items-start gap-3.5">
  <div className="w-12 h-12 rounded-[var(--r-m)] bg-[#1c1b1b] text-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm ">
@@ -615,7 +615,7 @@ export default function Dashboard({
  ))}
  </div>
  ) : (
- <div className="p-8 rounded-[var(--r-m)] bg-[#121214] text-center space-y-3">
+ <div className="p-8 rounded-[var(--r-m)] bg-[var(--surface)] text-center space-y-3">
  <Calendar className="w-8 h-8 text-neutral-500 mx-auto" />
  <div>
  <p className="text-sm font-bold text-[var(--sunken)] font-display">No hay próximas fechas programadas</p>

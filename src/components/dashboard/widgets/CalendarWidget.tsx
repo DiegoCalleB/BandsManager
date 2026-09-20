@@ -359,7 +359,7 @@ export function CalendarWidget({
  {viewMode === 'mini_month' && (
  <div className="space-y-3">
  {/* Calendar Controls */}
- <div className="flex items-center justify-between bg-[#121214] p-2.5 rounded-[var(--r-m)] ">
+ <div className="flex items-center justify-between bg-[var(--surface)] p-2.5 rounded-[var(--r-m)] ">
  <button
  type="button"
  onClick={() => setCurrentMonthDate(new Date(year, month - 1, 1))}
@@ -414,8 +414,8 @@ export function CalendarWidget({
  : isToday
  ? 'bg-stone-800 /40 text-amber-400 font-black'
  : dayEvents.length > 0
- ? 'bg-[#121214] /80 text-[var(--sunken)] hover:/30'
- : 'bg-[#121214]/50 /40 text-[var(--ink-2)] hover:bg-stone-900'
+ ? 'bg-[var(--surface)] /80 text-[var(--sunken)] hover:/30'
+ : 'bg-[var(--surface)]/50 /40 text-[var(--ink-2)] hover:bg-stone-900'
  }`}
  >
  <span className="leading-none">{dayNum}</span>
@@ -432,7 +432,7 @@ export function CalendarWidget({
 
  {/* Details for selected day if clicked */}
  {selectedDayStr && (
- <div className="p-3 bg-[#121214] rounded-[var(--r-m)] text-xs font-mono space-y-2">
+ <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-mono space-y-2">
  <div className="flex items-center justify-between text-[var(--ink-3)] pb-1.5 border-b ">
  <span className="font-bold text-amber-300">Eventos para {selectedDayStr}:</span>
  <button type="button" onClick={() => setSelectedDayStr(null)} className="text-neutral-500 hover:text-[var(--ink-3)]">✕</button>
@@ -482,8 +482,8 @@ export function CalendarWidget({
  key={dateStr}
  className={`p-2.5 rounded-[var(--r-m)] text-xs font-mono flex flex-col justify-between min-h-[90px] transition-all ${
  dayEvts.length > 0
- ? 'bg-[#121214] /40'
- : 'bg-[#121214]/60 '
+ ? 'bg-[var(--surface)] /40'
+ : 'bg-[var(--surface)]/60 '
  }`}
  >
  <div className="flex items-center justify-between pb-1 border-b ">

@@ -968,7 +968,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
  {/* Section Content */}
  {isExpanded && (
- <div className="divide-y divide-[#222120]/60 bg-[#121110]">
+ <div className="divide-y divide-[#222120]/60 bg-[var(--bg)]">
  {section.items.map((row, rIdx) => (
  <div
  key={rIdx}

@@ -155,7 +155,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  };
 
  return (
- <div className="min-h-screen bg-[#0d0c0c] text-[var(--sunken)] font-sans selection:bg-[var(--acc)] selection:text-black">
+ <div className="min-h-screen bg-[var(--sunken)] text-[var(--sunken)] font-sans selection:bg-[var(--acc)] selection:text-black">
  {/* Background Ambient Glows */}
  <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
  <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[120px]" />
@@ -164,7 +164,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
 
  {/* Sticky Navigation / Header */}
- <header className="relative z-20 border-b /80 bg-[#121111]/90 backdrop-blur-md sticky top-0">
+ <header className="relative z-20 border-b /80 bg-[var(--bg)]/90 backdrop-blur-md sticky top-0">
  <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black p-0.5 shadow-md flex items-center justify-center shrink-0">
