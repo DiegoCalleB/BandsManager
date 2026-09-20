@@ -932,7 +932,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  {/* Sections Accordion */}
- <div className="divide-y divide-[#262422]">
+ <div className="divide-y divide-[var(--hair)]">
  {COMPARISON_TABLE.map((section) => {
  const IconComp = section.icon;
  const isExpanded = expandedSections[section.title];
