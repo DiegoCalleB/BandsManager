@@ -2301,7 +2301,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Step 3: Generated Result & Save to Catalog */}
  {generatedResult && (
- <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-br from-emerald-950/40 to-slate-900 space-y-4">
+ <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-br from-emerald-950/40 to-neutral-900 space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-full bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)]">

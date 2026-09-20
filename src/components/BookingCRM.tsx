@@ -454,7 +454,7 @@ export default function BookingCRM({
  return norm ==='medio' || norm ==='productora';
  };
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
 
  // Filter leads by active section tab
  const sectionLeads = useMemo(() => {
@@ -2084,7 +2084,7 @@ export default function BookingCRM({
 
  {isTemplatesSectionOpen && (
  <div className="mt-5 pt-4800/80 space-y-6">
- <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${'-slate-100'}`}>
+ <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${'-neutral-100'}`}>
  <div>
  <h4 className={`text-xs font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
  Pautas diferenciadas por categoría
@@ -2378,7 +2378,7 @@ export default function BookingCRM({
  'bg-[var(--surface)]'
  }`}>
  <div className="space-y-3">
- <div className={`flex items-center gap-2 pb-2 ${'-slate-200'}`}>
+ <div className={`flex items-center gap-2 pb-2 ${'-neutral-200'}`}>
  <span className={`w-1.5 h-1.5 rounded-full ${'bg-[var(--acc)]'}`} />
  <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
  </div>

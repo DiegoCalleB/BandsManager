@@ -756,7 +756,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  ?'bg-gradient-to-r from-amber-0/20 via-amber-400/10 to-amber-0/15 /50'
  : plan.id ==='cabeza_de_cartel'
  ?'bg-gradient-to-r from-[var(--ok)]/20 via-emerald-400/10 to-emerald-500/15/50'
- :'bg-gradient-to-r from-slate-500/20 viabg-[var(--surface)] to-slate-500/10 /30'
+ :'bg-gradient-to-r from-neutral-500/20 viabg-[var(--surface)] to-neutral-500/10 /30'
  }`}>
  <div className="flex items-start gap-2.5">
  <div className={`p-1.5 rounded-[var(--r-m)] shrink-0 ${

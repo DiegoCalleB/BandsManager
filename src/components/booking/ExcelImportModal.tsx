@@ -456,7 +456,7 @@ export function ExcelImportModal({
  }`}
  >
  {/* MODAL HEADER */}
- <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-emerald-950/30 via-zinc-900/50 to-amber-950/20">
+ <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-emerald-950/30 via-neutral-900/50 to-amber-950/20">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)]">
  <FileSpreadsheet className="w-5 h-5" />

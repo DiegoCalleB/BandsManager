@@ -99,7 +99,7 @@ export function EnsayoCronometro({
 
  return (
  <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] relative overflow-hidden">
- {/* Background soft glow when running */}
+ {/* Background soft when running */}
  {isActive && (
  <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--acc)]/10 rounded-full blur-3xl pointer-events-none" />
  )}

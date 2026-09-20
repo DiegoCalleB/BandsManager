@@ -5554,7 +5554,7 @@ export default function SongStudioModal({
  {/* AI Instrument Track Generator Modal */}
  {showAiTrackGenModal && (
  <div className="fixed inset-0 z-[120] bg-[var(--scrim)]/80 flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
- <div className="bg-gradient-to-b from-zinc-900 via-indigo-950/80 to-zinc-950 rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
+ <div className="bg-gradient-to-b from-neutral-900 via-indigo-950/80 to-neutral-950 rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between/20 pb-3">
  <div className="flex items-center gap-2.5 text-[var(--tentative)]/80 font-sans font-bold text-sm">
  <Wand2 className="w-5 h-5 text-[var(--tentative)]" />

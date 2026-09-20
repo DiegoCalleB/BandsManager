@@ -287,7 +287,7 @@ export default function Dashboard({
  return matchesSearch && matchesCity && matchesGenre;
  });
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
  const subCardBg = 'bg-[var(--bg)]/80 text-[var(--ink)]';
  const textTitle = 'text-[var(--ink)]';
  const textSub = 'text-[var(--ink-2)]';

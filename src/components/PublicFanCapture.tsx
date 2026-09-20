@@ -104,7 +104,7 @@ export const PublicFanCapture: React.FC = () => {
  return (
  <div className="min-h-screen bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center p-4 selection:bg-[var(--acc)] selection:text-[var(--ink)]">
  {/* Background Glow */}
- <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-0/10 via-slate-950 to-slate-950 pointer-events-none" />
+ <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-0/10 via-neutral-950 to-neutral-950 pointer-events-none" />
 
  <div className="w-full max-w-md relative z-10 space-y-6">
  {/* LOGO & BRAND HEADER */}
@@ -122,7 +122,7 @@ export const PublicFanCapture: React.FC = () => {
  </div>
  )}
  <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-[var(--ink)] p-1.5 rounded-full">
- <Heart className="w-4 h-4 fill-slate-950" />
+ <Heart className="w-4 h-4 fill-neutral-950" />
  </span>
  </div>
 
@@ -211,7 +211,7 @@ export const PublicFanCapture: React.FC = () => {
  required
  checked={consentimientoRGPD}
  onChange={e => setConsentimientoRGPD(e.target.checked)}
- className="mt-0.5 w-4 h-4 rounded bg-[var(--surface)] text-[var(--acc)] focus:ring-amber-500 focus:ring-offset-slate-900"
+ className="mt-0.5 w-4 h-4 rounded bg-[var(--surface)] text-[var(--acc)] focus:ring-amber-500 focus:ring-offset-neutral-900"
  />
  <span>
  Acepto recibir novedades, lanzamientos y fechas de conciertos de <strong>Bakandeya</strong>. 

@@ -79,7 +79,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newSala}
  onChange={(e) => setNewSala(e.target.value)}
  placeholder="Ej: Sala Apolo"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
@@ -92,7 +92,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newCiudad}
  onChange={(e) => setNewCiudad(e.target.value)}
  placeholder="Ej: Barcelona"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
@@ -104,7 +104,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newRegion}
  onChange={(e) => setNewRegion(e.target.value)}
  placeholder="Ej: Cataluña"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
@@ -115,7 +115,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  type="number"
  value={newAforo}
  onChange={(e) => setNewAforo(Number(e.target.value))}
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
@@ -126,7 +126,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  type="text"
  value={newGenero}
  onChange={(e) => setNewGenero(e.target.value)}
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
@@ -136,7 +136,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  id="new-lead-tipo"
  value={newTipo}
  onChange={(e) => setNewTipo(e.target.value as LeadType)}
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans cursor-pointer"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans cursor-pointer"
  >
  <option value="sala">🏛️ Sala / Teatro (Booking directo)</option>
  <option value="festival">🎪 Festival (Escenarios / Carteles)</option>
@@ -155,7 +155,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newInstagram}
  onChange={(e) => setNewInstagram(e.target.value)}
  placeholder="Ej: @sala_apolo"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
  />
  </div>
  </div>
@@ -168,7 +168,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newEmail}
  onChange={(e) => setNewEmail(e.target.value)}
  placeholder="Ej: booking@salaapolo.com"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
@@ -180,7 +180,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newNotas}
  onChange={(e) => setNewNotas(e.target.value)}
  placeholder="Alguna instrucción de booking, contacto recomendado..."
- className="w-full bg-[var(--sunken)] rounded p-3 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans leading-relaxed"
+ className="w-full bg-[var(--sunken)] rounded p-3 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans leading-relaxed"
  />
  </div>
 

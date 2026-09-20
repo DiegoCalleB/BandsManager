@@ -109,7 +109,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  {/* Items List */}
- <div className="p-3 sm:p-4 overflow-y-auto space-y-2 flex-1 divide-y divide-zinc-800/40">
+ <div className="p-3 sm:p-4 overflow-y-auto space-y-2 flex-1 divide-y divide-neutral-800/40">
  {items.map((item, idx) => (
  <div key={item.id || idx} className="pt-2 first:pt-0 flex items-center justify-between gap-2 text-xs font-sans">
  <div className="flex items-center gap-2 min-w-0 flex-1">

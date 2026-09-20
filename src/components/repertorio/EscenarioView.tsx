@@ -234,7 +234,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {/* CONCERT PLAYER CONSOLE (SPOTIFY LIVE BAR) */}
  {activeSetlist && activeSetlist.items.length > 0 && (
  <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4 relative overflow-hidden">
- {/* Subtle top glow line */}
+ {/* Subtle top line */}
  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--ok)]/60 to-transparent" />
 
  <div className="flex flex-col md:flex-row items-center justify-between gap-4">

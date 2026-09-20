@@ -252,7 +252,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </datalist>
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
- '-slate-200 bg-[var(--bg)]'
+ '-neutral-200 bg-[var(--bg)]'
  }`}>
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10 -indigo-500/20 text-[var(--tentative)] flex items-center justify-center">
@@ -280,7 +280,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Tab Selection */}
  <div className={`px-6 pt-3 flex gap-2 ${
- '-slate-200 bg-[var(--bg)]/50'
+ '-neutral-200 bg-[var(--bg)]/50'
  }`}>
  <button
  onClick={() => { setActiveTab('list'); setError(null); setSuccessMsg(null); }}
@@ -346,7 +346,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div
  key={u.id}
  className={`p-4 rounded-[var(--r-m)] transition-all ${
- 'bg-[var(--bg)] -slate-200/80 hover:-slate-300'
+ 'bg-[var(--bg)] -neutral-200/80 hover:-neutral-300'
  }`}
  >
  <div className="flex flex-wrap items-center justify-between gap-3">
@@ -679,7 +679,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Modal Footer */}
  <div className={`px-6 py-3 text-right ${
- '-slate-200 bg-[var(--bg)]'
+ '-neutral-200 bg-[var(--bg)]'
  }`}>
  <button
  onClick={onClose}

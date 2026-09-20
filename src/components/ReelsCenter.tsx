@@ -1292,7 +1292,7 @@ export default function ReelsCenter({
  ? (highlights[selectedHighlightIndex]?.range ||'0:30')
  :'0:30');
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
  const textTitle = 'text-[var(--ink)]';
  const textSub = 'text-[var(--ink-2)]';
  const textMuted = 'text-[var(--ink-2)]';
@@ -1301,7 +1301,7 @@ export default function ReelsCenter({
  <div data-modulo="reels" className={`space-y-6 ${'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>
  
  {/* Header con Sincronización en Excel */}
- <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${'-slate-100'}`}>
+ <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${'-neutral-100'}`}>
  {/* HEADER / TITULO PRINCIPAL */}
  <div className="mb-2">
  <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-[var(--ink)] mb-2">Medios</h1>
@@ -1361,7 +1361,7 @@ export default function ReelsCenter({
  )}
 
  {/* Dynamic Segment Tab Selector */}
- <div className={`flex pb-4 mb-2 flex-wrap gap-3 ${'-slate-100'}`}>
+ <div className={`flex pb-4 mb-2 flex-wrap gap-3 ${'-neutral-100'}`}>
  <button
  id="tab-btn-pipeline"
  onClick={() => setActiveTab('pipeline')}
@@ -1396,7 +1396,7 @@ export default function ReelsCenter({
  <div className="space-y-6">
  {/* 1. Pipeline Kanban */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-3 ${'-slate-100'}`}>
+ <div className={` pb-3 ${'-neutral-100'}`}>
  <h3 className={`text-sm font-bold font-display tracking-widest ${'text-[var(--acc)]'}`}>Pipeline de Reels y Contenido</h3>
  <p className={`text-[10px] font-sans mt-1 ${textSub}`}>
  Visualiza los vídeos grabados por la banda en la carretera y arrástralos / muévelos de etapa para coordinar la publicación.
@@ -1419,7 +1419,7 @@ export default function ReelsCenter({
  } ${
  selectedPostInPhone?.id === post.id
  ?' -[var(--acc)]'
- : '-slate-200 hover:-indigo-300'
+ : '-neutral-200 hover:-indigo-300'
  }`}
  >
  <div className="flex justify-between items-start gap-1">
@@ -1434,7 +1434,7 @@ export default function ReelsCenter({
  <p className={`text-[11px] font-medium leading-snug font-sans line-clamp-3 ${textTitle}`}>
  {post.contenido}
  </p>
- <div className={`flex justify-between items-center pt-1 ${'-slate-100'}`}>
+ <div className={`flex justify-between items-center pt-1 ${'-neutral-100'}`}>
  <span className="text-[8px] font-sans text-[var(--ink-2)]">{post.fecha}</span>
  <button 
  id={`btn-move-aprobado-${post.id}`}
@@ -1485,7 +1485,7 @@ export default function ReelsCenter({
  <p className={`text-[11px] font-medium leading-snug font-sans line-clamp-3 ${textTitle}`}>
  {post.contenido}
  </p>
- <div className={`flex justify-between items-center pt-1 ${'-slate-100'}`}>
+ <div className={`flex justify-between items-center pt-1 ${'-neutral-100'}`}>
  <button 
  id={`btn-move-borrador-${post.id}`}
  onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado:'borrador' }); }}
@@ -1515,7 +1515,7 @@ export default function ReelsCenter({
  {/* Listos / Publicados */}
  <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${'bg-[var(--surface)]'}`}>
  <span className={`text-[10px] font-sans tracking-wider text-[var(--ok)] font-bold block pb-1.5 ${
- '-slate-200/80'
+ '-neutral-200/80'
  }`}>Listos / Publicados ({posts.filter(r => r.estado ==='publicado').length})</span>
  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
  {posts.filter(r => r.estado ==='publicado').map(post => (
@@ -1527,7 +1527,7 @@ export default function ReelsCenter({
  } ${
  selectedPostInPhone?.id === post.id
  ?'-emerald-500'
- : '-slate-200 hover:-emerald-300'
+ : '-neutral-200 hover:-emerald-300'
  }`}
  >
  <div className="flex justify-between items-start gap-1">
@@ -1542,7 +1542,7 @@ export default function ReelsCenter({
  <p className={`text-[11px] font-medium leading-snug font-sans line-clamp-3 ${textTitle}`}>
  {post.contenido}
  </p>
- <div className={`flex justify-between items-center pt-1 ${'-slate-100'}`}>
+ <div className={`flex justify-between items-center pt-1 ${'-neutral-100'}`}>
  <button 
  id={`btn-move-aprobado-back-${post.id}`}
  onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado:'aprobado' }); }}
@@ -1569,7 +1569,7 @@ export default function ReelsCenter({
 
  {/* 2. Structured Soul AI Writer */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-3 ${'-slate-100'}`}>
+ <div className={` pb-3 ${'-neutral-100'}`}>
  <h3 className={`text-sm font-bold font-display tracking-widest flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <Sparkles className="w-4 h-4" /> AI Reels Writer (Redacción Estructurada)
  </h3>
@@ -1647,7 +1647,7 @@ export default function ReelsCenter({
  
  {/* 1. Drag & Drop & Upload Area */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-3 ${'-slate-100'}`}>
+ <div className={` pb-3 ${'-neutral-100'}`}>
  <h3 className={`text-sm font-bold font-display tracking-widest flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <Video className={`w-4 h-4 ${'text-[var(--acc)]'}`} /> Extraer Highlights de Vídeos de Ensayos / Directos
  </h3>
@@ -1750,7 +1750,7 @@ export default function ReelsCenter({
  </div>
  ) : (
  <div className={` rounded-[var(--r-l)] p-8 transition-all ${
- '-slate-200 bg-[var(--bg)]'
+ '-neutral-200 bg-[var(--bg)]'
  }`}>
  <div className="space-y-4 max-w-xl mx-auto text-center">
  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${
@@ -1980,7 +1980,7 @@ export default function ReelsCenter({
  {/* 2. Lighttable (Mesa de Luz con los Clips Detectados) */}
  {highlights.length > 0 && (
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-2 ${'-slate-100'}`}>
+ <div className={` pb-2 ${'-neutral-100'}`}>
  <h3 className={`text-sm font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
  <Layers className="w-4 h-4" /> Mesa de Luz de Clips Sugeridos (Highlights)
  </h3>
@@ -2072,7 +2072,7 @@ export default function ReelsCenter({
  className={` rounded-[var(--r-m)] p-3.5 cursor-pointer transition-all space-y-3 relative group overflow-hidden ${
  isSelected 
  ?' -[var(--acc)] bg-[var(--acc)]/5/5' 
- : '-slate-200 bg-[var(--surface)] hover:-indigo-300 hover:bg-[var(--bg)]/50'
+ : '-neutral-200 bg-[var(--surface)] hover:-indigo-300 hover:bg-[var(--bg)]/50'
  }`}
  >
  {/* Simulated miniature video thumbnail track design */}
@@ -2112,7 +2112,7 @@ export default function ReelsCenter({
  </div>
 
  {/* Virality score meter */}
- <div className={`space-y-1 pt-1.5 ${'-slate-100'}`}>
+ <div className={`space-y-1 pt-1.5 ${'-neutral-100'}`}>
  <div className="flex justify-between items-center text-[9px] font-sans text-[var(--ink-2)]">
  <span className="flex items-center gap-1">
  <Flame className={`w-3 h-3 ${'text-[var(--acc)]'}`} /> Virality Score:
@@ -2136,7 +2136,7 @@ export default function ReelsCenter({
  {/* 3. Editor & Scheduler Form for Selected Highlight */}
  {highlights.length > 0 && (
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-2 ${'-slate-100'}`}>
+ <div className={` pb-2 ${'-neutral-100'}`}>
  <h3 className={`text-sm font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
  <Calendar className="w-4 h-4" /> Personalizar Publicación y Programar en Calendario
  </h3>
@@ -2352,7 +2352,7 @@ export default function ReelsCenter({
  className={`py-2 px-2 rounded-[var(--r-s)] text-[10px] font-sans text-center transition-all cursor-pointer ${
  selectedPlatform === plat.id
  ?' bg-[var(--acc)] -[var(--acc)] text-[var(--on-acc)] font-black'
- : '-slate-200 hover:-indigo-200 bg-[var(--surface)] text-[var(--ink-2)]'
+ : '-neutral-200 hover:-indigo-200 bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  {plat.name}
@@ -2446,7 +2446,7 @@ export default function ReelsCenter({
 
  {/* 4. Calendario de Publicaciones de la Banda List */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={` pb-2 flex justify-between items-center ${'-slate-100'}`}>
+ <div className={` pb-2 flex justify-between items-center ${'-neutral-100'}`}>
  <div>
  <h3 className={`text-sm font-bold font-display tracking-widest flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <Calendar className="w-4 h-4" /> Calendario de Publicaciones de la Banda ({posts.length})
@@ -2456,7 +2456,7 @@ export default function ReelsCenter({
  </p>
  </div>
  <span className={`text-[8px] font-sans px-2 py-0.5 rounded ${
- '-slate-200 text-[var(--ink-2)] bg-[var(--bg)]'
+ '-neutral-200 text-[var(--ink-2)] bg-[var(--bg)]'
  }`}>
  Live Database
  </span>
@@ -2500,7 +2500,7 @@ export default function ReelsCenter({
  </div>
  
  <div className={`flex md:flex-col justify-end items-end gap-2 md: md: pt-2.5 md:pt-0 md:pl-4 shrink-0 ${
- '-slate-200'
+ '-neutral-200'
  }`}>
  <span className="text-[8px] font-sans text-[var(--ink-2)]">Responsable: {post.responsable ||'Community Manager'}</span>
  <button
@@ -2532,14 +2532,14 @@ export default function ReelsCenter({
  <div className={`xl:col-span-4 rounded-[var(--r-m)] p-5 flex flex-col justify-between select-none ${colors.card}`}>
  
  <div className="space-y-3">
- <div className={` pb-2 ${'-slate-100'}`}>
+ <div className={` pb-2 ${'-neutral-100'}`}>
  <h3 className={`text-xs font-sans tracking-widest ${'text-[var(--acc)]'}`}>Vista Previa en Redes</h3>
  <p className="text-[9px] text-[var(--ink-2)] font-sans mt-0.5">Visualiza cómo se verá la copia y el contenido en directo</p>
  </div>
 
  {/* Smart Phone Shell Frame */}
  <div className={`mx-auto w-[240px] h-[450px] rounded-[30px] -[6px] relative overflow-hidden flex flex-col justify-between ${
- '-slate-300 bg-[var(--surface)]'
+ '-neutral-300 bg-[var(--surface)]'
  }`}>
  
  {/* Speaker & camera notch mockup */}
@@ -2828,7 +2828,7 @@ export default function ReelsCenter({
  </div>
 
  {/* Simulated Upload Status Queue */}
- <div className={`space-y-2 pt-4 mt-4 ${'-slate-100'}`}>
+ <div className={`space-y-2 pt-4 mt-4 ${'-neutral-100'}`}>
  <div className="flex justify-between items-center">
  <span className="text-[9px] font-sans text-[var(--ink-2)]">Canal de Emisión</span>
  <button

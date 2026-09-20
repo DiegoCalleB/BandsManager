@@ -34,7 +34,7 @@ export function GlobalCampaignBar({
 
  return (
  <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--sunken)] via-[var(--bg)] to-[var(--bg)] p-1.5 sm:p-2.5 animate-fade-in relative overflow-hidden">
- {/* Background ambient glow */}
+ {/* Background ambient */}
  <div 
  className="absolute -right-10 -top-10 w-28 h-28 rounded-full blur-3xl opacity-15 pointer-events-none"
  style={{ backgroundColor: campaign.color ||'var(--acc)' }}

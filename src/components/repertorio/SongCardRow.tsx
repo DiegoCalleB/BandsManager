@@ -439,8 +439,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  {/* Menu Popover */}
  {showMenu && (
  <div
- className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs ${?'bg-[var(--surface)] text-[var(--ink)] divide-y divide-slate-100'
- :'bg-[var(--surface)]/95 /80 text-[var(--ink-2)] divide-y divide-slate-800/60'
+ className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs ${?'bg-[var(--surface)] text-[var(--ink)] divide-y divide-neutral-100'
+ :'bg-[var(--surface)]/95 /80 text-[var(--ink-2)] divide-y divide-neutral-800/60'
  }`}
  >
  <div className="py-1 space-y-0.5">

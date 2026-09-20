@@ -430,7 +430,7 @@ export default function RepertorioSetlists({
  onNavigate
 }: RepertorioSetlistsProps) {
  const { t } = useLanguage();
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
  const bName = bandName ||'Tu Banda';
 
  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('repertorio');
@@ -3177,7 +3177,7 @@ export default function RepertorioSetlists({
  <ChevronLeft className="w-4 h-4" />
  </button>
  {/* Hub central: solo el score de energía (sin el nombre del tema, ya se ve
- resaltado en el propio gráfico), con un aro y un glow del color de su
+ resaltado en el propio gráfico), con un aro y un del color de su
  categoría para que el joystick tenga vida propia en vez de ser cuatro
  flechas sueltas. */}
  <div
@@ -4109,7 +4109,7 @@ export default function RepertorioSetlists({
  <div className="space-y-4">
  {/* CATALOG PLAYLIST HERO BANNER */}
  <div className={`relative overflow-hidden rounded-[var(--r-l)] sm:rounded-3xl p-4 sm:p-5 ${
- 'bg-gradient-to-r from-slate-50 via-indigo-50/30 to-slate-50 text-[var(--ink)]'
+ 'bg-gradient-to-r from-neutral-50 via-indigo-50/30 to-neutral-50 text-[var(--ink)]'
  }`}>
  <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
  <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] bg-[var(--surface)] overflow-hidden flex items-center justify-center group">

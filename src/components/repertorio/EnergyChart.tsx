@@ -65,7 +65,7 @@ interface EnergyChartProps {
  onSelectItem?: (id: string) => void;
  /** Alto del contenedor del gráfico en px. Default 256 (el tamaño del Mapa de Energía grande). */
  height?: number;
- /** Versión reducida para espacios pequeños (p.ej. dentro del modal de Análisis IA): sin glow, ejes/puntos más pequeños. */
+ /** Versión reducida para espacios pequeños (p.ej. dentro del modal de Análisis IA): sin, ejes/puntos más pequeños. */
  compact?: boolean;
  /** Si se pasa, arrastrar un punto horizontalmente reordena el setlist a esa posición — la
  * altura del punto sigue sin poder tocarse (es la energía calculada, no un valor editable).
@@ -351,7 +351,7 @@ export function EnergyChart({
  >
  {!compact && (
  <style>{`
- /* Espectro flat design: removed glow effects per Law 1 */
+ /* Espectro flat design: removed effects per Law 1 */
  `}</style>
  )}
  {/* Arrastrando en vertical: burbuja con la energía en vivo, pegada al dedo/cursor (no fija
@@ -706,7 +706,7 @@ export function EnergyChart({
  ? (onReorder && canEditThisEnergy ?'move' : canEditThisEnergy ?'ns-resize' :'ew-resize')
  : (onSelectItem ?'pointer' :'default'),
  opacity: isDraggingThis ? 0.5 : isHighlighted ? 1 : 0.6,
- // Espectro: zero glow/drop-shadow. Highlight via opacity change instead.
+ // Espectro: zero/drop-shadow. Highlight via opacity change instead.
  filter: 'none',
  transition: isDraggingThis ?'none' :'all 0.2s ease',
  pointerEvents: canDragThis ?'none' :'auto'

@@ -20,7 +20,7 @@ export interface PublicoSilhouetteProps {
  */
  className?: string;
  /**
- * When true, adds animated celebration effect (raised arms glow)
+ * When true, adds animated celebration effect (raised arms)
  */
  animated?: boolean;
 }

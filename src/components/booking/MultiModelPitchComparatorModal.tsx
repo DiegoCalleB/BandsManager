@@ -587,7 +587,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <th className="py-1.5 px-2 font-bold text-[var(--ok)]">Coste 1.000 Salas</th>
  </tr>
  </thead>
- <tbody className="divide-y divide-zinc-800/50 font-sans text-[var(--ink-2)]">
+ <tbody className="divide-y divide-neutral-800/50 font-sans text-[var(--ink-2)]">
  <tr className="hover:bg-[var(--surface)]/40">
  <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
  <span>🚀</span> DeepSeek V3

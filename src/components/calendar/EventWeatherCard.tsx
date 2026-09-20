@@ -75,9 +75,9 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  case'sun':
  return'from-amber-0/30 via-amber-400/10 to-transparent /50';
  case'cloud-sun':
- return'from-amber-0/25 via-slate-700/25 to-transparent /35';
+ return'from-amber-0/25 via-neutral-700/25 to-transparent /35';
  case'cloud':
- return'from-slate-600/35 via-slate-800/25 to-transparent /40';
+ return'from-neutral-600/35 via-neutral-800/25 to-transparent /40';
  case'rain':
  return'from-sky-500/30 via-blue-600/20 to-transparent/50';
  case'lightning':
@@ -85,7 +85,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  case'snow':
  return'from-cyan-500/30 via-blue-900/25 to-transparent/50';
  case'fog':
- return'from-slate-500/25 via-zinc-700/25 to-transparent /35';
+ return'from-neutral-500/25 via-neutral-700/25 to-transparent /35';
  default:
  return'from-amber-0/20 to-transparent /30';
  }
@@ -167,9 +167,9 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  :'bg-gradient-to-br from-amber-50/70 to-sky-50/70 text-[var(--ink)]' 
  : hasAlerts
  ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90/40 text-[var(--ink-2)]'
- :'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-stone-900/90 /40 text-[var(--ink-2)]'
- :'bg-gradient-to-br from-stone-900/80 to-[var(--surface)]/80 /25 text-[var(--ink-2)]'
+ ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-neutral-900/90/40 text-[var(--ink-2)]'
+ :'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-neutral-900/90 /40 text-[var(--ink-2)]'
+ :'bg-gradient-to-br from-neutral-900/80 to-[var(--surface)]/80 /25 text-[var(--ink-2)]'
  }`}>
  {/* Barra superior del widget del tiempo */}
  <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 /15">

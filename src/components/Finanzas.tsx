@@ -134,17 +134,17 @@ export default function Finanzas({
 
  const categories = Array.from(new Set(payments.map(p => p.categoria)));
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
  const textTitle = 'text-[var(--ink)]';
  const textSub = 'text-[var(--ink-2)]';
  const textMuted = 'text-[var(--ink-2)]';
- const cardBorder = '-slate-200';
+ const cardBorder = '-neutral-200';
 
  return (
  <div className={`space-y-6 ${'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>
  
  {/* Header con Sincronización en Excel */}
- <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${'-slate-100'}`}>
+ <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${'-neutral-100'}`}>
  <div>
  <h4 className={`text-xs font-sans tracking-widest ${'text-[var(--acc)]'}`}>Finanzas & Libro Contable</h4>
  <h2 className={`text-xl font-bold font-display tracking-wider mt-1 ${textTitle}`}>CONTABILIDAD DE BANDA</h2>
@@ -249,7 +249,7 @@ export default function Finanzas({
  </div>
 
  {/* Tabs / Filter Bar */}
- <div className={`flex flex-col md:flex-row md:items-center justify-between pb-4 mb-2 gap-4 ${'-slate-100'}`}>
+ <div className={`flex flex-col md:flex-row md:items-center justify-between pb-4 mb-2 gap-4 ${'-neutral-100'}`}>
  <div className="flex gap-2 flex-wrap">
  <button
  onClick={() => setActiveTab('rentabilidad')}
@@ -374,7 +374,7 @@ export default function Finanzas({
  <th className="p-3 text-right">Acción</th>
  </tr>
  </thead>
- <tbody className="divide-y divide-slate-800/60">
+ <tbody className="divide-y divide-neutral-800/60">
  {concerts.map(c => {
  const g = c.gastosDetalle || {};
  const gasolina = g.gasolina || 0;
@@ -705,7 +705,7 @@ export default function Finanzas({
  <div
  key={p.id}
  className={`p-3 rounded-[var(--r-m)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all ${
- 'bg-[var(--surface)] hover:-slate-300'
+ 'bg-[var(--surface)] hover:-neutral-300'
  }`}
  >
  <div className="flex gap-3 items-center min-w-0">

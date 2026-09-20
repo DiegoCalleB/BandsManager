@@ -468,7 +468,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/90 overflow-y-auto overscroll-contain animate-fadeIn">
- {/* Background ambient glow */}
+ {/* Background ambient */}
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--acc)]/10 rounded-full blur-3xl pointer-events-none" />
 
  {/* Main Container */}
@@ -1342,7 +1342,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  }}
  className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-sans text-xs transition-all hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
  >
- <Sparkles className="w-3 h-3 fill-stone-950" />
+ <Sparkles className="w-3 h-3 fill-neutral-950" />
  <span>Seleccionar {plan.name}</span>
  </button>
  )}

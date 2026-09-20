@@ -199,7 +199,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  return (
  <div className="space-y-6">
  {/* Pinned / Band Post Box */}
- <div className="bg-gradient-to-r from-amber-0/10 via-slate-900 to-slate-900 rounded-[var(--r-l)] p-5 relative overflow-hidden">
+ <div className="bg-gradient-to-r from-amber-0/10 via-neutral-900 to-neutral-900 rounded-[var(--r-l)] p-5 relative overflow-hidden">
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
  <div className="flex items-center gap-3.5">
  {effectiveBandLogo ? (

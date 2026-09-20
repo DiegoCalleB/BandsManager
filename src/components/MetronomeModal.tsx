@@ -192,7 +192,7 @@ export function MetronomeModal({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="bg-gradient-to-b from-zinc-900 to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-md overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
+ <div className="bg-gradient-to-b from-neutral-900 to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-md overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
  
  {/* Header */}
  <div className="p-4 flex items-center justify-between bg-[var(--ink)]/5">

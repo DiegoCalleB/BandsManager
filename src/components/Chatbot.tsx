@@ -687,7 +687,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  return () => clearInterval(intervalId);
  }, [activeRun?.id, activeRun?.status, activeRun?.isDemo]);
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
 
  // Auto-scroll chat to bottom on mount and on message/loading updates
  useEffect(() => {
@@ -1714,7 +1714,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  return (
  <div className={`flex flex-col ${isFloating ?'h-[550px]' :'h-full min-h-[500px]'} ${'bg-[var(--surface)]'} rounded-[var(--r-l)] overflow-hidden font-sans w-full max-w-full overflow-x-hidden`}>
  {/* Bot Header */}
- <div className={`px-5 py-4 flex items-center justify-between ${'bg-[var(--bg)] -slate-200/80'}`}>
+ <div className={`px-5 py-4 flex items-center justify-between ${'bg-[var(--bg)] -neutral-200/80'}`}>
  <div className="flex items-center gap-3">
  <div className={`p-1.5 rounded-[var(--r-s)] ${'bg-[var(--tentative)]/5 text-[var(--tentative)]'}`}>
  <Guitar className="w-4 h-4" />
@@ -2134,7 +2134,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </button>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--bg)] -slate-200/60'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--bg)] -neutral-200/60'}`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans text-[var(--ink-2)]">Estado</span>
  {activeRun.status ==='queued' && (
@@ -2391,7 +2391,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div 
  key={iIdx} 
  className={`p-1.5 rounded text-[9px] font-sans flex flex-col gap-0.5 ${
- 'bg-[var(--ink)]/60 -slate-200/50 text-[var(--ink-2)]'
+ 'bg-[var(--ink)]/60 -neutral-200/50 text-[var(--ink-2)]'
  }`}
  >
  <div className="flex justify-between items-start">
