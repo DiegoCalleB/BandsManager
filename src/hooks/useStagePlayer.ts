@@ -4,9 +4,9 @@ import { resolveAudioUrl } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 
 export function useStagePlayer(
-  activeSetlist: Setlist | null,
-  songs: Song[],
-  parseMmSsToSeconds: (timeStr: string) => number
+ activeSetlist: Setlist | null,
+ songs: Song[],
+ parseMmSsToSeconds: (timeStr: string) => number
 ) {
  // Stage Mode Concert Player State (Modo Escenario)
  const [stagePlayingIndex, setStagePlayingIndex] = useState<number | null>(null);
@@ -43,30 +43,30 @@ export function useStagePlayer(
  const getInactiveAudioEl = () => (activeSlotRef.current === 'A' ? stageAudioRefB.current : stageAudioRef.current);
 
  const cancelCrossfade = () => {
-   if (crossfadeRafRef.current !== null) {
-     cancelAnimationFrame(crossfadeRafRef.current);
-     crossfadeRafRef.current = null;
-   }
-   if (isCrossfadingRef.current) {
-     const inactive = getInactiveAudioEl();
-     if (inactive) {
-       inactive.pause();
-       inactive.volume = 1;
-     }
-     const active = getActiveAudioEl();
-     if (active) active.volume = 1;
-     isCrossfadingRef.current = false;
-     setIsCrossfading(false);
-   }
+ if (crossfadeRafRef.current !== null) {
+ cancelAnimationFrame(crossfadeRafRef.current);
+ crossfadeRafRef.current = null;
+ }
+ if (isCrossfadingRef.current) {
+ const inactive = getInactiveAudioEl();
+ if (inactive) {
+ inactive.pause();
+ inactive.volume = 1;
+ }
+ const active = getActiveAudioEl();
+ if (active) active.volume = 1;
+ isCrossfadingRef.current = false;
+ setIsCrossfading(false);
+ }
  };
 
  // Cualquier cambio de índice que NO venga de un fundido recién completado (clic en una fila,
  // Siguiente/Anterior, cambio de setlist) corta un fundido en curso — sin esto, terminaría
  // aplicándose sobre la pista equivocada.
  useEffect(() => {
-   if (pendingCrossfadePromotionRef.current) return;
-   cancelCrossfade();
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+ if (pendingCrossfadePromotionRef.current) return;
+ cancelCrossfade();
+ // eslint-disable-next-line react-hooks/exhaustive-deps
  }, [stagePlayingIndex]);
 
  // Effect when active playing index changes in Stage Mode (Modo Escenario)
@@ -178,8 +178,8 @@ export function useStagePlayer(
 
  // Cancela cualquier fundido pendiente al desmontar (cambio de pestaña/repertorio).
  useEffect(() => {
-   return () => cancelCrossfade();
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+ return () => cancelCrossfade();
+ // eslint-disable-next-line react-hooks/exhaustive-deps
  }, []);
 
  // Handlers for Stage Mode Concert Player Controls
@@ -325,22 +325,22 @@ export function useStagePlayer(
  });
  };
 
-  return {
-    stageAudioRef,
-    stageAudioRefB,
-    stagePlayingIndex, setStagePlayingIndex,
-    stageIsPlaying, setStageIsPlaying,
-    stageAutoplayNext, setStageAutoplayNext,
-    stageCurrentTime, setStageCurrentTime,
-    stageItemDuration,
-    stageResolvedUrl,
-    stageCrossfadeEnabled, setStageCrossfadeEnabled,
-    isCrossfading,
-    toggleStagePlayPause,
-    handleStageNext,
-    handleStagePrev,
-    handleStageSeek,
-    handleStageAudioEnded,
-    handleStageTimeUpdate,
-  };
+ return {
+ stageAudioRef,
+ stageAudioRefB,
+ stagePlayingIndex, setStagePlayingIndex,
+ stageIsPlaying, setStageIsPlaying,
+ stageAutoplayNext, setStageAutoplayNext,
+ stageCurrentTime, setStageCurrentTime,
+ stageItemDuration,
+ stageResolvedUrl,
+ stageCrossfadeEnabled, setStageCrossfadeEnabled,
+ isCrossfading,
+ toggleStagePlayPause,
+ handleStageNext,
+ handleStagePrev,
+ handleStageSeek,
+ handleStageAudioEnded,
+ handleStageTimeUpdate,
+ };
 }

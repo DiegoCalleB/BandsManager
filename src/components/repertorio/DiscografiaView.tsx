@@ -366,7 +366,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
  return (
  <div
- className={`p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl shadow-xl transition-all ${
+ className={`p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl transition-all ${
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95
  }`}
  >
@@ -375,7 +375,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  {/* Desktop title row (hidden on mobile to keep screen ultra-clean since RepertorioNavBar already provides title) */}
  <div className="hidden sm:flex items-center justify-between gap-3">
  <div className="flex items-center gap-2.5">
- <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center shadow-inner shrink-0">
+ <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center shrink-0">
  <Disc3 className="w-4 h-4 text-[var(--acc)]" />
  </div>
  <div>
@@ -393,7 +393,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={() => setExportModalData({ isOpen: true, albumName:'all' })}
- className={`px-3.5 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-xs transition-all ${
+ className={`px-3.5 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] /80'
@@ -407,7 +407,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={() => setShowCreateAlbumMenu((v) => !v)}
- className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-95"
+ className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Nuevo Disco</span>
@@ -415,7 +415,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  {showCreateAlbumMenu && (
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowCreateAlbumMenu(false)} />
- <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs ${
+ <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${
  isStitchLight
  ?' bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'
@@ -515,7 +515,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => setActiveFilterTab('todos')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
  activeFilterTab ==='todos'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -526,7 +526,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => setActiveFilterTab('albumes')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
  activeFilterTab ==='albumes'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -537,7 +537,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => setActiveFilterTab('singles')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
  activeFilterTab ==='singles'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -569,7 +569,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  type="button"
  onClick={handleAnalyzeAllDynamics}
  disabled={dynamicsAnalysis?.running}
- className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink-3)] hover:text-[var(--tentative)]/40 font-bold text-[11px] font-sans flex items-center gap-1 cursor-pointer shadow-sm transition-all"
+ className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink-3)] hover:text-[var(--tentative)]/40 font-bold text-[11px] font-sans flex items-center gap-1 cursor-pointer transition-all"
  title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
  >
  {dynamicsAnalysis?.running ? (
@@ -638,7 +638,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  return (
  <div
  key={album}
- className={`rounded-[var(--r-l)] overflow-hidden transition-all duration-200 shadow-sm ${
+ className={`rounded-[var(--r-l)] overflow-hidden transition-all duration-200 ${
  isStitchLight
  ?' bg-[var(--bg)]'
  :'/80 bg-[var(--surface)]/40 hover:/80'
@@ -660,7 +660,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  url={coverUrl}
  onPlay={onSelectSong ? handlePlayAlbum : undefined}
  isPlaying={isPlayingAlbum}
- className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] shadow-sm object-cover"
+ className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] object-cover"
  />
  </div>
 
@@ -698,7 +698,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={handlePlayAlbum}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer"
  title={isPlayingAlbum ?'Pausar disco' :'Reproducir disco'}
  >
  {isPlayingAlbum ? (

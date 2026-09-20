@@ -33,7 +33,7 @@ export const NotificationToastContainer: React.FC<NotificationToastContainerProp
  return (
  <div
  key={toast.id}
- className={`pointer-events-auto flex items-start gap-3 p-3.5 rounded-[var(--r-l)] shadow-xl transition-all duration-300 transform translate-y-0 animate-in fade-in slide-in-from-bottom-2 ${bg}`}
+ className={`pointer-events-auto flex items-start gap-3 p-3.5 rounded-[var(--r-l)] transition-all duration-300 transform translate-y-0 animate-in fade-in slide-in-from-bottom-2 ${bg}`}
  >
  {icon}
  <div className="flex-1 min-w-0 pr-1">

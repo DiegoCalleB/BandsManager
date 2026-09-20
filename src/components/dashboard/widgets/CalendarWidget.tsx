@@ -410,7 +410,7 @@ export function CalendarWidget({
  onClick={() => setSelectedDayStr(dateKey === selectedDayStr ? null : dateKey)}
  className={`p-1.5 min-h-[38px] rounded-[var(--r-s)] text-xs flex flex-col items-center justify-between transition-all cursor-pointer relative ${
  isSelected
- ?'bg-[var(--acc)]/20 text-[var(--ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] font-bold'
  : isToday
  ?'bg-[var(--surface)]/60 /40 text-[var(--acc)] font-black'
  : dayEvents.length > 0
@@ -422,8 +422,8 @@ export function CalendarWidget({
 
  {/* Indicators for events */}
  <div className="flex items-center gap-0.5 mt-1">
- {hasConcert && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 shadow-xs" title="Concierto" />}
- {hasRehearsal && <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] shadow-xs" title="Ensayo" />}
+ {hasConcert && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60" title="Concierto" />}
+ {hasRehearsal && <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" title="Ensayo" />}
  </div>
  </button>
  );

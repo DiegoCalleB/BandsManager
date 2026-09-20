@@ -10,7 +10,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
- <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-[var(--ink)] relative my-auto max-h-[90vh] overflow-y-auto">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 text-[var(--ink)] relative my-auto max-h-[90vh] overflow-y-auto">
  <button
  type="button"
  onClick={onClose}
@@ -129,7 +129,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  <button
  type="button"
  onClick={onClose}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-all cursor-pointer shadow-lg"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-all cursor-pointer"
  >
  Entendido
  </button>

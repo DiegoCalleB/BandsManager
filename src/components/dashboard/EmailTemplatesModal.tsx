@@ -122,7 +122,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
- <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-3xl my-auto max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-3xl my-auto max-h-[90vh] overflow-y-auto flex flex-col animate-in zoom-in-95 duration-200">
  
  {/* Modal Header */}
  <div className="p-5 bg-[var(--surface)] border-b flex items-center justify-between">
@@ -162,7 +162,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  onClick={() => setSelectedTemplate(tpl.id)}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-2 cursor-pointer ${
  isSelected
- ?'bg-[var(--acc)]/20 /60 text-[var(--acc)]/70 shadow-md'
+ ?'bg-[var(--acc)]/20 /60 text-[var(--acc)]/70'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]'
  }`}
  >

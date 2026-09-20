@@ -516,7 +516,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={effectiveSemitones} />
  ))}
  <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80
- <div className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
+ <div className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
  {/* Header */}
  <div className={`px-5 py-4 flex items-center justify-between border-b ${isStitchLight ?' bg-[var(--bg)]' :' bg-[var(--surface)]/60'}`}>
  <div className="flex items-center gap-2.5 min-w-0">
@@ -533,7 +533,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  type="button"
  onClick={onOpenStudio}
- className="px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-sm"
+ className="px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
  title="Abrir Studio multipista completo de este tema"
  >
  <Sliders className="w-3.5 h-3.5" />

@@ -1345,7 +1345,7 @@ export function PdfExportModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 bg-[var(--scrim)]/90 flex items-center justify-center p-2 sm:p-4 z-[9999] overflow-y-auto overscroll-contain">
  <div
- className={`w-full max-w-7xl max-h-[96vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
+ className={`w-full max-w-7xl max-h-[96vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${
  isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'
  }`}
  >
@@ -1382,7 +1382,7 @@ export function PdfExportModal({
  <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
  <button
  onClick={() => handlePrint()}
- className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-sans text-xs font-black transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-95 hover:shadow-[var(--ok)]/20"
+ className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-sans text-xs font-black transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-95 hover:shadow-[var(--ok)]/20"
  >
  <Printer className="w-4 h-4" />
  {/*"Músico(s)", no"Hoja(s)": cada uno puede generar más de una página física según
@@ -1437,7 +1437,7 @@ export function PdfExportModal({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='all_members'
- ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1450,7 +1450,7 @@ export function PdfExportModal({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='single_member'
- ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1463,7 +1463,7 @@ export function PdfExportModal({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='master'
- ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1498,7 +1498,7 @@ export function PdfExportModal({
  <button
  onClick={() => setViewDensity('sentado')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- viewDensity ==='sentado' ?'bg-[var(--surface)] text-[var(--ink)] shadow-md' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ viewDensity ==='sentado' ?'bg-[var(--surface)] text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
  >
@@ -1507,7 +1507,7 @@ export function PdfExportModal({
  <button
  onClick={() => setViewDensity('de_pie')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- viewDensity ==='de_pie' ?'bg-[var(--surface)] text-[var(--ink)] shadow-md' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ viewDensity ==='de_pie' ?'bg-[var(--surface)] text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
  >
@@ -1700,7 +1700,7 @@ export function PdfExportModal({
  {/* Authentic Real Stage Paper Sheet */}
  <div
  ref={sheetRef}
- className="relative overflow-hidden bg-[var(--surface)] text-[var(--ink)] p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
+ className="relative overflow-hidden bg-[var(--surface)] text-[var(--ink)] p-8 sm:p-12 rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
  style={{
  width:'210mm',
  minHeight:'297mm',
@@ -1760,7 +1760,7 @@ export function PdfExportModal({
  </div>
  </div>
 
- <div className="border-2 border-[var(--hair)] bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap shadow-sm">
+ <div className="border-2 border-[var(--hair)] bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap">
  <div className="text-[6pt] font-sans font-bold text-[var(--ink-2)] tracking-widest">
  {!isCurrentMaster ?'REPERTORIO PERSONALIZADO' :'COPIA DE CONTROL'}
  </div>
@@ -2054,7 +2054,7 @@ export function PdfExportModal({
  auto-ajuste detecta ese caso límite real — nunca decide en nombre del usuario. */}
  {sizeChoiceDialog && (
  <div className="fixed inset-0 bg-[var(--scrim)]/80 flex items-center justify-center z-[10000] p-4">
- <div className={`rounded-[var(--r-l)] shadow-2xl max-w-lg w-full p-6 ${
+ <div className={`rounded-[var(--r-l)] max-w-lg w-full p-6 ${
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  }`}>
  <h3 className={`text-lg font-black mb-2 flex items-center gap-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>

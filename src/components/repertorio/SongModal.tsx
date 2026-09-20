@@ -113,7 +113,7 @@ export function SongModal({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden ${colors.card}`}>
+ <div className={`w-full max-w-lg p-5 rounded-[var(--r-l)] my-auto max-h-[90vh] flex flex-col overflow-hidden ${colors.card}`}>
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <Music className="w-5 h-5 text-[var(--ok)]" />
@@ -501,7 +501,7 @@ export function SongModal({
  </button>
  <button
  type="submit"
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-95 cursor-pointer shadow-lg"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-95 cursor-pointer"
  >
  Guardar Canción
  </button>

@@ -55,7 +55,7 @@ export function SetlistModal({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] shadow-2xl ${colors.card} text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto`}>
+ <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] ${colors.card} text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto`}>
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <Layers className="w-5 h-5 text-[var(--acc)]" />
@@ -123,7 +123,7 @@ export function SetlistModal({
  </button>
  <button
  type="submit"
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)] transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)] transition-transform active:scale-95 cursor-pointer flex items-center gap-1.5"
  >
  <Check className="w-4 h-4 stroke-[3]" />
  <span>{setlistToEdit ?'Guardar Cambios' :'Crear Repertorio'}</span>

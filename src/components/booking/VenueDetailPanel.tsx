@@ -586,7 +586,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="w-full space-y-5 relative">
  {/* Feedback Alert for Bolo Confirmado */}
  {feedbackBoloMsg && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--ok)]/20 text-[var(--ink-2)] font-sans text-xs font-bold flex items-center justify-between gap-2 shadow-lg animate-fadeIn">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--ok)]/20 text-[var(--ink-2)] font-sans text-xs font-bold flex items-center justify-between gap-2 animate-fadeIn">
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-[var(--ok)]" />
  <span>{feedbackBoloMsg}</span>
@@ -601,7 +601,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* HEADER CARD */}
- <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-4 sm:p-5 border-[var(--hair)]800 shadow-xl space-y-4">
+ <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-4 sm:p-5 border-[var(--hair)]800 space-y-4">
  {/* Title Bar */}
  <div className="flex justify-between items-start gap-2">
  <div className="flex items-center gap-3">
@@ -744,7 +744,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  href={`https://wa.me/${phoneClean}`}
  target="_blank"
  rel="noreferrer"
- className="py-2.5 px-3 bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+ className="py-2.5 px-3 bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
  >
  <MessageCircle className="w-4 h-4 text-[var(--ok)]" />
  <span>WhatsApp Directo</span>
@@ -754,7 +754,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {selectedLead.telefono ? (
  <a
  href={`tel:${selectedLead.telefono}`}
- className="py-2.5 px-3 bg-[var(--bg)]/90 hover:bg-[var(--tentative)] text-[var(--ink-3)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+ className="py-2.5 px-3 bg-[var(--bg)]/90 hover:bg-[var(--tentative)] text-[var(--ink-3)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
  >
  <PhoneCall className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Llamar por Tel</span>
@@ -790,7 +790,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={handleApprovePitchDirectly}
  disabled={isCreatingDraft}
- className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
+ className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer disabled:opacity-50"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
  <span>{isCreatingDraft ?'Creando borrador...' :'Aprobar'}</span>
@@ -857,7 +857,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setIsCreatingDraft(false);
  }
  }}
- className="px-3 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+ className="px-3 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
  title="Forzar el despacho inmediato de este correo por el Agente Enviador"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
@@ -1014,7 +1014,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="space-y-4">
  {/* Edit Form Modal/Inline */}
  {isEditingLeadInfo && (
- <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--surface)] text-[var(--ink)] shadow-xl">
+ <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--surface)] text-[var(--ink)]">
  <div className="flex justify-between items-center pb-2 border-b border-[var(--hair)]800">
  <span className="font-bold text-xs tracking-wider text-[var(--acc)] flex items-center gap-1.5">
  <Edit3 className="w-3.5 h-3.5" /> Editar Ficha ({selectedLead.nombre_sala})
@@ -1028,7 +1028,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </button>
  <button
  onClick={handleSaveLeadInfo}
- className="px-3 py-1 text-xs rounded bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)]/60 cursor-pointer shadow-sm"
+ className="px-3 py-1 text-xs rounded bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)]/60 cursor-pointer"
  >
  Guardar
  </button>
@@ -1152,7 +1152,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setEditedLeadInfo(prev => ({ ...prev, icono: emoji }))}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  editedLeadInfo.icono === emoji
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110 shadow-md'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110'
  :'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60'
  }`}
  >
@@ -1394,7 +1394,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={() => setShowMultiModelModal(true)}
- className="px-2.5 py-1 bg-gradient-to-r from-amber-0/20 via-sky-500/20 to-emerald-500/20 hover:from-amber-0/30 hover:to-emerald-500/30 rounded text-[11px] text-[var(--acc)]/70 font-bold flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
+ className="px-2.5 py-1 bg-gradient-to-r from-amber-0/20 via-sky-500/20 to-emerald-500/20 hover:from-amber-0/30 hover:to-emerald-500/30 rounded text-[11px] text-[var(--acc)]/70 font-bold flex items-center gap-1.5 cursor-pointer transition-all"
  title="Compara en paralelo propuestas generadas por DeepSeek V3 y Gemini Flash"
  >
  <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1415,7 +1415,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={handleApprovePitchDirectly}
  disabled={isCreatingDraft}
- className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold rounded text-xs flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
+ className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold rounded text-xs flex items-center gap-1 cursor-pointer disabled:opacity-50"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
  <span>{isCreatingDraft ?'Creando borrador...' : (isReplyStage ?'Aprobar Respuesta' :'Aprobar Pitch')}</span>
@@ -1426,7 +1426,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* Active Campaign Context Banner in Pitch Section */}
  {activeCampaign && (activeCampaign.isActive !== false) && (
- <div className="mb-2.5 p-2.5 bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 rounded-[var(--r-m)] space-y-2 shadow-xs">
+ <div className="mb-2.5 p-2.5 bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 rounded-[var(--r-m)] space-y-2">
  <div className="flex items-center justify-between gap-2">
  <div className="flex items-center gap-2 min-w-0">
  <span className="text-xs shrink-0">🎯</span>
@@ -1443,7 +1443,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => handleRegeneratePitchWithFeedback()}
  disabled={isRegeneratingPitch}
- className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold rounded text-[10px] flex items-center gap-1 transition-all cursor-pointer shrink-0 shadow-sm disabled:opacity-50"
+ className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold rounded text-[10px] flex items-center gap-1 transition-all cursor-pointer shrink-0 disabled:opacity-50"
  title="Reescribe el pitch adaptándolo a las fechas y aforo de esta campaña"
  >
  <Sparkles className="w-3 h-3" />
@@ -1671,7 +1671,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setSelectedAiModel(m.id)}
  className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isSelected
- ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50 shadow-sm'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
  :'bg-[var(--bg)]/60 text-[var(--ink-2)] border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  title={`Coste aproximado por pitch: ${m.cost}`}
@@ -1710,7 +1710,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => handleRegeneratePitchWithFeedback()}
  disabled={isRegeneratingPitch || isRevertingPitch}
- className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-all font-sans"
  >
  {isRegeneratingPitch ? (
  <>
@@ -1858,7 +1858,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setInteractionType(type)}
  className={`px-2 py-1 rounded text-[10px] font-bold transition-all cursor-pointer ${
  interactionType === type
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1928,7 +1928,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <button
  type="submit"
- className="w-full py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
+ className="w-full py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] transition-all cursor-pointer flex items-center justify-center gap-1.5"
  >
  <Save className="w-3.5 h-3.5" />
  <span>Anotar en Bitácora</span>

@@ -265,7 +265,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  const badgeInfo = getStatusBadge();
 
  return (
- <div className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all shadow-sm bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]`}>
+ <div className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]`}>
  {/* Header Row */}
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-[var(--hair)]/60">
  <div className="flex items-center gap-3">
@@ -437,7 +437,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {/* AUDIT MODAL */}
  {showAuditModal && (
  <div className="fixed inset-0 bg-[var(--scrim)]/80 z-50 flex items-center justify-center p-4">
- <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 animate-in zoom-in-95 duration-200">
  <div className="flex justify-between items-start">
  <div className="flex items-center gap-3">
  <div className="p-2.5 bg-[var(--acc)]/20 rounded-[var(--r-m)] text-[var(--acc)]">

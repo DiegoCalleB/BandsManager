@@ -182,7 +182,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
- <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] shadow-2xl max-h-[90vh] overflow-y-auto">
+ <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] max-h-[90vh] overflow-y-auto">
  {/* Header */}
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">

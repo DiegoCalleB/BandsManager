@@ -91,11 +91,11 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
  <img
  src={imgUrl}
  alt={lead.nombre_sala ||'Logo'}
- className={`${imgSize} object-contain bg-[var(--bg)]/90 shrink-0 shadow-sm transition-opacity group-hover/avatar:opacity-60`}
+ className={`${imgSize} object-contain bg-[var(--bg)]/90 shrink-0 transition-opacity group-hover/avatar:opacity-60`}
  onError={() => setImgError(true)}
  />
  ) : (
- <div className={`${containerSize} bg-[var(--sunken)] flex items-center justify-center shrink-0 shadow-inner group-hover/avatar:bg-[var(--ink-3)]/60 transition-colors`}>
+ <div className={`${containerSize} bg-[var(--sunken)] flex items-center justify-center shrink-0 group-hover/avatar:bg-[var(--ink-3)]/60 transition-colors`}>
  <span>{emoji}</span>
  </div>
  )}

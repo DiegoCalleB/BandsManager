@@ -408,7 +408,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="bg-gradient-to-b from-zinc-900 via-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col my-auto max-h-[92vh]">
+ <div className="bg-gradient-to-b from-zinc-900 via-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-lg overflow-hidden flex flex-col my-auto max-h-[92vh]">
  
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)]10 flex items-center justify-between bg-[var(--ink)]/5 shrink-0">
@@ -475,7 +475,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`px-2 py-1 rounded-md font-bold transition-all cursor-pointer ${
  isCatSelected
- ?'bg-[var(--ok)] text-[var(--ink)] shadow-xs'
+ ?'bg-[var(--ok)] text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
  }`}
  >
@@ -496,7 +496,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-left text-xs font-medium transition-all cursor-pointer flex items-start justify-between gap-2 ${
  selectedPresetId === p.id
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold shadow-sm'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold'
  :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-[var(--ink)]/10'
  }`}
  >
@@ -528,7 +528,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </div>
 
  {/* Main Visual Tuner Display */}
- <div className="bg-[var(--sunken)] border-[var(--hair)]10 rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+ <div className="bg-[var(--sunken)] border-[var(--hair)]10 rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden">
  
  {/* Tuning needle meter bar */}
  <div className="w-full space-y-2">
@@ -548,12 +548,12 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
 
  {/* Needle pointer */}
  <div 
- className={`absolute top-0.5 bottom-0.5 w-3.5 rounded-full transition-all duration-100 z-20 shadow-md ${
+ className={`absolute top-0.5 bottom-0.5 w-3.5 rounded-full transition-all duration-100 z-20 ${
  isTunedIn 
- ?'bg-[var(--ok)] shadow-emerald-500/80 scale-110' 
+ ?'bg-[var(--ok)] scale-110' 
  : currentCents < -5 
- ?'bg-[var(--acc)]/60 shadow-amber-0/50' 
- :'bg-[var(--alert)] shadow-rose-500/50'
+ ?'bg-[var(--acc)]/60' 
+ :'bg-[var(--alert)]'
  }`}
  style={{ left: `calc(${needlePercent}% - 7px)` }}
  />
@@ -608,8 +608,8 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  onClick={isListening ? stopTuner : startTuner}
  className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 ${
  isListening
- ?'bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] shadow-sm'
- :'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black shadow-lg shadow-emerald-500/20'
+ ?'bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]'
+ :'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black'
  }`}
  >
  {isListening ? (
@@ -680,7 +680,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
  isTonePlaying
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-md scale-105'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-black scale-105'
  : isSelected
  ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold'
  :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-[var(--ink)]/10 hover:border-[var(--hair)]20'

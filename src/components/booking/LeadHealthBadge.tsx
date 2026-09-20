@@ -120,7 +120,7 @@ export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({
  return (
  <div className="inline-flex flex-col items-start gap-0.5">
  <span
- className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] sm:text-xs shadow-xs ${health.badgeClass}`}
+ className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] sm:text-xs ${health.badgeClass}`}
  title={health.description}
  >
  <span>{health.label}</span>

@@ -667,7 +667,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  };
 
  return (
- <div className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden shadow-lg transition-all" style={{
+ <div className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden transition-all" style={{
  borderColor: isStitchLight ?'#e2e8f0' :'#27272a'
  }}>
  <style>{`
@@ -689,7 +689,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  {/* Floating Control Overlay */}
  <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
  {/* City Info Card */}
- <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] shadow-md flex items-center gap-2 font-sans text-xs ${
+ <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-sans text-xs ${
  isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}>
  <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
@@ -718,7 +718,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className="relative">
  <button
  onClick={() => setShowStyleMenu(!showStyleMenu)}
- className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
+ className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--bg)]/95 hover:bg-[var(--surface)] text-[var(--ink)]'
@@ -729,8 +729,8 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  </button>
 
  {showStyleMenu && (
- <div className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] shadow-2xl space-y-1 font-sans text-xs z-[1100] ${
- isStitchLight ?'bg-[var(--surface)]/95 text-[var(--ink)] shadow-slate-300/50' :'bg-[var(--bg)]/95 text-[var(--ink)] shadow-black/80'
+ <div className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] space-y-1 font-sans text-xs z-[1100] ${
+ isStitchLight ?'bg-[var(--surface)]/95 text-[var(--ink)]' :'bg-[var(--bg)]/95 text-[var(--ink)] shadow-black/80'
  }`}>
  <div className="text-[10px] font-bold text-[var(--ink-2)] px-2 py-1 flex items-center justify-between">
  <span>Elegir Capa de Mapa</span>
@@ -745,7 +745,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
  mapStyle === key
- ?'bg-[var(--tentative)]/80 text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--tentative)]/80 text-[var(--ink)]'
  : isStitchLight
  ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'hover:bg-[var(--surface)] text-[var(--ink-2)]'
@@ -761,7 +761,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  <button
  onClick={handleRecenter}
- className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
+ className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--bg)]/90 hover:bg-[var(--surface)] text-[var(--ink)]'
@@ -774,7 +774,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  </div>
 
  {/* Floating Legend */}
- <div className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] font-sans text-[10px] space-y-1 shadow-md hidden sm:block ${
+ <div className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] font-sans text-[10px] space-y-1 hidden sm:block ${
  isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink-2)]' :'bg-[var(--bg)]/90 text-[var(--ink-2)]'
  }`}>
  <div className="font-bold text-[9px] tracking-wider mb-1 text-[var(--ink-2)]">Leyenda</div>

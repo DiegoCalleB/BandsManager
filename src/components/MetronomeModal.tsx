@@ -192,7 +192,7 @@ export function MetronomeModal({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="bg-gradient-to-b from-zinc-900 to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-md overflow-hidden shadow-2xl shadow-amber-0/10 my-auto max-h-[90vh] overflow-y-auto">
+ <div className="bg-gradient-to-b from-zinc-900 to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-md overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
  
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--ink)]/5">
@@ -323,8 +323,8 @@ export function MetronomeModal({
  className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-sans font-bold text-sm transition-all duration-75 ${
  isActive
  ? isAccent
- ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-lg shadow-amber-0/50 scale-105'
- :'bg-[var(--ok)] text-[var(--ink)] border-[var(--ok)] shadow-lg shadow-emerald-500/50 scale-105'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] scale-105'
+ :'bg-[var(--ok)] text-[var(--ink)] border-[var(--ok)] scale-105'
  :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
@@ -403,10 +403,10 @@ export function MetronomeModal({
  <div className="pt-2">
  <button
  onClick={togglePlay}
- className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 shadow-xl transition-all cursor-pointer active:scale-98 ${
+ className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98 ${
  isPlaying
- ?'bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-rose-500/25'
- :'bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] shadow-amber-0/25'
+ ?'bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)]'
+ :'bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)]'
  }`}
  >
  {isPlaying ? (

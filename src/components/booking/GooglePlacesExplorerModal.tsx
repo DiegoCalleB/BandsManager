@@ -600,7 +600,7 @@ export function GooglePlacesExplorerModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-6 bg-[var(--scrim)]/90 overflow-y-auto overscroll-contain pt-2 pb-24 sm:py-6 animate-fadeIn">
  <div
- className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
+ className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]800'
@@ -653,7 +653,7 @@ export function GooglePlacesExplorerModal({
  <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
  
  {/* Búsqueda Masiva de Campaña Activa: Recintos, Locales y Discotecas con Aforo y Estilo */}
- <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-0/10 via-purple-500/10 to-indigo-500/10 space-y-3 shadow-md">
+ <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-0/10 via-purple-500/10 to-indigo-500/10 space-y-3">
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
  <div className="flex items-start sm:items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
@@ -680,7 +680,7 @@ export function GooglePlacesExplorerModal({
  type="button"
  onClick={handleMassCampaignSearch}
  disabled={isMassCampaignSearching || isSearching}
- className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-[var(--acc)] via-amber-400 to-amber-500 hover:from-amber-400 hover:to-[var(--acc-soft)] text-[var(--acc-ink)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-amber-0/20 cursor-pointer disabled:opacity-50 shrink-0"
+ className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-[var(--acc)] via-amber-400 to-amber-500 hover:from-amber-400 hover:to-[var(--acc-soft)] text-[var(--acc-ink)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all hover:shadow-amber-0/20 cursor-pointer disabled:opacity-50 shrink-0"
  >
  {isMassCampaignSearching ? (
  <>
@@ -723,7 +723,7 @@ export function GooglePlacesExplorerModal({
  }}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
  isChecked
- ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50 shadow-sm'
+ ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50'
  :'bg-[var(--bg)]/80 text-[var(--ink-2)] border-[var(--hair)]800 hover:text-[var(--ink-2)]'
  }`}
  >
@@ -759,7 +759,7 @@ export function GooglePlacesExplorerModal({
  )}
 
  {/* Main Filter and Search Bar */}
- <div className="bg-[var(--bg)]/80 p-4 rounded-[var(--r-m)] space-y-3.5 shadow-sm">
+ <div className="bg-[var(--bg)]/80 p-4 rounded-[var(--r-m)] space-y-3.5">
  
  {/* Category Selector Pills (8 Categorías) */}
  <div className="space-y-1.5">
@@ -788,7 +788,7 @@ export function GooglePlacesExplorerModal({
  onClick={() => handleCategoryChange(cat.id)}
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
  isSelected
- ?'bg-[var(--acc)] text-[var(--on-acc)] border-[var(--acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] border-[var(--acc)]'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:bg-[var(--surface)]'
  }`}
  title={cat.desc}
@@ -871,7 +871,7 @@ export function GooglePlacesExplorerModal({
  type="button"
  onClick={() => handleSearch()}
  disabled={isSearching}
- className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50 ml-auto"
+ className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 ml-auto"
  >
  {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
  <span>{isSearching ?'Buscando...' : `Buscar ${searchLimit} Resultados`}</span>
@@ -983,7 +983,7 @@ export function GooglePlacesExplorerModal({
  <button
  onClick={handleExtractBatchEmails}
  disabled={isExtractingBatch || selectedCount === 0}
- className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md"
+ className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  title="Agente Enriquecedor: Investiga las páginas oficiales y fuentes públicas sin inventar emails"
  >
  {isExtractingBatch ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]/70" />}
@@ -993,7 +993,7 @@ export function GooglePlacesExplorerModal({
  <button
  onClick={handleImportToCRM}
  disabled={isImporting || selectedCount === 0}
- className="px-3.5 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md"
+ className="px-3.5 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
  {isImporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PlusCircle className="w-3.5 h-3.5" />}
  <span>📥 Incluir en mis Leads ({selectedCount})</span>
@@ -1008,7 +1008,7 @@ export function GooglePlacesExplorerModal({
  key={place.place_id}
  className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col justify-between space-y-2.5 ${
  place.selected
- ?'bg-[var(--bg)] border-[var(--acc)]/50 shadow-lg'
+ ?'bg-[var(--bg)] border-[var(--acc)]/50'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800/80 opacity-70'
  }`}
  >
@@ -1196,7 +1196,7 @@ export function GooglePlacesExplorerModal({
  {/* Discarded Suggestions Sub-Modal */}
  {showDiscardedModal && (
  <div className="fixed inset-0 z-[110] flex items-center justify-center p-3 bg-[var(--scrim)]/80 animate-fadeIn">
- <div className="w-full max-w-lg bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+ <div className="w-full max-w-lg bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[80vh]">
  <div className="p-4 border-b border-[var(--hair)]800 flex items-center justify-between bg-[var(--bg)]/60">
  <div className="flex items-center gap-2">
  <Ban className="w-4 h-4 text-[var(--alert)]" />

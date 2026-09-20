@@ -72,7 +72,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+ <div className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center">
@@ -163,7 +163,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  onAddGeneratedAudio(generatedAudioUrl, `AI Soundtrack: ${prompt.slice(0, 30)}...`);
  onClose();
  }}
- className="w-full py-2 bg-gradient-to-r from-[var(--acc)] to-orange-600 hover:from-amber-400 hover:to-orange-500 text-[var(--ink)] font-bold text-xs tracking-wider rounded-[var(--r-m)] transition shadow-md"
+ className="w-full py-2 bg-gradient-to-r from-[var(--acc)] to-orange-600 hover:from-amber-400 hover:to-orange-500 text-[var(--ink)] font-bold text-xs tracking-wider rounded-[var(--r-m)] transition"
  >
  + Añadir Soundtrack a la Canción / Estudio
  </button>
@@ -184,7 +184,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  type="button"
  onClick={handleGenerate}
  disabled={isGenerating || !prompt.trim()}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-orange-600 hover:from-amber-400 hover:to-orange-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-orange-600 hover:from-amber-400 hover:to-orange-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs tracking-wider flex items-center gap-2 cursor-pointer"
  >
  {isGenerating ? (
  <>

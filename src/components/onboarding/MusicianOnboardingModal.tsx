@@ -43,7 +43,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <div 
  role="dialog"
  aria-modal="true"
- className="relative w-full max-w-2xl bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
+ className="relative w-full max-w-2xl bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[92vh]"
  >
  {/* Decorative Top Ambient Glow */}
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-24 bg-[var(--acc)]/10 blur-3xl pointer-events-none" />
@@ -76,7 +76,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  onClick={() => setAppLang(l.code)}
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-sans font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
- ?'bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold shadow-sm scale-105'
+ ?'bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold scale-105'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  title={l.label}
@@ -102,7 +102,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  {/* Misión 1: Bolo / Concierto */}
  <div
  onClick={() => handleChooseMission('calendario')}
- className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-amber-0/5"
+ className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-amber-0/5"
  >
  <div className="flex items-start gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0 group-hover:scale-105 transition-transform">
@@ -135,7 +135,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  {/* Misión 2: Dossier / EPK */}
  <div
  onClick={() => handleChooseMission('epk')}
- className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--acc)]/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-sky-500/5"
+ className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--acc)]/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sky-500/5"
  >
  <div className="flex items-start gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0 group-hover:scale-105 transition-transform">
@@ -168,7 +168,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  {/* Misión 3: Repertorio / Setlist */}
  <div
  onClick={() => handleChooseMission('repertorio')}
- className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--ok)]/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-emerald-500/5"
+ className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--ok)]/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-emerald-500/5"
  >
  <div className="flex items-start gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ok)] shrink-0 group-hover:scale-105 transition-transform">

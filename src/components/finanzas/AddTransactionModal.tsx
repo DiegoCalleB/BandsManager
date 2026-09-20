@@ -58,7 +58,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/60 overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  id="add-transaction-modal"
- className="w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto"
+ className="w-full max-w-md rounded-[var(--r-l)] p-6 relative my-auto max-h-[90vh] overflow-y-auto"
  style={{
  backgroundColor: colors.card,
  borderColor: colors.border,
@@ -206,7 +206,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  <button
  type="submit"
  disabled={isSubmitting}
- className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] transition-all disabled:opacity-50"
  >
  {isSubmitting ?'Guardando...' :'Guardar Transacción'}
  </button>

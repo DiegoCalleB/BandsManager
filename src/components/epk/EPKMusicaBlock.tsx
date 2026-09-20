@@ -203,11 +203,11 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <div
  className={`p-3 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[var(--surface)] to-[var(--surface)] ${
  config.audioPreview?.habilitado !== false
- ?'/40 shadow-lg'
+ ?'/40'
  :' opacity-50'
  } flex items-center justify-between gap-3 text-left`}
  >
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 text-[var(--ink)] flex items-center justify-center shrink-0 shadow-md">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 text-[var(--ink)] flex items-center justify-center shrink-0">
  <Music className="w-5 h-5 fill-bg-[var(--surface)]" />
  </div>
  <div className="min-w-0 flex-1">

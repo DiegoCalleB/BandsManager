@@ -75,21 +75,21 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  const getWeatherIconBackdrop = (iconType?: EventWeatherData['iconType']) => {
  switch (iconType) {
  case'sun':
- return'from-amber-0/30 via-amber-400/10 to-transparent /50 shadow-[0_0_20px_var(--acc-glow)]';
+ return'from-amber-0/30 via-amber-400/10 to-transparent /50';
  case'cloud-sun':
- return'from-amber-0/25 via-slate-700/25 to-transparent /35 shadow-[0_0_16px_var(--acc-glow)]';
+ return'from-amber-0/25 via-slate-700/25 to-transparent /35';
  case'cloud':
- return'from-slate-600/35 via-slate-800/25 to-transparent /40 shadow-[0_0_14px_rgba(148,163,184,0.2)]';
+ return'from-slate-600/35 via-slate-800/25 to-transparent /40';
  case'rain':
- return'from-sky-500/30 via-blue-600/20 to-transparent border-[var(--acc)]/50 shadow-[0_0_18px_rgba(56,189,248,0.3)]';
+ return'from-sky-500/30 via-blue-600/20 to-transparent border-[var(--acc)]/50';
  case'lightning':
- return'from-yellow-500/35 via-purple-900/35 to-transparent /60 shadow-[0_0_22px_rgba(250,204,21,0.4)]';
+ return'from-yellow-500/35 via-purple-900/35 to-transparent /60';
  case'snow':
- return'from-cyan-500/30 via-blue-900/25 to-transparent border-[var(--acc)]/50 shadow-[0_0_18px_rgba(103,232,249,0.3)]';
+ return'from-cyan-500/30 via-blue-900/25 to-transparent border-[var(--acc)]/50';
  case'fog':
- return'from-slate-500/25 via-zinc-700/25 to-transparent /35 shadow-[0_0_12px_rgba(148,163,184,0.2)]';
+ return'from-slate-500/25 via-zinc-700/25 to-transparent /35';
  default:
- return'from-amber-0/20 to-transparent /30 shadow-[0_0_14px_var(--acc-glow)]';
+ return'from-amber-0/20 to-transparent /30';
  }
  };
 
@@ -106,7 +106,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  return (
  <div className={`rounded-[var(--r-m)] px-3.5 py-2.5 transition-all duration-200 flex items-center justify-between gap-3 ${
  hasAlerts
- ?'bg-[var(--acc-soft)] /40 text-[var(--ink-2)] shadow-xs'
+ ?'bg-[var(--acc-soft)] /40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2.5 min-w-0 flex-1">
@@ -166,13 +166,13 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  isStitchLight 
  ? hasAlerts
  ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-50 to-amber-50 border-[var(--alert)] text-[var(--ink)] shadow-sm'
- :'bg-gradient-to-br from-amber-50 to-sky-50 text-[var(--ink)] shadow-sm'
+ ?'bg-gradient-to-br from-rose-50 to-amber-50 border-[var(--alert)] text-[var(--ink)]'
+ :'bg-gradient-to-br from-amber-50 to-sky-50 text-[var(--ink)]'
  :'bg-gradient-to-br from-amber-50/70 to-sky-50/70 text-[var(--ink)]' 
  : hasAlerts
  ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90 border-[var(--alert)]/40 text-[var(--ink-2)] shadow-rose-950/20 shadow-lg'
- :'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-stone-900/90 /40 text-[var(--ink-2)] shadow-amber-950/20 shadow-lg'
+ ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90 border-[var(--alert)]/40 text-[var(--ink-2)]'
+ :'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-stone-900/90 /40 text-[var(--ink-2)]'
  :'bg-gradient-to-br from-stone-900/80 to-[var(--surface)]/80 /25 text-[var(--ink-2)]'
  }`}>
  {/* Barra superior del widget del tiempo */}
@@ -195,8 +195,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {hasAlerts && (
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-sans font-bold tracking-wider ${
  dangerAlertsCount > 0
- ?'bg-[var(--alert)] text-[var(--ink)] shadow-xs'
- :'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
+ ?'bg-[var(--alert)] text-[var(--ink)]'
+ :'bg-[var(--acc)] text-[var(--on-acc)]'
  }`}>
  {dangerAlertsCount > 0 ?'Alerta Activa' :'Aviso Meteo'}
  </span>
@@ -215,7 +215,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  onClick={() => setSelectedSlot('show')}
  className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold transition-colors cursor-pointer flex items-center gap-1 ${
  selectedSlot ==='show'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--acc)]/70'
  }`}
  >
@@ -226,7 +226,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  onClick={() => setSelectedSlot('soundcheck')}
  className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold transition-colors cursor-pointer flex items-center gap-1 ${
  selectedSlot ==='soundcheck'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--acc)]/70'
  }`}
  >
@@ -313,7 +313,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  whileHover={{ scale: 1.05 }}
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.rainProbability || 0) >= 40 
- ?'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--ink-3)] shadow-[0_0_12px_rgba(14,165,233,0.25)]' 
+ ?'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--ink-3)]' 
  :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
@@ -339,7 +339,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  whileHover={{ scale: 1.05 }}
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.windGusts || 0) >= 40 
- ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 shadow-[0_0_12px_rgba(245,158,11,0.25)]' 
+ ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70' 
  :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
@@ -386,8 +386,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  animate={{ opacity: 1, y: 0 }}
  className={`rounded-[var(--r-m)] p-3 transition-all duration-200 ${
  isDanger
- ? 'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-[var(--alert)]/40 shadow-rose-950/30 shadow-md'
- : 'bg-[var(--acc-soft)] /40 text-[var(--acc)] shadow-amber-950/20 shadow-md'
+ ? 'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-[var(--alert)]/40'
+ : 'bg-[var(--acc-soft)] /40 text-[var(--acc)]'
  }`}
  >
  <div className="flex items-start justify-between gap-2">
@@ -410,8 +410,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-sans font-bold tracking-wider ${
  isDanger
- ?'bg-[var(--alert)] text-[var(--ink)] shadow-xs'
- :'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
+ ?'bg-[var(--alert)] text-[var(--ink)]'
+ :'bg-[var(--acc)] text-[var(--on-acc)]'
  }`}>
  {isDanger ?'Peligro Extremo' :'Precaución'}
  </span>

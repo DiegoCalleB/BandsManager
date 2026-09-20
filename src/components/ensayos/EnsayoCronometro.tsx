@@ -77,7 +77,7 @@ export function EnsayoCronometro({
 
  if (isCompact) {
  return (
- <div className="flex items-center gap-2 bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-m)] px-3 py-1.5 shadow-sm">
+ <div className="flex items-center gap-2 bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-m)] px-3 py-1.5">
  <Clock className={`w-3.5 h-3.5 ${isActive ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
  <span className={`font-sans font-bold text-sm tracking-wider ${isOvertime ?'text-[var(--alert)]' :'text-[var(--ink)]'}`}>
  {formatTime(seconds)}
@@ -98,7 +98,7 @@ export function EnsayoCronometro({
  }
 
  return (
- <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] border-[var(--hair)] shadow-lg relative overflow-hidden">
+ <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] border-[var(--hair)] relative overflow-hidden">
  {/* Background soft glow when running */}
  {isActive && (
  <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--acc)]/10 rounded-full blur-3xl pointer-events-none" />
@@ -143,10 +143,10 @@ export function EnsayoCronometro({
  <div className="flex items-center gap-1.5">
  <button
  onClick={toggleTimer}
- className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer shadow-sm active:scale-95 ${
+ className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer active:scale-95 ${
  isActive
- ?'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60 shadow-amber-0/20'
- :'bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] shadow-emerald-500/20'
+ ?'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60'
+ :'bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]'
  }`}
  >
  {isActive ? (

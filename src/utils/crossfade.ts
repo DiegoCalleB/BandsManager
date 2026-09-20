@@ -17,22 +17,22 @@ export const CROSSFADE_SECONDS = 5;
  * simple rampa lineal.
  */
 export function computeCrossfadeGains(
-  elapsedMs: number,
-  fadeDurationMs: number
+ elapsedMs: number,
+ fadeDurationMs: number
 ): { fromGain: number; toGain: number } {
-  const t = fadeDurationMs > 0 ? Math.max(0, Math.min(1, elapsedMs / fadeDurationMs)) : 1;
-  const angle = (t * Math.PI) / 2;
-  return { fromGain: Math.cos(angle), toGain: Math.sin(angle) };
+ const t = fadeDurationMs > 0 ? Math.max(0, Math.min(1, elapsedMs / fadeDurationMs)) : 1;
+ const angle = (t * Math.PI) / 2;
+ return { fromGain: Math.cos(angle), toGain: Math.sin(angle) };
 }
 
 /** Segundo en el que hay que arrancar la reproducción de una canción para que sus últimos
  * `fadeSec` segundos coincidan con la ventana de fundido. */
 export function getCrossfadeStartTime(durationSec: number, fadeSec: number = CROSSFADE_SECONDS): number {
-  return Math.max(0, durationSec - fadeSec);
+ return Math.max(0, durationSec - fadeSec);
 }
 
 /** Si la canción es más corta que la ventana de fundido (p.ej. un clip de "palabras al
  * público" de pocos segundos), no hay hueco real para fundir — se salta y se usa un corte duro. */
 export function shouldCrossfade(durationSec: number, fadeSec: number = CROSSFADE_SECONDS): boolean {
-  return durationSec > fadeSec;
+ return durationSec > fadeSec;
 }

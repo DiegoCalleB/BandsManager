@@ -112,7 +112,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+ <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
@@ -222,7 +222,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  type="button"
  onClick={handleGenerateIdea}
  disabled={isGenerating}
- className="w-full py-3 rounded-[var(--r-m)] bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-[var(--ink)] font-sans text-xs font-bold flex items-center justify-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+ className="w-full py-3 rounded-[var(--r-m)] bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-[var(--ink)] font-sans text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-50"
  >
  {isGenerating ? (
  <>
@@ -288,7 +288,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <button
  type="button"
  onClick={handleAcceptAndAddIdea}
- className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-[var(--ok)] hover:to-teal-500 text-xs font-sans font-bold text-[var(--ink)] flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-[var(--ok)] hover:to-teal-500 text-xs font-sans font-bold text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
  >
  <Plus className="w-4 h-4" />
  <span>Añadir como Nueva Idea al Tema</span>

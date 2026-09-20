@@ -134,12 +134,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  : isDragOver
  ?'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-[var(--ok)]/10'
  : isPlayingCurrent
- ? 'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ink)] shadow-sm ring-1 ring-emerald-500/20'
+ ? 'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ink)] ring-1 ring-emerald-500/20'
  : isSelected
  ? 'bg-[var(--acc)]/10 /30 text-[var(--ink)]'
  : isStitchLight
- ?'bg-[var(--surface)] hover:bg-[var(--bg)] /80 text-[var(--ink)] shadow-xs'
- :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-[var(--ink)] shadow-xs'
+ ?'bg-[var(--surface)] hover:bg-[var(--bg)] /80 text-[var(--ink)]'
+ :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-[var(--ink)]'
  } ${draggable ?'cursor-grab active:cursor-grabbing' :''}`}
  >
  <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto">
@@ -173,10 +173,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onPlay}
  className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full flex items-center justify-center transition-all cursor-pointer ${
  isPlaying
- ?'bg-[var(--ok)] text-[var(--ink)] shadow-md scale-105'
+ ?'bg-[var(--ok)] text-[var(--ink)] scale-105'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)] group-hover:scale-105 shadow-xs'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)] group-hover:scale-105'
  }`}
  title={isPlaying ?'Pausar canción' : `Reproducir ${displayTitle}`}
  >
@@ -194,7 +194,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
  {/* Optional Cover image (hidden on tiny screens if no cover) */}
  {song.portadaUrl ? (
- <div className="hidden sm:block w-8.5 h-8.5 rounded-[var(--r-s)] overflow-hidden shrink-0 shadow-xs">
+ <div className="hidden sm:block w-8.5 h-8.5 rounded-[var(--r-s)] overflow-hidden shrink-0">
  <img src={song.portadaUrl} alt={displayTitle} className="w-full h-full object-cover" />
  </div>
  ) : null}
@@ -334,7 +334,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenStudio}
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  ideasCount > 0
- ?'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] /40 shadow-xs'
+ ?'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] /40'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] /80'
@@ -362,7 +362,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  hasIrisStems(song)
- ?'bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500/30 text-[var(--acc)]/70 /40 shadow-xs'
+ ?'bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500/30 text-[var(--acc)]/70 /40'
  : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
  }`}
  title={hasIrisStems(song) ?'Ver pistas e instrumentos separados con Iris' :'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
@@ -379,7 +379,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenMemberNotes}
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
  hasMemberNotes
- ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 /30 shadow-xs'
+ ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 /30'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
@@ -453,7 +453,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  {/* Menu Popover */}
  {showMenu && (
  <div
- className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 shadow-2xl text-xs ${
+ className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)] divide-y divide-slate-100'
  :'bg-[var(--surface)]/95 /80 text-[var(--ink-2)] divide-y divide-slate-800/60'

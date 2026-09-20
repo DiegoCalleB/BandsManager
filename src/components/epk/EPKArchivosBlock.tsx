@@ -73,13 +73,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <img
  src={config.logoUrl}
  alt="Logo de la banda"
- className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 shadow-lg bg-[var(--surface)]"
+ className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 bg-[var(--surface)]"
  />
  ) : isBakandeya ? (
  <img
  src="/logo_bakandeya_bueno_sin_fondo.png"
  alt="Bakandeya Logo"
- className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 shadow-lg bg-[var(--surface)]"
+ className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 bg-[var(--surface)]"
  />
  ) : (
  <div className="w-28 h-28 rounded-[var(--r-l)] border-2 border-dashed bg-[var(--surface)] flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
@@ -91,7 +91,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
  <div className="space-y-3 flex-1 w-full">
  <div className="flex items-center gap-2">
- <label className="flex-1 cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 transition shadow-md">
+ <label className="flex-1 cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 transition">
  {isUploadingLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
  <span>{isUploadingLogo ?'Subiendo Logo...' :'Subir Logo (PNG/JPG)'}</span>
  <input
@@ -192,7 +192,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <p className="text-[11px] text-[var(--ink-2)]">PDF, Word o TXT. Estará listo para el envío automático en correos.</p>
  </div>
 
- <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition shadow-md">
+ <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
  {isUploadingDossier ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
  <span>{isUploadingDossier ?'Subiendo Documento...' :'Seleccionar PDF / Dossier'}</span>
  <input
@@ -294,7 +294,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <p className="text-xs font-bold text-[var(--ink)]">Sube aquí el Rider Técnico (PDF)</p>
  </div>
 
- <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition shadow-md">
+ <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
  {isUploadingRider ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
  <span>{isUploadingRider ?'Subiendo Documento...' :'Seleccionar PDF / Rider'}</span>
  <input
@@ -330,7 +330,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  Fotos reales de directo o sesión de prensa. Es lo primero que ve alguien que nunca os ha visto tocar.
  </p>
  <label
- className={`cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs inline-flex items-center justify-center gap-2 transition shadow-md ${
+ className={`cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs inline-flex items-center justify-center gap-2 transition ${
  subiendoGaleria ?'opacity-70 pointer-events-none' :''
  }`}
  >

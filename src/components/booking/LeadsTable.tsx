@@ -116,7 +116,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <button
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAllFiltered}
- className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)]/90 hover:bg-[var(--surface)] border-[var(--hair)]700 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer shadow-xs"
+ className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)]/90 hover:bg-[var(--surface)] border-[var(--hair)]700 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
  >
  {isAllSelected ? (
  <>
@@ -162,10 +162,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  onClick={() => onSelectLead(lead)}
  className={`p-4 rounded-[var(--r-l)] transition-all cursor-pointer flex flex-col justify-between gap-3 relative group ${
  isChecked
- ?'bg-[var(--surface)] border-2 border-[var(--acc)] shadow-xl ring-2 ring-[var(--acc)]/25'
+ ?'bg-[var(--surface)] border-2 border-[var(--acc)] ring-2 ring-[var(--acc)]/25'
  : isDetailOpen
- ?'bg-[var(--sunken)] border-2 border-[var(--acc)] shadow-xl ring-1 ring-purple-400/30'
- :'bg-[var(--bg)] hover:bg-[var(--sunken)] hover:border-[var(--hair)]700 shadow-md'
+ ?'bg-[var(--sunken)] border-2 border-[var(--acc)] ring-1 ring-purple-400/30'
+ :'bg-[var(--bg)] hover:bg-[var(--sunken)] hover:border-[var(--hair)]700'
  }`}
  >
  {/* Header info */}
@@ -183,7 +183,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  >
  <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
  isChecked 
- ?'bg-[var(--acc)] border-[var(--acc)] text-[var(--ink)] shadow-xs' 
+ ?'bg-[var(--acc)] border-[var(--acc)] text-[var(--ink)]' 
  :'border-[var(--hair)]600 group-hover:border-[var(--hair)]400 bg-[var(--bg)]/80 hover:'
  }`}>
  {isChecked && <CheckSquare className="w-3.5 h-3.5" />}
@@ -258,7 +258,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  target="_blank"
  rel="noreferrer"
  onClick={(e) => e.stopPropagation()}
- className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs min-h-[38px]"
+ className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer min-h-[38px]"
  title="Enviar WhatsApp directo a la sala"
  >
  <MessageCircle className="w-4 h-4 text-[var(--ok)]" />
@@ -271,7 +271,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <a
  href={`tel:${lead.telefono}`}
  onClick={(e) => e.stopPropagation()}
- className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--bg)]/80 hover:bg-[var(--tentative)] text-[var(--ink-3)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs min-h-[38px]"
+ className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--bg)]/80 hover:bg-[var(--tentative)] text-[var(--ink-3)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer min-h-[38px]"
  title="Llamar directamente por teléfono"
  >
  <PhoneCall className="w-4 h-4 text-[var(--ink-2)]" />
@@ -302,7 +302,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center gap-1 min-h-[38px] ${
  isDetailOpen
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--ink-3)]/60'
  }`}
  >

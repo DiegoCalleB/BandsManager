@@ -475,7 +475,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
  <div
  ref={scrollContainerRef}
- className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl pointer-events-auto"
+ className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-3xl max-h-[90vh] overflow-y-auto pointer-events-auto"
  style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
  >
  {/* Todo lo de aquí dentro (header, gráfico, score, arco, sugerencias, áreas de mejora) es

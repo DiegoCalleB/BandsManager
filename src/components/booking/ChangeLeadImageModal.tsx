@@ -135,7 +135,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  }}
  >
  <div 
- className="bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-l)] w-full max-w-md p-5 shadow-2xl relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
+ className="bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}

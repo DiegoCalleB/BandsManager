@@ -81,7 +81,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <ModalPortal isOpen={true} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/60 overflow-y-auto overscroll-contain animate-in fade-in">
  <div
- className="relative w-full max-w-2xl my-auto rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+ className="relative w-full max-w-2xl my-auto rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh]"
  style={{ backgroundColor: colors.card, borderColor: colors.border }}
  >
  <div
@@ -174,7 +174,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <button
  onClick={handleGenerate}
  disabled={isGenerating}
- className="w-full py-2.5 rounded-[var(--r-m)] font-semibold text-[var(--on-acc)] bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-600/20"
+ className="w-full py-2.5 rounded-[var(--r-m)] font-semibold text-[var(--on-acc)] bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-50 transition-all flex items-center justify-center gap-2"
  >
  {isGenerating ? (
  <span className="animate-pulse">Generando respuesta con Gemini IA...</span>
@@ -215,7 +215,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <button
  onClick={handleCommit}
  disabled={!simulationMessage}
- className="px-5 py-2 rounded-[var(--r-m)] font-semibold text-[var(--on-ok)] bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 transition-all flex items-center gap-2 shadow-lg shadow-emerald-600/20"
+ className="px-5 py-2 rounded-[var(--r-m)] font-semibold text-[var(--on-ok)] bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 transition-all flex items-center gap-2"
  >
  <CheckCircle2 className="w-4 h-4" />
  Registrar en Hilo de Emails

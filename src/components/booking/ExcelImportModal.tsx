@@ -453,14 +453,14 @@ export function ExcelImportModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div
- className={`relative w-full max-w-5xl max-h-[92vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
+ className={`relative w-full max-w-5xl max-h-[92vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink)]'
  }`}
  >
  {/* MODAL HEADER */}
  <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--hair)] bg-gradient-to-r from-emerald-950/30 via-zinc-900/50 to-amber-950/20">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)] shadow-sm">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)]">
  <FileSpreadsheet className="w-5 h-5" />
  </div>
  <div>
@@ -531,7 +531,7 @@ export function ExcelImportModal({
  onDragOver={e => e.preventDefault()}
  onDrop={handleFileDrop}
  onClick={() => fileInputRef.current?.click()}
- className="w-full max-w-2xl p-10 border-2 border-dashed border-[var(--hair)]700 hover:border-[var(--ok)]/70 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-all flex flex-col items-center justify-center text-center cursor-pointer group shadow-inner"
+ className="w-full max-w-2xl p-10 border-2 border-dashed border-[var(--hair)]700 hover:border-[var(--ok)]/70 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-all flex flex-col items-center justify-center text-center cursor-pointer group"
  >
  <input
  ref={fileInputRef}
@@ -540,7 +540,7 @@ export function ExcelImportModal({
  onChange={handleFileChange}
  className="hidden"
  />
- <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--ok)]/10 group-hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mb-4 transition-all group-hover:scale-110 shadow-sm">
+ <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--ok)]/10 group-hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mb-4 transition-all group-hover:scale-110">
  <Upload className="w-8 h-8" />
  </div>
  <h4 className="text-base font-bold text-[var(--ink)] group-hover:text-[var(--ink-2)] transition-colors">
@@ -620,7 +620,7 @@ export function ExcelImportModal({
  onClick={() => setDefaultCategory(cat.id)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
  defaultCategory === cat.id
- ?'bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold'
  :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
  }`}
  >
@@ -911,7 +911,7 @@ export function ExcelImportModal({
  </div>
 
  {/* PREVIEW TABLE */}
- <div className="border-[var(--hair)] rounded-[var(--r-m)] overflow-hidden bg-[var(--bg)]/80 shadow-inner max-h-[380px] overflow-y-auto">
+ <div className="border-[var(--hair)] rounded-[var(--r-m)] overflow-hidden bg-[var(--bg)]/80 max-h-[380px] overflow-y-auto">
  <table className="w-full text-left text-xs border-collapse">
  <thead className="sticky top-0 bg-[var(--bg)]/95 text-[var(--ink-2)] border-b border-[var(--hair)] z-10 font-bold">
  <tr>
@@ -1046,7 +1046,7 @@ export function ExcelImportModal({
  <button
  type="button"
  onClick={buildParsedRows}
- className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] shadow-lg active:scale-95 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] active:scale-95 transition-all cursor-pointer"
  >
  <span>Continuar a Vista Previa ({rawRows.length} filas)</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -1058,7 +1058,7 @@ export function ExcelImportModal({
  type="button"
  disabled={isImporting || selectedCount === 0}
  onClick={handleExecuteImport}
- className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] shadow-xl active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isImporting ? (
  <>

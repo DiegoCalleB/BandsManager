@@ -17,25 +17,25 @@ const COMBINING_DIACRITIC_END = 0x036f;
 
 /** Quita acentos (á -> a) sin depender de un rango unicode literal en el código fuente. */
 function stripDiacritics(value: string): string {
-  return Array.from(value.normalize('NFD'))
-    .filter(ch => {
-      const code = ch.codePointAt(0) ?? 0;
-      return code < COMBINING_DIACRITIC_START || code > COMBINING_DIACRITIC_END;
-    })
-    .join('');
+ return Array.from(value.normalize('NFD'))
+ .filter(ch => {
+ const code = ch.codePointAt(0) ?? 0;
+ return code < COMBINING_DIACRITIC_START || code > COMBINING_DIACRITIC_END;
+ })
+ .join('');
 }
 
 function normalizeInstrumentLabel(value: string): string {
-  return stripDiacritics(value.toLowerCase()).trim();
+ return stripDiacritics(value.toLowerCase()).trim();
 }
 
 const INSTRUMENT_ALIASES: Record<string, StemInstrumentCategory> = {
-  voz: 'Voz', vocal: 'Voz', vocalista: 'Voz', cantante: 'Voz', voces: 'Voz',
-  bateria: 'Batería', percusion: 'Batería', baterista: 'Batería',
-  bajo: 'Bajo', bajista: 'Bajo',
-  guitarra: 'Guitarras', guitarras: 'Guitarras', guitarrista: 'Guitarras',
-  teclado: 'Teclados', teclados: 'Teclados', piano: 'Teclados', pianista: 'Teclados', sintetizador: 'Teclados',
-  arreglos: 'Arreglos', cuerdas: 'Arreglos', vientos: 'Arreglos', sintes: 'Arreglos'
+ voz: 'Voz', vocal: 'Voz', vocalista: 'Voz', cantante: 'Voz', voces: 'Voz',
+ bateria: 'Batería', percusion: 'Batería', baterista: 'Batería',
+ bajo: 'Bajo', bajista: 'Bajo',
+ guitarra: 'Guitarras', guitarras: 'Guitarras', guitarrista: 'Guitarras',
+ teclado: 'Teclados', teclados: 'Teclados', piano: 'Teclados', pianista: 'Teclados', sintetizador: 'Teclados',
+ arreglos: 'Arreglos', cuerdas: 'Arreglos', vientos: 'Arreglos', sintes: 'Arreglos'
 };
 
 /**
@@ -44,15 +44,15 @@ const INSTRUMENT_ALIASES: Record<string, StemInstrumentCategory> = {
  * "Manager" o "Técnico de Sonido" no tienen pista propia que aislar).
  */
 export function matchInstrumentToStemCategory(instrument: string | undefined | null): StemInstrumentCategory | null {
-  if (!instrument) return null;
-  const normalized = normalizeInstrumentLabel(instrument);
-  if (!normalized) return null;
+ if (!instrument) return null;
+ const normalized = normalizeInstrumentLabel(instrument);
+ if (!normalized) return null;
 
-  const direct = INSTRUMENT_ALIASES[normalized];
-  if (direct) return direct;
+ const direct = INSTRUMENT_ALIASES[normalized];
+ if (direct) return direct;
 
-  for (const [alias, category] of Object.entries(INSTRUMENT_ALIASES)) {
-    if (normalized.includes(alias)) return category;
-  }
-  return null;
+ for (const [alias, category] of Object.entries(INSTRUMENT_ALIASES)) {
+ if (normalized.includes(alias)) return category;
+ }
+ return null;
 }

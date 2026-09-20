@@ -56,7 +56,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  className="fixed inset-0 z-50 bg-[var(--scrim)]/95 flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
  >
  {/* BARRA SUPERIOR PRINCIPAL (DESKTOP & MOBILE) */}
- <header className="w-full bg-[var(--surface)] border-b border-[var(--hair)] px-3 sm:px-5 py-2.5 shrink-0 z-30 shadow-2xl flex items-center justify-between gap-2">
+ <header className="w-full bg-[var(--surface)] border-b border-[var(--hair)] px-3 sm:px-5 py-2.5 shrink-0 z-30 flex items-center justify-between gap-2">
  {/* Lado Izquierdo: Título y Estado */}
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
@@ -81,13 +81,13 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  {/* Centro (en pantallas medianas y grandes): Controles Principales */}
  <div className="hidden lg:flex items-center gap-2">
  {/* Selector de Pantalla / Estado */}
- <div className="flex bg-[var(--surface)] rounded-[var(--r-m)] p-1 shadow-inner">
+ <div className="flex bg-[var(--surface)] rounded-[var(--r-m)] p-1">
  <button
  type="button"
  onClick={() => setPreviewScreen('form')}
  className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
  previewScreen ==='form'
- ?'bg-[var(--acc)] text-[var(--ink)] shadow-md font-extrabold'
+ ?'bg-[var(--acc)] text-[var(--ink)] font-extrabold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -99,7 +99,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setPreviewScreen('success')}
  className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
  previewScreen ==='success'
- ?'bg-[var(--ok)] text-[var(--ink)] shadow-md font-extrabold'
+ ?'bg-[var(--ok)] text-[var(--ink)] font-extrabold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -109,7 +109,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </div>
 
  {/* Selector de Dispositivo */}
- <div className="flex bg-[var(--surface)] rounded-[var(--r-m)] p-1 shadow-inner">
+ <div className="flex bg-[var(--surface)] rounded-[var(--r-m)] p-1">
  <button
  type="button"
  onClick={() => setDeviceMode('mobile')}
@@ -139,7 +139,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </div>
 
  {/* Selector de Idioma */}
- <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-m)] p-1 gap-1 shadow-inner">
+ <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-m)] p-1 gap-1">
  <Globe2 className="w-3 h-3 text-[var(--ink-2)] ml-1 mr-0.5" />
  {FAN_FORM_LANGUAGES.map(l => (
  <button
@@ -148,7 +148,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setSelectedLanguage(l.code)}
  className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-sans transition-all cursor-pointer ${
  selectedLanguage === l.code
- ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold shadow-inner'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] opacity-75 hover:opacity-100'
  }`}
  title={l.label}
@@ -196,7 +196,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  <button
  type="button"
  onClick={onClose}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold transition cursor-pointer text-xs font-sans shadow-md active:scale-95"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold transition cursor-pointer text-xs font-sans active:scale-95"
  title={t('previewClose')}
  >
  <X className="w-4 h-4" />
@@ -280,14 +280,14 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  /* MOCKUP ELEGANTE DE SMARTPHONE */
  <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-all duration-200">
  {/* Chasis exterior del smartphone */}
- <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[var(--bg)] shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.06)] border-[var(--hair)]/80">
+ <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[var(--bg)] border-[var(--hair)]/80">
  {/* Dynamic Island / Altavoz */}
  <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-20 h-3 bg-black rounded-full z-30 flex items-center justify-center pointer-events-none opacity-80">
  <div className="w-2 h-2 rounded-full bg-[var(--surface)] border-[var(--hair)]" />
  </div>
 
  {/* Pantalla del teléfono con altura adaptativa y scroll nativo */}
- <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[var(--bg)] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4 border-[var(--surface)] shadow-inner">
+ <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[var(--bg)] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4 border-[var(--surface)]">
  <FansLanding
  key={`mobile-${simKey}-${selectedLanguage}-${selectedConcertId}-${previewScreen}`}
  currentBandId={currentBandId}
@@ -309,7 +309,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </div>
  ) : (
  /* MOCKUP DE ESCRITORIO / NAVEGADOR */
- <div className="w-full max-w-4xl bg-[var(--bg)] rounded-[var(--r-l)] shadow-2xl overflow-hidden my-auto flex flex-col h-[calc(100dvh-160px)] max-h-[740px]">
+ <div className="w-full max-w-4xl bg-[var(--bg)] rounded-[var(--r-l)] overflow-hidden my-auto flex flex-col h-[calc(100dvh-160px)] max-h-[740px]">
  {/* Barra simulada de navegador */}
  <div className="bg-[var(--surface)] border-b px-4 py-2 flex items-center justify-between gap-3 text-xs font-sans shrink-0">
  <div className="flex items-center gap-1.5">

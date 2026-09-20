@@ -104,7 +104,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--surface)]/80
- <div className="bg-[var(--surface)] rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+ <div className="bg-[var(--surface)] rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
  {/* Cabecera */}
  <div className="flex items-center justify-between border-b pb-4">
  <div className="flex items-center gap-3">
@@ -140,7 +140,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  onClick={() => setSelectedFormat('poster-a4')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='poster-a4'
- ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
+ ?'bg-[var(--acc)]/10 text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
@@ -163,7 +163,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  onClick={() => setSelectedFormat('svg')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='svg'
- ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
+ ?'bg-[var(--acc)]/10 text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
@@ -186,7 +186,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  onClick={() => setSelectedFormat('png-4k')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='png-4k'
- ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
+ ?'bg-[var(--acc)]/10 text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
@@ -209,7 +209,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  onClick={() => setSelectedFormat('badge')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='badge'
- ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
+ ?'bg-[var(--acc)]/10 text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
@@ -281,7 +281,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  type="button"
  onClick={handleDownload}
  disabled={isExporting}
- className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-lg disabled:opacity-50"
+ className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
  {isExporting ?'Generando archivo en Alta Resolución...' :'Descargar Archivo en Alta Resolución'}
@@ -290,7 +290,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <button
  type="button"
  onClick={handlePrint}
- className="w-full sm:w-auto py-3 px-5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-md"
+ className="w-full sm:w-auto py-3 px-5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
  >
  <Printer className="w-4 h-4" />
  Imprimir en A4 / Guardar PDF

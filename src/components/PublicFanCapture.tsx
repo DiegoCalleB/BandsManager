@@ -114,14 +114,14 @@ export const PublicFanCapture: React.FC = () => {
  <img
  src={bandInfo.logoUrl}
  alt={bandInfo.name ||"Logo"}
- className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover border-2 shadow-xl shadow-amber-0/20"
+ className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover border-2"
  />
  ) : (
- <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)] border-2 /80 flex items-center justify-center text-[var(--acc)] shadow-xl">
+ <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)] border-2 /80 flex items-center justify-center text-[var(--acc)]">
  <Music className="w-10 h-10" />
  </div>
  )}
- <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-[var(--ink)] p-1.5 rounded-full shadow-lg">
+ <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-[var(--ink)] p-1.5 rounded-full">
  <Heart className="w-4 h-4 fill-slate-950" />
  </span>
  </div>
@@ -140,7 +140,7 @@ export const PublicFanCapture: React.FC = () => {
 
  {!submitted ? (
  /* FORM CARD */
- <form onSubmit={handleSubmit} className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 shadow-2xl space-y-4
+ <form onSubmit={handleSubmit} className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 space-y-4
  {errorMsg && (
  <div className="p-3 bg-[var(--alert)]/90/80 text-[var(--alert)]/40 text-xs rounded-[var(--r-m)] font-medium">
  ⚠️ {errorMsg}
@@ -225,7 +225,7 @@ export const PublicFanCapture: React.FC = () => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-extrabold text-sm rounded-[var(--r-m)] shadow-lg shadow-amber-0/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
+ className="w-full py-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-extrabold text-sm rounded-[var(--r-m)] transition flex items-center justify-center gap-2 disabled:opacity-50"
  >
  {loading ? (
  <span>Guardando...</span>
@@ -239,7 +239,7 @@ export const PublicFanCapture: React.FC = () => {
  </form>
  ) : (
  /* THANK YOU CARD */
- <div className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 sm:p-8 shadow-2xl space-y-6 text-center animate-fade-in">
+ <div className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 sm:p-8 space-y-6 text-center animate-fade-in">
  <div className="w-16 h-16 bg-[var(--acc)]/20 text-[var(--acc)] rounded-full mx-auto flex items-center justify-center">
  <CheckCircle2 className="w-8 h-8" />
  </div>

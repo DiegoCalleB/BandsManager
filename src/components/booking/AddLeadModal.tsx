@@ -95,7 +95,7 @@ export function AddLeadModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fadeIn">
  <div
- className={`w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
+ className={`w-full max-w-lg p-5 rounded-[var(--r-l)] space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -242,7 +242,7 @@ export function AddLeadModal({
  onClick={() => setNewLeadData(prev => ({ ...prev, icono: emoji }))}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  newLeadData.icono === emoji
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110 shadow-md border-[var(--acc)]'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110 border-[var(--acc)]'
  :'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60'
  }`}
  >
@@ -464,7 +464,7 @@ export function AddLeadModal({
  </button>
  <button
  type="submit"
- className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider transition-all cursor-pointer shadow-lg ${
+ className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider transition-all cursor-pointer ${
  'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
  }`}
  >

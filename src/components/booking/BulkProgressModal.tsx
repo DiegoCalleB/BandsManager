@@ -42,7 +42,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={isCompleted ? onClose : undefined}>
  <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
- <div className="w-full max-w-lg bg-[var(--surface)] border-[var(--acc)]/40 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
+ <div className="w-full max-w-lg bg-[var(--surface)] border-[var(--acc)]/40 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[85vh] my-auto">
  
  {/* Header */}
  <div className="p-4 sm:p-5 border-b border-[var(--hair)]800 bg-gradient-to-r from-[var(--surface)] to-[var(--bg)] flex items-center justify-between">
@@ -160,7 +160,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-md transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] transition-colors cursor-pointer"
  >
  Cerrar y ver resultados
  </button>

@@ -107,7 +107,7 @@ export function AIBandScoutModal({
  return (
  <ModalPortal>
  <div className="fixed inset-0 bg-[var(--scrim)]/60 z-[100] flex items-center justify-center p-4">
- <div className={`w-full max-w-4xl ${bgColor} rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}>
+ <div className={`w-full max-w-4xl ${bgColor} rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh]`}>
  
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)]/10 flex justify-between items-center bg-gradient-to-r from-amber-0/10 to-orange-500/10">
@@ -187,7 +187,7 @@ export function AIBandScoutModal({
  <button
  onClick={handleSearch}
  disabled={isSearching}
- className="px-6 py-2.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-0/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+ className="px-6 py-2.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold rounded-[var(--r-m)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
  >
  {isSearching ? (
  <>

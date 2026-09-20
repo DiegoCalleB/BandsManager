@@ -153,7 +153,7 @@ export function EnergyChart({
  setAnimMode(isFirstEverPaint ?'entrance' :'switch');
  const t = setTimeout(() => setAnimMode('fast'), (isFirstEverPaint ? GRAND_ENTRANCE_MS : SETLIST_SWITCH_MS) + 100);
  return () => clearTimeout(t);
-  
+ 
  }, [setlistKey]);
  const curveAnimationDuration = animMode ==='entrance' ? GRAND_ENTRANCE_MS : animMode ==='switch' ? SETLIST_SWITCH_MS : FAST_EDIT_MS;
  const curveAnimationEasing = animMode ==='entrance' ?'ease-in-out' :'ease-out';
@@ -377,7 +377,7 @@ export function EnergyChart({
  const placeOnLeft = dragPointerPos.x > containerWidth * 0.6;
  return (
  <div
- className="absolute z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[12px] font-sans text-[var(--ink)] shadow-xl pointer-events-none whitespace-nowrap"
+ className="absolute z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[12px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap"
  style={{
  border: `1px solid ${info.hexColor}99`,
  ...(isTouch
@@ -399,7 +399,7 @@ export function EnergyChart({
  {/* Arrastrando en horizontal (o gesto aún sin decidir): nombre + destino del reordenamiento,
  para saber qué se está moviendo sin tener que leer el número de posición en el eje X. */}
  {draggingFromIndex !== null && dragAxis !=='y' && hoverIndex !== null && (
- <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-sans text-[var(--ink)] shadow-xl pointer-events-none whitespace-nowrap">
+ <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap">
  <span className="text-[var(--acc)]/70 font-bold">{chartData[draggingFromIndex]?.name}</span>
  {hoverIndex !== draggingFromIndex && (
  <>
@@ -553,7 +553,7 @@ export function EnergyChart({
  if (!active || !payload?.length) return null;
  const d = payload[0].payload;
  return (
- <div className="bg-[var(--sunken)] text-[var(--ink)] text-[9px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] shadow-xl max-w-[200px]">
+ <div className="bg-[var(--sunken)] text-[var(--ink)] text-[9px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] max-w-[200px]">
  <p className="font-bold text-[var(--acc)] text-[10px]">#{d.idx + 1} {d.name}</p>
  {d.isSpeechEvent ? (
  <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">

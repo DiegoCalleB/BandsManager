@@ -231,7 +231,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
  return (
  <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
- <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl pointer-events-auto">
+ <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto pointer-events-auto">
  {/* Header + Mapa de Energía en un único bloque sticky, mismo patrón que el Análisis IA —
  así el gráfico se ve siempre arriba mientras se hace scroll por las acciones del plan. */}
  <div className="sticky top-0 z-10 bg-[var(--surface)]">

@@ -29,7 +29,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
  <div className="flex items-center gap-3">
  <div
- className="w-12 h-12 rounded-[var(--r-l)] flex items-center justify-center shadow-lg"
+ className="w-12 h-12 rounded-[var(--r-l)] flex items-center justify-center"
  style={{
  backgroundColor: `${colors.primary}15`,
  color: colors.primary,
@@ -88,7 +88,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  <button
  id="btn-nueva-cancion"
  onClick={onOpenNewSongModal}
- className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] shadow-md hover:brightness-110 active:scale-95 transition-all"
+ className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] hover:brightness-110 active:scale-95 transition-all"
  style={{ backgroundColor: colors.primary }}
  >
  <Plus className="w-4 h-4" />
@@ -98,7 +98,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  <button
  id="btn-nuevo-setlist"
  onClick={onOpenNewSetlistModal}
- className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] shadow-md hover:brightness-110 active:scale-95 transition-all"
+ className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] hover:brightness-110 active:scale-95 transition-all"
  style={{ backgroundColor: colors.primary }}
  >
  <Plus className="w-4 h-4" />

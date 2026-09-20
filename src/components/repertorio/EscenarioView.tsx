@@ -159,7 +159,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  }, [handleStageNext, handleStagePrev, toggleStagePlayPause]);
 
  return (
- <div className="p-4 sm:p-6 rounded-[var(--r-l)] bg-[var(--sunken)] space-y-6 text-[var(--ink)] shadow-2xl">
+ <div className="p-4 sm:p-6 rounded-[var(--r-l)] bg-[var(--sunken)] space-y-6 text-[var(--ink)]">
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4">
  <div>
  <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -203,7 +203,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  <button
  onClick={() => setShowPdfPreview(true)}
- className="px-2 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-sans font-extrabold text-[10px] rounded-[var(--r-m)] hover:bg-[var(--acc)]/50/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+ className="px-2 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-sans font-extrabold text-[10px] rounded-[var(--r-m)] hover:bg-[var(--acc)]/50/15 transition-all flex items-center gap-2 cursor-pointer"
  >
  <Printer className="w-4 h-4" />
  <span>Imprimir / Exportar</span>
@@ -233,14 +233,14 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  {/* CONCERT PLAYER CONSOLE (SPOTIFY LIVE BAR) */}
  {activeSetlist && activeSetlist.items.length > 0 && (
- <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-4 shadow-2xl relative overflow-hidden">
+ <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-4 relative overflow-hidden">
  {/* Subtle top glow line */}
  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--ok)]/60 to-transparent" />
 
  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
  {/* Active Track Metadata & Heart Favorite */}
  <div className="flex items-center gap-3.5 w-full md:w-auto">
- <div className="w-13 h-13 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden group">
+ <div className="w-13 h-13 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] flex items-center justify-center shrink-0 relative overflow-hidden group">
  {currentStageSong?.portadaUrl ? (
  <img src={currentStageSong.portadaUrl} alt={currentStageSong.titulo} className="w-full h-full object-cover" />
  ) : stagePlayingIndex !== null ? (
@@ -294,7 +294,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <span className="flex items-center gap-1.5 font-bold text-[var(--acc)]/70">
  <span className={`w-2 h-2 rounded-full transition-all duration-75 ${
  stageIsPlaying 
- ? (metronomeTick ?'bg-[var(--acc)]/60 scale-125 shadow-[0_0_8px_var(--acc)]' :'bg-[var(--acc-soft)] scale-90')
+ ? (metronomeTick ?'bg-[var(--acc)]/60 scale-125' :'bg-[var(--acc-soft)] scale-90')
  :'bg-[var(--ink-2)]/60'
  }`} />
  {currentStageSong.bpm || 120} BPM
@@ -349,7 +349,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  setShowItemAudioUrl(currentStageItem.audioUrl ||'');
  setShowShowItemModal(true);
  }}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ml-1 hover:scale-105 shadow-md"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ml-1 hover:scale-105"
  title="Grabar o subir audio para esta presentación / interludio"
  >
  <Mic className="w-4 h-4 text-[var(--acc)]" />
@@ -363,7 +363,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {/* Previous Track */}
  <button
  onClick={handleStagePrev}
- className="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+ className="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer"
  title="Pista anterior"
  >
  <SkipBack className="w-5 h-5 fill-current" />
@@ -372,7 +372,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {/* Play / Pause Circular Main Button */}
  <button
  onClick={toggleStagePlayPause}
- className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold flex items-center justify-center shadow-xl shadow-[var(--ok)]/25 cursor-pointer hover:scale-105 active:scale-95 transition-all"
+ className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold flex items-center justify-center/25 cursor-pointer hover:scale-105 active:scale-95 transition-all"
  title={stageIsPlaying ?"Pausar show" :"Iniciar directo"}
  >
  {stageIsPlaying ? (
@@ -385,7 +385,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {/* Next Track */}
  <button
  onClick={handleStageNext}
- className="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+ className="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer"
  title="Pista siguiente"
  >
  <SkipForward className="w-5 h-5 fill-current" />
@@ -396,7 +396,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setStageAutoplayNext(!stageAutoplayNext)}
  className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  stageAutoplayNext
- ?'bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/50 shadow-sm'
+ ?'bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/50'
  :'bg-[var(--surface)] text-[var(--ink-2)] border-transparent hover:text-[var(--ink)]'
  }`}
  title={stageAutoplayNext ?"Autoplay continuo activado" :"Autoplay desactivado"}
@@ -410,7 +410,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setStageCrossfadeEnabled(!stageCrossfadeEnabled)}
  className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all text-base ${
  stageCrossfadeEnabled
- ?'bg-[var(--acc)]/20 text-[var(--acc)] shadow-sm'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] border-transparent hover:text-[var(--ink)]'
  }`}
  title={stageCrossfadeEnabled ?"Fundido entre canciones activado (5s)" :"Fundido entre canciones desactivado (corte directo)"}
@@ -431,7 +431,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </div>
 
  {/* Ridged Progress Track */}
- <div className="relative w-full h-3.5 rounded-full bg-[var(--surface)] border-[var(--hair)] overflow-hidden group cursor-pointer shadow-inner flex items-center">
+ <div className="relative w-full h-3.5 rounded-full bg-[var(--surface)] border-[var(--hair)] overflow-hidden group cursor-pointer flex items-center">
  <div 
  className="absolute inset-0 opacity-20 pointer-events-none"
  style={{
@@ -440,7 +440,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  />
 
  <div 
- className="h-full bg-gradient-to-r from-[var(--ok)] via-[var(--ok)] to-[#20df64] transition-all duration-150 relative shadow-[0_0_12px_rgba(var(--ok-rgb), 0.4)]"
+ className="h-full bg-gradient-to-r from-[var(--ok)] via-[var(--ok)] to-[#20df64] transition-all duration-150 relative"
  style={{ width: `${stageProgressPct}%` }}
  >
  <div 
@@ -449,7 +449,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  backgroundImage:'repeating-linear-gradient(90deg, transparent 0px, transparent 3px, var(--shadow-dark) 3px, var(--shadow-dark) 6px)'
  }}
  />
- <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-[var(--surface)] shadow-[0_0_8px_var(--shadow-soft)] opacity-90" />
+ <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-[var(--surface)] opacity-90" />
  </div>
 
  <input
@@ -508,7 +508,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setShowChordsPanel(!showChordsPanel)}
  className={`text-[11px] font-sans px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
  showChordsPanel 
- ?'bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/50 shadow-sm' 
+ ?'bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/50' 
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]'
  }`}
  >
@@ -621,7 +621,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  arrastre, notas, popover de energía...) cuando este reproductor va embebido ahí —
  repetirla aquí sería la misma información dos veces en la misma pantalla. */}
  {!embedded && activeSetlist ? (
- <div className="bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] overflow-hidden shadow-2xl p-4 sm:p-6">
+ <div className="bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] overflow-hidden p-4 sm:p-6">
  <div className="overflow-x-auto">
  <div className="min-w-[650px] space-y-2">
  <div className="grid grid-cols-12 text-[11px] font-sans font-extrabold text-[var(--ink-2)] pb-3 border-b border-[var(--hair)]800/80 px-3">
@@ -657,7 +657,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  }}
  className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  isPlayingThis
- ?'bg-[var(--surface)] text-[var(--ink)] font-bold scale-105 shadow-md' 
+ ?'bg-[var(--surface)] text-[var(--ink)] font-bold scale-105' 
  :'bg-[var(--surface)] text-[var(--ok)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
  }`}
  title={isPlayingThis ?'Pausar' :'Reproducir este tema'}
@@ -705,7 +705,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  return (
  <div
  key={it.id}
- className="py-3 px-4 bg-gradient-to-r from-[var(--ok)]/20 via-[var(--surface)] to-[var(--sunken)] border-l-4 border-[var(--hair)] rounded-[var(--r-m)] font-sans text-[var(--ok)] font-extrabold text-xs tracking-wider flex items-center gap-2 my-2 shadow-md"
+ className="py-3 px-4 bg-gradient-to-r from-[var(--ok)]/20 via-[var(--surface)] to-[var(--sunken)] border-l-4 border-[var(--hair)] rounded-[var(--r-m)] font-sans text-[var(--ok)] font-extrabold text-xs tracking-wider flex items-center gap-2 my-2"
  >
  <span className="text-sm">⚡</span>
  <span>{it.tituloCustom ||'SECCIÓN DEL SHOW'}</span>
@@ -743,7 +743,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  }}
  className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  isPlayingThis 
- ?'bg-[var(--acc)] text-[var(--ink)] font-bold scale-105 shadow-md' 
+ ?'bg-[var(--acc)] text-[var(--ink)] font-bold scale-105' 
  :'bg-[var(--surface)] text-[var(--acc)] hover:bg-[var(--acc)] hover:text-[var(--ink)]'
  }`}
  title={isPlayingThis ?'Pausar' :'Reproducir discurso / audio'}

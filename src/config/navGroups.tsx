@@ -2,48 +2,48 @@ import type { LucideIcon } from 'lucide-react';
 import { LayoutGrid, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2, Briefcase, Mic2 } from 'lucide-react';
 
 export type NavItemId =
-  | 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'giras'
-  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'ensayos' | 'catalogo' | 'discografia' | 'chat' | 'finanzas' | 'merchan'
-  | 'metronome' | 'tuner';
+ | 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'giras'
+ | 'epk' | 'fans' | 'reels' | 'repertorio' | 'ensayos' | 'catalogo' | 'discografia' | 'chat' | 'finanzas' | 'merchan'
+ | 'metronome' | 'tuner';
 
 export interface NavItemDef {
-  id: NavItemId;
-  icon: LucideIcon;
-  labelKey: string;
-  labelDefault: string;
-  adminOnly?: boolean;
+ id: NavItemId;
+ icon: LucideIcon;
+ labelKey: string;
+ labelDefault: string;
+ adminOnly?: boolean;
 }
 
 // labelKey siempre resuelve contra el diccionario de LanguageContext (TRANSLATIONS['es']
 // define todas las claves 'nav.*' usadas aquí), así que labelDefault en la práctica solo
 // se usa si esa clave llegara a faltar del diccionario — mismo texto en los tres navs.
 export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
-  resumen: { id: 'resumen', icon: LayoutGrid, labelKey: 'nav.resumen', labelDefault: 'Dashboard' },
-  booking: { id: 'booking', icon: Building2, labelKey: 'nav.booking', labelDefault: 'Escenarios' },
-  medios: { id: 'medios', icon: Radio, labelKey: 'nav.medios', labelDefault: 'Medios' },
-  management: { id: 'management', icon: Briefcase, labelKey: 'nav.management', labelDefault: 'Management' },
-  bandas: { id: 'bandas', icon: Users, labelKey: 'nav.bandas', labelDefault: 'Grupos' },
-  calendario: { id: 'calendario', icon: CalendarRange, labelKey: 'nav.calendario', labelDefault: 'Calendario' },
-  giras: { id: 'giras', icon: Truck, labelKey: 'nav.giras', labelDefault: 'Tour Manager' },
-  epk: { id: 'epk', icon: BookOpen, labelKey: 'nav.epk', labelDefault: 'Dossier (EPK)' },
-  fans: { id: 'fans', icon: QrCode, labelKey: 'nav.fans', labelDefault: 'Captura QR & Fans' },
-  reels: { id: 'reels', icon: Video, labelKey: 'nav.reels', labelDefault: 'Reels Center' },
-  repertorio: { id: 'repertorio', icon: Disc3, labelKey: 'nav.repertorio', labelDefault: 'Repertorios' },
-  ensayos: { id: 'ensayos', icon: Mic2, labelKey: 'nav.ensayos', labelDefault: 'Ensayos' },
-  catalogo: { id: 'catalogo', icon: Music, labelKey: 'nav.discografia', labelDefault: 'Discografía' },
-  discografia: { id: 'discografia', icon: Disc2, labelKey: 'nav.discografia', labelDefault: 'Discografía' },
-  chat: { id: 'chat', icon: Guitar, labelKey: 'nav.chat', labelDefault: 'Agente Mánager' },
-  finanzas: { id: 'finanzas', icon: Coins, labelKey: 'nav.finanzas', labelDefault: 'Finanzas', adminOnly: true },
-  merchan: { id: 'merchan', icon: Sparkles, labelKey: 'nav.merchan', labelDefault: 'Merchandising', adminOnly: true },
-  metronome: { id: 'metronome', icon: Clock, labelKey: 'nav.metronome', labelDefault: 'Metrónomo' },
-  tuner: { id: 'tuner', icon: Guitar, labelKey: 'nav.tuner', labelDefault: 'Afinador' },
+ resumen: { id: 'resumen', icon: LayoutGrid, labelKey: 'nav.resumen', labelDefault: 'Dashboard' },
+ booking: { id: 'booking', icon: Building2, labelKey: 'nav.booking', labelDefault: 'Escenarios' },
+ medios: { id: 'medios', icon: Radio, labelKey: 'nav.medios', labelDefault: 'Medios' },
+ management: { id: 'management', icon: Briefcase, labelKey: 'nav.management', labelDefault: 'Management' },
+ bandas: { id: 'bandas', icon: Users, labelKey: 'nav.bandas', labelDefault: 'Grupos' },
+ calendario: { id: 'calendario', icon: CalendarRange, labelKey: 'nav.calendario', labelDefault: 'Calendario' },
+ giras: { id: 'giras', icon: Truck, labelKey: 'nav.giras', labelDefault: 'Tour Manager' },
+ epk: { id: 'epk', icon: BookOpen, labelKey: 'nav.epk', labelDefault: 'Dossier (EPK)' },
+ fans: { id: 'fans', icon: QrCode, labelKey: 'nav.fans', labelDefault: 'Captura QR & Fans' },
+ reels: { id: 'reels', icon: Video, labelKey: 'nav.reels', labelDefault: 'Reels Center' },
+ repertorio: { id: 'repertorio', icon: Disc3, labelKey: 'nav.repertorio', labelDefault: 'Repertorios' },
+ ensayos: { id: 'ensayos', icon: Mic2, labelKey: 'nav.ensayos', labelDefault: 'Ensayos' },
+ catalogo: { id: 'catalogo', icon: Music, labelKey: 'nav.discografia', labelDefault: 'Discografía' },
+ discografia: { id: 'discografia', icon: Disc2, labelKey: 'nav.discografia', labelDefault: 'Discografía' },
+ chat: { id: 'chat', icon: Guitar, labelKey: 'nav.chat', labelDefault: 'Agente Mánager' },
+ finanzas: { id: 'finanzas', icon: Coins, labelKey: 'nav.finanzas', labelDefault: 'Finanzas', adminOnly: true },
+ merchan: { id: 'merchan', icon: Sparkles, labelKey: 'nav.merchan', labelDefault: 'Merchandising', adminOnly: true },
+ metronome: { id: 'metronome', icon: Clock, labelKey: 'nav.metronome', labelDefault: 'Metrónomo' },
+ tuner: { id: 'tuner', icon: Guitar, labelKey: 'nav.tuner', labelDefault: 'Afinador' },
 };
 
 export interface NavGroupDef {
-  id: string;
-  titleKey: string;
-  titleDefault: string;
-  itemIds: NavItemId[];
+ id: string;
+ titleKey: string;
+ titleDefault: string;
+ itemIds: NavItemId[];
 }
 
 /**
@@ -66,36 +66,36 @@ export const NAV_PINNED_BOTTOM_IDS: NavItemId[] = ['chat'];
  * suficientes módulos (ver MIN_MODULES_FOR_GROUPED_NAV).
  */
 export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
-  {
-    id: 'contactos',
-    titleKey: 'navGroup.contactos',
-    titleDefault: 'Contactos',
-    itemIds: ['booking', 'medios', 'management', 'bandas'],
-  },
-  {
-    id: 'musica',
-    titleKey: 'navGroup.musica',
-    titleDefault: 'Música',
-    itemIds: ['repertorio', 'ensayos', 'discografia'],
-  },
-  {
-    id: 'promocion',
-    titleKey: 'navGroup.promocion',
-    titleDefault: 'Promoción',
-    itemIds: ['epk', 'fans', 'reels'],
-  },
-  {
-    id: 'negocio',
-    titleKey: 'navGroup.negocio',
-    titleDefault: 'Negocio',
-    itemIds: ['giras', 'finanzas', 'merchan'],
-  },
-  {
-    id: 'herramientas',
-    titleKey: 'navGroup.herramientas',
-    titleDefault: 'Herramientas',
-    itemIds: ['metronome', 'tuner'],
-  },
+ {
+ id: 'contactos',
+ titleKey: 'navGroup.contactos',
+ titleDefault: 'Contactos',
+ itemIds: ['booking', 'medios', 'management', 'bandas'],
+ },
+ {
+ id: 'musica',
+ titleKey: 'navGroup.musica',
+ titleDefault: 'Música',
+ itemIds: ['repertorio', 'ensayos', 'discografia'],
+ },
+ {
+ id: 'promocion',
+ titleKey: 'navGroup.promocion',
+ titleDefault: 'Promoción',
+ itemIds: ['epk', 'fans', 'reels'],
+ },
+ {
+ id: 'negocio',
+ titleKey: 'navGroup.negocio',
+ titleDefault: 'Negocio',
+ itemIds: ['giras', 'finanzas', 'merchan'],
+ },
+ {
+ id: 'herramientas',
+ titleKey: 'navGroup.herramientas',
+ titleDefault: 'Herramientas',
+ itemIds: ['metronome', 'tuner'],
+ },
 ];
 
 /**
@@ -103,36 +103,36 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
  * ensayos, discografia).
  */
 export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
-  {
-    id: 'contactos',
-    titleKey: 'navGroup.contactos',
-    titleDefault: 'Contactos',
-    itemIds: ['booking', 'medios', 'management', 'bandas'],
-  },
-  {
-    id: 'musica',
-    titleKey: 'navGroup.musica',
-    titleDefault: 'Música',
-    itemIds: ['repertorio', 'ensayos', 'discografia'],
-  },
-  {
-    id: 'promocion',
-    titleKey: 'navGroup.promocion',
-    titleDefault: 'Promoción',
-    itemIds: ['epk', 'fans', 'reels'],
-  },
-  {
-    id: 'negocio',
-    titleKey: 'navGroup.negocio',
-    titleDefault: 'Negocio',
-    itemIds: ['giras', 'finanzas', 'merchan'],
-  },
-  {
-    id: 'herramientas',
-    titleKey: 'navGroup.herramientas',
-    titleDefault: 'Herramientas',
-    itemIds: ['metronome', 'tuner'],
-  },
+ {
+ id: 'contactos',
+ titleKey: 'navGroup.contactos',
+ titleDefault: 'Contactos',
+ itemIds: ['booking', 'medios', 'management', 'bandas'],
+ },
+ {
+ id: 'musica',
+ titleKey: 'navGroup.musica',
+ titleDefault: 'Música',
+ itemIds: ['repertorio', 'ensayos', 'discografia'],
+ },
+ {
+ id: 'promocion',
+ titleKey: 'navGroup.promocion',
+ titleDefault: 'Promoción',
+ itemIds: ['epk', 'fans', 'reels'],
+ },
+ {
+ id: 'negocio',
+ titleKey: 'navGroup.negocio',
+ titleDefault: 'Negocio',
+ itemIds: ['giras', 'finanzas', 'merchan'],
+ },
+ {
+ id: 'herramientas',
+ titleKey: 'navGroup.herramientas',
+ titleDefault: 'Herramientas',
+ itemIds: ['metronome', 'tuner'],
+ },
 ];
 
 // Mantener NAV_GROUPS como alias para compatibilidad (apunta a desktop)
@@ -146,7 +146,7 @@ export const NAV_GROUPS = NAV_GROUPS_DESKTOP;
  * solo en vista agrupada.
  */
 export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
-  'resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'discografia', 'chat', 'finanzas', 'merchan',
+ 'resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'discografia', 'chat', 'finanzas', 'merchan',
 ];
 
 /**
@@ -156,30 +156,30 @@ export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
  * sidebar — mantiene la lista de módulos principales para scroll horizontal.)
  */
 export const TOP_TABS_ORDER_IDS: NavItemId[] = [
-  'resumen', 'booking', 'medios', 'management', 'calendario', 'bandas', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'discografia', 'chat', 'finanzas', 'merchan',
+ 'resumen', 'booking', 'medios', 'management', 'calendario', 'bandas', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'discografia', 'chat', 'finanzas', 'merchan',
 ];
 
 // Todos los planes (incluyendo `promo` y `promo_plus`) agrupan sus secciones en el menú (Música, Promoción, etc.).
 export const MIN_MODULES_FOR_GROUPED_NAV = 4;
 
 export function shouldGroupNavForPlan(planId?: string): boolean {
-  if (!planId) return true;
-  return true;
+ if (!planId) return true;
+ return true;
 }
 
 export function findNavGroupIdForItem(itemId: string): string | undefined {
-  return NAV_GROUPS.find((g) => g.itemIds.includes(itemId as NavItemId))?.id;
+ return NAV_GROUPS.find((g) => g.itemIds.includes(itemId as NavItemId))?.id;
 }
 
 export interface BottomNavSlotDef {
-  id: string;
-  kind: 'view' | 'group' | 'more';
-  /** Solo para kind 'view' o vista inicial por defecto de 'group': navega directo a este NavItemId. */
-  itemId?: NavItemId;
-  /** Solo para kind 'group': abre un sheet con los itemIds de este NAV_GROUPS_MOBILE. */
-  groupId?: string;
-  labelKey: string;
-  labelDefault: string;
+ id: string;
+ kind: 'view' | 'group' | 'more';
+ /** Solo para kind 'view' o vista inicial por defecto de 'group': navega directo a este NavItemId. */
+ itemId?: NavItemId;
+ /** Solo para kind 'group': abre un sheet con los itemIds de este NAV_GROUPS_MOBILE. */
+ groupId?: string;
+ labelKey: string;
+ labelDefault: string;
 }
 
 /**
@@ -190,9 +190,9 @@ export interface BottomNavSlotDef {
  * resto (Contactos, Negocio, Herramientas, Chat, perfil...).
  */
 export const NAV_BOTTOM_BAR_SLOTS: BottomNavSlotDef[] = [
-  { id: 'resumen', kind: 'view', itemId: 'resumen', labelKey: 'nav.resumen', labelDefault: 'Resumen' },
-  { id: 'calendario', kind: 'view', itemId: 'calendario', labelKey: 'nav.calendario', labelDefault: 'Calendario' },
-  { id: 'musica', kind: 'group', groupId: 'musica', itemId: 'repertorio', labelKey: 'nav.repertorio', labelDefault: 'Repertorios' },
-  { id: 'promocion', kind: 'group', groupId: 'promocion', itemId: 'epk', labelKey: 'nav.epk', labelDefault: 'Dossier' },
-  { id: 'more', kind: 'more', labelKey: 'nav.mas', labelDefault: 'Más' },
+ { id: 'resumen', kind: 'view', itemId: 'resumen', labelKey: 'nav.resumen', labelDefault: 'Resumen' },
+ { id: 'calendario', kind: 'view', itemId: 'calendario', labelKey: 'nav.calendario', labelDefault: 'Calendario' },
+ { id: 'musica', kind: 'group', groupId: 'musica', itemId: 'repertorio', labelKey: 'nav.repertorio', labelDefault: 'Repertorios' },
+ { id: 'promocion', kind: 'group', groupId: 'promocion', itemId: 'epk', labelKey: 'nav.epk', labelDefault: 'Dossier' },
+ { id: 'more', kind: 'more', labelKey: 'nav.mas', labelDefault: 'Más' },
 ];

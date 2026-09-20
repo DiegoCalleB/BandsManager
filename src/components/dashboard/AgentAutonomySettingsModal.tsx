@@ -545,7 +545,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
- <div className={`border rounded-[var(--r-l)] w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden shadow-2xl flex flex-col my-auto animate-in zoom-in-95 duration-200 ${
+ <div className={`border rounded-[var(--r-l)] w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden flex flex-col my-auto animate-in zoom-in-95 duration-200 ${
  isStitchLight 
  ?'bg-[var(--surface)] text-[var(--ink)]' 
  :'bg-[var(--surface)] /30 text-[var(--ink)]'
@@ -633,7 +633,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <Mail className="w-4 h-4 text-[var(--ink-2)]" />
  <span>3. Email & Buzón</span>
  {emailAccountConnected && (
- <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80 inline-block shadow-sm"></span>
+ <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80 inline-block"></span>
  )}
  </button>
 
@@ -777,7 +777,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchLevel ==='draft_only'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -809,7 +809,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchLevel ==='scheduled_window'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -841,7 +841,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchLevel ==='autonomous_first_contact'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -884,7 +884,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.negotiationDepth ==='outreach_only'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -905,7 +905,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.negotiationDepth ==='filter_conditions'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -926,7 +926,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.negotiationDepth ==='advanced_negotiation'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -1145,7 +1145,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchMode !=='direct_send'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -1171,7 +1171,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchMode ==='direct_send'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -1209,7 +1209,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={applyPresetRecommendedBooking}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-[11px] font-sans font-black transition-all cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm shadow-[var(--acc)]/10/20"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-[11px] font-sans font-black transition-all cursor-pointer active:scale-95 flex items-center gap-1.5/10/20"
  >
  <Sparkles className="w-3.5 h-3.5" />
  <span>🌟 Sugerir Mejores Días (M-X-J)</span>
@@ -1354,7 +1354,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'cursor-default' :'cursor-pointer active:scale-95'
  } ${
  isSelected
- ?'bg-[var(--acc)]/15 text-[var(--ink)] shadow-sm shadow-[var(--acc)]/10/10 ring-1 ring-amber-0/30'
+ ?'bg-[var(--acc)]/15 text-[var(--ink)]/10/10 ring-1 ring-amber-0/30'
  :'bg-[var(--surface)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -1426,7 +1426,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'cursor-default' :'cursor-pointer active:scale-95'
  } ${
  isSelected
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm font-black'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-black'
  : isPrimeTime
  ?'bg-[var(--surface)] text-[var(--acc)]/70/90 hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
@@ -1793,7 +1793,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={handleSaveResponseStrategies}
  disabled={isSavingStrategies}
- className="ml-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 transition-all"
+ className="ml-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-all"
  >
  {isSavingStrategies ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
  <span>{isSavingStrategies ?'Guardando...' :'Guardar Estrategias de Respuesta'}</span>
@@ -1854,7 +1854,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setAuditAgentFilter(f.id)}
  className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-bold ${
  auditAgentFilter === f.id
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/50 shadow-xs'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/50'
  :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -1992,7 +1992,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  onClick={handleSave}
  disabled={isSaving || isLoading}
- className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans font-bold hover:bg-[var(--acc)]/60 disabled:opacity-50 transition-all flex items-center gap-1.5 cursor-pointer shadow-lg active:scale-95"
+ className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-sans font-bold hover:bg-[var(--acc)]/60 disabled:opacity-50 transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
  >
  {isSaving ? (
  <>

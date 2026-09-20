@@ -272,7 +272,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
+ <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  {/* Header */}
@@ -643,7 +643,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onUseTailoredPitch(toneData.pitch_personalizado_ejemplo ||'');
  onClose();
  }}
- className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-900/20 transition-all"
+ className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
  >
  <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch Personalizado en Co-Booking
  </button>

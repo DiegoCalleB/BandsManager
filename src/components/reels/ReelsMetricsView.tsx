@@ -652,8 +652,8 @@ export function ReelsMetricsView({
  className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
  activeMainSection ==='metrics'
  ? isStitchLight
- ?'bg-[var(--surface)] text-[var(--tentative)] shadow-sm'
- :'bg-[var(--ok)] text-[var(--ink)] shadow-md shadow-emerald-500/20 font-black'
+ ?'bg-[var(--surface)] text-[var(--tentative)]'
+ :'bg-[var(--ok)] text-[var(--ink)] font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -666,7 +666,7 @@ export function ReelsMetricsView({
  onClick={() => setActiveMainSection('growth_plan')}
  className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
  activeMainSection ==='growth_plan'
- ? 'bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)] shadow-md shadow-[var(--acc)]/10/20 font-black'
+ ? 'bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)]/10/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -726,7 +726,7 @@ export function ReelsMetricsView({
  setScanResult(null);
  setShowScanModal(true);
  }}
- className="px-3.5 py-2.5 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-all bg-[var(--acc-soft)] border-[var(--acc)]/40 text-[var(--acc-ink)] hover:border-[var(--acc)] shadow-sm"
+ className="px-3.5 py-2.5 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-all bg-[var(--acc-soft)] border-[var(--acc)]/40 text-[var(--acc-ink)] hover:border-[var(--acc)]"
  title="Sube una captura de pantalla de tu Instagram, TikTok o Spotify y Gemini extraerá todas las métricas al instante"
  >
  <Camera className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -767,7 +767,7 @@ export function ReelsMetricsView({
  className={`flex-1 md:flex-initial px-4 py-2.5 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isScanningMetrics
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- :'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] shadow-lg shadow-emerald-900/30'
+ :'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)]'
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isScanningMetrics ?'animate-spin' :''}`} />
@@ -962,7 +962,7 @@ export function ReelsMetricsView({
  {/* Fans Registrados (BBDD / Formulario Únete) Card */}
  {hasFans && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
- isStitchLight ?'bg-[var(--accent-alt)]/10/50 shadow-sm' :'bg-[var(--surface)]/40 /30'
+ isStitchLight ?'bg-[var(--accent-alt)]/10/50' :'bg-[var(--surface)]/40 /30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider text-[var(--acc)] font-bold flex items-center gap-1.5">
@@ -988,7 +988,7 @@ export function ReelsMetricsView({
 
  {/* 2. Recharts Dynamic Adaptive Area Chart */}
  {metrics.length > 0 && (
- <div className={`p-4 sm:p-5 rounded-[var(--r-m)] transition-all ${isStitchLight ?'bg-[var(--bg)]/70 shadow-sm' :'bg-[var(--surface)]/70 shadow-md'}`}>
+ <div className={`p-4 sm:p-5 rounded-[var(--r-m)] transition-all ${isStitchLight ?'bg-[var(--bg)]/70' :'bg-[var(--surface)]/70'}`}>
  {/* Header with Title & Scale Badge */}
  <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-4">
  <div>
@@ -1024,8 +1024,8 @@ export function ReelsMetricsView({
  className={`px-2 py-0.5 rounded text-[9px] font-sans font-bold transition-all cursor-pointer ${
  isSelected
  ? isStitchLight
- ?'bg-[var(--tentative)]/80 text-[var(--ink)] shadow-xs'
- :'bg-[var(--tentative)]/80 text-[var(--ink)] shadow-sm shadow-indigo-950/40'
+ ?'bg-[var(--tentative)]/80 text-[var(--ink)]'
+ :'bg-[var(--tentative)]/80 text-[var(--ink)]'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
@@ -1087,7 +1087,7 @@ export function ReelsMetricsView({
  {hasInstagram && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.instagram
- ? 'bg-[var(--alert)]/15 border-[var(--alert)]/40 text-[var(--alert)]/80 shadow-sm shadow-pink-950/20'
+ ? 'bg-[var(--alert)]/15 border-[var(--alert)]/40 text-[var(--alert)]/80'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1121,7 +1121,7 @@ export function ReelsMetricsView({
  {hasTikTok && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.tiktok
- ? 'bg-[var(--tentative)]/15 border-[var(--acc)]/40 text-[var(--acc)]/80 shadow-sm shadow-cyan-950/20'
+ ? 'bg-[var(--tentative)]/15 border-[var(--acc)]/40 text-[var(--acc)]/80'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1155,7 +1155,7 @@ export function ReelsMetricsView({
  {hasYouTube && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.youtube
- ? 'bg-[var(--alert)]/90/30 border-[var(--alert)]/40 text-[var(--alert)]/60 shadow-sm shadow-red-950/20'
+ ? 'bg-[var(--alert)]/90/30 border-[var(--alert)]/40 text-[var(--alert)]/60'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1189,7 +1189,7 @@ export function ReelsMetricsView({
  {hasSpotify && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.spotify
- ? 'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)] shadow-sm shadow-emerald-950/20'
+ ? 'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1582,7 +1582,7 @@ export function ReelsMetricsView({
  className={`flex-1 py-2.5 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-widest cursor-pointer flex items-center justify-center gap-1.5 transition-all ${
  isSavingMetric
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- : 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/15'
+ : 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/15'
  }`}
  >
  {isSavingMetric ?'Guardando...' : editingMetricId ?'Actualizar Snapshot' :'Añadir Snapshot'}
@@ -1738,7 +1738,7 @@ export function ReelsMetricsView({
  {showIgModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/75 animate-in fade-in duration-200">
  <div 
- className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
+ className={`w-full max-w-xl rounded-[var(--r-l)] overflow-hidden ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  onClick={(e) => e.stopPropagation()}
@@ -1746,7 +1746,7 @@ export function ReelsMetricsView({
  {/* Modal Header */}
  <div className="p-5 border-b flex items-center justify-between bg-gradient-to-r from-pink-950/30 via-purple-950/20 to-[var(--surface)]">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 flex items-center justify-center text-[var(--ink)] shadow-lg shadow-pink-500/20">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 flex items-center justify-center text-[var(--ink)]">
  <Instagram className="w-5 h-5" />
  </div>
  <div>
@@ -1916,7 +1916,7 @@ export function ReelsMetricsView({
  className={`px-4 py-2.5 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
  isConnectingIg || !igTokenInput.trim()
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- :'bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-[var(--ink)] shadow-lg shadow-pink-900/30'
+ :'bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-[var(--ink)]'
  }`}
  >
  {isConnectingIg ? (
@@ -1985,7 +1985,7 @@ export function ReelsMetricsView({
  {/* 5. GEMINI MULTIMODAL SCREENSHOT SCANNER MODAL */}
  {showScanModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
- <div className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col ${
+ <div className={`w-full max-w-xl rounded-[var(--r-l)] overflow-hidden flex flex-col ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {/* Modal Header */}
@@ -2093,7 +2093,7 @@ export function ReelsMetricsView({
  className={`w-full py-3 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer ${
  isAnalyzingScreenshot
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- :'bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-[var(--ink)] shadow-lg shadow-indigo-900/30'
+ :'bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-[var(--ink)]'
  }`}
  >
  {isAnalyzingScreenshot ? (

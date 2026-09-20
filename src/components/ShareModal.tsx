@@ -91,7 +91,7 @@ export function ShareModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--scrim)]/75 p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
  <div 
- className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-[var(--ink)]"
+ className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] overflow-hidden flex flex-col my-auto max-h-[92vh] text-[var(--ink)]"
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}
@@ -125,7 +125,7 @@ export function ShareModal({
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
  <button
  onClick={handleWhatsApp}
- className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-emerald-900/30 active:scale-95"
+ className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-semibold text-xs transition-all active:scale-95"
  >
  <MessageSquare className="w-4 h-4 fill-[var(--surface)]/20" />
  <span>WhatsApp</span>
@@ -133,7 +133,7 @@ export function ShareModal({
 
  <button
  onClick={handleWebShare}
- className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-sky-900/30 active:scale-95"
+ className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-semibold text-xs transition-all active:scale-95"
  >
  <Share2 className="w-4 h-4" />
  <span>Otras Apps</span>
@@ -141,7 +141,7 @@ export function ShareModal({
 
  <button
  onClick={handleCopy}
- className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-all shadow-lg active:scale-95 ${
+ className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-all active:scale-95 ${
  copied 
  ?'bg-[var(--accent-alt)] text-[var(--ink)]' 
  :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] border-[var(--hair)]'
@@ -153,7 +153,7 @@ export function ShareModal({
 
  <button
  onClick={handleEmail}
- className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-indigo-900/30 active:scale-95"
+ className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-semibold text-xs transition-all active:scale-95"
  >
  <Mail className="w-4 h-4" />
  <span>Email</span>
@@ -226,7 +226,7 @@ export function ShareModal({
  </button>
  <button
  onClick={handleWhatsApp}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-colors flex items-center gap-1.5 shadow-md"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-colors flex items-center gap-1.5"
  >
  <Send className="w-3.5 h-3.5" />
  Enviar a WhatsApp

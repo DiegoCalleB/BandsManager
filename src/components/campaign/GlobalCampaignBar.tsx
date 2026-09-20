@@ -33,7 +33,7 @@ export function GlobalCampaignBar({
  const firstTargetDate = campaign.targetDates?.[0];
 
  return (
- <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-gradient-to-r from-[#1b122e] via-[#141022] to-[var(--bg)] p-1.5 sm:p-2.5 shadow-sm shadow-purple-950/20 animate-fade-in relative overflow-hidden">
+ <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-gradient-to-r from-[#1b122e] via-[#141022] to-[var(--bg)] p-1.5 sm:p-2.5 animate-fade-in relative overflow-hidden">
  {/* Background ambient glow */}
  <div 
  className="absolute -right-10 -top-10 w-28 h-28 rounded-full blur-3xl opacity-15 pointer-events-none"
@@ -46,7 +46,7 @@ export function GlobalCampaignBar({
  {/* Left Side: Campaign Badge, Name & Toggle */}
  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
  <div 
- className="w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center shrink-0 shadow-xs"
+ className="w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center shrink-0"
  style={{ 
  backgroundColor: `${campaign.color ||'#8b5cf6'}25`,
  borderColor: `${campaign.color ||'#8b5cf6'}50`,
@@ -103,9 +103,9 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={() => onNavigate('booking', { campaignFilter: campaign.id })}
- className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
+ className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
  currentView ==='booking'
- ?'bg-[var(--tentative)] text-[var(--ink)] shadow-xs'
+ ?'bg-[var(--tentative)] text-[var(--ink)]'
  :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
  }`}
  title="Ver salas objetivo de esta campaña en Booking CRM"
@@ -118,9 +118,9 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={() => onNavigate('calendario', { selectedDate: firstTargetDate })}
- className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
+ className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
  currentView ==='calendario'
- ?'bg-[var(--tentative)] text-[var(--ink)] shadow-xs'
+ ?'bg-[var(--tentative)] text-[var(--ink)]'
  :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
  }`}
  title="Ver fechas de la campaña en el Calendario"
@@ -133,9 +133,9 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={() => onNavigate('bandas', { campaignCities: campaign.targetCities })}
- className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
+ className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
  currentView ==='bandas'
- ?'bg-[var(--tentative)] text-[var(--ink)] shadow-xs'
+ ?'bg-[var(--tentative)] text-[var(--ink)]'
  :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
  }`}
  title="Ver grupos en las ciudades objetivo para Co-booking"

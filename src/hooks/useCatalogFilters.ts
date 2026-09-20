@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Song } from '../types';
 
 export function useCatalogFilters(songs: Song[]) {
-  const [groupByAlbum, setGroupByAlbum] = useState(false);
+ const [groupByAlbum, setGroupByAlbum] = useState(false);
  const [catalogSearch, setCatalogSearch] = useState('');
  const [catalogAlbumFilter, setCatalogAlbumFilter] = useState<string>('todos');
  const [catalogStatusFilter, setCatalogStatusFilter] = useState<string>('todos');
@@ -52,12 +52,12 @@ export function useCatalogFilters(songs: Song[]) {
  });
  }, [songs, catalogSearch, catalogAlbumFilter, catalogStatusFilter, groupByAlbum]);
 
-  return {
-    groupByAlbum, setGroupByAlbum,
-    catalogSearch, setCatalogSearch,
-    catalogAlbumFilter, setCatalogAlbumFilter,
-    catalogStatusFilter, setCatalogStatusFilter,
-    albumsList,
-    filteredSongs,
-  };
+ return {
+ groupByAlbum, setGroupByAlbum,
+ catalogSearch, setCatalogSearch,
+ catalogAlbumFilter, setCatalogAlbumFilter,
+ catalogStatusFilter, setCatalogStatusFilter,
+ albumsList,
+ filteredSongs,
+ };
 }

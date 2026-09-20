@@ -111,7 +111,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => setIsAddSongsModalOpen(true)}
- className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs shrink-0"
+ className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shrink-0"
  title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
  >
  <ListPlus className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -151,7 +151,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => handleAddItemToSetlist(undefined,'bloque_header','⚡ Bloque Nuevo')}
- className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
+ className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all"
  title="Añadir un encabezado de bloque para estructurar el concierto"
  >
  <span>⚡</span>
@@ -162,7 +162,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => setShowEventMenu(v => !v)}
- className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
+ className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all"
  title="Añadir saludos, presentaciones, descansos, bises o eventos personalizados"
  >
  <Zap className="w-3.5 h-3.5 text-[var(--ink-2)]" />
@@ -175,7 +175,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  {showEventMenu && (
  <>
  <div className="fixed inset-0 z-40" onClick={() => setShowEventMenu(false)} />
- <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 shadow-2xl p-2 space-y-2 text-xs">
+ <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 p-2 space-y-2 text-xs">
  {/* Standard Preset Events */}
  <div>
  <div className="text-[10px] tracking-wider text-[var(--ink-2)] px-2 py-1 font-semibold">

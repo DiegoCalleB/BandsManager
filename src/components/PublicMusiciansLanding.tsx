@@ -167,7 +167,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <header className="relative z-20 border-b /80 bg-[var(--bg)]/90 sticky top-0">
  <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black p-0.5 shadow-md flex items-center justify-center shrink-0">
+ <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black p-0.5 flex items-center justify-center shrink-0">
  <img
  src="/bandmanageriodefinitiva.jpeg"
  alt="BandManager.io Logo"
@@ -186,7 +186,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
 
  {/* Language Selector (Solo banderas, contextual) */}
- <div className="flex items-center gap-1.5 bg-[var(--surface)]/80 p-1 rounded-[var(--r-m)] shadow-inner" role="group" aria-label="Idioma / Language">
+ <div className="flex items-center gap-1.5 bg-[var(--surface)]/80 p-1 rounded-[var(--r-m)]" role="group" aria-label="Idioma / Language">
  {availableLanguages.map((lang) => (
  <button
  key={lang.code}
@@ -194,7 +194,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  onClick={() => handleLanguageChange(lang.code)}
  className={`w-8 h-8 rounded-[var(--r-s)] text-base flex items-center justify-center transition-all ${
  currentLang === lang.code
- ?'bg-[var(--acc)]/20 text-[var(--acc)] /50 shadow-inner scale-105'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)] /50 scale-105'
  :'bg-[var(--surface)]/60 /80 hover: opacity-70 hover:opacity-100'
  }`}
  title={lang.label}
@@ -234,7 +234,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <div className="flex flex-col items-center justify-center gap-3">
  <div className="relative group">
  <div className="absolute -inset-1 bg-gradient-to-r from-amber-0/30 via-yellow-400/20 to-amber-600/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
- <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-black p-1 shadow-2xl flex items-center justify-center">
+ <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-black p-1 flex items-center justify-center">
  <img
  src="/bandmanageriodefinitiva.jpeg"
  alt="BandManager.io"
@@ -264,7 +264,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  {/* FEATURE CARDS */}
  <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5 shadow-lg">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <QrCode className="w-5 h-5" />
  </div>
@@ -276,7 +276,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </p>
  </div>
 
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5 shadow-lg">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <FileText className="w-5 h-5" />
  </div>
@@ -288,7 +288,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </p>
  </div>
 
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5 shadow-lg">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <Music className="w-5 h-5" />
  </div>
@@ -319,8 +319,8 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  {submitted ? (
  /* SUCCESS CONFIRMATION */
- <div className="p-8 sm:p-12 rounded-3xl bg-[var(--surface)] shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95">
- <div className="w-20 h-20 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mx-auto shadow-[0_0_30px_var(--ok-glow)]">
+ <div className="p-8 sm:p-12 rounded-3xl bg-[var(--surface)] text-center space-y-6 animate-in fade-in zoom-in-95">
+ <div className="w-20 h-20 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mx-auto">
  <CheckCircle2 className="w-10 h-10" />
  </div>
 
@@ -356,7 +356,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
  ) : (
  /* EARLY ACCESS FORM */
- <div className="p-6 sm:p-10 rounded-3xl bg-[var(--surface)] shadow-2xl space-y-6">
+ <div className="p-6 sm:p-10 rounded-3xl bg-[var(--surface)] space-y-6">
  <div className="space-y-2 border-b pb-6 text-center sm:text-left">
  <div className="inline-flex items-center gap-2 text-[var(--acc)] font-sans text-xs font-bold tracking-wider">
  <Users className="w-4 h-4" />
@@ -588,7 +588,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-amber-400 to-[#e0a820] text-[var(--ink)] font-sans font-black text-sm tracking-wider shadow-lg shadow-amber-0/20 hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+ className="w-full py-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-amber-400 to-[#e0a820] text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
  >
  {loading ? (
  <>

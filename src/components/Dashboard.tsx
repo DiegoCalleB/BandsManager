@@ -453,7 +453,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("fans")}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 font-sans text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
  >
  <QrCode className="w-4 h-4 text-[var(--acc)]" />
  <span>Códigos QR & Fans</span>
@@ -461,7 +461,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("epk")}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--tentative)]/15 hover:bg-[var(--tentative)]/25 text-[var(--tentative)]/80 font-sans text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--tentative)]/15 hover:bg-[var(--tentative)]/25 text-[var(--tentative)]/80 font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
  >
  <BookOpen className="w-4 h-4 text-[var(--acc)]" />
  <span>Dossier EPK</span>
@@ -470,7 +470,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("repertorio")}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-3)] font-sans text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-3)] font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
  >
  <Disc3 className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Repertorio</span>
@@ -479,7 +479,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("calendario")}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
  >
  <Calendar className="w-4 h-4" />
  <span>Calendario</span>
@@ -488,7 +488,7 @@ export default function Dashboard({
  </div>
 
  {/* 1. SECCIÓN PRINCIPAL AL INICIO: PRÓXIMAS FECHAS Y AGENDA */}
- <div className="p-6 rounded-[var(--r-l)] bg-[var(--surface)]/90 shadow-sm space-y-4">
+ <div className="p-6 rounded-[var(--r-l)] bg-[var(--surface)]/90 space-y-4">
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
@@ -516,7 +516,7 @@ export default function Dashboard({
  onClick={() => setAgendaFilterMode('all')}
  className={`px-2.5 py-1 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode ==='all'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  title="Ver eventos de todas las bandas"
@@ -531,7 +531,7 @@ export default function Dashboard({
  onClick={() => setAgendaFilterMode('active')}
  className={`px-2.5 py-1 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode ==='active'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  title={`Ver solo eventos de ${activeBandName}`}
@@ -562,7 +562,7 @@ export default function Dashboard({
  className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
  >
  <div className="flex items-start gap-3.5">
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center shrink-0 shadow-sm">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center shrink-0">
  <span className="text-lg font-sans font-black leading-none text-[var(--acc)]">
  {item.day}
  </span>
@@ -631,7 +631,7 @@ export default function Dashboard({
  {/* 2. TARJETAS RÁPIDAS DE CAPTURA QR, FANS Y DOSSIER */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* Card 1: Códigos QR & Captura de Fans */}
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 shadow-sm flex flex-col justify-between space-y-4 hover:/40 transition-all">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4 hover:/40 transition-all">
  <div>
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
@@ -669,7 +669,7 @@ export default function Dashboard({
  </div>
 
  {/* Card 2: Dossier EPK Digital */}
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 shadow-sm flex flex-col justify-between space-y-4 hover:border-[var(--acc)]/40 transition-all">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4 hover:border-[var(--acc)]/40 transition-all">
  <div>
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">

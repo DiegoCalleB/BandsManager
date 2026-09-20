@@ -509,7 +509,7 @@ export default function TourManager({
  <div data-modulo="sala" className={`space-y-6 ${colors.text}`}>
 
  {/* Header */}
- <div className={`p-5 sm:p-6 rounded-[var(--r-l)] ${colors.card} shadow-sm border-[var(--hair)]`}>
+ <div className={`p-5 sm:p-6 rounded-[var(--r-l)] ${colors.card} border-[var(--hair)]`}>
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
  <div>
  <div className="flex items-center gap-2">
@@ -528,7 +528,7 @@ export default function TourManager({
  
  <button
  onClick={handleOpenCreateModal}
- className="px-4 py-2.5 rounded-[var(--r-m)] text-xs font-sans font-bold tracking-wider bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc-soft)] transition-all shadow-md active:scale-95 flex items-center gap-2 cursor-pointer"
+ className="px-4 py-2.5 rounded-[var(--r-m)] text-xs font-sans font-bold tracking-wider bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc-soft)] transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
  >
  <Plus className="w-4 h-4 shrink-0" />
  <span>Nueva Gira</span>
@@ -597,7 +597,7 @@ export default function TourManager({
  const isCurrentUserConvocado = !currentUser?.id || !isFormacionParcial || (tour.convocados_ids && tour.convocados_ids.includes(currentUser.id));
 
  return (
- <div key={tour.id || `tour-${index}`} className={`p-5 rounded-[var(--r-l)] ${colors.card} border-[var(--hair)] shadow-sm group hover:border-[var(--hair)] transition-colors flex flex-col justify-between`}>
+ <div key={tour.id || `tour-${index}`} className={`p-5 rounded-[var(--r-l)] ${colors.card} border-[var(--hair)] group hover:border-[var(--hair)] transition-colors flex flex-col justify-between`}>
  <div>
  <div className="flex justify-between items-start mb-4">
  <div>
@@ -765,7 +765,7 @@ export default function TourManager({
  {isModalOpen && (
  <ModalPortal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-4xl rounded-[var(--r-l)] ${colors.bg} border-[var(--hair)] shadow-2xl flex flex-col my-auto max-h-[90vh]`}>
+ <div className={`w-full max-w-4xl rounded-[var(--r-l)] ${colors.bg} border-[var(--hair)] flex flex-col my-auto max-h-[90vh]`}>
  {/* Modal Header */}
  <div className="p-4 sm:p-6 border-b border-[var(--hair)] flex justify-between items-center bg-[var(--sunken)] shrink-0">
  <div>
@@ -836,7 +836,7 @@ export default function TourManager({
  }}
  className={`px-3 py-1 text-xs font-sans font-bold rounded-md transition-all cursor-pointer ${
  formConvocatoriaTipo ==='completa'
- ?'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -847,7 +847,7 @@ export default function TourManager({
  onClick={() => setFormConvocatoriaTipo('parcial')}
  className={`px-3 py-1 text-xs font-sans font-bold rounded-md transition-all cursor-pointer ${
  formConvocatoriaTipo ==='parcial'
- ?'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -890,7 +890,7 @@ export default function TourManager({
  onClick={() => handleToggleMember(m.id)}
  className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-3 transition-all cursor-pointer ${
  isSelected
- ?'bg-[var(--tentative)]/20 border-[var(--acc)]/50 text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--tentative)]/20 border-[var(--acc)]/50 text-[var(--ink)]'
  :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
@@ -955,7 +955,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => handleAddVehicle(0)}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink-3)] hover:bg-[var(--acc)]/30 text-xs font-sans font-bold flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink-3)] hover:bg-[var(--acc)]/30 text-xs font-sans font-bold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" /> Añadir Vehículo
  </button>
@@ -1323,7 +1323,7 @@ export default function TourManager({
  <button
  type="submit"
  form="tour-form"
- className="px-5 py-2 rounded-[var(--r-m)] text-sm font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc-soft)] shadow-lg active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+ className="px-5 py-2 rounded-[var(--r-m)] text-sm font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc-soft)] active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
  >
  <Activity className="w-4 h-4" />
  {editingTour ?'Guardar Cambios' :'Crear Gira'}
@@ -1338,7 +1338,7 @@ export default function TourManager({
  {tourToDelete && (
  <ModalPortal isOpen={!!tourToDelete} onClose={() => setTourToDelete(null)}>
  <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-md rounded-[var(--r-l)] ${colors.card} p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150 my-auto`}>
+ <div className={`w-full max-w-md rounded-[var(--r-l)] ${colors.card} p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 my-auto`}>
  <div className="flex items-center gap-3 text-[var(--alert)]">
  <div className="p-3 rounded-full bg-[var(--alert)]/10 shrink-0">
  <Trash2 className="w-6 h-6" />
@@ -1364,7 +1364,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={confirmDelete}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold tracking-wider bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-md active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold tracking-wider bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
  >
  <Trash2 className="w-4 h-4" />
  Sí, Eliminar Gira

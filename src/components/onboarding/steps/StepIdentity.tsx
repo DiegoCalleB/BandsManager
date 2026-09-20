@@ -72,7 +72,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={localBandName}
  onChange={(e) => setLocalBandName(e.target.value)}
  placeholder="Ej. Linkin Park, Los Delirio, The Midnight Waves..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] font-medium placeholder-[var(--ink-2)] focus:outline-none focus: text-sm shadow-inner"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] font-medium placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
  />
  </div>
 
@@ -86,7 +86,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={city}
  onChange={(e) => setCity(e.target.value)}
  placeholder="Ej. Madrid, Barcelona, Valencia, Los Ángeles..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm shadow-inner"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
  />
  </div>
 
@@ -100,7 +100,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={genre}
  onChange={(e) => setGenre(e.target.value)}
  placeholder="Ej. Nu-Metal, Rock Alternativo, Indie Pop, Ska-Rock..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm mb-2 shadow-inner"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm mb-2"
  />
  <div className="flex flex-wrap gap-1.5">
  {commonGenres.slice(0, 8).map((g) => (
@@ -149,7 +149,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  onClick={() => setFontStyle(f.id)}
  className={`p-3.5 rounded-[var(--r-m)] text-left transition-all relative overflow-hidden group cursor-pointer ${
  isSelected
- ?'bg-[var(--acc)]/10 /60 shadow-lg shadow-amber-0/10 ring-1 ring-amber-0/30'
+ ?'bg-[var(--acc)]/10 /60 ring-1 ring-amber-0/30'
  :'bg-[var(--bg)]/90 border-[var(--hair)] hover:/30 hover:bg-[var(--bg)]'
  }`}
  >
@@ -234,7 +234,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  </div>
 
  <div className="flex items-center gap-4">
- <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] flex items-center justify-center overflow-hidden flex-shrink-0 relative group shadow-inner">
+ <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] flex items-center justify-center overflow-hidden flex-shrink-0 relative group">
  {logoUrl ? (
  <img src={logoUrl} alt="Logo de la banda" className="w-full h-full object-cover" />
  ) : (

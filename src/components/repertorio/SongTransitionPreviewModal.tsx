@@ -523,7 +523,7 @@ export function SongTransitionPreviewModal({
  initial={{ opacity: 0, scale: 0.96, y: 8 }}
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.96, y: 8 }}
- className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col text-[var(--ink)]"
+ className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] overflow-hidden flex flex-col text-[var(--ink)]"
  >
  {/* Compact Header */}
  <div className="flex items-center justify-between px-3.5 py-2 border-b border-[var(--hair)] bg-[var(--surface)] shrink-0">
@@ -766,7 +766,7 @@ export function SongTransitionPreviewModal({
  <div
  className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
  currentGains.isCrossfading
- ?'bg-[var(--acc)] text-[var(--on-acc)] scale-110 shadow-lg shadow-amber-0/30'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] scale-110'
  :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
@@ -920,7 +920,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  playbackMode ==='real'
- ?'bg-[var(--ok)] text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--ok)] text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -935,7 +935,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  playbackMode ==='synth'
- ?'bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)]/60 text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -953,7 +953,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  autoCueEnabled
- ?'bg-[var(--acc)]/15 text-[var(--acc)] /40 shadow-sm'
+ ?'bg-[var(--acc)]/15 text-[var(--acc)] /40'
  :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  title="Auto-CUE Inteligente: Detecta y salta automáticamente los huecos de silencio y aplausos al principio y final de canciones en directo"
@@ -973,7 +973,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='crossfade'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -987,7 +987,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='segue'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1001,7 +1001,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='pause'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1083,7 +1083,7 @@ export function SongTransitionPreviewModal({
 
  {/* Playhead Indicator */}
  <div
- className="absolute top-0 bottom-0 w-0.5 bg-[var(--surface)] shadow-[0_0_8px_var(--shadow-soft)] z-20 pointer-events-none transition-all duration-75"
+ className="absolute top-0 bottom-0 w-0.5 bg-[var(--surface)] z-20 pointer-events-none transition-all duration-75"
  style={{
  left: `${(currentTime / timeline.totalDurationSec) * 100}%`
  }}

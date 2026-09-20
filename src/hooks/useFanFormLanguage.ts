@@ -9,24 +9,24 @@ import { FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '.
  * El fan puede cambiarlo a mano en cualquier momento con el selector.
  */
 function detectInitialFanFormLanguage(): FanFormLanguage {
-  if (typeof window === 'undefined') return DEFAULT_FAN_FORM_LANGUAGE;
+ if (typeof window === 'undefined') return DEFAULT_FAN_FORM_LANGUAGE;
 
-  const params = new URLSearchParams(window.location.search);
-  const queryLang = params.get('lang');
-  if (isFanFormLanguage(queryLang)) return queryLang;
+ const params = new URLSearchParams(window.location.search);
+ const queryLang = params.get('lang');
+ if (isFanFormLanguage(queryLang)) return queryLang;
 
-  const browserLang = (navigator.language || '').slice(0, 2).toLowerCase();
-  if (isFanFormLanguage(browserLang)) return browserLang;
+ const browserLang = (navigator.language || '').slice(0, 2).toLowerCase();
+ if (isFanFormLanguage(browserLang)) return browserLang;
 
-  return DEFAULT_FAN_FORM_LANGUAGE;
+ return DEFAULT_FAN_FORM_LANGUAGE;
 }
 
 export function useFanFormLanguage(overrideLang?: FanFormLanguage): [FanFormLanguage, (lang: FanFormLanguage) => void] {
-  const [language, setLanguage] = useState<FanFormLanguage>(() => {
-    if (overrideLang && isFanFormLanguage(overrideLang)) {
-      return overrideLang;
-    }
-    return detectInitialFanFormLanguage();
-  });
-  return [language, setLanguage];
+ const [language, setLanguage] = useState<FanFormLanguage>(() => {
+ if (overrideLang && isFanFormLanguage(overrideLang)) {
+ return overrideLang;
+ }
+ return detectInitialFanFormLanguage();
+ });
+ return [language, setLanguage];
 }

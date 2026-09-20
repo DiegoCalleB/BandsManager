@@ -72,7 +72,7 @@ export function NegotiationSimulationModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fadeIn">
  <div
- className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
+ className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -222,8 +222,8 @@ export function NegotiationSimulationModal({
  disabled={isGeneratingSimulation || !simulationCustomInstruction}
  className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 ${
  isStitchLight
- ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)] shadow-md'
- :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-extrabold shadow-lg'
+ ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
+ :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-extrabold'
  }`}
  >
  {isGeneratingSimulation ? (

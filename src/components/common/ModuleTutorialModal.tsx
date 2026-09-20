@@ -233,9 +233,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  const accentStyles = {
  purple: {
  badgeBg:'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border-[var(--acc)]/30',
- iconBox:'bg-[var(--tentative)]/20 text-[var(--acc)] border-[var(--acc)]/30 shadow-purple-500/10',
+ iconBox:'bg-[var(--tentative)]/20 text-[var(--acc)] border-[var(--acc)]/30',
  activeDot:'bg-[var(--acc)] w-7',
- primaryBtn:'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] shadow-purple-900/30',
+ primaryBtn:'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]',
  hookBorder:'border-[var(--acc)]/25 bg-[var(--tentative)]/10 text-[var(--ink)]',
  highlightText:'text-[var(--acc)]',
  targetCard:'border-[var(--acc)]/40 bg-[var(--tentative)]/5',
@@ -244,9 +244,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  },
  amber: {
  badgeBg:'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30',
- iconBox:'bg-[var(--acc)]/20 text-[var(--acc)] /30 shadow-amber-0/10',
+ iconBox:'bg-[var(--acc)]/20 text-[var(--acc)] /30',
  activeDot:'bg-[var(--acc)]/60 w-7',
- primaryBtn:'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-black shadow-amber-900/30',
+ primaryBtn:'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-black',
  hookBorder:'/25 bg-[var(--acc)]/10 text-[var(--acc)]',
  highlightText:'text-[var(--acc)]',
  targetCard:'/40 bg-[var(--acc)]/5',
@@ -255,9 +255,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  },
  blue: {
  badgeBg:'bg-[var(--acc)]/15 text-[var(--ink-3)] border-[var(--acc)]/30',
- iconBox:'bg-[var(--acc)]/20 text-[var(--ink-2)] border-[var(--acc)]/30 shadow-sky-500/10',
+ iconBox:'bg-[var(--acc)]/20 text-[var(--ink-2)] border-[var(--acc)]/30',
  activeDot:'bg-[var(--tentative)] w-7',
- primaryBtn:'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold shadow-sky-900/30',
+ primaryBtn:'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold',
  hookBorder:'border-[var(--acc)]/25 bg-[var(--acc)]/10 text-[var(--tentative)]/40',
  highlightText:'text-[var(--ink-2)]',
  targetCard:'border-[var(--acc)]/40 bg-[var(--acc)]/5',
@@ -266,9 +266,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  },
  emerald: {
  badgeBg:'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30',
- iconBox:'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/30 shadow-emerald-500/10',
+ iconBox:'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/30',
  activeDot:'bg-[var(--ok)] w-7',
- primaryBtn:'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black shadow-emerald-900/30',
+ primaryBtn:'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black',
  hookBorder:'border-[var(--ok)]/25 bg-[var(--ok)]/10 text-[var(--ok)]/40',
  highlightText:'text-[var(--ok)]',
  targetCard:'border-[var(--ok)]/40 bg-[var(--ok)]/5',
@@ -277,9 +277,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  },
  rose: {
  badgeBg:'bg-[var(--alert)]/15 text-[var(--ink-2)] border-[var(--alert)]/30',
- iconBox:'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--alert)]/30 shadow-rose-500/10',
+ iconBox:'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--alert)]/30',
  activeDot:'bg-[var(--alert)] w-7',
- primaryBtn:'bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold shadow-rose-900/30',
+ primaryBtn:'bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold',
  hookBorder:'border-[var(--alert)]/25 bg-[var(--alert)]/10 text-[var(--alert)]/40',
  highlightText:'text-[var(--alert)]',
  targetCard:'border-[var(--alert)]/40 bg-[var(--alert)]/5',
@@ -299,7 +299,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  {targetRect && effectiveFloatingMode && (
  <div className="fixed inset-0 z-[9999] pointer-events-none">
  <div
- className="absolute border-2 sm:border-3 rounded-[var(--r-m)] transition-all duration-300 shadow-[0_0_35px_rgba(var(--ink-rgb), 0.75)] pointer-events-none"
+ className="absolute border-2 sm:border-3 rounded-[var(--r-m)] transition-all duration-300 pointer-events-none"
  style={{
  top: Math.max(0, targetRect.top - 4),
  left: Math.max(0, targetRect.left - 4),
@@ -315,7 +315,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
 
  {/* Target Tooltip Badge */}
  <div 
- className={`absolute ${targetRect.top < 36 ?'-bottom-7' :'-top-7'} left-0 px-2 py-0.5 rounded-md bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] tracking-wider flex items-center gap-1 shadow-lg whitespace-nowrap`}
+ className={`absolute ${targetRect.top < 36 ?'-bottom-7' :'-top-7'} left-0 px-2 py-0.5 rounded-md bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] tracking-wider flex items-center gap-1 whitespace-nowrap`}
  >
  <span>👉 {currentStep.uiTarget?.label ||'Aquí'}</span>
  </div>
@@ -345,8 +345,8 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  transition={{ type:'spring', stiffness: 350, damping: 30 }}
  className={
  effectiveFloatingMode
- ?"pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95 border-2 /50 rounded-[var(--r-l)] shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
- :"relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] border-0 md:border md:border-[var(--hair)]/90 rounded-none md:rounded-3xl shadow-2xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
+ ?"pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95 border-2 /50 rounded-[var(--r-l)] shadow-black/95 overflow-hidden flex flex-col"
+ :"relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] border-0 md:border md:border-[var(--hair)]/90 rounded-none md:rounded-3xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
  }
  >
  {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}
@@ -431,7 +431,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  >
  {/* Step Header with Icon */}
  <div className="flex items-start gap-3">
- <div className={`p-2.5 rounded-[var(--r-m)] shadow-inner shrink-0 ${accentStyles.iconBox}`}>
+ <div className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${accentStyles.iconBox}`}>
  <CurrentIcon className="w-5 h-5" />
  </div>
  <div className="space-y-0.5 min-w-0">
@@ -453,7 +453,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
 
  {/* TARJETITA DE REFERENCIA AL BOTÓN O SECCIÓN EN LA APP */}
  {currentStep.uiTarget && (
- <div className={`rounded-[var(--r-l)] p-3.5 space-y-2.5 shadow-sm ${accentStyles.targetCard}`}>
+ <div className={`rounded-[var(--r-l)] p-3.5 space-y-2.5 ${accentStyles.targetCard}`}>
  <div className="flex items-center justify-between gap-2 flex-wrap">
  <div className="flex items-center gap-1.5">
  <span className="relative flex h-2 w-2">
@@ -481,7 +481,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  setIsFloatingMode(true);
  setTimeout(() => locateTargetElement(true), 100);
  }}
- className={`text-[11px] font-sans font-bold px-2.5 py-1 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer active:scale-95 shadow-xs ${accentStyles.targetBtn}`}
+ className={`text-[11px] font-sans font-bold px-2.5 py-1 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer active:scale-95 ${accentStyles.targetBtn}`}
  title="Fijar modo flotante y enfocar este elemento en la pantalla"
  >
  <Target className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -491,7 +491,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  </div>
 
  {/* Nombre del elemento simulando botón o control */}
- <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--bg)]/90 border-[var(--hair)] text-xs shadow-inner">
+ <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--bg)]/90 border-[var(--hair)] text-xs">
  <span className="text-[var(--acc)] font-sans font-black text-xs shrink-0">
  {currentStep.uiTarget.type ==='button' ?'▶' :'▪'}
  </span>
@@ -574,7 +574,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  id={`tutorial-next-btn-${moduleId}`}
  type="button"
  onClick={handleNext}
- className={`flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-lg ${accentStyles.primaryBtn}`}
+ className={`flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 ${accentStyles.primaryBtn}`}
  >
  {isLastStep ? (
  <>

@@ -162,7 +162,7 @@ export function MemberNotesModal({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden ${
+ <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[90vh] flex flex-col overflow-hidden ${
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]'
  }`}>
  {/* Header */}
@@ -320,7 +320,7 @@ export function MemberNotesModal({
  <div className="flex items-center justify-between mb-2">
  <div className="flex items-center gap-2.5">
  <div
- className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-xs text-[var(--ink)] shadow-sm"
+ className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-xs text-[var(--ink)]"
  style={{ backgroundColor: member.avatarColor ||'#6366f1' }}
  >
  {member.name.charAt(0)}
@@ -390,7 +390,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={handleSave}
- className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer shadow-lg ${
+ className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer ${
  savedSuccess 
  ?'bg-[var(--ok)] text-[var(--ink)]' 
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)]'

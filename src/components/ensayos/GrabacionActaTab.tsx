@@ -205,7 +205,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {/* Top Section: Live Audio Recording & Upload */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Audio Recorder Card */}
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-sm space-y-4">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
@@ -249,7 +249,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={stopRecording}
- className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-2 mx-auto cursor-pointer shadow-lg shadow-rose-500/30 active:scale-95 transition-all"
+ className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-2 mx-auto cursor-pointer active:scale-95 transition-all"
  >
  <Square className="w-4 h-4 fill-current" />
  <span>Detener Grabación ({formatTime(recordDuration)})</span>
@@ -259,7 +259,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={startRecording}
- className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-xs tracking-wider flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 active:scale-95 transition-all"
+ className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-xs tracking-wider flex items-center gap-2 cursor-pointer active:scale-95 transition-all"
  >
  <Mic className="w-4 h-4" />
  <span>Iniciar Grabación con Micrófono</span>
@@ -331,7 +331,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {/* Rehearsal Audio Clips Library */}
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-sm space-y-4">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <FileAudio className="w-4 h-4 text-[var(--acc)]" />
@@ -388,7 +388,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {/* Bottom Section: AI Generated Minutes / Acta del Ensayo */}
- <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] border-[var(--hair)] shadow-lg space-y-5">
+ <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] border-[var(--hair)] space-y-5">
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--surface)] pb-4">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
@@ -408,7 +408,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  onClick={handleGenerateAIActa}
  disabled={isGeneratingActa}
- className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] disabled:opacity-50 text-xs font-sans font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] disabled:opacity-50 text-xs font-sans font-bold transition-all cursor-pointer"
  >
  {isGeneratingActa ? (
  <>

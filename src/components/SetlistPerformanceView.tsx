@@ -448,7 +448,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => setModeArchetype('directo')}
  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
  modeArchetype ==='directo'
- ? glareMode ?'bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-sm' :'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ? glareMode ?'bg-[var(--acc)]/60 text-[var(--on-acc)]' :'bg-[var(--acc)] text-[var(--on-acc)]'
  : glareMode ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -459,7 +459,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => setModeArchetype('ensayo')}
  className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 cursor-pointer ${
  modeArchetype ==='ensayo'
- ?'bg-[var(--ok)] text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--ok)] text-[var(--ink)]'
  : glareMode ?'text-[var(--ink-2)] hover:text-[var(--ok)]' :'text-[var(--ink-2)] hover:text-[var(--ok)]'
  }`}
  >
@@ -473,7 +473,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  id="btn-stage-songlist-drawer"
  type="button"
  onClick={() => setShowSongListDrawer(true)}
- className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
+ className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
  glareMode
  ?'bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]'
  :'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40'
@@ -496,7 +496,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  id="btn-stage-practice-mode"
  type="button"
  onClick={() => handleLaunchPractice()}
- className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
+ className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
  glareMode
  ?'bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ok)] border-[var(--ok)]'
  :'bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] hover:border-[var(--ok)]'
@@ -514,7 +514,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => handleLaunchStudio()}
- className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
+ className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
  glareMode
  ?'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)] border-[var(--hair)]300'
  :'bg-[var(--sunken)]/80 hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]'
@@ -533,7 +533,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  id="btn-stage-studio-mode"
  type="button"
  onClick={() => handleLaunchStudio()}
- className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
+ className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
  glareMode
  ?'bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/30 text-[var(--tentative)] border-[var(--acc)]'
  :'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 hover:border-[var(--acc)]'
@@ -565,7 +565,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {showMoreMenu && (
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowMoreMenu(false)} />
- <div className={`absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-0.5 text-sm ${
+ <div className={`absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] p-1.5 space-y-0.5 text-sm ${
  glareMode ?'bg-[var(--surface)] border-text-[var(--ink-2)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {/* Studio & Ensayo shortcuts inside menu */}
@@ -747,7 +747,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => handleLaunchPractice()}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition active:scale-95 cursor-pointer"
  >
  <Headphones className="w-3.5 h-3.5" />
  <span>Abrir Sala de Ensayo</span>
@@ -756,7 +756,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => handleLaunchStudio()}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition active:scale-95 cursor-pointer"
  >
  <Sparkles className="w-3.5 h-3.5" />
  <span>Separar en Studio</span>
@@ -991,7 +991,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {/* Drawer: Repertorio completo, pistas Iris y accesos directos a Studio */}
  {showSongListDrawer && (
  <div className="fixed inset-0 z-50 flex justify-end bg-[var(--scrim)]/75 animate-in fade-in duration-150">
- <div className="w-full max-w-md h-full bg-[var(--surface)] border-l border-[var(--hair)] flex flex-col shadow-2xl text-[var(--ink)]">
+ <div className="w-full max-w-md h-full bg-[var(--surface)] border-l border-[var(--hair)] flex flex-col text-[var(--ink)]">
  {/* Drawer Header */}
  <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]">
  <div className="flex items-center gap-2.5">
@@ -1058,7 +1058,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  key={item.id}
  className={`p-3 rounded-[var(--r-m)] transition flex flex-col gap-2.5 ${
  isCurrent
- ?'bg-[var(--acc)]/10 /50 shadow-md'
+ ?'bg-[var(--acc)]/10 /50'
  :'bg-[var(--surface)] border-[var(--hair)]800/80 hover:border-[var(--hair)]700'
  }`}
  >
@@ -1211,7 +1211,7 @@ const ScannedSheetPage: React.FC<{ song: Song }> = ({ song }) => {
  <img
  src={song.estructuraDocumentoUrl}
  alt={`Partitura de ${song.titulo}`}
- className="max-w-full max-h-full object-contain rounded shadow-2xl"
+ className="max-w-full max-h-full object-contain rounded"
  />
  ) : (
  <iframe
@@ -1356,7 +1356,7 @@ const ChordSheetPage: React.FC<{
  onClick={onToggleTeleprompterMode}
  className={`px-2.5 py-1 text-xs font-sans font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 cursor-pointer ${
  teleprompterMode ==='scroll'
- ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 shadow-sm'
+ ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70'
  :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={teleprompterMode ==='scroll' ?'Cambiar a modo pedal por secciones' :'Cambiar a modo teleprompter scroll continuo'}

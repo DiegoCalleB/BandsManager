@@ -453,13 +453,13 @@ export const BandMap: React.FC<BandMapProps> = ({
  };
 
  return (
- <div className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden shadow-lg">
+ <div className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden">
  {/* Map Element */}
  <div ref={mapRef} className="w-full h-full z-0" />
 
  {/* Header Overlay */}
  <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
- <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] shadow-md flex items-center gap-2 font-sans text-xs ${
+ <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-sans text-xs ${
  isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}>
  <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
@@ -482,7 +482,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <div className="relative">
  <button
  onClick={() => setShowStyleMenu(!showStyleMenu)}
- className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
+ className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight ?'bg-[var(--surface)]/95 text-[var(--ink)]' :'bg-[var(--bg)]/95 text-[var(--ink)]'
  }`}
  >
@@ -491,7 +491,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  </button>
 
  {showStyleMenu && (
- <div className="absolute right-0 top-11 w-60 p-2 rounded-[var(--r-m)] shadow-2xl space-y-1 font-sans text-xs z-[1100] bg-[var(--bg)]/95 text-[var(--ink)]">
+ <div className="absolute right-0 top-11 w-60 p-2 rounded-[var(--r-m)] space-y-1 font-sans text-xs z-[1100] bg-[var(--bg)]/95 text-[var(--ink)]">
  {(Object.keys(MAP_STYLES) as MapStyleKey[]).map(key => (
  <button
  key={key}
@@ -513,7 +513,7 @@ export const BandMap: React.FC<BandMapProps> = ({
 
  <button
  onClick={handleRecenter}
- className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
+ className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}
  >

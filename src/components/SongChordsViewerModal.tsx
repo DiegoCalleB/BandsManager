@@ -216,7 +216,7 @@ export function SongChordsViewerModal({
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
- <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-[var(--ink)] my-auto">
+ <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden text-[var(--ink)] my-auto">
 
  {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
  <button
@@ -269,7 +269,7 @@ export function SongChordsViewerModal({
  type="button"
  onClick={handleGenerateWithAi}
  disabled={isGeneratingAi}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-purple-950/50 disabled:opacity-50"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  title={song.audioPrincipalUrl ?'Reanalizar escuchando el audio real de la canción' :'Generar cifrado y guía con IA (sin audio disponible)'}
  >
  <Wand2 className={`w-4 h-4 text-[var(--acc)]/40 ${isGeneratingAi ?'animate-spin' :''}`} />
@@ -517,7 +517,7 @@ export function SongChordsViewerModal({
  )}
 
  {/* THE CHORD SHEET DISPLAY */}
- <div className="bg-[var(--sunken)] p-6 rounded-[var(--r-l)] shadow-inner font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
+ <div className="bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
  {renderFormattedChordSheet(processedText)}
  </div>
  </div>
@@ -526,9 +526,9 @@ export function SongChordsViewerModal({
  {/* TAB 2: SUBSTITUTE QUICK GUIDE (FICHA PARA MÚSICO SUSTITUTO) */}
  {activeTab ==='substitute' && (
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
- <div className="bg-gradient-to-br from-purple-950/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] shadow-xl space-y-5">
+ <div className="bg-gradient-to-br from-purple-950/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] space-y-5">
  <div className="flex items-center gap-3 border-b border-[var(--acc)]/30 pb-4">
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] shadow-lg">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)]">
  <UserCheck className="w-6 h-6" />
  </div>
  <div>
@@ -613,7 +613,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={handleSaveEdits}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
  >
  <Save className="w-4 h-4" />
  <span>Guardar Cambios</span>
@@ -772,7 +772,7 @@ function renderFormattedChordSheet(text: string) {
  return (
  <span
  key={pIdx}
- className="font-bold text-[var(--acc)] bg-[var(--acc-soft)] px-1 py-0.5 rounded mx-0.5 text-xs shadow-sm"
+ className="font-bold text-[var(--acc)] bg-[var(--acc-soft)] px-1 py-0.5 rounded mx-0.5 text-xs"
  >
  {chordName}
  </span>

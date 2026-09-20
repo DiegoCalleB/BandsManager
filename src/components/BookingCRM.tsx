@@ -1124,7 +1124,7 @@ export default function BookingCRM({
 
  {/* EXPANDED IA TOOLS PANEL (Responsive on all screen sizes) */}
  {isMobileToolsOpen && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-2.5 animate-in slide-in-from-top-2 duration-150 shadow-2xl">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-2.5 animate-in slide-in-from-top-2 duration-150">
  <div className="flex items-center justify-between text-xs font-bold text-[var(--acc)]/70 pb-1.5 border-b border-[var(--hair)]">
  <span className="flex items-center gap-1.5">
  <Wrench className="w-3.5 h-3.5" />
@@ -1147,7 +1147,7 @@ export default function BookingCRM({
  setIsMobileToolsOpen(false);
  handleTriggerEnviadorAgent();
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-[var(--ink)] transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-[var(--ink)] transition-all cursor-pointer active:scale-98 disabled:opacity-50"
  >
  <span className="flex items-center gap-2">
  {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-[var(--ok)] animate-spin" /> : <Send className="w-4 h-4 text-[var(--ok)]" />}
@@ -1161,7 +1161,7 @@ export default function BookingCRM({
  setIsPlacesExplorerOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-all cursor-pointer shadow-sm active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-all cursor-pointer active:scale-98"
  >
  <span className="flex items-center gap-2">
  <Search className="w-4 h-4" />
@@ -1176,7 +1176,7 @@ export default function BookingCRM({
  setIsExcelImportOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] transition-all cursor-pointer shadow-sm active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] transition-all cursor-pointer active:scale-98"
  >
  <span className="flex items-center gap-2">
  <FileSpreadsheet className="w-4 h-4 text-[var(--ok)]" />
@@ -1191,7 +1191,7 @@ export default function BookingCRM({
  setIsDuplicatesModalOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40 transition-all cursor-pointer active:scale-98"
  >
  <span className="flex items-center gap-2">
  <Copy className="w-4 h-4 text-[var(--acc)]" />
@@ -1212,7 +1212,7 @@ export default function BookingCRM({
  setIsContactEnricherOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-[var(--tentative)]/60 to-[var(--acc)]/60 hover:from-[var(--tentative)]/80 hover:to-[var(--acc)]/80 text-[var(--tentative)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-[var(--tentative)]/60 to-[var(--acc)]/60 hover:from-[var(--tentative)]/80 hover:to-[var(--acc)]/80 text-[var(--tentative)]/40 transition-all cursor-pointer active:scale-98"
  >
  <span className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-[var(--tentative)]" />
@@ -1453,7 +1453,7 @@ export default function BookingCRM({
 
  {/* ⚡ UNIFIED COMPACT FILTERS PANEL (Desktop, Tablet & Mobile) */}
  {isMobileFiltersOpen && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-3.5 shadow-2xl animate-in slide-in-from-top-2 duration-150">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-3.5 animate-in slide-in-from-top-2 duration-150">
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <span className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
  <Filter className="w-3.5 h-3.5" />
@@ -1569,7 +1569,7 @@ export default function BookingCRM({
  key={sf.id}
  className={`group relative shrink-0 flex items-center rounded-full transition-all cursor-pointer ${
  isActive
- ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold'
  :'bg-[var(--bg)]/80 hover:bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink)]'
  }`}
  >
@@ -1636,7 +1636,7 @@ export default function BookingCRM({
  onClick={() => setTypeFilter(t.key)}
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
  typeFilter === t.key
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60'
  }`}
  >
@@ -1708,7 +1708,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setIsMobileFiltersOpen(false)}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] cursor-pointer shadow-sm"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] cursor-pointer"
  >
  Ver {filteredLeads.length} resultados
  </button>
@@ -2124,7 +2124,7 @@ export default function BookingCRM({
  onClick={() => setTemplateTab(tab.id as TemplateCategory)}
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold shadow-md'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -2381,7 +2381,7 @@ export default function BookingCRM({
  id="template-btn-save"
  onClick={handleSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
- 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
+ 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
  }`}
  >
  Guardar Plantillas y Directrices

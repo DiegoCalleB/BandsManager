@@ -267,7 +267,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => onPlatformClick?.(key, url)}
- className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 shadow-sm ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
+ className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
  >
  <IconComp className="w-4 h-4 shrink-0" />
  <span>{label}</span>
@@ -331,7 +331,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => onPlatformClick?.(key, url)}
- className={`flex items-center justify-center gap-2.5 p-3 rounded-[var(--r-m)] text-xs font-bold transition-all duration-200 shadow-md group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
+ className={`flex items-center justify-center gap-2.5 p-3 rounded-[var(--r-m)] text-xs font-bold transition-all duration-200 group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
  >
  <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
  <span className={isFullWidth ?"text-sm font-black tracking-wide" :"truncate"}>{label}</span>

@@ -3,9 +3,9 @@ import { initAuth, googleSignIn, logout, fetchGmailThreadsForEmail } from '../ut
 import { Lead } from '../types';
 
 export function useGmailIntegration(
-  selectedLead: Lead | null,
-  setSelectedLead: (updater: (prev: Lead | null) => Lead | null) => void,
-  onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void
+ selectedLead: Lead | null,
+ setSelectedLead: (updater: (prev: Lead | null) => Lead | null) => void,
+ onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void
 ) {
  // Gmail integration states
  const [gmailUser, setGmailUser] = useState<any>(null);
@@ -120,11 +120,11 @@ export function useGmailIntegration(
  }
  };
 
-  return {
-    gmailUser, gmailToken,
-    isSyncingGmail, gmailStatusMsg,
-    handleGmailLogin,
-    handleGmailLogout,
-    handleSyncGmailForLead,
-  };
+ return {
+ gmailUser, gmailToken,
+ isSyncingGmail, gmailStatusMsg,
+ handleGmailLogin,
+ handleGmailLogout,
+ handleSyncGmailForLead,
+ };
 }

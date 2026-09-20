@@ -163,7 +163,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain animate-fadeIn">
- <div className="w-full max-w-lg bg-[var(--bg)] border-[var(--hair)]800 rounded-3xl p-5 sm:p-6 text-[var(--ink)] space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
+ <div className="w-full max-w-lg bg-[var(--bg)] border-[var(--hair)]800 rounded-3xl p-5 sm:p-6 text-[var(--ink)] space-y-5 my-auto max-h-[92vh] overflow-y-auto">
  
  {/* Header */}
  <div className="flex justify-between items-start border-b border-[var(--hair)]800/80 pb-3">
@@ -234,7 +234,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  }}
  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-all cursor-pointer text-center ${
  targetDurationMin === mins
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ok)] shadow-sm'
+ ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ok)]'
  :'bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -303,7 +303,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  }}
  className={`p-3 rounded-[var(--r-l)] transition-all cursor-pointer flex items-center justify-between gap-2 ${
  isSelected
- ?'bg-[var(--acc)]/15 /80 shadow-md'
+ ?'bg-[var(--acc)]/15 /80'
  : isOptimal
  ?'bg-[var(--ok)]/10 border-[var(--ok)]/40 hover:bg-[var(--ok)]/15'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 hover:border-[var(--hair)]700'
@@ -345,7 +345,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="button"
  disabled={isSubmitting || (!selectedSetlistId && !generateNewSetlist)}
  onClick={handleSaveAndLink}
- className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] text-[var(--ink)] font-sans font-black text-xs tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] text-[var(--ink)] font-sans font-black text-xs tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
  >
  <Check className="w-4 h-4 stroke-[3]" />
  <span>{isSubmitting ?'Guardando...' :'Confirmar Bolo y Asignar Setlist'}</span>

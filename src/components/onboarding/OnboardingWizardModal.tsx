@@ -1001,7 +1001,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  return (
  <ModalPortal>
  <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-[var(--scrim)]/85 overflow-y-auto">
- <div className="relative w-full max-w-3xl rounded-3xl bg-[var(--surface)] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
+ <div className="relative w-full max-w-3xl rounded-3xl bg-[var(--surface)] border-[var(--hair)] overflow-hidden flex flex-col max-h-[90vh] my-auto">
  
  {/* Header */}
  <div className="p-5 sm:p-6 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--bg)]/50">
@@ -1044,7 +1044,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  onClick={() => setCurrentStepIndex(idx)}
  className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs whitespace-nowrap transition-all ${
  isCurrent
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  : isPassed
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 hover:bg-[var(--acc)]/25'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -1387,7 +1387,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={handleNextStep}
- className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-all shadow-lg shadow-amber-0/20"
+ className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-all"
  >
  {currentStepIndex === activeSteps.length - 1 ? (
  <>

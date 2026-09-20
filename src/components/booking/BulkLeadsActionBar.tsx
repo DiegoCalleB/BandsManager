@@ -63,7 +63,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  {/* Gmail-Style Sticky Top Actions Toolbar */}
  <div 
  id="bulk-leads-action-bar"
- className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] shadow-xl p-2.5 sm:p-3 transition-all animate-slide-up ${
+ className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] p-2.5 sm:p-3 transition-all animate-slide-up ${
  'bg-[var(--surface)]/95 border-[var(--acc)]/50 text-[var(--ink)] shadow-black/80'
  }`}
  >
@@ -90,7 +90,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  </button>
 
  <div className="flex items-center gap-2">
- <span className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-bold flex items-center justify-center text-xs shadow-xs font-sans shrink-0">
+ <span className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-bold flex items-center justify-center text-xs font-sans shrink-0">
  {selectedCount}
  </span>
  <div className="leading-tight">
@@ -132,7 +132,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  <button
  type="button"
  onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
- className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
  isStitchLight
  ?'bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]'
  :'bg-gradient-to-r from-amber-0/20 to-amber-600/20 hover:from-amber-0/30 hover:to-amber-600/30 /50 text-[var(--ink)]'
@@ -151,9 +151,9 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  className="fixed inset-0 z-40"
  onClick={() => setIsStatusDropdownOpen(false)}
  />
- <div className={`absolute top-full mt-2 right-0 z-50 w-64 rounded-[var(--r-l)] shadow-2xl p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${
+ <div className={`absolute top-full mt-2 right-0 z-50 w-64 rounded-[var(--r-l)] p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${
  isStitchLight
- ?'bg-[var(--surface)] shadow-slate-400/50'
+ ?'bg-[var(--surface)]'
  :'bg-[var(--surface)] border-[var(--hair)]700 shadow-black/90'
  }`}>
  <div className={`px-2 py-1 text-[10px] font-sans font-bold border-b ${
@@ -189,7 +189,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  <button
  type="button"
  onClick={onBulkGeneratePitches}
- className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
  'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-[var(--acc)]/50 text-[var(--acc)]/40'
  }`}
  title="Generar propuestas de pitch con IA para todos los seleccionados"
@@ -203,7 +203,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  <button
  type="button"
  onClick={onBulkEnrich}
- className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
  'bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800 border-[var(--acc)]/50 text-[var(--tentative)]/40'
  }`}
  title="Buscar y enriquecer teléfonos, emails y redes con Scout IA"
@@ -269,7 +269,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  {/* Confirmation Modal for Bulk Deletion */}
  <ModalPortal isOpen={isConfirmDeleteOpen} onClose={() => setIsConfirmDeleteOpen(false)}>
  <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
- <div className="w-full max-w-md bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl p-5 space-y-4 my-auto">
+ <div className="w-full max-w-md bg-[var(--surface)] rounded-[var(--r-l)] p-5 space-y-4 my-auto">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--alert)]/20 flex items-center justify-center text-[var(--alert)] shrink-0">
  <Trash2 className="w-5 h-5" />
@@ -302,7 +302,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  setIsConfirmDeleteOpen(false);
  onBulkDelete();
  }}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-md transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] transition-colors cursor-pointer"
  >
  Sí, eliminar {selectedCount}
  </button>

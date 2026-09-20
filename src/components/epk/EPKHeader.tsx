@@ -62,7 +62,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  {/* ============================================================ */}
  {/* 1. VERSIÓN MÓVIL (< sm): ULTRA COMPACTA, LIMPIA Y SIN RUIDO */}
  {/* ============================================================ */}
- <div className="sm:hidden bg-[var(--surface)] border-[var(--hair)] p-2.5 rounded-[var(--r-m)] shadow-xs space-y-2">
+ <div className="sm:hidden bg-[var(--surface)] border-[var(--hair)] p-2.5 rounded-[var(--r-m)] space-y-2">
  <div className="flex items-center justify-between gap-2">
  <div className="min-w-0">
  <h2 className="text-sm font-bold font-sans text-[var(--ink)] leading-tight truncate">
@@ -85,7 +85,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <button
  type="button"
  onClick={onSave}
- className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer"
+ className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
  >
  <Save className="w-3.5 h-3.5" />
  <span>Guardar</span>
@@ -112,7 +112,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className="fixed inset-0 z-40"
  onClick={() => setShowMobileMenu(false)}
  />
- <div className="absolute right-0 top-full mt-1.5 w-56 bg-[var(--surface)] rounded-[var(--r-m)] shadow-2xl z-50 p-1.5 space-y-1 text-xs">
+ <div className="absolute right-0 top-full mt-1.5 w-56 bg-[var(--surface)] rounded-[var(--r-m)] z-50 p-1.5 space-y-1 text-xs">
  <a
  href={publicEpkUrl}
  target="_blank"
@@ -240,7 +240,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  {/* ============================================================ */}
  {/* 2. VERSIÓN ESCRITORIO (>= sm): COMPLETA Y ESPACIOSA */}
  {/* ============================================================ */}
- <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] border-[var(--hair)] p-4 sm:p-5 rounded-[var(--r-l)] shadow-sm">
+ <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] border-[var(--hair)] p-4 sm:p-5 rounded-[var(--r-l)]">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] text-[10px] font-sans font-bold">
@@ -268,7 +268,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  id="tutorial-trigger-epk"
  type="button"
  onClick={onOpenTutorial}
- className="px-3 py-2 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
+ className="px-3 py-2 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer active:scale-95"
  title="Abrir guía interactiva del Dossier EPK"
  >
  <HelpCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
@@ -306,7 +306,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <button
  type="button"
  onClick={onSave}
- className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs sm:text-sm rounded-[var(--r-m)] flex items-center gap-2 shadow-md hover:shadow-lg transition cursor-pointer"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs sm:text-sm rounded-[var(--r-m)] flex items-center gap-2 hover:shadow-lg transition cursor-pointer"
  >
  <Save className="w-4 h-4" />
  <span>Guardar Cambios</span>
@@ -463,7 +463,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock(block.id)}
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
  isActive
- ?'bg-[var(--acc)] text-[var(--ink)] font-bold shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--ink)] font-bold'
  :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:border-[var(--hair)]'
  }`}
  >

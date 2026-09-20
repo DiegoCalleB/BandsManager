@@ -564,7 +564,7 @@ export function BulkAlbumAudioUploaderModal({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div
- className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden ${
+ className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl overflow-hidden ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)]'
@@ -573,7 +573,7 @@ export function BulkAlbumAudioUploaderModal({
  {/* Modal Header */}
  <div className="p-6 border-b border-[var(--hair)] flex items-center justify-between shrink-0 bg-gradient-to-r from-[var(--ok)]/10 to-transparent">
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[var(--ok)] shadow-inner">
+ <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[var(--ok)]">
  <FolderUp className="w-6 h-6" />
  </div>
  <div>
@@ -768,7 +768,7 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => togglePlayAudio(idx)}
  className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-all cursor-pointer ${
  isPlaying
- ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--ink)]/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]'
  }`}
  title={isPlaying ?'Pausar audio' :'Escuchar previo'}
@@ -930,7 +930,7 @@ export function BulkAlbumAudioUploaderModal({
  type="button"
  onClick={handleStartUpload}
  disabled={isUploading || items.length === 0}
- className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] text-xs font-sans font-bold shadow-lg flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] text-xs font-sans font-bold flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isUploading ? (
  <>

@@ -121,60 +121,60 @@ Cordialmente,
  const [isOptimizingTemplate, setIsOptimizingTemplate] = useState(false);
  const [optimizationFeedbackMsg, setOptimizationFeedbackMsg] = useState<string | null>(null);
  const [templateCustomInstruction, setTemplateCustomInstruction] = useState('');
-  const [templateToneRating, setTemplateToneRating] = useState<number>(0);
-  const [templateContentRating, setTemplateContentRating] = useState<number>(0);
+ const [templateToneRating, setTemplateToneRating] = useState<number>(0);
+ const [templateContentRating, setTemplateContentRating] = useState<number>(0);
 
-  // Estadísticas de éxito por categoría
-  const [templateStats, setTemplateStats] = useState<Record<string, { totalUses: number; positiveResponses: number; responseRate: number; invalidEmails: number; bouncedEmails: number }>>({});
+ // Estadísticas de éxito por categoría
+ const [templateStats, setTemplateStats] = useState<Record<string, { totalUses: number; positiveResponses: number; responseRate: number; invalidEmails: number; bouncedEmails: number }>>({});
 
  const handleOptimizeTemplate = async () => {
-   setIsOptimizingTemplate(true);
-   setOptimizationFeedbackMsg(null);
-   try {
-     const activeData = getActiveTemplateData();
-     const res = await fetch('/api/templates/optimize', {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({
-         category: templateTab,
-         currentSubject: activeData.subject,
-         currentBody: activeData.body,
-         currentGuidelines: activeData.guidelines,
-         customInstruction: templateCustomInstruction,
-         toneRating: templateToneRating,
-         contentRating: templateContentRating
-       })
-     });
-     const data = await res.json();
-     if (res.ok && data.success && data.optimized) {
-       activeData.setSubject(data.optimized.subject);
-       activeData.setBody(data.optimized.body);
-       activeData.setGuidelines(data.optimized.guidelines);
-       
-       setTestPromptResult(`Asunto: ${data.optimized.subject}
+ setIsOptimizingTemplate(true);
+ setOptimizationFeedbackMsg(null);
+ try {
+ const activeData = getActiveTemplateData();
+ const res = await fetch('/api/templates/optimize', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({
+ category: templateTab,
+ currentSubject: activeData.subject,
+ currentBody: activeData.body,
+ currentGuidelines: activeData.guidelines,
+ customInstruction: templateCustomInstruction,
+ toneRating: templateToneRating,
+ contentRating: templateContentRating
+ })
+ });
+ const data = await res.json();
+ if (res.ok && data.success && data.optimized) {
+ activeData.setSubject(data.optimized.subject);
+ activeData.setBody(data.optimized.body);
+ activeData.setGuidelines(data.optimized.guidelines);
+ 
+ setTestPromptResult(`Asunto: ${data.optimized.subject}
 
 ${data.optimized.body}`);
-       
-       const countNote = data.feedbackCountUsed > 0 
-         ? `Aplicado aprendizaje de ${data.feedbackCountUsed} valoraciones previas del mánager.`
-         : 'Refrescada con pautas de estilo de Bakandeya.';
-       const ratingsAppliedNote = (templateToneRating > 0 || templateContentRating > 0)
-         ? ` (Estrellitas aplicadas: Tono ${templateToneRating || '-'}/5, Contenido ${templateContentRating || '-'}/5)`
-         : '';
+ 
+ const countNote = data.feedbackCountUsed > 0 
+ ? `Aplicado aprendizaje de ${data.feedbackCountUsed} valoraciones previas del mánager.`
+ : 'Refrescada con pautas de estilo de Bakandeya.';
+ const ratingsAppliedNote = (templateToneRating > 0 || templateContentRating > 0)
+ ? ` (Estrellitas aplicadas: Tono ${templateToneRating || '-'}/5, Contenido ${templateContentRating || '-'}/5)`
+ : '';
 
-       setOptimizationFeedbackMsg(`✨ Plantilla re-generada con IA: ${data.optimized.explanation || countNote}${ratingsAppliedNote}`);
-       setTemplateCustomInstruction('');
-       setTemplateToneRating(0);
-       setTemplateContentRating(0);
-     } else {
-       setOptimizationFeedbackMsg('⚠️ No se pudo re-generar la plantilla. Inténtalo de nuevo.');
-     }
-   } catch (err) {
-     console.error('Error optimizing template:', err);
-     setOptimizationFeedbackMsg('⚠️ Error de conexión al re-generar la plantilla.');
-   } finally {
-     setIsOptimizingTemplate(false);
-   }
+ setOptimizationFeedbackMsg(`✨ Plantilla re-generada con IA: ${data.optimized.explanation || countNote}${ratingsAppliedNote}`);
+ setTemplateCustomInstruction('');
+ setTemplateToneRating(0);
+ setTemplateContentRating(0);
+ } else {
+ setOptimizationFeedbackMsg('⚠️ No se pudo re-generar la plantilla. Inténtalo de nuevo.');
+ }
+ } catch (err) {
+ console.error('Error optimizing template:', err);
+ setOptimizationFeedbackMsg('⚠️ Error de conexión al re-generar la plantilla.');
+ } finally {
+ setIsOptimizingTemplate(false);
+ }
  };
 
  // Helper to retrieve current active template fields by category
@@ -267,195 +267,195 @@ ${data.optimized.body}`);
  const activeData = getActiveTemplateData();
 
  try {
-   const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-   if (token) {
-     headers['Authorization'] = `Bearer ${token}`;
-     headers['x-auth-token'] = token;
-   }
-   const res = await fetch('/api/templates/preview', {
-     method: 'POST',
-     headers,
-     body: JSON.stringify({
-       category: templateTab,
-       subject: activeData.subject,
-       body: activeData.body,
-       guidelines: activeData.guidelines
-     })
-   });
-   const data = await res.json();
-   if (res.ok && data.success) {
-     setTestPromptResult(`Asunto: ${data.subject}\n\n${data.body}`);
-   } else {
-     setTestPromptResult(`⚠️ ${data.error || 'No se pudo simular la plantilla.'}`);
-   }
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+ if (token) {
+ headers['Authorization'] = `Bearer ${token}`;
+ headers['x-auth-token'] = token;
+ }
+ const res = await fetch('/api/templates/preview', {
+ method: 'POST',
+ headers,
+ body: JSON.stringify({
+ category: templateTab,
+ subject: activeData.subject,
+ body: activeData.body,
+ guidelines: activeData.guidelines
+ })
+ });
+ const data = await res.json();
+ if (res.ok && data.success) {
+ setTestPromptResult(`Asunto: ${data.subject}\n\n${data.body}`);
+ } else {
+ setTestPromptResult(`⚠️ ${data.error || 'No se pudo simular la plantilla.'}`);
+ }
  } catch (err) {
-   console.error('Error testing prompt:', err);
-   setTestPromptResult('⚠️ Error de conexión al simular la plantilla.');
+ console.error('Error testing prompt:', err);
+ setTestPromptResult('⚠️ Error de conexión al simular la plantilla.');
  } finally {
-   setIsTestingPrompt(false);
+ setIsTestingPrompt(false);
  }
  };
 
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-        const headers: Record<string, string> = {};
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-          headers['x-auth-token'] = token;
-        }
-        const res = await fetch('/api/templates', { headers });
-        const data = await res.json();
-        if (res.ok && data.success && data.templates) {
-          const t = data.templates;
-          if (t.salas) {
-            setSubjectTemplateSala(t.salas.subject);
-            setBodyTemplateSala(t.salas.body);
-            setAiGuidelinesSala(t.salas.guidelines);
-          }
-          if (t.festivales) {
-            setSubjectTemplateFestival(t.festivales.subject);
-            setBodyTemplateFestival(t.festivales.body);
-            setAiGuidelinesFestival(t.festivales.guidelines);
-          }
-          if (t.discotecas) {
-            setSubjectTemplateDiscoteca(t.discotecas.subject);
-            setBodyTemplateDiscoteca(t.discotecas.body);
-            setAiGuidelinesDiscoteca(t.discotecas.guidelines);
-          }
-          if (t.medios) {
-            setSubjectTemplateMedio(t.medios.subject);
-            setBodyTemplateMedio(t.medios.body);
-            setAiGuidelinesMedio(t.medios.guidelines);
-          }
-          if (t.grupos) {
-            setSubjectTemplateGrupo(t.grupos.subject);
-            setBodyTemplateGrupo(t.grupos.body);
-            setAiGuidelinesGrupo(t.grupos.guidelines);
-          }
-          if (t.managements) {
-            setSubjectTemplateManagement(t.managements.subject);
-            setBodyTemplateManagement(t.managements.body);
-            setAiGuidelinesManagement(t.managements.guidelines);
-          }
-          if (t.ayuntamientos) {
-            setSubjectTemplateAyuntamiento(t.ayuntamientos.subject);
-            setBodyTemplateAyuntamiento(t.ayuntamientos.body);
-            setAiGuidelinesAyuntamiento(t.ayuntamientos.guidelines);
-          }
-        }
-      } catch (err) {
-        console.warn('Could not load saved templates from API:', err);
-      }
-    };
-    const fetchStats = async () => {
-      try {
-        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-        const headers: Record<string, string> = {};
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-          headers['x-auth-token'] = token;
-        }
-        const res = await fetch('/api/templates/stats', { headers });
-        const data = await res.json();
-        if (res.ok && data.success && data.stats) {
-          setTemplateStats(data.stats);
-        }
-      } catch (err) {
-        console.warn('Could not load template stats from API:', err);
-      }
-    };
-    fetchTemplates();
-    fetchStats();
-  }, []);
+ useEffect(() => {
+ const fetchTemplates = async () => {
+ try {
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers: Record<string, string> = {};
+ if (token) {
+ headers['Authorization'] = `Bearer ${token}`;
+ headers['x-auth-token'] = token;
+ }
+ const res = await fetch('/api/templates', { headers });
+ const data = await res.json();
+ if (res.ok && data.success && data.templates) {
+ const t = data.templates;
+ if (t.salas) {
+ setSubjectTemplateSala(t.salas.subject);
+ setBodyTemplateSala(t.salas.body);
+ setAiGuidelinesSala(t.salas.guidelines);
+ }
+ if (t.festivales) {
+ setSubjectTemplateFestival(t.festivales.subject);
+ setBodyTemplateFestival(t.festivales.body);
+ setAiGuidelinesFestival(t.festivales.guidelines);
+ }
+ if (t.discotecas) {
+ setSubjectTemplateDiscoteca(t.discotecas.subject);
+ setBodyTemplateDiscoteca(t.discotecas.body);
+ setAiGuidelinesDiscoteca(t.discotecas.guidelines);
+ }
+ if (t.medios) {
+ setSubjectTemplateMedio(t.medios.subject);
+ setBodyTemplateMedio(t.medios.body);
+ setAiGuidelinesMedio(t.medios.guidelines);
+ }
+ if (t.grupos) {
+ setSubjectTemplateGrupo(t.grupos.subject);
+ setBodyTemplateGrupo(t.grupos.body);
+ setAiGuidelinesGrupo(t.grupos.guidelines);
+ }
+ if (t.managements) {
+ setSubjectTemplateManagement(t.managements.subject);
+ setBodyTemplateManagement(t.managements.body);
+ setAiGuidelinesManagement(t.managements.guidelines);
+ }
+ if (t.ayuntamientos) {
+ setSubjectTemplateAyuntamiento(t.ayuntamientos.subject);
+ setBodyTemplateAyuntamiento(t.ayuntamientos.body);
+ setAiGuidelinesAyuntamiento(t.ayuntamientos.guidelines);
+ }
+ }
+ } catch (err) {
+ console.warn('Could not load saved templates from API:', err);
+ }
+ };
+ const fetchStats = async () => {
+ try {
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers: Record<string, string> = {};
+ if (token) {
+ headers['Authorization'] = `Bearer ${token}`;
+ headers['x-auth-token'] = token;
+ }
+ const res = await fetch('/api/templates/stats', { headers });
+ const data = await res.json();
+ if (res.ok && data.success && data.stats) {
+ setTemplateStats(data.stats);
+ }
+ } catch (err) {
+ console.warn('Could not load template stats from API:', err);
+ }
+ };
+ fetchTemplates();
+ fetchStats();
+ }, []);
 
  const handleSaveTemplates = async () => {
-   const activeData = getActiveTemplateData();
-   try {
-     const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-     const headers: Record<string, string> = {
-       'Content-Type': 'application/json'
-     };
-     if (token) {
-       headers['Authorization'] = `Bearer ${token}`;
-       headers['x-auth-token'] = token;
-     }
-     const res = await fetch('/api/templates/save', {
-       method: 'POST',
-       headers,
-       body: JSON.stringify({
-         category: templateTab,
-         subject: activeData.subject,
-         body: activeData.body,
-         guidelines: activeData.guidelines,
-         customInstruction: templateCustomInstruction,
-         toneRating: templateToneRating,
-         contentRating: templateContentRating
-       })
-     });
-     const data = await res.json();
-     if (res.ok && data.success) {
-       setOptimizationFeedbackMsg(`✅ Plantilla y Pautas para [${activeData.title}] guardadas y ya se usarán al generar pitches para esta categoría.`);
-       setTemplateCustomInstruction('');
-       setTemplateToneRating(0);
-       setTemplateContentRating(0);
-     } else {
-       alert('⚠️ Error al guardar en el servidor.');
-     }
-   } catch (err) {
-     console.error('Error saving template:', err);
-     alert('⚠️ Error de conexión al guardar la plantilla.');
-   }
+ const activeData = getActiveTemplateData();
+ try {
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers: Record<string, string> = {
+ 'Content-Type': 'application/json'
+ };
+ if (token) {
+ headers['Authorization'] = `Bearer ${token}`;
+ headers['x-auth-token'] = token;
+ }
+ const res = await fetch('/api/templates/save', {
+ method: 'POST',
+ headers,
+ body: JSON.stringify({
+ category: templateTab,
+ subject: activeData.subject,
+ body: activeData.body,
+ guidelines: activeData.guidelines,
+ customInstruction: templateCustomInstruction,
+ toneRating: templateToneRating,
+ contentRating: templateContentRating
+ })
+ });
+ const data = await res.json();
+ if (res.ok && data.success) {
+ setOptimizationFeedbackMsg(`✅ Plantilla y Pautas para [${activeData.title}] guardadas y ya se usarán al generar pitches para esta categoría.`);
+ setTemplateCustomInstruction('');
+ setTemplateToneRating(0);
+ setTemplateContentRating(0);
+ } else {
+ alert('⚠️ Error al guardar en el servidor.');
+ }
+ } catch (err) {
+ console.error('Error saving template:', err);
+ alert('⚠️ Error de conexión al guardar la plantilla.');
+ }
  };
 
  const handleResetTemplate = async () => {
-   if (!confirm(`¿Restaurar la plantilla de ${templateTab} a valores por defecto?`)) return;
+ if (!confirm(`¿Restaurar la plantilla de ${templateTab} a valores por defecto?`)) return;
 
-   try {
-     const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-     if (token) {
-       headers['Authorization'] = `Bearer ${token}`;
-       headers['x-auth-token'] = token;
-     }
-     const res = await fetch('/api/templates/reset', {
-       method: 'POST',
-       headers,
-       body: JSON.stringify({ category: templateTab })
-     });
-     const data = await res.json();
-     if (res.ok && data.success) {
-       const activeData = getActiveTemplateData();
-       activeData.setSubject(data.template.subject);
-       activeData.setBody(data.template.body);
-       activeData.setGuidelines(data.template.guidelines);
-       setOptimizationFeedbackMsg(`✅ ${data.message}`);
-       setTemplateCustomInstruction('');
-       setTemplateToneRating(0);
-       setTemplateContentRating(0);
-     } else {
-       setOptimizationFeedbackMsg('⚠️ Error al resetear la plantilla.');
-     }
-   } catch (err) {
-     console.error('Error resetting template:', err);
-     setOptimizationFeedbackMsg('⚠️ Error de conexión al resetear la plantilla.');
-   }
+ try {
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+ if (token) {
+ headers['Authorization'] = `Bearer ${token}`;
+ headers['x-auth-token'] = token;
+ }
+ const res = await fetch('/api/templates/reset', {
+ method: 'POST',
+ headers,
+ body: JSON.stringify({ category: templateTab })
+ });
+ const data = await res.json();
+ if (res.ok && data.success) {
+ const activeData = getActiveTemplateData();
+ activeData.setSubject(data.template.subject);
+ activeData.setBody(data.template.body);
+ activeData.setGuidelines(data.template.guidelines);
+ setOptimizationFeedbackMsg(`✅ ${data.message}`);
+ setTemplateCustomInstruction('');
+ setTemplateToneRating(0);
+ setTemplateContentRating(0);
+ } else {
+ setOptimizationFeedbackMsg('⚠️ Error al resetear la plantilla.');
+ }
+ } catch (err) {
+ console.error('Error resetting template:', err);
+ setOptimizationFeedbackMsg('⚠️ Error de conexión al resetear la plantilla.');
+ }
  };
 
-  return {
-    templateTab, setTemplateTab,
-    testPromptResult, isTestingPrompt,
-    isOptimizingTemplate, optimizationFeedbackMsg, setOptimizationFeedbackMsg,
-    templateCustomInstruction, setTemplateCustomInstruction,
-    templateToneRating, setTemplateToneRating,
-    templateContentRating, setTemplateContentRating,
-    templateStats,
-    getActiveTemplateData,
-    handleOptimizeTemplate,
-    handleTestPrompt,
-    handleSaveTemplates,
-    handleResetTemplate,
-  };
+ return {
+ templateTab, setTemplateTab,
+ testPromptResult, isTestingPrompt,
+ isOptimizingTemplate, optimizationFeedbackMsg, setOptimizationFeedbackMsg,
+ templateCustomInstruction, setTemplateCustomInstruction,
+ templateToneRating, setTemplateToneRating,
+ templateContentRating, setTemplateContentRating,
+ templateStats,
+ getActiveTemplateData,
+ handleOptimizeTemplate,
+ handleTestPrompt,
+ handleSaveTemplates,
+ handleResetTemplate,
+ };
 }

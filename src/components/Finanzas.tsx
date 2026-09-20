@@ -157,7 +157,7 @@ export default function Finanzas({
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncing
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)]'
- : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
+ : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30'
  }`}
  title="Sincronizar todas las transacciones financieras"
  >
@@ -291,8 +291,8 @@ export default function Finanzas({
  onClick={() => setIsAddOpen(true)}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
  isStitchLight 
- ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] shadow-sm' 
- :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-md'
+ ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]' 
+ :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]'
  }`}
  >
  <Plus className="w-3.5 h-3.5" /> Registrar Operación
@@ -502,7 +502,7 @@ export default function Finanzas({
  {/* EDIT CONCERT EXPENSES MODAL */}
  {editingConcertId && (
  <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
- <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4 shadow-2xl">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4">
  <div className="flex items-center justify-between border-b pb-3">
  <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
  <Calculator className="w-5 h-5 text-[var(--acc)]" /> Desglose Real de Gastos de Bolo
@@ -610,7 +610,7 @@ export default function Finanzas({
  }
  setEditingConcertId(null);
  }}
- className="px-4 py-2 bg-[var(--acc)] text-[var(--ink)] text-xs font-bold rounded-[var(--r-m)] shadow-lg"
+ className="px-4 py-2 bg-[var(--acc)] text-[var(--ink)] text-xs font-bold rounded-[var(--r-m)]"
  >
  Guardar Gastos
  </button>

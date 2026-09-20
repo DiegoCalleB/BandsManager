@@ -92,7 +92,7 @@ export function AddSongsToSetlistModal({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[92vh] flex flex-col ${colors.card} text-[var(--ink)]`}>
+ <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[92vh] flex flex-col ${colors.card} text-[var(--ink)]`}>
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <ListPlus className="w-5 h-5 text-[var(--ok)]" />
@@ -193,7 +193,7 @@ export function AddSongsToSetlistModal({
  }`}
  >
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
- isSelected ?'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] shadow-sm scale-105' :' text-[var(--ink-2)]'
+ isSelected ?'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] scale-105' :' text-[var(--ink-2)]'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>
@@ -240,7 +240,7 @@ export function AddSongsToSetlistModal({
  type="button"
  disabled={selectedIds.length === 0}
  onClick={handleSubmit}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer flex items-center gap-1.5"
  >
  <ListPlus className="w-4 h-4 stroke-[3]" />
  <span>Añadir {selectedIds.length > 0 ? `${selectedIds.length} Canciones en Orden` :'Canciones'}</span>

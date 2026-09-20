@@ -76,7 +76,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className={`relative w-full max-w-lg my-auto rounded-[var(--r-l)] shadow-2xl p-6 overflow-hidden ${
+ <div className={`relative w-full max-w-lg my-auto rounded-[var(--r-l)] p-6 overflow-hidden ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center justify-between pb-4 border-b border-[var(--hair)]">
@@ -146,7 +146,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  type="button"
  onClick={handleStartEnrichment}
  disabled={isProcessing || incompleteLeads.length === 0}
- className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] transition-all flex items-center gap-2 shadow-lg shadow-amber-0/20 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isProcessing ? (
  <>

@@ -106,7 +106,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  {/* Revolut */}
  <div className="p-3 bg-[var(--surface)]/80 rounded-[var(--r-m)] space-y-1.5">
  <div className="flex items-center gap-1.5">
- <div className="w-5 h-5 rounded-md bg-[var(--surface)] text-[var(--ink)] flex items-center justify-center p-0.5 shadow-sm">
+ <div className="w-5 h-5 rounded-md bg-[var(--surface)] text-[var(--ink)] flex items-center justify-center p-0.5">
  <svg className="w-full h-full fill-[var(--ink)]" viewBox="0 0 24 24">
  <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z" />
  </svg>
@@ -148,7 +148,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  {/* PayPal */}
  <div className="p-3 bg-[var(--surface)]/80 rounded-[var(--r-m)] space-y-1.5">
  <div className="flex items-center gap-1.5">
- <div className="w-5 h-5 rounded-md bg-[var(--bg)] text-[#0079C1] flex items-center justify-center p-0.5 shadow-sm">
+ <div className="w-5 h-5 rounded-md bg-[var(--bg)] text-[#0079C1] flex items-center justify-center p-0.5">
  <PayPalLogo className="w-full h-full fill-[var(--surface)]" />
  </div>
  <label className="text-xs font-semibold text-[var(--tentative)]/40">PayPal (paypal.me)</label>
@@ -189,7 +189,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  {/* Bizum */}
  <div className="space-y-1.5">
  <div className="flex items-center gap-2">
- <div className="w-5 h-5 rounded-md bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center p-0.5 shadow-sm">
+ <div className="w-5 h-5 rounded-md bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center p-0.5">
  <BizumLogo className="w-4 h-4" />
  </div>
  <label className="text-xs font-semibold text-[var(--ink)]">Bizum (Teléfono)</label>
@@ -227,7 +227,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  (config.donacionRevolut?.metodoPorDefecto ||'revolut') ==='revolut'
- ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--ink-3)] shadow-sm'
+ ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--ink-3)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -244,7 +244,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='paypal'
- ?'bg-[var(--tentative)]/50/20 border-[var(--acc)] text-[var(--acc)]/80 shadow-sm'
+ ?'bg-[var(--tentative)]/50/20 border-[var(--acc)] text-[var(--acc)]/80'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -261,7 +261,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='bizum'
- ?'bg-[var(--ok)]/20 border-[var(--ok)] text-[var(--ink-2)] shadow-sm'
+ ?'bg-[var(--ok)]/20 border-[var(--ok)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -325,7 +325,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  Tarjeta desactivada: no se mostrará en &quot;Únete&quot; ni en el Dossier
  </div>
  ) : (
- <div className="relative overflow-hidden p-3.5 sm:p-4 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)]/95 via-[var(--surface)]/90 to-[var(--surface)]/95 p-4 shadow-xl space-y-3">
+ <div className="relative overflow-hidden p-3.5 sm:p-4 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)]/95 via-[var(--surface)]/90 to-[var(--surface)]/95 p-4 space-y-3">
  <div className="relative flex items-start gap-3 sm:gap-3.5">
  <div className="min-w-0 flex-1">
  <div className="flex items-center justify-between gap-2">

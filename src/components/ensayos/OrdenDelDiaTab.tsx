@@ -310,7 +310,7 @@ export function OrdenDelDiaTab({
  return (
  <div className="space-y-6 animate-fade-in">
  {/* Top Banner with Run-of-Show Stats & Direct Live Launch */}
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[#141413] to-[#1a1917] border-[var(--hair)] shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[#141413] to-[#1a1917] border-[var(--hair)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
  <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">
@@ -364,7 +364,7 @@ export function OrdenDelDiaTab({
 
  <button
  onClick={onGoToLiveMode}
- className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--ink)] font-sans font-black text-xs tracking-wider hover:brightness-110 shadow-lg shadow-amber-0/20 transition-all cursor-pointer active:scale-95"
+ className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--ink)] font-sans font-black text-xs tracking-wider hover:brightness-110 transition-all cursor-pointer active:scale-95"
  >
  <Play className="w-4 h-4 fill-current" />
  <span>Iniciar Modo Local en Vivo</span>
@@ -375,7 +375,7 @@ export function OrdenDelDiaTab({
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
  {/* Left Column: Objectives & Quick Tips */}
  <div className="space-y-4">
- <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-sm">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)]">
  <div className="flex items-center justify-between gap-2 mb-3">
  <div className="flex items-center gap-2">
  <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
@@ -492,7 +492,7 @@ export function OrdenDelDiaTab({
  setSelectedSongIds([]);
  setShowAddSongModal(true);
  }}
- className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold shadow-sm shadow-amber-400/20 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-all cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>+ Añadir Canciones</span>
@@ -517,7 +517,7 @@ export function OrdenDelDiaTab({
  setSelectedSongIds([]);
  setShowAddSongModal(true);
  }}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-sans font-bold hover:bg-[var(--acc)] cursor-pointer shadow-md"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-sans font-bold hover:bg-[var(--acc)] cursor-pointer"
  >
  + Añadir Canciones del Repertorio
  </button>
@@ -569,7 +569,7 @@ export function OrdenDelDiaTab({
  isDragging
  ?'opacity-30 scale-[0.98]'
  : isDragOver
- ?' border-2 scale-[1.01] bg-[var(--acc)]/10 shadow-lg'
+ ?' border-2 scale-[1.01] bg-[var(--acc)]/10'
  : item.evaluacion ==='bordada'
  ?'bg-[var(--surface)] border-[var(--ok)]/30 hover:border-[var(--ok)]/50'
  : item.evaluacion ==='repetir'
@@ -709,7 +709,7 @@ export function OrdenDelDiaTab({
  {showAddSongModal && (
  <ModalPortal isOpen={showAddSongModal} onClose={() => setShowAddSongModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
- <div className="w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[92vh] flex flex-col border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)]">
+ <div className="w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[92vh] flex flex-col border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)]">
  <div className="flex justify-between items-center pb-3 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2">
  <Disc3 className="w-5 h-5 text-[var(--acc)]" />
@@ -816,7 +816,7 @@ export function OrdenDelDiaTab({
  {/* Number in selection order */}
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
  isSelected
- ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-sm scale-105'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] scale-105'
  :' text-[var(--ink-2)]'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
@@ -866,7 +866,7 @@ export function OrdenDelDiaTab({
  type="button"
  disabled={selectedSongIds.length === 0}
  onClick={handleConfirmAddSongs}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/60 hover:bg-[var(--acc)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/60 hover:bg-[var(--acc)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer flex items-center gap-1.5"
  >
  <Plus className="w-4 h-4 stroke-[3]" />
  <span>Añadir {selectedSongIds.length > 0 ? `${selectedSongIds.length} Canciones en Orden` :'Canciones'}</span>
@@ -882,7 +882,7 @@ export function OrdenDelDiaTab({
  {showImportSetlistModal && (
  <ModalPortal isOpen={showImportSetlistModal} onClose={() => setShowImportSetlistModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
- <div className="w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl my-auto flex flex-col border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)]">
+ <div className="w-full max-w-lg p-5 rounded-[var(--r-l)] my-auto flex flex-col border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)]">
  <div className="flex justify-between items-center pb-3 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2">
  <FolderInput className="w-5 h-5 text-[var(--acc)]" />
@@ -960,7 +960,7 @@ export function OrdenDelDiaTab({
  {showAddBlockModal && (
  <ModalPortal isOpen={showAddBlockModal} onClose={() => setShowAddBlockModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
- <form onSubmit={handleConfirmAddBlock} className="bg-[var(--surface)] border-[var(--hair)] w-full max-w-md rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col">
+ <form onSubmit={handleConfirmAddBlock} className="bg-[var(--surface)] border-[var(--hair)] w-full max-w-md rounded-[var(--r-l)] overflow-hidden flex flex-col">
  <div className="flex items-center justify-between p-4 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2">
  <Layers className="w-4 h-4 text-[var(--acc)]" />
@@ -1051,7 +1051,7 @@ export function OrdenDelDiaTab({
  </button>
  <button
  type="submit"
- className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] cursor-pointer shadow-md"
+ className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] cursor-pointer"
  >
  Añadir Bloque
  </button>

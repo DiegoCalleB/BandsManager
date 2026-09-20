@@ -245,7 +245,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <ModalPortal isOpen={true} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div 
- className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
+ className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight 
  ?'bg-[var(--surface)] text-[var(--ink)]' 
  :'bg-[var(--surface)] text-[var(--ink-2)]'
@@ -359,7 +359,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div className="flex flex-wrap items-center justify-between gap-3">
  <div className="flex items-center gap-3">
  <div
- className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] shadow-inner font-sans text-sm shrink-0"
+ className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
  style={{ backgroundColor: u.avatarColor ||'var(--ok)' }}
  >
  {u.name.slice(0, 2)}
@@ -595,7 +595,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <button
  type="submit"
  disabled={loading}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-amber-0/10 active:scale-98"
+ className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98"
  >
  {loading ? (
  <span>Creando miembro...</span>
@@ -669,7 +669,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <button
  type="submit"
  disabled={loading || !assocEmail.trim()}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-indigo-600/20 active:scale-98"
+ className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98"
  >
  {loading ? (
  <span>Asociando músico...</span>

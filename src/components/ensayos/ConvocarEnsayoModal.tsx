@@ -109,7 +109,7 @@ export function ConvocarEnsayoModal({
  return (
  <ModalPortal>
  <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 animate-fade-in overflow-y-auto">
- <div className="bg-[var(--surface)] border-[var(--hair)] w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh]">
+ <div className="bg-[var(--surface)] border-[var(--hair)] w-full max-w-xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh]">
  {/* Header */}
  <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2.5">
@@ -343,7 +343,7 @@ export function ConvocarEnsayoModal({
  </button>
  <button
  type="submit"
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] transition-all cursor-pointer shadow-md shadow-amber-400/20 active:scale-95"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] transition-all cursor-pointer active:scale-95"
  >
  {isEditing ?'Guardar Cambios' :'Convocar Ensayo'}
  </button>

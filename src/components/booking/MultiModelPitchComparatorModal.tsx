@@ -214,7 +214,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain">
- <div className="relative w-full max-w-6xl bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
+ <div className="relative w-full max-w-6xl bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[94vh] my-auto">
  
  {/* HEADER */}
  <div className="px-5 py-3.5 border-b border-[var(--hair)]800 flex items-center justify-between bg-[var(--surface)]/95 sticky top-0 z-10">
@@ -305,7 +305,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <button
  onClick={handleRunComparison}
  disabled={isLoading || selectedProviders.length === 0}
- className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans shrink-0"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-all font-sans shrink-0"
  >
  {isLoading ? (
  <>
@@ -348,7 +348,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => setVolumeScale('1')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='1'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -359,7 +359,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => setVolumeScale('100')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='100'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -370,7 +370,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => setVolumeScale('1000')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='1000'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -434,7 +434,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  key={prop.provider + idx}
  className={`flex flex-col rounded-[var(--r-m)] transition-all duration-200 ${
  isSelected
- ?'bg-[var(--surface)] border-[var(--ok)]/80 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/40'
+ ?'bg-[var(--surface)] border-[var(--ok)]/80 ring-1 ring-emerald-500/40'
  :'bg-[var(--surface)] border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  >
@@ -541,7 +541,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  disabled={!prop.text && !prop.fallbackText}
  className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  isSelected
- ?'bg-[var(--ok)] text-[var(--ink)] shadow-md shadow-emerald-500/20'
+ ?'bg-[var(--ok)] text-[var(--ink)]'
  :'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 hover:/60'
  }`}
  >

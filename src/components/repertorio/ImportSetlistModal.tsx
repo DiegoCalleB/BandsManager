@@ -210,7 +210,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
 
  return (
  <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
- <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl pointer-events-auto">
+ <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto pointer-events-auto">
  <div className="sticky top-0 z-10 bg-[var(--surface)] border-b p-3 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
  <ImagePlus className="w-5 h-5 text-[var(--ink-2)]" />

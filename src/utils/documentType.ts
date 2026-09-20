@@ -3,11 +3,11 @@
 // cuando no se puede mostrar inline (Word).
 
 export function isImageDocument(name?: string, url?: string): boolean {
-  const target = (name || url || '').toLowerCase();
-  return /\.(jpe?g|png|webp|gif)(\?|$)/.test(target);
+ const target = (name || url || '').toLowerCase();
+ return /\.(jpe?g|png|webp|gif)(\?|$)/.test(target);
 }
 
 export function isPdfDocument(name?: string, url?: string): boolean {
-  const target = (name || url || '').toLowerCase();
-  return /\.pdf(\?|$)/.test(target);
+ const target = (name || url || '').toLowerCase();
+ return /\.pdf(\?|$)/.test(target);
 }

@@ -3,10 +3,10 @@ import { apiFetch } from '../utils/api';
 import { Lead } from '../types';
 
 export function useNegotiationSimulation(
-  selectedLead: Lead | null,
-  setSelectedLead: (updater: (prev: Lead | null) => Lead | null) => void,
-  onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void,
-  setManualEmailStatus: (status: string) => void
+ selectedLead: Lead | null,
+ setSelectedLead: (updater: (prev: Lead | null) => Lead | null) => void,
+ onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void,
+ setManualEmailStatus: (status: string) => void
 ) {
  // Advanced Simulation States
  const [isSimulatingAvanzado, setIsSimulatingAvanzado] = useState(false);
@@ -174,21 +174,21 @@ export function useNegotiationSimulation(
  }, 5000);
  };
 
-  return {
-    isSimulatingAvanzado, setIsSimulatingAvanzado,
-    simulationRole,
-    simulationScenario,
-    simulationCustomInstruction, setSimulationCustomInstruction,
-    simulationSenderName, setSimulationSenderName,
-    simulationSubject, setSimulationSubject,
-    simulationMessage, setSimulationMessage,
-    isGeneratingSimulation,
-    simulationGenerated,
-    PREDEFINED_SCENARIOS,
-    handleRoleChange,
-    handleScenarioChange,
-    handleOpenAdvancedSimulation,
-    handleGenerateSimulationEmail,
-    handleCommitSimulation,
-  };
+ return {
+ isSimulatingAvanzado, setIsSimulatingAvanzado,
+ simulationRole,
+ simulationScenario,
+ simulationCustomInstruction, setSimulationCustomInstruction,
+ simulationSenderName, setSimulationSenderName,
+ simulationSubject, setSimulationSubject,
+ simulationMessage, setSimulationMessage,
+ isGeneratingSimulation,
+ simulationGenerated,
+ PREDEFINED_SCENARIOS,
+ handleRoleChange,
+ handleScenarioChange,
+ handleOpenAdvancedSimulation,
+ handleGenerateSimulationEmail,
+ handleCommitSimulation,
+ };
 }

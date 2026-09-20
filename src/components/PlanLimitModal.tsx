@@ -45,7 +45,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
- <div className="relative w-full max-w-lg rounded-3xl bg-[var(--surface)] border-[var(--hair)] p-6 sm:p-8 shadow-2xl space-y-6 text-[var(--ink)] font-sans my-auto max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-lg rounded-3xl bg-[var(--surface)] border-[var(--hair)] p-6 sm:p-8 space-y-6 text-[var(--ink)] font-sans my-auto max-h-[90vh] overflow-y-auto">
  {/* Close Button */}
  <button
  onClick={onClose}
@@ -113,7 +113,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  billingInterval={billingPeriod}
  bandId={currentUser?.band_id}
  userEmail={currentUser?.email}
- className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] font-black text-xs tracking-wider shadow-lg shadow-amber-0/20 transition-all hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center justify-center gap-2"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] font-black text-xs tracking-wider transition-all hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center justify-center gap-2"
  >
  <span>Mejorar a {targetPlanDef.name} ({targetPlanDef.price})</span>
  <ArrowRight className="w-4 h-4" />

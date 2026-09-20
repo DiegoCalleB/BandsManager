@@ -45,7 +45,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  return (
  <div className="space-y-6 text-center animate-in zoom-in-95 duration-300 py-4">
  {/* Celebration Icon */}
- <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)] flex items-center justify-center mx-auto shadow-xl shadow-amber-0/20">
+ <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)] flex items-center justify-center mx-auto">
  <Sparkles className="w-8 h-8" />
  </div>
 
@@ -79,7 +79,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  {/* Action Cards for EPK and Fans */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto pt-2">
  {/* EPK Card */}
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--bg)]/90 shadow-lg space-y-3 relative overflow-hidden group">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--bg)]/90 space-y-3 relative overflow-hidden group">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Globe className="w-5 h-5 text-[var(--acc)]" />
@@ -115,7 +115,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  </div>
 
  {/* Fans Landing Card */}
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--bg)]/90 shadow-lg space-y-3 relative overflow-hidden group">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--bg)]/90 space-y-3 relative overflow-hidden group">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Heart className="w-5 h-5 text-[var(--alert)]" />
@@ -156,7 +156,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <button
  type="button"
  onClick={onFinish}
- className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-sm shadow-xl shadow-amber-0/20 hover:scale-[1.02] transition-all"
+ className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-sm hover:scale-[1.02] transition-all"
  >
  Entrar a BandManager.ai <ArrowRight className="w-4 h-4" />
  </button>

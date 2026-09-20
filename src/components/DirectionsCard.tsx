@@ -25,7 +25,7 @@ export default function DirectionsCard({
  rel="noopener noreferrer"
  onClick={(e) => e.stopPropagation()}
  className={`inline-flex relative max-w-full w-full sm:w-auto mx-auto justify-center items-center overflow-hidden rounded-[var(--r-m)] transition-all duration-200 group cursor-pointer ${
- 'bg-[var(--surface)] border-[var(--hair)] shadow-md hover:border-[var(--acc)]/50 hover:shadow-purple-500/10'
+ 'bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--acc)]/50 hover:shadow-purple-500/10'
  } ${className}`}
  >
  {/* Tactile Simulated Map Grid */}

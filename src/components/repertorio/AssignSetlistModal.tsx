@@ -32,7 +32,7 @@ export function AssignSetlistModal({
  return (
  <ModalPortal isOpen={!!assigningSetlist} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] space-y-4 shadow-2xl my-auto max-h-[90vh] overflow-y-auto ${colors.card}`}>
+ <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] space-y-4 my-auto max-h-[90vh] overflow-y-auto ${colors.card}`}>
  <div className="flex justify-between items-center pb-3">
  <h3 className={`text-sm font-bold font-sans ${colors.text}`}>
  Asignar Repertorio a Concierto / Ensayo

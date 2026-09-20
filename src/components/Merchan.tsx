@@ -318,9 +318,9 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* 🎁 Banner de Regalo Pendiente de Canjear */}
  {hasGiftPending && (
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-0/20 via-amber-400/15 to-amber-0/10 border-2 /60 shadow-xl shadow-amber-0/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-0/20 via-amber-400/15 to-amber-0/10 border-2 /60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
  <div className="flex items-start sm:items-center gap-3.5">
- <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center shrink-0 shadow-lg shadow-amber-400/20">
+ <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center shrink-0">
  <Gift className="w-6 h-6 stroke-[2.5]" />
  </div>
  <div>
@@ -346,7 +346,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  setClaimStep('form');
  setShowClaimModal(true);
  }}
- className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] text-xs font-black font-sans tracking-wider transition-all shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+ className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] text-xs font-black font-sans tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
  >
  <PackageCheck className="w-4 h-4" />
  <span>Canjear Pegatinas Gratis</span>
@@ -358,7 +358,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
  {/* Panel de Control */}
- <div className={`lg:col-span-4 p-5 rounded-[var(--r-l)] shadow-xl space-y-6 h-fit ${
+ <div className={`lg:col-span-4 p-5 rounded-[var(--r-l)] space-y-6 h-fit ${
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]'
  }`}>
  
@@ -371,7 +371,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setProductType('camiseta')}
  className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-all ${
  productType ==='camiseta'
- ? ('bg-[var(--acc)] text-[#121111] shadow-lg shadow-[var(--acc)]/10')
+ ? ('bg-[var(--acc)] text-[#121111]/10')
  : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]')
  }`}
  >
@@ -382,7 +382,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setProductType('pegatina')}
  className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-all ${
  productType ==='pegatina'
- ? ('bg-[var(--acc)] text-[#121111] shadow-lg shadow-[var(--acc)]/10')
+ ? ('bg-[var(--acc)] text-[#121111]/10')
  : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]')
  }`}
  >
@@ -494,7 +494,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setSelectedAlbumIndex(idx)}
  className={`shrink-0 w-20 h-20 rounded-[var(--r-s)] bg-cover bg-center border-2 transition-all snap-start cursor-pointer ${
  selectedAlbumIndex === idx
- ? ('border-[var(--acc)] shadow-md shadow-[var(--acc)]/20')
+ ? ('border-[var(--acc)]/20')
  :'border-transparent opacity-50 hover:opacity-100'
  }`}
  url={album.url}
@@ -523,7 +523,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setRemoveBgMode(m.id as any)}
  className={`py-1.5 px-1 rounded text-[10px] font-sans font-bold transition ${
  removeBgMode === m.id
- ?'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--ink)]'
  :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -543,7 +543,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <button
  key={c.id}
  onClick={() => setShirtColor(c.id)}
- className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${shirtColor === c.id ? ('border-[var(--acc)] scale-110') :'border-transparent shadow-sm'}`}
+ className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${shirtColor === c.id ? ('border-[var(--acc)] scale-110') :'border-transparent'}`}
  style={{ backgroundColor: c.id }}
  title={c.name}
  />
@@ -575,9 +575,9 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className={`w-full py-4 rounded-[var(--r-m)] font-sans text-sm font-bold tracking-widest flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
  isGenerating
  ?'opacity-70 cursor-not-allowed'
- :'hover:scale-[1.01] shadow-xl'
+ :'hover:scale-[1.01]'
  } ${
- 'bg-gradient-to-br from-[var(--acc)] to-[#e0a820] text-[#121111] shadow-[var(--acc)]/10'
+ 'bg-gradient-to-br from-[var(--acc)] to-[#e0a820] text-[#121111]/10'
  }`}
  >
  {isGenerating ? (
@@ -596,7 +596,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
 
  {/* Zona de Vista Previa y Galería */}
- <div className={`lg:col-span-8 p-6 rounded-[var(--r-l)] shadow-xl space-y-6 min-h-[500px] flex flex-col ${
+ <div className={`lg:col-span-8 p-6 rounded-[var(--r-l)] space-y-6 min-h-[500px] flex flex-col ${
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]'
  }`}>
  <div className="flex items-center justify-between">
@@ -627,10 +627,10 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {generatedDesigns.map((design) => {
  const displayGraphic = design.processedUrl || design.url;
  return (
- <div key={design.id} className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square hover:/50 transition-all shadow-xl flex flex-col items-center justify-center p-6 ${design.type ==='camiseta' ? (isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]') : (isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]')}`}>
+ <div key={design.id} className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square hover:/50 transition-all flex flex-col items-center justify-center p-6 ${design.type ==='camiseta' ? (isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]') : (isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]')}`}>
  
  {design.type ==='pegatina' ? (
- <div className="w-52 h-52 bg-[var(--surface)] shadow-2xl flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 border-4 border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden">
+ <div className="w-52 h-52 bg-[var(--surface)] flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 border-4 border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden">
  {design.assetType ==='portada' || design.assetType ==='custom' ? (
  <ResolvedBgImage className="h-36 w-full bg-cover bg-center" url={displayGraphic} />
  ) : (
@@ -663,13 +663,13 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="absolute top-1 -right-6 w-12 h-14 rounded-[var(--r-m)] -rotate-[20deg]" style={{ backgroundColor: design.shirtColor ||'#121111', zIndex: 1 }} />
  
  {/* Main Body */}
- <div className="absolute inset-0 rounded-[var(--r-l)] shadow-2xl flex flex-col items-center justify-start pt-9 overflow-hidden" style={{ backgroundColor: design.shirtColor ||'#121111', zIndex: 2 }}>
+ <div className="absolute inset-0 rounded-[var(--r-l)] flex flex-col items-center justify-start pt-9 overflow-hidden" style={{ backgroundColor: design.shirtColor ||'#121111', zIndex: 2 }}>
  {/* Neck cut-out */}
  <div className="absolute -top-4 w-16 h-8 rounded-[50%]" style={{ backgroundColor: isStitchLight ?'#f1f5f9' :'#090d16', boxShadow:'inset 0 -2px 4px rgba(0,0,0,0.3)' }} />
  
  {/* Graphic on Layer */}
  {design.assetType ==='portada' ? (
- <ResolvedBgImage className="w-24 h-24 rounded-[var(--r-s)] shadow-md bg-cover bg-center" url={displayGraphic} />
+ <ResolvedBgImage className="w-24 h-24 rounded-[var(--r-s)] bg-cover bg-center" url={displayGraphic} />
  ) : (
  <div 
  className="w-28 h-28 bg-contain bg-center bg-no-repeat transition-all" 
@@ -693,7 +693,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  link.href = displayGraphic;
  link.click();
  }}
- className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 shadow-lg transition ${
+ className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 transition ${
  'bg-[var(--acc)] text-[#121111] hover:bg-[var(--surface)]'
  }`}
  >
@@ -702,7 +702,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </button>
  <button 
  onClick={() => handleDelete(design.id)}
- className="px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 bg-[var(--alert)]/90 text-[var(--ink)] hover:bg-[var(--alert)] shadow-lg transition"
+ className="px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 bg-[var(--alert)]/90 text-[var(--ink)] hover:bg-[var(--alert)] transition"
  >
  <Trash2 className="w-4 h-4" />
  Eliminar
@@ -710,7 +710,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
  
  <div className={`absolute bottom-3 left-3 px-2 py-1 rounded-md text-[9px] font-sans font-bold z-20 ${
- isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink-2)] shadow-sm' :'bg-[var(--surface)]/90 text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink-2)]' :'bg-[var(--surface)]/90 text-[var(--ink-2)]'
  }`}>
  {design.type} • {design.assetType ==='custom' ?'Imagen propia' : design.assetType}
  </div>
@@ -726,7 +726,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {/* 🎁 Modal de Canje de Pegatinas de Bienvenida */}
  {showClaimModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn">
- <div className="relative w-full max-w-2xl rounded-3xl bg-[var(--surface)] border-2 /50 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+ <div className="relative w-full max-w-2xl rounded-3xl bg-[var(--surface)] border-2 /50 overflow-hidden flex flex-col max-h-[90vh]">
  {/* Modal Header */}
  <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[#141210] border-b border-[var(--hair)] flex items-center justify-between">
  <div className="flex items-center gap-3">
@@ -769,7 +769,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] flex flex-col sm:flex-row items-center gap-5">
  {/* Sticker Preview visual */}
- <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] border-4 border-[var(--hair)] shadow-xl p-2 flex flex-col items-center justify-center transform -rotate-3">
+ <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] border-4 border-[var(--hair)] p-2 flex flex-col items-center justify-center transform -rotate-3">
  <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--on-acc)] font-black flex items-center justify-center text-lg font-display mb-1">
  {bandInitials}
  </div>
@@ -934,7 +934,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <button
  type="button"
  onClick={() => setClaimStep('success')}
- className="px-6 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] text-xs font-black font-sans tracking-wider shadow-lg shadow-amber-0/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+ className="px-6 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] text-xs font-black font-sans tracking-wider hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
  >
  <PackageCheck className="w-4 h-4" />
  <span>Pedir mis pegatinas</span>

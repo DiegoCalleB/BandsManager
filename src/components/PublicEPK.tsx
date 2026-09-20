@@ -169,25 +169,25 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <section key="cifras" className="mb-14 print:mb-6">
  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
  {config.cifrasClave.oyentes && (
- <div className={`${styles.cardHighlight} rounded-[var(--r-l)] p-4.5 text-center shadow-lg transition`}>
+ <div className={`${styles.cardHighlight} rounded-[var(--r-l)] p-4.5 text-center transition`}>
  <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.oyentes}</span>
  <p className="text-xs opacity-75 font-medium mt-1">{t('cifraOyentes')}</p>
  </div>
  )}
  {config.cifrasClave.directos && (
- <div className={`${styles.cardHighlight} rounded-[var(--r-l)] p-4.5 text-center shadow-lg transition`}>
+ <div className={`${styles.cardHighlight} rounded-[var(--r-l)] p-4.5 text-center transition`}>
  <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.directos}</span>
  <p className="text-xs opacity-75 font-medium mt-1">{t('cifraDirectos')}</p>
  </div>
  )}
  {config.cifrasClave.comunidad && (
- <div className={`${styles.cardHighlight} rounded-[var(--r-l)] p-4.5 text-center shadow-lg transition`}>
+ <div className={`${styles.cardHighlight} rounded-[var(--r-l)] p-4.5 text-center transition`}>
  <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.comunidad}</span>
  <p className="text-xs opacity-75 font-medium mt-1">{t('cifraComunidad')}</p>
  </div>
  )}
  {config.cifrasClave.ciudades && (
- <div className={`${styles.cardHighlight} rounded-[var(--r-l)] p-4.5 text-center shadow-lg transition`}>
+ <div className={`${styles.cardHighlight} rounded-[var(--r-l)] p-4.5 text-center transition`}>
  <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.ciudades}</span>
  <p className="text-xs opacity-75 font-medium mt-1">{t('cifraCiudades')}</p>
  </div>
@@ -310,11 +310,11 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  href={url}
  target="_blank"
  rel="noopener noreferrer"
- className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-[var(--alert)]/40 shadow-sm transition-all duration-200 active:scale-95 text-[var(--ink-2)] hover:text-[var(--ink)]"
+ className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-[var(--alert)]/40 transition-all duration-200 active:scale-95 text-[var(--ink-2)] hover:text-[var(--ink)]"
  title={interpolate(t('seguirMiembro'), { name: m.nombre })}
  aria-label={interpolate(t('seguirMiembro'), { name: m.nombre })}
  >
- <span className="w-3.5 h-3.5 rounded-[4px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center p-[2px] text-[var(--ink)] shrink-0 group-hover/ig:scale-110 transition-transform shadow-xs">
+ <span className="w-3.5 h-3.5 rounded-[4px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center p-[2px] text-[var(--ink)] shrink-0 group-hover/ig:scale-110 transition-transform">
  <Instagram className="w-full h-full stroke-[2.5]" />
  </span>
  <span className="text-[11px] font-sans font-medium truncate max-w-[85px] sm:max-w-[110px]">
@@ -416,7 +416,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </div>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {validCitas.map(cita => (
- <div key={cita.id} className={`${styles.cardHighlight} rounded-[var(--r-l)] p-5 flex flex-col justify-between space-y-4 shadow-lg transition`}>
+ <div key={cita.id} className={`${styles.cardHighlight} rounded-[var(--r-l)] p-5 flex flex-col justify-between space-y-4 transition`}>
  <div className="space-y-3">
  <Quote className={`w-6 h-6 ${styles.quoteIcon}`} />
  <p className="text-sm italic leading-relaxed">"{cita.texto}"
@@ -628,7 +628,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  return (
  <div className={`min-h-screen ${styles.pageBg} font-sans print:bg-[var(--surface)] print:text-[var(--ink)]`}>
  {/* Top Floating Action Bar (Hidden on Print) */}
- <div className={`fixed top-0 left-0 right-0 ${styles.topBar} border-b z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden`}>
+ <div className={`fixed top-0 left-0 right-0 ${styles.topBar} border-b z-50 py-3 px-4 flex items-center justify-between print:hidden`}>
  <div className="flex items-center gap-3">
  {displayLogo ? (
  <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover" />
@@ -686,7 +686,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <img
  src={displayLogo}
  alt={t('logoOficialAlt')}
- className={`rounded-[var(--r-m)] object-cover shadow-2xl mb-7 ${fotoPortada ?'w-16 h-16 sm:w-20 sm:h-20' :'w-24 h-24 sm:w-28 sm:h-28'}`}
+ className={`rounded-[var(--r-m)] object-cover mb-7 ${fotoPortada ?'w-16 h-16 sm:w-20 sm:h-20' :'w-24 h-24 sm:w-28 sm:h-28'}`}
  />
  )}
 
@@ -764,7 +764,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  const isCurrentlyPlaying = playingSongId === activeSong.id;
 
  return (
- <div className={`fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 ${styles.stickyPlayer} rounded-[var(--r-l)] p-3.5 shadow-2xl z-40 flex items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 print:hidden`}>
+ <div className={`fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 ${styles.stickyPlayer} rounded-[var(--r-l)] p-3.5 z-40 flex items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 print:hidden`}>
  <div className="flex items-center gap-3 overflow-hidden">
  <button
  onClick={() => setPlayingSongId(isCurrentlyPlaying ? null : activeSong.id)}

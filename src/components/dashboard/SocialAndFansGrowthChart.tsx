@@ -370,8 +370,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  return (
  <div className={`p-5 rounded-[var(--r-l)] transition-all ${
  isStitchLight 
- ?'bg-[var(--bg)]/90 shadow-sm text-[var(--ink)]' 
- :'bg-[var(--surface)]/90 shadow-sm text-[var(--ink)]'
+ ?'bg-[var(--bg)]/90 text-[var(--ink)]' 
+ :'bg-[var(--surface)]/90 text-[var(--ink)]'
  }`}>
  {/* Header Section */}
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 border-b /60">
@@ -402,7 +402,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => onNavigate('fans')}
- className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
+ className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
  'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'
  }`}
  title="Ir al gestor de comunidad, muro y capturas de fans"
@@ -414,7 +414,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => onNavigate('reels')}
- className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
+ className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
  'bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)]'
  }`}
  title="Abrir el panel completo de métricas y sincronización"
@@ -529,8 +529,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Card 5: Fans Registrados en Base de Datos (Formulario Únete) */}
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all col-span-2 sm:col-span-1 ${
  isStitchLight 
- ?'bg-[var(--accent-alt)]/10 shadow-sm' 
- :'bg-gradient-to-br from-amber-950/30 to-[var(--surface)] /40 shadow-sm shadow-amber-950/20'
+ ?'bg-[var(--accent-alt)]/10' 
+ :'bg-gradient-to-br from-amber-950/30 to-[var(--surface)] /40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
@@ -576,7 +576,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => setSelectedPeriod(opt.id)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold transition-all cursor-pointer ${
  isSelected
- ? 'bg-gradient-to-r from-[var(--acc)] to-amber-600 text-[var(--ink)] shadow-sm shadow-amber-950/40'
+ ? 'bg-gradient-to-r from-[var(--acc)] to-amber-600 text-[var(--ink)]'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
@@ -753,7 +753,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Fans Registrados (BD / Únete) Chip */}
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.fans
- ? 'bg-[var(--acc-soft)] /60 text-[var(--ink)] font-bold shadow-sm shadow-amber-950/30'
+ ? 'bg-[var(--acc-soft)] /60 text-[var(--ink)] font-bold'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button

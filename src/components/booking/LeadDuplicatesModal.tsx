@@ -208,7 +208,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <ModalPortal>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div
- className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden transition-all ${
+ className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden transition-all ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)]'
@@ -275,7 +275,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('all')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='all'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -289,7 +289,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('same_email')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='same_email'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -304,7 +304,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('same_name_and_city')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='same_name_and_city'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -319,7 +319,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('similar_name_same_city')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='similar_name_same_city'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -334,7 +334,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('same_website')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='same_website'
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -351,7 +351,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  disabled={isProcessing}
  onClick={handleMergeAllAuto}
- className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] transition flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50 shrink-0 ml-auto"
+ className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 ml-auto"
  >
  <Sparkles className="w-3.5 h-3.5" />
  <span>Fusionar Todos Automáticamente</span>
@@ -379,7 +379,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  key={group.id}
  className={`rounded-[var(--r-l)] p-4 transition-all ${
  isStitchLight
- ?'bg-[var(--bg)]/70 shadow-xs'
+ ?'bg-[var(--bg)]/70'
  :'bg-[var(--surface)]/60 /90'
  }`}
  >
@@ -417,7 +417,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  isSuggested
  ? isStitchLight
  ?'bg-[var(--accent-alt)]/10/60'
- :'bg-[var(--surface)] /50 shadow-xs'
+ :'bg-[var(--surface)] /50'
  : isStitchLight
  ?'bg-[var(--surface)]'
  :'bg-[var(--surface)]'
@@ -493,7 +493,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  disabled={isProcessing}
  onClick={() => handleMergeGroup(group, lead.id)}
- className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
+ className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
  isSuggested
  ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'

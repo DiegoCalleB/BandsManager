@@ -220,7 +220,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  return (
  <div className={`space-y-5 p-5 sm:p-6 rounded-[var(--r-l)] transition-all ${
  isStitchLight
- ?'bg-[var(--surface)] shadow-sm'
+ ?'bg-[var(--surface)]'
  :'bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b /60">
@@ -291,7 +291,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  type="button"
  onClick={handleConnectGmailOAuth}
  disabled={gmailOAuthConnecting}
- className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+ className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
  >
  {gmailOAuthConnecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
  <span>{gmailOAuthConnecting ?'Redirigiendo a Google...' :'Conectar con Google'}</span>
@@ -355,7 +355,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  onClick={() => handleProviderChange(p)}
  className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
  provider === p
- ?'bg-[var(--acc)]/20 border-[var(--acc)]/80 text-[var(--tentative)]/40 shadow-sm shadow-sky-900/30'
+ ?'bg-[var(--acc)]/20 border-[var(--acc)]/80 text-[var(--tentative)]/40'
  : isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 /80 text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink-2)]'
@@ -466,7 +466,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  type="button"
  onClick={handleSave}
  disabled={saving}
- className="w-full sm:w-auto px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+ className="w-full sm:w-auto px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
  >
  {saving ? (
  <>

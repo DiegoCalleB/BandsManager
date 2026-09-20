@@ -11,32 +11,32 @@
 // textFit.test.ts).
 
 export interface NoteSegment {
-  text: string;
-  className: string;
+ text: string;
+ className: string;
 }
 
 export interface NoteLine {
-  text: string;
-  className: string;
-  /** Tamaño propio de esta línea: igual al `fontSizePx` común salvo para la nota excepcional
-   *  que ni al mínimo compartido cupo, que se encoge más por su cuenta (ver fitStackedNoteSegments). */
-  fontSizePx: number;
+ text: string;
+ className: string;
+ /** Tamaño propio de esta línea: igual al `fontSizePx` común salvo para la nota excepcional
+ * que ni al mínimo compartido cupo, que se encoge más por su cuenta (ver fitStackedNoteSegments). */
+ fontSizePx: number;
 }
 
 export interface StackedFitResult {
-  /** Tamaño común/compartido elegido para la fila (referencia; cada línea lleva además el suyo). */
-  fontSizePx: number;
-  lines: NoteLine[];
+ /** Tamaño común/compartido elegido para la fila (referencia; cada línea lleva además el suyo). */
+ fontSizePx: number;
+ lines: NoteLine[];
 }
 
 export interface FitOptions {
-  maxWidthPx: number;
-  maxFontSizePx: number;
-  minFontSizePx: number;
-  fontFamily: string;
-  fontWeight?: string | number;
-  fontStepPx?: number;
-  measure: (text: string, fontSizePx: number) => number;
+ maxWidthPx: number;
+ maxFontSizePx: number;
+ minFontSizePx: number;
+ fontFamily: string;
+ fontWeight?: string | number;
+ fontStepPx?: number;
+ measure: (text: string, fontSizePx: number) => number;
 }
 
 /**
@@ -49,11 +49,11 @@ export const NOTE_FONT_HARD_FLOOR_PX = 6;
 
 /** Encoge el tamaño de UNA nota concreta (nunca su texto) hasta que quepa, con suelo absoluto. */
 function shrinkFontToFit(text: string, startSizePx: number, maxWidthPx: number, measure: FitOptions['measure'], stepPx: number): number {
-  let size = startSizePx;
-  while (size > NOTE_FONT_HARD_FLOOR_PX && measure(text, size) > maxWidthPx) {
-    size -= stepPx;
-  }
-  return Math.max(size, NOTE_FONT_HARD_FLOOR_PX);
+ let size = startSizePx;
+ while (size > NOTE_FONT_HARD_FLOOR_PX && measure(text, size) > maxWidthPx) {
+ size -= stepPx;
+ }
+ return Math.max(size, NOTE_FONT_HARD_FLOOR_PX);
 }
 
 /**
@@ -65,48 +65,48 @@ function shrinkFontToFit(text: string, startSizePx: number, maxWidthPx: number, 
  * absoluto si ni así llega.
  */
 export function fitStackedNoteSegments(segments: NoteSegment[], opts: FitOptions): StackedFitResult {
-  const nonEmpty = segments.filter(s => s.text && s.text.trim().length > 0);
-  if (nonEmpty.length === 0) {
-    return { fontSizePx: opts.maxFontSizePx, lines: [] };
-  }
+ const nonEmpty = segments.filter(s => s.text && s.text.trim().length > 0);
+ if (nonEmpty.length === 0) {
+ return { fontSizePx: opts.maxFontSizePx, lines: [] };
+ }
 
-  const { maxFontSizePx, minFontSizePx, maxWidthPx, measure, fontStepPx = 0.5 } = opts;
+ const { maxFontSizePx, minFontSizePx, maxWidthPx, measure, fontStepPx = 0.5 } = opts;
 
-  let fontSizePx = minFontSizePx;
-  for (let size = maxFontSizePx; size >= minFontSizePx; size -= fontStepPx) {
-    if (nonEmpty.every(seg => measure(seg.text, size) <= maxWidthPx)) {
-      fontSizePx = size;
-      break;
-    }
-  }
+ let fontSizePx = minFontSizePx;
+ for (let size = maxFontSizePx; size >= minFontSizePx; size -= fontStepPx) {
+ if (nonEmpty.every(seg => measure(seg.text, size) <= maxWidthPx)) {
+ fontSizePx = size;
+ break;
+ }
+ }
 
-  const lines: NoteLine[] = nonEmpty.map(seg =>
-    measure(seg.text, fontSizePx) <= maxWidthPx
-      ? { text: seg.text, className: seg.className, fontSizePx }
-      : { text: seg.text, className: seg.className, fontSizePx: shrinkFontToFit(seg.text, fontSizePx, maxWidthPx, measure, fontStepPx) }
-  );
+ const lines: NoteLine[] = nonEmpty.map(seg =>
+ measure(seg.text, fontSizePx) <= maxWidthPx
+ ? { text: seg.text, className: seg.className, fontSizePx }
+ : { text: seg.text, className: seg.className, fontSizePx: shrinkFontToFit(seg.text, fontSizePx, maxWidthPx, measure, fontStepPx) }
+ );
 
-  return { fontSizePx, lines };
+ return { fontSizePx, lines };
 }
 
 /** Medidor real basado en canvas, para usar en producción (impresión y vista previa). */
 export function makeCanvasMeasurer(): (
-  text: string,
-  fontSizePx: number,
-  fontFamily: string,
-  fontWeight?: string | number
+ text: string,
+ fontSizePx: number,
+ fontFamily: string,
+ fontWeight?: string | number
 ) => number {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  return (text, fontSizePx, fontFamily, fontWeight = 400) => {
-    if (!ctx) return text.length * fontSizePx * 0.55;
-    ctx.font = `${fontWeight} ${fontSizePx}px ${fontFamily}`;
-    return ctx.measureText(text).width;
-  };
+ const canvas = document.createElement('canvas');
+ const ctx = canvas.getContext('2d');
+ return (text, fontSizePx, fontFamily, fontWeight = 400) => {
+ if (!ctx) return text.length * fontSizePx * 0.55;
+ ctx.font = `${fontWeight} ${fontSizePx}px ${fontFamily}`;
+ return ctx.measureText(text).width;
+ };
 }
 
 export function mmToPx(mm: number): number {
-  return (mm * 96) / 25.4;
+ return (mm * 96) / 25.4;
 }
 
 /**
@@ -115,12 +115,12 @@ export function mmToPx(mm: number): number {
  * repintados o reimpresiones de la misma canción (nada de Math.random()).
  */
 export function deterministicRotationDeg(id: string, maxDeg = 1.2): number {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash * 31 + id.charCodeAt(i)) | 0;
-  }
-  const normalized = (Math.abs(hash) % 1000) / 1000; // 0..1
-  return (normalized * 2 - 1) * maxDeg;
+ let hash = 0;
+ for (let i = 0; i < id.length; i++) {
+ hash = (hash * 31 + id.charCodeAt(i)) | 0;
+ }
+ const normalized = (Math.abs(hash) % 1000) / 1000; // 0..1
+ return (normalized * 2 - 1) * maxDeg;
 }
 
 /**
@@ -133,10 +133,10 @@ export function deterministicRotationDeg(id: string, maxDeg = 1.2): number {
  * dar siempre el mismo resultado para el mismo id, entre repintados e impresiones.
  */
 export function deterministicOffsetPx(id: string, maxPx = 2.5): number {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash * 37 + id.charCodeAt(i)) | 0;
-  }
-  const normalized = (Math.abs(hash) % 1000) / 1000; // 0..1
-  return (normalized * 2 - 1) * maxPx;
+ let hash = 0;
+ for (let i = 0; i < id.length; i++) {
+ hash = (hash * 37 + id.charCodeAt(i)) | 0;
+ }
+ const normalized = (Math.abs(hash) % 1000) / 1000; // 0..1
+ return (normalized * 2 - 1) * maxPx;
 }

@@ -20,7 +20,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <ModalPortal isOpen={true} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div 
- className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[85vh] ${
+ className={`w-full max-w-xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[85vh] ${
  isStitchLight 
  ?'bg-[var(--surface)] text-[var(--ink)]' 
  :'bg-[var(--surface)] text-[var(--ink-2)]'
@@ -31,7 +31,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-3">
- <div className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shadow-inner shrink-0 ${
+ <div className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${
  'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/20'
  }`}>
  <Type className="w-5 h-5" />
@@ -78,7 +78,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  onClick={() => onSelectFont(preset.id)}
  className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer relative group ${
  isSelected
- ? 'bg-[var(--acc)]/10 ring-2 ring-amber-0/20 shadow-lg'
+ ? 'bg-[var(--acc)]/10 ring-2 ring-amber-0/20'
  : isStitchLight
  ?'bg-[var(--bg)] hover:-slate-300 hover:bg-[var(--sunken)]/80'
  :'bg-[var(--surface)]/60 hover:-neutral-700 hover:bg-[var(--surface)]'
@@ -148,7 +148,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  </span>
  <button
  onClick={onClose}
- className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer shadow-sm ${
+ className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer ${
  'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
  }`}
  >

@@ -380,7 +380,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] shadow-xl font-sans text-xs text-[var(--ink)] z-50">
+ <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] font-sans text-xs text-[var(--ink)] z-50">
  <div className="font-bold text-[var(--ok)]">{data.month}</div>
  <div className="text-[var(--ink-2)] mt-1 space-y-0.5">
  <div>Ingresos: <span className="font-bold text-[var(--ok)]">+{data.ingresos}€</span></div>

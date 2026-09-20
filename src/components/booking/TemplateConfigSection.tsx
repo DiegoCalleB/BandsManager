@@ -119,7 +119,7 @@ export function TemplateConfigSection({
  onClick={() => onSelectTemplateTab(tab.id as TemplateCategory)}
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold shadow-md'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -348,7 +348,7 @@ export function TemplateConfigSection({
  id="template-btn-save"
  onClick={onSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
- 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
+ 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
  }`}
  >
  Guardar Plantillas y Directrices

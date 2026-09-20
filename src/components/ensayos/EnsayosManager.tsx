@@ -129,7 +129,7 @@ export function EnsayosManager({
  if (rehearsals.length === 0) {
  return (
  <div className="p-6 sm:p-12 max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
- <div className="w-16 h-16 rounded-3xl bg-[var(--acc)]/60/15 flex items-center justify-center text-[var(--acc)] mx-auto shadow-lg shadow-amber-400/10">
+ <div className="w-16 h-16 rounded-3xl bg-[var(--acc)]/60/15 flex items-center justify-center text-[var(--acc)] mx-auto">
  <Mic className="w-8 h-8" />
  </div>
 
@@ -147,7 +147,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:bg-[var(--acc)] shadow-xl shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:bg-[var(--acc)] transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-4 h-4" />
  <span>Convocar Primer Ensayo</span>
@@ -174,7 +174,7 @@ export function EnsayosManager({
  return (
  <div className="space-y-6 animate-fade-in pb-12">
  {/* Top Header Card: Active Rehearsal Details & Session Selector */}
- <div className="p-4 sm:p-6 rounded-3xl bg-[var(--surface)] border-[var(--hair)] shadow-xl space-y-4">
+ <div className="p-4 sm:p-6 rounded-3xl bg-[var(--surface)] border-[var(--hair)] space-y-4">
  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
  {/* Left: Rehearsal Picker & Title */}
  <div className="space-y-2">
@@ -266,7 +266,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>+ Convocar Ensayo</span>
@@ -280,7 +280,7 @@ export function EnsayosManager({
  onClick={() => setActiveTab('orden_del_dia')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
  activeTab ==='orden_del_dia'
- ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black shadow-md shadow-amber-400/20'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  >
@@ -293,7 +293,7 @@ export function EnsayosManager({
  onClick={() => setActiveTab('modo_local')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
  activeTab ==='modo_local'
- ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black shadow-md shadow-amber-400/20'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  >
@@ -306,7 +306,7 @@ export function EnsayosManager({
  onClick={() => setActiveTab('grabacion_acta')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
  activeTab ==='grabacion_acta'
- ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black shadow-md shadow-amber-400/20'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  >

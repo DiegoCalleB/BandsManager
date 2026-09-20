@@ -169,7 +169,7 @@ export function CampaignManagerModal({
 
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
- <div className="bg-[var(--bg)] border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+ <div className="bg-[var(--bg)] border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
  
  {/* Header */}
  <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[var(--bg)]">
@@ -445,7 +445,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={handleSave}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] shadow-md active:scale-95 flex items-center gap-2"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] active:scale-95 flex items-center gap-2"
  >
  <Check className="w-4 h-4" />
  Guardar Campaña
@@ -474,7 +474,7 @@ export function CampaignManagerModal({
  onClick={() => onSetActiveCampaign(null)}
  className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
  !activeCampaign
- ?'bg-[var(--surface)]/80 shadow-md ring-1 ring-amber-400/30'
+ ?'bg-[var(--surface)]/80 ring-1 ring-amber-400/30'
  :'bg-[var(--surface)] hover: text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -519,7 +519,7 @@ export function CampaignManagerModal({
  key={camp.id}
  className={`p-4 rounded-[var(--r-m)] transition-all relative overflow-hidden ${
  isActive
- ?'bg-[var(--surface)] border-[var(--acc)]/60 shadow-lg ring-1 ring-purple-500/30'
+ ?'bg-[var(--surface)] border-[var(--acc)]/60 ring-1 ring-purple-500/30'
  :'bg-[var(--surface)] hover:'
  }`}
  >
@@ -611,7 +611,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => onSetActiveCampaign(camp)}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] shadow-sm flex items-center gap-1.5 transition-all active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] flex items-center gap-1.5 transition-all active:scale-95"
  >
  <Target className="w-3.5 h-3.5" /> Activar
  </button>

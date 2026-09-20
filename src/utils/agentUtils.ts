@@ -3,25 +3,25 @@
  */
 
 export function sanitizeAIResponse(rawText: string): string {
-  if (!rawText) return '';
-  return rawText
-    .replace(/^```json\s*/i, '')
-    .replace(/^```html\s*/i, '')
-    .replace(/^```markdown\s*/i, '')
-    .replace(/^```\s*/i, '')
-    .replace(/\s*```$/i, '')
-    .trim();
+ if (!rawText) return '';
+ return rawText
+ .replace(/^```json\s*/i, '')
+ .replace(/^```html\s*/i, '')
+ .replace(/^```markdown\s*/i, '')
+ .replace(/^```\s*/i, '')
+ .replace(/\s*```$/i, '')
+ .trim();
 }
 
 export function buildPitchPrompt(
-  venueName: string,
-  city: string,
-  capacity: number,
-  genre: string,
-  bandBio: string,
-  estimatedCache: number = 800
+ venueName: string,
+ city: string,
+ capacity: number,
+ genre: string,
+ bandBio: string,
+ estimatedCache: number = 800
 ): string {
-  return `
+ return `
 Eres un Booking Manager profesional con más de 15 años de experiencia negociando fechas para bandas independientes.
 Genera un correo de pitch personalizado, profesional, persuasivo y respetuoso para la sala/organizador:
 
@@ -45,13 +45,13 @@ INSTRUCCIONES:
 }
 
 export function buildPressReleasePrompt(
-  bandName: string,
-  releaseTitle: string,
-  releaseDate: string,
-  genre: string,
-  keyHighlights: string
+ bandName: string,
+ releaseTitle: string,
+ releaseDate: string,
+ genre: string,
+ keyHighlights: string
 ): string {
-  return `
+ return `
 Eres un Jefe de Prensa Musical (PR Manager). Redacta una Nota de Prensa oficial atractiva para medios de comunicación, blogs y radios musicales.
 
 DATOS DEL LANZAMIENTO:
@@ -65,19 +65,19 @@ ESTRUCTURA REQUERIDA:
 1. Titular llamativo e impactante.
 2. Subtitular resumen.
 3. Cuerpo principal (3 párrafos cortos):
-   - Párrafo 1: El concepto musical y la propuesta sonora.
-   - Párrafo 2: La historia detrás del tema o álbum.
-   - Párrafo 3: Fechas de gira o eventos de presentación.
+ - Párrafo 1: El concepto musical y la propuesta sonora.
+ - Párrafo 2: La historia detrás del tema o álbum.
+ - Párrafo 3: Fechas de gira o eventos de presentación.
 4. Ficha técnica y contacto para acreditaciones / entrevistas.
 `.trim();
 }
 
 export function buildReelScriptPrompt(
-  songTitle: string,
-  conceptAngle: string,
-  targetPlatform: 'TikTok' | 'Instagram' | 'YouTube Shorts' = 'Instagram'
+ songTitle: string,
+ conceptAngle: string,
+ targetPlatform: 'TikTok' | 'Instagram' | 'YouTube Shorts' = 'Instagram'
 ): string {
-  return `
+ return `
 Eres un Director Creativo especialista en contenido viral para artistas en ${targetPlatform}.
 Crea un guion detallado de 15 a 30 segundos para promocionar la canción "${songTitle}".
 

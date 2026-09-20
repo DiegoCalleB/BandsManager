@@ -47,12 +47,12 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  const activeSetlist = setlists.find(s => s.id === activeSetlistId) || setlists[0];
 
  return (
- <header className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-[var(--r-l)] ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95 /80'} space-y-2.5 shadow-sm`}>
+ <header className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-[var(--r-l)] ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95 /80'} space-y-2.5`}>
  {/* Top Row: Title + 2 Main Pillars (Setlists vs Discografía) */}
  <div className="flex items-center justify-between gap-2">
  {/* Module Title */}
  <div className="flex items-center gap-2.5 min-w-0">
- <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 shadow-xs ${
+ <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${
  'bg-[var(--acc)]/15 text-[var(--acc)]'
  }`}>
  <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
@@ -88,7 +88,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setActiveTab('setlists')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='setlists'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >
@@ -107,7 +107,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setActiveTab('catalogo')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='catalogo'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >
@@ -132,7 +132,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  <button
  type="button"
  onClick={() => setShowSetlistDropdown(v => !v)}
- className={`w-full px-3 py-1.5 rounded-[var(--r-m)] text-left flex items-center justify-between gap-2 text-xs font-medium transition-all cursor-pointer shadow-xs ${
+ className={`w-full px-3 py-1.5 rounded-[var(--r-m)] text-left flex items-center justify-between gap-2 text-xs font-medium transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)] hover:'
  :'bg-[var(--surface)] text-[var(--ink)] hover:'
@@ -156,7 +156,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  {showSetlistDropdown && (
  <>
  <div className="fixed inset-0 z-40" onClick={() => setShowSetlistDropdown(false)} />
- <div className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-1 text-xs ${
+ <div className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-[var(--r-m)] p-1.5 space-y-1 text-xs ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'
@@ -213,7 +213,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  id="btn-create-setlist"
  type="button"
  onClick={onCreateSetlist}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
  title="Crear un nuevo setlist de concierto"
  >
  <Plus className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setCatalogoViewMode('albumes')}
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
  catalogoViewMode ==='albumes'
- ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 shadow-xs font-bold'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -261,7 +261,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setCatalogoViewMode('canciones')}
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
  catalogoViewMode ==='canciones'
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)] shadow-xs font-bold'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -283,7 +283,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  id="btn-add-song"
  type="button"
  onClick={onOpenNewSongModal}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shrink-0 active:scale-95"
  >
  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
  <span>Nueva Canción</span>
@@ -292,7 +292,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  id="btn-add-album"
  type="button"
  onClick={onOpenNewAlbumModal}
- className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 ${
+ className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shrink-0 ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] /80'

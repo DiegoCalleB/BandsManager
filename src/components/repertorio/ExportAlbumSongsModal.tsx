@@ -410,7 +410,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <ModalPortal>
  <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div
- className={`w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transition-all ${
+ className={`w-full max-w-2xl rounded-3xl overflow-hidden flex flex-col max-h-[90vh] transition-all ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)]'
@@ -419,7 +419,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  {/* Header */}
  <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between gap-3 bg-gradient-to-r from-[var(--ok)]/10 via-transparent to-transparent">
  <div className="flex items-center gap-3 min-w-0">
- <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[var(--ok)] shrink-0 shadow-inner">
+ <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[var(--ok)] shrink-0">
  <Download className="w-5 h-5 sm:w-6 sm:h-6" />
  </div>
  <div className="min-w-0">
@@ -484,7 +484,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('zip')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
  format ==='zip'
- ?'bg-gradient-to-br from-[var(--ok)]/30 to-emerald-900/40 border-[var(--hair)] text-[var(--ink)] shadow-lg ring-1 ring-[var(--ok)]/40'
+ ?'bg-gradient-to-br from-[var(--ok)]/30 to-emerald-900/40 border-[var(--hair)] text-[var(--ink)] ring-1 ring-[var(--ok)]/40'
  :'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ink-2)] hover:bg-[var(--ok)]/20'
  }`}
  >
@@ -503,7 +503,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('csv')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format ==='csv'
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)] shadow-lg'
+ ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)]'
  :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
@@ -519,7 +519,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('m3u')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format ==='m3u'
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)] shadow-lg'
+ ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)]'
  :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
@@ -535,7 +535,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('txt')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format ==='txt'
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)] shadow-lg'
+ ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)]'
  :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
@@ -551,7 +551,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('json')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format ==='json'
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)] shadow-lg'
+ ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)]'
  :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
@@ -703,7 +703,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  type="button"
  disabled={zipLoading}
  onClick={handleDownloadZip}
- className="px-5 py-2.5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] hover:from-[var(--ok)] hover:to-[var(--ok)] text-[var(--ink)] font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] hover:from-[var(--ok)] hover:to-[var(--ok)] text-[var(--ink)] font-extrabold text-xs flex items-center gap-2 transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-50"
  >
  {zipLoading ? (
  <>
@@ -721,7 +721,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <button
  type="button"
  onClick={handleDownloadStandard}
- className="px-5 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95"
+ className="px-5 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold text-xs flex items-center gap-2 transition-all cursor-pointer hover:scale-105 active:scale-95"
  >
  <Download className="w-4 h-4" />
  <span>Descargar .{getContentForFormat().extension.toUpperCase()}</span>

@@ -880,7 +880,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="w-full space-y-6">
  
  {/* 1. HEADER COMPACTO Y CONTROLES */}
- <div className={`p-3 sm:p-3.5 rounded-[var(--r-m)] transition-all ${colors.card} shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5`}>
+ <div className={`p-3 sm:p-3.5 rounded-[var(--r-m)] transition-all ${colors.card} flex flex-col sm:flex-row sm:items-center justify-between gap-2.5`}>
  {/* Izquierda: Título y sub-pestañas */}
  <div className="flex items-center gap-2.5 flex-wrap">
  <div className="flex items-center gap-2">
@@ -902,7 +902,7 @@ Bakandeya Agent Manager IA & Músicos`;
  onClick={() => setSubTab('co_booking')}
  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
  subTab ==='co_booking'
- ?'bg-[var(--sunken)] text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--sunken)] text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -915,7 +915,7 @@ Bakandeya Agent Manager IA & Músicos`;
  onClick={() => { setSubTab('registered_bands'); fetchRegisteredBands(); }}
  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
  subTab ==='registered_bands'
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)] shadow-sm'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -941,7 +941,7 @@ Bakandeya Agent Manager IA & Músicos`;
  alert('Añade primero una banda para generar un pitch de intercambio.');
  }
  }}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--tentative)]/40 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--tentative)]/40 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
  title="Generar pitch de intercambio de fechas (Date Swap)"
  >
  <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
@@ -951,7 +951,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={() => setIsScoutModalOpen(true)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
  title="Scout IA: Buscar bandas para co-booking"
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
@@ -962,7 +962,7 @@ Bakandeya Agent Manager IA & Músicos`;
  id="band-btn-add-new"
  type="button"
  onClick={handleOpenCreateModal}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
  >
  <Plus className="w-3.5 h-3.5 shrink-0" />
  <span>Nueva Banda</span>
@@ -971,7 +971,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
  title="Exportar Excel Completo (.xlsx)"
  >
  <FileSpreadsheet className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -982,7 +982,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* TAB 2: REGISTERED BANDS VIEW (registro_bandas) */}
  {subTab ==='registered_bands' ? (
- <div className={`p-5 rounded-[var(--r-l)] ${colors.card} space-y-4 shadow-lg `}>
+ <div className={`p-5 rounded-[var(--r-l)] ${colors.card} space-y-4 `}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
  <h3 className="text-xl font-bold font-display text-[var(--ink)] flex items-center gap-2">
@@ -1073,7 +1073,7 @@ Bakandeya Agent Manager IA & Músicos`;
  ) : (
  <>
  {/* 2. FILTER & SEARCH CONTROL BAR */}
- <div className={`p-4 rounded-[var(--r-m)] ${colors.card} space-y-3 shadow-md`}>
+ <div className={`p-4 rounded-[var(--r-m)] ${colors.card} space-y-3`}>
  <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
  
  {/* Search Bar */}
@@ -1239,7 +1239,7 @@ Bakandeya Agent Manager IA & Músicos`;
  return (
  <div
  key={band.id}
- className={`p-5 rounded-[var(--r-l)] transition-all flex flex-col justify-between space-y-4 ${colors.card} shadow-md group relative overflow-hidden ${
+ className={`p-5 rounded-[var(--r-l)] transition-all flex flex-col justify-between space-y-4 ${colors.card} group relative overflow-hidden ${
  isSelected ?'ring-2 ring-[var(--acc)] border-[var(--acc)]/70 bg-[var(--surface)]' :'hover:-amber-0/40'
  }`}
  >
@@ -1414,7 +1414,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  ) : (
  /* TABLE LIST VIEW */
- <div className={`rounded-[var(--r-l)] overflow-hidden ${colors.card} shadow-md overflow-x-auto`}>
+ <div className={`rounded-[var(--r-l)] overflow-hidden ${colors.card} overflow-x-auto`}>
  <table className="w-full text-left text-[10px] font-sans min-w-[850px] border-collapse">
  <thead className="bg-[var(--surface)]/90 text-[var(--ink-2)] tracking-wider text-[10px] border-b border-[var(--hair)]">
  <tr>
@@ -1546,7 +1546,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* 4. MODAL: CREATE / EDIT BAND CONTACT */}
  {isAddEditModalOpen && (
  <div className="fixed inset-0 bg-[var(--scrim)]/85 flex items-center justify-center p-4 z-50">
- <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
+ <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center justify-between pb-3">
@@ -1575,7 +1575,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="button"
  onClick={handleAiLookup}
  disabled={isAiSearching || !formName.trim()}
- className="flex items-center gap-1.5 text-[10px] font-sans font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30 transition-all disabled:opacity-50 cursor-pointer shadow-sm"
+ className="flex items-center gap-1.5 text-[10px] font-sans font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30 transition-all disabled:opacity-50 cursor-pointer"
  >
  {isAiSearching ? (
  <>
@@ -1618,7 +1618,7 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
 
  {aiProposal && (
- <div className="md:col-span-2 p-3.5 bg-[var(--bg)] border-[var(--acc)]/40 rounded-[var(--r-m)] space-y-3 text-xs font-sans shadow-xl">
+ <div className="md:col-span-2 p-3.5 bg-[var(--bg)] border-[var(--acc)]/40 rounded-[var(--r-m)] space-y-3 text-xs font-sans">
  <div className="flex items-center justify-between border-b border-[var(--hair)]800 pb-2">
  <div className="flex items-center gap-1.5 text-[var(--acc)] font-bold">
  <Sparkles className="w-4 h-4" />
@@ -1927,7 +1927,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </button>
  <button
  type="submit"
- className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-m)] transition-all cursor-pointer shadow-md"
+ className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-m)] transition-all cursor-pointer"
  >
  {editingBand ?'Guardar Cambios' :'Añadir Banda'}
  </button>

@@ -114,7 +114,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/75 animate-fadeIn">
- <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 shadow-2xl space-y-6 text-[var(--ink)] relative">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-6 text-[var(--ink)] relative">
  {/* Header */}
  <div className="flex items-center justify-between pb-4 border-b border-[var(--hair)]800">
  <div className="flex items-center gap-3">
@@ -297,7 +297,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="button"
  onClick={handleExport}
  disabled={targetCount === 0}
- className="px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center gap-2 shadow-lg shadow-amber-0/10 transition cursor-pointer disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center gap-2 transition cursor-pointer disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
  <span>Descargar {targetCount} {targetCount === 1 ?'contacto' :'contactos'}</span>

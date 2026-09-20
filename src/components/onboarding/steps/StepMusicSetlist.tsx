@@ -96,7 +96,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  onClick={() => setMusicSubTab('spotify')}
  className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
  musicSubTab ==='spotify'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-md font-semibold'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-semibold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -108,7 +108,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  onClick={() => setMusicSubTab('upload')}
  className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
  musicSubTab ==='upload'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-md font-semibold'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-semibold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -120,7 +120,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  onClick={() => setMusicSubTab('manual')}
  className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
  musicSubTab ==='manual'
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-md font-semibold'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-semibold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

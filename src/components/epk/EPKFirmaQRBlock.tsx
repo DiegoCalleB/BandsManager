@@ -295,7 +295,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <span className="text-[10px] text-[var(--ink-2)] font-sans">Renderizado Email</span>
  </div>
 
- <div className="bg-[var(--surface)] text-[var(--ink)] p-4 sm:p-5 rounded-[var(--r-l)] shadow-md space-y-3 font-sans text-xs">
+ <div className="bg-[var(--surface)] text-[var(--ink)] p-4 sm:p-5 rounded-[var(--r-l)] space-y-3 font-sans text-xs">
  <p className="text-[var(--ink-2)] italic text-[11px] pb-2 border-b border-[var(--hair)]">
  ... [Cuerpo del correo redactado para la sala o festival] ...
  </p>
@@ -351,7 +351,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  href={publicEpkUrl ||'#'}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer group"
+ className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-semibold transition active:scale-95 cursor-pointer group"
  >
  <FileText className="w-3.5 h-3.5 text-[var(--acc)] group-hover:scale-110 transition-transform" />
  <span>
@@ -450,7 +450,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <img
  src={badgeInfo.badgeUrl}
  alt={badgeInfo.label}
- className="h-5 rounded object-contain shadow-xs"
+ className="h-5 rounded object-contain"
  />
  </a>
  );
@@ -473,10 +473,10 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  type="button"
  id="copy-rich-signature-btn"
  onClick={handleCopyRichSignature}
- className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md ${
+ className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
  copiadoFirma ==='rich'
  ?'bg-[var(--ok)] text-[var(--ink)] ring-2 ring-emerald-400'
- :'bg-gradient-to-r from-[var(--acc)] to-amber-400 hover:from-amber-400 hover:to-[var(--acc-soft)] text-[var(--ink)] shadow-amber-0/10'
+ :'bg-gradient-to-r from-[var(--acc)] to-amber-400 hover:from-amber-400 hover:to-[var(--acc-soft)] text-[var(--ink)]'
  }`}
  title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"
  >
@@ -644,7 +644,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  QR directo a vuestro dossier público para incluir en cartelería, carpetas físicas de prensa o tarjetas de contacto.
  </p>
 
- <div className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block shadow-xl border-4">
+ <div className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block border-4">
  <QRCode value={publicEpkUrl} size={150} />
  </div>
 

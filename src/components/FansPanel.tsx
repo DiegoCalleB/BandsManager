@@ -525,7 +525,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {showFansHeaderMenu && (
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowFansHeaderMenu(false)} />
- <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] shadow-2xl p-1.5 space-y-0.5 text-xs font-sans">
+ <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
  <button
  type="button"
  onClick={() => { setShowFansHeaderMenu(false); openTutorial(); }}
@@ -781,7 +781,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setSelectedCityFilter('')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
  selectedCityFilter ===''
- ?'bg-[var(--acc)] text-[var(--ink)] shadow-md'
+ ?'bg-[var(--acc)] text-[var(--ink)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
@@ -797,7 +797,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setSelectedCityFilter(city)}
  className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
  isSelected
- ?'bg-[var(--acc)] text-[var(--ink)] shadow-md'
+ ?'bg-[var(--acc)] text-[var(--ink)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
@@ -1181,11 +1181,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  {/* Contenido principal: el QR, grande y arriba del todo */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col items-center text-center space-y-4">
- <div id="qr-code-svg-container" className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl border-4 inline-block relative">
+ <div id="qr-code-svg-container" className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] border-4 inline-block relative">
  <QRCode value={qrConcertUrl} size={210} level="H" />
  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
  {effectiveBandLogo ? (
- <div className="w-14 h-14 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-center overflow-hidden border-2 shadow-xl p-0.5">
+ <div className="w-14 h-14 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-center overflow-hidden border-2 p-0.5">
  <img
  src={effectiveBandLogo}
  alt={`Logo ${effectiveBandName}`}
@@ -1193,7 +1193,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  </div>
  ) : (
- <div className="w-12 h-12 bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] flex items-center justify-center border-2 shadow-xl">
+ <div className="w-12 h-12 bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] flex items-center justify-center border-2">
  <Users className="w-6 h-6" />
  </div>
  )}
@@ -1226,7 +1226,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  id="fans-qr-export-btn"
  type="button"
  onClick={handlePrintQr}
- className="flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-lg"
+ className="flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer"
  >
  <Printer className="w-4 h-4" /> Cartel A4 / PDF
  </button>
@@ -1242,7 +1242,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {showQrMoreMenu && (
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowQrMoreMenu(false)} />
- <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] shadow-2xl p-1.5 space-y-0.5 text-[11px] font-sans">
+ <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-[11px] font-sans">
  <button
  type="button"
  onClick={() => { setShowQrMoreMenu(false); handleDownloadSvg(); }}
@@ -1519,7 +1519,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  setSavedToConcertFeedback(true);
  setTimeout(() => setSavedToConcertFeedback(false), 3500);
  }}
- className={`w-full py-2.5 px-3 font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-md ${
+ className={`w-full py-2.5 px-3 font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer ${
  savedToConcertFeedback
  ?'bg-[var(--ok)] text-[var(--ink)]'
  :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)]'
@@ -1575,7 +1575,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  {showAddModal && (
  <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
- <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b pb-3">
  <h3 className="text-lg font-black text-[var(--ink)] font-display tracking-widest flex items-center gap-2">
  <Users className="w-5 h-5 text-[var(--acc)]" />
@@ -1702,7 +1702,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </button>
  <button
  type="submit"
- className="px-5 py-2.5 bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-black tracking-widest rounded-[var(--r-m)] shadow-lg transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
+ className="px-5 py-2.5 bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-black tracking-widest rounded-[var(--r-m)] transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
  >
  <Plus className="w-4 h-4" /> Guardar Fan
  </button>

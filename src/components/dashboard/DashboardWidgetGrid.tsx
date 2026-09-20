@@ -429,7 +429,7 @@ export function DashboardWidgetGrid({
  >
  {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
  {isEditMode && (
- <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--sunken)] p-2 rounded-t-xl mb-1 text-xs font-sans text-[var(--ink-2)] shadow-md gap-2">
+ <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--sunken)] p-2 rounded-t-xl mb-1 text-xs font-sans text-[var(--ink-2)] gap-2">
  <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
  <GripVertical className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">
@@ -545,7 +545,7 @@ export function DashboardWidgetGrid({
  {/* MODAL / CATALOGO: AÑADIR NUEVO WIDGET */}
  {isAddModalOpen && (
  <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 flex items-center justify-center p-4">
- <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
  {/* Header */}
  <div className="p-5 border-b flex items-center justify-between">
  <div className="flex items-center gap-2.5">
@@ -580,7 +580,7 @@ export function DashboardWidgetGrid({
  onClick={() => setSelectedCategory(cat)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold whitespace-nowrap cursor-pointer transition-all ${
  selectedCategory === cat
- ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -614,7 +614,7 @@ export function DashboardWidgetGrid({
  <button
  type="button"
  onClick={() => handleAddWidget(item.type)}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95 shadow-sm"
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95"
  >
  <Plus className="w-4 h-4" />
  <span>{isAlreadyAdded ?'Añadir Otro' :'Añadir'}</span>

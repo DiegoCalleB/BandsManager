@@ -463,7 +463,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
  </div>
- <button type="submit" disabled={loading} className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-sm active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
+ <button type="submit" disabled={loading} className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--ink)] font-bold text-sm tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
  {loading ?'Creando cuenta...' : (<><span>Crear mi Dossier y QR</span><ArrowRight className="w-4 h-4" /></>)}
  </button>
  </form>

@@ -110,7 +110,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  onClick={onClose}
  >
  <div 
- className="bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-l)] w-full max-w-md p-5 shadow-2xl relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
+ className="bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
  onClick={(e) => e.stopPropagation()}
  >
  <div className="flex items-center justify-between border-b border-[var(--hair)]800 pb-3">
@@ -129,9 +129,9 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  <div className="flex items-center justify-center py-2 bg-[var(--bg)]/80 rounded-[var(--r-m)]">
  <div className="relative">
  {band.imagen_url ? (
- <img src={band.imagen_url} alt={band.nombre_banda} className="w-20 h-20 rounded-[var(--r-l)] object-cover border-2 border-[var(--acc)] shadow-lg" />
+ <img src={band.imagen_url} alt={band.nombre_banda} className="w-20 h-20 rounded-[var(--r-l)] object-cover border-2 border-[var(--acc)]" />
  ) : (
- <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--sunken)] border-2 border-[var(--hair)]700 flex items-center justify-center text-3xl shadow-inner">
+ <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--sunken)] border-2 border-[var(--hair)]700 flex items-center justify-center text-3xl">
  {band.icono ||'🎸'}
  </div>
  )}
