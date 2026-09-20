@@ -1030,7 +1030,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <tbody className="divide-y divide-neutral-800/60 bg-[var(--surface)]/40 text-[var(--sunken)]">
  {registeredBands.length === 0 ? (
  <tr>
- <td colSpan={9} className="p-8 text-center text-neutral-500 italic">
+ <td colSpan={9} className="p-8 text-center text-[var(--ink-2)] italic">
  {isLoadingRegBands ?'Cargando bandas registradas...' :'No hay registros en registro_bandas aún.'}
  </td>
  </tr>
