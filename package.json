@@ -17,7 +17,10 @@
     "verify:docs": "node scripts/verify-docs-refs.cjs",
     "prepare": "husky || exit 0",
     "test:visual": "playwright test --project=visual",
-    "test:visual:update": "playwright test --project=visual --update-snapshots"
+    "test:visual:update": "playwright test --project=visual --update-snapshots",
+    "design:audit": "node scripts/design-audit.js",
+    "design:audit:strict": "node scripts/design-audit.js --strict",
+    "design:fix": "node scripts/design-fixer.js && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@distube/ytdl-core": "^4.16.12",
