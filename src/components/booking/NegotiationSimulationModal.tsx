@@ -234,9 +234,7 @@ export function NegotiationSimulationModal({
  rows={6}
  value={simulationMessage}
  onChange={(e) => onMessageChange(e.target.value)}
- className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none font-sans leading-relaxed ${?'bg-[var(--acc)]/15 text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink-2)]'
- }`}
+ className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none font-sans leading-relaxed bg-[var(--surface)] text-[var(--ink-2)]`}
  />
  <p className={`text-[10px] font-sans ${textMuted} leading-tight`}>
  💡 Tip: Puedes retocar el texto directamente para añadir detalles personalizados

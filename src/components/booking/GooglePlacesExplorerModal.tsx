@@ -598,14 +598,12 @@ export function GooglePlacesExplorerModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-6 bg-[var(--scrim)]/90 overflow-y-auto overscroll-contain pt-2 pb-24 sm:py-6 animate-fadeIn">
  <div
- className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink)]800'
- }`}
+ className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden bg-[var(--surface)] text-[var(--ink)]`}
  >
  {/* Header */}
- <div className="p-4 sm:p-5800 flex items-center justify-between shrink-0 bg-[var(--bg)]/60">
+ <div className="p-4 sm:p-5 flex items-center justify-between shrink-0 bg-[var(--bg)]/60">
  <div className="flex items-center gap-3">
- <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15/40 text-[var(--acc)]">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Search className="w-5 h-5" />
  </div>
  <div>

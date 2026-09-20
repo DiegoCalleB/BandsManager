@@ -636,9 +636,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  </span>
  </div>
  <div
- className={`p-3 rounded-[var(--r-l)] font-sans text-xs max-h-44 overflow-y-auto custom-scrollbar select-all ${?'bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ok)]/90'
- }`}
+ className={`p-3 rounded-[var(--r-l)] font-sans text-xs max-h-44 overflow-y-auto custom-scrollbar select-all bg-[var(--sunken)] text-[var(--ink)]`}
  >
  <pre className="whitespace-pre-wrap break-all leading-relaxed">
  {getContentForFormat().content.slice(0, 1200)}

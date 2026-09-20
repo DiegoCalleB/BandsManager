@@ -452,9 +452,7 @@ export function AddLeadModal({
  <button
  type="button"
  onClick={onClose}
- className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer ${?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
- }`}
+ className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
  >
  Cancelar
  </button>

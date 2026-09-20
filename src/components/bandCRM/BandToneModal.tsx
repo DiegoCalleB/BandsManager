@@ -621,9 +621,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  readOnly
  rows={6}
  value={toneData.pitch_personalizado_ejemplo}
- className={`w-full p-3 rounded-[var(--r-m)] font-sans text-[10px] leading-relaxed focus:outline-none ${?'bg-[var(--bg)] text-[var(--ink)]'
- :'bg-[var(--sunken)] text-[var(--ink-2)]'
- }`}
+ className={`w-full p-3 rounded-[var(--r-m)] font-sans text-[10px] leading-relaxed focus:outline-none bg-[var(--sunken)] text-[var(--ink-2)]`}
  />
 
  {onUseTailoredPitch && (

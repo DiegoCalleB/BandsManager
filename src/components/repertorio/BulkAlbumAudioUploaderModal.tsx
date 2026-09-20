@@ -774,9 +774,7 @@ export function BulkAlbumAudioUploaderModal({
  type="text"
  value={item.title}
  onChange={(e) => handleTitleChange(idx, e.target.value)}
- className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full ${?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--sunken)] text-[var(--ink)]'
- }`}
+ className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full bg-[var(--surface)] text-[var(--ink)]`}
  placeholder="Título de la canción"
  />
  </div>

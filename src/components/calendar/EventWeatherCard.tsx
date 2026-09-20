@@ -160,16 +160,12 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  }
 
  return (
- <div className={`rounded-[var(--r-m)] p-4 transition-all duration-200 ${? hasAlerts
- ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-50 to-amber-50 text-[var(--ink)]'
- :'bg-gradient-to-br from-amber-50 to-sky-50 text-[var(--ink)]'
- :'bg-gradient-to-br from-amber-50/70 to-sky-50/70 text-[var(--ink)]' 
+ <div className={`rounded-[var(--r-m)] p-4 transition-all duration-200 ${
+ hasAlerts && dangerAlertsCount > 0
+ ?'bg-[var(--alert)]/15 text-[var(--ink)]'
  : hasAlerts
- ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-neutral-900/90/40 text-[var(--ink-2)]'
- :'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-neutral-900/90 /40 text-[var(--ink-2)]'
- :'bg-gradient-to-br from-neutral-900/80 to-[var(--surface)]/80 /25 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/15 text-[var(--ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  {/* Barra superior del widget del tiempo */}
  <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 /15">
