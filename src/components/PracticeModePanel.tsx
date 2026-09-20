@@ -502,11 +502,11 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  const chordsSourceLabel = (source: TrackChordsResult['chordsSource']) => {
  if (source === 'audio_real') return { text: '🎧 Transcrito escuchando esta pista real', tone: 'text-emerald-400' };
  if (source === 'ia_sin_audio') return { text: '🤖 Propuesta de IA sin poder escuchar el audio', tone: 'text-amber-400' };
- return { text: '📐 Plantilla genérica (sin IA disponible)', tone: 'text-text-[var(--ink-2)]' };
+ return { text: '📐 Plantilla genérica (sin IA disponible)', tone: 'text-[var(--ink-2)]' };
  };
 
- const panelBg = isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]';
- const cardBg = isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)]/60 /80';
+ const panelBg = isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--sunken)]';
+ const cardBg = isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)]/60 /80';
 
  return (
  <>
@@ -518,14 +518,14 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
  {/* Header */}
- <div className={`px-5 py-4 flex items-center justify-between border-b ${isStitchLight ? ' bg-[var(--bg)]' : ' bg-bg-[var(--surface)]/60'}`}>
+ <div className={`px-5 py-4 flex items-center justify-between border-b ${isStitchLight ? ' bg-[var(--bg)]' : ' bg-[var(--surface)]/60'}`}>
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
  <Headphones className="w-5 h-5" />
  </div>
  <div className="min-w-0">
  <h3 className="font-bold font-display uppercase tracking-wider text-sm truncate">Sala de Ensayo Individual</h3>
- <p className="text-[11px] text-text-[var(--ink-2)] truncate">{song.titulo} · {idea.titulo}</p>
+ <p className="text-[11px] text-[var(--ink-2)] truncate">{song.titulo} · {idea.titulo}</p>
  </div>
  </div>
  <div className="flex items-center gap-2 shrink-0">
@@ -540,7 +540,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <span className="hidden sm:inline">Modo Studio</span>
  </button>
  )}
- <button onClick={onClose} className="p-2 rounded-[var(--r-s)] hover:bg-neutral-800/60 text-text-[var(--ink-2)] hover:text-white shrink-0 cursor-pointer">
+ <button onClick={onClose} className="p-2 rounded-[var(--r-s)] hover:bg-neutral-800/60 text-[var(--ink-2)] hover:text-white shrink-0 cursor-pointer">
  <X className="w-5 h-5" />
  </button>
  </div>
@@ -584,7 +584,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-emerald-500 text-black flex items-center justify-center shrink-0 hover:bg-emerald-400">
  {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
  </button>
- <span className="text-[11px] font-mono text-text-[var(--ink-2)] w-10 text-right">{formatTime(currentTime)}</span>
+ <span className="text-[11px] font-mono text-[var(--ink-2)] w-10 text-right">{formatTime(currentTime)}</span>
  <input
  type="range"
  min={0}
@@ -594,41 +594,41 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  onChange={(e) => handleSeekBarChange(Number(e.target.value))}
  className="flex-1 accent-emerald-500"
  />
- <span className="text-[11px] font-mono text-text-[var(--ink-2)] w-10">{formatTime(duration)}</span>
+ <span className="text-[11px] font-mono text-[var(--ink-2)] w-10">{formatTime(duration)}</span>
  </div>
 
  <div className="flex flex-wrap items-center gap-3">
  <div className="flex items-center gap-1">
- <Gauge className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
- <span className="text-[10px] font-mono text-text-[var(--ink-2)] mr-0.5">Tempo</span>
+ <Gauge className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+ <span className="text-[10px] font-mono text-[var(--ink-2)] mr-0.5">Tempo</span>
  <button
  onClick={() => nudgeBpm(-5)}
  title="-5 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]"
  >-5</button>
  <button
  onClick={() => nudgeBpm(-1)}
  title="-1 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]"
  >-1</button>
- <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ? 'text-amber-300' : 'text-bg-[var(--sunken)]'}`}>
+ <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ? 'text-amber-300' : 'text-[var(--sunken)]'}`}>
  {targetBpm} BPM
  </span>
  <button
  onClick={() => nudgeBpm(1)}
  title="+1 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]"
  >+1</button>
  <button
  onClick={() => nudgeBpm(5)}
  title="+5 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]"
  >+5</button>
  {speed !== 1 && (
  <button
  onClick={() => changeSpeed(1)}
  title={`Volver al tempo original (${baseBpm} BPM)`}
- className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white"
+ className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white"
  >
  ↺ {baseBpm}
  </button>
@@ -636,29 +636,29 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  </div>
 
  <div className="flex items-center gap-1.5">
- <Repeat className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
- <span className="text-[10px] font-mono text-text-[var(--ink-2)]">Bucle</span>
- <button onClick={markLoopA} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)]">
+ <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">Bucle</span>
+ <button onClick={markLoopA} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]">
  A {loopA != null ? formatTime(loopA) : '--:--'}
  </button>
- <button onClick={markLoopB} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)]">
+ <button onClick={markLoopB} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]">
  B {loopB != null ? formatTime(loopB) : '--:--'}
  </button>
  {(loopA != null || loopB != null) && (
- <button onClick={clearLoop} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white">
+ <button onClick={clearLoop} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white">
  Quitar
  </button>
  )}
  </div>
 
  <div className="flex items-center gap-1.5">
- <ArrowUpDown className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
- <span className="text-[10px] font-mono text-text-[var(--ink-2)]">Tono</span>
+ <ArrowUpDown className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">Tono</span>
  <select
  value={semitonesOffset}
  onChange={(e) => setSemitonesOffset(Number(e.target.value))}
  title="Trasposición de tono en tiempo real — útil para ensayar en el tono acordado para un bolo concreto"
- className={`text-xs font-mono rounded-[var(--r-s)] px-2 py-1 outline-none ${isStitchLight ? 'bg-white ' : 'bg-bg-[var(--surface)] '} ${semitonesOffset !== 0 ? 'text-sky-400 font-bold' : ''}`}
+ className={`text-xs font-mono rounded-[var(--r-s)] px-2 py-1 outline-none ${isStitchLight ? 'bg-white ' : 'bg-[var(--surface)] '} ${semitonesOffset !== 0 ? 'text-sky-400 font-bold' : ''}`}
  >
  {TRANSPOSE_SEMITONE_OPTIONS.map(st => {
  const origKey = song.tonalidad?.trim();
@@ -680,7 +680,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
  metronomeOn
  ? 'bg-amber-500/20 /40 text-amber-300'
- : 'bg-neutral-800 border-transparent text-text-[var(--ink-2)] hover:text-white'
+ : 'bg-neutral-800 border-transparent text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <Timer className="w-3.5 h-3.5" /> {targetBpm} BPM
@@ -691,7 +691,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
  beatAnchorSec > 0
  ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
- : 'bg-neutral-800 border-transparent text-text-[var(--ink-2)] hover:text-white'
+ : 'bg-neutral-800 border-transparent text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <Target className="w-3.5 h-3.5" /> {beatAnchorSec > 0 ? `Compás ${formatTime(beatAnchorSec)}` : 'Marcar beat de compás'}
@@ -703,7 +703,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  if (metronomeOn && isPlaying) resyncMetronomeAt(currentTime, 0);
  }}
  title="Quitar el compás marcado (volver a asumir que empieza en 0:00)"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white"
  >
  ✕
  </button>
@@ -730,7 +730,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {/* Mezcla manual por pista */}
  <div className="space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-[11px] font-mono font-semibold text-text-[var(--ink-2)] uppercase">Mi mezcla (solo la ves tú)</span>
+ <span className="text-[11px] font-mono font-semibold text-[var(--ink-2)] uppercase">Mi mezcla (solo la ves tú)</span>
  <div className="flex items-center gap-3">
  <button
  onClick={handleAutoBalance}
@@ -741,7 +741,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {isAutoBalancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Scale className="w-3 h-3" />}
  {isAutoBalancing ? 'Analizando...' : 'Auto-Balance'}
  </button>
- <button onClick={resetOverrides} className="flex items-center gap-1 text-[10px] font-mono text-text-[var(--ink-2)] hover:text-white">
+ <button onClick={resetOverrides} className="flex items-center gap-1 text-[10px] font-mono text-[var(--ink-2)] hover:text-white">
  <RotateCcw className="w-3 h-3" /> Restablecer
  </button>
  </div>
@@ -763,14 +763,14 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => toggleMute(tr.id)}
  title="Silenciar (solo en mi mezcla)"
- className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.muted ? 'bg-red-500/80 text-white' : 'bg-neutral-800 text-text-[var(--ink-2)] hover:text-white'}`}
+ className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.muted ? 'bg-red-500/80 text-white' : 'bg-neutral-800 text-[var(--ink-2)] hover:text-white'}`}
  >
  M
  </button>
  <button
  onClick={() => toggleSolo(tr.id)}
  title="Solo (aislar, solo en mi mezcla)"
- className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.solo ? 'bg-amber-400 text-black' : 'bg-neutral-800 text-text-[var(--ink-2)] hover:text-white'}`}
+ className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.solo ? 'bg-amber-400 text-black' : 'bg-neutral-800 text-[var(--ink-2)] hover:text-white'}`}
  >
  S
  </button>
@@ -788,7 +788,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  onClick={() => (chords ? setExpandedChordsTrackId(isExpanded ? null : tr.id) : handleAnalyzeTrackChords(tr))}
  title="Detectar acordes escuchando solo esta pista aislada"
  disabled={isLoadingThis}
- className="w-6 h-6 rounded flex items-center justify-center bg-neutral-800 text-text-[var(--ink-2)] hover:text-indigo-300 disabled:opacity-50"
+ className="w-6 h-6 rounded flex items-center justify-center bg-neutral-800 text-[var(--ink-2)] hover:text-indigo-300 disabled:opacity-50"
  >
  {isLoadingThis ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Music2 className="w-3.5 h-3.5" />}
  </button>
@@ -803,7 +803,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {chordsSourceLabel(chords.chordsSource).text}
  {chords.esAproximado && ' · ⚠️ aproximado, verifica de oído'}
  </p>
- <pre className="text-[11px] font-mono whitespace-pre-wrap text-bg-[var(--sunken)] max-h-40 overflow-y-auto bg-black/30 rounded-[var(--r-s)] p-2">
+ <pre className="text-[11px] font-mono whitespace-pre-wrap text-[var(--sunken)] max-h-40 overflow-y-auto bg-black/30 rounded-[var(--r-s)] p-2">
  {chords.cifradoTexto}
  </pre>
  {onApplyAsMainChords && (
@@ -825,7 +825,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
 
  {/* Exportar */}
  <div className={`rounded-[var(--r-m)] p-3 space-y-2 ${cardBg}`}>
- <span className="text-[11px] font-mono font-semibold text-text-[var(--ink-2)] uppercase">Descargar para escuchar offline</span>
+ <span className="text-[11px] font-mono font-semibold text-[var(--ink-2)] uppercase">Descargar para escuchar offline</span>
  <div className="flex flex-wrap gap-2">
  <button
  onClick={() => handleExport('sin-mi-pista')}
@@ -844,7 +844,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => handleExport('mezcla-actual')}
  disabled={isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-neutral-800 text-bg-[var(--sunken)] hover:bg-neutral-700 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-neutral-800 text-[var(--sunken)] hover:bg-neutral-700 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting === 'mezcla-actual' ? 'Generando…' : 'Mi mezcla actual'}
  </button>

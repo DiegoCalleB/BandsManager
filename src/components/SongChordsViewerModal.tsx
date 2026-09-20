@@ -222,7 +222,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={onClose}
- className="absolute top-3 right-3 z-20 p-1.5 rounded-full bg-black/50 hover:bg-rose-500/30 text-text-[var(--ink-3)] hover:text-rose-300 transition cursor-pointer"
+ className="absolute top-3 right-3 z-20 p-1.5 rounded-full bg-black/50 hover:bg-rose-500/30 text-[var(--ink-3)] hover:text-rose-300 transition cursor-pointer"
  title="Cerrar"
  >
  <X className="w-5 h-5" />
@@ -243,7 +243,7 @@ export function SongChordsViewerModal({
  </span>
  )}
  </div>
- <div className="flex items-center gap-3 text-xs text-text-[var(--ink-2)] font-mono mt-0.5">
+ <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] font-mono mt-0.5">
  <span>Tonalidad: <strong className="text-amber-400">{song.tonalidad || 'Mim'}</strong></span>
  <span>•</span>
  <span>Tempo: <strong className="text-emerald-400">{song.bpm || 120} BPM</strong></span>
@@ -256,7 +256,7 @@ export function SongChordsViewerModal({
  {song.duracion && (
  <>
  <span>•</span>
- <span>Duración: <strong className="text-text-[var(--ink-3)]">{song.duracion}</strong></span>
+ <span>Duración: <strong className="text-[var(--ink-3)]">{song.duracion}</strong></span>
  </>
  )}
  </div>
@@ -289,7 +289,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setShowShareModal(true)}
- className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-emerald-500/20 text-text-[var(--ink-3)] hover:text-emerald-300 transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-emerald-500/20 text-[var(--ink-3)] hover:text-emerald-300 transition cursor-pointer"
  title="Compartir canción y acordes por WhatsApp o App"
  >
  <MessageSquare className="w-4 h-4" />
@@ -298,7 +298,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => window.print()}
- className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-text-[var(--ink-3)] hover:text-white transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-3)] hover:text-white transition cursor-pointer"
  title="Imprimir Cifrado"
  >
  <Printer className="w-4 h-4" />
@@ -317,7 +317,7 @@ export function SongChordsViewerModal({
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
  activeTab === 'chords'
  ? 'bg-amber-500 text-black shadow'
- : 'text-text-[var(--ink-2)] hover:text-white'
+ : 'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <FileText className="w-3.5 h-3.5" />
@@ -330,7 +330,7 @@ export function SongChordsViewerModal({
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
  activeTab === 'substitute'
  ? 'bg-purple-600 text-white shadow'
- : 'text-text-[var(--ink-2)] hover:text-white'
+ : 'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <UserCheck className="w-3.5 h-3.5" />
@@ -343,7 +343,7 @@ export function SongChordsViewerModal({
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
  activeTab === 'edit'
  ? 'bg-neutral-800 text-white shadow'
- : 'text-text-[var(--ink-2)] hover:text-white'
+ : 'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -357,7 +357,7 @@ export function SongChordsViewerModal({
  
  {/* TRANSPOSITION CONTROL */}
  <div className="flex items-center gap-1 bg-black/40 px-2 py-1 rounded-[var(--r-m)] ">
- <span className="text-[11px] text-text-[var(--ink-2)] mr-1">Tono:</span>
+ <span className="text-[11px] text-[var(--ink-2)] mr-1">Tono:</span>
  <button
  type="button"
  onClick={() => setTranspose(prev => prev - 1)}
@@ -366,7 +366,7 @@ export function SongChordsViewerModal({
  >
  -1
  </button>
- <span className={`w-8 text-center font-bold ${transpose !== 0 ? 'text-amber-400' : 'text-text-[var(--ink-3)]'}`}>
+ <span className={`w-8 text-center font-bold ${transpose !== 0 ? 'text-amber-400' : 'text-[var(--ink-3)]'}`}>
  {transpose > 0 ? `+${transpose}` : transpose}
  </span>
  <button
@@ -381,7 +381,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setTranspose(0)}
- className="p-1 rounded text-text-[var(--ink-2)] hover:text-amber-400 transition cursor-pointer ml-1"
+ className="p-1 rounded text-[var(--ink-2)] hover:text-amber-400 transition cursor-pointer ml-1"
  title="Restablecer Tono Original"
  >
  <RotateCcw className="w-3 h-3" />
@@ -393,7 +393,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setNotation(prev => prev === 'ES' ? 'EN' : 'ES')}
- className="px-2.5 py-1 rounded-[var(--r-m)] bg-black/40 hover: text-text-[var(--ink-3)] hover:text-white font-bold transition cursor-pointer flex items-center gap-1"
+ className="px-2.5 py-1 rounded-[var(--r-m)] bg-black/40 hover: text-[var(--ink-3)] hover:text-white font-bold transition cursor-pointer flex items-center gap-1"
  title="Cambiar entre Cifrado Latino (Do, Re, Mi) e Inglés (C, D, E)"
  >
  <span>Cifrado:</span>
@@ -408,7 +408,7 @@ export function SongChordsViewerModal({
  className={`px-2.5 py-0.5 rounded-[var(--r-s)] font-bold flex items-center gap-1 transition cursor-pointer ${
  isAutoScrolling
  ? 'bg-emerald-600 text-white animate-pulse'
- : 'bg-white/10 text-text-[var(--ink-3)] hover:text-white'
+ : 'bg-white/10 text-[var(--ink-3)] hover:text-white'
  }`}
  title="Iniciar/Pausar Desfile Automático"
  >
@@ -418,14 +418,14 @@ export function SongChordsViewerModal({
 
  {isAutoScrolling && (
  <div className="flex items-center gap-1 ml-1">
- <span className="text-[10px] text-text-[var(--ink-2)]">Vel:</span>
+ <span className="text-[10px] text-[var(--ink-2)]">Vel:</span>
  {[1, 2, 3].map(v => (
  <button
  key={v}
  type="button"
  onClick={() => setScrollSpeed(v)}
  className={`w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center transition cursor-pointer ${
- scrollSpeed === v ? 'bg-emerald-500 text-black' : 'bg-white/10 text-text-[var(--ink-2)]'
+ scrollSpeed === v ? 'bg-emerald-500 text-black' : 'bg-white/10 text-[var(--ink-2)]'
  }`}
  >
  {v}x
@@ -442,7 +442,7 @@ export function SongChordsViewerModal({
  className={`px-2.5 py-1 rounded-[var(--r-m)] font-bold transition cursor-pointer ${
  showChordDiagrams
  ? 'bg-purple-950/40 border-purple-500/50 text-purple-300'
- : 'bg-black/40 text-text-[var(--ink-2)] hover:text-white'
+ : 'bg-black/40 text-[var(--ink-2)] hover:text-white'
  }`}
  >
  🎸 Diagramas
@@ -452,7 +452,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={handleCopyChords}
- className="p-1.5 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-text-[var(--ink-3)] hover:text-white transition cursor-pointer"
+ className="p-1.5 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-3)] hover:text-white transition cursor-pointer"
  title="Copiar texto de acordes"
  >
  {copiedText ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -510,7 +510,7 @@ export function SongChordsViewerModal({
  Ver Ficha Completa →
  </button>
  </div>
- <p className="text-bg-[var(--sunken)] text-sm font-semibold tracking-wide bg-black/40 p-2 rounded-[var(--r-s)] border-white/5">
+ <p className="text-[var(--sunken)] text-sm font-semibold tracking-wide bg-black/40 p-2 rounded-[var(--r-s)] border-[var(--hair)]5">
  {guiaSustituto.estructura}
  </p>
  </div>
@@ -526,7 +526,7 @@ export function SongChordsViewerModal({
  {/* TAB 2: SUBSTITUTE QUICK GUIDE (FICHA PARA MÚSICO SUSTITUTO) */}
  {activeTab === 'substitute' && (
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
- <div className="bg-gradient-to-br from-purple-950/60 to-bg-[var(--surface)] p-6 rounded-[var(--r-l)] shadow-xl space-y-5">
+ <div className="bg-gradient-to-br from-purple-950/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] shadow-xl space-y-5">
  <div className="flex items-center gap-3 border-b border-purple-500/30 pb-4">
  <div className="p-3 rounded-[var(--r-m)] bg-purple-600 text-white shadow-lg">
  <UserCheck className="w-6 h-6" />
@@ -541,7 +541,7 @@ export function SongChordsViewerModal({
 
  {/* GUIDES GRID */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
- <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
+ <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
  <span className="text-amber-400 font-bold block text-[11px] uppercase tracking-wider">
  1. Estructura Exacta del Tema
  </span>
@@ -550,7 +550,7 @@ export function SongChordsViewerModal({
  </p>
  </div>
 
- <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
+ <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
  <span className="text-emerald-400 font-bold block text-[11px] uppercase tracking-wider">
  2. Progresión Armónica Clave
  </span>
@@ -559,29 +559,29 @@ export function SongChordsViewerModal({
  </p>
  </div>
 
- <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
+ <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
  <span className="text-rose-400 font-bold block text-[11px] uppercase tracking-wider">
  3. Cortes, Entradas y Claves
  </span>
- <p className="text-bg-[var(--sunken)] leading-relaxed">
+ <p className="text-[var(--sunken)] leading-relaxed">
  {guiaSustituto.cortesYClaves || 'Sin indicaciones especiales de cortes.'}
  </p>
  </div>
 
- <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
+ <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
  <span className="text-purple-300 font-bold block text-[11px] uppercase tracking-wider">
  4. Capo / Afinación
  </span>
- <p className="text-bg-[var(--sunken)] leading-relaxed">
+ <p className="text-[var(--sunken)] leading-relaxed">
  {guiaSustituto.capoTraste || 'Standard / Sin Capo'}
  </p>
  </div>
 
- <div className="sm:col-span-2 bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
+ <div className="sm:col-span-2 bg-black/50 p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
  <span className="text-cyan-400 font-bold block text-[11px] uppercase tracking-wider">
  5. Protagonismo de Instrumentos / Arreglos
  </span>
- <p className="text-bg-[var(--sunken)] leading-relaxed">
+ <p className="text-[var(--sunken)] leading-relaxed">
  {guiaSustituto.instrumentosClave || 'Seguir el pulso principal de batería y bajo.'}
  </p>
  </div>
@@ -640,7 +640,7 @@ export function SongChordsViewerModal({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
  <div>
- <label className="text-text-[var(--ink-2)] block mb-0.5">Estructura Exacta del Tema:</label>
+ <label className="text-[var(--ink-2)] block mb-0.5">Estructura Exacta del Tema:</label>
  <input
  type="text"
  value={guiaSustituto.estructura || ''}
@@ -651,7 +651,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div>
- <label className="text-text-[var(--ink-2)] block mb-0.5">Progresiones Clave:</label>
+ <label className="text-[var(--ink-2)] block mb-0.5">Progresiones Clave:</label>
  <input
  type="text"
  value={guiaSustituto.progresionClave || ''}
@@ -662,7 +662,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div>
- <label className="text-text-[var(--ink-2)] block mb-0.5">Cortes y Claves en Vivo:</label>
+ <label className="text-[var(--ink-2)] block mb-0.5">Cortes y Claves en Vivo:</label>
  <input
  type="text"
  value={guiaSustituto.cortesYClaves || ''}
@@ -673,7 +673,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div>
- <label className="text-text-[var(--ink-2)] block mb-0.5">Capo / Afinación:</label>
+ <label className="text-[var(--ink-2)] block mb-0.5">Capo / Afinación:</label>
  <input
  type="text"
  value={guiaSustituto.capoTraste || ''}
@@ -778,7 +778,7 @@ function renderFormattedChordSheet(text: string) {
  </span>
  );
  }
- return <span key={pIdx} className="text-bg-[var(--sunken)]">{part}</span>;
+ return <span key={pIdx} className="text-[var(--sunken)]">{part}</span>;
  })}
  </div>
  );
@@ -802,7 +802,7 @@ function renderFormattedChordSheet(text: string) {
 
  // Standard lyrics line
  return (
- <div key={idx} className="text-bg-[var(--sunken)] py-0.5">
+ <div key={idx} className="text-[var(--sunken)] py-0.5">
  {line || '\u00A0'}
  </div>
  );
@@ -829,7 +829,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  Traste {shape.baseFret}
  </div>
  )}
- <div className="grid grid-cols-6 gap-0.5 my-1 text-text-[var(--ink-2)] border-b pb-0.5">
+ <div className="grid grid-cols-6 gap-0.5 my-1 text-[var(--ink-2)] border-b pb-0.5">
  {['E', 'A', 'D', 'G', 'B', 'E'].map((s, i) => (
  <span key={i} className="text-center">{s}</span>
  ))}

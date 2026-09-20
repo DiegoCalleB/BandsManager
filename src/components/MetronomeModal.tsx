@@ -207,12 +207,12 @@ export function MetronomeModal({
  WebAudio API
  </span>
  </h3>
- <p className="text-xs text-text-[var(--ink-2)]">Click de alta precisión para ensayos y estudio</p>
+ <p className="text-xs text-[var(--ink-2)]">Click de alta precisión para ensayos y estudio</p>
  </div>
  </div>
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -224,7 +224,7 @@ export function MetronomeModal({
  {/* Song Selector Sync */}
  {songs.length > 0 && (
  <div className="bg-white/5 rounded-[var(--r-m)] p-3 border-white/5 flex flex-col gap-1.5">
- <label className="text-xs font-semibold text-text-[var(--ink-3)] flex items-center gap-1.5">
+ <label className="text-xs font-semibold text-[var(--ink-3)] flex items-center gap-1.5">
  <Music className="w-3.5 h-3.5 text-amber-400" />
  Sincronizar BPM desde Repertorio:
  </label>
@@ -269,7 +269,7 @@ export function MetronomeModal({
  <span className="text-5xl font-black font-mono tracking-tight text-white drop-shadow-md">
  {bpm}
  </span>
- <span className="text-[10px] font-mono text-text-[var(--ink-2)] uppercase tracking-wider">
+ <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider">
  Pulsaciones por Minuto
  </span>
  </div>
@@ -303,7 +303,7 @@ export function MetronomeModal({
 
  {/* Animated Beat Visualizer Bar */}
  <div className="space-y-2">
- <div className="flex items-center justify-between text-xs text-text-[var(--ink-2)]">
+ <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">
  <span className="font-semibold flex items-center gap-1">
  Compás ({timeSignature}/4):
  </span>
@@ -339,7 +339,7 @@ export function MetronomeModal({
  <div className="grid grid-cols-2 gap-3">
  {/* Compás selector */}
  <div className="bg-white/5 rounded-[var(--r-m)] p-2.5 border-white/5">
- <label className="text-[11px] font-semibold text-text-[var(--ink-2)] block mb-1.5">
+ <label className="text-[11px] font-semibold text-[var(--ink-2)] block mb-1.5">
  Métrica:
  </label>
  <div className="grid grid-cols-3 gap-1">
@@ -350,7 +350,7 @@ export function MetronomeModal({
  className={`py-1 text-xs font-bold rounded-[var(--r-s)] transition-colors cursor-pointer ${
  timeSignature === sig
  ? 'bg-amber-500 text-slate-950'
- : 'bg-black/40 text-text-[var(--ink-3)] hover:bg-white/10'
+ : 'bg-black/40 text-[var(--ink-3)] hover:bg-white/10'
  }`}
  >
  {sig}/4
@@ -367,13 +367,13 @@ export function MetronomeModal({
  <span className="text-xs font-black text-amber-300 uppercase tracking-wider group-hover:scale-105 transition-transform">
  👆 TAP TEMPO
  </span>
- <span className="text-[10px] text-text-[var(--ink-2)]">Toca el ritmo 4 veces</span>
+ <span className="text-[10px] text-[var(--ink-2)]">Toca el ritmo 4 veces</span>
  </button>
  </div>
 
  {/* Quick BPM Presets */}
  <div className="space-y-1.5">
- <span className="text-[11px] font-semibold text-text-[var(--ink-2)] block">
+ <span className="text-[11px] font-semibold text-[var(--ink-2)] block">
  Presets Rápidos:
  </span>
  <div className="flex items-center gap-1.5 flex-wrap">
@@ -390,7 +390,7 @@ export function MetronomeModal({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium cursor-pointer transition-colors ${
  bpm === p.val
  ? 'bg-amber-500/20 /50 text-amber-300 font-bold'
- : 'bg-white/5 border-white/5 text-text-[var(--ink-3)] hover:bg-white/10'
+ : 'bg-white/5 border-white/5 text-[var(--ink-3)] hover:bg-white/10'
  }`}
  >
  {p.label}

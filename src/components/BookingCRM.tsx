@@ -950,8 +950,8 @@ export default function BookingCRM({
 
 
  const subCardBg = isStitchLight ? 'bg-[var(--bg)]/60' : 'bg-[var(--surface)]';
- const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-bg-[var(--sunken)]';
- const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]';
+ const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]';
+ const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]';
  const textMuted = isStitchLight ? 'text-[var(--ink-3)]' : 'text-[var(--ink-3)]';
  const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCityFilter ? 1 : 0) + (statusFilter !== 'todos' ? 1 : 0) + (typeFilter !== 'todos' ? 1 : 0) + (minCapacityFilter > 0 ? 1 : 0) + (onlyFavoritesFilter ? 1 : 0) + (onlyVerifiedFilter ? 1 : 0) + (activeSavedFilterId ? 1 : 0);
 
@@ -1485,7 +1485,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyFavoritesFilter
  ? 'bg-amber-500/20 text-amber-300 /50'
- : 'bg-black/40 text-text-[var(--ink-2)] hover:text-white'
+ : 'bg-black/40 text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <span>⭐ Favoritos</span>
@@ -1498,7 +1498,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyVerifiedFilter
  ? 'bg-sky-500/20 text-sky-300 border-sky-500/50'
- : 'bg-black/40 text-text-[var(--ink-2)] hover:text-white'
+ : 'bg-black/40 text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <span>✔ Verificados</span>
@@ -1506,7 +1506,7 @@ export default function BookingCRM({
  </button>
 
  <div className="flex items-center gap-1.5 bg-black/40 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs">
- <span className="text-text-[var(--ink-2)]">Aforo mín:</span>
+ <span className="text-[var(--ink-2)]">Aforo mín:</span>
  <input
  type="number"
  placeholder="Ej: 300"
@@ -2136,7 +2136,7 @@ export default function BookingCRM({
  : 'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
  : isStitchLight
  ? 'text-[var(--ink-2)] hover:text-[var(--ink)]'
- : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : 'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <IconComp className="w-3.5 h-3.5" />
@@ -2327,7 +2327,7 @@ export default function BookingCRM({
  {templateStats && templateStats[templateTab] && (
  <div className="space-y-2 pt-3 pb-2">
  <div className="flex flex-wrap gap-2 items-center">
- <span className="text-[9px] font-mono text-text-[var(--ink-2)]">📊 Resultados:</span>
+ <span className="text-[9px] font-mono text-[var(--ink-2)]">📊 Resultados:</span>
  <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-950 text-blue-300'}`}>
  {templateStats[templateTab].totalUses} usos
  </span>
@@ -2373,7 +2373,7 @@ export default function BookingCRM({
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
  ? 'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
- : 'bg-bg-[var(--surface)] hover:-neutral-700 text-neutral-300'
+ : 'bg-[var(--surface)] hover:-neutral-700 text-neutral-300'
  }`}
  >
  {isTestingPrompt ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}

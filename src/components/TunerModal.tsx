@@ -408,10 +408,10 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="bg-gradient-to-b from-zinc-900 via-bg-[var(--surface)] to-black rounded-[var(--r-l)] w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col my-auto max-h-[92vh]">
+ <div className="bg-gradient-to-b from-zinc-900 via-[var(--surface)] to-black rounded-[var(--r-l)] w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col my-auto max-h-[92vh]">
  
  {/* Header */}
- <div className="p-4 border-b border-white/10 flex items-center justify-between bg-white/5 shrink-0">
+ <div className="p-4 border-b border-[var(--hair)]10 flex items-center justify-between bg-white/5 shrink-0">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-400">
  <Guitar className="w-5 h-5 animate-pulse" />
@@ -423,7 +423,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  Precision Autocorrelation
  </span>
  </h3>
- <p className="text-xs text-text-[var(--ink-2)]">Detección cromática en tiempo real vía micrófono</p>
+ <p className="text-xs text-[var(--ink-2)]">Detección cromática en tiempo real vía micrófono</p>
  </div>
  </div>
  <button
@@ -432,7 +432,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  stopReferenceTone();
  onClose();
  }}
- className="p-1.5 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -444,13 +444,13 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  {/* Instrument Filter & Preset Selector */}
  <div className="space-y-2.5">
  <div className="flex items-center justify-between">
- <label className="text-xs font-semibold text-text-[var(--ink-3)] flex items-center gap-1.5">
+ <label className="text-xs font-semibold text-[var(--ink-3)] flex items-center gap-1.5">
  <Radio className="w-3.5 h-3.5 text-emerald-400" />
  Instrumento y Afinación:
  </label>
 
  {/* Instrument Category Filter Tabs */}
- <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-[var(--r-s)] border-white/10 text-[10px]">
+ <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-[var(--r-s)] border-[var(--hair)]10 text-[10px]">
  {(['all', 'guitar', 'ukulele', 'bass'] as const).map((cat) => {
  const labels = {
  all: 'Todos',
@@ -476,7 +476,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  className={`px-2 py-1 rounded-md font-bold transition-all cursor-pointer ${
  isCatSelected
  ? 'bg-emerald-500 text-zinc-950 shadow-xs'
- : 'text-text-[var(--ink-2)] hover:text-white hover:bg-white/5'
+ : 'text-[var(--ink-2)] hover:text-white hover:bg-white/5'
  }`}
  >
  {labels[cat]}
@@ -497,7 +497,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  className={`p-2.5 rounded-[var(--r-m)] text-left text-xs font-medium transition-all cursor-pointer flex items-start justify-between gap-2 ${
  selectedPresetId === p.id
  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60 font-bold shadow-sm'
- : 'bg-white/5 text-text-[var(--ink-3)] border-white/5 hover:bg-white/10'
+ : 'bg-white/5 text-[var(--ink-3)] border-[var(--hair)]5 hover:bg-white/10'
  }`}
  >
  <div className="flex flex-col min-w-0 flex-1">
@@ -514,7 +514,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </span>
  </div>
  {p.description && (
- <span className="text-[10px] text-text-[var(--ink-2)] font-normal truncate mt-0.5">
+ <span className="text-[10px] text-[var(--ink-2)] font-normal truncate mt-0.5">
  {p.description}
  </span>
  )}
@@ -528,11 +528,11 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </div>
 
  {/* Main Visual Tuner Display */}
- <div className="bg-black/80 border-white/10 rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+ <div className="bg-black/80 border-[var(--hair)]10 rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
  
  {/* Tuning needle meter bar */}
  <div className="w-full space-y-2">
- <div className="flex items-center justify-between text-[11px] font-mono text-text-[var(--ink-2)]">
+ <div className="flex items-center justify-between text-[11px] font-mono text-[var(--ink-2)]">
  <span className="text-amber-400 font-bold">-50 Cents (Grave)</span>
  <span className={`font-bold ${isTunedIn ? 'text-emerald-400 text-xs font-black animate-bounce' : 'text-emerald-300'}`}>
  {isTunedIn ? '¡AFINADO PERFECTO!' : '0 Cents'}
@@ -570,13 +570,13 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }`}>
  {pitch.noteName}
  </span>
- <span className="text-2xl font-mono text-text-[var(--ink-2)] font-bold">
+ <span className="text-2xl font-mono text-[var(--ink-2)] font-bold">
  {pitch.octave}
  </span>
  </div>
 
  <div className="flex items-center gap-3 mt-1.5 font-mono text-xs">
- <span className="text-text-[var(--ink-3)] font-bold">
+ <span className="text-[var(--ink-3)] font-bold">
  {pitch.freq} Hz
  </span>
  <span className={`px-2 py-0.5 rounded-md font-bold ${
@@ -591,14 +591,14 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </div>
  </div>
  ) : isListening ? (
- <div className="flex flex-col items-center gap-2 text-text-[var(--ink-2)] py-2">
+ <div className="flex flex-col items-center gap-2 text-[var(--ink-2)] py-2">
  <RefreshCw className="w-6 h-6 animate-spin text-emerald-400" />
  <span className="text-xs font-mono">Escuchando instrumento... Toca una cuerda</span>
  </div>
  ) : (
  <div className="flex flex-col items-center gap-2 text-neutral-500 py-2">
  <MicOff className="w-8 h-8 opacity-40" />
- <span className="text-xs font-mono text-text-[var(--ink-2)]">Micrófono desactivado</span>
+ <span className="text-xs font-mono text-[var(--ink-2)]">Micrófono desactivado</span>
  </div>
  )}
  </div>
@@ -659,11 +659,11 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  {/* Interactive String Pitch Buttons & Reference Tones */}
  <div className="space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-xs font-semibold text-text-[var(--ink-3)] flex items-center gap-1.5">
+ <span className="text-xs font-semibold text-[var(--ink-3)] flex items-center gap-1.5">
  <Volume2 className="w-3.5 h-3.5 text-amber-400" />
  Cuerdas Objetivo & Tonos de Referencia:
  </span>
- <span className="text-[10px] text-text-[var(--ink-2)] font-mono">Toca un tono para oírlo</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-mono">Toca un tono para oírlo</span>
  </div>
 
  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -683,14 +683,14 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  ? 'bg-amber-500 text-zinc-950 font-black shadow-md scale-105'
  : isSelected
  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60 font-bold'
- : 'bg-white/5 text-text-[var(--ink-3)] border-white/5 hover:bg-white/10 hover:border-white/20'
+ : 'bg-white/5 text-[var(--ink-3)] border-[var(--hair)]5 hover:bg-white/10 hover:border-[var(--hair)]20'
  }`}
  >
  <div className="flex items-center gap-1">
  <span className="font-black text-sm">{str.note}{str.octave}</span>
  {isTonePlaying && <Volume2 className="w-3.5 h-3.5 animate-pulse" />}
  </div>
- <span className="text-[10px] text-text-[var(--ink-2)] opacity-90 truncate max-w-full">
+ <span className="text-[10px] text-[var(--ink-2)] opacity-90 truncate max-w-full">
  {str.freq} Hz
  </span>
  </button>
@@ -702,7 +702,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </div>
 
  {/* Footer */}
- <div className="p-3.5 border-t border-white/10 bg-white/5 flex items-center justify-between text-[11px] text-text-[var(--ink-2)] shrink-0">
+ <div className="p-3.5 border-t border-[var(--hair)]10 bg-white/5 flex items-center justify-between text-[11px] text-[var(--ink-2)] shrink-0">
  <span>Soporta afinación de Guitarra eléctrica/acústica, Bajo y Ukelele (Soprano, Concierto, Tenor y Barítono).</span>
  <button
  onClick={() => {

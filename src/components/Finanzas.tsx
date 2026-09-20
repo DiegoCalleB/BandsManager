@@ -134,8 +134,8 @@ export default function Finanzas({
  const categories = Array.from(new Set(payments.map(p => p.categoria)));
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
- const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-bg-[var(--sunken)]';
- const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]';
+ const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]';
+ const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]';
  const textMuted = isStitchLight ? 'text-[var(--ink-3)]' : 'text-neutral-500';
  const cardBorder = isStitchLight ? '-slate-200' : '-neutral-800';
 
@@ -261,7 +261,7 @@ export default function Finanzas({
  className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  activeTab === 'rentabilidad'
  ? colors.primary
- : isStitchLight ? 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : isStitchLight ? 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <Calculator className="w-3.5 h-3.5" /> Rentabilidad por Bolo
@@ -271,7 +271,7 @@ export default function Finanzas({
  className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
  activeTab === 'ledger'
  ? colors.primary
- : isStitchLight ? 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : isStitchLight ? 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  Libro Diario (Historial)
@@ -281,7 +281,7 @@ export default function Finanzas({
  className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
  activeTab === 'analytics'
  ? colors.primary
- : isStitchLight ? 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : isStitchLight ? 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  Análisis de Costes (Categorías)
@@ -647,7 +647,7 @@ export default function Finanzas({
  type="button"
  onClick={() => setSearchTerm('')}
  className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
- isStitchLight ? 'text-[var(--ink-3)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
+ isStitchLight ? 'text-[var(--ink-3)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
  }`}
  title="Borrar búsqueda"
  >
@@ -725,7 +725,7 @@ export default function Finanzas({
  <div className="flex items-center gap-2">
  <h4 className={`text-xs font-bold font-display truncate ${textTitle}`}>{p.concepto}</h4>
  <span className={`text-[8px] px-1.5 py-0.5 rounded font-mono uppercase tracking-wider ${
- isStitchLight ? 'bg-[var(--sunken)] text-[var(--ink-2)]' : 'bg-neutral-800 text-text-[var(--ink-2)]'
+ isStitchLight ? 'bg-[var(--sunken)] text-[var(--ink-2)]' : 'bg-neutral-800 text-[var(--ink-2)]'
  }`}>
  {p.categoria}
  </span>
@@ -840,7 +840,7 @@ export default function Finanzas({
  <span className={`uppercase font-bold ${textTitle}`}>{item.cat}</span>
  <span className={`${textSub}`}>{totalInCat.toLocaleString('es-ES')}€ ({percent.toFixed(1)}%)</span>
  </div>
- <div className={`w-full h-2 rounded-full ${isStitchLight ? 'bg-[var(--sunken)]' : 'bg-bg-[var(--surface)]'}`}>
+ <div className={`w-full h-2 rounded-full ${isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)]'}`}>
  <div className={`h-2 rounded-full ${item.color}`} style={{ width: `${Math.max(percent, totalInCat > 0 ? 3 : 0)}%` }} />
  </div>
  </div>
@@ -849,9 +849,9 @@ export default function Finanzas({
  </div>
 
  <div className="space-y-4">
- <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ? 'bg-[var(--bg)] -slate-100' : 'bg-bg-[var(--surface)]/40 -neutral-800'} space-y-3 text-xs leading-relaxed`}>
+ <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ? 'bg-[var(--bg)] -slate-100' : 'bg-[var(--surface)]/40 -neutral-800'} space-y-3 text-xs leading-relaxed`}>
  <h4 className={`font-mono font-bold uppercase tracking-wider ${textTitle}`}>Auditoría Operativa</h4>
- <div className="space-y-2 text-[11px] font-mono text-text-[var(--ink-2)]">
+ <div className="space-y-2 text-[11px] font-mono text-[var(--ink-2)]">
  <div className="flex justify-between">
  <span>Gasto en Viajes (Transporte/Hotel):</span>
  <span className={`${textTitle}`}>

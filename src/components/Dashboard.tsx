@@ -294,8 +294,8 @@ export default function Dashboard({
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const subCardBg = isStitchLight ? 'bg-[var(--bg)]/80 text-[var(--ink)]' : 'bg-[#1A1918] text-zinc-100';
- const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-bg-[var(--sunken)]';
- const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]';
+ const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]';
+ const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]';
  const textMuted = isStitchLight ? 'text-[var(--ink-3)]' : 'text-neutral-500';
 
  // Calculate real metrics from leads
@@ -500,10 +500,10 @@ export default function Dashboard({
  <Calendar className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-bg-[var(--sunken)] flex items-center gap-2">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--sunken)] flex items-center gap-2">
  Próximas Fechas y Agenda
  </h3>
- <p className="text-xs font-mono text-text-[var(--ink-2)]">
+ <p className="text-xs font-mono text-[var(--ink-2)]">
  {agendaFilterMode === 'all' 
  ? 'Conciertos y ensayos de todas tus bandas asignadas.' 
  : `Conciertos y ensayos programados para ${activeBandName}.`}
@@ -522,7 +522,7 @@ export default function Dashboard({
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode === 'all'
  ? 'bg-amber-500 text-stone-950 font-black shadow-xs'
- : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : 'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  title="Ver eventos de todas las bandas"
  >
@@ -537,7 +537,7 @@ export default function Dashboard({
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode === 'active'
  ? 'bg-amber-500 text-stone-950 font-black shadow-xs'
- : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : 'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  title={`Ver solo eventos de ${activeBandName}`}
  >
@@ -567,7 +567,7 @@ export default function Dashboard({
  className="p-4 rounded-[var(--r-m)] bg-[#121214] hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
  >
  <div className="flex items-start gap-3.5">
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-[#1c1b1b] text-bg-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm ">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-[#1c1b1b] text-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm ">
  <span className="text-lg font-mono font-black leading-none text-amber-400">
  {item.day}
  </span>
@@ -591,12 +591,12 @@ export default function Dashboard({
  <span className="truncate">{item.bandName}</span>
  </span>
  )}
- <span className="text-[10px] font-mono text-text-[var(--ink-2)]">
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">
  • {item.badge}
  </span>
  </div>
 
- <h4 className="text-base font-bold font-display tracking-wide mt-1.5 text-bg-[var(--sunken)] truncate">
+ <h4 className="text-base font-bold font-display tracking-wide mt-1.5 text-[var(--sunken)] truncate">
  {item.title}
  </h4>
 
@@ -607,7 +607,7 @@ export default function Dashboard({
  </div>
  </div>
 
- <div className="mt-3 pt-2.5 border-t text-xs font-mono text-text-[var(--ink-2)] flex items-center justify-between">
+ <div className="mt-3 pt-2.5 border-t text-xs font-mono text-[var(--ink-2)] flex items-center justify-between">
  <span className="truncate">{item.details}</span>
  <ArrowRight className="w-3.5 h-3.5 shrink-0 text-amber-400" />
  </div>
@@ -618,8 +618,8 @@ export default function Dashboard({
  <div className="p-8 rounded-[var(--r-m)] bg-[#121214] text-center space-y-3">
  <Calendar className="w-8 h-8 text-neutral-500 mx-auto" />
  <div>
- <p className="text-sm font-bold text-bg-[var(--sunken)] font-display">No hay próximas fechas programadas</p>
- <p className="text-xs font-mono text-text-[var(--ink-2)] mt-0.5">Añade conciertos o ensayos desde el calendario para ver tu agenda aquí.</p>
+ <p className="text-sm font-bold text-[var(--sunken)] font-display">No hay próximas fechas programadas</p>
+ <p className="text-xs font-mono text-[var(--ink-2)] mt-0.5">Añade conciertos o ensayos desde el calendario para ver tu agenda aquí.</p>
  </div>
  <button
  type="button"
@@ -644,10 +644,10 @@ export default function Dashboard({
  <QrCode className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-bg-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
  Captura QR & Fans
  </h3>
- <p className="text-[11px] font-mono text-text-[var(--ink-2)]">
+ <p className="text-[11px] font-mono text-[var(--ink-2)]">
  QRs para directos, flyers y captación de audiencia
  </p>
  </div>
@@ -656,7 +656,7 @@ export default function Dashboard({
  {totalFansCount} / {maxPromoFans} Fans
  </span>
  </div>
- <p className="text-xs text-text-[var(--ink-3)] mt-3 leading-relaxed">
+ <p className="text-xs text-[var(--ink-3)] mt-3 leading-relaxed">
  Genera códigos QR de alta resolución (SVG y PNG 4K) y flyers imprimibles listos para proyectar o colocar en salas y festivales.
  </p>
  </div>
@@ -682,10 +682,10 @@ export default function Dashboard({
  <BookOpen className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-bg-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
  Dossier (EPK) Digital
  </h3>
- <p className="text-[11px] font-mono text-text-[var(--ink-2)]">
+ <p className="text-[11px] font-mono text-[var(--ink-2)]">
  Prensa, rider técnico, vídeos y bio online
  </p>
  </div>
@@ -694,7 +694,7 @@ export default function Dashboard({
  Público
  </span>
  </div>
- <p className="text-xs text-text-[var(--ink-3)] mt-3 leading-relaxed">
+ <p className="text-xs text-[var(--ink-3)] mt-3 leading-relaxed">
  Tu carta de presentación oficial para festivales, promotores y medios. Personalizable y accesible desde cualquier dispositivo.
  </p>
  </div>
