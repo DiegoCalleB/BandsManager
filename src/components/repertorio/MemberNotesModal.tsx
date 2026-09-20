@@ -370,7 +370,7 @@ export function MemberNotesModal({
  placeholder={`Notas específicas para ${member.name} (${member.instrument})... ej. Entrada en compás 8, solo con sordina, cambio de afinación...`}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
  }`}
  />

@@ -417,7 +417,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <div className="fixed inset-0 z-30" onClick={() => setShowCreateAlbumMenu(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
- ?' bg-white text-[var(--ink)]'
+ ?' bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {onCreateAlbum && (
@@ -492,7 +492,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 	placeholder="Buscar canción, tono, letra..."
 	className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-all focus:outline-none focus:ring-2 focus:ring-amber-0/40 ${
 	isStitchLight
-	?'bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:bg-white'
+	?'bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:bg-[var(--surface)]'
 	:'bg-[var(--surface)]/80 text-[var(--ink)] placeholder-[var(--ink-2)] focus:/60'
 	}`}
  />
@@ -721,7 +721,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => onEditAlbum(album)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
  isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Gestionar las canciones de este álbum"

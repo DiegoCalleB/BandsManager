@@ -338,7 +338,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div 
  className={`w-full max-w-md rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight 
- ?'bg-white text-[var(--ink)]' 
+ ?'bg-[var(--surface)] text-[var(--ink)]' 
  :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
@@ -686,7 +686,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  isPlanSelected
  ?'bg-[var(--acc)]/20 /80 text-[var(--acc)]/70 shadow-sm'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:bg-[var(--bg)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
@@ -789,7 +789,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  isSelected
  ?'bg-[var(--acc)]/15 /50 text-[var(--acc)]/70 shadow-sm'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >

@@ -22,7 +22,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <div 
  className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[85vh] ${
  isStitchLight 
- ?'bg-white text-[var(--ink)]' 
+ ?'bg-[var(--surface)] text-[var(--ink)]' 
  :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >

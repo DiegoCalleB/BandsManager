@@ -1377,7 +1377,7 @@ export default function ReelsCenter({
  ?'bg-indigo-600 text-[var(--ink)] font-black shadow-md'
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
- ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-white'
+ ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/50'
  }`}
  >
@@ -1392,7 +1392,7 @@ export default function ReelsCenter({
  ?'bg-indigo-600 text-[var(--ink)] font-black shadow-md'
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
- ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-white'
+ ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/50'
  }`}
  >
@@ -1603,7 +1603,7 @@ export default function ReelsCenter({
  placeholder="Ej: R-violin tocando el violín a toda velocidad o elyar ensayando con el hang pan en el camerino..."
  className={`w-full rounded-[var(--r-s)] p-3 text-xs focus:outline-none font-sans leading-relaxed ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500'
  :'bg-[var(--surface)] -[#99907c]/20 text-[var(--ink)] focus:outline-none focus:-[var(--acc)]/50'
  }`}
  />
@@ -1630,7 +1630,7 @@ export default function ReelsCenter({
  disabled={isGenerating}
  className={`w-full py-3 font-mono font-bold text-xs uppercase tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${
  isStitchLight
- ?'bg-white hover:-emerald-400 text-emerald-600'
+ ?'bg-[var(--surface)] hover:-emerald-400 text-emerald-600'
  :'bg-[var(--surface)] -emerald-500/30 hover:-emerald-500/50 text-emerald-400'
  }`}
  >
@@ -1654,7 +1654,7 @@ export default function ReelsCenter({
  onChange={(e) => setGeneratedCopy(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-xs font-mono leading-relaxed focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500'
  :'bg-[var(--surface)] -[#99907c]/15 text-[var(--ink-2)] focus:-[var(--acc)]/30'
  }`}
  />
@@ -1793,7 +1793,7 @@ export default function ReelsCenter({
  placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
  className={`w-full rounded-[var(--r-m)] pl-3 pr-10 py-2.5 text-xs focus:outline-none font-mono ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500'
  :'bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
  }`}
  />
@@ -1886,7 +1886,7 @@ export default function ReelsCenter({
  title="Un concierto, un videoclip y un ensayo se buscan y se titulan de forma distinta: cambia qué momentos prioriza la IA."
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500'
  :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  >
@@ -1906,7 +1906,7 @@ export default function ReelsCenter({
  placeholder="Ej: Solo de violín rápido o improvisación de loops con percusión..."
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none font-sans ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500'
  :'bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
  }`}
  />
@@ -1919,7 +1919,7 @@ export default function ReelsCenter({
  onChange={(e) => setVideoDuration(Number(e.target.value))}
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500'
  :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  >
@@ -2107,7 +2107,7 @@ export default function ReelsCenter({
  ?'-indigo-600 bg-indigo-50/20 shadow-md'
  :'-[var(--acc)] bg-[var(--acc)]/5 shadow-lg shadow-[var(--acc)]/5' 
  : isStitchLight
- ?'-slate-200 bg-white hover:-indigo-300 hover:bg-[var(--bg)]/50'
+ ?'-slate-200 bg-[var(--surface)] hover:-indigo-300 hover:bg-[var(--bg)]/50'
  :'bg-[var(--surface)]/80 bg-[var(--surface)]/60 hover:-neutral-700 hover:bg-[var(--surface)]/90'
  }`}
  >
@@ -2254,7 +2254,7 @@ export default function ReelsCenter({
  placeholder="Ej: En este tramo del 0:15 al 0:45 sólo toca el bajo Jon y la batería, no hay violín..."
  className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs font-sans focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500'
  :'bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
  }`}
  />
@@ -2352,7 +2352,7 @@ export default function ReelsCenter({
  onChange={(e) => setEditedCopy(e.target.value)}
  className={`w-full rounded-[var(--r-m)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${
  isStitchLight 
- ?'bg-white text-[var(--ink)] focus:-indigo-500' 
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500' 
  :'bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
  }`}
  />
@@ -2401,7 +2401,7 @@ export default function ReelsCenter({
  ?'bg-indigo-600 text-[var(--ink)] font-black'
  :'bg-[var(--acc)] -[var(--acc)] text-[var(--acc-ink)] font-black'
  : isStitchLight
- ?'-slate-200 hover:-indigo-200 bg-white text-[var(--ink-2)]'
+ ?'-slate-200 hover:-indigo-200 bg-[var(--surface)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:-neutral-700 bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}
  >
@@ -2421,7 +2421,7 @@ export default function ReelsCenter({
  onChange={(e) => setScheduledDate(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-mono focus:outline-none ${
  isStitchLight 
- ?'bg-white text-[var(--ink)] focus:-indigo-500' 
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500' 
  :'bg-[var(--surface)] focus:-[var(--acc)]/50'
  }`}
  />
@@ -2434,7 +2434,7 @@ export default function ReelsCenter({
  onChange={(e) => setScheduledTime(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-mono focus:outline-none ${
  isStitchLight 
- ?'bg-white text-[var(--ink)] focus:-indigo-500' 
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500' 
  :'bg-[var(--surface)] focus:-[var(--acc)]/50'
  }`}
  />
@@ -3388,7 +3388,7 @@ export default function ReelsCenter({
  }}
  title="Arrastrar para ajustar el inicio (Izquierda)"
  >
- <div className="w-1.5 h-6 bg-[var(--acc)]/60 group-hover/lhandle:bg-white rounded-full transition-all shadow-md group-hover/lhandle:scale-y-110" />
+ <div className="w-1.5 h-6 bg-[var(--acc)]/60 group-hover/lhandle:bg-[var(--surface)] rounded-full transition-all shadow-md group-hover/lhandle:scale-y-110" />
  </div>
 
  <span className="text-[8px] font-mono text-[var(--acc)]/70 font-extrabold tracking-tight select-none pointer-events-none pl-1">START</span>
@@ -3408,7 +3408,7 @@ export default function ReelsCenter({
  }}
  title="Arrastrar para ajustar el fin (Derecha)"
  >
- <div className="w-1.5 h-6 bg-[var(--acc)]/60 group-hover/rhandle:bg-white rounded-full transition-all shadow-md group-hover/rhandle:scale-y-110" />
+ <div className="w-1.5 h-6 bg-[var(--acc)]/60 group-hover/rhandle:bg-[var(--surface)] rounded-full transition-all shadow-md group-hover/rhandle:scale-y-110" />
  </div>
  </div>
 
@@ -3426,7 +3426,7 @@ export default function ReelsCenter({
  {/* Background track ticks */}
  <div className="absolute inset-0 flex justify-between px-3 pointer-events-none opacity-5">
  {[...Array(20)].map((_, i) => (
- <div key={i} className="h-full w-[1px] bg-white" />
+ <div key={i} className="h-full w-[1px] bg-[var(--surface)]" />
  ))}
  </div>
  </div>

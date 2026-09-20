@@ -632,7 +632,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <span>Anual</span>
  <span className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded-full font-extrabold ${
  billingPeriod ==='annual'
- ?'bg-black text-[var(--acc)]/70'
+ ?'bg-[var(--sunken)] text-[var(--acc)]/70'
  :'bg-emerald-500/20 text-emerald-400'
  }`}>
  -20% · 2 meses gratis

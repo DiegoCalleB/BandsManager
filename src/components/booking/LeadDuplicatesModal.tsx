@@ -210,7 +210,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden transition-all ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -277,7 +277,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  selectedFilter ==='all'
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
@@ -291,7 +291,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  selectedFilter ==='same_email'
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
@@ -306,7 +306,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  selectedFilter ==='same_name_and_city'
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
@@ -321,7 +321,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  selectedFilter ==='similar_name_same_city'
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
@@ -336,7 +336,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  selectedFilter ==='same_website'
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
@@ -419,7 +419,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-amber-50/60'
  :'bg-[var(--surface)] /50 shadow-xs'
  : isStitchLight
- ?'bg-white'
+ ?'bg-[var(--surface)]'
  :'bg-[var(--surface)]'
  }`}
  >

@@ -602,7 +602,7 @@ export function GooglePlacesExplorerModal({
  <div
  className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]800'
  }`}
  >

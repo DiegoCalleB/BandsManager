@@ -239,7 +239,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  {/* Camera View */}
  {isCameraOpen && (
  <div className="space-y-3">
- <div className="relative bg-black rounded-[var(--r-s)] overflow-hidden">
+ <div className="relative bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden">
  <video
  ref={videoRef}
  autoPlay

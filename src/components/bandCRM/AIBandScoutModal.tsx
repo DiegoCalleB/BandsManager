@@ -263,7 +263,7 @@ export function AIBandScoutModal({
  <button
  onClick={handleImport}
  disabled={selectedBands.size === 0}
- className="px-6 py-2 bg-black text-[var(--ink)] hover:bg-[var(--surface)]/80 font-bold text-sm rounded-[var(--r-m)] transition-all shadow disabled:opacity-50 flex items-center gap-2"
+ className="px-6 py-2 bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]/80 font-bold text-sm rounded-[var(--r-m)] transition-all shadow disabled:opacity-50 flex items-center gap-2"
  >
  <UserPlus className="w-4 h-4" />
  Importar {selectedBands.size} Bandas al CRM

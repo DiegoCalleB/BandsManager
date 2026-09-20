@@ -152,7 +152,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onScenarioChange(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  >
@@ -180,7 +180,7 @@ export function NegotiationSimulationModal({
  placeholder="Ej. Kike (Sala Hebe) o Bakandeya Agent Manager IA"
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
@@ -196,7 +196,7 @@ export function NegotiationSimulationModal({
  placeholder="Ej. Re: Propuesta..."
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
@@ -220,7 +220,7 @@ export function NegotiationSimulationModal({
  placeholder="Define pautas específicas (ej. propone taquilla 60/40, exige rider técnico especial, etc.)..."
  className={`w-full rounded-[var(--r-s)] p-2.5 text-[10px] focus:outline-none font-sans leading-relaxed ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />

@@ -295,7 +295,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <span className="text-[10px] text-[var(--ink-2)] font-mono">Renderizado Email</span>
  </div>
 
- <div className="bg-white text-[var(--ink)] p-4 sm:p-5 rounded-[var(--r-l)] shadow-md space-y-3 font-sans text-xs">
+ <div className="bg-[var(--surface)] text-[var(--ink)] p-4 sm:p-5 rounded-[var(--r-l)] shadow-md space-y-3 font-sans text-xs">
  <p className="text-[var(--ink-2)] italic text-[11px] pb-2 border-b border-[var(--hair)]">
  ... [Cuerpo del correo redactado para la sala o festival] ...
  </p>
@@ -644,7 +644,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  QR directo a vuestro dossier público para incluir en cartelería, carpetas físicas de prensa o tarjetas de contacto.
  </p>
 
- <div className="p-4 bg-white rounded-[var(--r-l)] inline-block shadow-xl border-4">
+ <div className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block shadow-xl border-4">
  <QRCode value={publicEpkUrl} size={150} />
  </div>
 

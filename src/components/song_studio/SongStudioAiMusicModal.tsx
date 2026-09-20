@@ -109,7 +109,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  value={style}
  onChange={(e) => setStyle(e.target.value)}
  placeholder="Ej: Rock alternativo, post-punk, psicodelia..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus: font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus: font-mono"
  />
  </div>
 
@@ -120,7 +120,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  onChange={(e) => setPrompt(e.target.value)}
  rows={3}
  placeholder="Describe la atmósfera, energía, instrumentación o propósito..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus: font-mono resize-none leading-relaxed"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus: font-mono resize-none leading-relaxed"
  />
  </div>
 

@@ -94,7 +94,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
  if (isEditing) {
  return (
- <div className="mb-6 p-5 border-[var(--hair)] rounded-[var(--r-m)] bg-white shadow-sm">
+ <div className="mb-6 p-5 border-[var(--hair)] rounded-[var(--r-m)] bg-[var(--surface)] shadow-sm">
  <div className="flex justify-between items-center mb-4">
  <h3 className="font-semibold text-lg flex items-center gap-2">
  <Target className="w-5 h-5" /> Configurar Campaña
@@ -234,7 +234,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </button>
  <button 
  onClick={handleSave}
- className="px-4 py-2 text-sm bg-black text-[var(--ink)] hover:bg-[var(--surface)]800 rounded-[var(--r-s)] font-medium flex items-center gap-2"
+ className="px-4 py-2 text-sm bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]800 rounded-[var(--r-s)] font-medium flex items-center gap-2"
  >
  <Check className="w-4 h-4" /> Guardar y Activar
  </button>
@@ -244,7 +244,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  }
 
  return (
- <div className="mb-6 bg-black text-[var(--ink)] rounded-[var(--r-m)] overflow-hidden shadow-lg relative">
+ <div className="mb-6 bg-[var(--sunken)] text-[var(--ink)] rounded-[var(--r-m)] overflow-hidden shadow-lg relative">
  <div className="absolute top-0 right-0 p-4">
  <button 
  onClick={handleClear}

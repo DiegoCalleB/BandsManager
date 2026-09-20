@@ -159,7 +159,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  }, [handleStageNext, handleStagePrev, toggleStagePlayPause]);
 
  return (
- <div className="p-4 sm:p-6 rounded-[var(--r-l)] bg-black space-y-6 text-[var(--ink)] shadow-2xl">
+ <div className="p-4 sm:p-6 rounded-[var(--r-l)] bg-[var(--sunken)] space-y-6 text-[var(--ink)] shadow-2xl">
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4">
  <div>
  <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -449,7 +449,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  backgroundImage:'repeating-linear-gradient(90deg, transparent 0px, transparent 3px, var(--shadow-dark) 3px, var(--shadow-dark) 6px)'
  }}
  />
- <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-white shadow-[0_0_8px_var(--shadow-soft)] opacity-90" />
+ <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-[var(--surface)] shadow-[0_0_8px_var(--shadow-soft)] opacity-90" />
  </div>
 
  <input

@@ -91,7 +91,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='setlists'
  ? isStitchLight
- ?'bg-white text-[var(--ink)] shadow-sm font-bold'
+ ?'bg-[var(--surface)] text-[var(--ink)] shadow-sm font-bold'
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
@@ -112,7 +112,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='catalogo'
  ? isStitchLight
- ?'bg-white text-[var(--ink)] shadow-sm font-bold'
+ ?'bg-[var(--surface)] text-[var(--ink)] shadow-sm font-bold'
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
@@ -140,7 +140,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setShowSetlistDropdown(v => !v)}
  className={`w-full px-3 py-1.5 rounded-[var(--r-m)] text-left flex items-center justify-between gap-2 text-xs font-medium transition-all cursor-pointer shadow-xs ${
  isStitchLight
- ?'bg-white text-[var(--ink)] hover:'
+ ?'bg-[var(--surface)] text-[var(--ink)] hover:'
  :'bg-[var(--surface)] text-[var(--ink)] hover:'
  }`}
  >
@@ -164,7 +164,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  <div className="fixed inset-0 z-40" onClick={() => setShowSetlistDropdown(false)} />
  <div className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <div className="px-2.5 py-1.5 text-[11px] uppercase tracking-wider text-[var(--ink-2)] font-semibold flex items-center justify-between">

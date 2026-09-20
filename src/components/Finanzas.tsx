@@ -640,7 +640,7 @@ export default function Finanzas({
  onChange={(e) => setSearchTerm(e.target.value)}
  className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-1.5 text-xs focus:outline-none font-mono transition-all ${
  isStitchLight 
- ?'bg-white text-[var(--ink)] focus:-indigo-500 placeholder:text-slate-450' 
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500 placeholder:text-slate-450' 
  :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-[var(--ink-2)]'
  }`}
  />
@@ -716,7 +716,7 @@ export default function Finanzas({
  key={p.id}
  className={`p-3 rounded-[var(--r-m)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all ${
  isStitchLight
- ?'bg-white hover:-slate-300'
+ ?'bg-[var(--surface)] hover:-slate-300'
  :'bg-[var(--surface)] -[#99907c]/15 hover:-[#99907c]/30'
  }`}
  >

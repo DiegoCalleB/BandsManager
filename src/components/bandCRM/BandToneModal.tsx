@@ -264,7 +264,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  const inputClass = `w-full p-2 rounded-[var(--r-s)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`;
  const labelClass ='text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] block mb-1';

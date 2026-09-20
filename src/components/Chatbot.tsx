@@ -1877,7 +1877,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className={`p-3.5 rounded-[var(--r-m)] text-xs leading-relaxed ${
  isBot 
  ? (isStitchLight 
- ?'bg-white text-[var(--ink)] rounded-tl-none shadow-sm' 
+ ?'bg-[var(--surface)] text-[var(--ink)] rounded-tl-none shadow-sm' 
  :'bg-[var(--surface)]/50 -bg-[var(--surface)]/80 rounded-tl-none text-[var(--ink-2)]') 
  : (isStitchLight 
  ?'bg-indigo-50 text-indigo-950 rounded-tr-none' 
@@ -2467,7 +2467,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
  className={`flex-1 rounded-[var(--r-m)] px-3.5 py-2 text-xs focus:outline-none transition-all font-sans resize-none max-h-28 min-h-[38px] ${
  isStitchLight 
- ?'bg-white text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-2)]' 
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-2)]' 
  :'bg-[var(--surface)]/60 text-[var(--ink-2)] focus:-cyan-500/50 placeholder:text-[var(--ink-2)]'
  }`}
  />

@@ -2779,7 +2779,7 @@ export default function RepertorioSetlists({
  <div className="fixed inset-0 z-30" onClick={() => setShowSetlistActionsMenu(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
- ?' bg-white text-[var(--ink)]'
+ ?' bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <button
@@ -2878,7 +2878,7 @@ export default function RepertorioSetlists({
  <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
- ?' bg-white text-[var(--ink)]'
+ ?' bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <button
@@ -3543,7 +3543,7 @@ export default function RepertorioSetlists({
  isSelected
  ?'border-[var(--acc)] ring-2 ring-indigo-500/20 bg-indigo-500/10 shadow-sm'
  : isStitchLight
- ?'bg-white hover:'
+ ?'bg-[var(--surface)] hover:'
  :'bg-[var(--surface)]/80 /80 hover:/80'
  }`}
  >
@@ -4245,7 +4245,7 @@ export default function RepertorioSetlists({
  onChange={(e) => setCatalogSearch(e.target.value)}
  className={`w-full rounded-[var(--r-m)] pl-9.5 ${catalogSearch ?'pr-8' :'pr-3'} py-2 text-xs focus:outline-none transition-all ${
  isStitchLight 
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500/20 placeholder:text-[var(--ink-2)]' 
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500/20 placeholder:text-[var(--ink-2)]' 
  :'bg-[var(--surface)]/60 text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
  }`}
  />

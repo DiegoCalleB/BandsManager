@@ -1083,12 +1083,12 @@ export function SongTransitionPreviewModal({
 
  {/* Playhead Indicator */}
  <div
- className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_8px_var(--shadow-soft)] z-20 pointer-events-none transition-all duration-75"
+ className="absolute top-0 bottom-0 w-0.5 bg-[var(--surface)] shadow-[0_0_8px_var(--shadow-soft)] z-20 pointer-events-none transition-all duration-75"
  style={{
  left: `${(currentTime / timeline.totalDurationSec) * 100}%`
  }}
  >
- <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full shadow" />
+ <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[var(--surface)] rounded-full shadow" />
  </div>
  </div>
 

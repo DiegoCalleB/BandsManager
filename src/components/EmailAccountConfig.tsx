@@ -222,7 +222,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  return (
  <div className={`space-y-5 p-5 sm:p-6 rounded-[var(--r-l)] transition-all ${
  isStitchLight
- ?'bg-white shadow-sm'
+ ?'bg-[var(--surface)] shadow-sm'
  :'bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b /60">

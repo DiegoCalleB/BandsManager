@@ -652,7 +652,7 @@ export function ReelsMetricsView({
  className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-mono font-bold tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer ${
  activeMainSection ==='metrics'
  ? isStitchLight
- ?'bg-white text-indigo-600 shadow-sm'
+ ?'bg-[var(--surface)] text-indigo-600 shadow-sm'
  :'bg-emerald-500 text-[var(--ink)] shadow-md shadow-emerald-500/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
@@ -667,7 +667,7 @@ export function ReelsMetricsView({
  className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-mono font-bold tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer ${
  activeMainSection ==='growth_plan'
  ? isStitchLight
- ?'bg-white text-indigo-600 shadow-sm'
+ ?'bg-[var(--surface)] text-indigo-600 shadow-sm'
  :'bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)] shadow-md shadow-amber-0/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
@@ -753,7 +753,7 @@ export function ReelsMetricsView({
  igStatus?.connected
  ?'bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-rose-500/15 border-[var(--alert)]/40 text-pink-400 hover:border-[var(--alert)]'
  : isStitchLight
- ?'bg-white border-[var(--alert)] text-pink-700 hover:bg-pink-50'
+ ?'bg-[var(--surface)] border-[var(--alert)] text-pink-700 hover:bg-pink-50'
  :'bg-[var(--surface)] border-[var(--alert)]/40 text-pink-400 hover:bg-pink-950/30'
  }`}
  title="Configurar conexión oficial con Meta Graph API / Instagram OAuth"
@@ -795,7 +795,7 @@ export function ReelsMetricsView({
  isSyncingMetrics
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:bg-[var(--bg)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  >
@@ -1460,7 +1460,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricDate(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1478,7 +1478,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricInsta(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1495,7 +1495,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricTiktok(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1512,7 +1512,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricYoutube(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1529,7 +1529,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricSpotify(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1601,7 +1601,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricNotes(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />

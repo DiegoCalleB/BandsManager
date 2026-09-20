@@ -34,9 +34,11 @@
   --ok:       #17998C;
   --ok-soft:  #DDF1EE;
   --ok-rgb:   23, 153, 140;
+  --on-ok:    #FFFFFF;
   --alert:    #B3453C;
   --alert-soft: #FAE7E5;
   --alert-rgb: 179, 69, 60;
+  --on-alert: #FFFFFF;
 
   /* Acento por defecto (módulo Panel/Booking). Lo tiñe [data-modulo].
      Terracota suave, inspirado en instrumentos musicales: madera, latón.
@@ -89,9 +91,11 @@
   --ok:       #4FC7B8;
   --ok-soft:  #122D29;
   --ok-rgb:   79, 199, 184;
+  --on-ok:    #072220;
   --alert:    #E27A70;
   --alert-soft: #2E1815;
   --alert-rgb: 226, 122, 112;
+  --on-alert: #2E100C;
 
   --acc:      #C8945E;
   --acc-soft: #3E3028;
@@ -125,9 +129,11 @@
   --ok:       #10B981;
   --ok-soft:  #062C22;
   --ok-rgb:   16, 185, 129;
+  --on-ok:    #052016;
   --alert:    #F43F5E;
   --alert-soft: #2C0C14;
   --alert-rgb: 244, 63, 94;
+  --on-alert: #2C0510;
 
   --acc:      #F2CA50;
   --acc-soft: #2C2310;

@@ -412,7 +412,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <div
  className={`w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transition-all ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >

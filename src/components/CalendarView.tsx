@@ -2297,7 +2297,7 @@ export default function CalendarView({
  borderAndBgClass ='bg-purple-950/30 hover:border-[var(--acc)] hover:shadow-md hover:shadow-purple-500/20 text-purple-200';
  } else {
  borderAndBgClass = isStitchLight
- ?'bg-white hover:border-[var(--acc)] hover:bg-[var(--bg)] text-[var(--ink)] shadow-xs'
+ ?'bg-[var(--surface)] hover:border-[var(--acc)] hover:bg-[var(--bg)] text-[var(--ink)] shadow-xs'
  :'bg-[var(--surface)]/80 hover:/60 hover:bg-[var(--surface)]/80 hover:shadow-md hover:shadow-amber-0/10 text-[var(--ink-2)] shadow-xs';
  }
 
@@ -2429,7 +2429,7 @@ export default function CalendarView({
  : isToday
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 /60 font-bold'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:border-[var(--acc)]'
  :'bg-[var(--surface)]/90 text-[var(--ink-2)] hover:/50'
  }`}
  >
@@ -2477,7 +2477,7 @@ export default function CalendarView({
  ?'bg-amber-50/40'
  :'bg-[var(--surface)]/60 /30'
  : isStitchLight
- ?'bg-white'
+ ?'bg-[var(--surface)]'
  :'bg-[var(--surface)]/50 /80'
  }`}
  >
@@ -3145,7 +3145,7 @@ export default function CalendarView({
  {showViewConfigPopover && (
  <div className={`absolute top-full right-0 sm:left-0 sm:right-auto mt-2 z-50 w-80 sm:w-96 rounded-[var(--r-l)] p-4 shadow-2xl ${
  isStitchLight
- ?"bg-white text-[var(--ink)] shadow-slate-300/60"
+ ?"bg-[var(--surface)] text-[var(--ink)] shadow-slate-300/60"
  :"bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink)] shadow-black/90"
  } animate-in fade-in zoom-in-95 duration-150`}>
  <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[var(--hair)]10">
@@ -3455,7 +3455,7 @@ export default function CalendarView({
  id="calendar-selected-day-banner"
  className={`mt-5 p-4 rounded-[var(--r-l)] transition-all duration-200 ${
  isStitchLight
- ?'bg-white shadow-sm'
+ ?'bg-[var(--surface)] shadow-sm'
  :'bg-[var(--surface)]/95 border-[var(--hair)]800 shadow-xl'
  }`}
  >
@@ -4404,7 +4404,7 @@ export default function CalendarView({
  }`}>
  <div 
  onClick={() => onNavigate?.('fans', { concertId: selectedConcert.id })}
- className="p-1 bg-white rounded-[var(--r-s)] shadow shrink-0 cursor-pointer hover:scale-105 transition-transform"
+ className="p-1 bg-[var(--surface)] rounded-[var(--r-s)] shadow shrink-0 cursor-pointer hover:scale-105 transition-transform"
  title="Haz clic para abrir la configuración del QR"
  >
  <QRCode value={targetQrUrl} size={58} level="M" />
@@ -5219,7 +5219,7 @@ export default function CalendarView({
  ?'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
  :'bg-[var(--surface)]/50 text-[var(--ink-2)] line-through'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:-indigo-300'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:-indigo-300'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:-[#99907c]/35'
  }`}
  >
@@ -5259,7 +5259,7 @@ export default function CalendarView({
  ?'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
  :'bg-[var(--surface)]/50 text-[var(--ink-2)] line-through'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)] hover:-indigo-300'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] hover:-indigo-300'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:-[#99907c]/35'
  }`}
  >
@@ -5269,7 +5269,7 @@ export default function CalendarView({
  onChange={() => {}} // handled by div click
  className={`rounded focus:ring-0 cursor-pointer h-3.5 w-3.5 ${
  isStitchLight
- ?'-slate-300 text-sky-400 bg-white'
+ ?'-slate-300 text-sky-400 bg-[var(--surface)]'
  :'-[#99907c]/40 text-[var(--acc)] bg-[var(--surface)]'
  }`}
  />
@@ -8337,7 +8337,7 @@ export default function CalendarView({
  item.checked
  ?'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)] line-through'
  : isStitchLight
- ?'bg-white text-[var(--ink)] hover:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] hover:border-[var(--acc)]'
  :'bg-[var(--sunken)] /80 text-[var(--ink-2)] hover:border-[var(--acc)]/40'
  }`}
  >

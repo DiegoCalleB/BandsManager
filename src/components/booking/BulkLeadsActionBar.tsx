@@ -155,7 +155,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  />
  <div className={`absolute top-full mt-2 right-0 z-50 w-64 rounded-[var(--r-l)] shadow-2xl p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${
  isStitchLight
- ?'bg-white shadow-slate-400/50'
+ ?'bg-[var(--surface)] shadow-slate-400/50'
  :'bg-[var(--surface)] border-[var(--hair)]700 shadow-black/90'
  }`}>
  <div className={`px-2 py-1 text-[10px] font-mono uppercase font-bold border-b ${

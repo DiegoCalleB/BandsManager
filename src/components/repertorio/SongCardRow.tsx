@@ -142,7 +142,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-amber-50/80 text-[var(--ink)]'
  :'bg-[var(--acc)]/10 /30 text-[var(--ink)]'
  : isStitchLight
- ?'bg-white hover:bg-[var(--bg)] /80 text-[var(--ink)] shadow-xs'
+ ?'bg-[var(--surface)] hover:bg-[var(--bg)] /80 text-[var(--ink)] shadow-xs'
  :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-[var(--ink)] shadow-xs'
  } ${draggable ?'cursor-grab active:cursor-grabbing' :''}`}
  >
@@ -186,9 +186,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  >
  {isPlaying ? (
  <div className="flex items-center gap-0.5">
- <span className="w-0.5 h-3 bg-black rounded-full animate-pulse" />
- <span className="w-0.5 h-4 bg-black rounded-full animate-pulse delay-75" />
- <span className="w-0.5 h-2.5 bg-black rounded-full animate-pulse delay-150" />
+ <span className="w-0.5 h-3 bg-[var(--sunken)] rounded-full animate-pulse" />
+ <span className="w-0.5 h-4 bg-[var(--sunken)] rounded-full animate-pulse delay-75" />
+ <span className="w-0.5 h-2.5 bg-[var(--sunken)] rounded-full animate-pulse delay-150" />
  </div>
  ) : (
  <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
@@ -463,7 +463,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <div
  className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 shadow-2xl text-xs backdrop-blur-md ${
  isStitchLight
- ?'bg-white text-[var(--ink)] divide-y divide-slate-100'
+ ?'bg-[var(--surface)] text-[var(--ink)] divide-y divide-slate-100'
  :'bg-[var(--surface)]/95 /80 text-[var(--ink-2)] divide-y divide-slate-800/60'
  }`}
  >

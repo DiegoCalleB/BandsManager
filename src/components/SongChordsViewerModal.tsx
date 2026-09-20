@@ -628,7 +628,7 @@ export function SongChordsViewerModal({
  value={cifradoTexto}
  onChange={(e) => setCifradoTexto(e.target.value)}
  rows={14}
- className="w-full p-3 bg-black rounded-[var(--r-m)] text-[var(--ink)] font-mono text-xs focus:outline-none focus: leading-relaxed"
+ className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-[var(--ink)] font-mono text-xs focus:outline-none focus: leading-relaxed"
  placeholder={`[Intro]\nMim Do Re Mim\n\n[Estribillo]\n[Sol] Que tiene tu [Re] veneno [Mim] ...`}
  />
  </div>
@@ -645,7 +645,7 @@ export function SongChordsViewerModal({
  type="text"
  value={guiaSustituto.estructura ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, estructura: e.target.value })}
- className="w-full p-2 bg-black rounded-[var(--r-s)] text-[var(--ink)]"
+ className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
  placeholder="Intro -> Verso -> Estribillo -> Outro"
  />
  </div>
@@ -656,7 +656,7 @@ export function SongChordsViewerModal({
  type="text"
  value={guiaSustituto.progresionClave ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, progresionClave: e.target.value })}
- className="w-full p-2 bg-black rounded-[var(--r-s)] text-[var(--ink)]"
+ className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
  placeholder="Verso: Mim - Do | Estribillo: Sol - Re"
  />
  </div>
@@ -667,7 +667,7 @@ export function SongChordsViewerModal({
  type="text"
  value={guiaSustituto.cortesYClaves ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, cortesYClaves: e.target.value })}
- className="w-full p-2 bg-black rounded-[var(--r-s)] text-[var(--ink)]"
+ className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
  placeholder="Parón en compás 8..."
  />
  </div>
@@ -678,7 +678,7 @@ export function SongChordsViewerModal({
  type="text"
  value={guiaSustituto.capoTraste ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, capoTraste: e.target.value })}
- className="w-full p-2 bg-black rounded-[var(--r-s)] text-[var(--ink)]"
+ className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
  placeholder="Capo 2º traste"
  />
  </div>

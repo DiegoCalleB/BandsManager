@@ -404,7 +404,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => onNavigate('fans')}
  className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
  isStitchLight
- ?'bg-white hover:bg-[var(--sunken)] text-[var(--ink)]'
+ ?'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'
  }`}
  title="Ir al gestor de comunidad, muro y capturas de fans"
@@ -438,7 +438,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasInstagram && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ?'bg-white border-[var(--alert)] shadow-xs' 
+ ?'bg-[var(--surface)] border-[var(--alert)] shadow-xs' 
  :'bg-[var(--surface)]/60 border-[var(--alert)]/40'
  }`}>
  <div className="flex items-center justify-between">
@@ -464,7 +464,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasTikTok && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ?'bg-white border-[var(--acc)] shadow-xs' 
+ ?'bg-[var(--surface)] border-[var(--acc)] shadow-xs' 
  :'bg-[var(--surface)]/60 border-[var(--acc)]/40'
  }`}>
  <div className="flex items-center justify-between">
@@ -490,7 +490,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasYouTube && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ?'bg-white border-[var(--alert)] shadow-xs' 
+ ?'bg-[var(--surface)] border-[var(--alert)] shadow-xs' 
  :'bg-[var(--surface)]/60 border-[var(--alert)]/40'
  }`}>
  <div className="flex items-center justify-between">
@@ -516,7 +516,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasSpotify && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ?'bg-white border-[var(--ok)] shadow-xs' 
+ ?'bg-[var(--surface)] border-[var(--ok)] shadow-xs' 
  :'bg-[var(--surface)]/60 border-[var(--ok)]/40'
  }`}>
  <div className="flex items-center justify-between">

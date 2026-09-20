@@ -386,7 +386,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
  <button
  onClick={onClose}
- className="mt-4 px-6 py-2 bg-[var(--alert)] hover:bg-[var(--alert)]/80 text-white rounded-[var(--r-pill)] font-medium text-sm"
+ className="mt-4 px-6 py-2 bg-[var(--alert)] hover:bg-[var(--alert)]/80 text-[var(--on-alert)] rounded-[var(--r-pill)] font-medium text-sm"
  >
  Cerrar
  </button>

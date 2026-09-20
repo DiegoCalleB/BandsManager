@@ -3029,7 +3029,7 @@ export default function SongStudioModal({
  <div>PREPARANDO GRABACIÓN MULTIPISTA...</div>
  <div className="text-xs opacity-80 font-bold">Arranca en: ¡{countInCountdown}!</div>
  </div>
- <span className="text-3xl font-black ml-2 bg-black text-[var(--acc)] px-3.5 py-1 rounded-[var(--r-m)] shadow-inner">
+ <span className="text-3xl font-black ml-2 bg-[var(--sunken)] text-[var(--acc)] px-3.5 py-1 rounded-[var(--r-m)] shadow-inner">
  {countInCountdown}
  </span>
  </div>
@@ -3525,7 +3525,7 @@ export default function SongStudioModal({
  <select
  value={newIdeaStyle}
  onChange={(e) => setNewIdeaStyle(e.target.value as any)}
- className="w-full px-2 py-1 rounded-[var(--r-s)] bg-black text-xs text-[var(--ink)] font-mono"
+ className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] font-mono"
  >
  <option value="rock">Rock / Pop Standard</option>
  <option value="pop">Pop / Disco 4-on-floor</option>
@@ -3543,7 +3543,7 @@ export default function SongStudioModal({
  type="number"
  value={newIdeaBpm}
  onChange={(e) => setNewIdeaBpm(parseInt(e.target.value) || 120)}
- className="w-full px-2 py-1 rounded-[var(--r-s)] bg-black text-xs text-[var(--ink)] font-mono"
+ className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] font-mono"
  />
  </div>
 
@@ -3553,7 +3553,7 @@ export default function SongStudioModal({
  type="text"
  value={newIdeaKey}
  onChange={(e) => setNewIdeaKey(e.target.value)}
- className="w-full px-2 py-1 rounded-[var(--r-s)] bg-black text-xs text-[var(--ink)] font-mono"
+ className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] font-mono"
  placeholder="Do, Re, Mi..."
  />
  </div>
@@ -4143,7 +4143,7 @@ export default function SongStudioModal({
  value={editingTrackName}
  onChange={(e) => setEditingTrackName(e.target.value)}
  onKeyDown={(e) => e.key ==='Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)}
- className="w-full min-w-0 px-1.5 py-0.5 rounded bg-black border-[var(--acc)] text-[11px] text-[var(--ink)] font-bold"
+ className="w-full min-w-0 px-1.5 py-0.5 rounded bg-[var(--sunken)] border-[var(--acc)] text-[11px] text-[var(--ink)] font-bold"
  autoFocus
  />
  <button
@@ -4496,7 +4496,7 @@ export default function SongStudioModal({
  {newTrackName.trim() || `Pista ${tracks.length + 1}`}
  </span>
  <span className="px-2 py-0.5 rounded bg-red-600 text-[var(--ink)] font-mono text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow">
- <span className="w-2 h-2 rounded-full bg-white animate-ping" /> GRABANDO ONDAS EN DIRECTO...
+ <span className="w-2 h-2 rounded-full bg-[var(--surface)] animate-ping" /> GRABANDO ONDAS EN DIRECTO...
  </span>
  </div>
  <span className="text-[10px] font-mono text-red-300 block mt-0.5">

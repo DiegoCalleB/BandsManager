@@ -233,6 +233,47 @@ function fixBlackWhiteOverlays(content) {
   return { content: lines.join('\n'), changed };
 }
 
+// Archivos donde bg-white/bg-black sólido es intencional y NO se toca:
+// mockups de producto físico (siempre blancos/negros en la vida real),
+// modo escenario de SetlistPerformanceView (glareMode/isResting, ya
+// documentado en visual-identity/SKILL.md como vista puntual aparte del
+// tema global), lienzo de vídeo en ReelsCenter.
+const SOLID_BW_EXCLUDED_FILES = new Set([
+  'components/SetlistPerformanceView.tsx',  // glareMode + isResting: alto contraste de escenario, no theming
+  'components/Merchan.tsx',                 // mockup físico de sticker/merch — el producto real es blanco
+  'components/repertorio/PdfExportModal.tsx', // página A4 de PDF — el papel es blanco, la tinta es negra
+  'components/FansLandingPreviewModal.tsx', // chasis de smartphone mockup — el notch es negro de verdad
+  'components/PublicMusiciansLanding.tsx',  // marco del logo — identidad de marca, no superficie temática
+]);
+
+function fixSolidBlackWhite(content, relPath) {
+  if (SOLID_BW_EXCLUDED_FILES.has(relPath)) return { content, changed: false };
+
+  let changed = false;
+  const skipLine = (line) =>
+    /isStitchLight|glareMode|qr-code|QRCode|print:|<video|aspect-video|aspect-\[9\/16\]/.test(line) ||
+    (/overflow-hidden/.test(line) && /inset-0/.test(line));
+
+  const lines = content.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (skipLine(line)) continue;
+
+    if (/\bbg-white\b(?!\/)/.test(line)) {
+      const before = line;
+      line = line.replace(/\bbg-white\b(?!\/)/g, 'bg-[var(--surface)]');
+      if (line !== before) changed = true;
+    }
+    if (/\bbg-black\b(?!\/)/.test(line)) {
+      const before = line;
+      line = line.replace(/\bbg-black\b(?!\/)/g, 'bg-[var(--sunken)]');
+      if (line !== before) changed = true;
+    }
+    lines[i] = line;
+  }
+  return { content: lines.join('\n'), changed };
+}
+
 function fixFile(filePath) {
   let content = fs.readFileSync(filePath, 'utf-8');
   let changed = false;
@@ -261,6 +302,10 @@ function fixFile(filePath) {
   const overlayResult = fixBlackWhiteOverlays(content);
   content = overlayResult.content;
   if (overlayResult.changed) changed = true;
+
+  const solidResult = fixSolidBlackWhite(content, relPath.split(path.sep).join('/'));
+  content = solidResult.content;
+  if (solidResult.changed) changed = true;
 
   if (changed) {
     fs.writeFileSync(filePath, content);

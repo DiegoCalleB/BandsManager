@@ -553,7 +553,7 @@ export function EnergyChart({
  if (!active || !payload?.length) return null;
  const d = payload[0].payload;
  return (
- <div className="bg-black text-[var(--ink)] text-[9px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] shadow-xl max-w-[200px]">
+ <div className="bg-[var(--sunken)] text-[var(--ink)] text-[9px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] shadow-xl max-w-[200px]">
  <p className="font-bold text-[var(--acc)] text-[10px]">#{d.idx + 1} {d.name}</p>
  {d.isSpeechEvent ? (
  <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">

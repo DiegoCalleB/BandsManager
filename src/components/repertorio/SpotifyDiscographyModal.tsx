@@ -336,7 +336,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  placeholder="Nombre de tu banda o URL de Spotify (https://open.spotify.com/artist/...)"
  className={`w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--ok)] transition-all ${
  isStitchLight
- ?'bg-white text-[var(--ink)] placeholder:text-[var(--ink-2)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  }`}
  />
@@ -372,7 +372,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <div
  className={`p-4 rounded-[var(--r-l)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all ${
  isStitchLight
- ?'bg-white shadow-sm'
+ ?'bg-[var(--surface)] shadow-sm'
  :'bg-[var(--surface)]/90'
  }`}
  >
@@ -511,7 +511,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`rounded-[var(--r-l)] transition-all overflow-hidden ${
  isSelected
  ? isStitchLight
- ?'border-[var(--hair)] bg-white shadow-md'
+ ?'border-[var(--hair)] bg-[var(--surface)] shadow-md'
  :'border-[var(--hair)]/50 bg-[var(--surface)]/90 shadow-lg'
  : isStitchLight
  ?' bg-[var(--ink)]/70 opacity-60'

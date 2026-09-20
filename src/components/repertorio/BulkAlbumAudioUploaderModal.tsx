@@ -566,7 +566,7 @@ export function BulkAlbumAudioUploaderModal({
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -616,7 +616,7 @@ export function BulkAlbumAudioUploaderModal({
  placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut..."
  className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--ok)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--ok)]'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--hair)]'
  }`}
  />
@@ -640,7 +640,7 @@ export function BulkAlbumAudioUploaderModal({
  coverPreviewUrl
  ?'border-[var(--ok)] text-emerald-400 bg-emerald-500/10'
  : isStitchLight
- ?' bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
+ ?' bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
  :' bg-[var(--surface)] hover:bg-[var(--ink)]/5 text-[var(--ink-2)]'
  }`}
  >
@@ -792,8 +792,8 @@ export function BulkAlbumAudioUploaderModal({
  onChange={(e) => handleTitleChange(idx, e.target.value)}
  className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
- :'bg-black text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
+ :'bg-[var(--sunken)] text-[var(--ink)]'
  }`}
  placeholder="Título de la canción"
  />
@@ -820,11 +820,11 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-full text-xs font-mono rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
  item.matchedSongId
  ? isStitchLight
- ?'bg-white border-[var(--ok)] text-[var(--ink)] font-bold'
- :'bg-black border-[var(--hair)]/50 text-[var(--ink)] font-bold'
+ ?'bg-[var(--surface)] border-[var(--ok)] text-[var(--ink)] font-bold'
+ :'bg-[var(--sunken)] border-[var(--hair)]/50 text-[var(--ink)] font-bold'
  : isStitchLight
- ?'bg-white text-[var(--ink-2)]'
- :'bg-black text-[var(--ink-2)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
  <option value="">-- No asignar a ninguna --</option>

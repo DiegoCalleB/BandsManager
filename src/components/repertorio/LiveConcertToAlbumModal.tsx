@@ -1228,7 +1228,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div
  className={`relative w-full max-w-5xl my-auto rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink-2)]'
  } max-h-[92vh] flex flex-col`}
  >
@@ -1323,7 +1323,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => setYoutubeUrl(e.target.value)}
  className={`w-full px-3 py-2 text-sm rounded-[var(--r-s)] focus:outline-none focus:ring-2 focus:ring-amber-500 ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
@@ -1555,7 +1555,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => setAlbumTitle(e.target.value)}
  className={`px-2.5 py-1 text-xs font-bold rounded ${
  isStitchLight
- ?'bg-white text-[var(--ink)]'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
@@ -1944,7 +1944,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => handleUpdateTrack(track.index,'title', e.target.value)}
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:'
  : track.type ==='musica'
  ?'bg-[var(--surface)]/90 /40 text-[var(--acc)] placeholder-[var(--ink-2)] focus: focus:ring-1 focus:ring-amber-400'
  :'bg-[var(--surface)]/90 border-[var(--acc)]/40 text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-[var(--acc)] focus:ring-1 focus:ring-purple-400'

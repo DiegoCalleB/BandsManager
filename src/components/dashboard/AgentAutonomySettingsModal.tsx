@@ -547,7 +547,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-md z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
  <div className={`border rounded-[var(--r-l)] w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden shadow-2xl flex flex-col my-auto animate-in zoom-in-95 duration-200 ${
  isStitchLight 
- ?'bg-white text-[var(--ink)]' 
+ ?'bg-[var(--surface)] text-[var(--ink)]' 
  :'bg-[var(--surface)] /30 text-[var(--ink)]'
  }`}>
  

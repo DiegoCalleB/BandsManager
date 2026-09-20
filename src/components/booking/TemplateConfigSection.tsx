@@ -120,7 +120,7 @@ export function TemplateConfigSection({
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
  ? isStitchLight
- ?'bg-white text-sky-400 shadow-sm'
+ ?'bg-[var(--surface)] text-sky-400 shadow-sm'
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -183,7 +183,7 @@ export function TemplateConfigSection({
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  />
@@ -204,7 +204,7 @@ export function TemplateConfigSection({
  onChange={(e) => activeTemplate.setBody(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
@@ -226,7 +226,7 @@ export function TemplateConfigSection({
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
@@ -347,7 +347,7 @@ export function TemplateConfigSection({
  disabled={isTestingPrompt}
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
- ?'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
+ ?'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover: text-[var(--ink)]'
  }`}
  >
@@ -402,7 +402,7 @@ export function TemplateConfigSection({
  <div
  className={`border rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
  isStitchLight
- ?'bg-white text-[var(--ink-2)]'
+ ?'bg-[var(--surface)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
