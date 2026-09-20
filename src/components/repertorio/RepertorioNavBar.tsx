@@ -25,7 +25,7 @@ interface RepertorioNavBarProps {
 }
 
 export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
- colors
+ colors,
  activeTab,
  setActiveTab,
  catalogoViewMode,
