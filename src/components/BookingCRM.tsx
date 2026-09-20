@@ -1133,7 +1133,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setIsMobileToolsOpen(false)}
- className="text-zinc-400 hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -1202,7 +1202,7 @@ export default function BookingCRM({
  {duplicateGroupsCount} {duplicateGroupsCount === 1 ?'grupo' :'grupos'}
  </span>
  ) : (
- <span className="text-[10px] text-zinc-400 font-normal">0 duplicados</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-normal">0 duplicados</span>
  )}
  </button>
 
@@ -1255,9 +1255,9 @@ export default function BookingCRM({
  setIsMobileToolsOpen(false);
  handleEnrichAddresses();
  }}
- className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border-zinc-700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+ className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-[var(--ink)] border-[var(--hair)]700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
  >
- <MapPin className="w-3.5 h-3.5 text-zinc-400" />
+ <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>{isEnrichingAddresses ?'Rellenando direcciones...' :'Autocompletar Direcciones'}</span>
  </button>
  </div>
@@ -1462,7 +1462,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setIsMobileFiltersOpen(false)}
- className="text-zinc-400 hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -1470,7 +1470,7 @@ export default function BookingCRM({
 
  {/* 1. Quick Toggles (Favoritos, Verificados, Aforo) */}
  <div className="space-y-1.5">
- <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Opciones rápidas</p>
+ <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Opciones rápidas</p>
  <div className="flex items-center gap-2 flex-wrap">
  <button
  type="button"
@@ -1511,7 +1511,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setMinCapacityFilter(0)}
- className="text-neutral-500 hover:text-[var(--ink)] cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-3 h-3" />
  </button>
@@ -1548,7 +1548,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setIsSavingFilterOpen(false)}
- className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-[var(--r-s)] cursor-pointer"
+ className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] rounded-[var(--r-s)] cursor-pointer"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -1560,7 +1560,7 @@ export default function BookingCRM({
  {/* Saved Filters List */}
  {savedFilters.length > 0 && (
  <div className="space-y-1.5">
- <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Búsquedas guardadas</p>
+ <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Búsquedas guardadas</p>
  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
  {savedFilters.map((sf) => {
  const isActive = activeSavedFilterId === sf.id;
@@ -1570,7 +1570,7 @@ export default function BookingCRM({
  className={`group relative shrink-0 flex items-center rounded-full transition-all cursor-pointer ${
  isActive
  ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold shadow-xs'
- :'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-800 text-neutral-300'
+ :'bg-zinc-900/80 hover:bg-zinc-800 border-[var(--hair)]800 text-[var(--ink)]'
  }`}
  >
  <button
@@ -1588,7 +1588,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={(e) => handleDeleteSavedFilter(sf.id, e)}
- className="pr-2 text-neutral-500 hover:text-rose-400 transition-colors p-0.5 rounded-full cursor-pointer"
+ className="pr-2 text-[var(--ink-2)] hover:text-rose-400 transition-colors p-0.5 rounded-full cursor-pointer"
  title="Eliminar filtro guardado"
  >
  <X className="w-3 h-3" />
@@ -1602,7 +1602,7 @@ export default function BookingCRM({
 
  {/* 2. Tipo Filter */}
  <div className="space-y-1.5">
- <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Tipo de espacio / contacto</p>
+ <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Tipo de espacio / contacto</p>
  <div className="flex items-center gap-1.5 flex-wrap">
  {(sectionTab ==='medios'
  ? [
@@ -1637,7 +1637,7 @@ export default function BookingCRM({
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
  typeFilter === t.key
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
- :'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+ :'bg-zinc-800 text-[var(--ink-2)] hover:bg-zinc-700'
  }`}
  >
  {t.label}
@@ -1649,7 +1649,7 @@ export default function BookingCRM({
  {/* 3. Ciudad Filter */}
  <div className="space-y-1.5">
  <div className="flex items-center justify-between">
- <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Ciudad / Localidad</p>
+ <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Ciudad / Localidad</p>
  {selectedCityFilter && (
  <button
  type="button"
@@ -1667,7 +1667,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-all cursor-pointer ${
  selectedCityFilter ===''
  ?'bg-[var(--surface)] text-[var(--acc)] font-bold'
- :'bg-zinc-900 text-zinc-400 hover:text-[var(--ink)] border-zinc-800'
+ :'bg-zinc-900 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
  }`}
  >
  Todas ({activeLeadsForSection.length})
@@ -1683,7 +1683,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)] font-bold border-[var(--acc)]/50'
- :'bg-zinc-900 text-zinc-400 hover:text-[var(--ink)] border-zinc-800'
+ :'bg-zinc-900 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
  }`}
  >
  <span>{cityName}</span>
@@ -1699,7 +1699,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={handleClearAllFilters}
- className="text-xs text-zinc-400 hover:text-rose-400 flex items-center gap-1 px-2 py-1 cursor-pointer"
+ className="text-xs text-[var(--ink-2)] hover:text-rose-400 flex items-center gap-1 px-2 py-1 cursor-pointer"
  >
  <RefreshCw className="w-3 h-3" />
  <span>Limpiar filtros</span>
@@ -1759,7 +1759,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={handleClearAllFilters}
- className="text-xs text-zinc-400 hover:text-rose-400 shrink-0 underline ml-1 cursor-pointer"
+ className="text-xs text-[var(--ink-2)] hover:text-rose-400 shrink-0 underline ml-1 cursor-pointer"
  >
  Limpiar todo
  </button>
@@ -2093,7 +2093,7 @@ export default function BookingCRM({
  </div>
 
  {isTemplatesSectionOpen && (
- <div className="mt-5 pt-4 border-t border-zinc-800/80 space-y-6">
+ <div className="mt-5 pt-4 border-t border-[var(--hair)]800/80 space-y-6">
  <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <div>
  <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>
@@ -2175,7 +2175,7 @@ export default function BookingCRM({
  )}
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'}`}>Asunto del Email por Defecto</label>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>Asunto del Email por Defecto</label>
  <input
  id="template-subject"
  type="text"
@@ -2190,7 +2190,7 @@ export default function BookingCRM({
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
  <textarea
  id="template-body"
  rows={8}
@@ -2260,7 +2260,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
- templateToneRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
+ templateToneRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)]'
  }`}
  title={`Calificar tono y estilo: ${star}/5`}
  >
@@ -2285,7 +2285,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
- templateContentRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
+ templateContentRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)]'
  }`}
  title={`Calificar contenido y estructura: ${star}/5`}
  >
@@ -2366,7 +2366,7 @@ export default function BookingCRM({
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
  ?'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] hover:-neutral-700 text-neutral-300'
+ :'bg-[var(--surface)] hover:-neutral-700 text-[var(--ink)]'
  }`}
  >
  {isTestingPrompt ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
@@ -2378,7 +2378,7 @@ export default function BookingCRM({
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink-2)]'
- :'bg-[var(--surface)]/70 hover:bg-neutral-600 text-neutral-300'
+ :'bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)]'
  }`}
  title="Restaurar valores por defecto de esta plantilla"
  >
@@ -2391,7 +2391,7 @@ export default function BookingCRM({
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  isStitchLight
  ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] shadow-md shadow-indigo-100'
- :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/10'
+ :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -2420,7 +2420,7 @@ export default function BookingCRM({
  <div className={`rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
  isStitchLight
  ?'bg-white text-[var(--ink-2)]'
- :'bg-[var(--surface)] text-neutral-300'
+ :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {testPromptResult}
  </div>
@@ -2454,7 +2454,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
- templateToneRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
+ templateToneRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)]'
  }`}
  title={`Calificar tono: ${star}/5`}
  >
@@ -2479,7 +2479,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
- templateContentRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
+ templateContentRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)]'
  }`}
  title={`Calificar contenido: ${star}/5`}
  >
@@ -2505,7 +2505,7 @@ export default function BookingCRM({
  <div className={`border-2 border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
  isStitchLight
  ?' text-[var(--ink-3)]'
- :' text-neutral-600'
+ :' text-[var(--ink-2)]'
  }`}>
  Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus directrices actuales.
  </div>

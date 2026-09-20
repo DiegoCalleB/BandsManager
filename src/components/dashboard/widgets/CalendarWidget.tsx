@@ -382,7 +382,7 @@ export function CalendarWidget({
  {/* Grid of days */}
  <div className="grid grid-cols-7 gap-1 text-center font-mono text-xs">
  {['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d => (
- <div key={d} className="text-[10px] text-neutral-500 font-bold py-1 uppercase">{d}</div>
+ <div key={d} className="text-[10px] text-[var(--ink-2)] font-bold py-1 uppercase">{d}</div>
  ))}
 
  {/* Empty slots for start padding */}
@@ -435,7 +435,7 @@ export function CalendarWidget({
  <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-mono space-y-2">
  <div className="flex items-center justify-between text-[var(--ink-3)] pb-1.5 border-b">
  <span className="font-bold text-[var(--acc)]/70">Eventos para {selectedDayStr}:</span>
- <button type="button" onClick={() => setSelectedDayStr(null)} className="text-neutral-500 hover:text-[var(--ink-3)]">✕</button>
+ <button type="button" onClick={() => setSelectedDayStr(null)} className="text-[var(--ink-2)] hover:text-[var(--ink-3)]">✕</button>
  </div>
  {(eventsByDayMap.get(selectedDayStr) || []).length > 0 ? (
  (eventsByDayMap.get(selectedDayStr) || []).map(evt => (
@@ -453,7 +453,7 @@ export function CalendarWidget({
  <p className="font-bold text-[var(--sunken)] mt-1">{evt.title}</p>
  <p className="text-[var(--ink-2)] text-[11px]">{evt.location}</p>
  </div>
- <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
+ <ArrowRight className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  </div>
  ))
  ) : (
@@ -505,7 +505,7 @@ export function CalendarWidget({
  </div>
  ))}
  {dayEvts.length === 0 && (
- <span className="text-[10px] text-neutral-600 block text-center py-2">Libre</span>
+ <span className="text-[10px] text-[var(--ink-2)] block text-center py-2">Libre</span>
  )}
  </div>
  </div>

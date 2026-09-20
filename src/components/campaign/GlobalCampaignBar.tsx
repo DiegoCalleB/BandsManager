@@ -61,7 +61,7 @@ export function GlobalCampaignBar({
  <span className="text-[8px] font-mono font-extrabold uppercase tracking-wider px-1 py-0.2 rounded bg-purple-500/25 text-purple-200 shrink-0">
  🎯 CAMPAÑA
  </span>
- <h2 className="text-xs sm:text-sm font-bold font-display text-zinc-100 truncate" title={campaign.name}>
+ <h2 className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] truncate" title={campaign.name}>
  {campaign.name}
  </h2>
  </div>
@@ -72,12 +72,12 @@ export function GlobalCampaignBar({
  <MapPin className="w-2.5 h-2.5 text-sky-400 shrink-0" />
  {campaign.targetCities?.join(',') ||'Todas las ciudades'}
  </span>
- <span className="text-neutral-600">•</span>
+ <span className="text-[var(--ink-2)]">•</span>
  <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-mono">
  <Users className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
  {campaign.minCapacity}-{campaign.maxCapacity} pax
  </span>
- <span className="text-neutral-600">•</span>
+ <span className="text-[var(--ink-2)]">•</span>
  <span className="inline-flex items-center gap-1 text-pink-300 font-mono font-semibold truncate max-w-[180px]">
  <Calendar className="w-2.5 h-2.5 text-pink-400 shrink-0" />
  {campaign.targetDatesText || `${campaign.targetDates?.length || 0} fechas`}

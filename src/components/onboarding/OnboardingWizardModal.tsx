@@ -1011,7 +1011,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  Configuración Inicial · Plan {userPlanId.toUpperCase().replace('_','')}
  </span>
  {!isCelebrationStep && (
- <span className="text-xs text-zinc-400">
+ <span className="text-xs text-[var(--ink-2)]">
  Paso {currentStepIndex + 1} de {activeSteps.length}
  </span>
  )}
@@ -1047,7 +1047,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  ?'bg-[var(--acc)] text-black font-bold shadow-sm'
  : isPassed
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 hover:bg-[var(--acc)]/25'
- :'text-zinc-500 hover:text-zinc-300'
+ :'text-zinc-500 hover:text-[var(--ink-2)]'
  }`}
  >
  {isPassed ? (
@@ -1360,7 +1360,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={handlePrevStep}
- className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-medium transition-colors"
+ className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-zinc-900 hover:bg-zinc-800 text-[var(--ink-2)] text-xs font-medium transition-colors"
  >
  <ArrowLeft className="w-3.5 h-3.5" /> Anterior
  </button>
@@ -1368,7 +1368,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="text-xs text-zinc-500 hover:text-zinc-300"
+ className="text-xs text-zinc-500 hover:text-[var(--ink-2)]"
  >
  Configurar más tarde
  </button>
@@ -1379,7 +1379,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={handleSkipStep}
- className="inline-flex items-center gap-1 px-3 py-2 rounded-[var(--r-m)] text-zinc-400 hover:text-[var(--ink)] text-xs transition-colors"
+ className="inline-flex items-center gap-1 px-3 py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs transition-colors"
  >
  <SkipForward className="w-3.5 h-3.5" /> Saltar paso
  </button>

@@ -330,7 +330,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </span>
  <span className="text-[10px] font-mono text-[var(--acc)]/70 font-bold">500 uds Vinilo Mate</span>
  </div>
- <p className="text-sm font-bold text-zinc-100 mt-1">
+ <p className="text-sm font-bold text-[var(--ink)] mt-1">
  Tienes 500 pegatinas gratis esperando. Diseña las tuyas y pídelas.
  </p>
  <p className="text-xs text-[var(--ink-2)] mt-0.5">
@@ -535,7 +535,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {productType ==='camiseta' && (
  <div className="space-y-3">
- <label className={`font-mono text-[10px] font-bold uppercase tracking-widest ${isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-500'}`}>
+ <label className={`font-mono text-[10px] font-bold uppercase tracking-widest ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  3. Color de la Prenda
  </label>
  <div className="flex flex-wrap gap-2">
@@ -604,7 +604,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  isStitchLight ?'bg-white' :'bg-[var(--bg)]'
  }`}>
  <div className="flex items-center justify-between">
- <h2 className={`font-mono text-xs uppercase font-bold tracking-widest flex items-center gap-2 ${isStitchLight ?'text-[var(--ink-3)]' :'text-neutral-500'}`}>
+ <h2 className={`font-mono text-xs uppercase font-bold tracking-widest flex items-center gap-2 ${isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-2)]'}`}>
  <Layers className="w-4 h-4 text-amber-500" /> Galería de Diseños Producidos ({generatedDesigns.length})
  </h2>
  </div>
@@ -613,7 +613,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {generatedDesigns.length === 0 && !isGenerating ? (
  <div className="h-full flex flex-col items-center justify-center gap-4 text-center p-10">
  <div className={`w-20 h-20 rounded-full flex items-center justify-center border-2 border-dashed ${
- isStitchLight ?' bg-[var(--bg)] text-[var(--ink-3)]' :' bg-[var(--surface)] text-neutral-600'
+ isStitchLight ?' bg-[var(--bg)] text-[var(--ink-3)]' :' bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <ImageIcon className="w-8 h-8" />
  </div>
@@ -621,7 +621,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <p className={`font-display text-lg font-bold mb-1 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-3)]'}`}>
  El taller está listo
  </p>
- <p className={`font-mono text-xs max-w-sm ${isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-500'}`}>
+ <p className={`font-mono text-xs max-w-sm ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Configura las opciones, sube tu imagen o selecciona un logo y pulsa"Generar Diseño Mockup" para previsualizar los resultados.
  </p>
  </div>
@@ -738,7 +738,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <Gift className="w-5 h-5 stroke-[2.5]" />
  </div>
  <div>
- <h3 className="text-base font-black font-display uppercase tracking-wider text-zinc-100 flex items-center gap-2">
+ <h3 className="text-base font-black font-display uppercase tracking-wider text-[var(--ink)] flex items-center gap-2">
  <span>Canjear Pack de Pegatinas Gratis</span>
  <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
  100 uds
@@ -783,7 +783,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  <div className="flex-1 text-center sm:text-left space-y-1">
  <div className="flex items-center justify-center sm:justify-start gap-2">
- <span className="text-xs font-bold text-zinc-100">Logo {displayBandName} (Oficial)</span>
+ <span className="text-xs font-bold text-[var(--ink)]">Logo {displayBandName} (Oficial)</span>
  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
  Alta resolución 300 DPI
  </span>
@@ -811,12 +811,12 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  Nombre del Destinatario / Banda
  </label>
  <div className="relative">
- <User className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+ <User className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
  <input
  type="text"
  value={shippingForm.nombre}
  onChange={(e) => setShippingForm({ ...shippingForm, nombre: e.target.value })}
- className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-zinc-100 focus:outline-none focus:"
+ className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-[var(--ink)] focus:outline-none focus:"
  placeholder="Nombre y apellidos"
  />
  </div>
@@ -827,12 +827,12 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  Calle, número, piso y puerta
  </label>
  <div className="relative">
- <Building className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+ <Building className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
  <input
  type="text"
  value={shippingForm.direccion}
  onChange={(e) => setShippingForm({ ...shippingForm, direccion: e.target.value })}
- className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-zinc-100 focus:outline-none focus:"
+ className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-[var(--ink)] focus:outline-none focus:"
  placeholder="Dirección completa del local o domicilio"
  />
  </div>
@@ -846,7 +846,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  type="text"
  value={shippingForm.cp}
  onChange={(e) => setShippingForm({ ...shippingForm, cp: e.target.value })}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-zinc-100 focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-[var(--ink)] focus:outline-none focus:"
  placeholder="28001"
  />
  </div>
@@ -859,7 +859,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  type="text"
  value={shippingForm.ciudad}
  onChange={(e) => setShippingForm({ ...shippingForm, ciudad: e.target.value })}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-zinc-100 focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-[var(--ink)] focus:outline-none focus:"
  placeholder="Madrid"
  />
  </div>
@@ -869,12 +869,12 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  Teléfono de Contacto (para el mensajero)
  </label>
  <div className="relative">
- <Phone className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+ <Phone className="w-4 h-4 text-[var(--ink-2)] absolute left-3 top-1/2 -translate-y-1/2" />
  <input
  type="tel"
  value={shippingForm.telefono}
  onChange={(e) => setShippingForm({ ...shippingForm, telefono: e.target.value })}
- className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-zinc-100 focus:outline-none focus:"
+ className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono text-[var(--ink)] focus:outline-none focus:"
  placeholder="+34 600 000 000"
  />
  </div>
@@ -890,7 +890,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
 
  <div className="space-y-2">
- <h4 className="text-2xl font-black font-display uppercase tracking-wider text-zinc-100">
+ <h4 className="text-2xl font-black font-display uppercase tracking-wider text-[var(--ink)]">
  ¡Pedido Recibido con Éxito!
  </h4>
  <p className="text-sm font-bold text-[var(--acc)]/70">
@@ -904,11 +904,11 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] text-left w-full max-w-md space-y-2 text-xs font-mono">
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <span className="text-[var(--ink-2)]">Destinatario:</span>
- <span className="text-zinc-200 font-bold">{shippingForm.nombre}</span>
+ <span className="text-[var(--ink)] font-bold">{shippingForm.nombre}</span>
  </div>
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <span className="text-[var(--ink-2)]">Dirección:</span>
- <span className="text-zinc-200">{shippingForm.direccion}, {shippingForm.cp} {shippingForm.ciudad}</span>
+ <span className="text-[var(--ink)]">{shippingForm.direccion}, {shippingForm.cp} {shippingForm.ciudad}</span>
  </div>
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <span className="text-[var(--ink-2)]">Pack:</span>
@@ -952,7 +952,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  setShowClaimModal(false);
  setHasGiftPending(false); // Canjeado
  }}
- className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-100 text-xs font-mono font-bold cursor-pointer transition-colors"
+ className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-mono font-bold cursor-pointer transition-colors"
  >
  Entendido, volver al Taller
  </button>

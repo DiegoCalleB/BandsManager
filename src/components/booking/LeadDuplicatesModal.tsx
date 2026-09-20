@@ -211,7 +211,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden transition-all ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :'bg-[var(--surface)] text-zinc-100'
+ :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* Header */}
@@ -235,7 +235,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  {duplicateGroups.length} {duplicateGroups.length === 1 ?'grupo' :'grupos'}
  </span>
  </div>
- <p className={`text-xs mt-0.5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-zinc-400'}`}>
+ <p className={`text-xs mt-0.5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Detecta salas y contactos repetidos por email idéntico, nombre y ciudad, o dominios coincidentes.
  </p>
  </div>
@@ -247,7 +247,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`p-2 rounded-[var(--r-m)] transition-colors cursor-pointer ${
  isStitchLight
  ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'hover:bg-[var(--surface)]/80 text-zinc-400 hover:text-[var(--ink)]'
+ :'hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <X className="w-5 h-5" />
@@ -278,7 +278,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
  Todos ({reasonCounts.all})
@@ -292,7 +292,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
  Mismo Email ({reasonCounts.same_email})
@@ -307,7 +307,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
  Mismo Nombre y Ciudad ({reasonCounts.same_name_and_city})
@@ -322,7 +322,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
  Nombre Similar ({reasonCounts.similar_name_same_city})
@@ -337,7 +337,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
  }`}
  >
  Misma Web ({reasonCounts.same_website})
@@ -366,10 +366,10 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto">
  <ShieldCheck className="w-6 h-6" />
  </div>
- <h3 className="text-base font-bold text-zinc-200">
+ <h3 className="text-base font-bold text-[var(--ink)]">
  ¡No se han encontrado salas ni leads duplicados!
  </h3>
- <p className="text-xs text-zinc-400 max-w-md mx-auto">
+ <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
  Tu base de datos está perfectamente limpia y organizada. No hay coincidencias conflictivas de nombres, correos ni recintos.
  </p>
  </div>
@@ -390,7 +390,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <AlertTriangle className="w-3 h-3" />
  {group.matchReasonLabel}
  </span>
- <span className="text-[11px] text-zinc-400">
+ <span className="text-[11px] text-[var(--ink-2)]">
  {group.confidence}% de certeza
  </span>
  </div>
@@ -398,7 +398,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <button
  type="button"
  onClick={() => setIgnoredGroupIds(prev => new Set(prev).add(group.id))}
- className="text-[11px] text-zinc-400 hover:text-zinc-200 underline cursor-pointer"
+ className="text-[11px] text-[var(--ink-2)] hover:text-[var(--ink)] underline cursor-pointer"
  >
  Ignorar (No son duplicados)
  </button>
@@ -427,7 +427,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <div className="flex items-start justify-between gap-2">
  <div className="min-w-0">
  <div className="flex items-center gap-1.5 flex-wrap">
- <h4 className="font-bold text-sm text-zinc-100 truncate">
+ <h4 className="font-bold text-sm text-[var(--ink)] truncate">
  {lead.nombre_sala}
  </h4>
  {isSuggested && (
@@ -436,23 +436,23 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  </span>
  )}
  </div>
- <div className="flex items-center gap-1 text-xs text-zinc-400 mt-0.5">
+ <div className="flex items-center gap-1 text-xs text-[var(--ink-2)] mt-0.5">
  <MapPin className="w-3 h-3 text-zinc-500 shrink-0" />
  <span>{lead.ciudad ||'Sin ciudad'}</span>
  {lead.region && <span>· {lead.region}</span>}
  </div>
  </div>
 
- <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--surface)]/80 text-zinc-300 capitalize shrink-0">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--surface)]/80 text-[var(--ink-2)] capitalize shrink-0">
  {lead.estado ||'nuevo'}
  </span>
  </div>
 
  {/* Contact Details */}
- <div className="space-y-1 text-xs text-zinc-300 pt-1">
+ <div className="space-y-1 text-xs text-[var(--ink-2)] pt-1">
  {lead.email_contacto ? (
  <div className="flex items-center gap-1.5 truncate">
- <Mail className="w-3 h-3 text-zinc-400 shrink-0" />
+ <Mail className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
  <span className="truncate">{lead.email_contacto}</span>
  </div>
  ) : (
@@ -461,7 +461,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  {lead.telefono && (
  <div className="flex items-center gap-1.5 truncate">
- <Phone className="w-3 h-3 text-zinc-400 shrink-0" />
+ <Phone className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
  <span>{lead.telefono}</span>
  </div>
  )}
@@ -474,13 +474,13 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  )}
 
  {lead.aforo ? (
- <div className="text-[11px] text-zinc-400">
- Aforo: <span className="font-medium text-zinc-200">{lead.aforo} personas</span>
+ <div className="text-[11px] text-[var(--ink-2)]">
+ Aforo: <span className="font-medium text-[var(--ink)]">{lead.aforo} personas</span>
  </div>
  ) : null}
 
  {lead.notas && (
- <p className="text-[11px] text-zinc-400 line-clamp-2 bg-black/20 p-1.5 rounded-[var(--r-s)] mt-1">
+ <p className="text-[11px] text-[var(--ink-2)] line-clamp-2 bg-black/20 p-1.5 rounded-[var(--r-s)] mt-1">
  {lead.notas}
  </p>
  )}
@@ -496,7 +496,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
  isSuggested
  ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}
  title="Conserva este lead y añade todos los teléfonos, notas y datos de los demás"
  >
@@ -528,16 +528,16 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`p-3 sm:px-5 border-t flex items-center justify-between text-xs ${
  isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] text-zinc-400'
+ :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <span>
- Total analizado: <strong className="text-zinc-200">{leads.length}</strong> salas y leads.
+ Total analizado: <strong className="text-[var(--ink)]">{leads.length}</strong> salas y leads.
  </span>
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-m)] font-medium bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 transition cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-m)] font-medium bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] transition cursor-pointer"
  >
  Cerrar
  </button>

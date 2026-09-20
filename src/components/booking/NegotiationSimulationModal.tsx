@@ -235,7 +235,7 @@ export function NegotiationSimulationModal({
  className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 ${
  isStitchLight
  ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] shadow-md'
- :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-extrabold shadow-lg'
+ :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] font-extrabold shadow-lg'
  }`}
  >
  {isGeneratingSimulation ? (
@@ -303,7 +303,7 @@ export function NegotiationSimulationModal({
  className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all ${
  isStitchLight
  ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)]'
- :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-extrabold'
+ :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] font-extrabold'
  }`}
  >
  <Check className="w-4 h-4" /> Guardar y Sincronizar

@@ -34,7 +34,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  <h3 className="text-base font-semibold text-[var(--ink)]">Vídeos de YouTube & Directos</h3>
  </div>
 
- <p className="text-xs text-zinc-400">
+ <p className="text-xs text-[var(--ink-2)]">
  Los programadores de salas y festivales siempre piden ver cómo suena la banda en directo y vuestros videoclips oficiales.
  </p>
 
@@ -54,7 +54,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  <div className="flex items-center gap-2">
  <span className="text-sm font-medium text-[var(--ink)]">{vid.titulo}</span>
  {(vid as any).tipo && (
- <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 capitalize">
+ <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-[var(--ink-2)] capitalize">
  {(vid as any).tipo}
  </span>
  )}
@@ -80,7 +80,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  type="button"
  onClick={() => onToggleHighlightVideo(vid.id)}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition-colors ${
- vid.destacado ?'text-[var(--acc)] bg-[var(--acc)]/10' :'text-zinc-500 hover:text-zinc-300'
+ vid.destacado ?'text-[var(--acc)] bg-[var(--acc)]/10' :'text-zinc-500 hover:text-[var(--ink-2)]'
  }`}
  title={vid.destacado ?'Quitar destacado' :'Marcar como vídeo principal'}
  >
@@ -102,7 +102,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
 
  {/* Add Video Form */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
- <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5">
  <Plus className="w-3.5 h-3.5 text-[var(--acc)]" />
  Añadir Nuevo Vídeo (YouTube)
  </h4>

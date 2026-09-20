@@ -59,14 +59,14 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  <h3 className="text-base font-semibold text-[var(--ink)]">Captación de Fans, Regalo Descargable & Pagos Directos</h3>
  </div>
 
- <p className="text-xs text-zinc-400">
+ <p className="text-xs text-[var(--ink-2)]">
  Configura tu landing page pública de fans. Coloca el código QR en tus conciertos para captar emails, regalar contenido exclusivo y recibir propinas o pagos por Bizum y Revolut.
  </p>
 
  {/* Mensajes QR para Fans */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Gancho / Titular en el QR de Concierto
  </label>
  <input
@@ -79,7 +79,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Mensaje de Bienvenida para nuevos Fans
  </label>
  <input
@@ -103,7 +103,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1">
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
  Descripción del Regalo
  </label>
  <input
@@ -116,7 +116,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  </div>
 
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1">
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
  Código de Descuento en Merch (Opcional)
  </label>
  <input
@@ -131,7 +131,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
 
  {/* Subida del archivo de regalo */}
  <div className="pt-2 border-t border-[var(--hair)] space-y-2">
- <label className="block text-xs font-medium text-zinc-300">
+ <label className="block text-xs font-medium text-[var(--ink-2)]">
  Archivo descargable de regalo (MP3, WAV, PDF, ZIP)
  </label>
  <input
@@ -154,7 +154,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  <button
  type="button"
  onClick={() => leadMagnetInputRef.current?.click()}
- className="text-xs text-zinc-400 hover:text-[var(--ink)] underline"
+ className="text-xs text-[var(--ink-2)] hover:text-[var(--ink)] underline"
  >
  Cambiar
  </button>
@@ -192,14 +192,14 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
 
  {/* Métodos de Pago y Propinas Directas */}
  <div className="pt-2 border-t border-[var(--hair)] space-y-3">
- <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5">
  <DollarSign className="w-3.5 h-3.5 text-[var(--acc)]" />
  Métodos de Pago & Propinas Directas (Sin Comisiones)
  </h4>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1 flex items-center gap-1">
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
  <Smartphone className="w-3 h-3 text-cyan-400" /> Bizum (Teléfono)
  </label>
  <input
@@ -212,7 +212,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  </div>
 
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1 flex items-center gap-1">
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
  <CreditCard className="w-3 h-3 text-blue-400" /> Revolut (@Tag)
  </label>
  <input
@@ -225,7 +225,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  </div>
 
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1 flex items-center gap-1">
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
  <DollarSign className="w-3 h-3 text-indigo-400" /> PayPal (Email / Me)
  </label>
  <input
@@ -238,7 +238,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  </div>
 
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1 flex items-center gap-1">
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
  <CreditCard className="w-3 h-3 text-emerald-400" /> IBAN / Transferencia
  </label>
  <input

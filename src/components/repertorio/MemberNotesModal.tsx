@@ -196,12 +196,12 @@ export function MemberNotesModal({
  const summary = getReadinessSummary({ notasPorMiembro: Object.entries(memberReadiness).filter(([, v]) => v).map(([k, v]) => ({ memberName: k, estadoPreparacion: v })) }, allMembersToDisplay.length);
  return (
  <div className="flex items-center gap-2 flex-wrap pt-3 text-[11px] font-mono">
- <span className="text-neutral-500 uppercase font-bold">Preparación de la banda:</span>
+ <span className="text-[var(--ink-2)] uppercase font-bold">Preparación de la banda:</span>
  <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">✅ {summary.lista} listos</span>
  <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400">🔶 {summary.casiLista} casi</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]">🌱 {summary.aprendiendo} aprendiendo</span>
  {summary.sinOpinar > 0 && (
- <span className="px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-neutral-500">{summary.sinOpinar} sin marcar</span>
+ <span className="px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-[var(--ink-2)]">{summary.sinOpinar} sin marcar</span>
  )}
  </div>
  );
@@ -355,7 +355,7 @@ export function MemberNotesModal({
  className={`text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] transition-all ${
  memberReadiness[memberKey] === level.value
  ? level.colorClass
- :'bg-white/5 text-neutral-500 border-transparent hover:border-[var(--hair)]'
+ :'bg-white/5 text-[var(--ink-2)] border-transparent hover:border-[var(--hair)]'
  }`}
  >
  {level.icon} {level.label}

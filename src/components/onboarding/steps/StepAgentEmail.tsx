@@ -37,7 +37,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  Human-in-the-Loop: Automatización Segura de Booking
  </h4>
  </div>
- <p className="text-xs text-zinc-300 leading-relaxed">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed">
  Tus agentes de IA descubren salas (Scout), redactan propuestas hiper-personalizadas (Redactor) y leen respuestas automáticamente. 
  <strong className="text-[var(--ink)] font-medium"> Ningún email se envía sin tu aprobación explícita previa</strong>.
  </p>
@@ -46,7 +46,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  {/* Correo remitente & Firma profesional */}
  <div className="space-y-4">
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center gap-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
  <Mail className="w-3.5 h-3.5 text-[var(--acc)]" />
  Email Oficial desde el que contactarás a las salas
  </label>
@@ -64,13 +64,13 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
 
  {/* Firma de correo del redactor */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
- <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider">
  Firma de Correo para las Propuestas
  </h4>
 
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1">Nombre del Remitente</label>
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Nombre del Remitente</label>
  <input
  type="text"
  value={signatureName}
@@ -81,7 +81,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  </div>
 
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1">Cargo / Rol</label>
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Cargo / Rol</label>
  <input
  type="text"
  value={signatureCargo}
@@ -92,7 +92,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  </div>
 
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1">Teléfono en la firma</label>
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Teléfono en la firma</label>
  <input
  type="tel"
  value={signaturePhone}

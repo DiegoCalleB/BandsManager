@@ -505,7 +505,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
  placeholder="Buscar proyecto..."
- className="w-full pl-9 pr-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] placeholder-neutral-500 focus:outline-none focus:/60"
+ className="w-full pl-9 pr-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:outline-none focus:/60"
  />
  </div>
  )}
@@ -649,7 +649,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  ) : (
  <div className="w-full h-full rounded-[var(--r-m)] bg-gradient-to-br from-amber-500/15 to-orange-600/15 flex flex-col items-center justify-center text-[var(--acc)] gap-1">
  <Guitar className="w-8 h-8 opacity-80" />
- <span className="text-xs font-black font-mono text-zinc-300">
+ <span className="text-xs font-black font-mono text-[var(--ink-2)]">
  {band.bandName.slice(0, 2).toUpperCase()}
  </span>
  </div>
@@ -736,14 +736,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <span className="text-xs font-bold font-display uppercase tracking-wider text-center">
  Añadir Proyecto
  </span>
- <span className="text-[10px] font-mono text-neutral-500 mt-0.5 text-center">
+ <span className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5 text-center">
  Registrar otra banda
  </span>
  </div>
  </div>
 
  {/* Modal Footer */}
- <div className="mt-8 pt-4 border-t border-[var(--hair)]/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
+ <div className="mt-8 pt-4 border-t border-[var(--hair)]/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--ink-2)]">
  <span className="font-mono">
  {uniqueBands.length} {uniqueBands.length === 1 ?'proyecto disponible' :'proyectos disponibles'}
  </span>
@@ -802,7 +802,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  placeholder="Ej: Los Nocturnos, KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑, Bakandeya..."
  required
  autoFocus
- className="w-full px-4 py-3 rounded-[var(--r-l)] text-sm bg-[var(--surface)] text-[var(--ink)] placeholder-neutral-500 focus:/70 focus:outline-none transition-colors shadow-inner font-bold"
+ className="w-full px-4 py-3 rounded-[var(--r-l)] text-sm bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:/70 focus:outline-none transition-colors shadow-inner font-bold"
  />
  </div>
 
@@ -816,7 +816,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={newBandLeaderName}
  onChange={(e) => setNewBandLeaderName(e.target.value)}
  placeholder="Ej: Kurt Cobain (Guitarra & Mánager)"
- className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-neutral-500 focus:/70 focus:outline-none transition-colors"
+ className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:/70 focus:outline-none transition-colors"
  />
  </div>
 
@@ -831,7 +831,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={newBandStyle}
  onChange={(e) => setNewBandStyle(e.target.value)}
  placeholder="Ej: Rock, Indie, Mestizaje, Ska..."
- className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-neutral-500 focus:/70 focus:outline-none transition-colors"
+ className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:/70 focus:outline-none transition-colors"
  />
  </div>
 
@@ -845,7 +845,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={newBandLocation}
  onChange={(e) => setNewBandLocation(e.target.value)}
  placeholder="Ej: Madrid, Barcelona, Valencia..."
- className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-neutral-500 focus:/70 focus:outline-none transition-colors"
+ className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:/70 focus:outline-none transition-colors"
  />
  </div>
  </div>
@@ -979,9 +979,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <h3 className="text-base font-bold text-[var(--sunken)]">Ensayo</h3>
  <div className="mt-1.5 flex items-baseline gap-1">
  <span className="text-2xl font-black text-[var(--ink)]">0€</span>
- <span className="text-[11px] text-neutral-500 font-medium">/ siempre</span>
+ <span className="text-[11px] text-[var(--ink-2)] font-medium">/ siempre</span>
  </div>
- <p className="text-[11px] text-neutral-500 mt-1.5 min-h-[32px]">Para proyectos noveles que arrancan su local.</p>
+ <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">Para proyectos noveles que arrancan su local.</p>
  </div>
 
  <ul className="space-y-2 mb-5 flex-1 text-xs">
@@ -993,8 +993,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  ].map((f, i) => {
  const isHighlighted = newBandFeatureCategory ==='all' || newBandFeatureCategory === f.cat;
  return (
- <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--ink-3)] opacity-100' :'text-neutral-600 opacity-40'}`}>
- <Check className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-[var(--ink-2)]' :'text-neutral-700'}`} />
+ <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--ink-3)] opacity-100' :'text-[var(--ink-2)] opacity-40'}`}>
+ <Check className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-[var(--ink-2)]' :'text-[var(--ink-3)]'}`} />
  <span className={isHighlighted && newBandFeatureCategory !=='all' ?'font-bold text-[var(--acc)]' :''}>{f.text}</span>
  </li>
  );
@@ -1046,8 +1046,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  ].map((f, i) => {
  const isHighlighted = newBandFeatureCategory ==='all' || newBandFeatureCategory === f.cat;
  return (
- <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--sunken)] opacity-100' :'text-neutral-600 opacity-40'}`}>
- <Check className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-[var(--ink-3)]' :'text-neutral-700'}`} />
+ <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--sunken)] opacity-100' :'text-[var(--ink-2)] opacity-40'}`}>
+ <Check className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-[var(--ink-3)]' :'text-[var(--ink-3)]'}`} />
  <span className={isHighlighted && newBandFeatureCategory !=='all' ?'font-bold text-[var(--acc)]' :''}>{f.text}</span>
  </li>
  );
@@ -1101,8 +1101,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  ].map((f, i) => {
  const isHighlighted = newBandFeatureCategory ==='all' || newBandFeatureCategory === f.cat;
  return (
- <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--sunken)] opacity-100' :'text-neutral-600 opacity-40'}`}>
- <Zap className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-[var(--acc)]' :'text-neutral-700'}`} />
+ <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--sunken)] opacity-100' :'text-[var(--ink-2)] opacity-40'}`}>
+ <Zap className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-[var(--acc)]' :'text-[var(--ink-3)]'}`} />
  <span className={isHighlighted && newBandFeatureCategory !=='all' ?'font-bold text-[var(--acc)]' :''}>{f.text}</span>
  </li>
  );
@@ -1157,8 +1157,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  ].map((f, i) => {
  const isHighlighted = newBandFeatureCategory ==='all' || newBandFeatureCategory === f.cat;
  return (
- <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--ink-3)] opacity-100' :'text-neutral-600 opacity-40'}`}>
- <Shield className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-emerald-400' :'text-neutral-700'}`} />
+ <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ?'text-[var(--ink-3)] opacity-100' :'text-[var(--ink-2)] opacity-40'}`}>
+ <Shield className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ?'text-emerald-400' :'text-[var(--ink-3)]'}`} />
  <span className={isHighlighted && newBandFeatureCategory !=='all' ?'font-bold text-[var(--acc)]' :''}>{f.text}</span>
  </li>
  );

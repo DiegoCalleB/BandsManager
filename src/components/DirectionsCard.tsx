@@ -46,7 +46,7 @@ export default function DirectionsCard({
  {/* Content Container */}
  <div className="relative z-10 p-2.5 py-2 flex flex-col sm:flex-row items-center justify-center gap-2 bg-gradient-to-r from-[var(--bg)] via-[var(--bg)]/95 to-transparent text-center w-full">
  {address && (
- <span className="text-[10px] font-sans text-zinc-400 truncate leading-tight max-w-[220px]" title={address}>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] truncate leading-tight max-w-[220px]" title={address}>
  {address}
  </span>
  )}
@@ -55,7 +55,7 @@ export default function DirectionsCard({
  <div className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all shrink-0 ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-3)] group-hover:bg-indigo-600 group-hover:text-[var(--ink)] group-hover:border-indigo-500'
- :'bg-zinc-800/90 border-zinc-700/80 text-zinc-200 group-hover:bg-purple-600 group-hover:text-[var(--ink)] group-hover:border-purple-500'
+ :'bg-zinc-800/90 border-[var(--hair)]700/80 text-[var(--ink)] group-hover:bg-purple-600 group-hover:text-[var(--ink)] group-hover:border-purple-500'
  }`}>
  <Navigation className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
  <span className="inline">Cómo llegar</span>

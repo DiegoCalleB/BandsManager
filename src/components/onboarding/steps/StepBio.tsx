@@ -37,7 +37,7 @@ export const StepBio: React.FC<StepBioProps> = ({
 
  {/* Slogan */}
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Slogan / Frase de Impacto
  </label>
  <input
@@ -55,7 +55,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  {/* Biografía con Asistente */}
  <div>
  <div className="flex items-center justify-between mb-1.5">
- <label className="text-xs font-medium text-zinc-300">
+ <label className="text-xs font-medium text-[var(--ink-2)]">
  Biografía / Resumen de Prensa
  </label>
  <button
@@ -79,7 +79,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  {/* Formato de Directo */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-[var(--hair)]">
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Formato de Escenario
  </label>
  <input
@@ -92,7 +92,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Músicos en Escenario
  </label>
  <input
@@ -106,7 +106,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Duración Típica del Show
  </label>
  <input

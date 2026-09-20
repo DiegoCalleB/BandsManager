@@ -275,7 +275,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <Upload className="w-8 h-8 mx-auto mb-2 text-purple-400" />
  <p className="text-sm font-semibold text-[var(--ink)]">Arrastra un archivo aquí</p>
  <p className="text-xs text-[var(--ink-2)] mt-1">o haz clic para seleccionar</p>
- <p className="text-xs text-neutral-500 mt-2">PDF, JPG, PNG, Word (máx. 10MB)</p>
+ <p className="text-xs text-[var(--ink-2)] mt-2">PDF, JPG, PNG, Word (máx. 10MB)</p>
  </div>
  <input
  ref={fileInputRef}

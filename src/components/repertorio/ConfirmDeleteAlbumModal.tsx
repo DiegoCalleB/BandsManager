@@ -39,7 +39,7 @@ export function ConfirmDeleteAlbumModal({
  <button
  type="button"
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-zinc-400 hover:text-[var(--ink)] hover:bg-white/10 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/10 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>

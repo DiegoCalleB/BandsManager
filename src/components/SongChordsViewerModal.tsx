@@ -699,14 +699,14 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setShowChordDiagrams(false)}
- className="text-neutral-500 hover:text-[var(--ink)] text-xs"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] text-xs"
  >
  ✕
  </button>
  </div>
 
  {uniqueChords.length === 0 ? (
- <p className="text-xs text-neutral-500 font-mono italic">
+ <p className="text-xs text-[var(--ink-2)] font-mono italic">
  No se detectaron acordes en el texto.
  </p>
  ) : (
@@ -745,7 +745,7 @@ export function SongChordsViewerModal({
 
 // RENDER FUNCTION FOR FORMATTED CHORD SHEET WITH HIGHLIGHTED CHORDS
 function renderFormattedChordSheet(text: string) {
- if (!text) return <span className="text-neutral-500 italic">Sin cifrado disponible. Usa el botón de IA para generarlo.</span>;
+ if (!text) return <span className="text-[var(--ink-2)] italic">Sin cifrado disponible. Usa el botón de IA para generarlo.</span>;
 
  const lines = text.split('\n');
 
@@ -849,7 +849,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  </div>
  </div>
  ) : (
- <p className="text-[10px] text-neutral-500 font-mono">
+ <p className="text-[10px] text-[var(--ink-2)] font-mono">
  [Acorde Estándar]
  </p>
  )}

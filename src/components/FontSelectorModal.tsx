@@ -145,7 +145,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <div className={`px-6 py-3 flex justify-between items-center shrink-0 ${
  isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-neutral-800 bg-[var(--surface)]/60'
  }`}>
- <span className="text-[10px] font-mono text-neutral-500">
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">
  Cambio instantáneo guardado en tu navegador
  </span>
  <button

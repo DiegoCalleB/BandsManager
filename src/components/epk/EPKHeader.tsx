@@ -71,12 +71,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <button
  type="button"
  onClick={() => setShowHealthDetails(prev => !prev)}
- className="mt-0.5 text-[10px] font-mono flex items-center gap-1 cursor-pointer transition text-stone-400 hover:text-[var(--acc)]/70"
+ className="mt-0.5 text-[10px] font-mono flex items-center gap-1 cursor-pointer transition text-[var(--ink-2)] hover:text-[var(--acc)]/70"
  >
  <span className={completedCount >= 5 ?'text-emerald-400 font-semibold' :'text-[var(--acc)] font-semibold'}>
  ● {completedCount}/{totalCount} requisitos listos
  </span>
- {showHealthDetails ? <ChevronUp className="w-3 h-3 text-stone-500" /> : <ChevronDown className="w-3 h-3 text-stone-500" />}
+ {showHealthDetails ? <ChevronUp className="w-3 h-3 text-[var(--ink-2)]" /> : <ChevronDown className="w-3 h-3 text-[var(--ink-2)]" />}
  </button>
  </div>
 
@@ -188,7 +188,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded flex items-center gap-1 transition ${
  item.ok
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
  <span>{item.label}</span>
@@ -246,8 +246,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] text-[10px] font-mono font-bold uppercase">
  Kit de Prensa & EPK
  </span>
- <span className="text-[11px] text-stone-500 hidden sm:inline">•</span>
- <span className="text-[11px] text-stone-400 hidden sm:inline">
+ <span className="text-[11px] text-[var(--ink-2)] hidden sm:inline">•</span>
+ <span className="text-[11px] text-[var(--ink-2)] hidden sm:inline">
  Gestor Modular del Dossier
  </span>
  </div>
@@ -317,7 +317,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  {/* STATUS & HEALTH BAR ESCRITORIO (>= sm) */}
  <div className="hidden sm:flex items-center justify-between gap-3 px-3 sm:px-4 py-2 bg-[var(--surface)] rounded-[var(--r-m)] text-xs">
  <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5 text-[11px] font-mono">
- <span className="text-stone-500 uppercase tracking-wider text-[10px] shrink-0 font-bold">
+ <span className="text-[var(--ink-2)] uppercase tracking-wider text-[10px] shrink-0 font-bold">
  Estado:
  </span>
 
@@ -327,7 +327,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasLogo
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Logo de la banda (Bloque Archivos)"
  >
@@ -340,7 +340,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasBio
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Biografía oficial (Bloque Perfil)"
  >
@@ -353,7 +353,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasDossier
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Dossier en PDF (Bloque Archivos)"
  >
@@ -366,7 +366,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasRider
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Rider técnico (Bloque Archivos)"
  >
@@ -379,7 +379,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numMiembros > 0
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Miembros de la formación (Bloque Perfil)"
  >
@@ -392,7 +392,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numTemas > 0
  ?'bg-sky-500/10 text-sky-400 border-sky-500/20'
- :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Temas y audio preview (Bloque Música)"
  >
@@ -405,7 +405,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numTraducciones > 0
  ?'bg-purple-500/10 text-purple-300 border-purple-500/20'
- :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Versiones en otros idiomas (Bloque Donaciones & Idiomas)"
  >
@@ -420,16 +420,16 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-semibold flex items-center gap-1.5 transition ${
  showAiNotice
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
- :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-[var(--acc)]/70'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--acc)]/70'
  }`}
  title="Ver integración con Chatbot y Agentes de IA"
  >
  <Bot className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span className="hidden sm:inline">Info IA</span>
  {showAiNotice ? (
- <ChevronUp className="w-3 h-3 text-stone-400" />
+ <ChevronUp className="w-3 h-3 text-[var(--ink-2)]" />
  ) : (
- <ChevronDown className="w-3 h-3 text-stone-400" />
+ <ChevronDown className="w-3 h-3 text-[var(--ink-2)]" />
  )}
  </button>
  )}

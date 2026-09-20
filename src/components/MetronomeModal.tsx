@@ -325,7 +325,7 @@ export function MetronomeModal({
  ? isAccent
  ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-lg shadow-amber-500/50 scale-105'
  :'bg-emerald-400 text-[var(--ink)] border-emerald-300 shadow-lg shadow-emerald-500/50 scale-105'
- :'bg-white/5 text-neutral-500 border-[var(--hair)]'
+ :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
  {idx + 1}

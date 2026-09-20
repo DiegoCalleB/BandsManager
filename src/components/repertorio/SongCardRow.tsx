@@ -140,17 +140,17 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  : isSelected
  ? isStitchLight
  ?'bg-amber-50/80 text-[var(--ink)]'
- :'bg-[var(--acc)]/10 /30 text-zinc-100'
+ :'bg-[var(--acc)]/10 /30 text-[var(--ink)]'
  : isStitchLight
  ?'bg-white hover:bg-[var(--bg)] /80 text-[var(--ink)] shadow-xs'
- :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-zinc-200 shadow-xs'
+ :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-[var(--ink)] shadow-xs'
  } ${draggable ?'cursor-grab active:cursor-grabbing' :''}`}
  >
  <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto">
  {/* Drag Handle (when draggable) */}
  {draggable && (
  <div 
- className="shrink-0 text-zinc-500 hover:text-zinc-300 cursor-grab active:cursor-grabbing -mr-0.5"
+ className="shrink-0 text-zinc-500 hover:text-[var(--ink-2)] cursor-grab active:cursor-grabbing -mr-0.5"
  title="Arrastrar para reordenar canción"
  >
  <GripVertical className="w-4 h-4 opacity-40 group-hover:opacity-100 transition-opacity" />
@@ -180,7 +180,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-emerald-500 text-black shadow-md scale-105'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-emerald-500 text-[var(--ink-2)] hover:text-black'
- :'bg-[var(--surface)]/80 hover:bg-emerald-500 text-zinc-300 hover:text-black group-hover:scale-105 shadow-xs'
+ :'bg-[var(--surface)]/80 hover:bg-emerald-500 text-[var(--ink-2)] hover:text-black group-hover:scale-105 shadow-xs'
  }`}
  title={isPlaying ?'Pausar canción' : `Reproducir ${displayTitle}`}
  >
@@ -258,14 +258,14 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
  isStitchLight
  ?'bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 text-zinc-300'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
  {song.tonalidad ||'—'}{song.bpm ? ` • ${song.bpm} BPM` :''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ?' 🤖' :''}
  </span>
 
  {/* Duration */}
- <span className="text-zinc-400 text-xs font-normal">
+ <span className="text-[var(--ink-2)] text-xs font-normal">
  {durationText}
  </span>
 
@@ -277,7 +277,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-emerald-500/15 text-[var(--ink-2)]'
  : song.estadoTema ==='ensayando'
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70'
- :'bg-[var(--surface)]/80 text-zinc-400'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
  {song.estadoTema ==='listo' ?'Listo' : song.estadoTema ==='ensayando' ?'Ensayando' : song.estadoTema}
@@ -343,7 +343,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] /40 shadow-xs'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 /80'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] /80'
  }`}
  title="Abrir Studio de Grabación Multipista & Pistas"
  >
@@ -390,11 +390,11 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 /30 shadow-xs'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-400 hover:text-zinc-200 /70'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
  }`}
  title="Ver y editar notas específicas por miembro de la banda"
  >
- <Users className={`w-3.5 h-3.5 ${hasMemberNotes ?'text-[var(--acc)]' :'text-zinc-400'}`} />
+ <Users className={`w-3.5 h-3.5 ${hasMemberNotes ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
  <span className="hidden md:inline text-xs">Notas</span>
  </button>
  )}
@@ -407,7 +407,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-400 hover:text-zinc-100 /70'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
  }`}
  title="Editar canción (título, tonalidad, BPM, afinación, disco...)"
  >
@@ -493,7 +493,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <button
  type="button"
  onClick={() => { setShowMenu(false); onEditSong(); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-zinc-300 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-[var(--ink-2)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
  >
  <Edit3 className="w-3.5 h-3.5" />
  <span>Editar Canción</span>

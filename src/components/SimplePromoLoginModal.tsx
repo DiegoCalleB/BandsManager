@@ -380,7 +380,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  <div className="relative flex items-center">
  <Lock className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
  <input type={showPassword ?'text' :'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Contraseña" className={`${inputClass} pr-11`} required />
- <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer">
+ <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer">
  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
  </div>
@@ -459,7 +459,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  <div className="relative flex items-center">
  <Lock className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
  <input type={showRegPassword ?'text' :'password'} value={regPassword} onChange={(e) => setRegPassword(e.target.value)} placeholder="Contraseña" className={`${inputClass} pr-11`} required />
- <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer">
+ <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer">
  {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
  </div>
@@ -473,7 +473,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  <div className="w-full h-px bg-[var(--hair)]"></div>
  </div>
  <div className="relative flex justify-center text-xs">
- <span className="px-2.5 bg-[var(--surface)] text-neutral-500 font-medium">O registrarme con</span>
+ <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">O registrarme con</span>
  </div>
  </div>
 

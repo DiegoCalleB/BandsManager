@@ -2660,7 +2660,7 @@ export default function RepertorioSetlists({
  setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? { ...s, nombre: val } : s));
  }}
  title={activeSetlist.descripcion ||'Nombre del repertorio'}
- className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-500/50 ${isStitchLight ?'text-[var(--ink)]' :'text-zinc-100'}`}
+ className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-500/50 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}
  />
 
  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap sm:flex-nowrap">
@@ -2672,11 +2672,11 @@ export default function RepertorioSetlists({
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
  isStitchLight 
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 hover:text-[var(--ink)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)]'
  }`}
  title="Imprimir repertorio o exportar a PDF / atril en papel"
  >
- <Printer className="w-3.5 h-3.5 text-zinc-400" />
+ <Printer className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span className="hidden xs:inline">Imprimir</span>
  </button>
 
@@ -2768,7 +2768,7 @@ export default function RepertorioSetlists({
  className={`p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
  isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] border-transparent hover:'
- :'text-zinc-400 hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 border-transparent hover:'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 border-transparent hover:'
  }`}
  title="Acciones del repertorio: compartir, asignar a bolo, duplicar, editar detalles, eliminar"
  >
@@ -2780,7 +2780,7 @@ export default function RepertorioSetlists({
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
  ?' bg-white text-[var(--ink)]'
- :' bg-[var(--surface)] text-zinc-200'
+ :' bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <button
  type="button"
@@ -2804,7 +2804,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setShowPdfPreview(true); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'text-[var(--ink)] hover:bg-[var(--sunken)]' :'text-zinc-200 hover:bg-[var(--surface)]/80'
+ isStitchLight ?'text-[var(--ink)] hover:bg-[var(--sunken)]' :'text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  >
  <Printer className="w-3.5 h-3.5 shrink-0" /> Imprimir / PDF
@@ -2813,7 +2813,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDuplicateSetlist(activeSetlist); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-zinc-300 hover:bg-[var(--surface)]/80'
+ isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  >
  <Copy className="w-3.5 h-3.5 shrink-0" /> Duplicar setlist
@@ -2822,7 +2822,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setSetlistModalData({ isOpen: true, setlistToEdit: activeSetlist }); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-zinc-300 hover:bg-[var(--surface)]/80'
+ isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  >
  <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar detalles
@@ -2855,10 +2855,10 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => setShowSetlistStats((v) => !v)}
- className="flex items-center gap-1.5 text-xs hover:opacity-80 transition cursor-pointer text-zinc-300"
+ className="flex items-center gap-1.5 text-xs hover:opacity-80 transition cursor-pointer text-[var(--ink-2)]"
  title={showSetlistStats ?'Ocultar métricas secundarias' :'Ver interludios, bloques y perfil de dinámica'}
  >
- <span className="font-semibold text-zinc-100">⏱️ {activeSetlistMetrics.formattedTime}</span>
+ <span className="font-semibold text-[var(--ink)]">⏱️ {activeSetlistMetrics.formattedTime}</span>
  <span className="text-zinc-600">·</span>
  <span className="font-bold text-[var(--acc)]">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
  <span className="text-zinc-500 text-[10px]">{showSetlistStats ?'▲' :'▼'}</span>
@@ -2879,7 +2879,7 @@ export default function RepertorioSetlists({
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
  ?' bg-white text-[var(--ink)]'
- :' bg-[var(--surface)] text-zinc-200'
+ :' bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <button
  type="button"
@@ -2892,7 +2892,7 @@ export default function RepertorioSetlists({
  }`}
  >
  <span className="text-xs font-semibold text-[var(--acc)] flex items-center gap-1.5">📖 Ver análisis</span>
- <span className="block text-[11px] text-zinc-400 mt-0.5">Arco narrativo, puntuación y sugerencias explicadas.</span>
+ <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">Arco narrativo, puntuación y sugerencias explicadas.</span>
  </button>
  <button
  type="button"
@@ -2907,7 +2907,7 @@ export default function RepertorioSetlists({
  }`}
  >
  <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">🪄 Generar plan de cambios</span>
- <span className="block text-[11px] text-zinc-400 mt-0.5">Reordena y optimiza canciones sobre una copia.</span>
+ <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">Reordena y optimiza canciones sobre una copia.</span>
  </button>
  </div>
  </>
@@ -2979,7 +2979,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => setShowChartSettingsMenu((v) => !v)}
- className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-neutral-300 hover:text-[var(--ink)] transition-all cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-all cursor-pointer"
  title="Ajustes del gráfico (leyenda de colores, curva ideal)"
  >
  <Sliders className="w-3.5 h-3.5" />
@@ -2992,7 +2992,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowIdealCurve((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- showIdealCurve ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-neutral-500'
+ showIdealCurve ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Curva ideal de referencia: un arco de pacing clásico escalado al rango real de energías de tu repertorio"
  >
@@ -3003,7 +3003,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowBpmLine((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- showBpmLine ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-neutral-500'
+ showBpmLine ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Línea de BPM en un eje secundario — apagada por defecto para no saturar el gráfico en pantallas estrechas"
  >
@@ -3014,7 +3014,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowTonalidad((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- showTonalidad ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-neutral-500'
+ showTonalidad ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Tonalidad de cada canción junto a su punto — con muchos temas seguidos, usa el zoom (🔍) para separarlos y leerlos bien"
  >
@@ -3025,7 +3025,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setChartZoom((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- chartZoom ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-neutral-500'
+ chartZoom ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Ensancha el gráfico y añade scroll horizontal — más espacio entre puntos para leer tonalidad/BPM por tramos"
  >
@@ -3036,14 +3036,14 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowTransitionBadges((v) => !v)}
  className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
- showTransitionBadges ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-neutral-500'
+ showTransitionBadges ?'bg-[var(--surface)]/70 text-[var(--sunken)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Muestra u oculta los ticks (✓) y aspas (✕) de calidad de unión entre temas en el gráfico"
  >
  <span>✓ / ✕ Calidad de uniones</span>
  <span>{showTransitionBadges ?'ON' :'OFF'}</span>
  </button>
- <div className="flex flex-col gap-1 text-[9px] text-neutral-300 pt-1 border-t">
+ <div className="flex flex-col gap-1 text-[9px] text-[var(--ink)] pt-1 border-t">
  <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background:'#0284c7' }} />🌙 Balada</span>
  <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background:'#059669' }} />🎵 Media</span>
  <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background:'#a16207' }} />🔥 Alta</span>
@@ -3069,7 +3069,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => setShowEnergyMap((v) => !v)}
- className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-neutral-300 hover:text-[var(--ink)] transition-all cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-all cursor-pointer"
  title={showEnergyMap ?'Ocultar el mapa de energía' :'Mostrar el mapa de energía'}
  >
  {showEnergyMap ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
@@ -3077,7 +3077,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => setShowConcertPlayer((v) => !v)}
- className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-neutral-300 hover:text-[var(--ink)] transition-all cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-all cursor-pointer"
  title={showConcertPlayer ?'Ocultar reproductor de concierto' :'Mostrar reproductor de concierto'}
  >
  {showConcertPlayer ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
@@ -3092,7 +3092,7 @@ export default function RepertorioSetlists({
  bastante importante —cambia la energía de la canción en TODOS los
  repertorios— como para dejarlo oculto. Una línea, sin dismiss ni estado
  extra (AGENTS.md §6). */}
- <p className="text-[9px] text-neutral-500">
+ <p className="text-[9px] text-[var(--ink-2)]">
  💡 Toca un punto para reordenar o cambiar su energía — la energía es de la canción, se aplica en todos tus repertorios.
  </p>
  {optimizeSummary && (
@@ -3199,7 +3199,7 @@ export default function RepertorioSetlists({
  {/* Nombre del tema anterior/siguiente junto a la flecha que lleva hasta él —
  así se sabe con qué canción se va a intercambiar posición antes de
  pulsar, sin tener que mirar el gráfico para ubicarla. */}
- <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-right leading-tight">
+ <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-[var(--ink-2)] font-mono text-right leading-tight">
  {prevName ||''}
  </span>
  <button
@@ -3240,7 +3240,7 @@ export default function RepertorioSetlists({
  >
  <ChevronRight className="w-4 h-4" />
  </button>
- <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-left leading-tight">
+ <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-[var(--ink-2)] font-mono text-left leading-tight">
  {nextName ||''}
  </span>
  </div>
@@ -3331,7 +3331,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => setShowHeuristicWarnings((v) => !v)}
- className="w-full flex items-center justify-between px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-neutral-300 text-[10px] font-mono transition-all cursor-pointer"
+ className="w-full flex items-center justify-between px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink)] text-[10px] font-mono transition-all cursor-pointer"
  >
  <span>⚠️ Avisos y sugerencias ({energyAnalysis.warnings.length + (aiAnalysisResult?.suggestions?.length ?? 0)})</span>
  <span>{showHeuristicWarnings ?'▲' :'▼'}</span>
@@ -3642,7 +3642,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => handleSetTonalidadDeseada(it.id, note)}
  className={`px-1 py-1 rounded text-[10px] font-mono font-bold transition cursor-pointer ${
- desiredKey === note ?'bg-[var(--acc)] text-black' :'bg-[var(--surface)]/80 text-neutral-300 hover:bg-[var(--surface)]/70'
+ desiredKey === note ?'bg-[var(--acc)] text-black' :'bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70'
  }`}
  >
  {note}
@@ -3744,7 +3744,7 @@ export default function RepertorioSetlists({
  className={`w-5 h-5 rounded text-[9px] font-mono font-bold flex items-center justify-center transition disabled:opacity-50 ${
  currentVal1a10 === val
  ?'bg-[var(--acc)] text-black'
- :'bg-[var(--surface)]/80 text-neutral-300 hover:bg-[var(--surface)]/70'
+ :'bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70'
  }`}
  >
  {val}
@@ -3884,17 +3884,17 @@ export default function RepertorioSetlists({
  <div className={`border-t px-2.5 py-2 text-[9px] font-mono space-y-1 ${isStitchLight ?'bg-[var(--bg)]' :'bg-black/20'}`}>
  {song.cantantePrincipal && (
  <div className="text-[var(--ink-2)]">
- <span className="font-bold text-neutral-500">Cantante:</span> {song.cantantePrincipal}
+ <span className="font-bold text-[var(--ink-2)]">Cantante:</span> {song.cantantePrincipal}
  </div>
  )}
  {song.afinacion && (
  <div className="text-[var(--ink-2)]">
- <span className="font-bold text-neutral-500">Afinación:</span> {song.afinacion}
+ <span className="font-bold text-[var(--ink-2)]">Afinación:</span> {song.afinacion}
  </div>
  )}
  {song.albumDisco && (
  <div className="text-[var(--ink-2)]">
- <span className="font-bold text-neutral-500">Disco:</span> {song.albumDisco}
+ <span className="font-bold text-[var(--ink-2)]">Disco:</span> {song.albumDisco}
  </div>
  )}
 
@@ -3907,7 +3907,7 @@ export default function RepertorioSetlists({
  className={`w-full text-[9px] font-mono px-2 py-1 rounded mt-1 ${
  isStitchLight
  ?'bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-3)]'
- :'bg-black/40 text-neutral-300 placeholder:text-neutral-600'
+ :'bg-black/40 text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  }`}
  />
 
@@ -4587,7 +4587,7 @@ export default function RepertorioSetlists({
  }} className="space-y-4 text-xs font-mono">
 
  <div>
- <label className="block text-neutral-300 font-bold mb-1">Categoría del Evento *</label>
+ <label className="block text-[var(--ink)] font-bold mb-1">Categoría del Evento *</label>
  <select
  name="tipoItem"
  defaultValue={editingShowItem?.tipoItem ||'presentacion'}
@@ -4613,7 +4613,7 @@ export default function RepertorioSetlists({
  </div>
 
  <div>
- <label className="block text-neutral-300 font-bold mb-1">Título / Nombre en la Hoja de Escenario *</label>
+ <label className="block text-[var(--ink)] font-bold mb-1">Título / Nombre en la Hoja de Escenario *</label>
  <input
  name="tituloCustom"
  type="text"
@@ -4665,7 +4665,7 @@ export default function RepertorioSetlists({
  </div>
 
  <div>
- <label className="block text-neutral-300 font-bold mb-1">Notas / Cues para la Banda / Sonido (Opcional)</label>
+ <label className="block text-[var(--ink)] font-bold mb-1">Notas / Cues para la Banda / Sonido (Opcional)</label>
  <textarea
  name="notaTema"
  rows={2}
@@ -4711,7 +4711,7 @@ export default function RepertorioSetlists({
  </button>
  )}
 
- <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-neutral-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer">
+ <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer">
  <Upload className="w-3.5 h-3.5 text-sky-400" />
  <span>Subir MP3 / WAV</span>
  <input

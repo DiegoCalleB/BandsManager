@@ -413,7 +413,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transition-all ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :'bg-[var(--surface)] text-zinc-100'
+ :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* Header */}
@@ -646,7 +646,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <div className="space-y-1.5">
  <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">
  <span className="font-semibold uppercase tracking-wider">Vista previa del archivo</span>
- <span className="font-mono text-[11px] text-neutral-500">
+ <span className="font-mono text-[11px] text-[var(--ink-2)]">
  formato .{getContentForFormat().extension}
  </span>
  </div>

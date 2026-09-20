@@ -42,7 +42,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* Instagram */}
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center gap-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
  <Instagram className="w-3.5 h-3.5 text-pink-400" />
  Instagram (Perfil o URL)
  </label>
@@ -57,7 +57,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
 
  {/* Spotify */}
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center gap-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
  <Music className="w-3.5 h-3.5 text-emerald-400" />
  Spotify (Perfil de Artista)
  </label>
@@ -72,7 +72,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
 
  {/* YouTube */}
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center gap-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
  <Youtube className="w-3.5 h-3.5 text-red-400" />
  Canal de YouTube
  </label>
@@ -87,7 +87,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
 
  {/* TikTok */}
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center gap-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
  <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
  TikTok
  </label>
@@ -102,7 +102,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
 
  {/* Web Oficial */}
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center gap-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
  <Globe className="w-3.5 h-3.5 text-blue-400" />
  Sitio Web Oficial / Linktree
  </label>
@@ -117,7 +117,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
 
  {/* WhatsApp Contacto */}
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center gap-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
  <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
  WhatsApp de Contacto Directo
  </label>
@@ -135,14 +135,14 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  <div className="pt-3 border-t border-[var(--hair)] space-y-3">
  <div className="flex items-center gap-2">
  <ShoppingBag className="w-4 h-4 text-[var(--acc)]" />
- <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider">
  Tienda de Merchandising & Productos Oficiales
  </h4>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div>
- <label className="block text-xs font-medium text-zinc-400 mb-1">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
  Enlace a Tienda de Merch (Bandcamp, BigCartel, Tienda Online)
  </label>
  <input
@@ -155,7 +155,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-medium text-zinc-400 mb-1">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
  Artículos Destacados en Directo
  </label>
  <input

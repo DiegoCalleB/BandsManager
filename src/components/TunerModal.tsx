@@ -596,7 +596,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <span className="text-xs font-mono">Escuchando instrumento... Toca una cuerda</span>
  </div>
  ) : (
- <div className="flex flex-col items-center gap-2 text-neutral-500 py-2">
+ <div className="flex flex-col items-center gap-2 text-[var(--ink-2)] py-2">
  <MicOff className="w-8 h-8 opacity-40" />
  <span className="text-xs font-mono text-[var(--ink-2)]">Micrófono desactivado</span>
  </div>

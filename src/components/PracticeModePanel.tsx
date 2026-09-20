@@ -712,7 +712,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  </div>
 
  <div className="flex items-center gap-2 px-0.5">
- <span className="text-[10px] font-mono text-neutral-500 w-10 text-right">{Math.round(baseBpm * 0.4)}</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)] w-10 text-right">{Math.round(baseBpm * 0.4)}</span>
  <input
  type="range"
  min={Math.round(baseBpm * 0.4)}
@@ -723,7 +723,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  title="Ajuste fino de tempo — arrastra para cualquier BPM exacto"
  className="flex-1 accent-amber-500"
  />
- <span className="text-[10px] font-mono text-neutral-500 w-10">{Math.round(baseBpm * 1.6)}</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)] w-10">{Math.round(baseBpm * 1.6)}</span>
  </div>
  </div>
 
@@ -774,7 +774,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  >
  S
  </button>
- <Volume2 className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
+ <Volume2 className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
  <input
  type="range"
  min={0}

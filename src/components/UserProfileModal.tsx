@@ -667,7 +667,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
- <p className="text-[10px] font-mono text-neutral-500">
+ <p className="text-[10px] font-mono text-[var(--ink-2)]">
  Se creará en el plan <span className="text-[var(--acc)] font-bold">Promo</span> (dossier, calendario y fans).
  </p>
  ) : (
@@ -829,7 +829,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  disabled={isDeleting}
  onClick={() => setBandToDeleteInProfile({ id: b.band_id, name: b.bandName })}
  title="Eliminar proyecto"
- className="p-1.5 rounded-[var(--r-s)] text-neutral-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
  >
  {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
  </button>
@@ -1014,7 +1014,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  );
  })}
  </div>
- <p className="text-[10px] text-neutral-500 font-mono">
+ <p className="text-[10px] text-[var(--ink-2)] font-mono">
  Ahora mismo: {resolverTemaEspectro(prefEspectro) ==='dark' ?'oscuro' : resolverTemaEspectro(prefEspectro) ==='light' ?'claro' :'clásico'}
  </p>
  </div>
@@ -1156,7 +1156,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <span>Gestión de la Banda</span>
  </button>
  ) : (
- <span className="text-[10px] font-mono text-neutral-500">BandManager.io v2.0</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">BandManager.io v2.0</span>
  )}
 
  <button

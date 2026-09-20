@@ -157,7 +157,7 @@ export function SongModal({
  className="hidden"
  />
  {audioFileName && (
- <div className="mt-2 text-xs text-zinc-300 flex items-center gap-1.5 font-sans">
+ <div className="mt-2 text-xs text-[var(--ink-2)] flex items-center gap-1.5 font-sans">
  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span className="truncate">Archivo: {audioFileName}</span>
  </div>

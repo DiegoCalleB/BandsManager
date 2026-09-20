@@ -64,7 +64,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* Nombre de la Banda */}
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Nombre de la Banda o Proyecto Musical <span className="text-[var(--acc)]">*</span>
  </label>
  <input
@@ -78,7 +78,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
 
  {/* Ciudad Base */}
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Ciudad / Región de Origen <span className="text-[var(--acc)]">*</span>
  </label>
  <input
@@ -92,7 +92,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
 
  {/* Género */}
  <div className="md:col-span-2">
- <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Género / Estilo Musical <span className="text-[var(--acc)]">*</span>
  </label>
  <input
@@ -111,7 +111,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className={`text-[11px] px-2.5 py-1 rounded-[var(--r-s)] transition-colors cursor-pointer ${
  genre.toLowerCase().includes(g.toLowerCase())
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 font-semibold'
- :'bg-zinc-800/60 text-zinc-400 border-[var(--hair)] hover:border-[var(--hair)]'
+ :'bg-zinc-800/60 text-[var(--ink-2)] border-[var(--hair)] hover:border-[var(--hair)]'
  }`}
  >
  {g}
@@ -129,12 +129,12 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <Type className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-semibold text-[var(--ink)]">3. Estilo de Tipografía para el Nombre de la Banda</h3>
  </div>
- <span className="text-[11px] font-mono text-zinc-400">
+ <span className="text-[11px] font-mono text-[var(--ink-2)]">
  Se aplicará al Dossier EPK, cartelería y cabeceras
  </span>
  </div>
 
- <p className="text-xs text-zinc-400">
+ <p className="text-xs text-[var(--ink-2)]">
  Selecciona cómo quieres que luzca el nombre de tu banda en el EPK oficial y materiales de prensa:
  </p>
 
@@ -158,7 +158,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className={`text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded-full ${
  isSelected
  ?'bg-[var(--acc)] text-stone-950'
- :'bg-zinc-800 text-zinc-400 border-[var(--hair)]'
+ :'bg-zinc-800 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
  {f.badge}
@@ -180,7 +180,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  {previewName}
  </div>
 
- <p className="text-[11px] text-zinc-400 mt-1 line-clamp-2 leading-relaxed">
+ <p className="text-[11px] text-[var(--ink-2)] mt-1 line-clamp-2 leading-relaxed">
  {f.description}
  </p>
  </button>
@@ -212,14 +212,14 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  >
  {previewName}
  </div>
- <p className="text-[11px] text-zinc-400 truncate">
+ <p className="text-[11px] text-[var(--ink-2)] truncate">
  {genre ||'Género musical'} · {city ||'Ciudad'} · {language}
  </p>
  </div>
  </div>
 
  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
- <span className="text-xs text-zinc-400 font-mono">
+ <span className="text-xs text-[var(--ink-2)] font-mono">
  Fuente activa: <strong className="text-[var(--acc)]/70">{BAND_FONT_OPTIONS.find(f => f.id === fontStyle)?.name ||'Headline Rock'}</strong>
  </span>
  </div>
@@ -271,7 +271,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={logoUrl}
  onChange={(e) => setLogoUrl(e.target.value)}
  placeholder="O pega aquí una URL directa (https://...)"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900/60 border-[var(--hair)] text-zinc-300 placeholder-zinc-600 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900/60 border-[var(--hair)] text-[var(--ink-2)] placeholder-zinc-600 text-xs focus:outline-none focus:"
  />
  </div>
  </div>

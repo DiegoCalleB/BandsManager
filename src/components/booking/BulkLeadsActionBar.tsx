@@ -32,7 +32,7 @@ const STATUS_OPTIONS: { status: LeadStatus; label: string; color: string; icon: 
  { status:'respondido', label:'Respondido / Conversación', color:'bg-indigo-500/20 text-indigo-300 border-indigo-500/40', icon: MessageSquare },
  { status:'negociando', label:'Negociando Caché / Fecha', color:'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: ArrowRight },
  { status:'confirmado', label:'Confirmado (Cerrado)', color:'bg-emerald-500/30 text-[var(--ink)] border-emerald-400', icon: CheckCircle2 },
- { status:'aplazado', label:'Aplazado (Próxima temp.)', color:'bg-zinc-700/50 text-zinc-300 border-zinc-600', icon: Clock },
+ { status:'aplazado', label:'Aplazado (Próxima temp.)', color:'bg-zinc-700/50 text-[var(--ink-2)] border-[var(--hair)]600', icon: Clock },
  { status:'no_interesado', label:'No Interesado / Descartado', color:'bg-rose-500/20 text-[var(--ink-2)] border-rose-500/40', icon: ShieldAlert },
 ];
 
@@ -87,7 +87,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  ) : selectedCount > 0 ? (
  <MinusSquare className="w-5 h-5" />
  ) : (
- <Square className="w-5 h-5 text-zinc-400" />
+ <Square className="w-5 h-5 text-[var(--ink-2)]" />
  )}
  </button>
 
@@ -118,7 +118,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`md:hidden p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-[var(--ink)]'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-zinc-800 hover:text-[var(--ink)]'
  }`}
  title="Cerrar selección"
  >
@@ -156,10 +156,10 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  <div className={`absolute top-full mt-2 right-0 z-50 w-64 rounded-[var(--r-l)] shadow-2xl p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${
  isStitchLight
  ?'bg-white shadow-slate-400/50'
- :'bg-[var(--surface)] border-zinc-700 shadow-black/90'
+ :'bg-[var(--surface)] border-[var(--hair)]700 shadow-black/90'
  }`}>
  <div className={`px-2 py-1 text-[10px] font-mono uppercase font-bold border-b ${
- isStitchLight ?'text-[var(--ink-2)]' :'text-zinc-400 border-zinc-800'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)] border-[var(--hair)]800'
  }`}>
  Mover {selectedCount} {itemLabel} a:
  </div>
@@ -226,7 +226,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-amber-600'
- :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-[var(--acc)]/70'
+ :'bg-zinc-800 hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--acc)]/70'
  }`}
  title="Marcar como favoritos"
  >
@@ -240,7 +240,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-semibold transition-all flex items-center gap-1 cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
+ :'bg-zinc-800 hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--ink)]'
  }`}
  title="Exportar selección a CSV"
  >
@@ -263,7 +263,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`hidden md:flex p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-[var(--ink)]'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-zinc-800 hover:text-[var(--ink)]'
  }`}
  title="Deseleccionar todo"
  >
@@ -283,10 +283,10 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  <Trash2 className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold text-zinc-100 font-display">
+ <h3 className="text-base font-bold text-[var(--ink)] font-display">
  ¿Eliminar {selectedCount} {itemLabel}?
  </h3>
- <p className="text-xs text-zinc-400 font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-mono">
  Esta acción eliminará los registros seleccionados de la base de datos.
  </p>
  </div>
@@ -296,11 +296,11 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  ⚠️ Se borrarán definitivamente {selectedCount} elementos del CRM.
  </div>
 
- <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/80">
+ <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--hair)]800/80">
  <button
  type="button"
  onClick={() => setIsConfirmDeleteOpen(false)}
- className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors cursor-pointer"
+ className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>

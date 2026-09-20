@@ -22,7 +22,7 @@ interface BulkBandActionBarProps {
 }
 
 const BAND_STATUS_OPTIONS: { status: BandRelationshipStatus; label: string; color: string; icon: any }[] = [
- { status:'sin_contactar', label:'Sin Contactar', color:'bg-zinc-700/40 text-zinc-300 border-zinc-600', icon: Clock },
+ { status:'sin_contactar', label:'Sin Contactar', color:'bg-zinc-700/40 text-[var(--ink-2)] border-[var(--hair)]600', icon: Clock },
  { status:'intercambio_propuesto', label:'Intercambio Propuesto', color:'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Repeat },
  { status:'pendiente_respuesta', label:'Pendiente Respuesta', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
  { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-emerald-500/30 text-[var(--ink)] border-emerald-400', icon: CheckCircle2 },
@@ -77,7 +77,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  ) : selectedCount > 0 ? (
  <MinusSquare className="w-5 h-5" />
  ) : (
- <Square className="w-5 h-5 text-zinc-400" />
+ <Square className="w-5 h-5 text-[var(--ink-2)]" />
  )}
  </button>
 
@@ -108,7 +108,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`md:hidden p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-[var(--ink)]'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-zinc-800 hover:text-[var(--ink)]'
  }`}
  title="Cerrar selección"
  >
@@ -146,10 +146,10 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <div className={`absolute top-full mt-2 right-0 z-50 w-60 rounded-[var(--r-l)] shadow-2xl p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${
  isStitchLight
  ?'bg-white shadow-slate-400/50'
- :'bg-[var(--surface)] border-zinc-700 shadow-black/90'
+ :'bg-[var(--surface)] border-[var(--hair)]700 shadow-black/90'
  }`}>
  <div className={`px-2 py-1 text-[10px] font-mono uppercase font-bold border-b ${
- isStitchLight ?'text-[var(--ink-2)]' :'text-zinc-400 border-zinc-800'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)] border-[var(--hair)]800'
  }`}>
  Mover {selectedCount} bandas a:
  </div>
@@ -200,7 +200,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-amber-600'
- :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-[var(--acc)]/70'
+ :'bg-zinc-800 hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--acc)]/70'
  }`}
  title="Marcar bandas como favoritas"
  >
@@ -214,7 +214,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-semibold transition-all flex items-center gap-1 cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
+ :'bg-zinc-800 hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--ink)]'
  }`}
  title="Exportar bandas seleccionadas a CSV"
  >
@@ -237,7 +237,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`hidden md:flex p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-[var(--ink)]'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-zinc-800 hover:text-[var(--ink)]'
  }`}
  title="Deseleccionar todo"
  >
@@ -257,10 +257,10 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <Trash2 className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold text-zinc-100 font-display">
+ <h3 className="text-base font-bold text-[var(--ink)] font-display">
  ¿Eliminar {selectedCount} bandas?
  </h3>
- <p className="text-xs text-zinc-400 font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-mono">
  Esta acción eliminará los contactos de las bandas seleccionadas.
  </p>
  </div>
@@ -270,11 +270,11 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  ⚠️ Se borrarán definitivamente {selectedCount} bandas aliadas.
  </div>
 
- <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/80">
+ <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--hair)]800/80">
  <button
  type="button"
  onClick={() => setIsConfirmDeleteOpen(false)}
- className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors cursor-pointer"
+ className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>

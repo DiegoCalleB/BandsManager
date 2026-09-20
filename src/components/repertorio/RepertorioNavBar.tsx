@@ -60,10 +60,10 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
  </div>
  <div className="min-w-0">
- <h1 className={`text-base sm:text-lg font-bold tracking-tight leading-none truncate ${isStitchLight ?'text-[var(--ink)]' :'text-zinc-100'}`}>
+ <h1 className={`text-base sm:text-lg font-bold tracking-tight leading-none truncate ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  Repertorios
  </h1>
- <p className="text-xs text-zinc-400 mt-1 hidden sm:block truncate font-normal">
+ <p className="text-xs text-[var(--ink-2)] mt-1 hidden sm:block truncate font-normal">
  {activeTab ==='setlists' && `${setlists.length} setlists de directo`}
  {activeTab ==='catalogo' && `${songCount} canciones · ${albumCount} álbumes y EPs`}
  </p>
@@ -93,7 +93,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  ? isStitchLight
  ?'bg-white text-[var(--ink)] shadow-sm font-bold'
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
- :'text-zinc-400 hover:text-zinc-200 font-medium'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >
  <Layers className="w-3.5 h-3.5" />
@@ -114,7 +114,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  ? isStitchLight
  ?'bg-white text-[var(--ink)] shadow-sm font-bold'
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
- :'text-zinc-400 hover:text-zinc-200 font-medium'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >
  <Disc3 className="w-3.5 h-3.5" />
@@ -141,21 +141,21 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`w-full px-3 py-1.5 rounded-[var(--r-m)] text-left flex items-center justify-between gap-2 text-xs font-medium transition-all cursor-pointer shadow-xs ${
  isStitchLight
  ?'bg-white text-[var(--ink)] hover:'
- :'bg-[var(--surface)] text-zinc-200 hover:'
+ :'bg-[var(--surface)] text-[var(--ink)] hover:'
  }`}
  >
  <div className="flex items-center gap-2 min-w-0">
  <span className="text-[var(--acc)] font-bold shrink-0">📋</span>
- <span className="font-semibold truncate text-zinc-100">
+ <span className="font-semibold truncate text-[var(--ink)]">
  {activeSetlist ? activeSetlist.nombre :'Seleccionar repertorio'}
  </span>
  {activeSetlist && (
- <span className="text-[11px] text-zinc-400 shrink-0 hidden sm:inline">
+ <span className="text-[11px] text-[var(--ink-2)] shrink-0 hidden sm:inline">
  ({activeSetlist.items.filter(i => i.tipoItem ==='cancion').length} temas)
  </span>
  )}
  </div>
- <ChevronDown className={`w-3.5 h-3.5 text-zinc-400 shrink-0 transition-transform ${showSetlistDropdown ?'rotate-180' :''}`} />
+ <ChevronDown className={`w-3.5 h-3.5 text-[var(--ink-2)] shrink-0 transition-transform ${showSetlistDropdown ?'rotate-180' :''}`} />
  </button>
 
  {/* Setlist Dropdown List */}
@@ -165,9 +165,9 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  <div className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :' bg-[var(--surface)] text-zinc-200'
+ :' bg-[var(--surface)] text-[var(--ink)]'
  }`}>
- <div className="px-2.5 py-1.5 text-[11px] uppercase tracking-wider text-zinc-400 font-semibold flex items-center justify-between">
+ <div className="px-2.5 py-1.5 text-[11px] uppercase tracking-wider text-[var(--ink-2)] font-semibold flex items-center justify-between">
  <span>Tus Setlists ({setlists.length})</span>
  <button
  type="button"
@@ -195,7 +195,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 transition cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-semibold'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-zinc-300 hover:bg-white/5'
+ : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-white/5'
  }`}
  >
  <div className="min-w-0 truncate">
@@ -232,7 +232,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`p-1.5 rounded-[var(--r-m)] transition cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-300 hover:text-[var(--ink)] /70'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
  }`}
  title="Importar repertorio desde foto o PDF impreso"
  >
@@ -255,7 +255,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
  catalogoViewMode ==='albumes'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 shadow-xs font-bold'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Disc3 className="w-3.5 h-3.5" />
@@ -268,7 +268,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
  catalogoViewMode ==='canciones'
  ?'bg-emerald-500/20 text-[var(--ink-2)] shadow-xs font-bold'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Music className="w-3.5 h-3.5" />
@@ -277,7 +277,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  </div>
 
  {/* Mobile indicator for quick context */}
- <div className="md:hidden text-xs text-zinc-400 truncate">
+ <div className="md:hidden text-xs text-[var(--ink-2)] truncate">
  <span>{songCount} temas</span>
  <span className="opacity-50 mx-1">·</span>
  <span>{albumCount} discos</span>
@@ -301,7 +301,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 /80'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] /80'
  }`}
  >
  <Disc3 className="w-3.5 h-3.5 stroke-[2.5]" />

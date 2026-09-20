@@ -100,7 +100,7 @@ export function AIBandScoutModal({
 
  const bgColor = isStitchLight ?"bg-white" :"bg-[var(--surface)]";
  const textColor = isStitchLight ?"text-[var(--ink)]" :"text-[var(--ink)]";
- const subtextColor = isStitchLight ?"text-[var(--ink-2)]" :"text-gray-400";
+ const subtextColor = isStitchLight ?"text-[var(--ink-2)]" :"text-[var(--ink-2)]";
  const inputBg = isStitchLight ?"bg-[var(--bg)]" :"bg-[var(--surface)]";
  const borderColor = isStitchLight ?"" :"border-[#333]";
 
@@ -120,7 +120,7 @@ export function AIBandScoutModal({
  <p className={`text-xs ${subtextColor}`}>Descubre bandas para Co-booking o Date Swap</p>
  </div>
  </div>
- <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors text-gray-400 hover:text-gray-600">
+ <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors text-[var(--ink-2)] hover:text-[var(--ink-3)]">
  <X className="w-5 h-5" />
  </button>
  </div>
@@ -144,7 +144,7 @@ export function AIBandScoutModal({
  <div>
  <label className={`block text-xs font-bold mb-1.5 uppercase tracking-wider ${subtextColor}`}>Ciudad Origen de la Banda</label>
  <div className="relative">
- <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+ <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
  <input
  type="text"
  value={city}
@@ -158,7 +158,7 @@ export function AIBandScoutModal({
  <div>
  <label className={`block text-xs font-bold mb-1.5 uppercase tracking-wider ${subtextColor}`}>Estilo / Género Musical</label>
  <div className="relative">
- <Music className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+ <Music className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
  <input
  type="text"
  value={genre}

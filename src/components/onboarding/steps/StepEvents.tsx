@@ -48,7 +48,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  <h3 className="text-base font-semibold text-[var(--ink)]">Próximos Conciertos & Ensayos (Agenda)</h3>
  </div>
 
- <p className="text-xs text-zinc-400">
+ <p className="text-xs text-[var(--ink-2)]">
  Publica tus próximas fechas para que tus fans compren entradas y los promotores vean que tenéis una gira activa.
  </p>
 
@@ -74,7 +74,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  <div>
  <div className="flex items-center gap-2">
  <span className="text-sm font-medium text-[var(--ink)]">{ev.titulo}</span>
- <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 capitalize">
+ <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-[var(--ink-2)] capitalize">
  {ev.tipo}
  </span>
  </div>
@@ -100,7 +100,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
 
  {/* Add Event Form */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
- <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5">
  <Plus className="w-3.5 h-3.5 text-[var(--acc)]" />
  Añadir Fecha a la Agenda
  </h4>

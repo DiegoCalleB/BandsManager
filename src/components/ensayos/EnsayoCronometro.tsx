@@ -79,7 +79,7 @@ export function EnsayoCronometro({
  return (
  <div className="flex items-center gap-2 bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-m)] px-3 py-1.5 shadow-sm">
  <Clock className={`w-3.5 h-3.5 ${isActive ?'text-[var(--acc)] animate-pulse' :'text-[var(--ink-2)]'}`} />
- <span className={`font-mono font-bold text-sm tracking-wider ${isOvertime ?'text-rose-400' :'text-zinc-100'}`}>
+ <span className={`font-mono font-bold text-sm tracking-wider ${isOvertime ?'text-rose-400' :'text-[var(--ink)]'}`}>
  {formatTime(seconds)}
  </span>
  <button
@@ -110,7 +110,7 @@ export function EnsayoCronometro({
  <Clock className={`w-4 h-4 ${isActive ?'animate-pulse' :''}`} />
  </div>
  <div>
- <h4 className="text-xs font-mono font-bold text-zinc-200 uppercase tracking-wider">
+ <h4 className="text-xs font-mono font-bold text-[var(--ink)] uppercase tracking-wider">
  Cronómetro de Ensayo
  </h4>
  <p className="text-[10px] font-mono text-[var(--ink-2)]">
@@ -130,11 +130,11 @@ export function EnsayoCronometro({
  <div className="flex items-baseline justify-between gap-4 my-2">
  <div className="flex items-baseline gap-2">
  <span className={`text-3xl sm:text-4xl font-mono font-black tracking-tight ${
- isOvertime ?'text-rose-400' : isActive ?'text-[var(--acc)]' :'text-zinc-100'
+ isOvertime ?'text-rose-400' : isActive ?'text-[var(--acc)]' :'text-[var(--ink)]'
  }`}>
  {formatTime(seconds)}
  </span>
- <span className="text-xs font-mono text-neutral-500">
+ <span className="text-xs font-mono text-[var(--ink-2)]">
  / {formatTime(totalTargetSec)}
  </span>
  </div>
@@ -186,7 +186,7 @@ export function EnsayoCronometro({
  style={{ width: `${progressPct}%` }}
  />
  </div>
- <div className="flex justify-between items-center text-[10px] font-mono text-neutral-500 mt-1">
+ <div className="flex justify-between items-center text-[10px] font-mono text-[var(--ink-2)] mt-1">
  <span>{progressPct}% completado</span>
  <span>{Math.max(0, Math.round((totalTargetSec - seconds) / 60))} min restantes</span>
  </div>

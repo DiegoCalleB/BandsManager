@@ -103,7 +103,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  <div className="space-y-1.5">
  <label className="block text-[10px] font-mono uppercase tracking-wider text-[#d1b375] flex items-center justify-between">
  <span>Mensaje de Propuesta Generado (Músico a Músico)</span>
- <span className="text-[10px] text-neutral-500 lowercase">editable & listo para enviar</span>
+ <span className="text-[10px] text-[var(--ink-2)] lowercase">editable & listo para enviar</span>
  </label>
 
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] text-[10px] font-mono text-[var(--sunken)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
@@ -113,7 +113,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
 
  {/* Actions Bar */}
  <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
- <div className="text-[10px] font-mono text-neutral-500">
+ <div className="text-[10px] font-mono text-[var(--ink-2)]">
  Destinatario: <strong className="text-[var(--ink)]">{band.contacto_nombre || band.nombre_banda}</strong>
  </div>
 

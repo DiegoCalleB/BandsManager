@@ -777,13 +777,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </div>
 
  {/* Pie de seguridad y métricas */}
- <div className="pt-2.5 flex items-center justify-between text-[10px] text-neutral-500">
+ <div className="pt-2.5 flex items-center justify-between text-[10px] text-[var(--ink-2)]">
  <span className="flex items-center gap-1">
- <LockIcon className="w-3 h-3 text-neutral-500 shrink-0" />
+ <LockIcon className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
  <span>{t('revolutSecureDirect') ||'Pago seguro y directo a la banda · Sin intermediarios'}</span>
  </span>
  {totalClicks > 0 && (
- <span className="text-[9px] font-mono text-neutral-500 bg-[var(--surface)] px-1.5 py-0.5 rounded">
+ <span className="text-[9px] font-mono text-[var(--ink-2)] bg-[var(--surface)] px-1.5 py-0.5 rounded">
  {totalClicks} {totalClicks === 1 ? t('clickSingular') : t('clickPlural')}
  </span>
  )}
@@ -931,7 +931,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {codigoDescuentoFan && (
  <div className="pt-2">
- <p className="text-[10px] text-neutral-500 uppercase tracking-wider font-bold mb-1">{t('merchCode')}</p>
+ <p className="text-[10px] text-[var(--ink-2)] uppercase tracking-wider font-bold mb-1">{t('merchCode')}</p>
  <div className="flex items-center justify-center gap-2 p-3 bg-[var(--surface)] border-dashed rounded-[var(--r-s)]">
  <Tag className="w-4 h-4 text-emerald-400" />
  <span className="font-mono text-emerald-400 font-bold tracking-widest">{codigoDescuentoFan}</span>
@@ -1086,7 +1086,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Enlace a Inicio */}
  <div className="pt-2">
- <a href="/" className="text-xs font-mono text-neutral-500 hover:text-amber-500 underline transition-colors">
+ <a href="/" className="text-xs font-mono text-[var(--ink-2)] hover:text-amber-500 underline transition-colors">
  {t('backHome')}
  </a>
  </div>

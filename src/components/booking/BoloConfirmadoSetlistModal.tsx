@@ -163,10 +163,10 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
- <div className="w-full max-w-lg bg-zinc-950 border-zinc-800 rounded-3xl p-5 sm:p-6 text-[var(--ink)] space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
+ <div className="w-full max-w-lg bg-zinc-950 border-[var(--hair)]800 rounded-3xl p-5 sm:p-6 text-[var(--ink)] space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
  
  {/* Header */}
- <div className="flex justify-between items-start border-b border-zinc-800/80 pb-3">
+ <div className="flex justify-between items-start border-b border-[var(--hair)]800/80 pb-3">
  <div>
  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-black uppercase tracking-wider mb-1">
  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -175,13 +175,13 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  <h3 className="text-lg sm:text-xl font-black font-mono text-[var(--ink)]">
  {lead.nombre_sala}
  </h3>
- <p className="text-xs text-zinc-400 font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-mono">
  {lead.ciudad} {lead.region ? `• ${lead.region}` :''}
  </p>
  </div>
  <button
  onClick={onClose}
- className="p-1 rounded-[var(--r-m)] text-zinc-400 hover:text-[var(--ink)] hover:bg-zinc-800 transition-colors"
+ className="p-1 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-zinc-800 transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -190,7 +190,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  {/* Quick Details Form (Fecha y Duración pactada) */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
  <div className="space-y-1">
- <label className="text-zinc-400 flex items-center gap-1 font-bold">
+ <label className="text-[var(--ink-2)] flex items-center gap-1 font-bold">
  <Calendar className="w-3.5 h-3.5 text-[var(--ok)]" />
  Fecha del Concierto:
  </label>
@@ -198,12 +198,12 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="date"
  value={concertDate}
  onChange={(e) => setConcertDate(e.target.value)}
- className="w-full bg-zinc-900 border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus:border-[var(--hair)] focus:outline-none"
+ className="w-full bg-zinc-900 border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus:border-[var(--hair)] focus:outline-none"
  />
  </div>
 
  <div className="space-y-1">
- <label className="text-zinc-400 flex items-center gap-1 font-bold">
+ <label className="text-[var(--ink-2)] flex items-center gap-1 font-bold">
  <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
  Caché Pactado (€):
  </label>
@@ -212,14 +212,14 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  placeholder="Ej. 600"
  value={cacheAmount}
  onChange={(e) => setCacheAmount(e.target.value)}
- className="w-full bg-zinc-900 border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus: focus:outline-none"
+ className="w-full bg-zinc-900 border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus: focus:outline-none"
  />
  </div>
  </div>
 
  {/* Duración Pactada / Formato Selector */}
  <div className="space-y-1.5">
- <label className="text-xs font-mono font-bold text-zinc-300 flex items-center justify-between">
+ <label className="text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-between">
  <span>Duración pactada para el pase:</span>
  <span className="text-[var(--ok)]">{targetDurationMin} min</span>
  </label>
@@ -235,7 +235,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-all cursor-pointer text-center ${
  targetDurationMin === mins
  ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ok)] shadow-sm'
- :'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-[var(--ink)]'
+ :'bg-zinc-900 border-[var(--hair)]800 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {mins} min
@@ -247,7 +247,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  {/* Setlists Section: Sugerencia óptima o selector */}
  <div className="space-y-2 pt-1">
  <div className="flex items-center justify-between text-xs font-mono">
- <span className="text-zinc-300 font-bold flex items-center gap-1.5">
+ <span className="text-[var(--ink-2)] font-bold flex items-center gap-1.5">
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  Asignación de Repertorio Óptimo:
  </span>
@@ -255,7 +255,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="button"
  onClick={() => setGenerateNewSetlist(!generateNewSetlist)}
  className={`text-[11px] underline decoration-dotted transition-colors ${
- generateNewSetlist ?'text-[var(--ok)] font-bold' :'text-zinc-400 hover:text-[var(--ink)]'
+ generateNewSetlist ?'text-[var(--ok)] font-bold' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {generateNewSetlist ?'← Elegir de mis setlists' :'⚡ Crear setlist a medida'}
@@ -263,7 +263,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
 
  {isLoadingData ? (
- <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 border-zinc-800 text-center text-xs font-mono text-zinc-500 animate-pulse">
+ <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)]800 text-center text-xs font-mono text-zinc-500 animate-pulse">
  Calculando duraciones y repertorios óptimos...
  </div>
  ) : generateNewSetlist ? (
@@ -272,11 +272,11 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  <Zap className="w-4 h-4 text-[var(--ok)]" />
  <span>Se creará un nuevo setlist automático:</span>
  </div>
- <p className="text-[11px] font-mono text-zinc-300">"Bolo {lead.nombre_sala} ({targetDurationMin} min)" seleccionando canciones de tu catálogo según la energía requerida.
+ <p className="text-[11px] font-mono text-[var(--ink-2)]">"Bolo {lead.nombre_sala} ({targetDurationMin} min)" seleccionando canciones de tu catálogo según la energía requerida.
  </p>
  </div>
  ) : setlists.length === 0 ? (
- <div className="p-4 rounded-[var(--r-l)] bg-zinc-900 border-zinc-800 text-center space-y-2 text-xs font-mono text-zinc-400">
+ <div className="p-4 rounded-[var(--r-l)] bg-zinc-900 border-[var(--hair)]800 text-center space-y-2 text-xs font-mono text-[var(--ink-2)]">
  <p>No tienes ningún setlist guardado aún.</p>
  <button
  type="button"
@@ -306,12 +306,12 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  ?'bg-[var(--acc)]/15 /80 shadow-md'
  : isOptimal
  ?'bg-emerald-500/10 border-emerald-500/40 hover:bg-emerald-500/15'
- :'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700'
+ :'bg-zinc-900/60 border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  >
  <div className="space-y-0.5">
  <div className="flex items-center gap-2">
- <Music className={`w-3.5 h-3.5 ${isSelected ?'text-[var(--acc)]' :'text-zinc-400'}`} />
+ <Music className={`w-3.5 h-3.5 ${isSelected ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
  <span className="font-mono text-xs font-bold text-[var(--ink)]">
  {st.nombre}
  </span>
@@ -321,14 +321,14 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </span>
  )}
  </div>
- <p className="text-[10px] font-mono text-zinc-400">
+ <p className="text-[10px] font-mono text-[var(--ink-2)]">
  {durationMin} min aprox. • {st.items?.length || 0} items
  {isOptimal && ` • ${bestMatch?.reason}`}
  </p>
  </div>
 
  <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
- isSelected ?' bg-[var(--acc)]/60 text-black' :'border-zinc-700'
+ isSelected ?' bg-[var(--acc)]/60 text-black' :'border-[var(--hair)]700'
  }`}>
  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
  </div>
@@ -355,7 +355,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="button"
  disabled={isSubmitting}
  onClick={onConfirmWithoutSetlist}
- className="w-full py-2 px-3 text-center text-zinc-400 hover:text-zinc-200 text-xs font-mono transition-colors cursor-pointer"
+ className="w-full py-2 px-3 text-center text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono transition-colors cursor-pointer"
  >
  Confirmar solo en CRM (asignar repertorio más tarde)
  </button>

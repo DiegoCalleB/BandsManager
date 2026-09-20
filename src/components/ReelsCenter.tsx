@@ -1295,7 +1295,7 @@ export default function ReelsCenter({
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-neutral-500';
+ const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-2)]';
 
  return (
  <div data-modulo="reels" className={`space-y-6 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>
@@ -1304,8 +1304,8 @@ export default function ReelsCenter({
  <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  {/* HEADER / TITULO PRINCIPAL */}
  <div className="mb-2">
- <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-zinc-100 mb-2">Medios</h1>
- <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Analítica Social y Prensa</p>
+ <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-[var(--ink)] mb-2">Medios</h1>
+ <p className="text-sm font-mono text-[var(--ink-2)] uppercase tracking-widest">Analítica Social y Prensa</p>
  </div>
  <div className="flex gap-2.5 items-center flex-wrap">
  <button
@@ -1323,7 +1323,7 @@ export default function ReelsCenter({
  disabled={isSyncingReels}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncingReels
- ?'bg-[var(--surface)]/80 text-neutral-500 animate-pulse'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] animate-pulse'
  : isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-sm shadow-indigo-100'
  :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
@@ -1439,7 +1439,7 @@ export default function ReelsCenter({
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
  post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-neutral-300'
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-[var(--ink)]'
  }`}>
  {post.plataforma}
  </span>
@@ -1449,7 +1449,7 @@ export default function ReelsCenter({
  {post.contenido}
  </p>
  <div className={`flex justify-between items-center pt-1 ${isStitchLight ?'-slate-100' :'-bg-[var(--surface)]'}`}>
- <span className="text-[8px] font-mono text-neutral-500">{post.fecha}</span>
+ <span className="text-[8px] font-mono text-[var(--ink-2)]">{post.fecha}</span>
  <button 
  id={`btn-move-aprobado-${post.id}`}
  onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado:'aprobado' }); }}
@@ -1490,7 +1490,7 @@ export default function ReelsCenter({
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
  post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-neutral-300'
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-[var(--ink)]'
  }`}>
  {post.plataforma}
  </span>
@@ -1503,7 +1503,7 @@ export default function ReelsCenter({
  <button 
  id={`btn-move-borrador-${post.id}`}
  onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado:'borrador' }); }}
- className="text-[8px] font-mono text-neutral-500 hover:underline cursor-pointer bg-transparent -none p-0"
+ className="text-[8px] font-mono text-[var(--ink-2)] hover:underline cursor-pointer bg-transparent -none p-0"
  >
  ← Borrador
  </button>
@@ -1547,7 +1547,7 @@ export default function ReelsCenter({
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
  post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-neutral-300'
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-[var(--ink)]'
  }`}>
  {post.plataforma}
  </span>
@@ -1560,7 +1560,7 @@ export default function ReelsCenter({
  <button 
  id={`btn-move-aprobado-back-${post.id}`}
  onClick={(e) => { e.stopPropagation(); onUpdatePost(post.id, { estado:'aprobado' }); }}
- className="text-[8px] font-mono text-neutral-500 hover:underline cursor-pointer bg-transparent -none p-0"
+ className="text-[8px] font-mono text-[var(--ink-2)] hover:underline cursor-pointer bg-transparent -none p-0"
  >
  ← Re-editar
  </button>
@@ -1611,7 +1611,7 @@ export default function ReelsCenter({
 
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
  <div className="lg:col-span-4 space-y-2.5">
- <span className="block text-[9px] uppercase font-mono text-neutral-500">Seleccionar Tonalidad AI</span>
+ <span className="block text-[9px] uppercase font-mono text-[var(--ink-2)]">Seleccionar Tonalidad AI</span>
  <button
  id="btn-reels-hype"
  onClick={() => handleGenerateCopy('hype')}
@@ -1646,7 +1646,7 @@ export default function ReelsCenter({
  </div>
 
  <div className="lg:col-span-8 space-y-1.5">
- <span className="block text-[9px] uppercase font-mono text-neutral-500">Publicación Generada (Listo para copiar)</span>
+ <span className="block text-[9px] uppercase font-mono text-[var(--ink-2)]">Publicación Generada (Listo para copiar)</span>
  <textarea
  id="reels-generated-output"
  rows={6}
@@ -1734,7 +1734,7 @@ export default function ReelsCenter({
  </div>
  <div>
  <p className={`text-xs font-bold ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`}>{selectedFile.name}</p>
- <p className="text-[10px] text-neutral-500 font-mono mt-0.5">{(selectedFile.size / (1024 * 1024)).toFixed(1)} MB</p>
+ <p className="text-[10px] text-[var(--ink-2)] font-mono mt-0.5">{(selectedFile.size / (1024 * 1024)).toFixed(1)} MB</p>
  </div>
  <button
  id="btn-clear-file"
@@ -1765,7 +1765,7 @@ export default function ReelsCenter({
  </div>
  <div>
  <p className={`text-xs font-bold ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--sunken)]'}`}>Suelta tu vídeo aquí o haz clic para buscar</p>
- <p className="text-[10px] text-neutral-500 font-mono mt-1">Soporta .mp4, .mov, .m4v (Vídeo bruto de conciertos o ensayos, máx 100MB)</p>
+ <p className="text-[10px] text-[var(--ink-2)] font-mono mt-1">Soporta .mp4, .mov, .m4v (Vídeo bruto de conciertos o ensayos, máx 100MB)</p>
  </div>
  </div>
  )}
@@ -1782,7 +1782,7 @@ export default function ReelsCenter({
  </div>
  <div>
  <p className={`text-xs font-bold ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--sunken)]'}`}>Introduce la URL del vídeo de YouTube</p>
- <p className="text-[10px] text-neutral-500 font-mono mt-1">Extrae highlights de cualquier vídeo público de YouTube, Shorts o directo</p>
+ <p className="text-[10px] text-[var(--ink-2)] font-mono mt-1">Extrae highlights de cualquier vídeo público de YouTube, Shorts o directo</p>
  </div>
  <div className="relative">
  <input
@@ -1809,7 +1809,7 @@ export default function ReelsCenter({
  setLoadedFromSaveAt(null);
  setDetectedContentType(null);
  }}
- className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 text-xs font-mono bg-transparent -none cursor-pointer"
+ className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono bg-transparent -none cursor-pointer"
  >
  ×
  </button>
@@ -1819,7 +1819,7 @@ export default function ReelsCenter({
  {/* Ficha real del vídeo: sin esto el usuario no sabía si la URL era la correcta
  hasta después de gastar un análisis entero. */}
  {isFetchingMeta && (
- <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-neutral-500 pt-1">
+ <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-[var(--ink-2)] pt-1">
  <RefreshCw className="w-3 h-3 animate-spin" />
  <span>Leyendo la ficha del vídeo...</span>
  </div>
@@ -1849,7 +1849,7 @@ export default function ReelsCenter({
  {videoMeta.title ||'Vídeo de YouTube'}
  </p>
  <div className="flex flex-wrap gap-1.5 items-center text-[9px] font-mono">
- {videoMeta.author && <span className="text-neutral-500 truncate max-w-[120px]">{videoMeta.author}</span>}
+ {videoMeta.author && <span className="text-[var(--ink-2)] truncate max-w-[120px]">{videoMeta.author}</span>}
  {videoMeta.durationKnown ? (
  <span className={`px-1.5 py-0.5 rounded font-bold ${isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--acc)]/10 text-[var(--acc)]'}`}>
  {formatTime(videoMeta.duration)}
@@ -1858,7 +1858,7 @@ export default function ReelsCenter({
  <span className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)]">duración desconocida</span>
  )}
  <span className={`px-1.5 py-0.5 rounded font-bold ${
- videoMeta.hasTranscript ?'bg-emerald-500/10 text-emerald-400' :'bg-[var(--surface)]/80 text-neutral-500'
+ videoMeta.hasTranscript ?'bg-emerald-500/10 text-emerald-400' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
  {videoMeta.hasTranscript ? `subtítulos ✓ (${videoMeta.transcriptLines})` :'sin subtítulos'}
  </span>
@@ -1876,7 +1876,7 @@ export default function ReelsCenter({
  <label className="block text-[9px] font-mono uppercase text-[var(--ink-2)]">
  Tipo de material
  {contentType ==='auto' && detectedContentType && (
- <span className="normal-case font-sans text-neutral-500"> (detectado: {detectedContentType})</span>
+ <span className="normal-case font-sans text-[var(--ink-2)]"> (detectado: {detectedContentType})</span>
  )}
  </label>
  <select
@@ -1887,7 +1887,7 @@ export default function ReelsCenter({
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:-indigo-500'
- :'bg-[var(--surface)] text-neutral-300 focus:-[var(--acc)]/50'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  >
  <option value="auto">Detectar automáticamente</option>
@@ -1920,7 +1920,7 @@ export default function ReelsCenter({
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:-indigo-500'
- :'bg-[var(--surface)] text-neutral-300 focus:-[var(--acc)]/50'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  >
  <option value={15}>15 segundos (Ideal para Reels cortos / Stories)</option>
@@ -1956,7 +1956,7 @@ export default function ReelsCenter({
  ? isStitchLight
  ?'bg-indigo-600 text-white shadow-md hover:bg-indigo-700'
  :'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)] shadow-lg shadow-[var(--acc)]/10 hover:scale-[1.01]' 
- :'bg-[var(--surface)]/80 text-neutral-500 cursor-not-allowed'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  }`}
  >
  {isAnalyzing ? (
@@ -1980,7 +1980,7 @@ export default function ReelsCenter({
  <span className={`font-bold ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>Estado del análisis:</span>
  <span className="text-[var(--ink-2)]">Paso {loadingStep + 1} de {getLoadingSteps().length}</span>
  </div>
- <p className={`text-[11px] font-mono leading-normal ${isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'}`}>
+ <p className={`text-[11px] font-mono leading-normal ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>
  ⚡️ <span className={isStitchLight ?'text-indigo-500' :'text-[var(--accent)]'}>{getLoadingSteps()[loadingStep]}</span>
  </p>
  <div className={`w-full h-1.5 rounded-full overflow-hidden ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
@@ -2029,7 +2029,7 @@ export default function ReelsCenter({
  return (
  <div className="space-y-1.5">
  <div className="flex items-center justify-between">
- <span className="text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
+ <span className="text-[9px] font-mono uppercase text-[var(--ink-2)] tracking-wider">
  {conDesglose ?'Señales medidas (volumen · arranque · montaje)' :'Energía medida en el audio'}
  </span>
  <span className="text-[9px] font-mono text-emerald-400">● {ventanas.length} tramos con potencial</span>
@@ -2071,7 +2071,7 @@ export default function ReelsCenter({
  );
  })()}
  </div>
- <p className="text-[9px] font-mono text-neutral-600 leading-tight">
+ <p className="text-[9px] font-mono text-[var(--ink-2)] leading-tight">
  {conDesglose
  ?'Cuanto más intenso, más potencial combinado (volumen + arranque + montaje). El recuadro verde es el corte seleccionado.'
  :'Cuanto más intenso, más suena la banda en ese punto. El recuadro verde es el corte seleccionado.'}
@@ -2131,7 +2131,7 @@ export default function ReelsCenter({
  <Play className="w-3.5 h-3.5 fill-[var(--acc)] ml-0.5" />
  </div>
  </div>
- <span className="text-[8px] font-mono text-neutral-500 self-end z-10 bg-black/60 px-1 rounded truncate w-full">
+ <span className="text-[8px] font-mono text-[var(--ink-2)] self-end z-10 bg-black/60 px-1 rounded truncate w-full">
  CLIP-{index + 1}.mp4
  </span>
  </div>
@@ -2272,7 +2272,7 @@ export default function ReelsCenter({
  key={`clip-tone-${star}`}
  type="button"
  onClick={() => setClipToneRating(clipToneRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${clipToneRating >= star ?'text-[var(--acc)]' :'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${clipToneRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'}`}
  title={`Valorar el tono: ${star}/5`}
  >
  <Star className="w-3.5 h-3.5 fill-current" />
@@ -2288,7 +2288,7 @@ export default function ReelsCenter({
  key={`clip-content-${star}`}
  type="button"
  onClick={() => setClipContentRating(clipContentRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${clipContentRating >= star ?'text-[var(--acc)]' :'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${clipContentRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'}`}
  title={`Valorar el contenido: ${star}/5`}
  >
  <Star className="w-3.5 h-3.5 fill-current" />
@@ -2299,14 +2299,14 @@ export default function ReelsCenter({
  </div>
 
  <div className="flex items-center gap-1.5 text-[10px] font-mono">
- <span className="text-neutral-500 uppercase tracking-wider">Alcance del ajuste:</span>
+ <span className="text-[var(--ink-2)] uppercase tracking-wider">Alcance del ajuste:</span>
  <button
  type="button"
  onClick={() => setClipFeedbackScope('este_reel')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
  clipFeedbackScope ==='este_reel'
  ?'bg-[var(--surface)]/70 text-[var(--ink)] font-bold'
- :'bg-transparent text-neutral-500 hover:text-neutral-300'
+ :'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Solo este corte
@@ -2317,7 +2317,7 @@ export default function ReelsCenter({
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all flex items-center gap-1 ${
  clipFeedbackScope ==='global'
  ?'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
- :'bg-transparent text-neutral-500 hover:text-neutral-300'
+ :'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="La IA recordará esta corrección también para futuros Reels de la banda"
  >
@@ -2334,7 +2334,7 @@ export default function ReelsCenter({
 
  {highlights[selectedHighlightIndex]?.reason && (
  <div className={`p-2.5 rounded-[var(--r-m)] text-[11px] font-sans leading-relaxed ${
- isStitchLight ?'bg-white/80 text-[var(--ink-2)]' :'bg-black/40 text-neutral-300'
+ isStitchLight ?'bg-white/80 text-[var(--ink-2)]' :'bg-black/40 text-[var(--ink)]'
  }`}>
  <span className="font-mono text-[9px] uppercase font-bold text-[var(--ink-2)] block mb-0.5">Diagnóstico IA del Fragmento:</span>
  <p>{highlights[selectedHighlightIndex]?.reason}</p>
@@ -2363,7 +2363,7 @@ export default function ReelsCenter({
  <div className={`p-3 rounded-[var(--r-m)] flex gap-3 items-start text-[11px] leading-relaxed ${
  isStitchLight 
  ?'bg-indigo-50/30 text-[var(--ink-2)]' 
- :'bg-[var(--acc)]/5 -[var(--acc)]/15 text-neutral-300'
+ :'bg-[var(--acc)]/5 -[var(--acc)]/15 text-[var(--ink)]'
  }`}>
  <Clock className={`w-4.5 h-4.5 mt-0.5 shrink-0 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`} />
  <div className="space-y-0.5">
@@ -2448,10 +2448,10 @@ export default function ReelsCenter({
  disabled={isScheduling}
  className={`w-full py-3.5 rounded-[var(--r-m)] font-mono text-xs font-bold tracking-widest uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isScheduling
- ?'bg-[var(--surface)]/80 text-neutral-500 cursor-not-allowed'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  : isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] font-black shadow-md'
- :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-black shadow-lg shadow-[var(--acc)]/15'
+ :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] font-black shadow-lg shadow-[var(--acc)]/15'
  }`}
  >
  {isScheduling ? (
@@ -2512,7 +2512,7 @@ export default function ReelsCenter({
  </p>
  </div>
  <span className={`text-[8px] font-mono px-2 py-0.5 rounded uppercase ${
- isStitchLight ?'-slate-200 text-[var(--ink-3)] bg-[var(--bg)]' :'-neutral-800 text-neutral-500'
+ isStitchLight ?'-slate-200 text-[var(--ink-3)] bg-[var(--bg)]' :'-neutral-800 text-[var(--ink-2)]'
  }`}>
  Live Database
  </span>
@@ -2541,12 +2541,12 @@ export default function ReelsCenter({
  <div className="flex items-center gap-2 flex-wrap">
  <span className={`text-[8px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
  post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-neutral-300'
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-[var(--ink)]'
  }`}>
  {post.plataforma}
  </span>
  <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
- <Clock className="w-3.5 h-3.5 text-neutral-500" /> {post.fecha}
+ <Clock className="w-3.5 h-3.5 text-[var(--ink-2)]" /> {post.fecha}
  </span>
  <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold uppercase tracking-wider">
  {post.estado}
@@ -2560,7 +2560,7 @@ export default function ReelsCenter({
  <div className={`flex md:flex-col justify-end items-end gap-2 md: md: pt-2.5 md:pt-0 md:pl-4 shrink-0 ${
  isStitchLight ?'-slate-200' :'-bg-[var(--surface)]'
  }`}>
- <span className="text-[8px] font-mono text-neutral-500">Responsable: {post.responsable ||'Community Manager'}</span>
+ <span className="text-[8px] font-mono text-[var(--ink-2)]">Responsable: {post.responsable ||'Community Manager'}</span>
  <button
  id={`delete-post-${post.id}`}
  onClick={async () => {
@@ -2569,7 +2569,7 @@ export default function ReelsCenter({
  alert('Publicación desactivada/movida a borrador.');
  }
  }}
- className="p-1 text-neutral-600 hover:text-rose-500 transition-colors bg-transparent -none cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-rose-500 transition-colors bg-transparent -none cursor-pointer"
  title="Eliminar del Calendario"
  >
  <Trash2 className="w-4 h-4" />
@@ -2592,7 +2592,7 @@ export default function ReelsCenter({
  <div className="space-y-3">
  <div className={` pb-2 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <h3 className={`text-xs font-mono uppercase tracking-widest ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>Vista Previa en Redes</h3>
- <p className="text-[9px] text-neutral-500 font-mono mt-0.5">Visualiza cómo se verá la copia y el contenido en directo</p>
+ <p className="text-[9px] text-[var(--ink-2)] font-mono mt-0.5">Visualiza cómo se verá la copia y el contenido en directo</p>
  </div>
 
  {/* Smart Phone Shell Frame */}
@@ -2916,8 +2916,8 @@ export default function ReelsCenter({
  </div>
  </div>
  ) : (
- <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-500 justify-end">
- <CheckCircle2 className="w-3.5 h-3.5 text-neutral-600" />
+ <div className="flex items-center gap-1.5 text-[10px] font-mono text-[var(--ink-2)] justify-end">
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Todo sincronizado</span>
  </div>
  )}
@@ -2947,7 +2947,7 @@ export default function ReelsCenter({
  e.stopPropagation();
  setIsExpandedPreview(false);
  }}
- className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)]/80 text-neutral-300 hover:text-[var(--ink)] transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center backdrop-blur-sm"
+ className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)]/80 text-[var(--ink)] hover:text-[var(--ink)] transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center backdrop-blur-sm"
  title="Cerrar modo cine (ESC o Click fuera)"
  >
  <X className="w-6 h-6" />
@@ -3184,7 +3184,7 @@ export default function ReelsCenter({
  <button
  id="expanded-mute-btn"
  onClick={() => setIsPreviewMuted(!isPreviewMuted)}
- className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-neutral-300 hover:text-[var(--ink)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all cursor-pointer shadow-lg select-none text-xs font-mono font-bold"
+ className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] hover:text-[var(--ink)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all cursor-pointer shadow-lg select-none text-xs font-mono font-bold"
  >
  {isPreviewMuted ? (
  <>
@@ -3235,8 +3235,8 @@ export default function ReelsCenter({
  {/* Virality Card & Reason */}
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/50 -neutral-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
  <div className="space-y-1">
- <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block">Por qué este momento es viral</span>
- <p className="text-xs text-neutral-300 leading-relaxed max-w-xl">
+ <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider block">Por qué este momento es viral</span>
+ <p className="text-xs text-[var(--ink)] leading-relaxed max-w-xl">
  {highlights[selectedHighlightIndex]?.description ||'La IA está analizando los ganchos emocionales de este intervalo.'}
  </p>
  </div>
@@ -3343,7 +3343,7 @@ export default function ReelsCenter({
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Clock className="w-4 h-4 text-[var(--acc)]" />
- <span className="text-xs font-mono font-extrabold uppercase text-neutral-300 tracking-wider">
+ <span className="text-xs font-mono font-extrabold uppercase text-[var(--ink)] tracking-wider">
  Línea de Tiempo Interactiva
  </span>
  </div>
@@ -3358,7 +3358,7 @@ export default function ReelsCenter({
  <span>00:00</span>
  <span className="text-[9px] text-[var(--acc)]/80 font-bold flex items-center gap-1">
  <span>🎛️ Arrastra los bordes</span>
- <span className="text-neutral-500">•</span>
+ <span className="text-[var(--ink-2)]">•</span>
  <span>Haz click para posicionar</span>
  </span>
  <span>{formatTime(totalDuration)}</span>
@@ -3457,7 +3457,7 @@ export default function ReelsCenter({
  id="btn-crop-start-minus"
  type="button"
  onClick={() => handleAdjustCrop('start_minus')}
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 cursor-pointer"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-[var(--ink)] flex items-center justify-center gap-1 cursor-pointer"
  title="Mover inicio 1 segundo atrás (extender por la izquierda)"
  >
  <ChevronLeft className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -3468,7 +3468,7 @@ export default function ReelsCenter({
  type="button"
  disabled={start >= end - 1}
  onClick={() => handleAdjustCrop('start_plus')}
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-[var(--ink)] flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
  title="Mover inicio 1 segundo adelante (recortar por la izquierda)"
  >
  <span>+1s (Recortar)</span>
@@ -3493,7 +3493,7 @@ export default function ReelsCenter({
  type="button"
  disabled={end <= start + 1}
  onClick={() => handleAdjustCrop('end_minus')}
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-[var(--ink)] flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
  title="Mover fin 1 segundo atrás (recortar por la derecha)"
  >
  <ChevronLeft className="w-4 h-4 text-amber-500 shrink-0" />
@@ -3503,7 +3503,7 @@ export default function ReelsCenter({
  id="btn-crop-end-plus"
  type="button"
  onClick={() => handleAdjustCrop('end_plus')}
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-neutral-300 flex items-center justify-center gap-1 cursor-pointer"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-[var(--ink)] flex items-center justify-center gap-1 cursor-pointer"
  title="Mover fin 1 segundo adelante (extender por la derecha)"
  >
  <span>+1s (Extender)</span>
@@ -3530,7 +3530,7 @@ export default function ReelsCenter({
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/60 -neutral-800/85 space-y-4">
  <div className="flex items-center gap-2">
  <Film className="w-4 h-4 text-emerald-400 shrink-0" />
- <span className="text-xs font-mono font-extrabold uppercase text-neutral-300 tracking-wider">
+ <span className="text-xs font-mono font-extrabold uppercase text-[var(--ink)] tracking-wider">
  Generador de Reel Físico y Subtítulos
  </span>
  </div>
@@ -3542,7 +3542,7 @@ export default function ReelsCenter({
  {/* Opciones de renderizado */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1.5">
- <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Encuadre vertical</span>
+ <span className="block text-[9px] font-mono uppercase text-[var(--ink-2)] tracking-wider">Encuadre vertical</span>
  <div className="grid grid-cols-3 gap-1">
  {([
  { valor:'crop' as const, etiqueta:'Recortar', ayuda:'Recorta los laterales. Encuadre cerrado: puede dejar fuera a parte de la banda.' },
@@ -3568,7 +3568,7 @@ export default function ReelsCenter({
  </div>
 
  <div className="space-y-1.5">
- <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Subtítulos</span>
+ <span className="block text-[9px] font-mono uppercase text-[var(--ink-2)] tracking-wider">Subtítulos</span>
  <button
  type="button"
  onClick={() => setBurnSubtitles(v => !v)}
@@ -3586,7 +3586,7 @@ export default function ReelsCenter({
  <span>{burnSubtitles ?'Incrustados en el vídeo' :'Solo pista .vtt aparte'}</span>
  </button>
  {videoMeta && !videoMeta.hasTranscript && (
- <p className="text-[9px] font-mono text-neutral-600 leading-tight">Este vídeo no tiene transcripción en YouTube.</p>
+ <p className="text-[9px] font-mono text-[var(--ink-2)] leading-tight">Este vídeo no tiene transcripción en YouTube.</p>
  )}
  {burnSubtitles && (
  <button
@@ -3644,7 +3644,7 @@ export default function ReelsCenter({
  </div>
  </div>
 
- <p className="text-[11px] text-neutral-300">
+ <p className="text-[11px] text-[var(--ink)]">
  Clip listo{renderedClipSize > 0 ? ` (${(renderedClipSize / (1024 * 1024)).toFixed(1)} MB)` :''}. Se está reproduciendo en el simulador de la izquierda y puedes descargarlo ya.
  </p>
 
@@ -3739,7 +3739,7 @@ export default function ReelsCenter({
  <span className="text-[8.5px] font-mono text-[var(--acc)] font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded shrink-0">
  {cue.start.toFixed(1)}s
  </span>
- <p className="text-neutral-300 font-sans italic leading-tight">"{cue.text}"
+ <p className="text-[var(--ink)] font-sans italic leading-tight">"{cue.text}"
  </p>
  </div>
  ))}
@@ -3796,7 +3796,7 @@ export default function ReelsCenter({
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/40 -neutral-800/60 space-y-3">
  {clip.hookText && (
  <div className="space-y-1">
- <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
+ <span className="block text-[9px] font-mono uppercase text-[var(--ink-2)] tracking-wider">
  Rótulo para los primeros 2 segundos
  </span>
  <div className="flex items-center gap-2">
@@ -3814,14 +3814,14 @@ export default function ReelsCenter({
 
  {clip.cta && (
  <div className="space-y-1">
- <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Llamada a la acción</span>
- <p className="text-[11px] text-neutral-300 leading-snug">{clip.cta}</p>
+ <span className="block text-[9px] font-mono uppercase text-[var(--ink-2)] tracking-wider">Llamada a la acción</span>
+ <p className="text-[11px] text-[var(--ink)] leading-snug">{clip.cta}</p>
  </div>
  )}
 
  {variantes.length > 1 && (
  <div className="space-y-1.5">
- <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
+ <span className="block text-[9px] font-mono uppercase text-[var(--ink-2)] tracking-wider">
  Versiones por plataforma (pulsa para usarla)
  </span>
  <div className="flex flex-wrap gap-1.5">
@@ -3847,7 +3847,7 @@ export default function ReelsCenter({
  {(clip.hashtags || []).length > 0 && (
  <div className="space-y-1.5">
  <div className="flex justify-between items-center">
- <span className="text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Hashtags sugeridos</span>
+ <span className="text-[9px] font-mono uppercase text-[var(--ink-2)] tracking-wider">Hashtags sugeridos</span>
  <button
  type="button"
  onClick={() => setEditedCopy(prev => `${prev.trimEnd()}\n\n${(clip.hashtags || []).join('')}`.trim())}
@@ -3904,7 +3904,7 @@ export default function ReelsCenter({
  placeholder="Escribe el copy para tus redes sociales..."
  className="w-full text-xs font-sans bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-[var(--sunken)] focus:outline-none focus:-neutral-700 leading-relaxed font-normal shadow-inner"
  />
- <p className="text-[9.5px] font-mono text-neutral-500">
+ <p className="text-[9.5px] font-mono text-[var(--ink-2)]">
  * Puedes editar este texto libremente antes de programarlo. Se actualizará en tiempo real en la pantalla del simulador de la izquierda.
  </p>
  </div>
@@ -3912,7 +3912,7 @@ export default function ReelsCenter({
  {/* Scheduling controls inside Modal */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-[var(--r-m)] bg-[var(--surface)]/30 -neutral-800/50">
  <div>
- <label className="block text-[9px] font-mono uppercase text-neutral-500 mb-1 font-bold">Plataforma</label>
+ <label className="block text-[9px] font-mono uppercase text-[var(--ink-2)] mb-1 font-bold">Plataforma</label>
  <select
  id="modal-platform-select"
  value={selectedPlatform}
@@ -3931,7 +3931,7 @@ export default function ReelsCenter({
  </div>
 
  <div>
- <label className="block text-[9px] font-mono uppercase text-neutral-500 mb-1 font-bold">Fecha de Publicación</label>
+ <label className="block text-[9px] font-mono uppercase text-[var(--ink-2)] mb-1 font-bold">Fecha de Publicación</label>
  <input
  id="modal-date-input"
  type="date"
@@ -3942,7 +3942,7 @@ export default function ReelsCenter({
  </div>
 
  <div>
- <label className="block text-[9px] font-mono uppercase text-neutral-500 mb-1 font-bold">Hora Óptima Sugerida</label>
+ <label className="block text-[9px] font-mono uppercase text-[var(--ink-2)] mb-1 font-bold">Hora Óptima Sugerida</label>
  <input
  id="modal-time-input"
  type="time"
@@ -3989,7 +3989,7 @@ export default function ReelsCenter({
  ))}
  </div>
  ) : (
- <span className="text-[10px] font-mono text-neutral-500">Se guarda en tu agenda de Reels</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">Se guarda en tu agenda de Reels</span>
  )}
  </div>
 

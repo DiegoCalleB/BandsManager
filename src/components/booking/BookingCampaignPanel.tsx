@@ -147,7 +147,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <label className="block text-xs text-[var(--ink-3)] font-medium mb-2 uppercase tracking-wider">Fechas Clave del Concierto</label>
  <div className="flex gap-2 flex-wrap items-center">
  {campaignForm.targetDates?.map((date, idx) => (
- <div key={idx} className="flex items-center gap-1.5 hover:bg-[var(--surface)] hover:bg-gray-200/80 px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors">
+ <div key={idx} className="flex items-center gap-1.5 hover:bg-[var(--surface)] hover:bg-[var(--surface)]/80 px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors">
  <Calendar className="w-3.5 h-3.5 text-[var(--ink-3)] shrink-0" />
  <input
  type="date"
@@ -234,7 +234,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </button>
  <button 
  onClick={handleSave}
- className="px-4 py-2 text-sm bg-black text-[var(--ink)] hover:bg-gray-800 rounded-[var(--r-s)] font-medium flex items-center gap-2"
+ className="px-4 py-2 text-sm bg-black text-[var(--ink)] hover:bg-[var(--surface)]800 rounded-[var(--r-s)] font-medium flex items-center gap-2"
  >
  <Check className="w-4 h-4" /> Guardar y Activar
  </button>

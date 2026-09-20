@@ -778,7 +778,7 @@ export function ReelsMetricsView({
  disabled={isScanningMetrics}
  className={`flex-1 md:flex-initial px-4 py-2.5 rounded-[var(--r-m)] font-mono text-[10px] font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isScanningMetrics
- ?'bg-[var(--surface)]/80 text-neutral-500 cursor-not-allowed'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  :'bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] shadow-lg shadow-emerald-900/30'
  }`}
  >
@@ -793,7 +793,7 @@ export function ReelsMetricsView({
  disabled={isSyncingMetrics}
  className={`px-3 py-2.5 rounded-[var(--r-m)] font-mono text-[10px] font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isSyncingMetrics
- ?'bg-[var(--surface)]/80 text-neutral-500 cursor-not-allowed'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--bg)]'
  :'bg-[var(--surface)] text-[var(--ink-3)] hover:bg-[var(--surface)]/80'
@@ -1102,7 +1102,7 @@ export function ReelsMetricsView({
  ? isStitchLight
  ?'bg-pink-50 border-pink-300 text-pink-700 shadow-sm'
  :'bg-pink-950/30 border-pink-500/40 text-pink-300 shadow-sm shadow-pink-950/20'
- :'bg-[var(--surface)]/30 text-neutral-500 opacity-60 hover:opacity-100'
+ :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
  onClick={() => toggleChannel('instagram')}
@@ -1118,7 +1118,7 @@ export function ReelsMetricsView({
  {selectedChannels.instagram ? (
  <Eye className="w-3 h-3 text-pink-400 ml-0.5" />
  ) : (
- <EyeOff className="w-3 h-3 text-neutral-500 ml-0.5" />
+ <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
  )}
  </button>
  <button
@@ -1138,7 +1138,7 @@ export function ReelsMetricsView({
  ? isStitchLight
  ?'bg-cyan-50 border-cyan-300 text-cyan-700 shadow-sm'
  :'bg-cyan-950/30 border-cyan-500/40 text-cyan-300 shadow-sm shadow-cyan-950/20'
- :'bg-[var(--surface)]/30 text-neutral-500 opacity-60 hover:opacity-100'
+ :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
  onClick={() => toggleChannel('tiktok')}
@@ -1154,7 +1154,7 @@ export function ReelsMetricsView({
  {selectedChannels.tiktok ? (
  <Eye className="w-3 h-3 text-cyan-400 ml-0.5" />
  ) : (
- <EyeOff className="w-3 h-3 text-neutral-500 ml-0.5" />
+ <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
  )}
  </button>
  <button
@@ -1174,7 +1174,7 @@ export function ReelsMetricsView({
  ? isStitchLight
  ?'bg-red-50 border-red-300 text-red-700 shadow-sm'
  :'bg-red-950/30 border-red-500/40 text-red-300 shadow-sm shadow-red-950/20'
- :'bg-[var(--surface)]/30 text-neutral-500 opacity-60 hover:opacity-100'
+ :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
  onClick={() => toggleChannel('youtube')}
@@ -1190,7 +1190,7 @@ export function ReelsMetricsView({
  {selectedChannels.youtube ? (
  <Eye className="w-3 h-3 text-red-400 ml-0.5" />
  ) : (
- <EyeOff className="w-3 h-3 text-neutral-500 ml-0.5" />
+ <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
  )}
  </button>
  <button
@@ -1210,7 +1210,7 @@ export function ReelsMetricsView({
  ? isStitchLight
  ?'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-sm'
  :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink-2)] shadow-sm shadow-emerald-950/20'
- :'bg-[var(--surface)]/30 text-neutral-500 opacity-60 hover:opacity-100'
+ :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
  onClick={() => toggleChannel('spotify')}
@@ -1226,7 +1226,7 @@ export function ReelsMetricsView({
  {selectedChannels.spotify ? (
  <Eye className="w-3 h-3 text-emerald-400 ml-0.5" />
  ) : (
- <EyeOff className="w-3 h-3 text-neutral-500 ml-0.5" />
+ <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
  )}
  </button>
  <button
@@ -1244,9 +1244,9 @@ export function ReelsMetricsView({
  <div className="h-64 w-full relative">
  {(!selectedChannels.instagram && !selectedChannels.tiktok && !selectedChannels.youtube && (!hasSpotify || !selectedChannels.spotify)) ? (
  <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border-dashed rounded-[var(--r-m)] bg-[var(--surface)]/20">
- <SlidersHorizontal className="w-8 h-8 text-neutral-500 mb-2" />
+ <SlidersHorizontal className="w-8 h-8 text-[var(--ink-2)] mb-2" />
  <p className="text-xs font-mono font-medium text-[var(--ink-3)]">Todos los canales están ocultos</p>
- <p className="text-[10px] font-mono text-neutral-500 mt-1 max-w-xs">
+ <p className="text-[10px] font-mono text-[var(--ink-2)] mt-1 max-w-xs">
  Haz clic en las etiquetas de Instagram, TikTok o YouTube para activar su curva y ver la escala ajustada.
  </p>
  <button
@@ -1368,7 +1368,7 @@ export function ReelsMetricsView({
  <h3 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Video className="w-3.5 h-3.5 text-emerald-500" /> Monitoreo de Views y Contenidos Indexados
  </h3>
- <p className="text-[9px] font-mono text-neutral-500 mt-0.5">
+ <p className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">
  Vídeos y lanzamientos extraídos en vivo desde los canales oficiales de la banda.
  </p>
  </div>
@@ -1378,7 +1378,7 @@ export function ReelsMetricsView({
  </div>
 
  {contentItems.length === 0 ? (
- <div className="py-8 text-center text-neutral-500 font-mono text-xs border-dashed rounded-[var(--r-m)]">
+ <div className="py-8 text-center text-[var(--ink-2)] font-mono text-xs border-dashed rounded-[var(--r-m)]">
  Pulsa <b className="text-emerald-400">"Ejecutar Radar Ahora"</b> para escanear y listar los vídeos y reproducciones de tus canales.
  </div>
  ) : (
@@ -1406,7 +1406,7 @@ export function ReelsMetricsView({
  <Youtube className="w-2.5 h-2.5" /> {item.platform}
  </span>
  {item.published_at && (
- <span className="text-[8px] font-mono text-neutral-500">{item.published_at.split('T')[0]}</span>
+ <span className="text-[8px] font-mono text-[var(--ink-2)]">{item.published_at.split('T')[0]}</span>
  )}
  </div>
  <h4 className={`text-xs font-bold line-clamp-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`} title={item.title}>
@@ -1416,7 +1416,7 @@ export function ReelsMetricsView({
 
  <div className="flex items-center justify-between pt-2 border-t /10">
  <span className="text-sm font-black font-mono text-emerald-500">
- {(item.views || 0).toLocaleString()} <span className="text-[9px] text-neutral-500 font-normal">views</span>
+ {(item.views || 0).toLocaleString()} <span className="text-[9px] text-[var(--ink-2)] font-normal">views</span>
  </span>
  {item.url && (
  <a
@@ -1445,7 +1445,7 @@ export function ReelsMetricsView({
  <h3 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Plus className="w-3.5 h-3.5" /> {editingMetricId ?'Editar Checkpoint' :'Nuevo Checkpoint Manual'}
  </h3>
- <p className="text-[9px] font-mono text-neutral-500 mt-0.5">
+ <p className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">
  Guarda un registro de audiencia para persistirlo en Supabase.
  </p>
  </div>
@@ -1613,10 +1613,10 @@ export function ReelsMetricsView({
  disabled={isSavingMetric}
  className={`flex-1 py-2.5 rounded-[var(--r-m)] font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer flex items-center justify-center gap-1.5 transition-all ${
  isSavingMetric
- ?'bg-[var(--surface)]/80 text-neutral-500 cursor-not-allowed'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  : isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-md'
- :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/15'
+ :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/15'
  }`}
  >
  {isSavingMetric ?'Guardando...' : editingMetricId ?'Actualizar Snapshot' :'Añadir Snapshot'}
@@ -1645,7 +1645,7 @@ export function ReelsMetricsView({
  <h3 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Table className="w-3.5 h-3.5" /> Registros Históricos en Supabase ({metrics.length})
  </h3>
- <p className="text-[9px] font-mono text-neutral-500 mt-0.5">
+ <p className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">
  Snapshots persistentes y deltas calculados de evolución diaria.
  </p>
  </div>
@@ -1663,7 +1663,7 @@ export function ReelsMetricsView({
  <th className="py-2.5 font-medium text-center">Acciones</th>
  </tr>
  </thead>
- <tbody className="divide-y divide-neutral-500/10">
+ <tbody className="divide-y divide-[var(--hair)]500/10">
  {metrics.length === 0 ? (
  <tr>
  <td colSpan={3 + activeCount} className="py-12 px-4">
@@ -1690,7 +1690,7 @@ export function ReelsMetricsView({
  const formatDelta = (delta: number) => {
  if (delta > 0) return <span className="text-emerald-500 font-bold">+{delta}</span>;
  if (delta < 0) return <span className="text-rose-500 font-bold">{delta}</span>;
- return <span className="text-neutral-500">0</span>;
+ return <span className="text-[var(--ink-2)]">0</span>;
  };
 
  const parts = m.fecha.split('-');
@@ -1706,36 +1706,36 @@ export function ReelsMetricsView({
  {hasInstagram && (
  <td className="py-3 text-right">
  <div className="font-bold">{(m.instagram_followers || m.instagram || 0).toLocaleString()}</div>
- <div className="text-[8px] text-neutral-500">{formatDelta(instaDelta)}</div>
+ <div className="text-[8px] text-[var(--ink-2)]">{formatDelta(instaDelta)}</div>
  </td>
  )}
  {hasTikTok && (
  <td className="py-3 text-right">
  <div className="font-bold">{(m.tiktok_followers || m.tiktok || 0).toLocaleString()}</div>
- <div className="text-[8px] text-neutral-500">{formatDelta(tiktokDelta)}</div>
+ <div className="text-[8px] text-[var(--ink-2)]">{formatDelta(tiktokDelta)}</div>
  </td>
  )}
  {hasYouTube && (
  <td className="py-3 text-right">
  <div className="font-bold">{(m.youtube_subscribers || m.youtube || 0).toLocaleString()}</div>
- <div className="text-[8px] text-neutral-500">{formatDelta(youtubeDelta)}</div>
+ <div className="text-[8px] text-[var(--ink-2)]">{formatDelta(youtubeDelta)}</div>
  </td>
  )}
  {hasSpotify && (
  <td className="py-3 text-right">
  <div className="font-bold">{(m.spotify_monthly_listeners || m.spotify || 0).toLocaleString()}</div>
- <div className="text-[8px] text-neutral-500">{formatDelta(spotifyDelta)}</div>
+ <div className="text-[8px] text-[var(--ink-2)]">{formatDelta(spotifyDelta)}</div>
  </td>
  )}
  <td className="py-3 pl-3 text-[var(--ink-2)] font-sans max-w-[120px] truncate" title={m.notas}>
- {m.notas || <span className="text-neutral-600 font-mono text-[9px]">-</span>}
+ {m.notas || <span className="text-[var(--ink-2)] font-mono text-[9px]">-</span>}
  </td>
  <td className="py-3 text-center">
  <div className="flex justify-center items-center gap-1.5">
  <button
  type="button"
  onClick={() => handleEditMetricClick(m)}
- className="p-1 hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-none text-neutral-500"
+ className="p-1 hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-none text-[var(--ink-2)]"
  title="Editar snapshot"
  >
  <Edit className="w-3.5 h-3.5" />
@@ -1748,7 +1748,7 @@ export function ReelsMetricsView({
  await onDeleteMetric(m.id);
  }
  }}
- className="p-1 hover:text-rose-500 transition-colors cursor-pointer bg-transparent border-none text-neutral-500"
+ className="p-1 hover:text-rose-500 transition-colors cursor-pointer bg-transparent border-none text-[var(--ink-2)]"
  title="Eliminar snapshot"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1931,7 +1931,7 @@ export function ReelsMetricsView({
  :'bg-black/50 text-[var(--ink)] focus:ring-pink-500 focus:border-pink-500'
  }`}
  />
- <div className="absolute right-3 top-3 text-neutral-500">
+ <div className="absolute right-3 top-3 text-[var(--ink-2)]">
  <Key className="w-4 h-4" />
  </div>
  </div>
@@ -1951,7 +1951,7 @@ export function ReelsMetricsView({
  disabled={isConnectingIg || !igTokenInput.trim()}
  className={`px-4 py-2.5 rounded-[var(--r-m)] font-mono text-xs font-bold tracking-wider uppercase flex items-center gap-2 transition-all cursor-pointer ${
  isConnectingIg || !igTokenInput.trim()
- ?'bg-[var(--surface)]/80 text-neutral-500 cursor-not-allowed'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  :'bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-[var(--ink)] shadow-lg shadow-pink-900/30'
  }`}
  >
@@ -2130,7 +2130,7 @@ export function ReelsMetricsView({
  disabled={isAnalyzingScreenshot}
  className={`w-full py-3 rounded-[var(--r-m)] font-mono text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 transition-all cursor-pointer ${
  isAnalyzingScreenshot
- ?'bg-[var(--surface)]/80 text-neutral-500 cursor-not-allowed'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  :'bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-[var(--ink)] shadow-lg shadow-indigo-900/30'
  }`}
  >

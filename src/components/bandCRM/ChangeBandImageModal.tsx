@@ -110,20 +110,20 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  onClick={onClose}
  >
  <div 
- className="bg-[var(--surface)] border-zinc-800 rounded-[var(--r-l)] w-full max-w-md p-5 shadow-2xl relative text-zinc-100 flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
+ className="bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-l)] w-full max-w-md p-5 shadow-2xl relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
  onClick={(e) => e.stopPropagation()}
  >
- <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+ <div className="flex items-center justify-between border-b border-[var(--hair)]800 pb-3">
  <div className="flex items-center gap-2.5">
  <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-m)]">
  <Camera className="w-5 h-5 text-[var(--acc)]" />
  </div>
  <div>
- <h3 className="font-display font-bold text-base text-zinc-100">Cambiar Imagen / Logo</h3>
- <p className="text-xs text-zinc-400 font-sans">{band.nombre_banda}</p>
+ <h3 className="font-display font-bold text-base text-[var(--ink)]">Cambiar Imagen / Logo</h3>
+ <p className="text-xs text-[var(--ink-2)] font-sans">{band.nombre_banda}</p>
  </div>
  </div>
- <button onClick={onClose} className="p-1.5 hover:bg-zinc-800 rounded-[var(--r-s)] text-zinc-400"><X className="w-5 h-5" /></button>
+ <button onClick={onClose} className="p-1.5 hover:bg-zinc-800 rounded-[var(--r-s)] text-[var(--ink-2)]"><X className="w-5 h-5" /></button>
  </div>
 
  <div className="flex items-center justify-center py-2 bg-zinc-900/80 rounded-[var(--r-m)]">
@@ -131,7 +131,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  {band.imagen_url ? (
  <img src={band.imagen_url} alt={band.nombre_banda} className="w-20 h-20 rounded-[var(--r-l)] object-cover border-2 border-[var(--acc)] shadow-lg" />
  ) : (
- <div className="w-20 h-20 rounded-[var(--r-l)] bg-zinc-800 border-2 border-zinc-700 flex items-center justify-center text-3xl shadow-inner">
+ <div className="w-20 h-20 rounded-[var(--r-l)] bg-zinc-800 border-2 border-[var(--hair)]700 flex items-center justify-center text-3xl shadow-inner">
  {band.icono ||'🎸'}
  </div>
  )}
@@ -150,8 +150,8 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  <div className="flex items-center gap-3">
  <div className="p-2 bg-zinc-800 text-[var(--acc)] rounded-[var(--r-s)]">{isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}</div>
  <div>
- <span className="block font-bold text-xs text-zinc-200">{isUploading ?'Subiendo...' :'Subir desde dispositivo'}</span>
- <span className="block text-[11px] text-zinc-400 font-sans">Formatos JPG, PNG, WEBP o SVG</span>
+ <span className="block font-bold text-xs text-[var(--ink)]">{isUploading ?'Subiendo...' :'Subir desde dispositivo'}</span>
+ <span className="block text-[11px] text-[var(--ink-2)] font-sans">Formatos JPG, PNG, WEBP o SVG</span>
  </div>
  </div>
  <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} disabled={isUploading || isSearching} />
@@ -175,13 +175,13 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  </button>
 
  {!showUrlInput ? (
- <button type="button" onClick={() => setShowUrlInput(true)} className="w-full p-2.5 bg-zinc-900/60 hover:bg-zinc-800 border-zinc-800 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-zinc-300 font-medium transition-all">
- <LinkIcon className="w-4 h-4 text-zinc-400" />
+ <button type="button" onClick={() => setShowUrlInput(true)} className="w-full p-2.5 bg-zinc-900/60 hover:bg-zinc-800 border-[var(--hair)]800 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all">
+ <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Pegar URL directa de imagen</span>
  </button>
  ) : (
- <div className="p-3 bg-zinc-900 border-zinc-700 rounded-[var(--r-m)] space-y-2">
- <input type="url" placeholder="https://ejemplo.com/logo.png" value={customUrl} onChange={(e) => setCustomUrl(e.target.value)} className="w-full bg-black/60 border-zinc-700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-[var(--acc)]" />
+ <div className="p-3 bg-zinc-900 border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
+ <input type="url" placeholder="https://ejemplo.com/logo.png" value={customUrl} onChange={(e) => setCustomUrl(e.target.value)} className="w-full bg-black/60 border-[var(--hair)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]" />
  <button onClick={handleSaveCustomUrl} disabled={!customUrl.trim()} className="px-3 py-1.5 bg-[var(--acc)] text-black font-bold text-xs rounded-[var(--r-s)] hover:bg-[var(--acc)]/60">Guardar</button>
  </div>
  )}

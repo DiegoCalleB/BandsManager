@@ -212,7 +212,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <Mic className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-mono font-bold text-zinc-100 uppercase">
+ <h3 className="text-sm font-mono font-bold text-[var(--ink)] uppercase">
  Grabadora de Audio en Vivo
  </h3>
  <p className="text-xs text-[var(--ink-2)]">
@@ -277,12 +277,12 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  placeholder="Título de la toma (ej. Riff nuevo tema 2)..."
  value={recordingTitle}
  onChange={e => setRecordingTitle(e.target.value)}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-zinc-100 outline-none focus:"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none focus:"
  />
  <select
  value={recordingTag}
  onChange={e => setRecordingTag(e.target.value as any)}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-zinc-100 outline-none cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none cursor-pointer"
  >
  <option value="toma_completa">🎵 Toma Completa</option>
  <option value="riff">🎸 Riff / Idea Nueva</option>
@@ -335,7 +335,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <FileAudio className="w-4 h-4 text-[var(--acc)]" />
- <h3 className="text-sm font-mono font-bold text-zinc-100 uppercase">
+ <h3 className="text-sm font-mono font-bold text-[var(--ink)] uppercase">
  Tomas y Audios del Ensayo ({recordings.length})
  </h3>
  </div>
@@ -358,7 +358,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  >
  <div className="flex items-center justify-between gap-2">
  <div className="flex items-center gap-2 min-w-0">
- <span className="text-xs font-bold text-zinc-100 truncate">
+ <span className="text-xs font-bold text-[var(--ink)] truncate">
  {rec.titulo}
  </span>
  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--surface)]/80 text-[var(--acc)]/70 uppercase">
@@ -367,12 +367,12 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  <div className="flex items-center gap-2 shrink-0">
- <span className="text-[10px] font-mono text-neutral-500">
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">
  {formatTime(rec.duracionSegundos)}
  </span>
  <button
  onClick={() => handleDeleteRecording(rec.id)}
- className="text-neutral-500 hover:text-rose-400 p-0.5 cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-rose-400 p-0.5 cursor-pointer"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -395,7 +395,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">
  <Sparkles className="w-4 h-4" />
  </span>
- <h3 className="text-sm font-mono font-bold text-zinc-100 uppercase tracking-wider">
+ <h3 className="text-sm font-mono font-bold text-[var(--ink)] uppercase tracking-wider">
  Acta de Ensayo Inteligente (Human-in-the-loop)
  </h3>
  </div>
@@ -438,7 +438,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
  {/* Display Acta Content */}
  {!acta ? (
- <div className="p-8 text-center text-neutral-500 text-xs space-y-2 border-dashed border-[var(--hair)] rounded-[var(--r-m)]">
+ <div className="p-8 text-center text-[var(--ink-2)] text-xs space-y-2 border-dashed border-[var(--hair)] rounded-[var(--r-m)]">
  <p>Pulsa"Generar Acta con IA" para obtener un resumen estructurado del ensayo listo para compartir.</p>
  </div>
  ) : (

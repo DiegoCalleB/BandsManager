@@ -470,7 +470,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  </div>
  <div className="flex justify-between items-center text-[11px]">
  <span className={`font-medium ${textColors[Math.max(0, score - 1)]}`}>{labels[Math.max(0, score - 1)]}</span>
- <span className="text-neutral-500">{pass.length < 6 ?'Mínimo 6 caracteres' :'✓ Longitud OK'}</span>
+ <span className="text-[var(--ink-2)]">{pass.length < 6 ?'Mínimo 6 caracteres' :'✓ Longitud OK'}</span>
  </div>
  </div>
  );
@@ -604,7 +604,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={username}
  onChange={(e) => setUsername(e.target.value)}
  placeholder="Correo electrónico o Usuario"
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)] focus:ring-2 focus:ring-[var(--acc)]/20 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)] focus:ring-2 focus:ring-[var(--acc)]/20 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all duration-200 shadow-inner"
  required
  />
  </div>
@@ -616,13 +616,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={password}
  onChange={(e) => setPassword(e.target.value)}
  placeholder="Contraseña"
- className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)] focus:ring-2 focus:ring-[var(--acc)]/20 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)] focus:ring-2 focus:ring-[var(--acc)]/20 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all duration-200 shadow-inner"
  required
  />
  <button
  type="button"
  onClick={() => setShowPassword(!showPassword)}
- className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer"
+ className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer"
  >
  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
@@ -678,7 +678,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="w-full border-t /80"></div>
  </div>
  <div className="relative flex justify-center text-xs">
- <span className="px-2.5 bg-[var(--surface)] text-neutral-500 font-medium">O continuar con</span>
+ <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">O continuar con</span>
  </div>
  </div>
 
@@ -697,7 +697,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  >
  Crear banda
  </button>
- <span className="text-neutral-700">•</span>
+ <span className="text-[var(--ink-3)]">•</span>
  <button 
  type="button"
  onClick={() => {
@@ -764,7 +764,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={resetEmailOrUsername}
  onChange={(e) => setResetEmailOrUsername(e.target.value)}
  placeholder="Correo electrónico o Usuario"
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -799,7 +799,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  onChange={(e) => setResetCode(e.target.value)}
  placeholder="Código de 6 dígitos"
  maxLength={6}
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] font-mono tracking-wider placeholder:font-sans placeholder:tracking-normal placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] font-mono tracking-wider placeholder:font-sans placeholder:tracking-normal placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -813,13 +813,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={resetNewPassword}
  onChange={(e) => setResetNewPassword(e.target.value)}
  placeholder="Nueva contraseña (mín. 6 caracteres)"
- className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  <button
  type="button"
  onClick={() => setShowResetNewPassword(!showResetNewPassword)}
- className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer"
+ className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer"
  >
  {showResetNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
@@ -835,7 +835,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={resetConfirmPassword}
  onChange={(e) => setResetConfirmPassword(e.target.value)}
  placeholder="Repite la nueva contraseña"
- className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -906,7 +906,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={regLeaderName}
  onChange={(e) => setRegLeaderName(e.target.value)}
  placeholder="Tu Nombre o Apodo"
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -926,7 +926,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={regBandName}
  onChange={(e) => setRegBandName(e.target.value)}
  placeholder="Nombre de la Banda / Artista (Ej: KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑)"
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner font-semibold"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner font-semibold"
  required
  />
  </div>
@@ -939,7 +939,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={regEmail}
  onChange={(e) => setRegEmail(e.target.value)}
  placeholder="Correo electrónico"
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -952,13 +952,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={regPassword}
  onChange={(e) => setRegPassword(e.target.value)}
  placeholder="Contraseña"
- className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  <button
  type="button"
  onClick={() => setShowRegPassword(!showRegPassword)}
- className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer"
+ className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer"
  >
  {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
@@ -987,7 +987,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="w-full border-t"></div>
  </div>
  <div className="relative flex justify-center text-xs">
- <span className="px-2 bg-[var(--bg)] text-neutral-500">O regístrate con</span>
+ <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">O regístrate con</span>
  </div>
  </div>
 
@@ -1026,7 +1026,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={activateEmail}
  onChange={(e) => setActivateEmail(e.target.value)}
  placeholder="Correo electrónico de invitación"
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -1072,7 +1072,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="w-full border-t"></div>
  </div>
  <div className="relative flex justify-center text-xs">
- <span className="px-2 bg-[var(--bg)] text-neutral-500">O comprobar con</span>
+ <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">O comprobar con</span>
  </div>
  </div>
 
@@ -1105,7 +1105,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={activateName}
  onChange={(e) => setActivateName(e.target.value)}
  placeholder="Nombre real completo"
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -1117,7 +1117,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={activateUsername}
  onChange={(e) => setActivateUsername(e.target.value)}
  placeholder="Nombre de usuario elegido"
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -1129,13 +1129,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={activatePassword}
  onChange={(e) => setActivatePassword(e.target.value)}
  placeholder="Crea tu contraseña"
- className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  <button
  type="button"
  onClick={() => setShowActivatePassword(!showActivatePassword)}
- className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer"
+ className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer"
  >
  {showActivatePassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
@@ -1162,7 +1162,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="w-full border-t"></div>
  </div>
  <div className="relative flex justify-center text-xs">
- <span className="px-2 bg-[var(--bg)] text-neutral-500">O activar con tu cuenta de Google</span>
+ <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">O activar con tu cuenta de Google</span>
  </div>
  </div>
 

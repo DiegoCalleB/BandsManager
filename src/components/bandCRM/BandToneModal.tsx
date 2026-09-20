@@ -483,21 +483,21 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* 1. Main Tone Cards */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px] font-mono">
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Tono General</span>
+ <span className="text-[var(--ink-2)] uppercase tracking-wider block text-[9px]">Tono General</span>
  <span className="font-bold text-[var(--acc)] block text-xs mt-0.5">
  {toneData.tono_comunicacion ||'No especificado'}
  </span>
  </div>
 
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Tratamiento</span>
+ <span className="text-[var(--ink-2)] uppercase tracking-wider block text-[9px]">Tratamiento</span>
  <span className="font-bold text-sky-400 block text-xs mt-0.5">
  {toneData.tratamiento_habitual ||'Tú / Informal'}
  </span>
  </div>
 
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Nivel de Energía</span>
+ <span className="text-[var(--ink-2)] uppercase tracking-wider block text-[9px]">Nivel de Energía</span>
  <span className="font-bold text-emerald-400 block text-xs mt-0.5">
  {toneData.nivel_energia ||'Alta / Explosiva'}
  </span>
@@ -512,7 +512,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </span>
  {toneData.emojis_frecuentes && toneData.emojis_frecuentes.length > 0 && (
  <div className="flex items-center gap-1 text-sm">
- <span className="text-[9px] font-mono text-neutral-500 uppercase mr-1">Emojis:</span>
+ <span className="text-[9px] font-mono text-[var(--ink-2)] uppercase mr-1">Emojis:</span>
  {toneData.emojis_frecuentes.map((e, idx) => (
  <span key={idx}>{e}</span>
  ))}
@@ -531,7 +531,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </span>
  ))
  ) : (
- <span className="text-[10px] font-mono text-neutral-500">No se detectaron términos específicos.</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">No se detectaron términos específicos.</span>
  )}
  </div>
 
@@ -694,7 +694,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onClick={() => handleDeleteLearnedRule('pitch', cat,'manual', idx)}
  disabled={savingManual}
  title="Quitar esta regla manual"
- className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+ className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
  >
  ✕
  </button>
@@ -711,7 +711,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onClick={() => handleDeleteLearnedRule('pitch', cat,'auto', idx)}
  disabled={savingAuto}
  title="Quitar esta regla (p. ej. si contradice tu configuración manual)"
- className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+ className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
  >
  ✕
  </button>
@@ -737,7 +737,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onKeyDown={(e) => { if (e.key ==='Enter') handleAddLearnedRule('pitch', cat); }}
  placeholder="🔒 + añadir regla manual (protegida)..."
  disabled={savingManual}
- className="flex-1 px-2 py-1 rounded bg-black/40 text-[10px] text-zinc-200 font-sans focus:outline-none focus:border-violet-500 disabled:opacity-50"
+ className="flex-1 px-2 py-1 rounded bg-black/40 text-[10px] text-[var(--ink)] font-sans focus:outline-none focus:border-violet-500 disabled:opacity-50"
  />
  <button
  onClick={() => handleAddLearnedRule('pitch', cat)}
@@ -752,11 +752,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  })}
  </div>
  ) : (
- <p className="text-[10px] font-mono text-neutral-500">
+ <p className="text-[10px] font-mono text-[var(--ink-2)]">
  Todavía no hay reglas aprendidas. Corrige al menos 2 pitches para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa"Entrenar ADN de tono ahora". Para no esperar a eso, puedes pegar directamente conversaciones reales buenas en <strong className="text-violet-300">Booking CRM → Plantillas de Email → Hilos de Email de Ejemplo</strong>.
  </p>
  )}
- <p className="text-[9px] font-mono text-neutral-600">
+ <p className="text-[9px] font-mono text-[var(--ink-2)]">
  🔒 = regla escrita a mano, nunca se pierde al re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se fusiona con lo anterior en cada re-entrenamiento
  </p>
  </div>
@@ -804,7 +804,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onClick={() => handleDeleteLearnedRule('reply', cat,'manual', idx)}
  disabled={savingManual}
  title="Quitar esta regla manual"
- className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+ className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
  >
  ✕
  </button>
@@ -821,7 +821,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onClick={() => handleDeleteLearnedRule('reply', cat,'auto', idx)}
  disabled={savingAuto}
  title="Quitar esta regla (p. ej. si contradice tu configuración manual de Estrategias de Respuesta)"
- className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+ className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
  >
  ✕
  </button>
@@ -847,7 +847,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onKeyDown={(e) => { if (e.key ==='Enter') handleAddLearnedRule('reply', cat); }}
  placeholder="🔒 + añadir regla manual (protegida)..."
  disabled={savingManual}
- className="flex-1 px-2 py-1 rounded bg-black/40 text-[10px] text-zinc-200 font-sans focus:outline-none focus:border-sky-500 disabled:opacity-50"
+ className="flex-1 px-2 py-1 rounded bg-black/40 text-[10px] text-[var(--ink)] font-sans focus:outline-none focus:border-sky-500 disabled:opacity-50"
  />
  <button
  onClick={() => handleAddLearnedRule('reply', cat)}
@@ -862,11 +862,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  })}
  </div>
  ) : (
- <p className="text-[10px] font-mono text-neutral-500">
+ <p className="text-[10px] font-mono text-[var(--ink-2)]">
  Todavía no hay reglas aprendidas de respuestas. Corrige al menos 2 respuestas para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa"Entrenar ADN de tono ahora". Para no esperar a eso, puedes pegar directamente conversaciones reales buenas en <strong className="text-sky-300">Booking CRM → Plantillas de Email → Hilos de Email de Ejemplo</strong>.
  </p>
  )}
- <p className="text-[9px] font-mono text-neutral-600">
+ <p className="text-[9px] font-mono text-[var(--ink-2)]">
  🔒 = regla escrita a mano, nunca se pierde al re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se fusiona con lo anterior en cada re-entrenamiento
  </p>
  </div>

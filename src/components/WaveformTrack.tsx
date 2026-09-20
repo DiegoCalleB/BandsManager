@@ -348,7 +348,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  className="absolute top-0 bottom-0 right-0 bg-black/40 border-l border-dashed border-[var(--hair)] flex items-center justify-end px-3 pointer-events-none z-10"
  style={{ left: `${trackWidthPercent}%` }}
  >
- <span className="text-[9px] font-mono text-neutral-500 font-semibold uppercase tracking-wider">
+ <span className="text-[9px] font-mono text-[var(--ink-2)] font-semibold uppercase tracking-wider">
  Fin de pista ({formatSecs(effTrackDur)})
  </span>
  </div>

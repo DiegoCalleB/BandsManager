@@ -1756,14 +1756,14 @@ export function PdfExportModal({
  <h1 className="text-[14pt] font-black uppercase tracking-tighter m-0 leading-none text-black font-['Anton',sans-serif]">
  {bandName.toUpperCase()}
  </h1>
- <div className="text-[9pt] font-bold text-neutral-700 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-full font-['Oswald',sans-serif]">
+ <div className="text-[9pt] font-bold text-[var(--ink-3)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-full font-['Oswald',sans-serif]">
  {activeSetlist.nombre.toUpperCase()}
  </div>
  </div>
  </div>
 
  <div className="border-2 border-black bg-white p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap shadow-sm">
- <div className="text-[6pt] font-mono font-bold text-neutral-500 uppercase tracking-widest">
+ <div className="text-[6pt] font-mono font-bold text-[var(--ink-2)] uppercase tracking-widest">
  {!isCurrentMaster ?'REPERTORIO PERSONALIZADO' :'COPIA DE CONTROL'}
  </div>
  <div className="text-[10pt] font-black uppercase text-black leading-tight font-['Anton',sans-serif]">
@@ -1926,13 +1926,13 @@ export function PdfExportModal({
  )}
 
  {showBpm && s.bpm && (
- <span className="font-mono text-[10.5pt] font-bold text-neutral-600 ml-1 shrink-0">
+ <span className="font-mono text-[10.5pt] font-bold text-[var(--ink-2)] ml-1 shrink-0">
  {s.bpm} BPM
  </span>
  )}
 
  {showDuration && s.duracion && (
- <span className="font-mono text-[10.5pt] font-bold text-neutral-500 ml-1 shrink-0">
+ <span className="font-mono text-[10.5pt] font-bold text-[var(--ink-2)] ml-1 shrink-0">
  {s.duracion}
  </span>
  )}
@@ -2016,9 +2016,9 @@ export function PdfExportModal({
  } else {
  return (
  <div key={item.id} className="pl-9 py-0.5 text-neutral-800 font-mono text-[11pt] font-bold">
- <span className="text-neutral-500">****</span> {(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem ||'INTERLUDIO').toUpperCase()} <span className="text-neutral-500">****</span>
+ <span className="text-[var(--ink-2)]">****</span> {(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem ||'INTERLUDIO').toUpperCase()} <span className="text-[var(--ink-2)]">****</span>
  {(item.notas || (item as any).notaTema) && item.tituloCustom && (
- <span className="text-[10pt] text-neutral-600 font-normal italic ml-2">
+ <span className="text-[10pt] text-[var(--ink-2)] font-normal italic ml-2">
  ({item.notas || (item as any).notaTema})
  </span>
  )}
@@ -2032,7 +2032,7 @@ export function PdfExportModal({
 
  {/* Bottom Footer with BandManager & link */}
  {showAppBranding && (
- <div className="flex justify-between items-center border-t border-black pt-1 mt-2 font-mono text-[7.5pt] text-neutral-600">
+ <div className="flex justify-between items-center border-t border-black pt-1 mt-2 font-mono text-[7.5pt] text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <span className="font-black text-black">⚡ BandManager</span>
  <span>•</span>
@@ -2099,7 +2099,7 @@ export function PdfExportModal({
  </div>
  <button
  onClick={() => setSizeChoiceDialog(null)}
- className={`mt-4 text-xs font-mono cursor-pointer ${isStitchLight ?'text-[var(--ink-3)] hover:text-[var(--ink-2)]' :'text-neutral-500 hover:text-[var(--ink-3)]'}`}
+ className={`mt-4 text-xs font-mono cursor-pointer ${isStitchLight ?'text-[var(--ink-3)] hover:text-[var(--ink-2)]' :'text-[var(--ink-2)] hover:text-[var(--ink-3)]'}`}
  >
  Cancelar
  </button>

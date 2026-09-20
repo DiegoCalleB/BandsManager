@@ -45,7 +45,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fade-in">
- <div className="relative w-full max-w-lg rounded-3xl bg-[var(--surface)] border-[var(--hair)] p-6 sm:p-8 shadow-2xl space-y-6 text-zinc-100 font-sans my-auto max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-lg rounded-3xl bg-[var(--surface)] border-[var(--hair)] p-6 sm:p-8 shadow-2xl space-y-6 text-[var(--ink)] font-sans my-auto max-h-[90vh] overflow-y-auto">
  {/* Close Button */}
  <button
  onClick={onClose}
@@ -63,7 +63,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/60/10 px-2 py-0.5 rounded-md">
  Límite de {currentPlanDef.name} alcanzado
  </span>
- <h3 className="text-xl font-bold font-display uppercase tracking-wide text-zinc-100 mt-1">
+ <h3 className="text-xl font-bold font-display uppercase tracking-wide text-[var(--ink)] mt-1">
  Cupo de {info.plural} completado ({currentCount})
  </h3>
  </div>
@@ -89,7 +89,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  Plan Recomendado: {targetPlanDef.name}
  </span>
  </div>
- <span className="text-xs font-mono text-zinc-300 font-bold bg-[var(--acc)]/60/20 px-2.5 py-0.5 rounded-full">
+ <span className="text-xs font-mono text-[var(--ink-2)] font-bold bg-[var(--acc)]/60/20 px-2.5 py-0.5 rounded-full">
  {targetPlanDef.badge}
  </span>
  </div>
@@ -126,7 +126,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-zinc-200 text-xs font-mono transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono transition-colors cursor-pointer"
  >
  Continuar en {currentPlanDef.name}
  </button>

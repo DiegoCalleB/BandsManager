@@ -333,7 +333,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </p>
 
  <div className="space-y-2 mb-4">
- <span className="text-[10px] font-mono uppercase text-neutral-500 block">Tácticas Clave para la Banda:</span>
+ <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] block">Tácticas Clave para la Banda:</span>
  {channel.actionItems.slice(0, 2).map(action => (
  <div 
  key={action.id}
@@ -347,7 +347,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {completedActions[action.id] ? (
  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
  ) : (
- <Circle className="w-4 h-4 text-neutral-500 shrink-0 mt-0.5" />
+ <Circle className="w-4 h-4 text-[var(--ink-2)] shrink-0 mt-0.5" />
  )}
  <div>
  <p className="text-xs font-mono font-bold text-[var(--sunken)]">{action.title}</p>
@@ -447,7 +447,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </div>
 
  <div className="p-3 rounded-[var(--r-m)] bg-black/40 text-right min-w-[200px]">
- <span className="text-[9px] font-mono text-neutral-500 uppercase block">Horario Recomendado</span>
+ <span className="text-[9px] font-mono text-[var(--ink-2)] uppercase block">Horario Recomendado</span>
  <span className="text-xs font-mono font-bold text-[var(--acc)] mt-0.5 block">{currentChannel.recommendedSchedule}</span>
  </div>
  </div>
@@ -461,7 +461,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
  Checklist de Tácticas & Plan de Acción para la Banda
  </h4>
- <span className="text-[10px] font-mono text-neutral-500">
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">
  Haz clic para marcar como hecha
  </span>
  </div>
@@ -487,7 +487,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {isDone ? (
  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
  ) : (
- <Circle className="w-5 h-5 text-neutral-600 hover:text-[var(--ink-2)]" />
+ <Circle className="w-5 h-5 text-[var(--ink-2)] hover:text-[var(--ink-2)]" />
  )}
  </button>
  <div className="flex-1">

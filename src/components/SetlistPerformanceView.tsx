@@ -411,7 +411,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => setIsResting(false)}
  >
  <span className="text-5xl mb-4">😴</span>
- <p className="text-neutral-600 text-sm font-mono mb-1">Modo descanso — ahorrando batería</p>
+ <p className="text-[var(--ink-2)] text-sm font-mono mb-1">Modo descanso — ahorrando batería</p>
  <p className="text-neutral-800 text-xs font-mono">Toca la pantalla para volver a"{itemLabel(currentItem, songs)}"</p>
  </div>
  );
@@ -441,7 +441,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <div className="flex items-center gap-1.5 shrink-0 relative">
  {/* Toggle Directo / Ensayo */}
  <div className={`flex items-center rounded-[var(--r-s)] p-0.5 text-xs font-bold shrink-0 ${
- glareMode ?'bg-zinc-100 border-zinc-300' :'bg-black/50 border-[var(--hair)]'
+ glareMode ?'bg-zinc-100 border-[var(--hair)]300' :'bg-black/50 border-[var(--hair)]'
  }`}>
  <button
  type="button"
@@ -449,7 +449,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
  modeArchetype ==='directo'
  ? glareMode ?'bg-[var(--acc)]/60 text-black shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
- : glareMode ?'text-zinc-600 hover:text-black' :'text-zinc-400 hover:text-[var(--ink)]'
+ : glareMode ?'text-zinc-600 hover:text-black' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Directo
@@ -460,7 +460,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 cursor-pointer ${
  modeArchetype ==='ensayo'
  ?'bg-emerald-500 text-black shadow-sm'
- : glareMode ?'text-zinc-600 hover:text-emerald-700' :'text-zinc-400 hover:text-emerald-400'
+ : glareMode ?'text-zinc-600 hover:text-emerald-700' :'text-[var(--ink-2)] hover:text-emerald-400'
  }`}
  >
  <Headphones className="w-3 h-3" />
@@ -516,8 +516,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => handleLaunchStudio()}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
  glareMode
- ?'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border-zinc-300'
- :'bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300'
+ ?'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border-[var(--hair)]300'
+ :'bg-zinc-800/80 hover:bg-zinc-700 text-[var(--ink-2)]'
  }`}
  title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
  >
@@ -548,7 +548,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  <button
  onClick={() => setShowMoreMenu(v => !v)}
- className={`p-1.5 rounded-[var(--r-s)] transition ${showMoreMenu ? (glareMode ?'bg-black/10' :'bg-white/15') : glareMode ?'hover:bg-black/10 text-neutral-700' :'hover:bg-white/10 text-[var(--ink-3)]'}`}
+ className={`p-1.5 rounded-[var(--r-s)] transition ${showMoreMenu ? (glareMode ?'bg-black/10' :'bg-white/15') : glareMode ?'hover:bg-black/10 text-[var(--ink-3)]' :'hover:bg-white/10 text-[var(--ink-3)]'}`}
  title="Más opciones"
  >
  <MoreVertical className="w-5 h-5" />
@@ -585,7 +585,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  onClick={() => { setShowMoreMenu(false); handleLaunchStudio(); }}
  className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${
- glareMode ?'hover:bg-black/5 text-neutral-700' :'hover:bg-white/10 text-[var(--ink-3)]'
+ glareMode ?'hover:bg-black/5 text-[var(--ink-3)]' :'hover:bg-white/10 text-[var(--ink-3)]'
  }`}
  title="Abre el Studio para separar las pistas de este tema con el motor de IA Iris"
  >
@@ -679,12 +679,12 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  repertorio, batería (si el navegador la soporta) y si hace falta revisar los
  acordes de este tema. */}
  <div className="flex items-center gap-2 mt-1 pl-7 text-[11px] font-mono flex-wrap">
- <span className={glareMode ?'text-neutral-600' :'text-neutral-500'}>{currentIndex + 1}/{allItems.length}</span>
+ <span className={glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>{currentIndex + 1}/{allItems.length}</span>
 
  {batteryLevel !== null && (
  <span
  className={`flex items-center gap-1 ${
- batteryCharging ?'text-emerald-400' : batteryLevel < 0.2 ?'text-rose-400 font-bold' : glareMode ?'text-neutral-600' :'text-neutral-500'
+ batteryCharging ?'text-emerald-400' : batteryLevel < 0.2 ?'text-rose-400 font-bold' : glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
  }`}
  title={batteryCharging ?'Cargando' : batteryLevel < 0.2 ?'Batería baja — busca un cargador' :'Batería'}
  >
@@ -765,7 +765,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => handleLaunchStudio()}
- className="px-2 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1 border-zinc-700 transition active:scale-95 cursor-pointer"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] text-xs font-semibold flex items-center gap-1 border-[var(--hair)]700 transition active:scale-95 cursor-pointer"
  >
  <Sliders className="w-3.5 h-3.5 text-indigo-300" />
  <span>Studio</span>
@@ -900,7 +900,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  )}
  </div>
  {effectiveTranspose !== 0 && (
- <span className="text-neutral-500 font-mono text-[11px] hidden sm:inline">
+ <span className="text-[var(--ink-2)] font-mono text-[11px] hidden sm:inline">
  (original {currentSong?.tonalidad})
  </span>
  )}
@@ -952,7 +952,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
 
  {nextItem && (
- <p className={`text-center text-[11px] font-mono truncate ${glareMode ?'text-neutral-600' :'text-neutral-500'}`}>
+ <p className={`text-center text-[11px] font-mono truncate ${glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Siguiente: <span className={glareMode ?'text-neutral-800' :'text-[var(--ink-3)]'}>{itemLabel(nextItem, songs)}</span>
  {nextItem.tipoItem ==='cancion' && songs.find(s => s.id === nextItem.songId)?.tonalidad && (
  <span> · {songs.find(s => s.id === nextItem.songId)?.tonalidad}</span>
@@ -991,7 +991,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {/* Drawer: Repertorio completo, pistas Iris y accesos directos a Studio */}
  {showSongListDrawer && (
  <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
- <div className="w-full max-w-md h-full bg-[var(--surface)] border-l border-[var(--hair)] flex flex-col shadow-2xl text-zinc-200">
+ <div className="w-full max-w-md h-full bg-[var(--surface)] border-l border-[var(--hair)] flex flex-col shadow-2xl text-[var(--ink)]">
  {/* Drawer Header */}
  <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]">
  <div className="flex items-center gap-2.5">
@@ -1000,14 +1000,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
  <div>
  <h3 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">Repertorio & Pistas Iris</h3>
- <p className="text-[11px] text-zinc-400">
+ <p className="text-[11px] text-[var(--ink-2)]">
  {songsWithIrisCount} de {songsInSetlistCount} temas con pistas Iris listas
  </p>
  </div>
  </div>
  <button
  onClick={() => setShowSongListDrawer(false)}
- className="p-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-zinc-400 hover:text-[var(--ink)] cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -1034,17 +1034,17 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`p-3 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition ${
  isCurrent
  ?'bg-purple-950/40 border-purple-500/50 text-purple-200'
- :'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700 text-zinc-400'
+ :'bg-zinc-900/60 border-[var(--hair)]800 hover:border-[var(--hair)]700 text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-2.5">
  <span className="text-lg">{meta.icon}</span>
  <div>
- <div className="text-xs font-bold text-zinc-200">{item.tituloCustom || meta.label}</div>
+ <div className="text-xs font-bold text-[var(--ink)]">{item.tituloCustom || meta.label}</div>
  <div className="text-[10px] text-zinc-500 font-mono">Bloque de escenario</div>
  </div>
  </div>
- <span className="px-2 py-1 rounded bg-zinc-800 text-[10px] text-zinc-300 font-mono">
+ <span className="px-2 py-1 rounded bg-zinc-800 text-[10px] text-[var(--ink-2)] font-mono">
  Ir al bloque
  </span>
  </div>
@@ -1059,13 +1059,13 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`p-3 rounded-[var(--r-m)] transition flex flex-col gap-2.5 ${
  isCurrent
  ?'bg-[var(--acc)]/10 /50 shadow-md'
- :'bg-[var(--surface)] border-zinc-800/80 hover:border-zinc-700'
+ :'bg-[var(--surface)] border-[var(--hair)]800/80 hover:border-[var(--hair)]700'
  }`}
  >
  <div className="flex items-start justify-between gap-2">
  <div className="flex items-center gap-2 min-w-0">
  <span className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-mono font-bold shrink-0 ${
- isCurrent ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'bg-zinc-800 text-zinc-300'
+ isCurrent ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'bg-zinc-800 text-[var(--ink-2)]'
  }`}>
  {idx + 1}
  </span>
@@ -1073,7 +1073,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <h4 className={`text-xs font-bold truncate ${isCurrent ?'text-[var(--acc)]' :'text-[var(--ink)]'}`}>
  {song.titulo}
  </h4>
- <div className="flex items-center gap-2 text-[10px] text-zinc-400 font-mono">
+ <div className="flex items-center gap-2 text-[10px] text-[var(--ink-2)] font-mono">
  {song.tonalidad && <span className="text-[var(--acc)]/70">Tono: {song.tonalidad}</span>}
  {song.bpm ? <span>· {song.bpm} BPM</span> : null}
  {song.duracion ? <span>· {song.duracion}</span> : null}
@@ -1128,7 +1128,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  setShowSongListDrawer(false);
  handleLaunchStudio(song);
  }}
- className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border-zinc-700 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+ className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]700 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
  title="Abrir Studio multipista completo de este tema"
  >
  <Sliders className="w-3.5 h-3.5 text-indigo-300" />
@@ -1141,7 +1141,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  setCurrentIndex(idx);
  setShowSongListDrawer(false);
  }}
- className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-black/40 hover:bg-black/60 text-zinc-300 border-[var(--hair)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+ className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-black/40 hover:bg-black/60 text-[var(--ink-2)] border-[var(--hair)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
  title="Mostrar en el atril"
  >
  <Play className="w-3 h-3 text-[var(--acc)]" />
@@ -1183,10 +1183,10 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
  {script}
  </p>
  ) : (
- <p className="text-neutral-500 text-lg">{meta.label}</p>
+ <p className="text-[var(--ink-2)] text-lg">{meta.label}</p>
  )}
  {duration && (
- <p className="mt-8 text-neutral-500 font-mono text-sm">⏱ {duration}</p>
+ <p className="mt-8 text-[var(--ink-2)] font-mono text-sm">⏱ {duration}</p>
  )}
  </div>
  );
@@ -1199,7 +1199,7 @@ const ScannedSheetPage: React.FC<{ song: Song }> = ({ song }) => {
 
  if (!song.estructuraDocumentoUrl || song.estructuraDocumentoUrl.trim() ==='') {
  return (
- <div className="w-full h-full flex items-center justify-center bg-[var(--surface)] p-4 text-neutral-500 text-sm">
+ <div className="w-full h-full flex items-center justify-center bg-[var(--surface)] p-4 text-[var(--ink-2)] text-sm">
  No hay documento adjunto disponible
  </div>
  );
@@ -1340,7 +1340,7 @@ const ChordSheetPage: React.FC<{
  <button
  onClick={onToggleDetails}
  className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition ${
- showDetails ? (glareMode ?'bg-black/15 text-black' :'bg-white/15 text-[var(--ink)]') : (glareMode ?'text-neutral-600 hover:text-black' :'text-[var(--ink-2)] hover:text-[var(--ink)]')
+ showDetails ? (glareMode ?'bg-black/15 text-black' :'bg-white/15 text-[var(--ink)]') : (glareMode ?'text-[var(--ink-2)] hover:text-black' :'text-[var(--ink-2)] hover:text-[var(--ink)]')
  }`}
  title="Estructura y progresión de acordes"
  >
@@ -1419,7 +1419,7 @@ const ChordSheetPage: React.FC<{
 
  {/* Velocidades */}
  <div className="flex items-center gap-1 text-[11px] font-mono">
- <span className="text-neutral-500 hidden sm:inline mr-1">Vel:</span>
+ <span className="text-[var(--ink-2)] hidden sm:inline mr-1">Vel:</span>
  {[0.5, 1, 1.5, 2].map(speed => (
  <button
  key={speed}
@@ -1447,7 +1447,7 @@ const ChordSheetPage: React.FC<{
  ) : hasMultipleSections ? (
  // NAVEGACIÓN POR SECCIONES (PEDAL / TAP)
  <div className="flex-1 flex flex-col overflow-hidden">
- <div className={`shrink-0 text-center py-1.5 text-[11px] font-mono border-b ${borderClass} ${glareMode ?'text-neutral-600' :'text-[var(--ink-2)]'}`}>
+ <div className={`shrink-0 text-center py-1.5 text-[11px] font-mono border-b ${borderClass} ${glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Parte {currentSectionIndex + 1}/{sections.length}
  {currentSection?.title && <span className={glareMode ?'text-purple-700 font-bold' :'text-purple-300 font-bold'}> · {currentSection.title}</span>}
  </div>

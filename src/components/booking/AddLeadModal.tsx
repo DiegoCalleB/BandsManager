@@ -176,7 +176,7 @@ export function AddLeadModal({
  </div>
 
  {/* Logo Selector */}
- <div className="bg-zinc-900/60 p-3 rounded-[var(--r-m)] border-zinc-800 space-y-2.5">
+ <div className="bg-zinc-900/60 p-3 rounded-[var(--r-m)] border-[var(--hair)]800 space-y-2.5">
  <div className="flex items-center justify-between flex-wrap gap-2">
  <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
  Icono o Logo del Medio / Sala
@@ -191,7 +191,7 @@ export function AddLeadModal({
  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>{isSearchingLogo ?'Buscando...' :'🔍 Buscar Logo'}</span>
  </button>
- <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-zinc-700">
+ <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-[var(--hair)]700">
  <Upload className="w-3 h-3 text-[var(--acc)]" />
  <span>{isUploadingLeadLogo ?'Subiendo...' :'Subir Logo'}</span>
  <input
@@ -214,14 +214,14 @@ export function AddLeadModal({
  </div>
 
  {newLeadData.imagen_url ? (
- <div className="flex items-center gap-3 p-2 bg-zinc-950 rounded-[var(--r-s)] border-zinc-800">
+ <div className="flex items-center gap-3 p-2 bg-zinc-950 rounded-[var(--r-s)] border-[var(--hair)]800">
  <img
  src={newLeadData.imagen_url}
  alt="Logo"
  className="w-10 h-10 rounded-[var(--r-s)] object-cover border-[var(--acc)]/50 shrink-0"
  />
  <div className="flex-1 min-w-0">
- <p className="text-[10px] text-zinc-300 font-bold truncate">
+ <p className="text-[10px] text-[var(--ink-2)] font-bold truncate">
  {newLeadData.imagen_url}
  </p>
  <p className="text-[9px] text-zinc-500">Logo oficial guardado</p>
@@ -236,7 +236,7 @@ export function AddLeadModal({
  </div>
  ) : (
  <div className="space-y-1.5">
- <p className="text-[9px] text-zinc-400">Selecciona un emoji característico:</p>
+ <p className="text-[9px] text-[var(--ink-2)]">Selecciona un emoji característico:</p>
  <div className="flex flex-wrap gap-1.5">
  {['📻','📰','🌐','🎙️','📺','🏛️','🎪','🪩','🎸','💼','🎆','⚡','🔥'].map(
  emoji => (
@@ -247,7 +247,7 @@ export function AddLeadModal({
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  newLeadData.icono === emoji
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold scale-110 shadow-md border-[var(--acc)]'
- :'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700'
+ :'bg-zinc-800/80 text-[var(--ink-2)] hover:bg-zinc-700'
  }`}
  >
  {emoji}

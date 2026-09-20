@@ -523,7 +523,7 @@ export function SongTransitionPreviewModal({
  initial={{ opacity: 0, scale: 0.96, y: 8 }}
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.96, y: 8 }}
- className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col text-zinc-200"
+ className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col text-[var(--ink)]"
  >
  {/* Compact Header */}
  <div className="flex items-center justify-between px-3.5 py-2 border-b border-[var(--hair)] bg-[var(--surface)] shrink-0">
@@ -559,12 +559,12 @@ export function SongTransitionPreviewModal({
  onNavigateTransition(indexA - 1, indexA);
  }
  }}
- className="p-1 rounded hover:bg-[var(--surface)] text-zinc-300 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+ className="p-1 rounded hover:bg-[var(--surface)] text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
  title="Transición anterior en el repertorio"
  >
  <ChevronLeft className="w-3.5 h-3.5" />
  </button>
- <span className="text-[10px] font-mono px-1.5 text-zinc-400">
+ <span className="text-[10px] font-mono px-1.5 text-[var(--ink-2)]">
  {indexA + 1}/{totalItemsCount || indexB + 1}
  </span>
  <button
@@ -576,7 +576,7 @@ export function SongTransitionPreviewModal({
  onNavigateTransition(indexB, indexB + 1);
  }
  }}
- className="p-1 rounded hover:bg-[var(--surface)] text-zinc-300 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+ className="p-1 rounded hover:bg-[var(--surface)] text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
  title="Siguiente transición en el repertorio"
  >
  <ChevronRight className="w-3.5 h-3.5" />
@@ -587,7 +587,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={onClose}
- className="p-1 rounded-[var(--r-s)] text-zinc-400 hover:text-[var(--ink)] hover:bg-zinc-800 transition cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-zinc-800 transition cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -645,16 +645,16 @@ export function SongTransitionPreviewModal({
  >
  <div>
  <div className="flex items-center justify-between mb-0.5">
- <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1">
+ <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1">
  <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60" />
  #{indexA + 1} Anterior
  </span>
  <div className="flex items-center gap-1">
- <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-zinc-700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-[var(--hair)]700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
  🎼 {itemA?.tonalidadDeseada || songA.tonalidad ||'Sin tono'}
  </span>
  {songA.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-zinc-700 text-sky-300 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-[var(--hair)]700 text-sky-300 font-mono text-[9px] font-semibold">
  🥁 {songA.bpm} BPM
  </span>
  )}
@@ -683,7 +683,7 @@ export function SongTransitionPreviewModal({
  CUE Out: {formatSec(cueAnalysisA.cueOut)}
  {cueAnalysisA.hasApplauseOutro && <span className="text-[var(--ink)]">👏 Aplausos fin</span>}
  {cueAnalysisA.outroSilenceSec > 0.3 && (
- <span className="text-zinc-400">(-{cueAnalysisA.outroSilenceSec.toFixed(1)}s)</span>
+ <span className="text-[var(--ink-2)]">(-{cueAnalysisA.outroSilenceSec.toFixed(1)}s)</span>
  )}
  </span>
  {onUpdateSong && (
@@ -702,7 +702,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Audio Source Status & Selector for Song A */}
- <div className="pt-1 border-t border-zinc-800/80 space-y-1">
+ <div className="pt-1 border-t border-[var(--hair)]800/80 space-y-1">
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1">
  {audioSourceTypeA ==='maqueta' && (
@@ -727,7 +727,7 @@ export function SongTransitionPreviewModal({
  setSelectedSampleA(s);
  }
  }}
- className="bg-[var(--surface)] border-zinc-800 text-[10px] rounded p-0.5 text-[var(--acc)]/70 focus:outline-none max-w-[160px] cursor-pointer"
+ className="bg-[var(--surface)] border-[var(--hair)]800 text-[10px] rounded p-0.5 text-[var(--acc)]/70 focus:outline-none max-w-[160px] cursor-pointer"
  >
  {STUDIO_SAMPLE_TRACKS.map((st) => (
  <option key={st.id} value={st.id}>
@@ -737,14 +737,14 @@ export function SongTransitionPreviewModal({
  </select>
  )}
  {isDetectingCuesA && (
- <span className="text-[8px] text-zinc-400 animate-pulse">Analizando...</span>
+ <span className="text-[8px] text-[var(--ink-2)] animate-pulse">Analizando...</span>
  )}
  </div>
 
  <button
  type="button"
  onClick={() => fileInputRefA.current?.click()}
- className="text-[9px] text-zinc-400 hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
+ className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
  title="Subir archivo .mp3/.wav propio para probar"
  >
  📁 Subir
@@ -752,7 +752,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* VU Meter for Track A */}
- <div className="w-full bg-black/50 h-1 rounded-full overflow-hidden border-zinc-800">
+ <div className="w-full bg-black/50 h-1 rounded-full overflow-hidden border-[var(--hair)]800">
  <div
  className="h-full bg-gradient-to-r from-amber-500 to-amber-300 transition-all duration-75"
  style={{ width: `${Math.min(100, liveGainA * 100)}%` }}
@@ -767,7 +767,7 @@ export function SongTransitionPreviewModal({
  className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
  currentGains.isCrossfading
  ?'bg-[var(--acc)] text-black scale-110 shadow-lg shadow-amber-500/30 animate-pulse'
- :'bg-[var(--surface)] text-zinc-400 border-[var(--hair)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
  <ArrowRight className="w-3.5 h-3.5" />
@@ -788,16 +788,16 @@ export function SongTransitionPreviewModal({
  >
  <div>
  <div className="flex items-center justify-between mb-0.5">
- <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1">
+ <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1">
  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
  #{indexB + 1} Siguiente
  </span>
  <div className="flex items-center gap-1">
- <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-zinc-700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-[var(--hair)]700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
  🎼 {itemB?.tonalidadDeseada || songB.tonalidad ||'Sin tono'}
  </span>
  {songB.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-zinc-700 text-sky-300 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-[var(--hair)]700 text-sky-300 font-mono text-[9px] font-semibold">
  🥁 {songB.bpm} BPM
  </span>
  )}
@@ -826,7 +826,7 @@ export function SongTransitionPreviewModal({
  CUE In: {formatSec(cueAnalysisB.cueIn)}
  {cueAnalysisB.hasApplauseIntro && <span className="text-[var(--ink)]">👏 Aplausos inicio</span>}
  {cueAnalysisB.introSilenceSec > 0.3 && (
- <span className="text-zinc-400">(+{cueAnalysisB.introSilenceSec.toFixed(1)}s)</span>
+ <span className="text-[var(--ink-2)]">(+{cueAnalysisB.introSilenceSec.toFixed(1)}s)</span>
  )}
  </span>
  {onUpdateSong && (
@@ -845,7 +845,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Audio Source Status & Selector for Song B */}
- <div className="pt-1 border-t border-zinc-800/80 space-y-1">
+ <div className="pt-1 border-t border-[var(--hair)]800/80 space-y-1">
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1">
  {audioSourceTypeB ==='maqueta' && (
@@ -870,7 +870,7 @@ export function SongTransitionPreviewModal({
  setSelectedSampleB(s);
  }
  }}
- className="bg-[var(--surface)] border-zinc-800 text-[10px] rounded p-0.5 text-[var(--ink-2)] focus:outline-none max-w-[160px] cursor-pointer"
+ className="bg-[var(--surface)] border-[var(--hair)]800 text-[10px] rounded p-0.5 text-[var(--ink-2)] focus:outline-none max-w-[160px] cursor-pointer"
  >
  {STUDIO_SAMPLE_TRACKS.map((st) => (
  <option key={st.id} value={st.id}>
@@ -880,14 +880,14 @@ export function SongTransitionPreviewModal({
  </select>
  )}
  {isDetectingCuesB && (
- <span className="text-[8px] text-zinc-400 animate-pulse">Analizando...</span>
+ <span className="text-[8px] text-[var(--ink-2)] animate-pulse">Analizando...</span>
  )}
  </div>
 
  <button
  type="button"
  onClick={() => fileInputRefB.current?.click()}
- className="text-[9px] text-zinc-400 hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
+ className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
  title="Subir archivo .mp3/.wav propio para probar"
  >
  📁 Subir
@@ -895,7 +895,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* VU Meter for Track B */}
- <div className="w-full bg-black/50 h-1 rounded-full overflow-hidden border-zinc-800">
+ <div className="w-full bg-black/50 h-1 rounded-full overflow-hidden border-[var(--hair)]800">
  <div
  className="h-full bg-gradient-to-r from-emerald-500 to-emerald-300 transition-all duration-75"
  style={{ width: `${Math.min(100, liveGainB * 100)}%` }}
@@ -921,7 +921,7 @@ export function SongTransitionPreviewModal({
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  playbackMode ==='real'
  ?'bg-emerald-500 text-black shadow-sm'
- :'text-zinc-400 hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Disc3 className="w-3 h-3" />
@@ -936,7 +936,7 @@ export function SongTransitionPreviewModal({
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  playbackMode ==='synth'
  ?'bg-[var(--acc)]/60 text-black shadow-sm'
- :'text-zinc-400 hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Music className="w-3 h-3" />
@@ -954,7 +954,7 @@ export function SongTransitionPreviewModal({
  className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  autoCueEnabled
  ?'bg-[var(--acc)]/15 text-[var(--acc)] /40 shadow-sm'
- :'bg-[var(--surface)] text-zinc-400 border-zinc-700 hover:text-zinc-200'
+ :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  title="Auto-CUE Inteligente: Detecta y salta automáticamente los huecos de silencio y aplausos al principio y final de canciones en directo"
  >
@@ -974,7 +974,7 @@ export function SongTransitionPreviewModal({
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='crossfade'
  ?'bg-[var(--acc)] text-black shadow-sm'
- :'text-zinc-400 hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Fundido ({config.fadeDurationSec}s)
@@ -988,7 +988,7 @@ export function SongTransitionPreviewModal({
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='segue'
  ?'bg-[var(--acc)] text-black shadow-sm'
- :'text-zinc-400 hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Corte (0s)
@@ -1002,7 +1002,7 @@ export function SongTransitionPreviewModal({
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='pause'
  ?'bg-[var(--acc)] text-black shadow-sm'
- :'text-zinc-400 hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Pausa ({config.pauseDurationSec}s)
@@ -1010,7 +1010,7 @@ export function SongTransitionPreviewModal({
 
  {/* Seconds selector for crossfade */}
  {config.style ==='crossfade' && (
- <div className="flex items-center gap-0.5 pl-1 border-l border-zinc-700">
+ <div className="flex items-center gap-0.5 pl-1 border-l border-[var(--hair)]700">
  {[2, 3, 5, 8].map((sec) => (
  <button
  key={sec}
@@ -1022,7 +1022,7 @@ export function SongTransitionPreviewModal({
  className={`px-1 py-0.2 rounded font-mono text-[9px] transition cursor-pointer ${
  config.fadeDurationSec === sec
  ?'bg-[var(--acc)]/30 text-[var(--acc)] font-bold'
- :'text-zinc-400 hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {sec}s
@@ -1035,7 +1035,7 @@ export function SongTransitionPreviewModal({
 
  {/* Visual Multi-Track Waveform Timeline with Scrubbing */}
  <div
- className="relative h-7 bg-black/60 rounded-[var(--r-s)] border-zinc-800 cursor-pointer overflow-hidden p-0.5 select-none"
+ className="relative h-7 bg-black/60 rounded-[var(--r-s)] border-[var(--hair)]800 cursor-pointer overflow-hidden p-0.5 select-none"
  onClick={(e) => {
  const rect = e.currentTarget.getBoundingClientRect();
  const ratio = (e.clientX - rect.left) / rect.width;
@@ -1107,7 +1107,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={handleRestart}
- className="p-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-zinc-300 border-[var(--hair)] transition cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)] transition cursor-pointer"
  title="Rebobinar al inicio del enlace"
  >
  <RotateCcw className="w-3 h-3" />
@@ -1118,7 +1118,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={() => setIsMuted(!isMuted)}
- className="text-zinc-400 hover:text-[var(--ink)] transition cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
  >
  {isMuted || volume === 0 ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
  </button>
@@ -1143,7 +1143,7 @@ export function SongTransitionPreviewModal({
 
  {/* Progress Time & Status */}
  <div className="flex items-center gap-1.5">
- <span className="font-mono text-zinc-300 font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded text-[10px] border-zinc-800">
+ <span className="font-mono text-[var(--ink-2)] font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded text-[10px] border-[var(--hair)]800">
  ⏱️ {currentTime.toFixed(1)}s / {timeline.totalDurationSec.toFixed(1)}s
  </span>
  {isPlaying && (
@@ -1159,7 +1159,7 @@ export function SongTransitionPreviewModal({
  {/* Smart Tabbed Musical Intelligence Panel */}
  <div className="rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] overflow-hidden">
  {/* Tab Navigation Ribbon & Verdict Summary */}
- <div className="flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1.5 border-b border-zinc-800 bg-[var(--surface)]">
+ <div className="flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1.5 border-b border-[var(--hair)]800 bg-[var(--surface)]">
  {/* Tabs */}
  <div className="flex items-center gap-1">
  <button
@@ -1168,11 +1168,11 @@ export function SongTransitionPreviewModal({
  className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
  activeTab ==='pros_cons'
  ?'bg-zinc-800 text-[var(--acc)]/70'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>Pros y Contras</span>
- <span className="text-[9px] font-mono px-1 rounded bg-black/40 text-zinc-300">
+ <span className="text-[9px] font-mono px-1 rounded bg-black/40 text-[var(--ink-2)]">
  +{diagnosis.porQueSi.length} / -{diagnosis.porQueNo.length}
  </span>
  </button>
@@ -1183,7 +1183,7 @@ export function SongTransitionPreviewModal({
  className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
  activeTab ==='metrics'
  ?'bg-zinc-800 text-[var(--acc)]/70'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>Métricas Armónicas</span>
@@ -1195,7 +1195,7 @@ export function SongTransitionPreviewModal({
  className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
  activeTab ==='stagecraft'
  ?'bg-zinc-800 text-[var(--acc)]/70'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>Stagecraft ({diagnosis.stageRecommendations.length})</span>
@@ -1203,7 +1203,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Right Summary Verdict */}
- <div className="text-[10px] text-zinc-400 flex items-center gap-1">
+ <div className="text-[10px] text-[var(--ink-2)] flex items-center gap-1">
  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>Recomendado: <strong className="text-[var(--ink)] uppercase font-bold">{diagnosis.recommendedStyle}</strong></span>
  </div>
@@ -1234,13 +1234,13 @@ export function SongTransitionPreviewModal({
  {pro.category}
  </span>
  </div>
- <p className="text-zinc-300 leading-tight pl-3.5 text-[9px]">
+ <p className="text-[var(--ink-2)] leading-tight pl-3.5 text-[9px]">
  {pro.detail}
  </p>
  </div>
  ))}
  {diagnosis.porQueSi.length === 0 && (
- <div className="p-1.5 rounded-[var(--r-s)] bg-zinc-900/50 border-zinc-800 text-[10px] text-zinc-400 text-center">
+ <div className="p-1.5 rounded-[var(--r-s)] bg-zinc-900/50 border-[var(--hair)]800 text-[10px] text-[var(--ink-2)] text-center">
  Sin factores musicales especialmente favorables.
  </div>
  )}
@@ -1262,21 +1262,21 @@ export function SongTransitionPreviewModal({
  ?'bg-[var(--alert-soft)] border-rose-500/40'
  : con.severity ==='aviso'
  ?'bg-[var(--acc-soft)] /30'
- :'bg-zinc-900/60 border-zinc-800'
+ :'bg-zinc-900/60 border-[var(--hair)]800'
  }`}
  >
  <div className="flex items-center justify-between gap-1">
  <span className={`font-bold flex items-center gap-1 truncate ${
- con.severity ==='critico' ?'text-[var(--ink-2)]' : con.severity ==='aviso' ?'text-[var(--acc)]/70' :'text-zinc-300'
+ con.severity ==='critico' ?'text-[var(--ink-2)]' : con.severity ==='aviso' ?'text-[var(--acc)]/70' :'text-[var(--ink-2)]'
  }`}>
  <AlertTriangle className="w-2.5 h-2.5 shrink-0" />
  {con.title}
  </span>
- <span className="text-[8px] uppercase px-1 rounded font-mono bg-black/40 text-zinc-300 shrink-0">
+ <span className="text-[8px] uppercase px-1 rounded font-mono bg-black/40 text-[var(--ink-2)] shrink-0">
  {con.severity}
  </span>
  </div>
- <p className="text-zinc-300 leading-tight pl-3.5 text-[9px]">
+ <p className="text-[var(--ink-2)] leading-tight pl-3.5 text-[9px]">
  {con.detail}
  </p>
  </div>
@@ -1294,32 +1294,32 @@ export function SongTransitionPreviewModal({
 
  {activeTab ==='metrics' && (
  <div className="grid grid-cols-1 md:grid-cols-3 gap-1.5">
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-zinc-800 space-y-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)]800 space-y-0.5">
  <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--acc)]/70">
  <Music className="w-3 h-3" />
  <span>Armonía & Tono</span>
  </div>
- <p className="text-[10px] text-zinc-300 leading-tight">
+ <p className="text-[10px] text-[var(--ink-2)] leading-tight">
  {diagnosis.harmonyDescription}
  </p>
  </div>
 
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-zinc-800 space-y-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)]800 space-y-0.5">
  <div className="flex items-center gap-1 text-[11px] font-bold text-sky-300">
  <Zap className="w-3 h-3" />
  <span>Salto BPM</span>
  </div>
- <p className="text-[10px] text-zinc-300 leading-tight">
+ <p className="text-[10px] text-[var(--ink-2)] leading-tight">
  {diagnosis.bpmDescription}
  </p>
  </div>
 
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-zinc-800 space-y-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)]800 space-y-0.5">
  <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--ink-2)]">
  <Flame className="w-3 h-3" />
  <span>Energía Escénica</span>
  </div>
- <p className="text-[10px] text-zinc-300 leading-tight">
+ <p className="text-[10px] text-[var(--ink-2)] leading-tight">
  {diagnosis.energyDescription}
  </p>
  </div>
@@ -1331,13 +1331,13 @@ export function SongTransitionPreviewModal({
  {diagnosis.stageRecommendations.map((rec, idx) => (
  <div key={idx} className="flex items-start gap-1.5 bg-black/30 p-1.5 rounded-[var(--r-s)] text-[10px]">
  <Compass className="w-3 h-3 text-[var(--acc)] shrink-0 mt-0.5" />
- <p className="text-[10px] leading-tight text-zinc-300">
+ <p className="text-[10px] leading-tight text-[var(--ink-2)]">
  {rec}
  </p>
  </div>
  ))}
  {diagnosis.stageRecommendations.length === 0 && (
- <div className="text-[10px] text-zinc-400 text-center py-2">
+ <div className="text-[10px] text-[var(--ink-2)] text-center py-2">
  Sin sugerencias adicionales de escenario para este enlace.
  </div>
  )}
@@ -1373,7 +1373,7 @@ export function SongTransitionPreviewModal({
  onSwapSongs(indexA, indexB);
  onClose();
  }}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border-zinc-700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
  >
  <ArrowLeftRight className="w-3 h-3" />
  <span>Invertir (A ⇄ B)</span>

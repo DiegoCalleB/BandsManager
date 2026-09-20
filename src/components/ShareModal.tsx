@@ -105,13 +105,13 @@ export function ShareModal({
  Compartir {title}
  </h3>
  {subtitle && (
- <p className="text-xs text-zinc-400">{subtitle}</p>
+ <p className="text-xs text-[var(--ink-2)]">{subtitle}</p>
  )}
  </div>
  </div>
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-zinc-400 hover:text-[var(--ink)] hover:bg-white/10 transition-colors"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/10 transition-colors"
  title="Cerrar"
  >
  <X className="w-5 h-5" />
@@ -144,7 +144,7 @@ export function ShareModal({
  className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-all shadow-lg active:scale-95 ${
  copied 
  ?'bg-amber-600 text-[var(--ink)]' 
- :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border-[var(--hair)]'
+ :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]'
  }`}
  >
  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -162,7 +162,7 @@ export function ShareModal({
 
  {/* Optional Phone Number input for WhatsApp direct */}
  <div className="p-3 rounded-[var(--r-m)] bg-white/[0.03] border-[var(--hair)] space-y-1.5">
- <label className="text-xs font-medium text-zinc-300 flex items-center justify-between">
+ <label className="text-xs font-medium text-[var(--ink-2)] flex items-center justify-between">
  <span className="flex items-center gap-1.5">
  <Phone className="w-3.5 h-3.5 text-emerald-400" />
  Número de WhatsApp (Opcional)
@@ -183,7 +183,7 @@ export function ShareModal({
  {/* Text Preview & Edit Area */}
  <div className="space-y-1.5">
  <div className="flex items-center justify-between">
- <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+ <span className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
  Vista previa del mensaje
  </span>
  <button
@@ -200,10 +200,10 @@ export function ShareModal({
  value={text}
  onChange={(e) => setText(e.target.value)}
  rows={10}
- className="w-full p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-xs font-mono text-zinc-200 focus:outline-none focus:border-[var(--acc)] leading-relaxed custom-scrollbar"
+ className="w-full p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] leading-relaxed custom-scrollbar"
  />
  ) : (
- <div className="p-3.5 rounded-[var(--r-m)] bg-zinc-900/90 border-[var(--hair)] text-xs text-zinc-300 whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-zinc-900/90 border-[var(--hair)] text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">
  {text}
  </div>
  )}
@@ -220,7 +220,7 @@ export function ShareModal({
  <div className="flex items-center gap-2">
  <button
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-medium text-zinc-400 hover:text-[var(--ink)] hover:bg-white/5 transition-colors"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-medium text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/5 transition-colors"
  >
  Cancelar
  </button>

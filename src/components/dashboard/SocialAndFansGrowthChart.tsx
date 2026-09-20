@@ -371,7 +371,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`p-5 rounded-[var(--r-l)] transition-all ${
  isStitchLight 
  ?'bg-[var(--bg)]/90 shadow-sm text-[var(--ink)]' 
- :'bg-[var(--surface)]/90 shadow-sm text-zinc-100'
+ :'bg-[var(--surface)]/90 shadow-sm text-[var(--ink)]'
  }`}>
  {/* Header Section */}
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 border-b /60">
@@ -637,7 +637,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="flex items-center justify-between gap-2 mb-3 pb-3 border-b /40 flex-wrap">
  <div className="flex flex-wrap items-center gap-2">
  <span className="text-[10px] font-mono text-[var(--ink-2)] mr-1 flex items-center gap-1">
- <SlidersHorizontal className="w-3 h-3 text-neutral-500" /> Curvas del Gráfico:
+ <SlidersHorizontal className="w-3 h-3 text-[var(--ink-2)]" /> Curvas del Gráfico:
  </span>
 
  {/* Instagram Chip */}
@@ -647,7 +647,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  ? isStitchLight
  ?'bg-pink-50 border-pink-300 text-pink-700'
  :'bg-pink-950/30 border-pink-500/40 text-pink-300'
- :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
  type="button"
@@ -660,7 +660,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <span className="text-[9px] px-1 py-0.2 rounded bg-pink-500/15 font-mono font-bold">
  {countInstagram.toLocaleString()}
  </span>
- {selectedChannels.instagram ? <Eye className="w-3 h-3 text-pink-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+ {selectedChannels.instagram ? <Eye className="w-3 h-3 text-pink-400" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
  </button>
  <button
  type="button"
@@ -680,7 +680,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  ? isStitchLight
  ?'bg-cyan-50 border-cyan-300 text-cyan-700'
  :'bg-cyan-950/30 border-cyan-500/40 text-cyan-300'
- :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
  type="button"
@@ -693,7 +693,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-500/15 font-mono font-bold">
  {countTikTok.toLocaleString()}
  </span>
- {selectedChannels.tiktok ? <Eye className="w-3 h-3 text-cyan-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+ {selectedChannels.tiktok ? <Eye className="w-3 h-3 text-cyan-400" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
  </button>
  <button
  type="button"
@@ -713,7 +713,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  ? isStitchLight
  ?'bg-red-50 border-red-300 text-red-700'
  :'bg-red-950/30 border-red-500/40 text-red-300'
- :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
  type="button"
@@ -726,7 +726,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <span className="text-[9px] px-1 py-0.2 rounded bg-red-500/15 font-mono font-bold">
  {countYouTube.toLocaleString()}
  </span>
- {selectedChannels.youtube ? <Eye className="w-3 h-3 text-red-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+ {selectedChannels.youtube ? <Eye className="w-3 h-3 text-red-400" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
  </button>
  <button
  type="button"
@@ -746,7 +746,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  ? isStitchLight
  ?'bg-emerald-50 border-emerald-300 text-emerald-700'
  :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink-2)]'
- :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
  type="button"
@@ -759,7 +759,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/15 font-mono font-bold">
  {countSpotify.toLocaleString()}
  </span>
- {selectedChannels.spotify ? <Eye className="w-3 h-3 text-emerald-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+ {selectedChannels.spotify ? <Eye className="w-3 h-3 text-emerald-400" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
  </button>
  <button
  type="button"
@@ -778,7 +778,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  ? isStitchLight
  ?'bg-amber-50 text-amber-800 font-bold shadow-xs'
  :'bg-[var(--acc-soft)] /60 text-[var(--ink)] font-bold shadow-sm shadow-amber-950/30'
- :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
+ :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
  type="button"
@@ -791,7 +791,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-mono font-black">
  {totalFans}
  </span>
- {selectedChannels.fans ? <Eye className="w-3 h-3 text-[var(--acc)]" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+ {selectedChannels.fans ? <Eye className="w-3 h-3 text-[var(--acc)]" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
  </button>
  <button
  type="button"
@@ -809,9 +809,9 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="h-64 w-full relative">
  {!hasAnyChannelSelected ? (
  <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border-dashed rounded-[var(--r-m)] bg-[var(--surface)]/20">
- <SlidersHorizontal className="w-8 h-8 text-neutral-500 mb-2" />
+ <SlidersHorizontal className="w-8 h-8 text-[var(--ink-2)] mb-2" />
  <p className="text-xs font-mono font-medium text-[var(--ink-3)]">Todos los canales están ocultos</p>
- <p className="text-[10px] font-mono text-neutral-500 mt-1 max-w-xs">
+ <p className="text-[10px] font-mono text-[var(--ink-2)] mt-1 max-w-xs">
  Haz clic en cualquiera de las etiquetas superiores para activar sus curvas y reescalar el gráfico.
  </p>
  <button
@@ -977,7 +977,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </span>
  </div>
 
- <span className="text-neutral-500">
+ <span className="text-[var(--ink-2)]">
  Curvas escaladas dinámicamente con datos de Supabase
  </span>
  </div>

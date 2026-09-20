@@ -568,7 +568,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}
  />
- <p className="text-[10px] text-neutral-500">
+ <p className="text-[10px] text-[var(--ink-2)]">
  Usa uno de los nombres sugeridos (Voz, Batería, Bajo, Guitarras, Teclados, Arreglos) para que el modo Ensayo Individual y Mi Monitor encuentren su pista aislada automáticamente.
  </p>
  </div>

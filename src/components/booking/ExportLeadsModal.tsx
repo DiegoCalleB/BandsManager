@@ -114,21 +114,21 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
- <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 shadow-2xl space-y-6 text-zinc-100 relative">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 shadow-2xl space-y-6 text-[var(--ink)] relative">
  {/* Header */}
- <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
+ <div className="flex items-center justify-between pb-4 border-b border-[var(--hair)]800">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]">
  <FileSpreadsheet className="w-5 h-5" />
  </div>
  <div>
  <h3 className="text-base font-bold text-[var(--ink)]">Exportar Leads de Booking</h3>
- <p className="text-xs text-zinc-400">Descarga tu base de contactos en Excel o JSON</p>
+ <p className="text-xs text-[var(--ink-2)]">Descarga tu base de contactos en Excel o JSON</p>
  </div>
  </div>
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-zinc-400 hover:text-[var(--ink)] hover:bg-zinc-800 transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-zinc-800 transition cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -147,7 +147,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='filtered'
  ?'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
- :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ :'bg-zinc-900/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='filtered' ?'text-[var(--acc)]' :'text-zinc-500'}`} />
@@ -158,7 +158,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  {filteredLeads.length} contactos
  </span>
  </div>
- <p className="text-[11px] text-zinc-400 mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  Exporta únicamente las salas o medios que cumplen la búsqueda y los filtros aplicados en este momento.
  </p>
  </div>
@@ -171,18 +171,18 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='all'
  ?'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
- :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ :'bg-zinc-900/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='all' ?'text-[var(--acc)]' :'text-zinc-500'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Todos los contactos del CRM</span>
- <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300">
+ <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-[var(--ink-2)]">
  {allLeads.length} contactos
  </span>
  </div>
- <p className="text-[11px] text-zinc-400 mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  Exporta toda la base de datos de salas, festivales, medios y contactos de la banda activa.
  </p>
  </div>
@@ -196,7 +196,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='selected'
  ?'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
- :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ :'bg-zinc-900/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <CheckSquare className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='selected' ?'text-[var(--acc)]' :'text-zinc-500'}`} />
@@ -207,7 +207,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  {selectedLeads.length} seleccionados
  </span>
  </div>
- <p className="text-[11px] text-zinc-400 mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  Exporta únicamente las casillas que has marcado explícitamente en la lista.
  </p>
  </div>
@@ -228,13 +228,13 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
  exportFormat ==='csv'
  ?'bg-emerald-500/20 border-emerald-500/60 text-[var(--ink)] font-bold'
- :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ :'bg-zinc-900/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <FileSpreadsheet className="w-4 h-4 text-emerald-400 shrink-0" />
  <div>
  <span className="text-xs block">Excel / CSV (.csv)</span>
- <span className="text-[10px] text-zinc-400 font-normal">Compatible UTF-8 Windows</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-normal">Compatible UTF-8 Windows</span>
  </div>
  </button>
 
@@ -244,13 +244,13 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
  exportFormat ==='json'
  ?'bg-sky-500/20 border-sky-500/60 text-sky-200 font-bold'
- :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+ :'bg-zinc-900/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <FileCode className="w-4 h-4 text-sky-400 shrink-0" />
  <div>
  <span className="text-xs block">JSON Datos (.json)</span>
- <span className="text-[10px] text-zinc-400 font-normal">Objeto raw estructurado</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-normal">Objeto raw estructurado</span>
  </div>
  </button>
  </div>
@@ -258,25 +258,25 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
  {/* 3. CSV Options */}
  {exportFormat ==='csv' && (
- <div className="p-3 rounded-[var(--r-m)] bg-zinc-900/80 border-zinc-800 space-y-2">
- <span className="text-[11px] font-bold text-zinc-300 block">Campos adicionales en CSV:</span>
+ <div className="p-3 rounded-[var(--r-m)] bg-zinc-900/80 border-[var(--hair)]800 space-y-2">
+ <span className="text-[11px] font-bold text-[var(--ink-2)] block">Campos adicionales en CSV:</span>
  <div className="flex items-center gap-4 text-xs">
- <label className="flex items-center gap-2 cursor-pointer text-zinc-300">
+ <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)]">
  <input
  type="checkbox"
  checked={includePitch}
  onChange={(e) => setIncludePitch(e.target.checked)}
- className="rounded border-zinc-700 text-amber-500 focus:ring-amber-500/20 bg-zinc-950"
+ className="rounded border-[var(--hair)]700 text-amber-500 focus:ring-amber-500/20 bg-zinc-950"
  />
  <span>Incluir Pitch / Propuesta IA</span>
  </label>
 
- <label className="flex items-center gap-2 cursor-pointer text-zinc-300">
+ <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)]">
  <input
  type="checkbox"
  checked={includeNotes}
  onChange={(e) => setIncludeNotes(e.target.checked)}
- className="rounded border-zinc-700 text-amber-500 focus:ring-amber-500/20 bg-zinc-950"
+ className="rounded border-[var(--hair)]700 text-amber-500 focus:ring-amber-500/20 bg-zinc-950"
  />
  <span>Incluir Historial y Notas</span>
  </label>
@@ -285,11 +285,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  )}
 
  {/* Action buttons */}
- <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-800">
+ <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--hair)]800">
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] transition cursor-pointer"
  >
  Cancelar
  </button>

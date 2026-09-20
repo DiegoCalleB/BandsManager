@@ -101,7 +101,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <div className="my-5 space-y-4 text-xs">
  <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60 /80'}`}>
  <div className="flex items-center justify-between mb-2">
- <span className="font-semibold text-neutral-300">Salas con información incompleta:</span>
+ <span className="font-semibold text-[var(--ink)]">Salas con información incompleta:</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] font-bold">{incompleteLeads.length}</span>
  </div>
  <p className="text-[var(--ink-2)] leading-relaxed">

@@ -53,24 +53,24 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <h3 className="text-2xl font-bold text-[var(--ink)] mb-1">
  ¡Perfil y Dossier de {bandName ||'tu Banda'} Listos!
  </h3>
- <p className="text-sm text-zinc-400 max-w-md mx-auto">
+ <p className="text-sm text-[var(--ink-2)] max-w-md mx-auto">
  Tus dos portales públicos interactivos ya están completamente operativos y sincronizados con tus datos.
  </p>
  </div>
 
  {/* Stats Summary Pills */}
  <div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalSongs} Temas
  </span>
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Globe className="w-3.5 h-3.5 text-red-400" /> {totalVideos} Vídeos
  </span>
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Calendar className="w-3.5 h-3.5 text-blue-400" /> {totalEvents} Fechas
  </span>
  {hasRider && (
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Layers className="w-3.5 h-3.5 text-emerald-400" /> Rider Técnico
  </span>
  )}
@@ -90,7 +90,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  </span>
  </div>
 
- <p className="text-xs text-zinc-400">
+ <p className="text-xs text-[var(--ink-2)]">
  Prensa, biografía, videoclips, reproductor de audio, fotos en alta resolución y rider descargable.
  </p>
 
@@ -106,7 +106,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <button
  type="button"
  onClick={() => copyToClipboard(epkUrl,'epk')}
- className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs transition-colors flex items-center justify-center"
+ className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace EPK"
  >
  {copiedEpk ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -126,7 +126,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  </span>
  </div>
 
- <p className="text-xs text-zinc-400">
+ <p className="text-xs text-[var(--ink-2)]">
  Captación de base de fans, descarga de regalo (lead magnet), propinas y pagos directos por Bizum/Revolut.
  </p>
 
@@ -142,7 +142,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <button
  type="button"
  onClick={() => copyToClipboard(fansUrl,'fans')}
- className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs transition-colors flex items-center justify-center"
+ className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace Fans"
  >
  {copiedFans ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}

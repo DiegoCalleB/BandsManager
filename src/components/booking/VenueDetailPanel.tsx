@@ -601,7 +601,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* HEADER CARD */}
- <div className="bg-[#1A1918] rounded-[var(--r-l)] p-4 sm:p-5 border-zinc-800 shadow-xl space-y-4">
+ <div className="bg-[#1A1918] rounded-[var(--r-l)] p-4 sm:p-5 border-[var(--hair)]800 shadow-xl space-y-4">
  {/* Title Bar */}
  <div className="flex justify-between items-start gap-2">
  <div className="flex items-center gap-3">
@@ -617,7 +617,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </h3>
  <VerifiedBadge isVerified={isLeadVerificado(selectedLead)} size="md" showLabel={true} />
  </div>
- <p className="text-xs sm:text-sm font-sans mt-0.5 text-zinc-300">
+ <p className="text-xs sm:text-sm font-sans mt-0.5 text-[var(--ink-2)]">
  {selectedLead.ciudad} • {selectedLead.genero ||'Variado'} •{''}
  {selectedLead.roster
  ? `Róster: ${selectedLead.roster}`
@@ -646,7 +646,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  />
  <button
  onClick={handleStartEdit}
- className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-zinc-300 hover:text-[var(--ink)] transition-colors cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  title="Editar ficha completa"
  >
  <Edit3 className="w-4 h-4" />
@@ -662,7 +662,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-zinc-400 hover:text-[var(--ink)] transition-colors cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  title="Cerrar panel"
  >
  <X className="w-4 h-4" />
@@ -671,7 +671,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {/* Lead Health / Temperature Badge & Quality Indicator & Category Selector */}
- <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-zinc-800/80">
+ <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[var(--hair)]800/80">
  <div className="flex flex-wrap items-center gap-2">
  <LeadHealthBadge lead={selectedLead} showDescription={true} size="md" />
  <ReliabilityBadge item={selectedLead} size="md" />
@@ -690,26 +690,26 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="text-xs font-sans font-bold text-[var(--acc)]/70 bg-transparent cursor-pointer focus:outline-none"
  title="Cambiar categoría / tipo de este lead"
  >
- <option value="sala" className="bg-zinc-900 text-zinc-100">🏟️ Sala de Conciertos</option>
- <option value="festival" className="bg-zinc-900 text-zinc-100">🎪 Festival</option>
- <option value="ayuntamiento" className="bg-zinc-900 text-zinc-100">🏛️ Ayuntamiento / Fiestas</option>
- <option value="discoteca" className="bg-zinc-900 text-zinc-100">🪩 Discoteca / Club</option>
- <option value="grupo" className="bg-zinc-900 text-zinc-100">🎸 Grupo / Banda Aliada</option>
- <option value="agencia" className="bg-zinc-900 text-zinc-100">💼 Agencia de Booking</option>
- <option value="manager" className="bg-zinc-900 text-zinc-100">👔 Manager / Representante</option>
- <option value="productora" className="bg-zinc-900 text-zinc-100">🎬 Productora de Eventos</option>
- <option value="sello" className="bg-zinc-900 text-zinc-100">💿 Discográfica / Sello</option>
- <option value="medio" className="bg-zinc-900 text-zinc-100">📻 Medio / Prensa / Radio</option>
+ <option value="sala" className="bg-zinc-900 text-[var(--ink)]">🏟️ Sala de Conciertos</option>
+ <option value="festival" className="bg-zinc-900 text-[var(--ink)]">🎪 Festival</option>
+ <option value="ayuntamiento" className="bg-zinc-900 text-[var(--ink)]">🏛️ Ayuntamiento / Fiestas</option>
+ <option value="discoteca" className="bg-zinc-900 text-[var(--ink)]">🪩 Discoteca / Club</option>
+ <option value="grupo" className="bg-zinc-900 text-[var(--ink)]">🎸 Grupo / Banda Aliada</option>
+ <option value="agencia" className="bg-zinc-900 text-[var(--ink)]">💼 Agencia de Booking</option>
+ <option value="manager" className="bg-zinc-900 text-[var(--ink)]">👔 Manager / Representante</option>
+ <option value="productora" className="bg-zinc-900 text-[var(--ink)]">🎬 Productora de Eventos</option>
+ <option value="sello" className="bg-zinc-900 text-[var(--ink)]">💿 Discográfica / Sello</option>
+ <option value="medio" className="bg-zinc-900 text-[var(--ink)]">📻 Medio / Prensa / Radio</option>
  </select>
  </div>
 
  {/* Status selector */}
- <div className="flex items-center gap-1.5 bg-[var(--bg)] px-2.5 py-1 rounded-[var(--r-m)] border-zinc-800">
+ <div className="flex items-center gap-1.5 bg-[var(--bg)] px-2.5 py-1 rounded-[var(--r-m)] border-[var(--hair)]800">
  <span className={`w-2 h-2 rounded-full ${getStatusDotColor(selectedLead.estado)}`} />
  <select
  value={normalizeStatus(selectedLead.estado)}
  onChange={(e) => handleCorrectStatus(e.target.value as LeadStatus)}
- className="text-xs font-sans font-bold text-zinc-100 bg-transparent cursor-pointer focus:outline-none"
+ className="text-xs font-sans font-bold text-[var(--ink)] bg-transparent cursor-pointer focus:outline-none"
  >
  <option value="nuevo" className="bg-zinc-900">
  Por contactar (nuevo)
@@ -781,7 +781,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <p className="text-xs font-bold text-[var(--acc)]/70">
  {isReplyStage ?'💬 Respuesta redactada por IA — Pendiente de aprobación' :'✉️ Pitch inicial redactado por IA — Pendiente de aprobación'}
  </p>
- <p className="text-[10px] text-zinc-400 truncate">
+ <p className="text-[10px] text-[var(--ink-2)] truncate">
  {isReplyStage ?'Revisa el borrador para responder a la sala y autorizar su envío.' :'Revisa la propuesta inicial para autorizar al agente de envíos.'}
  </p>
  </div>
@@ -807,7 +807,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <p className="text-xs font-bold text-cyan-300">
  📝 Borrador creado en tu Gmail
  </p>
- <p className="text-[10px] text-zinc-400">
+ <p className="text-[10px] text-[var(--ink-2)]">
  Revísalo en tu bandeja de borradores y envíalo cuando quieras — no se ha enviado nada automáticamente.
  </p>
  </div>
@@ -824,7 +824,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <p className="text-xs font-bold text-[var(--ink-2)]">
  🚀 {rawStatus ==='aprobado_respuesta' ?'Respuesta Aprobada' :'Propuesta Aprobada'} — En cola del Agente Enviador
  </p>
- <p className="text-[10px] text-zinc-400">
+ <p className="text-[10px] text-[var(--ink-2)]">
  {draftError
  ? `No se pudo crear el borrador en Gmail (${draftError}). El lead quedó en cola para el Agente Enviador por email.`
  :'El agente despachará este correo respetando las normas de envío y rate-limiting.'}
@@ -883,9 +883,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {/* CONTACT & LOCATION CARD */}
- <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-2.5 border-zinc-800">
+ <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-2.5 border-[var(--hair)]800">
  <div className="flex items-center justify-between">
- <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-zinc-400">
+ <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-[var(--ink-2)]">
  Ficha de Contacto & Ubicación
  </p>
  <div className="flex items-center gap-2 flex-wrap justify-end">
@@ -919,7 +919,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {selectedLead.direccion ? (
- <p className="text-xs font-sans font-bold text-zinc-100">{selectedLead.direccion}</p>
+ <p className="text-xs font-sans font-bold text-[var(--ink)]">{selectedLead.direccion}</p>
  ) : (
  <button
  onClick={() => {
@@ -952,11 +952,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <span>🎸</span> Róster de Artistas & Servicios de Representación
  </p>
  {selectedLead.roster ? (
- <p className="text-xs font-sans text-zinc-200 bg-black/40 p-2.5 rounded-[var(--r-s)] border-zinc-800 leading-relaxed">
+ <p className="text-xs font-sans text-[var(--ink)] bg-black/40 p-2.5 rounded-[var(--r-s)] border-[var(--hair)]800 leading-relaxed">
  {selectedLead.roster}
  </p>
  ) : (
- <p className="text-[11px] font-sans text-zinc-400 italic">
+ <p className="text-[11px] font-sans text-[var(--ink-2)] italic">
  Sin róster especificado. Haz clic en el botón de edición para añadir las bandas que gestiona.
  </p>
  )}
@@ -964,14 +964,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* NAVIGATION TABS (Pitch/Info | Email Thread | Bitácora) */}
- <div className="flex border-b border-zinc-800 gap-2 pt-1">
+ <div className="flex border-b border-[var(--hair)]800 gap-2 pt-1">
  <button
  type="button"
  onClick={() => setActiveTab('info')}
  className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 cursor-pointer ${
  activeTab ==='info'
  ?'border-b-2 border-[var(--acc)] text-[var(--acc)]'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Propuesta / Pitch
@@ -983,7 +983,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
  activeTab ==='emails'
  ?'border-b-2 border-[var(--acc)] text-[var(--acc)]'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Mail className="w-3.5 h-3.5" />
@@ -1001,7 +1001,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
  activeTab ==='bitacora'
  ?'border-b-2 border-[var(--acc)] text-[var(--acc)]'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <History className="w-3.5 h-3.5" />
@@ -1014,15 +1014,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="space-y-4">
  {/* Edit Form Modal/Inline */}
  {isEditingLeadInfo && (
- <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--surface)] text-zinc-100 shadow-xl">
- <div className="flex justify-between items-center pb-2 border-b border-zinc-800">
+ <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--surface)] text-[var(--ink)] shadow-xl">
+ <div className="flex justify-between items-center pb-2 border-b border-[var(--hair)]800">
  <span className="font-bold text-xs uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
  <Edit3 className="w-3.5 h-3.5" /> Editar Ficha ({selectedLead.nombre_sala})
  </span>
  <div className="flex gap-2">
  <button
  onClick={() => setIsEditingLeadInfo(false)}
- className="px-2.5 py-1 text-xs rounded bg-zinc-800 text-zinc-300 hover:bg-zinc-700 cursor-pointer"
+ className="px-2.5 py-1 text-xs rounded bg-zinc-800 text-[var(--ink-2)] hover:bg-zinc-700 cursor-pointer"
  >
  Cancelar
  </button>
@@ -1038,7 +1038,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="space-y-3 text-xs">
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Nombre Sala / Espacio / Contacto
  </label>
  <input
@@ -1047,7 +1047,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, nombre_sala: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 border-zinc-700 text-zinc-100 focus:outline-none focus:"
+ className="w-full p-2 rounded bg-zinc-900 border-[var(--hair)]700 text-[var(--ink)] focus:outline-none focus:"
  />
  </div>
 
@@ -1077,9 +1077,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {/* Logo Selector */}
- <div className="bg-zinc-900/60 p-3 rounded-[var(--r-m)] border-zinc-800 space-y-2.5">
+ <div className="bg-zinc-900/60 p-3 rounded-[var(--r-m)] border-[var(--hair)]800 space-y-2.5">
  <div className="flex items-center justify-between flex-wrap gap-2">
- <label className="block text-[10px] uppercase font-sans tracking-wider text-zinc-400">
+ <label className="block text-[10px] uppercase font-sans tracking-wider text-[var(--ink-2)]">
  Icono o Logo del Medio / Sala
  </label>
  <div className="flex items-center gap-2">
@@ -1093,7 +1093,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <span>{isSearchingLogo ?'Buscando...' :'🔍 Buscar Logo'}</span>
  </button>
  {onLeadLogoUpload && (
- <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-zinc-700">
+ <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-[var(--hair)]700">
  <Upload className="w-3 h-3 text-[var(--acc)]" />
  <span>{isUploadingLeadLogo ?'Subiendo...' :'Subir Logo'}</span>
  <input
@@ -1117,7 +1117,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {editedLeadInfo.imagen_url && editedLeadInfo.imagen_url.trim() !=='' ? (
- <div className="flex items-center gap-3 p-2 bg-zinc-950 rounded-[var(--r-s)] border-zinc-800">
+ <div className="flex items-center gap-3 p-2 bg-zinc-950 rounded-[var(--r-s)] border-[var(--hair)]800">
  <img
  src={editedLeadInfo.imagen_url}
  alt="Logo"
@@ -1127,7 +1127,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  }}
  />
  <div className="flex-1 min-w-0">
- <p className="text-[10px] text-zinc-300 font-bold truncate">
+ <p className="text-[10px] text-[var(--ink-2)] font-bold truncate">
  {editedLeadInfo.imagen_url}
  </p>
  <p className="text-[9px] text-zinc-500">Logo oficial guardado</p>
@@ -1142,7 +1142,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
  ) : (
  <div className="space-y-1.5">
- <p className="text-[9px] text-zinc-400">O selecciona un emoji característico:</p>
+ <p className="text-[9px] text-[var(--ink-2)]">O selecciona un emoji característico:</p>
  <div className="flex flex-wrap gap-1.5">
  {['📻','📰','🌐','🎙️','📺','🏛️','🎪','🪩','🎸','💼','🎆','⚡','🔥'].map(
  emoji => (
@@ -1153,7 +1153,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  editedLeadInfo.icono === emoji
  ?'bg-[var(--acc)] text-black font-bold scale-110 shadow-md'
- :'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700'
+ :'bg-zinc-800/80 text-[var(--ink-2)] hover:bg-zinc-700'
  }`}
  >
  {emoji}
@@ -1177,13 +1177,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, direccion: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 text-zinc-100 focus:outline-none focus:"
+ className="w-full p-2 rounded bg-zinc-900 text-[var(--ink)] focus:outline-none focus:"
  />
  </div>
 
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Ciudad
  </label>
  <input
@@ -1193,11 +1193,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, ciudad: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 border-zinc-700 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 border-[var(--hair)]700 text-[var(--ink)] focus:outline-none"
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Región / Provincia
  </label>
  <input
@@ -1207,14 +1207,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, region: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 border-zinc-700 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 border-[var(--hair)]700 text-[var(--ink)] focus:outline-none"
  />
  </div>
  </div>
 
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Persona de Contacto
  </label>
  <input
@@ -1224,11 +1224,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, contacto_nombre: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 border-zinc-700 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 border-[var(--hair)]700 text-[var(--ink)] focus:outline-none"
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Email Principal (Contratación)
  </label>
  <input
@@ -1238,7 +1238,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, email_contacto: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 border-zinc-700 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 border-[var(--hair)]700 text-[var(--ink)] focus:outline-none"
  />
  </div>
  </div>
@@ -1260,7 +1260,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Teléfono
  </label>
  <input
@@ -1270,11 +1270,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, telefono: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 border-zinc-700 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 border-[var(--hair)]700 text-[var(--ink)] focus:outline-none"
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Aforo (personas)
  </label>
  <input
@@ -1284,7 +1284,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, aforo: Number(e.target.value) })
  }
- className="w-full p-2 rounded bg-zinc-900 border-zinc-700 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 border-[var(--hair)]700 text-[var(--ink)] focus:outline-none"
  />
  </div>
  </div>
@@ -1322,7 +1322,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Inicio Festival (dd/mm/yyyy)
  </label>
  <input
@@ -1331,7 +1331,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, festival_start_date: e.target.value || undefined })
  }
- className="w-full p-2 rounded bg-zinc-900 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 text-[var(--ink)] focus:outline-none"
  />
  </div>
  <div>
@@ -1344,7 +1344,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, festival_end_date: e.target.value || undefined })
  }
- className="w-full p-2 rounded bg-zinc-900 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 text-[var(--ink)] focus:outline-none"
  />
  </div>
  </div>
@@ -1352,7 +1352,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Sitio Web
  </label>
  <input
@@ -1362,11 +1362,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, website: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 border-zinc-700 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 border-[var(--hair)]700 text-[var(--ink)] focus:outline-none"
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+ <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
  Instagram
  </label>
  <input
@@ -1376,7 +1376,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, instagram: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 border-zinc-700 text-zinc-100 focus:outline-none"
+ className="w-full p-2 rounded bg-zinc-900 border-[var(--hair)]700 text-[var(--ink)] focus:outline-none"
  />
  </div>
  </div>
@@ -1385,7 +1385,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* Pitch Generator Section */}
- <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-3 border-zinc-800">
+ <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-3 border-[var(--hair)]800">
  <div className="flex items-center justify-between flex-wrap gap-2">
  <span className="text-xs font-bold font-sans uppercase text-[var(--acc)] tracking-wider">
  {isReplyStage ?'💬 Respuesta Redactada por IA' :'✉️ Propuesta de Pitch Redactada'}
@@ -1404,7 +1404,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={handleCopyPitch}
- className="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-[11px] text-zinc-200 font-sans flex items-center gap-1 cursor-pointer"
+ className="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-[11px] text-[var(--ink)] font-sans flex items-center gap-1 cursor-pointer"
  >
  <Copy className="w-3 h-3" />
  <span>{copiedPitch ?'¡Copiado!' :'Copiar'}</span>
@@ -1468,7 +1468,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  rows={6}
  value={editedPitch}
  onChange={(e) => setEditedPitch(e.target.value)}
- className="w-full p-3 bg-black/60 rounded-[var(--r-m)] text-xs text-zinc-100 font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
+ className="w-full p-3 bg-black/60 rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
  />
  <div className="flex items-center justify-between gap-2">
  <span className="text-[10px] text-zinc-500 font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa'Regenerar' con estrellas/comentario y marca'Solo para esta sala' en vez de editar aquí.">
@@ -1477,7 +1477,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex gap-2 shrink-0">
  <button
  onClick={() => setIsEditingPitch(false)}
- className="px-3 py-1 bg-zinc-800 text-zinc-300 rounded text-xs hover:bg-zinc-700 cursor-pointer"
+ className="px-3 py-1 bg-zinc-800 text-[var(--ink-2)] rounded text-xs hover:bg-zinc-700 cursor-pointer"
  >
  Cancelar
  </button>
@@ -1496,7 +1496,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setEditedPitch(editedPitch || selectedLead.pitch_generado ||'');
  setIsEditingPitch(true);
  }}
- className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] border-zinc-800 text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed cursor-pointer hover:/40 transition-colors group relative"
+ className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] border-[var(--hair)]800 text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed cursor-pointer hover:/40 transition-colors group relative"
  >
  {editedPitch || selectedLead.pitch_generado ||'Sin pitch generado.'}
  <span className="absolute bottom-2 right-2 text-[10px] text-[var(--acc)] opacity-0 group-hover:opacity-100 transition-opacity font-bold">
@@ -1531,8 +1531,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* Ratings for Tone and Content */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
  {/* Tono Rating */}
- <div className="p-2.5 bg-black/40 rounded-[var(--r-s)] border-zinc-800 space-y-1.5">
- <span className="text-[11px] font-bold text-zinc-300 block">Tono e Intención</span>
+ <div className="p-2.5 bg-black/40 rounded-[var(--r-s)] border-[var(--hair)]800 space-y-1.5">
+ <span className="text-[11px] font-bold text-[var(--ink-2)] block">Tono e Intención</span>
  <div className="flex items-center gap-1">
  {[1, 2, 3, 4, 5].map((star) => (
  <button
@@ -1547,15 +1547,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <Star className="w-4 h-4 fill-current" />
  </button>
  ))}
- <span className="text-[10px] font-mono text-zinc-400 ml-1">
+ <span className="text-[10px] font-mono text-[var(--ink-2)] ml-1">
  {toneRating > 0 ? `${toneRating}/5` :'Sin calificar'}
  </span>
  </div>
  </div>
 
  {/* Content Rating */}
- <div className="p-2.5 bg-black/40 rounded-[var(--r-s)] border-zinc-800 space-y-1.5">
- <span className="text-[11px] font-bold text-zinc-300 block">Contenido y Estructura</span>
+ <div className="p-2.5 bg-black/40 rounded-[var(--r-s)] border-[var(--hair)]800 space-y-1.5">
+ <span className="text-[11px] font-bold text-[var(--ink-2)] block">Contenido y Estructura</span>
  <div className="flex items-center gap-1">
  {[1, 2, 3, 4, 5].map((star) => (
  <button
@@ -1570,7 +1570,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <Star className="w-4 h-4 fill-current" />
  </button>
  ))}
- <span className="text-[10px] font-mono text-zinc-400 ml-1">
+ <span className="text-[10px] font-mono text-[var(--ink-2)] ml-1">
  {contentRating > 0 ? `${contentRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -1579,7 +1579,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* Comments Area */}
  <div className="space-y-1">
- <label className="text-[11px] font-medium text-zinc-300 flex items-center gap-1">
+ <label className="text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
  <MessageSquare className="w-3 h-3 text-[var(--acc)]" />
  <span>Sugerencias o comentarios para mejorar este pitch:</span>
  </label>
@@ -1588,13 +1588,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  value={feedbackComment}
  onChange={(e) => setFeedbackComment(e.target.value)}
  placeholder="Ej:'Menciona que tocamos en el Viña Rock','Hazlo más corto y directo','Insiste en fecha para un sábado'..."
- className="w-full p-2.5 bg-black/60 rounded-[var(--r-s)] text-xs text-zinc-200 placeholder-zinc-500 font-sans focus:outline-none focus:"
+ className="w-full p-2.5 bg-black/60 rounded-[var(--r-s)] text-xs text-[var(--ink)] placeholder-zinc-500 font-sans focus:outline-none focus:"
  />
  </div>
 
  {/* Scope Selector: Solo este pitch vs Memoria Global Futura */}
  <div className="p-2.5 bg-black/50 rounded-[var(--r-m)] space-y-2">
- <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 font-mono block">
+ <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-2)] font-mono block">
  🎯 Alcance del entrenamiento IA:
  </span>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -1603,7 +1603,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
  feedbackScope ==='este_pitch'
  ?'bg-[var(--acc)]/15 /60 text-[var(--ink)]'
- :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+ :'bg-zinc-900/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700'
  }`}
  >
  <input
@@ -1614,7 +1614,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="mt-0.5 accent-amber-500 shrink-0"
  />
  <div className="text-[11px] leading-tight">
- <span className="font-bold text-zinc-100 block">Solo para este pitch</span>
+ <span className="font-bold text-[var(--ink)] block">Solo para este pitch</span>
  <span className="text-[10px] opacity-80">Ajuste puntual exclusivo para {selectedLead.nombre_sala}.</span>
  </div>
  </label>
@@ -1624,7 +1624,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
  feedbackScope ==='global'
  ?'bg-[var(--acc)]/15 /60 text-[var(--ink)]'
- :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+ :'bg-zinc-900/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700'
  }`}
  >
  <input
@@ -1654,8 +1654,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* Model selection pills for single-click regenerate */}
- <div className="flex items-center justify-between flex-wrap gap-2 p-2 bg-black/40 rounded-[var(--r-m)] border-zinc-800">
- <span className="text-[10px] font-mono text-zinc-400 font-bold uppercase">
+ <div className="flex items-center justify-between flex-wrap gap-2 p-2 bg-black/40 rounded-[var(--r-m)] border-[var(--hair)]800">
+ <span className="text-[10px] font-mono text-[var(--ink-2)] font-bold uppercase">
  🤖 Motor de Redacción & Coste:
  </span>
  <div className="flex items-center gap-1.5 flex-wrap">
@@ -1672,7 +1672,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50 shadow-sm'
- :'bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:border-zinc-700'
+ :'bg-zinc-900/60 text-[var(--ink-2)] border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  title={`Coste aproximado por pitch: ${m.cost}`}
  >
@@ -1728,7 +1728,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* History drawer if enabled */}
  {showFeedbackHistory && selectedLead.historial_feedback_pitch && selectedLead.historial_feedback_pitch.length > 0 && (
- <div className="mt-3 pt-3 border-t border-zinc-800 space-y-2">
+ <div className="mt-3 pt-3 border-t border-[var(--hair)]800 space-y-2">
  <span className="text-[11px] font-bold text-[var(--acc)] font-mono block uppercase">
  Historial de Aprendizaje e Iteraciones IA
  </span>
@@ -1736,10 +1736,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {selectedLead.historial_feedback_pitch.map((log) => (
  <div key={log.id} className={`p-2.5 rounded-[var(--r-s)] text-[11px] space-y-1.5 transition-all ${
  log.deshecho 
- ?'bg-black/30 border-zinc-800/50 opacity-60' 
- :'bg-black/50 border-zinc-800/80'
+ ?'bg-black/30 border-[var(--hair)]800/50 opacity-60' 
+ :'bg-black/50 border-[var(--hair)]800/80'
  }`}>
- <div className="flex items-center justify-between text-zinc-400 text-[10px] font-mono">
+ <div className="flex items-center justify-between text-[var(--ink-2)] text-[10px] font-mono">
  <span>{new Date(log.fecha).toLocaleString()}</span>
  <div className="flex items-center gap-2">
  {log.alcance ==='global' ? (
@@ -1748,7 +1748,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  Memoria Global
  </span>
  ) : (
- <span className="px-1.5 py-0.5 bg-zinc-800 text-zinc-300 border-zinc-700 rounded text-[9px]">
+ <span className="px-1.5 py-0.5 bg-zinc-800 text-[var(--ink-2)] border-[var(--hair)]700 rounded text-[9px]">
  Solo este pitch
  </span>
  )}
@@ -1768,8 +1768,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {log.pitch_previo && !log.deshecho && (
- <div className="flex items-center justify-between pt-1 border-t border-zinc-800/60">
- <span className="text-[10px] text-zinc-400 font-mono truncate max-w-[220px]" title={log.pitch_previo}>
+ <div className="flex items-center justify-between pt-1 border-t border-[var(--hair)]800/60">
+ <span className="text-[10px] text-[var(--ink-2)] font-mono truncate max-w-[220px]" title={log.pitch_previo}>
  Pitch previo: {log.pitch_previo.slice(0, 38)}...
  </span>
  <button
@@ -1811,7 +1811,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`p-3.5 rounded-[var(--r-m)] space-y-1.5 text-xs font-sans ${
  msg.remitente ==='sala'
  ?'bg-[var(--acc-soft)] /40 text-amber-100'
- :'bg-[var(--bg)] border-zinc-800 text-zinc-200'
+ :'bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)]'
  }`}
  >
  <div className="flex items-center justify-between font-bold text-[11px]">
@@ -1820,8 +1820,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </span>
  <span className="text-zinc-500 text-[10px] font-mono">{msg.fecha}</span>
  </div>
- <div className="font-bold text-zinc-100">{msg.asunto}</div>
- <p className="whitespace-pre-wrap text-zinc-300 leading-snug">{msg.mensaje}</p>
+ <div className="font-bold text-[var(--ink)]">{msg.asunto}</div>
+ <p className="whitespace-pre-wrap text-[var(--ink-2)] leading-snug">{msg.mensaje}</p>
  </div>
  ))
  )}
@@ -1834,7 +1834,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <History className="w-4 h-4 text-[var(--acc)]" />
- <h4 className="text-xs font-bold text-zinc-100 uppercase tracking-wider font-sans">
+ <h4 className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider font-sans">
  Bitácora de Contacto y Llamadas
  </h4>
  </div>
@@ -1846,11 +1846,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* Log Form */}
  <form
  onSubmit={handleAddInteractionLog}
- className="space-y-3 bg-[var(--bg)] p-3 rounded-[var(--r-m)] border-zinc-800"
+ className="space-y-3 bg-[var(--bg)] p-3 rounded-[var(--r-m)] border-[var(--hair)]800"
  >
  <div className="flex flex-wrap items-center justify-between gap-2">
  {/* Interaction Type Selector */}
- <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-s)] border-zinc-800">
+ <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-s)] border-[var(--hair)]800">
  {(['Llamada','WhatsApp','Email','Reunión','Otro'] as const).map((type) => (
  <button
  key={type}
@@ -1882,13 +1882,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  value={interactionAutor}
  onChange={(e) => setInteractionAutor(e.target.value)}
  placeholder="Tu nombre..."
- className="px-2 py-1 text-[10px] bg-zinc-900 border-zinc-800 rounded text-neutral-300 w-28 focus:outline-none"
+ className="px-2 py-1 text-[10px] bg-zinc-900 border-[var(--hair)]800 rounded text-[var(--ink)] w-28 focus:outline-none"
  />
  </div>
 
  {/* Result Outcome Pills */}
  <div className="space-y-1">
- <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-sans">
+ <span className="text-[9px] uppercase tracking-wider text-[var(--ink-2)] font-sans">
  Resultado del contacto:
  </span>
  <div className="flex flex-wrap gap-1">
@@ -1907,7 +1907,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  : res ==='Rechazado'
  ?'bg-rose-500/30 text-[var(--ink-2)] font-bold'
  :'bg-sky-500/30 text-sky-300 font-bold'
- :'bg-zinc-900 text-[var(--ink-2)] hover:text-[var(--ink)] border-zinc-800'
+ :'bg-zinc-900 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
  }`}
  >
  {res}
@@ -1923,7 +1923,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  value={interactionNotes}
  onChange={(e) => setInteractionNotes(e.target.value)}
  placeholder="Ej: Hablé con Carlos por WhatsApp. Pide propuesta de fechas para Noviembre..."
- className="w-full bg-black/50 rounded-[var(--r-s)] p-2.5 text-xs text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 resize-none font-sans"
+ className="w-full bg-black/50 rounded-[var(--r-s)] p-2.5 text-xs text-[var(--ink)] placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 resize-none font-sans"
  />
 
  <button
@@ -1949,7 +1949,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  (selectedLead.historial_contacto || []).map((log) => (
  <div
  key={log.id}
- className="p-2.5 rounded-[var(--r-s)] bg-[var(--bg)] border-zinc-800 space-y-1.5 text-xs font-sans relative group"
+ className="p-2.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 space-y-1.5 text-xs font-sans relative group"
  >
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1.5 font-bold">
@@ -1964,7 +1964,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  ?'🤝 Reunión'
  :'📝 Nota'}
  </span>
- <span className="text-zinc-400">{log.autor ||'Agente'}</span>
+ <span className="text-[var(--ink-2)]">{log.autor ||'Agente'}</span>
  </div>
  <div className="flex items-center gap-2">
  <span className="text-zinc-500 font-mono">{log.fecha}</span>
@@ -1995,7 +1995,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
  )}
 
- <p className="text-zinc-200 text-[11px] leading-snug whitespace-pre-wrap select-text">
+ <p className="text-[var(--ink)] text-[11px] leading-snug whitespace-pre-wrap select-text">
  {log.notas}
  </p>
  </div>

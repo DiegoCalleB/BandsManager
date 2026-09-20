@@ -97,7 +97,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
  musicSubTab ==='spotify'
  ?'bg-[var(--acc)] text-black shadow-md font-semibold'
- :'text-zinc-400 hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Search className="w-3.5 h-3.5" />
@@ -109,7 +109,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
  musicSubTab ==='upload'
  ?'bg-[var(--acc)] text-black shadow-md font-semibold'
- :'text-zinc-400 hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Upload className="w-3.5 h-3.5" />
@@ -121,7 +121,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
  musicSubTab ==='manual'
  ?'bg-[var(--acc)] text-black shadow-md font-semibold'
- :'text-zinc-400 hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Plus className="w-3.5 h-3.5" />
@@ -184,7 +184,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  className={`flex items-center justify-between p-2 rounded-[var(--r-s)] text-left text-xs transition-colors ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
- :'bg-zinc-800/40 text-zinc-300 border-transparent hover:border-[var(--hair)]'
+ :'bg-zinc-800/40 text-[var(--ink-2)] border-transparent hover:border-[var(--hair)]'
  }`}
  >
  <span className="truncate pr-2">{track.name}</span>
@@ -239,7 +239,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  <h4 className="text-sm font-semibold text-[var(--ink)] mb-1">
  Arrastra o haz clic para subir archivos de audio (MP3, WAV, M4A)
  </h4>
- <p className="text-xs text-zinc-400 max-w-md mx-auto">
+ <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
  Puedes subir canciones completas o maquetas. Se añadirán directamente al reproductor del EPK y a tu repertorio.
  </p>
  {isUploadingAudio && (
@@ -258,7 +258,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  {!showBulkInput ? (
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <div className="flex items-center justify-between">
- <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider">
  Añadir Canción Individual
  </h4>
  <button
@@ -315,13 +315,13 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  ) : (
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <div className="flex items-center justify-between">
- <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider">
  Pegar Títulos en Bloque (Uno por línea)
  </h4>
  <button
  type="button"
  onClick={() => setShowBulkInput(false)}
- className="text-xs text-zinc-400 hover:text-[var(--ink)]"
+ className="text-xs text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  Volver a modo individual
  </button>
@@ -356,7 +356,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  {manualSongs.map((s) => (
  <div key={s.id} className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-xs">
  <span className="text-[var(--ink)] font-medium">{s.titulo}</span>
- <div className="flex items-center gap-3 text-zinc-400">
+ <div className="flex items-center gap-3 text-[var(--ink-2)]">
  {s.tonalidad && <span>{s.tonalidad}</span>}
  {s.duracion && <span>{s.duracion}</span>}
  <button
@@ -390,7 +390,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  )}
  </div>
 
- <p className="text-xs text-zinc-400">
+ <p className="text-xs text-[var(--ink-2)]">
  Crea al instante un setlist de concierto optimizado con tus temas para ensayos, teleprompter de acordes y escenario.
  </p>
 
@@ -409,7 +409,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  type="button"
  onClick={() => onGenerateSetlist(45)}
  disabled={isCreatingSetlist || totalImportedSongsCount === 0}
- className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border-[var(--hair)] text-xs font-medium transition-colors disabled:opacity-50"
+ className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] border-[var(--hair)] text-xs font-medium transition-colors disabled:opacity-50"
  >
  <Clock className="w-3.5 h-3.5" />
  Crear Setlist Festival / Showcase (45 min)

@@ -45,7 +45,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <div className="w-full max-w-lg bg-[var(--surface)] border-[var(--acc)]/40 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
  
  {/* Header */}
- <div className="p-4 sm:p-5 border-b border-zinc-800 bg-gradient-to-r from-[var(--surface)] to-[var(--bg)] flex items-center justify-between">
+ <div className="p-4 sm:p-5 border-b border-[var(--hair)]800 bg-gradient-to-r from-[var(--surface)] to-[var(--bg)] flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]/70">
  {isCompleted ? (
@@ -55,10 +55,10 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  )}
  </div>
  <div>
- <h3 className="text-base font-bold text-zinc-100 font-display">
+ <h3 className="text-base font-bold text-[var(--ink)] font-display">
  {title}
  </h3>
- <p className="text-xs text-zinc-400 font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-mono">
  {subtitle || (isCompleted ?'Proceso completado' : `Procesando ${currentIndex + 1} de ${totalCount}...`)}
  </p>
  </div>
@@ -68,7 +68,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="p-1.5 text-zinc-400 hover:text-[var(--ink)] rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -76,9 +76,9 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  {/* Progress bar */}
- <div className="p-4 sm:p-5 space-y-3 bg-[var(--surface)]/60 border-b border-zinc-800">
+ <div className="p-4 sm:p-5 space-y-3 bg-[var(--surface)]/60 border-b border-[var(--hair)]800">
  <div className="flex items-center justify-between text-xs font-mono">
- <span className="text-zinc-300 font-bold">Progreso global</span>
+ <span className="text-[var(--ink-2)] font-bold">Progreso global</span>
  <span className="text-[var(--acc)] font-bold">{percentage}% ({isCompleted ? totalCount : currentIndex}/{totalCount})</span>
  </div>
 
@@ -123,9 +123,9 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
  )}
  {item.status ==='pending' && (
- <div className="w-3.5 h-3.5 rounded-full border-zinc-600 shrink-0" />
+ <div className="w-3.5 h-3.5 rounded-full border-[var(--hair)]600 shrink-0" />
  )}
- <span className="text-zinc-200 truncate font-semibold">
+ <span className="text-[var(--ink)] truncate font-semibold">
  {item.name}
  </span>
  </div>
@@ -146,12 +146,12 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  {/* Footer */}
- <div className="p-4 border-t border-zinc-800 bg-[var(--bg)] flex items-center justify-end gap-2">
+ <div className="p-4 border-t border-[var(--hair)]800 bg-[var(--bg)] flex items-center justify-end gap-2">
  {!isCompleted && onCancel && (
  <button
  type="button"
  onClick={onCancel}
- className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>

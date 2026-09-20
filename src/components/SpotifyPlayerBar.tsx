@@ -539,7 +539,7 @@ export default function SpotifyPlayerBar({
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
  <div className="w-full h-full bg-gradient-to-br from-[var(--ok)]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
- <Disc className={`w-5 h-5 ${isPlaying ?'animate-spin-slow text-[var(--ok)]' :'text-zinc-400'}`} />
+ <Disc className={`w-5 h-5 ${isPlaying ?'animate-spin-slow text-[var(--ok)]' :'text-[var(--ink-2)]'}`} />
  </div>
  )}
  {isPlaying && (
@@ -614,7 +614,7 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={() => setIsMinimized(false)}
- className="p-1.5 text-zinc-400 hover:text-[var(--ink)] cursor-pointer ml-1"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer ml-1"
  title="Expandir Reproductor"
  >
  <ChevronUp className="w-5 h-5 text-[var(--ok)]" />
@@ -642,7 +642,7 @@ export default function SpotifyPlayerBar({
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
  <div className="w-full h-full bg-gradient-to-br from-[var(--ok)]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
- <Disc className={`w-7 h-7 ${isPlaying ?'animate-spin-slow text-[var(--ok)]' :'text-zinc-400'}`} />
+ <Disc className={`w-7 h-7 ${isPlaying ?'animate-spin-slow text-[var(--ok)]' :'text-[var(--ink-2)]'}`} />
  </div>
  )}
  {isPlaying && (
@@ -661,7 +661,7 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={() => onUpdateSong({ ...song, favoritoGeneral: !song.favoritoGeneral })}
- className="text-zinc-400 hover:text-[var(--ok)] transition cursor-pointer p-0.5"
+ className="text-[var(--ink-2)] hover:text-[var(--ok)] transition cursor-pointer p-0.5"
  title={song.favoritoGeneral ?"Guardado en Favoritos" :"Guardar en Favoritos"}
  >
  <Sparkles className={`w-4 h-4 ${song.favoritoGeneral ?'text-[var(--ok)] fill-[var(--ok)]' :''}`} />
@@ -707,7 +707,7 @@ export default function SpotifyPlayerBar({
  <div className="flex items-center gap-1">
  <button
  onClick={() => setIsMinimized(!isMinimized)}
- className="p-1.5 text-zinc-400 hover:text-[var(--ink)] cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  title={isMinimized ?"Expandir Reproductor" :"Minimizar"}
  >
  {isMinimized ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}

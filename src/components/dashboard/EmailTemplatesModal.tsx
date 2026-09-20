@@ -131,7 +131,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  <FileText className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-zinc-100 flex items-center gap-2">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink)] flex items-center gap-2">
  Plantillas & Ejemplos Reales de Email
  </h3>
  <p className="text-xs text-[var(--ink-2)] font-mono">
@@ -185,7 +185,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  <span className="text-[10px] font-mono text-[var(--acc)] uppercase tracking-widest font-bold">
  {currentTpl.type}
  </span>
- <h4 className="text-sm font-bold font-display text-zinc-100">
+ <h4 className="text-sm font-bold font-display text-[var(--ink)]">
  {currentTpl.title}
  </h4>
  </div>
@@ -210,7 +210,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
  {/* Subject preview */}
  <div className="space-y-1">
- <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">Asunto del Correo:</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider">Asunto del Correo:</span>
  <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-mono font-bold text-[var(--acc)]/70">
  {currentTpl.subject.replace(/{bandName}/g, bandName)}
  </div>
@@ -218,7 +218,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
  {/* Body preview */}
  <div className="space-y-1">
- <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">Cuerpo del Mensaje:</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider">Cuerpo del Mensaje:</span>
  <pre className="p-4 rounded-[var(--r-s)] bg-[var(--surface)]/90 text-xs font-sans text-[var(--sunken)] whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">
  {currentTpl.body.replace(/{bandName}/g, bandName)}
  </pre>
@@ -238,7 +238,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  <div className="p-4 bg-[var(--surface)] border-t flex justify-end">
  <button
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-zinc-200 font-mono text-xs font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--ink)] font-mono text-xs font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
  >
  Cerrar
  </button>

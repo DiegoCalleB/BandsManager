@@ -316,7 +316,7 @@ export function OrdenDelDiaTab({
  <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">
  <ListOrdered className="w-4 h-4" />
  </span>
- <h3 className="text-sm font-mono font-bold text-zinc-100 uppercase tracking-wider">
+ <h3 className="text-sm font-mono font-bold text-[var(--ink)] uppercase tracking-wider">
  Orden del Día & Objetivos
  </h3>
  </div>
@@ -327,7 +327,7 @@ export function OrdenDelDiaTab({
  <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--acc)]/70 font-bold border-[var(--hair)]">
  ⏱ {totalMinutosEstimados} min estimados
  </span>
- <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-zinc-300 border-[var(--hair)]">
+ <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]">
  🎵 {cancionesCount} canciones
  </span>
  {pausasCount > 0 && (
@@ -379,7 +379,7 @@ export function OrdenDelDiaTab({
  <div className="flex items-center justify-between gap-2 mb-3">
  <div className="flex items-center gap-2">
  <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
- <h4 className="text-xs font-mono font-bold text-zinc-100 uppercase tracking-wider">
+ <h4 className="text-xs font-mono font-bold text-[var(--ink)] uppercase tracking-wider">
  Objetivos del Ensayo
  </h4>
  </div>
@@ -391,7 +391,7 @@ export function OrdenDelDiaTab({
  {/* List */}
  <div className="space-y-2 mb-3 max-h-64 overflow-y-auto">
  {objetivos.length === 0 ? (
- <p className="text-xs text-neutral-500 italic py-2">
+ <p className="text-xs text-[var(--ink-2)] italic py-2">
  No hay objetivos marcados para esta sesión. Añade uno abajo.
  </p>
  ) : (
@@ -401,7 +401,7 @@ export function OrdenDelDiaTab({
  className={`flex items-start justify-between gap-2 p-2.5 rounded-[var(--r-m)] transition-all ${
  obj.completado
  ?'bg-emerald-500/10 border-emerald-500/30 text-[var(--ink-2)]'
- :'bg-[var(--surface)] border-[var(--surface)] text-zinc-200 hover:'
+ :'bg-[var(--surface)] border-[var(--surface)] text-[var(--ink)] hover:'
  }`}
  >
  <button
@@ -412,7 +412,7 @@ export function OrdenDelDiaTab({
  {obj.completado ? (
  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
  ) : (
- <Square className="w-4 h-4 text-neutral-500 shrink-0 mt-0.5" />
+ <Square className="w-4 h-4 text-[var(--ink-2)] shrink-0 mt-0.5" />
  )}
  <span className={`text-xs ${obj.completado ?'line-through opacity-70' :''}`}>
  {obj.texto}
@@ -421,7 +421,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={() => handleDeleteObjetivo(obj.id)}
- className="text-neutral-500 hover:text-rose-400 p-0.5 cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-rose-400 p-0.5 cursor-pointer"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -443,7 +443,7 @@ export function OrdenDelDiaTab({
  handleAddObjetivo();
  }
  }}
- className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-zinc-100 outline-none focus:"
+ className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none focus:"
  />
  <button
  type="button"
@@ -461,7 +461,7 @@ export function OrdenDelDiaTab({
  💡 Consejos de Productividad
  </h5>
  <ul className="text-xs text-[var(--ink-2)] space-y-1.5 pl-4 list-disc font-sans">
- <li>Arrastra cualquier tema por el icono <GripVertical className="w-3 h-3 inline text-neutral-500" /> para cambiar el orden en 1 segundo.</li>
+ <li>Arrastra cualquier tema por el icono <GripVertical className="w-3 h-3 inline text-[var(--ink-2)]" /> para cambiar el orden en 1 segundo.</li>
  <li>Al añadir canciones múltiples, pulsa en el orden deseado para insertarlas tal cual.</li>
  <li>Marca descansos de 5-10 min para oxigenar el oído y repasar detalles técnicos.</li>
  </ul>
@@ -471,7 +471,7 @@ export function OrdenDelDiaTab({
  {/* Right Column: Run of Show Timeline with Drag & Drop */}
  <div className="lg:col-span-2 space-y-4">
  <div className="flex items-center justify-between gap-3">
- <h4 className="text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+ <h4 className="text-xs font-mono font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-2">
  <ListOrdered className="w-4 h-4 text-[var(--acc)]" />
  <span>Bloques y Canciones de la Sesión ({agenda.length})</span>
  </h4>
@@ -503,10 +503,10 @@ export function OrdenDelDiaTab({
  {/* Agenda List with Drag and Drop */}
  {agenda.length === 0 ? (
  <div className="p-8 rounded-[var(--r-l)] bg-[var(--surface)] border-dashed border-[var(--hair)] text-center space-y-3">
- <Disc3 className="w-10 h-10 text-neutral-600 mx-auto animate-spin-slow" />
+ <Disc3 className="w-10 h-10 text-[var(--ink-2)] mx-auto animate-spin-slow" />
  <div className="space-y-1">
- <p className="text-sm font-bold text-zinc-300">El orden del día está vacío</p>
- <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+ <p className="text-sm font-bold text-[var(--ink-2)]">El orden del día está vacío</p>
+ <p className="text-xs text-[var(--ink-2)] max-w-sm mx-auto">
  Añade canciones en el orden que quieras ensayar o carga un setlist completo con 1-clic.
  </p>
  </div>
@@ -582,7 +582,7 @@ export function OrdenDelDiaTab({
  <div className="flex items-start gap-2.5 flex-1 min-w-0">
  {/* Drag Handle */}
  <div
- className="cursor-grab active:cursor-grabbing text-neutral-500 hover:text-[var(--acc)] transition-colors shrink-0 pt-1"
+ className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors shrink-0 pt-1"
  title="Arrastra para reordenar"
  >
  <GripVertical className="w-4 h-4" />
@@ -595,7 +595,7 @@ export function OrdenDelDiaTab({
 
  <div className="space-y-1 min-w-0 flex-1">
  <div className="flex flex-wrap items-center gap-2">
- <span className="text-sm font-bold font-sans text-zinc-100 truncate">
+ <span className="text-sm font-bold font-sans text-[var(--ink)] truncate">
  {formatSongTitle(item.titulo)}
  </span>
  <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono uppercase font-bold ${bType.bg} ${bType.text} ${bType.border}`}>
@@ -661,7 +661,7 @@ export function OrdenDelDiaTab({
  }
  className="w-8 text-xs font-mono font-bold text-[var(--acc)] bg-transparent text-center outline-none"
  />
- <span className="text-[10px] font-mono text-neutral-500">m</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)]">m</span>
  </div>
 
  {/* Move Up / Down Buttons */}
@@ -670,7 +670,7 @@ export function OrdenDelDiaTab({
  type="button"
  disabled={idx === 0}
  onClick={() => handleMoveItem(idx,'up')}
- className="p-1 text-neutral-500 hover:text-[var(--ink)] disabled:opacity-20 disabled:hover:text-neutral-500 cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 disabled:hover:text-[var(--ink-2)] cursor-pointer"
  title="Subir posición"
  >
  <ArrowUp className="w-3.5 h-3.5" />
@@ -679,7 +679,7 @@ export function OrdenDelDiaTab({
  type="button"
  disabled={idx === agenda.length - 1}
  onClick={() => handleMoveItem(idx,'down')}
- className="p-1 text-neutral-500 hover:text-[var(--ink)] disabled:opacity-20 disabled:hover:text-neutral-500 cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 disabled:hover:text-[var(--ink-2)] cursor-pointer"
  title="Bajar posición"
  >
  <ArrowDown className="w-3.5 h-3.5" />
@@ -690,7 +690,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={() => handleDeleteAgendaItem(item.id)}
- className="p-1.5 text-neutral-500 hover:text-rose-400 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-rose-400 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Eliminar de la agenda"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -733,7 +733,7 @@ export function OrdenDelDiaTab({
 
  <div className="pt-3 space-y-2 shrink-0">
  <div className="relative">
- <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+ <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)]" />
  <input
  type="text"
  value={searchSongQuery}
@@ -817,7 +817,7 @@ export function OrdenDelDiaTab({
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-mono text-xs font-black transition-all ${
  isSelected
  ?'bg-[var(--acc)]/60 text-[var(--surface)] shadow-sm scale-105'
- :' text-neutral-500'
+ :' text-[var(--ink-2)]'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>
@@ -913,7 +913,7 @@ export function OrdenDelDiaTab({
  className="p-3 rounded-[var(--r-m)] border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between gap-3 hover: transition-all"
  >
  <div>
- <p className="text-xs font-bold text-zinc-100">{st.nombre}</p>
+ <p className="text-xs font-bold text-[var(--ink)]">{st.nombre}</p>
  <p className="text-[10px] font-mono text-[var(--ink-2)]">
  {count} canciones · {st.tipoFormato ||'Repertorio'}
  </p>
@@ -964,7 +964,7 @@ export function OrdenDelDiaTab({
  <div className="flex items-center justify-between p-4 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2">
  <Layers className="w-4 h-4 text-[var(--acc)]" />
- <h4 className="text-sm font-mono font-bold text-zinc-100 uppercase">
+ <h4 className="text-sm font-mono font-bold text-[var(--ink)] uppercase">
  Añadir Bloque de Sesión
  </h4>
  </div>
@@ -1009,7 +1009,7 @@ export function OrdenDelDiaTab({
  placeholder="Ej: Calentamiento & Sonido, Pausa café..."
  value={blockTitulo}
  onChange={e => setBlockTitulo(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-zinc-100 outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none focus:"
  />
  </div>
 
@@ -1023,7 +1023,7 @@ export function OrdenDelDiaTab({
  max="120"
  value={blockDuracion}
  onChange={e => setBlockDuracion(Number(e.target.value))}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono text-zinc-100 outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono text-[var(--ink)] outline-none focus:"
  />
  </div>
 
@@ -1036,7 +1036,7 @@ export function OrdenDelDiaTab({
  placeholder="Ej: Ajustar retorno de monitores y afinación..."
  value={blockEnfoque}
  onChange={e => setBlockEnfoque(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-zinc-100 outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none focus:"
  />
  </div>
  </div>

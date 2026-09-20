@@ -171,7 +171,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] uppercase font-sans tracking-wider ${
- isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'
  }`}
  >
  Asunto del Email por Defecto
@@ -192,7 +192,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] uppercase font-sans tracking-wider ${
- isStitchLight ?'text-[var(--ink-2)]' :'text-neutral-300'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'
  }`}
  >
  Cuerpo de la Plantilla de Correo de Presentación
@@ -271,7 +271,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={() => setToneRating(toneRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
- toneRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
+ toneRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)]'
  }`}
  title={`Calificar tono y estilo: ${star}/5`}
  >
@@ -296,7 +296,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={() => setContentRating(contentRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
- contentRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
+ contentRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)]'
  }`}
  title={`Calificar contenido y estructura: ${star}/5`}
  >
@@ -348,7 +348,7 @@ export function TemplateConfigSection({
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
  ?'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] hover: text-neutral-300'
+ :'bg-[var(--surface)] hover: text-[var(--ink)]'
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isTestingPrompt ?'animate-spin' :''}`} />
@@ -360,7 +360,7 @@ export function TemplateConfigSection({
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  isStitchLight
  ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] shadow-md shadow-indigo-100'
- :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/10'
+ :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -403,7 +403,7 @@ export function TemplateConfigSection({
  className={`border rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
  isStitchLight
  ?'bg-white text-[var(--ink-2)]'
- :'bg-[var(--surface)] text-neutral-300'
+ :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {testPromptResult}
@@ -438,7 +438,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={() => setToneRating(toneRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
- toneRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
+ toneRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)]'
  }`}
  title={`Calificar tono: ${star}/5`}
  >
@@ -463,7 +463,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={() => setContentRating(contentRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
- contentRating >= star ?'text-[var(--acc)]' :'text-neutral-600'
+ contentRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)]'
  }`}
  title={`Calificar contenido: ${star}/5`}
  >
@@ -492,7 +492,7 @@ export function TemplateConfigSection({
  className={`border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
  isStitchLight
  ?' text-[var(--ink-3)]'
- :' text-neutral-600'
+ :' text-[var(--ink-2)]'
  }`}
  >
  Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación

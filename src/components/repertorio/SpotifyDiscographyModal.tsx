@@ -337,7 +337,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--ok)] transition-all ${
  isStitchLight
  ?'bg-white text-[var(--ink)] placeholder:text-[var(--ink-3)]'
- :'bg-[var(--surface)] text-[var(--ink)] placeholder:text-neutral-500'
+ :'bg-[var(--surface)] text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  }`}
  />
  </div>
@@ -433,7 +433,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  </div>
  ) : albums.length === 0 ? (
  <div className="py-16 text-center space-y-3">
- <Disc className="w-12 h-12 text-neutral-600 mx-auto" />
+ <Disc className="w-12 h-12 text-[var(--ink-2)] mx-auto" />
  <p className="font-mono text-sm text-[var(--ink-2)]">
  Escribe el nombre de tu banda arriba o pega tu enlace de artista de Spotify para escanear tus álbumes y canciones.
  </p>
@@ -541,7 +541,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  />
  ) : (
  <div className="w-14 h-14 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex items-center justify-center shrink-0">
- <Disc className="w-6 h-6 text-neutral-500" />
+ <Disc className="w-6 h-6 text-[var(--ink-2)]" />
  </div>
  )}
 
@@ -611,7 +611,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  }`}
  >
  <div className="flex items-center gap-3 min-w-0 flex-1">
- <span className="w-5 text-neutral-500 font-bold text-center">
+ <span className="w-5 text-[var(--ink-2)] font-bold text-center">
  {track.trackNumber}
  </span>
 

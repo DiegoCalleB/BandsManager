@@ -107,7 +107,7 @@ export function AddSongsToSetlistModal({
 
  <div className="pt-3 space-y-2 shrink-0">
  <div className="relative">
- <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+ <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)]" />
  <input
  type="text"
  value={search}
@@ -193,7 +193,7 @@ export function AddSongsToSetlistModal({
  }`}
  >
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-mono text-xs font-black transition-all ${
- isSelected ?'bg-[var(--surface)] border-[var(--hair)] text-black shadow-sm scale-105' :' text-neutral-500'
+ isSelected ?'bg-[var(--surface)] border-[var(--hair)] text-black shadow-sm scale-105' :' text-[var(--ink-2)]'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>

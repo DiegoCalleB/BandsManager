@@ -180,7 +180,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  const getProviderBadge = (id: string) => {
  if (id ==='gemini') return'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30';
  if (id ==='deepseek') return'bg-sky-500/15 text-sky-300 border-sky-500/30';
- return'bg-zinc-800 text-zinc-300 border-zinc-700';
+ return'bg-zinc-800 text-[var(--ink-2)] border-[var(--hair)]700';
  };
 
  const getFallbackCostEstimate = (provider: string, charCount: number): CostEstimateInfo => {
@@ -217,21 +217,21 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="relative w-full max-w-6xl bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
  
  {/* HEADER */}
- <div className="px-5 py-3.5 border-b border-zinc-800 flex items-center justify-between bg-[var(--surface)]/95 sticky top-0 z-10">
+ <div className="px-5 py-3.5 border-b border-[var(--hair)]800 flex items-center justify-between bg-[var(--surface)]/95 sticky top-0 z-10">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)]">
  <Layers className="w-5 h-5" />
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <h2 className="text-base font-bold text-zinc-100 font-display">
+ <h2 className="text-base font-bold text-[var(--ink)] font-display">
  Comparador A/B: DeepSeek 🚀 vs. Gemini ⚡
  </h2>
  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
  A/B Testing + Costes Reales (€)
  </span>
  </div>
- <p className="text-xs text-zinc-400 font-sans">
+ <p className="text-xs text-[var(--ink-2)] font-sans">
  Evalúa en paralelo la calidad de redacción, el tiempo de respuesta y el <strong>coste económico real en céntimos de euro</strong> por propuesta.
  </p>
  </div>
@@ -239,19 +239,19 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  <button
  onClick={onClose}
- className="p-2 text-zinc-400 hover:text-zinc-100 rounded-[var(--r-s)] hover:bg-zinc-800 transition-colors cursor-pointer"
+ className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-zinc-800 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
  </div>
 
  {/* CONTROLS & VENUE BAR */}
- <div className="p-4 bg-[var(--bg)] border-b border-zinc-800/80 space-y-3">
+ <div className="p-4 bg-[var(--bg)] border-b border-[var(--hair)]800/80 space-y-3">
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
  {/* Venue Badge */}
  <div className="flex items-center gap-2 text-xs">
- <span className="text-zinc-400 font-mono text-[11px]">SALA DESTINO:</span>
- <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900 border-zinc-700 text-[var(--acc)]/70 font-bold">
+ <span className="text-[var(--ink-2)] font-mono text-[11px]">SALA DESTINO:</span>
+ <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)]700 text-[var(--acc)]/70 font-bold">
  🏟️ {lead.nombre_sala} ({lead.ciudad ||'España'})
  </span>
  <span className="text-zinc-500 text-[11px]">
@@ -261,7 +261,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  {/* Provider Selector Badges */}
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className="text-[11px] text-zinc-400 mr-1 font-mono">Motores activos:</span>
+ <span className="text-[11px] text-[var(--ink-2)] mr-1 font-mono">Motores activos:</span>
  {[
  { id:'deepseek', name:'DeepSeek V3', icon:'🚀' },
  { id:'gemini', name:'Gemini 3.7 Flash', icon:'⚡' }
@@ -275,7 +275,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
- :'bg-zinc-900/60 text-zinc-500 border-zinc-800 hover:border-zinc-700'
+ :'bg-zinc-900/60 text-zinc-500 border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  >
  <span>{prov.icon}</span>
@@ -295,7 +295,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  value={customComment}
  onChange={e => setCustomComment(e.target.value)}
  placeholder="Ajuste puntual opcional: Ej.'Destacar que tenemos 100k streams','Proponer viernes o sábado'..."
- className="w-full px-3 py-2 bg-black/60 rounded-[var(--r-m)] border-zinc-700 text-xs text-zinc-100 placeholder-zinc-500 font-sans focus:outline-none focus:"
+ className="w-full px-3 py-2 bg-black/60 rounded-[var(--r-m)] border-[var(--hair)]700 text-xs text-[var(--ink)] placeholder-zinc-500 font-sans focus:outline-none focus:"
  onKeyDown={e => {
  if (e.key ==='Enter') handleRunComparison();
  }}
@@ -323,25 +323,25 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* COMPARATIVA DE COSTES ECONÓMICOS / PROYECCIÓN DE GASTO */}
- <div className="px-4 py-3 bg-gradient-to-r from-[var(--surface)] via-[var(--bg)] to-[var(--surface)] border-b border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+ <div className="px-4 py-3 bg-gradient-to-r from-[var(--surface)] via-[var(--bg)] to-[var(--surface)] border-b border-[var(--hair)]800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div className="flex items-center gap-2">
  <Coins className="w-4 h-4 text-emerald-400 shrink-0" />
  <div>
  <div className="flex items-center gap-2">
- <span className="text-xs font-bold text-zinc-200">
+ <span className="text-xs font-bold text-[var(--ink)]">
  Calculadora de Inversión y Coste por Envío:
  </span>
  <span className="text-[10px] px-1.5 py-0.2 bg-emerald-500/10 text-[var(--ink-2)] rounded font-mono">
  Tarifas Oficiales 2025/2026
  </span>
  </div>
- <p className="text-[10px] text-zinc-400">
+ <p className="text-[10px] text-[var(--ink-2)]">
  Calculado sobre tokens de entrada (ADN banda + sala) y salida (cuerpo de email redactado).
  </p>
  </div>
  </div>
 
- <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-m)] border-zinc-800 self-start sm:self-auto">
+ <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-m)] border-[var(--hair)]800 self-start sm:self-auto">
  <span className="text-[10px] text-zinc-500 px-2 font-mono uppercase">Escala:</span>
  <button
  type="button"
@@ -349,7 +349,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='1'
  ?'bg-[var(--acc)] text-black shadow-sm'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  1 Pitch
@@ -360,7 +360,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='100'
  ?'bg-[var(--acc)] text-black shadow-sm'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  100 Salas (1 Gira)
@@ -371,7 +371,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='1000'
  ?'bg-[var(--acc)] text-black shadow-sm'
- :'text-zinc-400 hover:text-zinc-200'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  1.000 Salas (Campaña Nacional)
@@ -395,8 +395,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <Loader2 className="w-8 h-8 animate-spin text-[var(--acc)]" />
  </div>
  <div>
- <h3 className="text-sm font-bold text-zinc-100">Calculando propuestas y costes en paralelo...</h3>
- <p className="text-xs text-zinc-400 mt-1 max-w-md mx-auto">
+ <h3 className="text-sm font-bold text-[var(--ink)]">Calculando propuestas y costes en paralelo...</h3>
+ <p className="text-xs text-[var(--ink-2)] mt-1 max-w-md mx-auto">
  Enviando el mismo contexto a DeepSeek V3 y Google Gemini para medir persuasión, latencia y coste por token en paralelo.
  </p>
  </div>
@@ -435,23 +435,23 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  className={`flex flex-col rounded-[var(--r-m)] transition-all duration-200 ${
  isSelected
  ?'bg-[var(--surface)] border-emerald-500/80 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/40'
- :'bg-[var(--surface)] border-zinc-800 hover:border-zinc-700'
+ :'bg-[var(--surface)] border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  >
  {/* Model Header */}
- <div className="p-3.5 border-b border-zinc-800/80 flex items-center justify-between bg-black/30 rounded-t-xl">
+ <div className="p-3.5 border-b border-[var(--hair)]800/80 flex items-center justify-between bg-black/30 rounded-t-xl">
  <div className="flex items-center gap-2">
  <span className="text-lg">{getProviderIcon(prop.provider)}</span>
  <div>
  <div className="flex items-center gap-1.5">
- <span className="text-xs font-bold text-zinc-100">
+ <span className="text-xs font-bold text-[var(--ink)]">
  {getProviderDisplayName(prop.provider)}
  </span>
  <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold ${getProviderBadge(prop.provider)}`}>
  {isDeepSeek ?'🚀 Más Económico' :'⚡ Instantáneo'}
  </span>
  </div>
- <p className="text-[10px] text-zinc-400 font-mono">
+ <p className="text-[10px] text-[var(--ink-2)] font-mono">
  {prop.modelName} {prop.durationMs > 0 && `• ${prop.durationMs}ms`}
  </p>
  </div>
@@ -461,7 +461,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  type="button"
  onClick={() => handleCopyText(prop.text, idx)}
  disabled={prop.status ==='error'}
- className="p-1.5 text-zinc-400 hover:text-zinc-200 rounded-[var(--r-s)] hover:bg-zinc-800 transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-zinc-800 transition-colors cursor-pointer"
  title="Copiar propuesta"
  >
  {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -469,14 +469,14 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* Cost & Economics Card Banner */}
- <div className="px-3.5 py-2.5 bg-black/40 border-b border-zinc-800/70 flex items-center justify-between text-xs">
+ <div className="px-3.5 py-2.5 bg-black/40 border-b border-[var(--hair)]800/70 flex items-center justify-between text-xs">
  <div>
  <div className="flex items-center gap-1.5">
  <Coins className="w-3.5 h-3.5 text-emerald-400" />
  <span className="font-bold text-[var(--ink-2)] font-mono text-sm">
  {displayCost}
  </span>
- <span className="text-[10px] text-zinc-400 font-sans">
+ <span className="text-[10px] text-[var(--ink-2)] font-sans">
  ({scaleLabel})
  </span>
  </div>
@@ -504,29 +504,29 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <AlertCircle className="w-4 h-4 shrink-0 text-[var(--acc)] mt-0.5" />
  <div>
  <p className="font-bold text-[var(--acc)]/70">Aviso de Cuota / Saldo API</p>
- <p className="text-[11px] text-zinc-300 mt-0.5">{prop.error}</p>
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">{prop.error}</p>
  </div>
  </div>
  {prop.fallbackText && (
  <div className="space-y-1">
- <div className="flex items-center justify-between text-[10px] text-zinc-400 font-mono">
+ <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-mono">
  <span>⚡ Borrador Inteligente Adaptado (Modo Local):</span>
  </div>
- <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
+ <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
  {prop.fallbackText}
  </div>
  </div>
  )}
  </div>
  ) : (
- <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto">
+ <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto">
  {prop.text}
  </div>
  )}
 
  {/* Footer Metrics & Selection Button */}
- <div className="pt-2 border-t border-zinc-800/60 space-y-2">
- <div className="flex items-center justify-between text-[10px] text-zinc-400 font-mono">
+ <div className="pt-2 border-t border-[var(--hair)]800/60 space-y-2">
+ <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-mono">
  <span>{wordCount} palabras ({charCount} car.)</span>
  {isDeepSeek ? (
  <span className="text-sky-300">Tono: Directo y comercial</span>
@@ -568,7 +568,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  {/* TABLA COMPARATIVA DE RENTABILIDAD & TARIFAS */}
  <div className="mt-4 p-3.5 bg-black/50 rounded-[var(--r-m)] text-xs space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+ <span className="text-[11px] font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5 font-mono">
  <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" />
  Resumen de Costes & ROI para la Banda
  </span>
@@ -580,7 +580,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="overflow-x-auto">
  <table className="w-full text-left text-[11px] border-collapse">
  <thead>
- <tr className="border-b border-zinc-800 text-zinc-400 font-mono">
+ <tr className="border-b border-[var(--hair)]800 text-[var(--ink-2)] font-mono">
  <th className="py-1.5 px-2">Modelo</th>
  <th className="py-1.5 px-2">Entrada (1M tok)</th>
  <th className="py-1.5 px-2">Salida (1M tok)</th>
@@ -589,13 +589,13 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <th className="py-1.5 px-2 font-bold text-emerald-400">Coste 1.000 Salas</th>
  </tr>
  </thead>
- <tbody className="divide-y divide-zinc-800/50 font-sans text-zinc-300">
+ <tbody className="divide-y divide-zinc-800/50 font-sans text-[var(--ink-2)]">
  <tr className="hover:bg-zinc-900/40">
  <td className="py-1.5 px-2 font-bold text-sky-400 flex items-center gap-1">
  <span>🚀</span> DeepSeek V3
  </td>
- <td className="py-1.5 px-2 font-mono text-zinc-400">0,14 $ (0,13 €)</td>
- <td className="py-1.5 px-2 font-mono text-zinc-400">0,28 $ (0,26 €)</td>
+ <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,14 $ (0,13 €)</td>
+ <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,28 $ (0,26 €)</td>
  <td className="py-1.5 px-2 font-mono font-bold text-emerald-400">~0,00014 €</td>
  <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,014 €</td>
  <td className="py-1.5 px-2 font-mono font-bold text-emerald-400">~0,14 € (Máximo ROI)</td>
@@ -604,8 +604,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
  <span>⚡</span> Google Gemini 3.7 Flash
  </td>
- <td className="py-1.5 px-2 font-mono text-zinc-400">0,10 $ (0,09 €)</td>
- <td className="py-1.5 px-2 font-mono text-zinc-400">0,40 $ (0,37 €)</td>
+ <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,10 $ (0,09 €)</td>
+ <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,40 $ (0,37 €)</td>
  <td className="py-1.5 px-2 font-mono font-bold text-emerald-400">~0,00018 €</td>
  <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,018 €</td>
  <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,18 € (o 0 € con Free Tier)</td>
@@ -617,7 +617,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* FOOTER INFO BAR */}
- <div className="px-5 py-3 border-t border-zinc-800 bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-400">
+ <div className="px-5 py-3 border-t border-[var(--hair)]800 bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <ShieldCheck className="w-4 h-4 text-[var(--acc)]" />
  <span>
@@ -628,7 +628,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <button
  type="button"
  onClick={onClose}
- className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-[var(--r-s)] text-xs cursor-pointer font-sans"
+ className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] rounded-[var(--r-s)] text-xs cursor-pointer font-sans"
  >
  Cerrar
  </button>

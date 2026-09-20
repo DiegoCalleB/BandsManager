@@ -135,27 +135,27 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  }}
  >
  <div 
- className="bg-[var(--surface)] border-zinc-800 rounded-[var(--r-l)] w-full max-w-md p-5 shadow-2xl relative text-zinc-100 flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
+ className="bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-l)] w-full max-w-md p-5 shadow-2xl relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}
- <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+ <div className="flex items-center justify-between border-b border-[var(--hair)]800 pb-3">
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-m)] shrink-0">
  <Camera className="w-5 h-5 text-[var(--acc)]" />
  </div>
  <div className="min-w-0">
- <h3 className="font-display font-bold text-base text-zinc-100 truncate">
+ <h3 className="font-display font-bold text-base text-[var(--ink)] truncate">
  Cambiar Imagen / Logo
  </h3>
- <p className="text-xs text-zinc-400 font-sans truncate">
+ <p className="text-xs text-[var(--ink-2)] font-sans truncate">
  {lead.nombre_sala} {lead.ciudad ? `(${lead.ciudad})` :''}
  </p>
  </div>
  </div>
  <button
  onClick={onClose}
- className="p-1.5 hover:bg-zinc-800 rounded-[var(--r-s)] text-zinc-400 hover:text-zinc-200 transition-colors"
+ className="p-1.5 hover:bg-zinc-800 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -186,10 +186,10 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
  </div>
  <div className="text-left">
- <span className="block font-bold text-xs text-zinc-200 group-hover:text-[var(--acc)]/70 transition-colors">
+ <span className="block font-bold text-xs text-[var(--ink)] group-hover:text-[var(--acc)]/70 transition-colors">
  {isUploading ?'Subiendo imagen...' :'Subir desde dispositivo'}
  </span>
- <span className="block text-[11px] text-zinc-400 font-sans">
+ <span className="block text-[11px] text-[var(--ink-2)] font-sans">
  Formatos JPG, PNG, WEBP o SVG
  </span>
  </div>
@@ -230,14 +230,14 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  <button
  type="button"
  onClick={() => setShowUrlInput(true)}
- className="w-full p-2.5 bg-zinc-900/60 hover:bg-zinc-800 border-zinc-800 hover:border-zinc-700 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-zinc-300 font-medium transition-all"
+ className="w-full p-2.5 bg-zinc-900/60 hover:bg-zinc-800 border-[var(--hair)]800 hover:border-[var(--hair)]700 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
  >
- <LinkIcon className="w-4 h-4 text-zinc-400" />
+ <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Pegar URL directa de imagen</span>
  </button>
  ) : (
- <div className="p-3 bg-zinc-900 border-zinc-700 rounded-[var(--r-m)] space-y-2">
- <label className="block text-[10px] uppercase font-sans tracking-wider text-zinc-400">
+ <div className="p-3 bg-zinc-900 border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
+ <label className="block text-[10px] uppercase font-sans tracking-wider text-[var(--ink-2)]">
  Pegar enlace de imagen (URL)
  </label>
  <div className="flex gap-2">
@@ -246,7 +246,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  placeholder="https://ejemplo.com/logo.png"
  value={customUrl}
  onChange={(e) => setCustomUrl(e.target.value)}
- className="flex-1 bg-black/60 border-zinc-700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-[var(--acc)]"
+ className="flex-1 bg-black/60 border-[var(--hair)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
  />
  <button
  type="button"

@@ -184,7 +184,7 @@ export function EnsayosManager({
  <select
  value={currentRehearsal?.id ||''}
  onChange={e => setSelectedRehearsalId(e.target.value)}
- className="appearance-none bg-[var(--surface)] border-[var(--hair)] text-zinc-100 px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-mono font-bold hover: focus: outline-none cursor-pointer"
+ className="appearance-none bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-mono font-bold hover: focus: outline-none cursor-pointer"
  >
  {sortedRehearsals.map(r => (
  <option key={r.id} value={r.id}>
@@ -229,19 +229,19 @@ export function EnsayosManager({
 
  {/* Rehearsal Headline */}
  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[var(--ink-3)]">
- <span className="flex items-center gap-1.5 text-zinc-100 font-bold">
+ <span className="flex items-center gap-1.5 text-[var(--ink)] font-bold">
  <Calendar className="w-4 h-4 text-[var(--acc)]" />
  {currentRehearsal?.fecha} ({currentRehearsal?.hora ||'19:30'} - {currentRehearsal?.horaFin ||'21:30'})
  </span>
 
  <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
- <MapPin className="w-3.5 h-3.5 text-neutral-500" />
+ <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  {currentRehearsal?.lugar ||'Local de ensayo'}
  </span>
 
  {currentRehearsal?.convocados_nombres && (
  <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
- <Users className="w-3.5 h-3.5 text-neutral-500" />
+ <Users className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  {Array.isArray(currentRehearsal.convocados_nombres)
  ? currentRehearsal.convocados_nombres.join(',')
  : String(currentRehearsal.convocados_nombres)}
@@ -281,7 +281,7 @@ export function EnsayosManager({
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab ==='orden_del_dia'
  ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]/80'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  >
  <ListOrdered className="w-4 h-4 shrink-0" />
@@ -294,7 +294,7 @@ export function EnsayosManager({
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab ==='modo_local'
  ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]/80'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  >
  <Radio className="w-4 h-4 shrink-0" />
@@ -307,7 +307,7 @@ export function EnsayosManager({
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab ==='grabacion_acta'
  ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]/80'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  >
  <Mic className="w-4 h-4 shrink-0" />

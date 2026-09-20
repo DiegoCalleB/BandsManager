@@ -440,7 +440,7 @@ export function DashboardWidgetGrid({
  <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
  {/* Width options */}
  <div className="flex items-center gap-0.5 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)] text-[10px]">
- <span className="text-neutral-500 px-1 font-bold">Ancho:</span>
+ <span className="text-[var(--ink-2)] px-1 font-bold">Ancho:</span>
  {([3, 4, 6, 8, 12] as const).map(spanVal => (
  <button
  key={spanVal}
@@ -459,7 +459,7 @@ export function DashboardWidgetGrid({
 
  {/* Height options */}
  <div className="flex items-center gap-0.5 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)] text-[10px]">
- <span className="text-neutral-500 px-1 font-bold">Alto:</span>
+ <span className="text-[var(--ink-2)] px-1 font-bold">Alto:</span>
  {(['compact','normal','tall'] as const).map(hVal => (
  <button
  key={hVal}

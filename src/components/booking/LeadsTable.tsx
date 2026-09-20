@@ -116,7 +116,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <button
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAllFiltered}
- className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900/90 hover:bg-zinc-800 border-zinc-700 text-zinc-300 hover:text-[var(--ink)] transition-all cursor-pointer shadow-xs"
+ className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900/90 hover:bg-zinc-800 border-[var(--hair)]700 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer shadow-xs"
  >
  {isAllSelected ? (
  <>
@@ -130,7 +130,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  </>
  ) : (
  <>
- <Square className="w-3.5 h-3.5 text-zinc-400" />
+ <Square className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Seleccionar todos ({filteredLeads.length})</span>
  </>
  )}
@@ -165,7 +165,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  ?'bg-[var(--surface)] border-2 border-[var(--acc)] shadow-xl ring-2 ring-[var(--acc)]/25'
  : isDetailOpen
  ?'bg-[#1A1918] border-2 border-purple-400 shadow-xl ring-1 ring-purple-400/30'
- :'bg-[var(--bg)] hover:bg-[#1A1918] hover:border-zinc-700 shadow-md'
+ :'bg-[var(--bg)] hover:bg-[#1A1918] hover:border-[var(--hair)]700 shadow-md'
  }`}
  >
  {/* Header info */}
@@ -184,7 +184,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
  isChecked 
  ?'bg-[var(--acc)] border-[var(--acc)] text-black shadow-xs' 
- :'border-zinc-600 group-hover:border-zinc-400 bg-zinc-900/80 hover:'
+ :'border-[var(--hair)]600 group-hover:border-[var(--hair)]400 bg-zinc-900/80 hover:'
  }`}>
  {isChecked && <CheckSquare className="w-3.5 h-3.5" />}
  </div>
@@ -226,8 +226,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  </div>
  </div>
 
- <div className="flex flex-wrap items-center gap-1.5 text-xs font-sans text-zinc-300 font-medium mt-1">
- <span className="text-zinc-200 font-semibold">{lead.ciudad ||'España'}</span>
+ <div className="flex flex-wrap items-center gap-1.5 text-xs font-sans text-[var(--ink-2)] font-medium mt-1">
+ <span className="text-[var(--ink)] font-semibold">{lead.ciudad ||'España'}</span>
  <span>•</span>
  <span className={lead.roster ?'text-[var(--acc)]/70 font-semibold' :''}>
  {lead.roster 
@@ -237,7 +237,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  : (lead.aforo ? `${lead.aforo} pax` :'Aforo n/d'))}
  </span>
  <span>•</span>
- <span className="text-zinc-400">{lead.genero ||'Variado'}</span>
+ <span className="text-[var(--ink-2)]">{lead.genero ||'Variado'}</span>
  </div>
 
  {/* Quality Badges */}
@@ -249,7 +249,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  </div>
 
  {/* Direct Action Bar (WhatsApp, Call, Quick Pitch Approve, View) */}
- <div className="pt-2.5 border-t border-zinc-800/80 flex flex-wrap items-center justify-between gap-2 w-full mt-1">
+ <div className="pt-2.5 border-t border-[var(--hair)]800/80 flex flex-wrap items-center justify-between gap-2 w-full mt-1">
  <div className="flex items-center gap-1.5">
  {/* Direct WhatsApp Button */}
  {phoneClean ? (
@@ -303,7 +303,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center gap-1 min-h-[38px] ${
  isDetailOpen
  ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
- :'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
+ :'bg-zinc-800 text-[var(--ink)] hover:bg-zinc-700'
  }`}
  >
  <Eye className="w-3.5 h-3.5" />

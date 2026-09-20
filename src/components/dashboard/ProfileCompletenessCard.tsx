@@ -476,7 +476,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <FileText className="w-4 h-4" /> 2. Agente Redactor (Pitches Personalizados & ADN de Tono)
  </h4>
  <p className="text-[var(--ink-2)] text-xs">
- Redacta las propuestas de correo para las salas extrayendo hitos de tu <strong className="text-zinc-100">Biografía</strong>, adjuntando tu <strong className="text-zinc-100">Dossier PDF</strong> y adaptando el vocabulario a la voz de la banda.
+ Redacta las propuestas de correo para las salas extrayendo hitos de tu <strong className="text-[var(--ink)]">Biografía</strong>, adjuntando tu <strong className="text-[var(--ink)]">Dossier PDF</strong> y adaptando el vocabulario a la voz de la banda.
  </p>
  </div>
 
@@ -485,7 +485,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <Disc3 className="w-4 h-4" /> 3. Agente Mánager AI (Negociación de Fechas & Caché)
  </h4>
  <p className="text-[var(--ink-2)] text-xs">
- Responde a las salas sobre disponibilidad consultando tu <strong className="text-zinc-100">Calendario</strong>, comprueba el <strong className="text-zinc-100">Rider Técnico</strong> y defiende el presupuesto según tus reglas de <strong className="text-zinc-100">Caché Mínimo</strong>.
+ Responde a las salas sobre disponibilidad consultando tu <strong className="text-[var(--ink)]">Calendario</strong>, comprueba el <strong className="text-[var(--ink)]">Rider Técnico</strong> y defiende el presupuesto según tus reglas de <strong className="text-[var(--ink)]">Caché Mínimo</strong>.
  </p>
  </div>
 

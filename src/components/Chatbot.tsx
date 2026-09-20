@@ -1723,7 +1723,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <h4 className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 uppercase ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]'}`}>
  Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block animate-pulse ${isStitchLight ?'bg-indigo-600 shadow-[0_0_8px_rgba(79,70,229,0.8)]' :'bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]'}`} />
  </h4>
- <span className="text-[9px] font-mono text-neutral-500">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
+ <span className="text-[9px] font-mono text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
  </div>
  </div>
 
@@ -1781,7 +1781,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  console.error(e);
  }
  }}
- className={`text-[9px] font-mono tracking-wider uppercase transition-all flex items-center gap-1 hover:underline cursor-pointer active:scale-95 ${isStitchLight ?'text-[var(--ink-3)] hover:text-indigo-600' :'text-neutral-500 hover:text-cyan-400'}`}
+ className={`text-[9px] font-mono tracking-wider uppercase transition-all flex items-center gap-1 hover:underline cursor-pointer active:scale-95 ${isStitchLight ?'text-[var(--ink-3)] hover:text-indigo-600' :'text-[var(--ink-2)] hover:text-cyan-400'}`}
  >
  Limpiar Hilo
  </button>
@@ -1884,7 +1884,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  :'bg-cyan-950/20 -cyan-500/10 rounded-tr-none text-[var(--ink-3)]')
  }`}>
  <div className="space-y-1">{parseMarkdown(msg.text)}</div>
- <span className="text-[8px] font-mono text-neutral-600 block mt-2 text-right">
+ <span className="text-[8px] font-mono text-[var(--ink-2)] block mt-2 text-right">
  {msg.timestamp instanceof Date ? msg.timestamp.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }) : new Date(msg.timestamp).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })}
  </span>
  </div>
@@ -2105,7 +2105,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <CheckCircle className="w-3.5 h-3.5" /> Aprobado e insertado
  </div>
  ) : (
- <div className={`text-[10px] font-mono rounded-[var(--r-s)] p-2 ${isStitchLight ?'text-[var(--ink-3)] bg-[var(--bg)]' :'text-neutral-500 bg-[var(--surface)]'}`}>
+ <div className={`text-[10px] font-mono rounded-[var(--r-s)] p-2 ${isStitchLight ?'text-[var(--ink-3)] bg-[var(--bg)]' :'text-[var(--ink-2)] bg-[var(--surface)]'}`}>
  Propuesta descartada
  </div>
  )}
@@ -2125,7 +2125,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center animate-pulse ${isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-cyan-500/10 -cyan-500/20 text-cyan-400'}`}>
  <Guitar className="w-3.5 h-3.5" />
  </div>
- <div className={`p-3.5 rounded-[var(--r-m)] rounded-tl-none text-[11px] font-mono flex items-center gap-2 ${isStitchLight ?'bg-white text-[var(--ink-2)] shadow-sm' :'bg-[var(--surface)]/50 text-neutral-500'}`}>
+ <div className={`p-3.5 rounded-[var(--r-m)] rounded-tl-none text-[11px] font-mono flex items-center gap-2 ${isStitchLight ?'bg-white text-[var(--ink-2)] shadow-sm' :'bg-[var(--surface)]/50 text-[var(--ink-2)]'}`}>
  <RefreshCw className={`w-3.5 h-3.5 animate-spin ${isStitchLight ?'text-indigo-600' :'text-cyan-400'}`} /> Analizando base de datos Supabase...
  </div>
  </div>
@@ -2141,7 +2141,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <button 
  type="button"
  onClick={() => setActiveRun(null)}
- className="text-neutral-500 hover:text-[var(--ink-3)] transition-colors cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--ink-3)] transition-colors cursor-pointer"
  title="Cerrar monitor"
  >
  <X className="w-3.5 h-3.5" />
@@ -2150,7 +2150,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)] -slate-200/60' :'bg-[var(--bg)]/60 -bg-[var(--surface)]/80'}`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase text-neutral-500">Estado</span>
+ <span className="text-[10px] font-mono uppercase text-[var(--ink-2)]">Estado</span>
  {activeRun.status ==='queued' && (
  <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[#d1b375]/15 text-[#d1b375] -amber-500/20 animate-pulse">🕒 En Cola</span>
  )}
@@ -2174,7 +2174,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {/* Steps sequencer */}
  {activeRun.steps && activeRun.steps.length > 0 && (
  <div className="mt-3 space-y-2 pt-2 -dashed dark:-neutral-800">
- <div className="flex items-center gap-1.5 text-[9px] text-neutral-500 uppercase tracking-wider">
+ <div className="flex items-center gap-1.5 text-[9px] text-[var(--ink-2)] uppercase tracking-wider">
  <Terminal className="w-3 h-3" /> Secuencia de Pasos:
  </div>
  <div className="space-y-1.5 pl-1">
@@ -2184,7 +2184,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const isStepRunning = step.status ==='in_progress';
  
  let dotColor ='bg-[var(--surface)]/80';
- let textColor ='text-neutral-500';
+ let textColor ='text-[var(--ink-2)]';
  if (isStepSuccess) {
  dotColor ='bg-emerald-500 shadow-[0_0_4px_var(--ok)]';
  textColor = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-3)]';
@@ -2427,7 +2427,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  ))}
  </div>
  ) : (
- <p className="text-[9px] italic text-neutral-500 font-mono">
+ <p className="text-[9px] italic text-[var(--ink-2)] font-mono">
  No se detectaron nuevas filas en esta ejecución. Toda la información ya está al día.
  </p>
  )}
@@ -2468,7 +2468,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  className={`flex-1 rounded-[var(--r-m)] px-3.5 py-2 text-xs focus:outline-none transition-all font-sans resize-none max-h-28 min-h-[38px] ${
  isStitchLight 
  ?'bg-white text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-3)]' 
- :'bg-[var(--surface)]/60 text-[var(--sunken)] focus:-cyan-500/50 placeholder:text-neutral-600'
+ :'bg-[var(--surface)]/60 text-[var(--sunken)] focus:-cyan-500/50 placeholder:text-[var(--ink-2)]'
  }`}
  />
  <button
@@ -2492,7 +2492,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  className={`p-2.5 rounded-[var(--r-m)] font-bold transition-all flex items-center justify-center shrink-0 cursor-pointer active:scale-95 active:opacity-90 mb-0.5 ${
  inputText.trim() 
  ? (isStitchLight ?'bg-indigo-600 text-[var(--ink)]' : colors.primary) 
- : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-3)]' :'bg-[var(--surface)] text-neutral-600 -neutral-800/40')
+ : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-3)]' :'bg-[var(--surface)] text-[var(--ink-2)] -neutral-800/40')
  }`}
  >
  <Send className={`w-4 h-4 ${isStitchLight && inputText.trim() ?'text-[var(--ink)]' :'text-zinc-950'}`} />

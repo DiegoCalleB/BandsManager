@@ -45,14 +45,14 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  <h3 className="text-base font-semibold text-[var(--ink)]">Caché & Condiciones de Contratación (Booking CRM)</h3>
  </div>
 
- <p className="text-xs text-zinc-400">
+ <p className="text-xs text-[var(--ink-2)]">
  Configura los rangos de caché orientativos y las condiciones de kilometraje/alojamiento para que las propuestas generadas por el agente o redactor incluyan cifras precisas.
  </p>
 
  {/* Caché estimado por formato */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] space-y-1">
- <label className="block text-[11px] font-medium text-zinc-400">
+ <label className="block text-[11px] font-medium text-[var(--ink-2)]">
  Caché Acústico / Showcase (€)
  </label>
  <div className="relative">
@@ -69,7 +69,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  </div>
 
  <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] space-y-1">
- <label className="block text-[11px] font-medium text-zinc-400">
+ <label className="block text-[11px] font-medium text-[var(--ink-2)]">
  Caché Sala / Concierto Estándar (€)
  </label>
  <div className="relative">
@@ -86,7 +86,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  </div>
 
  <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] space-y-1">
- <label className="block text-[11px] font-medium text-zinc-400">
+ <label className="block text-[11px] font-medium text-[var(--ink-2)]">
  Caché Festival / Fiesta Mayor (€)
  </label>
  <div className="relative">
@@ -106,7 +106,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  {/* Logística & Gastos de Desplazamiento */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[var(--hair)]">
  <div>
- <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center gap-1.5">
+ <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
  <Car className="w-3.5 h-3.5 text-[var(--acc)]" />
  Condiciones de Kilometraje / Furgoneta
  </label>
@@ -126,7 +126,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all flex items-center justify-between ${
  requiereAlojamiento
  ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
- :'bg-zinc-900 border-[var(--hair)] text-zinc-400'
+ :'bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -143,13 +143,13 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
  {/* Contacto Directo de Booking */}
  <div className="pt-2 border-t border-[var(--hair)] space-y-3">
- <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider">
  Persona de Contacto de Booking / Contratación
  </h4>
 
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1">Nombre / Cargo</label>
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Nombre / Cargo</label>
  <input
  type="text"
  value={contactoBookingNombre}
@@ -160,7 +160,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  </div>
 
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1">Email de Contratación</label>
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Email de Contratación</label>
  <input
  type="email"
  value={contactoBookingEmail}
@@ -171,7 +171,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  </div>
 
  <div>
- <label className="block text-[11px] font-medium text-zinc-400 mb-1">Teléfono Directo</label>
+ <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Teléfono Directo</label>
  <input
  type="tel"
  value={contactoBookingTelefono}

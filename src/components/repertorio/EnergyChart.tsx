@@ -403,7 +403,7 @@ export function EnergyChart({
  <span className="text-[var(--acc)]/70 font-bold">{chartData[draggingFromIndex]?.name}</span>
  {hoverIndex !== draggingFromIndex && (
  <>
- <span className="text-neutral-500"> → posición de </span>
+ <span className="text-[var(--ink-2)]"> → posición de </span>
  <span className="text-[var(--ink-2)]">"{chartData[hoverIndex]?.name}"</span>
  </>
  )}

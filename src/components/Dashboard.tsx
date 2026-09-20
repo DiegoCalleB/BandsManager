@@ -289,10 +289,10 @@ export default function Dashboard({
  });
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
- const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[#1A1918] text-zinc-100';
+ const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[#1A1918] text-[var(--ink)]';
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-neutral-500';
+ const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-2)]';
 
  // Calculate real metrics from leads
  const isMedio = (l: Lead) => {
@@ -439,11 +439,11 @@ export default function Dashboard({
  const maxPromoFans = 250;
 
  return (
- <div className={`space-y-6 ${isStitchLight ?"text-[var(--ink)]" :"text-zinc-100"} font-sans w-full max-w-full overflow-x-hidden`}>
+ <div className={`space-y-6 ${isStitchLight ?"text-[var(--ink)]" :"text-[var(--ink)]"} font-sans w-full max-w-full overflow-x-hidden`}>
  <div className="mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Dashboard</h1>
- <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">
+ <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[var(--ink)]">Dashboard</h1>
+ <p className="text-sm font-mono text-[var(--ink-2)] uppercase tracking-widest">
  Panel de {activeBandName}
  {agendaFilterMode ==='all' && hasMultipleBands && (
  <span className="ml-2 text-[var(--acc)] lowercase font-normal">(vista global de todas tus bandas)</span>
@@ -596,7 +596,7 @@ export default function Dashboard({
  {item.title}
  </h4>
 
- <p className="text-xs font-semibold mt-1 flex items-center gap-1 text-zinc-300 truncate">
+ <p className="text-xs font-semibold mt-1 flex items-center gap-1 text-[var(--ink-2)] truncate">
  <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
  <span>{item.location}</span>
  </p>

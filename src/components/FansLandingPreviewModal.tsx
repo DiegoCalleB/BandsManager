@@ -140,7 +140,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
 
  {/* Selector de Idioma */}
  <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-m)] p-1 gap-1 shadow-inner">
- <Globe2 className="w-3 h-3 text-neutral-500 ml-1 mr-0.5" />
+ <Globe2 className="w-3 h-3 text-[var(--ink-2)] ml-1 mr-0.5" />
  {FAN_FORM_LANGUAGES.map(l => (
  <button
  key={l.code}

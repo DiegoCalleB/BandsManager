@@ -98,7 +98,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
  return {
  type:'neutral',
  label:'✨ Activo',
- badgeClass:'bg-zinc-800/80 text-zinc-300 font-medium',
+ badgeClass:'bg-zinc-800/80 text-[var(--ink-2)] font-medium',
  icon:'✨',
  description:'En seguimiento regular'
  };
@@ -126,7 +126,7 @@ export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({
  <span>{health.label}</span>
  </span>
  {showDescription && (
- <span className="text-[10px] text-zinc-400 font-mono tracking-tight pl-1">
+ <span className="text-[10px] text-[var(--ink-2)] font-mono tracking-tight pl-1">
  {health.description}
  </span>
  )}

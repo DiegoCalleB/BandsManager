@@ -316,7 +316,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  )}
  </div>
 
- <div className="flex items-center gap-3 text-[11px] font-mono text-neutral-500">
+ <div className="flex items-center gap-3 text-[11px] font-mono text-[var(--ink-2)]">
  <div className="h-px flex-1 bg-[var(--surface)]/80" />
  <span>o conecta por SMTP/IMAP (Outlook u otro proveedor)</span>
  <div className="h-px flex-1 bg-[var(--surface)]/80" />

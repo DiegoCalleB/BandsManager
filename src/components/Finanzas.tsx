@@ -137,7 +137,7 @@ export default function Finanzas({
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-neutral-500';
+ const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-2)]';
  const cardBorder = isStitchLight ?'-slate-200' :'-neutral-800';
 
  return (
@@ -156,7 +156,7 @@ export default function Finanzas({
  disabled={isSyncing}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncing
- ?'bg-[var(--surface)]/80 text-neutral-500 animate-pulse'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] animate-pulse'
  : isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-sm shadow-indigo-100'
  :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
@@ -294,7 +294,7 @@ export default function Finanzas({
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isStitchLight 
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-sm' 
- :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-md'
+ :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] shadow-md'
  }`}
  >
  <Plus className="w-3.5 h-3.5" /> Registrar Operación
@@ -631,7 +631,7 @@ export default function Finanzas({
  {/* Ledger Filters */}
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col md:flex-row gap-3 ${colors.card} ${cardBorder}`}>
  <div className="relative flex-1">
- <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-neutral-500 pointer-events-none" />
+ <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[var(--ink-2)] pointer-events-none" />
  <input
  id="finanzas-search"
  type="text"
@@ -641,7 +641,7 @@ export default function Finanzas({
  className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-1.5 text-xs focus:outline-none font-mono transition-all ${
  isStitchLight 
  ?'bg-white text-[var(--ink)] focus:-indigo-500 placeholder:text-slate-450' 
- :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-neutral-600'
+ :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-[var(--ink-2)]'
  }`}
  />
  {searchTerm && (

@@ -336,15 +336,15 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  Contribución
  </span>
  </div>
- <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
+ <p className="text-[11px] text-[var(--ink)]/90 leading-relaxed mt-1">
  {config.donacionRevolut?.descripcion ||'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'}
  </p>
  </div>
  </div>
 
- <div className="pt-1 flex items-center justify-between text-[10px] text-neutral-500">
+ <div className="pt-1 flex items-center justify-between text-[10px] text-[var(--ink-2)]">
  <span className="flex items-center gap-1">
- <LockIcon className="w-3 h-3 text-neutral-500 shrink-0" />
+ <LockIcon className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
  <span>Pago seguro sin comisiones para la banda</span>
  </span>
  </div>

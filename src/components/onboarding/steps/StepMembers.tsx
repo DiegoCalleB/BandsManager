@@ -45,7 +45,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  >
  <div className="flex items-center gap-3">
  <div className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold text-xs ${
- m.isLeader ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-zinc-800 text-zinc-300 border-[var(--hair)]'
+ m.isLeader ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-zinc-800 text-[var(--ink-2)] border-[var(--hair)]'
  }`}>
  {m.name.charAt(0).toUpperCase()}
  </div>
@@ -58,7 +58,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  </span>
  )}
  </div>
- <div className="flex items-center gap-3 text-xs text-zinc-400 mt-0.5">
+ <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] mt-0.5">
  <span>{m.role ||'Músico'}</span>
  {m.email && <span className="text-zinc-500">· {m.email}</span>}
  {m.instagram && <span className="text-zinc-500">· @{m.instagram.replace('@','')}</span>}
@@ -82,7 +82,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
 
  {/* Add new member form */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
- <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5">
  <Plus className="w-3.5 h-3.5 text-[var(--acc)]" />
  Añadir Compañero de Banda / Músico
  </h4>

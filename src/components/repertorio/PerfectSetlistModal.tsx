@@ -286,7 +286,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  de cambios: reordenar canciones, quitar las que no encajen, añadir otras del
  repertorio que sí, y sugerir bloques (presentación, pausa, bis...) donde falten.
  </p>
- <p className="text-xs text-neutral-500 mb-6">
+ <p className="text-xs text-[var(--ink-2)] mb-6">
  No se toca este setlist: en cuanto se genere el plan, se trabaja sobre una copia nueva.
  </p>
  <button
@@ -347,7 +347,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <p className="text-xs text-[var(--ink-2)] mt-0.5">{action.reason}</p>
  </div>
  {isInvalid ? (
- <span className="shrink-0 text-[10px] text-neutral-500 font-mono font-medium whitespace-nowrap" title="Un cambio anterior afectó al item que esta acción necesitaba">
+ <span className="shrink-0 text-[10px] text-[var(--ink-2)] font-mono font-medium whitespace-nowrap" title="Un cambio anterior afectó al item que esta acción necesitaba">
  ⚠️ Ya no aplica
  </span>
  ) : isCurrentUndo ? (
@@ -386,13 +386,13 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 space-y-2">
  <div className="flex flex-wrap items-center gap-2">
  <div className="flex items-center gap-1">
- <span className="text-[9px] font-mono uppercase tracking-wider text-neutral-500">Intensidad</span>
+ <span className="text-[9px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Intensidad</span>
  {[1, 2, 3, 4, 5].map((star) => (
  <button
  key={`intensidad-${star}`}
  type="button"
  onClick={() => setIntensidadRating(intensidadRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ?'text-[var(--acc)]' :'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'}`}
  title={`Valorar la intensidad/energía: ${star}/5`}
  >
  <Star className="w-3 h-3 fill-current" />
@@ -400,13 +400,13 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  ))}
  </div>
  <div className="flex items-center gap-1">
- <span className="text-[9px] font-mono uppercase tracking-wider text-neutral-500">Contenido</span>
+ <span className="text-[9px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Contenido</span>
  {[1, 2, 3, 4, 5].map((star) => (
  <button
  key={`contenido-${star}`}
  type="button"
  onClick={() => setContenidoRating(contenidoRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ?'text-[var(--acc)]' :'text-neutral-700 hover:text-neutral-500'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'}`}
  title={`Valorar el contenido/selección de temas: ${star}/5`}
  >
  <Star className="w-3 h-3 fill-current" />
@@ -419,15 +419,15 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  value={comentarioFeedback}
  onChange={(e) => setComentarioFeedback(e.target.value)}
  placeholder="Ej:'Evita más de una balada seguida','el bis siempre un tema conocido'..."
- className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-[11px] text-[var(--sunken)] placeholder-neutral-500 font-sans focus:outline-none focus:"
+ className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-[11px] text-[var(--sunken)] placeholder-[var(--ink-3)]500 font-sans focus:outline-none focus:"
  />
  <div className="flex items-center gap-1.5 text-[10px] font-mono">
- <span className="text-neutral-500 uppercase tracking-wider">Alcance:</span>
+ <span className="text-[var(--ink-2)] uppercase tracking-wider">Alcance:</span>
  <button
  type="button"
  onClick={() => setFeedbackScope('este_setlist')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
- feedbackScope ==='este_setlist' ?'bg-[var(--surface)]/70 text-[var(--ink)] font-bold' :'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
+ feedbackScope ==='este_setlist' ?'bg-[var(--surface)]/70 text-[var(--ink)] font-bold' :'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-3)]'
  }`}
  >
  Solo este plan
@@ -436,7 +436,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  type="button"
  onClick={() => setFeedbackScope('global')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all flex items-center gap-1 ${
- feedbackScope ==='global' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold' :'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
+ feedbackScope ==='global' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold' :'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-3)]'
  }`}
  title="La IA recordará esta corrección también para futuros setlists de la banda"
  >

@@ -125,7 +125,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <div className="space-y-1.5 pt-1 border-t border-[var(--hair)]">
  <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] font-bold flex items-center justify-between">
  <span>Insertar Carácter o Símbolo:</span>
- <span className="text-neutral-500 font-normal">Añadir al nombre</span>
+ <span className="text-[var(--ink-2)] font-normal">Añadir al nombre</span>
  </label>
  <div className="flex flex-wrap gap-1.5">
  {ROCK_SYMBOLS.map((sym, idx) => (

@@ -783,7 +783,7 @@ export function BulkAlbumAudioUploaderModal({
  <div className="min-w-0 flex-1">
  {isCreatingBrandNewAlbum ? (
  <div className="flex items-center gap-2">
- <span className="text-xs font-mono text-neutral-500 w-5">
+ <span className="text-xs font-mono text-[var(--ink-2)] w-5">
  #{item.trackNumber || idx + 1}
  </span>
  <input

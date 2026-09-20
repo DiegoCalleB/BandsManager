@@ -178,7 +178,7 @@ export function CampaignManagerModal({
  <Target className="w-5 h-5" />
  </div>
  <div>
- <h2 className="text-base sm:text-lg font-bold font-display text-zinc-100 flex items-center gap-2">
+ <h2 className="text-base sm:text-lg font-bold font-display text-[var(--ink)] flex items-center gap-2">
  Gestor de Campañas de Booking
  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300">
  {campaigns.length} disponibles
@@ -225,7 +225,7 @@ export function CampaignManagerModal({
  value={formData.name ||''}
  onChange={e => setFormData({ ...formData, name: e.target.value })}
  placeholder="Ej: Campaña Diciembre 2026"
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-zinc-100 placeholder-neutral-500 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
  />
  </div>
  <div>
@@ -278,12 +278,12 @@ export function CampaignManagerModal({
  onChange={e => setNewCityInput(e.target.value)}
  onKeyDown={e => { if (e.key ==='Enter') { e.preventDefault(); handleAddCity(); } }}
  placeholder="Añadir ciudad (ej. Barcelona) y pulsar Enter"
- className="flex-1 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-1.5 text-xs text-zinc-100 placeholder-neutral-500 focus:border-sky-500"
+ className="flex-1 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-1.5 text-xs text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:border-sky-500"
  />
  <button
  type="button"
  onClick={handleAddCity}
- className="px-3 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 text-xs font-mono font-bold rounded-[var(--r-m)]"
+ className="px-3 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-mono font-bold rounded-[var(--r-m)]"
  >
  + Añadir
  </button>
@@ -300,7 +300,7 @@ export function CampaignManagerModal({
  type="number"
  value={formData.minCapacity || 0}
  onChange={e => setFormData({ ...formData, minCapacity: parseInt(e.target.value) || 0 })}
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-zinc-100"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)]"
  />
  </div>
  <div>
@@ -311,7 +311,7 @@ export function CampaignManagerModal({
  type="number"
  value={formData.maxCapacity || 0}
  onChange={e => setFormData({ ...formData, maxCapacity: parseInt(e.target.value) || 0 })}
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-zinc-100"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)]"
  />
  </div>
  </div>
@@ -326,7 +326,7 @@ export function CampaignManagerModal({
  {formData.targetDates?.map((date, idx) => (
  <div 
  key={idx}
- className="flex flex-col gap-1 bg-[var(--surface)] px-2.5 py-1.5 rounded-[var(--r-m)] text-zinc-100"
+ className="flex flex-col gap-1 bg-[var(--surface)] px-2.5 py-1.5 rounded-[var(--r-m)] text-[var(--ink)]"
  >
  <div className="flex items-center gap-1.5">
  <Calendar className="w-3.5 h-3.5 text-purple-400 shrink-0" />
@@ -340,7 +340,7 @@ export function CampaignManagerModal({
  next.sort();
  setFormData({ ...formData, targetDates: next });
  }}
- className="bg-transparent text-xs font-mono font-bold text-zinc-100 border-0 p-0 focus:ring-0 cursor-pointer"
+ className="bg-transparent text-xs font-mono font-bold text-[var(--ink)] border-0 p-0 focus:ring-0 cursor-pointer"
  />
  <button
  type="button"
@@ -384,7 +384,7 @@ export function CampaignManagerModal({
  value={formData.notes ||''}
  onChange={e => setFormData({ ...formData, notes: e.target.value })}
  placeholder="Ej: Intercambio con bandas de ska/mestizaje locales para compartir backline y taquilla al 50%."
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-zinc-100 placeholder-neutral-500 focus:border-purple-500"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:border-purple-500"
  />
  </div>
 
@@ -426,7 +426,7 @@ export function CampaignManagerModal({
  value={formData.customPitchTemplates?.[activePitchCategory] ||''}
  onChange={e => handlePitchTemplateChange(activePitchCategory, e.target.value)}
  placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para"${PITCH_CATEGORIES.find(c => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-zinc-100 placeholder-neutral-500 focus:border-purple-500"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:border-purple-500"
  />
  <p className="text-[11px] text-[var(--ink-2)] italic mt-1">
  💡 Cada caso de uso tiene su propio mensaje. Mientras esta campaña esté activa, el Redactor IA prioriza el mensaje de la categoría del lead sobre la plantilla habitual; las categorías sin mensaje definido siguen usando solo la plantilla habitual.
@@ -486,7 +486,7 @@ export function CampaignManagerModal({
  </div>
  <div>
  <div className="flex items-center gap-2">
- <span className="text-xs font-bold text-zinc-100">
+ <span className="text-xs font-bold text-[var(--ink)]">
  Modo General (Sin Filtro de Campaña)
  </span>
  {!activeCampaign && (
@@ -536,7 +536,7 @@ export function CampaignManagerModal({
  className="w-2.5 h-2.5 rounded-full shrink-0" 
  style={{ backgroundColor: themeColor }}
  />
- <h3 className="text-sm font-bold font-display text-zinc-100">
+ <h3 className="text-sm font-bold font-display text-[var(--ink)]">
  {camp.name}
  </h3>
  {isActive ? (
@@ -656,7 +656,7 @@ export function CampaignManagerModal({
  </div>
  <button
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 font-mono font-bold text-xs"
+ className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-mono font-bold text-xs"
  >
  Cerrar
  </button>

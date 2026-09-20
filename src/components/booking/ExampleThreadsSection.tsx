@@ -179,13 +179,13 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  >
  <div className="min-w-0">
  <span className="font-bold text-[var(--sunken)]">{t.titulo ||'Sin título'}</span>
- <span className="text-neutral-500 ml-2">{t.mensajes.length} mensaje(s) · {RESULTADO_LABEL[t.resultado] || t.resultado}</span>
+ <span className="text-[var(--ink-2)] ml-2">{t.mensajes.length} mensaje(s) · {RESULTADO_LABEL[t.resultado] || t.resultado}</span>
  </div>
  <div className="flex items-center gap-1 shrink-0">
  <button
  type="button"
  onClick={(e) => { e.stopPropagation(); handleEdit(t); }}
- className="p-1 text-neutral-500 hover:text-sky-400 cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-sky-400 cursor-pointer"
  title="Ver / editar este hilo"
  >
  <Pencil className="w-3.5 h-3.5" />
@@ -193,7 +193,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  <button
  type="button"
  onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
- className="p-1 text-neutral-500 hover:text-red-400 cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-red-400 cursor-pointer"
  title="Borrar este hilo de ejemplo"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -224,7 +224,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  <select
  value={m.rol}
  onChange={(e) => handleMessageChange(idx,'rol', e.target.value)}
- className="text-[9px] rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--surface)] text-neutral-300 shrink-0"
+ className="text-[9px] rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--surface)] text-[var(--ink)] shrink-0"
  >
  <option value="banda">Banda</option>
  <option value="sala">Sala</option>
@@ -237,7 +237,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'}`}
  />
  {mensajes.length > 1 && (
- <button type="button" onClick={() => handleRemoveMessageRow(idx)} className="p-1 text-neutral-500 hover:text-red-400 cursor-pointer shrink-0">
+ <button type="button" onClick={() => handleRemoveMessageRow(idx)} className="p-1 text-[var(--ink-2)] hover:text-red-400 cursor-pointer shrink-0">
  <Trash2 className="w-3.5 h-3.5" />
  </button>
  )}
@@ -259,7 +259,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  key={r}
  type="button"
  onClick={() => setResultado(r)}
- className={`text-[9px] px-2 py-1 rounded-[var(--r-s)] font-sans cursor-pointer ${resultado === r ?'bg-sky-500/30 text-sky-200 font-bold' :'bg-[var(--surface)] text-neutral-500'}`}
+ className={`text-[9px] px-2 py-1 rounded-[var(--r-s)] font-sans cursor-pointer ${resultado === r ?'bg-sky-500/30 text-sky-200 font-bold' :'bg-[var(--surface)] text-[var(--ink-2)]'}`}
  >
  {RESULTADO_LABEL[r]}
  </button>
