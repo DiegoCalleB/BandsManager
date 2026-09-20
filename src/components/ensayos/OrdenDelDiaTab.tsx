@@ -21,13 +21,13 @@ interface OrdenDelDiaTabProps {
  onGoToLiveMode: () => void;
 }
 
-const BLOCK_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
- cancion: { label:'Canción de Repertorio', icon:'🎵', bg:'bg-[var(--acc)]/10', text:'text-[var(--acc)]', border:'/20' },
- calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-[var(--acc)]/10', text:'text-[var(--acc)]/80', border:'border-[var(--acc)]/20' },
- pausa: { label:'Pausa / Descanso / Birra', icon:'☕', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]', border:'' },
- seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-[var(--tentative)]/10', text:'text-[var(--acc)]', border:'border-[var(--acc)]/20' },
- improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-[var(--ok)]/10', text:'text-[var(--ok)]', border:'border-[var(--ok)]/20' },
- outro: { label:'Repaso Final / Feedback', icon:'🏁', bg:'bg-[var(--acc)]/10', text:'text-[var(--ink-2)]', border:'border-[var(--acc)]/20' },
+const BLOCK_TYPES: Record<string, { label: string; icon: string; bg: string; text: string }> = {
+ cancion: { label:'Canción de Repertorio', icon:'🎵', bg:'bg-[var(--acc)]/10', text:'text-[var(--acc)]' },
+ calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-[var(--acc)]/10', text:'text-[var(--acc)]/80' },
+ pausa: { label:'Pausa / Descanso / Birra', icon:'☕', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]' },
+ seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-[var(--tentative)]/10', text:'text-[var(--acc)]' },
+ improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-[var(--ok)]/10', text:'text-[var(--ok)]' },
+ outro: { label:'Repaso Final / Feedback', icon:'🏁', bg:'bg-[var(--acc)]/10', text:'text-[var(--ink-2)]' },
 };
 
 // 1x1 transparent drag ghost image
@@ -598,7 +598,7 @@ export function OrdenDelDiaTab({
  <span className="text-sm font-bold font-sans text-[var(--ink)] truncate">
  {formatSongTitle(item.titulo)}
  </span>
- <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono uppercase font-bold ${bType.bg} ${bType.text} ${bType.border}`}>
+ <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono uppercase font-bold ${bType.bg} ${bType.text}`}>
  {bType.icon} {bType.label}
  </span>
 
