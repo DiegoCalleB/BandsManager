@@ -4062,7 +4062,7 @@ export default function CalendarView({
  evt.type ==='concierto'
  ? isStitchLight ?'bg-sky-500/15 text-sky-400' :'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  : evt.type ==='campaña'
- ?'bg-purple-500/20 text-purple-300'
+ ?'bg-[var(--tentative-soft)] text-[var(--tentative)]'
  : isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-emerald-500/20 text-[var(--ink-2)]'
  }`}>
  {evt.type ==='campaña' ?'🎯 Posible Bolo' : evt.type}

@@ -56,6 +56,12 @@
   --shadow-soft: rgba(0, 0, 0, 0.15);      /* Sombra muy suave (playhead, etc.) */
   --scrim:      #000000;                   /* Velo tras un modal — siempre oscuro, no cambia con el tema */
 
+  /* Categoría "posible" (bolo tentativo, no confirmado) — no es ok/alert/acc,
+     es su propio estado. NUNCA gatear en isStitchLight (roto: compara contra
+     hex de un tema legacy pre-Espectro que ya no existe, ver AGENTS.md). */
+  --tentative:      #7E22CE;
+  --tentative-soft: #F3E8FF;
+
   /* Elevación — Espectro es plano. Separa el relleno, no la sombra. */
   --sh-s: none;
   --sh-m: none;
@@ -108,6 +114,9 @@
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Mismo negro/sombra */
   --scrim:      #000000;
 
+  --tentative:      #C084FC;
+  --tentative-soft: rgba(192, 132, 252, 0.2);
+
   color-scheme: dark;
 }
 
@@ -145,6 +154,9 @@
   --acc-glow:   rgba(242, 202, 80, 0.1);   /* --acc (classic) con 10% */
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Mismo negro/sombra */
   --scrim:      #000000;
+
+  --tentative:      #C084FC;
+  --tentative-soft: rgba(192, 132, 252, 0.2);
 
   --r-pill: 999px;
   --r-s:    8px;
