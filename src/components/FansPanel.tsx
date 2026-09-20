@@ -973,8 +973,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {viewMode ==='grid' && (
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
  {filteredFans.length === 0 ? (
- <div className="col-span-full p-8 text-center text-[var(--ink-2)] font-mono bg-[var(--surface)]/50 rounded-[var(--r-m)]">
- No hay fans registrados que coincidan con los filtros aplicados.
+ <div className="col-span-full flex flex-col items-center justify-center py-12">
+ <PublicoSilhouette opacity={12} size="medium" />
+ <p className="mt-6 font-medium text-[var(--ink)] text-sm">Sin fans que coincidan</p>
+ <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
+ Ajusta los filtros o espera a que tus primeros fans se unan.
+ </p>
  </div>
  ) : (
  filteredFans.map(fan => (
@@ -1080,8 +1084,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <tbody className="divide-y divide-slate-800/50">
  {filteredFans.length === 0 ? (
  <tr>
- <td colSpan={7} className="p-8 text-center text-[var(--ink-2)] font-mono">
- No hay fans registrados que coincidan con los filtros aplicados.
+ <td colSpan={7} className="p-12">
+ <div className="flex flex-col items-center justify-center">
+ <PublicoSilhouette opacity={12} size="medium" />
+ <p className="mt-6 font-medium text-[var(--ink)] text-sm">Sin fans que coincidan</p>
+ <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
+ Ajusta los filtros o espera a que tus primeros fans se unan.
+ </p>
+ </div>
  </td>
  </tr>
  ) : (

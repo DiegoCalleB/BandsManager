@@ -8,6 +8,7 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianG
 import { api } from'../../services/api';
 import { getDeterministicGrowthPlan, GrowthPlan } from'../../utils/growthPlanEngine';
 import { SocialGrowthPlanView } from'./SocialGrowthPlanView';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 
 interface ReelsMetricsViewProps {
  colors: ThemeColors;
@@ -1665,8 +1666,14 @@ export function ReelsMetricsView({
  <tbody className="divide-y divide-neutral-500/10">
  {metrics.length === 0 ? (
  <tr>
- <td colSpan={3 + activeCount} className="py-8 text-center text-neutral-500 font-mono text-xs">
- No hay registros históricos todavía. Añade un checkpoint o ejecuta el radar.
+ <td colSpan={3 + activeCount} className="py-12 px-4">
+ <div className="flex flex-col items-center justify-center">
+ <PublicoSilhouette opacity={12} size="medium" />
+ <p className="mt-6 font-medium text-[var(--ink)] text-sm">Sin registros históricos</p>
+ <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
+ Añade un checkpoint o ejecuta el radar para comenzar a rastrear métricas.
+ </p>
+ </div>
  </td>
  </tr>
  ) : (
