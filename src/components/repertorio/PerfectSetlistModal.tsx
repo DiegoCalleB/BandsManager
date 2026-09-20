@@ -306,7 +306,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  )}
 
  {error && (
- <div className="bg-[var(--alert)]/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
+ <div className="bg-[var(--alert)]/20 rounded-[var(--r-s)] p-4 flex gap-3">
  <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
  <div>
  <p className="font-medium text-[var(--alert)]">Error</p>

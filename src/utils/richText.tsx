@@ -1,4 +1,4 @@
-import React from 'react';
+import React from' react';
 
 /**
  * Renderiza texto con **negrita** simple (sin más markdown) como <strong>.

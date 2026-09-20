@@ -12,9 +12,9 @@
  */
 
 export type IndexChange =
- | { type: 'move'; from: number; to: number }
- | { type: 'remove'; at: number }
- | { type: 'insert'; at: number };
+ | { type:' move'; from: number; to: number }
+ | { type:' remove'; at: number }
+ | { type:' insert'; at: number };
 
 /**
  * Ajusta una posición 0-indexada tras un cambio en OTRO punto del mismo array. Devuelve null si
@@ -23,14 +23,14 @@ export type IndexChange =
  * inventado.
  */
 export function adjustIndex(position0: number, change: IndexChange): number | null {
- if (change.type === 'move') {
+ if (change.type ===' move') {
  const { from, to } = change;
  if (position0 === from) return to;
  if (from < position0 && position0 <= to) return position0 - 1;
  if (to <= position0 && position0 < from) return position0 + 1;
  return position0;
  }
- if (change.type === 'remove') {
+ if (change.type ===' remove') {
  if (position0 === change.at) return null;
  return position0 > change.at ? position0 - 1 : position0;
  }

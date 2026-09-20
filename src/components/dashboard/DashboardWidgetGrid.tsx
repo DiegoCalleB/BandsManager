@@ -439,7 +439,7 @@ export function DashboardWidgetGrid({
 
  <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
  {/* Ancho — 3 tamaños con icono de proporción, no 5 porcentajes en texto */}
- <div className="flex items-center gap-1 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)]">
+ <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
  {([
  { span: 4 as const, w: 6, label:'Estrecho' },
  { span: 6 as const, w: 10, label:'Mitad' },
@@ -464,7 +464,7 @@ export function DashboardWidgetGrid({
  </div>
 
  {/* Alto — mismo patrón visual, icono de proporción vertical */}
- <div className="flex items-center gap-1 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)]">
+ <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
  {([
  { val:'compact' as const, h: 6, label:'Bajo' },
  { val:'normal' as const, h: 10, label:'Medio' },
@@ -494,7 +494,7 @@ export function DashboardWidgetGrid({
  type="button"
  onClick={() => handleMoveWidget(index,'up')}
  disabled={index === 0}
- className="p-1 rounded bg-[var(--surface)]/80 border-[var(--hair)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
+ className="p-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
  title="Mover arriba"
  >
  <ArrowUp className="w-3.5 h-3.5" />
@@ -503,7 +503,7 @@ export function DashboardWidgetGrid({
  type="button"
  onClick={() => handleMoveWidget(index,'down')}
  disabled={index === visibleWidgets.length - 1}
- className="p-1 rounded bg-[var(--surface)]/80 border-[var(--hair)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
+ className="p-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
  title="Mover abajo"
  >
  <ArrowDown className="w-3.5 h-3.5" />
@@ -547,7 +547,7 @@ export function DashboardWidgetGrid({
  <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
  {/* Header */}
- <div className="p-5 border-b flex items-center justify-between">
+ <div className="p-5 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Plus className="w-5 h-5" />
@@ -572,7 +572,7 @@ export function DashboardWidgetGrid({
  </div>
 
  {/* Category Filter Pills */}
- <div className="p-4 border-b /80 bg-[var(--surface)] flex gap-2 overflow-x-auto">
+ <div className="p-4 /80 bg-[var(--surface)] flex gap-2 overflow-x-auto">
  {categories.map(cat => (
  <button
  key={cat}
@@ -625,7 +625,7 @@ export function DashboardWidgetGrid({
  </div>
 
  {/* Footer */}
- <div className="p-4 border-t bg-[var(--surface)] text-right">
+ <div className="p-4 bg-[var(--surface)] text-right">
  <button
  type="button"
  onClick={() => setIsAddModalOpen(false)}

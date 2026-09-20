@@ -411,7 +411,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <div className="bg-gradient-to-b from-zinc-900 via-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-lg overflow-hidden flex flex-col my-auto max-h-[92vh]">
  
  {/* Header */}
- <div className="p-4 border-b border-[var(--hair)]10 flex items-center justify-between bg-[var(--ink)]/5 shrink-0">
+ <div className="p-410 flex items-center justify-between bg-[var(--ink)]/5 shrink-0">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ok)]">
  <Guitar className="w-5 h-5" />
@@ -450,7 +450,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </label>
 
  {/* Instrument Category Filter Tabs */}
- <div className="flex items-center gap-1 bg-[var(--sunken)] p-0.5 rounded-[var(--r-s)] border-[var(--hair)]10 text-[10px]">
+ <div className="flex items-center gap-1 bg-[var(--sunken)] p-0.5 rounded-[var(--r-s)]10 text-[10px]">
  {(['all','guitar','ukulele','bass'] as const).map((cat) => {
  const labels = {
  all:'Todos',
@@ -496,8 +496,8 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-left text-xs font-medium transition-all cursor-pointer flex items-start justify-between gap-2 ${
  selectedPresetId === p.id
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold'
- :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-[var(--ink)]/10'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]/60 font-bold'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)]5 hover:bg-[var(--ink)]/10'
  }`}
  >
  <div className="flex flex-col min-w-0 flex-1">
@@ -528,7 +528,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </div>
 
  {/* Main Visual Tuner Display */}
- <div className="bg-[var(--sunken)] border-[var(--hair)]10 rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden">
+ <div className="bg-[var(--sunken)]10 rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden">
  
  {/* Tuning needle meter bar */}
  <div className="w-full space-y-2">
@@ -631,7 +631,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[var(--acc)]" />
  <p className="leading-snug">{micError}</p>
  </div>
- <div className="flex flex-wrap items-center gap-2 pt-1 border-t /20">
+ <div className="flex flex-wrap items-center gap-2 pt-1 /20">
  <button
  onClick={() => {
  if (currentPreset.strings[0]) {
@@ -682,8 +682,8 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  isTonePlaying
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-black scale-105'
  : isSelected
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold'
- :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-[var(--ink)]/10 hover:border-[var(--hair)]20'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]/60 font-bold'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)]5 hover:bg-[var(--ink)]/10 hover:border-[var(--hair)]20'
  }`}
  >
  <div className="flex items-center gap-1">
@@ -702,7 +702,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </div>
 
  {/* Footer */}
- <div className="p-3.5 border-t border-[var(--hair)]10 bg-[var(--ink)]/5 flex items-center justify-between text-[11px] text-[var(--ink-2)] shrink-0">
+ <div className="p-3.510 bg-[var(--ink)]/5 flex items-center justify-between text-[11px] text-[var(--ink-2)] shrink-0">
  <span>Soporta afinación de Guitarra eléctrica/acústica, Bajo y Ukelele (Soprano, Concierto, Tenor y Barítono).</span>
  <button
  onClick={() => {

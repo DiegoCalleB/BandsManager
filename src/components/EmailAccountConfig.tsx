@@ -202,7 +202,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  };
 
  const inputClass = `w-full p-2.5 rounded-[var(--r-m)] text-xs font-sans transition-all outline-none ${
- 'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--acc)]/60'
+' bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--acc)]/60'
  }`;
  const labelClass ='text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-2';
 
@@ -223,7 +223,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  ?'bg-[var(--surface)]'
  :'bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}>
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b /60">
+ <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 /60">
  <div className="flex items-center gap-2">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-2)]">
  <Mail className="w-5 h-5" />
@@ -250,7 +250,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  Solo para Gmail; Outlook y otros proveedores siguen usando el formulario SMTP/IMAP de
  abajo. */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${
- 'bg-[var(--acc)]/5 border-[var(--acc)]/20'
+' bg-[var(--acc)]/5/20'
  }`}>
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
@@ -268,7 +268,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
  ) : gmailOAuthStatus.connected ? (
  <div className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 ${
- 'bg-[var(--ok)]/10 border-[var(--ok)]/20 text-[var(--ink)]'
+' bg-[var(--ok)]/10/20 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
@@ -323,7 +323,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  {status.connected && !editing ? (
  <div className="space-y-3">
  <div className={`p-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 ${
- 'bg-[var(--ok)]/10 border-[var(--ok)]/20 text-[var(--ink)]'
+' bg-[var(--ok)]/10/20 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
@@ -355,7 +355,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  onClick={() => handleProviderChange(p)}
  className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
  provider === p
- ?'bg-[var(--acc)]/20 border-[var(--acc)]/80 text-[var(--tentative)]/40'
+ ?'bg-[var(--acc)]/20/80 text-[var(--tentative)]/40'
  : isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 /80 text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink-2)]'
@@ -398,7 +398,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
 
  <div className={`p-3 rounded-[var(--r-m)] text-[11px] flex items-start gap-2 ${
- isStitchLight ?'bg-[var(--tentative)]/5/80 border-[var(--acc)] text-[var(--tentative)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--tentative)]/5/80 text-[var(--tentative)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[var(--ink-2)]" />
  <span>
@@ -412,7 +412,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
 
  {provider ==='other' && (
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t /60">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 /60">
  <div className="space-y-2">
  <label className={labelClass}><span>Servidor SMTP (envío)</span></label>
  <div className="flex gap-2">

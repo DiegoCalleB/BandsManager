@@ -88,7 +88,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  if (loading) {
  return (
  <div className="min-h-screen bg-[var(--surface)] text-[var(--ink)] flex flex-col items-center justify-center p-6">
- <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4"></div>
+ <div className="w-12 h-12 border-t-transparent rounded-full animate-spin mb-4"></div>
  <p className="text-[var(--acc)] font-medium">{t('cargando')}</p>
  </div>
  );
@@ -285,7 +285,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
  {miembros.map(m => (
  <div key={m.id} className="text-center space-y-2">
- <div className={`aspect-square rounded-[var(--r-l)] overflow-hidden ${styles.memberCard} border`}>
+ <div className={`aspect-square rounded-[var(--r-l)] overflow-hidden ${styles.memberCard} `}>
  {m.fotoUrl ? (
  <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" loading="lazy" />
  ) : (
@@ -386,7 +386,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </div>
  </div>
 
- <div className="pt-4 border-t border-current/20 print:">
+ <div className="pt-4 border-current/20 print:">
  <a
  href={`mailto:${config.contactoBooking?.email}?subject=${encodeURIComponent(t('asuntoContratacion'))}`}
  className={`w-full py-2.5 ${styles.accentBtn} rounded-[var(--r-m)] flex items-center justify-center gap-2 transition print:hidden`}
@@ -422,7 +422,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <p className="text-sm italic leading-relaxed">"{cita.texto}"
  </p>
  </div>
- <div className="pt-3 border-t border-current/15">
+ <div className="pt-3 border-current/15">
  <span className={`text-xs font-black ${styles.quoteMedium} tracking-wider font-sans`}>
  {cita.medio}
  </span>
@@ -518,7 +518,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  type="button"
  onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior:'smooth' })}
  aria-label={t('fotoAnterior')}
- className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+ className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[var(--sunken)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
  ‹
  </button>
@@ -526,7 +526,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  type="button"
  onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior:'smooth' })}
  aria-label={t('fotoSiguiente')}
- className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+ className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[var(--sunken)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
  ›
  </button>
@@ -558,7 +558,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </div>
  )}
  {spotifyEmbedUrl && (
- <div className={`rounded-[var(--r-m)] overflow-hidden ${styles.card} border`}>
+ <div className={`rounded-[var(--r-m)] overflow-hidden ${styles.card} `}>
  <iframe
  src={spotifyEmbedUrl}
  title={t('tituloSpotify')}
@@ -585,7 +585,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <div key={c.id} className={`${styles.card} rounded-[var(--r-m)] p-3.5 space-y-2.5`}>
  <div className="flex items-center justify-between gap-4">
  <div className="flex items-center gap-3">
- <span className={`px-2.5 py-1 rounded ${styles.badge} font-sans text-xs font-bold shrink-0 border`}>
+ <span className={`px-2.5 py-1 rounded ${styles.badge} font-sans text-xs font-bold shrink-0 `}>
  {c.fecha}
  </span>
  <div>
@@ -595,12 +595,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </p>
  </div>
  </div>
- <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${styles.badge} capitalize border`}>
+ <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${styles.badge} capitalize `}>
  {c.tipo}
  </span>
  </div>
  {(c.entradasUrl || c.entradasLugarFisico) && (
- <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-current/10 print:hidden">
+ <div className="flex flex-wrap items-center gap-2 pt-2 border-current/10 print:hidden">
  {c.entradasUrl && (
  <a
  href={c.entradasUrl}
@@ -628,7 +628,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  return (
  <div className={`min-h-screen ${styles.pageBg} font-sans print:bg-[var(--surface)] print:text-[var(--ink)]`}>
  {/* Top Floating Action Bar (Hidden on Print) */}
- <div className={`fixed top-0 left-0 right-0 ${styles.topBar} border-b z-50 py-3 px-4 flex items-center justify-between print:hidden`}>
+ <div className={`fixed top-0 left-0 right-0 ${styles.topBar} z-50 py-3 px-4 flex items-center justify-between print:hidden`}>
  <div className="flex items-center gap-3">
  {displayLogo ? (
  <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover" />
@@ -742,7 +742,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  })}
 
  {/* FOOTER */}
- <footer className={`text-center text-xs ${styles.footer} space-y-4 pt-6 border-t print:text-[var(--ink)]`}>
+ <footer className={`text-center text-xs ${styles.footer} space-y-4 pt-6 print:text-[var(--ink)]`}>
  {safeUrl(config.dossierPdfUrl) && (
  <a
  href={safeUrl(config.dossierPdfUrl)}

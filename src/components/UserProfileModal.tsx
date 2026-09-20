@@ -491,7 +491,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  {/* Active Band Logo Edit Section (Netflix Profile Style) */}
- <div className="space-y-2 pt-2 border-t /80">
+ <div className="space-y-2 pt-2 /80">
  <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center justify-between">
  <span className="flex items-center gap-1.5">
  <Camera className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -560,7 +560,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  {/* Main Band Selection Section */}
- <div className="space-y-2 pt-2 border-t /80">
+ <div className="space-y-2 pt-2 /80">
  <div className="flex items-center justify-between">
  <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
  <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400" />
@@ -608,7 +608,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {/* Creation Form Accordion */}
  {showCreateBandSection && (
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 ${
- 'bg-[var(--ok-soft)] border-[var(--ok)]/50'
+' bg-[var(--ok-soft)]/50'
  }`}>
  <div className="flex items-center justify-between">
  <p className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
@@ -849,7 +849,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  {/* Language Selection */}
- <div className="space-y-2 pt-2 border-t /80">
+ <div className="space-y-2 pt-2 /80">
  <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center justify-between">
  <span className="flex items-center gap-1.5">
  <Globe className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -888,7 +888,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  {/* Collapsible Appearance Settings (Theme & Font) */}
  {(onThemeChange || onFontChange) && (
- <div className="pt-3 border-t /80">
+ <div className="pt-3 /80">
  <button
  type="button"
  onClick={() => setShowAppearance(!showAppearance)}
@@ -938,7 +938,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  )}
 
  {onFontChange && (
- <div className="space-y-2 pt-2 border-t /60">
+ <div className="space-y-2 pt-2 /60">
  <label className="text-[11px] font-sans font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
  <Type className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Estilo de Fuente & Tipografía</span>
@@ -953,7 +953,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClick={() => onFontChange(p.id)}
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-0.5 ${
  isSelected
- ?'bg-[var(--ok)]/15 border-[var(--ok)]/50 text-[var(--ink-2)] font-bold'
+ ?'bg-[var(--ok)]/15/50 text-[var(--ink-2)] font-bold'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
@@ -980,7 +980,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  src/utils/temaEspectro.ts, asi que el cambio es instantaneo sin re-render del
  arbol: las 4.365 clases de color se resuelven solas via CSS vars. Por defecto'classic' = exactamente la app de siempre; el resto son las pantallas ya
  migradas (login, panel) mas el resto de la app tal cual, mientras avanza. */}
- <div className="pt-3 border-t /80">
+ <div className="pt-3 /80">
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/[0.04] space-y-2.5">
  <label className="text-[11px] font-sans font-semibold text-[var(--acc)]/70 flex items-center gap-1.5">
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1026,7 +1026,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  eliminado) y de email. EmailAccountConfig sigue siendo el mismo componente compartido,
  solo que ahora se llega a él siempre por el mismo camino. */}
  {currentUser.band_id && !isPromoUser && (
- <div className="pt-3 border-t /80">
+ <div className="pt-3 /80">
  <button
  type="button"
  onClick={() => setShowAgentConfig(true)}
@@ -1124,7 +1124,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="submit"
  disabled={loading}
  className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98 ${
- 'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
+' bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
  }`}
  >
  {loading ? (
@@ -1173,7 +1173,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className={`w-full max-w-lg rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
  }`}>
- <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] border-b /20 flex justify-between items-center">
+ <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
  <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center">
  <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -1311,7 +1311,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  ))}
  </ul>
 
- <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 border-t /80">
+ <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 /80">
  <span className="text-[10px] font-sans text-[var(--ink-2)]">
  {isCurrent ?'Tu plan activo' :'Cambio de plan inmediato'}
  </span>
@@ -1362,7 +1362,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  </div>
 
- <div className="px-6 py-3 bg-[var(--surface)] border-t flex items-center justify-between">
+ <div className="px-6 py-3 bg-[var(--surface)] flex items-center justify-between">
  {onNavigateToPlanes ? (
  <button
  type="button"

@@ -85,7 +85,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  style={{ backgroundColor: colors.card, borderColor: colors.border }}
  >
  <div
- className="p-5 border-b flex items-center justify-between"
+ className="p-5 flex items-center justify-between"
  style={{ borderColor: colors.border }}
  >
  <div className="flex items-center gap-3">
@@ -188,7 +188,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
 
  {simulationGenerated && (
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 space-y-3" style={{ borderColor: colors.border }}>
- <div className="flex items-center justify-between border-b pb-2" style={{ borderColor: colors.border }}>
+ <div className="flex items-center justify-between pb-2" style={{ borderColor: colors.border }}>
  <span className="font-semibold text-[var(--ink-2)]">Vista Previa del Mensaje</span>
  <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
  Listo para registrar
@@ -205,7 +205,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  )}
  </div>
 
- <div className="p-4 border-t flex justify-end gap-3" style={{ borderColor: colors.border }}>
+ <div className="p-4 flex justify-end gap-3" style={{ borderColor: colors.border }}>
  <button
  onClick={onClose}
  className="px-4 py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"

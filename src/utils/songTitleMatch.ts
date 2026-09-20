@@ -1,6 +1,6 @@
 /** Minúsculas, sin tildes/diacríticos, sin espacios extra — para que "Traca Final" case con "traca final" o "Traca Fínal" sin fallar por acentuación. */
 export function normalizeSongTitle(title?: string | null): string {
- return (title || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+ return (title ||' ').normalize('NFD').replace(/[̀-ͯ]/g,' ').toLowerCase().trim();
 }
 
 /** true si algún título de `needles` coincide (exacto o parcial) con `haystackTitle`. */

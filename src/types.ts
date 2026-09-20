@@ -1,25 +1,25 @@
 export type LeadStatus = 
- | 'nuevo' 
- | 'contactado'
- | 'esperando_respuesta' 
- | 'enviado'
- | 'respondido'
- | 'negociando'
- | 'confirmado'
- | 'aplazado'
- | 'no_interesado' 
- | 'descartado'
- | 'interesado' 
- | 'pendiente_aprobacion' 
- | 'aprobado' 
- | 'aprobado_propuesta'
- | 'aprobado_respuesta'
- | 'borrador_creado';
+ |' nuevo' 
+ |' contactado'
+ |' esperando_respuesta' 
+ |' enviado'
+ |' respondido'
+ |' negociando'
+ |' confirmado'
+ |' aplazado'
+ |' no_interesado' 
+ |' descartado'
+ |' interesado' 
+ |' pendiente_aprobacion' 
+ |' aprobado' 
+ |' aprobado_propuesta'
+ |' aprobado_respuesta'
+ |' borrador_creado';
 
 // Mismas 7 categorías que server/promptsManager.ts (mapLeadTipoToTemplateCategory) y
 // src/components/booking/TemplateConfigSection.tsx usan para las plantillas generales por
 // tipo de lead — se reutilizan aquí para poder definir un mensaje de campaña por caso de uso.
-export type PitchTemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
+export type PitchTemplateCategory =' salas' |' festivales' |' discotecas' |' medios' |' grupos' |' managements' |' ayuntamientos';
 
 export interface BookingCampaign {
  id: string;
@@ -28,7 +28,7 @@ export interface BookingCampaign {
  targetCities: string[];
  minCapacity: number;
  maxCapacity: number;
- targetDates: string[]; // e.g., ['2026-12-04', '2026-12-05', '2027-04-11', '2027-04-12']
+ targetDates: string[]; // e.g., ['2026-12-04',' 2026-12-05',' 2027-04-11',' 2027-04-12']
  targetDatesText?: string; // e.g., "4 o 5 de diciembre, o 11 y 12 de abril"
  campaignStartDate?: string; // YYYY-MM-DD: start date for filtering festival leads
  campaignEndDate?: string; // YYYY-MM-DD: end date for filtering festival leads
@@ -38,19 +38,19 @@ export interface BookingCampaign {
  // sin entrada aquí siguen usando solo la plantilla general de su tipo.
  customPitchTemplates?: Partial<Record<PitchTemplateCategory, string>>;
  isActive: boolean;
- color?: string; // Hex color for badge styling (e.g. '#8b5cf6', 'var(--acc)', '#06b6d4')
+ color?: string; // Hex color for badge styling (e.g.' #8b5cf6',' var(--acc)',' #06b6d4')
  created_at?: string;
 }
 
-export type LeadType = 'sala' | 'festival' | 'ayuntamiento' | 'grupo' | 'productora' | 'medio' | 'discoteca' | 'agencia' | 'manager' | 'sello';
+export type LeadType =' sala' |' festival' |' ayuntamiento' |' grupo' |' productora' |' medio' |' discoteca' |' agencia' |' manager' |' sello';
 
 export type BandRelationshipStatus = 
- | 'sin_contactar' 
- | 'intercambio_propuesto' 
- | 'concierto_agendado' 
- | 'colegas_aliados' 
- | 'pendiente_respuesta' 
- | 'no_disponible';
+ |' sin_contactar' 
+ |' intercambio_propuesto' 
+ |' concierto_agendado' 
+ |' colegas_aliados' 
+ |' pendiente_respuesta' 
+ |' no_disponible';
 
 export interface BandContact {
  id: string;
@@ -80,27 +80,27 @@ export interface BandContact {
 export interface InteractionLog {
  id: string;
  fecha: string;
- tipo: 'Llamada' | 'WhatsApp' | 'Email' | 'Reunión' | 'Otro';
+ tipo:' Llamada' |' WhatsApp' |' Email' |' Reunión' |' Otro';
  autor?: string;
  notas: string;
- resultado?: 'Interesado' | 'Enviar propuesta' | 'Seguimiento pendiente' | 'Rechazado' | 'Info recibida' | 'Acuerdo cerrado';
+ resultado?:' Interesado' |' Enviar propuesta' |' Seguimiento pendiente' |' Rechazado' |' Info recibida' |' Acuerdo cerrado';
 }
 
 export interface SavedFilter {
  id: string;
  nombre: string;
- sectionTab?: 'salas' | 'medios' | 'grupos';
+ sectionTab?:' salas' |' medios' |' grupos';
  searchTerm?: string;
  selectedCityFilter?: string;
- statusFilter?: LeadStatus | 'todos';
- typeFilter?: LeadType | 'todos' | 'radio' | 'tv' | 'prensa' | 'redes' | 'podcast';
+ statusFilter?: LeadStatus |' todos';
+ typeFilter?: LeadType |' todos' |' radio' |' tv' |' prensa' |' redes' |' podcast';
  minCapacityFilter?: number;
 }
 
 export interface EmailMessage {
  id: string;
  fecha: string;
- remitente: 'sala' | 'banda';
+ remitente:' sala' |' banda';
  remitente_nombre: string;
  asunto: string;
  mensaje: string;
@@ -115,7 +115,7 @@ export interface PitchFeedbackLog {
  comentario?: string;
  pitch_nuevo: string;
  deshecho?: boolean;
- alcance?: 'este_pitch' | 'global';
+ alcance?:' este_pitch' |' global';
 }
 
 export interface Lead {
@@ -161,14 +161,14 @@ export interface Lead {
 
 export interface RehearsalAgendaItem {
  id: string;
- tipo: 'cancion' | 'calentamiento' | 'pausa' | 'intro' | 'outro' | 'seccion_especifica' | 'improvisacion';
+ tipo:' cancion' |' calentamiento' |' pausa' |' intro' |' outro' |' seccion_especifica' |' improvisacion';
  titulo: string;
  songId?: string;
  duracionEstimadaMin: number;
  duracionRealSeg?: number;
  enfoque?: string; // Ej: "Afinar el solo de guitarra y la entrada del bajo", "Cuidar la segunda voz del estribillo"
- prioridad?: 'alta' | 'media' | 'baja';
- evaluacion?: 'bordada' | 'regular' | 'repetir'; // 🟢 Bordada, 🟡 Regular, 🔴 Repetir
+ prioridad?:' alta' |' media' |' baja';
+ evaluacion?:' bordada' |' regular' |' repetir'; // 🟢 Bordada, 🟡 Regular, 🔴 Repetir
  completado?: boolean;
  notas?: string;
 }
@@ -188,7 +188,7 @@ export interface RehearsalRecording {
  duracionSegundos?: number;
  grabadoEn: string;
  songId?: string;
- tipo: 'toma_completa' | 'idea_riff' | 'nota_voz_debate' | 'fragmento';
+ tipo:' toma_completa' |' idea_riff' |' nota_voz_debate' |' fragmento';
  notas?: string;
 }
 
@@ -221,12 +221,12 @@ export interface Rehearsal {
  lugar: string;
  asistentes: string[];
  notas: string;
- estado: 'programado' | 'cancelado' | 'completado' | 'en_curso';
- tipo_evento?: 'ensayo' | 'reunion' | 'otro';
+ estado:' programado' |' cancelado' |' completado' |' en_curso';
+ tipo_evento?:' ensayo' |' reunion' |' otro';
  asunto?: string;
  enlace_reunion?: string;
  setlistId?: string;
- convocatoria_tipo?: 'completa' | 'parcial';
+ convocatoria_tipo?:' completa' |' parcial';
  convocados_ids?: string[];
  convocados_nombres?: string[];
  // Módulo de Ensayos Pro
@@ -280,7 +280,7 @@ export interface TechnicalLogistics {
 
 export interface CierreMaterialItem {
  id: string;
- categoria: 'escenario' | 'camerino' | 'furgoneta' | 'general';
+ categoria:' escenario' |' camerino' |' furgoneta' |' general';
  item: string;
  checked: boolean;
  responsable?: string;
@@ -289,7 +289,7 @@ export interface CierreMaterialItem {
 export interface MerchBoloItem {
  id: string;
  nombre: string;
- categoria?: 'camisetas' | 'vinilos' | 'musica' | 'accesorios' | 'otro';
+ categoria?:' camisetas' |' vinilos' |' musica' |' accesorios' |' otro';
  talla?: string;
  precioUnitario: number;
  stockInicial: number; // Que sube a la furgoneta
@@ -316,16 +316,16 @@ export interface Concert {
  aforo_vendido: number;
  aforo_total: number;
  contrato_firmado: boolean;
- estado_pago: 'pendiente' | 'pagado' | 'anticipo';
+ estado_pago:' pendiente' |' pagado' |' anticipo';
  notas: string;
- // 'sala'/'ayuntamiento' los usan el scout/chatbot (mismas categorías que Lead.tipo);
- // 'propio'/'privado'/'posible' los usa el alta manual desde el calendario.
- tipo: 'sala' | 'festival' | 'ayuntamiento' | 'propio' | 'privado' | 'posible';
+ //' sala'/'ayuntamiento' los usan el scout/chatbot (mismas categorías que Lead.tipo);
+ //' propio'/'privado'/'posible' los usa el alta manual desde el calendario.
+ tipo:' sala' |' festival' |' ayuntamiento' |' propio' |' privado' |' posible';
  is_posible?: boolean;
  setlistId?: string;
  gastosDetalle?: ConcertExpenseBreakdown;
  gastosEstimadosTipicos?: number;
- convocatoria_tipo?: 'completa' | 'parcial';
+ convocatoria_tipo?:' completa' |' parcial';
  convocados_ids?: string[];
  convocados_nombres?: string[];
  giraId?: string;
@@ -454,7 +454,7 @@ export interface EPKConfig {
  paypalUrl?: string;
  bizumTelefono?: string;
  ibanCuenta?: string;
- metodoPorDefecto?: 'revolut' | 'paypal' | 'bizum' | 'iban';
+ metodoPorDefecto?:' revolut' |' paypal' |' bizum' |' iban';
  titulo?: string;
  descripcion?: string;
  };
@@ -486,7 +486,7 @@ export interface EPKConfig {
  habilitado?: boolean;
  citas?: PressQuote[];
  };
- // Plantilla visual y estética del EPK público ('stage', 'minimal', 'neon', 'vintage')
+ // Plantilla visual y estética del EPK público ('stage',' minimal',' neon',' vintage')
  plantilla?: EPKTemplateId;
  // Orden personalizado de las secciones en el dossier web
  ordenSecciones?: EPKSectionId[];
@@ -494,19 +494,19 @@ export interface EPKConfig {
  seccionesOcultas?: EPKSectionId[];
 }
 
-export type EPKTemplateId = 'stage' | 'minimal' | 'neon' | 'vintage';
+export type EPKTemplateId =' stage' |' minimal' |' neon' |' vintage';
 
 export type EPKSectionId =
- | 'cifras'
- | 'datos'
- | 'videos'
- | 'miembros'
- | 'bio'
- | 'prensa'
- | 'musica'
- | 'galeria'
- | 'escucha'
- | 'conciertos';
+ |' cifras'
+ |' datos'
+ |' videos'
+ |' miembros'
+ |' bio'
+ |' prensa'
+ |' musica'
+ |' galeria'
+ |' escucha'
+ |' conciertos';
 
 export interface PressQuote {
  id: string;
@@ -556,7 +556,7 @@ export interface Fan {
  cancionFavorita?: string;
  instagram?: string;
  avatarUrl?: string;
- nivelFan?: 'fundador' | 'superfan' | 'backstage' | 'fiel';
+ nivelFan?:' fundador' |' superfan' |' backstage' |' fiel';
  reacciones?: {
  likes?: number;
  fire?: number;
@@ -569,21 +569,21 @@ export interface SocialPost {
  id: string;
  band_id?: string;
  fecha: string;
- plataforma: 'Instagram' | 'TikTok' | 'YouTube' | 'Facebook';
+ plataforma:' Instagram' |' TikTok' |' YouTube' |' Facebook';
  contenido: string;
- estado: 'borrador' | 'aprobado' | 'publicado';
+ estado:' borrador' |' aprobado' |' publicado';
  responsable: string;
 }
 
 export interface Payment {
  id: string;
  band_id?: string;
- tipo: 'ingreso' | 'gasto';
- categoria: 'concierto' | 'merchandising' | 'subvencion' | 'transporte' | 'alojamiento' | 'comida' | 'promo' | 'otros';
+ tipo:' ingreso' |' gasto';
+ categoria:' concierto' |' merchandising' |' subvencion' |' transporte' |' alojamiento' |' comida' |' promo' |' otros';
  concepto: string;
  importe: number;
  fecha: string;
- estado: 'pendiente' | 'pagado';
+ estado:' pendiente' |' pagado';
 }
 
 export interface Message {
@@ -632,7 +632,7 @@ export interface SocialMetric {
 export interface SocialContentItem {
  id: string;
  band_id: string;
- platform: 'youtube' | 'instagram' | 'tiktok' | 'spotify';
+ platform:' youtube' |' instagram' |' tiktok' |' spotify';
  external_id: string;
  title: string;
  url?: string;
@@ -645,11 +645,11 @@ export interface SocialContentItem {
  last_scraped_at?: string;
 }
 
-// 'admin' es un rol real en producción (ver server/auth.ts, server/routes/users.ts): antes no
+//' admin' es un rol real en producción (ver server/auth.ts, server/routes/users.ts): antes no
 // estaba declarado aquí, así que TypeScript marcaba como "imposible" cualquier comprobación
-// `role === 'admin'` del frontend — código que en realidad protege permisos reales y que alguien
+// `role ===' admin'` del frontend — código que en realidad protege permisos reales y que alguien
 // podría borrar por parecer inalcanzable.
-export type UserRole = 'leader' | 'member' | 'admin';
+export type UserRole =' leader' |' member' |' admin';
 
 export interface GoogleOAuthConfig {
  connected: boolean;
@@ -666,7 +666,7 @@ export interface User {
  username: string;
  name: string;
  role: UserRole;
- plan?: 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
+ plan?:' promo' |' promo_plus' |' ensayo' |' local' |' de_gira' |' cabeza_de_cartel' | string;
  bandName?: string;
  band_id?: string;
  main_band_id?: string;
@@ -678,8 +678,8 @@ export interface User {
  googleOAuth?: GoogleOAuthConfig;
  ui_preferences?: {
  calendar_default_months?: {
- mobile?: '1' | '2';
- desktop?: '1' | '2';
+ mobile?:' 1' |' 2';
+ desktop?:' 1' |' 2';
  };
  [key: string]: unknown;
  };
@@ -696,22 +696,22 @@ export interface UserWithHash extends User {
  salt: string;
 }
 
-export type ThemeName = 'indie_velvet' | 'stitch_dark' | 'backstage_neon' | 'roots_ska' | 'brutalist_fuzz' | 'classic';
+export type ThemeName =' indie_velvet' |' stitch_dark' |' backstage_neon' |' roots_ska' |' brutalist_fuzz' |' classic';
 
 // Patrones de batería soportados por el sintetizador de acompañamiento (src/utils/accompanimentSynth.ts),
 // compartido entre el generador del Song Studio y las bases rítmicas propuestas por el chatbot.
-export type DrumPatternStyle = 'rock' | 'pop' | 'funk' | 'reggae' | 'ska' | 'cumbia' | 'punk';
+export type DrumPatternStyle =' rock' |' pop' |' funk' |' reggae' |' ska' |' cumbia' |' punk';
 
 // Instrumentos melódicos que el "genio de la lámpara" del chatbot puede sintetizar
 // (src/utils/instrumentSynth.ts, motor Tone.js) para proponer ideas de partes de canción
 // coherentes con el ADN musical de la banda, más allá de la base de batería/bajo.
-export type MelodicInstrument = 'guitarra' | 'violin' | 'handpan' | 'percusion';
+export type MelodicInstrument =' guitarra' |' violin' |' handpan' |' percusion';
 
-// Una nota o golpe dentro de una idea melódica generada por IA. 'tiempo' y 'duracionBeats'
+// Una nota o golpe dentro de una idea melódica generada por IA.' tiempo' y' duracionBeats'
 // se expresan en beats (no segundos) para que sean independientes del BPM al reproducirlos.
 export interface MelodicNoteEvent {
  tiempo: number; // posición de inicio en beats desde el arranque de la idea (0 = primer tiempo)
- nota: string; // notación científica compatible con Tone.js, ej. 'A3', 'C#4', 'G2'
+ nota: string; // notación científica compatible con Tone.js, ej.' A3',' C#4',' G2'
  duracionBeats: number; // duración de la nota/golpe en beats
  velocidad?: number; // intensidad de 0 a 1 (por defecto ~0.8)
 }
@@ -749,7 +749,7 @@ export interface AudioTrack {
 export interface SongAudioIdea {
  id: string;
  titulo: string;
- seccion: 'general' | 'intro' | 'verso' | 'estribillo' | 'puente' | 'solo' | 'outro';
+ seccion:' general' |' intro' |' verso' |' estribillo' |' puente' |' solo' |' outro';
  audioUrl: string; // Primary or legacy single audio track
  pistas?: AudioTrack[]; // Multitrack basic recording support
  subidoPor: string;
@@ -781,7 +781,7 @@ export interface MemberSongNote {
  /** Nivel de preparación de ESTE miembro con la canción, de cara a tocarla en directo — no es un
  * estado global de la canción (ya existe Song.estadoTema para eso), sino "¿yo, en concreto, ya
  * me la sé?", para que quien lleve la banda vea de un vistazo quién necesita repasar antes del bolo. */
- estadoPreparacion?: 'aprendiendo' | 'casi_lista' | 'lista';
+ estadoPreparacion?:' aprendiendo' |' casi_lista' |' lista';
 }
 
 export interface Song {
@@ -813,7 +813,7 @@ export interface Song {
  artista?: string; // Performing artist/band name (written on bulk album upload, shown in the player)
  portadaUrl?: string;
  favoritoGeneral?: boolean;
- estadoTema?: 'listo' | 'ensayando' | 'componiendo' | 'descartado';
+ estadoTema?:' listo' |' ensayando' |' componiendo' |' descartado';
  esVersionCovers?: boolean;
  enlaceAcordes?: string; // Link to drive/chords/partitura
  notasInternas?: string;
@@ -849,8 +849,8 @@ export interface Song {
 export interface SetlistItem {
  id: string;
  songId?: string; // null if speech/pause/break/block header
- tipoItem: 'cancion' | 'bloque';
- bloqueSubtipo?: 'header' | 'presentacion' | 'intro_tema' | 'beatbox' | 'solo_performance' | 'cambio_instrumento' | 'chapa' | 'descanso' | 'bis' | 'otro';
+ tipoItem:' cancion' |' bloque';
+ bloqueSubtipo?:' header' |' presentacion' |' intro_tema' |' beatbox' |' solo_performance' |' cambio_instrumento' |' chapa' |' descanso' |' bis' |' otro';
  tituloCustom?: string;
  duracionEstimadaMinutos?: number;
  duracionEstimadaSegundos?: number; // e.g. 90 seconds (1m 30s)
@@ -870,7 +870,7 @@ export interface Setlist {
  band_id?: string;
  nombre: string;
  descripcion?: string;
- tipoFormato: 'festival' | 'sala_larga' | 'acustico' | 'ensayo' | 'otro';
+ tipoFormato:' festival' |' sala_larga' |' acustico' |' ensayo' |' otro';
  duracionTotalEstimadaMinutos?: number;
  items: SetlistItem[];
  fechaCreacion: string;
@@ -880,7 +880,7 @@ export interface Setlist {
 }
 
 // A band's own custom "quick add" preset for the setlist editor, alongside the built-in ones
-// (Presentación, Intro Tema, Chapa...). Always inserted as tipoItem 'otro' — the icon/label are
+// (Presentación, Intro Tema, Chapa...). Always inserted as tipoItem' otro' — the icon/label are
 // what the band picks, tituloCustom/duracion are what gets pre-filled into the setlist item.
 export interface SetlistShortcut {
  id: string;
@@ -918,7 +918,7 @@ export interface TourVehicle {
  nombre: string;
  consumoL100km: number;
  precioCarburanteEUR?: number;
- tipoCombustible?: 'diesel' | 'gasolina95' | 'gasolina98' | 'electrico';
+ tipoCombustible?:' diesel' |' gasolina95' |' gasolina98' |' electrico';
 }
 
 export interface TourRouteStop {
@@ -934,7 +934,7 @@ export interface TourRouteStop {
  gastosDietas?: number;
  ingresoCacheEstimated?: number;
  notasLogisticas?: string;
- convocatoria_tipo?: 'completa' | 'parcial';
+ convocatoria_tipo?:' completa' |' parcial';
  convocados_ids?: string[];
  convocados_nombres?: string[];
 }
@@ -948,16 +948,16 @@ export interface Tour {
  vehiculo?: string;
  consumoL100km?: number;
  precioCarburanteEUR?: number;
- tipoCombustible?: 'diesel' | 'gasolina95' | 'gasolina98' | 'electrico';
+ tipoCombustible?:' diesel' |' gasolina95' |' gasolina98' |' electrico';
  vehiculos?: TourVehicle[];
  presupuestoLogistica?: number;
- convocatoria_tipo?: 'completa' | 'parcial';
+ convocatoria_tipo?:' completa' |' parcial';
  convocados_ids?: string[];
  convocados_nombres?: string[];
  sincronizarCalendario?: boolean;
  sincronizarFinanzas?: boolean;
  stops: TourRouteStop[];
- estado: 'planificacion' | 'confirmada' | 'completada' | 'cancelada';
+ estado:' planificacion' |' confirmada' |' completada' |' cancelada';
 }
 
 export interface RegisteredBand {
@@ -966,7 +966,7 @@ export interface RegisteredBand {
  fecha_registro: string;
  nombre_banda: string;
  email: string;
- plan: 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
+ plan:' promo' |' promo_plus' |' ensayo' |' local' |' de_gira' |' cabeza_de_cartel' | string;
  contacto_nombre?: string;
  estilo_musical?: string;
  localizacion?: string;
@@ -974,7 +974,7 @@ export interface RegisteredBand {
  instagram?: string;
  spotify_youtube?: string;
  aforo_promedio?: number;
- estado_cuenta?: 'activo' | 'prueba' | 'cancelado' | string;
+ estado_cuenta?:' activo' |' prueba' |' cancelado' | string;
  notas?: string;
  radar_enabled?: boolean;
  last_social_radar_at?: string;
@@ -995,7 +995,7 @@ export interface BandSchedule {
 export interface BandEmailAccountStatus {
  connected: boolean;
  band_id?: string;
- provider?: 'gmail' | 'outlook' | 'other';
+ provider?:' gmail' |' outlook' |' other';
  email?: string;
  smtp_host?: string;
  smtp_port?: number;
@@ -1016,8 +1016,8 @@ export interface PitchLearningExample {
  texto_aprobado: string;
  tuvo_edicion: boolean;
  diferencia_longitud?: number;
- tipo_accion: 'aprobado_propuesta' | 'aprobado_respuesta' | 'regenerado_con_feedback';
- resultado_respuesta?: 'pendiente' | 'positiva' | 'negativa' | 'sin_respuesta';
+ tipo_accion:' aprobado_propuesta' |' aprobado_respuesta' |' regenerado_con_feedback';
+ resultado_respuesta?:' pendiente' |' positiva' |' negativa' |' sin_respuesta';
  fecha_aprobacion: string;
 }
 

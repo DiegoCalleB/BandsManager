@@ -276,7 +276,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  {/* Header */}
- <div className="flex items-center justify-between pb-3 border-b /10">
+ <div className="flex items-center justify-between pb-3 /10">
  <div className="flex items-center gap-2.5">
  <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]">
  <Sparkles className="w-4 h-4" />
@@ -537,7 +537,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  {/* Extracted Quotes from Reels/Posts */}
  {toneData.frases_emblematicas_extraidas && toneData.frases_emblematicas_extraidas.length > 0 && (
- <div className="pt-1.5 border-t space-y-1">
+ <div className="pt-1.5 space-y-1">
  <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--acc)]/90 block">
  💬 Expresiones extraídas de sus Reels & Posts:
  </span>
@@ -552,7 +552,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  {/* Frases reales de directo: se acumulan solas desde transcripciones de conciertos, no se editan aquí. */}
  {toneData.frases_directo_extraidas && toneData.frases_directo_extraidas.length > 0 && (
- <div className="pt-1.5 border-t space-y-1">
+ <div className="pt-1.5 space-y-1">
  <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--ok)]/90 block">
  🎤 Frases reales dichas en directo (de vuestros propios conciertos):
  </span>
@@ -567,7 +567,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  {/* Per-platform tone nuances: el tono no es idéntico en todas las redes. */}
  {toneData.matices_por_red && Object.values(toneData.matices_por_red).some((v) => v && v.trim()) && (
- <div className="pt-1.5 border-t space-y-1.5">
+ <div className="pt-1.5 space-y-1.5">
  <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--ink-2)]/90 block">
  🎚️ Matices de tono según la red:
  </span>
@@ -600,7 +600,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </p>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${'bg-[var(--bg)]/20 border-[var(--acc)]/40 text-[var(--tentative)]/40'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${'bg-[var(--bg)]/20/40 text-[var(--tentative)]/40'}`}>
  <span className="font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1 text-[9px]">
  <HeartHandshake className="w-3 h-3" /> Recomendación de Contacto
  </span>
@@ -653,7 +653,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  {/* 5. Self-Refining Tone DNA: reglas aprendidas automáticamente de correcciones del mánager */}
  {editable && (
- <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--acc)]/10 border-[var(--acc)]/40'}`}>
+ <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--acc)]/10/40'}`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--tentative)] flex items-center gap-1.5">
  <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus Correcciones (Self-Refining Tone DNA)
@@ -767,7 +767,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  redactar mal el primer contacto, y viceversa. Mismo botón de entrenar sirve para
  ambos (refineAllToneDnaCategoriesForBand refina las dos bolsas de una vez). */}
  {editable && (
- <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--bg)]/20 border-[var(--acc)]/40'}`}>
+ <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--bg)]/20/40'}`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
  <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus RESPUESTAS a salas (Self-Refining Tone DNA)

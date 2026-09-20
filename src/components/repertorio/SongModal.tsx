@@ -114,7 +114,7 @@ export function SongModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-lg p-5 rounded-[var(--r-l)] my-auto max-h-[90vh] flex flex-col overflow-hidden ${colors.card}`}>
- <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
+ <div className="flex justify-between items-center pb-3">
  <div className="flex items-center gap-2">
  <Music className="w-5 h-5 text-[var(--ok)]" />
  <h3 className={`text-sm font-bold font-sans ${colors.text}`}>
@@ -132,7 +132,7 @@ export function SongModal({
 
  <div className="space-y-3 overflow-y-auto pr-1 flex-1 pb-2">
  {/* Audio File Upload Box with Auto Duration Detection */}
- <div className={`p-3 rounded-[var(--r-m)] border-dashed transition-all ${
+ <div className={`p-3 rounded-[var(--r-m)] transition-all ${
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/90'
  }`}>
  <div className="flex items-center justify-between gap-2">
@@ -273,7 +273,7 @@ export function SongModal({
  value={selectedAlbum}
  onChange={(e) => setSelectedAlbum(e.target.value)}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${
- 'bg-[var(--surface)] text-[var(--ok)]'
+' bg-[var(--surface)] text-[var(--ok)]'
  }`}
  >
  <option value="">Sin Disco (Single)</option>
@@ -289,7 +289,7 @@ export function SongModal({
  value={customAlbumInput}
  onChange={(e) => setCustomAlbumInput(e.target.value)}
  placeholder="Escribe el nombre del nuevo disco..."
- className={`w-full mt-1.5 p-2 rounded-[var(--r-s)] focus:outline-none border-[var(--hair)]/50 ${
+ className={`w-full mt-1.5 p-2 rounded-[var(--r-s)] focus:outline-none/50 ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -427,7 +427,7 @@ export function SongModal({
  type="button"
  onClick={() => setShowMemberNotesSection(p => !p)}
  className={`w-full p-3 flex items-center justify-between font-sans text-xs font-bold transition-colors cursor-pointer ${
- 'hover:bg-[var(--surface)]/80 text-[var(--ok)]'
+' hover:bg-[var(--surface)]/80 text-[var(--ok)]'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -438,7 +438,7 @@ export function SongModal({
  </button>
 
  {showMemberNotesSection && (
- <div className="p-3 pt-0 space-y-3 border-t border-[var(--hair)]">
+ <div className="p-3 pt-0 space-y-3">
  <p className="text-[10px] text-[var(--ink-2)] font-sans mt-2">
  Añade notas personalizadas para cada músico. Se imprimirán bajo esta canción en la hoja individual de cada miembro:
  </p>
@@ -491,7 +491,7 @@ export function SongModal({
  </div>
  </div>
 
- <div className="pt-3 border-t flex justify-end gap-2 shrink-0 bg-transparent">
+ <div className="pt-3 flex justify-end gap-2 shrink-0 bg-transparent">
  <button
  type="button"
  onClick={onClose}

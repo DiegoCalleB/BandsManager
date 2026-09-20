@@ -32,7 +32,7 @@ export const SongStudioDeleteConfirmModal: React.FC<SongStudioDeleteConfirmModal
  <p className="text-xs text-[var(--ink-2)] mt-1.5 leading-relaxed">{confirmDeleteModal.description}</p>
  </div>
  </div>
- <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--hair)]">
+ <div className="flex items-center justify-end gap-3 pt-3">
  <button
  type="button"
  onClick={onClose}

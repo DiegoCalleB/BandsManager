@@ -1,4 +1,4 @@
-import React from 'react';
+import React from' react';
 
 export interface PublicoSilhouetteProps {
  /**
@@ -10,7 +10,7 @@ export interface PublicoSilhouetteProps {
  * Size of the silhouette - relative to viewport
  * small: 60px, medium: 100px, large: 160px
  */
- size?: 'small' | 'medium' | 'large';
+ size?:' small' |' medium' |' large';
  /**
  * Color override - defaults to --ink-2
  */
@@ -38,17 +38,17 @@ export interface PublicoSilhouetteProps {
  */
 export const PublicoSilhouette: React.FC<PublicoSilhouetteProps> = ({
  opacity = 0.12,
- size = 'medium',
+ size =' medium',
  color,
- className = '',
+ className =' ',
  animated = false,
 }) => {
  const getTokenColor = (): string => {
  if (color) return color;
- if (typeof document === 'undefined') return 'rgba(100, 108, 120, 0.12)';
+ if (typeof document ===' undefined') return' rgba(100, 108, 120, 0.12)';
  const style = getComputedStyle(document.documentElement);
  const ink2 = style.getPropertyValue('--ink-2').trim();
- return ink2 || 'rgba(100, 108, 120, 0.12)';
+ return ink2 ||' rgba(100, 108, 120, 0.12)';
  };
 
  const sizeMap = {
@@ -59,7 +59,7 @@ export const PublicoSilhouette: React.FC<PublicoSilhouetteProps> = ({
 
  const dims = sizeMap[size];
  const resolvedColor = getTokenColor();
- const svgColor = `rgba(${resolvedColor.includes('rgb') ? resolvedColor.match(/\d+/g)?.join(', ') : '100, 108, 120'}, ${opacity})`;
+ const svgColor = `rgba(${resolvedColor.includes('rgb') ? resolvedColor.match(/\d+/g)?.join(',' ) :' 100, 108, 120'}, ${opacity})`;
 
  return (
  <svg
@@ -67,9 +67,9 @@ export const PublicoSilhouette: React.FC<PublicoSilhouetteProps> = ({
  height={dims.height}
  viewBox="0 0 100 100"
  xmlns="http://www.w3.org/2000/svg"
- className={`${className} ${animated ? 'animate-pulse' : ''}`}
+ className={`${className} ${animated ?' animate-pulse' :' '}`}
  style={{
- filter: animated ? `drop-shadow(0 0 ${dims.width / 4}px rgba(154, 95, 181, 0.4))` : 'none',
+ filter: animated ? `drop-shadow(0 0 ${dims.width / 4}px rgba(154, 95, 181, 0.4))` :' none',
  }}
  >
  {/* Ground/stage line - subtle */}

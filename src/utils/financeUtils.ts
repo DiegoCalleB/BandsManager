@@ -1,4 +1,4 @@
-import { Payment, Concert } from '../types';
+import { Payment, Concert } from' ../types';
 
 export interface CategoryBreakdown {
  categoria: string;
@@ -31,15 +31,15 @@ export function calculateFinancialSummary(payments: Payment[]): FinancialSummary
 
  for (const payment of payments) {
  const amount = Number(payment.importe) || 0;
- if (payment.tipo === 'ingreso') {
- if (payment.estado === 'pagado') {
+ if (payment.tipo ===' ingreso') {
+ if (payment.estado ===' pagado') {
  totalIngresos += amount;
  ingresosCatMap.set(payment.categoria, (ingresosCatMap.get(payment.categoria) || 0) + amount);
  } else {
  pagosPendientesIngreso += amount;
  }
- } else if (payment.tipo === 'gasto') {
- if (payment.estado === 'pagado') {
+ } else if (payment.tipo ===' gasto') {
+ if (payment.estado ===' pagado') {
  totalGastos += amount;
  gastosCatMap.set(payment.categoria, (gastosCatMap.get(payment.categoria) || 0) + amount);
  } else {

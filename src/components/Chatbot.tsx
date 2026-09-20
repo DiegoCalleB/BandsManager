@@ -687,7 +687,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  return () => clearInterval(intervalId);
  }, [activeRun?.id, activeRun?.status, activeRun?.isDemo]);
 
- const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
 
  // Auto-scroll chat to bottom on mount and on message/loading updates
  useEffect(() => {
@@ -1733,7 +1733,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => setIsAutonomyModalOpen(true)}
  className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-sans font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
- 'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--acc)]/40 border-[var(--acc)]/40'
+' bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--acc)]/40/40'
  }`}
  title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
  >
@@ -1748,7 +1748,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  ) : (
  <div 
  className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-sans font-semibold opacity-80 ${
- 'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border-[var(--acc)]/30'
+' bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30'
  }`}
  title="Límites de autonomía configurados (Configuración restringida a Administradores)"
  >
@@ -1822,7 +1822,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  onClick={() => setIsAutonomyModalOpen(true)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
  isStitchLight
- ?'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)] border-[var(--acc)]'
+ ?'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)]'
  :'bg-[var(--tentative)]/25 hover:bg-[var(--tentative)]/40 text-[var(--acc)]/40'
  }`}
  title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
@@ -1912,7 +1912,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const actStatus = act.status || (msg.actionStatus ==='applied' ?'applied' : msg.actionStatus ==='dismissed' ?'dismissed' :'pending');
 
  return (
- <div key={aIdx} className="space-y-2 border-t /20 pt-2 first:border-0 first:pt-0">
+ <div key={aIdx} className="space-y-2 /20 pt-2 first:border-0 first:pt-0">
  <p className={`text-[11px] leading-relaxed p-2.5 rounded-[var(--r-m)] font-sans ${isStitchLight ?'text-[var(--ink)] bg-[var(--surface)]' :'text-[var(--ink-2)] bg-[var(--surface)]'}`}>
  {act.description}
  </p>

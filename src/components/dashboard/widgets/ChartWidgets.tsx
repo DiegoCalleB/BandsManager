@@ -207,9 +207,9 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  <YAxis domain={[0, 20]} hide />
  <XAxis dataKey="num" hide />
  <Tooltip
- contentStyle={{ background:'var(--surface)', border:'none', borderRadius: 'var(--r-m)', fontSize: 11 }}
+ contentStyle={{ background:'var(--surface)', border:'none', borderRadius:' var(--r-m)', fontSize: 11 }}
  labelFormatter={(num) => chartData.find(d => d.num === num)?.title || `Tema ${num}`}
- formatter={(val: number, _name, item) => [`${val}/20 · ${(item?.payload as any)?.bpm ?? ''} BPM`, 'Energía']}
+ formatter={(val: number, _name, item) => [`${val}/20 · ${(item?.payload as any)?.bpm ??' '} BPM`,' Energía']}
  />
  <Area
  type="monotone"
@@ -222,9 +222,9 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  dot={(dotProps: any) => {
  const { cx, cy, payload } = dotProps;
  if (cx == null || cy == null) return <React.Fragment key={`d-${payload?.num}`} />;
- return <circle key={`d-${payload?.num}`} cx={cx} cy={cy} r={4} strokeWidth={1.5} stroke="var(--surface)" fill={payload?.hexColor || 'var(--acc)'} />;
+ return <circle key={`d-${payload?.num}`} cx={cx} cy={cy} r={4} strokeWidth={1.5} stroke="var(--surface)" fill={payload?.hexColor ||' var(--acc)'} />;
  }}
- activeDot={{ r: 6, strokeWidth: 2, stroke: 'var(--surface)' }}
+ activeDot={{ r: 6, strokeWidth: 2, stroke:' var(--surface)' }}
  />
  </AreaChart>
  </ResponsiveContainer>
@@ -258,7 +258,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- <div className="flex items-center justify-between pb-2.5 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-2.5">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink-2)] shrink-0">
  <Building2 className="w-5 h-5" />
@@ -283,7 +283,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  )}
  </div>
 
- <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-sans">
+ <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans">
  <span className="text-[var(--ink-2)]">Tasa de Conversión a Conciertos:</span>
  <span className="font-bold text-[var(--ok)] flex items-center gap-1">
  <TrendingUp className="w-3.5 h-3.5" /> {conversionRate}% ({counts.confirmado} cierres)
@@ -297,9 +297,9 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  value: d.count,
  color: d.color
  }))}
- height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
- barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
- gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
+ height={heightMode ===' compact' ? 140 : heightMode ===' tall' ? 300 : 200}
+ barWidth={heightMode ===' compact' ? 12 : heightMode ===' tall' ? 18 : 14}
+ gap={heightMode ===' compact' ? 6 : heightMode ===' tall' ? 10 : 8}
  showLabels={true}
  animated={true}
  tooltipFormatter={(val) => {
@@ -333,7 +333,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- <div className="flex items-center justify-between pb-2.5 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-2.5">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/15 text-[var(--ok)] shrink-0">
  <DollarSign className="w-5 h-5" />
@@ -417,7 +417,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- <div className="flex items-center justify-between pb-2.5 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-2.5">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc)] shrink-0">
  <Users className="w-5 h-5" />
@@ -452,11 +452,11 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  data={growthData.map((d) => ({
  label: d.mes,
  value: d.fans,
- color: 'var(--acc)'
+ color:' var(--acc)'
  }))}
- height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
- barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
- gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
+ height={heightMode ===' compact' ? 140 : heightMode ===' tall' ? 300 : 200}
+ barWidth={heightMode ===' compact' ? 12 : heightMode ===' tall' ? 18 : 14}
+ gap={heightMode ===' compact' ? 6 : heightMode ===' tall' ? 10 : 8}
  showLabels={true}
  animated={true}
  tooltipFormatter={(val) => `${val} fans acumulados`}

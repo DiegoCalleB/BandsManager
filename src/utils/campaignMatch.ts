@@ -1,4 +1,4 @@
-import { BookingCampaign, Lead } from '../types';
+import { BookingCampaign, Lead } from' ../types';
 
 const MONTH_NAMES_ES: Record<string, number> = {
  enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
@@ -73,8 +73,8 @@ export function leadMatchesCampaignCity(lead: Lead, campaign: BookingCampaign): 
 
  if (targetCities.length === 0 && targetRegions.length === 0) return true;
 
- const leadCity = (lead.ciudad || '').toLowerCase().trim();
- const leadRegion = (lead.region || '').toLowerCase().trim();
+ const leadCity = (lead.ciudad ||' ').toLowerCase().trim();
+ const leadRegion = (lead.region ||' ').toLowerCase().trim();
 
  return targetCities.some(c =>
  leadCity.includes(c) || leadRegion.includes(c) || (c.includes('madrid') && (leadCity.includes('madrid') || leadRegion.includes('madrid')))

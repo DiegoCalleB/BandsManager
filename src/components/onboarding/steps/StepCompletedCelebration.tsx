@@ -60,17 +60,17 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
 
  {/* Stats Summary Pills */}
  <div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
- <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalSongs} Temas
  </span>
- <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Globe className="w-3.5 h-3.5 text-[var(--alert)]" /> {totalVideos} Vídeos
  </span>
- <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalEvents} Fechas
  </span>
  {hasRider && (
- <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Layers className="w-3.5 h-3.5 text-[var(--ok)]" /> Rider Técnico
  </span>
  )}

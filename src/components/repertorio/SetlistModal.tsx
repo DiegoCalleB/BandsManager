@@ -56,7 +56,7 @@ export function SetlistModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] ${colors.card} text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto`}>
- <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
+ <div className="flex justify-between items-center pb-3">
  <div className="flex items-center gap-2">
  <Layers className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
@@ -113,7 +113,7 @@ export function SetlistModal({
  />
  </div>
 
- <div className="pt-3 border-t border-[var(--hair)] flex justify-end gap-2">
+ <div className="pt-3 flex justify-end gap-2">
  <button
  type="button"
  onClick={onClose}

@@ -59,7 +59,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* AUDIO PREVIEW ADELANTO EN LANDING DE FANS & EPK */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
+ <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <Music className="w-5 h-5" /> Canción / Adelanto en Audio Preview (Landing de Fans & EPK)
  </h3>
@@ -238,7 +238,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
 
  {/* VÍDEOS DE DIRECTO */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
+ <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
  <div className="flex items-center gap-2">
  <Share2 className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)]">
@@ -312,7 +312,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
 
  {/* DATOS LOGÍSTICOS & GIRA (DATOS DE CONTRATACIÓN) */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
  <Info className="w-5 h-5" /> Datos de Gira y Contratación
  </h3>
  <p className="text-xs text-[var(--ink-2)]">

@@ -134,7 +134,7 @@ export default function Finanzas({
 
  const categories = Array.from(new Set(payments.map(p => p.categoria)));
 
- const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
@@ -157,7 +157,7 @@ export default function Finanzas({
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncing
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)]'
- : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30'
+ :' bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30'
  }`}
  title="Sincronizar todas las transacciones financieras"
  >
@@ -166,7 +166,7 @@ export default function Finanzas({
  </button>
  
  <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-sans font-bold ${
- 'bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
+' bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping shrink-0" /> Auto-sync
  </span>
@@ -350,7 +350,7 @@ export default function Finanzas({
 
  {/* Concert Profitability Table */}
  <div className={`${colors.card} p-5 rounded-[var(--r-m)] space-y-4`}>
- <div className="flex items-center justify-between border-b /80 pb-3">
+ <div className="flex items-center justify-between /80 pb-3">
  <h3 className="text-sm font-bold tracking-wider text-[var(--acc)] flex items-center gap-2">
  <Calculator className="w-4 h-4" /> Desglose de Gastos & Rentabilidad por Bolo
  </h3>
@@ -368,7 +368,7 @@ export default function Finanzas({
  ) : (
  <div className="overflow-x-auto">
  <table className="w-full text-left text-xs">
- <thead className="bg-[var(--surface)]/80 text-[var(--acc)] font-bold font-sans text-[10px] border-b border-[var(--hair)]">
+ <thead className="bg-[var(--surface)]/80 text-[var(--acc)] font-bold font-sans text-[10px]">
  <tr>
  <th className="p-3">Fecha & Bolo</th>
  <th className="p-3">Ciudad / Sala</th>
@@ -403,13 +403,13 @@ export default function Finanzas({
 
  let alertBadge = {
  label:'🟢 Rentable',
- bgColor:'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ok)]'
+ bgColor:'bg-[var(--ok-soft)]/40 text-[var(--ok)]'
  };
 
  if (beneficioNeto < 0) {
  alertBadge = {
  label:'🔴 En Pérdidas',
- bgColor:'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-[var(--alert)]'
+ bgColor:'bg-[var(--alert-soft)]/50 text-[var(--alert)]'
  };
  } else if (beneficioNeto < 150) {
  alertBadge = {
@@ -503,7 +503,7 @@ export default function Finanzas({
  {editingConcertId && (
  <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4">
- <div className="flex items-center justify-between border-b pb-3">
+ <div className="flex items-center justify-between pb-3">
  <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
  <Calculator className="w-5 h-5 text-[var(--acc)]" /> Desglose Real de Gastos de Bolo
  </h3>
@@ -637,7 +637,7 @@ export default function Finanzas({
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
  className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-1.5 text-xs focus:outline-none font-sans transition-all ${
- 'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-[var(--ink-2)]'
+' bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-[var(--ink-2)]'
  }`}
  />
  {searchTerm && (
@@ -755,7 +755,7 @@ export default function Finanzas({
  ? isStitchLight
  ?'bg-[var(--ok)]/10 text-[var(--ok)]'
  :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ok)]'
- : 'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
+ :' bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
  }`}
  title="Hacer clic para cambiar el estado de pago"
  >

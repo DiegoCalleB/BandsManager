@@ -1,6 +1,6 @@
-import React from 'react';
-import { Onda } from '../ui/Onda';
-import { Sparkles } from 'lucide-react';
+import React from' react';
+import { Onda } from' ../ui/Onda';
+import { Sparkles } from' lucide-react';
 
 /**
  * OndaShowcase — demonstrates the visual personality transformation
@@ -15,14 +15,14 @@ import { Sparkles } from 'lucide-react';
 export const OndaShowcase: React.FC = () => {
  // Demo data: shows per week (typical band booking pattern)
  const weeklyShowsData = [
- { label: 'Sem 1', value: 2 },
- { label: 'Sem 2', value: 4 },
- { label: 'Sem 3', value: 3 },
- { label: 'Sem 4', value: 5 },
- { label: 'Sem 5', value: 6 },
- { label: 'Sem 6', value: 4 },
- { label: 'Sem 7', value: 7 },
- { label: 'Sem 8', value: 5 },
+ { label:' Sem 1', value: 2 },
+ { label:' Sem 2', value: 4 },
+ { label:' Sem 3', value: 3 },
+ { label:' Sem 4', value: 5 },
+ { label:' Sem 5', value: 6 },
+ { label:' Sem 6', value: 4 },
+ { label:' Sem 7', value: 7 },
+ { label:' Sem 8', value: 5 },
  ];
 
  return (
@@ -65,7 +65,7 @@ export const OndaShowcase: React.FC = () => {
  </div>
 
  {/* Callout */}
- <div className="border-l-4 border-[var(--acc)] pl-4 py-2 space-y-1">
+ <div className="border-l-4 pl-4 py-2 space-y-1">
  <p className="text-sm font-semibold text-[var(--ink)]">
  La personalidad se ve en detalles como este.
  </p>

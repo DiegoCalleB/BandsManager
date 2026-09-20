@@ -371,7 +371,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  }`}
  >
  {/* Top Controls Bar (Search + Quick Filters + Actions) */}
- <div className="mb-4 sm:mb-6 pb-3 sm:pb-4 border-b /60 space-y-2.5">
+ <div className="mb-4 sm:mb-6 pb-3 sm:pb-4 /60 space-y-2.5">
  {/* Desktop title row (hidden on mobile to keep screen ultra-clean since RepertorioNavBar already provides title) */}
  <div className="hidden sm:flex items-center justify-between gap-3">
  <div className="flex items-center gap-2.5">
@@ -650,7 +650,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`p-3.5 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer select-none transition-colors ${
  isStitchLight
  ?'hover:bg-[var(--sunken)]/80 border-b'
- :'hover:bg-[var(--surface)]/80 border-b /60'
+ :'hover:bg-[var(--surface)]/80 /60'
  }`}
  >
  {/* Left: Cover & Information */}
@@ -740,7 +740,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  setExportModalData({ isOpen: true, albumName: album });
  }}
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
- 'bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
+' bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
  >
@@ -756,7 +756,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs })}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
- ?'bg-[var(--ok)]/10 border-[var(--ok)] text-[var(--ok)] hover:bg-[var(--ok)]/20'
+ ?'bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
@@ -797,7 +797,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
  {/* Collapsible Tracklist Section */}
  {isExpanded && (
- <div className={`p-3 sm:p-4 border-t space-y-1.5 ${isStitchLight ?'bg-[var(--bg)]/70' :'bg-[var(--surface)]/80 /80'}`}>
+ <div className={`p-3 sm:p-4 space-y-1.5 ${isStitchLight ?'bg-[var(--bg)]/70' :'bg-[var(--surface)]/80 /80'}`}>
  {sortedAlbumSongs.map((s, idx) => {
  const isCurrentTrack = activePlayerSong?.id === s.id;
  const isDraggingThis = draggedItem?.album === album && draggedItem?.index === idx;
@@ -864,7 +864,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  })}
 
  {sortedAlbumSongs.length === 0 && (
- <div className="text-center py-6 text-[var(--ink-2)] text-xs italic font-sans bg-[var(--ink)]/5 rounded-[var(--r-l)] border-dashed border-[var(--hair)]">
+ <div className="text-center py-6 text-[var(--ink-2)] text-xs italic font-sans bg-[var(--ink)]/5 rounded-[var(--r-l)]">
  Disco sin canciones asignadas. Haz clic en"Gestionar" para añadir temas a este álbum.
  </div>
  )}
@@ -879,7 +879,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <PublicoSilhouette opacity={0.12} size="medium" className="mx-auto" />
  <div className="space-y-2">
  <p className="text-sm font-semibold text-[var(--ink)]">
- {cleanSearchQuery ? 'No encontramos coincidencias' : 'La discografía está vacía'}
+ {cleanSearchQuery ?' No encontramos coincidencias' :' La discografía está vacía'}
  </p>
  <p className="text-xs text-[var(--ink-2)] max-w-sm mx-auto">
  {cleanSearchQuery
@@ -891,7 +891,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={() => setSearchQuery('')}
- className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/30 text-xs font-sans font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
+ className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[var(--ok)]/30 text-xs font-sans font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
  >
  <X className="w-3.5 h-3.5" />
  <span>Limpiar búsqueda</span>

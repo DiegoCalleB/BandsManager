@@ -874,7 +874,7 @@ https://youtube.com/bakandeya_live
 Bakandeya Agent Manager IA & Músicos`;
  };
 
- const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
 
  return (
  <div className="w-full space-y-6">
@@ -1015,7 +1015,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="overflow-x-auto rounded-[var(--r-m)]">
  <table className="w-full text-left border-collapse text-xs font-sans">
  <thead>
- <tr className="bg-[var(--surface)] text-[var(--ink-2)] tracking-wider text-[10px] border-b border-[var(--hair)]">
+ <tr className="bg-[var(--surface)] text-[var(--ink-2)] tracking-wider text-[10px]">
  <th className="p-3">ID Reg.</th>
  <th className="p-3">Nombre Banda</th>
  <th className="p-3">Email Contacto</th>
@@ -1023,8 +1023,8 @@ Bakandeya Agent Manager IA & Músicos`;
  <th className="p-3">Fecha Registro</th>
  <th className="p-3">Estado Cuenta</th>
  <th className="p-3">Notas</th>
- <th className="p-3 font-bold text-[var(--acc)]/80 bg-[var(--acc)]/10 border-l border-[var(--acc)]/20">user_id</th>
- <th className="p-3 text-right text-[var(--acc)]/70 bg-[var(--acc)]/10 border-l /20 font-bold">band_id</th>
+ <th className="p-3 font-bold text-[var(--acc)]/80 bg-[var(--acc)]/10/20">user_id</th>
+ <th className="p-3 text-right text-[var(--acc)]/70 bg-[var(--acc)]/10 /20 font-bold">band_id</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-[var(--hair)]800/60 bg-[var(--surface)]/40 text-[var(--ink-2)]">
@@ -1057,10 +1057,10 @@ Bakandeya Agent Manager IA & Músicos`;
  </span>
  </td>
  <td className="p-3 text-[var(--ink-2)] max-w-xs truncate">{band.notas ||'—'}</td>
- <td className="p-3 text-left font-bold text-[var(--acc)]/80 bg-[var(--acc)]/5 border-l border-[var(--acc)]/20 font-sans">
+ <td className="p-3 text-left font-bold text-[var(--acc)]/80 bg-[var(--acc)]/5/20 font-sans">
  {band.user_id ||'—'}
  </td>
- <td className="p-3 text-right font-bold text-[var(--acc)]/70 bg-[var(--acc)]/5 border-l /20 font-sans">
+ <td className="p-3 text-right font-bold text-[var(--acc)]/70 bg-[var(--acc)]/5 /20 font-sans">
  {band.band_id || band.bandId ||'band-1'}
  </td>
  </tr>
@@ -1136,7 +1136,7 @@ Bakandeya Agent Manager IA & Músicos`;
  onClick={selectedBandIds.length === filteredBands.length ? handleDeselectAllBands : handleSelectAllFilteredBands}
  className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
  selectedBandIds.length > 0
- ?'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 hover:bg-[var(--acc)]/25'
+ ?'bg-[var(--acc)]/15 text-[var(--acc)]/30 hover:bg-[var(--acc)]/25'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={selectedBandIds.length === filteredBands.length ?'Deseleccionar todas' :'Seleccionar todas las filtradas'}
@@ -1240,7 +1240,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div
  key={band.id}
  className={`p-5 rounded-[var(--r-l)] transition-all flex flex-col justify-between space-y-4 ${colors.card} group relative overflow-hidden ${
- isSelected ?'ring-2 ring-[var(--acc)] border-[var(--acc)]/70 bg-[var(--surface)]' :'hover:-amber-0/40'
+ isSelected ?'ring-2 ring-[var(--acc)]/70 bg-[var(--surface)]' :'hover:-amber-0/40'
  }`}
  >
  <div className="space-y-3">
@@ -1263,7 +1263,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="flex items-center gap-1.5 min-w-0">
  <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink)] flex items-center gap-2 group-hover:text-[var(--acc)] transition-colors truncate min-w-0">
  {band.imagen_url ? (
- <img src={band.imagen_url} alt={band.nombre_banda} className="w-6 h-6 rounded-full object-cover border-[var(--acc)]/50 shrink-0" />
+ <img src={band.imagen_url} alt={band.nombre_banda} className="w-6 h-6 rounded-full object-cover/50 shrink-0" />
  ) : (
  <span className="text-sm shrink-0">{band.icono ||'🎸'}</span>
  )}
@@ -1416,7 +1416,7 @@ Bakandeya Agent Manager IA & Músicos`;
  /* TABLE LIST VIEW */
  <div className={`rounded-[var(--r-l)] overflow-hidden ${colors.card} overflow-x-auto`}>
  <table className="w-full text-left text-[10px] font-sans min-w-[850px] border-collapse">
- <thead className="bg-[var(--surface)]/90 text-[var(--ink-2)] tracking-wider text-[10px] border-b border-[var(--hair)]">
+ <thead className="bg-[var(--surface)]/90 text-[var(--ink-2)] tracking-wider text-[10px]">
  <tr>
  <th className="py-2.5 px-3 w-10 text-center whitespace-nowrap">
  <button
@@ -1466,7 +1466,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <td className="py-2 px-3 font-bold text-[var(--ink)] align-middle whitespace-nowrap">
  <div className="flex items-center gap-2 min-w-0">
  {band.imagen_url ? (
- <img src={band.imagen_url} alt={band.nombre_banda} className="w-5 h-5 rounded-full object-cover border-[var(--acc)]/50 shrink-0" />
+ <img src={band.imagen_url} alt={band.nombre_banda} className="w-5 h-5 rounded-full object-cover/50 shrink-0" />
  ) : (
  <span className="text-xs shrink-0">{band.icono ||'🎸'}</span>
  )}
@@ -1575,7 +1575,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="button"
  onClick={handleAiLookup}
  disabled={isAiSearching || !formName.trim()}
- className="flex items-center gap-1.5 text-[10px] font-sans font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30 transition-all disabled:opacity-50 cursor-pointer"
+ className="flex items-center gap-1.5 text-[10px] font-sans font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/30 transition-all disabled:opacity-50 cursor-pointer"
  >
  {isAiSearching ? (
  <>
@@ -1602,7 +1602,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* AI Proposal Overlay / Card */}
  {isAiSearching && (
- <div className="md:col-span-2 p-3 bg-[var(--surface)]/90 border-[var(--acc)]/30 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-sans">
+ <div className="md:col-span-2 p-3 bg-[var(--surface)]/90/30 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-sans">
  <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
  <span>Buscando datos de"{formName}" con IA en la web...</span>
  </div>
@@ -1618,8 +1618,8 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
 
  {aiProposal && (
- <div className="md:col-span-2 p-3.5 bg-[var(--bg)] border-[var(--acc)]/40 rounded-[var(--r-m)] space-y-3 text-xs font-sans">
- <div className="flex items-center justify-between border-b border-[var(--hair)]800 pb-2">
+ <div className="md:col-span-2 p-3.5 bg-[var(--bg)]/40 rounded-[var(--r-m)] space-y-3 text-xs font-sans">
+ <div className="flex items-center justify-between800 pb-2">
  <div className="flex items-center gap-1.5 text-[var(--acc)] font-bold">
  <Sparkles className="w-4 h-4" />
  <span>Propuesta de la IA (Revisa antes de confirmar):</span>
@@ -1646,56 +1646,56 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-[var(--ink-2)]">
  {aiProposal.estilo_musical && (
- <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
+ <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
  <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Estilo:</span> {aiProposal.estilo_musical}</div>
  <button type="button" onClick={() => setFormStyle(aiProposal.estilo_musical)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.localizacion && (
- <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
+ <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
  <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Origen:</span> {aiProposal.localizacion}</div>
  <button type="button" onClick={() => setFormLocation(aiProposal.localizacion)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.contacto_nombre && (
- <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
+ <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
  <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Contacto:</span> {aiProposal.contacto_nombre}</div>
  <button type="button" onClick={() => setFormContactName(aiProposal.contacto_nombre)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.email && (
- <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
+ <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
  <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Email:</span> {aiProposal.email}</div>
  <button type="button" onClick={() => setFormEmail(aiProposal.email)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.telefono && (
- <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
+ <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
  <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Tel:</span> {aiProposal.telefono}</div>
  <button type="button" onClick={() => setFormPhone(aiProposal.telefono)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.instagram && (
- <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
+ <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
  <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Instagram:</span> {aiProposal.instagram}</div>
  <button type="button" onClick={() => setFormInstagram(aiProposal.instagram)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {(aiProposal.spotify_url || aiProposal.youtube_url) && (
- <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800 sm:col-span-2">
+ <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800 sm:col-span-2">
  <div className="truncate max-w-[80%]"><span className="text-[var(--ink-2)] font-bold">Música / Media:</span> {aiProposal.spotify_url || aiProposal.youtube_url}</div>
  <button type="button" onClick={() => setFormSpotifyYoutube(aiProposal.spotify_url || aiProposal.youtube_url)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.biografia && (
- <div className="bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800 sm:col-span-2 space-y-1">
+ <div className="bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800 sm:col-span-2 space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[var(--ink-2)] font-bold">Resumen / Bio:</span>
  <button type="button" onClick={() => setFormNotes(prev => prev ? `${prev}\n\n[Bio IA]: ${aiProposal.biografia}` : aiProposal.biografia)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Añadir a Notas</button>
@@ -1734,7 +1734,7 @@ Bakandeya Agent Manager IA & Músicos`;
  onClick={() => { setFormIcon(emoji); }}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  formIcon === emoji && !formImageUrl
- ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--ink)] scale-110'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] scale-110'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
  }`}
  >

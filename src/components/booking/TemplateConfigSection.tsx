@@ -76,14 +76,14 @@ export function TemplateConfigSection({
  return (
  <div className={`${colors.card} p-5 space-y-6`}>
  <div
- className={`pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 border-b ${
+ className={`pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${
  isStitchLight ?'' :'border-[var(--hair)]'
  }`}
  >
  <div>
  <h3
  className={`text-sm font-bold font-display tracking-widest flex items-center gap-2 ${
- 'text-[var(--acc)]'
+' text-[var(--acc)]'
  }`}
  >
  <Settings className={`w-4 h-4 ${'text-[var(--acc)]'}`} />{''}
@@ -119,7 +119,7 @@ export function TemplateConfigSection({
  onClick={() => onSelectTemplateTab(tab.id as TemplateCategory)}
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
+ ?' bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -139,7 +139,7 @@ export function TemplateConfigSection({
  templateTab ==='medios'
  ?'bg-[var(--alert)]/15 text-[var(--alert)]'
  : templateTab ==='grupos'
- ? 'bg-[var(--surface)]/15 text-[var(--ok)]'
+ ?' bg-[var(--surface)]/15 text-[var(--ok)]'
  : templateTab ==='discotecas'
  ? isStitchLight
  ?'bg-[var(--acc)]/10 text-[var(--acc)]'
@@ -178,7 +178,7 @@ export function TemplateConfigSection({
  value={activeTemplate.subject}
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -197,7 +197,7 @@ export function TemplateConfigSection({
  value={activeTemplate.body}
  onChange={(e) => activeTemplate.setBody(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
  />
@@ -206,7 +206,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] font-sans tracking-wider flex items-center gap-1.5 ${
- 'text-[var(--acc)]'
+' text-[var(--acc)]'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
@@ -217,7 +217,7 @@ export function TemplateConfigSection({
  value={activeTemplate.guidelines}
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
  />
@@ -348,7 +348,7 @@ export function TemplateConfigSection({
  id="template-btn-save"
  onClick={onSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
- 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
+' bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -364,13 +364,13 @@ export function TemplateConfigSection({
  >
  <div className="space-y-3">
  <div
- className={`flex items-center gap-2 pb-2 border-b ${
+ className={`flex items-center gap-2 pb-2 ${
  isStitchLight ?'' :'border-[var(--surface)]'
  }`}
  >
  <span
  className={`w-1.5 h-1.5 rounded-full ${
- 'bg-[var(--acc)]'
+' bg-[var(--acc)]'
  }`}
  />
  <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>

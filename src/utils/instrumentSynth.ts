@@ -16,10 +16,10 @@
 // herramientas externas (ver server/utils/__tests__ y el histórico de esta función para el
 // criterio ya aplicado a accompanimentSynth.ts y midiExport.ts).
 
-import * as Tone from 'tone';
-import { MelodicInstrument, MelodicNoteEvent } from '../types';
-import { bufferToWavBlob } from './audioBufferToWav';
-import { notaAMidi } from './musicTheory';
+import * as Tone from' tone';
+import { MelodicInstrument, MelodicNoteEvent } from' ../types';
+import { bufferToWavBlob } from' ./audioBufferToWav';
+import { notaAMidi } from' ./musicTheory';
 
 // ---------------------------------------------------------------------------------------------
 // PRNG determinista (mulberry32): misma semilla -> misma secuencia siempre. Necesario para que
@@ -39,7 +39,7 @@ export function crearGeneradorDeterminista(semilla: number): () => number {
 export interface ParametrosHumanizacion {
  /** Desplazamiento de tiempo máximo, en milisegundos, hacia adelante o atrás. */
  jitterMaxMs: number;
- /** Variación máxima de intensidad, en la misma escala 0-1 que 'velocidad'. */
+ /** Variación máxima de intensidad, en la misma escala 0-1 que' velocidad'. */
  variacionVelocidad: number;
 }
 
@@ -141,16 +141,16 @@ export function asignarVoces(
 // validador del servidor (server/utils/melodicIdeaValidator.ts) ya reduce cualquier nota de
 // percusión a C2/G2/C3; esto clasifica por proximidad para no depender de que llegue exacto.
 // ---------------------------------------------------------------------------------------------
-export type GolpePercusion = 'grave' | 'medio' | 'agudo';
+export type GolpePercusion =' grave' |' medio' |' agudo';
 
 const GOLPES_MIDI: { golpe: GolpePercusion; midi: number }[] = [
- { golpe: 'grave', midi: 36 }, // C2
- { golpe: 'medio', midi: 43 }, // G2
- { golpe: 'agudo', midi: 48 } // C3
+ { golpe:' grave', midi: 36 }, // C2
+ { golpe:' medio', midi: 43 }, // G2
+ { golpe:' agudo', midi: 48 } // C3
 ];
 
 export function clasificarGolpePercusion(midi: number): GolpePercusion {
- let mejor: GolpePercusion = 'medio';
+ let mejor: GolpePercusion =' medio';
  let mejorDistancia = Infinity;
  for (const { golpe, midi: golpeMidi } of GOLPES_MIDI) {
  const distancia = Math.abs(midi - golpeMidi);
@@ -173,7 +173,7 @@ export interface BufferDeAudio {
  getChannelData(canal: number): Float32Array;
 }
 
-/** Muta los canales in-place para que el pico absoluto quede en 'picoObjetivo' (por defecto -1 dBFS). */
+/** Muta los canales in-place para que el pico absoluto quede en' picoObjetivo' (por defecto -1 dBFS). */
 export function normalizarPico(buffer: BufferDeAudio, picoObjetivo = 0.891): void {
  let pico = 0;
  for (let canal = 0; canal < buffer.numberOfChannels; canal++) {
@@ -231,7 +231,7 @@ const ESPACIO_POR_INSTRUMENTO: Record<MelodicInstrument, EspacioAcustico> = {
 };
 
 /**
- * Envía 'bus' (donde ya han sumado todas las voces del instrumento) al destino real, seco y con
+ * Envía' bus' (donde ya han sumado todas las voces del instrumento) al destino real, seco y con
  * un envío a reverb. El camino seco se queda a su nivel; el húmedo se SUMA encima, no se resta
  * del seco (mezcla aditiva, más simple que un crossfade equal-power y de sobra para esta cola).
  */
@@ -287,11 +287,11 @@ function dispararEventosGuitarra(bus: GainNode, eventos: EventoPreparado[]): voi
 
 function crearVozViolin(bus: GainNode): VozInstrumento {
  const synth = new Tone.PolySynth(Tone.Synth, {
- oscillator: { type: 'sawtooth' },
+ oscillator: { type:' sawtooth' },
  envelope: { attack: 0.18, decay: 0.12, sustain: 0.75, release: 0.35 }
  });
  const vibrato = new Tone.Vibrato({ frequency: 5.5, depth: 0.15 });
- const filtro = new Tone.Filter({ frequency: 3200, type: 'lowpass', rolloff: -12 });
+ const filtro = new Tone.Filter({ frequency: 3200, type:' lowpass', rolloff: -12 });
  synth.chain(vibrato, filtro, bus);
 
  return {
@@ -354,7 +354,7 @@ function crearVozPercusion(ctxNativo: BaseAudioContext, bus: GainNode, rng: () =
  const ruido = ctxNativo.createBufferSource();
  ruido.buffer = bufferRuido;
  const filtroRuido = ctxNativo.createBiquadFilter();
- filtroRuido.type = 'bandpass';
+ filtroRuido.type =' bandpass';
  filtroRuido.frequency.value = frecuenciaRuido;
  filtroRuido.Q.value = 1.1;
  const gananciaRuido = ctxNativo.createGain();
@@ -399,7 +399,7 @@ export async function renderMelodicIdeaAudioBlob(opts: {
  });
  // Semilla derivada (no la misma instancia que la de prepararEventos, que ya se ha consumido
  // por completo antes de llegar aquí) para que el timbre del espacio y de la percusión también
- // sean reproducibles: misma 'semilla' de entrada -> WAV bit a bit idéntico, no solo "las mismas
+ // sean reproducibles: misma' semilla' de entrada -> WAV bit a bit idéntico, no solo "las mismas
  // notas en los mismos instantes". Antes usaban Math.random() sin más.
  const rngSonido = crearGeneradorDeterminista(semilla + 1);
 
@@ -408,14 +408,14 @@ export async function renderMelodicIdeaAudioBlob(opts: {
  const bus = ctxNativo.createGain();
  conectarConEspacio(bus, ctxNativo, ESPACIO_POR_INSTRUMENTO[opts.instrument], rngSonido);
 
- if (opts.instrument === 'guitarra') {
+ if (opts.instrument ===' guitarra') {
  dispararEventosGuitarra(bus, eventosPreparados);
  return;
  }
 
  const voz =
- opts.instrument === 'violin' ? crearVozViolin(bus) :
- opts.instrument === 'handpan' ? crearVozHandpan(bus) :
+ opts.instrument ===' violin' ? crearVozViolin(bus) :
+ opts.instrument ===' handpan' ? crearVozHandpan(bus) :
  crearVozPercusion(ctxNativo, bus, rngSonido);
 
  for (const evento of eventosPreparados) voz.disparar(evento);

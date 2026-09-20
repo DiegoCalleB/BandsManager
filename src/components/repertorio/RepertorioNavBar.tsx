@@ -53,7 +53,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  {/* Module Title */}
  <div className="flex items-center gap-2.5 min-w-0">
  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${
- 'bg-[var(--acc)]/15 text-[var(--acc)]'
+' bg-[var(--acc)]/15 text-[var(--acc)]'
  }`}>
  <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
  </div>
@@ -81,14 +81,14 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  </div>
  )}
 
- <nav aria-label="Vistas principales de repertorio" className={`p-1 rounded-[var(--r-m)] flex items-center gap-1 ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/90 border-[var(--hair)]'}`}>
+ <nav aria-label="Vistas principales de repertorio" className={`p-1 rounded-[var(--r-m)] flex items-center gap-1 ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/90'}`}>
  <button
  id="tab-btn-setlists"
  type="button"
  onClick={() => setActiveTab('setlists')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='setlists'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ ?' bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >
@@ -107,7 +107,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setActiveTab('catalogo')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='catalogo'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ ?' bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >
@@ -124,7 +124,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  </div>
 
  {/* Sub Row: Contextual Quick Actions */}
- <div className={`flex items-center justify-between gap-2 pt-1.5 border-t ${isStitchLight ?'' :'/60'}`}>
+ <div className={`flex items-center justify-between gap-2 pt-1.5 ${isStitchLight ?'' :'/60'}`}>
  {activeTab ==='setlists' && (
  <>
  {/* Quick Setlist Switcher (Dropdown for 1-click change) */}
@@ -240,7 +240,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  <div className="flex items-center justify-between w-full gap-2">
  {/* Sub-view switcher inside Catálogo */}
  <div className={`hidden md:flex items-center gap-1 p-0.5 rounded-[var(--r-m)] shrink-0 ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/90 border-[var(--hair)]'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/90'
  }`}>
  <button
  id="btn-subtab-albumes"

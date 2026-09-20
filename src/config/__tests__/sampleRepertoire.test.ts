@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { SAMPLER_SONGS, SAMPLER_SETLISTS, SAMPLER_ALBUM_NAME, SAMPLER_COVER_URL } from '../sampleRepertoire';
-import fs from 'fs';
-import path from 'path';
+import { describe, it, expect } from' vitest';
+import { SAMPLER_SONGS, SAMPLER_SETLISTS, SAMPLER_ALBUM_NAME, SAMPLER_COVER_URL } from' ../sampleRepertoire';
+import fs from' fs';
+import path from' path';
 
 describe('sampleRepertoire config and assets', () => {
  it('defines 5 royalty-free sample tracks', () => {
@@ -20,15 +20,15 @@ describe('sampleRepertoire config and assets', () => {
  });
 
  it('all referenced mp3 and cover assets physically exist in /public', () => {
- const publicDir = path.resolve(__dirname, '../../../public');
+ const publicDir = path.resolve(__dirname,' ../../../public');
  
  // Check cover SVG
- const coverPath = path.join(publicDir, SAMPLER_COVER_URL.replace(/^\//, ''));
+ const coverPath = path.join(publicDir, SAMPLER_COVER_URL.replace(/^\//,' '));
  expect(fs.existsSync(coverPath)).toBe(true);
 
  // Check all 5 MP3 audio files
  for (const song of SAMPLER_SONGS) {
- const audioRel = song.audioPrincipalUrl!.replace(/^\//, '');
+ const audioRel = song.audioPrincipalUrl!.replace(/^\//,' ');
  const audioPath = path.join(publicDir, audioRel);
  expect(fs.existsSync(audioPath)).toBe(true);
  const stat = fs.statSync(audioPath);
@@ -42,13 +42,13 @@ describe('sampleRepertoire config and assets', () => {
  expect(setlist.id).toBe('setlist-sample-1');
  expect(setlist.items.length).toBeGreaterThanOrEqual(5);
 
- const songItems = setlist.items.filter(i => i.tipoItem === 'cancion');
+ const songItems = setlist.items.filter(i => i.tipoItem ===' cancion');
  expect(songItems.map(i => i.songId)).toEqual([
- 'sample-track-1',
- 'sample-track-2',
- 'sample-track-3',
- 'sample-track-4',
- 'sample-track-5'
+' sample-track-1',
+' sample-track-2',
+' sample-track-3',
+' sample-track-4',
+' sample-track-5'
  ]);
  });
 });

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Song, Setlist } from '../types';
-import { formatSongShareText, formatSetlistShareText } from '../utils/shareUtils';
+import { useState } from' react';
+import { Song, Setlist } from' ../types';
+import { formatSongShareText, formatSetlistShareText } from' ../utils/shareUtils';
 
 export function useShareModal(songs: Song[], bName: string) {
  const [shareModalData, setShareModalData] = useState<{
@@ -8,12 +8,12 @@ export function useShareModal(songs: Song[], bName: string) {
  title: string;
  subtitle?: string;
  text: string;
- itemType: 'song' | 'setlist';
+ itemType:' song' |' setlist';
  }>({
  isOpen: false,
- title: '',
- text: '',
- itemType: 'setlist'
+ title:' ',
+ text:' ',
+ itemType:' setlist'
  });
 
  const handleShareSetlist = (setlist: Setlist) => {
@@ -23,7 +23,7 @@ export function useShareModal(songs: Song[], bName: string) {
  title: setlist.nombre,
  subtitle: `Repertorio (${setlist.items.length} elementos) para WhatsApp`,
  text: formatSetlistShareText(setlist, songsMap, bName),
- itemType: 'setlist'
+ itemType:' setlist'
  });
  };
 
@@ -31,9 +31,9 @@ export function useShareModal(songs: Song[], bName: string) {
  setShareModalData({
  isOpen: true,
  title: song.titulo,
- subtitle: 'Compartir canción por WhatsApp',
+ subtitle:' Compartir canción por WhatsApp',
  text: formatSongShareText(song, { includeChords: true, includeGuide: true }),
- itemType: 'song'
+ itemType:' song'
  });
  };
 

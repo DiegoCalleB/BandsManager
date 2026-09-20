@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from' react';
 
 export interface ToastNotification {
  id: string;
- type: 'success' | 'error' | 'info' | 'warning';
+ type:' success' |' error' |' info' |' warning';
  title: string;
  message?: string;
  timestamp: number;

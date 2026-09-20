@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '../i18n/fansTranslations';
+import { useState } from' react';
+import { FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from' ../i18n/fansTranslations';
 
 /**
  * Determina el idioma inicial del formulario público "Únete":
@@ -9,13 +9,13 @@ import { FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '.
  * El fan puede cambiarlo a mano en cualquier momento con el selector.
  */
 function detectInitialFanFormLanguage(): FanFormLanguage {
- if (typeof window === 'undefined') return DEFAULT_FAN_FORM_LANGUAGE;
+ if (typeof window ===' undefined') return DEFAULT_FAN_FORM_LANGUAGE;
 
  const params = new URLSearchParams(window.location.search);
  const queryLang = params.get('lang');
  if (isFanFormLanguage(queryLang)) return queryLang;
 
- const browserLang = (navigator.language || '').slice(0, 2).toLowerCase();
+ const browserLang = (navigator.language ||' ').slice(0, 2).toLowerCase();
  if (isFanFormLanguage(browserLang)) return browserLang;
 
  return DEFAULT_FAN_FORM_LANGUAGE;

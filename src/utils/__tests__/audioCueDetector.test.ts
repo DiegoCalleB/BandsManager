@@ -1,12 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from' vitest';
 import {
  detectAudioCuesFromFloatChannel,
  detectLiveConcertTrackCues,
  formatCueOffset,
  applyDetectedCuesToSong,
  AudioCueAnalysis
-} from '../audioCueDetector';
-import { Song } from '../../types';
+} from' ../audioCueDetector';
+import { Song } from' ../../types';
 
 describe('audioCueDetector', () => {
  const sampleRate = 44100;
@@ -103,11 +103,11 @@ describe('audioCueDetector', () => {
 
  it('aplica correctamente los puntos CUE a la entidad Song', () => {
  const mockSong: Song = {
- id: 'song-live-1',
- titulo: 'Tema en Directo',
- duracion: '3:30',
+ id:' song-live-1',
+ titulo:' Tema en Directo',
+ duracion:' 3:30',
  duracionSegundos: 210,
- tonalidad: 'Em',
+ tonalidad:' Em',
  bpm: 120
  };
 

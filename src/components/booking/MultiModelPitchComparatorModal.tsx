@@ -179,8 +179,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  const getProviderBadge = (id: string) => {
  if (id ==='gemini') return'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30';
- if (id ==='deepseek') return'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30';
- return'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]700';
+ if (id ==='deepseek') return'bg-[var(--acc)]/15 text-[var(--acc)]/30';
+ return'bg-[var(--sunken)] text-[var(--ink-2)]700';
  };
 
  const getFallbackCostEstimate = (provider: string, charCount: number): CostEstimateInfo => {
@@ -217,7 +217,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="relative w-full max-w-6xl bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[94vh] my-auto">
  
  {/* HEADER */}
- <div className="px-5 py-3.5 border-b border-[var(--hair)]800 flex items-center justify-between bg-[var(--surface)]/95 sticky top-0 z-10">
+ <div className="px-5 py-3.5800 flex items-center justify-between bg-[var(--surface)]/95 sticky top-0 z-10">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)]">
  <Layers className="w-5 h-5" />
@@ -246,12 +246,12 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* CONTROLS & VENUE BAR */}
- <div className="p-4 bg-[var(--bg)] border-b border-[var(--hair)]800/80 space-y-3">
+ <div className="p-4 bg-[var(--bg)]800/80 space-y-3">
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
  {/* Venue Badge */}
  <div className="flex items-center gap-2 text-xs">
  <span className="text-[var(--ink-2)] font-sans text-[11px]">SALA DESTINO:</span>
- <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]700 text-[var(--acc)]/70 font-bold">
+ <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)]700 text-[var(--acc)]/70 font-bold">
  🏟️ {lead.nombre_sala} ({lead.ciudad ||'España'})
  </span>
  <span className="text-[var(--ink-2)] text-[11px]">
@@ -275,7 +275,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
- :'bg-[var(--bg)]/60 text-[var(--ink-2)] border-[var(--hair)]800 hover:border-[var(--hair)]700'
+ :'bg-[var(--bg)]/60 text-[var(--ink-2)]800 hover:border-[var(--hair)]700'
  }`}
  >
  <span>{prov.icon}</span>
@@ -295,7 +295,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  value={customComment}
  onChange={e => setCustomComment(e.target.value)}
  placeholder="Ajuste puntual opcional: Ej.'Destacar que tenemos 100k streams','Proponer viernes o sábado'..."
- className="w-full px-3 py-2 bg-[var(--sunken)] rounded-[var(--r-m)] border-[var(--hair)]700 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
+ className="w-full px-3 py-2 bg-[var(--sunken)] rounded-[var(--r-m)]700 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
  onKeyDown={e => {
  if (e.key ==='Enter') handleRunComparison();
  }}
@@ -323,7 +323,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* COMPARATIVA DE COSTES ECONÓMICOS / PROYECCIÓN DE GASTO */}
- <div className="px-4 py-3 bg-gradient-to-r from-[var(--surface)] via-[var(--bg)] to-[var(--surface)] border-b border-[var(--hair)]800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+ <div className="px-4 py-3 bg-gradient-to-r from-[var(--surface)] via-[var(--bg)] to-[var(--surface)]800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div className="flex items-center gap-2">
  <Coins className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <div>
@@ -341,7 +341,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
  </div>
 
- <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-m)] border-[var(--hair)]800 self-start sm:self-auto">
+ <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-m)]800 self-start sm:self-auto">
  <span className="text-[10px] text-[var(--ink-2)] px-2 font-sans">Escala:</span>
  <button
  type="button"
@@ -434,12 +434,12 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  key={prop.provider + idx}
  className={`flex flex-col rounded-[var(--r-m)] transition-all duration-200 ${
  isSelected
- ?'bg-[var(--surface)] border-[var(--ok)]/80 ring-1 ring-emerald-500/40'
- :'bg-[var(--surface)] border-[var(--hair)]800 hover:border-[var(--hair)]700'
+ ?'bg-[var(--surface)]/80 ring-1 ring-emerald-500/40'
+ :'bg-[var(--surface)]800 hover:border-[var(--hair)]700'
  }`}
  >
  {/* Model Header */}
- <div className="p-3.5 border-b border-[var(--hair)]800/80 flex items-center justify-between bg-[var(--sunken)] rounded-t-xl">
+ <div className="p-3.5800/80 flex items-center justify-between bg-[var(--sunken)] rounded-t-xl">
  <div className="flex items-center gap-2">
  <span className="text-lg">{getProviderIcon(prop.provider)}</span>
  <div>
@@ -469,7 +469,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* Cost & Economics Card Banner */}
- <div className="px-3.5 py-2.5 bg-[var(--sunken)] border-b border-[var(--hair)]800/70 flex items-center justify-between text-xs">
+ <div className="px-3.5 py-2.5 bg-[var(--sunken)]800/70 flex items-center justify-between text-xs">
  <div>
  <div className="flex items-center gap-1.5">
  <Coins className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -488,7 +488,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="text-right">
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
  isDeepSeek
- ?'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30'
+ ?'bg-[var(--ok)]/15 text-[var(--ink-2)]/30'
  :'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30'
  }`}>
  {isDeepSeek ?'10x más barato' :'Ultra rápido'}
@@ -525,7 +525,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  )}
 
  {/* Footer Metrics & Selection Button */}
- <div className="pt-2 border-t border-[var(--hair)]800/60 space-y-2">
+ <div className="pt-2800/60 space-y-2">
  <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-sans">
  <span>{wordCount} palabras ({charCount} car.)</span>
  {isDeepSeek ? (
@@ -580,7 +580,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="overflow-x-auto">
  <table className="w-full text-left text-[11px] border-collapse">
  <thead>
- <tr className="border-b border-[var(--hair)]800 text-[var(--ink-2)] font-sans">
+ <tr className="border-b800 text-[var(--ink-2)] font-sans">
  <th className="py-1.5 px-2">Modelo</th>
  <th className="py-1.5 px-2">Entrada (1M tok)</th>
  <th className="py-1.5 px-2">Salida (1M tok)</th>
@@ -617,7 +617,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* FOOTER INFO BAR */}
- <div className="px-5 py-3 border-t border-[var(--hair)]800 bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
+ <div className="px-5 py-3800 bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <ShieldCheck className="w-4 h-4 text-[var(--acc)]" />
  <span>

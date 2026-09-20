@@ -116,7 +116,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/75 animate-fadeIn">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-6 text-[var(--ink)] relative">
  {/* Header */}
- <div className="flex items-center justify-between pb-4 border-b border-[var(--hair)]800">
+ <div className="flex items-center justify-between pb-4800">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]">
  <FileSpreadsheet className="w-5 h-5" />
@@ -147,7 +147,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='filtered'
  ?'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
- :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+ :'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='filtered' ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
@@ -171,7 +171,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='all'
  ?'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
- :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+ :'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='all' ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
@@ -196,7 +196,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='selected'
  ?'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
- :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+ :'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <CheckSquare className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='selected' ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
@@ -227,8 +227,8 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportFormat('csv')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
  exportFormat ==='csv'
- ?'bg-[var(--ok)]/20 border-[var(--ok)]/60 text-[var(--ink)] font-bold'
- :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+ ?'bg-[var(--ok)]/20/60 text-[var(--ink)] font-bold'
+ :'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <FileSpreadsheet className="w-4 h-4 text-[var(--ok)] shrink-0" />
@@ -243,8 +243,8 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportFormat('json')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
  exportFormat ==='json'
- ?'bg-[var(--acc)]/20 border-[var(--acc)]/60 text-[var(--tentative)]/40 font-bold'
- :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+ ?'bg-[var(--acc)]/20/60 text-[var(--tentative)]/40 font-bold'
+ :'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
  <FileCode className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
@@ -258,7 +258,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
  {/* 3. CSV Options */}
  {exportFormat ==='csv' && (
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80 border-[var(--hair)]800 space-y-2">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80800 space-y-2">
  <span className="text-[11px] font-bold text-[var(--ink-2)] block">Campos adicionales en CSV:</span>
  <div className="flex items-center gap-4 text-xs">
  <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)]">
@@ -266,7 +266,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="checkbox"
  checked={includePitch}
  onChange={(e) => setIncludePitch(e.target.checked)}
- className="rounded border-[var(--hair)]700 text-[var(--acc)] focus:ring-amber-0/20 bg-[var(--bg)]"
+ className="rounded700 text-[var(--acc)] focus:ring-amber-0/20 bg-[var(--bg)]"
  />
  <span>Incluir Pitch / Propuesta IA</span>
  </label>
@@ -276,7 +276,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="checkbox"
  checked={includeNotes}
  onChange={(e) => setIncludeNotes(e.target.checked)}
- className="rounded border-[var(--hair)]700 text-[var(--acc)] focus:ring-amber-0/20 bg-[var(--bg)]"
+ className="rounded700 text-[var(--acc)] focus:ring-amber-0/20 bg-[var(--bg)]"
  />
  <span>Incluir Historial y Notas</span>
  </label>
@@ -285,7 +285,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  )}
 
  {/* Action buttons */}
- <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--hair)]800">
+ <div className="flex items-center justify-end gap-3 pt-3800">
  <button
  type="button"
  onClick={onClose}

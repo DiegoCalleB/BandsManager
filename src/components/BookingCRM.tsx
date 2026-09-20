@@ -460,7 +460,7 @@ export default function BookingCRM({
  return norm ==='medio' || norm ==='productora';
  };
 
- const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
 
  // Filter leads by active section tab
  const sectionLeads = useMemo(() => {
@@ -1125,7 +1125,7 @@ export default function BookingCRM({
  {/* EXPANDED IA TOOLS PANEL (Responsive on all screen sizes) */}
  {isMobileToolsOpen && (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-2.5 animate-in slide-in-from-top-2 duration-150">
- <div className="flex items-center justify-between text-xs font-bold text-[var(--acc)]/70 pb-1.5 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between text-xs font-bold text-[var(--acc)]/70 pb-1.5">
  <span className="flex items-center gap-1.5">
  <Wrench className="w-3.5 h-3.5" />
  Herramientas e Inteligencia Artificial
@@ -1191,7 +1191,7 @@ export default function BookingCRM({
  setIsDuplicatesModalOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40 transition-all cursor-pointer active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40 transition-all cursor-pointer active:scale-98"
  >
  <span className="flex items-center gap-2">
  <Copy className="w-4 h-4 text-[var(--acc)]" />
@@ -1255,7 +1255,7 @@ export default function BookingCRM({
  setIsMobileToolsOpen(false);
  handleEnrichAddresses();
  }}
- className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+ className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink)]700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
  >
  <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>{isEnrichingAddresses ?'Rellenando direcciones...' :'Autocompletar Direcciones'}</span>
@@ -1454,7 +1454,7 @@ export default function BookingCRM({
  {/* ⚡ UNIFIED COMPACT FILTERS PANEL (Desktop, Tablet & Mobile) */}
  {isMobileFiltersOpen && (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-3.5 animate-in slide-in-from-top-2 duration-150">
- <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-2">
  <span className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
  <Filter className="w-3.5 h-3.5" />
  Filtros y Búsquedas Avanzadas
@@ -1490,7 +1490,7 @@ export default function BookingCRM({
  onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyVerifiedFilter
- ?'bg-[var(--acc)]/20 text-[var(--ink-3)] border-[var(--acc)]/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink-3)]/50'
  :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1523,7 +1523,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setIsSavingFilterOpen(true)}
- className="px-2.5 py-1.5 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-s)] font-bold text-xs flex items-center gap-1 transition-all border-[var(--acc)]/30 cursor-pointer"
+ className="px-2.5 py-1.5 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-s)] font-bold text-xs flex items-center gap-1 transition-all/30 cursor-pointer"
  title="Guardar la combinación de filtros actual en 1 clic"
  >
  <BookmarkCheck className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1537,7 +1537,7 @@ export default function BookingCRM({
  placeholder="Nombre del filtro (ej: Salas BCN > 300)..."
  value={newFilterName}
  onChange={(e) => setNewFilterName(e.target.value)}
- className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--acc)]/50 text-[var(--ink)] focus:outline-none w-48 sm:w-56"
+ className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--bg)]/50 text-[var(--ink)] focus:outline-none w-48 sm:w-56"
  />
  <button
  type="submit"
@@ -1569,8 +1569,8 @@ export default function BookingCRM({
  key={sf.id}
  className={`group relative shrink-0 flex items-center rounded-full transition-all cursor-pointer ${
  isActive
- ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold'
- :'bg-[var(--bg)]/80 hover:bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink)]'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
+ :'bg-[var(--bg)]/80 hover:bg-[var(--surface)]800 text-[var(--ink)]'
  }`}
  >
  <button
@@ -1667,7 +1667,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-all cursor-pointer ${
  selectedCityFilter ===''
  ?'bg-[var(--surface)] text-[var(--acc)] font-bold'
- :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
+ :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800'
  }`}
  >
  Todas ({activeLeadsForSection.length})
@@ -1682,8 +1682,8 @@ export default function BookingCRM({
  onClick={() => setSelectedCityFilter(isSelected ?'' : cityName)}
  className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
- ?'bg-[var(--acc)]/20 text-[var(--acc)] font-bold border-[var(--acc)]/50'
- :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
+ ?'bg-[var(--acc)]/20 text-[var(--acc)] font-bold/50'
+ :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800'
  }`}
  >
  <span>{cityName}</span>
@@ -1695,7 +1695,7 @@ export default function BookingCRM({
  </div>
 
  {/* 4. Action Buttons Footer */}
- <div className="flex items-center justify-between gap-2 pt-2 border-t border-[var(--hair)]">
+ <div className="flex items-center justify-between gap-2 pt-2">
  <button
  type="button"
  onClick={handleClearAllFilters}
@@ -1751,7 +1751,7 @@ export default function BookingCRM({
  </span>
  )}
  {activeSavedFilterId && (
- <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/50 shrink-0">
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/50 shrink-0">
  📌 {savedFilters.find(f => f.id === activeSavedFilterId)?.nombre ||'Búsqueda guardada'}
  <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-[var(--ink)] cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
@@ -2093,7 +2093,7 @@ export default function BookingCRM({
  </div>
 
  {isTemplatesSectionOpen && (
- <div className="mt-5 pt-4 border-t border-[var(--hair)]800/80 space-y-6">
+ <div className="mt-5 pt-4800/80 space-y-6">
  <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <div>
  <h4 className={`text-xs font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
@@ -2124,7 +2124,7 @@ export default function BookingCRM({
  onClick={() => setTemplateTab(tab.id as TemplateCategory)}
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
+ ?' bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -2151,7 +2151,7 @@ export default function BookingCRM({
  : templateTab ==='discotecas'
  ? isStitchLight ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--tentative)]/10 text-[var(--tentative)]/80'
  : templateTab ==='ayuntamientos'
- ? 'bg-[var(--acc)]/10 text-[var(--acc)]/70'
+ ?' bg-[var(--acc)]/10 text-[var(--acc)]/70'
  : isStitchLight ?'bg-[var(--acc)]/15 text-[var(--ink-2)]' :'bg-[var(--acc)]/15 text-[var(--ink-2)]'
  }`}>
  <div>
@@ -2180,7 +2180,7 @@ export default function BookingCRM({
  value={activeTemplate.subject}
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2193,7 +2193,7 @@ export default function BookingCRM({
  value={activeTemplate.body}
  onChange={(e) => activeTemplate.setBody(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
  />
@@ -2209,7 +2209,7 @@ export default function BookingCRM({
  value={activeTemplate.guidelines}
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'
+' bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
  />
@@ -2381,7 +2381,7 @@ export default function BookingCRM({
  id="template-btn-save"
  onClick={handleSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
- 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
+' bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -2492,7 +2492,7 @@ export default function BookingCRM({
  </div>
  </div>
  ) : (
- <div className={`border-2 border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
+ <div className={`border-2 rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
  isStitchLight
  ?' text-[var(--ink-2)]'
  :' text-[var(--ink-2)]'

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from' vitest';
 import {
  resolverTema,
  leerPreferencia,
@@ -10,7 +10,7 @@ import {
  TEMA_POR_DEFECTO,
  CLAVE_TEMA,
  PREFERENCIAS,
-} from '../temaEspectro';
+} from' ../temaEspectro';
 
 /*
  * Este repo corre Vitest en entorno node (no hay jsdom ni happy-dom, y los
@@ -105,7 +105,7 @@ describe('temaEspectro', () => {
  });
 
  it('ignora un valor corrupto o de otro sistema de temas', () => {
- almacen[CLAVE_TEMA] = 'indie_velvet';
+ almacen[CLAVE_TEMA] =' indie_velvet';
  expect(leerPreferencia()).toBe('classic');
  });
 
@@ -118,8 +118,8 @@ describe('temaEspectro', () => {
 
  describe('esPreferenciaValida', () => {
  it('acepta solo las cuatro preferencias reales', () => {
- ['light', 'dark', 'classic', 'system'].forEach((v) => expect(esPreferenciaValida(v)).toBe(true));
- [null, undefined, 42, '', 'stitch_light', 'indie_velvet'].forEach((v) =>
+ ['light',' dark',' classic',' system'].forEach((v) => expect(esPreferenciaValida(v)).toBe(true));
+ [null, undefined, 42,' ',' stitch_light',' indie_velvet'].forEach((v) =>
  expect(esPreferenciaValida(v)).toBe(false),
  );
  });
@@ -167,7 +167,7 @@ describe('temaEspectro', () => {
 
  describe('escucharSistema', () => {
  it('repinta al cambiar el SO solo si la preferencia es "system"', () => {
- let pref: 'system' | 'light' = 'system';
+ let pref:' system' |' light' =' system';
  const sis = simularSistema(false);
  const parar = escucharSistema(() => pref);
 
@@ -175,8 +175,8 @@ describe('temaEspectro', () => {
  sis.disparar();
  expect(temaEstampado()).toBe('dark');
 
- doc.documentElement.dataset.theme = 'light';
- pref = 'light';
+ doc.documentElement.dataset.theme =' light';
+ pref =' light';
  sis.disparar();
  expect(temaEstampado()).toBe('light');
 
@@ -185,7 +185,7 @@ describe('temaEspectro', () => {
 
  it('se desuscribe al llamar a la función devuelta', () => {
  const sis = simularSistema(false);
- const parar = escucharSistema(() => 'system' as const);
+ const parar = escucharSistema(() =>' system' as const);
  expect(sis.numOyentes()).toBe(1);
  parar();
  expect(sis.numOyentes()).toBe(0);
@@ -193,7 +193,7 @@ describe('temaEspectro', () => {
 
  it('no revienta sin matchMedia', () => {
  vi.stubGlobal('window', {});
- expect(() => escucharSistema(() => 'system' as const)()).not.toThrow();
+ expect(() => escucharSistema(() =>' system' as const)()).not.toThrow();
  });
  });
 
@@ -205,7 +205,7 @@ describe('temaEspectro', () => {
  });
 
  it('respeta la preferencia guardada', () => {
- almacen[CLAVE_TEMA] = 'dark';
+ almacen[CLAVE_TEMA] =' dark';
  expect(inicializarTema()).toBe('dark');
  });
  });

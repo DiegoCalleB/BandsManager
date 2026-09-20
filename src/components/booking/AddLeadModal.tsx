@@ -110,7 +110,7 @@ export function AddLeadModal({
  )}
  <h3
  className={`text-sm font-bold font-display tracking-widest ${
- 'text-[var(--acc)]'
+' text-[var(--acc)]'
  }`}
  >
  {sectionTab ==='medios'
@@ -143,7 +143,7 @@ export function AddLeadModal({
  onClick={onModalScrape}
  disabled={isModalScraping || !newLeadData.nombre_sala}
  className={`px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'
+' bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'
  }`}
  title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
  >
@@ -166,13 +166,13 @@ export function AddLeadModal({
  value={newLeadData.nombre_sala}
  onChange={e => setNewLeadData(prev => ({ ...prev, nombre_sala: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
 
  {/* Logo Selector */}
- <div className="bg-[var(--bg)]/60 p-3 rounded-[var(--r-m)] border-[var(--hair)]800 space-y-2.5">
+ <div className="bg-[var(--bg)]/60 p-3 rounded-[var(--r-m)]800 space-y-2.5">
  <div className="flex items-center justify-between flex-wrap gap-2">
  <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
  Icono o Logo del Medio / Sala
@@ -187,7 +187,7 @@ export function AddLeadModal({
  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>{isSearchingLogo ?'Buscando...' :'🔍 Buscar Logo'}</span>
  </button>
- <label className="cursor-pointer px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-[var(--hair)]700">
+ <label className="cursor-pointer px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all700">
  <Upload className="w-3 h-3 text-[var(--acc)]" />
  <span>{isUploadingLeadLogo ?'Subiendo...' :'Subir Logo'}</span>
  <input
@@ -210,11 +210,11 @@ export function AddLeadModal({
  </div>
 
  {newLeadData.imagen_url ? (
- <div className="flex items-center gap-3 p-2 bg-[var(--bg)] rounded-[var(--r-s)] border-[var(--hair)]800">
+ <div className="flex items-center gap-3 p-2 bg-[var(--bg)] rounded-[var(--r-s)]800">
  <img
  src={newLeadData.imagen_url}
  alt="Logo"
- className="w-10 h-10 rounded-[var(--r-s)] object-cover border-[var(--acc)]/50 shrink-0"
+ className="w-10 h-10 rounded-[var(--r-s)] object-cover/50 shrink-0"
  />
  <div className="flex-1 min-w-0">
  <p className="text-[10px] text-[var(--ink-2)] font-bold truncate">
@@ -242,7 +242,7 @@ export function AddLeadModal({
  onClick={() => setNewLeadData(prev => ({ ...prev, icono: emoji }))}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  newLeadData.icono === emoji
- ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110 border-[var(--acc)]'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110'
  :'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60'
  }`}
  >
@@ -259,7 +259,7 @@ export function AddLeadModal({
  {isModalScraping && (
  <div
  className={`p-2.5 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 ${
- 'bg-[var(--surface)]/30 text-[var(--acc)]'
+' bg-[var(--surface)]/30 text-[var(--acc)]'
  }`}
  >
  <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]/80 shrink-0" />
@@ -289,7 +289,7 @@ export function AddLeadModal({
  value={newLeadData.direccion ||''}
  onChange={e => setNewLeadData(prev => ({ ...prev, direccion: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -305,7 +305,7 @@ export function AddLeadModal({
  value={newLeadData.ciudad}
  onChange={e => setNewLeadData(prev => ({ ...prev, ciudad: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -319,7 +319,7 @@ export function AddLeadModal({
  value={newLeadData.region}
  onChange={e => setNewLeadData(prev => ({ ...prev, region: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -336,7 +336,7 @@ export function AddLeadModal({
  value={newLeadData.email_contacto}
  onChange={e => setNewLeadData(prev => ({ ...prev, email_contacto: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -351,7 +351,7 @@ export function AddLeadModal({
  value={newLeadData.email_secundario ||''}
  onChange={e => setNewLeadData(prev => ({ ...prev, email_secundario: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -366,7 +366,7 @@ export function AddLeadModal({
  value={newLeadData.genero}
  onChange={e => setNewLeadData(prev => ({ ...prev, genero: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  >
  <option value="Radio">Radio / Programa</option>
@@ -382,7 +382,7 @@ export function AddLeadModal({
  setNewLeadData(prev => ({ ...prev, tipo: e.target.value as LeadType }))
  }
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  >
  <option value="sala">Sala de Conciertos</option>
@@ -408,7 +408,7 @@ export function AddLeadModal({
  value={newLeadData.roster ||''}
  onChange={e => setNewLeadData(prev => ({ ...prev, roster: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -430,7 +430,7 @@ export function AddLeadModal({
  value={newLeadData.pitch_generado}
  onChange={e => setNewLeadData(prev => ({ ...prev, pitch_generado: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] p-3 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -445,7 +445,7 @@ export function AddLeadModal({
  value={newLeadData.notas}
  onChange={e => setNewLeadData(prev => ({ ...prev, notas: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -465,7 +465,7 @@ export function AddLeadModal({
  <button
  type="submit"
  className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider transition-all cursor-pointer ${
- 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
+' bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
  }`}
  >
  {sectionTab ==='medios' ?'Guardar Medio' : sectionTab ==='grupos' ?'Guardar Contacto' :'Guardar Sala'}

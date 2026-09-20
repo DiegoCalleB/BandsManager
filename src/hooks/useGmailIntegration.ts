@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { initAuth, googleSignIn, logout, fetchGmailThreadsForEmail } from '../utils/gmail';
-import { Lead } from '../types';
+import { useState, useEffect } from' react';
+import { initAuth, googleSignIn, logout, fetchGmailThreadsForEmail } from' ../utils/gmail';
+import { Lead } from' ../types';
 
 export function useGmailIntegration(
  selectedLead: Lead | null,
@@ -42,18 +42,18 @@ export function useGmailIntegration(
  console.error('Error logging in with Google:', err);
  const isIframeEnv = window.self !== window.top;
  if (
- err?.code === 'auth/popup-closed-by-user' || 
+ err?.code ===' auth/popup-closed-by-user' || 
  err?.message?.includes('popup-closed-by-user') || 
  err?.message?.includes('closed-by-user') ||
  isIframeEnv
  ) {
  setGmailStatusMsg(
- '⚠️ Restricción de Iframe: El navegador bloqueó o cerró el popup de Google. ' + 
- 'Para poder conectar tu cuenta, haz clic en el botón"Abrir en pestaña nueva" ' + 
- 'que ves abajo o en la barra de AI Studio.'
+' ⚠️ Restricción de Iframe: El navegador bloqueó o cerró el popup de Google.'  + 
+' Para poder conectar tu cuenta, haz clic en el botón"Abrir en pestaña nueva"'  + 
+' que ves abajo o en la barra de AI Studio.'
  );
  } else {
- setGmailStatusMsg('No se pudo conectar: ' + (err.message || String(err)));
+ setGmailStatusMsg('No se pudo conectar:'  + (err.message || String(err)));
  }
  }
  };
@@ -114,7 +114,7 @@ export function useGmailIntegration(
  setTimeout(() => setGmailStatusMsg(''), 5000);
  } catch (err: any) {
  console.error('Error during Gmail sync:', err);
- setGmailStatusMsg('Error al sincronizar con Gmail: ' + (err.message || String(err)));
+ setGmailStatusMsg('Error al sincronizar con Gmail:'  + (err.message || String(err)));
  } finally {
  setIsSyncingGmail(false);
  }

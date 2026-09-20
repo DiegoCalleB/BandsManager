@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo } from' react';
 
 export interface OndaBar {
  label: string;
@@ -35,7 +35,7 @@ export const Onda: React.FC<OndaProps> = ({
  height = 120,
  barWidth = 16,
  gap = 8,
- className = '',
+ className =' ',
  showLabels = true,
  animated = true,
  tooltipFormatter = (v) => v.toString(),
@@ -45,16 +45,16 @@ export const Onda: React.FC<OndaProps> = ({
  }, [data]);
 
  const getTokenColor = (tokenName: string): string => {
- if (typeof document === 'undefined') return '#666666';
+ if (typeof document ===' undefined') return' #666666';
  const style = getComputedStyle(document.documentElement);
- return style.getPropertyValue(tokenName).trim() || '#666666';
+ return style.getPropertyValue(tokenName).trim() ||' #666666';
  };
 
  const barContainerStyle: React.CSSProperties = {
- display: 'flex',
+ display:' flex',
  gap: `${gap}px`,
- alignItems: 'flex-end',
- justifyContent: 'center',
+ alignItems:' flex-end',
+ justifyContent:' center',
  height: `${height}px`,
  padding: `0 ${gap}px`,
  };
@@ -67,23 +67,23 @@ export const Onda: React.FC<OndaProps> = ({
  width: `${barWidth}px`,
  height: `${barHeight}px`,
  backgroundColor: color,
- borderRadius: '999px 999px 0 0',
- cursor: 'pointer',
- transition: animated ? 'height 0.3s ease-out, opacity 0.3s ease-out' : 'none',
+ borderRadius:' 999px 999px 0 0',
+ cursor:' pointer',
+ transition: animated ?' height 0.3s ease-out, opacity 0.3s ease-out' :' none',
  opacity: 0.9,
- position: 'relative',
+ position:' relative',
  };
  };
 
  const labelStyle: React.CSSProperties = {
- fontSize: '12px',
+ fontSize:' 12px',
  color: getTokenColor('--ink-2'),
- textAlign: 'center',
- marginTop: '8px',
+ textAlign:' center',
+ marginTop:' 8px',
  maxWidth: `${barWidth}px`,
- overflow: 'hidden',
- textOverflow: 'ellipsis',
- whiteSpace: 'nowrap',
+ overflow:' hidden',
+ textOverflow:' ellipsis',
+ whiteSpace:' nowrap',
  };
 
  return (
@@ -92,7 +92,7 @@ export const Onda: React.FC<OndaProps> = ({
  {data.map((bar, index) => (
  <div
  key={`${bar.label}-${index}`}
- style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+ style={{ display:' flex', flexDirection:' column', alignItems:' center' }}
  >
  <div style={barStyle(bar)} title={`${bar.label}: ${tooltipFormatter(bar.value)}`} />
  {showLabels && <div style={labelStyle}>{bar.label}</div>}
@@ -126,34 +126,34 @@ export const OndaSeries: React.FC<OndaSeriesProps> = ({
  height = 120,
  barWidth = 12,
  gap = 4,
- className = '',
+ className =' ',
  showLabels = true,
 }) => {
  const allValues = series.flatMap(s => s.data.map(d => d.value));
  const maxValue = Math.max(...allValues, 1);
 
  const getTokenColor = (tokenName: string): string => {
- if (typeof document === 'undefined') return '#666666';
+ if (typeof document ===' undefined') return' #666666';
  const style = getComputedStyle(document.documentElement);
- return style.getPropertyValue(tokenName).trim() || '#666666';
+ return style.getPropertyValue(tokenName).trim() ||' #666666';
  };
 
  // Group bars by label (x-axis)
  const labels = series[0]?.data.map(d => d.label) || [];
 
  const barContainerStyle: React.CSSProperties = {
- display: 'flex',
+ display:' flex',
  gap: `${gap}px`,
- alignItems: 'flex-end',
- justifyContent: 'center',
+ alignItems:' flex-end',
+ justifyContent:' center',
  height: `${height}px`,
  padding: `0 ${gap}px`,
  };
 
  const barGroupStyle: React.CSSProperties = {
- display: 'flex',
+ display:' flex',
  gap: `${gap}px`,
- alignItems: 'flex-end',
+ alignItems:' flex-end',
  };
 
  const barStyle = (value: number, color?: string): React.CSSProperties => {
@@ -164,9 +164,9 @@ export const OndaSeries: React.FC<OndaSeriesProps> = ({
  width: `${barWidth}px`,
  height: `${barHeight}px`,
  backgroundColor: resolvedColor,
- borderRadius: '999px 999px 0 0',
+ borderRadius:' 999px 999px 0 0',
  opacity: 0.85,
- transition: 'height 0.3s ease-out, opacity 0.3s ease-out',
+ transition:' height 0.3s ease-out, opacity 0.3s ease-out',
  };
  };
 
@@ -188,15 +188,15 @@ export const OndaSeries: React.FC<OndaSeriesProps> = ({
  ))}
  </div>
  {showLabels && (
- <div style={{ display: 'flex', justifyContent: 'center', gap: `${gap}px`, marginTop: '12px', fontSize: '12px' }}>
+ <div style={{ display:' flex', justifyContent:' center', gap: `${gap}px`, marginTop:' 12px', fontSize:' 12px' }}>
  {series.map((s) => (
- <div key={`legend-${s.label}`} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+ <div key={`legend-${s.label}`} style={{ display:' flex', alignItems:' center', gap:' 4px' }}>
  <div
  style={{
- width: '12px',
- height: '12px',
+ width:' 12px',
+ height:' 12px',
  backgroundColor: s.color || getTokenColor('--acc'),
- borderRadius: '2px',
+ borderRadius:' 2px',
  }}
  />
  <span style={{ color: getTokenColor('--ink-2') }}>{s.label}</span>

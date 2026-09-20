@@ -184,7 +184,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
  <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] max-h-[90vh] overflow-y-auto">
  {/* Header */}
- <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
+ <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
  <FileText className="w-5 h-5" />
@@ -270,7 +270,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="space-y-3">
  <div
  onClick={() => fileInputRef.current?.click()}
- className="border-2 border-dashed border-[var(--acc)]/30 rounded-[var(--r-s)] p-8 text-center cursor-pointer hover:border-[var(--acc)]/60 transition"
+ className="border-2/30 rounded-[var(--r-s)] p-8 text-center cursor-pointer hover:border-[var(--acc)]/60 transition"
  >
  <Upload className="w-8 h-8 mx-auto mb-2 text-[var(--acc)]" />
  <p className="text-sm font-semibold text-[var(--ink)]">Arrastra un archivo aquí</p>
@@ -407,10 +407,10 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  {/* SIDE-BY-SIDE COMPARISON: original scanned document vs. what the AI extracted,
  so the user can eyeball whether the extraction actually matches the paper. */}
  {showComparison && (
- <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-[var(--ok)]/20">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2/20">
  <div className="space-y-1.5">
  <p className="text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Documento original</p>
- <div className="bg-[var(--sunken)] border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden max-h-96">
+ <div className="bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden max-h-96">
  {isImageDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl) ? (
  <img
  src={song.estructuraDocumentoUrl}
@@ -421,7 +421,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <iframe
  src={song.estructuraDocumentoUrl}
  title="Estructura original (PDF)"
- className="w-full h-96 border-0"
+ className="w-full h-96"
  />
  ) : (
  <div className="h-96 flex items-center justify-center text-xs text-[var(--ink-2)] p-4 text-center">
@@ -432,7 +432,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  </div>
  <div className="space-y-1.5">
  <p className="text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
- <div className="bg-[var(--sunken)] border-[var(--hair)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
+ <div className="bg-[var(--sunken)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
  <pre className="text-[11px] font-sans text-[var(--acc)] whitespace-pre-wrap leading-relaxed">
  {song.cifradoTexto ||'Sin acordes guardados todavía.'}
  </pre>

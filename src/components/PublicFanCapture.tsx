@@ -114,10 +114,10 @@ export const PublicFanCapture: React.FC = () => {
  <img
  src={bandInfo.logoUrl}
  alt={bandInfo.name ||"Logo"}
- className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover border-2"
+ className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover"
  />
  ) : (
- <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)] border-2 /80 flex items-center justify-center text-[var(--acc)]">
+ <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)] /80 flex items-center justify-center text-[var(--acc)]">
  <Music className="w-10 h-10" />
  </div>
  )}
@@ -204,7 +204,7 @@ export const PublicFanCapture: React.FC = () => {
  </div>
 
  {/* MANDATORY GDPR CHECKBOX */}
- <div className="pt-2 border-t /80">
+ <div className="pt-2 /80">
  <label className="flex items-start gap-2.5 cursor-pointer text-xs text-[var(--ink-2)] leading-relaxed select-none">
  <input
  type="checkbox"

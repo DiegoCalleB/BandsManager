@@ -89,7 +89,7 @@ export function AssignSongsToAlbumModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[92vh] flex flex-col ${colors.card} text-[var(--ink)]`}>
- <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
+ <div className="flex justify-between items-center pb-3">
  <div className="flex items-center gap-2">
  <Disc3 className="w-5 h-5 text-[var(--ok)]" />
  <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
@@ -162,7 +162,7 @@ export function AssignSongsToAlbumModal({
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
- <label className="px-3 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 border-[var(--hair)] flex items-center gap-1 text-xs">
+ <label className="px-3 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 flex items-center gap-1 text-xs">
  <Upload className="w-3.5 h-3.5 text-[var(--ok)]" />
  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
  </label>
@@ -184,7 +184,7 @@ export function AssignSongsToAlbumModal({
  </div>
  </div>
 
- <div className="border-t border-[var(--hair)] pt-3 flex flex-col flex-1 overflow-hidden">
+ <div className="border-t pt-3 flex flex-col flex-1 overflow-hidden">
  <div className="flex items-center justify-between text-xs font-sans text-[var(--ink-2)] mb-2">
  <span className="font-bold flex items-center gap-1.5">
  <Disc3 className="w-4 h-4 text-[var(--ok)]" />
@@ -214,10 +214,10 @@ export function AssignSongsToAlbumModal({
  onClick={() => toggleSong(song.id)}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition-all ${
  isSelected
- ?'bg-[var(--surface)]/20 border-[var(--hair)]/50 text-[var(--ink)]'
+ ?'bg-[var(--surface)]/20/50 text-[var(--ink)]'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-3 truncate pr-2">
@@ -254,7 +254,7 @@ export function AssignSongsToAlbumModal({
  </div>
  </div>
 
- <div className="pt-3 border-t border-[var(--hair)] flex justify-end gap-2 shrink-0">
+ <div className="pt-3 flex justify-end gap-2 shrink-0">
  <button
  type="button"
  onClick={onClose}

@@ -3,7 +3,7 @@ export interface ReelCard {
  title: string;
  duration: string;
  category: string;
- stage: 'draft' | 'edit' | 'ready';
+ stage:' draft' |' edit' |' ready';
  ideas: string;
 }
 
@@ -68,10 +68,10 @@ export function getStartTimeInSeconds(rangeStr?: string): number {
  * Formats seconds into MM:SS format
  */
 export function formatSecondsToTime(seconds: number): string {
- if (!seconds || seconds < 0) return '00:00';
+ if (!seconds || seconds < 0) return' 00:00';
  const mins = Math.floor(seconds / 60);
  const secs = Math.floor(seconds % 60);
- return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+ return `${mins.toString().padStart(2,' 0')}:${secs.toString().padStart(2,' 0')}`;
 }
 
 /** Fecha por defecto para programar un post: mañana, en vez de una fecha fija que se queda vieja. */
@@ -98,7 +98,7 @@ export interface ScheduleReadinessInput {
  */
 export function validateScheduleReadiness(input: ScheduleReadinessInput): string[] {
  const problemas: string[] = [];
- const copy = (input.copy || '').trim();
+ const copy = (input.copy ||' ').trim();
 
  if (!copy) {
  problemas.push('Falta el texto del copy.');
@@ -144,7 +144,7 @@ export function getCadenceWarnings(input: CadenceCheckInput): string[] {
  const maxDiasHueco = input.maxDaysGapWarning ?? 10;
 
  const conFecha = (input.posts || [])
- .map((p) => ({ ...p, ts: new Date((p.fecha || '').replace(' ', 'T')).getTime() }))
+ .map((p) => ({ ...p, ts: new Date((p.fecha ||' ').replace('' ,' T')).getTime() }))
  .filter((p) => !Number.isNaN(p.ts));
 
  const mismaRedCercana = conFecha.find(

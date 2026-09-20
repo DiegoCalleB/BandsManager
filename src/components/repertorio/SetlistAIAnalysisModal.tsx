@@ -554,8 +554,8 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  w.type ==='warning'
  ?'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
  : w.type ==='success'
- ?'bg-[var(--ok)]/10 text-[var(--ink-2)] border-[var(--ok)]/30'
- :'bg-[var(--acc)]/10 text-[var(--ink-3)] border-[var(--acc)]/30'
+ ?'bg-[var(--ok)]/10 text-[var(--ink-2)]/30'
+ :'bg-[var(--acc)]/10 text-[var(--ink-3)]/30'
  } ${isHighlighted ?'ring-2 ring-white/60' :''}`}
  style={{ cursor: hasSongs ?'pointer' :'default' }}
  onMouseEnter={() => { if (hasSongs) onHighlightSongs?.(w.songTitles!); }}
@@ -684,7 +684,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  isInvalid
  ?'bg-[var(--surface)] opacity-50'
  : isHighlighted
- ?'bg-[var(--acc)]/80/30 border-[var(--acc)]/50 ring-2 ring-purple-400/30'
+ ?'bg-[var(--acc)]/80/30/50 ring-2 ring-purple-400/30'
  :'bg-[var(--surface)]/80 hover:'
  }`}
  onMouseEnter={() => {

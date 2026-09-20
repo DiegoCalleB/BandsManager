@@ -112,7 +112,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  className={`relative p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between gap-3 ${
  isSelected
  ?'bg-gradient-to-br from-amber-0/20 via-amber-950/20 to-[var(--surface)]/90 ring-2 ring-amber-0/30 scale-[1.01]'
- :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--hair)]'
+ :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-[var(--hair)]'
  }`}
  >
  {/* Top Row: Flag & Name */}
@@ -148,7 +148,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  </div>
 
  {/* Bottom Row: Details & AI Note */}
- <div className="space-y-1.5 pt-2 border-t border-[var(--hair)]">
+ <div className="space-y-1.5 pt-2">
  <p className="text-xs text-[var(--ink-2)] leading-snug">
  {details.description}
  </p>
@@ -164,7 +164,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
 
  {/* Impact Breakdown Cards */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
- <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] flex items-start gap-2.5">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-start gap-2.5">
  <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] shrink-0">
  <Languages className="w-4 h-4" />
  </div>
@@ -176,7 +176,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  </div>
  </div>
 
- <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] flex items-start gap-2.5">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-start gap-2.5">
  <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] shrink-0">
  <MessageSquareText className="w-4 h-4" />
  </div>
@@ -188,7 +188,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  </div>
  </div>
 
- <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] flex items-start gap-2.5">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-start gap-2.5">
  <div className="p-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ok)] shrink-0">
  <FileText className="w-4 h-4" />
  </div>

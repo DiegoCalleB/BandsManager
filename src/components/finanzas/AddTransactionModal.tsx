@@ -89,8 +89,8 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setTipo('ingreso')}
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
  tipo ==='ingreso'
- ?'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]'
- :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent hover:bg-[var(--surface)]'
+ ?'bg-[var(--ok)]/20 text-[var(--ok)]'
+ :'bg-[var(--surface)]/40 text-[var(--ink-2)] hover:bg-[var(--surface)]'
  }`}
  >
  Ingreso (+€)
@@ -100,8 +100,8 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setTipo('gasto')}
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
  tipo ==='gasto'
- ?'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--alert)]'
- :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent hover:bg-[var(--surface)]'
+ ?'bg-[var(--alert)]/20 text-[var(--alert)]'
+ :'bg-[var(--surface)]/40 text-[var(--ink-2)] hover:bg-[var(--surface)]'
  }`}
  >
  Gasto (-€)
@@ -182,8 +182,8 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setEstado('pagado')}
  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
  estado ==='pagado'
- ?'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]'
- :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent'
+ ?'bg-[var(--ok)]/20 text-[var(--ok)]'
+ :'bg-[var(--surface)]/40 text-[var(--ink-2)]'
  }`}
  >
  Pagado / Completado
@@ -194,7 +194,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
  estado ==='pendiente'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]'
- :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent'
+ :'bg-[var(--surface)]/40 text-[var(--ink-2)]'
  }`}
  >
  Pendiente / Cobro futuro

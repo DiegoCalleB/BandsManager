@@ -91,13 +91,13 @@ export function ShareModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--scrim)]/75 p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
  <div 
- className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] overflow-hidden flex flex-col my-auto max-h-[92vh] text-[var(--ink)]"
+ className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] overflow-hidden flex flex-col my-auto max-h-[92vh] text-[var(--ink)]"
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}
- <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--hair)] bg-[var(--surface)]/[0.02]">
+ <div className="flex items-center justify-between px-5 py-4 bg-[var(--surface)]/[0.02]">
  <div className="flex items-center gap-3">
- <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-center">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-center">
  {getItemIcon()}
  </div>
  <div>
@@ -144,7 +144,7 @@ export function ShareModal({
  className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-all active:scale-95 ${
  copied 
  ?'bg-[var(--accent-alt)] text-[var(--ink)]' 
- :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] border-[var(--hair)]'
+ :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]'
  }`}
  >
  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -161,7 +161,7 @@ export function ShareModal({
  </div>
 
  {/* Optional Phone Number input for WhatsApp direct */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/[0.03] border-[var(--hair)] space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/[0.03] space-y-1.5">
  <label className="text-xs font-medium text-[var(--ink-2)] flex items-center justify-between">
  <span className="flex items-center gap-1.5">
  <Phone className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -176,7 +176,7 @@ export function ShareModal({
  value={phone}
  onChange={(e) => setPhone(e.target.value)}
  placeholder="Ej: +34612345678 o 612345678"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)] transition-colors"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)] transition-colors"
  />
  </div>
 
@@ -200,10 +200,10 @@ export function ShareModal({
  value={text}
  onChange={(e) => setText(e.target.value)}
  rows={10}
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-xs font-sans text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] leading-relaxed custom-scrollbar"
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--bg)] text-xs font-sans text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] leading-relaxed custom-scrollbar"
  />
  ) : (
- <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)]/90 border-[var(--hair)] text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)]/90 text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">
  {text}
  </div>
  )}
@@ -212,7 +212,7 @@ export function ShareModal({
  </div>
 
  {/* Footer */}
- <div className="p-4 border-t border-[var(--hair)] bg-[var(--surface)]/[0.02] flex items-center justify-between">
+ <div className="p-4 bg-[var(--surface)]/[0.02] flex items-center justify-between">
  <span className="text-[11px] text-[var(--ink-2)] flex items-center gap-1">
  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  Listos para WhatsApp, Telegram, Signal o Email

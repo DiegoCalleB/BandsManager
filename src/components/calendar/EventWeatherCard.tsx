@@ -81,11 +81,11 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  case'cloud':
  return'from-slate-600/35 via-slate-800/25 to-transparent /40';
  case'rain':
- return'from-sky-500/30 via-blue-600/20 to-transparent border-[var(--acc)]/50';
+ return'from-sky-500/30 via-blue-600/20 to-transparent/50';
  case'lightning':
  return'from-yellow-500/35 via-purple-900/35 to-transparent /60';
  case'snow':
- return'from-cyan-500/30 via-blue-900/25 to-transparent border-[var(--acc)]/50';
+ return'from-cyan-500/30 via-blue-900/25 to-transparent/50';
  case'fog':
  return'from-slate-500/25 via-zinc-700/25 to-transparent /35';
  default:
@@ -166,17 +166,17 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  isStitchLight 
  ? hasAlerts
  ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-50 to-amber-50 border-[var(--alert)] text-[var(--ink)]'
+ ?'bg-gradient-to-br from-rose-50 to-amber-50 text-[var(--ink)]'
  :'bg-gradient-to-br from-amber-50 to-sky-50 text-[var(--ink)]'
  :'bg-gradient-to-br from-amber-50/70 to-sky-50/70 text-[var(--ink)]' 
  : hasAlerts
  ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90 border-[var(--alert)]/40 text-[var(--ink-2)]'
+ ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90/40 text-[var(--ink-2)]'
  :'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-stone-900/90 /40 text-[var(--ink-2)]'
  :'bg-gradient-to-br from-stone-900/80 to-[var(--surface)]/80 /25 text-[var(--ink-2)]'
  }`}>
  {/* Barra superior del widget del tiempo */}
- <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b /15">
+ <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 /15">
  <div className="flex items-center gap-2">
  <span className={`p-1 rounded-md ${
  hasAlerts 
@@ -245,7 +245,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  type="button"
  onClick={() => setIsExpanded(false)}
  title="Minimizar widget del tiempo"
- className="px-1.5 py-0.5 text-[var(--ink-2)] hover:text-[var(--acc)]/70 text-[10px] font-sans flex items-center gap-0.5 transition-colors cursor-pointer border-l /20 ml-0.5"
+ className="px-1.5 py-0.5 text-[var(--ink-2)] hover:text-[var(--acc)]/70 text-[10px] font-sans flex items-center gap-0.5 transition-colors cursor-pointer /20 ml-0.5"
  >
  <span>Minimizar</span>
  <ChevronUp className="w-3 h-3" />
@@ -313,8 +313,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  whileHover={{ scale: 1.05 }}
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.rainProbability || 0) >= 40 
- ?'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--ink-3)]' 
- :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]'
+ ?'bg-[var(--acc)]/20/50 text-[var(--ink-3)]' 
+ :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-1 text-[10px] font-sans">
@@ -340,7 +340,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.windGusts || 0) >= 40 
  ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70' 
- :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-1 text-[10px] font-sans">
@@ -386,15 +386,15 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  animate={{ opacity: 1, y: 0 }}
  className={`rounded-[var(--r-m)] p-3 transition-all duration-200 ${
  isDanger
- ? 'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-[var(--alert)]/40'
- : 'bg-[var(--acc-soft)] /40 text-[var(--acc)]'
+ ?' bg-[var(--alert-soft)]/50 text-[var(--alert)]/40'
+ :' bg-[var(--acc-soft)] /40 text-[var(--acc)]'
  }`}
  >
  <div className="flex items-start justify-between gap-2">
  <div className="flex items-start gap-2.5">
  <div className={`p-1.5 rounded-[var(--r-s)] shrink-0 mt-0.5 ${
  isDanger 
- ?'bg-[var(--alert)]/20 border-[var(--alert)]/40' 
+ ?'bg-[var(--alert)]/20/40' 
  :'bg-[var(--acc)]/20 /40'
  }`}>
  <AnimatedWeatherIcon
@@ -442,7 +442,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  animate={{ opacity: 1, height:'auto' }}
  exit={{ opacity: 0, height: 0 }}
  transition={{ duration: 0.2 }}
- className={`mt-2.5 pt-2.5 border-t space-y-1.5 text-[10px] font-sans overflow-hidden ${
+ className={`mt-2.5 pt-2.5 space-y-1.5 text-[10px] font-sans overflow-hidden ${
  isDanger ?'border-[var(--alert)]/20 text-[var(--ink)]/90' :'/20 text-[var(--ink)]/90'
  }`}
  >

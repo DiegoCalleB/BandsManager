@@ -581,7 +581,7 @@ export function EnergyChart({
  </p>
  )}
  {d.transitionFromPrev && (
- <div className={`mt-1.5 pt-1 border-t ${
+ <div className={`mt-1.5 pt-1 ${
  d.transitionFromPrev.status ==='ok' ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-1 font-bold">
@@ -602,7 +602,7 @@ export function EnergyChart({
  </div>
  )}
  {d.idx > 0 && onPreviewTransition && (
- <p className="text-[var(--acc)] font-semibold mt-1 pt-1 border-t flex items-center gap-1 cursor-pointer hover:underline">
+ <p className="text-[var(--acc)] font-semibold mt-1 pt-1 flex items-center gap-1 cursor-pointer hover:underline">
  🎧 Probar unión con #{d.idx}
  </p>
  )}

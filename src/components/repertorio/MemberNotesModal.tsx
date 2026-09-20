@@ -166,7 +166,7 @@ export function MemberNotesModal({
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]'
  }`}>
  {/* Header */}
- <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)] shrink-0">
+ <div className="flex justify-between items-center pb-3 shrink-0">
  <div className="flex items-center gap-2.5">
  <div className={`p-2 rounded-[var(--r-m)] ${'bg-[var(--surface)]/10 text-[var(--ok)]'}`}>
  <Users className="w-5 h-5" />
@@ -209,7 +209,7 @@ export function MemberNotesModal({
 
  {/* Informational Tip */}
  <div className={`p-3 rounded-[var(--r-m)] my-3 text-xs flex items-start gap-2.5 ${
- 'bg-[var(--ok-soft)] text-[var(--ink-2)]'
+' bg-[var(--ok-soft)] text-[var(--ink-2)]'
  }`}>
  <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
  <div>
@@ -261,7 +261,7 @@ export function MemberNotesModal({
  {/* Add Custom Member Form */}
  {showAddCustomMember && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-wrap items-center gap-2 animate-in fade-in duration-150 ${
- isStitchLight ?'bg-[var(--tentative)]/5/70 border-[var(--acc)]' :'bg-[var(--surface)] border-[var(--hair)]/40'
+ isStitchLight ?'bg-[var(--tentative)]/5/70' :'bg-[var(--surface)]/40'
  }`}>
  <input
  type="text"
@@ -311,7 +311,7 @@ export function MemberNotesModal({
  key={member.id || member.name}
  className={`p-3.5 rounded-[var(--r-m)] transition-all ${
  hasNote
- ? 'bg-[var(--surface)]/90 border-[var(--ok)]/30'
+ ?' bg-[var(--surface)]/90/30'
  : isStitchLight
  ?'bg-[var(--bg)]/70'
  :'bg-[var(--surface)]/50'
@@ -353,7 +353,7 @@ export function MemberNotesModal({
  className={`text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] transition-all ${
  memberReadiness[memberKey] === level.value
  ? level.colorClass
- :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-transparent hover:border-[var(--hair)]'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  {level.icon} {level.label}
@@ -379,7 +379,7 @@ export function MemberNotesModal({
  </div>
 
  {/* Footer actions */}
- <div className="pt-3.5 mt-2 border-t border-[var(--hair)] flex justify-end items-center gap-2.5 shrink-0">
+ <div className="pt-3.5 mt-2 flex justify-end items-center gap-2.5 shrink-0">
  <button
  type="button"
  onClick={onClose}

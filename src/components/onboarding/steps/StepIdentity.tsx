@@ -50,12 +50,12 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <div className="space-y-6 animate-in fade-in duration-200">
  {/* 1. IDENTIDAD & NOMBRE DE LA BANDA */}
  <div className="space-y-4">
- <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-2">
  <div className="flex items-center gap-2">
  <Guitar className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-semibold text-[var(--ink)]">Nombre del Proyecto Musical & Ubicación</h3>
  </div>
- <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[var(--surface)]/80 border-[var(--hair)] text-[11px] text-[var(--ink-2)] font-sans">
+ <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[var(--surface)]/80 text-[11px] text-[var(--ink-2)] font-sans">
  <Globe className="w-3 h-3 text-[var(--acc)]" />
  <span>Idioma: <strong className="text-[var(--ink)]">{language ||'Español'}</strong></span>
  </div>
@@ -72,7 +72,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={localBandName}
  onChange={(e) => setLocalBandName(e.target.value)}
  placeholder="Ej. Linkin Park, Los Delirio, The Midnight Waves..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] font-medium placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] font-medium placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
  />
  </div>
 
@@ -86,7 +86,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={city}
  onChange={(e) => setCity(e.target.value)}
  placeholder="Ej. Madrid, Barcelona, Valencia, Los Ángeles..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
  />
  </div>
 
@@ -100,7 +100,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={genre}
  onChange={(e) => setGenre(e.target.value)}
  placeholder="Ej. Nu-Metal, Rock Alternativo, Indie Pop, Ska-Rock..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm mb-2"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm mb-2"
  />
  <div className="flex flex-wrap gap-1.5">
  {commonGenres.slice(0, 8).map((g) => (
@@ -111,7 +111,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className={`text-[11px] px-2.5 py-1 rounded-[var(--r-s)] transition-colors cursor-pointer ${
  genre.toLowerCase().includes(g.toLowerCase())
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 font-semibold'
- :'bg-[var(--sunken)]/60 text-[var(--ink-2)] border-[var(--hair)] hover:border-[var(--hair)]'
+ :'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  {g}
@@ -124,7 +124,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
 
  {/* 3. ELECCIÓN DEL ESTILO DE LA FUENTE PARA EL NOMBRE DE LA BANDA */}
  <div className="space-y-3 pt-2">
- <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-2">
  <div className="flex items-center gap-2">
  <Type className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-semibold text-[var(--ink)]">3. Estilo de Tipografía para el Nombre de la Banda</h3>
@@ -150,7 +150,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className={`p-3.5 rounded-[var(--r-m)] text-left transition-all relative overflow-hidden group cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/10 /60 ring-1 ring-amber-0/30'
- :'bg-[var(--bg)]/90 border-[var(--hair)] hover:/30 hover:bg-[var(--bg)]'
+ :'bg-[var(--bg)]/90 hover:/30 hover:bg-[var(--bg)]'
  }`}
  >
  <div className="flex items-center justify-between gap-2 mb-2">
@@ -158,7 +158,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className={`text-[10px] font-sans font-bold px-2 py-0.5 rounded-full ${
  isSelected
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
- :'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
  {f.badge}
@@ -227,14 +227,14 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  </div>
 
  {/* 4. SUBIDA DE LOGOTIPO OFICIAL O AVATAR */}
- <div className="pt-2 border-t border-[var(--hair)] space-y-2">
+ <div className="pt-2 space-y-2">
  <div className="flex items-center gap-2">
  <Camera className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-semibold text-[var(--ink)]">4. Logotipo Oficial o Imagen de Perfil</h3>
  </div>
 
  <div className="flex items-center gap-4">
- <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] flex items-center justify-center overflow-hidden flex-shrink-0 relative group">
+ <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--bg)] flex items-center justify-center overflow-hidden flex-shrink-0 relative group">
  {logoUrl ? (
  <img src={logoUrl} alt="Logo de la banda" className="w-full h-full object-cover" />
  ) : (
@@ -271,7 +271,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={logoUrl}
  onChange={(e) => setLogoUrl(e.target.value)}
  placeholder="O pega aquí una URL directa (https://...)"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)]/60 border-[var(--hair)] text-[var(--ink-2)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)]/60 text-[var(--ink-2)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>

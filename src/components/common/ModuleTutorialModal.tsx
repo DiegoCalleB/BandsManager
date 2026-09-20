@@ -232,15 +232,15 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  // Color accents based on module
  const accentStyles = {
  purple: {
- badgeBg:'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border-[var(--acc)]/30',
- iconBox:'bg-[var(--tentative)]/20 text-[var(--acc)] border-[var(--acc)]/30',
+ badgeBg:'bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30',
+ iconBox:'bg-[var(--tentative)]/20 text-[var(--acc)]/30',
  activeDot:'bg-[var(--acc)] w-7',
  primaryBtn:'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]',
  hookBorder:'border-[var(--acc)]/25 bg-[var(--tentative)]/10 text-[var(--ink)]',
  highlightText:'text-[var(--acc)]',
  targetCard:'border-[var(--acc)]/40 bg-[var(--tentative)]/5',
- targetBadge:'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--acc)]/30',
- targetBtn:'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80 border-[var(--acc)]/40'
+ targetBadge:'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/30',
+ targetBtn:'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80/40'
  },
  amber: {
  badgeBg:'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30',
@@ -254,37 +254,37 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  targetBtn:'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 /40'
  },
  blue: {
- badgeBg:'bg-[var(--acc)]/15 text-[var(--ink-3)] border-[var(--acc)]/30',
- iconBox:'bg-[var(--acc)]/20 text-[var(--ink-2)] border-[var(--acc)]/30',
+ badgeBg:'bg-[var(--acc)]/15 text-[var(--ink-3)]/30',
+ iconBox:'bg-[var(--acc)]/20 text-[var(--ink-2)]/30',
  activeDot:'bg-[var(--tentative)] w-7',
  primaryBtn:'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold',
  hookBorder:'border-[var(--acc)]/25 bg-[var(--acc)]/10 text-[var(--tentative)]/40',
  highlightText:'text-[var(--ink-2)]',
  targetCard:'border-[var(--acc)]/40 bg-[var(--acc)]/5',
- targetBadge:'bg-[var(--acc)]/20 text-[var(--ink-3)] border-[var(--acc)]/30',
- targetBtn:'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-3)] border-[var(--acc)]/40'
+ targetBadge:'bg-[var(--acc)]/20 text-[var(--ink-3)]/30',
+ targetBtn:'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-3)]/40'
  },
  emerald: {
- badgeBg:'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30',
- iconBox:'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/30',
+ badgeBg:'bg-[var(--ok)]/15 text-[var(--ink-2)]/30',
+ iconBox:'bg-[var(--ok)]/20 text-[var(--ok)]/30',
  activeDot:'bg-[var(--ok)] w-7',
  primaryBtn:'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black',
  hookBorder:'border-[var(--ok)]/25 bg-[var(--ok)]/10 text-[var(--ok)]/40',
  highlightText:'text-[var(--ok)]',
  targetCard:'border-[var(--ok)]/40 bg-[var(--ok)]/5',
- targetBadge:'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/30',
- targetBtn:'bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] border-[var(--ok)]/40'
+ targetBadge:'bg-[var(--ok)]/20 text-[var(--ink-2)]/30',
+ targetBtn:'bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)]/40'
  },
  rose: {
- badgeBg:'bg-[var(--alert)]/15 text-[var(--ink-2)] border-[var(--alert)]/30',
- iconBox:'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--alert)]/30',
+ badgeBg:'bg-[var(--alert)]/15 text-[var(--ink-2)]/30',
+ iconBox:'bg-[var(--alert)]/20 text-[var(--alert)]/30',
  activeDot:'bg-[var(--alert)] w-7',
  primaryBtn:'bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold',
  hookBorder:'border-[var(--alert)]/25 bg-[var(--alert)]/10 text-[var(--alert)]/40',
  highlightText:'text-[var(--alert)]',
  targetCard:'border-[var(--alert)]/40 bg-[var(--alert)]/5',
- targetBadge:'bg-[var(--alert)]/20 text-[var(--ink-2)] border-[var(--alert)]/30',
- targetBtn:'bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] border-[var(--alert)]/40'
+ targetBadge:'bg-[var(--alert)]/20 text-[var(--ink-2)]/30',
+ targetBtn:'bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]/40'
  }
  }[tutorialConfig.accent];
 
@@ -299,7 +299,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  {targetRect && effectiveFloatingMode && (
  <div className="fixed inset-0 z-[9999] pointer-events-none">
  <div
- className="absolute border-2 sm:border-3 rounded-[var(--r-m)] transition-all duration-300 pointer-events-none"
+ className="absolute sm:border-3 rounded-[var(--r-m)] transition-all duration-300 pointer-events-none"
  style={{
  top: Math.max(0, targetRect.top - 4),
  left: Math.max(0, targetRect.left - 4),
@@ -345,12 +345,12 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  transition={{ type:'spring', stiffness: 350, damping: 30 }}
  className={
  effectiveFloatingMode
- ?"pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95 border-2 /50 rounded-[var(--r-l)] shadow-black/95 overflow-hidden flex flex-col"
- :"relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] border-0 md:border md:border-[var(--hair)]/90 rounded-none md:rounded-3xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
+ ?"pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95 /50 rounded-[var(--r-l)] shadow-black/95 overflow-hidden flex flex-col"
+ :"relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] md:border md:border-[var(--hair)]/90 rounded-none md:rounded-3xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
  }
  >
  {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}
- <div className="p-3.5 sm:p-4 border-b border-[var(--hair)]/70 flex items-center justify-between bg-[var(--surface)]/80 shrink-0">
+ <div className="p-3.5 sm:p-4/70 flex items-center justify-between bg-[var(--surface)]/80 shrink-0">
  <div className="flex items-center gap-2">
  <span className={`px-2 py-0.5 rounded-full text-[10px] font-sans font-bold tracking-wider ${accentStyles.badgeBg}`}>
  {tutorialConfig.badge}
@@ -491,7 +491,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  </div>
 
  {/* Nombre del elemento simulando botón o control */}
- <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--bg)]/90 border-[var(--hair)] text-xs">
+ <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--bg)]/90 text-xs">
  <span className="text-[var(--acc)] font-sans font-black text-xs shrink-0">
  {currentStep.uiTarget.type ==='button' ?'▶' :'▪'}
  </span>
@@ -543,7 +543,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  </div>
 
  {/* BOTTOM ACTIONS BAR */}
- <div className="p-3.5 sm:p-4 border-t border-[var(--hair)]/80 bg-[var(--bg)]/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
+ <div className="p-3.5 sm:p-4/80 bg-[var(--bg)]/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
  {/* Don't show again toggle */}
  <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)]/80">
  <input
@@ -551,7 +551,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  type="checkbox"
  checked={dontShowAgain}
  onChange={(e) => setDontShowAgain(e.target.checked)}
- className="rounded border-[var(--hair)] bg-[var(--surface)]/80 text-[var(--acc)] focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
+ className="rounded bg-[var(--surface)]/80 text-[var(--acc)] focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
  />
  <span className="truncate">No volver a abrir automáticamente</span>
  </label>

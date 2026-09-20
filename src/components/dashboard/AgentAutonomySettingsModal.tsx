@@ -552,7 +552,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }`}>
  
  {/* Modal Header */}
- <div className={`p-4 sm:p-5 border-b flex items-center justify-between shrink-0 ${
+ <div className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center gap-3">
@@ -572,7 +572,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <ShieldCheck className="w-3 h-3" /> Mánager / Admin
  </span>
  ) : (
- <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--ink-3)]/60/50 text-[var(--ink-2)] border-[var(--hair)]600 flex items-center gap-1 font-bold">
+ <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--ink-3)]/60/50 text-[var(--ink-2)]600 flex items-center gap-1 font-bold">
  <Lock className="w-3 h-3" /> Modo Lectura (Músico)
  </span>
  )}
@@ -592,7 +592,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* Tab Navigation */}
- <div className={`flex border-b px-4 sm:px-5 gap-2 shrink-0 overflow-x-auto ${
+ <div className={`flex px-4 sm:px-5 gap-2 shrink-0 overflow-x-auto ${
  isStitchLight ?'bg-[var(--sunken)]/60' :'bg-[var(--surface)]/60'
  }`}>
  <button
@@ -684,7 +684,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Read-Only Banner for Non-Admins */}
  {!isAdmin && (
- <div className="p-3 bg-[var(--surface)] border-b text-[var(--acc)]/70 text-xs flex items-center gap-2 px-5">
+ <div className="p-3 bg-[var(--surface)] text-[var(--acc)]/70 text-xs flex items-center gap-2 px-5">
  <Lock className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span>
  Estás en modo <strong>Solo Lectura</strong>. Solo los miembros con rol de Administrador o Mánager pueden modificar los parámetros de los agentes.
@@ -795,7 +795,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </p>
  </div>
  </div>
- <div className="text-[10px] font-sans font-semibold text-[var(--acc)]/90 pt-2 border-t /80">
+ <div className="text-[10px] font-sans font-semibold text-[var(--acc)]/90 pt-2 /80">
  Ideal para empezar con la app.
  </div>
  </button>
@@ -827,7 +827,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </p>
  </div>
  </div>
- <div className="text-[10px] font-sans font-semibold text-[var(--ink-2)]/90 pt-2 border-t /80">
+ <div className="text-[10px] font-sans font-semibold text-[var(--ink-2)]/90 pt-2 /80">
  Agiliza respuestas sin bloquear.
  </div>
  </button>
@@ -859,7 +859,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </p>
  </div>
  </div>
- <div className="text-[10px] font-sans font-semibold text-[var(--ok)]/90 pt-2 border-t /80">
+ <div className="text-[10px] font-sans font-semibold text-[var(--ok)]/90 pt-2 /80">
  Máxima velocidad de prospección.
  </div>
  </button>
@@ -981,7 +981,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  ))}
  </div>
 
- <div className="pt-3 border-t space-y-2">
+ <div className="pt-3 space-y-2">
  <h5 className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
  <Euro className="w-3.5 h-3.5" /> Caché de Inicio de Negociación (opcional)
  </h5>
@@ -1025,7 +1025,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  </div>
 
- <div className="pt-2 border-t flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+ <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
  <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)] font-sans">
  <input
  type="checkbox"
@@ -1302,7 +1302,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* Días de la semana Selector (Enviador) */}
- <div className="space-y-2 pt-1 border-t border-[var(--surface)]">
+ <div className="space-y-2 pt-1">
  <div className="flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
  <span className="font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
  <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" /> Días de la Semana Habilitados:
@@ -1379,7 +1379,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* Horas Enviador Grid */}
- <div className="space-y-2 pt-2 border-t border-[var(--surface)]">
+ <div className="space-y-2 pt-2">
  <div className="flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
  <span className="font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
  <Clock className="w-3.5 h-3.5 text-[var(--acc)]" /> Horas del Día Habilitadas:
@@ -1759,7 +1759,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'cursor-default' :'cursor-pointer'
  } ${
  strategy.tone === toneOption
- ?'bg-[var(--tentative)]/20 border-[var(--acc)] text-[var(--tentative)]/60'
+ ?'bg-[var(--tentative)]/20 text-[var(--tentative)]/60'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1854,7 +1854,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setAuditAgentFilter(f.id)}
  className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-bold ${
  auditAgentFilter === f.id
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/50'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]/50'
  :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -1921,7 +1921,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {log.mensaje}
  </p>
 
- <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t /60 text-[10px] font-sans text-[var(--ink-2)]">
+ <div className="flex flex-wrap items-center justify-between gap-2 pt-1 /60 text-[10px] font-sans text-[var(--ink-2)]">
  <div className="flex items-center gap-1.5">
  <UserCheck className="w-3 h-3 text-[var(--ink-2)]" />
  <span>Disparado por: <strong className="text-[var(--ink-2)]">{log.usuario_email || log.usuario_id ||'Sistema'}</strong> ({log.disparado_por_tipo})</span>
@@ -1935,7 +1935,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Detalle de leads afectados si existen */}
  {Array.isArray(log.leads_afectados) && log.leads_afectados.length > 0 && (
- <div className="mt-2 pt-2 border-t /40 space-y-1.5">
+ <div className="mt-2 pt-2 /40 space-y-1.5">
  <span className="text-[10px] font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center justify-between">
  <span>Salas / Leads Procesados ({log.leads_afectados.length}):</span>
  </span>
@@ -1972,7 +1972,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* Modal Footer */}
- <div className={`p-4 border-t flex flex-wrap items-center justify-between gap-3 shrink-0 ${
+ <div className={`p-4 flex flex-wrap items-center justify-between gap-3 shrink-0 ${
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center gap-2 text-xs font-sans text-[var(--ink-2)]">

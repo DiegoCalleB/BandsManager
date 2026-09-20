@@ -59,7 +59,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
  <p className="text-[11px] text-[var(--ink-2)] leading-tight">
  Este contacto ha sido verificado mediante interacción y conversación real lograda por los agentes de IA de Booking.
  </p>
- <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-bg-[var(--surface)]/95" />
+ <div className="absolute top-full left-1/2 -translate-x-1/2 border-t-bg-[var(--surface)]/95" />
  </div>
  )}
  </div>

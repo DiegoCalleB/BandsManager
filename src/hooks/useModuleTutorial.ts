@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { ModuleTutorialId } from '../types/tutorial';
-import { isTutorialSeen, markTutorialSeen, isOnboardingCompleted, TUTORIAL_STORAGE_PREFIX } from '../utils/userPreferences';
+import { useState, useEffect, useCallback } from' react';
+import { ModuleTutorialId } from' ../types/tutorial';
+import { isTutorialSeen, markTutorialSeen, isOnboardingCompleted, TUTORIAL_STORAGE_PREFIX } from' ../utils/userPreferences';
 
 export function useModuleTutorial(moduleId: ModuleTutorialId, autoOpenFirstTime = true) {
  const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +39,7 @@ export function useModuleTutorial(moduleId: ModuleTutorialId, autoOpenFirstTime 
  window.addEventListener('bandmanager_onboarding_finished', handleOnboardingFinished);
 
  return () => {
- if (typeof cleanup === 'function') cleanup();
+ if (typeof cleanup ===' function') cleanup();
  window.removeEventListener('bandmanager_onboarding_finished', handleOnboardingFinished);
  };
  }, [moduleId, autoOpenFirstTime]);

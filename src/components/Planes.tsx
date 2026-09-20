@@ -439,7 +439,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className="w-full max-w-7xl mx-auto space-y-8 pb-16 font-sans">
  {/* Pending Payment Alert */}
  {currentUser?.estado_suscripcion ==='pago_pendiente' && (
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--alert)]/15 border-2 border-[var(--alert)]/50 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--alert)]/15/50 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
  <div className="flex items-start sm:items-center gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--alert)]/20 text-[var(--alert)] shrink-0">
  <AlertTriangle className="w-6 h-6" />
@@ -467,7 +467,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
  {/* Scheduled Downgrade Notice Banner */}
  {currentUser?.plan_pendiente && (
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/15 border-2 /40 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/15 /40 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
  <div className="flex items-start sm:items-center gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0">
  <Calendar className="w-6 h-6" />
@@ -499,7 +499,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  )}
 
  {/* Stripe Customer Portal Floating / Top Bar */}
- <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)]">
+ <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)]">
  <div className="flex items-center gap-3">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/60/10 flex items-center justify-center text-[var(--acc)] shrink-0">
  <ShieldCheck className="w-5 h-5" />
@@ -608,7 +608,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
  {/* Toggle Mensual / Anual con badge"-20% · 2 meses gratis" */}
  <div className="pt-4 flex flex-col sm:flex-row items-center gap-3">
- <div className="inline-flex p-1.5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)]">
+ <div className="inline-flex p-1.5 rounded-[var(--r-l)] bg-[var(--surface)]">
  <button
  type="button"
  onClick={() => setBillingPeriod('monthly')}
@@ -652,13 +652,13 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  const getBadgeStyle = (type: PlanCardData['badgeType']) => {
  switch (type) {
  case'blue':
- return'bg-[var(--acc)]/15 text-[var(--ink-3)] border-[var(--acc)]/30';
+ return'bg-[var(--acc)]/15 text-[var(--ink-3)]/30';
  case'silver':
  return'bg-[var(--sunken)]/15 text-[var(--ink-2)] /30';
  case'gold':
  return'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50';
  case'emerald':
- return'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/40';
+ return'bg-[var(--ok)]/20 text-[var(--ink-2)]/40';
  }
  };
 
@@ -680,8 +680,8 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  key={plan.id}
  className={`relative flex flex-col justify-between rounded-3xl p-6 transition-all duration-300 ${
  plan.isPopular
- ?'bg-gradient-to-b from-[var(--surface)] via-[var(--surface)] to-[var(--sunken)] border-2 /80 lg:-translate-y-2.5 z-10'
- :'bg-[var(--surface)] border-[var(--hair)] hover:'
+ ?'bg-gradient-to-b from-[var(--surface)] via-[var(--surface)] to-[var(--sunken)] /80 lg:-translate-y-2.5 z-10'
+ :'bg-[var(--surface)] hover:'
  }`}
  >
  {/* Popular Floating Badge */}
@@ -710,7 +710,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </p>
 
  {/* Price block */}
- <div className="pt-2 pb-1 border-y border-[var(--hair)]">
+ <div className="pt-2 pb-1">
  <div className="flex items-baseline gap-1">
  <span className="text-4xl sm:text-5xl font-black font-display tracking-tight text-[var(--ink)]">
  {priceDisplay}
@@ -755,7 +755,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  plan.isPopular
  ?'bg-gradient-to-r from-amber-0/20 via-amber-400/10 to-amber-0/15 /50'
  : plan.id ==='cabeza_de_cartel'
- ?'bg-gradient-to-r from-[var(--ok)]/20 via-emerald-400/10 to-emerald-500/15 border-[var(--ok)]/50'
+ ?'bg-gradient-to-r from-[var(--ok)]/20 via-emerald-400/10 to-emerald-500/15/50'
  :'bg-gradient-to-r from-slate-500/20 viabg-[var(--surface)] to-slate-500/10 /30'
  }`}>
  <div className="flex items-start gap-2.5">
@@ -791,7 +791,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
  </div>
  ) : (
- <div className="p-2.5 rounded-[var(--r-m)] border-dashed bg-[var(--surface)]/60 flex items-center justify-between gap-2 text-[var(--ink-2)]">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 flex items-center justify-between gap-2 text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <Gift className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span className="text-[10px] font-sans">Pack de pegatinas de bienvenida</span>
@@ -835,7 +835,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  {/* CTA Button */}
- <div id={`btn-plan-${plan.id}`} className="pt-6 mt-4 border-t border-[var(--hair)]">
+ <div id={`btn-plan-${plan.id}`} className="pt-6 mt-4">
  {plan.id === currentPlan ? (
  <div className="space-y-2">
  <div className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/60/15 text-[var(--acc)]/70 font-bold text-xs font-sans text-center flex items-center justify-center gap-1.5">
@@ -892,7 +892,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
  {/* 4. Complete Comparison Table */}
  <div className="pt-8 space-y-6">
- <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2 border-b border-[var(--hair)]">
+ <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2">
  <div className="text-center sm:text-left">
  <h2 className="text-2xl sm:text-3xl font-black font-display tracking-wider text-[var(--ink)]">
  Tabla Comparativa de Módulos
@@ -921,9 +921,9 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  {/* Table Container */}
- <div className="rounded-3xl border-[var(--hair)] bg-[var(--surface)] overflow-hidden">
+ <div className="rounded-3xl bg-[var(--surface)] overflow-hidden">
  {/* Header Row on Desktop */}
- <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[var(--surface)] border-b border-[var(--hair)] text-xs font-sans font-bold text-[var(--ink-2)]">
+ <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[var(--surface)] text-xs font-sans font-bold text-[var(--ink-2)]">
  <div className="col-span-4">Módulo / Funcionalidad</div>
  <div className="col-span-2 text-center text-[var(--ink-2)]">Ensayo (0€)</div>
  <div className="col-span-2 text-center text-[var(--ink-2)]">Local (12€/m)</div>
@@ -1042,7 +1042,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  {/* 5. Transparencia, Upgrades/Downgrades y Degradación No Destructiva */}
- <div className="rounded-3xl p-6 sm:p-8 bg-[var(--surface)] border-[var(--hair)] space-y-6">
+ <div className="rounded-3xl p-6 sm:p-8 bg-[var(--surface)] space-y-6">
  <div className="flex items-center gap-3">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/60/10 text-[var(--acc)]">
  <ShieldCheck className="w-6 h-6" />

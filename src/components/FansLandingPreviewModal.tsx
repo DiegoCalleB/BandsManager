@@ -56,7 +56,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  className="fixed inset-0 z-50 bg-[var(--scrim)]/95 flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
  >
  {/* BARRA SUPERIOR PRINCIPAL (DESKTOP & MOBILE) */}
- <header className="w-full bg-[var(--surface)] border-b border-[var(--hair)] px-3 sm:px-5 py-2.5 shrink-0 z-30 flex items-center justify-between gap-2">
+ <header className="w-full bg-[var(--surface)] px-3 sm:px-5 py-2.5 shrink-0 z-30 flex items-center justify-between gap-2">
  {/* Lado Izquierdo: Título y Estado */}
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
@@ -206,7 +206,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </header>
 
  {/* BARRA SECUNDARIA DE CONTROLES COMPACTA PARA MÓVIL / TABLET */}
- <div className="lg:hidden w-full bg-[var(--surface)] border-b border-[var(--hair)] px-3 py-1.5 flex items-center justify-between gap-2 shrink-0 overflow-x-auto z-20">
+ <div className="lg:hidden w-full bg-[var(--surface)] px-3 py-1.5 flex items-center justify-between gap-2 shrink-0 overflow-x-auto z-20">
  {/* Selector de Pantalla */}
  <div className="flex bg-[var(--surface)] rounded-[var(--r-s)] p-0.5 shrink-0">
  <button
@@ -280,14 +280,14 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  /* MOCKUP ELEGANTE DE SMARTPHONE */
  <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-all duration-200">
  {/* Chasis exterior del smartphone */}
- <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[var(--bg)] border-[var(--hair)]/80">
+ <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[var(--bg)]/80">
  {/* Dynamic Island / Altavoz */}
  <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-20 h-3 bg-black rounded-full z-30 flex items-center justify-center pointer-events-none opacity-80">
- <div className="w-2 h-2 rounded-full bg-[var(--surface)] border-[var(--hair)]" />
+ <div className="w-2 h-2 rounded-full bg-[var(--surface)]" />
  </div>
 
  {/* Pantalla del teléfono con altura adaptativa y scroll nativo */}
- <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[var(--bg)] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4 border-[var(--surface)]">
+ <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[var(--bg)] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4">
  <FansLanding
  key={`mobile-${simKey}-${selectedLanguage}-${selectedConcertId}-${previewScreen}`}
  currentBandId={currentBandId}
@@ -311,7 +311,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  /* MOCKUP DE ESCRITORIO / NAVEGADOR */
  <div className="w-full max-w-4xl bg-[var(--bg)] rounded-[var(--r-l)] overflow-hidden my-auto flex flex-col h-[calc(100dvh-160px)] max-h-[740px]">
  {/* Barra simulada de navegador */}
- <div className="bg-[var(--surface)] border-b px-4 py-2 flex items-center justify-between gap-3 text-xs font-sans shrink-0">
+ <div className="bg-[var(--surface)] px-4 py-2 flex items-center justify-between gap-3 text-xs font-sans shrink-0">
  <div className="flex items-center gap-1.5">
  <div className="w-2.5 h-2.5 rounded-full bg-[var(--alert)]/80" />
  <div className="w-2.5 h-2.5 rounded-full bg-[var(--acc)]/80" />
@@ -346,7 +346,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </main>
 
  {/* PIE DE PÁGINA INFORMATIVO Y ACCESIBLE */}
- <footer className="w-full bg-[var(--surface)] border-t border-[var(--hair)] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-sans text-[var(--ink-2)] shrink-0 flex items-center justify-between">
+ <footer className="w-full bg-[var(--surface)] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-sans text-[var(--ink-2)] shrink-0 flex items-center justify-between">
  <div className="flex items-center gap-2 truncate">
  <span className="w-2 h-2 rounded-full bg-[var(--ok)] shrink-0 inline-block" />
  <span className="truncate">{t('previewDisclaimer')}</span>

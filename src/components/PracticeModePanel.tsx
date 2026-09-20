@@ -518,7 +518,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
  {/* Header */}
- <div className={`px-5 py-4 flex items-center justify-between border-b ${isStitchLight ?' bg-[var(--bg)]' :' bg-[var(--surface)]/60'}`}>
+ <div className={`px-5 py-4 flex items-center justify-between ${isStitchLight ?' bg-[var(--bg)]' :' bg-[var(--surface)]/60'}`}>
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center shrink-0">
  <Headphones className="w-5 h-5" />
@@ -533,7 +533,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  type="button"
  onClick={onOpenStudio}
- className="px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
  title="Abrir Studio multipista completo de este tema"
  >
  <Sliders className="w-3.5 h-3.5" />
@@ -680,7 +680,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  className={`flex items-center gap-1 text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] ${
  metronomeOn
  ?'bg-[var(--acc)]/20 /40 text-[var(--acc)]/70'
- :'bg-[var(--surface)]/80 border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Timer className="w-3.5 h-3.5" /> {targetBpm} BPM
@@ -690,8 +690,8 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  title="Marcar beat de compás — ponte en el primer golpe fuerte del compás (en cualquier punto de la canción) y pulsa aquí: la claqueta recalcula toda su rejilla a partir de ese instante"
  className={`flex items-center gap-1 text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] ${
  beatAnchorSec > 0
- ?'bg-[var(--ok)]/20 border-[var(--ok)]/40 text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
+ ?'bg-[var(--ok)]/20/40 text-[var(--ink-2)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Target className="w-3.5 h-3.5" /> {beatAnchorSec > 0 ? `Compás ${formatTime(beatAnchorSec)}` :'Marcar beat de compás'}
@@ -795,7 +795,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  </div>
 
  {isExpanded && (chords || chordsErr) && (
- <div className="px-3 pb-3 space-y-2 border-t border-[var(--hair)] pt-2">
+ <div className="px-3 pb-3 space-y-2 pt-2">
  {chordsErr && <p className="text-[11px] text-[var(--alert)]">{chordsErr}</p>}
  {chords && (
  <>

@@ -42,7 +42,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
 
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
- <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
+ <div className="flex items-center gap-2 pb-2">
  <Layers className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-[var(--ink)]">Rider Técnico, Stage Plot & Requerimientos</h3>
  </div>
@@ -53,7 +53,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
 
  {/* Quick Specs Grid */}
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)]">Canales de Mesa Mínimos</label>
  <input
  type="number"
@@ -61,7 +61,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  max={64}
  value={canalesMesa}
  onChange={(e) => setCanalesMesa(Number(e.target.value))}
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -71,7 +71,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  llevaMicrofoniaPropia
  ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
- :'bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ :'bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -87,7 +87,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  llevaInEars
  ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
- :'bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ :'bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -103,7 +103,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  necesitaBacklineBateria
  ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
- :'bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ :'bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -115,7 +115,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  </div>
 
  {/* Subida de Archivo PDF de Rider / Stage Plot */}
- <div className="pt-2 border-t border-[var(--hair)] space-y-3">
+ <div className="pt-2 space-y-3">
  <label className="block text-xs font-medium text-[var(--ink-2)]">
  Documento PDF de Rider Técnico / Plano de Escenario (Stage Plot)
  </label>
@@ -159,7 +159,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  ) : (
  <div
  onClick={() => fileInputRef.current?.click()}
- className="border-2 border-dashed border-[var(--hair)] hover:/40 rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
+ className="border-2 hover:/40 rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
  >
  <Upload className="w-6 h-6 text-[var(--ink-2)] mx-auto mb-1.5" />
  <span className="text-xs font-medium text-[var(--ink-2)] block">
@@ -178,7 +178,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  </div>
 
  {/* Notas técnicas en texto */}
- <div className="pt-2 border-t border-[var(--hair)]">
+ <div className="pt-2">
  <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
  Notas de Escenario & Requerimientos Adicionales (Texto)
  </label>
@@ -187,7 +187,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  value={riderTecnicoText}
  onChange={(e) => setRiderTecnicoText(e.target.value)}
  placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus: leading-relaxed"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus: leading-relaxed"
  />
  </div>
  </div>

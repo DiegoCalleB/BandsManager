@@ -211,7 +211,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  return (
  <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
  <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto pointer-events-auto">
- <div className="sticky top-0 z-10 bg-[var(--surface)] border-b p-3 flex justify-between items-center">
+ <div className="sticky top-0 z-10 bg-[var(--surface)] p-3 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
  <ImagePlus className="w-5 h-5 text-[var(--ink-2)]" />
  <h2 className="text-base font-bold">Importar Repertorio de Foto/PDF</h2>
@@ -254,7 +254,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  )}
 
  {error && (
- <div className="bg-[var(--alert)]/80/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
+ <div className="bg-[var(--alert)]/80/20 rounded-[var(--r-s)] p-4 flex gap-3">
  <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
  <p className="text-sm text-[var(--alert)]/60">{error}</p>
  </div>

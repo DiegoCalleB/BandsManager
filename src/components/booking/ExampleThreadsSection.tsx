@@ -207,7 +207,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  )}
 
  {showForm && (
- <div className="space-y-2.5 pt-2 border-t border-[var(--acc)]/20">
+ <div className="space-y-2.5 pt-2/20">
  {editingId && (
  <div className="text-[9px] text-[var(--acc)] font-sans font-bold">Editando hilo guardado</div>
  )}

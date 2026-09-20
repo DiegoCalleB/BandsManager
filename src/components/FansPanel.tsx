@@ -570,7 +570,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
 
  {/* Tabs (metrics tab hidden for Promo) */}
- <div className="flex overflow-x-auto border-b hide-scrollbar gap-1">
+ <div className="flex overflow-x-auto hide-scrollbar gap-1">
  {!isPromo && (
  <button
  id="tab-btn-fans-metrics"
@@ -672,9 +672,9 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {evolutionaryGrowthData.length > 0 ? (
  <Onda
  data={evolutionaryGrowthData.map((d) => ({
- label: d.date || 'Sin fecha',
+ label: d.date ||' Sin fecha',
  value: d.total || 0,
- color: 'var(--acc)'
+ color:' var(--acc)'
  }))}
  height={240}
  barWidth={16}
@@ -759,7 +759,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {activeTab ==='fans' && (
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 space-y-5">
  {/* Configurable City Tabs Bar */}
- <div className="space-y-2 border-b pb-4">
+ <div className="space-y-2 pb-4">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold text-[var(--ink-2)] font-sans tracking-wider flex items-center gap-1.5">
  <MapPin className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -850,7 +850,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  type="button"
  onClick={() => setIsAddingCity(true)}
- className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] border-dashed flex items-center gap-1 transition cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] flex items-center gap-1 transition cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Añadir ciudad</span>
@@ -1007,7 +1007,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </button>
  </div>
 
- <div className="grid grid-cols-2 gap-2 text-[11px] font-sans pt-2 border-t /80">
+ <div className="grid grid-cols-2 gap-2 text-[11px] font-sans pt-2 /80">
  <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
  <span className="text-[var(--ink-2)] text-[9px] block">Ciudad</span>
  <span className="text-[var(--ink-2)] flex items-center gap-1 font-semibold">
@@ -1070,7 +1070,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {viewMode ==='table' && (
  <div className="overflow-x-auto">
  <table className="w-full text-left text-xs text-[var(--ink-2)]">
- <thead className="bg-[var(--surface)] text-[var(--acc)] font-bold border-b font-sans">
+ <thead className="bg-[var(--surface)] text-[var(--acc)] font-bold font-sans">
  <tr>
  <th className="p-3">Nombre</th>
  <th className="p-3">Correo Electrónico</th>
@@ -1150,7 +1150,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  {activeTab ==='qr' && (
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 lg:p-8 space-y-5">
- <div className="space-y-1 border-b pb-4">
+ <div className="space-y-1 pb-4">
  <h3 className="text-xl font-black text-[var(--ink)] flex items-center gap-2 font-display">
  <QrCode className="w-6 h-6 text-[var(--acc)]" /> Generador de QR
  </h3>
@@ -1181,11 +1181,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  {/* Contenido principal: el QR, grande y arriba del todo */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col items-center text-center space-y-4">
- <div id="qr-code-svg-container" className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] border-4 inline-block relative">
+ <div id="qr-code-svg-container" className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block relative">
  <QRCode value={qrConcertUrl} size={210} level="H" />
  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
  {effectiveBandLogo ? (
- <div className="w-14 h-14 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-center overflow-hidden border-2 p-0.5">
+ <div className="w-14 h-14 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-center overflow-hidden p-0.5">
  <img
  src={effectiveBandLogo}
  alt={`Logo ${effectiveBandName}`}
@@ -1193,7 +1193,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  </div>
  ) : (
- <div className="w-12 h-12 bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] flex items-center justify-center border-2">
+ <div className="w-12 h-12 bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] flex items-center justify-center">
  <Users className="w-6 h-6" />
  </div>
  )}
@@ -1511,7 +1511,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
 
  {selectedConcert && onUpdateConcert && (
- <div className="pt-2 border-t /80">
+ <div className="pt-2 /80">
  <button
  type="button"
  onClick={() => {
@@ -1576,7 +1576,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {showAddModal && (
  <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 max-h-[90vh] overflow-y-auto">
- <div className="flex items-center justify-between border-b pb-3">
+ <div className="flex items-center justify-between pb-3">
  <h3 className="text-lg font-black text-[var(--ink)] font-display tracking-widest flex items-center gap-2">
  <Users className="w-5 h-5 text-[var(--acc)]" />
  Registrar Fan / Seguidor Manual
@@ -1692,7 +1692,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  </div>
 
- <div className="pt-2 flex justify-end gap-3 border-t border-[var(--hair)]">
+ <div className="pt-2 flex justify-end gap-3">
  <button
  type="button"
  onClick={() => setShowAddModal(false)}

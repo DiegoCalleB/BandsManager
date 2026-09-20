@@ -163,10 +163,10 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain animate-fadeIn">
- <div className="w-full max-w-lg bg-[var(--bg)] border-[var(--hair)]800 rounded-3xl p-5 sm:p-6 text-[var(--ink)] space-y-5 my-auto max-h-[92vh] overflow-y-auto">
+ <div className="w-full max-w-lg bg-[var(--bg)]800 rounded-3xl p-5 sm:p-6 text-[var(--ink)] space-y-5 my-auto max-h-[92vh] overflow-y-auto">
  
  {/* Header */}
- <div className="flex justify-between items-start border-b border-[var(--hair)]800/80 pb-3">
+ <div className="flex justify-between items-start800/80 pb-3">
  <div>
  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[10px] font-black tracking-wider mb-1">
  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -198,7 +198,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="date"
  value={concertDate}
  onChange={(e) => setConcertDate(e.target.value)}
- className="w-full bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:border-[var(--hair)] focus:outline-none"
+ className="w-full bg-[var(--bg)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:border-[var(--hair)] focus:outline-none"
  />
  </div>
 
@@ -212,7 +212,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  placeholder="Ej. 600"
  value={cacheAmount}
  onChange={(e) => setCacheAmount(e.target.value)}
- className="w-full bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus: focus:outline-none"
+ className="w-full bg-[var(--bg)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus: focus:outline-none"
  />
  </div>
  </div>
@@ -234,8 +234,8 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  }}
  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-all cursor-pointer text-center ${
  targetDurationMin === mins
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ok)]'
- :'bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink-2)] hover:text-[var(--ink)]'
+ ?'bg-[var(--surface)]/20 text-[var(--ok)]'
+ :'bg-[var(--bg)]800 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {mins} min
@@ -263,11 +263,11 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
 
  {isLoadingData ? (
- <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)]800 text-center text-xs font-sans text-[var(--ink-2)]">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)]800 text-center text-xs font-sans text-[var(--ink-2)]">
  Calculando duraciones y repertorios óptimos...
  </div>
  ) : generateNewSetlist ? (
- <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 border-[var(--hair)]/40 space-y-2 animate-fadeIn">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10/40 space-y-2 animate-fadeIn">
  <div className="flex items-center gap-2 text-xs font-sans font-bold text-[var(--ok)]">
  <Zap className="w-4 h-4 text-[var(--ok)]" />
  <span>Se creará un nuevo setlist automático:</span>
@@ -276,7 +276,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </p>
  </div>
  ) : setlists.length === 0 ? (
- <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)]800 text-center space-y-2 text-xs font-sans text-[var(--ink-2)]">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)]800 text-center space-y-2 text-xs font-sans text-[var(--ink-2)]">
  <p>No tienes ningún setlist guardado aún.</p>
  <button
  type="button"
@@ -305,8 +305,8 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  isSelected
  ?'bg-[var(--acc)]/15 /80'
  : isOptimal
- ?'bg-[var(--ok)]/10 border-[var(--ok)]/40 hover:bg-[var(--ok)]/15'
- :'bg-[var(--bg)]/60 border-[var(--hair)]800 hover:border-[var(--hair)]700'
+ ?'bg-[var(--ok)]/10/40 hover:bg-[var(--ok)]/15'
+ :'bg-[var(--bg)]/60800 hover:border-[var(--hair)]700'
  }`}
  >
  <div className="space-y-0.5">

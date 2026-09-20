@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from' vitest';
 import {
  calculateFuelCost,
  calculateVehiclesFuelCost,
@@ -6,7 +6,7 @@ import {
  calculateTourSummary,
  TourStop,
  TourVehicle
-} from '../tourUtils';
+} from' ../tourUtils';
 
 describe('tourUtils', () => {
  describe('calculateFuelCost', () => {
@@ -25,14 +25,14 @@ describe('tourUtils', () => {
  it('calculates combined fuel cost for multiple vehicles', () => {
  const vehicles: TourVehicle[] = [
  {
- id: 'v1',
- nombre: 'Furgoneta Sprinter',
+ id:' v1',
+ nombre:' Furgoneta Sprinter',
  consumoL100km: 10,
  precioCarburanteEUR: 1.50
  },
  {
- id: 'v2',
- nombre: 'Turismo Coche Apoyo',
+ id:' v2',
+ nombre:' Turismo Coche Apoyo',
  consumoL100km: 6,
  precioCarburanteEUR: 1.60
  }
@@ -63,7 +63,7 @@ describe('tourUtils', () => {
  it('summarizes total distances, costs, income, and profit margin', () => {
  const stops: TourStop[] = [
  {
- ciudad: 'Madrid',
+ ciudad:' Madrid',
  distanciaAnteriorKm: 350,
  gastosGasolina: 63,
  gastosAlojamiento: 120,
@@ -71,7 +71,7 @@ describe('tourUtils', () => {
  ingresoCacheEstimated: 800
  },
  {
- ciudad: 'Barcelona',
+ ciudad:' Barcelona',
  distanciaAnteriorKm: 620,
  gastosGasolina: 112,
  gastosAlojamiento: 150,

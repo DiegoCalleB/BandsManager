@@ -1292,7 +1292,7 @@ export default function ReelsCenter({
  ? (highlights[selectedHighlightIndex]?.range ||'0:30')
  :'0:30');
 
- const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
@@ -1324,7 +1324,7 @@ export default function ReelsCenter({
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncingReels
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)]'
- : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30'
+ :' bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30'
  }`}
  title="Sincronizar todas las publicaciones de redes sociales"
  >
@@ -1333,7 +1333,7 @@ export default function ReelsCenter({
  </button>
  
  <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-sans font-bold ${
- 'bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
+' bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping shrink-0" /> Auto-sync
  </span>
@@ -1371,7 +1371,7 @@ export default function ReelsCenter({
  onClick={() => setActiveTab('pipeline')}
  className={`px-5 py-2.5 font-sans text-[10px] tracking-widest transition-all duration-300 rounded-[var(--r-m)] cursor-pointer ${
  activeTab ==='pipeline'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black/10'
+ ?' bg-[var(--acc)] text-[var(--on-acc)] font-black/10'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/50'
@@ -1384,7 +1384,7 @@ export default function ReelsCenter({
  onClick={() => setActiveTab('analyzer')}
  className={`px-5 py-2.5 font-sans text-[10px] tracking-widest transition-all duration-300 rounded-[var(--r-m)] flex items-center gap-1.5 cursor-pointer ${
  activeTab ==='analyzer'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black/10'
+ ?' bg-[var(--acc)] text-[var(--on-acc)] font-black/10'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/50'
@@ -1415,7 +1415,7 @@ export default function ReelsCenter({
  {/* Borradores */}
  <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
  <span className={`text-[10px] font-sans tracking-wider font-bold block pb-1.5 ${
- 'text-[var(--acc)]'
+' text-[var(--acc)]'
  }`}>Borradores ({posts.filter(r => r.estado ==='borrador').length})</span>
  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
  {posts.filter(r => r.estado ==='borrador').map(post => (
@@ -1426,7 +1426,7 @@ export default function ReelsCenter({
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  } ${
  selectedPostInPhone?.id === post.id
- ? '-[var(--acc)]'
+ ?' -[var(--acc)]'
  : isStitchLight ?'-slate-200 hover:-indigo-300' :'bg-[var(--surface)] hover:-[#99907c]/30'
  }`}
  >
@@ -1466,7 +1466,7 @@ export default function ReelsCenter({
  {/* En Edición / Aprobados */}
  <div className={`space-y-3 rounded-[var(--r-s)] p-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
  <span className={`text-[10px] font-sans tracking-wider font-bold block pb-1.5 ${
- 'text-[var(--acc)]'
+' text-[var(--acc)]'
  }`}>En Edición / Aprobados ({posts.filter(r => r.estado ==='aprobado').length})</span>
  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
  {posts.filter(r => r.estado ==='aprobado').map(post => (
@@ -1477,8 +1477,8 @@ export default function ReelsCenter({
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  } ${
  selectedPostInPhone?.id === post.id
- ? '-[var(--acc)]'
- : 'bg-[var(--surface)] hover:-[var(--acc)]/40'
+ ?' -[var(--acc)]'
+ :' bg-[var(--surface)] hover:-[var(--acc)]/40'
  }`}
  >
  <div className="flex justify-between items-start gap-1">
@@ -1596,7 +1596,7 @@ export default function ReelsCenter({
  onChange={(e) => setReelIdea(e.target.value)}
  placeholder="Ej: R-violin tocando el violín a toda velocidad o elyar ensayando con el hang pan en el camerino..."
  className={`w-full rounded-[var(--r-s)] p-3 text-xs focus:outline-none font-sans leading-relaxed ${
- 'bg-[var(--surface)] -[#99907c]/20 text-[var(--ink)] focus:outline-none focus:-[var(--acc)]/50'
+' bg-[var(--surface)] -[#99907c]/20 text-[var(--ink)] focus:outline-none focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -1609,7 +1609,7 @@ export default function ReelsCenter({
  onClick={() => handleGenerateCopy('hype')}
  disabled={isGenerating}
  className={`w-full py-3 font-sans font-bold text-xs tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${
- 'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)]'
+' bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)]'
  }`}
  >
  <Flame className="w-4 h-4" /> Balkan Hype 🎺🔥
@@ -1643,7 +1643,7 @@ export default function ReelsCenter({
  value={generatedCopy}
  onChange={(e) => setGeneratedCopy(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${
- 'bg-[var(--surface)] -[#99907c]/15 text-[var(--ink-2)] focus:-[var(--acc)]/30'
+' bg-[var(--surface)] -[#99907c]/15 text-[var(--ink-2)] focus:-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1673,7 +1673,7 @@ export default function ReelsCenter({
  onClick={() => { setInputType('file'); setAnalysisError(null); }}
  className={`px-3.5 py-1.5 text-[10px] font-sans rounded-[var(--r-s)] transition-all cursor-pointer ${
  inputType ==='file'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ ?' bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1684,7 +1684,7 @@ export default function ReelsCenter({
  onClick={() => { setInputType('youtube'); setAnalysisError(null); }}
  className={`px-3.5 py-1.5 text-[10px] font-sans rounded-[var(--r-s)] transition-all cursor-pointer ${
  inputType ==='youtube'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ ?' bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1702,10 +1702,10 @@ export default function ReelsCenter({
  onClick={() => document.getElementById('video-file-input')?.click()}
  className={` -dashed rounded-[var(--r-l)] p-8 text-center cursor-pointer transition-all ${
  dragActive
- ? '-[var(--acc)] bg-[var(--acc)]/5 scale-[1.01]'
+ ?' -[var(--acc)] bg-[var(--acc)]/5 scale-[1.01]'
  : selectedFile
  ?'-emerald-500/40 bg-[var(--ok)]/[0.02]'
- : '-[#99907c]/25 hover:-[var(--acc)]/40 bg-[var(--surface)]/50'
+ :' -[#99907c]/25 hover:-[var(--acc)]/40 bg-[var(--surface)]/50'
  }`}
  >
  <input
@@ -1747,7 +1747,7 @@ export default function ReelsCenter({
  ) : (
  <div className="space-y-3">
  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${
- 'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
+' bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  <Upload className="w-5 h-5" />
  </div>
@@ -1764,7 +1764,7 @@ export default function ReelsCenter({
  }`}>
  <div className="space-y-4 max-w-xl mx-auto text-center">
  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${
- 'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
+' bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  <Youtube className="w-5 h-5" />
  </div>
@@ -1780,7 +1780,7 @@ export default function ReelsCenter({
  onChange={(e) => setYoutubeUrl(e.target.value)}
  placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
  className={`w-full rounded-[var(--r-m)] pl-3 pr-10 py-2.5 text-xs focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
  }`}
  />
  {youtubeUrl && (
@@ -1871,7 +1871,7 @@ export default function ReelsCenter({
  onChange={(e) => setContentType(e.target.value as typeof contentType)}
  title="Un concierto, un videoclip y un ensayo se buscan y se titulan de forma distinta: cambia qué momentos prioriza la IA."
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  >
  <option value="auto">Detectar automáticamente</option>
@@ -1889,7 +1889,7 @@ export default function ReelsCenter({
  onChange={(e) => setVideoTopic(e.target.value)}
  placeholder="Ej: Solo de violín rápido o improvisación de loops con percusión..."
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -1900,7 +1900,7 @@ export default function ReelsCenter({
  value={videoDuration}
  onChange={(e) => setVideoDuration(Number(e.target.value))}
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  >
  <option value={15}>15 segundos (Ideal para Reels cortos / Stories)</option>
@@ -1933,7 +1933,7 @@ export default function ReelsCenter({
  disabled={(inputType ==='file' ? !selectedFile : !youtubeUrl) || isAnalyzing}
  className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all ${
  (inputType ==='file' ? selectedFile : youtubeUrl) 
- ? 'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)]/10 hover:scale-[1.01]' 
+ ?' bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)]/10 hover:scale-[1.01]' 
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  }`}
  >
@@ -2027,7 +2027,7 @@ export default function ReelsCenter({
  style={{
  left: `${izq}%`,
  width: `${ancho}%`,
- background: 'var(--acc)',
+ background:' var(--acc)',
  opacity: 0.25 + (Math.max(0, Math.min(100, v.score)) / 100) * 0.75
  }}
  />
@@ -2081,7 +2081,7 @@ export default function ReelsCenter({
  onClick={() => handleSelectHighlight(index)}
  className={` rounded-[var(--r-m)] p-3.5 cursor-pointer transition-all space-y-3 relative group overflow-hidden ${
  isSelected 
- ? '-[var(--acc)] bg-[var(--acc)]/5/5' 
+ ?' -[var(--acc)] bg-[var(--acc)]/5/5' 
  : isStitchLight
  ?'-slate-200 bg-[var(--surface)] hover:-indigo-300 hover:bg-[var(--bg)]/50'
  :'bg-[var(--surface)]/80 bg-[var(--surface)]/60 hover:-neutral-700 hover:bg-[var(--surface)]/90'
@@ -2098,7 +2098,7 @@ export default function ReelsCenter({
  ))}
  </div>
  <span className={`text-[8px] font-sans font-bold px-1.5 py-0.5 rounded self-start z-10 ${
- 'bg-[var(--acc)] text-[var(--on-acc)]'
+' bg-[var(--acc)] text-[var(--on-acc)]'
  }`}>
  {clip.range}
  </span>
@@ -2114,7 +2114,7 @@ export default function ReelsCenter({
 
  <div className="space-y-1.5">
  <h4 className={`text-[11px] font-bold font-sans line-clamp-1 flex items-center gap-1 transition-colors ${
- 'text-[var(--ink-2)] group-hover:text-[var(--acc)]'
+' text-[var(--ink-2)] group-hover:text-[var(--acc)]'
  }`}>
  {clip.title}
  </h4>
@@ -2183,7 +2183,7 @@ export default function ReelsCenter({
  />
  </div>
  <span className={`text-xs font-sans font-bold px-2.5 py-1 rounded shrink-0 ${
- 'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
+' bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  {highlights[selectedHighlightIndex]?.range}
  </span>
@@ -2191,7 +2191,7 @@ export default function ReelsCenter({
 
  {/* AI Re-analyzer & User Notes Panel */}
  <div className={`p-3.5 rounded-[var(--r-l)] space-y-3 ${
- 'bg-[var(--surface)]/90 -[var(--acc)]/20'
+' bg-[var(--surface)]/90 -[var(--acc)]/20'
  }`}>
  <div className="flex justify-between items-center flex-wrap gap-2">
  <div className="flex items-center gap-2">
@@ -2207,7 +2207,7 @@ export default function ReelsCenter({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer active:scale-95 ${
  isReanalyzingClip
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- : 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)]'
+ :' bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)]'
  }`}
  >
  <Sparkles className={`w-3.5 h-3.5 ${isReanalyzingClip ?'animate-spin' :''}`} />
@@ -2225,7 +2225,7 @@ export default function ReelsCenter({
  onChange={(e) => setClipUserNote(e.target.value)}
  placeholder="Ej: En este tramo del 0:15 al 0:45 sólo toca el bajo Jon y la batería, no hay violín..."
  className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs font-sans focus:outline-none ${
- 'bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2321,7 +2321,7 @@ export default function ReelsCenter({
  value={editedCopy}
  onChange={(e) => setEditedCopy(e.target.value)}
  className={`w-full rounded-[var(--r-m)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${
- 'bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2329,7 +2329,7 @@ export default function ReelsCenter({
  {/* Recommendation Tips */}
  {optimalTime && (
  <div className={`p-3 rounded-[var(--r-m)] flex gap-3 items-start text-[11px] leading-relaxed ${
- 'bg-[var(--acc)]/5 -[var(--acc)]/15 text-[var(--ink)]'
+' bg-[var(--acc)]/5 -[var(--acc)]/15 text-[var(--ink)]'
  }`}>
  <Clock className={`w-4.5 h-4.5 mt-0.5 shrink-0 ${'text-[var(--acc)]'}`} />
  <div className="space-y-0.5">
@@ -2363,7 +2363,7 @@ export default function ReelsCenter({
  }}
  className={`py-2 px-2 rounded-[var(--r-s)] text-[10px] font-sans text-center transition-all cursor-pointer ${
  selectedPlatform === plat.id
- ? 'bg-[var(--acc)] -[var(--acc)] text-[var(--on-acc)] font-black'
+ ?' bg-[var(--acc)] -[var(--acc)] text-[var(--on-acc)] font-black'
  : isStitchLight
  ?'-slate-200 hover:-indigo-200 bg-[var(--surface)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:-neutral-700 bg-[var(--surface)]/60 text-[var(--ink-2)]'
@@ -2384,7 +2384,7 @@ export default function ReelsCenter({
  value={scheduledDate}
  onChange={(e) => setScheduledDate(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none ${
- 'bg-[var(--surface)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2395,7 +2395,7 @@ export default function ReelsCenter({
  value={scheduledTime}
  onChange={(e) => setScheduledTime(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none ${
- 'bg-[var(--surface)] focus:-[var(--acc)]/50'
+' bg-[var(--surface)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2409,7 +2409,7 @@ export default function ReelsCenter({
  className={`w-full py-3.5 rounded-[var(--r-m)] font-sans text-xs font-bold tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isScheduling
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- : 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-black/15'
+ :' bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-black/15'
  }`}
  >
  {isScheduling ? (
@@ -2672,10 +2672,10 @@ export default function ReelsCenter({
  }`}>
  <div className="flex gap-4">
  <div className={`w-10 h-10 rounded-full -dashed flex items-center justify-center text-[8px] font-sans ${
- '-[var(--acc)]/50 text-[var(--acc)]/70'
+' -[var(--acc)]/50 text-[var(--acc)]/70'
  }`}>VOL</div>
  <div className={`w-10 h-10 rounded-full -dashed flex items-center justify-center text-[8px] font-sans ${
- '-[var(--accent)]/50 text-[var(--acc)]/70'
+' -[var(--accent)]/50 text-[var(--acc)]/70'
  }`}>SKA</div>
  </div>
  <span className={`text-[9px] font-sans tracking-widest text-center ${
@@ -2685,7 +2685,7 @@ export default function ReelsCenter({
  </span>
  {phoneDuration && (
  <span className={`text-[10px] font-sans py-0.5 px-2 rounded-full font-bold ${
- 'bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
+' bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  {phoneDuration}
  </span>
@@ -2697,7 +2697,7 @@ export default function ReelsCenter({
  {/* Top Status Header */}
  <div className="flex justify-between items-center z-10">
  <span className={`text-[9px] font-sans tracking-wider font-bold ${
- 'text-[var(--acc)]'
+' text-[var(--acc)]'
  }`}>
  {activeTab ==='analyzer' ?'AI ANALYZER REEL' :'REELS PREVIEW'}
  </span>
@@ -2783,7 +2783,7 @@ export default function ReelsCenter({
  <div className="z-10 space-y-2 mt-auto">
  <div className="flex items-center gap-1.5">
  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-sans font-bold ${
- 'bg-[var(--acc)]/20 -[var(--acc)] text-[var(--acc)]'
+' bg-[var(--acc)]/20 -[var(--acc)] text-[var(--acc)]'
  }`}>{nombreBanda.charAt(0).toUpperCase()}</span>
  <div>
  <span className="text-[9px] font-bold text-[var(--ink)] block truncate max-w-[90px]">{instagramHandle || nombreBanda}</span>
@@ -2818,7 +2818,7 @@ export default function ReelsCenter({
  <div className="relative w-full h-1 bg-[var(--surface)]/80 rounded-full overflow-hidden">
  <div 
  className={`absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-linear ${
- 'bg-gradient-to-r from-[var(--acc)] to-[var(--acc)]'
+' bg-gradient-to-r from-[var(--acc)] to-[var(--acc)]'
  }`}
  style={{ width: `${pct}%` }}
  />
@@ -2836,7 +2836,7 @@ export default function ReelsCenter({
 
  {/* Track label scrolling simulation */}
  <div className={`flex items-center gap-1 text-[8px] font-sans py-1 px-1.5 rounded-full max-w-[140px] truncate ${
- 'text-[var(--acc)] bg-black/40 bg-[var(--surface)]/50'
+' text-[var(--acc)] bg-black/40 bg-[var(--surface)]/50'
  }`}>
  <Music className="w-2.5 h-2.5 shrink-0" />
  <span className="animate-marquee whitespace-nowrap">{videoMeta?.title || `Audio original · ${nombreBanda}`}</span>
@@ -2853,7 +2853,7 @@ export default function ReelsCenter({
  onClick={handleSimulateUpload}
  disabled={uploadProgress !== null}
  className={`text-[9px] font-sans hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-40 bg-transparent -none ${
- 'text-[var(--acc)]'
+' text-[var(--acc)]'
  }`}
  >
  <Upload className="w-3 h-3" /> Subir Directo

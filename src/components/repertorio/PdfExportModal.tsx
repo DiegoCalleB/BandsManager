@@ -1354,7 +1354,7 @@ export function PdfExportModal({
  pequeñas no compita por espacio con los controles y la vista previa, que son lo que
  de verdad hace falta ver de un vistazo. */}
  <div
- className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 border-b shrink-0 ${
+ className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 shrink-0 ${
  isStitchLight ?' bg-[var(--surface)]' :' bg-[var(--bg)]'
  }`}
  >
@@ -1407,7 +1407,7 @@ export function PdfExportModal({
  </div>
 
  {/* Customization Control Panel */}
- <div className={`p-3 sm:px-6 border-b flex flex-col gap-3 text-xs font-sans shrink-0 ${
+ <div className={`p-3 sm:px-6 flex flex-col gap-3 text-xs font-sans shrink-0 ${
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/90'
  }`}>
  {/* Row 1: Mode & Target Selector — en móvil un <select> compacto (los 3 botones en
@@ -1429,7 +1429,7 @@ export function PdfExportModal({
  <option value="master">📄 Master Escenario / Sonido</option>
  </select>
 
- <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)]">
+ <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)]">
  <button
  onClick={() => {
  setPrintMode('all_members');
@@ -1494,7 +1494,7 @@ export function PdfExportModal({
  {/* Densidad de vista:"sentado" busca el mínimo nº de hojas posible (para leer de
  cerca — atril, mesa de sonido);"de pie" fuerza la letra más grande de todas,
  aceptando más hojas a cambio — para leerlo desde lejos, de pie en el escenario. */}
- <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)]">
+ <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)]">
  <button
  onClick={() => setViewDensity('sentado')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
@@ -1523,7 +1523,7 @@ export function PdfExportModal({
  <button
  onClick={() => setShowAdvancedSettings(v => !v)}
  className={`sm:hidden w-full flex items-center justify-between px-3 py-2 rounded-[var(--r-s)] font-bold cursor-pointer transition-colors ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink-2)]' :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink-2)]' :'bg-black/40 text-[var(--ink-2)]'
  }`}
  >
  <span className="flex items-center gap-1.5">
@@ -1535,7 +1535,7 @@ export function PdfExportModal({
  {/* Row 2: Typography, Handwritten Sharpie Ink & Toggles — en móvil apilado en columna
  (3 grupos en una sola fila se apretaban demasiado en pantallas pequeñas), en
  desktop en fila con espacio de sobra. */}
- <div className={`${showAdvancedSettings ?'flex' :'hidden'} flex-col sm:flex-row sm:flex-wrap items-start sm:items-center sm:justify-between gap-3 sm:gap-4 pt-2 border-t border-[var(--hair)] w-full sm:flex`}>
+ <div className={`${showAdvancedSettings ?'flex' :'hidden'} flex-col sm:flex-row sm:flex-wrap items-start sm:items-center sm:justify-between gap-3 sm:gap-4 pt-2 w-full sm:flex`}>
  {/* Tamaño de título: ya no se elige a mano — se auto-ajusta por hoja (ver
  computeAutoFitPlan) para llenar la página lo mejor posible, priorizando el
  mínimo ideal de 17pt (legible a ~2m en escenario) para repartir en varias hojas.
@@ -1571,7 +1571,7 @@ export function PdfExportModal({
  </select>
 
  {/* Ink color selector */}
- <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-s)] border-[var(--hair)]">
+ <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-s)]">
  <button
  onClick={() => setHandwritingColor('blue')}
  className={`w-5 h-5 rounded-full bg-[var(--tentative)] transition-transform cursor-pointer ${
@@ -1661,7 +1661,7 @@ export function PdfExportModal({
  {/* Pager Navigation for Multiple Sheets — recortado en móvil: sin el texto largo"Previsualizando hoja X de Y", y los botones Anterior/Siguiente solo con icono (el
  texto competía por ancho con el badge del músico en pantallas pequeñas). */}
  {membersToExport.length > 1 && (
- <div className={`px-3 sm:px-6 py-1.5 sm:py-2 border-b flex items-center justify-between gap-2 text-xs font-sans shrink-0 ${
+ <div className={`px-3 sm:px-6 py-1.5 sm:py-2 flex items-center justify-between gap-2 text-xs font-sans shrink-0 ${
  isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
@@ -1738,7 +1738,7 @@ export function PdfExportModal({
  {/* Top Sheet Header — compacta a propósito: cada mm que se ahorra aquí es un mm
  menos de riesgo de que el repertorio se desborde a una hoja extra. */}
  <div>
- <div className="flex items-center justify-between border-b-2 border-[var(--hair)] pb-0.5 mb-1">
+ <div className="flex items-center justify-between border-b-2 pb-0.5 mb-1">
  <div className="flex items-center gap-2">
  {showBandLogo && customLogoUrl && (
  <img
@@ -1760,7 +1760,7 @@ export function PdfExportModal({
  </div>
  </div>
 
- <div className="border-2 border-[var(--hair)] bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap">
+ <div className="border-2 bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap">
  <div className="text-[6pt] font-sans font-bold text-[var(--ink-2)] tracking-widest">
  {!isCurrentMaster ?'REPERTORIO PERSONALIZADO' :'COPIA DE CONTROL'}
  </div>
@@ -1918,7 +1918,7 @@ export function PdfExportModal({
  </span>
 
  {showTonality && s.tonalidad && (
- <span className="font-sans text-[11pt] font-black border-2 border-[var(--hair)] px-1.5 py-0.5 rounded bg-[var(--surface)] text-[var(--ink)] leading-none ml-1 shrink-0">
+ <span className="font-sans text-[11pt] font-black px-1.5 py-0.5 rounded bg-[var(--surface)] text-[var(--ink)] leading-none ml-1 shrink-0">
  {s.tonalidad}
  </span>
  )}
@@ -2030,7 +2030,7 @@ export function PdfExportModal({
 
  {/* Bottom Footer with BandManager & link */}
  {showAppBranding && (
- <div className="flex justify-between items-center border-t border-[var(--hair)] pt-1 mt-2 font-sans text-[7.5pt] text-[var(--ink-2)]">
+ <div className="flex justify-between items-center pt-1 mt-2 font-sans text-[7.5pt] text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <span className="font-black text-[var(--ink)]">⚡ BandManager</span>
  <span>•</span>
@@ -2071,7 +2071,7 @@ export function PdfExportModal({
  setSizeChoiceDialog(null);
  handlePrint('single');
  }}
- className="p-4 rounded-[var(--r-m)] border-2 /40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
+ className="p-4 rounded-[var(--r-m)] /40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
  >
  <div className={`font-black text-sm mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  📄 1 sola hoja (letra más pequeña)
@@ -2085,7 +2085,7 @@ export function PdfExportModal({
  setSizeChoiceDialog(null);
  handlePrint('multi');
  }}
- className="p-4 rounded-[var(--r-m)] border-2 border-[var(--acc)]/40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
+ className="p-4 rounded-[var(--r-m)]/40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
  >
  <div className={`font-black text-sm mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  📄📄 Varias hojas (letra más grande)

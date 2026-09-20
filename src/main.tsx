@@ -1,12 +1,12 @@
-import './utils/domTranslatePatch';
-import { initFrontendErrorTracking } from './utils/errorTracking';
-import {StrictMode, Suspense, lazy} from 'react';
-import {createRoot} from 'react-dom/client';
-import App from './App';
-import ErrorBoundary from './components/ErrorBoundary';
-import { LanguageProvider } from './context/LanguageContext';
-import './index.css';
-import { escucharSistema, leerPreferencia as leerPreferenciaEspectro } from './utils/temaEspectro';
+import' ./utils/domTranslatePatch';
+import { initFrontendErrorTracking } from' ./utils/errorTracking';
+import {StrictMode, Suspense, lazy} from' react';
+import {createRoot} from' react-dom/client';
+import App from' ./App';
+import ErrorBoundary from' ./components/ErrorBoundary';
+import { LanguageProvider } from' ./context/LanguageContext';
+import' ./index.css';
+import { escucharSistema, leerPreferencia as leerPreferenciaEspectro } from' ./utils/temaEspectro';
 
 // Inicializa el rastreo de errores del cliente si VITE_SENTRY_DSN está presente
 initFrontendErrorTracking();
@@ -14,7 +14,7 @@ initFrontendErrorTracking();
 // Tema «Espectro»: el atributo data-theme ya se estampó antes de este punto (script
 // inline en index.html, para no parpadear en la primera carga). Esto solo mantiene el
 // tema sincronizado con el sistema operativo MIENTRAS la app está abierta, si la
-// preferencia guardada es 'system' — sin esto, elegir "Automático" y luego cambiar el
+// preferencia guardada es' system' — sin esto, elegir "Automático" y luego cambiar el
 // modo oscuro del móvil no se notaría hasta recargar. Vive aquí (arranque, se monta una
 // sola vez) y no en UserProfileModal, que puede cerrarse.
 escucharSistema(leerPreferenciaEspectro);
@@ -24,15 +24,15 @@ const PublicEPK = lazy(() => import('./components/PublicEPK'));
 const PublicMusiciansLanding = lazy(() => import('./components/PublicMusiciansLanding'));
 
 const LoadingFallback = () => (
- <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+ <div style={{ minHeight:' 100vh', background:' var(--bg)', display:' flex', alignItems:' center', justifyContent:' center' }}>
  <div
  style={{
  width: 32,
  height: 32,
- borderRadius: '9999px',
- border: '3px solid rgba(var(--ink-rgb, 42, 46, 53), 0.15)',
- borderTopColor: 'var(--acc)',
- animation: 'spin 0.8s linear infinite'
+ borderRadius:' 9999px',
+ border:' 3px solid rgba(var(--ink-rgb, 42, 46, 53), 0.15)',
+ borderTopColor:' var(--acc)',
+ animation:' spin 0.8s linear infinite'
  }}
  />
  <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
@@ -40,7 +40,7 @@ const LoadingFallback = () => (
 );
 
 // Rutas públicas accesibles sin autenticación
-const pathname = typeof window !== 'undefined' ? window.location.pathname.toLowerCase() : '';
+const pathname = typeof window !==' undefined' ? window.location.pathname.toLowerCase() :' ';
 const esRutaPublicaEpk = /^\/epk\/?$/.test(pathname);
 const esRutaPublicaMusicos = /^\/(musicos|musicians|para-musicos|waitlist-musicos)\/?$/.test(pathname);
 

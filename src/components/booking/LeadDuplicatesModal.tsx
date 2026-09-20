@@ -216,7 +216,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  >
  {/* Header */}
  <div
- className={`p-4 sm:p-5 border-b flex items-center justify-between shrink-0 ${
+ className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${
  isStitchLight
  ?'bg-[var(--bg)]'
  :'bg-[var(--surface)]'
@@ -256,7 +256,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  {/* Success Banner */}
  {successMessage && (
- <div className="bg-[var(--ok)]/15 border-b border-[var(--ok)]/30 px-4 py-2.5 flex items-center gap-2 text-xs font-medium text-[var(--ink-2)] animate-in fade-in">
+ <div className="bg-[var(--ok)]/15/30 px-4 py-2.5 flex items-center gap-2 text-xs font-medium text-[var(--ink-2)] animate-in fade-in">
  <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span>{successMessage}</span>
  </div>
@@ -264,7 +264,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  {/* Controls & Filter Bar */}
  <div
- className={`p-3 sm:px-5 border-b flex flex-wrap items-center justify-between gap-2.5 shrink-0 ${
+ className={`p-3 sm:px-5 flex flex-wrap items-center justify-between gap-2.5 shrink-0 ${
  isStitchLight ?'bg-[var(--sunken)]/60' :'bg-[var(--surface)]/40'
  }`}
  >
@@ -384,7 +384,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  }`}
  >
  {/* Group Top Info */}
- <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b /60">
+ <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 /60">
  <div className="flex items-center gap-2">
  <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[var(--acc)]/15 text-[var(--acc)]/70 flex items-center gap-1">
  <AlertTriangle className="w-3 h-3" />
@@ -488,7 +488,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  </div>
 
  {/* Card Actions */}
- <div className="mt-3.5 pt-2.5 border-t /80 flex items-center justify-between gap-2">
+ <div className="mt-3.5 pt-2.5 /80 flex items-center justify-between gap-2">
  <button
  type="button"
  disabled={isProcessing}
@@ -525,7 +525,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  {/* Footer */}
  <div
- className={`p-3 sm:px-5 border-t flex items-center justify-between text-xs ${
+ className={`p-3 sm:px-5 flex items-center justify-between text-xs ${
  isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink-2)]'

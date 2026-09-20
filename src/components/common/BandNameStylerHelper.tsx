@@ -61,7 +61,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
  <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] p-4 z-50 text-[var(--ink-2)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
  {/* Header */}
- <div className="flex items-center justify-between border-b border-[var(--hair)] pb-2.5">
+ <div className="flex items-center justify-between pb-2.5">
  <div className="flex items-center gap-2">
  <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] font-bold text-xs">
  Я
@@ -122,7 +122,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  </div>
 
  {/* Quick Symbols Palette */}
- <div className="space-y-1.5 pt-1 border-t border-[var(--hair)]">
+ <div className="space-y-1.5 pt-1">
  <label className="text-[10px] font-sans tracking-wider text-[var(--ink-2)] font-bold flex items-center justify-between">
  <span>Insertar Carácter o Símbolo:</span>
  <span className="text-[var(--ink-2)] font-normal">Añadir al nombre</span>
@@ -143,7 +143,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  </div>
 
  {/* Footer: Clean button + Close */}
- <div className="pt-2 border-t border-[var(--hair)] flex items-center justify-between gap-2">
+ <div className="pt-2 flex items-center justify-between gap-2">
  <button
  type="button"
  onClick={handleClean}

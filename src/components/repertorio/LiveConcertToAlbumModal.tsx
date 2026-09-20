@@ -1234,8 +1234,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  >
  {/* Modal Header */}
  <div
- className={`p-6 border-b flex items-start justify-between ${
- 'bg-[var(--acc)]/10'
+ className={`p-6 flex items-start justify-between ${
+' bg-[var(--acc)]/10'
  }`}
  >
  <div className="flex items-center gap-3">
@@ -1345,7 +1345,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {/* AI Toggle Option */}
- <div className="pt-2 border-t /60 space-y-2">
+ <div className="pt-2 /60 space-y-2">
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <label className="flex items-center gap-3 cursor-pointer">
  <input
@@ -1382,7 +1382,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {useAi && (
- <div className="pl-7 pt-1.5 border-l-2 border-[var(--ok)]/40 ml-2">
+ <div className="pl-7 pt-1.5 border-l-2/40 ml-2">
  <label className="flex items-start gap-2.5 cursor-pointer">
  <input
  type="checkbox"
@@ -1432,7 +1432,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  </div>
 
- <div className="flex flex-wrap items-center gap-2 pt-1 border-t /20">
+ <div className="flex flex-wrap items-center gap-2 pt-1 /20">
  <button
  type="button"
  onClick={() => setCookieModalOpen(true)}
@@ -1741,12 +1741,12 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  isSelected
  ?'bg-[var(--acc)]/15 ring-1 ring-amber-0/50'
  : track.type ==='musica'
- ? 'bg-[var(--acc-soft)] /20 hover:/40'
- : 'bg-[var(--tentative)]/5/20 border-[var(--acc)]/20 hover:border-[var(--acc)]/40'
+ ?' bg-[var(--acc-soft)] /20 hover:/40'
+ :' bg-[var(--tentative)]/5/20/20 hover:border-[var(--acc)]/40'
  }`}
  >
  {/* Top Row: Track Controls, Type, Timestamps, and Actions */}
- <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b /60">
+ <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 /60">
  {/* Checkbox, Index & Type Switcher */}
  <div className="flex items-center gap-2">
  <button
@@ -1780,7 +1780,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`text-xs font-black px-2.5 py-1 rounded-[var(--r-s)] transition-all cursor-pointer ${
  track.type ==='musica'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50 hover:bg-[var(--acc)]/30'
- :'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--acc)]/50 hover:bg-[var(--tentative)]/30'
+ :'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/50 hover:bg-[var(--tentative)]/30'
  }`}
  title="Haz clic para alternar entre Canción y Speech/Presentación"
  >
@@ -1943,7 +1943,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  ?'bg-[var(--surface)] text-[var(--ink)] focus:'
  : track.type ==='musica'
  ?'bg-[var(--surface)]/90 /40 text-[var(--acc)] placeholder-[var(--ink-2)] focus: focus:ring-1 focus:ring-amber-400'
- :'bg-[var(--surface)]/90 border-[var(--acc)]/40 text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-[var(--acc)] focus:ring-1 focus:ring-purple-400'
+ :'bg-[var(--surface)]/90/40 text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-[var(--acc)] focus:ring-1 focus:ring-purple-400'
  }`}
  placeholder={
  track.type ==='musica'
@@ -2016,7 +2016,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Song Chords & Lyrics Control Row */}
  {track.type ==='musica' && (
- <div className="pl-9 pt-1.5 space-y-2 border-t /60 mt-2">
+ <div className="pl-9 pt-1.5 space-y-2 /60 mt-2">
  <div className="flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-2 text-xs">
  <span className="text-[var(--ink-2)] font-semibold text-[11px]">Ton:</span>
@@ -2108,7 +2108,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Speech Transcription row */}
  {track.type ==='dialogo' && (
- <div className="pl-9 pt-2 space-y-1.5 border-t border-[var(--acc)]/20 mt-2">
+ <div className="pl-9 pt-2 space-y-1.5/20 mt-2">
  <div className="flex items-center justify-between text-xs">
  <span className="text-[11px] font-bold text-[var(--tentative)]/80 flex items-center gap-1.5">
  🗣️ Transcripción del Speech / Intro:
@@ -2134,8 +2134,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Interactive Audio Fragment Scrubber Player - Positioned directly underneath the active track */}
  {activeSnippet && activeSnippet.trackIndex === track.index && (
- <div className="mt-3 p-3.5 bg-[var(--surface)] border-2 /60 rounded-[var(--r-m)] space-y-3 animate-fade-in ring-2 ring-amber-0/20">
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-2">
+ <div className="mt-3 p-3.5 bg-[var(--surface)] /60 rounded-[var(--r-m)] space-y-3 animate-fade-in ring-2 ring-amber-0/20">
+ <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
  <div className="flex items-center gap-2">
  <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] shrink-0">
  <Volume2 className="w-4 h-4" />
@@ -2392,7 +2392,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  </div>
 
- <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[var(--hair)]">
+ <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
  <p className="text-xs text-[var(--ink-2)]">
  ¿Deseas agregar formalmente este nuevo Álbum con todos sus temas a la Discografía de la Banda?
  </p>
@@ -2418,7 +2418,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {cookieModalOpen && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-4 text-[var(--ink-2)]">
- <div className="flex items-center justify-between border-b pb-3">
+ <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
  <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]">
  <Key className="w-4 h-4" />
@@ -2451,7 +2451,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <p className="text-[11px] text-[var(--ink-2)]">
  YouTube bloquea las peticiones automáticas desde centros de datos con el mensaje <em>"Sign in to confirm you're not a bot"</em>. Al vincular las cookies de tu cuenta/canal, el servidor se identifica legítimamente y descarga el vídeo o audio completo al instante a máxima velocidad.
  </p>
- <div className="pt-2 border-t text-[11px] text-[var(--ink-2)] space-y-1">
+ <div className="pt-2 text-[11px] text-[var(--ink-2)] space-y-1">
  <p className="font-bold text-[var(--ink-2)]">📌 Cómo obtener las cookies en 10 segundos:</p>
  <p>1. Instala la extensión gratuita de Chrome/Firefox <strong>"Get cookies.txt locally"</strong>.</p>
  <p>2. Abre YouTube con tu cuenta de la banda iniciada.</p>
@@ -2527,7 +2527,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-fade-in">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-3xl w-full p-6 space-y-4 text-[var(--ink-2)] max-h-[90vh] flex flex-col">
  {/* Header */}
- <div className="flex items-center justify-between border-b pb-3 shrink-0">
+ <div className="flex items-center justify-between pb-3 shrink-0">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--ink-2)]">
  <Tag className="w-5 h-5" />
@@ -2553,7 +2553,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {/* Tabs */}
- <div className="flex items-center gap-2 border-b pb-2 shrink-0">
+ <div className="flex items-center gap-2 pb-2 shrink-0">
  <button
  type="button"
  onClick={() => setQuickNamingActiveTab('table')}
@@ -2599,7 +2599,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`p-2.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center gap-2.5 ${
  tr.type ==='musica'
  ?'bg-[var(--acc-soft)] /20 hover:/40'
- :'bg-[var(--tentative)]/5/20 border-[var(--acc)]/20 hover:border-[var(--acc)]/40'
+ :'bg-[var(--tentative)]/5/20/20 hover:border-[var(--acc)]/40'
  }`}
  >
  {/* Index + Type Toggle Button */}
@@ -2622,7 +2622,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
  tr.type ==='musica'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 hover:bg-[var(--acc)]/30'
- :'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--acc)]/40 hover:bg-[var(--tentative)]/30'
+ :'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/40 hover:bg-[var(--tentative)]/30'
  }`}
  title="Haz clic para alternar entre Canción y Speech"
  >
@@ -2644,7 +2644,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
  tr.type ==='musica'
  ?'bg-[var(--surface)] /30 text-[var(--acc)] focus:'
- :'bg-[var(--surface)] border-[var(--acc)]/30 text-[var(--ink)] focus:border-[var(--acc)]'
+ :'bg-[var(--surface)]/30 text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  {tr.title && (
@@ -2772,7 +2772,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  )}
 
  {/* Footer */}
- <div className="pt-3 border-t flex justify-end shrink-0">
+ <div className="pt-3 flex justify-end shrink-0">
  <button
  type="button"
  onClick={() => setShowQuickNamingModal(false)}

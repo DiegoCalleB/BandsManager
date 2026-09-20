@@ -34,9 +34,9 @@ export const getLowLatencyAudioStream = async (options?: StudioAudioStreamOption
  });
  } catch (err: any) {
  const isPermissionError = 
- err?.name === 'NotAllowedError' || 
- err?.name === 'PermissionDeniedError' || 
- String(err?.message || '').toLowerCase().includes('permission denied');
+ err?.name ===' NotAllowedError' || 
+ err?.name ===' PermissionDeniedError' || 
+ String(err?.message ||' ').toLowerCase().includes('permission denied');
 
  if (isPermissionError) {
  throw new Error("Permiso de micrófono denegado por el usuario o navegador.");
@@ -65,7 +65,7 @@ export const createCleanAudioRecordingPipeline = (
  const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
  const audioCtx = existingCtx || new AudioCtxClass();
 
- if (audioCtx.state === 'suspended') {
+ if (audioCtx.state ===' suspended') {
  audioCtx.resume().catch(() => {});
  }
 
@@ -73,18 +73,18 @@ export const createCleanAudioRecordingPipeline = (
 
  // 1. High-Pass Filter (cut off low frequency rumble < 80Hz)
  const highpass = audioCtx.createBiquadFilter();
- highpass.type = 'highpass';
+ highpass.type =' highpass';
  highpass.frequency.setValueAtTime(80, audioCtx.currentTime);
  highpass.Q.setValueAtTime(0.707, audioCtx.currentTime);
 
  // 2. Notch Filter for 50Hz / 60Hz power hum
  const notch50 = audioCtx.createBiquadFilter();
- notch50.type = 'notch';
+ notch50.type =' notch';
  notch50.frequency.setValueAtTime(50, audioCtx.currentTime);
  notch50.Q.setValueAtTime(5.0, audioCtx.currentTime);
 
  const notch60 = audioCtx.createBiquadFilter();
- notch60.type = 'notch';
+ notch60.type =' notch';
  notch60.frequency.setValueAtTime(60, audioCtx.currentTime);
  notch60.Q.setValueAtTime(5.0, audioCtx.currentTime);
 
@@ -232,7 +232,7 @@ export const cleanAudioBlobOffline = async (audioBlob: Blob, latencyTrimMs: numb
 
  // Highpass filter @ 85Hz
  const hp = offlineCtx.createBiquadFilter();
- hp.type = 'highpass';
+ hp.type =' highpass';
  hp.frequency.value = 85;
 
  // Dynamics Compressor
@@ -283,13 +283,13 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
  const view = new DataView(wavBuffer);
 
  /* RIFF identifier */
- writeString(view, 0, 'RIFF');
+ writeString(view, 0,' RIFF');
  /* RIFF chunk length */
  view.setUint32(4, 36 + dataLength, true);
  /* RIFF type */
- writeString(view, 8, 'WAVE');
+ writeString(view, 8,' WAVE');
  /* format chunk identifier */
- writeString(view, 12, 'fmt ');
+ writeString(view, 12,' fmt' );
  /* format chunk length */
  view.setUint32(16, 16, true);
  /* sample format (raw) */
@@ -305,7 +305,7 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
  /* bits per sample */
  view.setUint16(34, bitDepth, true);
  /* data chunk identifier */
- writeString(view, 36, 'data');
+ writeString(view, 36,' data');
  /* data chunk length */
  view.setUint32(40, dataLength, true);
 
@@ -317,7 +317,7 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
  offset += 2;
  }
 
- return new Blob([wavBuffer], { type: 'audio/wav' });
+ return new Blob([wavBuffer], { type:' audio/wav' });
 }
 
 function writeString(view: DataView, offset: number, string: string) {
@@ -428,13 +428,13 @@ export const autoDetectAudioLatencyOffset = async (
  return onsetDiff;
  }
 
- const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform ===' MacIntel' && navigator.maxTouchPoints > 1);
  const isMobile = isIOS || /Android/i.test(navigator.userAgent);
  return isIOS ? 320 : isMobile ? 240 : 110;
 
  } catch (err) {
  console.warn("Auto latency detection fallback:", err);
- const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform ===' MacIntel' && navigator.maxTouchPoints > 1);
  const isMobile = isIOS || /Android/i.test(navigator.userAgent);
  return isIOS ? 320 : isMobile ? 240 : 110;
  }
@@ -522,20 +522,20 @@ export const exportMasterMixAudioBlob = async (
 
  // EQ Low
  const eqLow = offlineCtx.createBiquadFilter();
- eqLow.type = 'lowshelf';
+ eqLow.type =' lowshelf';
  eqLow.frequency.value = 100;
  eqLow.gain.value = input.eqLow ?? 0;
 
  // EQ Mid
  const eqMid = offlineCtx.createBiquadFilter();
- eqMid.type = 'peaking';
+ eqMid.type =' peaking';
  eqMid.frequency.value = 1000;
  eqMid.Q.value = 1.0;
  eqMid.gain.value = input.eqMid ?? 0;
 
  // EQ High
  const eqHigh = offlineCtx.createBiquadFilter();
- eqHigh.type = 'highshelf';
+ eqHigh.type =' highshelf';
  eqHigh.frequency.value = 8000;
  eqHigh.gain.value = input.eqHigh ?? 0;
 

@@ -289,7 +289,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
 
  return (
  <div 
- className="relative w-full h-12 bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden border border-[var(--hair)] cursor-pointer select-none group transition-colors hover:border-[var(--acc)]/40"
+ className="relative w-full h-12 bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden cursor-pointer select-none group transition-colors hover:border-[var(--acc)]/40"
  onClick={handleContainerClick}
  title="Haz clic para mover el cabezal de reproducción (Seek Master)"
  >
@@ -329,7 +329,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
 
  {/* Waveform Container - Proportionally scaled to track audio duration vs master duration */}
  <div
- className="h-full relative overflow-hidden bg-[var(--ink)]/10 border-r border-[var(--hair)] z-10"
+ className="h-full relative overflow-hidden bg-[var(--ink)]/10 z-10"
  style={{ width: `${trackWidthPercent}%` }}
  >
  <div className="absolute inset-0 pointer-events-none z-0">
@@ -345,7 +345,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  {/* Empty DAW Track Grid Region if track audio duration is shorter than master */}
  {trackWidthPercent < 98 && (
  <div 
- className="absolute top-0 bottom-0 right-0 bg-[var(--sunken)] border-l border-dashed border-[var(--hair)] flex items-center justify-end px-3 pointer-events-none z-10"
+ className="absolute top-0 bottom-0 right-0 bg-[var(--sunken)] flex items-center justify-end px-3 pointer-events-none z-10"
  style={{ left: `${trackWidthPercent}%` }}
  >
  <span className="text-[9px] font-sans text-[var(--ink-2)] font-semibold tracking-wider">

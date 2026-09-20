@@ -93,7 +93,7 @@ export function AddSongsToSetlistModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[92vh] flex flex-col ${colors.card} text-[var(--ink)]`}>
- <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
+ <div className="flex justify-between items-center pb-3">
  <div className="flex items-center gap-2">
  <ListPlus className="w-5 h-5 text-[var(--ok)]" />
  <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
@@ -124,7 +124,7 @@ export function AddSongsToSetlistModal({
  value={albumFilter}
  onChange={(e) => setAlbumFilter(e.target.value)}
  className={`text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${
- 'bg-[var(--surface)] text-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--acc)]'
  }`}
  >
  {albumsList.map(alb => (
@@ -186,14 +186,14 @@ export function AddSongsToSetlistModal({
  onClick={() => toggleSong(s.id)}
  className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
  isSelected
- ?'bg-[var(--surface)]/15 border-[var(--hair)]/50'
+ ?'bg-[var(--surface)]/15/50'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80'
  }`}
  >
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
- isSelected ?'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] scale-105' :' text-[var(--ink-2)]'
+ isSelected ?'bg-[var(--surface)] text-[var(--ink)] scale-105' :' text-[var(--ink-2)]'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>
@@ -207,7 +207,7 @@ export function AddSongsToSetlistModal({
  </span>
  )}
  {isSelected && (
- <span className="text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/20 text-[var(--ok)] font-extrabold shrink-0 ml-auto border-[var(--hair)]/40">
+ <span className="text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/20 text-[var(--ok)] font-extrabold shrink-0 ml-auto/40">
  #{selectedIndex + 1} en orden
  </span>
  )}
@@ -222,7 +222,7 @@ export function AddSongsToSetlistModal({
  )}
  </div>
 
- <div className="pt-3 mt-2 border-t border-[var(--hair)] flex items-center justify-between gap-3 shrink-0">
+ <div className="pt-3 mt-2 flex items-center justify-between gap-3 shrink-0">
  <span className="text-[10px] font-sans text-[var(--ink-2)]">
  {selectedIds.length > 0
  ? `${selectedIds.length} seleccionadas (en orden 1..${selectedIds.length}) · ${formatSecondsToMmSs(selectedDurationSeconds)}`

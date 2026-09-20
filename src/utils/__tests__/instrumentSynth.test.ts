@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from' vitest';
 import {
  crearGeneradorDeterminista,
  prepararEventos,
@@ -6,8 +6,8 @@ import {
  clasificarGolpePercusion,
  normalizarPico,
  type BufferDeAudio
-} from '../instrumentSynth';
-import { MelodicNoteEvent } from '../../types';
+} from' ../instrumentSynth';
+import { MelodicNoteEvent } from' ../../types';
 
 describe('crearGeneradorDeterminista', () => {
  it('la misma semilla produce siempre la misma secuencia', () => {
@@ -36,35 +36,35 @@ describe('crearGeneradorDeterminista', () => {
 
 describe('prepararEventos', () => {
  const base: MelodicNoteEvent[] = [
- { tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 0.9 },
- { tiempo: 2, nota: 'G4', duracionBeats: 0.5, velocidad: 0.5 }
+ { tiempo: 0, nota:' E4', duracionBeats: 1, velocidad: 0.9 },
+ { tiempo: 2, nota:' G4', duracionBeats: 0.5, velocidad: 0.5 }
  ];
 
  it('convierte beats a segundos absolutos según el bpm', () => {
  // A 120 BPM, 1 beat = 0.5s. Sin jitter (comprobamos con tolerancia el margen máximo).
- const preparados = prepararEventos(base, { instrument: 'handpan', bpm: 120, totalLength: 20, semilla: 1 });
+ const preparados = prepararEventos(base, { instrument:' handpan', bpm: 120, totalLength: 20, semilla: 1 });
  expect(preparados[0].tiempo).toBeCloseTo(0, 1);
  expect(preparados[1].tiempo).toBeCloseTo(1, 1); // 2 beats * 0.5s = 1s
  });
 
  it('es determinista: misma semilla, mismo resultado exacto', () => {
- const a = prepararEventos(base, { instrument: 'violin', bpm: 100, totalLength: 20, semilla: 7 });
- const b = prepararEventos(base, { instrument: 'violin', bpm: 100, totalLength: 20, semilla: 7 });
+ const a = prepararEventos(base, { instrument:' violin', bpm: 100, totalLength: 20, semilla: 7 });
+ const b = prepararEventos(base, { instrument:' violin', bpm: 100, totalLength: 20, semilla: 7 });
  expect(a).toEqual(b);
  });
 
  it('una semilla distinta cambia el resultado (para poder pedir "otra variación")', () => {
- const a = prepararEventos(base, { instrument: 'violin', bpm: 100, totalLength: 20, semilla: 1 });
- const b = prepararEventos(base, { instrument: 'violin', bpm: 100, totalLength: 20, semilla: 2 });
+ const a = prepararEventos(base, { instrument:' violin', bpm: 100, totalLength: 20, semilla: 1 });
+ const b = prepararEventos(base, { instrument:' violin', bpm: 100, totalLength: 20, semilla: 2 });
  expect(a).not.toEqual(b);
  });
 
  it('ordena los eventos por tiempo aunque lleguen desordenados', () => {
  const desordenados: MelodicNoteEvent[] = [
- { tiempo: 3, nota: 'G4', duracionBeats: 1 },
- { tiempo: 0, nota: 'E4', duracionBeats: 1 }
+ { tiempo: 3, nota:' G4', duracionBeats: 1 },
+ { tiempo: 0, nota:' E4', duracionBeats: 1 }
  ];
- const preparados = prepararEventos(desordenados, { instrument: 'guitarra', bpm: 120, totalLength: 20, semilla: 1 });
+ const preparados = prepararEventos(desordenados, { instrument:' guitarra', bpm: 120, totalLength: 20, semilla: 1 });
  expect(preparados[0].nota).toBe('E4');
  expect(preparados[1].nota).toBe('G4');
  });
@@ -73,8 +73,8 @@ describe('prepararEventos', () => {
  // La percusión tiene el jitter más ajustado (6ms): comprobamos el límite en muchas semillas.
  for (let semilla = 0; semilla < 50; semilla++) {
  const preparados = prepararEventos(
- [{ tiempo: 4, nota: 'C2', duracionBeats: 1 }],
- { instrument: 'percusion', bpm: 120, totalLength: 20, semilla }
+ [{ tiempo: 4, nota:' C2', duracionBeats: 1 }],
+ { instrument:' percusion', bpm: 120, totalLength: 20, semilla }
  );
  const tiempoBase = 4 * (60 / 120);
  expect(Math.abs(preparados[0].tiempo - tiempoBase)).toBeLessThanOrEqual(0.006 + 1e-9);
@@ -83,9 +83,9 @@ describe('prepararEventos', () => {
 
  it('descarta un evento cuyo tiempo humanizado cae fuera de la duración total', () => {
  const preparados = prepararEventos(
- [{ tiempo: 39.999, nota: 'E4', duracionBeats: 1 }],
+ [{ tiempo: 39.999, nota:' E4', duracionBeats: 1 }],
  // 40 beats a 120bpm = 20s exactos: este evento cae justo en el borde o más allá.
- { instrument: 'violin', bpm: 120, totalLength: 20, semilla: 3 }
+ { instrument:' violin', bpm: 120, totalLength: 20, semilla: 3 }
  );
  expect(preparados.every((e) => e.tiempo < 20)).toBe(true);
  });
@@ -93,8 +93,8 @@ describe('prepararEventos', () => {
  it('acota la intensidad humanizada al rango 0.15–1', () => {
  for (let semilla = 0; semilla < 50; semilla++) {
  const preparados = prepararEventos(
- [{ tiempo: 0, nota: 'E4', duracionBeats: 1, velocidad: 1 }, { tiempo: 1, nota: 'E4', duracionBeats: 1, velocidad: 0.16 }],
- { instrument: 'percusion', bpm: 120, totalLength: 20, semilla }
+ [{ tiempo: 0, nota:' E4', duracionBeats: 1, velocidad: 1 }, { tiempo: 1, nota:' E4', duracionBeats: 1, velocidad: 0.16 }],
+ { instrument:' percusion', bpm: 120, totalLength: 20, semilla }
  );
  for (const ev of preparados) {
  expect(ev.velocidad).toBeGreaterThanOrEqual(0.15);

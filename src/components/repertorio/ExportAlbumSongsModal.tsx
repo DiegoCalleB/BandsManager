@@ -417,9 +417,9 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  }`}
  >
  {/* Header */}
- <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between gap-3 bg-gradient-to-r from-[var(--ok)]/10 via-transparent to-transparent">
+ <div className="p-4 sm:p-5 flex items-center justify-between gap-3 bg-gradient-to-r from-[var(--ok)]/10 via-transparent to-transparent">
  <div className="flex items-center gap-3 min-w-0">
- <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[var(--ok)] shrink-0">
+ <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20/40 flex items-center justify-center text-[var(--ok)] shrink-0">
  <Download className="w-5 h-5 sm:w-6 sm:h-6" />
  </div>
  <div className="min-w-0">
@@ -484,8 +484,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('zip')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
  format ==='zip'
- ?'bg-gradient-to-br from-[var(--ok)]/30 to-emerald-900/40 border-[var(--hair)] text-[var(--ink)] ring-1 ring-[var(--ok)]/40'
- :'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ink-2)] hover:bg-[var(--ok)]/20'
+ ?'bg-gradient-to-br from-[var(--ok)]/30 to-emerald-900/40 text-[var(--ink)] ring-1 ring-[var(--ok)]/40'
+ :'bg-[var(--ok)]/10/30 text-[var(--ink-2)] hover:bg-[var(--ok)]/20'
  }`}
  >
  <Archive className={`w-5 h-5 ${format ==='zip' ?'text-[var(--ok)]' :'text-[var(--ok)]'}`} />
@@ -503,8 +503,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('csv')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format ==='csv'
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)]'
- :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
+ ?'bg-[var(--surface)]/20 text-[var(--ink)]'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
  <FileSpreadsheet className={`w-5 h-5 ${format ==='csv' ?'text-[var(--ok)]' :'text-[var(--ok)]'}`} />
@@ -519,8 +519,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('m3u')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format ==='m3u'
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)]'
- :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
+ ?'bg-[var(--surface)]/20 text-[var(--ink)]'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
  <Music className={`w-5 h-5 ${format ==='m3u' ?'text-[var(--ok)]' :'text-[var(--ink-2)]'}`} />
@@ -535,8 +535,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('txt')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format ==='txt'
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)]'
- :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
+ ?'bg-[var(--surface)]/20 text-[var(--ink)]'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
  <FileText className={`w-5 h-5 ${format ==='txt' ?'text-[var(--ok)]' :'text-[var(--acc)]'}`} />
@@ -551,8 +551,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('json')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format ==='json'
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ink)]'
- :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
+ ?'bg-[var(--surface)]/20 text-[var(--ink)]'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
  <Code className={`w-5 h-5 ${format ==='json' ?'text-[var(--ok)]' :'text-[var(--acc)]'}`} />
@@ -566,7 +566,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
  {/* Audio Availability Banner (for ZIP mode) */}
  {format ==='zip' && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 border-[var(--hair)]/30 flex items-center justify-between gap-3 text-xs">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10/30 flex items-center justify-between gap-3 text-xs">
  <div className="flex items-center gap-2 text-[var(--ink-2)]">
  <Music className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span>
@@ -584,7 +584,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  )}
 
  {/* 3. Export Options / Toggles */}
- <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--ink)]/5 border-[var(--hair)] space-y-2.5">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--ink)]/5 space-y-2.5">
  <span className="text-xs font-semibold text-[var(--ink-2)]">Contenido a incluir en la exportación:</span>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
  <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -666,7 +666,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  </div>
 
  {/* Footer Actions */}
- <div className="p-4 border-t border-[var(--hair)] bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-2">
+ <div className="p-4 bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-2">
  {onExportAsSetlistPdf && (
  <button
  type="button"
@@ -683,7 +683,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <button
  type="button"
  onClick={handleCopyClipboard}
- className="px-4 py-2.5 rounded-[var(--r-l)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer border-[var(--hair)] active:scale-95"
+ className="px-4 py-2.5 rounded-[var(--r-l)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
  >
  {copied ? (
  <>

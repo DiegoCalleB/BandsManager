@@ -61,7 +61,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* BIOGRAFÍA OFICIAL / RESUMEN EJECUTIVO */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
- <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
+ <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <FileText className="w-5 h-5" /> Biografía Oficial / Resumen Ejecutivo
  </h3>
@@ -71,7 +71,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  config.biografia.trim().length >= 80 &&
  !config.biografia.toLowerCase().includes('por definir') &&
  !config.biografia.includes('Propuesta musical en directo')
- ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/30'
+ ?'bg-[var(--ok)]/10 text-[var(--ok)]/30'
  :'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
  }`}
  >
@@ -116,7 +116,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
 
  {/* INFORMACIÓN ADICIONAL PARA EL DOSSIER */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
- <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
+ <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <Info className="w-5 h-5" /> Información Adicional y Notas del Dossier
  </h3>
@@ -127,7 +127,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  (config.dossierTextoExtra &&
  config.dossierTextoExtra.trim().length >= 80 &&
  !config.dossierTextoExtra.toLowerCase().includes('por definir'))
- ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/30'
+ ?'bg-[var(--ok)]/10 text-[var(--ok)]/30'
  :'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
  }`}
  >
@@ -170,7 +170,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
 
  {/* FORMACIÓN DE LA BANDA */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
+ <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
  <div className="flex items-center gap-2">
  <Users className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)]">
@@ -280,7 +280,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
 
  {/* DATOS DE CONTACTO DE BOOKING & REDES */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
  <Mail className="w-5 h-5" /> Datos de Contacto de Booking & Redes Oficiales
  </h3>
 
@@ -370,7 +370,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  />
  </div>
 
- <div className="pt-3 border-t space-y-3">
+ <div className="pt-3 space-y-3">
  <div className="flex items-center justify-between flex-wrap gap-2">
  <div>
  <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">

@@ -174,7 +174,7 @@ export function EnsayosManager({
  return (
  <div className="space-y-6 animate-fade-in pb-12">
  {/* Top Header Card: Active Rehearsal Details & Session Selector */}
- <div className="p-4 sm:p-6 rounded-3xl bg-[var(--surface)] border-[var(--hair)] space-y-4">
+ <div className="p-4 sm:p-6 rounded-3xl bg-[var(--surface)] space-y-4">
  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
  {/* Left: Rehearsal Picker & Title */}
  <div className="space-y-2">
@@ -184,7 +184,7 @@ export function EnsayosManager({
  <select
  value={currentRehearsal?.id ||''}
  onChange={e => setSelectedRehearsalId(e.target.value)}
- className="appearance-none bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-sans font-bold hover: focus: outline-none cursor-pointer"
+ className="appearance-none bg-[var(--surface)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-sans font-bold hover: focus: outline-none cursor-pointer"
  >
  {sortedRehearsals.map(r => (
  <option key={r.id} value={r.id}>
@@ -199,7 +199,7 @@ export function EnsayosManager({
  <span
  className={`px-2.5 py-1 rounded-full text-[10px] font-sans font-bold tracking-wider ${
  currentRehearsal?.estado ==='completado'
- ?'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30'
+ ?'bg-[var(--ok)]/15 text-[var(--ink-2)]/30'
  : currentRehearsal?.estado ==='en_curso'
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -275,7 +275,7 @@ export function EnsayosManager({
  </div>
 
  {/* Master Navigation Tabs - 100% Mobile Responsive */}
- <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[var(--surface)] rounded-[var(--r-l)] border-[var(--hair)]">
+ <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[var(--surface)] rounded-[var(--r-l)]">
  <button
  onClick={() => setActiveTab('orden_del_dia')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${

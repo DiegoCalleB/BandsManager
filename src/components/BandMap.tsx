@@ -89,7 +89,7 @@ const GEO_CACHE: Record<string, [number, number]> = {};
 
 function getTokenColor(tokenName: string): string {
  const style = getComputedStyle(document.documentElement);
- return style.getPropertyValue(tokenName).trim() || '#666666';
+ return style.getPropertyValue(tokenName).trim() ||' #666666';
 }
 
 function getStatusBadgeConfig(status: BandRelationshipStatus) {
@@ -100,18 +100,18 @@ function getStatusBadgeConfig(status: BandRelationshipStatus) {
 
  switch (status) {
  case'colegas_aliados':
- return { text:'🤝 Colegas / Aliados', color: okColor, bg: okColor + '26' };
+ return { text:'🤝 Colegas / Aliados', color: okColor, bg: okColor +' 26' };
  case'concierto_agendado':
- return { text:'⚡ Concierto Agendado', color: accColor, bg: accColor + '26' };
+ return { text:'⚡ Concierto Agendado', color: accColor, bg: accColor +' 26' };
  case'intercambio_propuesto':
- return { text:'🔄 Date Swap Propuesto', color: okColor, bg: okColor + '26' };
+ return { text:'🔄 Date Swap Propuesto', color: okColor, bg: okColor +' 26' };
  case'pendiente_respuesta':
- return { text:'⏳ Pendiente Respuesta', color: accColor, bg: accColor + '26' };
+ return { text:'⏳ Pendiente Respuesta', color: accColor, bg: accColor +' 26' };
  case'no_disponible':
- return { text:'❌ No Disponible', color: alertColor, bg: alertColor + '26' };
+ return { text:'❌ No Disponible', color: alertColor, bg: alertColor +' 26' };
  case'sin_contactar':
  default:
- return { text:'📡 Sin Contactar', color: ink3Color, bg: ink3Color + '26' };
+ return { text:'📡 Sin Contactar', color: ink3Color, bg: ink3Color +' 26' };
  }
 }
 

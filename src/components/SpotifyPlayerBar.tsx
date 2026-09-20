@@ -524,7 +524,7 @@ export default function SpotifyPlayerBar({
  onEnded={() => { if (activeSlotRef.current ==='B') handleEnded(); }}
  />
 
- <div className="bg-[var(--surface)]/98 border-t border-[var(--hair)] text-[var(--ink)] px-3.5 py-2.5 sm:px-4 sm:py-3 max-w-full">
+ <div className="bg-[var(--surface)]/98 text-[var(--ink)] px-3.5 py-2.5 sm:px-4 sm:py-3 max-w-full">
  {isMinimized ? (
  /* Minimized Compact Strip: single-row bar sitting strictly above mobile bottom navbar */
  <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
@@ -534,7 +534,7 @@ export default function SpotifyPlayerBar({
  className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer group"
  title="Haz clic para expandir el reproductor"
  >
- <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden border-[var(--hair)]">
+ <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden">
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
@@ -637,7 +637,7 @@ export default function SpotifyPlayerBar({
  {/* Left: Song Info */}
  <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
  <div className="flex items-center gap-3.5 min-w-0">
- <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden group border-[var(--hair)]">
+ <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden group">
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
@@ -777,7 +777,7 @@ export default function SpotifyPlayerBar({
  <select
  value={playbackRate}
  onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
- className="bg-[var(--surface)] text-[var(--ok)] text-[10px] font-sans rounded px-1.5 py-1 cursor-pointer hover:bg-[var(--ink-3)]/60 focus:outline-none border-[var(--hair)]"
+ className="bg-[var(--surface)] text-[var(--ok)] text-[10px] font-sans rounded px-1.5 py-1 cursor-pointer hover:bg-[var(--ink-3)]/60 focus:outline-none"
  title="Velocidad de Reproducción"
  >
  <option value={0.5}>0.5x</option>
@@ -791,8 +791,8 @@ export default function SpotifyPlayerBar({
  <select
  value={transposeSemitones}
  onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
- className={`bg-[var(--surface)] text-[10px] font-sans rounded px-1.5 py-1 cursor-pointer hover:bg-[var(--ink-3)]/60 focus:outline-none border-[var(--hair)] ${
- transposeSemitones !== 0 ?'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' :'text-[var(--ink-2)]'
+ className={`bg-[var(--surface)] text-[10px] font-sans rounded px-1.5 py-1 cursor-pointer hover:bg-[var(--ink-3)]/60 focus:outline-none ${
+ transposeSemitones !== 0 ?'text-[#ff6b9d] font-bold/30' :'text-[var(--ink-2)]'
  }`}
  title="Trasposición de Tono (Nativa en tiempo real Web Audio)"
  >
@@ -852,7 +852,7 @@ export default function SpotifyPlayerBar({
  {/* Studio / Arreglos Button */}
  <button
  onClick={() => onOpenStudio(song)}
- className="px-3 py-1.5 rounded-full bg-[var(--surface)]/15 hover:bg-[var(--surface)]/25 text-[var(--ok)] border-[var(--hair)]/30 font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+ className="px-3 py-1.5 rounded-full bg-[var(--surface)]/15 hover:bg-[var(--surface)]/25 text-[var(--ok)]/30 font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
  title="Abrir Estudio de Arreglos e Ideas"
  >
  <Sliders className="w-3.5 h-3.5" />
@@ -870,7 +870,7 @@ export default function SpotifyPlayerBar({
  </button>
 
  {/* Volume */}
- <div className="hidden sm:flex items-center gap-1.5 pl-2 border-l border-[var(--hair)]">
+ <div className="hidden sm:flex items-center gap-1.5 pl-2">
  <button
  onClick={() => setIsMuted(!isMuted)}
  className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"

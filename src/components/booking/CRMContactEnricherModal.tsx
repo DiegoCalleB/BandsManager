@@ -79,7 +79,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <div className={`relative w-full max-w-lg my-auto rounded-[var(--r-l)] p-6 overflow-hidden ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
- <div className="flex items-center justify-between pb-4 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-4">
  <div className="flex items-center gap-2">
  <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]">
  <Sparkles className="w-5 h-5" />
@@ -133,7 +133,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  )}
  </div>
 
- <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--hair)]">
+ <div className="flex items-center justify-end gap-3 pt-4">
  <button
  type="button"
  onClick={onClose}

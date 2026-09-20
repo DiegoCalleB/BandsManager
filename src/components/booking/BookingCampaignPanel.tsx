@@ -76,7 +76,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
  if (!activeCampaign && !isEditing) {
  return (
- <div className="mb-6 p-6 border-dashed rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col items-center justify-center gap-3 text-[var(--ink-2)]">
+ <div className="mb-6 p-6 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col items-center justify-center gap-3 text-[var(--ink-2)]">
  <Target className="w-5 h-5 text-[var(--ink-2)]" />
  <div className="text-center">
  <p className="font-medium text-[var(--ink)]">Sin campaña de booking activa</p>
@@ -94,7 +94,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
  if (isEditing) {
  return (
- <div className="mb-6 p-5 border-[var(--hair)] rounded-[var(--r-m)] bg-[var(--surface)]">
+ <div className="mb-6 p-5 rounded-[var(--r-m)] bg-[var(--surface)]">
  <div className="flex justify-between items-center mb-4">
  <h3 className="font-semibold text-lg flex items-center gap-2">
  <Target className="w-5 h-5" /> Configurar Campaña
@@ -159,7 +159,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  newDates.sort();
  setCampaignForm({ ...campaignForm, targetDates: newDates });
  }}
- className="text-xs font-semibold text-[var(--ink)] bg-transparent border-0 p-0 focus:ring-0 cursor-pointer"
+ className="text-xs font-semibold text-[var(--ink)] bg-transparent p-0 focus:ring-0 cursor-pointer"
  title="Haz clic para modificar esta fecha"
  />
  <button 
@@ -176,7 +176,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </button>
  </div>
  ))}
- <div className="flex items-center gap-1.5 bg-[var(--tentative)]/5 hover:bg-[var(--tentative)]/10/80 text-[var(--tentative)] px-3 py-1.5 rounded-[var(--r-s)] border-[var(--acc)] border-dashed transition-colors">
+ <div className="flex items-center gap-1.5 bg-[var(--tentative)]/5 hover:bg-[var(--tentative)]/10/80 text-[var(--tentative)] px-3 py-1.5 rounded-[var(--r-s)] transition-colors">
  <Plus className="w-3.5 h-3.5 shrink-0" />
  <span className="text-xs font-semibold shrink-0">Añadir Fecha:</span>
  <input 
@@ -189,7 +189,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  }
  e.target.value =''; // reset after selection
  }}
- className="text-xs font-semibold text-[var(--tentative)] bg-transparent border-0 p-0 focus:ring-0 cursor-pointer"
+ className="text-xs font-semibold text-[var(--tentative)] bg-transparent p-0 focus:ring-0 cursor-pointer"
  title="Seleccionar nueva fecha para añadir"
  />
  </div>
@@ -225,7 +225,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  </div>
 
- <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-[var(--hair)]">
+ <div className="flex justify-end gap-2 mt-4 pt-4">
  <button 
  onClick={() => setIsEditing(false)}
  className="px-4 py-2 text-sm text-[var(--ink-2)] hover:hover:bg-[var(--surface)] rounded-[var(--r-s)] font-medium"
@@ -276,7 +276,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  </div>
  </div>
- <div className="bg-[var(--ink)]/5 px-5 py-3 border-t border-[var(--hair)] flex justify-between items-center">
+ <div className="bg-[var(--ink)]/5 px-5 py-3 flex justify-between items-center">
  <div className="text-xs text-[var(--ink-2)]">
  * Los pitches generados por la IA mencionarán automáticamente estas fechas y el formato de Co-booking.
  </div>

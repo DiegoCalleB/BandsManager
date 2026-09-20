@@ -204,7 +204,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </div>
 
  {/* OPCIONES DE INCLUSIÓN */}
- <div className="pt-2 border-t space-y-3">
+ <div className="pt-2 space-y-3">
  <label className="flex items-center gap-3 cursor-pointer p-2.5 bg-[var(--surface)] rounded-[var(--r-m)] hover:/50 transition">
  <input
  type="checkbox"
@@ -250,7 +250,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </div>
 
  {/* REDES VINCULADAS */}
- <div className="pt-2 border-t space-y-2">
+ <div className="pt-2 space-y-2">
  <div className="flex items-center justify-between flex-wrap gap-2">
  <span className="text-xs font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
  <Share2 className="w-3.5 h-3.5" /> Redes enlazadas
@@ -296,7 +296,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </div>
 
  <div className="bg-[var(--surface)] text-[var(--ink)] p-4 sm:p-5 rounded-[var(--r-l)] space-y-3 font-sans text-xs">
- <p className="text-[var(--ink-2)] italic text-[11px] pb-2 border-b border-[var(--hair)]">
+ <p className="text-[var(--ink-2)] italic text-[11px] pb-2">
  ... [Cuerpo del correo redactado para la sala o festival] ...
  </p>
 
@@ -425,7 +425,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  if (filteredEntries.length === 0) return null;
 
  return (
- <div className="pt-2.5 border-t flex flex-wrap items-center gap-1.5">
+ <div className="pt-2.5 flex flex-wrap items-center gap-1.5">
  {filteredEntries.map(([net, url]) => {
  const cleanNet = net.toLowerCase();
  const badgeInfo = badgesMap[cleanNet] || {
@@ -467,7 +467,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </p>
 
  {/* BOTONES DE COPIADO DE FIRMA */}
- <div className="pt-2 border-t space-y-2.5">
+ <div className="pt-2 space-y-2.5">
  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
  <button
  type="button"
@@ -500,7 +500,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  onClick={handleCopyHtmlCode}
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='html'
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/40'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]/40'
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Copiar el código fuente HTML puro de la firma"
@@ -515,7 +515,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  onClick={handleCopyPlainText}
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='text'
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/40'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]/40'
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Copiar versión en texto plano"
@@ -561,7 +561,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  {showInstructions && (
  <div className="mt-2 p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3 text-xs text-[var(--ink-2)] animate-fadeIn">
  {/* Tabs de clientes */}
- <div className="flex items-center gap-1.5 border-b pb-2">
+ <div className="flex items-center gap-1.5 pb-2">
  <button
  type="button"
  onClick={() => setInstructionTab('gmail')}
@@ -633,7 +633,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
  {/* CÓDIGO QR OFICIAL DEL EPK */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 text-center">
- <div className="flex items-center justify-between border-b pb-3">
+ <div className="flex items-center justify-between pb-3">
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <QrCode className="w-5 h-5" /> Código QR Oficial del Dossier
  </h3>
@@ -644,7 +644,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  QR directo a vuestro dossier público para incluir en cartelería, carpetas físicas de prensa o tarjetas de contacto.
  </p>
 
- <div className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block border-4">
+ <div className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block">
  <QRCode value={publicEpkUrl} size={150} />
  </div>
 

@@ -128,7 +128,7 @@ export function AssignSetlistModal({
  onClick={onSave}
  disabled={!selectedConcertToAssign}
  className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold disabled:opacity-40 ${
- 'bg-[var(--acc)] text-[var(--on-acc)]'
+' bg-[var(--acc)] text-[var(--on-acc)]'
  }`}
  >
  Guardar Asignación

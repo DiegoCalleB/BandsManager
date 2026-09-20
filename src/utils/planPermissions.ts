@@ -1,4 +1,4 @@
-export type SubscriptionPlanId = 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | 'emergente' | 'profesional' | 'elite' | 'manager360';
+export type SubscriptionPlanId =' promo' |' promo_plus' |' ensayo' |' local' |' de_gira' |' cabeza_de_cartel' |' emergente' |' profesional' |' elite' |' manager360';
 
 export interface PlanFeature {
  id: string;
@@ -6,7 +6,7 @@ export interface PlanFeature {
 }
 
 export interface PlanDefinition {
- id: 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel';
+ id:' promo' |' promo_plus' |' ensayo' |' local' |' de_gira' |' cabeza_de_cartel';
  name: string;
  badge: string;
  color: string;
@@ -22,161 +22,161 @@ export interface PlanDefinition {
  features: string[];
 }
 
-export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanDefinition> = {
+export const PLANS: Record<'promo' |' promo_plus' |' ensayo' |' local' |' de_gira' |' cabeza_de_cartel', PlanDefinition> = {
  promo: {
- id: 'promo',
- name: 'Promo',
- badge: 'Festivales',
- color: '#a1a1aa', // Zinc claro
- price: '0€ / para siempre',
- credits: '0 créditos IA',
- creditsSub: 'Sin funciones de IA',
- description: 'Para bandas que necesitan su dossier, QR, calendario de directos, captación de fans y gestión de repertorio.',
- allowedModules: ['resumen', 'calendario', 'epk', 'fans', 'repertorio', 'ensayos', 'catalogo', 'discografia'],
+ id:' promo',
+ name:' Promo',
+ badge:' Festivales',
+ color:' #a1a1aa', // Zinc claro
+ price:' 0€ / para siempre',
+ credits:' 0 créditos IA',
+ creditsSub:' Sin funciones de IA',
+ description:' Para bandas que necesitan su dossier, QR, calendario de directos, captación de fans y gestión de repertorio.',
+ allowedModules: ['resumen',' calendario',' epk',' fans',' repertorio',' ensayos',' catalogo',' discografia'],
  features: [
- 'Dossier de Prensa Interactivo (EPK)',
- 'QR de contacto y difusión',
- 'Captación de fans con QR',
- 'Calendario de conciertos y ensayos',
- 'Gestión de Repertorio & Discografía (hasta 25 temas)',
+' Dossier de Prensa Interactivo (EPK)',
+' QR de contacto y difusión',
+' Captación de fans con QR',
+' Calendario de conciertos y ensayos',
+' Gestión de Repertorio & Discografía (hasta 25 temas)',
  ],
  },
  promo_plus: {
- id: 'promo_plus',
- name: 'Promo+',
- badge: 'Festivales+',
- color: '#38bdf8', // Sky / Azul brillante
- price: '0€ / para siempre',
- credits: '0 créditos IA',
- creditsSub: 'Sin funciones de IA',
- description: 'Para bandas que necesitan su dossier, QR, calendario y además repertorio, setlists y discografía.',
- allowedModules: ['resumen', 'calendario', 'epk', 'fans', 'repertorio', 'ensayos', 'catalogo', 'discografia'],
+ id:' promo_plus',
+ name:' Promo+',
+ badge:' Festivales+',
+ color:' #38bdf8', // Sky / Azul brillante
+ price:' 0€ / para siempre',
+ credits:' 0 créditos IA',
+ creditsSub:' Sin funciones de IA',
+ description:' Para bandas que necesitan su dossier, QR, calendario y además repertorio, setlists y discografía.',
+ allowedModules: ['resumen',' calendario',' epk',' fans',' repertorio',' ensayos',' catalogo',' discografia'],
  features: [
- 'Dossier de Prensa Interactivo (EPK)',
- 'QR de contacto y difusión',
- 'Captación de fans con QR',
- 'Calendario de conciertos y ensayos',
- 'Gestión de Repertorio, Setlists & Letras',
- 'Discografía & Catálogo de temas',
- 'Asignación de Setlists en directo',
+' Dossier de Prensa Interactivo (EPK)',
+' QR de contacto y difusión',
+' Captación de fans con QR',
+' Calendario de conciertos y ensayos',
+' Gestión de Repertorio, Setlists & Letras',
+' Discografía & Catálogo de temas',
+' Asignación de Setlists en directo',
  ],
  },
  ensayo: {
- id: 'ensayo',
- name: 'Ensayo',
- badge: 'Gratis',
- color: '#71717a', // Zinc
- price: '0€ / para siempre',
- credits: '100 créditos / mes',
- creditsSub: 'Pitches básicos y consultas IA',
- description: 'Para proyectos noveles que están empezando a organizarse.',
- allowedModules: ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'epk', 'repertorio', 'ensayos', 'catalogo', 'discografia', 'planes'],
+ id:' ensayo',
+ name:' Ensayo',
+ badge:' Gratis',
+ color:' #71717a', // Zinc
+ price:' 0€ / para siempre',
+ credits:' 100 créditos / mes',
+ creditsSub:' Pitches básicos y consultas IA',
+ description:' Para proyectos noveles que están empezando a organizarse.',
+ allowedModules: ['resumen',' booking',' medios',' management',' bandas',' calendario',' epk',' repertorio',' ensayos',' catalogo',' discografia',' planes'],
  features: [
- '1 banda o proyecto activo',
- '10 salas en base de datos',
- 'Dossier de Prensa Interactivo (EPK)',
- 'Gestión de Repertorio, Setlists & Letras',
- 'Metrónomo WebAudio & Afinador Pro',
+' 1 banda o proyecto activo',
+' 10 salas en base de datos',
+' Dossier de Prensa Interactivo (EPK)',
+' Gestión de Repertorio, Setlists & Letras',
+' Metrónomo WebAudio & Afinador Pro',
  ],
  },
  local: {
- id: 'local',
- name: 'Local',
- badge: 'Iniciación',
- color: '#94a3b8', // Slate / Silver
- price: '15€ / mes',
- credits: '300 créditos / mes',
- creditsSub: 'Booking guiado y generación de ideas',
- description: 'Bandas en activo que buscan arrancar su booking y difusión.',
- allowedModules: ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'catalogo', 'discografia', 'planes'],
+ id:' local',
+ name:' Local',
+ badge:' Iniciación',
+ color:' #94a3b8', // Slate / Silver
+ price:' 15€ / mes',
+ credits:' 300 créditos / mes',
+ creditsSub:' Booking guiado y generación de ideas',
+ description:' Bandas en activo que buscan arrancar su booking y difusión.',
+ allowedModules: ['resumen',' booking',' medios',' management',' bandas',' calendario',' epk',' fans',' reels',' repertorio',' ensayos',' catalogo',' discografia',' planes'],
  stickerGift: {
- qty: '250 pegatinas gratis',
- description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
+ qty:' 250 pegatinas gratis',
+ description:' Pack de pegatinas de tu banda, gratis con tu primera suscripción',
  },
  features: [
- '1 banda o proyecto',
- '50 salas de conciertos',
- '🎁 Regalo: 250 pegatinas vinilo de tu banda',
- '10 contactos de prensa y medios',
- 'Planificador de Redes & Reels Center',
- 'QR & Captura de Base de Fans',
- 'Asistente IA de Redacción de Pitches',
+' 1 banda o proyecto',
+' 50 salas de conciertos',
+' 🎁 Regalo: 250 pegatinas vinilo de tu banda',
+' 10 contactos de prensa y medios',
+' Planificador de Redes & Reels Center',
+' QR & Captura de Base de Fans',
+' Asistente IA de Redacción de Pitches',
  ],
  },
  de_gira: {
- id: 'de_gira',
- name: 'De Gira',
- badge: 'Más Popular',
- color: 'var(--acc)', // Amber / Gold
- price: '29€ / mes',
- credits: '800 créditos / mes',
- creditsSub: 'Flujos agénticos completos y auto-booking',
- description: 'Para bandas que tocan con frecuencia y automatizan su gestión.',
- allowedModules: ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'epk', 'giras', 'fans', 'reels', 'repertorio', 'ensayos', 'catalogo', 'discografia', 'chat', 'planes'],
+ id:' de_gira',
+ name:' De Gira',
+ badge:' Más Popular',
+ color:' var(--acc)', // Amber / Gold
+ price:' 29€ / mes',
+ credits:' 800 créditos / mes',
+ creditsSub:' Flujos agénticos completos y auto-booking',
+ description:' Para bandas que tocan con frecuencia y automatizan su gestión.',
+ allowedModules: ['resumen',' booking',' medios',' management',' bandas',' calendario',' epk',' giras',' fans',' reels',' repertorio',' ensayos',' catalogo',' discografia',' chat',' planes'],
  stickerGift: {
- qty: '500 pegatinas gratis',
- description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
+ qty:' 500 pegatinas gratis',
+ description:' Pack de pegatinas de tu banda, gratis con tu primera suscripción',
  },
  features: [
- 'Salas y festivales ilimitados',
- 'Medios y prensa ilimitados',
- '🎁 Regalo: 500 pegatinas vinilo de tu banda',
- 'Agentes IA Scout, Redactor y Lector',
- 'Rutas de Gira & Tour Logistics',
- 'Calculadora de kilometraje y dietas',
- 'Dossier EPK con dominio propio',
+' Salas y festivales ilimitados',
+' Medios y prensa ilimitados',
+' 🎁 Regalo: 500 pegatinas vinilo de tu banda',
+' Agentes IA Scout, Redactor y Lector',
+' Rutas de Gira & Tour Logistics',
+' Calculadora de kilometraje y dietas',
+' Dossier EPK con dominio propio',
  ],
  },
  cabeza_de_cartel: {
- id: 'cabeza_de_cartel',
- name: 'Cabeza de Cartel',
- badge: 'Pro & Multi-Banda',
- color: 'var(--ok)', // Emerald
- price: '79€ / mes',
- credits: '2.500 créditos / mes',
- creditsSub: 'Capacidad multi-banda y agentes en paralelo',
- description: 'Control total para proyectos profesionales, agencias y mánagers.',
- allowedModules: ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'epk', 'giras', 'fans', 'reels', 'repertorio', 'ensayos', 'catalogo', 'discografia', 'chat', 'finanzas', 'merchan', 'planes'],
+ id:' cabeza_de_cartel',
+ name:' Cabeza de Cartel',
+ badge:' Pro & Multi-Banda',
+ color:' var(--ok)', // Emerald
+ price:' 79€ / mes',
+ credits:' 2.500 créditos / mes',
+ creditsSub:' Capacidad multi-banda y agentes en paralelo',
+ description:' Control total para proyectos profesionales, agencias y mánagers.',
+ allowedModules: ['resumen',' booking',' medios',' management',' bandas',' calendario',' epk',' giras',' fans',' reels',' repertorio',' ensayos',' catalogo',' discografia',' chat',' finanzas',' merchan',' planes'],
  stickerGift: {
- qty: '1.000 pegatinas + entrega prioritaria',
- description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
+ qty:' 1.000 pegatinas + entrega prioritaria',
+ description:' Pack de pegatinas de tu banda, gratis con tu primera suscripción',
  },
  features: [
- 'Hasta 5 bandas gestionadas en paralelo',
- 'Todo ilimitado sin restricciones de volumen',
- '🎁 Regalo: 1.000 pegatinas vinilo + Envío Express',
- 'Taller Merchan & Inventario Completo',
- 'Finanzas Avanzadas e Ingresos/Gastos',
- 'IA Multi-Agente con Function Calling',
- 'Soporte Prioritario VIP 24/7',
+' Hasta 5 bandas gestionadas en paralelo',
+' Todo ilimitado sin restricciones de volumen',
+' 🎁 Regalo: 1.000 pegatinas vinilo + Envío Express',
+' Taller Merchan & Inventario Completo',
+' Finanzas Avanzadas e Ingresos/Gastos',
+' IA Multi-Agente con Function Calling',
+' Soporte Prioritario VIP 24/7',
  ],
  },
 };
 
-export function normalizePlan(rawPlan?: string): 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' {
- if (!rawPlan) return 'ensayo';
+export function normalizePlan(rawPlan?: string):' promo' |' promo_plus' |' ensayo' |' local' |' de_gira' |' cabeza_de_cartel' {
+ if (!rawPlan) return' ensayo';
  const clean = rawPlan.toLowerCase().trim();
 
- if (clean === 'cabeza_de_cartel' || clean === 'cabeza de cartel' || clean === 'elite' || clean === 'manager360' || clean === 'pro_plus' || clean === '360' || clean === 'manager 360' || clean === 'elite 360') {
- return 'cabeza_de_cartel';
+ if (clean ===' cabeza_de_cartel' || clean ===' cabeza de cartel' || clean ===' elite' || clean ===' manager360' || clean ===' pro_plus' || clean ===' 360' || clean ===' manager 360' || clean ===' elite 360') {
+ return' cabeza_de_cartel';
  }
- if (clean === 'de_gira' || clean === 'de gira' || clean === 'profesional' || clean === 'pro' || clean === 'consolidada' || clean === 'gira profesional' || clean === 'gira') {
- return 'de_gira';
+ if (clean ===' de_gira' || clean ===' de gira' || clean ===' profesional' || clean ===' pro' || clean ===' consolidada' || clean ===' gira profesional' || clean ===' gira') {
+ return' de_gira';
  }
- if (clean === 'local') {
- return 'local';
+ if (clean ===' local') {
+ return' local';
  }
- if (clean === 'promo_plus' || clean === 'promo+' || clean === 'promoplus' || clean === 'promo plus' || clean === 'festival_plus' || clean === 'festival+' || clean === 'promo_music' || clean === 'promomusic' || clean === 'promo music') {
- return 'promo_plus';
+ if (clean ===' promo_plus' || clean ===' promo+' || clean ===' promoplus' || clean ===' promo plus' || clean ===' festival_plus' || clean ===' festival+' || clean ===' promo_music' || clean ===' promomusic' || clean ===' promo music') {
+ return' promo_plus';
  }
- if (clean === 'promo' || clean === 'buskers' || clean === 'festival') {
- return 'promo';
+ if (clean ===' promo' || clean ===' buskers' || clean ===' festival') {
+ return' promo';
  }
- if (clean === 'ensayo' || clean === 'emergente' || clean === 'gratis' || clean === 'free' || clean === 'basico') {
- return 'ensayo';
+ if (clean ===' ensayo' || clean ===' emergente' || clean ===' gratis' || clean ===' free' || clean ===' basico') {
+ return' ensayo';
  }
 
- return 'ensayo';
+ return' ensayo';
 }
 
 export function getPlanDefinition(rawPlan?: string): PlanDefinition {
@@ -185,26 +185,26 @@ export function getPlanDefinition(rawPlan?: string): PlanDefinition {
 }
 
 export function isElitePlan(rawPlan?: string): boolean {
- return normalizePlan(rawPlan) === 'cabeza_de_cartel';
+ return normalizePlan(rawPlan) ===' cabeza_de_cartel';
 }
 
 export function getPlanTierLevel(rawPlan?: string): number {
  const norm = normalizePlan(rawPlan);
- if (norm === 'cabeza_de_cartel') return 4;
- if (norm === 'de_gira') return 3;
- if (norm === 'local') return 2;
- if (norm === 'ensayo') return 1;
- if (norm === 'promo_plus') return 0.5;
+ if (norm ===' cabeza_de_cartel') return 4;
+ if (norm ===' de_gira') return 3;
+ if (norm ===' local') return 2;
+ if (norm ===' ensayo') return 1;
+ if (norm ===' promo_plus') return 0.5;
  return 0; // promo
 }
 
-export function getPlanChangeType(currentPlan?: string, targetPlan?: string): 'current' | 'upgrade' | 'downgrade' {
+export function getPlanChangeType(currentPlan?: string, targetPlan?: string):' current' |' upgrade' |' downgrade' {
  const normCurrent = normalizePlan(currentPlan);
  const normTarget = normalizePlan(targetPlan);
- if (normCurrent === normTarget) return 'current';
+ if (normCurrent === normTarget) return' current';
  const currLevel = getPlanTierLevel(normCurrent);
  const targetLevel = getPlanTierLevel(normTarget);
- return targetLevel > currLevel ? 'upgrade' : 'downgrade';
+ return targetLevel > currLevel ?' upgrade' :' downgrade';
 }
 
 export interface PlanLimits {
@@ -216,7 +216,7 @@ export interface PlanLimits {
  monthlyCredits: number;
 }
 
-export const PLAN_LIMITS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanLimits> = {
+export const PLAN_LIMITS: Record<'promo' |' promo_plus' |' ensayo' |' local' |' de_gira' |' cabeza_de_cartel', PlanLimits> = {
  promo: {
  maxLeads: 0,
  maxPressContacts: 0,
@@ -274,28 +274,28 @@ export function getPlanLimits(rawPlan?: string): PlanLimits {
 
 export function checkRecordLimit(
  rawPlan: string | undefined,
- recordType: 'leads' | 'medios' | 'fans' | 'songs' | 'bands',
+ recordType:' leads' |' medios' |' fans' |' songs' |' bands',
  currentCount: number
 ): { allowed: boolean; max: number; current: number; message?: string } {
  const limits = getPlanLimits(rawPlan);
  let max = Infinity;
- let typeLabel = 'registros';
+ let typeLabel =' registros';
 
- if (recordType === 'leads') {
+ if (recordType ===' leads') {
  max = limits.maxLeads;
- typeLabel = 'escenarios';
- } else if (recordType === 'medios') {
+ typeLabel =' escenarios';
+ } else if (recordType ===' medios') {
  max = limits.maxPressContacts;
- typeLabel = 'contactos de medios';
- } else if (recordType === 'fans') {
+ typeLabel =' contactos de medios';
+ } else if (recordType ===' fans') {
  max = limits.maxFans;
- typeLabel = 'fans';
- } else if (recordType === 'songs') {
+ typeLabel =' fans';
+ } else if (recordType ===' songs') {
  max = limits.maxSongs;
- typeLabel = 'canciones';
- } else if (recordType === 'bands') {
+ typeLabel =' canciones';
+ } else if (recordType ===' bands') {
  max = limits.maxBands;
- typeLabel = 'bandas';
+ typeLabel =' bandas';
  }
 
  if (currentCount >= max) {
@@ -312,17 +312,17 @@ export function checkRecordLimit(
 
 export function hasModuleAccess(rawPlan: string | undefined, moduleId: string): boolean {
  const norm = normalizePlan(rawPlan);
- if (norm === 'cabeza_de_cartel') return true;
+ if (norm ===' cabeza_de_cartel') return true;
 
  const planDef = PLANS[norm];
  return planDef ? planDef.allowedModules.includes(moduleId) : false;
 }
 
-export function getRequiredPlanForModule(moduleId: string): 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' {
- if (PLANS.ensayo.allowedModules.includes(moduleId)) return 'ensayo';
- if (PLANS.local.allowedModules.includes(moduleId)) return 'local';
- if (PLANS.de_gira.allowedModules.includes(moduleId)) return 'de_gira';
- return 'cabeza_de_cartel';
+export function getRequiredPlanForModule(moduleId: string):' ensayo' |' local' |' de_gira' |' cabeza_de_cartel' {
+ if (PLANS.ensayo.allowedModules.includes(moduleId)) return' ensayo';
+ if (PLANS.local.allowedModules.includes(moduleId)) return' local';
+ if (PLANS.de_gira.allowedModules.includes(moduleId)) return' de_gira';
+ return' cabeza_de_cartel';
 }
 
 

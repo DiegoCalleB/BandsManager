@@ -5,7 +5,7 @@ export interface TourVehicle {
  nombre?: string;
  consumoL100km: number;
  precioCarburanteEUR?: number;
- tipoCombustible?: 'diesel' | 'gasolina95' | 'gasolina98' | 'electrico';
+ tipoCombustible?:' diesel' |' gasolina95' |' gasolina98' |' electrico';
 }
 
 export interface TourStop {

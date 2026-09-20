@@ -20,7 +20,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  const { score, details } = calculateLeadReliability(item);
 
  // Color coding
- let badgeColor ='bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30';
+ let badgeColor ='bg-[var(--ok)]/15 text-[var(--ink-2)]/30';
  let barColor ='bg-[var(--ok)]';
  let levelText ='Fiabilidad Alta';
 
@@ -30,7 +30,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  levelText ='Fiabilidad Media';
  }
  if (score < 30) {
- badgeColor ='bg-[var(--alert)]/15 text-[var(--alert)] border-[var(--alert)]/30';
+ badgeColor ='bg-[var(--alert)]/15 text-[var(--alert)]/30';
  barColor ='bg-[var(--alert)]';
  levelText ='Fiabilidad Baja';
  }
@@ -55,7 +55,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  {/* Tooltip Breakdown */}
  {showTooltip && (
  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 rounded-[var(--r-l)] bg-[var(--surface)]/95 text-[var(--ink-2)] text-xs z-50 pointer-events-none
- <div className="flex items-center justify-between pb-1.5 border-b mb-2">
+ <div className="flex items-center justify-between pb-1.5 mb-2">
  <span className="font-bold text-[var(--ink-2)] flex items-center gap-1">
  <Target className="w-3.5 h-3.5 text-[var(--acc)]" />
  Autodetector de Fiabilidad
@@ -88,7 +88,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  )}
  </ul>
 
- <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-bg-[var(--surface)]/95" />
+ <div className="absolute top-full left-1/2 -translate-x-1/2 border-t-bg-[var(--surface)]/95" />
  </div>
  )}
  </div>

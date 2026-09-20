@@ -169,10 +169,10 @@ export function CampaignManagerModal({
 
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
- <div className="bg-[var(--bg)] border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+ <div className="bg-[var(--bg)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
  
  {/* Header */}
- <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[var(--bg)]">
+ <div className="p-5 flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[var(--bg)]">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 flex items-center justify-center">
  <Target className="w-5 h-5" />
@@ -202,7 +202,7 @@ export function CampaignManagerModal({
  {isEditing ? (
  /* Editing / Creation Form */
  <div className="space-y-4">
- <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-3">
  <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)]">
  {editingCampaignId ?'✎ Editar Campaña' :'➕ Crear Nueva Campaña'}
  </span>
@@ -239,7 +239,7 @@ export function CampaignManagerModal({
  type="button"
  onClick={() => setFormData({ ...formData, color: col })}
  className={`w-7 h-7 rounded-[var(--r-s)] transition-transform cursor-pointer ${
- formData.color === col ?'scale-110 border-[var(--hair)] ring-2 ring-white/40' :'border-transparent opacity-70 hover:opacity-100'
+ formData.color === col ?'scale-110 ring-2 ring-white/40' :'border-transparent opacity-70 hover:opacity-100'
  }`}
  style={{ backgroundColor: col }}
  />
@@ -340,7 +340,7 @@ export function CampaignManagerModal({
  next.sort();
  setFormData({ ...formData, targetDates: next });
  }}
- className="bg-transparent text-xs font-sans font-bold text-[var(--ink)] border-0 p-0 focus:ring-0 cursor-pointer"
+ className="bg-transparent text-xs font-sans font-bold text-[var(--ink)] p-0 focus:ring-0 cursor-pointer"
  />
  <button
  type="button"
@@ -355,7 +355,7 @@ export function CampaignManagerModal({
  </div>
  ))}
 
- <div className="flex items-center gap-1.5 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 border-dashed rounded-[var(--r-m)] px-2.5 py-1 text-[var(--tentative)]/80">
+ <div className="flex items-center gap-1.5 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 rounded-[var(--r-m)] px-2.5 py-1 text-[var(--tentative)]/80">
  <Plus className="w-3.5 h-3.5" />
  <span className="text-[11px] font-sans font-bold">Añadir Fecha:</span>
  <input
@@ -364,7 +364,7 @@ export function CampaignManagerModal({
  handleAddDate(e.target.value);
  e.target.value ='';
  }}
- className="bg-transparent text-xs font-sans text-[var(--acc)]/40 border-0 p-0 focus:ring-0 cursor-pointer"
+ className="bg-transparent text-xs font-sans text-[var(--acc)]/40 p-0 focus:ring-0 cursor-pointer"
  />
  </div>
  </div>
@@ -409,7 +409,7 @@ export function CampaignManagerModal({
  onClick={() => setActivePitchCategory(cat.id)}
  className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors ${
  isSelected
- ?'bg-[var(--acc)]/30 text-[var(--acc)]/40 border-[var(--acc)]/60'
+ ?'bg-[var(--acc)]/30 text-[var(--acc)]/40/60'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:'
  }`}
  >
@@ -434,7 +434,7 @@ export function CampaignManagerModal({
  </div>
 
  {/* Action buttons */}
- <div className="flex justify-end gap-2 pt-3 border-t border-[var(--hair)]">
+ <div className="flex justify-end gap-2 pt-3">
  <button
  type="button"
  onClick={() => setIsEditing(false)}
@@ -519,7 +519,7 @@ export function CampaignManagerModal({
  key={camp.id}
  className={`p-4 rounded-[var(--r-m)] transition-all relative overflow-hidden ${
  isActive
- ?'bg-[var(--surface)] border-[var(--acc)]/60 ring-1 ring-purple-500/30'
+ ?'bg-[var(--surface)]/60 ring-1 ring-purple-500/30'
  :'bg-[var(--surface)] hover:'
  }`}
  >
@@ -649,7 +649,7 @@ export function CampaignManagerModal({
  </div>
 
  {/* Footer */}
- <div className="p-4 border-t border-[var(--hair)] bg-[var(--surface)] flex justify-between items-center text-xs text-[var(--ink-2)]">
+ <div className="p-4 bg-[var(--surface)] flex justify-between items-center text-xs text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <ShieldCheck className="w-4 h-4 text-[var(--ok)]" />
  <span>Persistencia en Supabase PostgreSQL</span>

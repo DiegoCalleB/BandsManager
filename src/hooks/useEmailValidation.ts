@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { apiFetch } from '../utils/api';
+import { useState, useEffect } from' react';
+import { apiFetch } from' ../utils/api';
 
 /**
  * Cachea validaciones de email para no hacer verificaciones innecesarias
@@ -12,7 +12,7 @@ export function useEmailValidation() {
  const loadEmailValidities = async () => {
  setIsLoading(true);
  try {
- const data = await apiFetch('/api/leads/validate-emails', { method: 'GET' });
+ const data = await apiFetch('/api/leads/validate-emails', { method:' GET' });
  if (data.success && data.validities) {
  setEmailValidities(data.validities);
  }
@@ -34,9 +34,9 @@ export function useEmailValidation() {
 /**
  * Helper para obtener status de email de un lead
  */
-export function getEmailStatus(leadId: string, email: string | null | undefined, emailValidities: Record<string, boolean>): 'valid' | 'invalid' | 'empty' {
- if (!email) return 'empty';
- return emailValidities[leadId] === false ? 'invalid' : 'valid';
+export function getEmailStatus(leadId: string, email: string | null | undefined, emailValidities: Record<string, boolean>):' valid' |' invalid' |' empty' {
+ if (!email) return' empty';
+ return emailValidities[leadId] === false ?' invalid' :' valid';
 }
 
 /**

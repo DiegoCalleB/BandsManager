@@ -310,7 +310,7 @@ export function OrdenDelDiaTab({
  return (
  <div className="space-y-6 animate-fade-in">
  {/* Top Banner with Run-of-Show Stats & Direct Live Launch */}
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[#141413] to-[#1a1917] border-[var(--hair)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[#141413] to-[#1a1917] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
  <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">
@@ -324,14 +324,14 @@ export function OrdenDelDiaTab({
  Añade temas en orden, reorganiza arrastrando y planifica los minutos exactos del ensayo.
  </p>
  <div className="flex flex-wrap items-center gap-2 pt-1 font-sans text-xs">
- <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--acc)]/70 font-bold border-[var(--hair)]">
+ <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--acc)]/70 font-bold">
  ⏱ {totalMinutosEstimados} min estimados
  </span>
- <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]">
+ <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)]">
  🎵 {cancionesCount} canciones
  </span>
  {pausasCount > 0 && (
- <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]">
+ <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)]">
  ☕ {pausasCount} descansos
  </span>
  )}
@@ -375,7 +375,7 @@ export function OrdenDelDiaTab({
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
  {/* Left Column: Objectives & Quick Tips */}
  <div className="space-y-4">
- <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)]">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]">
  <div className="flex items-center justify-between gap-2 mb-3">
  <div className="flex items-center gap-2">
  <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
@@ -400,8 +400,8 @@ export function OrdenDelDiaTab({
  key={obj.id}
  className={`flex items-start justify-between gap-2 p-2.5 rounded-[var(--r-m)] transition-all ${
  obj.completado
- ?'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ink-2)]'
- :'bg-[var(--surface)] border-[var(--surface)] text-[var(--ink)] hover:'
+ ?'bg-[var(--ok)]/10/30 text-[var(--ink-2)]'
+ :'bg-[var(--surface)] text-[var(--ink)] hover:'
  }`}
  >
  <button
@@ -443,7 +443,7 @@ export function OrdenDelDiaTab({
  handleAddObjetivo();
  }
  }}
- className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none focus:"
+ className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none focus:"
  />
  <button
  type="button"
@@ -456,7 +456,7 @@ export function OrdenDelDiaTab({
  </div>
 
  {/* Quick tips */}
- <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-2">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2">
  <h5 className="text-[11px] font-sans font-bold text-[var(--acc)] tracking-wider flex items-center gap-1.5">
  💡 Consejos de Productividad
  </h5>
@@ -502,7 +502,7 @@ export function OrdenDelDiaTab({
 
  {/* Agenda List with Drag and Drop */}
  {agenda.length === 0 ? (
- <div className="p-8 rounded-[var(--r-l)] bg-[var(--surface)] border-dashed border-[var(--hair)] text-center space-y-3">
+ <div className="p-8 rounded-[var(--r-l)] bg-[var(--surface)] text-center space-y-3">
  <Disc3 className="w-10 h-10 text-[var(--ink-2)] mx-auto animate-spin-slow" />
  <div className="space-y-1">
  <p className="text-sm font-bold text-[var(--ink-2)]">El orden del día está vacío</p>
@@ -569,12 +569,12 @@ export function OrdenDelDiaTab({
  isDragging
  ?'opacity-30 scale-[0.98]'
  : isDragOver
- ?' border-2 scale-[1.01] bg-[var(--acc)]/10'
+ ?' scale-[1.01] bg-[var(--acc)]/10'
  : item.evaluacion ==='bordada'
- ?'bg-[var(--surface)] border-[var(--ok)]/30 hover:border-[var(--ok)]/50'
+ ?'bg-[var(--surface)]/30 hover:border-[var(--ok)]/50'
  : item.evaluacion ==='repetir'
- ?'bg-[var(--surface)] border-[var(--alert)]/30 hover:border-[var(--alert)]/50'
- :'bg-[var(--surface)] border-[var(--hair)] hover:'
+ ?'bg-[var(--surface)]/30 hover:border-[var(--alert)]/50'
+ :'bg-[var(--surface)] hover:'
  }`}
  >
  <div className="flex items-start justify-between gap-3">
@@ -589,7 +589,7 @@ export function OrdenDelDiaTab({
  </div>
 
  {/* Number / Index */}
- <div className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)] flex items-center justify-center font-sans font-bold text-xs text-[var(--ink-2)] shrink-0">
+ <div className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--surface)] flex items-center justify-center font-sans font-bold text-xs text-[var(--ink-2)] shrink-0">
  {idx + 1}
  </div>
 
@@ -639,7 +639,7 @@ export function OrdenDelDiaTab({
  placeholder="Enfoque: ej. solo de guitarra, compenetrar coros, dinamismo..."
  value={item.enfoque ||''}
  onChange={e => handleUpdateAgendaItem(item.id, { enfoque: e.target.value })}
- className="w-full text-xs font-sans text-[var(--ink-2)] bg-transparent border-b border-transparent hover: focus: outline-none transition-colors"
+ className="w-full text-xs font-sans text-[var(--ink-2)] bg-transparent hover: focus: outline-none transition-colors"
  />
  </div>
  </div>
@@ -647,7 +647,7 @@ export function OrdenDelDiaTab({
 
  {/* Right: Duration, Controls & Move */}
  <div className="flex items-center gap-2 shrink-0">
- <div className="flex items-center gap-1 bg-[var(--surface)] border-[var(--hair)] px-2 py-1 rounded-[var(--r-s)]" title="Duración estimada en minutos">
+ <div className="flex items-center gap-1 bg-[var(--surface)] px-2 py-1 rounded-[var(--r-s)]" title="Duración estimada en minutos">
  <Clock className="w-3 h-3 text-[var(--ink-2)]" />
  <input
  type="number"
@@ -709,8 +709,8 @@ export function OrdenDelDiaTab({
  {showAddSongModal && (
  <ModalPortal isOpen={showAddSongModal} onClose={() => setShowAddSongModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
- <div className="w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[92vh] flex flex-col border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)]">
- <div className="flex justify-between items-center pb-3 border-b border-[var(--surface)]">
+ <div className="w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[92vh] flex flex-col bg-[var(--surface)] text-[var(--ink)]">
+ <div className="flex justify-between items-center pb-3">
  <div className="flex items-center gap-2">
  <Disc3 className="w-5 h-5 text-[var(--acc)]" />
  <div>
@@ -739,7 +739,7 @@ export function OrdenDelDiaTab({
  value={searchSongQuery}
  onChange={(e) => setSearchSongQuery(e.target.value)}
  placeholder="Buscar por título, tonalidad, género..."
- className="w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)] focus:outline-none focus:"
+ className="w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] focus:outline-none focus:"
  />
  </div>
 
@@ -747,7 +747,7 @@ export function OrdenDelDiaTab({
  <select
  value={selectedAlbumFilter}
  onChange={(e) => setSelectedAlbumFilter(e.target.value)}
- className="text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer border-[var(--hair)] bg-[var(--surface)] text-[var(--acc)]/70 font-bold"
+ className="text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer bg-[var(--surface)] text-[var(--acc)]/70 font-bold"
  >
  {albumsList.map(alb => (
  <option key={alb} value={alb}>{alb ==='todos' ?'Todos los álbumes' : alb}</option>
@@ -760,7 +760,7 @@ export function OrdenDelDiaTab({
  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer transition-colors ${
  onlyFavorites
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
- :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Star className={`w-3 h-3 ${onlyFavorites ?'fill-amber-400 text-[var(--acc)]' :''}`} />
@@ -770,7 +770,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={selectAllFiltered}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)] transition-colors"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
  >
  Seleccionar todo ({filteredSongs.length})
  </button>
@@ -779,7 +779,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={clearSelection}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)] transition-colors"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
  >
  Vaciar selección
  </button>
@@ -810,7 +810,7 @@ export function OrdenDelDiaTab({
  className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
  isSelected
  ?'bg-[var(--acc)]/60/15 /50 text-[var(--acc)]/70'
- :'bg-[var(--surface)] border-[var(--surface)] hover:bg-[var(--surface)] hover:'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] hover:'
  }`}
  >
  {/* Number in selection order */}
@@ -848,7 +848,7 @@ export function OrdenDelDiaTab({
  </div>
 
  {/* Modal Footer */}
- <div className="pt-3 mt-2 border-t border-[var(--surface)] flex items-center justify-between gap-3 shrink-0 bg-[var(--surface)]">
+ <div className="pt-3 mt-2 flex items-center justify-between gap-3 shrink-0 bg-[var(--surface)]">
  <span className="text-[10px] font-sans text-[var(--ink-2)]">
  {selectedSongIds.length > 0
  ? `${selectedSongIds.length} temas seleccionados en orden · ~${Math.ceil(selectedDurationSeconds / 60)} min`
@@ -882,8 +882,8 @@ export function OrdenDelDiaTab({
  {showImportSetlistModal && (
  <ModalPortal isOpen={showImportSetlistModal} onClose={() => setShowImportSetlistModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
- <div className="w-full max-w-lg p-5 rounded-[var(--r-l)] my-auto flex flex-col border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)]">
- <div className="flex justify-between items-center pb-3 border-b border-[var(--surface)]">
+ <div className="w-full max-w-lg p-5 rounded-[var(--r-l)] my-auto flex flex-col bg-[var(--surface)] text-[var(--ink)]">
+ <div className="flex justify-between items-center pb-3">
  <div className="flex items-center gap-2">
  <FolderInput className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
@@ -910,7 +910,7 @@ export function OrdenDelDiaTab({
  return (
  <div
  key={st.id}
- className="p-3 rounded-[var(--r-m)] border-[var(--hair)] bg-[var(--surface)] flex items-center justify-between gap-3 hover: transition-all"
+ className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between gap-3 hover: transition-all"
  >
  <div>
  <p className="text-xs font-bold text-[var(--ink)]">{st.nombre}</p>
@@ -942,7 +942,7 @@ export function OrdenDelDiaTab({
  </div>
  </div>
 
- <div className="flex justify-end pt-3 border-t border-[var(--surface)]">
+ <div className="flex justify-end pt-3">
  <button
  type="button"
  onClick={() => setShowImportSetlistModal(false)}
@@ -960,8 +960,8 @@ export function OrdenDelDiaTab({
  {showAddBlockModal && (
  <ModalPortal isOpen={showAddBlockModal} onClose={() => setShowAddBlockModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
- <form onSubmit={handleConfirmAddBlock} className="bg-[var(--surface)] border-[var(--hair)] w-full max-w-md rounded-[var(--r-l)] overflow-hidden flex flex-col">
- <div className="flex items-center justify-between p-4 border-b border-[var(--surface)]">
+ <form onSubmit={handleConfirmAddBlock} className="bg-[var(--surface)] w-full max-w-md rounded-[var(--r-l)] overflow-hidden flex flex-col">
+ <div className="flex items-center justify-between p-4">
  <div className="flex items-center gap-2">
  <Layers className="w-4 h-4 text-[var(--acc)]" />
  <h4 className="text-sm font-sans font-bold text-[var(--ink)]">
@@ -990,7 +990,7 @@ export function OrdenDelDiaTab({
  className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-2 text-xs font-sans transition-all cursor-pointer ${
  blockTipo === key
  ?'bg-[var(--acc)]/60/20 /40 text-[var(--acc)]/70 font-bold'
- :'bg-[var(--surface)] border-[var(--surface)] text-[var(--ink-2)] hover:'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <span>{def.icon}</span>
@@ -1009,7 +1009,7 @@ export function OrdenDelDiaTab({
  placeholder="Ej: Calentamiento & Sonido, Pausa café..."
  value={blockTitulo}
  onChange={e => setBlockTitulo(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none focus:"
  />
  </div>
 
@@ -1023,7 +1023,7 @@ export function OrdenDelDiaTab({
  max="120"
  value={blockDuracion}
  onChange={e => setBlockDuracion(Number(e.target.value))}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-sans text-[var(--ink)] outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink)] outline-none focus:"
  />
  </div>
 
@@ -1036,12 +1036,12 @@ export function OrdenDelDiaTab({
  placeholder="Ej: Ajustar retorno de monitores y afinación..."
  value={blockEnfoque}
  onChange={e => setBlockEnfoque(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none focus:"
  />
  </div>
  </div>
 
- <div className="flex items-center justify-end gap-2 p-4 border-t border-[var(--surface)] bg-[var(--surface)]">
+ <div className="flex items-center justify-end gap-2 p-4 bg-[var(--surface)]">
  <button
  type="button"
  onClick={() => setShowAddBlockModal(false)}

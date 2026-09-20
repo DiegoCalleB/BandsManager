@@ -1,9 +1,9 @@
-import { Song } from '../types';
+import { Song } from' ../types';
 
 /** Valor con el que la app rellena `tonalidad` cuando nadie la ha tocado nunca (ver
  * server/db/repertoire.ts, dbUpsertSong/mapSongRecord). Si la mayoría del repertorio sigue en
  * este valor, no es un dato real — es que nadie ha rellenado la tonalidad todavía. */
-export const TONALIDAD_FALLBACK = 'mim';
+export const TONALIDAD_FALLBACK =' mim';
 
 export interface ParsedKey {
  /** Clase de altura de la tónica, 0 (Do/C) a 11 (Si/B). */
@@ -52,12 +52,12 @@ export function parseTonalidad(tonalidad?: string | null): ParsedKey | null {
  let afterAccidental = rest;
  if (rest.startsWith('#') || rest.startsWith('sostenido')) {
  pc = (pc + 1) % 12;
- afterAccidental = rest.replace(/^(#|sostenido)/, '').trim();
+ afterAccidental = rest.replace(/^(#|sostenido)/,' ').trim();
  } else if (rest.startsWith('b') && !/^(mayor|major)/.test(rest)) {
  // "b" sola o "bemol" — pero no dejar que "b" de "Sib" ya consumida como nota se coma un modo
  // que empezara por b (no existe ninguno en español/inglés, así que esto es seguro).
  pc = (pc + 11) % 12;
- afterAccidental = rest.replace(/^(b|bemol)/, '').trim();
+ afterAccidental = rest.replace(/^(b|bemol)/,' ').trim();
  }
 
  const isMinor = /^(m|min|menor|minor)(?!ayor|ajor)/.test(afterAccidental);
@@ -67,7 +67,7 @@ export function parseTonalidad(tonalidad?: string | null): ParsedKey | null {
 
 /** Normaliza a una clave comparable (para detectar el fallback exacto, no para armonía). */
 function normalizarParaComparar(tonalidad?: string | null): string {
- return (tonalidad || '').trim().toLowerCase().replace(/\s+/g, '');
+ return (tonalidad ||' ').trim().toLowerCase().replace(/\s+/g,' ');
 }
 
 /**
@@ -98,7 +98,7 @@ function distanciaCircular(a: number, b: number): number {
  return Math.min(diff, 12 - diff);
 }
 
-export type CompatibilidadArmonica = 'identica' | 'compatible' | 'neutra' | 'choque';
+export type CompatibilidadArmonica =' identica' |' compatible' |' neutra' |' choque';
 
 /**
  * Evalúa la transición armónica entre dos tonalidades consecutivas del setlist.
@@ -108,18 +108,18 @@ export type CompatibilidadArmonica = 'identica' | 'compatible' | 'neutra' | 'cho
  * - choque: las tónicas están lejos en el círculo de quintas (nada en común), probable salto brusco
  */
 export function evaluarTransicionArmonica(a: ParsedKey, b: ParsedKey): CompatibilidadArmonica {
- if (a.pitchClass === b.pitchClass && a.isMinor === b.isMinor) return 'identica';
+ if (a.pitchClass === b.pitchClass && a.isMinor === b.isMinor) return' identica';
 
  // Subida (o bajada) de tono: mismo modo, un salto cromático corto — técnica habitual para dar
  // empuje a un tema, no una transición armónica "por casualidad".
  const semitonos = Math.abs(a.pitchClass - b.pitchClass);
  const semitonosCirculares = Math.min(semitonos, 12 - semitonos);
- if (a.isMinor === b.isMinor && semitonosCirculares > 0 && semitonosCirculares <= 2) return 'compatible';
+ if (a.isMinor === b.isMinor && semitonosCirculares > 0 && semitonosCirculares <= 2) return' compatible';
 
  const distancia = distanciaCircular(posicionCirculoQuintas(a), posicionCirculoQuintas(b));
- if (distancia <= 1) return 'compatible';
- if (distancia >= 4) return 'choque';
- return 'neutra';
+ if (distancia <= 1) return' compatible';
+ if (distancia >= 4) return' choque';
+ return' neutra';
 }
 
 /** Nombre corto para mostrar en un mensaje, a partir de la tonalidad tal como la escribió el usuario. */

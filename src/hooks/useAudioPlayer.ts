@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Song } from '../types';
+import { useState } from' react';
+import { Song } from' ../types';
 
 export function useAudioPlayer() {
  // Spotify Music Player State

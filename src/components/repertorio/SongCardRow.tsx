@@ -130,13 +130,13 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onDragEnd={onDragEnd}
  className={`group relative rounded-[var(--r-m)] transition-all duration-150 ${
  isDragging
- ?'opacity-30 scale-[0.98] border-dashed border-[var(--ok)]'
+ ?'opacity-30 scale-[0.98]'
  : isDragOver
  ?'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-[var(--ok)]/10'
  : isPlayingCurrent
- ? 'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ink)] ring-1 ring-emerald-500/20'
+ ?' bg-[var(--ok)]/10/30 text-[var(--ink)] ring-1 ring-emerald-500/20'
  : isSelected
- ? 'bg-[var(--acc)]/10 /30 text-[var(--ink)]'
+ ?' bg-[var(--acc)]/10 /30 text-[var(--ink)]'
  : isStitchLight
  ?'bg-[var(--surface)] hover:bg-[var(--bg)] /80 text-[var(--ink)]'
  :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-[var(--ink)]'
@@ -318,7 +318,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  type="button"
  onClick={onOpenChords}
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
- 'bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/25'
+' bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)]/25'
  }`}
  title="Ver cifrado de acordes, armonía y letra (LaCuerda.net)"
  >
@@ -363,7 +363,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  hasIrisStems(song)
  ?'bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500/30 text-[var(--acc)]/70 /40'
- : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
+ :' bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
  }`}
  title={hasIrisStems(song) ?'Ver pistas e instrumentos separados con Iris' :'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
  >
@@ -441,8 +441,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  showMenu
  ?'bg-[var(--surface)] text-[var(--ink)]'
  : isStitchLight
- ?'text-[var(--ink-2)] hover:bg-[var(--sunken)] border-transparent hover:'
- :'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 border-transparent'
+ ?'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:'
+ :'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  title="Más opciones del tema"
  aria-label="Más opciones"

@@ -1,6 +1,6 @@
-import { Song } from '../types';
-import { resolveSongAudioUrl } from './transitionAudioEngine';
-import { resolveAudioUrl } from './audioStorage';
+import { Song } from' ../types';
+import { resolveSongAudioUrl } from' ./transitionAudioEngine';
+import { resolveAudioUrl } from' ./audioStorage';
 
 export interface CueDetectionOptions {
  /** Umbral mínimo de energía RMS en decibelios relativos (por defecto -42 dB) */
@@ -377,7 +377,7 @@ export function detectLiveConcertTrackCues(
  * Formatea un offset CUE en segundos a formato legible "+0:03.5s" o "0:00"
  */
 export function formatCueOffset(seconds: number): string {
- if (typeof seconds !== 'number' || isNaN(seconds) || seconds <= 0) return '0:00.0';
+ if (typeof seconds !==' number' || isNaN(seconds) || seconds <= 0) return' 0:00.0';
  const mins = Math.floor(seconds / 60);
  const secs = (seconds % 60).toFixed(1);
  const padSecs = parseFloat(secs) < 10 ? `0${secs}` : secs;

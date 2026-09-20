@@ -205,7 +205,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {/* Top Section: Live Audio Recording & Upload */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Audio Recorder Card */}
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-4">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
@@ -229,7 +229,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {/* Big Recording Button & Wave */}
- <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] flex flex-col items-center justify-center space-y-3">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] flex flex-col items-center justify-center space-y-3">
  {isRecording ? (
  <div className="w-full space-y-3 text-center">
  {/* Simulated Audio Waveform Bars */}
@@ -268,7 +268,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
  {/* If audio was just recorded, show preview and save form */}
  {recordingBlobUrl && !isRecording && (
- <div className="w-full pt-3 border-t border-[var(--hair)] space-y-3">
+ <div className="w-full pt-3 space-y-3">
  <audio controls src={recordingBlobUrl} className="w-full h-8" />
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -277,12 +277,12 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  placeholder="Título de la toma (ej. Riff nuevo tema 2)..."
  value={recordingTitle}
  onChange={e => setRecordingTitle(e.target.value)}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none focus:"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none focus:"
  />
  <select
  value={recordingTag}
  onChange={e => setRecordingTag(e.target.value as any)}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs text-[var(--ink)] outline-none cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] outline-none cursor-pointer"
  >
  <option value="toma_completa">🎵 Toma Completa</option>
  <option value="riff">🎸 Riff / Idea Nueva</option>
@@ -313,7 +313,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {/* Upload Audio File Option */}
- <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--surface)]">
+ <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)]">
  <span className="text-xs text-[var(--ink-2)]">
  ¿Grabaste con Zoom H4n o grabadora externa?
  </span>
@@ -331,7 +331,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {/* Rehearsal Audio Clips Library */}
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-4">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <FileAudio className="w-4 h-4 text-[var(--acc)]" />
@@ -342,7 +342,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {recordings.length === 0 ? (
- <div className="p-8 flex flex-col items-center justify-center text-center border-dashed border-[var(--hair)] rounded-[var(--r-m)]">
+ <div className="p-8 flex flex-col items-center justify-center text-center rounded-[var(--r-m)]">
  <PublicoSilhouette opacity={12} size="small" />
  <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin grabaciones</p>
  <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs">
@@ -354,7 +354,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {recordings.map(rec => (
  <div
  key={rec.id}
- className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-2 hover: transition-colors"
+ className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2 hover: transition-colors"
  >
  <div className="flex items-center justify-between gap-2">
  <div className="flex items-center gap-2 min-w-0">
@@ -388,8 +388,8 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {/* Bottom Section: AI Generated Minutes / Acta del Ensayo */}
- <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] border-[var(--hair)] space-y-5">
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--surface)] pb-4">
+ <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] space-y-5">
+ <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
  <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">
@@ -438,13 +438,13 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
  {/* Display Acta Content */}
  {!acta ? (
- <div className="p-8 text-center text-[var(--ink-2)] text-xs space-y-2 border-dashed border-[var(--hair)] rounded-[var(--r-m)]">
+ <div className="p-8 text-center text-[var(--ink-2)] text-xs space-y-2 rounded-[var(--r-m)]">
  <p>Pulsa"Generar Acta con IA" para obtener un resumen estructurado del ensayo listo para compartir.</p>
  </div>
  ) : (
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
  {/* Executive Summary */}
- <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-2">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
  <h4 className="text-xs font-sans font-bold text-[var(--acc)] tracking-wider flex items-center gap-1.5">
  📝 Resumen Ejecutivo
  </h4>
@@ -454,7 +454,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {/* Temas Bordados vs A Pulir */}
- <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
  <div>
  <h4 className="text-xs font-sans font-bold text-[var(--ok)] tracking-wider mb-1.5">
  🟢 Temas Bordados
@@ -479,13 +479,13 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {/* Deberes para casa */}
- <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-2.5">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2.5">
  <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
  🎯 Deberes para Casa
  </h4>
  <div className="space-y-2">
  {(acta.deberesPorMiembro || []).map((d, i) => (
- <div key={i} className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)] text-xs">
+ <div key={i} className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs">
  <span className="font-sans font-bold text-[var(--acc)]/70 block">{d.miembro}:</span>
  <span className="text-[var(--ink-2)]">{d.tarea}</span>
  </div>

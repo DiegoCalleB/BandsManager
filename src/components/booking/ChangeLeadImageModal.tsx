@@ -135,11 +135,11 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  }}
  >
  <div 
- className="bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
+ className="bg-[var(--surface)]800 rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}
- <div className="flex items-center justify-between border-b border-[var(--hair)]800 pb-3">
+ <div className="flex items-center justify-between800 pb-3">
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-m)] shrink-0">
  <Camera className="w-5 h-5 text-[var(--acc)]" />
@@ -169,8 +169,8 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  {statusMsg && (
  <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${
  statusMsg.type ==='success' 
- ?'bg-[var(--ok-soft)] border-[var(--ok)] text-[var(--ink-2)]' 
- :'bg-[var(--alert-soft)] border-[var(--alert)] text-[var(--ink-2)]'
+ ?'bg-[var(--ok-soft)] text-[var(--ink-2)]' 
+ :'bg-[var(--alert-soft)] text-[var(--ink-2)]'
  }`}>
  {statusMsg.type ==='success' && <Check className="w-4 h-4" />}
  <span>{statusMsg.text}</span>
@@ -230,13 +230,13 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  <button
  type="button"
  onClick={() => setShowUrlInput(true)}
- className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] border-[var(--hair)]800 hover:border-[var(--hair)]700 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
+ className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)]800 hover:border-[var(--hair)]700 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
  >
  <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Pegar URL directa de imagen</span>
  </button>
  ) : (
- <div className="p-3 bg-[var(--bg)] border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
+ <div className="p-3 bg-[var(--bg)]700 rounded-[var(--r-m)] space-y-2">
  <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
  Pegar enlace de imagen (URL)
  </label>
@@ -246,7 +246,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  placeholder="https://ejemplo.com/logo.png"
  value={customUrl}
  onChange={(e) => setCustomUrl(e.target.value)}
- className="flex-1 bg-[var(--sunken)] border-[var(--hair)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
+ className="flex-1 bg-[var(--sunken)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
  />
  <button
  type="button"

@@ -365,27 +365,27 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
  switch (alert.icon) {
  case'lightning':
  return {
- bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/80',
+ bg: isDanger ?'bg-[var(--alert)]/25/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/80',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(234,179,8,0.3)]'
  };
  case'rain':
  return {
- bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--ink-3)]',
+ bg: isDanger ?'bg-[var(--alert)]/25/60 text-[var(--ink)]' :'bg-[var(--acc)]/20/50 text-[var(--ink-3)]',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(14,165,233,0.3)]'
  };
  case'snow':
  return {
- bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--acc)]/80',
+ bg: isDanger ?'bg-[var(--alert)]/25/60 text-[var(--ink)]' :'bg-[var(--acc)]/20/50 text-[var(--acc)]/80',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(6,182,212,0.3)]'
  };
  case'wind':
  return {
- bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
+ bg: isDanger ?'bg-[var(--alert)]/25/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  default:
  return {
- bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
+ bg: isDanger ?'bg-[var(--alert)]/25/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  }

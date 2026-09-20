@@ -168,21 +168,21 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  return {
  label:'Superfan Directos',
  icon: Flame,
- bg:'bg-[var(--alert)]/15 text-[var(--ink-2)] border-[var(--alert)]/30',
+ bg:'bg-[var(--alert)]/15 text-[var(--ink-2)]/30',
  dot:'bg-[var(--alert)]'
  };
  case'backstage':
  return {
  label:'Backstage VIP',
  icon: Award,
- bg:'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border-[var(--acc)]/30',
+ bg:'bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30',
  dot:'bg-[var(--acc)]'
  };
  default:
  return {
  label:'Oyente Fiel',
  icon: Music,
- bg:'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30',
+ bg:'bg-[var(--ok)]/15 text-[var(--ink-2)]/30',
  dot:'bg-[var(--ok)]'
  };
  }
@@ -247,7 +247,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
  {/* Band Announcements Feed */}
  {announcements.length === 0 && (
- <div className="bg-[var(--surface)]/60 border-dashed rounded-[var(--r-l)] p-6 text-center space-y-2">
+ <div className="bg-[var(--surface)]/60 rounded-[var(--r-l)] p-6 text-center space-y-2">
  <div className="w-10 h-10 mx-auto rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
  <Megaphone className="w-5 h-5" />
  </div>
@@ -285,7 +285,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <p className="text-[var(--ink-2)] text-xs font-sans leading-relaxed whitespace-pre-line">{ann.contenido}</p>
  </div>
 
- <div className="flex items-center justify-between pt-2 border-t /80">
+ <div className="flex items-center justify-between pt-2 /80">
  <div className="flex items-center gap-2">
  <button
  onClick={() => handleReactAnnouncement(ann.id,'likes')}
@@ -458,7 +458,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  Sin mensaje: este fan no escribió nada al registrarse.
  </p>
  )}
- <div className="flex items-center justify-between mt-2 pt-2 border-t text-[10px] text-[var(--ink-2)] font-sans">
+ <div className="flex items-center justify-between mt-2 pt-2 text-[10px] text-[var(--ink-2)] font-sans">
  <span>Origen: {fan.conciertoOrigenNombre ? `Concierto ${fan.conciertoOrigenNombre}` : (fan.comoConocio ||'Fan Club Web')}</span>
  <span>ID: {fan.id.slice(-6)}</span>
  </div>
@@ -553,7 +553,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  {showNewPostModal && (
  <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4">
- <div className="flex items-center justify-between border-b pb-3">
+ <div className="flex items-center justify-between pb-3">
  <h3 className="text-base font-bold text-[var(--ink)] font-display flex items-center gap-2">
  <Megaphone className="w-5 h-5 text-[var(--acc)]" />
  Publicar Comunicado en el Muro Social

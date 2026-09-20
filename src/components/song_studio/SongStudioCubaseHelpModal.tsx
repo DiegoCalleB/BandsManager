@@ -19,7 +19,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  <X className="w-5 h-5" />
  </button>
 
- <div className="flex items-center gap-3 border-b border-[var(--acc)]/20 pb-4">
+ <div className="flex items-center gap-3/20 pb-4">
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
  <Keyboard className="w-6 h-6" />
  </div>
@@ -37,84 +37,84 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Play / Pausa</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  Espacio
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Pausar Mantenida</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">
  P
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Detener e ir a Inicio (Stop)</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">
  0 / Stop / Home
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Bucle (Loop ON/OFF)</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  L / /
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Fijar Cue In (Inicio Bucle)</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/50 font-bold shadow">
  I
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Fijar Cue Out (Fin Bucle)</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  O
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Grabar Pista Overdub</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">
  R / Numpad *
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Nueva Idea / Proyecto</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">
  N
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Retroceder 5s / 15s</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  ← / Shift + ←
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Avanzar 5s / 15s</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  → / Shift + →
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Silencio (Mute)</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">
  M
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Solo</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">
  S
@@ -122,9 +122,9 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  </div>
  </div>
 
- <div className="pt-2 flex items-center justify-between border-t border-[var(--hair)]">
+ <div className="pt-2 flex items-center justify-between">
  <span className="text-[11px] text-[var(--ink-2)] font-sans">
- 💡 Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]">K</kbd> o <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
+ 💡 Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">K</kbd> o <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
  </span>
  <button
  type="button"

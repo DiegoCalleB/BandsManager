@@ -433,7 +433,7 @@ export function CalendarWidget({
  {/* Details for selected day if clicked */}
  {selectedDayStr && (
  <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-sans space-y-2">
- <div className="flex items-center justify-between text-[var(--ink-2)] pb-1.5 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between text-[var(--ink-2)] pb-1.5">
  <span className="font-bold text-[var(--acc)]/70">Eventos para {selectedDayStr}:</span>
  <button type="button" onClick={() => setSelectedDayStr(null)} className="text-[var(--ink-2)] hover:text-[var(--ink-2)]">✕</button>
  </div>
@@ -486,7 +486,7 @@ export function CalendarWidget({
  :'bg-[var(--surface)]/60'
  }`}
  >
- <div className="flex items-center justify-between pb-1 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-1">
  <span className="uppercase text-[10px] text-[var(--ink-2)] font-bold">{dayName}</span>
  <span className="font-bold text-[var(--acc)]">{dayNum}</span>
  </div>

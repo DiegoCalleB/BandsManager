@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from' vitest';
 import {
  EPK_LANGUAGES,
  EPK_TRANSLATIONS,
@@ -6,8 +6,8 @@ import {
  isEpkLanguage,
  idiomaEpkParaLead,
  idiomasDisponiblesParaEpk,
-} from '../epkTranslations';
-import { interpolate } from '../fansTranslations';
+} from' ../epkTranslations';
+import { interpolate } from' ../fansTranslations';
 
 describe('epkTranslations', () => {
  it('todos los idiomas declarados tienen su diccionario', () => {
@@ -47,9 +47,9 @@ describe('epkTranslations', () => {
  });
 
  it('interpolate rellena las variables del diccionario del EPK', () => {
- expect(interpolate(EPK_TRANSLATIONS.en.insigniaCabecera, { bandName: 'Bakandeya' }))
+ expect(interpolate(EPK_TRANSLATIONS.en.insigniaCabecera, { bandName:' Bakandeya' }))
  .toBe('Bakandeya — EPK / Press Kit');
- expect(interpolate(EPK_TRANSLATIONS.es.fotoPromocional, { n: '3' }))
+ expect(interpolate(EPK_TRANSLATIONS.es.fotoPromocional, { n:' 3' }))
  .toBe('Foto Promocional #3');
  });
 
@@ -67,19 +67,19 @@ describe('epkTranslations', () => {
 
 describe('idiomasDisponiblesParaEpk: solo 2-3 banderas, nunca las 4', () => {
  it('contexto español: solo español e inglés', () => {
- expect(idiomasDisponiblesParaEpk('es')).toEqual(['es', 'en']);
+ expect(idiomasDisponiblesParaEpk('es')).toEqual(['es',' en']);
  });
 
  it('contexto inglés: solo español e inglés', () => {
- expect(idiomasDisponiblesParaEpk('en')).toEqual(['es', 'en']);
+ expect(idiomasDisponiblesParaEpk('en')).toEqual(['es',' en']);
  });
 
  it('contexto italiano (dossier llamado desde un Únete de Italia): italiano primero', () => {
- expect(idiomasDisponiblesParaEpk('it')).toEqual(['it', 'en', 'es']);
+ expect(idiomasDisponiblesParaEpk('it')).toEqual(['it',' en',' es']);
  });
 
  it('contexto checo: checo primero', () => {
- expect(idiomasDisponiblesParaEpk('cs')).toEqual(['cs', 'en', 'es']);
+ expect(idiomasDisponiblesParaEpk('cs')).toEqual(['cs',' en',' es']);
  });
 
  it('nunca devuelve más de 3 idiomas', () => {
@@ -91,15 +91,15 @@ describe('idiomasDisponiblesParaEpk: solo 2-3 banderas, nunca las 4', () => {
 
 describe('idiomaEpkParaLead', () => {
  it('manda a inglés a los leads anglófonos', () => {
- expect(idiomaEpkParaLead({ ciudad: 'London', region: 'England' })).toBe('en');
- expect(idiomaEpkParaLead({ direccion: '12 Main St, Glasgow, Scotland' })).toBe('en');
- expect(idiomaEpkParaLead({ region: 'Estados Unidos' })).toBe('en');
- expect(idiomaEpkParaLead({ ciudad: 'Dublin', region: 'Ireland' })).toBe('en');
+ expect(idiomaEpkParaLead({ ciudad:' London', region:' England' })).toBe('en');
+ expect(idiomaEpkParaLead({ direccion:' 12 Main St, Glasgow, Scotland' })).toBe('en');
+ expect(idiomaEpkParaLead({ region:' Estados Unidos' })).toBe('en');
+ expect(idiomaEpkParaLead({ ciudad:' Dublin', region:' Ireland' })).toBe('en');
  });
 
  it('deja en español todo lo demás', () => {
- expect(idiomaEpkParaLead({ ciudad: 'Ávila', region: 'Castilla y León' })).toBe('es');
- expect(idiomaEpkParaLead({ ciudad: 'Milano', region: 'Italia' })).toBe('es');
+ expect(idiomaEpkParaLead({ ciudad:' Ávila', region:' Castilla y León' })).toBe('es');
+ expect(idiomaEpkParaLead({ ciudad:' Milano', region:' Italia' })).toBe('es');
  expect(idiomaEpkParaLead(null)).toBe('es');
  expect(idiomaEpkParaLead(undefined)).toBe('es');
  expect(idiomaEpkParaLead({})).toBe('es');
@@ -108,7 +108,7 @@ describe('idiomaEpkParaLead', () => {
  it('no confunde "usa" dentro de otra palabra con Estados Unidos', () => {
  // La keyword lleva un espacio delante justo por esto: hay topónimos y calles españolas
  // que contienen "usa" (Sousa, Tarrasa...) y no deben acabar con un EPK en inglés.
- expect(idiomaEpkParaLead({ ciudad: 'Sousa' })).toBe('es');
- expect(idiomaEpkParaLead({ direccion: 'Calle Musa 4' })).toBe('es');
+ expect(idiomaEpkParaLead({ ciudad:' Sousa' })).toBe('es');
+ expect(idiomaEpkParaLead({ direccion:' Calle Musa 4' })).toBe('es');
  });
 });

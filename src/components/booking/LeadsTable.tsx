@@ -116,7 +116,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <button
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAllFiltered}
- className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)]/90 hover:bg-[var(--surface)] border-[var(--hair)]700 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
+ className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)]/90 hover:bg-[var(--surface)]700 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
  >
  {isAllSelected ? (
  <>
@@ -162,9 +162,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  onClick={() => onSelectLead(lead)}
  className={`p-4 rounded-[var(--r-l)] transition-all cursor-pointer flex flex-col justify-between gap-3 relative group ${
  isChecked
- ?'bg-[var(--surface)] border-2 border-[var(--acc)] ring-2 ring-[var(--acc)]/25'
+ ?'bg-[var(--surface)] ring-2 ring-[var(--acc)]/25'
  : isDetailOpen
- ?'bg-[var(--sunken)] border-2 border-[var(--acc)] ring-1 ring-purple-400/30'
+ ?'bg-[var(--sunken)] ring-1 ring-purple-400/30'
  :'bg-[var(--bg)] hover:bg-[var(--sunken)] hover:border-[var(--hair)]700'
  }`}
  >
@@ -183,7 +183,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  >
  <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
  isChecked 
- ?'bg-[var(--acc)] border-[var(--acc)] text-[var(--ink)]' 
+ ?'bg-[var(--acc)] text-[var(--ink)]' 
  :'border-[var(--hair)]600 group-hover:border-[var(--hair)]400 bg-[var(--bg)]/80 hover:'
  }`}>
  {isChecked && <CheckSquare className="w-3.5 h-3.5" />}
@@ -249,7 +249,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  </div>
 
  {/* Direct Action Bar (WhatsApp, Call, Quick Pitch Approve, View) */}
- <div className="pt-2.5 border-t border-[var(--hair)]800/80 flex flex-wrap items-center justify-between gap-2 w-full mt-1">
+ <div className="pt-2.5800/80 flex flex-wrap items-center justify-between gap-2 w-full mt-1">
  <div className="flex items-center gap-1.5">
  {/* Direct WhatsApp Button */}
  {phoneClean ? (

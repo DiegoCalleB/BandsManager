@@ -76,7 +76,7 @@ export function NegotiationSimulationModal({
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
- <div className="flex justify-between items-start border-b border-[var(--sunken)] pb-3">
+ <div className="flex justify-between items-start pb-3">
  <div>
  <div className="flex items-center gap-2">
  <Sparkles className="w-5 h-5 text-[var(--acc)]" />
@@ -114,7 +114,7 @@ export function NegotiationSimulationModal({
  onClick={() => onRoleChange('sala')}
  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='sala'
- ? 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
+ ?' bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -127,7 +127,7 @@ export function NegotiationSimulationModal({
  onClick={() => onRoleChange('banda')}
  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='banda'
- ? 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
+ ?' bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -147,7 +147,7 @@ export function NegotiationSimulationModal({
  value={simulationScenario}
  onChange={(e) => onScenarioChange(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  >
  {(simulationRole ==='sala'
@@ -173,7 +173,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onSenderNameChange(e.target.value)}
  placeholder="Ej. Kike (Sala Hebe) o Bakandeya Agent Manager IA"
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -187,7 +187,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onSubjectChange(e.target.value)}
  placeholder="Ej. Re: Propuesta..."
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -209,7 +209,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onCustomInstructionChange(e.target.value)}
  placeholder="Define pautas específicas (ej. propone taquilla 60/40, exige rider técnico especial, etc.)..."
  className={`w-full rounded-[var(--r-s)] p-2.5 text-[10px] focus:outline-none font-sans leading-relaxed ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
+' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -240,11 +240,11 @@ export function NegotiationSimulationModal({
 
  {/* Output Preview Area */}
  {(simulationGenerated || simulationMessage) && (
- <div className="space-y-2 border-t border-[var(--sunken)] pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+ <div className="space-y-2 pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
  <div className="flex justify-between items-center">
  <label
  className={`block text-[10px] font-sans tracking-wider ${
- 'text-[var(--acc)]'
+' text-[var(--acc)]'
  }`}
  >
  ✨ Vista Previa del Correo Generado (Editable)
@@ -272,7 +272,7 @@ export function NegotiationSimulationModal({
  </div>
 
  {/* Footer Buttons */}
- <div className="flex justify-end gap-3.5 border-t border-[var(--sunken)] pt-3 mt-1">
+ <div className="flex justify-end gap-3.5 pt-3 mt-1">
  <button
  type="button"
  onClick={onClose}

@@ -110,10 +110,10 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  onClick={onClose}
  >
  <div 
- className="bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
+ className="bg-[var(--surface)]800 rounded-[var(--r-l)] w-full max-w-md p-5 relative text-[var(--ink)] flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
  onClick={(e) => e.stopPropagation()}
  >
- <div className="flex items-center justify-between border-b border-[var(--hair)]800 pb-3">
+ <div className="flex items-center justify-between800 pb-3">
  <div className="flex items-center gap-2.5">
  <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-m)]">
  <Camera className="w-5 h-5 text-[var(--acc)]" />
@@ -129,9 +129,9 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  <div className="flex items-center justify-center py-2 bg-[var(--bg)]/80 rounded-[var(--r-m)]">
  <div className="relative">
  {band.imagen_url ? (
- <img src={band.imagen_url} alt={band.nombre_banda} className="w-20 h-20 rounded-[var(--r-l)] object-cover border-2 border-[var(--acc)]" />
+ <img src={band.imagen_url} alt={band.nombre_banda} className="w-20 h-20 rounded-[var(--r-l)] object-cover" />
  ) : (
- <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--sunken)] border-2 border-[var(--hair)]700 flex items-center justify-center text-3xl">
+ <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--sunken)]700 flex items-center justify-center text-3xl">
  {band.icono ||'🎸'}
  </div>
  )}
@@ -139,7 +139,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  </div>
 
  {statusMsg && (
- <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${statusMsg.type ==='success' ?'bg-[var(--ok-soft)] border-[var(--ok)] text-[var(--ink-2)]' :'bg-[var(--alert-soft)] border-[var(--alert)] text-[var(--ink-2)]'}`}>
+ <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${statusMsg.type ==='success' ?'bg-[var(--ok-soft)] text-[var(--ink-2)]' :'bg-[var(--alert-soft)] text-[var(--ink-2)]'}`}>
  {statusMsg.type ==='success' && <Check className="w-4 h-4" />}
  <span>{statusMsg.text}</span>
  </div>
@@ -175,13 +175,13 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  </button>
 
  {!showUrlInput ? (
- <button type="button" onClick={() => setShowUrlInput(true)} className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all">
+ <button type="button" onClick={() => setShowUrlInput(true)} className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)]800 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all">
  <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Pegar URL directa de imagen</span>
  </button>
  ) : (
- <div className="p-3 bg-[var(--bg)] border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
- <input type="url" placeholder="https://ejemplo.com/logo.png" value={customUrl} onChange={(e) => setCustomUrl(e.target.value)} className="w-full bg-[var(--sunken)] border-[var(--hair)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]" />
+ <div className="p-3 bg-[var(--bg)]700 rounded-[var(--r-m)] space-y-2">
+ <input type="url" placeholder="https://ejemplo.com/logo.png" value={customUrl} onChange={(e) => setCustomUrl(e.target.value)} className="w-full bg-[var(--sunken)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]" />
  <button onClick={handleSaveCustomUrl} disabled={!customUrl.trim()} className="px-3 py-1.5 bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] hover:bg-[var(--acc)]/60">Guardar</button>
  </div>
  )}

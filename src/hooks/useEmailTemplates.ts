@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from' react';
 
-export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
+export type TemplateCategory =' salas' |' festivales' |' discotecas' |' medios' |' grupos' |' managements' |' ayuntamientos';
 
 export function useEmailTemplates() {
  // Template states for Salas
@@ -133,8 +133,8 @@ Cordialmente,
  try {
  const activeData = getActiveTemplateData();
  const res = await fetch('/api/templates/optimize', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ method:' POST',
+ headers: {' Content-Type':' application/json' },
  body: JSON.stringify({
  category: templateTab,
  currentSubject: activeData.subject,
@@ -157,10 +157,10 @@ ${data.optimized.body}`);
  
  const countNote = data.feedbackCountUsed > 0 
  ? `Aplicado aprendizaje de ${data.feedbackCountUsed} valoraciones previas del mánager.`
- : 'Refrescada con pautas de estilo de Bakandeya.';
+ :' Refrescada con pautas de estilo de Bakandeya.';
  const ratingsAppliedNote = (templateToneRating > 0 || templateContentRating > 0)
- ? ` (Estrellitas aplicadas: Tono ${templateToneRating || '-'}/5, Contenido ${templateContentRating || '-'}/5)`
- : '';
+ ? ` (Estrellitas aplicadas: Tono ${templateToneRating ||' -'}/5, Contenido ${templateContentRating ||' -'}/5)`
+ :' ';
 
  setOptimizationFeedbackMsg(`✨ Plantilla re-generada con IA: ${data.optimized.explanation || countNote}${ratingsAppliedNote}`);
  setTemplateCustomInstruction('');
@@ -180,7 +180,7 @@ ${data.optimized.body}`);
  // Helper to retrieve current active template fields by category
  const getActiveTemplateData = () => {
  switch (templateTab) {
- case 'salas':
+ case' salas':
  return {
  subject: subjectTemplateSala,
  body: bodyTemplateSala,
@@ -188,10 +188,10 @@ ${data.optimized.body}`);
  setSubject: setSubjectTemplateSala,
  setBody: setBodyTemplateSala,
  setGuidelines: setAiGuidelinesSala,
- title: '🏛️ Editando Plantilla para Salas y Teatros',
- desc: 'Propuestas directas de fechas, aforo, taquilla/caché e invitaciones a programadores de salas.'
+ title:' 🏛️ Editando Plantilla para Salas y Teatros',
+ desc:' Propuestas directas de fechas, aforo, taquilla/caché e invitaciones a programadores de salas.'
  };
- case 'festivales':
+ case' festivales':
  return {
  subject: subjectTemplateFestival,
  body: bodyTemplateFestival,
@@ -199,10 +199,10 @@ ${data.optimized.body}`);
  setSubject: setSubjectTemplateFestival,
  setBody: setBodyTemplateFestival,
  setGuidelines: setAiGuidelinesFestival,
- title: '🎪 Editando Plantilla para Festivales de Música',
- desc: 'Presentación de dossier, rider técnico compacto y propuesta para escenarios principales de festival.'
+ title:' 🎪 Editando Plantilla para Festivales de Música',
+ desc:' Presentación de dossier, rider técnico compacto y propuesta para escenarios principales de festival.'
  };
- case 'discotecas':
+ case' discotecas':
  return {
  subject: subjectTemplateDiscoteca,
  body: bodyTemplateDiscoteca,
@@ -210,10 +210,10 @@ ${data.optimized.body}`);
  setSubject: setSubjectTemplateDiscoteca,
  setBody: setBodyTemplateDiscoteca,
  setGuidelines: setAiGuidelinesDiscoteca,
- title: '🪩 Editando Plantilla para Discotecas y Clubbing',
- desc: 'Live Performance & Clubbing set para horarios nocturnos y sesiones de madrugada.'
+ title:' 🪩 Editando Plantilla para Discotecas y Clubbing',
+ desc:' Live Performance & Clubbing set para horarios nocturnos y sesiones de madrugada.'
  };
- case 'medios':
+ case' medios':
  return {
  subject: subjectTemplateMedio,
  body: bodyTemplateMedio,
@@ -221,10 +221,10 @@ ${data.optimized.body}`);
  setSubject: setSubjectTemplateMedio,
  setBody: setBodyTemplateMedio,
  setGuidelines: setAiGuidelinesMedio,
- title: '📻 Editando Plantilla para Medios de Comunicación, Radio y Prensa',
- desc: 'Nota de prensa, material de difusión, bio/fotos y propuesta para sonar en antena o entrevistas.'
+ title:' 📻 Editando Plantilla para Medios de Comunicación, Radio y Prensa',
+ desc:' Nota de prensa, material de difusión, bio/fotos y propuesta para sonar en antena o entrevistas.'
  };
- case 'grupos':
+ case' grupos':
  return {
  subject: subjectTemplateGrupo,
  body: bodyTemplateGrupo,
@@ -232,10 +232,10 @@ ${data.optimized.body}`);
  setSubject: setSubjectTemplateGrupo,
  setBody: setBodyTemplateGrupo,
  setGuidelines: setAiGuidelinesGrupo,
- title: '🎸 Editando Plantilla para Grupos y Bandas (Co-Booking)',
- desc: 'Intercambio de fechas (Date Swap), doble cartel en sala grande y compartir furgoneta/backline.'
+ title:' 🎸 Editando Plantilla para Grupos y Bandas (Co-Booking)',
+ desc:' Intercambio de fechas (Date Swap), doble cartel en sala grande y compartir furgoneta/backline.'
  };
- case 'managements':
+ case' managements':
  return {
  subject: subjectTemplateManagement,
  body: bodyTemplateManagement,
@@ -243,10 +243,10 @@ ${data.optimized.body}`);
  setSubject: setSubjectTemplateManagement,
  setBody: setBodyTemplateManagement,
  setGuidelines: setAiGuidelinesManagement,
- title: '💼 Editando Plantilla para Agencias de Booking y Management',
- desc: 'Propuestas corporativas para coproducción, representación de gira e inclusión en catálogo.'
+ title:' 💼 Editando Plantilla para Agencias de Booking y Management',
+ desc:' Propuestas corporativas para coproducción, representación de gira e inclusión en catálogo.'
  };
- case 'ayuntamientos':
+ case' ayuntamientos':
  return {
  subject: subjectTemplateAyuntamiento,
  body: bodyTemplateAyuntamiento,
@@ -254,8 +254,8 @@ ${data.optimized.body}`);
  setSubject: setSubjectTemplateAyuntamiento,
  setBody: setBodyTemplateAyuntamiento,
  setGuidelines: setAiGuidelinesAyuntamiento,
- title: '🏛️ Editando Plantilla para Ayuntamientos y Fiestas Patronales',
- desc: 'Registro formal e institucional para programación cultural, fiestas patronales y eventos municipales.'
+ title:' 🏛️ Editando Plantilla para Ayuntamientos y Fiestas Patronales',
+ desc:' Registro formal e institucional para programación cultural, fiestas patronales y eventos municipales.'
  };
  }
  };
@@ -268,13 +268,13 @@ ${data.optimized.body}`);
 
  try {
  const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
- const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+ const headers: Record<string, string> = {' Content-Type':' application/json' };
  if (token) {
  headers['Authorization'] = `Bearer ${token}`;
  headers['x-auth-token'] = token;
  }
  const res = await fetch('/api/templates/preview', {
- method: 'POST',
+ method:' POST',
  headers,
  body: JSON.stringify({
  category: templateTab,
@@ -287,7 +287,7 @@ ${data.optimized.body}`);
  if (res.ok && data.success) {
  setTestPromptResult(`Asunto: ${data.subject}\n\n${data.body}`);
  } else {
- setTestPromptResult(`⚠️ ${data.error || 'No se pudo simular la plantilla.'}`);
+ setTestPromptResult(`⚠️ ${data.error ||' No se pudo simular la plantilla.'}`);
  }
  } catch (err) {
  console.error('Error testing prompt:', err);
@@ -376,14 +376,14 @@ ${data.optimized.body}`);
  try {
  const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
  const headers: Record<string, string> = {
- 'Content-Type': 'application/json'
+' Content-Type':' application/json'
  };
  if (token) {
  headers['Authorization'] = `Bearer ${token}`;
  headers['x-auth-token'] = token;
  }
  const res = await fetch('/api/templates/save', {
- method: 'POST',
+ method:' POST',
  headers,
  body: JSON.stringify({
  category: templateTab,
@@ -415,13 +415,13 @@ ${data.optimized.body}`);
 
  try {
  const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
- const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+ const headers: Record<string, string> = {' Content-Type':' application/json' };
  if (token) {
  headers['Authorization'] = `Bearer ${token}`;
  headers['x-auth-token'] = token;
  }
  const res = await fetch('/api/templates/reset', {
- method: 'POST',
+ method:' POST',
  headers,
  body: JSON.stringify({ category: templateTab })
  });

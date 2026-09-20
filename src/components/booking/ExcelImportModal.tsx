@@ -454,11 +454,11 @@ export function ExcelImportModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div
  className={`relative w-full max-w-5xl max-h-[92vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)]800 text-[var(--ink)]'
  }`}
  >
  {/* MODAL HEADER */}
- <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--hair)] bg-gradient-to-r from-emerald-950/30 via-zinc-900/50 to-amber-950/20">
+ <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-emerald-950/30 via-zinc-900/50 to-amber-950/20">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)]">
  <FileSpreadsheet className="w-5 h-5" />
@@ -482,7 +482,7 @@ export function ExcelImportModal({
  <button
  type="button"
  onClick={handleDownloadTemplate}
- className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] border-[var(--hair)]700 transition-all cursor-pointer"
+ className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]700 transition-all cursor-pointer"
  title="Descargar archivo Excel de ejemplo con las columnas recomendadas"
  >
  <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -499,7 +499,7 @@ export function ExcelImportModal({
  </div>
 
  {/* STEP PROGRESS INDICATOR */}
- <div className="flex items-center justify-between px-6 py-2.5 bg-[var(--bg)]/60 border-b border-[var(--hair)] text-xs">
+ <div className="flex items-center justify-between px-6 py-2.5 bg-[var(--bg)]/60 text-xs">
  <div className="flex items-center gap-2">
  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ?'bg-[var(--ok)] text-[var(--ink)]' : step > 1 ?'bg-[var(--ok)]/20 text-[var(--ok)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  {step > 1 ? <Check className="w-3 h-3" /> :'1'}
@@ -531,7 +531,7 @@ export function ExcelImportModal({
  onDragOver={e => e.preventDefault()}
  onDrop={handleFileDrop}
  onClick={() => fileInputRef.current?.click()}
- className="w-full max-w-2xl p-10 border-2 border-dashed border-[var(--hair)]700 hover:border-[var(--ok)]/70 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-all flex flex-col items-center justify-center text-center cursor-pointer group"
+ className="w-full max-w-2xl p-10700 hover:border-[var(--ok)]/70 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-all flex flex-col items-center justify-center text-center cursor-pointer group"
  >
  <input
  ref={fileInputRef}
@@ -549,14 +549,14 @@ export function ExcelImportModal({
  <p className="text-xs text-[var(--ink-2)] mt-1 max-w-md">
  Soporta formatos <strong className="text-[var(--ink)]">.xlsx, .xls y .csv</strong> de cualquier hoja de cálculo que use tu banda.
  </p>
- <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full bg-[var(--sunken)]/80 text-[11px] text-[var(--ink-2)] border-[var(--hair)]700">
+ <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full bg-[var(--sunken)]/80 text-[11px] text-[var(--ink-2)]700">
  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Detección automática de salas, ciudades, teléfonos, emails y aforos</span>
  </div>
  </div>
 
  {/* DOWNLOAD TEMPLATE CARD */}
- <div className="w-full max-w-2xl p-4 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)] flex items-center justify-between gap-4">
+ <div className="w-full max-w-2xl p-4 rounded-[var(--r-m)] bg-[var(--bg)]/60 flex items-center justify-between gap-4">
  <div className="flex items-center gap-3">
  <Info className="w-5 h-5 text-[var(--acc)] shrink-0" />
  <div className="text-xs text-[var(--ink-2)]">
@@ -579,7 +579,7 @@ export function ExcelImportModal({
  {/* STEP 2: COLUMN MAPPING */}
  {step === 2 && (
  <div className="space-y-5">
- <div className="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between flex-wrap gap-2 pb-2">
  <div>
  <h4 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
  <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
@@ -596,7 +596,7 @@ export function ExcelImportModal({
  <select
  value={selectedSheet}
  onChange={e => handleSheetChange(e.target.value)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]700 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)]700 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  {sheetNames.map(s => (
  <option key={s} value={s}>{s}</option>
@@ -621,7 +621,7 @@ export function ExcelImportModal({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
  defaultCategory === cat.id
  ?'bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold'
- :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
+ :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800'
  }`}
  >
  <span>{cat.icon}</span>
@@ -652,12 +652,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Ciudad */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Ciudad / Población</label>
  <select
  value={mapping.ciudad}
  onChange={e => setMapping(prev => ({ ...prev, ciudad: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar (Usar'España') --</option>
  {rawHeaders.map(h => (
@@ -667,12 +667,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Email */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Email de Contacto</label>
  <select
  value={mapping.email_contacto}
  onChange={e => setMapping(prev => ({ ...prev, email_contacto: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
@@ -682,12 +682,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Teléfono */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Teléfono / WhatsApp</label>
  <select
  value={mapping.telefono}
  onChange={e => setMapping(prev => ({ ...prev, telefono: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
@@ -697,12 +697,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Aforo */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Aforo / Capacidad</label>
  <select
  value={mapping.aforo}
  onChange={e => setMapping(prev => ({ ...prev, aforo: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar (Usar por defecto) --</option>
  {rawHeaders.map(h => (
@@ -712,12 +712,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Instagram */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Instagram / Redes</label>
  <select
  value={mapping.instagram}
  onChange={e => setMapping(prev => ({ ...prev, instagram: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
@@ -727,12 +727,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Website */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Sitio Web / Link</label>
  <select
  value={mapping.website}
  onChange={e => setMapping(prev => ({ ...prev, website: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
@@ -742,12 +742,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Tipo / Categoría */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Tipo de Entidad (Columna)</label>
  <select
  value={mapping.tipo}
  onChange={e => setMapping(prev => ({ ...prev, tipo: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- Usar categoría por defecto --</option>
  {rawHeaders.map(h => (
@@ -757,12 +757,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Contacto Nombre */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Persona de Contacto / Booker</label>
  <select
  value={mapping.contacto_nombre}
  onChange={e => setMapping(prev => ({ ...prev, contacto_nombre: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
@@ -772,12 +772,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Género / Estilo */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Género / Estilo Musical</label>
  <select
  value={mapping.genero}
  onChange={e => setMapping(prev => ({ ...prev, genero: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
@@ -787,12 +787,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Dirección */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Dirección Física</label>
  <select
  value={mapping.direccion}
  onChange={e => setMapping(prev => ({ ...prev, direccion: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
@@ -802,12 +802,12 @@ export function ExcelImportModal({
  </div>
 
  {/* Notas / Observaciones */}
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)]800 space-y-1.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60800 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)]">Notas / Comentarios</label>
  <select
  value={mapping.notas}
  onChange={e => setMapping(prev => ({ ...prev, notas: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
@@ -823,7 +823,7 @@ export function ExcelImportModal({
  {step === 3 && (
  <div className="space-y-4">
  {/* TOP BAR / FILTERS */}
- <div className="flex items-center justify-between flex-wrap gap-2 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/70 border-[var(--hair)] text-xs">
+ <div className="flex items-center justify-between flex-wrap gap-2 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/70 text-xs">
  <div className="flex items-center gap-3 flex-wrap">
  <span className="font-bold text-[var(--ink)]">
  {selectedCount} de {parsedRows.length} seleccionados
@@ -844,7 +844,7 @@ export function ExcelImportModal({
  placeholder="Buscar en la vista previa..."
  value={searchPreview}
  onChange={e => setSearchPreview(e.target.value)}
- className="pl-8 pr-3 py-1 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] text-xs focus:outline-none focus:border-[var(--ok)]"
+ className="pl-8 pr-3 py-1 rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] text-xs focus:outline-none focus:border-[var(--ok)]"
  />
  </div>
 
@@ -880,7 +880,7 @@ export function ExcelImportModal({
 
  {/* IMPORT OPTIONS CARDS */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 border-[var(--hair)] hover:border-[var(--ok)]/40 transition-all cursor-pointer">
+ <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 hover:border-[var(--ok)]/40 transition-all cursor-pointer">
  <input
  type="checkbox"
  checked={updateDuplicates}
@@ -913,7 +913,7 @@ export function ExcelImportModal({
  {/* PREVIEW TABLE */}
  <div className="border-[var(--hair)] rounded-[var(--r-m)] overflow-hidden bg-[var(--bg)]/80 max-h-[380px] overflow-y-auto">
  <table className="w-full text-left text-xs border-collapse">
- <thead className="sticky top-0 bg-[var(--bg)]/95 text-[var(--ink-2)] border-b border-[var(--hair)] z-10 font-bold">
+ <thead className="sticky top-0 bg-[var(--bg)]/95 text-[var(--ink-2)] z-10 font-bold">
  <tr>
  <th className="p-2.5 w-8">
  <input
@@ -967,7 +967,7 @@ export function ExcelImportModal({
  <select
  value={row.tipo}
  onChange={e => handleRowTypeChange(row.id, e.target.value as LeadType)}
- className="px-2 py-1 rounded bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] text-[11px] focus:outline-none focus:border-[var(--ok)] cursor-pointer"
+ className="px-2 py-1 rounded bg-[var(--bg)]800 text-[var(--ink)] text-[11px] focus:outline-none focus:border-[var(--ok)] cursor-pointer"
  >
  {CATEGORY_OPTIONS.map(c => (
  <option key={c.id} value={c.id}>
@@ -1009,13 +1009,13 @@ export function ExcelImportModal({
  </div>
 
  {/* MODAL FOOTER */}
- <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--hair)] bg-[var(--bg)]">
+ <div className="flex items-center justify-between px-6 py-4 bg-[var(--bg)]">
  <div>
  {step === 2 && (
  <button
  type="button"
  onClick={() => setStep(1)}
- className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]800 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)]800 transition-all cursor-pointer"
  >
  <ArrowLeft className="w-3.5 h-3.5" />
  <span>Cambiar archivo</span>
@@ -1027,7 +1027,7 @@ export function ExcelImportModal({
  type="button"
  disabled={isImporting}
  onClick={() => setStep(2)}
- className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]800 transition-all cursor-pointer disabled:opacity-50"
+ className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)]800 transition-all cursor-pointer disabled:opacity-50"
  >
  <ArrowLeft className="w-3.5 h-3.5" />
  <span>Revisar mapeo</span>

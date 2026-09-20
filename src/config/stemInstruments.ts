@@ -5,12 +5,12 @@
  * (UserManagementModal) y para emparejar automáticamente "miembro -> pista"
  * en el mezclador (modo Ensayo Individual, Mi Monitor, exportar sin mi pista).
  */
-export const STEM_INSTRUMENT_CATEGORIES = ['Voz', 'Batería', 'Bajo', 'Guitarras', 'Teclados', 'Arreglos'] as const;
+export const STEM_INSTRUMENT_CATEGORIES = ['Voz',' Batería',' Bajo',' Guitarras',' Teclados',' Arreglos'] as const;
 
 export type StemInstrumentCategory = typeof STEM_INSTRUMENT_CATEGORIES[number];
 
 /** Roles habituales en una banda que no son un stem aislable, para el desplegable de miembros. */
-export const NON_STEM_ROLES = ['Coros', 'Manager', 'Técnico de Sonido', 'Otro'];
+export const NON_STEM_ROLES = ['Coros',' Manager',' Técnico de Sonido',' Otro'];
 
 const COMBINING_DIACRITIC_START = 0x0300;
 const COMBINING_DIACRITIC_END = 0x036f;
@@ -30,12 +30,12 @@ function normalizeInstrumentLabel(value: string): string {
 }
 
 const INSTRUMENT_ALIASES: Record<string, StemInstrumentCategory> = {
- voz: 'Voz', vocal: 'Voz', vocalista: 'Voz', cantante: 'Voz', voces: 'Voz',
- bateria: 'Batería', percusion: 'Batería', baterista: 'Batería',
- bajo: 'Bajo', bajista: 'Bajo',
- guitarra: 'Guitarras', guitarras: 'Guitarras', guitarrista: 'Guitarras',
- teclado: 'Teclados', teclados: 'Teclados', piano: 'Teclados', pianista: 'Teclados', sintetizador: 'Teclados',
- arreglos: 'Arreglos', cuerdas: 'Arreglos', vientos: 'Arreglos', sintes: 'Arreglos'
+ voz:' Voz', vocal:' Voz', vocalista:' Voz', cantante:' Voz', voces:' Voz',
+ bateria:' Batería', percusion:' Batería', baterista:' Batería',
+ bajo:' Bajo', bajista:' Bajo',
+ guitarra:' Guitarras', guitarras:' Guitarras', guitarrista:' Guitarras',
+ teclado:' Teclados', teclados:' Teclados', piano:' Teclados', pianista:' Teclados', sintetizador:' Teclados',
+ arreglos:' Arreglos', cuerdas:' Arreglos', vientos:' Arreglos', sintes:' Arreglos'
 };
 
 /**

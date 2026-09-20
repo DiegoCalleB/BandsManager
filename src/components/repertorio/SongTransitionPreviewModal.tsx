@@ -523,10 +523,10 @@ export function SongTransitionPreviewModal({
  initial={{ opacity: 0, scale: 0.96, y: 8 }}
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.96, y: 8 }}
- className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] overflow-hidden flex flex-col text-[var(--ink)]"
+ className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden flex flex-col text-[var(--ink)]"
  >
  {/* Compact Header */}
- <div className="flex items-center justify-between px-3.5 py-2 border-b border-[var(--hair)] bg-[var(--surface)] shrink-0">
+ <div className="flex items-center justify-between px-3.5 py-2 bg-[var(--surface)] shrink-0">
  <div className="flex items-center gap-2">
  <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] shrink-0">
  <Headphones className="w-3.5 h-3.5" />
@@ -549,7 +549,7 @@ export function SongTransitionPreviewModal({
  <div className="flex items-center gap-1.5">
  {/* Previous / Next navigation */}
  {onNavigateTransition && (
- <div className="flex items-center bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-s)] p-0.5">
+ <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-s)] p-0.5">
  <button
  type="button"
  disabled={!canGoPrev}
@@ -650,11 +650,11 @@ export function SongTransitionPreviewModal({
  #{indexA + 1} Anterior
  </span>
  <div className="flex items-center gap-1">
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--acc)]/70 font-sans text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)]700 text-[var(--acc)]/70 font-sans text-[9px] font-semibold">
  🎼 {itemA?.tonalidadDeseada || songA.tonalidad ||'Sin tono'}
  </span>
  {songA.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--ink-3)] font-sans text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)]700 text-[var(--ink-3)] font-sans text-[9px] font-semibold">
  🥁 {songA.bpm} BPM
  </span>
  )}
@@ -702,7 +702,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Audio Source Status & Selector for Song A */}
- <div className="pt-1 border-t border-[var(--hair)]800/80 space-y-1">
+ <div className="pt-1800/80 space-y-1">
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1">
  {audioSourceTypeA ==='maqueta' && (
@@ -727,7 +727,7 @@ export function SongTransitionPreviewModal({
  setSelectedSampleA(s);
  }
  }}
- className="bg-[var(--surface)] border-[var(--hair)]800 text-[10px] rounded p-0.5 text-[var(--acc)]/70 focus:outline-none max-w-[160px] cursor-pointer"
+ className="bg-[var(--surface)]800 text-[10px] rounded p-0.5 text-[var(--acc)]/70 focus:outline-none max-w-[160px] cursor-pointer"
  >
  {STUDIO_SAMPLE_TRACKS.map((st) => (
  <option key={st.id} value={st.id}>
@@ -752,7 +752,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* VU Meter for Track A */}
- <div className="w-full bg-[var(--sunken)] h-1 rounded-full overflow-hidden border-[var(--hair)]800">
+ <div className="w-full bg-[var(--sunken)] h-1 rounded-full overflow-hidden800">
  <div
  className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--acc-soft)] transition-all duration-75"
  style={{ width: `${Math.min(100, liveGainA * 100)}%` }}
@@ -767,7 +767,7 @@ export function SongTransitionPreviewModal({
  className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
  currentGains.isCrossfading
  ?'bg-[var(--acc)] text-[var(--on-acc)] scale-110'
- :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <ArrowRight className="w-3.5 h-3.5" />
@@ -793,11 +793,11 @@ export function SongTransitionPreviewModal({
  #{indexB + 1} Siguiente
  </span>
  <div className="flex items-center gap-1">
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--acc)]/70 font-sans text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)]700 text-[var(--acc)]/70 font-sans text-[9px] font-semibold">
  🎼 {itemB?.tonalidadDeseada || songB.tonalidad ||'Sin tono'}
  </span>
  {songB.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--ink-3)] font-sans text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)]700 text-[var(--ink-3)] font-sans text-[9px] font-semibold">
  🥁 {songB.bpm} BPM
  </span>
  )}
@@ -845,7 +845,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Audio Source Status & Selector for Song B */}
- <div className="pt-1 border-t border-[var(--hair)]800/80 space-y-1">
+ <div className="pt-1800/80 space-y-1">
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1">
  {audioSourceTypeB ==='maqueta' && (
@@ -870,7 +870,7 @@ export function SongTransitionPreviewModal({
  setSelectedSampleB(s);
  }
  }}
- className="bg-[var(--surface)] border-[var(--hair)]800 text-[10px] rounded p-0.5 text-[var(--ink-2)] focus:outline-none max-w-[160px] cursor-pointer"
+ className="bg-[var(--surface)]800 text-[10px] rounded p-0.5 text-[var(--ink-2)] focus:outline-none max-w-[160px] cursor-pointer"
  >
  {STUDIO_SAMPLE_TRACKS.map((st) => (
  <option key={st.id} value={st.id}>
@@ -895,7 +895,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* VU Meter for Track B */}
- <div className="w-full bg-[var(--sunken)] h-1 rounded-full overflow-hidden border-[var(--hair)]800">
+ <div className="w-full bg-[var(--sunken)] h-1 rounded-full overflow-hidden800">
  <div
  className="h-full bg-gradient-to-r from-[var(--ok)] to-[var(--ok-soft)] transition-all duration-75"
  style={{ width: `${Math.min(100, liveGainB * 100)}%` }}
@@ -906,12 +906,12 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Compact Unified Player & Waveform Timeline */}
- <div className="p-2 sm:p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-1.5">
+ <div className="p-2 sm:p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
  {/* Controls & Mode Ribbon Header */}
  <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
  {/* Mode Selector & Auto-CUE toggle */}
  <div className="flex items-center gap-1.5 flex-wrap">
- <div className="flex items-center p-0.5 bg-[var(--surface)] rounded-[var(--r-s)] border-[var(--hair)]">
+ <div className="flex items-center p-0.5 bg-[var(--surface)] rounded-[var(--r-s)]">
  <button
  type="button"
  onClick={() => {
@@ -954,7 +954,7 @@ export function SongTransitionPreviewModal({
  className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  autoCueEnabled
  ?'bg-[var(--acc)]/15 text-[var(--acc)] /40'
- :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]700 hover:text-[var(--ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)]700 hover:text-[var(--ink)]'
  }`}
  title="Auto-CUE Inteligente: Detecta y salta automáticamente los huecos de silencio y aplausos al principio y final de canciones en directo"
  >
@@ -964,7 +964,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Transition Style Selector */}
- <div className="flex items-center gap-1 bg-[var(--surface)] p-0.5 rounded-[var(--r-s)] border-[var(--hair)]">
+ <div className="flex items-center gap-1 bg-[var(--surface)] p-0.5 rounded-[var(--r-s)]">
  <button
  type="button"
  onClick={() => {
@@ -1010,7 +1010,7 @@ export function SongTransitionPreviewModal({
 
  {/* Seconds selector for crossfade */}
  {config.style ==='crossfade' && (
- <div className="flex items-center gap-0.5 pl-1 border-l border-[var(--hair)]700">
+ <div className="flex items-center gap-0.5 pl-1700">
  {[2, 3, 5, 8].map((sec) => (
  <button
  key={sec}
@@ -1035,7 +1035,7 @@ export function SongTransitionPreviewModal({
 
  {/* Visual Multi-Track Waveform Timeline with Scrubbing */}
  <div
- className="relative h-7 bg-[var(--sunken)] rounded-[var(--r-s)] border-[var(--hair)]800 cursor-pointer overflow-hidden p-0.5 select-none"
+ className="relative h-7 bg-[var(--sunken)] rounded-[var(--r-s)]800 cursor-pointer overflow-hidden p-0.5 select-none"
  onClick={(e) => {
  const rect = e.currentTarget.getBoundingClientRect();
  const ratio = (e.clientX - rect.left) / rect.width;
@@ -1071,7 +1071,7 @@ export function SongTransitionPreviewModal({
  {/* Crossfade overlap highlight */}
  {config.style ==='crossfade' && (
  <div
- className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-0/30 to-emerald-500/30 border-x /80 pointer-events-none flex items-center justify-center text-[8px] font-sans font-bold text-[var(--ink)]/90"
+ className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-0/30 to-emerald-500/30 /80 pointer-events-none flex items-center justify-center text-[8px] font-sans font-bold text-[var(--ink)]/90"
  style={{
  left: `${(timeline.crossfadeStartSec / timeline.totalDurationSec) * 100}%`,
  width: `${((timeline.crossfadeEndSec - timeline.crossfadeStartSec) / timeline.totalDurationSec) * 100}%`
@@ -1107,7 +1107,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={handleRestart}
- className="p-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)] transition cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition cursor-pointer"
  title="Rebobinar al inicio del enlace"
  >
  <RotateCcw className="w-3 h-3" />
@@ -1143,7 +1143,7 @@ export function SongTransitionPreviewModal({
 
  {/* Progress Time & Status */}
  <div className="flex items-center gap-1.5">
- <span className="font-sans text-[var(--ink-2)] font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded text-[10px] border-[var(--hair)]800">
+ <span className="font-sans text-[var(--ink-2)] font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded text-[10px]800">
  ⏱️ {currentTime.toFixed(1)}s / {timeline.totalDurationSec.toFixed(1)}s
  </span>
  {isPlaying && (
@@ -1157,9 +1157,9 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Smart Tabbed Musical Intelligence Panel */}
- <div className="rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] overflow-hidden">
+ <div className="rounded-[var(--r-m)] bg-[var(--surface)] overflow-hidden">
  {/* Tab Navigation Ribbon & Verdict Summary */}
- <div className="flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1.5 border-b border-[var(--hair)]800 bg-[var(--surface)]">
+ <div className="flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1.5800 bg-[var(--surface)]">
  {/* Tabs */}
  <div className="flex items-center gap-1">
  <button
@@ -1240,7 +1240,7 @@ export function SongTransitionPreviewModal({
  </div>
  ))}
  {diagnosis.porQueSi.length === 0 && (
- <div className="p-1.5 rounded-[var(--r-s)] bg-[var(--bg)]/50 border-[var(--hair)]800 text-[10px] text-[var(--ink-2)] text-center">
+ <div className="p-1.5 rounded-[var(--r-s)] bg-[var(--bg)]/50800 text-[10px] text-[var(--ink-2)] text-center">
  Sin factores musicales especialmente favorables.
  </div>
  )}
@@ -1259,10 +1259,10 @@ export function SongTransitionPreviewModal({
  key={con.id}
  className={`p-1.5 rounded-[var(--r-s)] text-[10px] space-y-0.5 ${
  con.severity ==='critico'
- ?'bg-[var(--alert-soft)] border-[var(--alert)]/40'
+ ?'bg-[var(--alert-soft)]/40'
  : con.severity ==='aviso'
  ?'bg-[var(--acc-soft)] /30'
- :'bg-[var(--bg)]/60 border-[var(--hair)]800'
+ :'bg-[var(--bg)]/60800'
  }`}
  >
  <div className="flex items-center justify-between gap-1">
@@ -1294,7 +1294,7 @@ export function SongTransitionPreviewModal({
 
  {activeTab ==='metrics' && (
  <div className="grid grid-cols-1 md:grid-cols-3 gap-1.5">
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)]800 space-y-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]800 space-y-0.5">
  <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--acc)]/70">
  <Music className="w-3 h-3" />
  <span>Armonía & Tono</span>
@@ -1304,7 +1304,7 @@ export function SongTransitionPreviewModal({
  </p>
  </div>
 
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)]800 space-y-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]800 space-y-0.5">
  <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--ink-3)]">
  <Zap className="w-3 h-3" />
  <span>Salto BPM</span>
@@ -1314,7 +1314,7 @@ export function SongTransitionPreviewModal({
  </p>
  </div>
 
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)]800 space-y-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]800 space-y-0.5">
  <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--ink-2)]">
  <Flame className="w-3 h-3" />
  <span>Energía Escénica</span>
@@ -1348,7 +1348,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* Fixed Smart Actions Footer */}
- <div className="flex flex-wrap items-center justify-between gap-1.5 px-3.5 py-2 border-t border-[var(--hair)] bg-[var(--surface)] shrink-0">
+ <div className="flex flex-wrap items-center justify-between gap-1.5 px-3.5 py-2 bg-[var(--surface)] shrink-0">
  <div className="flex flex-wrap items-center gap-1.5">
  {onInsertInterludio && itemA && (
  <button
@@ -1373,7 +1373,7 @@ export function SongTransitionPreviewModal({
  onSwapSongs(indexA, indexB);
  onClose();
  }}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] border-[var(--hair)]700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
  >
  <ArrowLeftRight className="w-3 h-3" />
  <span>Invertir (A ⇄ B)</span>

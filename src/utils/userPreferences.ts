@@ -1,17 +1,17 @@
-import { api } from '../services/api';
-import { User } from '../types';
-import { syncCalendarPreferencesFromUser } from './calendarViewPreferences';
+import { api } from' ../services/api';
+import { User } from' ../types';
+import { syncCalendarPreferencesFromUser } from' ./calendarViewPreferences';
 
-export const TUTORIAL_STORAGE_PREFIX = 'bm_tutorial_seen_';
-export const ONBOARDING_GLOBAL_KEY = 'bandmanager_onboarding_completed';
-export const PROFILE_WIZARD_GLOBAL_KEY = 'bandmanager_profile_wizard_completed';
+export const TUTORIAL_STORAGE_PREFIX =' bm_tutorial_seen_';
+export const ONBOARDING_GLOBAL_KEY =' bandmanager_onboarding_completed';
+export const PROFILE_WIZARD_GLOBAL_KEY =' bandmanager_profile_wizard_completed';
 
 /**
  * Normaliza un identificador de banda para guardado de preferencias
  */
 export function cleanBandKey(bandId?: string): string {
- if (!bandId) return '';
- return bandId.replace(/^(band|reg)-/, '').trim().toLowerCase();
+ if (!bandId) return' ';
+ return bandId.replace(/^(band|reg)-/,' ').trim().toLowerCase();
 }
 
 /**
@@ -19,7 +19,7 @@ export function cleanBandKey(bandId?: string): string {
  * Se ejecuta al iniciar sesión o al refrescar la sesión en background.
  */
 export function syncAllUserPreferencesFromUser(user?: User | null): void {
- if (!user || typeof localStorage === 'undefined') return;
+ if (!user || typeof localStorage ===' undefined') return;
 
  // 1. Sincronizar preferencias del calendario
  syncCalendarPreferencesFromUser(user);
@@ -29,15 +29,15 @@ export function syncAllUserPreferencesFromUser(user?: User | null): void {
  // 2. Sincronizar tutoriales vistos
  if (Array.isArray(uiPrefs.tutorials_seen)) {
  uiPrefs.tutorials_seen.forEach((moduleId: string) => {
- if (moduleId && typeof moduleId === 'string') {
- localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`, 'true');
+ if (moduleId && typeof moduleId ===' string') {
+ localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`,' true');
  }
  });
  }
 
  // 3. Sincronizar onboarding global
  if (uiPrefs.onboarding_completed) {
- localStorage.setItem(ONBOARDING_GLOBAL_KEY, 'true');
+ localStorage.setItem(ONBOARDING_GLOBAL_KEY,' true');
  }
 
  // 4. Sincronizar onboarding y asistente de perfil por banda
@@ -45,7 +45,7 @@ export function syncAllUserPreferencesFromUser(user?: User | null): void {
  uiPrefs.onboarding_completed_bands.forEach((bId: string) => {
  const clean = cleanBandKey(bId);
  if (clean) {
- localStorage.setItem(`${ONBOARDING_GLOBAL_KEY}_${clean}`, 'true');
+ localStorage.setItem(`${ONBOARDING_GLOBAL_KEY}_${clean}`,' true');
  }
  });
  }
@@ -54,7 +54,7 @@ export function syncAllUserPreferencesFromUser(user?: User | null): void {
  uiPrefs.profile_wizard_completed_bands.forEach((bId: string) => {
  const clean = cleanBandKey(bId);
  if (clean) {
- localStorage.setItem(`${PROFILE_WIZARD_GLOBAL_KEY}_${clean}`, 'true');
+ localStorage.setItem(`${PROFILE_WIZARD_GLOBAL_KEY}_${clean}`,' true');
  }
  });
  }
@@ -65,17 +65,17 @@ export function syncAllUserPreferencesFromUser(user?: User | null): void {
  * (comprobando primero en localStorage y luego en ui_preferences del usuario).
  */
 export function isTutorialSeen(moduleId: string, user?: User | null): boolean {
- if (typeof localStorage === 'undefined') return false;
+ if (typeof localStorage ===' undefined') return false;
 
  // 1. Comprobación rápida en localStorage (caché local)
- if (localStorage.getItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`) === 'true') {
+ if (localStorage.getItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`) ===' true') {
  return true;
  }
 
  // 2. Comprobación en el objeto usuario (Supabase)
  if (user?.ui_preferences?.tutorials_seen && Array.isArray(user.ui_preferences.tutorials_seen)) {
  if (user.ui_preferences.tutorials_seen.includes(moduleId)) {
- localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`, 'true');
+ localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`,' true');
  return true;
  }
  }
@@ -86,7 +86,7 @@ export function isTutorialSeen(moduleId: string, user?: User | null): boolean {
  if (cachedUserStr) {
  const parsed = JSON.parse(cachedUserStr);
  if (parsed?.ui_preferences?.tutorials_seen?.includes(moduleId)) {
- localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`, 'true');
+ localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`,' true');
  return true;
  }
  }
@@ -102,15 +102,15 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
  if (!moduleId) return false;
 
  // 1. Persistencia instantánea en localStorage
- if (typeof localStorage !== 'undefined') {
+ if (typeof localStorage !==' undefined') {
  try {
- localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`, 'true');
+ localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`,' true');
  } catch {}
  }
 
  // 2. Actualizar optimísticamente el usuario en caché
  let currentTutorials: string[] = [];
- if (typeof localStorage !== 'undefined') {
+ if (typeof localStorage !==' undefined') {
  try {
  const cachedUserStr = localStorage.getItem('bakandeya_user');
  if (cachedUserStr) {
@@ -132,7 +132,7 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
  // 3. Persistir en Supabase
  if (syncToSupabase) {
  try {
- const token = typeof localStorage !== 'undefined'
+ const token = typeof localStorage !==' undefined'
  ? (localStorage.getItem('bakandeya_token') || localStorage.getItem('token'))
  : null;
 
@@ -140,7 +140,7 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
  const response = await api.saveUiPreferences({
  tutorials_seen: currentTutorials.length > 0 ? currentTutorials : [moduleId]
  });
- if (response?.user && typeof localStorage !== 'undefined') {
+ if (response?.user && typeof localStorage !==' undefined') {
  localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
  }
  return true;
@@ -165,14 +165,14 @@ export function isOnboardingCompleted(bandId?: string, user?: User | null): {
  let wizardCompleted = false;
  let onboardingCompleted = false;
 
- if (typeof localStorage !== 'undefined') {
+ if (typeof localStorage !==' undefined') {
  wizardCompleted = clean
- ? localStorage.getItem(`${PROFILE_WIZARD_GLOBAL_KEY}_${clean}`) === 'true'
- : localStorage.getItem(PROFILE_WIZARD_GLOBAL_KEY) === 'true';
+ ? localStorage.getItem(`${PROFILE_WIZARD_GLOBAL_KEY}_${clean}`) ===' true'
+ : localStorage.getItem(PROFILE_WIZARD_GLOBAL_KEY) ===' true';
 
  onboardingCompleted = clean
- ? localStorage.getItem(`${ONBOARDING_GLOBAL_KEY}_${clean}`) === 'true'
- : localStorage.getItem(ONBOARDING_GLOBAL_KEY) === 'true';
+ ? localStorage.getItem(`${ONBOARDING_GLOBAL_KEY}_${clean}`) ===' true'
+ : localStorage.getItem(ONBOARDING_GLOBAL_KEY) ===' true';
  }
 
  if (user?.ui_preferences) {
@@ -202,15 +202,15 @@ export async function markOnboardingCompleted(
  const clean = cleanBandKey(bandId);
 
  // 1. Guardar en localStorage
- if (typeof localStorage !== 'undefined') {
+ if (typeof localStorage !==' undefined') {
  try {
  if (options.onboarding) {
- localStorage.setItem(ONBOARDING_GLOBAL_KEY, 'true');
- if (clean) localStorage.setItem(`${ONBOARDING_GLOBAL_KEY}_${clean}`, 'true');
+ localStorage.setItem(ONBOARDING_GLOBAL_KEY,' true');
+ if (clean) localStorage.setItem(`${ONBOARDING_GLOBAL_KEY}_${clean}`,' true');
  }
  if (options.wizard) {
- localStorage.setItem(PROFILE_WIZARD_GLOBAL_KEY, 'true');
- if (clean) localStorage.setItem(`${PROFILE_WIZARD_GLOBAL_KEY}_${clean}`, 'true');
+ localStorage.setItem(PROFILE_WIZARD_GLOBAL_KEY,' true');
+ if (clean) localStorage.setItem(`${PROFILE_WIZARD_GLOBAL_KEY}_${clean}`,' true');
  }
  } catch {}
  }
@@ -219,7 +219,7 @@ export async function markOnboardingCompleted(
  let updatedOnboardingBands: string[] = [];
  let updatedWizardBands: string[] = [];
 
- if (typeof localStorage !== 'undefined') {
+ if (typeof localStorage !==' undefined') {
  try {
  const cachedUserStr = localStorage.getItem('bakandeya_user');
  if (cachedUserStr) {
@@ -251,7 +251,7 @@ export async function markOnboardingCompleted(
  // 3. Sincronizar en Supabase
  if (syncToSupabase) {
  try {
- const token = typeof localStorage !== 'undefined'
+ const token = typeof localStorage !==' undefined'
  ? (localStorage.getItem('bakandeya_token') || localStorage.getItem('token'))
  : null;
 
@@ -261,7 +261,7 @@ export async function markOnboardingCompleted(
  onboarding_completed_bands: clean && !updatedOnboardingBands.includes(clean) ? [...updatedOnboardingBands, clean] : updatedOnboardingBands,
  profile_wizard_completed_bands: clean && !updatedWizardBands.includes(clean) ? [...updatedWizardBands, clean] : updatedWizardBands
  });
- if (response?.user && typeof localStorage !== 'undefined') {
+ if (response?.user && typeof localStorage !==' undefined') {
  localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
  }
  return true;

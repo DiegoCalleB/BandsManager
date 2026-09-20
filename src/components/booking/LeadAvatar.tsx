@@ -74,10 +74,10 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
 
  const imgSize =
  size ==='lg'
- ?'w-14 h-14 rounded-[var(--r-l)] p-1 border-2 border-[var(--acc)]'
+ ?'w-14 h-14 rounded-[var(--r-l)] p-1'
  : size ==='md'
- ?'w-12 h-12 rounded-[var(--r-m)] p-1 border-[var(--acc)]/50'
- :'w-8 h-8 rounded-[var(--r-s)] p-0.5 border-[var(--acc)]/50';
+ ?'w-12 h-12 rounded-[var(--r-m)] p-1/50'
+ :'w-8 h-8 rounded-[var(--r-s)] p-0.5/50';
 
  const cameraIconSize = size ==='sm' ?'w-3.5 h-3.5' :'w-5 h-5';
 
@@ -101,7 +101,7 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
  )}
 
  {showCameraHover && onClick && (
- <div className="absolute inset-0 bg-[var(--scrim)]/75 rounded-[var(--r-s)] opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity border-[var(--acc)]">
+ <div className="absolute inset-0 bg-[var(--scrim)]/75 rounded-[var(--r-s)] opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity">
  <Camera className={`${cameraIconSize} text-[var(--acc)]`} />
  </div>
  )}

@@ -42,10 +42,10 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={isCompleted ? onClose : undefined}>
  <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
- <div className="w-full max-w-lg bg-[var(--surface)] border-[var(--acc)]/40 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[85vh] my-auto">
+ <div className="w-full max-w-lg bg-[var(--surface)]/40 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[85vh] my-auto">
  
  {/* Header */}
- <div className="p-4 sm:p-5 border-b border-[var(--hair)]800 bg-gradient-to-r from-[var(--surface)] to-[var(--bg)] flex items-center justify-between">
+ <div className="p-4 sm:p-5800 bg-gradient-to-r from-[var(--surface)] to-[var(--bg)] flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]/70">
  {isCompleted ? (
@@ -76,7 +76,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  {/* Progress bar */}
- <div className="p-4 sm:p-5 space-y-3 bg-[var(--surface)]/60 border-b border-[var(--hair)]800">
+ <div className="p-4 sm:p-5 space-y-3 bg-[var(--surface)]/60800">
  <div className="flex items-center justify-between text-xs font-sans">
  <span className="text-[var(--ink-2)] font-bold">Progreso global</span>
  <span className="text-[var(--acc)] font-bold">{percentage}% ({isCompleted ? totalCount : currentIndex}/{totalCount})</span>
@@ -123,7 +123,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <AlertTriangle className="w-3.5 h-3.5 text-[var(--alert)] shrink-0" />
  )}
  {item.status ==='pending' && (
- <div className="w-3.5 h-3.5 rounded-full border-[var(--hair)]600 shrink-0" />
+ <div className="w-3.5 h-3.5 rounded-full600 shrink-0" />
  )}
  <span className="text-[var(--ink)] truncate font-semibold">
  {item.name}
@@ -146,7 +146,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  {/* Footer */}
- <div className="p-4 border-t border-[var(--hair)]800 bg-[var(--bg)] flex items-center justify-end gap-2">
+ <div className="p-4800 bg-[var(--bg)] flex items-center justify-end gap-2">
  {!isCompleted && onCancel && (
  <button
  type="button"

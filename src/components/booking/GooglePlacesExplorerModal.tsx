@@ -603,13 +603,13 @@ export function GooglePlacesExplorerModal({
  className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]800'
+ :'bg-[var(--surface)] text-[var(--ink)]800'
  }`}
  >
  {/* Header */}
- <div className="p-4 sm:p-5 border-b border-[var(--hair)]800 flex items-center justify-between shrink-0 bg-[var(--bg)]/60">
+ <div className="p-4 sm:p-5800 flex items-center justify-between shrink-0 bg-[var(--bg)]/60">
  <div className="flex items-center gap-3">
- <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 border-[var(--acc)]/40 text-[var(--acc)]">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15/40 text-[var(--acc)]">
  <Search className="w-5 h-5" />
  </div>
  <div>
@@ -697,7 +697,7 @@ export function GooglePlacesExplorerModal({
  </div>
 
  {/* Selector de Tipos de Espacio para la prospección masiva */}
- <div className="pt-2 border-t border-[var(--hair)]800/80 flex flex-wrap items-center justify-between gap-2">
+ <div className="pt-2800/80 flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold mr-1">Espacios a rastrear:</span>
  {[
@@ -724,7 +724,7 @@ export function GooglePlacesExplorerModal({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
  isChecked
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50'
- :'bg-[var(--bg)]/80 text-[var(--ink-2)] border-[var(--hair)]800 hover:text-[var(--ink-2)]'
+ :'bg-[var(--bg)]/80 text-[var(--ink-2)]800 hover:text-[var(--ink-2)]'
  }`}
  >
  <span>{item.icon}</span>
@@ -788,8 +788,8 @@ export function GooglePlacesExplorerModal({
  onClick={() => handleCategoryChange(cat.id)}
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
  isSelected
- ?'bg-[var(--acc)] text-[var(--on-acc)] border-[var(--acc)]'
- :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:bg-[var(--surface)]'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
+ :'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:bg-[var(--surface)]'
  }`}
  title={cat.desc}
  >
@@ -813,7 +813,7 @@ export function GooglePlacesExplorerModal({
  onChange={e => setSelectedCity(e.target.value)}
  onKeyDown={e => e.key ==='Enter' && handleSearch()}
  placeholder="Ciudad (ej. Granada, Madrid...)"
- className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
+ className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
  />
  {selectedCity && (
  <button
@@ -835,12 +835,12 @@ export function GooglePlacesExplorerModal({
  onChange={e => setSearchQuery(e.target.value)}
  onKeyDown={e => e.key ==='Enter' && handleSearch()}
  placeholder={CATEGORIES.find(c => c.id === selectedType)?.placeholder ||"Búsqueda opcional..."}
- className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
+ className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
  />
  </div>
 
  {/* Number of Venues limit (1 a 10) */}
- <div className="md:col-span-3 flex items-center gap-1.5 bg-[var(--bg)] px-3 py-1 rounded-[var(--r-m)] border-[var(--hair)]800">
+ <div className="md:col-span-3 flex items-center gap-1.5 bg-[var(--bg)] px-3 py-1 rounded-[var(--r-m)]800">
  <span className="text-[10px] font-sans text-[var(--ink-2)] whitespace-nowrap">Cantidad:</span>
  <input
  type="range"
@@ -857,7 +857,7 @@ export function GooglePlacesExplorerModal({
  </div>
 
  {/* Advanced Filters Toggle & Drawer (Aforo, etc) */}
- <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[var(--hair)]800/60">
+ <div className="flex flex-wrap items-center justify-between gap-2 pt-1800/60">
  <button
  type="button"
  onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
@@ -889,7 +889,7 @@ export function GooglePlacesExplorerModal({
  placeholder="Ej. 150"
  value={aforoMin}
  onChange={e => setAforoMin(e.target.value)}
- className="w-full p-2 bg-[var(--bg)] border-[var(--hair)]700 rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full p-2 bg-[var(--bg)]700 rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  <div>
@@ -901,7 +901,7 @@ export function GooglePlacesExplorerModal({
  placeholder="Ej. 800"
  value={aforoMax}
  onChange={e => setAforoMax(e.target.value)}
- className="w-full p-2 bg-[var(--bg)] border-[var(--hair)]700 rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full p-2 bg-[var(--bg)]700 rounded-[var(--r-s)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
@@ -963,7 +963,7 @@ export function GooglePlacesExplorerModal({
  {places.length > 0 ? (
  <div className="space-y-3">
  {/* Batch Actions Bar */}
- <div className="p-3 bg-[var(--bg)]/90 rounded-[var(--r-m)] border-[var(--hair)]800 flex flex-wrap items-center justify-between gap-3">
+ <div className="p-3 bg-[var(--bg)]/90 rounded-[var(--r-m)]800 flex flex-wrap items-center justify-between gap-3">
  <div className="flex items-center gap-3">
  <button
  onClick={toggleSelectAll}
@@ -1008,8 +1008,8 @@ export function GooglePlacesExplorerModal({
  key={place.place_id}
  className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col justify-between space-y-2.5 ${
  place.selected
- ?'bg-[var(--bg)] border-[var(--acc)]/50'
- :'bg-[var(--bg)]/60 border-[var(--hair)]800/80 opacity-70'
+ ?'bg-[var(--bg)]/50'
+ :'bg-[var(--bg)]/60800/80 opacity-70'
  }`}
  >
  <div className="space-y-2">
@@ -1025,10 +1025,10 @@ export function GooglePlacesExplorerModal({
  <img
  src={place.imagen_url}
  alt={place.nombre_sala}
- className="w-10 h-10 rounded-[var(--r-s)] object-cover border-[var(--hair)]700 shrink-0"
+ className="w-10 h-10 rounded-[var(--r-s)] object-cover700 shrink-0"
  />
  ) : (
- <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--sunken)] border-[var(--hair)]700 flex items-center justify-center text-lg shrink-0">
+ <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--sunken)]700 flex items-center justify-center text-lg shrink-0">
  {place.icono ||'🏛️'}
  </div>
  )}
@@ -1084,7 +1084,7 @@ export function GooglePlacesExplorerModal({
  <select
  value={String(place.tipo ||'sala').toLowerCase()}
  onChange={(e) => handlePlaceCategoryChange(place.place_id, e.target.value as LeadType)}
- className="bg-[var(--bg)] border-[var(--hair)]700 text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus: cursor-pointer"
+ className="bg-[var(--bg)]700 text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus: cursor-pointer"
  >
  {CATEGORIES.map(c => (
  <option key={c.id} value={c.id}>
@@ -1159,7 +1159,7 @@ export function GooglePlacesExplorerModal({
  </span>
  </div>
  ) : (
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]800 text-[10px] flex items-center justify-between gap-2">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)]800 text-[10px] flex items-center justify-between gap-2">
  <span className="text-[var(--ink-2)] italic">Sin correo extraído aún</span>
  <button
  onClick={() => handleExtractSingleEmail(place.place_id)}
@@ -1196,8 +1196,8 @@ export function GooglePlacesExplorerModal({
  {/* Discarded Suggestions Sub-Modal */}
  {showDiscardedModal && (
  <div className="fixed inset-0 z-[110] flex items-center justify-center p-3 bg-[var(--scrim)]/80 animate-fadeIn">
- <div className="w-full max-w-lg bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[80vh]">
- <div className="p-4 border-b border-[var(--hair)]800 flex items-center justify-between bg-[var(--bg)]/60">
+ <div className="w-full max-w-lg bg-[var(--bg)]800 rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[80vh]">
+ <div className="p-4800 flex items-center justify-between bg-[var(--bg)]/60">
  <div className="flex items-center gap-2">
  <Ban className="w-4 h-4 text-[var(--alert)]" />
  <h3 className="text-sm font-bold text-[var(--ink)]">Sugerencias No Deseadas ({discardedList.length})</h3>
@@ -1246,7 +1246,7 @@ export function GooglePlacesExplorerModal({
  </div>
 
  {discardedList.length > 0 && (
- <div className="p-3 border-t border-[var(--hair)]800 bg-[var(--bg)]/60 flex justify-between items-center">
+ <div className="p-3800 bg-[var(--bg)]/60 flex justify-between items-center">
  <button
  type="button"
  onClick={handleClearAllDiscarded}

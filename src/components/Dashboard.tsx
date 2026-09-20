@@ -287,7 +287,7 @@ export default function Dashboard({
  return matchesSearch && matchesCity && matchesGenre;
  });
 
- const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink)]';
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
@@ -489,7 +489,7 @@ export default function Dashboard({
 
  {/* 1. SECCIÓN PRINCIPAL AL INICIO: PRÓXIMAS FECHAS Y AGENDA */}
  <div className="p-6 rounded-[var(--r-l)] bg-[var(--surface)]/90 space-y-4">
- <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b border-[var(--hair)]">
+ <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Calendar className="w-5 h-5" />
@@ -509,7 +509,7 @@ export default function Dashboard({
  <div className="flex items-center gap-2.5 flex-wrap">
  {/* Band Filter Mode Toggle */}
  <div className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80 border-[var(--hair)]'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80'
  }`}>
  <button
  id="dashboard-promo-agenda-all-bands-btn"
@@ -602,7 +602,7 @@ export default function Dashboard({
  </div>
  </div>
 
- <div className="mt-3 pt-2.5 border-t text-xs font-sans text-[var(--ink-2)] flex items-center justify-between">
+ <div className="mt-3 pt-2.5 text-xs font-sans text-[var(--ink-2)] flex items-center justify-between">
  <span className="truncate">{item.details}</span>
  <ArrowRight className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
  </div>
@@ -633,7 +633,7 @@ export default function Dashboard({
  {/* Card 1: Códigos QR & Captura de Fans */}
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4 hover:/40 transition-all">
  <div>
- <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <QrCode className="w-5 h-5" />
@@ -671,7 +671,7 @@ export default function Dashboard({
  {/* Card 2: Dossier EPK Digital */}
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4 hover:border-[var(--acc)]/40 transition-all">
  <div>
- <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc)]">
  <BookOpen className="w-5 h-5" />

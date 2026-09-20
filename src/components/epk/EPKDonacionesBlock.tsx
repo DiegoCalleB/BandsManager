@@ -68,7 +68,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* APOYO ECONÓMICO / DONACIONES */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
+ <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
  <h3 className="text-base sm:text-lg font-bold text-[var(--ink-2)] flex items-center gap-2">
  <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones (Revolut, PayPal & Bizum)
  </h3>
@@ -227,7 +227,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  (config.donacionRevolut?.metodoPorDefecto ||'revolut') ==='revolut'
- ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--ink-3)]'
+ ?'bg-[var(--acc)]/20 text-[var(--ink-3)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -244,7 +244,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='paypal'
- ?'bg-[var(--tentative)]/50/20 border-[var(--acc)] text-[var(--acc)]/80'
+ ?'bg-[var(--tentative)]/50/20 text-[var(--acc)]/80'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -261,7 +261,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='bizum'
- ?'bg-[var(--ok)]/20 border-[var(--ok)] text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -321,7 +321,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
 
  {config.donacionRevolut?.habilitado === false ? (
- <div className="p-4 rounded-[var(--r-m)] border-dashed text-center text-xs text-[var(--ink-2)]">
+ <div className="p-4 rounded-[var(--r-m)] text-center text-xs text-[var(--ink-2)]">
  Tarjeta desactivada: no se mostrará en &quot;Únete&quot; ni en el Dossier
  </div>
  ) : (
@@ -356,7 +356,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
 
  {/* EPK MULTIIDIOMA */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
  <Languages className="w-5 h-5" /> Versiones del EPK en otros idiomas
  </h3>
  <div className="text-xs text-[var(--ink-2)] space-y-1">
@@ -481,7 +481,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  ))}
 
  {miembros.filter(m => (m.rol ||'').trim() || (m.bio ||'').trim()).length > 0 && (
- <div className="space-y-3 pt-2 border-t border-[var(--hair)]">
+ <div className="space-y-3 pt-2">
  <p className="text-[10px] tracking-wider text-[var(--ink-2)] font-semibold">
  Formación
  </p>

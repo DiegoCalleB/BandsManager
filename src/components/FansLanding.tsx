@@ -30,7 +30,7 @@ export interface FansLandingProps {
 const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ code, className ="w-4 h-3" }) => {
  if (code ==='es') {
  return (
- <svg className={`${className} rounded-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
+ <svg className={`${className} rounded-xs object-cover shrink-0`} viewBox="0 0 640 480">
  <path fill="#c60b1e" d="M0 0h640v480H0z"/>
  <path fill="#ffc400" d="M0 120h640v240H0z"/>
  </svg>
@@ -38,7 +38,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
  }
  if (code ==='en') {
  return (
- <svg className={`${className} rounded-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
+ <svg className={`${className} rounded-xs object-cover shrink-0`} viewBox="0 0 640 480">
  <path fill="#012169" d="M0 0h640v480H0z"/>
  <path fill="#fff" d="m75 0 245 180L565 0h75v55L415 240l225 185v55h-75L320 300 75 480H0v-55l225-185L0 55V0z"/>
  <path fill="#c8102e" d="m425 240 215 175v25h-35L390 265zm-210 0L0 415v25h35l215-175zm210 0L640 65V40h-35L390 215zm-210 0L0 65V40h35l215 175z"/>
@@ -49,7 +49,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
  }
  if (code ==='it') {
  return (
- <svg className={`${className} rounded-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
+ <svg className={`${className} rounded-xs object-cover shrink-0`} viewBox="0 0 640 480">
  <path fill="#009246" d="M0 0h213.3v480H0z"/>
  <path fill="#fff" d="M213.3 0h213.4v480H213.3z"/>
  <path fill="#ce2b37" d="M426.7 0H640v480H426.7z"/>
@@ -58,7 +58,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
  }
  if (code ==='cs') {
  return (
- <svg className={`${className} rounded-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
+ <svg className={`${className} rounded-xs object-cover shrink-0`} viewBox="0 0 640 480">
  <path fill="#d7141a" d="M0 0h640v480H0z"/>
  <path fill="#fff" d="M0 0h640v240H0z"/>
  <path fill="#11457e" d="M0 0l320 240L0 480z"/>
@@ -712,7 +712,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  };
 
  return (
- <div className={isSuccessScreen ?'pt-3 border-t text-left' : isFormScreen ?'pt-2' :'pt-1.5'}>
+ <div className={isSuccessScreen ?'pt-3 text-left' : isFormScreen ?'pt-2' :'pt-1.5'}>
  <div className="relative rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)]/95 via-[var(--surface)]/90 to-[var(--surface)]/95 hover:/60 p-3.5 sm:p-4 transition-all duration-300 text-left overflow-hidden">
  {/* Halo ambiental sutil */}
  <div className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-full bg-[var(--acc)]/10 blur-2xl" aria-hidden="true" />
@@ -932,7 +932,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  {codigoDescuentoFan && (
  <div className="pt-2">
  <p className="text-[10px] text-[var(--ink-2)] tracking-wider font-bold mb-1">{t('merchCode')}</p>
- <div className="flex items-center justify-center gap-2 p-3 bg-[var(--surface)] border-dashed rounded-[var(--r-s)]">
+ <div className="flex items-center justify-center gap-2 p-3 bg-[var(--surface)] rounded-[var(--r-s)]">
  <Tag className="w-4 h-4 text-[var(--ok)]" />
  <span className="font-sans text-[var(--ok)] font-bold tracking-widest">{codigoDescuentoFan}</span>
  </div>
@@ -981,7 +981,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Official Social Links in Success View */}
  {socialLinks && Object.values(socialLinks).some(Boolean) && (
- <div className="pt-2 border-t border-[var(--hair)]">
+ <div className="pt-2">
  <SocialPlatformsList
  links={socialLinks}
  variant="grid"
@@ -1012,7 +1012,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Booking / Contrataciones in Success View */}
  {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
- <div className="pt-4 border-t text-left">
+ <div className="pt-4 text-left">
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2.5">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
@@ -1062,7 +1062,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  )}
 
  {/* Banner para músicos y bandas */}
- <div className="pt-4 border-t text-left">
+ <div className="pt-4 text-left">
  <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-amber-950/20 space-y-2.5">
  <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
  <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -1107,11 +1107,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  src={logoUrl} 
  alt={bandName} 
  onError={() => setImgError(true)}
- className="w-24 h-24 mx-auto object-contain p-1 rounded-[var(--r-l)] border-2 /40 bg-[var(--surface)] drop-shadow-[0_0_15px_var(--acc-glow)]" 
+ className="w-24 h-24 mx-auto object-contain p-1 rounded-[var(--r-l)] /40 bg-[var(--surface)] drop-shadow-[0_0_15px_var(--acc-glow)]" 
  />
  </div>
  ) : (
- <div className="w-24 h-24 mx-auto rounded-[var(--r-l)] border-2 /50 bg-gradient-to-br from-[var(--surface)] to-[var(--surface)] flex flex-col items-center justify-center p-2 drop-shadow-[0_0_20px_var(--acc-glow)]">
+ <div className="w-24 h-24 mx-auto rounded-[var(--r-l)] /50 bg-gradient-to-br from-[var(--surface)] to-[var(--surface)] flex flex-col items-center justify-center p-2 drop-shadow-[0_0_20px_var(--acc-glow)]">
  <Flame className="w-10 h-10 text-[var(--acc)] mb-0.5" />
  <span className="text-[10px] font-black text-[var(--acc)]/70 font-display tracking-wider line-clamp-1">{bandName}</span>
  </div>
@@ -1280,7 +1280,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  {miembros.slice(0, 3).map((m, idx) => (
  <div
  key={m.id || idx}
- className="w-7 h-7 rounded-full border-2 border-[var(--surface)] bg-[var(--surface)]/80 flex items-center justify-center text-[10px] font-bold text-[var(--acc)]/70 overflow-hidden"
+ className="w-7 h-7 rounded-full bg-[var(--surface)]/80 flex items-center justify-center text-[10px] font-bold text-[var(--acc)]/70 overflow-hidden"
  title={`${m.nombre}${m.rol ? ` (${m.rol})` :''}`}
  >
  {m.fotoUrl ? (
@@ -1291,7 +1291,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </div>
  ))}
  {miembros.length > 3 && (
- <div className="w-7 h-7 rounded-full border-2 border-[var(--surface)] bg-[var(--surface)]/80 flex items-center justify-center text-[9px] font-bold text-[var(--ink-2)]">
+ <div className="w-7 h-7 rounded-full bg-[var(--surface)]/80 flex items-center justify-center text-[9px] font-bold text-[var(--ink-2)]">
  +{miembros.length - 3}
  </div>
  )}
@@ -1330,7 +1330,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </span>
  </div>
  {(c.entradasUrl || c.entradasLugarFisico) && (
- <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[var(--hair)]">
+ <div className="flex flex-wrap items-center gap-1.5 pt-1">
  {c.entradasUrl && (
  <a
  href={c.entradasUrl}
@@ -1496,7 +1496,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  required
  checked={formData.consentimiento}
  onChange={e => setFormData({...formData, consentimiento: e.target.checked})}
- className="peer appearance-none w-5 h-5 border-2 rounded bg-[var(--surface)] checked:bg-[var(--acc)] checked: transition-colors shrink-0 cursor-pointer"
+ className="peer appearance-none w-5 h-5 rounded bg-[var(--surface)] checked:bg-[var(--acc)] checked: transition-colors shrink-0 cursor-pointer"
  />
  <Check className="w-3.5 h-3.5 text-[var(--ink)] absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" strokeWidth={4} />
  </div>
@@ -1528,7 +1528,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Social Links shown below form as well */}
  {socialLinks && Object.values(socialLinks).some(Boolean) && (
- <div className="pt-4 border-t space-y-2">
+ <div className="pt-4 space-y-2">
  <p className="text-[11px] font-bold text-[var(--ink-2)] font-sans text-center tracking-wider">
  {t('followUsAlso')}
  </p>
@@ -1548,7 +1548,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Sección Destacada de Contrataciones & Booking Directo */}
  {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
- <div className="pt-5 border-t space-y-3">
+ <div className="pt-5 space-y-3">
  <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-amber-950/30 space-y-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2 text-[var(--acc)]">
@@ -1607,7 +1607,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  )}
 
  {/* Banner para músicos y bandas al final del formulario */}
- <div className="pt-4 border-t text-left">
+ <div className="pt-4 text-left">
  <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-amber-950/20 space-y-2.5">
  <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
  <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -1635,7 +1635,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  {showPrivacyModal && (
  <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 flex items-center justify-center p-4">
  <div className="max-w-lg w-full bg-[var(--surface)] rounded-[var(--r-l)] p-6 space-y-4 max-h-[85vh] overflow-y-auto">
- <div className="flex items-center justify-between border-b pb-4">
+ <div className="flex items-center justify-between pb-4">
  <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-sm tracking-wider">
  <Shield className="w-5 h-5" /> {t('privacyModalTitle')}
  </div>
@@ -1651,7 +1651,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <p>{renderBold(t('privacyPara4', { bandName }))}</p>
  </div>
 
- <div className="pt-4 border-t text-right">
+ <div className="pt-4 text-right">
  <button
  onClick={() => setShowPrivacyModal(false)}
  className="px-5 py-2.5 bg-[var(--acc)] hover:bg-[var(--accent-alt)] text-[var(--ink)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] transition-colors"

@@ -113,7 +113,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
- <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
+ <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
  <Sparkles className="w-5 h-5" />
@@ -240,7 +240,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  {/* GENERATED IDEA PREVIEW CARD */}
  {generatedIdea && (
  <div className="mt-4 p-4 rounded-[var(--r-m)] bg-[var(--acc)]/20 space-y-3 animate-in fade-in duration-200">
- <div className="flex items-center justify-between border-b border-[var(--acc)]/30 pb-2">
+ <div className="flex items-center justify-between/30 pb-2">
  <div className="flex items-center gap-2">
  <span className="px-2 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--acc)] font-sans text-[10px] font-bold">
  {generatedIdea.instrumentoRol}

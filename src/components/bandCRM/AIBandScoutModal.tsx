@@ -110,7 +110,7 @@ export function AIBandScoutModal({
  <div className={`w-full max-w-4xl ${bgColor} rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh]`}>
  
  {/* Header */}
- <div className="p-4 border-b border-[var(--hair)]/10 flex justify-between items-center bg-gradient-to-r from-amber-0/10 to-orange-500/10">
+ <div className="p-4/10 flex justify-between items-center bg-gradient-to-r from-amber-0/10 to-orange-500/10">
  <div className="flex items-center gap-3">
  <div className="p-2 bg-[var(--acc)]/20 rounded-[var(--r-s)] text-[var(--acc)]">
  <Sparkles className="w-5 h-5" />
@@ -191,7 +191,7 @@ export function AIBandScoutModal({
  >
  {isSearching ? (
  <>
- <div className="w-5 h-5 border-2 border-[var(--hair)] border-t-[var(--hair)] rounded-full animate-spin" />
+ <div className="w-5 h-5 border-t-[var(--hair)] rounded-full animate-spin" />
  Buscando bandas compatibles...
  </>
  ) : (
@@ -225,7 +225,7 @@ export function AIBandScoutModal({
  <div 
  key={idx}
  onClick={() => toggleSelection(idx)}
- className={`p-4 rounded-[var(--r-m)] border-2 transition-all cursor-pointer flex items-center justify-between
+ className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between
  ${selectedBands.has(idx) 
  ?' bg-[var(--acc)]/5' 
  : `${borderColor} ${inputBg} opacity-70 hover:opacity-100`}`}
@@ -253,7 +253,7 @@ export function AIBandScoutModal({
  </div>
 
  {/* Footer */}
- <div className={`p-4 border-t ${borderColor} flex justify-end gap-3 bg-[var(--sunken)]`}>
+ <div className={`p-4 ${borderColor} flex justify-end gap-3 bg-[var(--sunken)]`}>
  <button
  onClick={onClose}
  className={`px-4 py-2 font-medium text-sm rounded-[var(--r-m)] ${subtextColor} hover:${textColor} transition-colors`}

@@ -1,11 +1,11 @@
-import { Song } from '../types';
+import { Song } from' ../types';
 
 const ROMAN_NUMERALS = new Set([
- 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
- 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'
+' I',' II',' III',' IV',' V',' VI',' VII',' VIII',' IX',' X',
+' XI',' XII',' XIII',' XIV',' XV',' XVI',' XVII',' XVIII',' XIX',' XX'
 ]);
 
-const PRESERVE_LOWER = new Set(['feat.', 'ft.', 'vs.']);
+const PRESERVE_LOWER = new Set(['feat.',' ft.',' vs.']);
 
 /**
  * Normaliza y formatea el título de una canción con mayúsculas de nombres propios (Title / Proper Case).
@@ -14,15 +14,15 @@ const PRESERVE_LOWER = new Set(['feat.', 'ft.', 'vs.']);
  * Respeta números romanos (ej. "Part II"), siglas de colaboración (feat., ft.) y signos de puntuación/paréntesis.
  */
 export function formatSongTitle(rawTitle?: string | null): string {
- if (!rawTitle || typeof rawTitle !== 'string') return '';
+ if (!rawTitle || typeof rawTitle !==' string') return' ';
  const trimmed = rawTitle.trim();
- if (!trimmed) return '';
+ if (!trimmed) return' ';
 
- // Separar tokens respetando espacios y signos de delimitación (, [ ] ( ) / - _ – — : " ' )
+ // Separar tokens respetando espacios y signos de delimitación (, [ ] ( ) / - _ – — : "'  )
  const tokens = trimmed.split(/(\s+|[()\[\]/\-_–—:\",])/);
 
  const formatted = tokens.map((token) => {
- if (!token) return '';
+ if (!token) return' ';
 
  // Delimitadores y signos de puntuación
  if (/^[()\[\]/\-_–—:\",]+$/.test(token)) {
@@ -47,7 +47,7 @@ export function formatSongTitle(rawTitle?: string | null): string {
  return lower;
  }
 
- // Si comienza con comilla o apóstrofe (ej. 'N', "Intro")
+ // Si comienza con comilla o apóstrofe (ej.' N', "Intro")
  if ((lower.startsWith("'") || lower.startsWith('"')) && lower.length > 1) {
  const quote = lower.charAt(0);
  const rest = lower.slice(1);

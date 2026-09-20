@@ -40,7 +40,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 }) => {
  return (
  <div className="space-y-6 animate-in fade-in duration-200">
- <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
+ <div className="flex items-center gap-2 pb-2">
  <DollarSign className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-semibold text-[var(--ink)]">Caché & Condiciones de Contratación (Booking CRM)</h3>
  </div>
@@ -51,7 +51,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
  {/* Caché estimado por formato */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)]">
  Caché Acústico / Showcase (€)
  </label>
@@ -63,12 +63,12 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={cacheAcustico}
  onChange={(e) => setCacheAcustico(Number(e.target.value))}
  placeholder="400"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)]">
  Caché Sala / Concierto Estándar (€)
  </label>
@@ -80,12 +80,12 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={cacheSala}
  onChange={(e) => setCacheSala(Number(e.target.value))}
  placeholder="850"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)]">
  Caché Festival / Fiesta Mayor (€)
  </label>
@@ -97,14 +97,14 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={cacheFestival}
  onChange={(e) => setCacheFestival(Number(e.target.value))}
  placeholder="1800"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
  </div>
 
  {/* Logística & Gastos de Desplazamiento */}
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[var(--hair)]">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
  <div>
  <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
  <Car className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -115,7 +115,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={condicionesKm}
  onChange={(e) => setCondicionesKm(e.target.value)}
  placeholder="Ej. 0,25 €/km a partir de 100 km desde Madrid"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -126,7 +126,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all flex items-center justify-between ${
  requiereAlojamiento
  ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
- :'bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-[var(--bg)] text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  </div>
 
  {/* Contacto Directo de Booking */}
- <div className="pt-2 border-t border-[var(--hair)] space-y-3">
+ <div className="pt-2 space-y-3">
  <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider">
  Persona de Contacto de Booking / Contratación
  </h4>
@@ -155,7 +155,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={contactoBookingNombre}
  onChange={(e) => setContactoBookingNombre(e.target.value)}
  placeholder="Ej. Carlos (Booking & Manager)"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -166,7 +166,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={contactoBookingEmail}
  onChange={(e) => setContactoBookingEmail(e.target.value)}
  placeholder="booking@tubanda.com"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -177,7 +177,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={contactoBookingTelefono}
  onChange={(e) => setContactoBookingTelefono(e.target.value)}
  placeholder="+34 600 000 000"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>

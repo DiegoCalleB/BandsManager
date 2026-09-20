@@ -106,7 +106,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--surface)]/80
  <div className="bg-[var(--surface)] rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
  {/* Cabecera */}
- <div className="flex items-center justify-between border-b pb-4">
+ <div className="flex items-center justify-between pb-4">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-l)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <Sparkles className="w-5 h-5" />
@@ -262,7 +262,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  </label>
  )}
 
- <div className="pt-2 border-t /80 flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
+ <div className="pt-2 /80 flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
  <span>Destino QR: <strong className="text-[var(--acc)]/70">{url}</strong></span>
  </div>
  </div>

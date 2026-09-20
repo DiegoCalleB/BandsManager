@@ -195,7 +195,7 @@ export function MetronomeModal({
  <div className="bg-gradient-to-b from-zinc-900 to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-md overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
  
  {/* Header */}
- <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--ink)]/5">
+ <div className="p-4 flex items-center justify-between bg-[var(--ink)]/5">
  <div className="flex items-center gap-2">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
  <Clock className="w-5 h-5" />
@@ -223,7 +223,7 @@ export function MetronomeModal({
  
  {/* Song Selector Sync */}
  {songs.length > 0 && (
- <div className="bg-[var(--ink)]/5 rounded-[var(--r-m)] p-3 border-[var(--hair)] flex flex-col gap-1.5">
+ <div className="bg-[var(--ink)]/5 rounded-[var(--r-m)] p-3 flex flex-col gap-1.5">
  <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
  <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
  Sincronizar BPM desde Repertorio:
@@ -231,7 +231,7 @@ export function MetronomeModal({
  <select
  value={selectedSongId}
  onChange={handleSelectSong}
- className="w-full bg-[var(--bg)] border-[var(--hair)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none focus:/50"
+ className="w-full bg-[var(--bg)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none focus:/50"
  >
  <option value="">-- Seleccionar Canción --</option>
  {songs.map(song => (
@@ -244,7 +244,7 @@ export function MetronomeModal({
  )}
 
  {/* Large BPM Display & Quick Adjustment */}
- <div className="flex flex-col items-center justify-center bg-[var(--sunken)] border-[var(--hair)] rounded-[var(--r-l)] p-6 relative overflow-hidden">
+ <div className="flex flex-col items-center justify-center bg-[var(--sunken)] rounded-[var(--r-l)] p-6 relative overflow-hidden">
  <div className="text-xs font-sans font-bold text-[var(--acc)] tracking-widest mb-1 flex items-center gap-1">
  <Zap className="w-3.5 h-3.5" /> Tempo Actual
  </div>
@@ -252,14 +252,14 @@ export function MetronomeModal({
  <div className="flex items-center gap-4">
  <button
  onClick={() => setBpm(b => Math.max(30, b - 5))}
- className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 border-[var(--hair)] font-bold text-lg text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+ className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-lg text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
  title="-5 BPM"
  >
  -5
  </button>
  <button
  onClick={() => setBpm(b => Math.max(30, b - 1))}
- className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 border-[var(--hair)] font-bold text-sm text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+ className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-sm text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
  title="-1 BPM"
  >
  -1
@@ -276,14 +276,14 @@ export function MetronomeModal({
 
  <button
  onClick={() => setBpm(b => Math.min(280, b + 1))}
- className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 border-[var(--hair)] font-bold text-sm text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+ className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-sm text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
  title="+1 BPM"
  >
  +1
  </button>
  <button
  onClick={() => setBpm(b => Math.min(280, b + 5))}
- className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 border-[var(--hair)] font-bold text-lg text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+ className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-lg text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
  title="+5 BPM"
  >
  +5
@@ -324,8 +324,8 @@ export function MetronomeModal({
  isActive
  ? isAccent
  ?'bg-[var(--acc)]/60 text-[var(--ink)] scale-105'
- :'bg-[var(--ok)] text-[var(--ink)] border-[var(--ok)] scale-105'
- :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]'
+ :'bg-[var(--ok)] text-[var(--ink)] scale-105'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)]'
  }`}
  >
  {idx + 1}
@@ -338,7 +338,7 @@ export function MetronomeModal({
  {/* Time Signature Pickers & Tap Tempo */}
  <div className="grid grid-cols-2 gap-3">
  {/* Compás selector */}
- <div className="bg-[var(--ink)]/5 rounded-[var(--r-m)] p-2.5 border-[var(--hair)]">
+ <div className="bg-[var(--ink)]/5 rounded-[var(--r-m)] p-2.5">
  <label className="text-[11px] font-semibold text-[var(--ink-2)] block mb-1.5">
  Métrica:
  </label>
@@ -390,7 +390,7 @@ export function MetronomeModal({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium cursor-pointer transition-colors ${
  bpm === p.val
  ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 font-bold'
- :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10'
  }`}
  >
  {p.label}

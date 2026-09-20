@@ -41,7 +41,7 @@ Mánager Virtual & Booking Team de {bandName}`
  title:'2. Propuesta de Intercambio de Fechas entre Bandas (Co-headlining)',
  type:'Intercambio de bolos',
  icon: MessageSquareCode,
- badgeColor:'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--acc)]/30',
+ badgeColor:'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/30',
  subject:'Propuesta de bolo conjunto e intercambio de sala - {bandName} x {nombre_banda_amiga}',
  body: `¡Hola compas de {nombre_banda_amiga}!
 
@@ -63,7 +63,7 @@ Si os motiva la idea, decidnos y os pasamos un par de fechas que tenemos pre-res
  title:'3. Nota de Prensa & Estreno a Medios y Radios (Radio 3 / Prensa)',
  type:'Prensa & Radios',
  icon: Radio,
- badgeColor:'bg-[var(--alert)]/20 text-[var(--ink-2)] border-[var(--alert)]/30',
+ badgeColor:'bg-[var(--alert)]/20 text-[var(--ink-2)]/30',
  subject:'NOTA DE PRENSA: {bandName} estrena nuevo sencillo y anuncia fechas de gira',
  body: `A la atención del equipo de {nombre_medio},
 
@@ -85,7 +85,7 @@ Prensa & Comunicación - {bandName}`
  title:'4. Recordatorio Educado a Sala sin Respuesta (A los 7-10 días)',
  type:'Seguimiento',
  icon: RefreshCw,
- badgeColor:'bg-[var(--acc)]/20 text-[var(--ink-3)] border-[var(--acc)]/30',
+ badgeColor:'bg-[var(--acc)]/20 text-[var(--ink-3)]/30',
  subject:'Re: Propuesta de Concierto - {bandName} en {nombre_sala}',
  body: `Hola de nuevo, equipo de {nombre_sala},
 
@@ -125,7 +125,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-3xl my-auto max-h-[90vh] overflow-y-auto flex flex-col animate-in zoom-in-95 duration-200">
  
  {/* Modal Header */}
- <div className="p-5 bg-[var(--surface)] border-b flex items-center justify-between">
+ <div className="p-5 bg-[var(--surface)] flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
  <FileText className="w-5 h-5" />
@@ -180,7 +180,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
  {/* Selected Template Display Box */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
- <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3 border-b border-[var(--hair)]">
+ <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3">
  <div>
  <span className="text-[10px] font-sans text-[var(--acc)] tracking-widest font-bold">
  {currentTpl.type}
@@ -235,7 +235,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  </div>
 
  {/* Modal Footer */}
- <div className="p-4 bg-[var(--surface)] border-t flex justify-end">
+ <div className="p-4 bg-[var(--surface)] flex justify-end">
  <button
  onClick={onClose}
  className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--ink)] font-sans text-xs font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"

@@ -45,7 +45,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
- <div className="relative w-full max-w-lg rounded-3xl bg-[var(--surface)] border-[var(--hair)] p-6 sm:p-8 space-y-6 text-[var(--ink)] font-sans my-auto max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-lg rounded-3xl bg-[var(--surface)] p-6 sm:p-8 space-y-6 text-[var(--ink)] font-sans my-auto max-h-[90vh] overflow-y-auto">
  {/* Close Button */}
  <button
  onClick={onClose}
@@ -81,7 +81,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  </div>
 
  {/* Recommended plan highlight */}
- <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)] to-[var(--surface)] border-2 /40 space-y-4">
+ <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)] to-[var(--surface)] /40 space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-[var(--acc)]" />

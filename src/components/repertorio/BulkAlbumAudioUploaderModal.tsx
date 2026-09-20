@@ -571,9 +571,9 @@ export function BulkAlbumAudioUploaderModal({
  }`}
  >
  {/* Modal Header */}
- <div className="p-6 border-b border-[var(--hair)] flex items-center justify-between shrink-0 bg-gradient-to-r from-[var(--ok)]/10 to-transparent">
+ <div className="p-6 flex items-center justify-between shrink-0 bg-gradient-to-r from-[var(--ok)]/10 to-transparent">
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[var(--ok)]">
+ <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20/40 flex items-center justify-center text-[var(--ok)]">
  <FolderUp className="w-6 h-6" />
  </div>
  <div>
@@ -604,7 +604,7 @@ export function BulkAlbumAudioUploaderModal({
  <div className="p-6 overflow-y-auto space-y-6 flex-1">
  {/* Top Form (Album Title & Cover for New Album) */}
  {isCreatingBrandNewAlbum && (
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 border-[var(--hair)]">
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5">
  <div className="md:col-span-2 space-y-2">
  <label className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
  Nombre del Álbum / Disco
@@ -656,7 +656,7 @@ export function BulkAlbumAudioUploaderModal({
  onDragOver={handleDragOver}
  onDrop={handleDrop}
  onClick={() => fileInputRef.current?.click()}
- className={`p-8 border-2 border-dashed rounded-3xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
+ className={`p-8 rounded-3xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
  items.length > 0
  ? isStitchLight
  ?'border-[var(--ok)] bg-[var(--ok)]/10/30'
@@ -700,8 +700,8 @@ export function BulkAlbumAudioUploaderModal({
  <div
  className={`p-4 rounded-[var(--r-l)] flex items-center gap-3 text-xs font-sans ${
  feedbackMsg.type ==='success'
- ?'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ok)]'
- :'bg-[var(--alert)]/10 border-[var(--alert)]/30 text-[var(--alert)]'
+ ?'bg-[var(--ok)]/10/30 text-[var(--ok)]'
+ :'bg-[var(--alert)]/10/30 text-[var(--alert)]'
  }`}
  >
  {feedbackMsg.type ==='success' ? (
@@ -715,7 +715,7 @@ export function BulkAlbumAudioUploaderModal({
 
  {/* Upload Progress Bar (when active) */}
  {isUploading && (
- <div className="p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 border-[var(--hair)] space-y-2">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 space-y-2">
  <div className="flex items-center justify-between text-xs font-sans">
  <span className="flex items-center gap-2 text-[var(--ok)] font-bold">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -820,8 +820,8 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-full text-xs font-sans rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
  item.matchedSongId
  ? isStitchLight
- ?'bg-[var(--surface)] border-[var(--ok)] text-[var(--ink)] font-bold'
- :'bg-[var(--sunken)] border-[var(--hair)]/50 text-[var(--ink)] font-bold'
+ ?'bg-[var(--surface)] text-[var(--ink)] font-bold'
+ :'bg-[var(--sunken)]/50 text-[var(--ink)] font-bold'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)]'
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
@@ -916,12 +916,12 @@ export function BulkAlbumAudioUploaderModal({
  </div>
 
  {/* Modal Footer */}
- <div className="p-5 border-t border-[var(--hair)] flex items-center justify-between shrink-0 bg-[var(--sunken)]">
+ <div className="p-5 flex items-center justify-between shrink-0 bg-[var(--sunken)]">
  <button
  type="button"
  onClick={onClose}
  disabled={isUploading}
- className="px-5 py-2.5 rounded-[var(--r-l)] border-[var(--hair)] hover:bg-[var(--ink)]/5 text-xs font-sans font-bold transition cursor-pointer disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-l)] hover:bg-[var(--ink)]/5 text-xs font-sans font-bold transition cursor-pointer disabled:opacity-50"
  >
  Cancelar
  </button>

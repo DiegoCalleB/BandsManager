@@ -63,7 +63,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* LOGO DE LA BANDA */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
- <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
  <ImageIcon className="w-5 h-5" /> Logo Oficial de la Banda
  </h3>
 
@@ -73,16 +73,16 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <img
  src={config.logoUrl}
  alt="Logo de la banda"
- className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 bg-[var(--surface)]"
+ className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 /60 bg-[var(--surface)]"
  />
  ) : isBakandeya ? (
  <img
  src="/logo_bakandeya_bueno_sin_fondo.png"
  alt="Bakandeya Logo"
- className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 bg-[var(--surface)]"
+ className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 /60 bg-[var(--surface)]"
  />
  ) : (
- <div className="w-28 h-28 rounded-[var(--r-l)] border-2 border-dashed bg-[var(--surface)] flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
+ <div className="w-28 h-28 rounded-[var(--r-l)] bg-[var(--surface)] flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
  <ImageIcon className="w-8 h-8 text-[var(--ink-2)] mb-1" />
  <span className="text-[10px] font-medium text-[var(--ink-2)]">Sin Logo</span>
  </div>
@@ -131,7 +131,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
  {/* DOSSIER EN PDF O DOCUMENTO OFICIAL */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
- <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
  <FileDown className="w-5 h-5" /> Dossier en PDF o Documento Oficial
  </h3>
 
@@ -160,7 +160,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </button>
  </div>
 
- <div className="flex items-center gap-2 pt-1 border-t /80">
+ <div className="flex items-center gap-2 pt-1 /80">
  <a
  href={config.dossierPdfUrl}
  target="_blank"
@@ -183,7 +183,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </div>
  </div>
  ) : (
- <div className="p-5 bg-[var(--surface)] border-dashed rounded-[var(--r-m)] text-center space-y-3">
+ <div className="p-5 bg-[var(--surface)] rounded-[var(--r-m)] text-center space-y-3">
  <div className="w-12 h-12 rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)] mx-auto">
  <FileDown className="w-6 h-6 text-[var(--acc)]" />
  </div>
@@ -228,7 +228,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
  {/* RIDER TÉCNICO */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
+ <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca Interna)
  </h3>
@@ -263,7 +263,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <Trash2 className="w-4 h-4" />
  </button>
  </div>
- <div className="flex items-center gap-2 pt-1 border-t /80">
+ <div className="flex items-center gap-2 pt-1 /80">
  <a
  href={config.riderPdfUrl}
  target="_blank"
@@ -286,7 +286,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </div>
  </div>
  ) : (
- <div className="p-5 bg-[var(--surface)] border-dashed rounded-[var(--r-m)] text-center space-y-3">
+ <div className="p-5 bg-[var(--surface)] rounded-[var(--r-m)] text-center space-y-3">
  <div className="w-12 h-12 rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)] mx-auto">
  <FileDown className="w-6 h-6 text-[var(--acc)]" />
  </div>
@@ -323,7 +323,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
  {/* GALERÍA DE IMAGEN & PRENSA */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
- <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
  <ImageIcon className="w-5 h-5" /> Galería de Imagen &amp; Prensa
  </h3>
  <p className="text-xs text-[var(--ink-2)]">

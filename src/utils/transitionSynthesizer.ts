@@ -1,5 +1,5 @@
-import { parseTonalidad, ParsedKey } from './harmonicAnalysis';
-import { TransitionConfig, TransitionTimeline } from './transitionAudioEngine';
+import { parseTonalidad, ParsedKey } from' ./harmonicAnalysis';
+import { TransitionConfig, TransitionTimeline } from' ./transitionAudioEngine';
 
 // Frecuencias base para notas MIDI
 function midiToFreq(midi: number): number {
@@ -79,10 +79,10 @@ export function playSyntheticTransition(
  const filter = ctx.createBiquadFilter();
  const noteGain = ctx.createGain();
 
- osc.type = idx === 0 ? 'triangle' : 'sine';
+ osc.type = idx === 0 ?' triangle' :' sine';
  osc.frequency.setValueAtTime(midiToFreq(midiNote), padStartTime);
 
- filter.type = 'lowpass';
+ filter.type =' lowpass';
  filter.frequency.setValueAtTime(800 + idx * 250, padStartTime);
 
  noteGain.gain.setValueAtTime(0.001, padStartTime);
@@ -144,7 +144,7 @@ export function playSyntheticTransition(
  createRhythmPulses(tempoB, gainB, songBStartCtx, songBDuration);
 
  // Automation of volume transitions
- if (config.style === 'crossfade') {
+ if (config.style ===' crossfade') {
  const fadeStartCtx = startTime + timeline.crossfadeStartSec;
  const fadeEndCtx = startTime + timeline.crossfadeEndSec;
 
@@ -159,7 +159,7 @@ export function playSyntheticTransition(
  gainB.gain.setValueAtTime(0.001, fadeStartCtx);
  gainB.gain.linearRampToValueAtTime(1, fadeEndCtx);
  gainB.gain.setValueAtTime(1, startTime + timeline.totalDurationSec);
- } else if (config.style === 'segue') {
+ } else if (config.style ===' segue') {
  const cutCtx = startTime + timeline.songAEndSec;
  gainA.gain.setValueAtTime(1, startTime);
  gainA.gain.setValueAtTime(1, cutCtx - 0.01);

@@ -430,7 +430,7 @@ export default function RepertorioSetlists({
  onNavigate
 }: RepertorioSetlistsProps) {
  const { t } = useLanguage();
- const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const bName = bandName ||'Tu Banda';
 
  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('repertorio');
@@ -2687,7 +2687,7 @@ export default function RepertorioSetlists({
  onClick={() => setShowAIAnalysisModal(true)}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 ${
  isStitchLight 
- ?'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)] border-[var(--acc)]'
+ ?'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)]'
  :'bg-[var(--acc)]/90/50 hover:bg-[var(--acc)]/80/70 text-[var(--acc)]/40 hover:text-[var(--ink)]'
  }`}
  title="Cerebro IA: Análisis de narrativa, curva de energía, transiciones de tono y sugerencias"
@@ -2712,7 +2712,7 @@ export default function RepertorioSetlists({
  setShowPerfectSetlistModal(true);
  }}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 ${
- 'bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--ink)] hover:text-[var(--ink)]'
+' bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--ink)] hover:text-[var(--ink)]'
  }`}
  title="Optimizar IA: Generar el setlist perfecto con orden dinámico ideal y clímax de concierto"
  >
@@ -2765,8 +2765,8 @@ export default function RepertorioSetlists({
  onClick={() => setShowSetlistActionsMenu((v) => !v)}
  className={`p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
  isStitchLight
- ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] border-transparent hover:'
- :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 border-transparent hover:'
+ ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] hover:'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 hover:'
  }`}
  title="Acciones del repertorio: compartir, asignar a bolo, duplicar, editar detalles, eliminar"
  >
@@ -2829,7 +2829,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDeleteSetlist(activeSetlist.id); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--alert)] transition cursor-pointer flex items-center gap-2 ${
- 'hover:bg-[var(--alert-soft)]'
+' hover:bg-[var(--alert-soft)]'
  }`}
  >
  <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar setlist
@@ -2846,7 +2846,7 @@ export default function RepertorioSetlists({
  return (
  <div className="flex flex-col gap-2.5">
  <div className={`flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-1.5 rounded-[var(--r-m)] ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/90 border-[var(--hair)]'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/90'
  }`}>
  {/* Resumen en una línea y botón asistente IA */}
  <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto px-1.5">
@@ -3041,7 +3041,7 @@ export default function RepertorioSetlists({
  <span>✓ / ✕ Calidad de uniones</span>
  <span>{showTransitionBadges ?'ON' :'OFF'}</span>
  </button>
- <div className="flex flex-col gap-1 text-[9px] text-[var(--ink)] pt-1 border-t border-[var(--hair)]">
+ <div className="flex flex-col gap-1 text-[9px] text-[var(--ink)] pt-1">
  <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background:'#0284c7' }} />🌙 Balada</span>
  <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background:'#059669' }} />🎵 Media</span>
  <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background:'#a16207' }} />🔥 Alta</span>
@@ -3265,8 +3265,8 @@ export default function RepertorioSetlists({
  onClick={() => handleOpenTransitionPreview(selectedIndex - 1, selectedIndex)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer active:scale-95 ${
  evalPrev?.status ==='ok'
- ?'bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--ok)]/35 hover:border-[var(--ok)]/70'
- :'bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--alert)]/35 hover:border-[var(--alert)]/70'
+ ?'bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--ok)]/70'
+ :'bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--alert)]/70'
  }`}
  title={evalPrev ? `${evalPrev.title}: ${evalPrev.motivos.join(',')}` : `Comprobar cómo suena la unión de"${prevName}" con"${point.name}"`}
  >
@@ -3292,8 +3292,8 @@ export default function RepertorioSetlists({
  onClick={() => handleOpenTransitionPreview(selectedIndex, selectedIndex + 1)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer active:scale-95 ${
  evalNext?.status ==='ok'
- ?'bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--ok)]/35 hover:border-[var(--ok)]/70'
- :'bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--alert)]/35 hover:border-[var(--alert)]/70'
+ ?'bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--ok)]/70'
+ :'bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--alert)]/70'
  }`}
  title={evalNext ? `${evalNext.title}: ${evalNext.motivos.join(',')}` : `Comprobar cómo suena la unión de"${point.name}" con"${nextName}"`}
  >
@@ -3348,8 +3348,8 @@ export default function RepertorioSetlists({
  w.type ==='warning'
  ?'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
  : w.type ==='success'
- ?'bg-[var(--ok)]/10 text-[var(--ink-2)] border-[var(--ok)]/30'
- :'bg-[var(--acc)]/10 text-[var(--ink-3)] border-[var(--acc)]/30'
+ ?'bg-[var(--ok)]/10 text-[var(--ink-2)]/30'
+ :'bg-[var(--acc)]/10 text-[var(--ink-3)]/30'
  } ${isHighlighted ?'ring-2 ring-white/60' :''}`}
  style={{ cursor: hasSongs ?'pointer' :'default' }}
  onMouseEnter={() => { if (hasSongs) setHighlightedSongIds(w.songTitles!); }}
@@ -3534,7 +3534,7 @@ export default function RepertorioSetlists({
  className={`group rounded-[var(--r-m)] transition-all cursor-pointer ${
  isDragging ?'opacity-40 scale-[0.98]' :''
  } ${
- isDragOver ?'border-[var(--acc)] border-2 scale-[1.01] bg-[var(--tentative)]/10' :''
+ isDragOver ?'border-[var(--acc)] scale-[1.01] bg-[var(--tentative)]/10' :''
  } ${
  isSelected
  ?'border-[var(--acc)] ring-2 ring-indigo-500/20 bg-[var(--tentative)]/10'
@@ -3649,7 +3649,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => handleSetTonalidadDeseada(it.id, null)}
- className="w-full text-center text-[9px] font-sans text-[var(--ink-2)] hover:text-[var(--alert)] pt-1.5 border-t cursor-pointer"
+ className="w-full text-center text-[9px] font-sans text-[var(--ink-2)] hover:text-[var(--alert)] pt-1.5 cursor-pointer"
  >
  Volver al original ({song.tonalidad ||'—'})
  </button>
@@ -3799,8 +3799,8 @@ export default function RepertorioSetlists({
  }}
  className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0 ${
  evalUnion?.status ==='ok'
- ?'bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] border-[var(--ok)]/35 hover:border-[var(--ok)]/60'
- :'bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] border-[var(--alert)]/35 hover:border-[var(--alert)]/60'
+ ?'bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)]/35 hover:border-[var(--ok)]/60'
+ :'bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)]/35 hover:border-[var(--alert)]/60'
  }`}
  title={evalUnion ? `🎧 Probar unión con #${index} (${prevSong?.titulo}): ${evalUnion.title} · ${evalUnion.motivos.join(',')}` :"🎧 Probar unión y transición con la canción anterior"}
  >
@@ -3855,7 +3855,7 @@ export default function RepertorioSetlists({
  // MemberNotesModal/SongModal), así que hay que normalizar currentUser.name igual al buscarla.
  const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name.toLowerCase()];
  return (song.notasRepertorio || it.notaTema || userNote) ? (
- <div className="px-2.5 py-1.5 border-t text-[10px] font-sans space-y-1" onClick={(e) => e.stopPropagation()}>
+ <div className="px-2.5 py-1.5 text-[10px] font-sans space-y-1" onClick={(e) => e.stopPropagation()}>
  {song.notasRepertorio && (
  <div className="text-[var(--accent-alt)]/80 truncate" title={song.notasRepertorio}>
  📝 {song.notasRepertorio}
@@ -3951,7 +3951,7 @@ export default function RepertorioSetlists({
  className={`border rounded-[var(--r-s)] transition-all cursor-pointer ${
  isDragging ?'opacity-40 scale-[0.98]' :''
  } ${
- isDragOver ?' border-2 scale-[1.01] bg-[var(--acc)]/10' :''
+ isDragOver ?' scale-[1.01] bg-[var(--acc)]/10' :''
  } ${
  isSelected
  ?'border-[var(--acc)] ring-2 ring-[var(--acc)]/30 bg-[var(--acc)]/10'
@@ -3984,7 +3984,7 @@ export default function RepertorioSetlists({
  items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
  } : s));
  }}
- className="bg-transparent text-[13px] font-extrabold font-sans text-[var(--acc)] border-b border-dashed border-[var(--acc)]/40 focus:outline-none min-w-0 flex-1 tracking-wider"
+ className="bg-transparent text-[13px] font-extrabold font-sans text-[var(--acc)]/40 focus:outline-none min-w-0 flex-1 tracking-wider"
  />
 
  {/* Spacer */}
@@ -4066,7 +4066,7 @@ export default function RepertorioSetlists({
  items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
  } : s));
  }}
- className="bg-transparent border-b border-dashed border-[var(--hair)] text-[13px] font-bold font-sans text-[var(--ink)] focus:outline-none min-w-0 flex-1"
+ className="bg-transparent text-[13px] font-bold font-sans text-[var(--ink)] focus:outline-none min-w-0 flex-1"
  />
 
  {isSelected && (
@@ -4094,7 +4094,7 @@ export default function RepertorioSetlists({
 
  {/* SHOW NOTES IF EXIST */}
  {it.notaTema && (
- <div className="px-2.5 py-1 border-t text-[8px] font-sans text-[var(--ink)]/70 truncate" title={it.notaTema}>
+ <div className="px-2.5 py-1 text-[8px] font-sans text-[var(--ink)]/70 truncate" title={it.notaTema}>
  💡 {it.notaTema}
  </div>
  )}
@@ -4240,7 +4240,7 @@ export default function RepertorioSetlists({
  value={catalogSearch}
  onChange={(e) => setCatalogSearch(e.target.value)}
  className={`w-full rounded-[var(--r-m)] pl-9.5 ${catalogSearch ?'pr-8' :'pr-3'} py-2 text-xs focus:outline-none transition-all ${
- 'bg-[var(--surface)]/60 text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
+' bg-[var(--surface)]/60 text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
  }`}
  />
  {catalogSearch && (
@@ -4292,7 +4292,7 @@ export default function RepertorioSetlists({
  onClick={() => setGroupByAlbum(!groupByAlbum)}
  className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all ${
  groupByAlbum
- ? 'bg-[var(--tentative)]/15 text-[var(--tentative)]/50 border-[var(--acc)]/30'
+ ?' bg-[var(--tentative)]/15 text-[var(--tentative)]/50/30'
  : isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:bg-[var(--surface)]'
@@ -4307,7 +4307,7 @@ export default function RepertorioSetlists({
  onClick={handleNormalizeCatalogTitles}
  title="Formatea todos los títulos del catálogo con Mayúsculas de Nombres Propios (evita títulos todos en mayúsculas o minúsculas)"
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-95 whitespace-nowrap cursor-pointer ${
- 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
+' bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -4328,7 +4328,7 @@ export default function RepertorioSetlists({
  {/* BULK ACTIONS BAR */}
  {selectedCatalogIds.size > 0 && (
  <div className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 ${
- 'bg-[var(--tentative)]/20 border-[var(--acc)]/60 text-[var(--tentative)]/40'
+' bg-[var(--tentative)]/20/60 text-[var(--tentative)]/40'
  }`}>
  <span className="text-xs font-medium">
  {selectedCatalogIds.size} canciones seleccionadas
@@ -4364,7 +4364,7 @@ export default function RepertorioSetlists({
  {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
  <div className={`rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/60 /80`}>
  {/* Grid Aligned Header with Bulk Select & Column Identifiers */}
- <div className={`flex items-center justify-between px-4 py-3 border-b text-xs tracking-wider ${
+ <div className={`flex items-center justify-between px-4 py-3 text-xs tracking-wider ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)]' :'bg-[var(--surface)]/40 /80 text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2.5 min-w-0">
@@ -4536,7 +4536,7 @@ export default function RepertorioSetlists({
  {showShowItemModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80
  <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card}`}>
- <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
+ <div className="flex justify-between items-center pb-3">
  <div className="flex items-center gap-2">
  <span className="p-2 bg-[var(--acc)]/20 text-[var(--ink-2)] rounded-[var(--r-m)]">⚡</span>
  <div>
@@ -4913,16 +4913,16 @@ export default function RepertorioSetlists({
  <div
  className={`fixed bottom-5 right-5 z-[9999] flex items-center gap-2.5 px-4 py-3 rounded-[var(--r-l)] text-xs font-sans max-w-sm ${
  statusBanner.type ==='success'
- ?'bg-[var(--ok-soft)] border-[var(--ok)]/60 text-[var(--ok)]/40'
+ ?'bg-[var(--ok-soft)]/60 text-[var(--ok)]/40'
  : statusBanner.type ==='error'
- ?'bg-[var(--alert-soft)] border-[var(--alert)]/60 text-[var(--alert)]/40'
+ ?'bg-[var(--alert-soft)]/60 text-[var(--alert)]/40'
  : statusBanner.type ==='warning'
  ?'bg-[var(--acc-soft)] /60 text-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  {statusBanner.type ==='loading' && (
- <span className="w-3.5 h-3.5 border-2 border-[var(--hair)] border-t-[var(--hair)] rounded-full animate-spin shrink-0" />
+ <span className="w-3.5 h-3.5 border-t-[var(--hair)] rounded-full animate-spin shrink-0" />
  )}
  <span>{statusBanner.text}</span>
  </div>

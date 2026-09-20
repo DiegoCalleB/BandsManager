@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import { User } from '../types';
-import { api } from '../services/api';
-import { guardarCookieDeSesion, borrarCookieDeSesion } from '../utils/sessionCookie';
-import { syncAllUserPreferencesFromUser } from '../utils/userPreferences';
+import { useState, useEffect, useCallback } from' react';
+import { User } from' ../types';
+import { api } from' ../services/api';
+import { guardarCookieDeSesion, borrarCookieDeSesion } from' ../utils/sessionCookie';
+import { syncAllUserPreferencesFromUser } from' ../utils/userPreferences';
 
 export function useAuth() {
  const [currentUser, setCurrentUser] = useState<User | null>(() => {
@@ -24,7 +24,7 @@ export function useAuth() {
  });
 
  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
- return !!localStorage.getItem('bakandeya_token') || localStorage.getItem('bakandeya_logged_in') === 'true';
+ return !!localStorage.getItem('bakandeya_token') || localStorage.getItem('bakandeya_logged_in') ===' true';
  });
 
  const [availableBands, setAvailableBands] = useState<any[]>(() => {
@@ -36,7 +36,7 @@ export function useAuth() {
  }
  });
 
- const isAdmin = Boolean(currentUser && (currentUser.role === 'leader' || currentUser.role === 'admin'));
+ const isAdmin = Boolean(currentUser && (currentUser.role ===' leader' || currentUser.role ===' admin'));
 
  // Set 30-day cookie helper
  const syncSessionCookie = useCallback((token: string) => {
@@ -119,7 +119,7 @@ export function useAuth() {
 
  // Refresh on page focus / tab switch (mobile phone unlock)
  const handleFocus = () => {
- if (document.visibilityState === 'visible') {
+ if (document.visibilityState ===' visible') {
  refreshSession();
  }
  };
@@ -136,7 +136,7 @@ export function useAuth() {
 
  const handleLoginSuccess = useCallback((user: User, token: string, bandsList?: any[]) => {
  // If the user has a designated main_band_id or preferred band, ensure the active band matches it on login.
- // Antes, si no había ninguna banda preferida, se caía en 'band-bakandeya' en silencio: una
+ // Antes, si no había ninguna banda preferida, se caía en' band-bakandeya' en silencio: una
  // cuenta nueva sin banda todavía asignada entraba viendo los datos reales de esa banda. Sin
  // banda preferida, dejamos band_id sin normalizar y que el resto de la app pida elegir/crear
  // una banda en vez de asumir una por defecto.
@@ -157,11 +157,11 @@ export function useAuth() {
 
  // If availableBands list is provided, synchronize band name & plan with the active main band
  if (bandsList && Array.isArray(bandsList) && bandsList.length > 0) {
- const cleanPref = normalizedBandId.replace(/^(band|reg)-/, '');
+ const cleanPref = normalizedBandId.replace(/^(band|reg)-/,' ');
  const match = bandsList.find((b: any) =>
  b.band_id === normalizedBandId || b.id === normalizedBandId ||
- (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanPref) ||
- (b.id && b.id.replace(/^(band|reg)-/, '') === cleanPref)
+ (b.band_id && b.band_id.replace(/^(band|reg)-/,' ') === cleanPref) ||
+ (b.id && b.id.replace(/^(band|reg)-/,' ') === cleanPref)
  );
  if (match) {
  resolvedUser.bandName = match.bandName || match.nombre_banda || match.name || resolvedUser.bandName;
@@ -181,25 +181,25 @@ export function useAuth() {
  localStorage.setItem('bakandeya_token', token);
  localStorage.setItem('bakandeya_user', JSON.stringify(resolvedUser));
  syncAllUserPreferencesFromUser(resolvedUser);
- localStorage.setItem('bakandeya_remember_me', 'true');
- localStorage.setItem('bakandeya_logged_in', 'true');
+ localStorage.setItem('bakandeya_remember_me',' true');
+ localStorage.setItem('bakandeya_logged_in',' true');
  setIsLoggedIn(true);
  }, [syncSessionCookie]);
 
  const handleSwitchBand = useCallback(async (band_id: string) => {
  const tokenToUse = authToken || localStorage.getItem('bakandeya_token');
  const response = await fetch('/api/auth/switch-band', {
- method: 'POST',
+ method:' POST',
  headers: {
- 'Content-Type': 'application/json',
- ...(tokenToUse ? { 'Authorization': `Bearer ${tokenToUse}` } : {})
+' Content-Type':' application/json',
+ ...(tokenToUse ? {' Authorization': `Bearer ${tokenToUse}` } : {})
  },
  body: JSON.stringify({ band_id })
  });
 
  const data = await response.json().catch(() => ({}));
  if (!response.ok) {
- throw new Error(data.error || 'Error al cambiar de banda');
+ throw new Error(data.error ||' Error al cambiar de banda');
  }
 
  if (data.token) {

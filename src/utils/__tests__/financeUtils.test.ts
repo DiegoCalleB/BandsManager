@@ -1,50 +1,50 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from' vitest';
 import {
  calculateFinancialSummary,
  calculateConcertROI,
  calculateConcertExpenses,
  forecastConcertRevenue,
-} from '../financeUtils';
-import { Payment, Concert } from '../../types';
+} from' ../financeUtils';
+import { Payment, Concert } from' ../../types';
 
 describe('financeUtils', () => {
  it('calculates financial summary correctly for paid payments', () => {
  const mockPayments: Payment[] = [
  {
- id: '1',
- tipo: 'ingreso',
- categoria: 'concierto',
- concepto: 'Caché Sala A',
+ id:' 1',
+ tipo:' ingreso',
+ categoria:' concierto',
+ concepto:' Caché Sala A',
  importe: 1000,
- fecha: '2025-05-10',
- estado: 'pagado',
+ fecha:' 2025-05-10',
+ estado:' pagado',
  },
  {
- id: '2',
- tipo: 'ingreso',
- categoria: 'merchandising',
- concepto: 'Venta Camisetas',
+ id:' 2',
+ tipo:' ingreso',
+ categoria:' merchandising',
+ concepto:' Venta Camisetas',
  importe: 300,
- fecha: '2025-05-10',
- estado: 'pagado',
+ fecha:' 2025-05-10',
+ estado:' pagado',
  },
  {
- id: '3',
- tipo: 'gasto',
- categoria: 'transporte',
- concepto: 'Furgoneta',
+ id:' 3',
+ tipo:' gasto',
+ categoria:' transporte',
+ concepto:' Furgoneta',
  importe: 200,
- fecha: '2025-05-10',
- estado: 'pagado',
+ fecha:' 2025-05-10',
+ estado:' pagado',
  },
  {
- id: '4',
- tipo: 'gasto',
- categoria: 'alojamiento',
- concepto: 'Hotel Madrid',
+ id:' 4',
+ tipo:' gasto',
+ categoria:' alojamiento',
+ concepto:' Hotel Madrid',
  importe: 100,
- fecha: '2025-05-10',
- estado: 'pendiente',
+ fecha:' 2025-05-10',
+ estado:' pendiente',
  },
  ];
 
@@ -66,17 +66,17 @@ describe('financeUtils', () => {
 
  it('calculates concert detailed expenses correctly', () => {
  const concert: Concert = {
- id: 'c1',
- fecha: '2025-06-01',
- ciudad: 'Madrid',
- sala: 'Wurlitzer',
+ id:' c1',
+ fecha:' 2025-06-01',
+ ciudad:' Madrid',
+ sala:' Wurlitzer',
  cache: 800,
  aforo_vendido: 120,
  aforo_total: 150,
  contrato_firmado: true,
- estado_pago: 'pagado',
- notas: '',
- tipo: 'sala',
+ estado_pago:' pagado',
+ notas:' ',
+ tipo:' sala',
  gastosDetalle: {
  gasolina: 80,
  dietas: 50,

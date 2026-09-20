@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Song, SongAudioIdea, DrumPatternStyle } from '../types';
-import { uploadFileToServer } from '../utils/audioStorage';
-import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
+import { useState } from' react';
+import { Song, SongAudioIdea, DrumPatternStyle } from' ../types';
+import { uploadFileToServer } from' ../utils/audioStorage';
+import { generateAccompanimentAudioBlob } from' ../utils/accompanimentSynth';
 
 export function useAccompanimentGenerator(
  song: Song,
@@ -10,7 +10,7 @@ export function useAccompanimentGenerator(
  // --- ACCOMPANIMENT GENERATOR STATE ---
  const [showGenModalForIdea, setShowGenModalForIdea] = useState<SongAudioIdea | null>(null);
  const [genBpm, setGenBpm] = useState<number>(song.bpm || 120);
- const [genKey, setGenKey] = useState<string>(song.tonalidad || 'Do');
+ const [genKey, setGenKey] = useState<string>(song.tonalidad ||' Do');
  const [genDuration, setGenDuration] = useState<number>(30);
  const [includeDrums, setIncludeDrums] = useState<boolean>(true);
  const [includeBass, setIncludeBass] = useState<boolean>(true);
@@ -32,20 +32,20 @@ export function useAccompanimentGenerator(
  });
 
  const fileName = `sugerencia-${drumStyle}-${genKey}-${Date.now()}.wav`;
- const file = new File([wavBlob], fileName, { type: 'audio/wav' });
+ const file = new File([wavBlob], fileName, { type:' audio/wav' });
 
  const serverUrl = await uploadFileToServer(file);
 
  const parts = [];
  if (includeDrums) parts.push('Batería');
  if (includeBass) parts.push('Bajo');
- const trackLabel = `Ref IA: ${parts.join(' + ') || 'Acompañamiento'} (${genKey})`;
+ const trackLabel = `Ref IA: ${parts.join(' +' ) ||' Acompañamiento'} (${genKey})`;
 
  saveNewTrackToIdea(
  showGenModalForIdea, 
  serverUrl, 
  trackLabel, 
- parts.join(' + ') || 'IA Synth'
+ parts.join(' +' ) ||' IA Synth'
  );
 
  setShowGenModalForIdea(null);

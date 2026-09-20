@@ -164,7 +164,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
 
  {/* Sticky Navigation / Header */}
- <header className="relative z-20 border-b /80 bg-[var(--bg)]/90 sticky top-0">
+ <header className="relative z-20 /80 bg-[var(--bg)]/90 sticky top-0">
  <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black p-0.5 flex items-center justify-center shrink-0">
@@ -357,7 +357,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  ) : (
  /* EARLY ACCESS FORM */
  <div className="p-6 sm:p-10 rounded-3xl bg-[var(--surface)] space-y-6">
- <div className="space-y-2 border-b pb-6 text-center sm:text-left">
+ <div className="space-y-2 pb-6 text-center sm:text-left">
  <div className="inline-flex items-center gap-2 text-[var(--acc)] font-sans text-xs font-bold tracking-wider">
  <Users className="w-4 h-4" />
  <span>Early Access Waitlist</span>
@@ -615,7 +615,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </section>
 
  {/* Footer */}
- <footer className="text-center py-6 border-t border-[var(--surface)] text-xs font-sans text-[var(--ink-2)]">
+ <footer className="text-center py-6 text-xs font-sans text-[var(--ink-2)]">
  <p>{t.footerText}</p>
  </footer>
  </main>

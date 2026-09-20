@@ -171,7 +171,7 @@ export function GlobalCampaignBar({
 
  {/* Mobile Collapsible Details */}
  {isMobileExpanded && (
- <div className="sm:hidden pt-2 mt-2 border-t border-[var(--acc)]/20 text-[10px] text-[var(--ink-2)] flex flex-col gap-1 animate-fade-in relative z-10">
+ <div className="sm:hidden pt-2 mt-2/20 text-[10px] text-[var(--ink-2)] flex flex-col gap-1 animate-fade-in relative z-10">
  <div className="flex items-center gap-1.5 text-[var(--ink-3)] font-medium">
  <MapPin className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
  <span>{campaign.targetCities?.join(',') ||'Todas las ciudades'}</span>

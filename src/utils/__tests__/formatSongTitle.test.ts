@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { formatSongTitle, normalizeSongTitlesInList } from '../formatSongTitle';
-import { Song } from '../../types';
+import { describe, it, expect } from' vitest';
+import { formatSongTitle, normalizeSongTitlesInList } from' ../formatSongTitle';
+import { Song } from' ../../types';
 
 describe('formatSongTitle', () => {
  it('converts all-uppercase song titles to proper title case (nombres propios)', () => {
@@ -34,7 +34,7 @@ describe('formatSongTitle', () => {
 
  it('handles words with apostrophes and accents', () => {
  expect(formatSongTitle("don't stop believin'")).toBe("Don't Stop Believin'");
- expect(formatSongTitle("rock 'n' roll")).toBe("Rock 'N' Roll");
+ expect(formatSongTitle("rock' n' roll")).toBe("Rock' N' Roll");
  expect(formatSongTitle('CANCIONES Y SUEÑOS')).toBe('Canciones Y Sueños');
  });
 
@@ -42,16 +42,16 @@ describe('formatSongTitle', () => {
  expect(formatSongTitle('')).toBe('');
  expect(formatSongTitle(null as any)).toBe('');
  expect(formatSongTitle(undefined as any)).toBe('');
- expect(formatSongTitle(' ')).toBe('');
+ expect(formatSongTitle('' )).toBe('');
  });
 });
 
 describe('normalizeSongTitlesInList', () => {
  it('normalizes song titles across an array of songs', () => {
  const mockSongs: Song[] = [
- { id: '1', titulo: 'SOME KIND OF WONDERFUL', duracion: '3:30', tonalidad: 'D', band_id: 'b1' },
- { id: '2', titulo: 'Born to be wild', duracion: '3:33', tonalidad: 'E', band_id: 'b1' },
- { id: '3', titulo: 'Going Down', duracion: '3:30', tonalidad: 'D', band_id: 'b1' }
+ { id:' 1', titulo:' SOME KIND OF WONDERFUL', duracion:' 3:30', tonalidad:' D', band_id:' b1' },
+ { id:' 2', titulo:' Born to be wild', duracion:' 3:33', tonalidad:' E', band_id:' b1' },
+ { id:' 3', titulo:' Going Down', duracion:' 3:30', tonalidad:' D', band_id:' b1' }
  ];
 
  const { updatedSongs, changedCount } = normalizeSongTitlesInList(mockSongs);
