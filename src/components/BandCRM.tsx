@@ -36,50 +36,50 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  const [bands, setBands] = useState<BandContact[]>([]);
  const [selectedBandIds, setSelectedBandIds] = useState<string[]>([]);
  const [bulkProgressState, setBulkProgressState] = useState<{
-   isOpen: boolean;
-   title: string;
-   subtitle?: string;
-   items: BulkProgressItem[];
-   currentIndex: number;
-   totalCount: number;
-   isCompleted: boolean;
+ isOpen: boolean;
+ title: string;
+ subtitle?: string;
+ items: BulkProgressItem[];
+ currentIndex: number;
+ totalCount: number;
+ isCompleted: boolean;
  }>({
-   isOpen: false,
-   title: '',
-   items: [],
-   currentIndex: 0,
-   totalCount: 0,
-   isCompleted: false
+ isOpen: false,
+ title: '',
+ items: [],
+ currentIndex: 0,
+ totalCount: 0,
+ isCompleted: false
  });
  const [isLoading, setIsLoading] = useState(true);
 
  const fetchBands = () => {
-   const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-   fetch('/api/bands', {
-     headers: {
-       'Content-Type': 'application/json',
-       ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-     }
-   })
-     .then(async res => {
-       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-       const contentType = res.headers.get("content-type");
-       if (!contentType || !contentType.includes("application/json")) {
-         throw new Error("Respuesta no es JSON válido");
-       }
-       return res.json();
-     })
-     .then(data => {
-       if (data && data.bands) {
-         setBands(data.bands);
-       }
-     })
-     .catch(err => { if (err?.status !== 401) console.warn("Could not load bands:", err); })
-     .finally(() => setIsLoading(false));
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ fetch('/api/bands', {
+ headers: {
+ 'Content-Type': 'application/json',
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ }
+ })
+ .then(async res => {
+ if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+ const contentType = res.headers.get("content-type");
+ if (!contentType || !contentType.includes("application/json")) {
+ throw new Error("Respuesta no es JSON válido");
+ }
+ return res.json();
+ })
+ .then(data => {
+ if (data && data.bands) {
+ setBands(data.bands);
+ }
+ })
+ .catch(err => { if (err?.status !== 401) console.warn("Could not load bands:", err); })
+ .finally(() => setIsLoading(false));
  };
 
  useEffect(() => {
-   fetchBands();
+ fetchBands();
  }, [currentBandId]);
 
  // Save changes to localStorage whenever bands state updates
@@ -92,8 +92,8 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  if (!l.tipo) return false;
  const norm = String(l.tipo).trim().toLowerCase();
  return norm === 'grupo' || norm.includes('grup') || norm.includes('banda') || norm.includes('artist')
-   || norm === 'productora' || norm.includes('product') || norm === 'manager' || norm.includes('manag')
-   || norm === 'agencia' || norm.includes('agenc') || norm === 'sello' || norm.includes('sello');
+ || norm === 'productora' || norm.includes('product') || norm === 'manager' || norm.includes('manag')
+ || norm === 'agencia' || norm.includes('agenc') || norm === 'sello' || norm.includes('sello');
  });
 
  if (groupLeads.length > 0) {
@@ -144,35 +144,35 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  const [isLoadingRegBands, setIsLoadingRegBands] = useState(false);
 
  const fetchRegisteredBands = () => {
-   setIsLoadingRegBands(true);
-   const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-   fetch('/api/registered-bands', {
-     headers: {
-       'Content-Type': 'application/json',
-       ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-     }
-   })
-     .then(async res => {
-       if (!res.ok) {
-         throw new Error(`HTTP error ${res.status}`);
-       }
-       const contentType = res.headers.get("content-type");
-       if (!contentType || !contentType.includes("application/json")) {
-         throw new Error("Respuesta no es JSON válido");
-       }
-       return res.json();
-     })
-     .then(data => {
-       if (data && data.registeredBands) {
-         setRegisteredBands(data.registeredBands);
-       }
-     })
-     .catch(err => { if (err?.status !== 401) console.warn("Could not load registered bands:", err); })
-     .finally(() => setIsLoadingRegBands(false));
+ setIsLoadingRegBands(true);
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ fetch('/api/registered-bands', {
+ headers: {
+ 'Content-Type': 'application/json',
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ }
+ })
+ .then(async res => {
+ if (!res.ok) {
+ throw new Error(`HTTP error ${res.status}`);
+ }
+ const contentType = res.headers.get("content-type");
+ if (!contentType || !contentType.includes("application/json")) {
+ throw new Error("Respuesta no es JSON válido");
+ }
+ return res.json();
+ })
+ .then(data => {
+ if (data && data.registeredBands) {
+ setRegisteredBands(data.registeredBands);
+ }
+ })
+ .catch(err => { if (err?.status !== 401) console.warn("Could not load registered bands:", err); })
+ .finally(() => setIsLoadingRegBands(false));
  };
 
  useEffect(() => {
-   fetchRegisteredBands();
+ fetchRegisteredBands();
  }, [currentBandId]);
 
  const [searchTerm, setSearchTerm] = useState('');
@@ -201,63 +201,63 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  const [isAnalyzingTone, setIsAnalyzingTone] = useState(false);
 
  const handleAnalyzeTone = async (band: BandContact) => {
-   setSelectedToneBand(band);
-   setIsToneModalOpen(true);
-   setIsAnalyzingTone(true);
-   setToneData(null);
+ setSelectedToneBand(band);
+ setIsToneModalOpen(true);
+ setIsAnalyzingTone(true);
+ setToneData(null);
 
-   try {
-     const res = await fetch('/api/bands/analyze-tone', {
-       method: 'POST',
-       headers: {
-         'Content-Type': 'application/json',
-         ...getAuthHeaders()
-       },
-       body: JSON.stringify({
-         nombre_entidad: band.nombre_banda,
-         instagram: band.instagram,
-         estilo_musical: band.estilo_musical,
-         localizacion: band.localizacion,
-         tipo: 'Banda',
-         save_to_band_id: band.id
-       })
-     });
+ try {
+ const res = await fetch('/api/bands/analyze-tone', {
+ method: 'POST',
+ headers: {
+ 'Content-Type': 'application/json',
+ ...getAuthHeaders()
+ },
+ body: JSON.stringify({
+ nombre_entidad: band.nombre_banda,
+ instagram: band.instagram,
+ estilo_musical: band.estilo_musical,
+ localizacion: band.localizacion,
+ tipo: 'Banda',
+ save_to_band_id: band.id
+ })
+ });
 
-     const resData = await res.json();
-     if (resData.success && resData.data) {
-       let finalData = resData.data;
+ const resData = await res.json();
+ if (resData.success && resData.data) {
+ let finalData = resData.data;
 
-       // Also load learned rules from tone-dna endpoint to ensure we have the latest reglas_por_categoria
-       try {
-         const toneDnaRes = await fetch('/api/bands/tone-dna', {
-           headers: getAuthHeaders()
-         });
-         const toneDnaData = await toneDnaRes.json();
-         if (toneDnaRes.ok && toneDnaData.data?.reglas_por_categoria) {
-           finalData = {
-             ...finalData,
-             reglas_por_categoria: toneDnaData.data.reglas_por_categoria
-           };
-         }
-       } catch (err) {
-         console.warn('Could not load learned rules:', err);
-       }
+ // Also load learned rules from tone-dna endpoint to ensure we have the latest reglas_por_categoria
+ try {
+ const toneDnaRes = await fetch('/api/bands/tone-dna', {
+ headers: getAuthHeaders()
+ });
+ const toneDnaData = await toneDnaRes.json();
+ if (toneDnaRes.ok && toneDnaData.data?.reglas_por_categoria) {
+ finalData = {
+ ...finalData,
+ reglas_por_categoria: toneDnaData.data.reglas_por_categoria
+ };
+ }
+ } catch (err) {
+ console.warn('Could not load learned rules:', err);
+ }
 
-       setToneData(finalData);
-       setBands(prev => prev.map(b => b.id === band.id ? {
-         ...b,
-         estilo_comunicacion: finalData.tono_comunicacion || b.estilo_comunicacion,
-         dna_expresion: finalData
-       } : b));
-     } else {
-       alert(resData.error || 'No se pudo obtener el análisis de tono.');
-     }
-   } catch (err) {
-     console.error('Error analizando tono:', err);
-     alert('Error de conexión al analizar el tono de comunicación.');
-   } finally {
-     setIsAnalyzingTone(false);
-   }
+ setToneData(finalData);
+ setBands(prev => prev.map(b => b.id === band.id ? {
+ ...b,
+ estilo_comunicacion: finalData.tono_comunicacion || b.estilo_comunicacion,
+ dna_expresion: finalData
+ } : b));
+ } else {
+ alert(resData.error || 'No se pudo obtener el análisis de tono.');
+ }
+ } catch (err) {
+ console.error('Error analizando tono:', err);
+ alert('Error de conexión al analizar el tono de comunicación.');
+ } finally {
+ setIsAnalyzingTone(false);
+ }
  };
 
  // Form Fields State
@@ -280,31 +280,31 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  const [isScoutModalOpen, setIsScoutModalOpen] = useState(false);
 
  useEffect(() => {
-   const saved = localStorage.getItem('bandmanager_active_campaign');
-   if (saved) {
-     try {
-       setActiveCampaign(JSON.parse(saved));
-     } catch (e) {}
-   }
+ const saved = localStorage.getItem('bandmanager_active_campaign');
+ if (saved) {
+ try {
+ setActiveCampaign(JSON.parse(saved));
+ } catch (e) {}
+ }
  }, []);
 
  const handleLogoUpload = async (file: File) => {
-   if (!currentBandId) {
-     alert('No hay ninguna banda activa para subir la imagen.');
-     return;
-   }
-   try {
-     setIsUploadingLogo(true);
-     const url = await uploadFileToServer(file, { bandId: currentBandId, category: 'grupos' });
-     if (url) {
-       setFormImageUrl(url);
-     }
-   } catch (err) {
-     console.error('Error uploading band image:', err);
-     alert('Error al subir la imagen a Supabase');
-   } finally {
-     setIsUploadingLogo(false);
-   }
+ if (!currentBandId) {
+ alert('No hay ninguna banda activa para subir la imagen.');
+ return;
+ }
+ try {
+ setIsUploadingLogo(true);
+ const url = await uploadFileToServer(file, { bandId: currentBandId, category: 'grupos' });
+ if (url) {
+ setFormImageUrl(url);
+ }
+ } catch (err) {
+ console.error('Error uploading band image:', err);
+ alert('Error al subir la imagen a Supabase');
+ } finally {
+ setIsUploadingLogo(false);
+ }
  };
 
  // AI Band Lookup state
@@ -361,48 +361,48 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
 
  // Handle open modal for creation
  const handleOpenCreateModal = () => {
-  setEditingBand(null);
-  setFormName('');
-  setFormStyle('Balkan Ska / Mestizaje');
-  setFormLocation('Madrid');
-  setFormStatus('sin_contactar');
-  setFormLastContact(new Date().toISOString().split('T')[0]);
-  setFormContactName('');
-  setFormEmail('');
-  setFormPhone('');
-  setFormInstagram('');
-  setFormSpotifyYoutube('');
-  setFormAforo(0);
-  setFormNotes('');
-  setFormIcon('🎸');
-  setFormImageUrl('');
-  setAiProposal(null);
-  setAiError(null);
-  setIsAiSearching(false);
-  setIsAddEditModalOpen(true);
+ setEditingBand(null);
+ setFormName('');
+ setFormStyle('Balkan Ska / Mestizaje');
+ setFormLocation('Madrid');
+ setFormStatus('sin_contactar');
+ setFormLastContact(new Date().toISOString().split('T')[0]);
+ setFormContactName('');
+ setFormEmail('');
+ setFormPhone('');
+ setFormInstagram('');
+ setFormSpotifyYoutube('');
+ setFormAforo(0);
+ setFormNotes('');
+ setFormIcon('🎸');
+ setFormImageUrl('');
+ setAiProposal(null);
+ setAiError(null);
+ setIsAiSearching(false);
+ setIsAddEditModalOpen(true);
  };
 
  // Handle open modal for editing
  const handleOpenEditModal = (band: BandContact) => {
-  setEditingBand(band);
-  setFormName(band.nombre_banda);
-  setFormStyle(band.estilo_musical);
-  setFormLocation(band.localizacion);
-  setFormStatus(band.estado_relacion);
-  setFormLastContact(band.ultimo_contacto);
-  setFormContactName(band.contacto_nombre || '');
-  setFormEmail(band.email || '');
-  setFormPhone(band.telefono || '');
-  setFormInstagram(band.instagram || '');
-  setFormSpotifyYoutube(band.spotify_youtube || '');
-  setFormAforo(band.aforo_promedio || 0);
-  setFormNotes(band.notas_colaboracion || '');
-  setFormIcon(band.icono || '🎸');
-  setFormImageUrl(band.imagen_url || '');
-  setAiProposal(null);
-  setAiError(null);
-  setIsAiSearching(false);
-  setIsAddEditModalOpen(true);
+ setEditingBand(band);
+ setFormName(band.nombre_banda);
+ setFormStyle(band.estilo_musical);
+ setFormLocation(band.localizacion);
+ setFormStatus(band.estado_relacion);
+ setFormLastContact(band.ultimo_contacto);
+ setFormContactName(band.contacto_nombre || '');
+ setFormEmail(band.email || '');
+ setFormPhone(band.telefono || '');
+ setFormInstagram(band.instagram || '');
+ setFormSpotifyYoutube(band.spotify_youtube || '');
+ setFormAforo(band.aforo_promedio || 0);
+ setFormNotes(band.notas_colaboracion || '');
+ setFormIcon(band.icono || '🎸');
+ setFormImageUrl(band.imagen_url || '');
+ setAiProposal(null);
+ setAiError(null);
+ setIsAiSearching(false);
+ setIsAddEditModalOpen(true);
  };
 
  // Handle Save (Create or Update)
@@ -529,39 +529,39 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
 
  // Handle Import Scouted Bands
  const handleImportScoutedBands = async (importedBands: Partial<BandContact>[]) => {
-   const today = new Date().toISOString().split('T')[0];
-   const newBands = [];
-   
-   for (const b of importedBands) {
-     const newBand = {
-       id: `temp-${Date.now()}-${Math.random()}`,
-       nombre_banda: b.nombre_banda || 'Sin nombre',
-       localizacion: b.localizacion || 'Desconocida',
-       estilo_musical: b.estilo_musical || 'Mestizaje',
-       estado_relacion: 'sin_contactar' as BandRelationshipStatus,
-       instagram: (b as any).instagram_url || '',
-       spotify: (b as any).spotify_url || '',
-       youtube: (b as any).youtube_url || '',
-       aforo_promedio: b.aforo_promedio || null,
-       fecha_creacion: today,
-       ultimo_contacto: today,
-       notas: activeCampaign ? `Scouteada para campaña: ${activeCampaign.name}` : 'Scouteada vía IA',
-       es_favorito: false
-     };
-     newBands.push(newBand);
-     try {
-       await fetch('/api/bands', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(newBand)
-       });
-     } catch (err) {
-       console.error("Error creating scouted band", err);
-     }
-   }
-   
-   // Optimistic UI update
-   setBands(prev => [...newBands, ...prev]);
+ const today = new Date().toISOString().split('T')[0];
+ const newBands = [];
+ 
+ for (const b of importedBands) {
+ const newBand = {
+ id: `temp-${Date.now()}-${Math.random()}`,
+ nombre_banda: b.nombre_banda || 'Sin nombre',
+ localizacion: b.localizacion || 'Desconocida',
+ estilo_musical: b.estilo_musical || 'Mestizaje',
+ estado_relacion: 'sin_contactar' as BandRelationshipStatus,
+ instagram: (b as any).instagram_url || '',
+ spotify: (b as any).spotify_url || '',
+ youtube: (b as any).youtube_url || '',
+ aforo_promedio: b.aforo_promedio || null,
+ fecha_creacion: today,
+ ultimo_contacto: today,
+ notas: activeCampaign ? `Scouteada para campaña: ${activeCampaign.name}` : 'Scouteada vía IA',
+ es_favorito: false
+ };
+ newBands.push(newBand);
+ try {
+ await fetch('/api/bands', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify(newBand)
+ });
+ } catch (err) {
+ console.error("Error creating scouted band", err);
+ }
+ }
+ 
+ // Optimistic UI update
+ setBands(prev => [...newBands, ...prev]);
  };
 
  // Handle Delete
@@ -604,155 +604,155 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  } catch (err) { console.error("Error updating band status", err); }
  };
 
-  // Bulk action handlers
-  const handleToggleSelectBand = (id: string, e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    setSelectedBandIds(prev =>
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-    );
-  };
+ // Bulk action handlers
+ const handleToggleSelectBand = (id: string, e?: React.MouseEvent) => {
+ if (e) e.stopPropagation();
+ setSelectedBandIds(prev =>
+ prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+ );
+ };
 
-  const handleSelectAllFilteredBands = () => {
-    setSelectedBandIds(filteredBands.map(b => b.id));
-  };
+ const handleSelectAllFilteredBands = () => {
+ setSelectedBandIds(filteredBands.map(b => b.id));
+ };
 
-  const handleDeselectAllBands = () => {
-    setSelectedBandIds([]);
-  };
+ const handleDeselectAllBands = () => {
+ setSelectedBandIds([]);
+ };
 
-  const handleBulkBandStatusChange = async (newStatus: BandRelationshipStatus) => {
-    if (selectedBandIds.length === 0) return;
-    const today = new Date().toISOString().split('T')[0];
-    setBands(prev => prev.map(b => selectedBandIds.includes(b.id) ? { ...b, estado_relacion: newStatus, ultimo_contacto: today } : b));
-    
-    selectedBandIds.forEach(id => {
-      fetch(`/api/bands/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ estado_relacion: newStatus, ultimo_contacto: today })
-      }).catch(console.error);
-    });
-  };
+ const handleBulkBandStatusChange = async (newStatus: BandRelationshipStatus) => {
+ if (selectedBandIds.length === 0) return;
+ const today = new Date().toISOString().split('T')[0];
+ setBands(prev => prev.map(b => selectedBandIds.includes(b.id) ? { ...b, estado_relacion: newStatus, ultimo_contacto: today } : b));
+ 
+ selectedBandIds.forEach(id => {
+ fetch(`/api/bands/${id}`, {
+ method: 'PUT',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ estado_relacion: newStatus, ultimo_contacto: today })
+ }).catch(console.error);
+ });
+ };
 
-  const handleBulkBandToggleFavorite = (isFav: boolean) => {
-    if (selectedBandIds.length === 0) return;
-    setBands(prev => prev.map(b => selectedBandIds.includes(b.id) ? { ...b, es_favorito: isFav } : b));
-    selectedBandIds.forEach(id => {
-      fetch(`/api/bands/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ es_favorito: isFav })
-      }).catch(console.error);
-    });
-  };
+ const handleBulkBandToggleFavorite = (isFav: boolean) => {
+ if (selectedBandIds.length === 0) return;
+ setBands(prev => prev.map(b => selectedBandIds.includes(b.id) ? { ...b, es_favorito: isFav } : b));
+ selectedBandIds.forEach(id => {
+ fetch(`/api/bands/${id}`, {
+ method: 'PUT',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ es_favorito: isFav })
+ }).catch(console.error);
+ });
+ };
 
-  const handleBulkBandDelete = async () => {
-    if (selectedBandIds.length === 0) return;
-    const idsToDelete = [...selectedBandIds];
-    setSelectedBandIds([]);
-    setBands(prev => prev.filter(b => !idsToDelete.includes(b.id)));
-    try {
-      await api.bulkDeleteBands(idsToDelete);
-    } catch (err) {
-      console.error('Error bulk deleting bands:', err);
-      fetchBands();
-    }
-  };
+ const handleBulkBandDelete = async () => {
+ if (selectedBandIds.length === 0) return;
+ const idsToDelete = [...selectedBandIds];
+ setSelectedBandIds([]);
+ setBands(prev => prev.filter(b => !idsToDelete.includes(b.id)));
+ try {
+ await api.bulkDeleteBands(idsToDelete);
+ } catch (err) {
+ console.error('Error bulk deleting bands:', err);
+ fetchBands();
+ }
+ };
 
-  const handleBulkBandExportCsv = () => {
-    const bandsToExport = bands.filter(b => selectedBandIds.includes(b.id));
-    if (bandsToExport.length === 0) return;
+ const handleBulkBandExportCsv = () => {
+ const bandsToExport = bands.filter(b => selectedBandIds.includes(b.id));
+ if (bandsToExport.length === 0) return;
 
-    const headers = ['Nombre Banda', 'Estilo Musical', 'Localización', 'Estado Relación', 'Contacto', 'Email', 'Teléfono', 'Instagram', 'Spotify / Web', 'Aforo Habitual', 'Notas'];
-    const rows = bandsToExport.map(b => [
-      `"${(b.nombre_banda || '').replace(/"/g, '""')}"`,
-      `"${(b.estilo_musical || '').replace(/"/g, '""')}"`,
-      `"${(b.localizacion || '').replace(/"/g, '""')}"`,
-      `"${(b.estado_relacion || '').replace(/"/g, '""')}"`,
-      `"${(b.contacto_nombre || '').replace(/"/g, '""')}"`,
-      `"${(b.email || '').replace(/"/g, '""')}"`,
-      `"${(b.telefono || '').replace(/"/g, '""')}"`,
-      `"${(b.instagram || '').replace(/"/g, '""')}"`,
-      `"${(b.spotify_youtube || '').replace(/"/g, '""')}"`,
-      `"${b.aforo_promedio || ''}"`,
-      `"${(b.notas_colaboracion || '').replace(/"/g, '""')}"`
-    ]);
+ const headers = ['Nombre Banda', 'Estilo Musical', 'Localización', 'Estado Relación', 'Contacto', 'Email', 'Teléfono', 'Instagram', 'Spotify / Web', 'Aforo Habitual', 'Notas'];
+ const rows = bandsToExport.map(b => [
+ `"${(b.nombre_banda || '').replace(/"/g, '""')}"`,
+ `"${(b.estilo_musical || '').replace(/"/g, '""')}"`,
+ `"${(b.localizacion || '').replace(/"/g, '""')}"`,
+ `"${(b.estado_relacion || '').replace(/"/g, '""')}"`,
+ `"${(b.contacto_nombre || '').replace(/"/g, '""')}"`,
+ `"${(b.email || '').replace(/"/g, '""')}"`,
+ `"${(b.telefono || '').replace(/"/g, '""')}"`,
+ `"${(b.instagram || '').replace(/"/g, '""')}"`,
+ `"${(b.spotify_youtube || '').replace(/"/g, '""')}"`,
+ `"${b.aforo_promedio || ''}"`,
+ `"${(b.notas_colaboracion || '').replace(/"/g, '""')}"`
+ ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `bandmanager_bandas_seleccionadas_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+ const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+ const encodedUri = encodeURI(csvContent);
+ const link = document.createElement('a');
+ link.setAttribute('href', encodedUri);
+ link.setAttribute('download', `bandmanager_bandas_seleccionadas_${new Date().toISOString().slice(0, 10)}.csv`);
+ document.body.appendChild(link);
+ link.click();
+ document.body.removeChild(link);
+ };
 
-  const handleBulkGenerateSwaps = async () => {
-    const targetBands = bands.filter(b => selectedBandIds.includes(b.id));
-    if (targetBands.length === 0) return;
+ const handleBulkGenerateSwaps = async () => {
+ const targetBands = bands.filter(b => selectedBandIds.includes(b.id));
+ if (targetBands.length === 0) return;
 
-    const initialItems: BulkProgressItem[] = targetBands.map(b => ({
-      id: b.id,
-      name: b.nombre_banda,
-      status: 'pending'
-    }));
+ const initialItems: BulkProgressItem[] = targetBands.map(b => ({
+ id: b.id,
+ name: b.nombre_banda,
+ status: 'pending'
+ }));
 
-    setBulkProgressState({
-      isOpen: true,
-      title: 'Generando Propuestas Date Swap con IA',
-      subtitle: 'Redactando propuestas de intercambio de fechas y cartel doble',
-      items: initialItems,
-      currentIndex: 0,
-      totalCount: initialItems.length,
-      isCompleted: false
-    });
+ setBulkProgressState({
+ isOpen: true,
+ title: 'Generando Propuestas Date Swap con IA',
+ subtitle: 'Redactando propuestas de intercambio de fechas y cartel doble',
+ items: initialItems,
+ currentIndex: 0,
+ totalCount: initialItems.length,
+ isCompleted: false
+ });
 
-    const updatedItems = [...initialItems];
+ const updatedItems = [...initialItems];
 
-    for (let i = 0; i < targetBands.length; i++) {
-      const band = targetBands[i];
-      updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Redactando propuesta swap...' };
-      setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
+ for (let i = 0; i < targetBands.length; i++) {
+ const band = targetBands[i];
+ updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Redactando propuesta swap...' };
+ setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
 
-      try {
-        const res = await fetch('/api/bands/generate-date-swap-pitch', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            bandName: band.nombre_banda,
-            bandLocation: band.localizacion,
-            bandStyle: band.estilo_musical,
-            aforo: band.aforo_promedio
-          })
-        });
+ try {
+ const res = await fetch('/api/bands/generate-date-swap-pitch', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({
+ bandName: band.nombre_banda,
+ bandLocation: band.localizacion,
+ bandStyle: band.estilo_musical,
+ aforo: band.aforo_promedio
+ })
+ });
 
-        const data = await res.json();
-        const pitchText = data.pitch || data.data?.pitch || `Hola compas de ${band.nombre_banda},\n\nOs escribimos desde Bakandeya. Nos encanta vuestro estilo ${band.estilo_musical} y estamos planeando fechas por vuestra zona (${band.localizacion}). ¿Os cuadraría plantear un intercambio de fechas (Date Swap)? Nosotros os montamos fecha en nuestra ciudad y vosotros nos abrís en la vuestra.\n\n¡Un abrazo grande!`;
+ const data = await res.json();
+ const pitchText = data.pitch || data.data?.pitch || `Hola compas de ${band.nombre_banda},\n\nOs escribimos desde Bakandeya. Nos encanta vuestro estilo ${band.estilo_musical} y estamos planeando fechas por vuestra zona (${band.localizacion}). ¿Os cuadraría plantear un intercambio de fechas (Date Swap)? Nosotros os montamos fecha en nuestra ciudad y vosotros nos abrís en la vuestra.\n\n¡Un abrazo grande!`;
 
-        const updatedBand = {
-          ...band,
-          estado_relacion: 'propuesta_enviada' as BandRelationshipStatus,
-          notas_colaboracion: `${band.notas_colaboracion ? band.notas_colaboracion + '\n\n' : ''}[Propuesta Swap IA]:\n${pitchText}`
-        };
+ const updatedBand = {
+ ...band,
+ estado_relacion: 'propuesta_enviada' as BandRelationshipStatus,
+ notas_colaboracion: `${band.notas_colaboracion ? band.notas_colaboracion + '\n\n' : ''}[Propuesta Swap IA]:\n${pitchText}`
+ };
 
-        setBands(prev => prev.map(b => b.id === band.id ? updatedBand : b));
-        await fetch(`/api/bands/${band.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedBand)
-        });
+ setBands(prev => prev.map(b => b.id === band.id ? updatedBand : b));
+ await fetch(`/api/bands/${band.id}`, {
+ method: 'PUT',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify(updatedBand)
+ });
 
-        updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Propuesta lista' };
-      } catch (err: any) {
-        updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error al generar' };
-      }
+ updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Propuesta lista' };
+ } catch (err: any) {
+ updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error al generar' };
+ }
 
-      setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
-    }
+ setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
+ }
 
-    setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
-  };
+ setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
+ };
 
  // Filter logic
  const filteredBands = bands.filter(band => {
@@ -840,8 +840,8 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
 
  // Generate Date Swap Pitch Text
  const generatePitchText = (band: BandContact) => {
-   if (activeCampaign && activeCampaign.isActive) {
-     return `¡Buenas chavales de ${band.nombre_banda}! 🎸🔥
+ if (activeCampaign && activeCampaign.isActive) {
+ return `¡Buenas chavales de ${band.nombre_banda}! 🎸🔥
 
 Os escribimos directamente desde Bakandeya (banda de Balkan-Ska, violín enérgico, loops analógicos y electrónica).
 
@@ -858,7 +858,7 @@ https://youtube.com/bakandeya_live
 
 ¡Un fuerte abrazo!
 Bakandeya Agent Manager`;
-   }
+ }
 
  return `¡Buenas chavales de ${band.nombre_banda}! 🎸🔥
 
@@ -892,7 +892,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <Users className="w-4 h-4 text-[var(--acc)]" />
  <span>Grupos</span>
  </h2>
- <span className="text-[11px] font-mono text-text-[var(--ink-2)] bg-bg-[var(--surface)] px-2 py-0.5 rounded-full border ">
+ <span className="text-[11px] font-mono text-text-[var(--ink-2)] bg-bg-[var(--surface)] px-2 py-0.5 rounded-full ">
  {totalBands}
  </span>
  </div>
@@ -975,7 +975,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] border  transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
  title="Exportar Excel Completo (.xlsx)"
  >
  <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
@@ -984,9 +984,9 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  </div>
 
-  {/* TAB 2: REGISTERED BANDS VIEW (registro_bandas) */}
+ {/* TAB 2: REGISTERED BANDS VIEW (registro_bandas) */}
  {subTab === 'registered_bands' ? (
- <div className={`p-5 rounded-[var(--r-l)] ${colors.card} space-y-4 shadow-lg border `}>
+ <div className={`p-5 rounded-[var(--r-l)] ${colors.card} space-y-4 shadow-lg `}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
  <h3 className="text-xl font-bold font-display text-white flex items-center gap-2">
@@ -1000,7 +1000,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="flex items-center gap-2 shrink-0">
  <button
  onClick={fetchRegisteredBands}
- className="p-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer border "
+ className="p-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer "
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isLoadingRegBands ? 'animate-spin' : ''}`} />
  <span>Actualizar</span>
@@ -1016,7 +1016,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  </div>
 
- <div className="overflow-x-auto rounded-[var(--r-m)] border ">
+ <div className="overflow-x-auto rounded-[var(--r-m)] ">
  <table className="w-full text-left border-collapse text-xs font-mono">
  <thead>
  <tr className="bg-bg-[var(--surface)] text-text-[var(--ink-2)] uppercase tracking-wider text-[10px] border-b ">
@@ -1077,7 +1077,7 @@ Bakandeya Agent Manager IA & Músicos`;
  ) : (
  <>
  {/* 2. FILTER & SEARCH CONTROL BAR */}
- <div className={`p-4 rounded-[var(--r-m)] ${colors.card}  space-y-3 shadow-md`}>
+ <div className={`p-4 rounded-[var(--r-m)] ${colors.card} space-y-3 shadow-md`}>
  <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
  
  {/* Search Bar */}
@@ -1135,25 +1135,25 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* Quick Selection Toggle */}
  {filteredBands.length > 0 && (
-   <button
-     type="button"
-     onClick={selectedBandIds.length === filteredBands.length ? handleDeselectAllBands : handleSelectAllFilteredBands}
-     className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 border ${
-       selectedBandIds.length > 0
-         ? 'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 hover:bg-[var(--acc)]/25'
-         : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)]  hover:text-white'
-     }`}
-     title={selectedBandIds.length === filteredBands.length ? 'Deseleccionar todas' : 'Seleccionar todas las filtradas'}
-   >
-     {selectedBandIds.length === filteredBands.length ? (
-       <CheckSquare className="w-3.5 h-3.5 text-[var(--acc)]" />
-     ) : selectedBandIds.length > 0 ? (
-       <MinusSquare className="w-3.5 h-3.5 text-[var(--acc)]" />
-     ) : (
-       <Square className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
-     )}
-     <span>{selectedBandIds.length > 0 ? `${selectedBandIds.length}/${filteredBands.length}` : 'Sel. Todos'}</span>
-   </button>
+ <button
+ type="button"
+ onClick={selectedBandIds.length === filteredBands.length ? handleDeselectAllBands : handleSelectAllFilteredBands}
+ className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+ selectedBandIds.length > 0
+ ? 'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 hover:bg-[var(--acc)]/25'
+ : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)] hover:text-white'
+ }`}
+ title={selectedBandIds.length === filteredBands.length ? 'Deseleccionar todas' : 'Seleccionar todas las filtradas'}
+ >
+ {selectedBandIds.length === filteredBands.length ? (
+ <CheckSquare className="w-3.5 h-3.5 text-[var(--acc)]" />
+ ) : selectedBandIds.length > 0 ? (
+ <MinusSquare className="w-3.5 h-3.5 text-[var(--acc)]" />
+ ) : (
+ <Square className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
+ )}
+ <span>{selectedBandIds.length > 0 ? `${selectedBandIds.length}/${filteredBands.length}` : 'Sel. Todos'}</span>
+ </button>
  )}
 
  {/* View Mode Toggle */}
@@ -1196,20 +1196,20 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  </div>
 
-  {/* 🎯 GMAIL-STYLE BULK ACTIONS BAR (STICKY AT TOP OF LIST) */}
-  <BulkBandActionBar
-    selectedCount={selectedBandIds.length}
-    totalFilteredCount={filteredBands.length}
-    isAllSelected={filteredBands.length > 0 && selectedBandIds.length === filteredBands.length}
-    onSelectAll={handleSelectAllFilteredBands}
-    onDeselectAll={handleDeselectAllBands}
-    onBulkStatusChange={handleBulkBandStatusChange}
-    onBulkGeneratePitch={handleBulkGenerateSwaps}
-    onBulkToggleFavorite={handleBulkBandToggleFavorite}
-    onBulkExportCsv={handleBulkBandExportCsv}
-    onBulkDelete={handleBulkBandDelete}
-    isStitchLight={isStitchLight}
-  />
+ {/* 🎯 GMAIL-STYLE BULK ACTIONS BAR (STICKY AT TOP OF LIST) */}
+ <BulkBandActionBar
+ selectedCount={selectedBandIds.length}
+ totalFilteredCount={filteredBands.length}
+ isAllSelected={filteredBands.length > 0 && selectedBandIds.length === filteredBands.length}
+ onSelectAll={handleSelectAllFilteredBands}
+ onDeselectAll={handleDeselectAllBands}
+ onBulkStatusChange={handleBulkBandStatusChange}
+ onBulkGeneratePitch={handleBulkGenerateSwaps}
+ onBulkToggleFavorite={handleBulkBandToggleFavorite}
+ onBulkExportCsv={handleBulkBandExportCsv}
+ onBulkDelete={handleBulkBandDelete}
+ isStitchLight={isStitchLight}
+ />
 
  {/* 3. BAND LIST CONTAINER */}
  {filteredBands.length === 0 ? (
@@ -1239,12 +1239,12 @@ Bakandeya Agent Manager IA & Músicos`;
  /* GRID CARDS VIEW */
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
  {filteredBands.map((band) => {
-   const isSelected = selectedBandIds.includes(band.id);
-   return (
+ const isSelected = selectedBandIds.includes(band.id);
+ return (
  <div
  key={band.id}
  className={`p-5 rounded-[var(--r-l)] transition-all flex flex-col justify-between space-y-4 ${colors.card} shadow-md group relative overflow-hidden ${
-   isSelected ? 'ring-2 ring-[var(--acc)] border-[var(--acc)]/70 bg-[#1e1c17]' : 'hover:-amber-500/40'
+ isSelected ? 'ring-2 ring-[var(--acc)] border-[var(--acc)]/70 bg-[#1e1c17]' : 'hover:-amber-500/40'
  }`}
  >
  <div className="space-y-3">
@@ -1252,16 +1252,16 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="flex items-start justify-between gap-2">
  <div className="flex items-start gap-2.5 min-w-0">
  <button
-   type="button"
-   onClick={(e) => handleToggleSelectBand(band.id, e)}
-   className="mt-0.5 p-1 rounded hover:bg-neutral-800/80 text-text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer shrink-0"
-   title={isSelected ? 'Deseleccionar banda' : 'Seleccionar banda'}
+ type="button"
+ onClick={(e) => handleToggleSelectBand(band.id, e)}
+ className="mt-0.5 p-1 rounded hover:bg-neutral-800/80 text-text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer shrink-0"
+ title={isSelected ? 'Deseleccionar banda' : 'Seleccionar banda'}
  >
-   {isSelected ? (
-     <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
-   ) : (
-     <Square className="w-4 h-4 text-neutral-500 hover:text-text-[var(--ink-3)]" />
-   )}
+ {isSelected ? (
+ <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
+ ) : (
+ <Square className="w-4 h-4 text-neutral-500 hover:text-text-[var(--ink-3)]" />
+ )}
  </button>
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-1.5 min-w-0">
@@ -1424,20 +1424,20 @@ Bakandeya Agent Manager IA & Músicos`;
  <thead className="bg-bg-[var(--surface)]/90 text-text-[var(--ink-2)] uppercase tracking-wider text-[10px] border-b ">
  <tr>
  <th className="py-2.5 px-3 w-10 text-center whitespace-nowrap">
-   <button
-     type="button"
-     onClick={selectedBandIds.length === filteredBands.length && filteredBands.length > 0 ? handleDeselectAllBands : handleSelectAllFilteredBands}
-     className="text-text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer"
-     title={selectedBandIds.length === filteredBands.length ? 'Deseleccionar todas' : 'Seleccionar todas'}
-   >
-     {filteredBands.length > 0 && selectedBandIds.length === filteredBands.length ? (
-       <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
-     ) : selectedBandIds.length > 0 ? (
-       <MinusSquare className="w-4 h-4 text-[var(--acc)]" />
-     ) : (
-       <Square className="w-4 h-4 text-neutral-500" />
-     )}
-   </button>
+ <button
+ type="button"
+ onClick={selectedBandIds.length === filteredBands.length && filteredBands.length > 0 ? handleDeselectAllBands : handleSelectAllFilteredBands}
+ className="text-text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer"
+ title={selectedBandIds.length === filteredBands.length ? 'Deseleccionar todas' : 'Seleccionar todas'}
+ >
+ {filteredBands.length > 0 && selectedBandIds.length === filteredBands.length ? (
+ <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
+ ) : selectedBandIds.length > 0 ? (
+ <MinusSquare className="w-4 h-4 text-[var(--acc)]" />
+ ) : (
+ <Square className="w-4 h-4 text-neutral-500" />
+ )}
+ </button>
  </th>
  <th className="py-2.5 px-3 whitespace-nowrap min-w-[170px]">Banda / Artista</th>
  <th className="py-2.5 px-3 whitespace-nowrap min-w-[150px]">Estilo Musical</th>
@@ -1451,22 +1451,22 @@ Bakandeya Agent Manager IA & Músicos`;
  </thead>
  <tbody className="divide-y divide-neutral-800/60 text-text-[var(--ink-3)]">
  {filteredBands.map((band) => {
-   const isRowSelected = selectedBandIds.includes(band.id);
-   return (
+ const isRowSelected = selectedBandIds.includes(band.id);
+ return (
  <tr key={band.id} className={`transition-colors ${isRowSelected ? 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/15' : 'hover:bg-bg-[var(--surface)]/50'}`}>
  <td className="py-2 px-3 w-10 text-center align-middle whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-   <button
-     type="button"
-     onClick={(e) => handleToggleSelectBand(band.id, e)}
-     className="text-text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer"
-     title={isRowSelected ? 'Deseleccionar banda' : 'Seleccionar banda'}
-   >
-     {isRowSelected ? (
-       <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
-     ) : (
-       <Square className="w-4 h-4 text-neutral-500 hover:text-text-[var(--ink-3)]" />
-     )}
-   </button>
+ <button
+ type="button"
+ onClick={(e) => handleToggleSelectBand(band.id, e)}
+ className="text-text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer"
+ title={isRowSelected ? 'Deseleccionar banda' : 'Seleccionar banda'}
+ >
+ {isRowSelected ? (
+ <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
+ ) : (
+ <Square className="w-4 h-4 text-neutral-500 hover:text-text-[var(--ink-3)]" />
+ )}
+ </button>
  </td>
  <td className="py-2 px-3 font-bold text-white align-middle whitespace-nowrap">
  <div className="flex items-center gap-2 min-w-0">
@@ -1479,9 +1479,9 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  </td>
  <td className="py-2 px-3 text-[#d1b375] align-middle whitespace-nowrap">
-   <span className="truncate max-w-[150px] sm:max-w-[200px] block" title={band.estilo_musical}>
-     {band.estilo_musical}
-   </span>
+ <span className="truncate max-w-[150px] sm:max-w-[200px] block" title={band.estilo_musical}>
+ {band.estilo_musical}
+ </span>
  </td>
  <td className="py-2 px-3 align-middle whitespace-nowrap">
  <span className="inline-flex items-center gap-1 text-text-[var(--ink-3)] max-w-[140px] sm:max-w-[190px]" title={band.localizacion}>
@@ -1713,14 +1713,14 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
 
  {/* Icono o Imagen / Logo de la Banda */}
- <div className="space-y-2 sm:col-span-2 p-3 bg-bg-[var(--surface)]/60 rounded-[var(--r-m)] border ">
+ <div className="space-y-2 sm:col-span-2 p-3 bg-bg-[var(--surface)]/60 rounded-[var(--r-m)] ">
  <label className="block text-[10px] font-mono uppercase text-[var(--acc)] font-bold">
  Icono o Logo / Foto de la Banda
  </label>
 
  <div className="flex flex-wrap items-center gap-3">
  {/* Preview current avatar */}
- <div className="w-10 h-10 rounded-full bg-neutral-800 border  flex items-center justify-center overflow-hidden shrink-0">
+ <div className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center overflow-hidden shrink-0">
  {formImageUrl ? (
  <img src={formImageUrl} alt="Logo Banda" className="w-full h-full object-cover" />
  ) : (
@@ -1752,7 +1752,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Upload file button */}
  <div className="shrink-0 space-y-1">
  <span className="text-[10px] text-text-[var(--ink-2)] block font-mono">O subir logo (Supabase):</span>
- <label className="cursor-pointer px-2.5 py-1.5 bg-neutral-800 hover:bg-neutral-700 border  rounded-[var(--r-m)] text-[10px] font-mono text-zinc-200 flex items-center gap-1.5 transition-all active:scale-95">
+ <label className="cursor-pointer px-2.5 py-1.5 bg-neutral-800 hover:bg-neutral-700 rounded-[var(--r-m)] text-[10px] font-mono text-zinc-200 flex items-center gap-1.5 transition-all active:scale-95">
  {isUploadingLogo ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
  ) : (
@@ -1969,33 +1969,33 @@ Bakandeya Agent Manager IA & Músicos`;
  isLoading={isAnalyzingTone}
  onReAnalyze={() => selectedToneBand && handleAnalyzeTone(selectedToneBand)}
  onUseTailoredPitch={(tailoredText) => {
-   setCustomPitchText(tailoredText);
-   setSelectedPitchBand(selectedToneBand);
-   setIsPitchModalOpen(true);
+ setCustomPitchText(tailoredText);
+ setSelectedPitchBand(selectedToneBand);
+ setIsPitchModalOpen(true);
  }}
  />
 
  <AIBandScoutModal
-  isOpen={isScoutModalOpen}
-  onClose={() => setIsScoutModalOpen(false)}
-  activeCampaign={activeCampaign}
-  onAddBands={handleImportScoutedBands}
-  isStitchLight={isStitchLight}
+ isOpen={isScoutModalOpen}
+ onClose={() => setIsScoutModalOpen(false)}
+ activeCampaign={activeCampaign}
+ onAddBands={handleImportScoutedBands}
+ isStitchLight={isStitchLight}
  />
 
 
 
-  {/* Bulk Progress Modal */}
-  <BulkProgressModal
-    isOpen={bulkProgressState.isOpen}
-    onClose={() => setBulkProgressState(prev => ({ ...prev, isOpen: false }))}
-    title={bulkProgressState.title}
-    subtitle={bulkProgressState.subtitle}
-    items={bulkProgressState.items}
-    currentIndex={bulkProgressState.currentIndex}
-    totalCount={bulkProgressState.totalCount}
-    isCompleted={bulkProgressState.isCompleted}
-  />
+ {/* Bulk Progress Modal */}
+ <BulkProgressModal
+ isOpen={bulkProgressState.isOpen}
+ onClose={() => setBulkProgressState(prev => ({ ...prev, isOpen: false }))}
+ title={bulkProgressState.title}
+ subtitle={bulkProgressState.subtitle}
+ items={bulkProgressState.items}
+ currentIndex={bulkProgressState.currentIndex}
+ totalCount={bulkProgressState.totalCount}
+ isCompleted={bulkProgressState.isCompleted}
+ />
 
  </div>
  );

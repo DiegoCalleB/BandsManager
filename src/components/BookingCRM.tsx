@@ -39,112 +39,112 @@ import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 const matchesMedioType = (l: Lead, filter: string): boolean => {
-  if (!filter || filter === 'todos') return true;
-  const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
-  if (filter === 'radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
-  if (filter === 'tv' || filter === 'television') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
-  if (filter === 'prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
-  if (filter === 'redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
-  if (filter === 'podcast' || filter === 'podcasts') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
-  return true;
+ if (!filter || filter === 'todos') return true;
+ const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
+ if (filter === 'radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
+ if (filter === 'tv' || filter === 'television') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
+ if (filter === 'prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
+ if (filter === 'redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
+ if (filter === 'podcast' || filter === 'podcasts') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
+ return true;
 };
 
 const matchesGruposType = (l: Lead, filter: string): boolean => {
-  if (!filter || filter === 'todos') return true;
-  const norm = normalizeType(l.tipo);
-  if (norm === filter) return true;
-  const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
-  if (filter === 'grupo') return norm === 'grupo' || txt.includes('grupo') || txt.includes('banda') || txt.includes('artista') || txt.includes('co-booking') || txt.includes('músico') || txt.includes('musico') || txt.includes('🎸');
-  if (filter === 'agencia') return norm === 'agencia' || txt.includes('agencia') || txt.includes('agency') || txt.includes('booking') || txt.includes('promotora') || txt.includes('💼');
-  if (filter === 'manager') return norm === 'manager' || txt.includes('manager') || txt.includes('mánager') || txt.includes('management') || txt.includes('representante') || txt.includes('👔');
-  if (filter === 'productora') return norm === 'productora' || txt.includes('productora') || txt.includes('producciones') || txt.includes('production') || txt.includes('eventos') || txt.includes('🎬');
-  if (filter === 'sello') return norm === 'sello' || txt.includes('sello') || txt.includes('discográfica') || txt.includes('discografica') || txt.includes('record') || txt.includes('label') || txt.includes('💿');
-  return true;
+ if (!filter || filter === 'todos') return true;
+ const norm = normalizeType(l.tipo);
+ if (norm === filter) return true;
+ const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
+ if (filter === 'grupo') return norm === 'grupo' || txt.includes('grupo') || txt.includes('banda') || txt.includes('artista') || txt.includes('co-booking') || txt.includes('músico') || txt.includes('musico') || txt.includes('🎸');
+ if (filter === 'agencia') return norm === 'agencia' || txt.includes('agencia') || txt.includes('agency') || txt.includes('booking') || txt.includes('promotora') || txt.includes('💼');
+ if (filter === 'manager') return norm === 'manager' || txt.includes('manager') || txt.includes('mánager') || txt.includes('management') || txt.includes('representante') || txt.includes('👔');
+ if (filter === 'productora') return norm === 'productora' || txt.includes('productora') || txt.includes('producciones') || txt.includes('production') || txt.includes('eventos') || txt.includes('🎬');
+ if (filter === 'sello') return norm === 'sello' || txt.includes('sello') || txt.includes('discográfica') || txt.includes('discografica') || txt.includes('record') || txt.includes('label') || txt.includes('💿');
+ return true;
 };
 
 interface BookingCRMProps {
-  leads: Lead[];
-  colors: ThemeColors;
-  onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void;
-  onAddLead?: (lead: Lead) => void;
-  onDeleteLead?: (id: string) => void;
-  onBulkDeleteLeads?: (ids: string[]) => void;
-  initialSection?: 'salas' | 'medios' | 'grupos';
-  onSectionChange?: (section: 'salas' | 'medios' | 'grupos' | 'bandas') => void;
-  onNavigate?: (view: any, options?: any) => void;
-  bandsCount?: number;
-  initialStatusFilter?: LeadStatus | 'todos';
-  initialSelectedLeadId?: string;
-  epkConfig?: Partial<EPKConfig>;
-  onUpdateEpkConfig?: (newConfig: Partial<EPKConfig>) => void;
-  currentBandId?: string;
-  currentUser?: any;
-  bandName?: string;
-  activeCampaign?: BookingCampaign | null;
-  onCampaignChange?: (campaign: BookingCampaign | null) => void;
+ leads: Lead[];
+ colors: ThemeColors;
+ onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void;
+ onAddLead?: (lead: Lead) => void;
+ onDeleteLead?: (id: string) => void;
+ onBulkDeleteLeads?: (ids: string[]) => void;
+ initialSection?: 'salas' | 'medios' | 'grupos';
+ onSectionChange?: (section: 'salas' | 'medios' | 'grupos' | 'bandas') => void;
+ onNavigate?: (view: any, options?: any) => void;
+ bandsCount?: number;
+ initialStatusFilter?: LeadStatus | 'todos';
+ initialSelectedLeadId?: string;
+ epkConfig?: Partial<EPKConfig>;
+ onUpdateEpkConfig?: (newConfig: Partial<EPKConfig>) => void;
+ currentBandId?: string;
+ currentUser?: any;
+ bandName?: string;
+ activeCampaign?: BookingCampaign | null;
+ onCampaignChange?: (campaign: BookingCampaign | null) => void;
 }
 
 import {
-  normalizeStatus,
-  normalizeType,
-  autoDetectVenueAddress,
-  VENUE_ADDRESS_DATABASE
+ normalizeStatus,
+ normalizeType,
+ autoDetectVenueAddress,
+ VENUE_ADDRESS_DATABASE
 } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
 
 export { 
-  normalizeStatus, 
-  normalizeType, 
-  autoDetectVenueAddress, 
-  VENUE_ADDRESS_DATABASE 
+ normalizeStatus, 
+ normalizeType, 
+ autoDetectVenueAddress, 
+ VENUE_ADDRESS_DATABASE 
 };
 
 export default function BookingCRM({ 
-  leads, 
-  colors, 
-  onUpdateLead, 
-  onAddLead, 
-  onDeleteLead,
-  onBulkDeleteLeads,
-  initialSection = 'salas',
-  onSectionChange,
-  onNavigate,
-  bandsCount,
-  initialStatusFilter = 'todos',
-  initialSelectedLeadId,
-  epkConfig,
-  onUpdateEpkConfig,
-  currentBandId,
-  currentUser,
-  bandName,
-  activeCampaign,
-  onCampaignChange
+ leads, 
+ colors, 
+ onUpdateLead, 
+ onAddLead, 
+ onDeleteLead,
+ onBulkDeleteLeads,
+ initialSection = 'salas',
+ onSectionChange,
+ onNavigate,
+ bandsCount,
+ initialStatusFilter = 'todos',
+ initialSelectedLeadId,
+ epkConfig,
+ onUpdateEpkConfig,
+ currentBandId,
+ currentUser,
+ bandName,
+ activeCampaign,
+ onCampaignChange
 }: BookingCRMProps) {
-  const bookingTutorial = useModuleTutorial('booking');
-  const effectiveBandName = bandName || 'Tu Banda';
-  const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
+ const bookingTutorial = useModuleTutorial('booking');
+ const effectiveBandName = bandName || 'Tu Banda';
+ const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
 
-  const handleSelectSectionTab = (tab: 'salas' | 'medios' | 'grupos') => {
-    setSectionTab(tab);
-    setTypeFilter('todos');
-    onSectionChange?.(tab);
-  };
+ const handleSelectSectionTab = (tab: 'salas' | 'medios' | 'grupos') => {
+ setSectionTab(tab);
+ setTypeFilter('todos');
+ onSectionChange?.(tab);
+ };
  const {
-   searchTerm, setSearchTerm,
-   statusFilter, setStatusFilter,
-   typeFilter, setTypeFilter,
-   selectedCityFilter, setSelectedCityFilter,
-   minCapacityFilter, setMinCapacityFilter,
-   onlyFavoritesFilter, setOnlyFavoritesFilter,
-   onlyVerifiedFilter, setOnlyVerifiedFilter,
-   savedFilters,
-   isSavingFilterOpen, setIsSavingFilterOpen,
-   newFilterName, setNewFilterName,
-   activeSavedFilterId, setActiveSavedFilterId,
-   handleApplySavedFilter,
-   handleSaveCurrentFilter,
-   handleDeleteSavedFilter,
-   handleClearAllFilters,
+ searchTerm, setSearchTerm,
+ statusFilter, setStatusFilter,
+ typeFilter, setTypeFilter,
+ selectedCityFilter, setSelectedCityFilter,
+ minCapacityFilter, setMinCapacityFilter,
+ onlyFavoritesFilter, setOnlyFavoritesFilter,
+ onlyVerifiedFilter, setOnlyVerifiedFilter,
+ savedFilters,
+ isSavingFilterOpen, setIsSavingFilterOpen,
+ newFilterName, setNewFilterName,
+ activeSavedFilterId, setActiveSavedFilterId,
+ handleApplySavedFilter,
+ handleSaveCurrentFilter,
+ handleDeleteSavedFilter,
+ handleClearAllFilters,
  } = useSavedFilters(sectionTab, setSectionTab, initialStatusFilter);
  const [isAgentConfigOpen, setIsAgentConfigOpen] = useState(false);
  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
@@ -175,92 +175,92 @@ export default function BookingCRM({
 
  const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
  const [bulkProgressState, setBulkProgressState] = useState<{
-   isOpen: boolean;
-   title: string;
-   subtitle?: string;
-   items: BulkProgressItem[];
-   currentIndex: number;
-   totalCount: number;
-   isCompleted: boolean;
+ isOpen: boolean;
+ title: string;
+ subtitle?: string;
+ items: BulkProgressItem[];
+ currentIndex: number;
+ totalCount: number;
+ isCompleted: boolean;
  }>({
-   isOpen: false,
-   title: '',
-   items: [],
-   currentIndex: 0,
-   totalCount: 0,
-   isCompleted: false
+ isOpen: false,
+ title: '',
+ items: [],
+ currentIndex: 0,
+ totalCount: 0,
+ isCompleted: false
  });
 
  const interventionPanelRef = React.useRef<HTMLDivElement>(null);
  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
 
  const {
-   customCityChips,
-   isAddingCityChip, setIsAddingCityChip,
-   newCityInput, setNewCityInput,
-   activeLeadsForSection,
-   cityCounts,
-   displayCityChips,
-   handleAddCustomCity,
-   handleRemoveCustomCity,
+ customCityChips,
+ isAddingCityChip, setIsAddingCityChip,
+ newCityInput, setNewCityInput,
+ activeLeadsForSection,
+ cityCounts,
+ displayCityChips,
+ handleAddCustomCity,
+ handleRemoveCustomCity,
  } = useCityChips(leads, sectionTab, epkConfig, onUpdateEpkConfig, selectedCityFilter, setSelectedCityFilter);
 
  const {
-   interactionType, setInteractionType,
-   interactionNotes, setInteractionNotes,
-   interactionResultado, setInteractionResultado,
-   interactionAutor, setInteractionAutor,
-   handleAddInteractionLog,
-   handleDeleteInteractionLog,
+ interactionType, setInteractionType,
+ interactionNotes, setInteractionNotes,
+ interactionResultado, setInteractionResultado,
+ interactionAutor, setInteractionAutor,
+ handleAddInteractionLog,
+ handleDeleteInteractionLog,
  } = useInteractionLog(selectedLead, setSelectedLead, onUpdateLead);
 
  const {
-   templateTab, setTemplateTab,
-   testPromptResult, isTestingPrompt,
-   isOptimizingTemplate, optimizationFeedbackMsg, setOptimizationFeedbackMsg,
-   templateCustomInstruction, setTemplateCustomInstruction,
-   templateToneRating, setTemplateToneRating,
-   templateContentRating, setTemplateContentRating,
-   templateStats,
-   getActiveTemplateData,
-   handleOptimizeTemplate,
-   handleTestPrompt,
-   handleSaveTemplates,
-   handleResetTemplate,
+ templateTab, setTemplateTab,
+ testPromptResult, isTestingPrompt,
+ isOptimizingTemplate, optimizationFeedbackMsg, setOptimizationFeedbackMsg,
+ templateCustomInstruction, setTemplateCustomInstruction,
+ templateToneRating, setTemplateToneRating,
+ templateContentRating, setTemplateContentRating,
+ templateStats,
+ getActiveTemplateData,
+ handleOptimizeTemplate,
+ handleTestPrompt,
+ handleSaveTemplates,
+ handleResetTemplate,
  } = useEmailTemplates();
 
  const {
-   gmailUser, gmailToken,
-   isSyncingGmail, gmailStatusMsg,
-   handleGmailLogin,
-   handleGmailLogout,
-   handleSyncGmailForLead,
+ gmailUser, gmailToken,
+ isSyncingGmail, gmailStatusMsg,
+ handleGmailLogin,
+ handleGmailLogout,
+ handleSyncGmailForLead,
  } = useGmailIntegration(selectedLead, setSelectedLead, onUpdateLead);
 
-  const [filterByCampaign, setFilterByCampaign] = useState(Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)));
+ const [filterByCampaign, setFilterByCampaign] = useState(Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)));
 
-  // Automatically activate campaign filter & reset conflicting manual search filters whenever a campaign is active
-  useEffect(() => {
-    if (activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
-      setFilterByCampaign(true);
-      if (sectionTab === 'salas') {
-        setSelectedCityFilter('');
-        setMinCapacityFilter(0);
-        setTypeFilter('todos');
-        setStatusFilter('todos');
-        setSearchTerm('');
-      }
-    }
-  }, [activeCampaign?.id, activeCampaign?.isActive, (activeCampaign as any)?.is_active]);
+ // Automatically activate campaign filter & reset conflicting manual search filters whenever a campaign is active
+ useEffect(() => {
+ if (activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
+ setFilterByCampaign(true);
+ if (sectionTab === 'salas') {
+ setSelectedCityFilter('');
+ setMinCapacityFilter(0);
+ setTypeFilter('todos');
+ setStatusFilter('todos');
+ setSearchTerm('');
+ }
+ }
+ }, [activeCampaign?.id, activeCampaign?.isActive, (activeCampaign as any)?.is_active]);
 
  // Keep selectedLead synchronized with the latest leads prop data
  useEffect(() => {
-   if (selectedLead) {
-     const updated = leads.find(l => l.id === selectedLead.id);
-     if (updated && updated !== selectedLead) {
-       setSelectedLead(updated);
-     }
-   }
+ if (selectedLead) {
+ const updated = leads.find(l => l.id === selectedLead.id);
+ if (updated && updated !== selectedLead) {
+ setSelectedLead(updated);
+ }
+ }
  }, [leads]);
 
  // Automatically detect & save address when a lead is selected
@@ -293,34 +293,34 @@ export default function BookingCRM({
  const [isDispatchingEmails, setIsDispatchingEmails] = useState(false);
 
  const handleTriggerEnviadorAgent = async (leadId?: string) => {
-   setIsDispatchingEmails(true);
-   try {
-     const data = await apiFetch('/api/trigger-agent', {
-       method: 'POST',
-       body: JSON.stringify({
-         agentName: 'enviador',
-         params: { id: leadId, trigger_type: 'usuario_manual' }
-       })
-     });
+ setIsDispatchingEmails(true);
+ try {
+ const data = await apiFetch('/api/trigger-agent', {
+ method: 'POST',
+ body: JSON.stringify({
+ agentName: 'enviador',
+ params: { id: leadId, trigger_type: 'usuario_manual' }
+ })
+ });
 
-     try {
-       window.dispatchEvent(new CustomEvent('app-data-updated'));
-     } catch (_) {}
+ try {
+ window.dispatchEvent(new CustomEvent('app-data-updated'));
+ } catch (_) {}
 
-     if (data.dispatchedCount > 0) {
-       alert(`¡Agente Enviador ejecutado con éxito! ${data.message || ''}`);
-     } else if (data.results && data.results.some((r: any) => r.status === 'error')) {
-       const errMsgs = data.results.filter((r: any) => r.status === 'error').map((r: any) => `${r.nombre_sala}: ${r.error}`).join('\n');
-       alert(`Aviso del Agente Enviador:\n${data.message || ''}\n\nDetalles:\n${errMsgs}`);
-     } else {
-       alert(data.message || 'No se encontraron correos aprobados pendientes de despacho.');
-     }
-   } catch (err: any) {
-     console.error('Error al ejecutar Agente Enviador:', err);
-     alert(`Error al ejecutar el Agente Enviador: ${err.message || 'Error de conexión'}`);
-   } finally {
-     setIsDispatchingEmails(false);
-   }
+ if (data.dispatchedCount > 0) {
+ alert(`¡Agente Enviador ejecutado con éxito! ${data.message || ''}`);
+ } else if (data.results && data.results.some((r: any) => r.status === 'error')) {
+ const errMsgs = data.results.filter((r: any) => r.status === 'error').map((r: any) => `${r.nombre_sala}: ${r.error}`).join('\n');
+ alert(`Aviso del Agente Enviador:\n${data.message || ''}\n\nDetalles:\n${errMsgs}`);
+ } else {
+ alert(data.message || 'No se encontraron correos aprobados pendientes de despacho.');
+ }
+ } catch (err: any) {
+ console.error('Error al ejecutar Agente Enviador:', err);
+ alert(`Error al ejecutar el Agente Enviador: ${err.message || 'Error de conexión'}`);
+ } finally {
+ setIsDispatchingEmails(false);
+ }
  };
  const [isAddingLeadModalOpen, setIsAddingLeadModalOpen] = useState(false);
  const [newLeadData, setNewLeadData] = useState({
@@ -345,27 +345,27 @@ export default function BookingCRM({
  const [isUploadingLeadLogo, setIsUploadingLeadLogo] = useState(false);
 
  const handleLeadLogoUpload = async (file: File, isEdit: boolean): Promise<string | null> => {
-  if (!currentBandId) {
-    alert('No hay ninguna banda activa para subir la imagen.');
-    return null;
-  }
-  try {
-    setIsUploadingLeadLogo(true);
-    const targetBandId = currentBandId;
-    const url = await uploadFileToServer(file, { bandId: targetBandId, category: 'leads' });
-    if (url) {
-      if (isEdit) {
-        setEditedLeadInfo(prev => ({ ...prev, imagen_url: url }));
-        if (selectedLead?.id) {
-          setSelectedLead(prev => prev ? { ...prev, imagen_url: url } : null);
-          onUpdateLead(selectedLead.id, { imagen_url: url });
-        }
-      } else {
-        setNewLeadData(prev => ({ ...prev, imagen_url: url }));
-      }
-      return url;
-    }
-  } catch (err) {
+ if (!currentBandId) {
+ alert('No hay ninguna banda activa para subir la imagen.');
+ return null;
+ }
+ try {
+ setIsUploadingLeadLogo(true);
+ const targetBandId = currentBandId;
+ const url = await uploadFileToServer(file, { bandId: targetBandId, category: 'leads' });
+ if (url) {
+ if (isEdit) {
+ setEditedLeadInfo(prev => ({ ...prev, imagen_url: url }));
+ if (selectedLead?.id) {
+ setSelectedLead(prev => prev ? { ...prev, imagen_url: url } : null);
+ onUpdateLead(selectedLead.id, { imagen_url: url });
+ }
+ } else {
+ setNewLeadData(prev => ({ ...prev, imagen_url: url }));
+ }
+ return url;
+ }
+ } catch (err) {
  console.error('Error uploading lead logo:', err);
  alert('Error al subir la imagen del logo a Supabase');
  } finally {
@@ -395,21 +395,21 @@ export default function BookingCRM({
 
 
  const {
-   isSimulatingAvanzado, setIsSimulatingAvanzado,
-   simulationRole,
-   simulationScenario,
-   simulationCustomInstruction, setSimulationCustomInstruction,
-   simulationSenderName, setSimulationSenderName,
-   simulationSubject, setSimulationSubject,
-   simulationMessage, setSimulationMessage,
-   isGeneratingSimulation,
-   simulationGenerated,
-   PREDEFINED_SCENARIOS,
-   handleRoleChange,
-   handleScenarioChange,
-   handleOpenAdvancedSimulation,
-   handleGenerateSimulationEmail,
-   handleCommitSimulation,
+ isSimulatingAvanzado, setIsSimulatingAvanzado,
+ simulationRole,
+ simulationScenario,
+ simulationCustomInstruction, setSimulationCustomInstruction,
+ simulationSenderName, setSimulationSenderName,
+ simulationSubject, setSimulationSubject,
+ simulationMessage, setSimulationMessage,
+ isGeneratingSimulation,
+ simulationGenerated,
+ PREDEFINED_SCENARIOS,
+ handleRoleChange,
+ handleScenarioChange,
+ handleOpenAdvancedSimulation,
+ handleGenerateSimulationEmail,
+ handleCommitSimulation,
  } = useNegotiationSimulation(selectedLead, setSelectedLead, onUpdateLead, setManualEmailStatus);
 
 
@@ -464,56 +464,56 @@ export default function BookingCRM({
 
  // Filter leads by active section tab
  const sectionLeads = useMemo(() => {
-    const seen = new Set<string>();
-    const isGruposType = (norm: string) => ['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(norm);
-    return (leads || []).filter(lead => {
-      if (!lead) return false;
-      const leadKey = lead.id ? String(lead.id).trim() : null;
-      if (leadKey && seen.has(leadKey)) return false;
-      if (leadKey) seen.add(leadKey);
+ const seen = new Set<string>();
+ const isGruposType = (norm: string) => ['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(norm);
+ return (leads || []).filter(lead => {
+ if (!lead) return false;
+ const leadKey = lead.id ? String(lead.id).trim() : null;
+ if (leadKey && seen.has(leadKey)) return false;
+ if (leadKey) seen.add(leadKey);
 
-      const norm = normalizeType(lead.tipo);
-      if (sectionTab === 'medios') return norm === 'medio';
-      if (sectionTab === 'grupos') return isGruposType(norm);
-      return norm !== 'medio' && !isGruposType(norm);
-    });
-  }, [leads, sectionTab]);
+ const norm = normalizeType(lead.tipo);
+ if (sectionTab === 'medios') return norm === 'medio';
+ if (sectionTab === 'grupos') return isGruposType(norm);
+ return norm !== 'medio' && !isGruposType(norm);
+ });
+ }, [leads, sectionTab]);
 
  const filteredLeads = useMemo(() => {
-   const seen = new Set<string>();
-   return sectionLeads.filter((lead, idx) => {
-     const leadKey = lead.id ? String(lead.id).trim() : `lead-${idx}`;
-     if (seen.has(leadKey)) return false;
-     seen.add(leadKey);
+ const seen = new Set<string>();
+ return sectionLeads.filter((lead, idx) => {
+ const leadKey = lead.id ? String(lead.id).trim() : `lead-${idx}`;
+ if (seen.has(leadKey)) return false;
+ seen.add(leadKey);
 
-     if (sectionTab === 'salas' && filterByCampaign && activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
-        // El filtrado por aforo, fechas y ciudad de campaña solo aplica a recintos y festivales (salas),
-        // ya que los medios de comunicación y bandas no tienen aforo ni fechas de evento en campaña.
-        if (!leadMatchesCampaignCity(lead, activeCampaign) || !leadMatchesCampaignCapacity(lead, activeCampaign) || !leadMatchesCampaignDates(lead, activeCampaign)) return false;
-     }
+ if (sectionTab === 'salas' && filterByCampaign && activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
+ // El filtrado por aforo, fechas y ciudad de campaña solo aplica a recintos y festivales (salas),
+ // ya que los medios de comunicación y bandas no tienen aforo ni fechas de evento en campaña.
+ if (!leadMatchesCampaignCity(lead, activeCampaign) || !leadMatchesCampaignCapacity(lead, activeCampaign) || !leadMatchesCampaignDates(lead, activeCampaign)) return false;
+ }
 
-     const matchesSearch = (lead.nombre_sala || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
-       (lead.ciudad || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-       (lead.region || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-       (lead.email_contacto && lead.email_contacto.toLowerCase().includes(searchTerm.toLowerCase()));
-     const normSt = normalizeStatus(lead.estado);
-     const matchesStatus = statusFilter === 'todos' || 
-       normSt === statusFilter || 
-       (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado);
+ const matchesSearch = (lead.nombre_sala || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+ (lead.ciudad || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+ (lead.region || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+ (lead.email_contacto && lead.email_contacto.toLowerCase().includes(searchTerm.toLowerCase()));
+ const normSt = normalizeStatus(lead.estado);
+ const matchesStatus = statusFilter === 'todos' || 
+ normSt === statusFilter || 
+ (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado);
 
-     const matchesType = typeFilter === 'todos'
-       ? true
-       : sectionTab === 'medios'
-       ? matchesMedioType(lead, typeFilter)
-       : sectionTab === 'grupos'
-       ? matchesGruposType(lead, typeFilter)
-       : normalizeType(lead.tipo) === typeFilter;
-     const matchesCity = !selectedCityFilter || 
-       (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) || 
-       (lead.region || '').toLowerCase().includes(selectedCityFilter.toLowerCase());
-     const matchesCapacity = !minCapacityFilter || ((lead.aforo || 0) >= minCapacityFilter);
-     return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity;
-   });
+ const matchesType = typeFilter === 'todos'
+ ? true
+ : sectionTab === 'medios'
+ ? matchesMedioType(lead, typeFilter)
+ : sectionTab === 'grupos'
+ ? matchesGruposType(lead, typeFilter)
+ : normalizeType(lead.tipo) === typeFilter;
+ const matchesCity = !selectedCityFilter || 
+ (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) || 
+ (lead.region || '').toLowerCase().includes(selectedCityFilter.toLowerCase());
+ const matchesCapacity = !minCapacityFilter || ((lead.aforo || 0) >= minCapacityFilter);
+ return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity;
+ });
  }, [sectionLeads, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, sectionTab, filterByCampaign, activeCampaign]);
 
  const handleModalScrape = async () => {
@@ -965,1015 +965,1015 @@ export default function BookingCRM({
  <div className={`${selectedLead ? 'lg:col-span-2' : 'w-full lg:col-span-3'} space-y-4 transition-all duration-300`}>
  <div className="space-y-3 sm:space-y-4">
  
-   {/* Header: Tabs + Unified Action Buttons */}
-  <div className="flex flex-col gap-3">
-    <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-      {/* SECCIONES PRINCIPALES DE CONTACTOS: ESCENARIOS, MEDIOS Y MANAGEMENT/PRODUCTORAS */}
-      <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-pill)] bg-[var(--sunken)] overflow-x-auto w-full sm:w-auto scrollbar-none">
-        <button
-          id="section-tab-salas"
-          type="button"
-          onClick={() => handleSelectSectionTab('salas')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-            sectionTab === 'salas'
-              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-              : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
-          }`}
-        >
-          <Building2 className="w-3.5 h-3.5 shrink-0" />
-          <span>Escenarios</span>
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
-            sectionTab === 'salas' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
-          }`}>
-            {leads.filter(l => !normalizeType(l.tipo).includes('medio') && !['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(normalizeType(l.tipo))).length}
-          </span>
-        </button>
+ {/* Header: Tabs + Unified Action Buttons */}
+ <div className="flex flex-col gap-3">
+ <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+ {/* SECCIONES PRINCIPALES DE CONTACTOS: ESCENARIOS, MEDIOS Y MANAGEMENT/PRODUCTORAS */}
+ <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-pill)] bg-[var(--sunken)] overflow-x-auto w-full sm:w-auto scrollbar-none">
+ <button
+ id="section-tab-salas"
+ type="button"
+ onClick={() => handleSelectSectionTab('salas')}
+ className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+ sectionTab === 'salas'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ }`}
+ >
+ <Building2 className="w-3.5 h-3.5 shrink-0" />
+ <span>Escenarios</span>
+ <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
+ sectionTab === 'salas' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
+ }`}>
+ {leads.filter(l => !normalizeType(l.tipo).includes('medio') && !['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(normalizeType(l.tipo))).length}
+ </span>
+ </button>
 
-        <button
-          id="section-tab-medios"
-          type="button"
-          onClick={() => handleSelectSectionTab('medios')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-            sectionTab === 'medios'
-              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-              : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
-          }`}
-        >
-          <Radio className="w-3.5 h-3.5 shrink-0" />
-          <span>Medios y Prensa</span>
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
-            sectionTab === 'medios' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
-          }`}>
-            {leads.filter(l => normalizeType(l.tipo) === 'medio').length}
-          </span>
-        </button>
+ <button
+ id="section-tab-medios"
+ type="button"
+ onClick={() => handleSelectSectionTab('medios')}
+ className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+ sectionTab === 'medios'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ }`}
+ >
+ <Radio className="w-3.5 h-3.5 shrink-0" />
+ <span>Medios y Prensa</span>
+ <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
+ sectionTab === 'medios' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
+ }`}>
+ {leads.filter(l => normalizeType(l.tipo) === 'medio').length}
+ </span>
+ </button>
 
-        <button
-          id="section-tab-grupos"
-          type="button"
-          onClick={() => handleSelectSectionTab('grupos')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-            sectionTab === 'grupos'
-              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-              : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
-          }`}
-        >
-          <Briefcase className="w-3.5 h-3.5 shrink-0" />
-          <span>Management & Productoras</span>
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
-            sectionTab === 'grupos' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
-          }`}>
-            {leads.filter(l => ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some(t => normalizeType(l.tipo).includes(t))).length}
-          </span>
-        </button>
+ <button
+ id="section-tab-grupos"
+ type="button"
+ onClick={() => handleSelectSectionTab('grupos')}
+ className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+ sectionTab === 'grupos'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ }`}
+ >
+ <Briefcase className="w-3.5 h-3.5 shrink-0" />
+ <span>Management & Productoras</span>
+ <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
+ sectionTab === 'grupos' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
+ }`}>
+ {leads.filter(l => ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some(t => normalizeType(l.tipo).includes(t))).length}
+ </span>
+ </button>
 
-        <button
-          id="section-tab-bandas"
-          type="button"
-          onClick={() => {
-            if (onNavigate) {
-              onNavigate('bandas');
-            } else if (onSectionChange) {
-              onSectionChange('bandas');
-            }
-          }}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer text-[var(--ink-3)] hover:text-[var(--ink)]"
-          title="Ver Red de Co-Booking y Grupos Amigos"
-        >
-          <Users className="w-3.5 h-3.5 shrink-0 text-[var(--acc-ink)]" />
-          <span>Grupos</span>
-          {typeof bandsCount === 'number' && bandsCount > 0 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums bg-[var(--sunken)] text-[var(--ink-3)]">
-              {bandsCount}
-            </span>
-          )}
-        </button>
-      </div>
+ <button
+ id="section-tab-bandas"
+ type="button"
+ onClick={() => {
+ if (onNavigate) {
+ onNavigate('bandas');
+ } else if (onSectionChange) {
+ onSectionChange('bandas');
+ }
+ }}
+ className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer text-[var(--ink-3)] hover:text-[var(--ink)]"
+ title="Ver Red de Co-Booking y Grupos Amigos"
+ >
+ <Users className="w-3.5 h-3.5 shrink-0 text-[var(--acc-ink)]" />
+ <span>Grupos</span>
+ {typeof bandsCount === 'number' && bandsCount > 0 && (
+ <span className="text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums bg-[var(--sunken)] text-[var(--ink-3)]">
+ {bandsCount}
+ </span>
+ )}
+ </button>
+ </div>
 
-      {/* UNIFIED ACTION BUTTONS */}
-      <div className="flex items-center gap-1.5 shrink-0 ml-auto">
-        <button
-          id="add-new-lead-btn"
-          type="button"
-          onClick={() => {
-            setNewLeadData({
-              nombre_sala: '',
-              ciudad: '',
-              region: 'Nacional',
-              direccion: '',
-              aforo: 0,
-              tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
-              email_contacto: '',
-              telefono: '',
-              website: '',
-              instagram: '',
-              fuente: '',
-              genero: sectionTab === 'medios' ? 'Radio' : sectionTab === 'grupos' ? 'Management / Booking' : 'Balkan / Ska',
-              notas: '',
-              pitch_generado: '',
-              icono: sectionTab === 'medios' ? '📻' : sectionTab === 'grupos' ? '💼' : '🏛️',
-              imagen_url: ''
-            });
-            setIsAddingLeadModalOpen(true);
-          }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-105 text-[var(--on-acc)] active:scale-95 cursor-pointer"
-          title="Añadir contacto"
-        >
-          <PlusCircle className="w-3.5 h-3.5" />
-          <span>Añadir {sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'contacto' : 'escenario'}</span>
-        </button>
+ {/* UNIFIED ACTION BUTTONS */}
+ <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+ <button
+ id="add-new-lead-btn"
+ type="button"
+ onClick={() => {
+ setNewLeadData({
+ nombre_sala: '',
+ ciudad: '',
+ region: 'Nacional',
+ direccion: '',
+ aforo: 0,
+ tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
+ email_contacto: '',
+ telefono: '',
+ website: '',
+ instagram: '',
+ fuente: '',
+ genero: sectionTab === 'medios' ? 'Radio' : sectionTab === 'grupos' ? 'Management / Booking' : 'Balkan / Ska',
+ notas: '',
+ pitch_generado: '',
+ icono: sectionTab === 'medios' ? '📻' : sectionTab === 'grupos' ? '💼' : '🏛️',
+ imagen_url: ''
+ });
+ setIsAddingLeadModalOpen(true);
+ }}
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-105 text-[var(--on-acc)] active:scale-95 cursor-pointer"
+ title="Añadir contacto"
+ >
+ <PlusCircle className="w-3.5 h-3.5" />
+ <span>Añadir {sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'contacto' : 'escenario'}</span>
+ </button>
 
-        <ModuleTutorialTrigger
-          moduleId="booking"
-          onClick={bookingTutorial.openTutorial}
-        />
+ <ModuleTutorialTrigger
+ moduleId="booking"
+ onClick={bookingTutorial.openTutorial}
+ />
 
-        <button
-          id="export-leads-btn"
-          type="button"
-          onClick={() => setIsExportLeadsOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] active:scale-95 cursor-pointer"
-          title="Exportar base de datos a Excel / CSV o JSON"
-        >
-          <Download className="w-3.5 h-3.5 text-[var(--ink-3)]" />
-          <span className="hidden sm:inline">Exportar Leads</span>
-          <span className="sm:hidden">Exportar</span>
-        </button>
+ <button
+ id="export-leads-btn"
+ type="button"
+ onClick={() => setIsExportLeadsOpen(true)}
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] active:scale-95 cursor-pointer"
+ title="Exportar base de datos a Excel / CSV o JSON"
+ >
+ <Download className="w-3.5 h-3.5 text-[var(--ink-3)]" />
+ <span className="hidden sm:inline">Exportar Leads</span>
+ <span className="sm:hidden">Exportar</span>
+ </button>
 
-        <button
-          id="open-tools-btn"
-          type="button"
-          onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
-            isMobileToolsOpen
-              ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-              : 'bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)]'
-          }`}
-          title="Herramientas, Scout, Excel y Agentes IA"
-        >
-          <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
-          <span className="hidden sm:inline">Herramientas e IA</span>
-          <span className="sm:hidden">Herramientas</span>
-          {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
-            <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-semibold tabular-nums">
-              {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length}
-            </span>
-          )}
-          {duplicateGroupsCount > 0 && (
-            <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-bold" title={`${duplicateGroupsCount} grupos de duplicados detectados`}>
-              {duplicateGroupsCount} dup
-            </span>
-          )}
-          {isMobileToolsOpen ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
-        </button>
-      </div>
-    </div>
+ <button
+ id="open-tools-btn"
+ type="button"
+ onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
+ className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
+ isMobileToolsOpen
+ ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ : 'bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)]'
+ }`}
+ title="Herramientas, Scout, Excel y Agentes IA"
+ >
+ <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
+ <span className="hidden sm:inline">Herramientas e IA</span>
+ <span className="sm:hidden">Herramientas</span>
+ {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
+ <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-semibold tabular-nums">
+ {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length}
+ </span>
+ )}
+ {duplicateGroupsCount > 0 && (
+ <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-bold" title={`${duplicateGroupsCount} grupos de duplicados detectados`}>
+ {duplicateGroupsCount} dup
+ </span>
+ )}
+ {isMobileToolsOpen ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
+ </button>
+ </div>
+ </div>
 
-    {/* EXPANDED IA TOOLS PANEL (Responsive on all screen sizes) */}
-    {isMobileToolsOpen && (
-      <div className="p-3.5 rounded-[var(--r-l)] border bg-[var(--surface)] /40 space-y-2.5 animate-in slide-in-from-top-2 duration-150 shadow-2xl">
-        <div className="flex items-center justify-between text-xs font-bold text-amber-300 pb-1.5 border-b border-white/10">
-          <span className="flex items-center gap-1.5">
-            <Wrench className="w-3.5 h-3.5" />
-            Herramientas e Inteligencia Artificial
-          </span>
-          <button
-            type="button"
-            onClick={() => setIsMobileToolsOpen(false)}
-            className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </div>
+ {/* EXPANDED IA TOOLS PANEL (Responsive on all screen sizes) */}
+ {isMobileToolsOpen && (
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-2.5 animate-in slide-in-from-top-2 duration-150 shadow-2xl">
+ <div className="flex items-center justify-between text-xs font-bold text-amber-300 pb-1.5 border-b border-white/10">
+ <span className="flex items-center gap-1.5">
+ <Wrench className="w-3.5 h-3.5" />
+ Herramientas e Inteligencia Artificial
+ </span>
+ <button
+ type="button"
+ onClick={() => setIsMobileToolsOpen(false)}
+ className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
+ >
+ <X className="w-3.5 h-3.5" />
+ </button>
+ </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-          <button
-            type="button"
-            disabled={isDispatchingEmails}
-            onClick={() => {
-              setIsMobileToolsOpen(false);
-              handleTriggerEnviadorAgent();
-            }}
-            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-emerald-200 transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
-          >
-            <span className="flex items-center gap-2">
-              {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" /> : <Send className="w-4 h-4 text-emerald-400" />}
-              <span>{isDispatchingEmails ? 'Despachando correos...' : `Agente Enviador (${leads.filter(l => ['aprobado', 'aprobado_propuesta', 'aprobado_respuesta'].includes(l.estado)).length} en cola de envío)`}</span>
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setIsPlacesExplorerOpen(true);
-              setIsMobileToolsOpen(false);
-            }}
-            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--acc-ink)] hover:bg-[var(--acc)] transition-all cursor-pointer shadow-sm active:scale-98"
-          >
-            <span className="flex items-center gap-2">
-              <Search className="w-4 h-4" />
-              Scout Descubridor (Buscar Nuevos Leads)
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
-          </button>
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+ <button
+ type="button"
+ disabled={isDispatchingEmails}
+ onClick={() => {
+ setIsMobileToolsOpen(false);
+ handleTriggerEnviadorAgent();
+ }}
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-emerald-200 transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
+ >
+ <span className="flex items-center gap-2">
+ {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" /> : <Send className="w-4 h-4 text-emerald-400" />}
+ <span>{isDispatchingEmails ? 'Despachando correos...' : `Agente Enviador (${leads.filter(l => ['aprobado', 'aprobado_propuesta', 'aprobado_respuesta'].includes(l.estado)).length} en cola de envío)`}</span>
+ </span>
+ <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+ </button>
+ <button
+ type="button"
+ onClick={() => {
+ setIsPlacesExplorerOpen(true);
+ setIsMobileToolsOpen(false);
+ }}
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--acc-ink)] hover:bg-[var(--acc)] transition-all cursor-pointer shadow-sm active:scale-98"
+ >
+ <span className="flex items-center gap-2">
+ <Search className="w-4 h-4" />
+ Scout Descubridor (Buscar Nuevos Leads)
+ </span>
+ <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+ </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              setIsExcelImportOpen(true);
-              setIsMobileToolsOpen(false);
-            }}
-            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200 transition-all cursor-pointer shadow-sm active:scale-98"
-          >
-            <span className="flex items-center gap-2">
-              <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
-              Importar Excel / CSV (Bandas y Salas)
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
-          </button>
+ <button
+ type="button"
+ onClick={() => {
+ setIsExcelImportOpen(true);
+ setIsMobileToolsOpen(false);
+ }}
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200 transition-all cursor-pointer shadow-sm active:scale-98"
+ >
+ <span className="flex items-center gap-2">
+ <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+ Importar Excel / CSV (Bandas y Salas)
+ </span>
+ <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+ </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              setIsDuplicatesModalOpen(true);
-              setIsMobileToolsOpen(false);
-            }}
-            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
-          >
-            <span className="flex items-center gap-2">
-              <Copy className="w-4 h-4 text-[var(--acc)]" />
-              Detector y Limpiador de Duplicados
-            </span>
-            {duplicateGroupsCount > 0 ? (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)] text-[var(--acc-ink)]">
-                {duplicateGroupsCount} {duplicateGroupsCount === 1 ? 'grupo' : 'grupos'}
-              </span>
-            ) : (
-              <span className="text-[10px] text-zinc-400 font-normal">0 duplicados</span>
-            )}
-          </button>
+ <button
+ type="button"
+ onClick={() => {
+ setIsDuplicatesModalOpen(true);
+ setIsMobileToolsOpen(false);
+ }}
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+ >
+ <span className="flex items-center gap-2">
+ <Copy className="w-4 h-4 text-[var(--acc)]" />
+ Detector y Limpiador de Duplicados
+ </span>
+ {duplicateGroupsCount > 0 ? (
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)] text-[var(--acc-ink)]">
+ {duplicateGroupsCount} {duplicateGroupsCount === 1 ? 'grupo' : 'grupos'}
+ </span>
+ ) : (
+ <span className="text-[10px] text-zinc-400 font-normal">0 duplicados</span>
+ )}
+ </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              setIsContactEnricherOpen(true);
-              setIsMobileToolsOpen(false);
-            }}
-            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-indigo-900/60 to-purple-900/60 hover:from-indigo-900/80 hover:to-purple-900/80 text-indigo-200 transition-all cursor-pointer shadow-sm active:scale-98"
-          >
-            <span className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-indigo-400" />
-              Agente Enriquecedor de Contactos ({leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length} sin email)
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
-          </button>
+ <button
+ type="button"
+ onClick={() => {
+ setIsContactEnricherOpen(true);
+ setIsMobileToolsOpen(false);
+ }}
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-indigo-900/60 to-purple-900/60 hover:from-indigo-900/80 hover:to-purple-900/80 text-indigo-200 transition-all cursor-pointer shadow-sm active:scale-98"
+ >
+ <span className="flex items-center gap-2">
+ <Sparkles className="w-4 h-4 text-indigo-400" />
+ Agente Enriquecedor de Contactos ({leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length} sin email)
+ </span>
+ <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+ </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              setIsAgentConfigOpen(true);
-              setIsMobileToolsOpen(false);
-            }}
-            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 transition-all cursor-pointer active:scale-98"
-          >
-            <span className="flex items-center gap-2">
-              <Bot className="w-4 h-4 text-amber-400" />
-              Configurar Agentes IA (Autonomía & Tono)
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
-          </button>
+ <button
+ type="button"
+ onClick={() => {
+ setIsAgentConfigOpen(true);
+ setIsMobileToolsOpen(false);
+ }}
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 transition-all cursor-pointer active:scale-98"
+ >
+ <span className="flex items-center gap-2">
+ <Bot className="w-4 h-4 text-amber-400" />
+ Configurar Agentes IA (Autonomía & Tono)
+ </span>
+ <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+ </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              setIsMobileToolsOpen(false);
-              setIsExportLeadsOpen(true);
-            }}
-            className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 transition-all cursor-pointer active:scale-98"
-          >
-            <Download className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Exportar Leads (A la vista / Todos / Excel)</span>
-          </button>
+ <button
+ type="button"
+ onClick={() => {
+ setIsMobileToolsOpen(false);
+ setIsExportLeadsOpen(true);
+ }}
+ className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 transition-all cursor-pointer active:scale-98"
+ >
+ <Download className="w-3.5 h-3.5 text-emerald-400" />
+ <span>Exportar Leads (A la vista / Todos / Excel)</span>
+ </button>
 
-          <button
-            type="button"
-            disabled={isEnrichingAddresses}
-            onClick={() => {
-              setIsMobileToolsOpen(false);
-              handleEnrichAddresses();
-            }}
-            className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border-zinc-700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
-          >
-            <MapPin className="w-3.5 h-3.5 text-zinc-400" />
-            <span>{isEnrichingAddresses ? 'Rellenando direcciones...' : 'Autocompletar Direcciones'}</span>
-          </button>
-        </div>
-      </div>
-    )}
+ <button
+ type="button"
+ disabled={isEnrichingAddresses}
+ onClick={() => {
+ setIsMobileToolsOpen(false);
+ handleEnrichAddresses();
+ }}
+ className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border-zinc-700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+ >
+ <MapPin className="w-3.5 h-3.5 text-zinc-400" />
+ <span>{isEnrichingAddresses ? 'Rellenando direcciones...' : 'Autocompletar Direcciones'}</span>
+ </button>
+ </div>
+ </div>
+ )}
 
-  {/* Search & View Mode Switcher Row */}
+ {/* Search & View Mode Switcher Row */}
  <div className="flex flex-col sm:flex-row gap-2.5 sm:items-center justify-between">
-   <div className="flex-1 flex gap-2">
-     {/* Search Input */}
-     <div className="relative flex-1">
-       <Search className="absolute left-3 top-2.5 h-4 w-4 pointer-events-none transition-colors text-[var(--acc-ink)]" />
-       <input
-         id="crm-search"
-         type="text"
-         placeholder={sectionTab === 'medios' ? "🔍 Buscar medio..." : sectionTab === 'grupos' ? "🔍 Buscar management..." : "🔍 Buscar escenario..."}
-         value={searchTerm}
-         onChange={(e) => setSearchTerm(e.target.value)}
-         className={`w-full rounded-[var(--r-m)] pl-9 ${searchTerm ? 'pr-8' : 'pr-3'} py-2 text-xs font-semibold font-sans transition-colors bg-[var(--sunken)] text-[var(--ink)] focus:ring-2 focus:ring-[var(--acc)]/40 placeholder:text-[var(--ink-3)]`}
-       />
-       {searchTerm && (
-         <button
-           id="crm-search-clear"
-           type="button"
-           onClick={() => setSearchTerm('')}
-           className="absolute right-2.5 top-2.5 p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
-           title="Borrar búsqueda"
-         >
-           <X className="w-3.5 h-3.5" />
-         </button>
-       )}
-     </div>
+ <div className="flex-1 flex gap-2">
+ {/* Search Input */}
+ <div className="relative flex-1">
+ <Search className="absolute left-3 top-2.5 h-4 w-4 pointer-events-none transition-colors text-[var(--acc-ink)]" />
+ <input
+ id="crm-search"
+ type="text"
+ placeholder={sectionTab === 'medios' ? "🔍 Buscar medio..." : sectionTab === 'grupos' ? "🔍 Buscar management..." : "🔍 Buscar escenario..."}
+ value={searchTerm}
+ onChange={(e) => setSearchTerm(e.target.value)}
+ className={`w-full rounded-[var(--r-m)] pl-9 ${searchTerm ? 'pr-8' : 'pr-3'} py-2 text-xs font-semibold font-sans transition-colors bg-[var(--sunken)] text-[var(--ink)] focus:ring-2 focus:ring-[var(--acc)]/40 placeholder:text-[var(--ink-3)]`}
+ />
+ {searchTerm && (
+ <button
+ id="crm-search-clear"
+ type="button"
+ onClick={() => setSearchTerm('')}
+ className="absolute right-2.5 top-2.5 p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
+ title="Borrar búsqueda"
+ >
+ <X className="w-3.5 h-3.5" />
+ </button>
+ )}
+ </div>
 
-     {/* Tipo Dropdown Selector */}
-     <div className="relative shrink-0">
-       <select
-         id="crm-type-filter-select"
-         value={typeFilter}
-         onChange={(e) => setTypeFilter(e.target.value as any)}
-         aria-label="Filtrar por tipo"
-         className={`px-3 py-2 pr-7 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors cursor-pointer appearance-none ${
-           typeFilter !== 'todos'
-             ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
-             : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-         }`}
-       >
-         {sectionTab === 'medios' ? (
-           <>
-             <option value="todos">🌟 Todos los medios ({sectionLeads.length})</option>
-             <option value="radio">📻 Radios</option>
-             <option value="tv">📺 TV</option>
-             <option value="prensa">📰 Prensa</option>
-             <option value="redes">📱 Redes</option>
-             <option value="podcast">🎙️ Podcasts</option>
-           </>
-         ) : sectionTab === 'grupos' ? (
-           <>
-             <option value="todos">🌟 Todas las entidades ({sectionLeads.length})</option>
-             <option value="grupo">🎸 Grupos</option>
-             <option value="agencia">💼 Agencias</option>
-             <option value="manager">👔 Mánagers</option>
-             <option value="productora">🎬 Productoras</option>
-             <option value="sello">💿 Sellos</option>
-           </>
-         ) : (
-           <>
-             <option value="todos">🌟 Tipo: Todos ({sectionLeads.length})</option>
-             <option value="sala">🏛️ Salas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'sala').length})</option>
-             <option value="festival">🎪 Festivales ({sectionLeads.filter(l => normalizeType(l.tipo) === 'festival').length})</option>
-             <option value="discoteca">🪩 Discotecas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'discoteca').length})</option>
-             <option value="ayuntamiento">🎆 Ayuntamientos ({sectionLeads.filter(l => normalizeType(l.tipo) === 'ayuntamiento').length})</option>
-           </>
-         )}
-       </select>
-       <ChevronDown className="w-3.5 h-3.5 absolute right-2 top-2.5 pointer-events-none opacity-60" />
-     </div>
+ {/* Tipo Dropdown Selector */}
+ <div className="relative shrink-0">
+ <select
+ id="crm-type-filter-select"
+ value={typeFilter}
+ onChange={(e) => setTypeFilter(e.target.value as any)}
+ aria-label="Filtrar por tipo"
+ className={`px-3 py-2 pr-7 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors cursor-pointer appearance-none ${
+ typeFilter !== 'todos'
+ ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ }`}
+ >
+ {sectionTab === 'medios' ? (
+ <>
+ <option value="todos">🌟 Todos los medios ({sectionLeads.length})</option>
+ <option value="radio">📻 Radios</option>
+ <option value="tv">📺 TV</option>
+ <option value="prensa">📰 Prensa</option>
+ <option value="redes">📱 Redes</option>
+ <option value="podcast">🎙️ Podcasts</option>
+ </>
+ ) : sectionTab === 'grupos' ? (
+ <>
+ <option value="todos">🌟 Todas las entidades ({sectionLeads.length})</option>
+ <option value="grupo">🎸 Grupos</option>
+ <option value="agencia">💼 Agencias</option>
+ <option value="manager">👔 Mánagers</option>
+ <option value="productora">🎬 Productoras</option>
+ <option value="sello">💿 Sellos</option>
+ </>
+ ) : (
+ <>
+ <option value="todos">🌟 Tipo: Todos ({sectionLeads.length})</option>
+ <option value="sala">🏛️ Salas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'sala').length})</option>
+ <option value="festival">🎪 Festivales ({sectionLeads.filter(l => normalizeType(l.tipo) === 'festival').length})</option>
+ <option value="discoteca">🪩 Discotecas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'discoteca').length})</option>
+ <option value="ayuntamiento">🎆 Ayuntamientos ({sectionLeads.filter(l => normalizeType(l.tipo) === 'ayuntamiento').length})</option>
+ </>
+ )}
+ </select>
+ <ChevronDown className="w-3.5 h-3.5 absolute right-2 top-2.5 pointer-events-none opacity-60" />
+ </div>
 
-     {/* Advanced Filters Button */}
-     <button
-       id="toggle-filters-btn"
-       type="button"
-       onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-       className={`flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-bold transition-colors shrink-0 cursor-pointer ${
-         activeFiltersCount > 0 || isMobileFiltersOpen
-           ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-           : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-       }`}
-       title="Filtros avanzados y búsquedas guardadas"
-     >
-       <Filter className="w-3.5 h-3.5" />
-       <span className="hidden sm:inline">Filtros</span>
-       {activeFiltersCount > 0 && (
-         <span className="w-4 h-4 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-[10px] font-bold flex items-center justify-center">
-           {activeFiltersCount}
-         </span>
-       )}
-     </button>
+ {/* Advanced Filters Button */}
+ <button
+ id="toggle-filters-btn"
+ type="button"
+ onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+ className={`flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-bold transition-colors shrink-0 cursor-pointer ${
+ activeFiltersCount > 0 || isMobileFiltersOpen
+ ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ }`}
+ title="Filtros avanzados y búsquedas guardadas"
+ >
+ <Filter className="w-3.5 h-3.5" />
+ <span className="hidden sm:inline">Filtros</span>
+ {activeFiltersCount > 0 && (
+ <span className="w-4 h-4 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-[10px] font-bold flex items-center justify-center">
+ {activeFiltersCount}
+ </span>
+ )}
+ </button>
 
-     {/* Filter by Campaign Toggle */}
-     {activeCampaign && (
-       <button
-         id="crm-campaign-filter-btn"
-         type="button"
-         onClick={() => setFilterByCampaign(!filterByCampaign)}
-         className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer ${
-           filterByCampaign
-             ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
-             : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-         }`}
-         title={filterByCampaign ? "Quitar filtro de campaña (ver todas las salas)" : "Filtrar únicamente salas objetivo de la campaña"}
-       >
-         <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-         <span className="hidden sm:inline">{filterByCampaign ? 'Filtro Campaña' : 'Filtrar Campaña'}</span>
-         {filterByCampaign && (
-           <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] text-[10px] font-semibold tabular-nums">
-             {filteredLeads.length}
-           </span>
-         )}
-       </button>
-     )}
-   </div>
+ {/* Filter by Campaign Toggle */}
+ {activeCampaign && (
+ <button
+ id="crm-campaign-filter-btn"
+ type="button"
+ onClick={() => setFilterByCampaign(!filterByCampaign)}
+ className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer ${
+ filterByCampaign
+ ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ }`}
+ title={filterByCampaign ? "Quitar filtro de campaña (ver todas las salas)" : "Filtrar únicamente salas objetivo de la campaña"}
+ >
+ <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
+ <span className="hidden sm:inline">{filterByCampaign ? 'Filtro Campaña' : 'Filtrar Campaña'}</span>
+ {filterByCampaign && (
+ <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] text-[10px] font-semibold tabular-nums">
+ {filteredLeads.length}
+ </span>
+ )}
+ </button>
+ )}
+ </div>
 
-   {/* View Mode Toggle Switcher */}
-   <div className="p-1 rounded-[var(--r-m)] flex items-center justify-between sm:justify-start gap-1 shrink-0 bg-[var(--sunken)]">
-     <button
-       id="crm-view-grid"
-       type="button"
-       onClick={() => setViewMode('grid')}
-       className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-         viewMode === 'grid'
-           ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-           : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
-       }`}
-       title="Vista en Tarjetas"
-     >
-       <LayoutGrid className="w-3.5 h-3.5" />
-       <span>Tarjetas</span>
-     </button>
-     <button
-       id="crm-view-table"
-       type="button"
-       onClick={() => setViewMode('table')}
-       className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-         viewMode === 'table'
-           ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-           : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
-       }`}
-       title="Vista en Detalles / Tabla"
-     >
-       <List className="w-3.5 h-3.5" />
-       <span>Detalles</span>
-     </button>
-     <button
-        id="crm-view-map"
-        type="button"
-        onClick={() => setViewMode('map')}
-        className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-          viewMode === 'map'
-            ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-            : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
-        }`}
-        title="Vista en Mapa GPS Interactivo"
-      >
-        <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-[var(--on-acc)]' : 'text-[var(--ink-3)]'}`} />
-        <span>Mapa</span>
-      </button>
-    </div>
-  </div>
+ {/* View Mode Toggle Switcher */}
+ <div className="p-1 rounded-[var(--r-m)] flex items-center justify-between sm:justify-start gap-1 shrink-0 bg-[var(--sunken)]">
+ <button
+ id="crm-view-grid"
+ type="button"
+ onClick={() => setViewMode('grid')}
+ className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+ viewMode === 'grid'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+ : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ }`}
+ title="Vista en Tarjetas"
+ >
+ <LayoutGrid className="w-3.5 h-3.5" />
+ <span>Tarjetas</span>
+ </button>
+ <button
+ id="crm-view-table"
+ type="button"
+ onClick={() => setViewMode('table')}
+ className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+ viewMode === 'table'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+ : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ }`}
+ title="Vista en Detalles / Tabla"
+ >
+ <List className="w-3.5 h-3.5" />
+ <span>Detalles</span>
+ </button>
+ <button
+ id="crm-view-map"
+ type="button"
+ onClick={() => setViewMode('map')}
+ className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+ viewMode === 'map'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+ : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ }`}
+ title="Vista en Mapa GPS Interactivo"
+ >
+ <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-[var(--on-acc)]' : 'text-[var(--ink-3)]'}`} />
+ <span>Mapa</span>
+ </button>
+ </div>
+ </div>
 
 
-    </div>
+ </div>
 
-  {/* Enrich Status Banner */}
-  {enrichStatusMsg && (
-    <div className={`p-2.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between gap-2 animate-fadeIn ${
-      enrichStatusMsg.includes('¡Éxito!')
-        ? 'bg-[var(--ok-soft)] text-[var(--ok)]'
-        : 'bg-[var(--sunken)] text-[var(--ink-2)]'
-    }`}>
-      <div className="flex items-center gap-2">
-        <MapPin className={`w-4 h-4 shrink-0 animate-bounce ${enrichStatusMsg.includes('¡Éxito!') ? 'text-[var(--ok)]' : 'text-[var(--ink-3)]'}`} />
-        <span>{enrichStatusMsg}</span>
-      </div>
-      <button 
-        type="button" 
-        onClick={() => setEnrichStatusMsg('')}
-        className="p-0.5 rounded-[var(--r-s)] hover:opacity-75 cursor-pointer"
-      >
-        <X className="w-3.5 h-3.5" />
-      </button>
-    </div>
-  )}
+ {/* Enrich Status Banner */}
+ {enrichStatusMsg && (
+ <div className={`p-2.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between gap-2 animate-fadeIn ${
+ enrichStatusMsg.includes('¡Éxito!')
+ ? 'bg-[var(--ok-soft)] text-[var(--ok)]'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+ }`}>
+ <div className="flex items-center gap-2">
+ <MapPin className={`w-4 h-4 shrink-0 animate-bounce ${enrichStatusMsg.includes('¡Éxito!') ? 'text-[var(--ok)]' : 'text-[var(--ink-3)]'}`} />
+ <span>{enrichStatusMsg}</span>
+ </div>
+ <button 
+ type="button" 
+ onClick={() => setEnrichStatusMsg('')}
+ className="p-0.5 rounded-[var(--r-s)] hover:opacity-75 cursor-pointer"
+ >
+ <X className="w-3.5 h-3.5" />
+ </button>
+ </div>
+ )}
 
-  {/* ⚡ UNIFIED COMPACT FILTERS PANEL (Desktop, Tablet & Mobile) */}
-  {isMobileFiltersOpen && (
-    <div className="p-3.5 rounded-[var(--r-l)] border bg-[var(--surface)] /40 space-y-3.5 shadow-2xl animate-in slide-in-from-top-2 duration-150">
-      <div className="flex items-center justify-between pb-2 border-b border-white/10">
-        <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-          <Filter className="w-3.5 h-3.5" />
-          Filtros y Búsquedas Avanzadas
-        </span>
-        <button
-          type="button"
-          onClick={() => setIsMobileFiltersOpen(false)}
-          className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
-        >
-          <X className="w-4 h-4" />
-        </button>
-      </div>
+ {/* ⚡ UNIFIED COMPACT FILTERS PANEL (Desktop, Tablet & Mobile) */}
+ {isMobileFiltersOpen && (
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-3.5 shadow-2xl animate-in slide-in-from-top-2 duration-150">
+ <div className="flex items-center justify-between pb-2 border-b border-white/10">
+ <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+ <Filter className="w-3.5 h-3.5" />
+ Filtros y Búsquedas Avanzadas
+ </span>
+ <button
+ type="button"
+ onClick={() => setIsMobileFiltersOpen(false)}
+ className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
+ >
+ <X className="w-4 h-4" />
+ </button>
+ </div>
 
-      {/* 1. Quick Toggles (Favoritos, Verificados, Aforo) */}
-      <div className="space-y-1.5">
-        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Opciones rápidas</p>
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            type="button"
-            onClick={() => setOnlyFavoritesFilter(!onlyFavoritesFilter)}
-            className={`px-2.5 py-1.5 rounded-[var(--r-s)] border text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
-              onlyFavoritesFilter
-                ? 'bg-amber-500/20 text-amber-300 /50'
-                : 'bg-black/40 text-text-[var(--ink-2)]  hover:text-white'
-            }`}
-          >
-            <span>⭐ Favoritos</span>
-            {onlyFavoritesFilter && <X className="w-3 h-3 ml-0.5" />}
-          </button>
+ {/* 1. Quick Toggles (Favoritos, Verificados, Aforo) */}
+ <div className="space-y-1.5">
+ <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Opciones rápidas</p>
+ <div className="flex items-center gap-2 flex-wrap">
+ <button
+ type="button"
+ onClick={() => setOnlyFavoritesFilter(!onlyFavoritesFilter)}
+ className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+ onlyFavoritesFilter
+ ? 'bg-amber-500/20 text-amber-300 /50'
+ : 'bg-black/40 text-text-[var(--ink-2)] hover:text-white'
+ }`}
+ >
+ <span>⭐ Favoritos</span>
+ {onlyFavoritesFilter && <X className="w-3 h-3 ml-0.5" />}
+ </button>
 
-          <button
-            type="button"
-            onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
-            className={`px-2.5 py-1.5 rounded-[var(--r-s)] border text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
-              onlyVerifiedFilter
-                ? 'bg-sky-500/20 text-sky-300 border-sky-500/50'
-                : 'bg-black/40 text-text-[var(--ink-2)]  hover:text-white'
-            }`}
-          >
-            <span>✔ Verificados</span>
-            {onlyVerifiedFilter && <X className="w-3 h-3 ml-0.5" />}
-          </button>
+ <button
+ type="button"
+ onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
+ className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+ onlyVerifiedFilter
+ ? 'bg-sky-500/20 text-sky-300 border-sky-500/50'
+ : 'bg-black/40 text-text-[var(--ink-2)] hover:text-white'
+ }`}
+ >
+ <span>✔ Verificados</span>
+ {onlyVerifiedFilter && <X className="w-3 h-3 ml-0.5" />}
+ </button>
 
-          <div className="flex items-center gap-1.5 bg-black/40 px-2.5 py-1.5 rounded-[var(--r-s)] border  text-xs">
-            <span className="text-text-[var(--ink-2)]">Aforo mín:</span>
-            <input
-              type="number"
-              placeholder="Ej: 300"
-              value={minCapacityFilter || ''}
-              onChange={(e) => setMinCapacityFilter(Number(e.target.value) || 0)}
-              className="w-16 bg-transparent text-[var(--acc)] font-bold focus:outline-none"
-            />
-            {minCapacityFilter > 0 && (
-              <button
-                type="button"
-                onClick={() => setMinCapacityFilter(0)}
-                className="text-neutral-500 hover:text-white cursor-pointer"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            )}
-          </div>
+ <div className="flex items-center gap-1.5 bg-black/40 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs">
+ <span className="text-text-[var(--ink-2)]">Aforo mín:</span>
+ <input
+ type="number"
+ placeholder="Ej: 300"
+ value={minCapacityFilter || ''}
+ onChange={(e) => setMinCapacityFilter(Number(e.target.value) || 0)}
+ className="w-16 bg-transparent text-[var(--acc)] font-bold focus:outline-none"
+ />
+ {minCapacityFilter > 0 && (
+ <button
+ type="button"
+ onClick={() => setMinCapacityFilter(0)}
+ className="text-neutral-500 hover:text-white cursor-pointer"
+ >
+ <X className="w-3 h-3" />
+ </button>
+ )}
+ </div>
 
-          {/* Button to save current filter */}
-          {!isSavingFilterOpen ? (
-            <button
-              type="button"
-              onClick={() => setIsSavingFilterOpen(true)}
-              className="px-2.5 py-1.5 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-s)] font-bold text-xs flex items-center gap-1 transition-all border-[var(--acc)]/30 cursor-pointer"
-              title="Guardar la combinación de filtros actual en 1 clic"
-            >
-              <BookmarkCheck className="w-3.5 h-3.5 text-[var(--acc)]" />
-              <span>💾 Guardar búsqueda</span>
-            </button>
-          ) : (
-            <form onSubmit={handleSaveCurrentFilter} className="flex items-center gap-1.5 animate-fadeIn">
-              <input
-                type="text"
-                autoFocus
-                placeholder="Nombre del filtro (ej: Salas BCN > 300)..."
-                value={newFilterName}
-                onChange={(e) => setNewFilterName(e.target.value)}
-                className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-zinc-900 border-[var(--acc)]/50 text-white focus:outline-none w-48 sm:w-56"
-              />
-              <button
-                type="submit"
-                className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
-              >
-                Guardar
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsSavingFilterOpen(false)}
-                className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-[var(--r-s)] cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </form>
-          )}
-        </div>
-      </div>
+ {/* Button to save current filter */}
+ {!isSavingFilterOpen ? (
+ <button
+ type="button"
+ onClick={() => setIsSavingFilterOpen(true)}
+ className="px-2.5 py-1.5 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-s)] font-bold text-xs flex items-center gap-1 transition-all border-[var(--acc)]/30 cursor-pointer"
+ title="Guardar la combinación de filtros actual en 1 clic"
+ >
+ <BookmarkCheck className="w-3.5 h-3.5 text-[var(--acc)]" />
+ <span>💾 Guardar búsqueda</span>
+ </button>
+ ) : (
+ <form onSubmit={handleSaveCurrentFilter} className="flex items-center gap-1.5 animate-fadeIn">
+ <input
+ type="text"
+ autoFocus
+ placeholder="Nombre del filtro (ej: Salas BCN > 300)..."
+ value={newFilterName}
+ onChange={(e) => setNewFilterName(e.target.value)}
+ className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-zinc-900 border-[var(--acc)]/50 text-white focus:outline-none w-48 sm:w-56"
+ />
+ <button
+ type="submit"
+ className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
+ >
+ Guardar
+ </button>
+ <button
+ type="button"
+ onClick={() => setIsSavingFilterOpen(false)}
+ className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-[var(--r-s)] cursor-pointer"
+ >
+ <X className="w-3.5 h-3.5" />
+ </button>
+ </form>
+ )}
+ </div>
+ </div>
 
-      {/* Saved Filters List */}
-      {savedFilters.length > 0 && (
-        <div className="space-y-1.5">
-          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Búsquedas guardadas</p>
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-            {savedFilters.map((sf) => {
-              const isActive = activeSavedFilterId === sf.id;
-              return (
-                <div
-                  key={sf.id}
-                  className={`group relative shrink-0 flex items-center rounded-full border transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold shadow-xs'
-                      : 'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-800 text-neutral-300'
-                  }`}
-                >
-                  <button
-                    type="button"
-                    onClick={() => handleApplySavedFilter(sf)}
-                    className="px-3 py-1 text-xs font-sans flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <span>📌 {sf.nombre}</span>
-                    {sf.minCapacityFilter ? (
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-amber-200">
-                        &gt;{sf.minCapacityFilter}
-                      </span>
-                    ) : null}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => handleDeleteSavedFilter(sf.id, e)}
-                    className="pr-2 text-neutral-500 hover:text-rose-400 transition-colors p-0.5 rounded-full cursor-pointer"
-                    title="Eliminar filtro guardado"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+ {/* Saved Filters List */}
+ {savedFilters.length > 0 && (
+ <div className="space-y-1.5">
+ <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Búsquedas guardadas</p>
+ <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+ {savedFilters.map((sf) => {
+ const isActive = activeSavedFilterId === sf.id;
+ return (
+ <div
+ key={sf.id}
+ className={`group relative shrink-0 flex items-center rounded-full transition-all cursor-pointer ${
+ isActive
+ ? 'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold shadow-xs'
+ : 'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-800 text-neutral-300'
+ }`}
+ >
+ <button
+ type="button"
+ onClick={() => handleApplySavedFilter(sf)}
+ className="px-3 py-1 text-xs font-sans flex items-center gap-1.5 cursor-pointer"
+ >
+ <span>📌 {sf.nombre}</span>
+ {sf.minCapacityFilter ? (
+ <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-amber-200">
+ &gt;{sf.minCapacityFilter}
+ </span>
+ ) : null}
+ </button>
+ <button
+ type="button"
+ onClick={(e) => handleDeleteSavedFilter(sf.id, e)}
+ className="pr-2 text-neutral-500 hover:text-rose-400 transition-colors p-0.5 rounded-full cursor-pointer"
+ title="Eliminar filtro guardado"
+ >
+ <X className="w-3 h-3" />
+ </button>
+ </div>
+ );
+ })}
+ </div>
+ </div>
+ )}
 
-      {/* 2. Tipo Filter */}
-      <div className="space-y-1.5">
-        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Tipo de espacio / contacto</p>
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {(sectionTab === 'medios'
-            ? [
-                { key: 'todos', label: '🌟 Todos' },
-                { key: 'radio', label: '📻 Radio' },
-                { key: 'tv', label: '📺 TV' },
-                { key: 'prensa', label: '📰 Prensa' },
-                { key: 'redes', label: '📱 Redes' },
-                { key: 'podcast', label: '🎙️ Podcasts' }
-              ] as const
-            : sectionTab === 'grupos'
-            ? [
-                { key: 'todos', label: '🌟 Todos' },
-                { key: 'productora', label: '🎬 Productoras' },
-                { key: 'manager', label: '👔 Mánagers' },
-                { key: 'agencia', label: '💼 Agencias' },
-                { key: 'sello', label: '💿 Sellos' },
-                { key: 'grupo', label: '🎸 Grupos' }
-              ] as const
-            : [
-                { key: 'todos', label: '🌟 Todos' },
-                { key: 'sala', label: '🏛️ Salas' },
-                { key: 'festival', label: '🎪 Festivales' },
-                { key: 'discoteca', label: '🪩 Discotecas' },
-                { key: 'ayuntamiento', label: '🎆 Ayuntamientos' }
-              ] as const
-          ).map(t => (
-            <button
-              key={t.key}
-              type="button"
-              onClick={() => setTypeFilter(t.key)}
-              className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
-                typeFilter === t.key
-                  ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-      </div>
+ {/* 2. Tipo Filter */}
+ <div className="space-y-1.5">
+ <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Tipo de espacio / contacto</p>
+ <div className="flex items-center gap-1.5 flex-wrap">
+ {(sectionTab === 'medios'
+ ? [
+ { key: 'todos', label: '🌟 Todos' },
+ { key: 'radio', label: '📻 Radio' },
+ { key: 'tv', label: '📺 TV' },
+ { key: 'prensa', label: '📰 Prensa' },
+ { key: 'redes', label: '📱 Redes' },
+ { key: 'podcast', label: '🎙️ Podcasts' }
+ ] as const
+ : sectionTab === 'grupos'
+ ? [
+ { key: 'todos', label: '🌟 Todos' },
+ { key: 'productora', label: '🎬 Productoras' },
+ { key: 'manager', label: '👔 Mánagers' },
+ { key: 'agencia', label: '💼 Agencias' },
+ { key: 'sello', label: '💿 Sellos' },
+ { key: 'grupo', label: '🎸 Grupos' }
+ ] as const
+ : [
+ { key: 'todos', label: '🌟 Todos' },
+ { key: 'sala', label: '🏛️ Salas' },
+ { key: 'festival', label: '🎪 Festivales' },
+ { key: 'discoteca', label: '🪩 Discotecas' },
+ { key: 'ayuntamiento', label: '🎆 Ayuntamientos' }
+ ] as const
+ ).map(t => (
+ <button
+ key={t.key}
+ type="button"
+ onClick={() => setTypeFilter(t.key)}
+ className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
+ typeFilter === t.key
+ ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+ }`}
+ >
+ {t.label}
+ </button>
+ ))}
+ </div>
+ </div>
 
-      {/* 3. Ciudad Filter */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between">
-          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Ciudad / Localidad</p>
-          {selectedCityFilter && (
-            <button
-              type="button"
-              onClick={() => setSelectedCityFilter('')}
-              className="text-[10px] text-amber-400 hover:underline cursor-pointer"
-            >
-              Ver todas
-            </button>
-          )}
-        </div>
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-          <button
-            type="button"
-            onClick={() => setSelectedCityFilter('')}
-            className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-all cursor-pointer ${
-              selectedCityFilter === ''
-                ? 'bg-[var(--surface)] text-[var(--acc)] font-bold'
-                : 'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
-            }`}
-          >
-            Todas ({activeLeadsForSection.length})
-          </button>
-          {displayCityChips.map(cityName => {
-            const isSelected = selectedCityFilter.toLowerCase() === cityName.toLowerCase();
-            const count = cityCounts[cityName] || 0;
-            return (
-              <button
-                key={cityName}
-                type="button"
-                onClick={() => setSelectedCityFilter(isSelected ? '' : cityName)}
-                className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
-                  isSelected
-                    ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold border-[var(--acc)]/50'
-                    : 'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
-                }`}
-              >
-                <span>{cityName}</span>
-                {count > 0 && <span className="opacity-70 text-[10px]">({count})</span>}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+ {/* 3. Ciudad Filter */}
+ <div className="space-y-1.5">
+ <div className="flex items-center justify-between">
+ <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Ciudad / Localidad</p>
+ {selectedCityFilter && (
+ <button
+ type="button"
+ onClick={() => setSelectedCityFilter('')}
+ className="text-[10px] text-amber-400 hover:underline cursor-pointer"
+ >
+ Ver todas
+ </button>
+ )}
+ </div>
+ <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+ <button
+ type="button"
+ onClick={() => setSelectedCityFilter('')}
+ className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-all cursor-pointer ${
+ selectedCityFilter === ''
+ ? 'bg-[var(--surface)] text-[var(--acc)] font-bold'
+ : 'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
+ }`}
+ >
+ Todas ({activeLeadsForSection.length})
+ </button>
+ {displayCityChips.map(cityName => {
+ const isSelected = selectedCityFilter.toLowerCase() === cityName.toLowerCase();
+ const count = cityCounts[cityName] || 0;
+ return (
+ <button
+ key={cityName}
+ type="button"
+ onClick={() => setSelectedCityFilter(isSelected ? '' : cityName)}
+ className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
+ isSelected
+ ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold border-[var(--acc)]/50'
+ : 'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
+ }`}
+ >
+ <span>{cityName}</span>
+ {count > 0 && <span className="opacity-70 text-[10px]">({count})</span>}
+ </button>
+ );
+ })}
+ </div>
+ </div>
 
-      {/* 4. Action Buttons Footer */}
-      <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
-        <button
-          type="button"
-          onClick={handleClearAllFilters}
-          className="text-xs text-zinc-400 hover:text-rose-400 flex items-center gap-1 px-2 py-1 cursor-pointer"
-        >
-          <RefreshCw className="w-3 h-3" />
-          <span>Limpiar filtros</span>
-        </button>
+ {/* 4. Action Buttons Footer */}
+ <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
+ <button
+ type="button"
+ onClick={handleClearAllFilters}
+ className="text-xs text-zinc-400 hover:text-rose-400 flex items-center gap-1 px-2 py-1 cursor-pointer"
+ >
+ <RefreshCw className="w-3 h-3" />
+ <span>Limpiar filtros</span>
+ </button>
 
-        <button
-          type="button"
-          onClick={() => setIsMobileFiltersOpen(false)}
-          className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--acc)] text-[var(--acc-ink)] cursor-pointer shadow-sm"
-        >
-          Ver {filteredLeads.length} resultados
-        </button>
-      </div>
-    </div>
-  )}
+ <button
+ type="button"
+ onClick={() => setIsMobileFiltersOpen(false)}
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--acc)] text-[var(--acc-ink)] cursor-pointer shadow-sm"
+ >
+ Ver {filteredLeads.length} resultados
+ </button>
+ </div>
+ </div>
+ )}
 
-  {/* Active Filters Pill Bar (Responsive on all screen sizes) */}
-  {activeFiltersCount > 0 && !isMobileFiltersOpen && (
-    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
-      <span className="text-[10px] uppercase font-bold text-amber-400 shrink-0">Filtros:</span>
-      {selectedCityFilter && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
-          📍 {selectedCityFilter}
-          <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
-        </span>
-      )}
-      {typeFilter !== 'todos' && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
-          🏛️ {typeFilter}
-          <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
-        </span>
-      )}
-      {onlyFavoritesFilter && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
-          ⭐ Favoritos
-          <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
-        </span>
-      )}
-      {onlyVerifiedFilter && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 shrink-0">
-          ✔ Verificados
-          <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
-        </span>
-      )}
-      {minCapacityFilter > 0 && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
-          &gt;{minCapacityFilter} pax
-          <button type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
-        </span>
-      )}
-      {activeSavedFilterId && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/50 shrink-0">
-          📌 {savedFilters.find(f => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
-          <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
-        </span>
-      )}
-      <button
-        type="button"
-        onClick={handleClearAllFilters}
-        className="text-xs text-zinc-400 hover:text-rose-400 shrink-0 underline ml-1 cursor-pointer"
-      >
-        Limpiar todo
-      </button>
-    </div>
-  )}
+ {/* Active Filters Pill Bar (Responsive on all screen sizes) */}
+ {activeFiltersCount > 0 && !isMobileFiltersOpen && (
+ <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
+ <span className="text-[10px] uppercase font-bold text-amber-400 shrink-0">Filtros:</span>
+ {selectedCityFilter && (
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
+ 📍 {selectedCityFilter}
+ <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ </span>
+ )}
+ {typeFilter !== 'todos' && (
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
+ 🏛️ {typeFilter}
+ <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ </span>
+ )}
+ {onlyFavoritesFilter && (
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
+ ⭐ Favoritos
+ <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ </span>
+ )}
+ {onlyVerifiedFilter && (
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 shrink-0">
+ ✔ Verificados
+ <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ </span>
+ )}
+ {minCapacityFilter > 0 && (
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 shrink-0">
+ &gt;{minCapacityFilter} pax
+ <button type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ </span>
+ )}
+ {activeSavedFilterId && (
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/50 shrink-0">
+ 📌 {savedFilters.find(f => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
+ <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ </span>
+ )}
+ <button
+ type="button"
+ onClick={handleClearAllFilters}
+ className="text-xs text-zinc-400 hover:text-rose-400 shrink-0 underline ml-1 cursor-pointer"
+ >
+ Limpiar todo
+ </button>
+ </div>
+ )}
 
-  {/* Main Status Tabs Bar (Clean, no-scrollbar, single row) */}
-  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-    {([
-      { key: 'todos', label: 'Todos' },
-      { key: 'nuevo', label: 'Por contactar' },
-      { key: 'esperando_respuesta', label: 'Contactados' },
-      { key: 'respondido', label: 'En conversación' },
-      { key: 'negociando', label: 'Negociando' },
-      { key: 'confirmado', label: 'Confirmados 🎉' },
-      { key: 'aplazado', label: 'Aplazados ⏳' },
-      { key: 'no_interesado', label: 'Descartados' }
-    ] as const).map(tab => {
-      const count = tab.key === 'todos' 
-        ? sectionLeads.length 
-        : sectionLeads.filter(l => {
-            const norm = normalizeStatus(l.estado);
-            if (tab.key === 'esperando_respuesta') return norm === 'esperando_respuesta' || norm === 'enviado';
-            return norm === tab.key;
-          }).length;
-      const isSelected = statusFilter === tab.key;
+ {/* Main Status Tabs Bar (Clean, no-scrollbar, single row) */}
+ <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+ {([
+ { key: 'todos', label: 'Todos' },
+ { key: 'nuevo', label: 'Por contactar' },
+ { key: 'esperando_respuesta', label: 'Contactados' },
+ { key: 'respondido', label: 'En conversación' },
+ { key: 'negociando', label: 'Negociando' },
+ { key: 'confirmado', label: 'Confirmados 🎉' },
+ { key: 'aplazado', label: 'Aplazados ⏳' },
+ { key: 'no_interesado', label: 'Descartados' }
+ ] as const).map(tab => {
+ const count = tab.key === 'todos' 
+ ? sectionLeads.length 
+ : sectionLeads.filter(l => {
+ const norm = normalizeStatus(l.estado);
+ if (tab.key === 'esperando_respuesta') return norm === 'esperando_respuesta' || norm === 'enviado';
+ return norm === tab.key;
+ }).length;
+ const isSelected = statusFilter === tab.key;
 
-      return (
-        <button
-          id={`crm-filter-${tab.key}`}
-          key={tab.key}
-          onClick={() => setStatusFilter(tab.key)}
-          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-colors shrink-0 cursor-pointer flex items-center gap-1.5 ${
-            isSelected
-              ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
-              : 'text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--sunken)]'
-          }`}
-        >
-          <span>{tab.label}</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
-            isSelected 
-              ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' 
-              : 'bg-black/10 text-[var(--ink-3)]'
-          }`}>
-            {count}
-          </span>
-        </button>
-      );
-    })}
-  </div>
+ return (
+ <button
+ id={`crm-filter-${tab.key}`}
+ key={tab.key}
+ onClick={() => setStatusFilter(tab.key)}
+ className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-colors shrink-0 cursor-pointer flex items-center gap-1.5 ${
+ isSelected
+ ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+ : 'text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--sunken)]'
+ }`}
+ >
+ <span>{tab.label}</span>
+ <span className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
+ isSelected 
+ ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' 
+ : 'bg-black/10 text-[var(--ink-3)]'
+ }`}>
+ {count}
+ </span>
+ </button>
+ );
+ })}
+ </div>
 
-  {/* 🎯 GMAIL-STYLE BULK ACTIONS BAR (STICKY AT TOP OF LIST) */}
-  <BulkLeadsActionBar
-    selectedCount={selectedLeadIds.length}
-    totalFilteredCount={filteredLeads.length}
-    isAllSelected={filteredLeads.length > 0 && filteredLeads.every(l => selectedLeadIds.includes(l.id))}
-    onSelectAll={() => setSelectedLeadIds(filteredLeads.map(l => l.id))}
-    onDeselectAll={() => setSelectedLeadIds([])}
-    onBulkStatusChange={(newStatus) => {
-      if (selectedLeadIds.length === 0) return;
-      selectedLeadIds.forEach(id => {
-        onUpdateLead(id, { estado: newStatus });
-      });
-    }}
-    onBulkToggleFavorite={(isFav) => {
-      if (selectedLeadIds.length === 0) return;
-      selectedLeadIds.forEach(id => {
-        onUpdateLead(id, { es_favorito: isFav });
-      });
-    }}
-    onBulkGeneratePitches={async () => {
-      const selectedList = leads.filter(l => selectedLeadIds.includes(l.id));
-      if (selectedList.length === 0) return;
+ {/* 🎯 GMAIL-STYLE BULK ACTIONS BAR (STICKY AT TOP OF LIST) */}
+ <BulkLeadsActionBar
+ selectedCount={selectedLeadIds.length}
+ totalFilteredCount={filteredLeads.length}
+ isAllSelected={filteredLeads.length > 0 && filteredLeads.every(l => selectedLeadIds.includes(l.id))}
+ onSelectAll={() => setSelectedLeadIds(filteredLeads.map(l => l.id))}
+ onDeselectAll={() => setSelectedLeadIds([])}
+ onBulkStatusChange={(newStatus) => {
+ if (selectedLeadIds.length === 0) return;
+ selectedLeadIds.forEach(id => {
+ onUpdateLead(id, { estado: newStatus });
+ });
+ }}
+ onBulkToggleFavorite={(isFav) => {
+ if (selectedLeadIds.length === 0) return;
+ selectedLeadIds.forEach(id => {
+ onUpdateLead(id, { es_favorito: isFav });
+ });
+ }}
+ onBulkGeneratePitches={async () => {
+ const selectedList = leads.filter(l => selectedLeadIds.includes(l.id));
+ if (selectedList.length === 0) return;
 
-      const initialItems: BulkProgressItem[] = selectedList.map(l => ({
-        id: l.id,
-        name: l.nombre_sala,
-        status: 'pending'
-      }));
+ const initialItems: BulkProgressItem[] = selectedList.map(l => ({
+ id: l.id,
+ name: l.nombre_sala,
+ status: 'pending'
+ }));
 
-      setBulkProgressState({
-        isOpen: true,
-        title: 'Generando Pitches con IA Agéntica',
-        subtitle: 'Redactando propuestas personalizadas basadas en el ADN de la banda',
-        items: initialItems,
-        currentIndex: 0,
-        totalCount: initialItems.length,
-        isCompleted: false
-      });
+ setBulkProgressState({
+ isOpen: true,
+ title: 'Generando Pitches con IA Agéntica',
+ subtitle: 'Redactando propuestas personalizadas basadas en el ADN de la banda',
+ items: initialItems,
+ currentIndex: 0,
+ totalCount: initialItems.length,
+ isCompleted: false
+ });
 
-      const updatedItems = [...initialItems];
+ const updatedItems = [...initialItems];
 
-      for (let i = 0; i < selectedList.length; i++) {
-        const targetLead = selectedList[i];
-        updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Contactando Agente Redactor...' };
-        setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
+ for (let i = 0; i < selectedList.length; i++) {
+ const targetLead = selectedList[i];
+ updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Contactando Agente Redactor...' };
+ setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
 
-        try {
-          const campaignIsActive = Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true));
-          const res = await apiFetch(`/api/leads/${targetLead.id}/regenerate-pitch`, {
-            method: 'POST',
-            body: JSON.stringify({
-              activeCampaign: campaignIsActive ? activeCampaign : undefined
-            })
-          });
+ try {
+ const campaignIsActive = Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true));
+ const res = await apiFetch(`/api/leads/${targetLead.id}/regenerate-pitch`, {
+ method: 'POST',
+ body: JSON.stringify({
+ activeCampaign: campaignIsActive ? activeCampaign : undefined
+ })
+ });
 
-          if (res.success && res.newPitchText) {
-            onUpdateLead(targetLead.id, {
-              pitch_generado: res.newPitchText,
-              estado: 'pendiente_aprobacion'
-            });
-            updatedItems[i] = {
-              ...updatedItems[i],
-              status: 'success',
-              detail: res.simulated ? 'Propuesta lista (motor local ADN)' : 'Propuesta redactada'
-            };
+ if (res.success && res.newPitchText) {
+ onUpdateLead(targetLead.id, {
+ pitch_generado: res.newPitchText,
+ estado: 'pendiente_aprobacion'
+ });
+ updatedItems[i] = {
+ ...updatedItems[i],
+ status: 'success',
+ detail: res.simulated ? 'Propuesta lista (motor local ADN)' : 'Propuesta redactada'
+ };
 
-          } else {
-            updatedItems[i] = { ...updatedItems[i], status: 'error', detail: res.error || 'No se pudo generar la propuesta' };
-          }
-        } catch (err: any) {
-          updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error al generar' };
-        }
+ } else {
+ updatedItems[i] = { ...updatedItems[i], status: 'error', detail: res.error || 'No se pudo generar la propuesta' };
+ }
+ } catch (err: any) {
+ updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error al generar' };
+ }
 
-        setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
-      }
+ setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
+ }
 
-      setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
-    }}
-    onBulkEnrich={async () => {
-      const selectedList = leads.filter(l => selectedLeadIds.includes(l.id));
-      if (selectedList.length === 0) return;
+ setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
+ }}
+ onBulkEnrich={async () => {
+ const selectedList = leads.filter(l => selectedLeadIds.includes(l.id));
+ if (selectedList.length === 0) return;
 
-      const initialItems: BulkProgressItem[] = selectedList.map(l => ({
-        id: l.id,
-        name: l.nombre_sala,
-        status: 'pending'
-      }));
+ const initialItems: BulkProgressItem[] = selectedList.map(l => ({
+ id: l.id,
+ name: l.nombre_sala,
+ status: 'pending'
+ }));
 
-      setBulkProgressState({
-        isOpen: true,
-        title: 'Enriquecimiento Masivo con Agente Scout',
-        subtitle: 'Buscando datos de contacto, aforo, dirección y redes',
-        items: initialItems,
-        currentIndex: 0,
-        totalCount: initialItems.length,
-        isCompleted: false
-      });
+ setBulkProgressState({
+ isOpen: true,
+ title: 'Enriquecimiento Masivo con Agente Scout',
+ subtitle: 'Buscando datos de contacto, aforo, dirección y redes',
+ items: initialItems,
+ currentIndex: 0,
+ totalCount: initialItems.length,
+ isCompleted: false
+ });
 
-      const updatedItems = [...initialItems];
+ const updatedItems = [...initialItems];
 
-      for (let i = 0; i < selectedList.length; i++) {
-        const targetLead = selectedList[i];
-        updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Buscando datos...' };
-        setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
+ for (let i = 0; i < selectedList.length; i++) {
+ const targetLead = selectedList[i];
+ updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Buscando datos...' };
+ setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
 
-        try {
-          const res = await apiFetch(`/api/leads/enrich-lead`, {
-            method: 'POST',
-            body: JSON.stringify({
-              name: targetLead.nombre_sala,
-              city: targetLead.ciudad || 'España'
-            })
-          });
+ try {
+ const res = await apiFetch(`/api/leads/enrich-lead`, {
+ method: 'POST',
+ body: JSON.stringify({
+ name: targetLead.nombre_sala,
+ city: targetLead.ciudad || 'España'
+ })
+ });
 
-          if (res.success && res.data) {
-            const d = res.data;
-            const updates: Partial<Lead> = {};
-            if (d.email && !targetLead.email_contacto) updates.email_contacto = d.email;
-            if (d.phone && !targetLead.telefono) updates.telefono = d.phone;
-            if (d.website && !targetLead.website) updates.website = d.website;
-            if (d.capacity && !targetLead.aforo) updates.aforo = d.capacity;
-            if (d.address && !targetLead.direccion) updates.direccion = d.address;
-            if (d.instagram && !targetLead.instagram) updates.instagram = d.instagram;
+ if (res.success && res.data) {
+ const d = res.data;
+ const updates: Partial<Lead> = {};
+ if (d.email && !targetLead.email_contacto) updates.email_contacto = d.email;
+ if (d.phone && !targetLead.telefono) updates.telefono = d.phone;
+ if (d.website && !targetLead.website) updates.website = d.website;
+ if (d.capacity && !targetLead.aforo) updates.aforo = d.capacity;
+ if (d.address && !targetLead.direccion) updates.direccion = d.address;
+ if (d.instagram && !targetLead.instagram) updates.instagram = d.instagram;
 
-            if (Object.keys(updates).length > 0) {
-              onUpdateLead(targetLead.id, updates);
-              updatedItems[i] = { ...updatedItems[i], status: 'success', detail: `Actualizado: ${Object.keys(updates).join(', ')}` };
-            } else {
-              updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Ficha al día' };
-            }
-          } else {
-            updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Sin datos nuevos' };
-          }
-        } catch (err: any) {
-          updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error en búsqueda' };
-        }
+ if (Object.keys(updates).length > 0) {
+ onUpdateLead(targetLead.id, updates);
+ updatedItems[i] = { ...updatedItems[i], status: 'success', detail: `Actualizado: ${Object.keys(updates).join(', ')}` };
+ } else {
+ updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Ficha al día' };
+ }
+ } else {
+ updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Sin datos nuevos' };
+ }
+ } catch (err: any) {
+ updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error en búsqueda' };
+ }
 
-        setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
-      }
+ setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
+ }
 
-      setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
-    }}
-    onBulkExportCsv={() => setIsExportLeadsOpen(true)}
-    onBulkDelete={() => {
-      if (selectedLeadIds.length === 0) return;
-      const idsToDelete = [...selectedLeadIds];
-      setSelectedLeadIds([]);
-      if (onBulkDeleteLeads) {
-        onBulkDeleteLeads(idsToDelete);
-      } else if (onDeleteLead) {
-        idsToDelete.forEach(id => onDeleteLead(id));
-      }
-    }}
-    sectionTab={sectionTab}
-    isStitchLight={isStitchLight}
-  />
+ setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
+ }}
+ onBulkExportCsv={() => setIsExportLeadsOpen(true)}
+ onBulkDelete={() => {
+ if (selectedLeadIds.length === 0) return;
+ const idsToDelete = [...selectedLeadIds];
+ setSelectedLeadIds([]);
+ if (onBulkDeleteLeads) {
+ onBulkDeleteLeads(idsToDelete);
+ } else if (onDeleteLead) {
+ idsToDelete.forEach(id => onDeleteLead(id));
+ }
+ }}
+ sectionTab={sectionTab}
+ isStitchLight={isStitchLight}
+ />
 
  {/* Main Display Area: Map vs List */}
  {viewMode === 'map' ? (
@@ -1987,165 +1987,165 @@ export default function BookingCRM({
  activeRegionFilter=""
  />
  ) : (
-  <LeadsTable
-     onDeleteLead={onDeleteLead}
-    leads={filteredLeads}
-    selectedLead={selectedLead}
-    onSelectLead={handleOpenLead}
-    onUpdateLead={onUpdateLead}
-    onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
-    viewMode={viewMode === 'grid' ? 'grid' : 'table'}
-    getStatusBadgeClass={getStatusBadgeClass}
-    getStatusLabel={getStatusLabel}
-    normalizeType={normalizeType}
-    sectionTab={sectionTab}
-    selectedLeadIds={selectedLeadIds}
-    onToggleSelectLead={(id, e) => {
-      if (e) e.stopPropagation();
-      setSelectedLeadIds(prev =>
-        prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-      );
-    }}
-    onSelectAllFiltered={() => {
-      setSelectedLeadIds(filteredLeads.map(l => l.id));
-    }}
-    onDeselectAll={() => setSelectedLeadIds([])}
-    isAllSelected={filteredLeads.length > 0 && filteredLeads.every(l => selectedLeadIds.includes(l.id))}
-    isSomeSelected={filteredLeads.length > 0 && filteredLeads.some(l => selectedLeadIds.includes(l.id))}
-  />
-  )}
-  </div>
-  </div>
+ <LeadsTable
+ onDeleteLead={onDeleteLead}
+ leads={filteredLeads}
+ selectedLead={selectedLead}
+ onSelectLead={handleOpenLead}
+ onUpdateLead={onUpdateLead}
+ onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
+ viewMode={viewMode === 'grid' ? 'grid' : 'table'}
+ getStatusBadgeClass={getStatusBadgeClass}
+ getStatusLabel={getStatusLabel}
+ normalizeType={normalizeType}
+ sectionTab={sectionTab}
+ selectedLeadIds={selectedLeadIds}
+ onToggleSelectLead={(id, e) => {
+ if (e) e.stopPropagation();
+ setSelectedLeadIds(prev =>
+ prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+ );
+ }}
+ onSelectAllFiltered={() => {
+ setSelectedLeadIds(filteredLeads.map(l => l.id));
+ }}
+ onDeselectAll={() => setSelectedLeadIds([])}
+ isAllSelected={filteredLeads.length > 0 && filteredLeads.every(l => selectedLeadIds.includes(l.id))}
+ isSomeSelected={filteredLeads.length > 0 && filteredLeads.some(l => selectedLeadIds.includes(l.id))}
+ />
+ )}
+ </div>
+ </div>
 
-  {/* DETAILED WORKSPACE PANEL (Desktop view - rendered when a lead is selected) */}
-  {selectedLead && (
-    <div ref={interventionPanelRef} className="hidden lg:block space-y-6 lg:col-span-1 transition-all duration-300">
-      <VenueDetailPanel
-        selectedLead={selectedLead}
-        onClose={() => setSelectedLead(null)}
-        onUpdateLead={onUpdateLead}
-        getStatusBadgeClass={getStatusBadgeClass}
-        getStatusLabel={getStatusLabel}
-        getStatusDotColor={getStatusDotColor}
-        normalizeStatus={normalizeStatus}
-        normalizeType={normalizeType}
-        autoDetectVenueAddress={autoDetectVenueAddress}
-        onDeleteLead={onDeleteLead}
-        sectionTab={sectionTab}
-        isStitchLight={isStitchLight}
-        activeCampaign={activeCampaign}
-        onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
-        isUploadingLeadLogo={isUploadingLeadLogo}
-      />
-    </div>
-  )}
+ {/* DETAILED WORKSPACE PANEL (Desktop view - rendered when a lead is selected) */}
+ {selectedLead && (
+ <div ref={interventionPanelRef} className="hidden lg:block space-y-6 lg:col-span-1 transition-all duration-300">
+ <VenueDetailPanel
+ selectedLead={selectedLead}
+ onClose={() => setSelectedLead(null)}
+ onUpdateLead={onUpdateLead}
+ getStatusBadgeClass={getStatusBadgeClass}
+ getStatusLabel={getStatusLabel}
+ getStatusDotColor={getStatusDotColor}
+ normalizeStatus={normalizeStatus}
+ normalizeType={normalizeType}
+ autoDetectVenueAddress={autoDetectVenueAddress}
+ onDeleteLead={onDeleteLead}
+ sectionTab={sectionTab}
+ isStitchLight={isStitchLight}
+ activeCampaign={activeCampaign}
+ onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
+ isUploadingLeadLogo={isUploadingLeadLogo}
+ />
+ </div>
+ )}
 
-  {/* MOBILE BOTTOM SHEET FOR TOUCH / SMARTPHONES */}
-  <MobileBottomSheet
-    selectedLead={selectedLead}
-    onClose={() => setSelectedLead(null)}
-    onUpdateLead={onUpdateLead}
-    onDeleteLead={onDeleteLead}
-    getStatusBadgeClass={getStatusBadgeClass}
-    getStatusLabel={getStatusLabel}
-    getStatusDotColor={getStatusDotColor}
-    normalizeStatus={normalizeStatus}
-    normalizeType={normalizeType}
-    autoDetectVenueAddress={autoDetectVenueAddress}
-    sectionTab={sectionTab}
-    isStitchLight={isStitchLight}
-    activeCampaign={activeCampaign}
-    onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
-    isUploadingLeadLogo={isUploadingLeadLogo}
-  />
+ {/* MOBILE BOTTOM SHEET FOR TOUCH / SMARTPHONES */}
+ <MobileBottomSheet
+ selectedLead={selectedLead}
+ onClose={() => setSelectedLead(null)}
+ onUpdateLead={onUpdateLead}
+ onDeleteLead={onDeleteLead}
+ getStatusBadgeClass={getStatusBadgeClass}
+ getStatusLabel={getStatusLabel}
+ getStatusDotColor={getStatusDotColor}
+ normalizeStatus={normalizeStatus}
+ normalizeType={normalizeType}
+ autoDetectVenueAddress={autoDetectVenueAddress}
+ sectionTab={sectionTab}
+ isStitchLight={isStitchLight}
+ activeCampaign={activeCampaign}
+ onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
+ isUploadingLeadLogo={isUploadingLeadLogo}
+ />
 </div>
 
-  {/* 3. EMAIL TEMPLATES & AI SETTINGS EDITOR CARD */}
-  <div id="ai-template-config-section" className="bg-[var(--surface)] p-4 sm:p-5 rounded-[var(--r-l)] transition-colors">
-    <div
-      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none"
-      onClick={() => setIsTemplatesSectionOpen(!isTemplatesSectionOpen)}
-    >
-      <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc-soft)] flex items-center justify-center text-[var(--acc-ink)] shrink-0">
-          <Settings className="w-4 h-4" />
-        </div>
-        <div>
-          <h3 className="text-sm font-bold font-display flex items-center gap-2 text-[var(--ink)]">
-            Configuración de plantillas y pautas AI (Redactor)
-          </h3>
-          <p className="text-[11px] font-sans mt-0.5 text-[var(--ink-3)]">
-            Personaliza el correo por defecto y las directrices del Redactor AI para Salas, Festivales, Medios y Grupos.
-          </p>
-        </div>
-      </div>
+ {/* 3. EMAIL TEMPLATES & AI SETTINGS EDITOR CARD */}
+ <div id="ai-template-config-section" className="bg-[var(--surface)] p-4 sm:p-5 rounded-[var(--r-l)] transition-colors">
+ <div
+ className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none"
+ onClick={() => setIsTemplatesSectionOpen(!isTemplatesSectionOpen)}
+ >
+ <div className="flex items-center gap-3">
+ <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc-soft)] flex items-center justify-center text-[var(--acc-ink)] shrink-0">
+ <Settings className="w-4 h-4" />
+ </div>
+ <div>
+ <h3 className="text-sm font-bold font-display flex items-center gap-2 text-[var(--ink)]">
+ Configuración de plantillas y pautas AI (Redactor)
+ </h3>
+ <p className="text-[11px] font-sans mt-0.5 text-[var(--ink-3)]">
+ Personaliza el correo por defecto y las directrices del Redactor AI para Salas, Festivales, Medios y Grupos.
+ </p>
+ </div>
+ </div>
 
-      <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsTemplatesSectionOpen(!isTemplatesSectionOpen);
-          }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
-            isTemplatesSectionOpen
-              ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-              : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-          }`}
-        >
-          <span>{isTemplatesSectionOpen ? 'Plegar' : 'Configurar'}</span>
-          {isTemplatesSectionOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-        </button>
-      </div>
-    </div>
+ <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+ <button
+ type="button"
+ onClick={(e) => {
+ e.stopPropagation();
+ setIsTemplatesSectionOpen(!isTemplatesSectionOpen);
+ }}
+ className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
+ isTemplatesSectionOpen
+ ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ }`}
+ >
+ <span>{isTemplatesSectionOpen ? 'Plegar' : 'Configurar'}</span>
+ {isTemplatesSectionOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+ </button>
+ </div>
+ </div>
 
-    {isTemplatesSectionOpen && (
-      <div className="mt-5 pt-4 border-t border-zinc-800/80 space-y-6">
-        <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
-          <div>
-            <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'}`}>
-              Pautas diferenciadas por categoría
-            </h4>
-          </div>
+ {isTemplatesSectionOpen && (
+ <div className="mt-5 pt-4 border-t border-zinc-800/80 space-y-6">
+ <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
+ <div>
+ <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'}`}>
+ Pautas diferenciadas por categoría
+ </h4>
+ </div>
 
-          {/* Template Tab Selector (7 Categories) */}
-          <div className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${
-            isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)]'
-          }`}>
-            {[
-              { id: 'salas', label: '🏛️ Salas', icon: Building2 },
-              { id: 'festivales', label: '🎪 Festivales', icon: Tent },
-              { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
-              { id: 'medios', label: '📻 Medios', icon: Radio },
-              { id: 'grupos', label: '🎸 Grupos', icon: Users },
-              { id: 'managements', label: '💼 Managements', icon: Briefcase },
-              { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark }
-            ].map((tab) => {
-              const isActive = templateTab === tab.id;
-              const IconComp = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  id={`template-tab-${tab.id}`}
-                  onClick={() => setTemplateTab(tab.id as TemplateCategory)}
-                  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
-                    isActive
-                      ? isStitchLight
-                        ? 'bg-white text-sky-400 shadow-sm'
-                        : 'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
-                      : isStitchLight
-                      ? 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
-                  }`}
-                >
-                  <IconComp className="w-3.5 h-3.5" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+ {/* Template Tab Selector (7 Categories) */}
+ <div className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${
+ isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)]'
+ }`}>
+ {[
+ { id: 'salas', label: '🏛️ Salas', icon: Building2 },
+ { id: 'festivales', label: '🎪 Festivales', icon: Tent },
+ { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
+ { id: 'medios', label: '📻 Medios', icon: Radio },
+ { id: 'grupos', label: '🎸 Grupos', icon: Users },
+ { id: 'managements', label: '💼 Managements', icon: Briefcase },
+ { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark }
+ ].map((tab) => {
+ const isActive = templateTab === tab.id;
+ const IconComp = tab.icon;
+ return (
+ <button
+ key={tab.id}
+ type="button"
+ id={`template-tab-${tab.id}`}
+ onClick={() => setTemplateTab(tab.id as TemplateCategory)}
+ className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
+ isActive
+ ? isStitchLight
+ ? 'bg-white text-sky-400 shadow-sm'
+ : 'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
+ : isStitchLight
+ ? 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ }`}
+ >
+ <IconComp className="w-3.5 h-3.5" />
+ <span>{tab.label}</span>
+ </button>
+ );
+ })}
+ </div>
+ </div>
 
  {/* Category Notice Banner */}
  {(() => {
@@ -2175,10 +2175,10 @@ export default function BookingCRM({
  {/* Form Side */}
  <div className="space-y-4">
  {optimizationFeedbackMsg && (
-   <div className="p-3 bg-amber-500/15 text-amber-200 text-[11px] rounded-[var(--r-m)] flex items-center justify-between font-sans animate-in fade-in">
-     <span>{optimizationFeedbackMsg}</span>
-     <button onClick={() => setOptimizationFeedbackMsg(null)} className="text-amber-400 font-bold ml-2 hover:text-white cursor-pointer">✕</button>
-   </div>
+ <div className="p-3 bg-amber-500/15 text-amber-200 text-[11px] rounded-[var(--r-m)] flex items-center justify-between font-sans animate-in fade-in">
+ <span>{optimizationFeedbackMsg}</span>
+ <button onClick={() => setOptimizationFeedbackMsg(null)} className="text-amber-400 font-bold ml-2 hover:text-white cursor-pointer">✕</button>
+ </div>
  )}
 
  <div className="space-y-1.5">
@@ -2239,9 +2239,9 @@ export default function BookingCRM({
  <button 
  type="button" 
  onClick={() => {
-   setTemplateToneRating(0);
-   setTemplateContentRating(0);
-   setTemplateCustomInstruction('');
+ setTemplateToneRating(0);
+ setTemplateContentRating(0);
+ setTemplateCustomInstruction('');
  }}
  className="text-[9px] text-amber-400 font-bold hover:underline cursor-pointer"
  >
@@ -2267,7 +2267,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
-   templateToneRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ templateToneRating >= star ? 'text-amber-400' : 'text-neutral-600'
  }`}
  title={`Calificar tono y estilo: ${star}/5`}
  >
@@ -2292,7 +2292,7 @@ export default function BookingCRM({
  type="button"
  onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
  className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
-   templateContentRating >= star ? 'text-amber-400' : 'text-neutral-600'
+ templateContentRating >= star ? 'text-amber-400' : 'text-neutral-600'
  }`}
  title={`Calificar contenido y estructura: ${star}/5`}
  >
@@ -2325,33 +2325,33 @@ export default function BookingCRM({
 
  {/* Success Stats Badge + Reset Button */}
  {templateStats && templateStats[templateTab] && (
-   <div className="space-y-2 pt-3 pb-2">
-     <div className="flex flex-wrap gap-2 items-center">
-       <span className="text-[9px] font-mono text-text-[var(--ink-2)]">📊 Resultados:</span>
-       <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-950 text-blue-300'}`}>
-         {templateStats[templateTab].totalUses} usos
-       </span>
-       <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ? 'bg-green-100 text-green-700' : 'bg-green-950 text-green-300') : (isStitchLight ? 'bg-yellow-100 text-yellow-700' : 'bg-yellow-950 text-yellow-300')}`}>
-         {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
-       </span>
-     </div>
-     {(templateStats[templateTab].invalidEmails > 0 || templateStats[templateTab].bouncedEmails > 0) && (
-       <div className="space-y-1">
-         {templateStats[templateTab].invalidEmails > 0 && (
-           <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-red-100 text-red-700' : 'bg-red-950 text-red-300'}`}>
-             <span>⚠️</span>
-             <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
-           </div>
-         )}
-         {templateStats[templateTab].bouncedEmails > 0 && (
-           <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-orange-100 text-orange-700' : 'bg-orange-950 text-orange-300'}`}>
-             <span>📬</span>
-             <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
-           </div>
-         )}
-       </div>
-     )}
-   </div>
+ <div className="space-y-2 pt-3 pb-2">
+ <div className="flex flex-wrap gap-2 items-center">
+ <span className="text-[9px] font-mono text-text-[var(--ink-2)]">📊 Resultados:</span>
+ <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-950 text-blue-300'}`}>
+ {templateStats[templateTab].totalUses} usos
+ </span>
+ <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ? 'bg-green-100 text-green-700' : 'bg-green-950 text-green-300') : (isStitchLight ? 'bg-yellow-100 text-yellow-700' : 'bg-yellow-950 text-yellow-300')}`}>
+ {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
+ </span>
+ </div>
+ {(templateStats[templateTab].invalidEmails > 0 || templateStats[templateTab].bouncedEmails > 0) && (
+ <div className="space-y-1">
+ {templateStats[templateTab].invalidEmails > 0 && (
+ <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-red-100 text-red-700' : 'bg-red-950 text-red-300'}`}>
+ <span>⚠️</span>
+ <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
+ </div>
+ )}
+ {templateStats[templateTab].bouncedEmails > 0 && (
+ <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-orange-100 text-orange-700' : 'bg-orange-950 text-orange-300'}`}>
+ <span>📬</span>
+ <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
+ </div>
+ )}
+ </div>
+ )}
+ </div>
  )}
 
  <div className="flex flex-wrap gap-2 pt-2">
@@ -2426,8 +2426,8 @@ export default function BookingCRM({
  <div className="space-y-3">
  <div className={`rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
  isStitchLight
- ? 'bg-white text-[var(--ink-2)] border '
- : 'bg-[#1c1b1b] text-neutral-300 border '
+ ? 'bg-white text-[var(--ink-2)] '
+ : 'bg-[#1c1b1b] text-neutral-300 '
  }`}>
  {testPromptResult}
  </div>
@@ -2532,139 +2532,139 @@ export default function BookingCRM({
 
  </div>
 
-  {/* ADD NEW LEAD / MEDIO MODAL */}
-  <NegotiationSimulationModal
-    isOpen={isSimulatingAvanzado}
-    selectedLead={selectedLead}
-    isStitchLight={isStitchLight}
-    textSub={textSub}
-    textMuted={textMuted}
-    simulationRole={simulationRole}
-    simulationScenario={simulationScenario}
-    simulationSenderName={simulationSenderName}
-    simulationSubject={simulationSubject}
-    simulationCustomInstruction={simulationCustomInstruction}
-    simulationMessage={simulationMessage}
-    simulationGenerated={simulationGenerated}
-    isGeneratingSimulation={isGeneratingSimulation}
-    predefinedScenarios={PREDEFINED_SCENARIOS}
-    onClose={() => setIsSimulatingAvanzado(false)}
-    onRoleChange={handleRoleChange}
-    onScenarioChange={handleScenarioChange}
-    onSenderNameChange={setSimulationSenderName}
-    onSubjectChange={setSimulationSubject}
-    onCustomInstructionChange={setSimulationCustomInstruction}
-    onMessageChange={setSimulationMessage}
-    onGenerate={handleGenerateSimulationEmail}
-    onCommit={handleCommitSimulation}
-  />
+ {/* ADD NEW LEAD / MEDIO MODAL */}
+ <NegotiationSimulationModal
+ isOpen={isSimulatingAvanzado}
+ selectedLead={selectedLead}
+ isStitchLight={isStitchLight}
+ textSub={textSub}
+ textMuted={textMuted}
+ simulationRole={simulationRole}
+ simulationScenario={simulationScenario}
+ simulationSenderName={simulationSenderName}
+ simulationSubject={simulationSubject}
+ simulationCustomInstruction={simulationCustomInstruction}
+ simulationMessage={simulationMessage}
+ simulationGenerated={simulationGenerated}
+ isGeneratingSimulation={isGeneratingSimulation}
+ predefinedScenarios={PREDEFINED_SCENARIOS}
+ onClose={() => setIsSimulatingAvanzado(false)}
+ onRoleChange={handleRoleChange}
+ onScenarioChange={handleScenarioChange}
+ onSenderNameChange={setSimulationSenderName}
+ onSubjectChange={setSimulationSubject}
+ onCustomInstructionChange={setSimulationCustomInstruction}
+ onMessageChange={setSimulationMessage}
+ onGenerate={handleGenerateSimulationEmail}
+ onCommit={handleCommitSimulation}
+ />
 
-  <AddLeadModal
-    isOpen={isAddingLeadModalOpen}
-    sectionTab={sectionTab}
-    isStitchLight={isStitchLight}
-    textSub={textSub}
-    newLeadData={newLeadData}
-    setNewLeadData={setNewLeadData}
-    isModalScraping={isModalScraping}
-    modalScrapeStatus={modalScrapeStatus}
-    modalScrapeError={modalScrapeError}
-    modalScrapeSuccessMsg={modalScrapeSuccessMsg}
-    isUploadingLeadLogo={isUploadingLeadLogo}
-    onClose={() => setIsAddingLeadModalOpen(false)}
-    onSubmit={handleAddNewLeadSubmit}
-    onModalScrape={handleModalScrape}
-    onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
-  />
+ <AddLeadModal
+ isOpen={isAddingLeadModalOpen}
+ sectionTab={sectionTab}
+ isStitchLight={isStitchLight}
+ textSub={textSub}
+ newLeadData={newLeadData}
+ setNewLeadData={setNewLeadData}
+ isModalScraping={isModalScraping}
+ modalScrapeStatus={modalScrapeStatus}
+ modalScrapeError={modalScrapeError}
+ modalScrapeSuccessMsg={modalScrapeSuccessMsg}
+ isUploadingLeadLogo={isUploadingLeadLogo}
+ onClose={() => setIsAddingLeadModalOpen(false)}
+ onSubmit={handleAddNewLeadSubmit}
+ onModalScrape={handleModalScrape}
+ onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
+ />
 
-  <GooglePlacesExplorerModal
-    isOpen={isPlacesExplorerOpen}
-    isStitchLight={isStitchLight}
-    existingLeads={leads}
-    activeCampaign={activeCampaign}
-    bandGenre={epkConfig?.genero || (currentUser as any)?.genero || ''}
-    bandName={effectiveBandName}
-    onClose={() => setIsPlacesExplorerOpen(false)}
-    onImportLeads={() => {
-      window.dispatchEvent(new CustomEvent('app-data-updated'));
-    }}
-  />
+ <GooglePlacesExplorerModal
+ isOpen={isPlacesExplorerOpen}
+ isStitchLight={isStitchLight}
+ existingLeads={leads}
+ activeCampaign={activeCampaign}
+ bandGenre={epkConfig?.genero || (currentUser as any)?.genero || ''}
+ bandName={effectiveBandName}
+ onClose={() => setIsPlacesExplorerOpen(false)}
+ onImportLeads={() => {
+ window.dispatchEvent(new CustomEvent('app-data-updated'));
+ }}
+ />
 
-  <ExcelImportModal
-    isOpen={isExcelImportOpen}
-    isStitchLight={isStitchLight}
-    existingLeads={leads}
-    onClose={() => setIsExcelImportOpen(false)}
-    onSuccess={(importedLeads, updatedCount) => {
-      window.dispatchEvent(new CustomEvent('app-data-updated'));
-      if (importedLeads.length > 0 && onAddLead) {
-        importedLeads.forEach(l => onAddLead(l));
-      }
-    }}
-  />
+ <ExcelImportModal
+ isOpen={isExcelImportOpen}
+ isStitchLight={isStitchLight}
+ existingLeads={leads}
+ onClose={() => setIsExcelImportOpen(false)}
+ onSuccess={(importedLeads, updatedCount) => {
+ window.dispatchEvent(new CustomEvent('app-data-updated'));
+ if (importedLeads.length > 0 && onAddLead) {
+ importedLeads.forEach(l => onAddLead(l));
+ }
+ }}
+ />
 
-  <CRMContactEnricherModal
-    isOpen={isContactEnricherOpen}
-    onClose={() => setIsContactEnricherOpen(false)}
-    leads={leads}
-    onUpdateLead={onUpdateLead}
-    isStitchLight={isStitchLight}
-  />
+ <CRMContactEnricherModal
+ isOpen={isContactEnricherOpen}
+ onClose={() => setIsContactEnricherOpen(false)}
+ leads={leads}
+ onUpdateLead={onUpdateLead}
+ isStitchLight={isStitchLight}
+ />
 
-  <AgentAutonomySettingsModal
-    isOpen={isAgentConfigOpen}
-    onClose={() => setIsAgentConfigOpen(false)}
-    bandName={effectiveBandName}
-    bandId={currentBandId || currentUser?.band_id || ''}
-    currentUser={currentUser}
-    isStitchLight={isStitchLight}
-    onOpenTemplatesSection={() => {
-      setIsTemplatesSectionOpen(true);
-      setTimeout(() => {
-        const el = document.getElementById('ai-template-config-section');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 50);
-    }}
-  />
+ <AgentAutonomySettingsModal
+ isOpen={isAgentConfigOpen}
+ onClose={() => setIsAgentConfigOpen(false)}
+ bandName={effectiveBandName}
+ bandId={currentBandId || currentUser?.band_id || ''}
+ currentUser={currentUser}
+ isStitchLight={isStitchLight}
+ onOpenTemplatesSection={() => {
+ setIsTemplatesSectionOpen(true);
+ setTimeout(() => {
+ const el = document.getElementById('ai-template-config-section');
+ if (el) el.scrollIntoView({ behavior: 'smooth' });
+ }, 50);
+ }}
+ />
 
-  <ExportLeadsModal
-    isOpen={isExportLeadsOpen}
-    onClose={() => setIsExportLeadsOpen(false)}
-    allLeads={leads}
-    filteredLeads={filteredLeads}
-    selectedLeadIds={selectedLeadIds}
-    bandName={effectiveBandName}
-  />
+ <ExportLeadsModal
+ isOpen={isExportLeadsOpen}
+ onClose={() => setIsExportLeadsOpen(false)}
+ allLeads={leads}
+ filteredLeads={filteredLeads}
+ selectedLeadIds={selectedLeadIds}
+ bandName={effectiveBandName}
+ />
 
-  <LeadDuplicatesModal
-    isOpen={isDuplicatesModalOpen}
-    onClose={() => setIsDuplicatesModalOpen(false)}
-    leads={leads}
-    onUpdateLead={(lead) => onUpdateLead(lead.id, lead)}
-    onDeleteLead={onDeleteLead}
-    isStitchLight={isStitchLight}
-  />
+ <LeadDuplicatesModal
+ isOpen={isDuplicatesModalOpen}
+ onClose={() => setIsDuplicatesModalOpen(false)}
+ leads={leads}
+ onUpdateLead={(lead) => onUpdateLead(lead.id, lead)}
+ onDeleteLead={onDeleteLead}
+ isStitchLight={isStitchLight}
+ />
 
 
 
-  {/* BULK PROGRESS MODAL */}
-  <BulkProgressModal
-    isOpen={bulkProgressState.isOpen}
-    onClose={() => setBulkProgressState(prev => ({ ...prev, isOpen: false }))}
-    title={bulkProgressState.title}
-    subtitle={bulkProgressState.subtitle}
-    items={bulkProgressState.items}
-    currentIndex={bulkProgressState.currentIndex}
-    totalCount={bulkProgressState.totalCount}
-    isCompleted={bulkProgressState.isCompleted}
-  />
+ {/* BULK PROGRESS MODAL */}
+ <BulkProgressModal
+ isOpen={bulkProgressState.isOpen}
+ onClose={() => setBulkProgressState(prev => ({ ...prev, isOpen: false }))}
+ title={bulkProgressState.title}
+ subtitle={bulkProgressState.subtitle}
+ items={bulkProgressState.items}
+ currentIndex={bulkProgressState.currentIndex}
+ totalCount={bulkProgressState.totalCount}
+ isCompleted={bulkProgressState.isCompleted}
+ />
 
-  {/* MODULE TUTORIAL MODAL */}
-  <ModuleTutorialModal
-    isOpen={bookingTutorial.isOpen}
-    onClose={bookingTutorial.closeTutorial}
-    moduleId="booking"
-  />
+ {/* MODULE TUTORIAL MODAL */}
+ <ModuleTutorialModal
+ isOpen={bookingTutorial.isOpen}
+ onClose={bookingTutorial.closeTutorial}
+ moduleId="booking"
+ />
 
  </div>
  );

@@ -1,44 +1,44 @@
 import React, { useState, useMemo } from 'react';
 import { ThemeColors, Payment, Concert, ConcertExpenseBreakdown } from '../types';
 import { 
-  TrendingUp, TrendingDown, DollarSign, Plus, Filter, Search, X,
-  CheckCircle2, AlertCircle, RefreshCw, Trash2, Calendar, FileText, Check, ArrowRight,
-  Calculator, Edit3, AlertTriangle, ShieldCheck
+ TrendingUp, TrendingDown, DollarSign, Plus, Filter, Search, X,
+ CheckCircle2, AlertCircle, RefreshCw, Trash2, Calendar, FileText, Check, ArrowRight,
+ Calculator, Edit3, AlertTriangle, ShieldCheck
 } from 'lucide-react';
 import { FinanceSummaryCards } from './finanzas/FinanceSummaryCards';
 import { AddTransactionModal } from './finanzas/AddTransactionModal';
 import { calculateFinancialSummary } from '../utils/financeUtils';
 
 interface FinanzasProps {
-  colors: ThemeColors;
-  payments: Payment[];
-  concerts?: Concert[];
-  onAddPayment: (payment: Payment) => Promise<void>;
-  onUpdatePayment: (id: string, updatedFields: Partial<Payment>) => Promise<void>;
-  onUpdateConcert?: (id: string, updatedFields: Partial<Concert>) => Promise<void>;
-  tours?: any[];
-  bandUsers?: any[];
+ colors: ThemeColors;
+ payments: Payment[];
+ concerts?: Concert[];
+ onAddPayment: (payment: Payment) => Promise<void>;
+ onUpdatePayment: (id: string, updatedFields: Partial<Payment>) => Promise<void>;
+ onUpdateConcert?: (id: string, updatedFields: Partial<Concert>) => Promise<void>;
+ tours?: any[];
+ bandUsers?: any[];
 }
 
 export default function Finanzas({ 
-  colors, 
-  payments = [], 
-  concerts = [], 
-  onAddPayment, 
-  onUpdatePayment,
-  onUpdateConcert 
+ colors, 
+ payments = [], 
+ concerts = [], 
+ onAddPayment, 
+ onUpdatePayment,
+ onUpdateConcert 
 }: FinanzasProps) {
-  // Tabs: 'analytics', 'ledger', 'rentabilidad'
-  const [activeTab, setActiveTab] = useState<'analytics' | 'ledger' | 'rentabilidad'>('rentabilidad');
+ // Tabs: 'analytics', 'ledger', 'rentabilidad'
+ const [activeTab, setActiveTab] = useState<'analytics' | 'ledger' | 'rentabilidad'>('rentabilidad');
 
-  // Edit concert expenses state
-  const [editingConcertId, setEditingConcertId] = useState<string | null>(null);
-  const [editingGasolina, setEditingGasolina] = useState<string>('0');
-  const [editingDietas, setEditingDietas] = useState<string>('0');
-  const [editingAlquiler, setEditingAlquiler] = useState<string>('0');
-  const [editingAlojamiento, setEditingAlojamiento] = useState<string>('0');
-  const [editingOtros, setEditingOtros] = useState<string>('0');
-  const [editingNotasGastos, setEditingNotasGastos] = useState<string>('');
+ // Edit concert expenses state
+ const [editingConcertId, setEditingConcertId] = useState<string | null>(null);
+ const [editingGasolina, setEditingGasolina] = useState<string>('0');
+ const [editingDietas, setEditingDietas] = useState<string>('0');
+ const [editingAlquiler, setEditingAlquiler] = useState<string>('0');
+ const [editingAlojamiento, setEditingAlojamiento] = useState<string>('0');
+ const [editingOtros, setEditingOtros] = useState<string>('0');
+ const [editingNotasGastos, setEditingNotasGastos] = useState<string>('');
 
  // Search & Filter State
  const [searchTerm, setSearchTerm] = useState('');
@@ -302,322 +302,322 @@ export default function Finanzas({
 
  {/* Active Tab View */}
  {activeTab === 'rentabilidad' && (
-   <div className="space-y-6">
-     {/* Summary KPI cards for Concert Profitability */}
-     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-       {(() => {
-         const totalConcertCache = concerts.reduce((acc, c) => acc + (c.cache || 0), 0);
-         const totalConcertGastos = concerts.reduce((acc, c) => {
-           const g = c.gastosDetalle;
-           const sum = g ? ((g.gasolina || 0) + (g.dietas || 0) + (g.alquilerVehiculo || 0) + (g.alojamiento || 0) + (g.otros || 0)) : 0;
-           return acc + (sum || c.gastosEstimadosTipicos || 150);
-         }, 0);
-         const totalBeneficioNeto = totalConcertCache - totalConcertGastos;
-         const mediaBeneficio = concerts.length > 0 ? totalBeneficioNeto / concerts.length : 0;
+ <div className="space-y-6">
+ {/* Summary KPI cards for Concert Profitability */}
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+ {(() => {
+ const totalConcertCache = concerts.reduce((acc, c) => acc + (c.cache || 0), 0);
+ const totalConcertGastos = concerts.reduce((acc, c) => {
+ const g = c.gastosDetalle;
+ const sum = g ? ((g.gasolina || 0) + (g.dietas || 0) + (g.alquilerVehiculo || 0) + (g.alojamiento || 0) + (g.otros || 0)) : 0;
+ return acc + (sum || c.gastosEstimadosTipicos || 150);
+ }, 0);
+ const totalBeneficioNeto = totalConcertCache - totalConcertGastos;
+ const mediaBeneficio = concerts.length > 0 ? totalBeneficioNeto / concerts.length : 0;
 
-         return (
-           <>
-             <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
-               <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Total Caché Contratado</span>
-               <h4 className="text-xl font-black text-amber-400">{totalConcertCache.toLocaleString('es-ES')}€</h4>
-               <p className="text-[10px] text-[var(--ink-2)]">{concerts.length} conciertos en catálogo</p>
-             </div>
+ return (
+ <>
+ <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
+ <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Total Caché Contratado</span>
+ <h4 className="text-xl font-black text-amber-400">{totalConcertCache.toLocaleString('es-ES')}€</h4>
+ <p className="text-[10px] text-[var(--ink-2)]">{concerts.length} conciertos en catálogo</p>
+ </div>
 
-             <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
-               <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Total Gastos Gira</span>
-               <h4 className="text-xl font-black text-rose-400">-{totalConcertGastos.toLocaleString('es-ES')}€</h4>
-               <p className="text-[10px] text-[var(--ink-2)]">Gasolina, dietas, furgoneta, hoteles</p>
-             </div>
+ <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
+ <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Total Gastos Gira</span>
+ <h4 className="text-xl font-black text-rose-400">-{totalConcertGastos.toLocaleString('es-ES')}€</h4>
+ <p className="text-[10px] text-[var(--ink-2)]">Gasolina, dietas, furgoneta, hoteles</p>
+ </div>
 
-             <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
-               <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Beneficio Neto Acumulado</span>
-               <h4 className={`text-xl font-black ${totalBeneficioNeto >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                 {totalBeneficioNeto >= 0 ? `+${totalBeneficioNeto.toLocaleString('es-ES')}€` : `${totalBeneficioNeto.toLocaleString('es-ES')}€`}
-               </h4>
-               <p className="text-[10px] text-[var(--ink-2)]">Beneficio tras cubrir gastos de gira</p>
-             </div>
+ <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
+ <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Beneficio Neto Acumulado</span>
+ <h4 className={`text-xl font-black ${totalBeneficioNeto >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+ {totalBeneficioNeto >= 0 ? `+${totalBeneficioNeto.toLocaleString('es-ES')}€` : `${totalBeneficioNeto.toLocaleString('es-ES')}€`}
+ </h4>
+ <p className="text-[10px] text-[var(--ink-2)]">Beneficio tras cubrir gastos de gira</p>
+ </div>
 
-             <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
-               <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Beneficio Medio / Bolo</span>
-               <h4 className="text-xl font-black text-amber-300">
-                 {mediaBeneficio >= 0 ? `+${Math.round(mediaBeneficio)}€` : `${Math.round(mediaBeneficio)}€`}
-               </h4>
-               <p className="text-[10px] text-[var(--ink-2)]">Rentabilidad media por actuación</p>
-             </div>
-           </>
-         );
-       })()}
-     </div>
+ <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
+ <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Beneficio Medio / Bolo</span>
+ <h4 className="text-xl font-black text-amber-300">
+ {mediaBeneficio >= 0 ? `+${Math.round(mediaBeneficio)}€` : `${Math.round(mediaBeneficio)}€`}
+ </h4>
+ <p className="text-[10px] text-[var(--ink-2)]">Rentabilidad media por actuación</p>
+ </div>
+ </>
+ );
+ })()}
+ </div>
 
-     {/* Concert Profitability Table */}
-     <div className={`${colors.card} p-5 rounded-[var(--r-m)] space-y-4`}>
-       <div className="flex items-center justify-between border-b /80 pb-3">
-         <h3 className="text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
-           <Calculator className="w-4 h-4" /> Desglose de Gastos & Rentabilidad por Bolo
-         </h3>
-         <span className="text-xs text-[var(--ink-3)]">Haz clic en "Gastos" para desglosar peajes, gasolina, hotel y dietas.</span>
-       </div>
+ {/* Concert Profitability Table */}
+ <div className={`${colors.card} p-5 rounded-[var(--r-m)] space-y-4`}>
+ <div className="flex items-center justify-between border-b /80 pb-3">
+ <h3 className="text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+ <Calculator className="w-4 h-4" /> Desglose de Gastos & Rentabilidad por Bolo
+ </h3>
+ <span className="text-xs text-[var(--ink-3)]">Haz clic en "Gastos" para desglosar peajes, gasolina, hotel y dietas.</span>
+ </div>
 
-       <div className="overflow-x-auto">
-         <table className="w-full text-left text-xs">
-           <thead className="bg-slate-950/80 text-amber-400 uppercase font-bold font-mono text-[10px] border-b ">
-             <tr>
-               <th className="p-3">Fecha & Bolo</th>
-               <th className="p-3">Ciudad / Sala</th>
-               <th className="p-3">Caché (€)</th>
-               <th className="p-3">Desglose de Gastos (€)</th>
-               <th className="p-3">Gastos Totales</th>
-               <th className="p-3">Beneficio Neto</th>
-               <th className="p-3 text-center">Estado Rentabilidad</th>
-               <th className="p-3 text-right">Acción</th>
-             </tr>
-           </thead>
-           <tbody className="divide-y divide-slate-800/60">
-             {concerts.length > 0 ? (
-               concerts.map(c => {
-                 const g = c.gastosDetalle || {};
-                 const gasolina = g.gasolina || 0;
-                 const dietas = g.dietas || 0;
-                 const alquiler = g.alquilerVehiculo || 0;
-                 const alojamiento = g.alojamiento || 0;
-                 const otros = g.otros || 0;
-                 
-                 const hasCustomGastos = !!c.gastosDetalle;
-                 const totalGastosBolo = hasCustomGastos 
-                   ? (gasolina + dietas + alquiler + alojamiento + otros)
-                   : (c.gastosEstimadosTipicos || 150);
+ <div className="overflow-x-auto">
+ <table className="w-full text-left text-xs">
+ <thead className="bg-slate-950/80 text-amber-400 uppercase font-bold font-mono text-[10px] border-b ">
+ <tr>
+ <th className="p-3">Fecha & Bolo</th>
+ <th className="p-3">Ciudad / Sala</th>
+ <th className="p-3">Caché (€)</th>
+ <th className="p-3">Desglose de Gastos (€)</th>
+ <th className="p-3">Gastos Totales</th>
+ <th className="p-3">Beneficio Neto</th>
+ <th className="p-3 text-center">Estado Rentabilidad</th>
+ <th className="p-3 text-right">Acción</th>
+ </tr>
+ </thead>
+ <tbody className="divide-y divide-slate-800/60">
+ {concerts.length > 0 ? (
+ concerts.map(c => {
+ const g = c.gastosDetalle || {};
+ const gasolina = g.gasolina || 0;
+ const dietas = g.dietas || 0;
+ const alquiler = g.alquilerVehiculo || 0;
+ const alojamiento = g.alojamiento || 0;
+ const otros = g.otros || 0;
+ 
+ const hasCustomGastos = !!c.gastosDetalle;
+ const totalGastosBolo = hasCustomGastos 
+ ? (gasolina + dietas + alquiler + alojamiento + otros)
+ : (c.gastosEstimadosTipicos || 150);
 
-                 const beneficioNeto = (c.cache || 0) - totalGastosBolo;
-                 const margenPct = c.cache > 0 ? Math.round((beneficioNeto / c.cache) * 100) : 0;
-                  const numConvocados = c.convocatoria_tipo === "parcial" && c.convocados_ids && c.convocados_ids.length > 0
-                    ? c.convocados_ids.length 
-                    : (c.convocados_nombres && c.convocados_nombres.length > 0 ? c.convocados_nombres.length : 5);
-                  const netoPorMusico = Math.round(beneficioNeto / (numConvocados || 1));
+ const beneficioNeto = (c.cache || 0) - totalGastosBolo;
+ const margenPct = c.cache > 0 ? Math.round((beneficioNeto / c.cache) * 100) : 0;
+ const numConvocados = c.convocatoria_tipo === "parcial" && c.convocados_ids && c.convocados_ids.length > 0
+ ? c.convocados_ids.length 
+ : (c.convocados_nombres && c.convocados_nombres.length > 0 ? c.convocados_nombres.length : 5);
+ const netoPorMusico = Math.round(beneficioNeto / (numConvocados || 1));
 
-                 let alertBadge = {
-                   label: '🟢 Rentable',
-                   bgColor: 'bg-emerald-950/80 border-emerald-500/40 text-emerald-400'
-                 };
+ let alertBadge = {
+ label: '🟢 Rentable',
+ bgColor: 'bg-emerald-950/80 border-emerald-500/40 text-emerald-400'
+ };
 
-                 if (beneficioNeto < 0) {
-                   alertBadge = {
-                     label: '🔴 En Pérdidas',
-                     bgColor: 'bg-rose-950/80 border-rose-500/50 text-rose-400'
-                   };
-                 } else if (beneficioNeto < 150) {
-                   alertBadge = {
-                     label: '🟡 Ajustado',
-                     bgColor: 'bg-amber-950/80 /40 text-amber-300'
-                   };
-                 }
+ if (beneficioNeto < 0) {
+ alertBadge = {
+ label: '🔴 En Pérdidas',
+ bgColor: 'bg-rose-950/80 border-rose-500/50 text-rose-400'
+ };
+ } else if (beneficioNeto < 150) {
+ alertBadge = {
+ label: '🟡 Ajustado',
+ bgColor: 'bg-amber-950/80 /40 text-amber-300'
+ };
+ }
 
-                 return (
-                   <tr key={c.id} className="hover:bg-[var(--surface)]/30 transition">
-                     <td className="p-3 font-mono text-[var(--ink-3)]">
-                       <span className="font-bold text-white block">{c.fecha}</span>
-                       <span className="text-[10px] text-[var(--ink-2)] capitalize">{c.tipo}</span>
-                          {c.giraNombre && (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-mono">
-                              🚐 {c.giraNombre}
-                            </span>
-                          )}
-                     </td>
-                     <td className="p-3">
-                       <span className="font-bold text-white block">{c.sala}</span>
-                       <span className="text-[10px] text-[var(--ink-3)]">{c.ciudad}</span>
-                        {c.convocatoria_tipo === "parcial" ? (
-                          <span className="inline-block mt-0.5 text-[9px] text-purple-300 bg-purple-500/10 px-1.5 py-0.2 rounded font-mono" title={c.convocados_nombres?.join(", ")}>
-                            👤 Parcial ({numConvocados} miembros)
-                          </span>
-                        ) : (
-                          <span className="inline-block mt-0.5 text-[9px] text-emerald-400/80 font-mono">
-                            👥 Banda completa
-                          </span>
-                        )}
-                     </td>
-                     <td className="p-3 font-mono font-bold text-amber-400 text-sm">
-                       {c.cache ? `${c.cache}€` : '0€'}
-                     </td>
-                     <td className="p-3 text-[11px] text-[var(--ink-3)]">
-                       {hasCustomGastos ? (
-                         <div className="space-y-0.5">
-                           <div>Gasolina: <span className="font-mono text-[var(--ink-3)]">{gasolina}€</span> | Dietas: <span className="font-mono text-[var(--ink-3)]">{dietas}€</span></div>
-                           <div>Furgoneta: <span className="font-mono text-[var(--ink-3)]">{alquiler}€</span> | Hotel: <span className="font-mono text-[var(--ink-3)]">{alojamiento}€</span></div>
-                         </div>
-                       ) : (
-                         <span className="text-[var(--ink-2)] italic">Estimación típica (~150€)</span>
-                       )}
-                     </td>
-                     <td className="p-3 font-mono text-rose-400 font-semibold">
-                       -{totalGastosBolo}€
-                     </td>
-                     <td className="p-3 font-mono font-black text-sm">
-                       <span className={beneficioNeto >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
-                         {beneficioNeto >= 0 ? `+${beneficioNeto}€` : `${beneficioNeto}€`}
-                       </span>
-                       <span className="block text-[10px] text-[var(--ink-2)] font-normal">
-                         Margen: {margenPct}%
-                       </span>
-                        <span className="block text-[9px] text-purple-300 font-normal">
-                          Reparto: {netoPorMusico >= 0 ? "+" + netoPorMusico : netoPorMusico}€/músico
-                        </span>
-                     </td>
-                     <td className="p-3 text-center">
-                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${alertBadge.bgColor}`}>
-                         {alertBadge.label}
-                       </span>
-                     </td>
-                     <td className="p-3 text-right">
-                       <button
-                         onClick={() => {
-                           setEditingConcertId(c.id);
-                           setEditingGasolina(String(c.gastosDetalle?.gasolina || 0));
-                           setEditingDietas(String(c.gastosDetalle?.dietas || 0));
-                           setEditingAlquiler(String(c.gastosDetalle?.alquilerVehiculo || 0));
-                           setEditingAlojamiento(String(c.gastosDetalle?.alojamiento || 0));
-                           setEditingOtros(String(c.gastosDetalle?.otros || 0));
-                           setEditingNotasGastos(c.gastosDetalle?.notasGastos || '');
-                         }}
-                         className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-300 font-semibold rounded-[var(--r-s)] border  text-[11px] flex items-center gap-1 ml-auto transition cursor-pointer"
-                       >
-                         <Edit3 className="w-3.5 h-3.5" /> Gastos
-                       </button>
-                     </td>
-                   </tr>
-                 );
-               })
-             ) : (
-               <tr>
-                 <td colSpan={8} className="text-center p-8 text-[var(--ink-2)]">
-                   No hay conciertos registrados todavía.
-                 </td>
-               </tr>
-             )}
-           </tbody>
-         </table>
-       </div>
-     </div>
+ return (
+ <tr key={c.id} className="hover:bg-[var(--surface)]/30 transition">
+ <td className="p-3 font-mono text-[var(--ink-3)]">
+ <span className="font-bold text-white block">{c.fecha}</span>
+ <span className="text-[10px] text-[var(--ink-2)] capitalize">{c.tipo}</span>
+ {c.giraNombre && (
+ <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-mono">
+ 🚐 {c.giraNombre}
+ </span>
+ )}
+ </td>
+ <td className="p-3">
+ <span className="font-bold text-white block">{c.sala}</span>
+ <span className="text-[10px] text-[var(--ink-3)]">{c.ciudad}</span>
+ {c.convocatoria_tipo === "parcial" ? (
+ <span className="inline-block mt-0.5 text-[9px] text-purple-300 bg-purple-500/10 px-1.5 py-0.2 rounded font-mono" title={c.convocados_nombres?.join(", ")}>
+ 👤 Parcial ({numConvocados} miembros)
+ </span>
+ ) : (
+ <span className="inline-block mt-0.5 text-[9px] text-emerald-400/80 font-mono">
+ 👥 Banda completa
+ </span>
+ )}
+ </td>
+ <td className="p-3 font-mono font-bold text-amber-400 text-sm">
+ {c.cache ? `${c.cache}€` : '0€'}
+ </td>
+ <td className="p-3 text-[11px] text-[var(--ink-3)]">
+ {hasCustomGastos ? (
+ <div className="space-y-0.5">
+ <div>Gasolina: <span className="font-mono text-[var(--ink-3)]">{gasolina}€</span> | Dietas: <span className="font-mono text-[var(--ink-3)]">{dietas}€</span></div>
+ <div>Furgoneta: <span className="font-mono text-[var(--ink-3)]">{alquiler}€</span> | Hotel: <span className="font-mono text-[var(--ink-3)]">{alojamiento}€</span></div>
+ </div>
+ ) : (
+ <span className="text-[var(--ink-2)] italic">Estimación típica (~150€)</span>
+ )}
+ </td>
+ <td className="p-3 font-mono text-rose-400 font-semibold">
+ -{totalGastosBolo}€
+ </td>
+ <td className="p-3 font-mono font-black text-sm">
+ <span className={beneficioNeto >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
+ {beneficioNeto >= 0 ? `+${beneficioNeto}€` : `${beneficioNeto}€`}
+ </span>
+ <span className="block text-[10px] text-[var(--ink-2)] font-normal">
+ Margen: {margenPct}%
+ </span>
+ <span className="block text-[9px] text-purple-300 font-normal">
+ Reparto: {netoPorMusico >= 0 ? "+" + netoPorMusico : netoPorMusico}€/músico
+ </span>
+ </td>
+ <td className="p-3 text-center">
+ <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${alertBadge.bgColor}`}>
+ {alertBadge.label}
+ </span>
+ </td>
+ <td className="p-3 text-right">
+ <button
+ onClick={() => {
+ setEditingConcertId(c.id);
+ setEditingGasolina(String(c.gastosDetalle?.gasolina || 0));
+ setEditingDietas(String(c.gastosDetalle?.dietas || 0));
+ setEditingAlquiler(String(c.gastosDetalle?.alquilerVehiculo || 0));
+ setEditingAlojamiento(String(c.gastosDetalle?.alojamiento || 0));
+ setEditingOtros(String(c.gastosDetalle?.otros || 0));
+ setEditingNotasGastos(c.gastosDetalle?.notasGastos || '');
+ }}
+ className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-300 font-semibold rounded-[var(--r-s)] text-[11px] flex items-center gap-1 ml-auto transition cursor-pointer"
+ >
+ <Edit3 className="w-3.5 h-3.5" /> Gastos
+ </button>
+ </td>
+ </tr>
+ );
+ })
+ ) : (
+ <tr>
+ <td colSpan={8} className="text-center p-8 text-[var(--ink-2)]">
+ No hay conciertos registrados todavía.
+ </td>
+ </tr>
+ )}
+ </tbody>
+ </table>
+ </div>
+ </div>
 
-     {/* EDIT CONCERT EXPENSES MODAL */}
-     {editingConcertId && (
-       <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-         <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4 shadow-2xl">
-           <div className="flex items-center justify-between border-b  pb-3">
-             <h3 className="text-lg font-bold text-white flex items-center gap-2">
-               <Calculator className="w-5 h-5 text-amber-400" /> Desglose Real de Gastos de Bolo
-             </h3>
-             <button
-               onClick={() => setEditingConcertId(null)}
-               className="text-[var(--ink-3)] hover:text-white font-bold"
-             >
-               ✕
-             </button>
-           </div>
+ {/* EDIT CONCERT EXPENSES MODAL */}
+ {editingConcertId && (
+ <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4 shadow-2xl">
+ <div className="flex items-center justify-between border-b pb-3">
+ <h3 className="text-lg font-bold text-white flex items-center gap-2">
+ <Calculator className="w-5 h-5 text-amber-400" /> Desglose Real de Gastos de Bolo
+ </h3>
+ <button
+ onClick={() => setEditingConcertId(null)}
+ className="text-[var(--ink-3)] hover:text-white font-bold"
+ >
+ ✕
+ </button>
+ </div>
 
-           <div className="space-y-3 text-xs">
-             <div className="grid grid-cols-2 gap-3">
-               <div>
-                 <label className="text-[var(--ink-3)] font-semibold">Gasolina & Peajes (€)</label>
-                 <input
-                   type="number"
-                   value={editingGasolina}
-                   onChange={e => setEditingGasolina(e.target.value)}
-                   className="w-full bg-slate-950 border  rounded-[var(--r-m)] p-2.5 text-white font-mono"
-                 />
-               </div>
-               <div>
-                 <label className="text-[var(--ink-3)] font-semibold">Dietas / Comidas (€)</label>
-                 <input
-                   type="number"
-                   value={editingDietas}
-                   onChange={e => setEditingDietas(e.target.value)}
-                   className="w-full bg-slate-950 border  rounded-[var(--r-m)] p-2.5 text-white font-mono"
-                 />
-               </div>
-             </div>
+ <div className="space-y-3 text-xs">
+ <div className="grid grid-cols-2 gap-3">
+ <div>
+ <label className="text-[var(--ink-3)] font-semibold">Gasolina & Peajes (€)</label>
+ <input
+ type="number"
+ value={editingGasolina}
+ onChange={e => setEditingGasolina(e.target.value)}
+ className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ />
+ </div>
+ <div>
+ <label className="text-[var(--ink-3)] font-semibold">Dietas / Comidas (€)</label>
+ <input
+ type="number"
+ value={editingDietas}
+ onChange={e => setEditingDietas(e.target.value)}
+ className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ />
+ </div>
+ </div>
 
-             <div className="grid grid-cols-2 gap-3">
-               <div>
-                 <label className="text-[var(--ink-3)] font-semibold">Alquiler Furgoneta / Backline (€)</label>
-                 <input
-                   type="number"
-                   value={editingAlquiler}
-                   onChange={e => setEditingAlquiler(e.target.value)}
-                   className="w-full bg-slate-950 border  rounded-[var(--r-m)] p-2.5 text-white font-mono"
-                 />
-               </div>
-               <div>
-                 <label className="text-[var(--ink-3)] font-semibold">Alojamiento / Hoteles (€)</label>
-                 <input
-                   type="number"
-                   value={editingAlojamiento}
-                   onChange={e => setEditingAlojamiento(e.target.value)}
-                   className="w-full bg-slate-950 border  rounded-[var(--r-m)] p-2.5 text-white font-mono"
-                 />
-               </div>
-             </div>
+ <div className="grid grid-cols-2 gap-3">
+ <div>
+ <label className="text-[var(--ink-3)] font-semibold">Alquiler Furgoneta / Backline (€)</label>
+ <input
+ type="number"
+ value={editingAlquiler}
+ onChange={e => setEditingAlquiler(e.target.value)}
+ className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ />
+ </div>
+ <div>
+ <label className="text-[var(--ink-3)] font-semibold">Alojamiento / Hoteles (€)</label>
+ <input
+ type="number"
+ value={editingAlojamiento}
+ onChange={e => setEditingAlojamiento(e.target.value)}
+ className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ />
+ </div>
+ </div>
 
-             <div>
-               <label className="text-[var(--ink-3)] font-semibold">Otros Gastos Extra (€)</label>
-               <input
-                 type="number"
-                 value={editingOtros}
-                 onChange={e => setEditingOtros(e.target.value)}
-                 className="w-full bg-slate-950 border  rounded-[var(--r-m)] p-2.5 text-white font-mono"
-               />
-             </div>
+ <div>
+ <label className="text-[var(--ink-3)] font-semibold">Otros Gastos Extra (€)</label>
+ <input
+ type="number"
+ value={editingOtros}
+ onChange={e => setEditingOtros(e.target.value)}
+ className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ />
+ </div>
 
-             <div>
-               <label className="text-[var(--ink-3)] font-semibold">Notas sobre Gastos</label>
-               <textarea
-                 rows={2}
-                 value={editingNotasGastos}
-                 onChange={e => setEditingNotasGastos(e.target.value)}
-                 placeholder="Detalles de facturas, tickets guardados..."
-                 className="w-full bg-slate-950 border  rounded-[var(--r-m)] p-2.5 text-white"
-               />
-             </div>
+ <div>
+ <label className="text-[var(--ink-3)] font-semibold">Notas sobre Gastos</label>
+ <textarea
+ rows={2}
+ value={editingNotasGastos}
+ onChange={e => setEditingNotasGastos(e.target.value)}
+ placeholder="Detalles de facturas, tickets guardados..."
+ className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white"
+ />
+ </div>
 
-             {/* Total calculation preview */}
-             <div className="p-3 bg-slate-950 rounded-[var(--r-m)] flex items-center justify-between font-mono">
-               <span className="text-[var(--ink-3)] font-bold">TOTAL GASTOS CALCULADOS:</span>
-               <span className="text-rose-400 font-black text-sm">
-                 -{(Number(editingGasolina) || 0) + (Number(editingDietas) || 0) + (Number(editingAlquiler) || 0) + (Number(editingAlojamiento) || 0) + (Number(editingOtros) || 0)}€
-               </span>
-             </div>
-           </div>
+ {/* Total calculation preview */}
+ <div className="p-3 bg-slate-950 rounded-[var(--r-m)] flex items-center justify-between font-mono">
+ <span className="text-[var(--ink-3)] font-bold">TOTAL GASTOS CALCULADOS:</span>
+ <span className="text-rose-400 font-black text-sm">
+ -{(Number(editingGasolina) || 0) + (Number(editingDietas) || 0) + (Number(editingAlquiler) || 0) + (Number(editingAlojamiento) || 0) + (Number(editingOtros) || 0)}€
+ </span>
+ </div>
+ </div>
 
-           <div className="pt-2 flex justify-end gap-2">
-             <button
-               onClick={() => setEditingConcertId(null)}
-               className="px-4 py-2 bg-[var(--surface)] text-[var(--ink-3)] text-xs font-bold rounded-[var(--r-m)]"
-             >
-               Cancelar
-             </button>
-             <button
-               onClick={async () => {
-                 if (editingConcertId && onUpdateConcert) {
-                   const breakdown: ConcertExpenseBreakdown = {
-                     gasolina: Number(editingGasolina) || 0,
-                     dietas: Number(editingDietas) || 0,
-                     alquilerVehiculo: Number(editingAlquiler) || 0,
-                     alojamiento: Number(editingAlojamiento) || 0,
-                     otros: Number(editingOtros) || 0,
-                     notasGastos: editingNotasGastos
-                   };
-                   await onUpdateConcert(editingConcertId, { gastosDetalle: breakdown });
-                 }
-                 setEditingConcertId(null);
-               }}
-               className="px-4 py-2 bg-amber-500 text-slate-950 text-xs font-bold rounded-[var(--r-m)] shadow-lg"
-             >
-               Guardar Gastos
-             </button>
-           </div>
-         </div>
-       </div>
-     )}
-   </div>
+ <div className="pt-2 flex justify-end gap-2">
+ <button
+ onClick={() => setEditingConcertId(null)}
+ className="px-4 py-2 bg-[var(--surface)] text-[var(--ink-3)] text-xs font-bold rounded-[var(--r-m)]"
+ >
+ Cancelar
+ </button>
+ <button
+ onClick={async () => {
+ if (editingConcertId && onUpdateConcert) {
+ const breakdown: ConcertExpenseBreakdown = {
+ gasolina: Number(editingGasolina) || 0,
+ dietas: Number(editingDietas) || 0,
+ alquilerVehiculo: Number(editingAlquiler) || 0,
+ alojamiento: Number(editingAlojamiento) || 0,
+ otros: Number(editingOtros) || 0,
+ notasGastos: editingNotasGastos
+ };
+ await onUpdateConcert(editingConcertId, { gastosDetalle: breakdown });
+ }
+ setEditingConcertId(null);
+ }}
+ className="px-4 py-2 bg-amber-500 text-slate-950 text-xs font-bold rounded-[var(--r-m)] shadow-lg"
+ >
+ Guardar Gastos
+ </button>
+ </div>
+ </div>
+ </div>
+ )}
+ </div>
  )}
 
  {/* Active Tab View */}
@@ -881,10 +881,10 @@ export default function Finanzas({
 
  {/* Modal: Registrar Nueva Operación */}
  <AddTransactionModal
-   isOpen={isAddOpen}
-   colors={colors}
-   onClose={() => setIsAddOpen(false)}
-   onAddPayment={onAddPayment}
+ isOpen={isAddOpen}
+ colors={colors}
+ onClose={() => setIsAddOpen(false)}
+ onAddPayment={onAddPayment}
  />
  </div>
  );

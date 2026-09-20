@@ -4,11 +4,11 @@ import { User, ThemeName } from '../types';
 import { THEMES } from '../utils/theme';
 import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
 import {
-  PREFERENCIAS as PREFERENCIAS_ESPECTRO,
-  PreferenciaTema,
-  guardarPreferencia as guardarPreferenciaEspectro,
-  leerPreferencia as leerPreferenciaEspectro,
-  resolverTema as resolverTemaEspectro,
+ PREFERENCIAS as PREFERENCIAS_ESPECTRO,
+ PreferenciaTema,
+ guardarPreferencia as guardarPreferenciaEspectro,
+ leerPreferencia as leerPreferenciaEspectro,
+ resolverTema as resolverTemaEspectro,
 } from '../utils/temaEspectro';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { api, getAuthHeaders } from '../services/api';
@@ -74,24 +74,24 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [bandLogoUrl, setBandLogoUrl] = useState<string>(epkConfig?.logoUrl || '');
 
  useEffect(() => {
-   if (currentUser) {
-     setName(currentUser.name || '');
-     setInstrument(currentUser.instrument || '');
-     setAvatarColor(currentUser.avatarColor || '#10b981');
-     setSelectedMainBandId(currentUser.main_band_id || currentUser.band_id || '');
-   }
+ if (currentUser) {
+ setName(currentUser.name || '');
+ setInstrument(currentUser.instrument || '');
+ setAvatarColor(currentUser.avatarColor || '#10b981');
+ setSelectedMainBandId(currentUser.main_band_id || currentUser.band_id || '');
+ }
  }, [currentUser]);
 
  useEffect(() => {
-   if (availableBands) {
-     setLocalAvailableBands(availableBands);
-   }
+ if (availableBands) {
+ setLocalAvailableBands(availableBands);
+ }
  }, [availableBands]);
 
  useEffect(() => {
-   if (epkConfig?.logoUrl) {
-     setBandLogoUrl(epkConfig.logoUrl);
-   }
+ if (epkConfig?.logoUrl) {
+ setBandLogoUrl(epkConfig.logoUrl);
+ }
  }, [epkConfig?.logoUrl]);
  const [logoImgError, setLogoImgError] = useState(false);
  const [uploadingLogo, setUploadingLogo] = useState(false);
@@ -112,40 +112,40 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [confirmPassword, setConfirmPassword] = useState('');
 
  const handleLogoChangeInProfile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  setUploadingLogo(true);
-  setError(null);
-  setSuccessMsg(null);
-  if (!currentUser.band_id) {
-   setError('No hay ninguna banda activa para actualizar el logo.');
-   setUploadingLogo(false);
-   return;
-  }
-  try {
-   const userBandId = currentUser.band_id;
-   const url = await uploadFileToServer(file, { bandId: userBandId, category: 'logo' });
-   setBandLogoUrl(url);
+ const file = e.target.files?.[0];
+ if (!file) return;
+ setUploadingLogo(true);
+ setError(null);
+ setSuccessMsg(null);
+ if (!currentUser.band_id) {
+ setError('No hay ninguna banda activa para actualizar el logo.');
+ setUploadingLogo(false);
+ return;
+ }
+ try {
+ const userBandId = currentUser.band_id;
+ const url = await uploadFileToServer(file, { bandId: userBandId, category: 'logo' });
+ setBandLogoUrl(url);
 
-   const updatedEpk = { ...epkConfig, logoUrl: url, bandId: userBandId };
-   const authHeaders = getAuthHeaders() as Record<string, string>;
-   await fetch('/api/users/upload-logo', {
-     method: 'POST',
-     headers: { 'Content-Type': 'application/json', ...authHeaders, 'x-band-id': userBandId },
-     body: JSON.stringify({ logoUrl: url, bandId: userBandId })
-   });
+ const updatedEpk = { ...epkConfig, logoUrl: url, bandId: userBandId };
+ const authHeaders = getAuthHeaders() as Record<string, string>;
+ await fetch('/api/users/upload-logo', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json', ...authHeaders, 'x-band-id': userBandId },
+ body: JSON.stringify({ logoUrl: url, bandId: userBandId })
+ });
 
-   if (onUpdateEpkConfig) {
-     await onUpdateEpkConfig(updatedEpk);
-   }
-   if (onRefreshData) onRefreshData();
-   setSuccessMsg('¡Logo del proyecto actualizado con éxito!');
-  } catch (err: any) {
-   console.error('Error uploading band logo in profile:', err);
-   setError('Error al subir el logo de la banda.');
-  } finally {
-   setUploadingLogo(false);
-  }
+ if (onUpdateEpkConfig) {
+ await onUpdateEpkConfig(updatedEpk);
+ }
+ if (onRefreshData) onRefreshData();
+ setSuccessMsg('¡Logo del proyecto actualizado con éxito!');
+ } catch (err: any) {
+ console.error('Error uploading band logo in profile:', err);
+ setError('Error al subir el logo de la banda.');
+ } finally {
+ setUploadingLogo(false);
+ }
  };
 
  const [loading, setLoading] = useState(false);
@@ -155,7 +155,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  // Available bands local state & synchronization
  const [localAvailableBands, setLocalAvailableBands] = useState(availableBands);
  useEffect(() => {
-   setLocalAvailableBands(availableBands);
+ setLocalAvailableBands(availableBands);
  }, [availableBands]);
 
  // Band creation inside Profile Modal
@@ -172,105 +172,105 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [deletingBandId, setDeletingBandId] = useState<string | null>(null);
 
  const handleCreateBandInProfile = async (e: React.FormEvent) => {
-   e.preventDefault();
-   if (!createBandName.trim()) {
-     setError('Por favor, introduce el nombre del proyecto o banda');
-     return;
-   }
-   setIsCreatingBand(true);
-   setError(null);
-   setSuccessMsg(null);
-   const effectivePlan = SIMPLE_PROMO_ONLY_BAND_CREATION ? 'promo' : createBandPlan;
-   try {
-     const res = await api.createBand({
-       bandName: createBandName.trim(),
-       leaderName: createBandLeaderName.trim() || currentUser.name || currentUser.username || 'Líder',
-       plan: effectivePlan,
-       estilo_musical: createBandStyle.trim() || undefined,
-       localizacion: createBandLocation.trim() || undefined
-     });
+ e.preventDefault();
+ if (!createBandName.trim()) {
+ setError('Por favor, introduce el nombre del proyecto o banda');
+ return;
+ }
+ setIsCreatingBand(true);
+ setError(null);
+ setSuccessMsg(null);
+ const effectivePlan = SIMPLE_PROMO_ONLY_BAND_CREATION ? 'promo' : createBandPlan;
+ try {
+ const res = await api.createBand({
+ bandName: createBandName.trim(),
+ leaderName: createBandLeaderName.trim() || currentUser.name || currentUser.username || 'Líder',
+ plan: effectivePlan,
+ estilo_musical: createBandStyle.trim() || undefined,
+ localizacion: createBandLocation.trim() || undefined
+ });
 
-     if (res && res.success) {
-       if (res.user) {
-         localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
-         onUpdateUser(res.user as User);
-       }
-       if (res.availableBands && Array.isArray(res.availableBands)) {
-         setLocalAvailableBands(res.availableBands);
-       }
-       if (res.band_id) {
-         setSelectedMainBandId(res.band_id);
-       }
+ if (res && res.success) {
+ if (res.user) {
+ localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
+ onUpdateUser(res.user as User);
+ }
+ if (res.availableBands && Array.isArray(res.availableBands)) {
+ setLocalAvailableBands(res.availableBands);
+ }
+ if (res.band_id) {
+ setSelectedMainBandId(res.band_id);
+ }
 
-       // Redirect to Stripe Checkout for paid plans
-       if ((effectivePlan as string) !== 'ensayo' && effectivePlan !== 'promo' && effectivePlan !== 'promo_plus' && res.band_id) {
-         try {
-           await api.startCheckout({
-             planId: effectivePlan,
-             billingInterval: 'monthly',
-             bandId: res.band_id,
-             userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : undefined
-           });
-           setShowCreateBandSection(false);
-           setCreateBandName('');
-           setCreateBandStyle('');
-           return;
-         } catch (stripeErr) {
-           console.error('Error initiating Stripe checkout on create band in profile:', stripeErr);
-         }
-       }
+ // Redirect to Stripe Checkout for paid plans
+ if ((effectivePlan as string) !== 'ensayo' && effectivePlan !== 'promo' && effectivePlan !== 'promo_plus' && res.band_id) {
+ try {
+ await api.startCheckout({
+ planId: effectivePlan,
+ billingInterval: 'monthly',
+ bandId: res.band_id,
+ userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : undefined
+ });
+ setShowCreateBandSection(false);
+ setCreateBandName('');
+ setCreateBandStyle('');
+ return;
+ } catch (stripeErr) {
+ console.error('Error initiating Stripe checkout on create band in profile:', stripeErr);
+ }
+ }
 
-       setSuccessMsg(`¡Proyecto "${createBandName.trim()}" creado y configurado con éxito!`);
-       setShowCreateBandSection(false);
-       setCreateBandName('');
-       setCreateBandStyle('');
-       if (onRefreshData) await onRefreshData();
-     } else {
-       setError((res as any)?.error || 'No se pudo crear el proyecto musical');
-     }
-   } catch (err: any) {
-     console.error('Error creating band in profile modal:', err);
-     setError(err.message || 'Error al crear el nuevo proyecto');
-   } finally {
-     setIsCreatingBand(false);
-   }
+ setSuccessMsg(`¡Proyecto "${createBandName.trim()}" creado y configurado con éxito!`);
+ setShowCreateBandSection(false);
+ setCreateBandName('');
+ setCreateBandStyle('');
+ if (onRefreshData) await onRefreshData();
+ } else {
+ setError((res as any)?.error || 'No se pudo crear el proyecto musical');
+ }
+ } catch (err: any) {
+ console.error('Error creating band in profile modal:', err);
+ setError(err.message || 'Error al crear el nuevo proyecto');
+ } finally {
+ setIsCreatingBand(false);
+ }
  };
 
  const handleConfirmDeleteBandInProfile = async () => {
-   if (!bandToDeleteInProfile) return;
-   const { id: targetBandId, name: targetBandName } = bandToDeleteInProfile;
-   setDeletingBandId(targetBandId);
-   setBandToDeleteInProfile(null);
-   setError(null);
-   setSuccessMsg(null);
+ if (!bandToDeleteInProfile) return;
+ const { id: targetBandId, name: targetBandName } = bandToDeleteInProfile;
+ setDeletingBandId(targetBandId);
+ setBandToDeleteInProfile(null);
+ setError(null);
+ setSuccessMsg(null);
 
-   try {
-     const res = await api.leaveBand(targetBandId);
-     if (res && res.success) {
-       if (res.user) {
-         localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
-         onUpdateUser(res.user as User);
-         setSelectedMainBandId(res.user.main_band_id || res.user.band_id || '');
-       }
-       if (res.availableBands && Array.isArray(res.availableBands)) {
-         setLocalAvailableBands(res.availableBands);
-       }
-       setSuccessMsg(`"${targetBandName}" eliminada correctamente de tu cuenta.`);
-       if (onRefreshData) await onRefreshData();
-     } else {
-       setError(res?.message || 'Error al eliminar la banda');
-     }
-   } catch (err: any) {
-     console.error('Error deleting band in profile modal:', err);
-     const rawMsg = err?.message || '';
-     const isNetworkErr = rawMsg === 'Failed to fetch' || rawMsg.includes('NetworkError') || rawMsg.includes('fetch');
-     const userFriendlyMsg = isNetworkErr 
-       ? 'Error de conexión con el servidor. Por favor, reintenta en unos instantes.' 
-       : (rawMsg || 'Error al eliminar la banda de tu usuario');
-     setError(userFriendlyMsg);
-   } finally {
-     setDeletingBandId(null);
-   }
+ try {
+ const res = await api.leaveBand(targetBandId);
+ if (res && res.success) {
+ if (res.user) {
+ localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
+ onUpdateUser(res.user as User);
+ setSelectedMainBandId(res.user.main_band_id || res.user.band_id || '');
+ }
+ if (res.availableBands && Array.isArray(res.availableBands)) {
+ setLocalAvailableBands(res.availableBands);
+ }
+ setSuccessMsg(`"${targetBandName}" eliminada correctamente de tu cuenta.`);
+ if (onRefreshData) await onRefreshData();
+ } else {
+ setError(res?.message || 'Error al eliminar la banda');
+ }
+ } catch (err: any) {
+ console.error('Error deleting band in profile modal:', err);
+ const rawMsg = err?.message || '';
+ const isNetworkErr = rawMsg === 'Failed to fetch' || rawMsg.includes('NetworkError') || rawMsg.includes('fetch');
+ const userFriendlyMsg = isNetworkErr 
+ ? 'Error de conexión con el servidor. Por favor, reintenta en unos instantes.' 
+ : (rawMsg || 'Error al eliminar la banda de tu usuario');
+ setError(userFriendlyMsg);
+ } finally {
+ setDeletingBandId(null);
+ }
  };
 
  const colors = [
@@ -304,13 +304,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  try {
  const token = localStorage.getItem('bakandeya_token');
  if (selectedMainBandId && selectedMainBandId !== (currentUser.main_band_id || currentUser.band_id) && onSetMainBand) {
-  await onSetMainBand(selectedMainBandId).catch((e: any) => console.warn('Could not set main band:', e));
+ await onSetMainBand(selectedMainBandId).catch((e: any) => console.warn('Could not set main band:', e));
  }
  const response = await fetch(`/api/users/${currentUser.id}`, {
  method: 'PUT',
  headers: {
-  'Content-Type': 'application/json',
-  ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ 'Content-Type': 'application/json',
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {})
  },
  body: JSON.stringify({
  name: name.trim(),
@@ -342,15 +342,15 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  };
 
  return (
-  <ModalPortal isOpen={true} onClose={onClose}>
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
-      <div 
-        className={`w-full max-w-md rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
-          isStitchLight 
-            ? 'bg-white -slate-200 text-[var(--ink)]' 
-            : 'bg-bg-[var(--surface)] -neutral-800 text-bg-[var(--sunken)]'
-        }`}
-      >
+ <ModalPortal isOpen={true} onClose={onClose}>
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+ <div 
+ className={`w-full max-w-md rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
+ isStitchLight 
+ ? 'bg-white -slate-200 text-[var(--ink)]' 
+ : 'bg-bg-[var(--surface)] -neutral-800 text-bg-[var(--sunken)]'
+ }`}
+ >
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
  isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-bg-[var(--surface)]/60'
@@ -400,7 +400,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  )}
 
  {/* Plan Suscrito & Upgrade Section */}
- <div className={`p-3.5 rounded-[var(--r-m)] border relative overflow-hidden transition-all ${
+ <div className={`p-3.5 rounded-[var(--r-m)] relative overflow-hidden transition-all ${
  isStitchLight 
  ? 'bg-[var(--bg)] ' 
  : 'bg-gradient-to-r from-amber-950/30 via-bg-[var(--surface)] to-bg-[var(--surface)] /30'
@@ -510,10 +510,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </label>
 
  <div className={`p-3 rounded-[var(--r-m)] flex items-center justify-between gap-3 ${
- isStitchLight ? 'bg-[var(--bg)] border ' : 'bg-bg-[var(--surface)] border '
+ isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)] '
  }`}>
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  overflow-hidden flex items-center justify-center p-1 shrink-0 relative group">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-bg-[var(--surface)] overflow-hidden flex items-center justify-center p-1 shrink-0 relative group">
  {bandLogoUrl && !logoImgError ? (
  <img src={bandLogoUrl} alt="Logo Banda" onError={() => setLogoImgError(true)} className="w-full h-full object-contain" referrerPolicy="no-referrer" />
  ) : (
@@ -525,19 +525,19 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <p className="text-xs font-bold text-white">{activeBandName || currentUser.bandName || 'Tu Banda'}</p>
  {isPromoUser ? (
  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-300">
-   <Sparkles className="w-2.5 h-2.5 text-amber-400" />
-   <span>{currentPlanDef.name}</span>
+ <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+ <span>{currentPlanDef.name}</span>
  </span>
  ) : (
  <button
-   type="button"
-   onClick={() => setShowUpgradeModal(true)}
-   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 shadow-sm cursor-pointer transition-colors"
-   title="Cambiar o mejorar suscripción"
+ type="button"
+ onClick={() => setShowUpgradeModal(true)}
+ className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 shadow-sm cursor-pointer transition-colors"
+ title="Cambiar o mejorar suscripción"
  >
-   <Sparkles className="w-2.5 h-2.5 text-amber-400" />
-   <span>{currentPlanDef.name}</span>
-   <ArrowUpDown className="w-2.5 h-2.5 text-amber-400 ml-0.5" />
+ <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+ <span>{currentPlanDef.name}</span>
+ <ArrowUpDown className="w-2.5 h-2.5 text-amber-400 ml-0.5" />
  </button>
  )}
  </div>
@@ -570,329 +570,329 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  {/* Main Band Selection Section */}
  <div className="space-y-2 pt-2 border-t /80">
-   <div className="flex items-center justify-between">
-     <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)] flex items-center gap-1.5">
-       <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-       <span>Proyectos y Banda Principal</span>
-     </label>
-     <div className="flex items-center gap-2">
-       {onOpenProfileWizard && (
-         <button
-           type="button"
-           onClick={() => {
-             onClose();
-             onOpenProfileWizard();
-           }}
-           className="text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1 cursor-pointer font-bold"
-           title="Abrir asistente paso a paso de configuración de banda"
-         >
-           <Sparkles className="w-3 h-3 text-cyan-400" />
-           <span>Asistente Perfil</span>
-         </button>
-       )}
-       <button
-         type="button"
-         onClick={() => setShowCreateBandSection(!showCreateBandSection)}
-         className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 cursor-pointer font-bold"
-       >
-         <Plus className="w-3 h-3" />
-         <span>{showCreateBandSection ? 'Cerrar' : '+ Crear Proyecto'}</span>
-       </button>
-       {onOpenBandSwitcher && (
-         <button
-           type="button"
-           onClick={() => {
-             onClose();
-             onOpenBandSwitcher();
-           }}
-           className="text-[11px] font-mono text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1 cursor-pointer"
-         >
-           <span>Selector visual</span>
-           <ChevronDown className="w-3 h-3 -rotate-90" />
-         </button>
-       )}
-     </div>
-   </div>
+ <div className="flex items-center justify-between">
+ <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)] flex items-center gap-1.5">
+ <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+ <span>Proyectos y Banda Principal</span>
+ </label>
+ <div className="flex items-center gap-2">
+ {onOpenProfileWizard && (
+ <button
+ type="button"
+ onClick={() => {
+ onClose();
+ onOpenProfileWizard();
+ }}
+ className="text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1 cursor-pointer font-bold"
+ title="Abrir asistente paso a paso de configuración de banda"
+ >
+ <Sparkles className="w-3 h-3 text-cyan-400" />
+ <span>Asistente Perfil</span>
+ </button>
+ )}
+ <button
+ type="button"
+ onClick={() => setShowCreateBandSection(!showCreateBandSection)}
+ className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 cursor-pointer font-bold"
+ >
+ <Plus className="w-3 h-3" />
+ <span>{showCreateBandSection ? 'Cerrar' : '+ Crear Proyecto'}</span>
+ </button>
+ {onOpenBandSwitcher && (
+ <button
+ type="button"
+ onClick={() => {
+ onClose();
+ onOpenBandSwitcher();
+ }}
+ className="text-[11px] font-mono text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1 cursor-pointer"
+ >
+ <span>Selector visual</span>
+ <ChevronDown className="w-3 h-3 -rotate-90" />
+ </button>
+ )}
+ </div>
+ </div>
 
-   {/* Creation Form Accordion */}
-   {showCreateBandSection && (
-     <div className={`p-3.5 rounded-[var(--r-m)] border space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 ${
-       isStitchLight ? 'bg-emerald-50/50 border-emerald-200' : 'bg-emerald-950/20 border-emerald-800/50'
-     }`}>
-       <div className="flex items-center justify-between">
-         <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-           <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-           <span>Crear Nuevo Proyecto o Banda</span>
-         </p>
-         <button
-           type="button"
-           onClick={() => setShowCreateBandSection(false)}
-           className="text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] p-1 cursor-pointer"
-         >
-           <X className="w-3.5 h-3.5" />
-         </button>
-       </div>
+ {/* Creation Form Accordion */}
+ {showCreateBandSection && (
+ <div className={`p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 ${
+ isStitchLight ? 'bg-emerald-50/50 border-emerald-200' : 'bg-emerald-950/20 border-emerald-800/50'
+ }`}>
+ <div className="flex items-center justify-between">
+ <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+ <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+ <span>Crear Nuevo Proyecto o Banda</span>
+ </p>
+ <button
+ type="button"
+ onClick={() => setShowCreateBandSection(false)}
+ className="text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] p-1 cursor-pointer"
+ >
+ <X className="w-3.5 h-3.5" />
+ </button>
+ </div>
 
-       <div className="space-y-2">
-         <div>
-           <label className="text-[10px] font-mono text-text-[var(--ink-2)] block mb-1">Nombre del Proyecto / Banda *</label>
-           <input
-             type="text"
-             required
-             value={createBandName}
-             onChange={(e) => setCreateBandName(e.target.value)}
-             placeholder="Ej. Los Nocturnos, Cuarteto Acústico..."
-             className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs border outline-none font-medium ${
-               isStitchLight ? 'bg-white  text-[var(--ink)]' : 'bg-bg-[var(--surface)]  text-white'
-             }`}
-           />
-         </div>
+ <div className="space-y-2">
+ <div>
+ <label className="text-[10px] font-mono text-text-[var(--ink-2)] block mb-1">Nombre del Proyecto / Banda *</label>
+ <input
+ type="text"
+ required
+ value={createBandName}
+ onChange={(e) => setCreateBandName(e.target.value)}
+ placeholder="Ej. Los Nocturnos, Cuarteto Acústico..."
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none font-medium ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
+ }`}
+ />
+ </div>
 
-         <div className="grid grid-cols-2 gap-2">
-           <div>
-             <label className="text-[10px] font-mono text-text-[var(--ink-2)] block mb-1">Estilo / Género</label>
-             <input
-               type="text"
-               value={createBandStyle}
-               onChange={(e) => setCreateBandStyle(e.target.value)}
-               placeholder="Ej. Indie Rock, Pop..."
-               className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs border outline-none ${
-                 isStitchLight ? 'bg-white  text-[var(--ink)]' : 'bg-bg-[var(--surface)]  text-white'
-               }`}
-             />
-           </div>
-           <div>
-             <label className="text-[10px] font-mono text-text-[var(--ink-2)] block mb-1">Ubicación</label>
-             <input
-               type="text"
-               value={createBandLocation}
-               onChange={(e) => setCreateBandLocation(e.target.value)}
-               placeholder="Ej. Madrid, Barcelona..."
-               className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs border outline-none ${
-                 isStitchLight ? 'bg-white  text-[var(--ink)]' : 'bg-bg-[var(--surface)]  text-white'
-               }`}
-             />
-           </div>
-         </div>
+ <div className="grid grid-cols-2 gap-2">
+ <div>
+ <label className="text-[10px] font-mono text-text-[var(--ink-2)] block mb-1">Estilo / Género</label>
+ <input
+ type="text"
+ value={createBandStyle}
+ onChange={(e) => setCreateBandStyle(e.target.value)}
+ placeholder="Ej. Indie Rock, Pop..."
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
+ }`}
+ />
+ </div>
+ <div>
+ <label className="text-[10px] font-mono text-text-[var(--ink-2)] block mb-1">Ubicación</label>
+ <input
+ type="text"
+ value={createBandLocation}
+ onChange={(e) => setCreateBandLocation(e.target.value)}
+ placeholder="Ej. Madrid, Barcelona..."
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
+ }`}
+ />
+ </div>
+ </div>
 
-         {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
-           <p className="text-[10px] font-mono text-neutral-500">
-             Se creará en el plan <span className="text-amber-400 font-bold">Promo</span> (dossier, calendario y fans).
-           </p>
-         ) : (
-         <div>
-           <label className="text-[10px] font-mono text-text-[var(--ink-2)] block mb-1.5">Plan Inicial del Proyecto</label>
-           <div className="grid grid-cols-3 gap-1.5">
-             {(['emergente', 'profesional', 'elite'] as const).map((pKey) => {
-               const planDef = getPlanDefinition(pKey);
-               const isPlanSelected = createBandPlan === pKey;
-               return (
-                 <button
-                   key={pKey}
-                   type="button"
-                   onClick={() => setCreateBandPlan(pKey)}
-                   className={`p-2 rounded-[var(--r-s)] border text-left text-[11px] transition-all cursor-pointer ${
-                     isPlanSelected
-                       ? 'bg-amber-500/20 /80 text-amber-300 shadow-sm'
-                       : isStitchLight
-                       ? 'bg-white  text-[var(--ink-2)] hover:bg-[var(--bg)]'
-                       : 'bg-bg-[var(--surface)]  text-text-[var(--ink-2)] hover:'
-                   }`}
-                 >
-                   <p className="font-bold truncate text-[10px] uppercase">{planDef.name.split(' ')[0]}</p>
-                   <p className="text-[9px] font-mono text-amber-400/90">{planDef.price}</p>
-                 </button>
-               );
-             })}
-           </div>
-         </div>
-         )}
+ {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
+ <p className="text-[10px] font-mono text-neutral-500">
+ Se creará en el plan <span className="text-amber-400 font-bold">Promo</span> (dossier, calendario y fans).
+ </p>
+ ) : (
+ <div>
+ <label className="text-[10px] font-mono text-text-[var(--ink-2)] block mb-1.5">Plan Inicial del Proyecto</label>
+ <div className="grid grid-cols-3 gap-1.5">
+ {(['emergente', 'profesional', 'elite'] as const).map((pKey) => {
+ const planDef = getPlanDefinition(pKey);
+ const isPlanSelected = createBandPlan === pKey;
+ return (
+ <button
+ key={pKey}
+ type="button"
+ onClick={() => setCreateBandPlan(pKey)}
+ className={`p-2 rounded-[var(--r-s)] text-left text-[11px] transition-all cursor-pointer ${
+ isPlanSelected
+ ? 'bg-amber-500/20 /80 text-amber-300 shadow-sm'
+ : isStitchLight
+ ? 'bg-white text-[var(--ink-2)] hover:bg-[var(--bg)]'
+ : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)] hover:'
+ }`}
+ >
+ <p className="font-bold truncate text-[10px] uppercase">{planDef.name.split(' ')[0]}</p>
+ <p className="text-[9px] font-mono text-amber-400/90">{planDef.price}</p>
+ </button>
+ );
+ })}
+ </div>
+ </div>
+ )}
 
-         <div className="pt-1 flex items-center justify-end gap-2">
-           <button
-             type="button"
-             onClick={() => setShowCreateBandSection(false)}
-             className="px-2.5 py-1 rounded-[var(--r-s)] text-xs text-text-[var(--ink-2)] hover:text-white cursor-pointer"
-           >
-             Cancelar
-           </button>
-           <button
-             type="button"
-             onClick={handleCreateBandInProfile}
-             disabled={isCreatingBand || !createBandName.trim()}
-             className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-           >
-             {isCreatingBand ? (
-               <>
-                 <Loader2 className="w-3 h-3 animate-spin" />
-                 <span>Creando...</span>
-               </>
-             ) : (
-               <>
-                 <Plus className="w-3 h-3" />
-                 <span>Crear Proyecto</span>
-               </>
-             )}
-           </button>
-         </div>
-       </div>
-     </div>
-   )}
+ <div className="pt-1 flex items-center justify-end gap-2">
+ <button
+ type="button"
+ onClick={() => setShowCreateBandSection(false)}
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-xs text-text-[var(--ink-2)] hover:text-white cursor-pointer"
+ >
+ Cancelar
+ </button>
+ <button
+ type="button"
+ onClick={handleCreateBandInProfile}
+ disabled={isCreatingBand || !createBandName.trim()}
+ className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+ >
+ {isCreatingBand ? (
+ <>
+ <Loader2 className="w-3 h-3 animate-spin" />
+ <span>Creando...</span>
+ </>
+ ) : (
+ <>
+ <Plus className="w-3 h-3" />
+ <span>Crear Proyecto</span>
+ </>
+ )}
+ </button>
+ </div>
+ </div>
+ </div>
+ )}
 
-   {/* Delete Confirmation Box */}
-   {bandToDeleteInProfile && (
-     <div className="p-3 rounded-[var(--r-m)] bg-rose-500/10 space-y-2 animate-in fade-in duration-200">
-       <p className="text-xs font-bold text-rose-400 flex items-center gap-1.5">
-         <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
-         <span>¿Eliminar proyecto "{bandToDeleteInProfile.name}"?</span>
-       </p>
-       <p className="text-[11px] text-text-[var(--ink-3)]">
-         Se desvinculará este proyecto de tu cuenta de usuario. Esta acción no se puede deshacer.
-       </p>
-       <div className="flex items-center justify-end gap-2 pt-1">
-         <button
-           type="button"
-           onClick={() => setBandToDeleteInProfile(null)}
-           className="px-2.5 py-1 rounded-[var(--r-s)] text-xs text-text-[var(--ink-2)] hover:text-white cursor-pointer"
-         >
-           Cancelar
-         </button>
-         <button
-           type="button"
-           onClick={handleConfirmDeleteBandInProfile}
-           disabled={!!deletingBandId}
-           className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm"
-         >
-           {deletingBandId ? (
-             <>
-               <Loader2 className="w-3 h-3 animate-spin" />
-               <span>Eliminando...</span>
-             </>
-           ) : (
-             <>
-               <Trash2 className="w-3 h-3" />
-               <span>Sí, Eliminar</span>
-             </>
-           )}
-         </button>
-       </div>
-     </div>
-   )}
+ {/* Delete Confirmation Box */}
+ {bandToDeleteInProfile && (
+ <div className="p-3 rounded-[var(--r-m)] bg-rose-500/10 space-y-2 animate-in fade-in duration-200">
+ <p className="text-xs font-bold text-rose-400 flex items-center gap-1.5">
+ <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+ <span>¿Eliminar proyecto "{bandToDeleteInProfile.name}"?</span>
+ </p>
+ <p className="text-[11px] text-text-[var(--ink-3)]">
+ Se desvinculará este proyecto de tu cuenta de usuario. Esta acción no se puede deshacer.
+ </p>
+ <div className="flex items-center justify-end gap-2 pt-1">
+ <button
+ type="button"
+ onClick={() => setBandToDeleteInProfile(null)}
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-xs text-text-[var(--ink-2)] hover:text-white cursor-pointer"
+ >
+ Cancelar
+ </button>
+ <button
+ type="button"
+ onClick={handleConfirmDeleteBandInProfile}
+ disabled={!!deletingBandId}
+ className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm"
+ >
+ {deletingBandId ? (
+ <>
+ <Loader2 className="w-3 h-3 animate-spin" />
+ <span>Eliminando...</span>
+ </>
+ ) : (
+ <>
+ <Trash2 className="w-3 h-3" />
+ <span>Sí, Eliminar</span>
+ </>
+ )}
+ </button>
+ </div>
+ </div>
+ )}
 
-   <div className={`p-3 rounded-[var(--r-m)] border space-y-2 ${
-     isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)] '
-   }`}>
-     <p className="text-[11px] text-text-[var(--ink-2)]">
-       Selecciona tu proyecto principal por defecto o gestiona tus bandas activas:
-     </p>
+ <div className={`p-3 rounded-[var(--r-m)] space-y-2 ${
+ isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)] '
+ }`}>
+ <p className="text-[11px] text-text-[var(--ink-2)]">
+ Selecciona tu proyecto principal por defecto o gestiona tus bandas activas:
+ </p>
 
-     {localAvailableBands && localAvailableBands.length > 0 ? (
-       <div className="space-y-1.5 pt-1">
-         {localAvailableBands.map((b) => {
-           const isSelected = selectedMainBandId === b.band_id || (b.band_id && selectedMainBandId && selectedMainBandId.replace(/^(band|reg)-/, '') === b.band_id.replace(/^(band|reg)-/, ''));
-           const isDeleting = deletingBandId === b.band_id;
-           return (
-             <div
-               key={b.band_id}
-               className={`w-full p-2.5 rounded-[var(--r-m)] border flex items-center justify-between gap-3 transition-all ${
-                 isSelected
-                   ? 'bg-amber-500/15 /50 text-amber-300 shadow-sm'
-                   : isStitchLight
-                   ? 'bg-white  text-[var(--ink-2)]'
-                   : 'bg-bg-[var(--surface)]  text-text-[var(--ink-3)]'
-               }`}
-             >
-               <button
-                 type="button"
-                 onClick={() => setSelectedMainBandId(b.band_id)}
-                 className="flex items-center gap-2.5 min-w-0 flex-1 text-left cursor-pointer active:scale-98"
-               >
-                 <div className="w-6 h-6 rounded-[var(--r-s)] bg-neutral-800 border  flex items-center justify-center text-amber-400 shrink-0 text-xs font-mono font-bold">
-                   {b.bandName.slice(0, 2).toUpperCase()}
-                 </div>
-                 <div className="min-w-0">
-                   <p className="text-xs font-bold truncate">{b.bandName}</p>
-                   <p className="text-[10px] text-text-[var(--ink-2)] font-mono capitalize">{b.role === 'leader' ? 'Líder / Mánager' : 'Miembro'} • {getPlanDefinition(b.plan).name}</p>
-                 </div>
-               </button>
+ {localAvailableBands && localAvailableBands.length > 0 ? (
+ <div className="space-y-1.5 pt-1">
+ {localAvailableBands.map((b) => {
+ const isSelected = selectedMainBandId === b.band_id || (b.band_id && selectedMainBandId && selectedMainBandId.replace(/^(band|reg)-/, '') === b.band_id.replace(/^(band|reg)-/, ''));
+ const isDeleting = deletingBandId === b.band_id;
+ return (
+ <div
+ key={b.band_id}
+ className={`w-full p-2.5 rounded-[var(--r-m)] flex items-center justify-between gap-3 transition-all ${
+ isSelected
+ ? 'bg-amber-500/15 /50 text-amber-300 shadow-sm'
+ : isStitchLight
+ ? 'bg-white text-[var(--ink-2)]'
+ : 'bg-bg-[var(--surface)] text-text-[var(--ink-3)]'
+ }`}
+ >
+ <button
+ type="button"
+ onClick={() => setSelectedMainBandId(b.band_id)}
+ className="flex items-center gap-2.5 min-w-0 flex-1 text-left cursor-pointer active:scale-98"
+ >
+ <div className="w-6 h-6 rounded-[var(--r-s)] bg-neutral-800 flex items-center justify-center text-amber-400 shrink-0 text-xs font-mono font-bold">
+ {b.bandName.slice(0, 2).toUpperCase()}
+ </div>
+ <div className="min-w-0">
+ <p className="text-xs font-bold truncate">{b.bandName}</p>
+ <p className="text-[10px] text-text-[var(--ink-2)] font-mono capitalize">{b.role === 'leader' ? 'Líder / Mánager' : 'Miembro'} • {getPlanDefinition(b.plan).name}</p>
+ </div>
+ </button>
 
-               <div className="flex items-center gap-1.5 shrink-0">
-                 {isSelected ? (
-                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-black text-[9px] font-black uppercase font-mono">
-                     <Star className="w-2.5 h-2.5 fill-black" />
-                     <span>Principal</span>
-                   </span>
-                 ) : (
-                   <button
-                     type="button"
-                     onClick={() => setSelectedMainBandId(b.band_id)}
-                     className="text-[10px] font-mono text-text-[var(--ink-2)] hover:text-amber-400 px-1.5 py-0.5 rounded cursor-pointer"
-                   >
-                     Hacer principal
-                   </button>
-                 )}
+ <div className="flex items-center gap-1.5 shrink-0">
+ {isSelected ? (
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400 text-black text-[9px] font-black uppercase font-mono">
+ <Star className="w-2.5 h-2.5 fill-black" />
+ <span>Principal</span>
+ </span>
+ ) : (
+ <button
+ type="button"
+ onClick={() => setSelectedMainBandId(b.band_id)}
+ className="text-[10px] font-mono text-text-[var(--ink-2)] hover:text-amber-400 px-1.5 py-0.5 rounded cursor-pointer"
+ >
+ Hacer principal
+ </button>
+ )}
 
-                 {localAvailableBands.length > 1 && (
-                   <button
-                     type="button"
-                     disabled={isDeleting}
-                     onClick={() => setBandToDeleteInProfile({ id: b.band_id, name: b.bandName })}
-                     title="Eliminar proyecto"
-                     className="p-1.5 rounded-[var(--r-s)] text-neutral-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
-                   >
-                     {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-                   </button>
-                 )}
-               </div>
-             </div>
-           );
-         })}
-       </div>
-     ) : (
-       <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-bg-[var(--surface)] border ">
-         <span className="text-xs font-bold text-white">{activeBandName || currentUser.bandName || 'BAKANDEYA'}</span>
-         <span className="text-[10px] font-mono text-amber-400">Principal</span>
-       </div>
-     )}
-   </div>
+ {localAvailableBands.length > 1 && (
+ <button
+ type="button"
+ disabled={isDeleting}
+ onClick={() => setBandToDeleteInProfile({ id: b.band_id, name: b.bandName })}
+ title="Eliminar proyecto"
+ className="p-1.5 rounded-[var(--r-s)] text-neutral-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+ >
+ {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+ </button>
+ )}
+ </div>
+ </div>
+ );
+ })}
+ </div>
+ ) : (
+ <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-bg-[var(--surface)] ">
+ <span className="text-xs font-bold text-white">{activeBandName || currentUser.bandName || 'BAKANDEYA'}</span>
+ <span className="text-[10px] font-mono text-amber-400">Principal</span>
+ </div>
+ )}
+ </div>
  </div>
 
  {/* Language Selection */}
  <div className="space-y-2 pt-2 border-t /80">
-   <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)] flex items-center justify-between">
-     <span className="flex items-center gap-1.5">
-       <Globe className="w-3.5 h-3.5 text-amber-400" />
-       <span>Idioma de la Plataforma / Language</span>
-     </span>
-     <span className="text-[10px] text-amber-400/80 font-normal font-mono">Multilenguaje</span>
-   </label>
-   <div className="pt-1">
-     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-      {SUPPORTED_LANGUAGES.map((lang) => {
-        const isSelected = lang.code === language;
-        return (
-          <button
-            key={lang.code}
-            type="button"
-            onClick={() => setLanguage(lang.code)}
-            className={`p-2.5 rounded-[var(--r-m)] border text-left transition-all cursor-pointer flex items-center justify-between gap-2 active:scale-95 ${
-              isSelected
-                ? 'bg-amber-500/20 /60 text-amber-300 font-bold shadow-xs'
-                : isStitchLight
-                ? 'bg-[var(--bg)]  text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                : 'bg-bg-[var(--surface)]  text-text-[var(--ink-3)] hover: hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-base leading-none">{lang.flag}</span>
-              <span className="text-xs truncate">{lang.label}</span>
-            </div>
-            {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
-          </button>
-        );
-      })}
-     </div>
-   </div>
+ <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)] flex items-center justify-between">
+ <span className="flex items-center gap-1.5">
+ <Globe className="w-3.5 h-3.5 text-amber-400" />
+ <span>Idioma de la Plataforma / Language</span>
+ </span>
+ <span className="text-[10px] text-amber-400/80 font-normal font-mono">Multilenguaje</span>
+ </label>
+ <div className="pt-1">
+ <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+ {SUPPORTED_LANGUAGES.map((lang) => {
+ const isSelected = lang.code === language;
+ return (
+ <button
+ key={lang.code}
+ type="button"
+ onClick={() => setLanguage(lang.code)}
+ className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 active:scale-95 ${
+ isSelected
+ ? 'bg-amber-500/20 /60 text-amber-300 font-bold shadow-xs'
+ : isStitchLight
+ ? 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+ : 'bg-bg-[var(--surface)] text-text-[var(--ink-3)] hover: hover:text-white'
+ }`}
+ >
+ <div className="flex items-center gap-2 min-w-0">
+ <span className="text-base leading-none">{lang.flag}</span>
+ <span className="text-xs truncate">{lang.label}</span>
+ </div>
+ {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+ </button>
+ );
+ })}
+ </div>
+ </div>
  </div>
 
  {/* Collapsible Appearance Settings (Theme & Font) */}
@@ -901,8 +901,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={() => setShowAppearance(!showAppearance)}
- className={`w-full p-2.5 rounded-[var(--r-m)] border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
- isStitchLight ? 'bg-[var(--bg)]  text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-bg-[var(--surface)]  text-text-[var(--ink-3)] hover:'
+ className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
+ isStitchLight ? 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-bg-[var(--surface)] text-text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -931,10 +931,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  key={key}
  type="button"
  onClick={() => onThemeChange(key as ThemeName)}
- className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-1.5 border ${
+ className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-1.5 ${
  isSelected
  ? 'bg-amber-500/15 /50 text-amber-300 font-bold'
- : 'bg-bg-[var(--surface)]  text-text-[var(--ink-3)] hover:'
+ : 'bg-bg-[var(--surface)] text-text-[var(--ink-3)] hover:'
  }`}
  >
  <span className="text-[11px] font-mono truncate">{t.name}</span>
@@ -960,10 +960,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  key={p.id}
  type="button"
  onClick={() => onFontChange(p.id)}
- className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-0.5 border ${
+ className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-0.5 ${
  isSelected
  ? 'bg-emerald-500/15 border-emerald-500/50 text-emerald-300 font-bold'
- : 'bg-bg-[var(--surface)]  text-text-[var(--ink-3)] hover:'
+ : 'bg-bg-[var(--surface)] text-text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between gap-1 w-full">
@@ -984,64 +984,64 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  )}
 
  {/* Sistema «Espectro» — el rediseño en curso, real y en vivo. Independiente del
-     selector THEMES de arriba (ese es el sistema viejo, con colors/ThemeColors por
-     prop — sigue vivo y no se toca). Este escribe directo en <html data-theme> via
-     src/utils/temaEspectro.ts, asi que el cambio es instantaneo sin re-render del
-     arbol: las 4.365 clases de color se resuelven solas via CSS vars. Por defecto
-     'classic' = exactamente la app de siempre; el resto son las pantallas ya
-     migradas (login, panel) mas el resto de la app tal cual, mientras avanza. */}
+ selector THEMES de arriba (ese es el sistema viejo, con colors/ThemeColors por
+ prop — sigue vivo y no se toca). Este escribe directo en <html data-theme> via
+ src/utils/temaEspectro.ts, asi que el cambio es instantaneo sin re-render del
+ arbol: las 4.365 clases de color se resuelven solas via CSS vars. Por defecto
+ 'classic' = exactamente la app de siempre; el resto son las pantallas ya
+ migradas (login, panel) mas el resto de la app tal cual, mientras avanza. */}
  <div className="pt-3 border-t /80">
-   <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/[0.04] space-y-2.5">
-     <label className="text-[11px] font-mono font-semibold text-amber-300 flex items-center gap-1.5">
-       <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-       <span>Nuevo diseño — Espectro (en pruebas)</span>
-     </label>
-     <p className="text-[11px] text-text-[var(--ink-2)] leading-relaxed">
-       Ve probando el rediseño mientras migro pantalla a pantalla. Lo que aún no está
-       migrado se ve igual que siempre en cualquiera de las cuatro opciones — no rompe nada.
-     </p>
-     <div className="grid grid-cols-2 gap-2">
-       {PREFERENCIAS_ESPECTRO.map((p) => {
-         const isSelected = prefEspectro === p.id;
-         return (
-           <button
-             key={p.id}
-             type="button"
-             onClick={() => {
-               setPrefEspectro(p.id);
-               guardarPreferenciaEspectro(p.id);
-             }}
-             className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-1.5 border ${
-               isSelected
-                 ? 'bg-amber-500/15 /50 text-amber-300 font-bold'
-                 : 'bg-bg-[var(--surface)]  text-text-[var(--ink-3)] hover:'
-             }`}
-             title={p.descripcion}
-           >
-             <span className="text-[11px] font-mono truncate">{p.etiqueta}</span>
-             {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
-           </button>
-         );
-       })}
-     </div>
-     <p className="text-[10px] text-neutral-500 font-mono">
-       Ahora mismo: {resolverTemaEspectro(prefEspectro) === 'dark' ? 'oscuro' : resolverTemaEspectro(prefEspectro) === 'light' ? 'claro' : 'clásico'}
-     </p>
-   </div>
+ <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/[0.04] space-y-2.5">
+ <label className="text-[11px] font-mono font-semibold text-amber-300 flex items-center gap-1.5">
+ <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <span>Nuevo diseño — Espectro (en pruebas)</span>
+ </label>
+ <p className="text-[11px] text-text-[var(--ink-2)] leading-relaxed">
+ Ve probando el rediseño mientras migro pantalla a pantalla. Lo que aún no está
+ migrado se ve igual que siempre en cualquiera de las cuatro opciones — no rompe nada.
+ </p>
+ <div className="grid grid-cols-2 gap-2">
+ {PREFERENCIAS_ESPECTRO.map((p) => {
+ const isSelected = prefEspectro === p.id;
+ return (
+ <button
+ key={p.id}
+ type="button"
+ onClick={() => {
+ setPrefEspectro(p.id);
+ guardarPreferenciaEspectro(p.id);
+ }}
+ className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-1.5 ${
+ isSelected
+ ? 'bg-amber-500/15 /50 text-amber-300 font-bold'
+ : 'bg-bg-[var(--surface)] text-text-[var(--ink-3)] hover:'
+ }`}
+ title={p.descripcion}
+ >
+ <span className="text-[11px] font-mono truncate">{p.etiqueta}</span>
+ {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+ </button>
+ );
+ })}
+ </div>
+ <p className="text-[10px] text-neutral-500 font-mono">
+ Ahora mismo: {resolverTemaEspectro(prefEspectro) === 'dark' ? 'oscuro' : resolverTemaEspectro(prefEspectro) === 'light' ? 'claro' : 'clásico'}
+ </p>
+ </div>
  </div>
 
  {/* Agent Configuration Entry Point (Autonomía, Horarios & Email) - un único modal
-     centralizado (AgentAutonomySettingsModal, el mismo que usan Dashboard/Chatbot/BookingCRM)
-     en vez de duplicar aquí el formulario de horarios (antes BandScheduleConfig, ahora
-     eliminado) y de email. EmailAccountConfig sigue siendo el mismo componente compartido,
-     solo que ahora se llega a él siempre por el mismo camino. */}
+ centralizado (AgentAutonomySettingsModal, el mismo que usan Dashboard/Chatbot/BookingCRM)
+ en vez de duplicar aquí el formulario de horarios (antes BandScheduleConfig, ahora
+ eliminado) y de email. EmailAccountConfig sigue siendo el mismo componente compartido,
+ solo que ahora se llega a él siempre por el mismo camino. */}
  {currentUser.band_id && !isPromoUser && (
  <div className="pt-3 border-t /80">
  <button
  type="button"
  onClick={() => setShowAgentConfig(true)}
- className={`w-full p-2.5 rounded-[var(--r-m)] border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
- isStitchLight ? 'bg-[var(--bg)]  text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-bg-[var(--surface)]  text-text-[var(--ink-3)] hover:'
+ className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
+ isStitchLight ? 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'bg-bg-[var(--surface)] text-text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -1182,8 +1182,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {showUpgradeModal && (
  <ModalPortal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200 text-left">
- <div className={`w-full max-w-lg rounded-[var(--r-l)] shadow-2xl border overflow-hidden flex flex-col my-auto max-h-[90vh] ${
- isStitchLight ? 'bg-white  text-[var(--ink)]' : 'bg-bg-[var(--surface)] /30 text-bg-[var(--sunken)]'
+ <div className={`w-full max-w-lg rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] /30 text-bg-[var(--sunken)]'
  }`}>
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-bg-[var(--surface)] to-bg-[var(--surface)] border-b /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
@@ -1204,69 +1204,69 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-  {currentUser?.estado_suscripcion === 'pago_pendiente' && (
-    <div className="p-3.5 rounded-[var(--r-m)] bg-rose-500/20 text-rose-200 text-xs flex items-center justify-between gap-3">
-      <div className="flex items-center gap-2">
-        <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
-        <span>Pago pendiente. Actualiza tu método de pago para mantener tus funciones.</span>
-      </div>
-      <button
-        type="button"
-        onClick={async () => {
-          try {
-            // Sin email de repuesto: el que había era el del dueño de la plataforma y abría SU
-            // portal de facturación a quien no tuviera email. Lo resuelve el servidor.
-            const res = await api.createPortalSession({
-              bandId: currentUser.band_id,
-              returnUrl: window.location.href
-            });
-            if (res.success && res.url) window.location.href = res.url;
-          } catch (e) {}
-        }}
-        className="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-white font-mono font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer whitespace-nowrap"
-      >
-        Actualizar Tarjeta
-      </button>
-    </div>
-  )}
+ {currentUser?.estado_suscripcion === 'pago_pendiente' && (
+ <div className="p-3.5 rounded-[var(--r-m)] bg-rose-500/20 text-rose-200 text-xs flex items-center justify-between gap-3">
+ <div className="flex items-center gap-2">
+ <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+ <span>Pago pendiente. Actualiza tu método de pago para mantener tus funciones.</span>
+ </div>
+ <button
+ type="button"
+ onClick={async () => {
+ try {
+ // Sin email de repuesto: el que había era el del dueño de la plataforma y abría SU
+ // portal de facturación a quien no tuviera email. Lo resuelve el servidor.
+ const res = await api.createPortalSession({
+ bandId: currentUser.band_id,
+ returnUrl: window.location.href
+ });
+ if (res.success && res.url) window.location.href = res.url;
+ } catch (e) {}
+ }}
+ className="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-white font-mono font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer whitespace-nowrap"
+ >
+ Actualizar Tarjeta
+ </button>
+ </div>
+ )}
 
-  {currentUser?.plan_pendiente && (
-    <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/15 text-amber-200 text-xs flex items-center gap-2.5">
-      <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
-      <span>
-        Cambio programado a <strong className="uppercase font-mono text-amber-300">{currentUser.plan_pendiente.replace('_', ' ')}</strong> al finalizar el ciclo.
-      </span>
-    </div>
-  )}
+ {currentUser?.plan_pendiente && (
+ <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/15 text-amber-200 text-xs flex items-center gap-2.5">
+ <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+ <span>
+ Cambio programado a <strong className="uppercase font-mono text-amber-300">{currentUser.plan_pendiente.replace('_', ' ')}</strong> al finalizar el ciclo.
+ </span>
+ </div>
+ )}
 
-  <div className="flex items-center justify-between gap-2 p-3 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 border ">
-    <div className="flex items-center gap-2">
-      <CreditCard className="w-4 h-4 text-amber-400 shrink-0" />
-      <span className="text-xs text-text-[var(--ink-3)] font-mono">Facturación & Tarjetas en Stripe:</span>
-    </div>
-    <button
-      type="button"
-      onClick={async () => {
-        try {
-          const res = await api.createPortalSession({
-            bandId: currentUser.band_id,
-            returnUrl: window.location.href
-          });
-          if (res.success && res.url) {
-            window.location.href = res.url;
-          } else {
-            alert(res.error || 'No se pudo abrir el portal de Stripe');
-          }
-        } catch (err: any) {
-          alert('Error al conectar con Stripe: ' + err.message);
-        }
-      }}
-      className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer"
-    >
-      <span>Portal de Stripe</span>
-      <ExternalLink className="w-3 h-3" />
-    </button>
-  </div>
+ <div className="flex items-center justify-between gap-2 p-3 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 ">
+ <div className="flex items-center gap-2">
+ <CreditCard className="w-4 h-4 text-amber-400 shrink-0" />
+ <span className="text-xs text-text-[var(--ink-3)] font-mono">Facturación & Tarjetas en Stripe:</span>
+ </div>
+ <button
+ type="button"
+ onClick={async () => {
+ try {
+ const res = await api.createPortalSession({
+ bandId: currentUser.band_id,
+ returnUrl: window.location.href
+ });
+ if (res.success && res.url) {
+ window.location.href = res.url;
+ } else {
+ alert(res.error || 'No se pudo abrir el portal de Stripe');
+ }
+ } catch (err: any) {
+ alert('Error al conectar con Stripe: ' + err.message);
+ }
+ }}
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+ >
+ <span>Portal de Stripe</span>
+ <ExternalLink className="w-3 h-3" />
+ </button>
+ </div>
 
  <p className="text-xs text-text-[var(--ink-3)] leading-relaxed">
  Tu proyecto tiene actualmente activo el <strong className="text-amber-300">{currentPlanDef.name}</strong>. Puedes cambiar de plan al instante haciendo clic en el botón de la opción que desees:
@@ -1278,17 +1278,17 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  return (
  <div
  key={plan.id}
- className={`p-4 rounded-[var(--r-m)] border transition-all ${
+ className={`p-4 rounded-[var(--r-m)] transition-all ${
  isCurrent
  ? 'bg-amber-500/10 /50 ring-1 ring-amber-500/30'
- : 'bg-bg-[var(--surface)]/60  hover:'
+ : 'bg-bg-[var(--surface)]/60 hover:'
  }`}
  >
  <div className="flex items-center justify-between flex-wrap gap-2">
  <div className="flex items-center gap-2">
  <span className="font-bold text-xs text-white font-mono">{plan.name}</span>
  <span 
- className="text-[9px] font-mono font-bold px-2 py-0.5 rounded border"
+ className="text-[9px] font-mono font-bold px-2 py-0.5 rounded"
  style={{ backgroundColor: `${plan.color}20`, color: plan.color, borderColor: `${plan.color}40` }}
  >
  {plan.badge}
@@ -1336,27 +1336,27 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={async () => {
-                            try {
-                              if (plan.id !== 'ensayo') {
-                                await api.startCheckout({
-                                  planId: plan.id,
-                                  billingInterval: 'monthly',
-                                  bandId: currentUser.band_id || 'default',
-                                  userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : undefined
-                                });
-                                setShowUpgradeModal(false);
-                                return;
-                              }
+ try {
+ if (plan.id !== 'ensayo') {
+ await api.startCheckout({
+ planId: plan.id,
+ billingInterval: 'monthly',
+ bandId: currentUser.band_id || 'default',
+ userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : undefined
+ });
+ setShowUpgradeModal(false);
+ return;
+ }
 
-                              if (currentUser?.id) {
-                                await api.updateUser(currentUser.id, { plan: plan.id, band_id: currentUser.band_id } as any);
-                              }
-                              const updatedUser = { ...currentUser, plan: plan.id };
-                              localStorage.setItem('bakandeya_user', JSON.stringify(updatedUser));
-                              if (onUpdateUser) onUpdateUser(updatedUser as User);
-                              setShowUpgradeModal(false);
-                              alert(`¡Plan de suscripción cambiado con éxito a ${plan.name}! Módulos activados.`);
-                            } catch (e: any) {
+ if (currentUser?.id) {
+ await api.updateUser(currentUser.id, { plan: plan.id, band_id: currentUser.band_id } as any);
+ }
+ const updatedUser = { ...currentUser, plan: plan.id };
+ localStorage.setItem('bakandeya_user', JSON.stringify(updatedUser));
+ if (onUpdateUser) onUpdateUser(updatedUser as User);
+ setShowUpgradeModal(false);
+ alert(`¡Plan de suscripción cambiado con éxito a ${plan.name}! Módulos activados.`);
+ } catch (e: any) {
  console.error('Error al cambiar plan:', e);
  alert(e?.message || 'No se pudo cambiar el plan. Reintenta en unos instantes.');
  }
@@ -1374,19 +1374,19 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  </div>
 
- <div className="px-6 py-3 bg-bg-[var(--surface)] border-t  flex items-center justify-between">
+ <div className="px-6 py-3 bg-bg-[var(--surface)] border-t flex items-center justify-between">
  {onNavigateToPlanes ? (
-   <button
-     type="button"
-     onClick={() => {
-       setShowUpgradeModal(false);
-       onClose();
-       onNavigateToPlanes();
-     }}
-     className="text-xs font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1.5 cursor-pointer font-bold"
-   >
-     <span>Ver comparativa completa y tabla de planes →</span>
-   </button>
+ <button
+ type="button"
+ onClick={() => {
+ setShowUpgradeModal(false);
+ onClose();
+ onNavigateToPlanes();
+ }}
+ className="text-xs font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1.5 cursor-pointer font-bold"
+ >
+ <span>Ver comparativa completa y tabla de planes →</span>
+ </button>
  ) : <span />}
  <button
  onClick={() => setShowUpgradeModal(false)}

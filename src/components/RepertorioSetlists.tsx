@@ -10,8 +10,8 @@ import {
  Sparkles, Brain, Sliders, CheckCircle2, ChevronLeft, ChevronRight, HelpCircle, Eye, EyeOff, Headphones,
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
-  ChevronUp, ChevronDown, ListPlus, Users,
-  GripVertical, ImagePlus, MoreHorizontal, TrendingUp
+ ChevronUp, ChevronDown, ListPlus, Users,
+ GripVertical, ImagePlus, MoreHorizontal, TrendingUp
 } from 'lucide-react';
 import { RepertorioNavBar } from './repertorio/RepertorioNavBar';
 import { SetlistAddBar } from './repertorio/SetlistAddBar';
@@ -79,31 +79,31 @@ interface RepertorioSetlistsProps {
 // app: solo debe mostrarse cuando la banda activa es literalmente Bakandeya, nunca como
 // fallback para otras bandas (ver bandRosterMembers más abajo).
 const BAKANDEYA_DEMO_MEMBERS: BandMemberOption[] = [
-  { id: 'usr-1', name: 'Voz / Guitarra', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
-  { id: 'usr-2', name: 'Bajo / Coros', instrument: 'Bajo / Coros', avatarColor: '#f59e0b' },
-  { id: 'usr-3', name: 'Batería / Percusión', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
-  { id: 'usr-4', name: 'Teclados / Sintes', instrument: 'Teclados / Sintes', avatarColor: '#10b981' },
-  { id: 'usr-5', name: 'Vientos / Metales', instrument: 'Vientos / Metales', avatarColor: '#3b82f6' }
+ { id: 'usr-1', name: 'Voz / Guitarra', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
+ { id: 'usr-2', name: 'Bajo / Coros', instrument: 'Bajo / Coros', avatarColor: '#f59e0b' },
+ { id: 'usr-3', name: 'Batería / Percusión', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
+ { id: 'usr-4', name: 'Teclados / Sintes', instrument: 'Teclados / Sintes', avatarColor: '#10b981' },
+ { id: 'usr-5', name: 'Vientos / Metales', instrument: 'Vientos / Metales', avatarColor: '#3b82f6' }
 ];
 
 export function formatSecondsToMmSs(secs: number): string {
-  if (!secs || isNaN(secs) || secs < 0) return '00:00';
-  const m = Math.floor(secs / 60);
-  const s = Math.floor(secs % 60);
-  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+ if (!secs || isNaN(secs) || secs < 0) return '00:00';
+ const m = Math.floor(secs / 60);
+ const s = Math.floor(secs % 60);
+ return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 }
 
 export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
-  header: { label: 'Encabezado de Bloque / Sección', icon: '⚡', bg: 'bg-[#d1b375]/20', text: 'text-[#d1b375]', border: 'border-[var(--acc)]/50' },
-  presentacion: { label: 'Presentación Banda / Saludo', icon: '🎤', bg: 'bg-sky-500/15', text: 'text-sky-400', border: 'border-sky-500/30' },
-  intro_tema: { label: 'Intro / Historia del Tema', icon: '🗣️', bg: 'bg-indigo-500/15', text: 'text-indigo-400', border: 'border-indigo-500/30' },
-  beatbox: { label: 'Performance Beatbox / Ritmo', icon: '🥁', bg: 'bg-amber-500/15', text: 'text-amber-400', border: '/30' },
-  solo_performance: { label: 'Solo de Instrumento / Jam', icon: '🎸', bg: 'bg-purple-500/15', text: 'text-purple-400', border: 'border-purple-500/30' },
-  cambio_instrumento: { label: 'Cambio Instrumento / Afinación', icon: '🔧', bg: 'bg-emerald-500/15', text: 'text-emerald-400', border: 'border-emerald-500/30' },
-  chapa: { label: 'Chapa / Discurso con el Público', icon: '💬', bg: 'bg-orange-500/15', text: 'text-orange-400', border: 'border-orange-500/30' },
-  descanso: { label: 'Pausa / Intermedio / Agua', icon: '⏸️', bg: 'bg-zinc-800', text: 'text-zinc-300', border: 'border-zinc-700' },
-  bis: { label: 'BIS / Parón Pre-Bis', icon: '💣', bg: 'bg-rose-500/15', text: 'text-rose-400', border: 'border-rose-500/30' },
-  otro: { label: 'Otro Evento del Show', icon: '📌', bg: 'bg-neutral-800', text: 'text-neutral-300', border: '' }
+ header: { label: 'Encabezado de Bloque / Sección', icon: '⚡', bg: 'bg-[#d1b375]/20', text: 'text-[#d1b375]', border: 'border-[var(--acc)]/50' },
+ presentacion: { label: 'Presentación Banda / Saludo', icon: '🎤', bg: 'bg-sky-500/15', text: 'text-sky-400', border: 'border-sky-500/30' },
+ intro_tema: { label: 'Intro / Historia del Tema', icon: '🗣️', bg: 'bg-indigo-500/15', text: 'text-indigo-400', border: 'border-indigo-500/30' },
+ beatbox: { label: 'Performance Beatbox / Ritmo', icon: '🥁', bg: 'bg-amber-500/15', text: 'text-amber-400', border: '/30' },
+ solo_performance: { label: 'Solo de Instrumento / Jam', icon: '🎸', bg: 'bg-purple-500/15', text: 'text-purple-400', border: 'border-purple-500/30' },
+ cambio_instrumento: { label: 'Cambio Instrumento / Afinación', icon: '🔧', bg: 'bg-emerald-500/15', text: 'text-emerald-400', border: 'border-emerald-500/30' },
+ chapa: { label: 'Chapa / Discurso con el Público', icon: '💬', bg: 'bg-orange-500/15', text: 'text-orange-400', border: 'border-orange-500/30' },
+ descanso: { label: 'Pausa / Intermedio / Agua', icon: '⏸️', bg: 'bg-zinc-800', text: 'text-zinc-300', border: 'border-zinc-700' },
+ bis: { label: 'BIS / Parón Pre-Bis', icon: '💣', bg: 'bg-rose-500/15', text: 'text-rose-400', border: 'border-rose-500/30' },
+ otro: { label: 'Otro Evento del Show', icon: '📌', bg: 'bg-neutral-800', text: 'text-neutral-300', border: '' }
 };
 
 // GIF 1x1 transparente para anular la "foto" fantasma que el navegador dibuja por defecto al
@@ -114,7 +114,7 @@ export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: 
 // window.Image (no el icono `Image` de lucide-react importado arriba, que shadowea el global).
 const TRANSPARENT_DRAG_IMAGE = typeof window !== 'undefined' ? new window.Image() : null;
 if (TRANSPARENT_DRAG_IMAGE) {
-  TRANSPARENT_DRAG_IMAGE.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7';
+ TRANSPARENT_DRAG_IMAGE.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7';
 }
 
 const DEFAULT_SONGS: Song[] = [
@@ -377,35 +377,35 @@ export default function RepertorioSetlists({
  // de otra banda — este mismo bug (ver MemberNotesModal/PdfExportModal/SongModal más abajo)
  // hacía que cualquier banda viera hardcodeados los músicos de Bakandeya en "Repertorios".
  const bandRosterMembers: BandMemberOption[] = useMemo(() => {
-   if (isBakandeya) return BAKANDEYA_DEMO_MEMBERS;
-   return resolveBandMembers(bandUsers);
+ if (isBakandeya) return BAKANDEYA_DEMO_MEMBERS;
+ return resolveBandMembers(bandUsers);
  }, [isBakandeya, bandUsers]);
 
  // Helper to filter out template songs for non-Bakandeya bands
  const sanitizeBandSongs = React.useCallback((rawList: Song[]): Song[] => {
-   if (!Array.isArray(rawList)) return [];
-   if (isBakandeya) return rawList;
-   return rawList.filter(s => {
-     if (!s || typeof s !== 'object') return false;
-     const sId = (s.id || '').toLowerCase();
-     if (sId.startsWith('sample-track-')) return true;
-     if (sId.startsWith('song-cm-') || /^song-[1-8]$/.test(sId) || sId.startsWith('live_song_')) {
-       return false;
-     }
-     return true;
-   });
+ if (!Array.isArray(rawList)) return [];
+ if (isBakandeya) return rawList;
+ return rawList.filter(s => {
+ if (!s || typeof s !== 'object') return false;
+ const sId = (s.id || '').toLowerCase();
+ if (sId.startsWith('sample-track-')) return true;
+ if (sId.startsWith('song-cm-') || /^song-[1-8]$/.test(sId) || sId.startsWith('live_song_')) {
+ return false;
+ }
+ return true;
+ });
  }, [isBakandeya]);
 
  const sanitizeBandSetlists = React.useCallback((rawList: Setlist[]): Setlist[] => {
-   if (!Array.isArray(rawList)) return [];
-   if (isBakandeya) return rawList;
-   return rawList.filter(sl => {
-     if (!sl || typeof sl !== 'object') return false;
-     const slId = (sl.id || '').toLowerCase();
-     if (slId.startsWith('setlist-sample-')) return true;
-     if (slId === 'setlist-1' || slId === 'setlist-2') return false;
-     return true;
-   });
+ if (!Array.isArray(rawList)) return [];
+ if (isBakandeya) return rawList;
+ return rawList.filter(sl => {
+ if (!sl || typeof sl !== 'object') return false;
+ const slId = (sl.id || '').toLowerCase();
+ if (slId.startsWith('setlist-sample-')) return true;
+ if (slId === 'setlist-1' || slId === 'setlist-2') return false;
+ return true;
+ });
  }, [isBakandeya]);
 
  // Navigation tab inside module
@@ -415,65 +415,65 @@ export default function RepertorioSetlists({
 
  // Sync activeTab with the view prop (when navigating from sidebar)
  useEffect(() => {
-   if (view === 'catalogo') {
-     setActiveTab('catalogo');
-     setCatalogoViewMode('canciones');
-   } else if (view === 'discografia') {
-     setActiveTab('catalogo');
-     setCatalogoViewMode('albumes');
-   } else {
-     // repertorio, undefined, o el antiguo 'directo' (módulo eliminado) — aterriza en Repertorio
-     // en vez de en una vista muerta.
-     setActiveTab('setlists');
-   }
+ if (view === 'catalogo') {
+ setActiveTab('catalogo');
+ setCatalogoViewMode('canciones');
+ } else if (view === 'discografia') {
+ setActiveTab('catalogo');
+ setCatalogoViewMode('albumes');
+ } else {
+ // repertorio, undefined, o el antiguo 'directo' (módulo eliminado) — aterriza en Repertorio
+ // en vez de en una vista muerta.
+ setActiveTab('setlists');
+ }
  }, [view]);
 
  const handleTabChange = useCallback((newTab: 'catalogo' | 'setlists') => {
-   setActiveTab(newTab);
-   if (onNavigate) {
-     const targetView = newTab === 'setlists' ? 'repertorio' : 'discografia';
-     onNavigate(targetView);
-   }
+ setActiveTab(newTab);
+ if (onNavigate) {
+ const targetView = newTab === 'setlists' ? 'repertorio' : 'discografia';
+ onNavigate(targetView);
+ }
  }, [onNavigate]);
 
  // Songs Repertoire State
  const [songs, setSongs] = useState<Song[]>(() => {
-   try {
-     const key = `band_songs_${cleanBand || 'default'}`;
-     const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
-     const parsed = saved ? JSON.parse(saved) : [];
-     const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((s: any) => {
-       const sId = (s?.id || '').toLowerCase();
-       if (sId.startsWith('sample-track-')) return true;
-       return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
-     }) : []);
-     if (sanitized.length > 0) {
-       return sanitized;
-     }
-     return isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS;
-   } catch {
-     return isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS;
-   }
+ try {
+ const key = `band_songs_${cleanBand || 'default'}`;
+ const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
+ const parsed = saved ? JSON.parse(saved) : [];
+ const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((s: any) => {
+ const sId = (s?.id || '').toLowerCase();
+ if (sId.startsWith('sample-track-')) return true;
+ return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
+ }) : []);
+ if (sanitized.length > 0) {
+ return sanitized;
+ }
+ return isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS;
+ } catch {
+ return isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS;
+ }
  });
 
  // Setlists State
  const [setlists, setSetlists] = useState<Setlist[]>(() => {
-   try {
-     const key = `band_setlists_${cleanBand || 'default'}`;
-     const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
-     const parsed = saved ? JSON.parse(saved) : [];
-     const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((sl: any) => {
-       const slId = (sl?.id || '').toLowerCase();
-       if (slId.startsWith('setlist-sample-')) return true;
-       return slId !== 'setlist-1' && slId !== 'setlist-2';
-     }) : []);
-     if (sanitized.length > 0) {
-       return sanitized;
-     }
-     return isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS;
-   } catch {
-     return isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS;
-   }
+ try {
+ const key = `band_setlists_${cleanBand || 'default'}`;
+ const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
+ const parsed = saved ? JSON.parse(saved) : [];
+ const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((sl: any) => {
+ const slId = (sl?.id || '').toLowerCase();
+ if (slId.startsWith('setlist-sample-')) return true;
+ return slId !== 'setlist-1' && slId !== 'setlist-2';
+ }) : []);
+ if (sanitized.length > 0) {
+ return sanitized;
+ }
+ return isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS;
+ } catch {
+ return isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS;
+ }
  });
 
  // Selected Active Setlist ID
@@ -517,19 +517,19 @@ export default function RepertorioSetlists({
  const [newShortcutMinutes, setNewShortcutMinutes] = useState<number>(1);
 
  const {
-   shareModalData, setShareModalData,
-   handleShareSetlist,
-   handleShareSong,
+ shareModalData, setShareModalData,
+ handleShareSetlist,
+ handleShareSong,
  } = useShareModal(songs, bName);
 
  // Filter States for Catalog
  const {
-   groupByAlbum, setGroupByAlbum,
-   catalogSearch, setCatalogSearch,
-   catalogAlbumFilter, setCatalogAlbumFilter,
-   catalogStatusFilter, setCatalogStatusFilter,
-   albumsList,
-   filteredSongs,
+ groupByAlbum, setGroupByAlbum,
+ catalogSearch, setCatalogSearch,
+ catalogAlbumFilter, setCatalogAlbumFilter,
+ catalogStatusFilter, setCatalogStatusFilter,
+ albumsList,
+ filteredSongs,
  } = useCatalogFilters(songs);
 
  // Helper to parse"mm:ss" to seconds
@@ -546,31 +546,31 @@ export default function RepertorioSetlists({
  };
 
  const {
-   activePlayerSong, setActivePlayerSong,
-   playerAutoPlay,
-   playSignal,
-   isPlayerPlaying, setIsPlayerPlaying,
-   playerTransposeSemitones,
-   handleSelectPlayerSong,
+ activePlayerSong, setActivePlayerSong,
+ playerAutoPlay,
+ playSignal,
+ isPlayerPlaying, setIsPlayerPlaying,
+ playerTransposeSemitones,
+ handleSelectPlayerSong,
  } = useAudioPlayer();
 
  // Concert Player (Reproductor de Concierto / Modo Escenario)
  const {
-   stageAudioRef, stageAudioRefB,
-   stagePlayingIndex, setStagePlayingIndex,
-   stageIsPlaying, setStageIsPlaying,
-   stageAutoplayNext, setStageAutoplayNext,
-   stageCurrentTime, setStageCurrentTime,
-   stageItemDuration,
-   stageResolvedUrl,
-   stageCrossfadeEnabled, setStageCrossfadeEnabled,
-   isCrossfading,
-   handleStageAudioEnded,
-   handleStageTimeUpdate,
-   handleStageSeek,
-   handleStagePrev,
-   handleStageNext,
-   toggleStagePlayPause,
+ stageAudioRef, stageAudioRefB,
+ stagePlayingIndex, setStagePlayingIndex,
+ stageIsPlaying, setStageIsPlaying,
+ stageAutoplayNext, setStageAutoplayNext,
+ stageCurrentTime, setStageCurrentTime,
+ stageItemDuration,
+ stageResolvedUrl,
+ stageCrossfadeEnabled, setStageCrossfadeEnabled,
+ isCrossfading,
+ handleStageAudioEnded,
+ handleStageTimeUpdate,
+ handleStageSeek,
+ handleStagePrev,
+ handleStageNext,
+ toggleStagePlayPause,
  } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
 
  // Cola de canciones que gobierna Siguiente/Anterior (y el fundido) de la barra Spotify
@@ -580,8 +580,8 @@ export default function RepertorioSetlists({
  // entrada de reproducción que no venga de un repositorio.
  const [playerQueueOverride, setPlayerQueueOverride] = useState<Song[] | null>(null);
  const selectPlayerSongWithQueue = useCallback((song: Song | null, autoPlay: boolean = false, queue: Song[] | null = null, transposeSemitones: number = 0) => {
-   setPlayerQueueOverride(queue);
-   handleSelectPlayerSong(song, autoPlay, transposeSemitones);
+ setPlayerQueueOverride(queue);
+ handleSelectPlayerSong(song, autoPlay, transposeSemitones);
  }, [handleSelectPlayerSong]);
 
  // Song Modal State
@@ -594,9 +594,9 @@ export default function RepertorioSetlists({
  const [activeStudioOpenIris, setActiveStudioOpenIris] = useState<boolean>(false);
 
  const handleOpenStudioModal = useCallback((song: Song | null, opts?: { openIris?: boolean }) => {
-   setIsPlayerPlaying(false);
-   setActiveStudioOpenIris(!!opts?.openIris);
-   setActiveStudioSong(song);
+ setIsPlayerPlaying(false);
+ setActiveStudioOpenIris(!!opts?.openIris);
+ setActiveStudioSong(song);
  }, [setIsPlayerPlaying]);
 
  // Chords Viewer Modal State
@@ -605,66 +605,66 @@ export default function RepertorioSetlists({
 
  // Transition Preview Modal State (para comprobar el enlace auditivo/armónico entre temas consecutivos)
  const [transitionPreviewData, setTransitionPreviewData] = useState<{
-   isOpen: boolean;
-   songA: Song | null;
-   songB: Song | null;
-   itemA: SetlistItem | null;
-   itemB: SetlistItem | null;
-   indexA: number;
-   indexB: number;
+ isOpen: boolean;
+ songA: Song | null;
+ songB: Song | null;
+ itemA: SetlistItem | null;
+ itemB: SetlistItem | null;
+ indexA: number;
+ indexB: number;
  } | null>(null);
 
  const handleOpenTransitionPreview = useCallback((idxA: number, idxB: number) => {
-   if (!activeSetlist || !activeSetlist.items) return;
-   const items = activeSetlist.items;
-   if (idxA < 0 || idxB < 0 || idxA >= items.length || idxB >= items.length) return;
+ if (!activeSetlist || !activeSetlist.items) return;
+ const items = activeSetlist.items;
+ if (idxA < 0 || idxB < 0 || idxA >= items.length || idxB >= items.length) return;
 
-   const itA = items[idxA];
-   const itB = items[idxB];
-   const sA = itA?.songId ? songs.find((s) => s.id === itA.songId) : null;
-   const sB = itB?.songId ? songs.find((s) => s.id === itB.songId) : null;
+ const itA = items[idxA];
+ const itB = items[idxB];
+ const sA = itA?.songId ? songs.find((s) => s.id === itA.songId) : null;
+ const sB = itB?.songId ? songs.find((s) => s.id === itB.songId) : null;
 
-   if (sA && sB) {
-     setTransitionPreviewData({
-       isOpen: true,
-       songA: sA,
-       songB: sB,
-       itemA: itA,
-       itemB: itB,
-       indexA: idxA,
-       indexB: idxB
-     });
-   }
+ if (sA && sB) {
+ setTransitionPreviewData({
+ isOpen: true,
+ songA: sA,
+ songB: sB,
+ itemA: itA,
+ itemB: itB,
+ indexA: idxA,
+ indexB: idxB
+ });
+ }
  }, [activeSetlist, songs]);
 
  // Selected item in active setlist (for intelligent insertion beneath selected song)
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
-  const [draggedCatalogSongId, setDraggedCatalogSongId] = useState<string | null>(null);
-  const [dragOverCatalogSongId, setDragOverCatalogSongId] = useState<string | null>(null);
+ const [draggedCatalogSongId, setDraggedCatalogSongId] = useState<string | null>(null);
+ const [dragOverCatalogSongId, setDragOverCatalogSongId] = useState<string | null>(null);
 
-  const handleDropCatalogSong = (sourceSongId: string, targetSongId: string) => {
-    if (sourceSongId === targetSongId) return;
-    const sourceIdx = songs.findIndex(s => s.id === sourceSongId);
-    const targetIdx = songs.findIndex(s => s.id === targetSongId);
-    if (sourceIdx < 0 || targetIdx < 0) return;
+ const handleDropCatalogSong = (sourceSongId: string, targetSongId: string) => {
+ if (sourceSongId === targetSongId) return;
+ const sourceIdx = songs.findIndex(s => s.id === sourceSongId);
+ const targetIdx = songs.findIndex(s => s.id === targetSongId);
+ if (sourceIdx < 0 || targetIdx < 0) return;
 
-    const newSongs = [...songs];
-    const [movedSong] = newSongs.splice(sourceIdx, 1);
-    newSongs.splice(targetIdx, 0, movedSong);
+ const newSongs = [...songs];
+ const [movedSong] = newSongs.splice(sourceIdx, 1);
+ newSongs.splice(targetIdx, 0, movedSong);
 
-    const updatedSongs = newSongs.map((s, idx) => ({ ...s, ordenAlbum: idx + 1 }));
-    setSongs(updatedSongs);
-    saveSongsToLocalStorageSafely(updatedSongs);
+ const updatedSongs = newSongs.map((s, idx) => ({ ...s, ordenAlbum: idx + 1 }));
+ setSongs(updatedSongs);
+ saveSongsToLocalStorageSafely(updatedSongs);
 
-    // Persist song reordering to server
-    updatedSongs.forEach((s) => {
-      fetch('/api/songs/' + s.id, {
-        method: 'PUT',
-        headers: getHeaders(),
-        body: JSON.stringify(s),
-      }).catch((err) => console.error('Error updating catalog song order on server:', err));
-    });
-  };
+ // Persist song reordering to server
+ updatedSongs.forEach((s) => {
+ fetch('/api/songs/' + s.id, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(s),
+ }).catch((err) => console.error('Error updating catalog song order on server:', err));
+ });
+ };
  // Mostrar/ocultar el Mapa de Energía del Show (visible por defecto: es la pieza más "wow")
  const [showEnergyMap, setShowEnergyMap] = useState<boolean>(true);
  // Curva "ideal" de referencia superpuesta al Mapa de Energía — visible por defecto, con su
@@ -749,96 +749,96 @@ export default function RepertorioSetlists({
  // medio camino. Al depender solo de activeSetlist/songs, el gráfico no se re-anima por
  // interacciones de UI que no cambian los datos reales.
  const { energyAnalysis, chartData, yDomain, ZONAS_ENERGIA } = useMemo(() => {
-  const analysis = analyzeSetlistEnergy(activeSetlist?.items || [], songs);
-  // Curva de energía "ideal" de referencia (arco de pacing clásico, escalado al rango real de
-  // este repertorio) — se pinta como segunda línea en el gráfico para ver de un vistazo dónde se
-  // aleja más la curva real, sin depender de leer el texto del análisis.
-  const idealCurve = calcularCurvaEnergiaIdeal(analysis.points);
-  const data = analysis.points.map((pt, idx) => {
-   // Chapa/presentación/interludio/pausa/bis/etc. — cualquier evento que no sea canción — no
-   // representa energía real del show: el "bis" en concreto es solo la marca de "aquí empieza",
-   // no una canción en sí (las canciones reales del bis puntúan por su cuenta justo después).
-   // Contarlos como un punto más de la curva (con su score de relleno) dibujaba un "bajón" o un
-   // pico falso ahí. Se marcan en el gráfico con su propia línea vertical (ver EnergyChart) en
-   // vez de ensuciar la curva con un valor inventado.
-   const isSpeechEvent = !pt.isSong;
-   // Choque de tonalidad con la SIGUIENTE canción real del setlist (círculo de quintas) — se
-   // salta cualquier evento de "speech" de por medio para comparar canciones de verdad, no una
-   // canción contra una chapa/interludio que no tiene tonalidad.
-   let harmonyClash = false;
-   if (!isSpeechEvent && pt.song?.tonalidad) {
-    const siguienteCancion = analysis.points.slice(idx + 1).find((p) => p.isSong);
-    const keyA = parseTonalidad(pt.song.tonalidad);
-    const keyB = siguienteCancion?.song?.tonalidad ? parseTonalidad(siguienteCancion.song.tonalidad) : null;
-    if (keyA && keyB) harmonyClash = evaluarTransicionArmonica(keyA, keyB) === 'choque';
-   }
-   let transitionToNext: EvaluacionUnion | null = null;
-   let transitionFromPrev: EvaluacionUnion | null = null;
-   if (!isSpeechEvent && pt.song) {
-     const siguienteCancion = analysis.points.slice(idx + 1).find((p) => p.isSong);
-     if (siguienteCancion?.song) {
-       transitionToNext = evaluarCalidadUnion(pt.song, siguienteCancion.song);
-     }
-     const anteriorCancion = analysis.points.slice(0, idx).reverse().find((p) => p.isSong);
-     if (anteriorCancion?.song) {
-       transitionFromPrev = evaluarCalidadUnion(anteriorCancion.song, pt.song);
-     }
-   }
+ const analysis = analyzeSetlistEnergy(activeSetlist?.items || [], songs);
+ // Curva de energía "ideal" de referencia (arco de pacing clásico, escalado al rango real de
+ // este repertorio) — se pinta como segunda línea en el gráfico para ver de un vistazo dónde se
+ // aleja más la curva real, sin depender de leer el texto del análisis.
+ const idealCurve = calcularCurvaEnergiaIdeal(analysis.points);
+ const data = analysis.points.map((pt, idx) => {
+ // Chapa/presentación/interludio/pausa/bis/etc. — cualquier evento que no sea canción — no
+ // representa energía real del show: el "bis" en concreto es solo la marca de "aquí empieza",
+ // no una canción en sí (las canciones reales del bis puntúan por su cuenta justo después).
+ // Contarlos como un punto más de la curva (con su score de relleno) dibujaba un "bajón" o un
+ // pico falso ahí. Se marcan en el gráfico con su propia línea vertical (ver EnergyChart) en
+ // vez de ensuciar la curva con un valor inventado.
+ const isSpeechEvent = !pt.isSong;
+ // Choque de tonalidad con la SIGUIENTE canción real del setlist (círculo de quintas) — se
+ // salta cualquier evento de "speech" de por medio para comparar canciones de verdad, no una
+ // canción contra una chapa/interludio que no tiene tonalidad.
+ let harmonyClash = false;
+ if (!isSpeechEvent && pt.song?.tonalidad) {
+ const siguienteCancion = analysis.points.slice(idx + 1).find((p) => p.isSong);
+ const keyA = parseTonalidad(pt.song.tonalidad);
+ const keyB = siguienteCancion?.song?.tonalidad ? parseTonalidad(siguienteCancion.song.tonalidad) : null;
+ if (keyA && keyB) harmonyClash = evaluarTransicionArmonica(keyA, keyB) === 'choque';
+ }
+ let transitionToNext: EvaluacionUnion | null = null;
+ let transitionFromPrev: EvaluacionUnion | null = null;
+ if (!isSpeechEvent && pt.song) {
+ const siguienteCancion = analysis.points.slice(idx + 1).find((p) => p.isSong);
+ if (siguienteCancion?.song) {
+ transitionToNext = evaluarCalidadUnion(pt.song, siguienteCancion.song);
+ }
+ const anteriorCancion = analysis.points.slice(0, idx).reverse().find((p) => p.isSong);
+ if (anteriorCancion?.song) {
+ transitionFromPrev = evaluarCalidadUnion(anteriorCancion.song, pt.song);
+ }
+ }
 
-   return {
-    idx,
-    id: pt.item.id,
-    songId: isSpeechEvent ? undefined : pt.song?.id,
-    name: pt.title,
-    score: isSpeechEvent ? null : pt.score,
-    idealScore: isSpeechEvent ? null : idealCurve[idx],
-    range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
-    color: pt.info.hexColor,
-    icon: pt.info.icon,
-    label: pt.info.label,
-    variance: pt.variance,
-    isSong: pt.isSong,
-    isSpeechEvent,
-    bpm: isSpeechEvent ? null : (typeof pt.song?.bpm === 'number' && pt.song.bpm > 0 ? pt.song.bpm : null),
-    harmonyClash,
-    tonalidad: isSpeechEvent ? null : (pt.song?.tonalidad?.trim() || null),
-    transitionToNext,
-    transitionFromPrev
-   };
-  });
+ return {
+ idx,
+ id: pt.item.id,
+ songId: isSpeechEvent ? undefined : pt.song?.id,
+ name: pt.title,
+ score: isSpeechEvent ? null : pt.score,
+ idealScore: isSpeechEvent ? null : idealCurve[idx],
+ range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
+ color: pt.info.hexColor,
+ icon: pt.info.icon,
+ label: pt.info.label,
+ variance: pt.variance,
+ isSong: pt.isSong,
+ isSpeechEvent,
+ bpm: isSpeechEvent ? null : (typeof pt.song?.bpm === 'number' && pt.song.bpm > 0 ? pt.song.bpm : null),
+ harmonyClash,
+ tonalidad: isSpeechEvent ? null : (pt.song?.tonalidad?.trim() || null),
+ transitionToNext,
+ transitionFromPrev
+ };
+ });
 
-  // Dominio Y dinámico: se escala al propio setlist (no siempre 1-20) para que las
-  // diferencias de energía entre temas se noten de verdad, no se aplasten en un rango fijo.
-  // Los eventos de "speech" quedan fuera del cálculo — su rango de relleno (4±0) no debe estrechar
-  // ni desplazar la escala pensada para las canciones reales.
-  let domain: [number, number] = [1, 20];
-  const dataParaDominio = data.filter((d) => !d.isSpeechEvent);
-  if (dataParaDominio.length > 0) {
-   const allValues = dataParaDominio.flatMap((d) => d.range);
-   const minVal = Math.min(...allValues);
-   const maxVal = Math.max(...allValues);
-   let lo = Math.max(1, minVal - 2);
-   let hi = Math.min(20, maxVal + 2);
-   if (hi - lo < 6) {
-    const mid = (hi + lo) / 2;
-    lo = Math.max(1, mid - 3);
-    hi = Math.min(20, mid + 3);
-   }
-   domain = [lo, hi];
-  }
+ // Dominio Y dinámico: se escala al propio setlist (no siempre 1-20) para que las
+ // diferencias de energía entre temas se noten de verdad, no se aplasten en un rango fijo.
+ // Los eventos de "speech" quedan fuera del cálculo — su rango de relleno (4±0) no debe estrechar
+ // ni desplazar la escala pensada para las canciones reales.
+ let domain: [number, number] = [1, 20];
+ const dataParaDominio = data.filter((d) => !d.isSpeechEvent);
+ if (dataParaDominio.length > 0) {
+ const allValues = dataParaDominio.flatMap((d) => d.range);
+ const minVal = Math.min(...allValues);
+ const maxVal = Math.max(...allValues);
+ let lo = Math.max(1, minVal - 2);
+ let hi = Math.min(20, maxVal + 2);
+ if (hi - lo < 6) {
+ const mid = (hi + lo) / 2;
+ lo = Math.max(1, mid - 3);
+ hi = Math.min(20, mid + 3);
+ }
+ domain = [lo, hi];
+ }
 
-  // Bandas de fondo por categoría de energía (mismos umbrales que getEnergyInfo) — es lo
-  // que convierte la curva en un "mapa" de verdad: se ve a simple vista en qué zona cae
-  // cada canción, no solo por el color del punto sino por el propio fondo del chart.
-  const zonas = [
-   { min: 1, max: 8, color: '#0284c7' },
-   { min: 9, max: 14, color: '#059669' },
-   { min: 15, max: 18, color: '#a16207' },
-   { min: 19, max: 20, color: '#a21caf' }
-  ].map((z) => ({ ...z, y1: Math.max(z.min, domain[0]), y2: Math.min(z.max, domain[1]) }))
-   .filter((z) => z.y1 < z.y2);
+ // Bandas de fondo por categoría de energía (mismos umbrales que getEnergyInfo) — es lo
+ // que convierte la curva en un "mapa" de verdad: se ve a simple vista en qué zona cae
+ // cada canción, no solo por el color del punto sino por el propio fondo del chart.
+ const zonas = [
+ { min: 1, max: 8, color: '#0284c7' },
+ { min: 9, max: 14, color: '#059669' },
+ { min: 15, max: 18, color: '#a16207' },
+ { min: 19, max: 20, color: '#a21caf' }
+ ].map((z) => ({ ...z, y1: Math.max(z.min, domain[0]), y2: Math.min(z.max, domain[1]) }))
+ .filter((z) => z.y1 < z.y2);
 
-  return { energyAnalysis: analysis, chartData: data, yDomain: domain, ZONAS_ENERGIA: zonas };
+ return { energyAnalysis: analysis, chartData: data, yDomain: domain, ZONAS_ENERGIA: zonas };
  }, [activeSetlist, songs]);
 
  // Drag and Drop state for setlist items
@@ -857,21 +857,21 @@ export default function RepertorioSetlists({
  const [energyPopoverPos, setEnergyPopoverPos] = useState<{ top: number; left: number; openUpward: boolean } | null>(null);
 
  useEffect(() => {
-   if (!editingEnergyItemId) return;
-   const handleClickOutside = (e: MouseEvent) => {
-     if (!(e.target as HTMLElement)?.closest?.('[data-energy-popover]')) {
-       setEditingEnergyItemId(null);
-     }
-   };
-   // Cerrar en scroll (de la lista o de la página): con position:fixed calculado una sola vez al
-   // abrir, si el usuario sigue haciendo scroll el popover dejaría de estar junto a su botón.
-   const handleScroll = () => setEditingEnergyItemId(null);
-   document.addEventListener('mousedown', handleClickOutside);
-   window.addEventListener('scroll', handleScroll, true);
-   return () => {
-     document.removeEventListener('mousedown', handleClickOutside);
-     window.removeEventListener('scroll', handleScroll, true);
-   };
+ if (!editingEnergyItemId) return;
+ const handleClickOutside = (e: MouseEvent) => {
+ if (!(e.target as HTMLElement)?.closest?.('[data-energy-popover]')) {
+ setEditingEnergyItemId(null);
+ }
+ };
+ // Cerrar en scroll (de la lista o de la página): con position:fixed calculado una sola vez al
+ // abrir, si el usuario sigue haciendo scroll el popover dejaría de estar junto a su botón.
+ const handleScroll = () => setEditingEnergyItemId(null);
+ document.addEventListener('mousedown', handleClickOutside);
+ window.addEventListener('scroll', handleScroll, true);
+ return () => {
+ document.removeEventListener('mousedown', handleClickOutside);
+ window.removeEventListener('scroll', handleScroll, true);
+ };
  }, [editingEnergyItemId]);
 
  // Popover de "tono deseado" (transposición): mismo patrón que el de energía — item de setlist
@@ -880,67 +880,67 @@ export default function RepertorioSetlists({
  const [keyPopoverPos, setKeyPopoverPos] = useState<{ top: number; left: number } | null>(null);
 
  useEffect(() => {
-   if (!editingKeyItemId) return;
-   const handleClickOutside = (e: MouseEvent) => {
-     if (!(e.target as HTMLElement)?.closest?.('[data-key-popover]')) {
-       setEditingKeyItemId(null);
-     }
-   };
-   const handleScroll = () => setEditingKeyItemId(null);
-   document.addEventListener('mousedown', handleClickOutside);
-   window.addEventListener('scroll', handleScroll, true);
-   return () => {
-     document.removeEventListener('mousedown', handleClickOutside);
-     window.removeEventListener('scroll', handleScroll, true);
-   };
+ if (!editingKeyItemId) return;
+ const handleClickOutside = (e: MouseEvent) => {
+ if (!(e.target as HTMLElement)?.closest?.('[data-key-popover]')) {
+ setEditingKeyItemId(null);
+ }
+ };
+ const handleScroll = () => setEditingKeyItemId(null);
+ document.addEventListener('mousedown', handleClickOutside);
+ window.addEventListener('scroll', handleScroll, true);
+ return () => {
+ document.removeEventListener('mousedown', handleClickOutside);
+ window.removeEventListener('scroll', handleScroll, true);
+ };
  }, [editingKeyItemId]);
 
  // Guarda (o quita, con null) el tono en el que se quiere tocar esta canción en ESTE
  // repertorio — vive en el SetlistItem, no en la canción, porque el mismo tema puede tocarse
  // en tonos distintos según el bolo/cantante (ver comentario en types.ts).
  const handleSetTonalidadDeseada = (itemId: string, tonalidad: string | null) => {
-   if (!activeSetlist) return;
-   const updatedSetlist: Setlist = {
-     ...activeSetlist,
-     items: activeSetlist.items.map(it => it.id === itemId ? { ...it, tonalidadDeseada: tonalidad || undefined } : it)
-   };
-   setSetlists(prev => prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st));
-   syncSetlistToBackend(updatedSetlist);
-   setEditingKeyItemId(null);
+ if (!activeSetlist) return;
+ const updatedSetlist: Setlist = {
+ ...activeSetlist,
+ items: activeSetlist.items.map(it => it.id === itemId ? { ...it, tonalidadDeseada: tonalidad || undefined } : it)
+ };
+ setSetlists(prev => prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st));
+ syncSetlistToBackend(updatedSetlist);
+ setEditingKeyItemId(null);
  };
 
  // Núcleo compartido: fija a mano la energía (1-20) de una canción, tanto desde el popover 1-10
  // de la fila (handleSetEnergiaManual) como desde el arrastre vertical en el propio gráfico
  // (handleEnergyChartDrag) — un solo sitio que llama al PATCH y actualiza el estado optimista.
  const handleSetEnergiaManualValue = async (song: Song, itemId: string, nuevaEnergia: number) => {
-   setSavingEnergyItemId(itemId);
-   // Optimista: refleja el cambio ya mismo en la UI y en el gráfico, sin esperar al servidor.
-   setSongs(prev => prev.map(s => s.id === song.id ? { ...s, energia: nuevaEnergia, energiaManual: true } : s));
-   try {
-     await fetch(`/api/songs/${song.id}/energia`, {
-       method: 'PATCH',
-       headers: getHeaders(),
-       body: JSON.stringify({ energia: nuevaEnergia })
-     });
-   } catch (err) {
-     console.error('Error guardando energía manual:', err);
-   } finally {
-     setSavingEnergyItemId(null);
-     setEditingEnergyItemId(null);
-   }
+ setSavingEnergyItemId(itemId);
+ // Optimista: refleja el cambio ya mismo en la UI y en el gráfico, sin esperar al servidor.
+ setSongs(prev => prev.map(s => s.id === song.id ? { ...s, energia: nuevaEnergia, energiaManual: true } : s));
+ try {
+ await fetch(`/api/songs/${song.id}/energia`, {
+ method: 'PATCH',
+ headers: getHeaders(),
+ body: JSON.stringify({ energia: nuevaEnergia })
+ });
+ } catch (err) {
+ console.error('Error guardando energía manual:', err);
+ } finally {
+ setSavingEnergyItemId(null);
+ setEditingEnergyItemId(null);
+ }
  };
 
  const handleSetEnergiaManual = (song: Song, itemId: string, valor1a10: number) =>
-   handleSetEnergiaManualValue(song, itemId, valor1a10 * 2);
+ handleSetEnergiaManualValue(song, itemId, valor1a10 * 2);
 
  // Arrastrar un punto en vertical en el Mapa de Energía cambia su energía (1-20) directamente —
  // mismo resultado que el popover 1-10 de la fila, pero sin salir del gráfico. EnergyChart ya
  // filtra esto a puntos con songId (canciones reales, nunca eventos de "speech"/bis).
  const handleEnergyChartDrag = useCallback((point: EnergyChartPoint, newScore: number) => {
-   if (!point.songId) return;
-   const song = songs.find(s => s.id === point.songId);
-   if (song) handleSetEnergiaManualValue(song, point.id, newScore);
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+ if (!point.songId) return;
+ const song = songs.find(s => s.id === point.songId);
+ if (song) handleSetEnergiaManualValue(song, point.id, newScore);
+ // eslint-disable-next-line react-hooks/exhaustive-deps
  }, [songs]);
 
  // Deletion Confirmation Modal State
@@ -959,19 +959,19 @@ export default function RepertorioSetlists({
  const [selectedCatalogIds, setSelectedCatalogIds] = useState<Set<string>>(new Set());
 
  const sortedSongsByAlbumAndOrder = useMemo(() => {
-   return [...songs].sort((a, b) => {
-     const albumA = a.albumDisco || a.album || 'Z_SinDisco';
-     const albumB = b.albumDisco || b.album || 'Z_SinDisco';
-     if (albumA !== albumB) {
-       return albumA.localeCompare(albumB);
-     }
-     const orderA = typeof a.ordenAlbum === 'number' ? a.ordenAlbum : 999;
-     const orderB = typeof b.ordenAlbum === 'number' ? b.ordenAlbum : 999;
-     if (orderA !== orderB) {
-       return orderA - orderB;
-     }
-     return a.titulo.localeCompare(b.titulo);
-   });
+ return [...songs].sort((a, b) => {
+ const albumA = a.albumDisco || a.album || 'Z_SinDisco';
+ const albumB = b.albumDisco || b.album || 'Z_SinDisco';
+ if (albumA !== albumB) {
+ return albumA.localeCompare(albumB);
+ }
+ const orderA = typeof a.ordenAlbum === 'number' ? a.ordenAlbum : 999;
+ const orderB = typeof b.ordenAlbum === 'number' ? b.ordenAlbum : 999;
+ if (orderA !== orderB) {
+ return orderA - orderB;
+ }
+ return a.titulo.localeCompare(b.titulo);
+ });
  }, [songs]);
 
  const handleUpdateSongFromChords = (updatedSong: Song) => {
@@ -1051,111 +1051,111 @@ export default function RepertorioSetlists({
  };
 
  useEffect(() => {
-  let isCancelled = false;
-  // On bandId change, immediately reset and load the clean cache for this band
-  const keyS = `band_songs_${cleanBand || 'default'}`;
-  const keySt = `band_setlists_${cleanBand || 'default'}`;
-  try {
-    const savedS = localStorage.getItem(keyS) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
-    const parsedS = savedS ? JSON.parse(savedS) : [];
-    const sanitizedS = sanitizeBandSongs(parsedS);
-    setSongs(sanitizedS.length > 0 ? sanitizedS : (isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS));
+ let isCancelled = false;
+ // On bandId change, immediately reset and load the clean cache for this band
+ const keyS = `band_songs_${cleanBand || 'default'}`;
+ const keySt = `band_setlists_${cleanBand || 'default'}`;
+ try {
+ const savedS = localStorage.getItem(keyS) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
+ const parsedS = savedS ? JSON.parse(savedS) : [];
+ const sanitizedS = sanitizeBandSongs(parsedS);
+ setSongs(sanitizedS.length > 0 ? sanitizedS : (isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS));
 
-    const savedSt = localStorage.getItem(keySt) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
-    const parsedSt = savedSt ? JSON.parse(savedSt) : [];
-    const sanitizedSt = sanitizeBandSetlists(parsedSt);
-    setSetlists(sanitizedSt.length > 0 ? sanitizedSt : (isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS));
-    if (sanitizedSt.length > 0) {
-      setActiveSetlistId(sanitizedSt[0].id);
-    } else {
-      setActiveSetlistId(isBakandeya ? 'setlist-1' : (SAMPLER_SETLISTS[0]?.id || ''));
-    }
-  } catch {
-    setSongs(isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS);
-    setSetlists(isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS);
-  }
+ const savedSt = localStorage.getItem(keySt) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
+ const parsedSt = savedSt ? JSON.parse(savedSt) : [];
+ const sanitizedSt = sanitizeBandSetlists(parsedSt);
+ setSetlists(sanitizedSt.length > 0 ? sanitizedSt : (isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS));
+ if (sanitizedSt.length > 0) {
+ setActiveSetlistId(sanitizedSt[0].id);
+ } else {
+ setActiveSetlistId(isBakandeya ? 'setlist-1' : (SAMPLER_SETLISTS[0]?.id || ''));
+ }
+ } catch {
+ setSongs(isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS);
+ setSetlists(isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS);
+ }
 
-  const fetchRepertorio = async () => {
-    try {
-      const [resSongs, resSetlists] = await Promise.all([
-        fetch('/api/songs', { headers: getHeaders() }),
-        fetch('/api/setlists', { headers: getHeaders() })
-      ]);
+ const fetchRepertorio = async () => {
+ try {
+ const [resSongs, resSetlists] = await Promise.all([
+ fetch('/api/songs', { headers: getHeaders() }),
+ fetch('/api/setlists', { headers: getHeaders() })
+ ]);
 
-      if (isCancelled) return;
+ if (isCancelled) return;
 
-      if (resSongs.ok) {
-        const dataS = await resSongs.json();
-        if (dataS.songs && Array.isArray(dataS.songs)) {
-          const sanitized = sanitizeBandSongs(dataS.songs);
-          setSongs(sanitized.length > 0 ? sanitized : (isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS));
-        }
-      }
+ if (resSongs.ok) {
+ const dataS = await resSongs.json();
+ if (dataS.songs && Array.isArray(dataS.songs)) {
+ const sanitized = sanitizeBandSongs(dataS.songs);
+ setSongs(sanitized.length > 0 ? sanitized : (isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS));
+ }
+ }
 
-      if (resSetlists.ok) {
-        const dataSt = await resSetlists.json();
-        if (dataSt.setlists && Array.isArray(dataSt.setlists)) {
-          const sanitized = sanitizeBandSetlists(dataSt.setlists);
-          const finalSetlists = sanitized.length > 0 ? sanitized : (isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS);
-          setSetlists(finalSetlists);
-          if (finalSetlists.length > 0) {
-            setActiveSetlistId(prev => finalSetlists.some((s: any) => s.id === prev) ? prev : finalSetlists[0].id);
-          } else {
-            setActiveSetlistId('');
-          }
-        }
-      }
-    } catch (err) {
-      console.warn('Unable to load repertorio from server API, using cached state:', err);
-    }
-  };
+ if (resSetlists.ok) {
+ const dataSt = await resSetlists.json();
+ if (dataSt.setlists && Array.isArray(dataSt.setlists)) {
+ const sanitized = sanitizeBandSetlists(dataSt.setlists);
+ const finalSetlists = sanitized.length > 0 ? sanitized : (isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS);
+ setSetlists(finalSetlists);
+ if (finalSetlists.length > 0) {
+ setActiveSetlistId(prev => finalSetlists.some((s: any) => s.id === prev) ? prev : finalSetlists[0].id);
+ } else {
+ setActiveSetlistId('');
+ }
+ }
+ }
+ } catch (err) {
+ console.warn('Unable to load repertorio from server API, using cached state:', err);
+ }
+ };
 
-  // Antes de fiarnos de lo que diga el servidor, reenviamos cualquier edición de setlist que
-  // se quedó pendiente sin conexión (p.ej. un cambio de tono en un bolo sin wifi) — si no, el
-  // fetch de abajo traería la versión vieja del servidor y la pisaría sin que nadie se entere.
-  const flushPendingSetlistSyncs = async () => {
-    const pending = getPendingSetlistSyncs(bandId);
-    if (pending.length === 0) return;
-    await Promise.all(pending.map(async (setlist: any) => {
-      try {
-        const res = await fetch(`/api/setlists/${setlist.id}`, {
-          method: 'PUT',
-          headers: getHeaders(),
-          body: JSON.stringify(setlist)
-        });
-        if (res.ok) clearPendingSetlistSync(bandId, setlist.id);
-      } catch {
-        // Sigue sin haber conexión — se reintenta en el próximo montaje o al volver 'online'.
-      }
-    }));
-  };
+ // Antes de fiarnos de lo que diga el servidor, reenviamos cualquier edición de setlist que
+ // se quedó pendiente sin conexión (p.ej. un cambio de tono en un bolo sin wifi) — si no, el
+ // fetch de abajo traería la versión vieja del servidor y la pisaría sin que nadie se entere.
+ const flushPendingSetlistSyncs = async () => {
+ const pending = getPendingSetlistSyncs(bandId);
+ if (pending.length === 0) return;
+ await Promise.all(pending.map(async (setlist: any) => {
+ try {
+ const res = await fetch(`/api/setlists/${setlist.id}`, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(setlist)
+ });
+ if (res.ok) clearPendingSetlistSync(bandId, setlist.id);
+ } catch {
+ // Sigue sin haber conexión — se reintenta en el próximo montaje o al volver 'online'.
+ }
+ }));
+ };
 
-  (async () => {
-    await flushPendingSetlistSyncs();
-    if (!isCancelled) await fetchRepertorio();
-  })();
+ (async () => {
+ await flushPendingSetlistSyncs();
+ if (!isCancelled) await fetchRepertorio();
+ })();
 
-  return () => {
-    isCancelled = true;
-  };
+ return () => {
+ isCancelled = true;
+ };
  }, [bandId, cleanBand, isBakandeya, sanitizeBandSongs, sanitizeBandSetlists]);
 
  // Reintenta ediciones de setlist pendientes en cuanto el navegador recupera conexión, sin
  // esperar a que el usuario cierre y reabra la pestaña (que es cuando fetchRepertorio corre).
  useEffect(() => {
-   const handleOnline = () => {
-     getPendingSetlistSyncs(bandId).forEach((setlist: any) => {
-       fetch(`/api/setlists/${setlist.id}`, {
-         method: 'PUT',
-         headers: getHeaders(),
-         body: JSON.stringify(setlist)
-       }).then(res => {
-         if (res.ok) clearPendingSetlistSync(bandId, setlist.id);
-       }).catch(() => {});
-     });
-   };
-   window.addEventListener('online', handleOnline);
-   return () => window.removeEventListener('online', handleOnline);
+ const handleOnline = () => {
+ getPendingSetlistSyncs(bandId).forEach((setlist: any) => {
+ fetch(`/api/setlists/${setlist.id}`, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(setlist)
+ }).then(res => {
+ if (res.ok) clearPendingSetlistSync(bandId, setlist.id);
+ }).catch(() => {});
+ });
+ };
+ window.addEventListener('online', handleOnline);
+ return () => window.removeEventListener('online', handleOnline);
  }, [bandId]);
 
  useEffect(() => {
@@ -1168,34 +1168,34 @@ export default function RepertorioSetlists({
 
  // Load this band's own custom setlist shortcuts
  useEffect(() => {
-  let isCancelled = false;
-  setCustomShortcuts([]);
-  const fetchShortcuts = async () => {
-    try {
-      const res = await fetch('/api/setlist-shortcuts', { headers: getHeaders() });
-      if (isCancelled) return;
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data.shortcuts)) {
-          setCustomShortcuts(data.shortcuts);
-        }
-      }
-    } catch (err) {
-      console.warn('No se pudieron cargar los accesos rápidos de repertorio:', err);
-    }
-  };
-  fetchShortcuts();
-  return () => { isCancelled = true; };
+ let isCancelled = false;
+ setCustomShortcuts([]);
+ const fetchShortcuts = async () => {
+ try {
+ const res = await fetch('/api/setlist-shortcuts', { headers: getHeaders() });
+ if (isCancelled) return;
+ if (res.ok) {
+ const data = await res.json();
+ if (Array.isArray(data.shortcuts)) {
+ setCustomShortcuts(data.shortcuts);
+ }
+ }
+ } catch (err) {
+ console.warn('No se pudieron cargar los accesos rápidos de repertorio:', err);
+ }
+ };
+ fetchShortcuts();
+ return () => { isCancelled = true; };
  }, [bandId]);
 
  // Cuando cambia el setlist activo, cargar el análisis IA guardado si existe
  useEffect(() => {
-  if (activeSetlist?.ai_analysis_json) {
-    setAiAnalysisResult(activeSetlist.ai_analysis_json);
-  } else {
-    setAiAnalysisResult(null);
-  }
-  setHighlightedSongIds([]);
+ if (activeSetlist?.ai_analysis_json) {
+ setAiAnalysisResult(activeSetlist.ai_analysis_json);
+ } else {
+ setAiAnalysisResult(null);
+ }
+ setHighlightedSongIds([]);
  }, [activeSetlist?.id, activeSetlist?.ai_analysis_json]);
 
  // Microphone recording for Show Items (Presentaciones/Chapas)
@@ -1326,87 +1326,87 @@ export default function RepertorioSetlists({
  // Ask the backend to listen to a song's real audio and auto-fill its lyrics/chords (cifradoTexto).
  // Fires in the background after a song is saved with a new audio file, no extra click needed.
  const runAutoChordAnalysis = async (song: Song) => {
-   if (!song.audioPrincipalUrl) return;
+ if (!song.audioPrincipalUrl) return;
 
-   // Si la subida cayó en uno de los fallbacks locales de audioStorage (IndexedDB o data URL),
-   // el servidor no puede descargar ese audio, así que analizarlo daría un cifrado inventado
-   // a partir del título. Mejor decirlo que fingir que se ha transcrito la grabación.
-   if (!/^https?:\/\//i.test(song.audioPrincipalUrl) && !song.audioPrincipalUrl.startsWith('/')) {
-     setStatusBanner({
-       text: `El audio de "${song.titulo}" no llegó a subirse al servidor, así que no se pueden transcribir los acordes. Vuelve a subirlo.`,
-       type: 'error'
-     });
-     setTimeout(() => setStatusBanner(null), 6000);
-     return;
-   }
+ // Si la subida cayó en uno de los fallbacks locales de audioStorage (IndexedDB o data URL),
+ // el servidor no puede descargar ese audio, así que analizarlo daría un cifrado inventado
+ // a partir del título. Mejor decirlo que fingir que se ha transcrito la grabación.
+ if (!/^https?:\/\//i.test(song.audioPrincipalUrl) && !song.audioPrincipalUrl.startsWith('/')) {
+ setStatusBanner({
+ text: `El audio de "${song.titulo}" no llegó a subirse al servidor, así que no se pueden transcribir los acordes. Vuelve a subirlo.`,
+ type: 'error'
+ });
+ setTimeout(() => setStatusBanner(null), 6000);
+ return;
+ }
 
-   setStatusBanner({ text: `🎵 Analizando letra y acordes de "${song.titulo}" con IA…`, type: 'loading' });
-   try {
-     const res = await fetch('/api/generate-song-chords', {
-       method: 'POST',
-       headers: getHeaders(),
-       body: JSON.stringify({
-         songId: song.id,
-         titulo: song.titulo,
-         tonalidad: song.tonalidad,
-         bpm: song.bpm,
-         afinacion: song.afinacion,
-         esVersionCovers: song.esVersionCovers,
-         audioUrl: song.audioPrincipalUrl
-       })
-     });
-     const data = await res.json();
-     if (res.ok && data?.cifradoTexto) {
-       const updatedSong = { ...song, cifradoTexto: data.cifradoTexto, guiaSustituto: data.guiaSustituto };
-       setSongs(prev => {
-         const next = prev.map(s => s.id === song.id ? { ...s, cifradoTexto: data.cifradoTexto, guiaSustituto: data.guiaSustituto } : s);
-         saveSongsToLocalStorageSafely(next);
-         return next;
-       });
+ setStatusBanner({ text: `🎵 Analizando letra y acordes de "${song.titulo}" con IA…`, type: 'loading' });
+ try {
+ const res = await fetch('/api/generate-song-chords', {
+ method: 'POST',
+ headers: getHeaders(),
+ body: JSON.stringify({
+ songId: song.id,
+ titulo: song.titulo,
+ tonalidad: song.tonalidad,
+ bpm: song.bpm,
+ afinacion: song.afinacion,
+ esVersionCovers: song.esVersionCovers,
+ audioUrl: song.audioPrincipalUrl
+ })
+ });
+ const data = await res.json();
+ if (res.ok && data?.cifradoTexto) {
+ const updatedSong = { ...song, cifradoTexto: data.cifradoTexto, guiaSustituto: data.guiaSustituto };
+ setSongs(prev => {
+ const next = prev.map(s => s.id === song.id ? { ...s, cifradoTexto: data.cifradoTexto, guiaSustituto: data.guiaSustituto } : s);
+ saveSongsToLocalStorageSafely(next);
+ return next;
+ });
 
-       // Si el servidor no pudo guardarlo, lo persistimos nosotros por la vía normal para que
-       // el cifrado no se quede solo en esta pestaña y se pierda al recargar.
-       if (!data.persisted) {
-         fetch(`/api/songs/${encodeURIComponent(song.id)}`, {
-           method: 'PUT',
-           headers: getHeaders(),
-           body: JSON.stringify(updatedSong)
-         }).catch(err => console.error('Error persisting generated chords:', err));
-       }
+ // Si el servidor no pudo guardarlo, lo persistimos nosotros por la vía normal para que
+ // el cifrado no se quede solo en esta pestaña y se pierda al recargar.
+ if (!data.persisted) {
+ fetch(`/api/songs/${encodeURIComponent(song.id)}`, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(updatedSong)
+ }).catch(err => console.error('Error persisting generated chords:', err));
+ }
 
-       // El backend distingue tres orígenes reales del cifrado para que este aviso nunca
-       // haga pasar una plantilla genérica de relleno (cuando la IA falla del todo) por
-       // una transcripción real o una propuesta honesta de la IA.
-       if (data.chordsSource === 'audio_real') {
-         setStatusBanner({
-           text: `✓ Letra y acordes de "${song.titulo}" transcritos del audio`,
-           type: 'success'
-         });
-       } else if (data.chordsSource === 'ia_sin_audio' && !data.esAproximado) {
-         setStatusBanner({
-           text: `✓ Cifrado propuesto por IA para "${song.titulo}" (no se pudo leer el audio: revísalo)`,
-           type: 'success'
-         });
-       } else if (data.chordsSource === 'ia_sin_audio' && data.esAproximado) {
-         setStatusBanner({
-           text: `⚠️ Acordes aproximados de "${song.titulo}" (de memoria, sin audio ni certeza): verifícalos de oído antes de tocarlos`,
-           type: 'warning'
-         });
-       } else {
-         setStatusBanner({
-           text: `⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico en "${song.titulo}", revísalo antes de usarlo`,
-           type: 'warning'
-         });
-       }
-     } else {
-       setStatusBanner({ text: `No se pudieron analizar los acordes de "${song.titulo}"`, type: 'error' });
-     }
-   } catch (err) {
-     console.error('Error auto-generating chords from audio:', err);
-     setStatusBanner({ text: `No se pudieron analizar los acordes de "${song.titulo}"`, type: 'error' });
-   } finally {
-     setTimeout(() => setStatusBanner(null), 4000);
-   }
+ // El backend distingue tres orígenes reales del cifrado para que este aviso nunca
+ // haga pasar una plantilla genérica de relleno (cuando la IA falla del todo) por
+ // una transcripción real o una propuesta honesta de la IA.
+ if (data.chordsSource === 'audio_real') {
+ setStatusBanner({
+ text: `✓ Letra y acordes de "${song.titulo}" transcritos del audio`,
+ type: 'success'
+ });
+ } else if (data.chordsSource === 'ia_sin_audio' && !data.esAproximado) {
+ setStatusBanner({
+ text: `✓ Cifrado propuesto por IA para "${song.titulo}" (no se pudo leer el audio: revísalo)`,
+ type: 'success'
+ });
+ } else if (data.chordsSource === 'ia_sin_audio' && data.esAproximado) {
+ setStatusBanner({
+ text: `⚠️ Acordes aproximados de "${song.titulo}" (de memoria, sin audio ni certeza): verifícalos de oído antes de tocarlos`,
+ type: 'warning'
+ });
+ } else {
+ setStatusBanner({
+ text: `⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico en "${song.titulo}", revísalo antes de usarlo`,
+ type: 'warning'
+ });
+ }
+ } else {
+ setStatusBanner({ text: `No se pudieron analizar los acordes de "${song.titulo}"`, type: 'error' });
+ }
+ } catch (err) {
+ console.error('Error auto-generating chords from audio:', err);
+ setStatusBanner({ text: `No se pudieron analizar los acordes de "${song.titulo}"`, type: 'error' });
+ } finally {
+ setTimeout(() => setStatusBanner(null), 4000);
+ }
  };
 
  // Handle Add/Edit Song Form Submit
@@ -1433,36 +1433,36 @@ export default function RepertorioSetlists({
  const esVersionCovers = tipo === 'cover';
  const enlaceAcordes = (formData.get('enlaceAcordes') as string) || '';
  const notasInternas = formData.get('notasInternas') as string;
-  const notasRepertorio = (formData.get('notasRepertorio') as string) || '';
-  const notasMiembrosJson = formData.get('notasMiembrosJson') as string;
-  let notasMiembros: Record<string, string> = editingSong?.notasMiembros || {};
-  if (notasMiembrosJson) {
-    try {
-      notasMiembros = JSON.parse(notasMiembrosJson);
-    } catch {
-      // ignore
-    }
-  }
+ const notasRepertorio = (formData.get('notasRepertorio') as string) || '';
+ const notasMiembrosJson = formData.get('notasMiembrosJson') as string;
+ let notasMiembros: Record<string, string> = editingSong?.notasMiembros || {};
+ if (notasMiembrosJson) {
+ try {
+ notasMiembros = JSON.parse(notasMiembrosJson);
+ } catch {
+ // ignore
+ }
+ }
  let audioPrincipalUrl = (formData.get('audioPrincipalUrl') as string) || editingSong?.audioPrincipalUrl || '';
  let portadaUrl = (formData.get('portadaUrl') as string) || editingSong?.portadaUrl || '';
 
  const audioFile = formData.get('audioFile') as File;
  const hasNewAudio = Boolean(audioFile && audioFile.size > 0);
  if (hasNewAudio) {
-   try {
-     audioPrincipalUrl = await uploadFileToServer(audioFile);
-   } catch (err) {
-     console.error('Error reading uploaded audio file:', err);
-   }
+ try {
+ audioPrincipalUrl = await uploadFileToServer(audioFile);
+ } catch (err) {
+ console.error('Error reading uploaded audio file:', err);
+ }
  }
 
  const portadaFile = formData.get('portadaFile') as File;
  if (portadaFile && portadaFile.size > 0) {
-   try {
-     portadaUrl = await uploadFileToServer(portadaFile);
-   } catch (err) {
-     console.error('Error reading uploaded portada file:', err);
-   }
+ try {
+ portadaUrl = await uploadFileToServer(portadaFile);
+ } catch (err) {
+ console.error('Error reading uploaded portada file:', err);
+ }
  }
 
  if (editingSong) {
@@ -1483,18 +1483,18 @@ export default function RepertorioSetlists({
  esVersionCovers,
  enlaceAcordes,
  notasInternas,
-  notasRepertorio,
-  notasMiembros,
+ notasRepertorio,
+ notasMiembros,
  audioPrincipalUrl,
  portadaUrl
  };
  setSongs(prev => {
-   const next = prev.map(s => s.id === editingSong.id ? updatedSong : s);
-   saveSongsToLocalStorageSafely(next);
-   return next;
+ const next = prev.map(s => s.id === editingSong.id ? updatedSong : s);
+ saveSongsToLocalStorageSafely(next);
+ return next;
  });
  if (activePlayerSong?.id === editingSong.id) {
-   setActivePlayerSong(updatedSong);
+ setActivePlayerSong(updatedSong);
  }
  fetch(`/api/songs/${editingSong.id}`, {
  method: 'PUT',
@@ -1520,15 +1520,15 @@ export default function RepertorioSetlists({
  esVersionCovers,
  enlaceAcordes,
  notasInternas,
-  notasRepertorio,
-  notasMiembros,
+ notasRepertorio,
+ notasMiembros,
  audioPrincipalUrl,
  portadaUrl
  };
  setSongs(prev => {
-   const next = [newSong, ...prev];
-   saveSongsToLocalStorageSafely(next);
-   return next;
+ const next = [newSong, ...prev];
+ saveSongsToLocalStorageSafely(next);
+ return next;
  });
  fetch('/api/songs', {
  method: 'POST',
@@ -1564,288 +1564,288 @@ export default function RepertorioSetlists({
 
  // Catalog multi-select: lets the user act on several songs at once instead of one by one
  const toggleCatalogSelect = (songId: string) => {
-   setSelectedCatalogIds(prev => {
-     const next = new Set(prev);
-     if (next.has(songId)) next.delete(songId);
-     else next.add(songId);
-     return next;
-   });
+ setSelectedCatalogIds(prev => {
+ const next = new Set(prev);
+ if (next.has(songId)) next.delete(songId);
+ else next.add(songId);
+ return next;
+ });
  };
 
  const clearCatalogSelection = () => setSelectedCatalogIds(new Set());
 
  const handleBulkDeleteSongs = (songIds: string[]) => {
-   if (songIds.length === 0) return;
-   setConfirmDeleteModal({
-     title: 'Eliminar Canciones Seleccionadas',
-     description: `¿Seguro que deseas eliminar ${songIds.length} canciones del catálogo del grupo? Se quitarán también de los repertorios donde aparezcan.`,
-     onConfirm: () => {
-       const idsSet = new Set(songIds);
-       setSongs(prev => prev.filter(s => !idsSet.has(s.id)));
-       setSetlists(prev => prev.map(st => ({
-         ...st,
-         items: st.items.filter(it => !it.songId || !idsSet.has(it.songId))
-       })));
-       songIds.forEach(songId => {
-         fetch(`/api/songs/${songId}`, {
-           method: 'DELETE',
-           headers: getHeaders()
-         }).catch(err => console.error('Error deleting song on server:', err));
-       });
-       clearCatalogSelection();
-     }
-   });
+ if (songIds.length === 0) return;
+ setConfirmDeleteModal({
+ title: 'Eliminar Canciones Seleccionadas',
+ description: `¿Seguro que deseas eliminar ${songIds.length} canciones del catálogo del grupo? Se quitarán también de los repertorios donde aparezcan.`,
+ onConfirm: () => {
+ const idsSet = new Set(songIds);
+ setSongs(prev => prev.filter(s => !idsSet.has(s.id)));
+ setSetlists(prev => prev.map(st => ({
+ ...st,
+ items: st.items.filter(it => !it.songId || !idsSet.has(it.songId))
+ })));
+ songIds.forEach(songId => {
+ fetch(`/api/songs/${songId}`, {
+ method: 'DELETE',
+ headers: getHeaders()
+ }).catch(err => console.error('Error deleting song on server:', err));
+ });
+ clearCatalogSelection();
+ }
+ });
  };
 
  const handleBulkAddSelectedToSetlist = (songIds: string[]) => {
-   if (songIds.length === 0) return;
-   if (!activeSetlist) {
-     setStatusBanner({ text: 'Selecciona o crea primero un repertorio en la pestaña "Setlists & Directos" para añadir estas canciones.', type: 'error' });
-     setTimeout(() => setStatusBanner(null), 5000);
-     return;
-   }
-   handleAddMultipleSongsToSetlist(songIds);
-   setStatusBanner({ text: `✓ ${songIds.length} canciones añadidas a "${activeSetlist.nombre}"`, type: 'success' });
-   setTimeout(() => setStatusBanner(null), 4000);
-   clearCatalogSelection();
+ if (songIds.length === 0) return;
+ if (!activeSetlist) {
+ setStatusBanner({ text: 'Selecciona o crea primero un repertorio en la pestaña "Setlists & Directos" para añadir estas canciones.', type: 'error' });
+ setTimeout(() => setStatusBanner(null), 5000);
+ return;
+ }
+ handleAddMultipleSongsToSetlist(songIds);
+ setStatusBanner({ text: `✓ ${songIds.length} canciones añadidas a "${activeSetlist.nombre}"`, type: 'success' });
+ setTimeout(() => setStatusBanner(null), 4000);
+ clearCatalogSelection();
  };
 
  const handleToggleFavorite = (songId: string) => {
-   const updated = songs.map(s => {
-     if (s.id === songId) {
-       const isFav = !s.favoritoGeneral;
-       const updatedSong = { ...s, favoritoGeneral: isFav };
-       fetch(`/api/songs/${s.id}`, {
-         method: 'PUT',
-         headers: getHeaders(),
-         body: JSON.stringify(updatedSong)
-       }).catch(err => console.error('Error toggling favorite on server:', err));
-       return updatedSong;
-     }
-     return s;
-   });
-   setSongs(updated);
-   saveSongsToLocalStorageSafely(updated);
+ const updated = songs.map(s => {
+ if (s.id === songId) {
+ const isFav = !s.favoritoGeneral;
+ const updatedSong = { ...s, favoritoGeneral: isFav };
+ fetch(`/api/songs/${s.id}`, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(updatedSong)
+ }).catch(err => console.error('Error toggling favorite on server:', err));
+ return updatedSong;
+ }
+ return s;
+ });
+ setSongs(updated);
+ saveSongsToLocalStorageSafely(updated);
  };
 
  const handleUnassignAlbumSongs = (albumName: string) => {
-   const updatedSongs = songs.map(s => {
-     if ((s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName) {
-       return { ...s, albumDisco: '' };
-     }
-     return s;
-   });
-   setSongs(updatedSongs);
-   saveSongsToLocalStorageSafely(updatedSongs);
+ const updatedSongs = songs.map(s => {
+ if ((s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName) {
+ return { ...s, albumDisco: '' };
+ }
+ return s;
+ });
+ setSongs(updatedSongs);
+ saveSongsToLocalStorageSafely(updatedSongs);
 
-   updatedSongs
-     .filter(s => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName)
-     .forEach(s => {
-       fetch(`/api/songs/${s.id}`, {
-         method: 'PUT',
-         headers: getHeaders(),
-         body: JSON.stringify(s)
-       }).catch(err => console.error('Error updating song album on server:', err));
-     });
+ updatedSongs
+ .filter(s => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName)
+ .forEach(s => {
+ fetch(`/api/songs/${s.id}`, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(s)
+ }).catch(err => console.error('Error updating song album on server:', err));
+ });
  };
 
  const handleDeleteAlbumAndSongs = (albumName: string) => {
-   const songsToDelete = songs.filter(s => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
-   const idsToDelete = new Set(songsToDelete.map(s => s.id));
+ const songsToDelete = songs.filter(s => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
+ const idsToDelete = new Set(songsToDelete.map(s => s.id));
 
-   const updatedSongs = songs.filter(s => !idsToDelete.has(s.id));
-   setSongs(updatedSongs);
-   saveSongsToLocalStorageSafely(updatedSongs);
+ const updatedSongs = songs.filter(s => !idsToDelete.has(s.id));
+ setSongs(updatedSongs);
+ saveSongsToLocalStorageSafely(updatedSongs);
 
-   setSetlists(prev => prev.map(st => ({
-     ...st,
-     items: st.items.filter(it => !idsToDelete.has(it.songId))
-   })));
+ setSetlists(prev => prev.map(st => ({
+ ...st,
+ items: st.items.filter(it => !idsToDelete.has(it.songId))
+ })));
 
-   songsToDelete.forEach(s => {
-     fetch(`/api/songs/${s.id}`, {
-       method: 'DELETE',
-       headers: getHeaders()
-     }).catch(err => console.error('Error deleting song on server:', err));
-   });
+ songsToDelete.forEach(s => {
+ fetch(`/api/songs/${s.id}`, {
+ method: 'DELETE',
+ headers: getHeaders()
+ }).catch(err => console.error('Error deleting song on server:', err));
+ });
  };
 
  const handleSaveAlbumSongs = (albumName: string, selectedSongIds: string[]) => {
-   const selectedSet = new Set(selectedSongIds);
-   const updatedSongs = songs.map(s => {
-     const isCurrentlyInAlbum = (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName;
-     if (selectedSet.has(s.id)) {
-       return { ...s, albumDisco: albumName };
-     } else if (isCurrentlyInAlbum) {
-       return { ...s, albumDisco: '' };
-     }
-     return s;
-   });
+ const selectedSet = new Set(selectedSongIds);
+ const updatedSongs = songs.map(s => {
+ const isCurrentlyInAlbum = (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName;
+ if (selectedSet.has(s.id)) {
+ return { ...s, albumDisco: albumName };
+ } else if (isCurrentlyInAlbum) {
+ return { ...s, albumDisco: '' };
+ }
+ return s;
+ });
 
-   setSongs(updatedSongs);
-   saveSongsToLocalStorageSafely(updatedSongs);
+ setSongs(updatedSongs);
+ saveSongsToLocalStorageSafely(updatedSongs);
 
-   updatedSongs.forEach(s => {
-     fetch(`/api/songs/${s.id}`, {
-       method: 'PUT',
-       headers: getHeaders(),
-       body: JSON.stringify(s)
-     }).catch(err => console.error('Error updating song album on server:', err));
-   });
+ updatedSongs.forEach(s => {
+ fetch(`/api/songs/${s.id}`, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(s)
+ }).catch(err => console.error('Error updating song album on server:', err));
+ });
  };
 
  const handleReorderAlbumTrack = (albumName: string, songId: string, direction: 'up' | 'down') => {
-   const albumSongs = songs
-     .filter(s => (s.albumDisco || 'Singles / Sin Disco') === albumName)
-     .sort((a, b) => (a.ordenAlbum ?? 0) - (b.ordenAlbum ?? 0));
+ const albumSongs = songs
+ .filter(s => (s.albumDisco || 'Singles / Sin Disco') === albumName)
+ .sort((a, b) => (a.ordenAlbum ?? 0) - (b.ordenAlbum ?? 0));
 
-   const index = albumSongs.findIndex(s => s.id === songId);
-   if (index === -1) return;
+ const index = albumSongs.findIndex(s => s.id === songId);
+ if (index === -1) return;
 
-   const targetIndex = direction === 'up' ? index - 1 : index + 1;
-   if (targetIndex < 0 || targetIndex >= albumSongs.length) return;
+ const targetIndex = direction === 'up' ? index - 1 : index + 1;
+ if (targetIndex < 0 || targetIndex >= albumSongs.length) return;
 
-   const newAlbumSongs = [...albumSongs];
-   const temp = newAlbumSongs[index];
-   newAlbumSongs[index] = newAlbumSongs[targetIndex];
-   newAlbumSongs[targetIndex] = temp;
+ const newAlbumSongs = [...albumSongs];
+ const temp = newAlbumSongs[index];
+ newAlbumSongs[index] = newAlbumSongs[targetIndex];
+ newAlbumSongs[targetIndex] = temp;
 
-   const orderMap = new Map<string, number>();
-   newAlbumSongs.forEach((song, idx) => {
-     orderMap.set(song.id, idx + 1);
-   });
+ const orderMap = new Map<string, number>();
+ newAlbumSongs.forEach((song, idx) => {
+ orderMap.set(song.id, idx + 1);
+ });
 
-   const updatedSongs = songs.map(s => {
-     if (orderMap.has(s.id)) {
-       return { ...s, ordenAlbum: orderMap.get(s.id) };
-     }
-     return s;
-   });
+ const updatedSongs = songs.map(s => {
+ if (orderMap.has(s.id)) {
+ return { ...s, ordenAlbum: orderMap.get(s.id) };
+ }
+ return s;
+ });
 
-   setSongs(updatedSongs);
-   saveSongsToLocalStorageSafely(updatedSongs);
+ setSongs(updatedSongs);
+ saveSongsToLocalStorageSafely(updatedSongs);
 
-   newAlbumSongs.forEach(s => {
-     const updated = { ...s, ordenAlbum: orderMap.get(s.id) };
-     fetch(`/api/songs/${s.id}`, {
-       method: 'PUT',
-       headers: getHeaders(),
-       body: JSON.stringify(updated)
-     }).catch(err => console.error('Error updating song order on server:', err));
-   });
+ newAlbumSongs.forEach(s => {
+ const updated = { ...s, ordenAlbum: orderMap.get(s.id) };
+ fetch(`/api/songs/${s.id}`, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(updated)
+ }).catch(err => console.error('Error updating song order on server:', err));
+ });
  };
 
-  const handleNormalizeCatalogTitles = async () => {
-    const { updatedSongs, changedCount } = normalizeSongTitlesInList(songs);
-    if (changedCount === 0) {
-      setStatusBanner({
-        text: '✨ Todos los temas del catálogo ya tienen formato con mayúsculas de nombres propios.',
-        type: 'success'
-      });
-      setTimeout(() => setStatusBanner(null), 3500);
-      return;
-    }
+ const handleNormalizeCatalogTitles = async () => {
+ const { updatedSongs, changedCount } = normalizeSongTitlesInList(songs);
+ if (changedCount === 0) {
+ setStatusBanner({
+ text: '✨ Todos los temas del catálogo ya tienen formato con mayúsculas de nombres propios.',
+ type: 'success'
+ });
+ setTimeout(() => setStatusBanner(null), 3500);
+ return;
+ }
 
-    setSongs(updatedSongs);
-    saveSongsToLocalStorageSafely(updatedSongs);
-    setStatusBanner({
-      text: `✨ Se han normalizado ${changedCount} temas con mayúsculas de nombres propios.`,
-      type: 'success'
-    });
-    setTimeout(() => setStatusBanner(null), 4000);
+ setSongs(updatedSongs);
+ saveSongsToLocalStorageSafely(updatedSongs);
+ setStatusBanner({
+ text: `✨ Se han normalizado ${changedCount} temas con mayúsculas de nombres propios.`,
+ type: 'success'
+ });
+ setTimeout(() => setStatusBanner(null), 4000);
 
-    const changed = updatedSongs.filter(s => {
-      const orig = songs.find(o => o.id === s.id);
-      return orig && orig.titulo !== s.titulo;
-    });
+ const changed = updatedSongs.filter(s => {
+ const orig = songs.find(o => o.id === s.id);
+ return orig && orig.titulo !== s.titulo;
+ });
 
-    for (const songToUpdate of changed) {
-      fetch(`/api/songs/${songToUpdate.id}`, {
-        method: 'PUT',
-        headers: getHeaders(),
-        body: JSON.stringify(songToUpdate)
-      }).catch(err => console.warn('Error saving normalized song:', songToUpdate.id, err));
-    }
-  };
+ for (const songToUpdate of changed) {
+ fetch(`/api/songs/${songToUpdate.id}`, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(songToUpdate)
+ }).catch(err => console.warn('Error saving normalized song:', songToUpdate.id, err));
+ }
+ };
 
  // Setlist Operations
  const handleCreateSetlist = () => {
-   setSetlistModalData({ isOpen: true, setlistToEdit: null });
+ setSetlistModalData({ isOpen: true, setlistToEdit: null });
  };
 
  // El modal de importación ya hizo el POST tanto de las canciones nuevas como del setlist —
  // aquí solo se actualiza el estado local y se cambia a verlo, igual que tras crear/duplicar
  // un setlist a mano.
  const handleSetlistImported = (setlist: Setlist, newSongs: Song[]) => {
-   if (newSongs.length > 0) {
-     setSongs((prev) => {
-       const next = [...prev, ...newSongs];
-       saveSongsToLocalStorageSafely(next);
-       return next;
-     });
-   }
-   setSetlists((prev) => {
-     const next = [setlist, ...prev];
-     saveSetlistsToLocalStorageSafely(next);
-     return next;
-   });
-   setActiveSetlistId(setlist.id);
+ if (newSongs.length > 0) {
+ setSongs((prev) => {
+ const next = [...prev, ...newSongs];
+ saveSongsToLocalStorageSafely(next);
+ return next;
+ });
+ }
+ setSetlists((prev) => {
+ const next = [setlist, ...prev];
+ saveSetlistsToLocalStorageSafely(next);
+ return next;
+ });
+ setActiveSetlistId(setlist.id);
  };
 
  const handleSaveSetlistModal = (setlistData: {
-   id?: string;
-   nombre: string;
-   descripcion: string;
-   tipoFormato: Setlist['tipoFormato'];
+ id?: string;
+ nombre: string;
+ descripcion: string;
+ tipoFormato: Setlist['tipoFormato'];
  }) => {
-   if (setlistData.id) {
-     setSetlists((prev) =>
-       prev.map((s) =>
-         s.id === setlistData.id
-           ? {
-               ...s,
-               nombre: setlistData.nombre,
-               descripcion: setlistData.descripcion,
-               tipoFormato: setlistData.tipoFormato,
-               fechaUltimaEdicion: new Date().toISOString().split('T')[0],
-             }
-           : s
-       )
-     );
-     const existing = setlists.find((s) => s.id === setlistData.id);
-     if (existing) {
-       const payload = {
-         ...existing,
-         nombre: setlistData.nombre,
-         descripcion: setlistData.descripcion,
-         tipoFormato: setlistData.tipoFormato,
-       };
-       fetch(`/api/setlists/${setlistData.id}`, {
-         method: 'PUT',
-         headers: getHeaders(),
-         body: JSON.stringify(payload),
-       }).catch((err) => console.error('Error updating setlist:', err));
-     }
-   } else {
-     const newSetlist: Setlist = {
-       id: `setlist-${Date.now()}`,
-       nombre: setlistData.nombre,
-       descripcion: setlistData.descripcion || 'Nuevo repertorio para directo',
-       tipoFormato: setlistData.tipoFormato || 'festival',
-       duracionTotalEstimadaMinutos: 45,
-       fechaCreacion: new Date().toISOString().split('T')[0],
-       fechaUltimaEdicion: new Date().toISOString().split('T')[0],
-       items: [],
-     };
-     setSetlists((prev) => [newSetlist, ...prev]);
-     setActiveSetlistId(newSetlist.id);
+ if (setlistData.id) {
+ setSetlists((prev) =>
+ prev.map((s) =>
+ s.id === setlistData.id
+ ? {
+ ...s,
+ nombre: setlistData.nombre,
+ descripcion: setlistData.descripcion,
+ tipoFormato: setlistData.tipoFormato,
+ fechaUltimaEdicion: new Date().toISOString().split('T')[0],
+ }
+ : s
+ )
+ );
+ const existing = setlists.find((s) => s.id === setlistData.id);
+ if (existing) {
+ const payload = {
+ ...existing,
+ nombre: setlistData.nombre,
+ descripcion: setlistData.descripcion,
+ tipoFormato: setlistData.tipoFormato,
+ };
+ fetch(`/api/setlists/${setlistData.id}`, {
+ method: 'PUT',
+ headers: getHeaders(),
+ body: JSON.stringify(payload),
+ }).catch((err) => console.error('Error updating setlist:', err));
+ }
+ } else {
+ const newSetlist: Setlist = {
+ id: `setlist-${Date.now()}`,
+ nombre: setlistData.nombre,
+ descripcion: setlistData.descripcion || 'Nuevo repertorio para directo',
+ tipoFormato: setlistData.tipoFormato || 'festival',
+ duracionTotalEstimadaMinutos: 45,
+ fechaCreacion: new Date().toISOString().split('T')[0],
+ fechaUltimaEdicion: new Date().toISOString().split('T')[0],
+ items: [],
+ };
+ setSetlists((prev) => [newSetlist, ...prev]);
+ setActiveSetlistId(newSetlist.id);
 
-     fetch('/api/setlists', {
-       method: 'POST',
-       headers: getHeaders(),
-       body: JSON.stringify(newSetlist),
-     }).catch((err) => console.error('Error creating setlist on server:', err));
-   }
+ fetch('/api/setlists', {
+ method: 'POST',
+ headers: getHeaders(),
+ body: JSON.stringify(newSetlist),
+ }).catch((err) => console.error('Error creating setlist on server:', err));
+ }
  };
 
  const handleOldSetlist = () => {
@@ -1932,52 +1932,52 @@ export default function RepertorioSetlists({
  // array", así que todos pasan por aquí para compartir el snapshot de "Deshacer" (sourceKey
  // identifica qué acción lo generó) y el guardado/sync.
  const applySetlistItemsChange = (newItems: SetlistItem[], sourceKey: string) => {
-   if (!activeSetlist) return;
+ if (!activeSetlist) return;
 
-   setUndoReorderSnapshot({ setlistId: activeSetlist.id, items: activeSetlist.items, sourceKey });
+ setUndoReorderSnapshot({ setlistId: activeSetlist.id, items: activeSetlist.items, sourceKey });
 
-   const updatedSetlist: Setlist = {
-     ...activeSetlist,
-     fechaUltimaEdicion: new Date().toISOString().split('T')[0],
-     items: newItems
-   };
+ const updatedSetlist: Setlist = {
+ ...activeSetlist,
+ fechaUltimaEdicion: new Date().toISOString().split('T')[0],
+ items: newItems
+ };
 
-   setSetlists(prev => {
-     const next = prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st);
-     saveSetlistsToLocalStorageSafely(next);
-     return next;
-   });
-   syncSetlistToBackend(updatedSetlist);
+ setSetlists(prev => {
+ const next = prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st);
+ saveSetlistsToLocalStorageSafely(next);
+ return next;
+ });
+ syncSetlistToBackend(updatedSetlist);
  };
 
  const reorderSetlistItems = (fromIndex: number, toIndex: number, sourceKey: string = 'manual') => {
-   if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
-   const newItems = [...activeSetlist.items];
-   const [movedItem] = newItems.splice(fromIndex, 1);
-   newItems.splice(toIndex, 0, movedItem);
-   applySetlistItemsChange(newItems, sourceKey);
+ if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+ const newItems = [...activeSetlist.items];
+ const [movedItem] = newItems.splice(fromIndex, 1);
+ newItems.splice(toIndex, 0, movedItem);
+ applySetlistItemsChange(newItems, sourceKey);
  };
 
  // Busca el mejor hueco del setlist ACTUAL para meter una chapa/interludio — la transición entre
  // dos canciones ya consecutivas que más "chirría" (choque de tonalidad + salto de tempo/energía).
  // No reordena nada: solo sugiere, y el usuario decide si la inserta.
  const suggestChapaSpot = () => {
-   if (!activeSetlist) return;
-   const sugerencia = sugerirMejorPuntoParaChapa(activeSetlist.items, songs);
-   setChapaSuggestion(sugerencia);
-   if (!sugerencia) {
-     setOptimizeSummary('👍 Las transiciones ya van suaves — no hace falta forzar una chapa en ningún punto concreto.');
-     window.setTimeout(() => setOptimizeSummary(null), 7000);
-   }
+ if (!activeSetlist) return;
+ const sugerencia = sugerirMejorPuntoParaChapa(activeSetlist.items, songs);
+ setChapaSuggestion(sugerencia);
+ if (!sugerencia) {
+ setOptimizeSummary('👍 Las transiciones ya van suaves — no hace falta forzar una chapa en ningún punto concreto.');
+ window.setTimeout(() => setOptimizeSummary(null), 7000);
+ }
  };
 
  // Inserta la chapa sugerida justo donde se calculó — reutiliza el mismo flujo que "+ Añadir
  // bloque" del editor manual (handleAddItemToSetlist ya sabe rellenar título/duración por defecto
  // para el subtipo 'chapa').
  const insertSuggestedChapa = () => {
-   if (!chapaSuggestion) return;
-   handleAddItemToSetlist(undefined, 'chapa', undefined, undefined, undefined, undefined, chapaSuggestion.insertAfterItemId);
-   setChapaSuggestion(null);
+ if (!chapaSuggestion) return;
+ handleAddItemToSetlist(undefined, 'chapa', undefined, undefined, undefined, undefined, chapaSuggestion.insertAfterItemId);
+ setChapaSuggestion(null);
  };
 
  // Reordena solo las CANCIONES (nunca los bloques de chapa/presentación/bis, que el usuario
@@ -1986,113 +1986,113 @@ export default function RepertorioSetlists({
  // primera canción del setlist nunca se mueve (ver optimizarOrdenPorTransiciones): es la apertura
  // que ya eligió el usuario, no un dato más a optimizar.
  const optimizeSetlistTransitions = () => {
-   if (!activeSetlist) return;
-   setChapaSuggestion(null); // el orden va a cambiar: cualquier sugerencia calculada sobre el orden anterior queda obsoleta
-   const items = activeSetlist.items;
-   const songPositions: number[] = [];
-   const slots: HuecoCancion[] = [];
-   items.forEach((item, i) => {
-     if (item.tipoItem === 'cancion' && item.songId) {
-       const song = songs.find((s) => s.id === item.songId);
-       if (song) {
-         songPositions.push(i);
-         slots.push({ item, song });
-       }
-     }
-   });
-   if (slots.length < 3) return; // con 2 canciones o menos no hay nada que reordenar
+ if (!activeSetlist) return;
+ setChapaSuggestion(null); // el orden va a cambiar: cualquier sugerencia calculada sobre el orden anterior queda obsoleta
+ const items = activeSetlist.items;
+ const songPositions: number[] = [];
+ const slots: HuecoCancion[] = [];
+ items.forEach((item, i) => {
+ if (item.tipoItem === 'cancion' && item.songId) {
+ const song = songs.find((s) => s.id === item.songId);
+ if (song) {
+ songPositions.push(i);
+ slots.push({ item, song });
+ }
+ }
+ });
+ if (slots.length < 3) return; // con 2 canciones o menos no hay nada que reordenar
 
-   const costeAntes = costeTotalTransiciones(slots);
-   const optimizado = optimizarOrdenPorTransiciones(slots);
-   const costeDespues = costeTotalTransiciones(optimizado);
+ const costeAntes = costeTotalTransiciones(slots);
+ const optimizado = optimizarOrdenPorTransiciones(slots);
+ const costeDespues = costeTotalTransiciones(optimizado);
 
-   const newItems = [...items];
-   songPositions.forEach((pos, idx) => { newItems[pos] = optimizado[idx].item; });
-   applySetlistItemsChange(newItems, 'optimize-transitions');
+ const newItems = [...items];
+ songPositions.forEach((pos, idx) => { newItems[pos] = optimizado[idx].item; });
+ applySetlistItemsChange(newItems, 'optimize-transitions');
 
-   const mejoraPct = costeAntes > 0 ? Math.round((1 - costeDespues / costeAntes) * 100) : 0;
-   setOptimizeSummary(
-     mejoraPct > 0
-       ? `🎯 Orden optimizado: transiciones un ${mejoraPct}% más suaves (tonalidad + tempo + energía).`
-       : 'El orden actual ya es prácticamente el mejor posible para estas transiciones.'
-   );
-   window.setTimeout(() => setOptimizeSummary(null), 7000);
+ const mejoraPct = costeAntes > 0 ? Math.round((1 - costeDespues / costeAntes) * 100) : 0;
+ setOptimizeSummary(
+ mejoraPct > 0
+ ? `🎯 Orden optimizado: transiciones un ${mejoraPct}% más suaves (tonalidad + tempo + energía).`
+ : 'El orden actual ya es prácticamente el mejor posible para estas transiciones.'
+ );
+ window.setTimeout(() => setOptimizeSummary(null), 7000);
  };
 
  // Quita el item en `index` (usado por el plan de "Setlist Perfecto" para retirar una canción que
  // no encaja — a diferencia de handleRemoveSetlistItem, que borra por id desde la lista visual,
  // esto trabaja por índice porque así es como el plan referencia sus posiciones).
  const removeSetlistItemAtIndex = (index: number, sourceKey: string) => {
-   if (!activeSetlist || index < 0 || index >= activeSetlist.items.length) return;
-   const newItems = activeSetlist.items.filter((_, i) => i !== index);
-   applySetlistItemsChange(newItems, sourceKey);
+ if (!activeSetlist || index < 0 || index >= activeSetlist.items.length) return;
+ const newItems = activeSetlist.items.filter((_, i) => i !== index);
+ applySetlistItemsChange(newItems, sourceKey);
  };
 
  // Inserta una canción del catálogo en `insertIndex` — variante de handleAddItemToSetlist que
  // inserta en una posición concreta (la que propuso el plan) en vez de tras el item seleccionado.
  const insertSongAtIndex = (songId: string, insertIndex: number, sourceKey: string) => {
-   if (!activeSetlist) return;
-   const newItem: SetlistItem = {
-     id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-     tipoItem: 'cancion',
-     songId
-   };
-   const newItems = [...activeSetlist.items];
-   const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
-   newItems.splice(clampedIndex, 0, newItem);
-   applySetlistItemsChange(newItems, sourceKey);
+ if (!activeSetlist) return;
+ const newItem: SetlistItem = {
+ id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+ tipoItem: 'cancion',
+ songId
+ };
+ const newItems = [...activeSetlist.items];
+ const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
+ newItems.splice(clampedIndex, 0, newItem);
+ applySetlistItemsChange(newItems, sourceKey);
  };
 
  // Inserta un bloque (presentación, pausa, bis...) en `insertIndex` — el plan de "Setlist
  // Perfecto" ya viene con block_type validado contra los tipoItem reales, así que aquí no hace
  // falta repetir los defaults por tipo que sí tiene handleAddItemToSetlist para el editor manual.
  const insertBlockAtIndex = (
-   tipoItem: SetlistItem['tipoItem'],
-   tituloCustom: string,
-   duracionEstimadaMinutos: number | undefined,
-   insertIndex: number,
-   sourceKey: string
+ tipoItem: SetlistItem['tipoItem'],
+ tituloCustom: string,
+ duracionEstimadaMinutos: number | undefined,
+ insertIndex: number,
+ sourceKey: string
  ) => {
-   if (!activeSetlist) return;
-   const newItem: SetlistItem = {
-     id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-     tipoItem,
-     tituloCustom,
-     duracionEstimadaMinutos,
-     duracionEstimadaSegundos: duracionEstimadaMinutos ? Math.round(duracionEstimadaMinutos * 60) : undefined
-   };
-   const newItems = [...activeSetlist.items];
-   const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
-   newItems.splice(clampedIndex, 0, newItem);
-   applySetlistItemsChange(newItems, sourceKey);
+ if (!activeSetlist) return;
+ const newItem: SetlistItem = {
+ id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+ tipoItem,
+ tituloCustom,
+ duracionEstimadaMinutos,
+ duracionEstimadaSegundos: duracionEstimadaMinutos ? Math.round(duracionEstimadaMinutos * 60) : undefined
+ };
+ const newItems = [...activeSetlist.items];
+ const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
+ newItems.splice(clampedIndex, 0, newItem);
+ applySetlistItemsChange(newItems, sourceKey);
  };
 
  // Ejecuta UNA acción concreta del plan de "Setlist Perfecto" — cada acción ya viene validada por
  // el servidor (posiciones dentro de rango, catalog_index resuelto a un song_id real, block_type
  // dentro del enum), así que aquí solo se traduce cada tipo a la función que ya mueve/inserta/quita.
  const applyPerfectSetlistAction = (action: PerfectSetlistAction, sourceKey: string) => {
-   switch (action.type) {
-     case 'reorder':
-       if (action.from_position != null && action.to_position != null) {
-         reorderSetlistItems(action.from_position - 1, action.to_position - 1, sourceKey);
-       }
-       break;
-     case 'remove_song':
-       if (action.item_position != null) {
-         removeSetlistItemAtIndex(action.item_position - 1, sourceKey);
-       }
-       break;
-     case 'add_song':
-       if (action.song_id && action.insert_at_position != null) {
-         insertSongAtIndex(action.song_id, action.insert_at_position - 1, sourceKey);
-       }
-       break;
-     case 'add_block':
-       if (action.block_type && action.insert_at_position != null) {
-         insertBlockAtIndex(action.block_type as SetlistItem['tipoItem'], action.title || 'Nuevo bloque', action.duracion_minutos, action.insert_at_position - 1, sourceKey);
-       }
-       break;
-   }
+ switch (action.type) {
+ case 'reorder':
+ if (action.from_position != null && action.to_position != null) {
+ reorderSetlistItems(action.from_position - 1, action.to_position - 1, sourceKey);
+ }
+ break;
+ case 'remove_song':
+ if (action.item_position != null) {
+ removeSetlistItemAtIndex(action.item_position - 1, sourceKey);
+ }
+ break;
+ case 'add_song':
+ if (action.song_id && action.insert_at_position != null) {
+ insertSongAtIndex(action.song_id, action.insert_at_position - 1, sourceKey);
+ }
+ break;
+ case 'add_block':
+ if (action.block_type && action.insert_at_position != null) {
+ insertBlockAtIndex(action.block_type as SetlistItem['tipoItem'], action.title || 'Nuevo bloque', action.duracion_minutos, action.insert_at_position - 1, sourceKey);
+ }
+ break;
+ }
  };
 
  // Genera el plan de "Setlist Perfecto" y, la PRIMERA vez, duplica el setlist ANTES de que se
@@ -2103,42 +2103,42 @@ export default function RepertorioSetlists({
  // una copia nueva si no existe ninguna todavía para este setlist, o si se pide explícitamente
  // (`forceNewCopy`, botón "Nueva copia" del modal).
  const handleGeneratePerfectSetlist = async (forceNewCopy: boolean = false, feedback?: SetlistFeedbackInput) => {
-   if (!activeSetlist) return;
+ if (!activeSetlist) return;
 
-   const existingDraft = !forceNewCopy && perfectSetlistDraft && (
-     perfectSetlistDraft.draftSetlistId === activeSetlist.id ||
-     perfectSetlistDraft.originalSetlistId === activeSetlist.id
-   ) ? perfectSetlistDraft : null;
+ const existingDraft = !forceNewCopy && perfectSetlistDraft && (
+ perfectSetlistDraft.draftSetlistId === activeSetlist.id ||
+ perfectSetlistDraft.originalSetlistId === activeSetlist.id
+ ) ? perfectSetlistDraft : null;
 
-   // Si el usuario volvió al setlist ORIGINAL (no a la copia) pero ya existe una copia de una
-   // ronda anterior, se retoma esa copia en vez de generar/duplicar desde el original de nuevo.
-   let targetSetlist = activeSetlist;
-   if (existingDraft && existingDraft.draftSetlistId !== activeSetlist.id) {
-     const draft = setlists.find(s => s.id === existingDraft.draftSetlistId);
-     if (draft) {
-       targetSetlist = draft;
-       setActiveSetlistId(draft.id);
-     }
-   }
+ // Si el usuario volvió al setlist ORIGINAL (no a la copia) pero ya existe una copia de una
+ // ronda anterior, se retoma esa copia en vez de generar/duplicar desde el original de nuevo.
+ let targetSetlist = activeSetlist;
+ if (existingDraft && existingDraft.draftSetlistId !== activeSetlist.id) {
+ const draft = setlists.find(s => s.id === existingDraft.draftSetlistId);
+ if (draft) {
+ targetSetlist = draft;
+ setActiveSetlistId(draft.id);
+ }
+ }
 
-   setPerfectSetlistLoading(true);
-   setPerfectSetlistError(null);
-   try {
-     const result = await api.generatePerfectSetlist(targetSetlist.id, feedback);
-     if (result.success && result.plan) {
-       if (!existingDraft) {
-         const copy = handleDuplicateSetlist(targetSetlist, '(Setlist Perfecto)');
-         setPerfectSetlistDraft({ originalSetlistId: targetSetlist.id, draftSetlistId: copy.id });
-       }
-       setPerfectSetlistPlan(result.plan);
-     } else {
-       setPerfectSetlistError(result.error || 'Error al generar el plan');
-     }
-   } catch (err: any) {
-     setPerfectSetlistError(err.message || 'Error desconocido');
-   } finally {
-     setPerfectSetlistLoading(false);
-   }
+ setPerfectSetlistLoading(true);
+ setPerfectSetlistError(null);
+ try {
+ const result = await api.generatePerfectSetlist(targetSetlist.id, feedback);
+ if (result.success && result.plan) {
+ if (!existingDraft) {
+ const copy = handleDuplicateSetlist(targetSetlist, '(Setlist Perfecto)');
+ setPerfectSetlistDraft({ originalSetlistId: targetSetlist.id, draftSetlistId: copy.id });
+ }
+ setPerfectSetlistPlan(result.plan);
+ } else {
+ setPerfectSetlistError(result.error || 'Error al generar el plan');
+ }
+ } catch (err: any) {
+ setPerfectSetlistError(err.message || 'Error desconocido');
+ } finally {
+ setPerfectSetlistLoading(false);
+ }
  };
 
  const canUndoReorder = !!undoReorderSnapshot && undoReorderSnapshot.setlistId === activeSetlist?.id;
@@ -2148,271 +2148,271 @@ export default function RepertorioSetlists({
  const undoSourceKey = canUndoReorder ? undoReorderSnapshot!.sourceKey : null;
 
  const undoLastReorder = () => {
-   if (!activeSetlist || !undoReorderSnapshot || undoReorderSnapshot.setlistId !== activeSetlist.id) return;
+ if (!activeSetlist || !undoReorderSnapshot || undoReorderSnapshot.setlistId !== activeSetlist.id) return;
 
-   const restoredSetlist: Setlist = {
-     ...activeSetlist,
-     fechaUltimaEdicion: new Date().toISOString().split('T')[0],
-     items: undoReorderSnapshot.items
-   };
+ const restoredSetlist: Setlist = {
+ ...activeSetlist,
+ fechaUltimaEdicion: new Date().toISOString().split('T')[0],
+ items: undoReorderSnapshot.items
+ };
 
-   setSetlists(prev => {
-     const next = prev.map(st => st.id === activeSetlist.id ? restoredSetlist : st);
-     saveSetlistsToLocalStorageSafely(next);
-     return next;
-   });
-   syncSetlistToBackend(restoredSetlist);
-   setUndoReorderSnapshot(null);
+ setSetlists(prev => {
+ const next = prev.map(st => st.id === activeSetlist.id ? restoredSetlist : st);
+ saveSetlistsToLocalStorageSafely(next);
+ return next;
+ });
+ syncSetlistToBackend(restoredSetlist);
+ setUndoReorderSnapshot(null);
  };
 
  const handleDropItem = (targetIndex: number) => {
-   if (draggedItemIndex !== null) reorderSetlistItems(draggedItemIndex, targetIndex);
-   setDraggedItemIndex(null);
-   setDragOverItemIndex(null);
+ if (draggedItemIndex !== null) reorderSetlistItems(draggedItemIndex, targetIndex);
+ setDraggedItemIndex(null);
+ setDragOverItemIndex(null);
  };
 
  const handleAddItemToSetlist = (
-  songId?: string,
-  tipoItem: any = 'cancion',
-  tituloCustom?: string,
-  duracionEstimadaMinutos?: number,
-  duracionEstimadaSegundos?: number,
-  notaTema?: string,
-  insertAfterId?: string | null
+ songId?: string,
+ tipoItem: any = 'cancion',
+ tituloCustom?: string,
+ duracionEstimadaMinutos?: number,
+ duracionEstimadaSegundos?: number,
+ notaTema?: string,
+ insertAfterId?: string | null
  ) => {
-  if (!activeSetlist) return;
+ if (!activeSetlist) return;
 
-  // Map old tipoItem values to new (tipoItem, bloqueSubtipo) structure
-  let actualTipoItem: 'cancion' | 'bloque' = 'cancion';
-  let bloqueSubtipo: SetlistItem['bloqueSubtipo'] = undefined;
+ // Map old tipoItem values to new (tipoItem, bloqueSubtipo) structure
+ let actualTipoItem: 'cancion' | 'bloque' = 'cancion';
+ let bloqueSubtipo: SetlistItem['bloqueSubtipo'] = undefined;
 
-  if (tipoItem !== 'cancion') {
-    actualTipoItem = 'bloque';
-    bloqueSubtipo = tipoItem; // Map directly: 'presentacion', 'bis', 'header', etc.
-  }
+ if (tipoItem !== 'cancion') {
+ actualTipoItem = 'bloque';
+ bloqueSubtipo = tipoItem; // Map directly: 'presentacion', 'bis', 'header', etc.
+ }
 
-  const newItem: SetlistItem = {
-   id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-   tipoItem: actualTipoItem,
-   bloqueSubtipo,
-   songId,
-   tituloCustom,
-   duracionEstimadaMinutos,
-   duracionEstimadaSegundos,
-   notaTema
-  };
+ const newItem: SetlistItem = {
+ id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+ tipoItem: actualTipoItem,
+ bloqueSubtipo,
+ songId,
+ tituloCustom,
+ duracionEstimadaMinutos,
+ duracionEstimadaSegundos,
+ notaTema
+ };
 
-  if (!tituloCustom) {
-   const subtype = bloqueSubtipo || tipoItem;
-   if (subtype === 'header' || subtype === 'bloque_header') {
-    newItem.tituloCustom = '⚡ Nuevo Bloque / Sección del Show';
-   } else if (subtype === 'presentacion') {
-    newItem.tituloCustom = 'Presentación Banda & Saludo';
-    newItem.duracionEstimadaMinutos = 2;
-    newItem.duracionEstimadaSegundos = 120;
-   } else if (subtype === 'beatbox') {
-    newItem.tituloCustom = 'Solo de Batería / Percusión';
-    newItem.duracionEstimadaMinutos = 2;
-    newItem.duracionEstimadaSegundos = 120;
-   } else if (subtype === 'intro_tema') {
-    newItem.tituloCustom = 'Intro / Historia del Tema';
-    newItem.duracionEstimadaMinutos = 1;
-    newItem.duracionEstimadaSegundos = 60;
-   } else if (subtype === 'solo_performance') {
-    newItem.tituloCustom = 'Solo Instrumental / Jam';
-    newItem.duracionEstimadaMinutos = 2;
-    newItem.duracionEstimadaSegundos = 120;
-   } else if (subtype === 'cambio_instrumento') {
-    newItem.tituloCustom = 'Cambio Instrumento & Afinación';
-    newItem.duracionEstimadaMinutos = 1;
-    newItem.duracionEstimadaSegundos = 60;
-   } else if (subtype === 'chapa') {
-    newItem.tituloCustom = 'Chapa / Discurso con Público';
-    newItem.duracionEstimadaMinutos = 2;
-    newItem.duracionEstimadaSegundos = 120;
-   } else if (subtype === 'descanso') {
-    newItem.tituloCustom = 'Pausa / Intermedio / Agua';
-    newItem.duracionEstimadaMinutos = 2;
-    newItem.duracionEstimadaSegundos = 120;
-   } else if (subtype === 'bis') {
-    newItem.tituloCustom = '💣 BIS / PARTE FINAL DEL SHOW';
-    newItem.duracionEstimadaMinutos = 1;
-    newItem.duracionEstimadaSegundos = 60;
-   }
-  }
+ if (!tituloCustom) {
+ const subtype = bloqueSubtipo || tipoItem;
+ if (subtype === 'header' || subtype === 'bloque_header') {
+ newItem.tituloCustom = '⚡ Nuevo Bloque / Sección del Show';
+ } else if (subtype === 'presentacion') {
+ newItem.tituloCustom = 'Presentación Banda & Saludo';
+ newItem.duracionEstimadaMinutos = 2;
+ newItem.duracionEstimadaSegundos = 120;
+ } else if (subtype === 'beatbox') {
+ newItem.tituloCustom = 'Solo de Batería / Percusión';
+ newItem.duracionEstimadaMinutos = 2;
+ newItem.duracionEstimadaSegundos = 120;
+ } else if (subtype === 'intro_tema') {
+ newItem.tituloCustom = 'Intro / Historia del Tema';
+ newItem.duracionEstimadaMinutos = 1;
+ newItem.duracionEstimadaSegundos = 60;
+ } else if (subtype === 'solo_performance') {
+ newItem.tituloCustom = 'Solo Instrumental / Jam';
+ newItem.duracionEstimadaMinutos = 2;
+ newItem.duracionEstimadaSegundos = 120;
+ } else if (subtype === 'cambio_instrumento') {
+ newItem.tituloCustom = 'Cambio Instrumento & Afinación';
+ newItem.duracionEstimadaMinutos = 1;
+ newItem.duracionEstimadaSegundos = 60;
+ } else if (subtype === 'chapa') {
+ newItem.tituloCustom = 'Chapa / Discurso con Público';
+ newItem.duracionEstimadaMinutos = 2;
+ newItem.duracionEstimadaSegundos = 120;
+ } else if (subtype === 'descanso') {
+ newItem.tituloCustom = 'Pausa / Intermedio / Agua';
+ newItem.duracionEstimadaMinutos = 2;
+ newItem.duracionEstimadaSegundos = 120;
+ } else if (subtype === 'bis') {
+ newItem.tituloCustom = '💣 BIS / PARTE FINAL DEL SHOW';
+ newItem.duracionEstimadaMinutos = 1;
+ newItem.duracionEstimadaSegundos = 60;
+ }
+ }
 
-  const targetRefId = insertAfterId !== undefined ? insertAfterId : selectedSetlistItemId;
-  let newItems: SetlistItem[];
-  if (targetRefId) {
-    const idx = activeSetlist.items.findIndex(it => it.id === targetRefId);
-    if (idx !== -1) {
-      newItems = [...activeSetlist.items];
-      newItems.splice(idx + 1, 0, newItem);
-    } else {
-      newItems = [...activeSetlist.items, newItem];
-    }
-  } else {
-    newItems = [...activeSetlist.items, newItem];
-  }
+ const targetRefId = insertAfterId !== undefined ? insertAfterId : selectedSetlistItemId;
+ let newItems: SetlistItem[];
+ if (targetRefId) {
+ const idx = activeSetlist.items.findIndex(it => it.id === targetRefId);
+ if (idx !== -1) {
+ newItems = [...activeSetlist.items];
+ newItems.splice(idx + 1, 0, newItem);
+ } else {
+ newItems = [...activeSetlist.items, newItem];
+ }
+ } else {
+ newItems = [...activeSetlist.items, newItem];
+ }
 
-  const updatedSetlist: Setlist = {
-   ...activeSetlist,
-   fechaUltimaEdicion: new Date().toISOString().split('T')[0],
-   items: newItems
-  };
+ const updatedSetlist: Setlist = {
+ ...activeSetlist,
+ fechaUltimaEdicion: new Date().toISOString().split('T')[0],
+ items: newItems
+ };
 
-  setSetlists(prev => {
-    const next = prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st);
-    saveSetlistsToLocalStorageSafely(next);
-    return next;
-  });
-  syncSetlistToBackend(updatedSetlist);
-  setSelectedSetlistItemId(newItem.id);
+ setSetlists(prev => {
+ const next = prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st);
+ saveSetlistsToLocalStorageSafely(next);
+ return next;
+ });
+ syncSetlistToBackend(updatedSetlist);
+ setSelectedSetlistItemId(newItem.id);
  };
 
  // Inserts a band-created custom shortcut into the active setlist as a generic ('otro') item
  const handleUseCustomShortcut = (sc: SetlistShortcut) => {
-  handleAddItemToSetlist(undefined, 'otro', sc.tituloCustom, sc.duracionEstimadaMinutos, sc.duracionEstimadaSegundos, sc.notaTema);
+ handleAddItemToSetlist(undefined, 'otro', sc.tituloCustom, sc.duracionEstimadaMinutos, sc.duracionEstimadaSegundos, sc.notaTema);
  };
 
  const handleCreateShortcut = async () => {
-  const etiqueta = newShortcutLabel.trim();
-  if (!etiqueta) return;
-  try {
-    const res = await fetch('/api/setlist-shortcuts', {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({
-        icono: newShortcutIcon.trim() || '⭐',
-        etiqueta,
-        tituloCustom: etiqueta,
-        duracionEstimadaMinutos: newShortcutMinutes,
-        duracionEstimadaSegundos: newShortcutMinutes * 60
-      })
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.shortcut) {
-        setCustomShortcuts(prev => [...prev, data.shortcut]);
-      }
-    }
-  } catch (err) {
-    console.error('Error al crear el acceso rápido:', err);
-  } finally {
-    setNewShortcutLabel('');
-    setNewShortcutIcon('⭐');
-    setNewShortcutMinutes(1);
-    setIsAddingShortcut(false);
-  }
+ const etiqueta = newShortcutLabel.trim();
+ if (!etiqueta) return;
+ try {
+ const res = await fetch('/api/setlist-shortcuts', {
+ method: 'POST',
+ headers: getHeaders(),
+ body: JSON.stringify({
+ icono: newShortcutIcon.trim() || '⭐',
+ etiqueta,
+ tituloCustom: etiqueta,
+ duracionEstimadaMinutos: newShortcutMinutes,
+ duracionEstimadaSegundos: newShortcutMinutes * 60
+ })
+ });
+ if (res.ok) {
+ const data = await res.json();
+ if (data.shortcut) {
+ setCustomShortcuts(prev => [...prev, data.shortcut]);
+ }
+ }
+ } catch (err) {
+ console.error('Error al crear el acceso rápido:', err);
+ } finally {
+ setNewShortcutLabel('');
+ setNewShortcutIcon('⭐');
+ setNewShortcutMinutes(1);
+ setIsAddingShortcut(false);
+ }
  };
 
  const handleDeleteShortcut = async (id: string) => {
-  setCustomShortcuts(prev => prev.filter(sc => sc.id !== id));
-  try {
-    await fetch(`/api/setlist-shortcuts/${id}`, { method: 'DELETE', headers: getHeaders() });
-  } catch (err) {
-    console.error('Error al eliminar el acceso rápido:', err);
-  }
+ setCustomShortcuts(prev => prev.filter(sc => sc.id !== id));
+ try {
+ await fetch(`/api/setlist-shortcuts/${id}`, { method: 'DELETE', headers: getHeaders() });
+ } catch (err) {
+ console.error('Error al eliminar el acceso rápido:', err);
+ }
  };
 
  // Add several catalog songs to the active setlist in a single action/save
  const handleAddMultipleSongsToSetlist = (songIds: string[]) => {
-  if (!activeSetlist || songIds.length === 0) return;
+ if (!activeSetlist || songIds.length === 0) return;
 
-  const newSongItems: SetlistItem[] = songIds.map(songId => ({
-   id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-   tipoItem: 'cancion',
-   songId
-  }));
+ const newSongItems: SetlistItem[] = songIds.map(songId => ({
+ id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+ tipoItem: 'cancion',
+ songId
+ }));
 
-  const targetRefId = selectedSetlistItemId;
-  let newItems: SetlistItem[];
-  if (targetRefId) {
-    const idx = activeSetlist.items.findIndex(it => it.id === targetRefId);
-    if (idx !== -1) {
-      newItems = [...activeSetlist.items];
-      newItems.splice(idx + 1, 0, ...newSongItems);
-    } else {
-      newItems = [...activeSetlist.items, ...newSongItems];
-    }
-  } else {
-    newItems = [...activeSetlist.items, ...newSongItems];
-  }
+ const targetRefId = selectedSetlistItemId;
+ let newItems: SetlistItem[];
+ if (targetRefId) {
+ const idx = activeSetlist.items.findIndex(it => it.id === targetRefId);
+ if (idx !== -1) {
+ newItems = [...activeSetlist.items];
+ newItems.splice(idx + 1, 0, ...newSongItems);
+ } else {
+ newItems = [...activeSetlist.items, ...newSongItems];
+ }
+ } else {
+ newItems = [...activeSetlist.items, ...newSongItems];
+ }
 
-  const updatedSetlist: Setlist = {
-   ...activeSetlist,
-   fechaUltimaEdicion: new Date().toISOString().split('T')[0],
-   items: newItems
-  };
+ const updatedSetlist: Setlist = {
+ ...activeSetlist,
+ fechaUltimaEdicion: new Date().toISOString().split('T')[0],
+ items: newItems
+ };
 
-  setSetlists(prev => {
-    const next = prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st);
-    saveSetlistsToLocalStorageSafely(next);
-    return next;
-  });
-  syncSetlistToBackend(updatedSetlist);
-  setSelectedSetlistItemId(newSongItems[newSongItems.length - 1].id);
+ setSetlists(prev => {
+ const next = prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st);
+ saveSetlistsToLocalStorageSafely(next);
+ return next;
+ });
+ syncSetlistToBackend(updatedSetlist);
+ setSelectedSetlistItemId(newSongItems[newSongItems.length - 1].id);
  };
 
  const handleSaveShowItem = (itemData: Partial<SetlistItem>) => {
-  if (!activeSetlist) return;
+ if (!activeSetlist) return;
 
-  // Map old tipoItem values to new structure if needed
-  const mappedData = { ...itemData };
-  if (mappedData.tipoItem && mappedData.tipoItem !== 'cancion') {
-    const subtype = mappedData.tipoItem;
-    mappedData.tipoItem = 'bloque' as any;
-    mappedData.bloqueSubtipo = subtype as any;
-  }
+ // Map old tipoItem values to new structure if needed
+ const mappedData = { ...itemData };
+ if (mappedData.tipoItem && mappedData.tipoItem !== 'cancion') {
+ const subtype = mappedData.tipoItem;
+ mappedData.tipoItem = 'bloque' as any;
+ mappedData.bloqueSubtipo = subtype as any;
+ }
 
-  let updatedItems: SetlistItem[];
+ let updatedItems: SetlistItem[];
 
-  if (editingShowItem) {
-   updatedItems = activeSetlist.items.map(it =>
-    it.id === editingShowItem.id ? { ...it, ...mappedData, audioUrl: showItemAudioUrl } : it
-   );
-  } else {
-   const defaultSubtype = (mappedData.bloqueSubtipo || 'otro') as any;
-   const newItem: SetlistItem = {
-    id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-    tipoItem: mappedData.tipoItem === 'cancion' ? 'cancion' : 'bloque',
-    bloqueSubtipo: mappedData.tipoItem === 'cancion' ? undefined : defaultSubtype,
-    tituloCustom: mappedData.tituloCustom || 'Evento del Show',
-    duracionEstimadaMinutos: mappedData.duracionEstimadaMinutos || 2,
-    duracionEstimadaSegundos: mappedData.duracionEstimadaSegundos || 120,
-    notaTema: mappedData.notaTema || '',
-    audioUrl: showItemAudioUrl
-   };
+ if (editingShowItem) {
+ updatedItems = activeSetlist.items.map(it =>
+ it.id === editingShowItem.id ? { ...it, ...mappedData, audioUrl: showItemAudioUrl } : it
+ );
+ } else {
+ const defaultSubtype = (mappedData.bloqueSubtipo || 'otro') as any;
+ const newItem: SetlistItem = {
+ id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+ tipoItem: mappedData.tipoItem === 'cancion' ? 'cancion' : 'bloque',
+ bloqueSubtipo: mappedData.tipoItem === 'cancion' ? undefined : defaultSubtype,
+ tituloCustom: mappedData.tituloCustom || 'Evento del Show',
+ duracionEstimadaMinutos: mappedData.duracionEstimadaMinutos || 2,
+ duracionEstimadaSegundos: mappedData.duracionEstimadaSegundos || 120,
+ notaTema: mappedData.notaTema || '',
+ audioUrl: showItemAudioUrl
+ };
 
-   if (selectedSetlistItemId) {
-     const idx = activeSetlist.items.findIndex(it => it.id === selectedSetlistItemId);
-     if (idx !== -1) {
-       updatedItems = [...activeSetlist.items];
-       updatedItems.splice(idx + 1, 0, newItem);
-     } else {
-       updatedItems = [...activeSetlist.items, newItem];
-     }
-   } else {
-     updatedItems = [...activeSetlist.items, newItem];
-   }
-   setSelectedSetlistItemId(newItem.id);
-  }
+ if (selectedSetlistItemId) {
+ const idx = activeSetlist.items.findIndex(it => it.id === selectedSetlistItemId);
+ if (idx !== -1) {
+ updatedItems = [...activeSetlist.items];
+ updatedItems.splice(idx + 1, 0, newItem);
+ } else {
+ updatedItems = [...activeSetlist.items, newItem];
+ }
+ } else {
+ updatedItems = [...activeSetlist.items, newItem];
+ }
+ setSelectedSetlistItemId(newItem.id);
+ }
 
-  const updatedSetlist: Setlist = {
-   ...activeSetlist,
-   fechaUltimaEdicion: new Date().toISOString().split('T')[0],
-   items: updatedItems
-  };
+ const updatedSetlist: Setlist = {
+ ...activeSetlist,
+ fechaUltimaEdicion: new Date().toISOString().split('T')[0],
+ items: updatedItems
+ };
 
-  setSetlists(prev => {
-   const next = prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st);
-   saveSetlistsToLocalStorageSafely(next);
-   return next;
-  });
-  syncSetlistToBackend(updatedSetlist);
-  setShowShowItemModal(false);
-  setEditingShowItem(null);
-  setShowItemAudioUrl('');
+ setSetlists(prev => {
+ const next = prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st);
+ saveSetlistsToLocalStorageSafely(next);
+ return next;
+ });
+ syncSetlistToBackend(updatedSetlist);
+ setShowShowItemModal(false);
+ setEditingShowItem(null);
+ setShowItemAudioUrl('');
  };
 
  const handleRemoveSetlistItem = (itemId: string) => {
@@ -2598,34 +2598,34 @@ export default function RepertorioSetlists({
  };
 
  return (
-  <div data-modulo="repertorio" className="space-y-3">
-  {/* REPERTORIO UNIFIED NAV BAR: Título, tabs segmentadas (Setlists & Directo / Catálogo & Discografía) y acciones rápidas */}
-  <RepertorioNavBar
-    colors={colors}
-    isStitchLight={isStitchLight}
-    activeTab={activeTab}
-    setActiveTab={handleTabChange}
-    catalogoViewMode={catalogoViewMode}
-    setCatalogoViewMode={setCatalogoViewMode}
-    setlists={setlists}
-    activeSetlistId={activeSetlistId}
-    onSelectSetlist={(id) => {
-      setActiveSetlistId(id);
-    }}
-    onCreateSetlist={handleCreateSetlist}
-    onImportSetlist={() => setShowImportSetlistModal(true)}
-    onOpenNewSongModal={() => { setEditingSong(null); setShowSongModal(true); }}
-    onOpenNewAlbumModal={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
-    songCount={songs.length}
-    albumCount={albumsList.filter(a => a !== 'todos').length}
-    onOpenTutorial={openTutorial}
-  />
+ <div data-modulo="repertorio" className="space-y-3">
+ {/* REPERTORIO UNIFIED NAV BAR: Título, tabs segmentadas (Setlists & Directo / Catálogo & Discografía) y acciones rápidas */}
+ <RepertorioNavBar
+ colors={colors}
+ isStitchLight={isStitchLight}
+ activeTab={activeTab}
+ setActiveTab={handleTabChange}
+ catalogoViewMode={catalogoViewMode}
+ setCatalogoViewMode={setCatalogoViewMode}
+ setlists={setlists}
+ activeSetlistId={activeSetlistId}
+ onSelectSetlist={(id) => {
+ setActiveSetlistId(id);
+ }}
+ onCreateSetlist={handleCreateSetlist}
+ onImportSetlist={() => setShowImportSetlistModal(true)}
+ onOpenNewSongModal={() => { setEditingSong(null); setShowSongModal(true); }}
+ onOpenNewAlbumModal={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
+ songCount={songs.length}
+ albumCount={albumsList.filter(a => a !== 'todos').length}
+ onOpenTutorial={openTutorial}
+ />
 
-  {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
-  {activeTab === 'setlists' && (
-  <div className="w-full">
-  {/* MAIN EDITOR FOR ACTIVE SETLIST */}
-  <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 border ${isStitchLight ? 'bg-white ' : 'bg-[#16161a]/95 /80 backdrop-blur-sm'} shadow-sm`}>
+ {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
+ {activeTab === 'setlists' && (
+ <div className="w-full">
+ {/* MAIN EDITOR FOR ACTIVE SETLIST */}
+ <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 ${isStitchLight ? 'bg-white ' : 'bg-[#16161a]/95 /80 backdrop-blur-sm'} shadow-sm`}>
  {activeSetlist ? (
  <>
  {/* CABECERA COMPACTA: nombre del setlist + un único menú "⋯" con las acciones secundarias. */}
@@ -2648,9 +2648,9 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowPdfPreview(true)}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
-   isStitchLight 
-     ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)] border '
-     : 'bg-neutral-800/90 hover:bg-neutral-700 text-zinc-200 hover:text-white'
+ isStitchLight 
+ ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)] '
+ : 'bg-neutral-800/90 hover:bg-neutral-700 text-zinc-200 hover:text-white'
  }`}
  title="Imprimir repertorio o exportar a PDF / atril en papel"
  >
@@ -2664,9 +2664,9 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowAIAnalysisModal(true)}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
-   isStitchLight 
-     ? 'bg-purple-100 hover:bg-purple-200 text-purple-950 border-purple-300'
-     : 'bg-purple-950/50 hover:bg-purple-900/70 text-purple-200 hover:text-white shadow-[0_0_12px_rgba(168,85,247,0.18)]'
+ isStitchLight 
+ ? 'bg-purple-100 hover:bg-purple-200 text-purple-950 border-purple-300'
+ : 'bg-purple-950/50 hover:bg-purple-900/70 text-purple-200 hover:text-white shadow-[0_0_12px_rgba(168,85,247,0.18)]'
  }`}
  title="Cerebro IA: Análisis de narrativa, curva de energía, transiciones de tono y sugerencias"
  >
@@ -2674,9 +2674,9 @@ export default function RepertorioSetlists({
  <span className="hidden sm:inline">Cerebro IA</span>
  <span className="sm:hidden">IA</span>
  {aiAnalysisResult?.overallScore && (
-   <span className="px-1.5 py-0.2 rounded-full bg-purple-500/20 text-[10px] font-mono font-bold text-purple-300">
-     {aiAnalysisResult.overallScore}
-   </span>
+ <span className="px-1.5 py-0.2 rounded-full bg-purple-500/20 text-[10px] font-mono font-bold text-purple-300">
+ {aiAnalysisResult.overallScore}
+ </span>
  )}
  </button>
 
@@ -2685,14 +2685,14 @@ export default function RepertorioSetlists({
  id="btn-ai-perfect-header"
  type="button"
  onClick={() => {
-   setPerfectSetlistPlan(null);
-   setPerfectSetlistError(null);
-   setShowPerfectSetlistModal(true);
+ setPerfectSetlistPlan(null);
+ setPerfectSetlistError(null);
+ setShowPerfectSetlistModal(true);
  }}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
-   isStitchLight 
-     ? 'bg-amber-100 hover:bg-amber-200 text-amber-950 border '
-     : 'bg-amber-950/40 hover:bg-amber-900/60 text-amber-200 hover:text-white shadow-[0_0_12px_rgba(245,158,11,0.18)]'
+ isStitchLight 
+ ? 'bg-amber-100 hover:bg-amber-200 text-amber-950 '
+ : 'bg-amber-950/40 hover:bg-amber-900/60 text-amber-200 hover:text-white shadow-[0_0_12px_rgba(245,158,11,0.18)]'
  }`}
  title="Optimizar IA: Generar el setlist perfecto con orden dinámico ideal y clímax de concierto"
  >
@@ -2706,11 +2706,11 @@ export default function RepertorioSetlists({
  id="btn-stage-mode-header"
  type="button"
  onClick={() => {
-   if (activeSetlist) {
-     cacheActiveStageSetlist(activeSetlist, songs, bandId);
-     setPerformanceInitialMode('directo');
-     setPerformanceSetlistId(activeSetlist.id);
-   }
+ if (activeSetlist) {
+ cacheActiveStageSetlist(activeSetlist, songs, bandId);
+ setPerformanceInitialMode('directo');
+ setPerformanceSetlistId(activeSetlist.id);
+ }
  }}
  className="shrink-0 px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
  title="Modo Escenario / Atril: teleprompter con partituras, acordes y letras en directo"
@@ -2725,11 +2725,11 @@ export default function RepertorioSetlists({
  id="btn-rehearsal-mode-header"
  type="button"
  onClick={() => {
-   if (activeSetlist) {
-     cacheActiveStageSetlist(activeSetlist, songs, bandId);
-     setPerformanceInitialMode('ensayo');
-     setPerformanceSetlistId(activeSetlist.id);
-   }
+ if (activeSetlist) {
+ cacheActiveStageSetlist(activeSetlist, songs, bandId);
+ setPerformanceInitialMode('ensayo');
+ setPerformanceSetlistId(activeSetlist.id);
+ }
  }}
  className="shrink-0 px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
  title="Modo Ensayo: atril optimizado para ensayo con pistas Iris, silenciamiento de instrumentos y metrónomo"
@@ -2743,10 +2743,10 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => setShowSetlistActionsMenu((v) => !v)}
- className={`p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer border ${
-   isStitchLight
-     ? 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] border-transparent hover:'
-     : 'text-zinc-400 hover:text-white hover:bg-neutral-800 border-transparent hover:'
+ className={`p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
+ isStitchLight
+ ? 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] border-transparent hover:'
+ : 'text-zinc-400 hover:text-white hover:bg-neutral-800 border-transparent hover:'
  }`}
  title="Acciones del repertorio: compartir, asignar a bolo, duplicar, editar detalles, eliminar"
  >
@@ -2755,16 +2755,16 @@ export default function RepertorioSetlists({
  {showSetlistActionsMenu && (
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowSetlistActionsMenu(false)} />
- <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] border shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
-   isStitchLight
-     ? ' bg-white text-[var(--ink)]'
-     : ' bg-[#16161a] text-zinc-200'
+ <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+ isStitchLight
+ ? ' bg-white text-[var(--ink)]'
+ : ' bg-[#16161a] text-zinc-200'
  }`}>
  <button
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleShareSetlist(activeSetlist); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-emerald-400 transition cursor-pointer flex items-center gap-2 ${
-   isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
+ isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
  }`}
  >
  <MessageSquare className="w-3.5 h-3.5 shrink-0" /> Compartir repertorio
@@ -2773,7 +2773,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setAssigningSetlist(activeSetlist); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-emerald-400 transition cursor-pointer flex items-center gap-2 ${
-   isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
+ isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
  }`}
  >
  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Asignar a bolo/ensayo
@@ -2782,7 +2782,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setShowPdfPreview(true); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${
-   isStitchLight ? 'text-[var(--ink)] hover:bg-[var(--sunken)]' : 'text-zinc-200 hover:bg-neutral-800/80'
+ isStitchLight ? 'text-[var(--ink)] hover:bg-[var(--sunken)]' : 'text-zinc-200 hover:bg-neutral-800/80'
  }`}
  >
  <Printer className="w-3.5 h-3.5 shrink-0" /> Imprimir / PDF
@@ -2791,7 +2791,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDuplicateSetlist(activeSetlist); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${
-   isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-zinc-300 hover:bg-neutral-800/80'
+ isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-zinc-300 hover:bg-neutral-800/80'
  }`}
  >
  <Copy className="w-3.5 h-3.5 shrink-0" /> Duplicar setlist
@@ -2800,7 +2800,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setSetlistModalData({ isOpen: true, setlistToEdit: activeSetlist }); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${
-   isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-zinc-300 hover:bg-neutral-800/80'
+ isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-zinc-300 hover:bg-neutral-800/80'
  }`}
  >
  <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar detalles
@@ -2809,7 +2809,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDeleteSetlist(activeSetlist.id); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-rose-400 transition cursor-pointer flex items-center gap-2 ${
-   isStitchLight ? 'hover:bg-rose-50' : 'hover:bg-rose-950/40'
+ isStitchLight ? 'hover:bg-rose-50' : 'hover:bg-rose-950/40'
  }`}
  >
  <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar setlist
@@ -2821,1098 +2821,1098 @@ export default function RepertorioSetlists({
  </div>
  </div>
 
-  {/* SETLIST VIEW MODES & SUMMARY BAR */}
-  {(() => {
-    return (
-      <div className="flex flex-col gap-2.5">
-        <div className={`flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-1.5 rounded-[var(--r-m)] border ${
-          isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/90 border-white/5'
-        }`}>
-          {/* Resumen en una línea y botón asistente IA */}
-          <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto px-1.5">
-            <button
-              type="button"
-              onClick={() => setShowSetlistStats((v) => !v)}
-              className="flex items-center gap-1.5 text-xs hover:opacity-80 transition cursor-pointer text-zinc-300"
-              title={showSetlistStats ? 'Ocultar métricas secundarias' : 'Ver interludios, bloques y perfil de dinámica'}
-            >
-              <span className="font-semibold text-zinc-100">⏱️ {activeSetlistMetrics.formattedTime}</span>
-              <span className="text-zinc-600">·</span>
-              <span className="font-bold text-amber-400">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
-              <span className="text-zinc-500 text-[10px]">{showSetlistStats ? '▲' : '▼'}</span>
-            </button>
+ {/* SETLIST VIEW MODES & SUMMARY BAR */}
+ {(() => {
+ return (
+ <div className="flex flex-col gap-2.5">
+ <div className={`flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-1.5 rounded-[var(--r-m)] ${
+ isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/90 border-white/5'
+ }`}>
+ {/* Resumen en una línea y botón asistente IA */}
+ <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto px-1.5">
+ <button
+ type="button"
+ onClick={() => setShowSetlistStats((v) => !v)}
+ className="flex items-center gap-1.5 text-xs hover:opacity-80 transition cursor-pointer text-zinc-300"
+ title={showSetlistStats ? 'Ocultar métricas secundarias' : 'Ver interludios, bloques y perfil de dinámica'}
+ >
+ <span className="font-semibold text-zinc-100">⏱️ {activeSetlistMetrics.formattedTime}</span>
+ <span className="text-zinc-600">·</span>
+ <span className="font-bold text-amber-400">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
+ <span className="text-zinc-500 text-[10px]">{showSetlistStats ? '▲' : '▼'}</span>
+ </button>
 
-            <div className="relative shrink-0">
-              <button
-                type="button"
-                onClick={() => setShowAssistantChooser((v) => !v)}
-                className="px-2.5 py-1 rounded-[var(--r-s)] bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 hover:text-amber-200 transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-xs"
-                title="Asistente IA del repertorio"
-              >
-                🧠 <span className="hidden xs:inline">Asistente IA</span>
-              </button>
-              {showAssistantChooser && (
-                <>
-                  <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
-                  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] border shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
-                    isStitchLight
-                      ? ' bg-white text-[var(--ink)]'
-                      : ' bg-[#16161a] text-zinc-200'
-                  }`}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowAssistantChooser(false);
-                        setShowAIAnalysisModal(true);
-                      }}
-                      className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer ${
-                        isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
-                      }`}
-                    >
-                      <span className="text-xs font-semibold text-amber-400 flex items-center gap-1.5">📖 Ver análisis</span>
-                      <span className="block text-[11px] text-zinc-400 mt-0.5">Arco narrativo, puntuación y sugerencias explicadas.</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowAssistantChooser(false);
-                        setPerfectSetlistPlan(null);
-                        setPerfectSetlistError(null);
-                        setShowPerfectSetlistModal(true);
-                      }}
-                      className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer ${
-                        isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
-                      }`}
-                    >
-                      <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">🪄 Generar plan de cambios</span>
-                      <span className="block text-[11px] text-zinc-400 mt-0.5">Reordena y optimiza canciones sobre una copia.</span>
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
+ <div className="relative shrink-0">
+ <button
+ type="button"
+ onClick={() => setShowAssistantChooser((v) => !v)}
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 hover:text-amber-200 transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-xs"
+ title="Asistente IA del repertorio"
+ >
+ 🧠 <span className="hidden xs:inline">Asistente IA</span>
+ </button>
+ {showAssistantChooser && (
+ <>
+ <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
+ <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+ isStitchLight
+ ? ' bg-white text-[var(--ink)]'
+ : ' bg-[#16161a] text-zinc-200'
+ }`}>
+ <button
+ type="button"
+ onClick={() => {
+ setShowAssistantChooser(false);
+ setShowAIAnalysisModal(true);
+ }}
+ className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer ${
+ isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
+ }`}
+ >
+ <span className="text-xs font-semibold text-amber-400 flex items-center gap-1.5">📖 Ver análisis</span>
+ <span className="block text-[11px] text-zinc-400 mt-0.5">Arco narrativo, puntuación y sugerencias explicadas.</span>
+ </button>
+ <button
+ type="button"
+ onClick={() => {
+ setShowAssistantChooser(false);
+ setPerfectSetlistPlan(null);
+ setPerfectSetlistError(null);
+ setShowPerfectSetlistModal(true);
+ }}
+ className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer ${
+ isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
+ }`}
+ >
+ <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">🪄 Generar plan de cambios</span>
+ <span className="block text-[11px] text-zinc-400 mt-0.5">Reordena y optimiza canciones sobre una copia.</span>
+ </button>
+ </div>
+ </>
+ )}
+ </div>
+ </div>
+ </div>
 
-        {/* Métricas secundarias, solo si se piden */}
-        {showSetlistStats && (
-          <div className="flex flex-wrap items-center gap-1.5 px-1 text-xs">
-            <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 font-medium">
-              💬 {activeSetlistMetrics.eventCount} interludios
-            </span>
-            <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/10 text-amber-300 font-medium">
-              ⚡ {activeSetlistMetrics.blockCount} bloques
-            </span>
-            <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 font-medium">
-              {energyAnalysis.profileLabel}
-            </span>
-          </div>
-        )}
+ {/* Métricas secundarias, solo si se piden */}
+ {showSetlistStats && (
+ <div className="flex flex-wrap items-center gap-1.5 px-1 text-xs">
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 font-medium">
+ 💬 {activeSetlistMetrics.eventCount} interludios
+ </span>
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/10 text-amber-300 font-medium">
+ ⚡ {activeSetlistMetrics.blockCount} bloques
+ </span>
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 font-medium">
+ {energyAnalysis.profileLabel}
+ </span>
+ </div>
+ )}
 
-        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
-        {energyAnalysis.points.length > 0 && (
-          <div className={`p-3 sm:p-4 rounded-[var(--r-l)] border space-y-2.5 animate-fadeIn ${
-            isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)]/60 /80'
-          }`}>
-            <div className="flex items-center justify-between gap-2 text-xs text-[var(--ink-3)]">
-              <span
-                className="font-semibold uppercase tracking-wider text-slate-200 truncate text-[11px]"
-                title="Arrastra un punto en horizontal para reordenar el setlist, o en vertical para cambiar su energía. También puedes seleccionarlo y usar las flechas."
-              >
-                📈 Mapa de Energía
-              </span>
-              <div className="flex items-center gap-2 shrink-0">
-                {canUndoReorder && (
-                  <button
-                    type="button"
-                    onClick={undoLastReorder}
-                    className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
-                    title="Deshacer el último reordenamiento del setlist"
-                  >
-                    ↩️ Deshacer
-                  </button>
-                )}
-                {showEnergyMap && (
-                  <button
-                    type="button"
-                    onClick={optimizeSetlistTransitions}
-                    className="px-2 py-0.5 rounded-[var(--r-s)] bg-emerald-900/40 hover:bg-emerald-800/60 text-emerald-300 hover:text-emerald-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
-                    title="Reordena las canciones (nunca las chapas/bloques) para suavizar los saltos de tonalidad, tempo y energía entre temas consecutivos — sin tocar tu canción de apertura"
-                  >
-                    🎯 Optimizar orden
-                  </button>
-                )}
-                {showEnergyMap && (
-                  <button
-                    type="button"
-                    onClick={suggestChapaSpot}
-                    className="px-2 py-0.5 rounded-[var(--r-s)] bg-sky-900/40 hover:bg-sky-800/60 text-sky-300 hover:text-sky-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
-                    title="Busca la transición entre canciones que más chirría (tonalidad, tempo, energía) — ahí es donde una chapa/interludio hablado se nota menos"
-                  >
-                    💬 ¿Dónde chapa?
-                  </button>
-                )}
-                {showEnergyMap && (
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setShowChartSettingsMenu((v) => !v)}
-                      className="p-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
-                      title="Ajustes del gráfico (leyenda de colores, curva ideal)"
-                    >
-                      <Sliders className="w-3.5 h-3.5" />
-                    </button>
-                    {showChartSettingsMenu && (
-                      <>
-                        <div className="fixed inset-0 z-30" onClick={() => setShowChartSettingsMenu(false)} />
-                        <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] border  bg-bg-[var(--surface)] shadow-2xl p-2.5 space-y-2.5">
-                          <button
-                            type="button"
-                            onClick={() => setShowIdealCurve((v) => !v)}
-                            className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
-                              showIdealCurve ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
-                            }`}
-                            title="Curva ideal de referencia: un arco de pacing clásico escalado al rango real de energías de tu repertorio"
-                          >
-                            <span>〰️ Curva ideal</span>
-                            <span>{showIdealCurve ? 'ON' : 'OFF'}</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setShowBpmLine((v) => !v)}
-                            className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
-                              showBpmLine ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
-                            }`}
-                            title="Línea de BPM en un eje secundario — apagada por defecto para no saturar el gráfico en pantallas estrechas"
-                          >
-                            <span>🥁 Línea de BPM</span>
-                            <span>{showBpmLine ? 'ON' : 'OFF'}</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setShowTonalidad((v) => !v)}
-                            className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
-                              showTonalidad ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
-                            }`}
-                            title="Tonalidad de cada canción junto a su punto — con muchos temas seguidos, usa el zoom (🔍) para separarlos y leerlos bien"
-                          >
-                            <span>🎼 Tonalidad</span>
-                            <span>{showTonalidad ? 'ON' : 'OFF'}</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setChartZoom((v) => !v)}
-                            className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
-                              chartZoom ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
-                            }`}
-                            title="Ensancha el gráfico y añade scroll horizontal — más espacio entre puntos para leer tonalidad/BPM por tramos"
-                          >
-                            <span>🔍 Zoom (más espacio)</span>
-                            <span>{chartZoom ? 'ON' : 'OFF'}</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setShowTransitionBadges((v) => !v)}
-                            className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
-                              showTransitionBadges ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
-                            }`}
-                            title="Muestra u oculta los ticks (✓) y aspas (✕) de calidad de unión entre temas en el gráfico"
-                          >
-                            <span>✓ / ✕ Calidad de uniones</span>
-                            <span>{showTransitionBadges ? 'ON' : 'OFF'}</span>
-                          </button>
-                          <div className="flex flex-col gap-1 text-[9px] text-neutral-300 pt-1 border-t ">
-                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
-                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />🎵 Media</span>
-                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a16207' }} />🔥 Alta</span>
-                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a21caf' }} />💣 Explosiva</span>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
-                {showEnergyMap && (
-                  <button
-                    type="button"
-                    onClick={() => setShowTonalidad((v) => !v)}
-                    className={`p-1 rounded-[var(--r-s)] transition-all cursor-pointer ${
-                      showTonalidad ? 'bg-amber-500/20 text-amber-300' : 'bg-neutral-800 text-text-[var(--ink-2)] hover:text-white'
-                    }`}
-                    title={showTonalidad ? 'Ocultar tonalidades del gráfico' : 'Mostrar tonalidades en el gráfico'}
-                  >
-                    🎼
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setShowEnergyMap((v) => !v)}
-                  className="p-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
-                  title={showEnergyMap ? 'Ocultar el mapa de energía' : 'Mostrar el mapa de energía'}
-                >
-                  {showEnergyMap ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowConcertPlayer((v) => !v)}
-                  className="p-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
-                  title={showConcertPlayer ? 'Ocultar reproductor de concierto' : 'Mostrar reproductor de concierto'}
-                >
-                  {showConcertPlayer ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                </button>
-              </div>
-            </div>
+ {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
+ {energyAnalysis.points.length > 0 && (
+ <div className={`p-3 sm:p-4 rounded-[var(--r-l)] space-y-2.5 animate-fadeIn ${
+ isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)]/60 /80'
+ }`}>
+ <div className="flex items-center justify-between gap-2 text-xs text-[var(--ink-3)]">
+ <span
+ className="font-semibold uppercase tracking-wider text-slate-200 truncate text-[11px]"
+ title="Arrastra un punto en horizontal para reordenar el setlist, o en vertical para cambiar su energía. También puedes seleccionarlo y usar las flechas."
+ >
+ 📈 Mapa de Energía
+ </span>
+ <div className="flex items-center gap-2 shrink-0">
+ {canUndoReorder && (
+ <button
+ type="button"
+ onClick={undoLastReorder}
+ className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+ title="Deshacer el último reordenamiento del setlist"
+ >
+ ↩️ Deshacer
+ </button>
+ )}
+ {showEnergyMap && (
+ <button
+ type="button"
+ onClick={optimizeSetlistTransitions}
+ className="px-2 py-0.5 rounded-[var(--r-s)] bg-emerald-900/40 hover:bg-emerald-800/60 text-emerald-300 hover:text-emerald-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+ title="Reordena las canciones (nunca las chapas/bloques) para suavizar los saltos de tonalidad, tempo y energía entre temas consecutivos — sin tocar tu canción de apertura"
+ >
+ 🎯 Optimizar orden
+ </button>
+ )}
+ {showEnergyMap && (
+ <button
+ type="button"
+ onClick={suggestChapaSpot}
+ className="px-2 py-0.5 rounded-[var(--r-s)] bg-sky-900/40 hover:bg-sky-800/60 text-sky-300 hover:text-sky-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+ title="Busca la transición entre canciones que más chirría (tonalidad, tempo, energía) — ahí es donde una chapa/interludio hablado se nota menos"
+ >
+ 💬 ¿Dónde chapa?
+ </button>
+ )}
+ {showEnergyMap && (
+ <div className="relative">
+ <button
+ type="button"
+ onClick={() => setShowChartSettingsMenu((v) => !v)}
+ className="p-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
+ title="Ajustes del gráfico (leyenda de colores, curva ideal)"
+ >
+ <Sliders className="w-3.5 h-3.5" />
+ </button>
+ {showChartSettingsMenu && (
+ <>
+ <div className="fixed inset-0 z-30" onClick={() => setShowChartSettingsMenu(false)} />
+ <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-bg-[var(--surface)] shadow-2xl p-2.5 space-y-2.5">
+ <button
+ type="button"
+ onClick={() => setShowIdealCurve((v) => !v)}
+ className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+ showIdealCurve ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
+ }`}
+ title="Curva ideal de referencia: un arco de pacing clásico escalado al rango real de energías de tu repertorio"
+ >
+ <span>〰️ Curva ideal</span>
+ <span>{showIdealCurve ? 'ON' : 'OFF'}</span>
+ </button>
+ <button
+ type="button"
+ onClick={() => setShowBpmLine((v) => !v)}
+ className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+ showBpmLine ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
+ }`}
+ title="Línea de BPM en un eje secundario — apagada por defecto para no saturar el gráfico en pantallas estrechas"
+ >
+ <span>🥁 Línea de BPM</span>
+ <span>{showBpmLine ? 'ON' : 'OFF'}</span>
+ </button>
+ <button
+ type="button"
+ onClick={() => setShowTonalidad((v) => !v)}
+ className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+ showTonalidad ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
+ }`}
+ title="Tonalidad de cada canción junto a su punto — con muchos temas seguidos, usa el zoom (🔍) para separarlos y leerlos bien"
+ >
+ <span>🎼 Tonalidad</span>
+ <span>{showTonalidad ? 'ON' : 'OFF'}</span>
+ </button>
+ <button
+ type="button"
+ onClick={() => setChartZoom((v) => !v)}
+ className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+ chartZoom ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
+ }`}
+ title="Ensancha el gráfico y añade scroll horizontal — más espacio entre puntos para leer tonalidad/BPM por tramos"
+ >
+ <span>🔍 Zoom (más espacio)</span>
+ <span>{chartZoom ? 'ON' : 'OFF'}</span>
+ </button>
+ <button
+ type="button"
+ onClick={() => setShowTransitionBadges((v) => !v)}
+ className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+ showTransitionBadges ? 'bg-neutral-700 text-bg-[var(--sunken)]' : 'bg-neutral-800 text-neutral-500'
+ }`}
+ title="Muestra u oculta los ticks (✓) y aspas (✕) de calidad de unión entre temas en el gráfico"
+ >
+ <span>✓ / ✕ Calidad de uniones</span>
+ <span>{showTransitionBadges ? 'ON' : 'OFF'}</span>
+ </button>
+ <div className="flex flex-col gap-1 text-[9px] text-neutral-300 pt-1 border-t ">
+ <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
+ <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />🎵 Media</span>
+ <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a16207' }} />🔥 Alta</span>
+ <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a21caf' }} />💣 Explosiva</span>
+ </div>
+ </div>
+ </>
+ )}
+ </div>
+ )}
+ {showEnergyMap && (
+ <button
+ type="button"
+ onClick={() => setShowTonalidad((v) => !v)}
+ className={`p-1 rounded-[var(--r-s)] transition-all cursor-pointer ${
+ showTonalidad ? 'bg-amber-500/20 text-amber-300' : 'bg-neutral-800 text-text-[var(--ink-2)] hover:text-white'
+ }`}
+ title={showTonalidad ? 'Ocultar tonalidades del gráfico' : 'Mostrar tonalidades en el gráfico'}
+ >
+ 🎼
+ </button>
+ )}
+ <button
+ type="button"
+ onClick={() => setShowEnergyMap((v) => !v)}
+ className="p-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
+ title={showEnergyMap ? 'Ocultar el mapa de energía' : 'Mostrar el mapa de energía'}
+ >
+ {showEnergyMap ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+ </button>
+ <button
+ type="button"
+ onClick={() => setShowConcertPlayer((v) => !v)}
+ className="p-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
+ title={showConcertPlayer ? 'Ocultar reproductor de concierto' : 'Mostrar reproductor de concierto'}
+ >
+ {showConcertPlayer ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+ </button>
+ </div>
+ </div>
 
-            {showEnergyMap && (
-              <>
-                {/* Nota breve pero deliberada: no va solo en el tooltip del título porque en
-                    móvil (tap, sin hover) nunca se vería, y el efecto de tocar un punto es lo
-                    bastante importante —cambia la energía de la canción en TODOS los
-                    repertorios— como para dejarlo oculto. Una línea, sin dismiss ni estado
-                    extra (AGENTS.md §6). */}
-                <p className="text-[9px] text-neutral-500">
-                  💡 Toca un punto para reordenar o cambiar su energía — la energía es de la canción, se aplica en todos tus repertorios.
-                </p>
-                {optimizeSummary && (
-                  <p className="text-[10px] font-mono text-emerald-300 bg-emerald-900/20 rounded-[var(--r-s)] px-2 py-1">
-                    {optimizeSummary}
-                  </p>
-                )}
-                {chapaSuggestion && (() => {
-                  const motivos: string[] = [];
-                  if (chapaSuggestion.coste.harmonyRelation === 'choque') motivos.push('choque de tonalidad');
-                  if (chapaSuggestion.coste.bpmDiff != null && chapaSuggestion.coste.bpmDiff >= 15) motivos.push(`salto de ${Math.round(chapaSuggestion.coste.bpmDiff)} BPM`);
-                  if (chapaSuggestion.coste.energyDiff != null && chapaSuggestion.coste.energyDiff >= 6) motivos.push('salto grande de energía');
-                  return (
-                    <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-sky-300 bg-sky-900/20 rounded-[var(--r-s)] px-2 py-1">
-                      <span>
-                        💬 Mejor sitio para una chapa: entre <b>"{chapaSuggestion.cancionAntes}"</b> y <b>"{chapaSuggestion.cancionDespues}"</b>
-                        {motivos.length > 0 ? ` — ${motivos.join(', ')}.` : '.'}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={insertSuggestedChapa}
-                        className="px-1.5 py-0.5 rounded-[var(--r-s)] bg-sky-800/60 hover:bg-sky-700/80 text-sky-100 transition-all cursor-pointer font-medium shrink-0"
-                      >
-                        ➕ Insertar aquí
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setChapaSuggestion(null)}
-                        className="text-sky-400 hover:text-sky-200 transition-all cursor-pointer shrink-0"
-                        title="Descartar sugerencia"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  );
-                })()}
+ {showEnergyMap && (
+ <>
+ {/* Nota breve pero deliberada: no va solo en el tooltip del título porque en
+ móvil (tap, sin hover) nunca se vería, y el efecto de tocar un punto es lo
+ bastante importante —cambia la energía de la canción en TODOS los
+ repertorios— como para dejarlo oculto. Una línea, sin dismiss ni estado
+ extra (AGENTS.md §6). */}
+ <p className="text-[9px] text-neutral-500">
+ 💡 Toca un punto para reordenar o cambiar su energía — la energía es de la canción, se aplica en todos tus repertorios.
+ </p>
+ {optimizeSummary && (
+ <p className="text-[10px] font-mono text-emerald-300 bg-emerald-900/20 rounded-[var(--r-s)] px-2 py-1">
+ {optimizeSummary}
+ </p>
+ )}
+ {chapaSuggestion && (() => {
+ const motivos: string[] = [];
+ if (chapaSuggestion.coste.harmonyRelation === 'choque') motivos.push('choque de tonalidad');
+ if (chapaSuggestion.coste.bpmDiff != null && chapaSuggestion.coste.bpmDiff >= 15) motivos.push(`salto de ${Math.round(chapaSuggestion.coste.bpmDiff)} BPM`);
+ if (chapaSuggestion.coste.energyDiff != null && chapaSuggestion.coste.energyDiff >= 6) motivos.push('salto grande de energía');
+ return (
+ <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-sky-300 bg-sky-900/20 rounded-[var(--r-s)] px-2 py-1">
+ <span>
+ 💬 Mejor sitio para una chapa: entre <b>"{chapaSuggestion.cancionAntes}"</b> y <b>"{chapaSuggestion.cancionDespues}"</b>
+ {motivos.length > 0 ? ` — ${motivos.join(', ')}.` : '.'}
+ </span>
+ <button
+ type="button"
+ onClick={insertSuggestedChapa}
+ className="px-1.5 py-0.5 rounded-[var(--r-s)] bg-sky-800/60 hover:bg-sky-700/80 text-sky-100 transition-all cursor-pointer font-medium shrink-0"
+ >
+ ➕ Insertar aquí
+ </button>
+ <button
+ type="button"
+ onClick={() => setChapaSuggestion(null)}
+ className="text-sky-400 hover:text-sky-200 transition-all cursor-pointer shrink-0"
+ title="Descartar sugerencia"
+ >
+ ✕
+ </button>
+ </div>
+ );
+ })()}
 
-                <div className={chartZoom ? 'overflow-x-auto -mx-1 px-1' : undefined}>
-                  <EnergyChart
-                    setlistKey={activeSetlist.id}
-                    chartData={chartData}
-                    yDomain={yDomain}
-                    zonasEnergia={ZONAS_ENERGIA}
-                    highlightedSongIds={highlightedSongIds}
-                    selectedSetlistItemId={selectedSetlistItemId}
-                    showTransitionBadges={showTransitionBadges}
-                    onSelectItem={(id) => {
-                      setSelectedSetlistItemId(id);
-                    }}
-                    onPreviewTransition={(selIdx) => {
-                      if (selIdx > 0) handleOpenTransitionPreview(selIdx - 1, selIdx);
-                    }}
-                    onReorder={reorderSetlistItems}
-                    onEnergyChange={handleEnergyChartDrag}
-                    height={256}
-                    showIdealCurve={showIdealCurve}
-                    showBpmLine={showBpmLine}
-                    showTonalidad={showTonalidad}
-                    expandedWidthPx={chartZoom ? Math.max(700, chartData.length * 60) : undefined}
-                  />
-                </div>
+ <div className={chartZoom ? 'overflow-x-auto -mx-1 px-1' : undefined}>
+ <EnergyChart
+ setlistKey={activeSetlist.id}
+ chartData={chartData}
+ yDomain={yDomain}
+ zonasEnergia={ZONAS_ENERGIA}
+ highlightedSongIds={highlightedSongIds}
+ selectedSetlistItemId={selectedSetlistItemId}
+ showTransitionBadges={showTransitionBadges}
+ onSelectItem={(id) => {
+ setSelectedSetlistItemId(id);
+ }}
+ onPreviewTransition={(selIdx) => {
+ if (selIdx > 0) handleOpenTransitionPreview(selIdx - 1, selIdx);
+ }}
+ onReorder={reorderSetlistItems}
+ onEnergyChange={handleEnergyChartDrag}
+ height={256}
+ showIdealCurve={showIdealCurve}
+ showBpmLine={showBpmLine}
+ showTonalidad={showTonalidad}
+ expandedWidthPx={chartZoom ? Math.max(700, chartData.length * 60) : undefined}
+ />
+ </div>
 
-                {/* Joystick/D-pad del punto seleccionado: ◀▶ mueve el tema de posición, ▲▼ sube o
-                    baja su energía un punto exacto — alternativa al arrastre del gráfico para
-                    cuando se quiere precisión, o directamente para móvil, donde el arrastre (sobre
-                    todo en vertical, encima de un SVG de recharts) no siempre responde igual de
-                    bien que en escritorio. */}
-                {selectedSetlistItemId && (() => {
-                  const selectedIndex = chartData.findIndex((d) => d.id === selectedSetlistItemId);
-                  if (selectedIndex === -1) return null;
-                  const point = chartData[selectedIndex];
-                  const canEditEnergy = point.songId != null && typeof point.score === 'number';
-                  const info = canEditEnergy ? getEnergyInfo(point.score as number) : null;
-                  const bumpEnergy = (delta: number) => {
-                    if (!canEditEnergy || typeof point.score !== 'number') return;
-                    const next = Math.max(1, Math.min(20, point.score + delta));
-                    if (next !== point.score) handleEnergyChartDrag(point, next);
-                  };
-                  const dirBtnClass = "w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
-                  const reorderBtnClass = `${dirBtnClass} bg-neutral-800/80 hover:bg-neutral-700 text-amber-300/90 hover:/60`;
-                  const energyBtnStyle = info
-                    ? { color: info.hexColor, borderColor: `${info.hexColor}55`, background: 'rgba(23,23,23,0.8)' }
-                    : undefined;
-                  const prevName = selectedIndex > 0 ? chartData[selectedIndex - 1]?.name : null;
-                  const nextName = selectedIndex < chartData.length - 1 ? chartData[selectedIndex + 1]?.name : null;
-                  const hasPrevSong = selectedIndex > 0 && chartData[selectedIndex - 1]?.songId && point.songId;
-                  const hasNextSong = selectedIndex < chartData.length - 1 && chartData[selectedIndex + 1]?.songId && point.songId;
+ {/* Joystick/D-pad del punto seleccionado: ◀▶ mueve el tema de posición, ▲▼ sube o
+ baja su energía un punto exacto — alternativa al arrastre del gráfico para
+ cuando se quiere precisión, o directamente para móvil, donde el arrastre (sobre
+ todo en vertical, encima de un SVG de recharts) no siempre responde igual de
+ bien que en escritorio. */}
+ {selectedSetlistItemId && (() => {
+ const selectedIndex = chartData.findIndex((d) => d.id === selectedSetlistItemId);
+ if (selectedIndex === -1) return null;
+ const point = chartData[selectedIndex];
+ const canEditEnergy = point.songId != null && typeof point.score === 'number';
+ const info = canEditEnergy ? getEnergyInfo(point.score as number) : null;
+ const bumpEnergy = (delta: number) => {
+ if (!canEditEnergy || typeof point.score !== 'number') return;
+ const next = Math.max(1, Math.min(20, point.score + delta));
+ if (next !== point.score) handleEnergyChartDrag(point, next);
+ };
+ const dirBtnClass = "w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
+ const reorderBtnClass = `${dirBtnClass} bg-neutral-800/80 hover:bg-neutral-700 text-amber-300/90 hover:/60`;
+ const energyBtnStyle = info
+ ? { color: info.hexColor, borderColor: `${info.hexColor}55`, background: 'rgba(23,23,23,0.8)' }
+ : undefined;
+ const prevName = selectedIndex > 0 ? chartData[selectedIndex - 1]?.name : null;
+ const nextName = selectedIndex < chartData.length - 1 ? chartData[selectedIndex + 1]?.name : null;
+ const hasPrevSong = selectedIndex > 0 && chartData[selectedIndex - 1]?.songId && point.songId;
+ const hasNextSong = selectedIndex < chartData.length - 1 && chartData[selectedIndex + 1]?.songId && point.songId;
 
-                  return (
-                    <div className="w-full flex flex-col items-center gap-1.5 pt-1.5 pb-0.5">
-                      {canEditEnergy && (
-                        <button
-                          type="button"
-                          disabled={(point.score as number) >= 20}
-                          onClick={() => bumpEnergy(1)}
-                          className={`${dirBtnClass} border hover:brightness-125`}
-                          style={energyBtnStyle}
-                          title="Subir energía"
-                        >
-                          <ChevronUp className="w-4 h-4" />
-                        </button>
-                      )}
-                      <div className="w-full flex items-center justify-center gap-2">
-                        {/* Nombre del tema anterior/siguiente junto a la flecha que lleva hasta él —
-                            así se sabe con qué canción se va a intercambiar posición antes de
-                            pulsar, sin tener que mirar el gráfico para ubicarla. */}
-                        <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-right leading-tight">
-                          {prevName || ''}
-                        </span>
-                        <button
-                          type="button"
-                          disabled={selectedIndex <= 0}
-                          onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
-                          className={reorderBtnClass}
-                          title={prevName ? `Mover antes de "${prevName}"` : 'Mover una posición hacia atrás'}
-                        >
-                          <ChevronLeft className="w-4 h-4" />
-                        </button>
-                        {/* Hub central: solo el score de energía (sin el nombre del tema, ya se ve
-                            resaltado en el propio gráfico), con un aro y un glow del color de su
-                            categoría para que el joystick tenga vida propia en vez de ser cuatro
-                            flechas sueltas. */}
-                        <div
-                          className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-mono font-bold shrink-0"
-                          style={info ? {
-                            background: `radial-gradient(circle at 35% 30%, ${info.hexColor}40, #0a0a0a 75%)`,
-                            border: `1.5px solid ${info.hexColor}`,
-                            boxShadow: `0 0 9px ${info.hexColor}80, inset 0 0 4px ${info.hexColor}30`,
-                            color: info.hexColor
-                          } : {
-                            background: '#171717',
-                            border: '1.5px solid #3f3f46',
-                            color: '#71717a'
-                          }}
-                          title={info ? `${info.label} · ${point.score}/20` : point.name}
-                        >
-                          {info ? point.score : '•'}
-                        </div>
-                        <button
-                          type="button"
-                          disabled={selectedIndex >= chartData.length - 1}
-                          onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
-                          className={reorderBtnClass}
-                          title={nextName ? `Mover después de "${nextName}"` : 'Mover una posición hacia adelante'}
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </button>
-                        <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-left leading-tight">
-                          {nextName || ''}
-                        </span>
-                      </div>
-                      {canEditEnergy && (
-                        <button
-                          type="button"
-                          disabled={(point.score as number) <= 1}
-                          onClick={() => bumpEnergy(-1)}
-                          className={`${dirBtnClass} border hover:brightness-125`}
-                          style={energyBtnStyle}
-                          title="Bajar energía"
-                        >
-                          <ChevronDown className="w-4 h-4" />
-                        </button>
-                      )}
+ return (
+ <div className="w-full flex flex-col items-center gap-1.5 pt-1.5 pb-0.5">
+ {canEditEnergy && (
+ <button
+ type="button"
+ disabled={(point.score as number) >= 20}
+ onClick={() => bumpEnergy(1)}
+ className={`${dirBtnClass} hover:brightness-125`}
+ style={energyBtnStyle}
+ title="Subir energía"
+ >
+ <ChevronUp className="w-4 h-4" />
+ </button>
+ )}
+ <div className="w-full flex items-center justify-center gap-2">
+ {/* Nombre del tema anterior/siguiente junto a la flecha que lleva hasta él —
+ así se sabe con qué canción se va a intercambiar posición antes de
+ pulsar, sin tener que mirar el gráfico para ubicarla. */}
+ <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-right leading-tight">
+ {prevName || ''}
+ </span>
+ <button
+ type="button"
+ disabled={selectedIndex <= 0}
+ onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
+ className={reorderBtnClass}
+ title={prevName ? `Mover antes de "${prevName}"` : 'Mover una posición hacia atrás'}
+ >
+ <ChevronLeft className="w-4 h-4" />
+ </button>
+ {/* Hub central: solo el score de energía (sin el nombre del tema, ya se ve
+ resaltado en el propio gráfico), con un aro y un glow del color de su
+ categoría para que el joystick tenga vida propia en vez de ser cuatro
+ flechas sueltas. */}
+ <div
+ className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-mono font-bold shrink-0"
+ style={info ? {
+ background: `radial-gradient(circle at 35% 30%, ${info.hexColor}40, #0a0a0a 75%)`,
+ border: `1.5px solid ${info.hexColor}`,
+ boxShadow: `0 0 9px ${info.hexColor}80, inset 0 0 4px ${info.hexColor}30`,
+ color: info.hexColor
+ } : {
+ background: '#171717',
+ border: '1.5px solid #3f3f46',
+ color: '#71717a'
+ }}
+ title={info ? `${info.label} · ${point.score}/20` : point.name}
+ >
+ {info ? point.score : '•'}
+ </div>
+ <button
+ type="button"
+ disabled={selectedIndex >= chartData.length - 1}
+ onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
+ className={reorderBtnClass}
+ title={nextName ? `Mover después de "${nextName}"` : 'Mover una posición hacia adelante'}
+ >
+ <ChevronRight className="w-4 h-4" />
+ </button>
+ <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-left leading-tight">
+ {nextName || ''}
+ </span>
+ </div>
+ {canEditEnergy && (
+ <button
+ type="button"
+ disabled={(point.score as number) <= 1}
+ onClick={() => bumpEnergy(-1)}
+ className={`${dirBtnClass} hover:brightness-125`}
+ style={energyBtnStyle}
+ title="Bajar energía"
+ >
+ <ChevronDown className="w-4 h-4" />
+ </button>
+ )}
 
-                      {/* Botones de acción para probar transiciones de audio con tema anterior o siguiente */}
-                      {(hasPrevSong || hasNextSong) && (() => {
-                        const evalPrev = point.transitionFromPrev;
-                        const evalNext = point.transitionToNext;
-                        return (
-                          <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5">
-                            {hasPrevSong && (
-                              <button
-                                type="button"
-                                onClick={() => handleOpenTransitionPreview(selectedIndex - 1, selectedIndex)}
-                                className={`px-3 py-1.5 rounded-[var(--r-m)] border text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
-                                  evalPrev?.status === 'ok'
-                                    ? 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white border-emerald-500/35 hover:border-emerald-500/70'
-                                    : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-white border-rose-500/35 hover:border-rose-500/70'
-                                }`}
-                                title={evalPrev ? `${evalPrev.title}: ${evalPrev.motivos.join(', ')}` : `Comprobar cómo suena la unión de "${prevName}" con "${point.name}"`}
-                              >
-                                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
-                                  evalPrev?.status === 'ok' ? 'bg-emerald-500/30 text-emerald-200' : 'bg-rose-500/30 text-rose-200'
-                                }`}>
-                                  {evalPrev ? evalPrev.icon : '⚡'}
-                                </span>
-                                <div className="flex flex-col text-left leading-none">
-                                  <div className="flex items-center gap-1">
-                                    <span>Unión con #{selectedIndex} ({prevName})</span>
-                                    {evalPrev && <span className="text-[10px] font-mono opacity-80">({evalPrev.scorePercent}%)</span>}
-                                  </div>
-                                  {evalPrev && evalPrev.motivos.length > 0 && (
-                                    <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">{evalPrev.motivos[0]}</span>
-                                  )}
-                                </div>
-                              </button>
-                            )}
-                            {hasNextSong && (
-                              <button
-                                type="button"
-                                onClick={() => handleOpenTransitionPreview(selectedIndex, selectedIndex + 1)}
-                                className={`px-3 py-1.5 rounded-[var(--r-m)] border text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
-                                  evalNext?.status === 'ok'
-                                    ? 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white border-emerald-500/35 hover:border-emerald-500/70'
-                                    : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-white border-rose-500/35 hover:border-rose-500/70'
-                                }`}
-                                title={evalNext ? `${evalNext.title}: ${evalNext.motivos.join(', ')}` : `Comprobar cómo suena la unión de "${point.name}" con "${nextName}"`}
-                              >
-                                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
-                                  evalNext?.status === 'ok' ? 'bg-emerald-500/30 text-emerald-200' : 'bg-rose-500/30 text-rose-200'
-                                }`}>
-                                  {evalNext ? evalNext.icon : '⚡'}
-                                </span>
-                                <div className="flex flex-col text-left leading-none">
-                                  <div className="flex items-center gap-1">
-                                    <span>Unión con #{selectedIndex + 2} ({nextName})</span>
-                                    {evalNext && <span className="text-[10px] font-mono opacity-80">({evalNext.scorePercent}%)</span>}
-                                  </div>
-                                  {evalNext && evalNext.motivos.length > 0 && (
-                                    <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">{evalNext.motivos[0]}</span>
-                                  )}
-                                </div>
-                              </button>
-                            )}
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  );
-                })()}
+ {/* Botones de acción para probar transiciones de audio con tema anterior o siguiente */}
+ {(hasPrevSong || hasNextSong) && (() => {
+ const evalPrev = point.transitionFromPrev;
+ const evalNext = point.transitionToNext;
+ return (
+ <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5">
+ {hasPrevSong && (
+ <button
+ type="button"
+ onClick={() => handleOpenTransitionPreview(selectedIndex - 1, selectedIndex)}
+ className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
+ evalPrev?.status === 'ok'
+ ? 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white border-emerald-500/35 hover:border-emerald-500/70'
+ : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-white border-rose-500/35 hover:border-rose-500/70'
+ }`}
+ title={evalPrev ? `${evalPrev.title}: ${evalPrev.motivos.join(', ')}` : `Comprobar cómo suena la unión de "${prevName}" con "${point.name}"`}
+ >
+ <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+ evalPrev?.status === 'ok' ? 'bg-emerald-500/30 text-emerald-200' : 'bg-rose-500/30 text-rose-200'
+ }`}>
+ {evalPrev ? evalPrev.icon : '⚡'}
+ </span>
+ <div className="flex flex-col text-left leading-none">
+ <div className="flex items-center gap-1">
+ <span>Unión con #{selectedIndex} ({prevName})</span>
+ {evalPrev && <span className="text-[10px] font-mono opacity-80">({evalPrev.scorePercent}%)</span>}
+ </div>
+ {evalPrev && evalPrev.motivos.length > 0 && (
+ <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">{evalPrev.motivos[0]}</span>
+ )}
+ </div>
+ </button>
+ )}
+ {hasNextSong && (
+ <button
+ type="button"
+ onClick={() => handleOpenTransitionPreview(selectedIndex, selectedIndex + 1)}
+ className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
+ evalNext?.status === 'ok'
+ ? 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white border-emerald-500/35 hover:border-emerald-500/70'
+ : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-white border-rose-500/35 hover:border-rose-500/70'
+ }`}
+ title={evalNext ? `${evalNext.title}: ${evalNext.motivos.join(', ')}` : `Comprobar cómo suena la unión de "${point.name}" con "${nextName}"`}
+ >
+ <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+ evalNext?.status === 'ok' ? 'bg-emerald-500/30 text-emerald-200' : 'bg-rose-500/30 text-rose-200'
+ }`}>
+ {evalNext ? evalNext.icon : '⚡'}
+ </span>
+ <div className="flex flex-col text-left leading-none">
+ <div className="flex items-center gap-1">
+ <span>Unión con #{selectedIndex + 2} ({nextName})</span>
+ {evalNext && <span className="text-[10px] font-mono opacity-80">({evalNext.scorePercent}%)</span>}
+ </div>
+ {evalNext && evalNext.motivos.length > 0 && (
+ <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">{evalNext.motivos[0]}</span>
+ )}
+ </div>
+ </button>
+ )}
+ </div>
+ );
+ })()}
+ </div>
+ );
+ })()}
 
-                {/* Avisos y sugerencias — plegados por defecto, con un solo toggle que resume
-                    cuántos hay entre los heurísticos y los del último Análisis IA, en vez de dos
-                    filas de badges siempre desplegadas ocupando pantalla. */}
-                {(energyAnalysis.warnings.length > 0 || (aiAnalysisResult?.suggestions?.length ?? 0) > 0) && (
-                  <button
-                    type="button"
-                    onClick={() => setShowHeuristicWarnings((v) => !v)}
-                    className="w-full flex items-center justify-between px-2 py-1 rounded-[var(--r-s)] bg-neutral-800/60 hover:bg-neutral-800 text-neutral-300 text-[10px] font-mono transition-all cursor-pointer"
-                  >
-                    <span>⚠️ Avisos y sugerencias ({energyAnalysis.warnings.length + (aiAnalysisResult?.suggestions?.length ?? 0)})</span>
-                    <span>{showHeuristicWarnings ? '▲' : '▼'}</span>
-                  </button>
-                )}
+ {/* Avisos y sugerencias — plegados por defecto, con un solo toggle que resume
+ cuántos hay entre los heurísticos y los del último Análisis IA, en vez de dos
+ filas de badges siempre desplegadas ocupando pantalla. */}
+ {(energyAnalysis.warnings.length > 0 || (aiAnalysisResult?.suggestions?.length ?? 0) > 0) && (
+ <button
+ type="button"
+ onClick={() => setShowHeuristicWarnings((v) => !v)}
+ className="w-full flex items-center justify-between px-2 py-1 rounded-[var(--r-s)] bg-neutral-800/60 hover:bg-neutral-800 text-neutral-300 text-[10px] font-mono transition-all cursor-pointer"
+ >
+ <span>⚠️ Avisos y sugerencias ({energyAnalysis.warnings.length + (aiAnalysisResult?.suggestions?.length ?? 0)})</span>
+ <span>{showHeuristicWarnings ? '▲' : '▼'}</span>
+ </button>
+ )}
 
-                {/* Warnings & Suggestions (Heuristic) */}
-                {showHeuristicWarnings && energyAnalysis.warnings.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    {energyAnalysis.warnings.map((w, i) => {
-                      const hasSongs = !!w.songTitles && w.songTitles.length > 0;
-                      const isHighlighted = hasSongs && highlightedSongIds.length > 0 &&
-                        w.songTitles!.some(t => titlesMatch(t, highlightedSongIds));
-                      return (
-                        <span
-                          key={i}
-                          className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition ${
-                            w.type === 'warning'
-                              ? 'bg-amber-500/10 text-amber-300 /30'
-                              : w.type === 'success'
-                              ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
-                              : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
-                          } ${isHighlighted ? 'ring-2 ring-white/60' : ''}`}
-                          style={{ cursor: hasSongs ? 'pointer' : 'default' }}
-                          onMouseEnter={() => { if (hasSongs) setHighlightedSongIds(w.songTitles!); }}
-                          onMouseLeave={() => setHighlightedSongIds([])}
-                          onClick={() => { if (hasSongs) setHighlightedSongIds(isHighlighted ? [] : w.songTitles!); }}
-                          title={hasSongs ? `Resalta: ${w.songTitles!.join(', ')}` : undefined}
-                        >
-                          <span>{w.icon}</span>
-                          <span>{w.message}</span>
-                          {w.suggestedReorder && (
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                reorderSetlistItems(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex, `warning-${i}`);
-                              }}
-                              className="ml-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/25 text-white font-bold transition"
-                              title={w.suggestedReorder.description}
-                            >
-                              ✓ Aplicar
-                            </button>
-                          )}
-                        </span>
-                      );
-                    })}
-                  </div>
-                )}
+ {/* Warnings & Suggestions (Heuristic) */}
+ {showHeuristicWarnings && energyAnalysis.warnings.length > 0 && (
+ <div className="flex flex-wrap items-center gap-1.5 pt-1">
+ {energyAnalysis.warnings.map((w, i) => {
+ const hasSongs = !!w.songTitles && w.songTitles.length > 0;
+ const isHighlighted = hasSongs && highlightedSongIds.length > 0 &&
+ w.songTitles!.some(t => titlesMatch(t, highlightedSongIds));
+ return (
+ <span
+ key={i}
+ className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 transition ${
+ w.type === 'warning'
+ ? 'bg-amber-500/10 text-amber-300 /30'
+ : w.type === 'success'
+ ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+ : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
+ } ${isHighlighted ? 'ring-2 ring-white/60' : ''}`}
+ style={{ cursor: hasSongs ? 'pointer' : 'default' }}
+ onMouseEnter={() => { if (hasSongs) setHighlightedSongIds(w.songTitles!); }}
+ onMouseLeave={() => setHighlightedSongIds([])}
+ onClick={() => { if (hasSongs) setHighlightedSongIds(isHighlighted ? [] : w.songTitles!); }}
+ title={hasSongs ? `Resalta: ${w.songTitles!.join(', ')}` : undefined}
+ >
+ <span>{w.icon}</span>
+ <span>{w.message}</span>
+ {w.suggestedReorder && (
+ <button
+ type="button"
+ onClick={(e) => {
+ e.stopPropagation();
+ reorderSetlistItems(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex, `warning-${i}`);
+ }}
+ className="ml-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/25 text-white font-bold transition"
+ title={w.suggestedReorder.description}
+ >
+ ✓ Aplicar
+ </button>
+ )}
+ </span>
+ );
+ })}
+ </div>
+ )}
 
-                {/* AI Analysis Summary (if available) - as badges like warnings */}
-                {showHeuristicWarnings && aiAnalysisResult && (
-                  <div className="space-y-2 pt-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-purple-300">🧠 Análisis IA: {aiAnalysisResult.overallScore}/100</span>
-                      <button
-                        type="button"
-                        onClick={() => setShowAIAnalysisModal(true)}
-                        className="px-2 py-0.5 rounded text-[9px] bg-purple-700/50 hover:bg-purple-600 text-purple-200 transition font-medium"
-                      >
-                        Ver análisis completo
-                      </button>
-                    </div>
-                    {aiAnalysisResult.suggestions?.length > 0 && (
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        {aiAnalysisResult.suggestions.map((s: any, i: number) => {
-                          const songsToHighlight: string[] = (s.songs_involved && s.songs_involved.length > 0)
-                            ? s.songs_involved
-                            : []; // Si no hay songs_involved, usar array vacío
-                          const hasSongs = songsToHighlight.length > 0;
-                          const isHighlighted = hasSongs && highlightedSongIds.length > 0 &&
-                            songsToHighlight.some((songTitle: string) => titlesMatch(songTitle, highlightedSongIds));
-                          return (
-                            <span
-                              key={i}
-                              className="px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition"
-                              style={{
-                                backgroundColor: isHighlighted ? 'rgb(168 85 247 / 0.4)' : 'rgb(126 34 206 / 0.3)',
-                                borderColor: isHighlighted ? 'rgb(168 85 247 / 0.8)' : 'rgb(147 51 234 / 0.4)',
-                                color: 'rgb(196 181 253)',
-                                cursor: hasSongs ? 'pointer' : 'default'
-                              }}
-                              onMouseEnter={() => {
-                                if (hasSongs) setHighlightedSongIds(songsToHighlight);
-                              }}
-                              onMouseLeave={() => setHighlightedSongIds([])}
-                              onClick={() => {
-                                if (hasSongs) setHighlightedSongIds(isHighlighted ? [] : songsToHighlight);
-                              }}
-                              title={hasSongs ? `Resalta: ${songsToHighlight.join(', ')}` : s.title}
-                            >
-                              <span>{s.priority === 'high' && '🔴'}{s.priority === 'medium' && '🟠'}{s.priority === 'low' && '🟡'}</span>
-                              <span>{s.title}</span>
-                            </span>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        )}
+ {/* AI Analysis Summary (if available) - as badges like warnings */}
+ {showHeuristicWarnings && aiAnalysisResult && (
+ <div className="space-y-2 pt-2">
+ <div className="flex items-center justify-between">
+ <span className="text-xs font-bold text-purple-300">🧠 Análisis IA: {aiAnalysisResult.overallScore}/100</span>
+ <button
+ type="button"
+ onClick={() => setShowAIAnalysisModal(true)}
+ className="px-2 py-0.5 rounded text-[9px] bg-purple-700/50 hover:bg-purple-600 text-purple-200 transition font-medium"
+ >
+ Ver análisis completo
+ </button>
+ </div>
+ {aiAnalysisResult.suggestions?.length > 0 && (
+ <div className="flex flex-wrap items-center gap-1.5">
+ {aiAnalysisResult.suggestions.map((s: any, i: number) => {
+ const songsToHighlight: string[] = (s.songs_involved && s.songs_involved.length > 0)
+ ? s.songs_involved
+ : []; // Si no hay songs_involved, usar array vacío
+ const hasSongs = songsToHighlight.length > 0;
+ const isHighlighted = hasSongs && highlightedSongIds.length > 0 &&
+ songsToHighlight.some((songTitle: string) => titlesMatch(songTitle, highlightedSongIds));
+ return (
+ <span
+ key={i}
+ className="px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 transition"
+ style={{
+ backgroundColor: isHighlighted ? 'rgb(168 85 247 / 0.4)' : 'rgb(126 34 206 / 0.3)',
+ borderColor: isHighlighted ? 'rgb(168 85 247 / 0.8)' : 'rgb(147 51 234 / 0.4)',
+ color: 'rgb(196 181 253)',
+ cursor: hasSongs ? 'pointer' : 'default'
+ }}
+ onMouseEnter={() => {
+ if (hasSongs) setHighlightedSongIds(songsToHighlight);
+ }}
+ onMouseLeave={() => setHighlightedSongIds([])}
+ onClick={() => {
+ if (hasSongs) setHighlightedSongIds(isHighlighted ? [] : songsToHighlight);
+ }}
+ title={hasSongs ? `Resalta: ${songsToHighlight.join(', ')}` : s.title}
+ >
+ <span>{s.priority === 'high' && '🔴'}{s.priority === 'medium' && '🟠'}{s.priority === 'low' && '🟡'}</span>
+ <span>{s.title}</span>
+ </span>
+ );
+ })}
+ </div>
+ )}
+ </div>
+ )}
+ </>
+ )}
+ </div>
+ )}
 
-      </div>
-    );
-  })()}
+ </div>
+ );
+ })()}
 
-  {/* ADD ITEMS ACTION BAR (Modular) */}
-  <SetlistAddBar
-    activeSetlist={activeSetlist}
-    songs={songs}
-    sortedSongsByAlbumAndOrder={sortedSongsByAlbumAndOrder}
-    selectedSetlistItemId={selectedSetlistItemId}
-    setSelectedSetlistItemId={setSelectedSetlistItemId}
-    handleAddItemToSetlist={handleAddItemToSetlist}
-    setIsAddSongsModalOpen={setIsAddSongsModalOpen}
-    setEditingShowItem={setEditingShowItem}
-    setShowShowItemModal={setShowShowItemModal}
-    customShortcuts={customShortcuts}
-    handleUseCustomShortcut={handleUseCustomShortcut}
-    handleDeleteShortcut={handleDeleteShortcut}
-    isAddingShortcut={isAddingShortcut}
-    setIsAddingShortcut={setIsAddingShortcut}
-    newShortcutIcon={newShortcutIcon}
-    setNewShortcutIcon={setNewShortcutIcon}
-    newShortcutLabel={newShortcutLabel}
-    setNewShortcutLabel={setNewShortcutLabel}
-    newShortcutMinutes={newShortcutMinutes}
-    setNewShortcutMinutes={setNewShortcutMinutes}
-    handleCreateShortcut={handleCreateShortcut}
-    isStitchLight={isStitchLight}
-  />
+ {/* ADD ITEMS ACTION BAR (Modular) */}
+ <SetlistAddBar
+ activeSetlist={activeSetlist}
+ songs={songs}
+ sortedSongsByAlbumAndOrder={sortedSongsByAlbumAndOrder}
+ selectedSetlistItemId={selectedSetlistItemId}
+ setSelectedSetlistItemId={setSelectedSetlistItemId}
+ handleAddItemToSetlist={handleAddItemToSetlist}
+ setIsAddSongsModalOpen={setIsAddSongsModalOpen}
+ setEditingShowItem={setEditingShowItem}
+ setShowShowItemModal={setShowShowItemModal}
+ customShortcuts={customShortcuts}
+ handleUseCustomShortcut={handleUseCustomShortcut}
+ handleDeleteShortcut={handleDeleteShortcut}
+ isAddingShortcut={isAddingShortcut}
+ setIsAddingShortcut={setIsAddingShortcut}
+ newShortcutIcon={newShortcutIcon}
+ setNewShortcutIcon={setNewShortcutIcon}
+ newShortcutLabel={newShortcutLabel}
+ setNewShortcutLabel={setNewShortcutLabel}
+ newShortcutMinutes={newShortcutMinutes}
+ setNewShortcutMinutes={setNewShortcutMinutes}
+ handleCreateShortcut={handleCreateShortcut}
+ isStitchLight={isStitchLight}
+ />
 
-  {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
-  <div className="space-y-2 max-h-[calc(88vh-200px)] min-h-[480px] overflow-y-auto pr-1">
-  {activeSetlist.items.length === 0 ? (
-  <div className="text-center py-12 border-dashed /80 rounded-[var(--r-l)] text-[var(--ink-3)] text-xs">
-  No hay canciones en este repertorio. Usa la barra superior para añadir temas o eventos.
-  </div>
-  ) : (
-  activeSetlist.items.map((it, index) => {
-  const isSelected = selectedSetlistItemId === it.id;
-  const isDragging = draggedItemIndex === index;
-  const isDragOver = dragOverItemIndex === index;
+ {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
+ <div className="space-y-2 max-h-[calc(88vh-200px)] min-h-[480px] overflow-y-auto pr-1">
+ {activeSetlist.items.length === 0 ? (
+ <div className="text-center py-12 border-dashed /80 rounded-[var(--r-l)] text-[var(--ink-3)] text-xs">
+ No hay canciones en este repertorio. Usa la barra superior para añadir temas o eventos.
+ </div>
+ ) : (
+ activeSetlist.items.map((it, index) => {
+ const isSelected = selectedSetlistItemId === it.id;
+ const isDragging = draggedItemIndex === index;
+ const isDragOver = dragOverItemIndex === index;
 
-  if (it.tipoItem === 'cancion' && it.songId) {
-  const song = songs.find(s => s.id === it.songId);
-  if (!song) return null;
+ if (it.tipoItem === 'cancion' && it.songId) {
+ const song = songs.find(s => s.id === it.songId);
+ if (!song) return null;
 
-  // Check if this song has member notes
-  const memberNotesCount = song.notasMiembros
-    ? Object.values(song.notasMiembros).filter(v => typeof v === 'string' && v.trim().length > 0).length
-    : 0;
+ // Check if this song has member notes
+ const memberNotesCount = song.notasMiembros
+ ? Object.values(song.notasMiembros).filter(v => typeof v === 'string' && v.trim().length > 0).length
+ : 0;
 
-  const isExpanded = expandedSetlistItemIds.has(it.id);
-  const toggleExpand = () => {
-    const newSet = new Set(expandedSetlistItemIds);
-    if (newSet.has(it.id)) {
-      newSet.delete(it.id);
-    } else {
-      newSet.add(it.id);
-    }
-    setExpandedSetlistItemIds(newSet);
-  };
+ const isExpanded = expandedSetlistItemIds.has(it.id);
+ const toggleExpand = () => {
+ const newSet = new Set(expandedSetlistItemIds);
+ if (newSet.has(it.id)) {
+ newSet.delete(it.id);
+ } else {
+ newSet.add(it.id);
+ }
+ setExpandedSetlistItemIds(newSet);
+ };
 
-  // Reproducir esta canción sin tener que expandir la fila
-  const isPlayingThisRow = activePlayerSong?.id === song.id && isPlayerPlaying;
-  const playThisSong = () => {
-    const setlistSongs = activeSetlist.items
-      .filter((i) => i.tipoItem === 'cancion' && i.songId)
-      .map((i) => songs.find((s) => s.id === i.songId))
-      .filter((s): s is Song => !!s);
-    // Calculate transposition from tonalidadDeseada if set
-    const diffResult = song.tonalidad && it.tonalidadDeseada
-      ? getSemitoneDifference(song.tonalidad, it.tonalidadDeseada)
-      : null;
-    const transposeSemitones = diffResult ?? 0;
-    selectPlayerSongWithQueue(song, true, setlistSongs, transposeSemitones);
-  };
+ // Reproducir esta canción sin tener que expandir la fila
+ const isPlayingThisRow = activePlayerSong?.id === song.id && isPlayerPlaying;
+ const playThisSong = () => {
+ const setlistSongs = activeSetlist.items
+ .filter((i) => i.tipoItem === 'cancion' && i.songId)
+ .map((i) => songs.find((s) => s.id === i.songId))
+ .filter((s): s is Song => !!s);
+ // Calculate transposition from tonalidadDeseada if set
+ const diffResult = song.tonalidad && it.tonalidadDeseada
+ ? getSemitoneDifference(song.tonalidad, it.tonalidadDeseada)
+ : null;
+ const transposeSemitones = diffResult ?? 0;
+ selectPlayerSongWithQueue(song, true, setlistSongs, transposeSemitones);
+ };
 
-  const songIndex = activeSetlist.items.slice(0, index).filter(i => i.tipoItem === 'cancion').length;
+ const songIndex = activeSetlist.items.slice(0, index).filter(i => i.tipoItem === 'cancion').length;
 
-  return (
-  <div
-  key={it.id}
-  draggable={true}
-  onDragStart={(e) => { if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0); setDraggedItemIndex(index); }}
-  onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
-  onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
-  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
-  onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
-  onClick={() => {
-  if (!isSelected && !isExpanded) {
-  setExpandedSetlistItemIds(new Set(expandedSetlistItemIds).add(it.id));
-  }
-  setSelectedSetlistItemId(isSelected ? null : it.id);
-  }}
-  className={`group border rounded-[var(--r-m)] transition-all cursor-pointer ${
-  isDragging ? 'opacity-40 scale-[0.98]' : ''
-  } ${
-  isDragOver ? 'border-indigo-400 border-2 scale-[1.01] bg-indigo-500/10 shadow-lg' : ''
-  } ${
-  isSelected
-    ? 'border-indigo-500 ring-2 ring-indigo-500/20 bg-indigo-500/10 shadow-sm'
-    : isStitchLight
-      ? 'bg-white  hover:'
-      : 'bg-[var(--surface)]/80 /80 hover:/80'
-  }`}
-  >
-  {/* MAIN ROW - COMPACT */}
-  <div className="flex items-center gap-2.5 px-3 py-2 overflow-x-auto">
-    {/* Drag Handle */}
-    <div
-      className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-indigo-400 transition-colors shrink-0"
-      title="Arrastrar y soltar para reordenar"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <GripVertical className="w-3.5 h-3.5" />
-    </div>
+ return (
+ <div
+ key={it.id}
+ draggable={true}
+ onDragStart={(e) => { if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0); setDraggedItemIndex(index); }}
+ onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
+ onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
+ onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
+ onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
+ onClick={() => {
+ if (!isSelected && !isExpanded) {
+ setExpandedSetlistItemIds(new Set(expandedSetlistItemIds).add(it.id));
+ }
+ setSelectedSetlistItemId(isSelected ? null : it.id);
+ }}
+ className={`group rounded-[var(--r-m)] transition-all cursor-pointer ${
+ isDragging ? 'opacity-40 scale-[0.98]' : ''
+ } ${
+ isDragOver ? 'border-indigo-400 border-2 scale-[1.01] bg-indigo-500/10 shadow-lg' : ''
+ } ${
+ isSelected
+ ? 'border-indigo-500 ring-2 ring-indigo-500/20 bg-indigo-500/10 shadow-sm'
+ : isStitchLight
+ ? 'bg-white hover:'
+ : 'bg-[var(--surface)]/80 /80 hover:/80'
+ }`}
+ >
+ {/* MAIN ROW - COMPACT */}
+ <div className="flex items-center gap-2.5 px-3 py-2 overflow-x-auto">
+ {/* Drag Handle */}
+ <div
+ className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-indigo-400 transition-colors shrink-0"
+ title="Arrastrar y soltar para reordenar"
+ onClick={(e) => e.stopPropagation()}
+ >
+ <GripVertical className="w-3.5 h-3.5" />
+ </div>
 
-    {/* Index / Play */}
-    <button
-      type="button"
-      onClick={(e) => { e.stopPropagation(); playThisSong(); }}
-      className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer bg-emerald-600 text-white sm:bg-transparent sm:group-hover:bg-emerald-600 sm:group-hover:text-white"
-      title={isPlayingThisRow ? 'Sonando ahora' : 'Reproducir esta canción'}
-    >
-      {isPlayingThisRow ? (
-        <div className="flex items-center gap-0.5">
-          <span className="w-0.5 h-2 bg-emerald-400 rounded-full animate-pulse" />
-          <span className="w-0.5 h-2.5 bg-emerald-300 rounded-full animate-pulse delay-75" />
-          <span className="w-0.5 h-1.5 bg-emerald-400 rounded-full animate-pulse delay-150" />
-        </div>
-      ) : (
-        <>
-          <span className="sm:group-hover:hidden text-xs font-semibold text-[var(--ink-3)]">{songIndex + 1}</span>
-          <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-white" />
-        </>
-      )}
-    </button>
+ {/* Index / Play */}
+ <button
+ type="button"
+ onClick={(e) => { e.stopPropagation(); playThisSong(); }}
+ className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer bg-emerald-600 text-white sm:bg-transparent sm:group-hover:bg-emerald-600 sm:group-hover:text-white"
+ title={isPlayingThisRow ? 'Sonando ahora' : 'Reproducir esta canción'}
+ >
+ {isPlayingThisRow ? (
+ <div className="flex items-center gap-0.5">
+ <span className="w-0.5 h-2 bg-emerald-400 rounded-full animate-pulse" />
+ <span className="w-0.5 h-2.5 bg-emerald-300 rounded-full animate-pulse delay-75" />
+ <span className="w-0.5 h-1.5 bg-emerald-400 rounded-full animate-pulse delay-150" />
+ </div>
+ ) : (
+ <>
+ <span className="sm:group-hover:hidden text-xs font-semibold text-[var(--ink-3)]">{songIndex + 1}</span>
+ <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-white" />
+ </>
+ )}
+ </button>
 
-    {/* Title + metadata */}
-    <span className={`text-sm font-semibold tracking-tight ${isStitchLight ? 'text-[var(--ink)]' : 'text-slate-100'} truncate shrink-0 max-w-[42vw] sm:max-w-[220px]`} title={formatSongTitle(song.titulo)}>
-      {formatSongTitle(song.titulo)}
-    </span>
+ {/* Title + metadata */}
+ <span className={`text-sm font-semibold tracking-tight ${isStitchLight ? 'text-[var(--ink)]' : 'text-slate-100'} truncate shrink-0 max-w-[42vw] sm:max-w-[220px]`} title={formatSongTitle(song.titulo)}>
+ {formatSongTitle(song.titulo)}
+ </span>
 
-    {(() => {
-      // Tono en el que se quiere tocar ESTE tema en ESTE repertorio (distinto del tono
-      // original de grabación por registro vocal, cantante sustituto, etc.) — se guarda en
-      // el SetlistItem (it.tonalidadDeseada) y el Modo Concierto lo transporta solo.
-      const desiredKey = it.tonalidadDeseada;
-      const isEditingKey = editingKeyItemId === it.id;
-      const KEY_POPOVER_WIDTH_PX = 200;
-      const KEY_POPOVER_HEIGHT_PX = 110;
-      const rawOrigKey = (song.tonalidad || '').trim();
-      const isEsKey = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(rawOrigKey);
-      const baseRoots = isEsKey
-        ? ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si']
-        : ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-      const keyMatch = rawOrigKey.match(/^(Do#|Re#|Fa#|Sol#|La#|Do|Re|Mi|Fa|Sol|La|Si|C#|D#|F#|G#|A#|Db|Eb|Gb|Ab|Bb|C|D|E|F|G|A|B)(.*)$/i);
-      const keySuffix = keyMatch ? keyMatch[2] : '';
-      const keyNotes = baseRoots.map(root => `${root}${keySuffix}`);
-      return (
-        <div className="relative shrink-0">
-          <button
-            type="button"
-            data-key-popover
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isEditingKey) {
-                setEditingKeyItemId(null);
-                return;
-              }
-              const rect = e.currentTarget.getBoundingClientRect();
-              setKeyPopoverPos({
-                top: Math.min(rect.bottom + 4, window.innerHeight - KEY_POPOVER_HEIGHT_PX - 8),
-                left: Math.min(rect.left, window.innerWidth - KEY_POPOVER_WIDTH_PX - 8)
-              });
-              setEditingKeyItemId(it.id);
-            }}
-            className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${
-              desiredKey ? 'bg-amber-500/20 text-amber-400' : 'bg-[#10b981]/15 text-[#10b981]'
-            }`}
-            title={desiredKey
-              ? `Original: ${song.tonalidad || '—'} · Tocar en este repertorio: ${desiredKey}. Clic para cambiar.`
-              : 'Tonalidad original. Clic para definir en qué tono tocarla en este repertorio (transposición automática).'}
-          >
-            {desiredKey ? `${song.tonalidad || '—'} → ${desiredKey}` : (song.tonalidad || '—')}
-          </button>
-          {isEditingKey && keyPopoverPos && createPortal(
-            <div
-              data-key-popover
-              className="fixed z-[100] bg-bg-[var(--surface)] border  rounded-[var(--r-s)] shadow-2xl p-2 space-y-1.5 w-[200px]"
-              style={{ top: keyPopoverPos.top, left: keyPopoverPos.left }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <p className="text-[9px] font-mono text-text-[var(--ink-2)] px-0.5">Tocar en tono (original: {song.tonalidad || '—'}):</p>
-              <div className="grid grid-cols-4 gap-1">
-                {keyNotes.map(note => (
-                  <button
-                    key={note}
-                    type="button"
-                    onClick={() => handleSetTonalidadDeseada(it.id, note)}
-                    className={`px-1 py-1 rounded text-[10px] font-mono font-bold transition cursor-pointer ${
-                      desiredKey === note ? 'bg-amber-500 text-black' : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
-                    }`}
-                  >
-                    {note}
-                  </button>
-                ))}
-              </div>
-              {desiredKey && (
-                <button
-                  type="button"
-                  onClick={() => handleSetTonalidadDeseada(it.id, null)}
-                  className="w-full text-center text-[9px] font-mono text-text-[var(--ink-2)] hover:text-rose-400 pt-1.5 border-t  cursor-pointer"
-                >
-                  Volver al original ({song.tonalidad || '—'})
-                </button>
-              )}
-            </div>,
-            document.body
-          )}
-        </div>
-      );
-    })()}
+ {(() => {
+ // Tono en el que se quiere tocar ESTE tema en ESTE repertorio (distinto del tono
+ // original de grabación por registro vocal, cantante sustituto, etc.) — se guarda en
+ // el SetlistItem (it.tonalidadDeseada) y el Modo Concierto lo transporta solo.
+ const desiredKey = it.tonalidadDeseada;
+ const isEditingKey = editingKeyItemId === it.id;
+ const KEY_POPOVER_WIDTH_PX = 200;
+ const KEY_POPOVER_HEIGHT_PX = 110;
+ const rawOrigKey = (song.tonalidad || '').trim();
+ const isEsKey = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(rawOrigKey);
+ const baseRoots = isEsKey
+ ? ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si']
+ : ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+ const keyMatch = rawOrigKey.match(/^(Do#|Re#|Fa#|Sol#|La#|Do|Re|Mi|Fa|Sol|La|Si|C#|D#|F#|G#|A#|Db|Eb|Gb|Ab|Bb|C|D|E|F|G|A|B)(.*)$/i);
+ const keySuffix = keyMatch ? keyMatch[2] : '';
+ const keyNotes = baseRoots.map(root => `${root}${keySuffix}`);
+ return (
+ <div className="relative shrink-0">
+ <button
+ type="button"
+ data-key-popover
+ onClick={(e) => {
+ e.stopPropagation();
+ if (isEditingKey) {
+ setEditingKeyItemId(null);
+ return;
+ }
+ const rect = e.currentTarget.getBoundingClientRect();
+ setKeyPopoverPos({
+ top: Math.min(rect.bottom + 4, window.innerHeight - KEY_POPOVER_HEIGHT_PX - 8),
+ left: Math.min(rect.left, window.innerWidth - KEY_POPOVER_WIDTH_PX - 8)
+ });
+ setEditingKeyItemId(it.id);
+ }}
+ className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${
+ desiredKey ? 'bg-amber-500/20 text-amber-400' : 'bg-[#10b981]/15 text-[#10b981]'
+ }`}
+ title={desiredKey
+ ? `Original: ${song.tonalidad || '—'} · Tocar en este repertorio: ${desiredKey}. Clic para cambiar.`
+ : 'Tonalidad original. Clic para definir en qué tono tocarla en este repertorio (transposición automática).'}
+ >
+ {desiredKey ? `${song.tonalidad || '—'} → ${desiredKey}` : (song.tonalidad || '—')}
+ </button>
+ {isEditingKey && keyPopoverPos && createPortal(
+ <div
+ data-key-popover
+ className="fixed z-[100] bg-bg-[var(--surface)] rounded-[var(--r-s)] shadow-2xl p-2 space-y-1.5 w-[200px]"
+ style={{ top: keyPopoverPos.top, left: keyPopoverPos.left }}
+ onClick={(e) => e.stopPropagation()}
+ >
+ <p className="text-[9px] font-mono text-text-[var(--ink-2)] px-0.5">Tocar en tono (original: {song.tonalidad || '—'}):</p>
+ <div className="grid grid-cols-4 gap-1">
+ {keyNotes.map(note => (
+ <button
+ key={note}
+ type="button"
+ onClick={() => handleSetTonalidadDeseada(it.id, note)}
+ className={`px-1 py-1 rounded text-[10px] font-mono font-bold transition cursor-pointer ${
+ desiredKey === note ? 'bg-amber-500 text-black' : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+ }`}
+ >
+ {note}
+ </button>
+ ))}
+ </div>
+ {desiredKey && (
+ <button
+ type="button"
+ onClick={() => handleSetTonalidadDeseada(it.id, null)}
+ className="w-full text-center text-[9px] font-mono text-text-[var(--ink-2)] hover:text-rose-400 pt-1.5 border-t cursor-pointer"
+ >
+ Volver al original ({song.tonalidad || '—'})
+ </button>
+ )}
+ </div>,
+ document.body
+ )}
+ </div>
+ );
+ })()}
 
-    {/* Solo se muestra si hay estructura subida: distingue de un vistazo un cifrado ya
-        comprobado por alguien de la banda de uno recién subido en el que nadie ha confiado
-        todavía — justo lo que hace falta saber antes de fiarse de él en un concierto. */}
-    {song.estructuraDocumentoUrl && (
-      <span
-        className={`text-[8px] font-mono px-1 py-0.5 rounded shrink-0 ${
-          song.estructuraVerificada ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'
-        }`}
-        title={song.estructuraVerificada ? 'Acordes verificados' : 'Acordes sin verificar — revísalos antes de tocarla en directo'}
-      >
-        {song.estructuraVerificada ? '✓' : '⚠️'}
-      </span>
-    )}
+ {/* Solo se muestra si hay estructura subida: distingue de un vistazo un cifrado ya
+ comprobado por alguien de la banda de uno recién subido en el que nadie ha confiado
+ todavía — justo lo que hace falta saber antes de fiarse de él en un concierto. */}
+ {song.estructuraDocumentoUrl && (
+ <span
+ className={`text-[8px] font-mono px-1 py-0.5 rounded shrink-0 ${
+ song.estructuraVerificada ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'
+ }`}
+ title={song.estructuraVerificada ? 'Acordes verificados' : 'Acordes sin verificar — revísalos antes de tocarla en directo'}
+ >
+ {song.estructuraVerificada ? '✓' : '⚠️'}
+ </span>
+ )}
 
-    <span className="text-[9px] font-mono text-text-[var(--ink-2)] shrink-0">
-      {song.bpm ? `${song.bpm}` : '—'}
-    </span>
+ <span className="text-[9px] font-mono text-text-[var(--ink-2)] shrink-0">
+ {song.bpm ? `${song.bpm}` : '—'}
+ </span>
 
-    <span className="text-[9px] font-mono text-[#d1b375] font-bold shrink-0">
-      {song.duracion || '0:00'}
-    </span>
+ <span className="text-[9px] font-mono text-[#d1b375] font-bold shrink-0">
+ {song.duracion || '0:00'}
+ </span>
 
-    {(() => {
-      const energy = getEnergyInfo(song);
-      const currentVal1a10 = Math.max(1, Math.min(10, Math.round((song.energia || 10) / 2)));
-      const isEditingThis = editingEnergyItemId === it.id;
-      // Alto aproximado del popover (10 botones de 20px + padding) para decidir si hay hueco
-      // debajo en el viewport o si hay que abrirlo hacia arriba.
-      const POPOVER_HEIGHT_PX = 36;
-      const POPOVER_WIDTH_PX = 220;
-      return (
-        <div className="relative shrink-0">
-          <button
-            type="button"
-            data-energy-popover
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isEditingThis) {
-                setEditingEnergyItemId(null);
-                return;
-              }
-              const rect = e.currentTarget.getBoundingClientRect();
-              const openUpward = window.innerHeight - rect.bottom < POPOVER_HEIGHT_PX + 8;
-              setEnergyPopoverPos({
-                top: openUpward ? rect.top - POPOVER_HEIGHT_PX - 4 : rect.bottom + 4,
-                left: Math.min(rect.left, window.innerWidth - POPOVER_WIDTH_PX - 8),
-                openUpward
-              });
-              setEditingEnergyItemId(it.id);
-            }}
-            className={`text-[8px] font-mono px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`}
-            title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? ' — fijada a mano' : ''}. Clic para cambiarla.`}
-          >
-            <span>{energy.icon}</span>
-            {song.energiaManual && <span className="ml-0.5" title="Energía fijada a mano">✋</span>}
-          </button>
-          {/* Portal + position:fixed a propósito: la fila vive dentro de una lista con
-              overflow-y-auto (ver contenedor "ITEMS LIST"), así que un popover position:absolute
-              quedaba recortado/oculto por ese overflow en canciones cerca del final del scroll —
-              de ahí que "hubiera que bajar" para verlo. Con fixed + posición calculada al abrir
-              (arriba o abajo según el hueco real en el viewport) escapa a ese clipping. */}
-          {isEditingThis && energyPopoverPos && createPortal(
-            // Selector 1-10 (más fácil de puntuar que 1-20 directamente) — se guarda como
-            // energia = valor*2 para no tocar el resto del sistema, que ya usa escala 1-20.
-            <div
-              data-energy-popover
-              className="fixed z-[100] bg-bg-[var(--surface)] border  rounded-[var(--r-s)] shadow-2xl p-1.5 flex items-center gap-0.5"
-              style={{ top: energyPopoverPos.top, left: energyPopoverPos.left }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {Array.from({ length: 10 }, (_, i) => i + 1).map(val => (
-                <button
-                  key={val}
-                  type="button"
-                  disabled={savingEnergyItemId === it.id}
-                  onClick={() => handleSetEnergiaManual(song, it.id, val)}
-                  className={`w-5 h-5 rounded text-[9px] font-mono font-bold flex items-center justify-center transition disabled:opacity-50 ${
-                    currentVal1a10 === val
-                      ? 'bg-amber-500 text-black'
-                      : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
-                  }`}
-                >
-                  {val}
-                </button>
-              ))}
-            </div>,
-            document.body
-          )}
-        </div>
-      );
-    })()}
+ {(() => {
+ const energy = getEnergyInfo(song);
+ const currentVal1a10 = Math.max(1, Math.min(10, Math.round((song.energia || 10) / 2)));
+ const isEditingThis = editingEnergyItemId === it.id;
+ // Alto aproximado del popover (10 botones de 20px + padding) para decidir si hay hueco
+ // debajo en el viewport o si hay que abrirlo hacia arriba.
+ const POPOVER_HEIGHT_PX = 36;
+ const POPOVER_WIDTH_PX = 220;
+ return (
+ <div className="relative shrink-0">
+ <button
+ type="button"
+ data-energy-popover
+ onClick={(e) => {
+ e.stopPropagation();
+ if (isEditingThis) {
+ setEditingEnergyItemId(null);
+ return;
+ }
+ const rect = e.currentTarget.getBoundingClientRect();
+ const openUpward = window.innerHeight - rect.bottom < POPOVER_HEIGHT_PX + 8;
+ setEnergyPopoverPos({
+ top: openUpward ? rect.top - POPOVER_HEIGHT_PX - 4 : rect.bottom + 4,
+ left: Math.min(rect.left, window.innerWidth - POPOVER_WIDTH_PX - 8),
+ openUpward
+ });
+ setEditingEnergyItemId(it.id);
+ }}
+ className={`text-[8px] font-mono px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`}
+ title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? ' — fijada a mano' : ''}. Clic para cambiarla.`}
+ >
+ <span>{energy.icon}</span>
+ {song.energiaManual && <span className="ml-0.5" title="Energía fijada a mano">✋</span>}
+ </button>
+ {/* Portal + position:fixed a propósito: la fila vive dentro de una lista con
+ overflow-y-auto (ver contenedor "ITEMS LIST"), así que un popover position:absolute
+ quedaba recortado/oculto por ese overflow en canciones cerca del final del scroll —
+ de ahí que "hubiera que bajar" para verlo. Con fixed + posición calculada al abrir
+ (arriba o abajo según el hueco real en el viewport) escapa a ese clipping. */}
+ {isEditingThis && energyPopoverPos && createPortal(
+ // Selector 1-10 (más fácil de puntuar que 1-20 directamente) — se guarda como
+ // energia = valor*2 para no tocar el resto del sistema, que ya usa escala 1-20.
+ <div
+ data-energy-popover
+ className="fixed z-[100] bg-bg-[var(--surface)] rounded-[var(--r-s)] shadow-2xl p-1.5 flex items-center gap-0.5"
+ style={{ top: energyPopoverPos.top, left: energyPopoverPos.left }}
+ onClick={(e) => e.stopPropagation()}
+ >
+ {Array.from({ length: 10 }, (_, i) => i + 1).map(val => (
+ <button
+ key={val}
+ type="button"
+ disabled={savingEnergyItemId === it.id}
+ onClick={() => handleSetEnergiaManual(song, it.id, val)}
+ className={`w-5 h-5 rounded text-[9px] font-mono font-bold flex items-center justify-center transition disabled:opacity-50 ${
+ currentVal1a10 === val
+ ? 'bg-amber-500 text-black'
+ : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+ }`}
+ >
+ {val}
+ </button>
+ ))}
+ </div>,
+ document.body
+ )}
+ </div>
+ );
+ })()}
 
-    {isSelected && (
-      <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500 text-black shrink-0">
-        📌
-      </span>
-    )}
+ {isSelected && (
+ <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500 text-black shrink-0">
+ 📌
+ </span>
+ )}
 
-    {/* Spacer */}
-    <div className="flex-1"></div>
+ {/* Spacer */}
+ <div className="flex-1"></div>
 
-    {/* Notas de miembros / acordes ya no van en la fila compacta — se han movido al panel
-        expandible (ver más abajo): son consultas ocasionales, no algo que se mira en cada fila
-        de cada setlist. Reordenar arriba/abajo se ha quitado por completo: ya lo cubren el drag
-        handle y el joystick del gráfico (seleccionar el punto + ◀▶) sin duplicar el control.
-        AGENTS.md §6. */}
-    {memberNotesCount > 0 && (
-      <span className="text-amber-300 shrink-0" title={`${memberNotesCount} nota(s) de miembros`}>
-        <Users className="w-3 h-3" />
-      </span>
-    )}
+ {/* Notas de miembros / acordes ya no van en la fila compacta — se han movido al panel
+ expandible (ver más abajo): son consultas ocasionales, no algo que se mira en cada fila
+ de cada setlist. Reordenar arriba/abajo se ha quitado por completo: ya lo cubren el drag
+ handle y el joystick del gráfico (seleccionar el punto + ◀▶) sin duplicar el control.
+ AGENTS.md §6. */}
+ {memberNotesCount > 0 && (
+ <span className="text-amber-300 shrink-0" title={`${memberNotesCount} nota(s) de miembros`}>
+ <Users className="w-3 h-3" />
+ </span>
+ )}
 
-    {/* Studio button */}
-    <button
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation();
-        handleOpenStudioModal(song);
-      }}
-      className="p-0.5 text-text-[var(--ink-2)] hover:text-indigo-400 transition-colors shrink-0"
-      title="Abrir Studio de Grabación Multipista & Pistas"
-    >
-      <Headphones className="w-3.5 h-3.5 text-indigo-400" />
-    </button>
+ {/* Studio button */}
+ <button
+ type="button"
+ onClick={(e) => {
+ e.stopPropagation();
+ handleOpenStudioModal(song);
+ }}
+ className="p-0.5 text-text-[var(--ink-2)] hover:text-indigo-400 transition-colors shrink-0"
+ title="Abrir Studio de Grabación Multipista & Pistas"
+ >
+ <Headphones className="w-3.5 h-3.5 text-indigo-400" />
+ </button>
 
-    {/* Probar unión con tema anterior con indicador de calidad (✓ o ✕) */}
-    {index > 0 && activeSetlist.items[index - 1]?.songId && (() => {
-      const prevSong = songs.find(s => s.id === activeSetlist.items[index - 1].songId);
-      const evalUnion = prevSong && song ? evaluarCalidadUnion(prevSong, song) : null;
-      return (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleOpenTransitionPreview(index - 1, index);
-          }}
-          className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0 border ${
-            evalUnion?.status === 'ok'
-              ? 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border-emerald-500/35 hover:border-emerald-500/60'
-              : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border-rose-500/35 hover:border-rose-500/60'
-          }`}
-          title={evalUnion ? `🎧 Probar unión con #${index} (${prevSong?.titulo}): ${evalUnion.title} · ${evalUnion.motivos.join(', ')}` : "🎧 Probar unión y transición con la canción anterior"}
-        >
-          <span>{evalUnion?.icon || '⚡'}</span>
-          <Headphones className="w-3 h-3" />
-        </button>
-      );
-    })()}
+ {/* Probar unión con tema anterior con indicador de calidad (✓ o ✕) */}
+ {index > 0 && activeSetlist.items[index - 1]?.songId && (() => {
+ const prevSong = songs.find(s => s.id === activeSetlist.items[index - 1].songId);
+ const evalUnion = prevSong && song ? evaluarCalidadUnion(prevSong, song) : null;
+ return (
+ <button
+ type="button"
+ onClick={(e) => {
+ e.stopPropagation();
+ handleOpenTransitionPreview(index - 1, index);
+ }}
+ className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0 ${
+ evalUnion?.status === 'ok'
+ ? 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border-emerald-500/35 hover:border-emerald-500/60'
+ : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border-rose-500/35 hover:border-rose-500/60'
+ }`}
+ title={evalUnion ? `🎧 Probar unión con #${index} (${prevSong?.titulo}): ${evalUnion.title} · ${evalUnion.motivos.join(', ')}` : "🎧 Probar unión y transición con la canción anterior"}
+ >
+ <span>{evalUnion?.icon || '⚡'}</span>
+ <Headphones className="w-3 h-3" />
+ </button>
+ );
+ })()}
 
-    {/* Edit song button */}
-    <button
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation();
-        setEditingSong(song);
-        setShowSongModal(true);
-      }}
-      className="p-0.5 text-text-[var(--ink-2)] hover:text-amber-400 transition-colors shrink-0"
-      title="Editar canción"
-    >
-      <Edit3 className="w-3.5 h-3.5" />
-    </button>
+ {/* Edit song button */}
+ <button
+ type="button"
+ onClick={(e) => {
+ e.stopPropagation();
+ setEditingSong(song);
+ setShowSongModal(true);
+ }}
+ className="p-0.5 text-text-[var(--ink-2)] hover:text-amber-400 transition-colors shrink-0"
+ title="Editar canción"
+ >
+ <Edit3 className="w-3.5 h-3.5" />
+ </button>
 
-    {/* Expand button for details */}
-    <button
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation();
-        toggleExpand();
-      }}
-      className="p-0.5 text-text-[var(--ink-2)] hover:text-amber-400 transition-colors shrink-0"
-      title={isExpanded ? "Ocultar detalles" : "Ver afinación, disco, cantante, acordes y notas de miembros"}
-    >
-      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-    </button>
+ {/* Expand button for details */}
+ <button
+ type="button"
+ onClick={(e) => {
+ e.stopPropagation();
+ toggleExpand();
+ }}
+ className="p-0.5 text-text-[var(--ink-2)] hover:text-amber-400 transition-colors shrink-0"
+ title={isExpanded ? "Ocultar detalles" : "Ver afinación, disco, cantante, acordes y notas de miembros"}
+ >
+ {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+ </button>
 
-    <button
-      onClick={() => handleRemoveSetlistItem(it.id)}
-      className="p-0.5 text-text-[var(--ink-2)] hover:text-rose-400 transition-colors shrink-0"
-      title="Quitar del setlist"
-    >
-      <X className="w-3.5 h-3.5" />
-    </button>
-  </div>
+ <button
+ onClick={() => handleRemoveSetlistItem(it.id)}
+ className="p-0.5 text-text-[var(--ink-2)] hover:text-rose-400 transition-colors shrink-0"
+ title="Quitar del setlist"
+ >
+ <X className="w-3.5 h-3.5" />
+ </button>
+ </div>
 
-  {/* ALWAYS SHOW NOTES IF EXIST - Compact line */}
-  {(() => {
-    // La nota "general para el grupo" que se edita en MemberNotesModal/SongModal se guarda en
-    // notasRepertorio, no en notasInternas (un campo distinto, sin UI de edición expuesta aquí)
-    // — mirar notasInternas hacía que esta línea nunca mostrara la nota general recién guardada.
-    // La clave del músico activo siempre se guarda en minúsculas (ver handleNoteChange en
-    // MemberNotesModal/SongModal), así que hay que normalizar currentUser.name igual al buscarla.
-    const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name.toLowerCase()];
-    return (song.notasRepertorio || it.notaTema || userNote) ? (
-      <div className="px-2.5 py-1.5 border-t text-[10px] font-mono space-y-1" onClick={(e) => e.stopPropagation()}>
-        {song.notasRepertorio && (
-          <div className="text-amber-600/80 truncate" title={song.notasRepertorio}>
-            📝 {song.notasRepertorio}
-          </div>
-        )}
-        {userNote && (
-          <div className="text-cyan-600/80 truncate" title={userNote}>
-            👤 {currentUser.name}: {userNote}
-          </div>
-        )}
-        {it.notaTema && (
-          <div className="text-emerald-600/80 truncate" title={it.notaTema}>
-            💡 {it.notaTema}
-          </div>
-        )}
-      </div>
-    ) : null;
-  })()}
+ {/* ALWAYS SHOW NOTES IF EXIST - Compact line */}
+ {(() => {
+ // La nota "general para el grupo" que se edita en MemberNotesModal/SongModal se guarda en
+ // notasRepertorio, no en notasInternas (un campo distinto, sin UI de edición expuesta aquí)
+ // — mirar notasInternas hacía que esta línea nunca mostrara la nota general recién guardada.
+ // La clave del músico activo siempre se guarda en minúsculas (ver handleNoteChange en
+ // MemberNotesModal/SongModal), así que hay que normalizar currentUser.name igual al buscarla.
+ const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name.toLowerCase()];
+ return (song.notasRepertorio || it.notaTema || userNote) ? (
+ <div className="px-2.5 py-1.5 border-t text-[10px] font-mono space-y-1" onClick={(e) => e.stopPropagation()}>
+ {song.notasRepertorio && (
+ <div className="text-amber-600/80 truncate" title={song.notasRepertorio}>
+ 📝 {song.notasRepertorio}
+ </div>
+ )}
+ {userNote && (
+ <div className="text-cyan-600/80 truncate" title={userNote}>
+ 👤 {currentUser.name}: {userNote}
+ </div>
+ )}
+ {it.notaTema && (
+ <div className="text-emerald-600/80 truncate" title={it.notaTema}>
+ 💡 {it.notaTema}
+ </div>
+ )}
+ </div>
+ ) : null;
+ })()}
 
-  {/* EXPANDED DETAILS - Only when isExpanded */}
-  {isExpanded && (
-    <div className={`border-t px-2.5 py-2 text-[9px] font-mono space-y-1 ${isStitchLight ? 'bg-[var(--bg)]' : 'bg-black/20'}`}>
-      {song.cantantePrincipal && (
-        <div className="text-text-[var(--ink-2)]">
-          <span className="font-bold text-neutral-500">Cantante:</span> {song.cantantePrincipal}
-        </div>
-      )}
-      {song.afinacion && (
-        <div className="text-text-[var(--ink-2)]">
-          <span className="font-bold text-neutral-500">Afinación:</span> {song.afinacion}
-        </div>
-      )}
-      {song.albumDisco && (
-        <div className="text-text-[var(--ink-2)]">
-          <span className="font-bold text-neutral-500">Disco:</span> {song.albumDisco}
-        </div>
-      )}
+ {/* EXPANDED DETAILS - Only when isExpanded */}
+ {isExpanded && (
+ <div className={`border-t px-2.5 py-2 text-[9px] font-mono space-y-1 ${isStitchLight ? 'bg-[var(--bg)]' : 'bg-black/20'}`}>
+ {song.cantantePrincipal && (
+ <div className="text-text-[var(--ink-2)]">
+ <span className="font-bold text-neutral-500">Cantante:</span> {song.cantantePrincipal}
+ </div>
+ )}
+ {song.afinacion && (
+ <div className="text-text-[var(--ink-2)]">
+ <span className="font-bold text-neutral-500">Afinación:</span> {song.afinacion}
+ </div>
+ )}
+ {song.albumDisco && (
+ <div className="text-text-[var(--ink-2)]">
+ <span className="font-bold text-neutral-500">Disco:</span> {song.albumDisco}
+ </div>
+ )}
 
-      <input
-        type="text"
-        placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)..."
-        value={it.notaTema || ''}
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => handleUpdateItemNote(it.id, e.target.value)}
-        className={`w-full text-[9px] font-mono px-2 py-1 rounded mt-1 ${
-          isStitchLight
-            ? 'bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-3)]'
-            : 'bg-black/40 text-neutral-300 placeholder:text-neutral-600 border '
-        }`}
-      />
+ <input
+ type="text"
+ placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)..."
+ value={it.notaTema || ''}
+ onClick={(e) => e.stopPropagation()}
+ onChange={(e) => handleUpdateItemNote(it.id, e.target.value)}
+ className={`w-full text-[9px] font-mono px-2 py-1 rounded mt-1 ${
+ isStitchLight
+ ? 'bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-3)]'
+ : 'bg-black/40 text-neutral-300 placeholder:text-neutral-600 '
+ }`}
+ />
 
-      {/* Notas de miembros / acordes / studio */}
-      <div className="flex items-center gap-2 pt-1">
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); setActiveMemberNotesSong(song); }}
-          className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors ${
-            memberNotesCount > 0 ? 'text-amber-300 hover:text-amber-400' : 'text-text-[var(--ink-2)] hover:text-amber-300'
-          }`}
-        >
-          <Users className="w-3 h-3" /> Notas de miembros{memberNotesCount > 0 ? ` (${memberNotesCount})` : ''}
-        </button>
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); setActiveChordsSong(song); }}
-          className="flex items-center gap-1 px-1.5 py-0.5 rounded text-text-[var(--ink-2)] hover:text-indigo-400 transition-colors"
-        >
-          <FileText className="w-3 h-3" /> Acordes
-        </button>
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); handleOpenStudioModal(song); }}
-          className="flex items-center gap-1 px-1.5 py-0.5 rounded text-text-[var(--ink-2)] hover:text-indigo-400 transition-colors"
-        >
-          <Headphones className="w-3 h-3 text-indigo-400" /> Studio multipista
-        </button>
-      </div>
-    </div>
-  )}
+ {/* Notas de miembros / acordes / studio */}
+ <div className="flex items-center gap-2 pt-1">
+ <button
+ type="button"
+ onClick={(e) => { e.stopPropagation(); setActiveMemberNotesSong(song); }}
+ className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors ${
+ memberNotesCount > 0 ? 'text-amber-300 hover:text-amber-400' : 'text-text-[var(--ink-2)] hover:text-amber-300'
+ }`}
+ >
+ <Users className="w-3 h-3" /> Notas de miembros{memberNotesCount > 0 ? ` (${memberNotesCount})` : ''}
+ </button>
+ <button
+ type="button"
+ onClick={(e) => { e.stopPropagation(); setActiveChordsSong(song); }}
+ className="flex items-center gap-1 px-1.5 py-0.5 rounded text-text-[var(--ink-2)] hover:text-indigo-400 transition-colors"
+ >
+ <FileText className="w-3 h-3" /> Acordes
+ </button>
+ <button
+ type="button"
+ onClick={(e) => { e.stopPropagation(); handleOpenStudioModal(song); }}
+ className="flex items-center gap-1 px-1.5 py-0.5 rounded text-text-[var(--ink-2)] hover:text-indigo-400 transition-colors"
+ >
+ <Headphones className="w-3 h-3 text-indigo-400" /> Studio multipista
+ </button>
+ </div>
+ </div>
+ )}
  </div>
  );
  } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
@@ -3932,57 +3932,57 @@ export default function RepertorioSetlists({
  isDragOver ? ' border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
  } ${
  isSelected
-   ? 'border-[var(--acc)] ring-2 ring-[var(--acc)]/30 bg-[var(--acc)]/10 shadow-md'
-   : 'border-[var(--acc)]/50 bg-[#d1b375]/5 hover:border-[var(--acc)]/70'
+ ? 'border-[var(--acc)] ring-2 ring-[var(--acc)]/30 bg-[var(--acc)]/10 shadow-md'
+ : 'border-[var(--acc)]/50 bg-[#d1b375]/5 hover:border-[var(--acc)]/70'
  }`}
  >
  <div className="flex items-center gap-2 px-2.5 py-1.5">
-   {/* Drag Handle */}
-   <div
-     className="cursor-grab active:cursor-grabbing text-[var(--acc)]/70 hover:text-[var(--acc)] transition-colors shrink-0"
-     title="Arrastrar y soltar para reordenar"
-     onClick={(e) => e.stopPropagation()}
-   >
-     <GripVertical className="w-3.5 h-3.5" />
-   </div>
+ {/* Drag Handle */}
+ <div
+ className="cursor-grab active:cursor-grabbing text-[var(--acc)]/70 hover:text-[var(--acc)] transition-colors shrink-0"
+ title="Arrastrar y soltar para reordenar"
+ onClick={(e) => e.stopPropagation()}
+ >
+ <GripVertical className="w-3.5 h-3.5" />
+ </div>
 
-   {/* Icon */}
-   <span className="text-[var(--acc)] shrink-0">⚡</span>
+ {/* Icon */}
+ <span className="text-[var(--acc)] shrink-0">⚡</span>
 
-   {/* Title input - inline */}
-   <input
-     type="text"
-     value={it.tituloCustom || ''}
-     placeholder="Ej: 🔥 BLOQUE 1: CALENTAMIENTO"
-     onClick={(e) => e.stopPropagation()}
-     onChange={(e) => {
-       const val = e.target.value;
-       setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
-         ...s,
-         items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
-       } : s));
-     }}
-     className="bg-transparent text-[13px] font-extrabold font-mono text-[var(--acc)] border-b border-dashed border-[var(--acc)]/40 focus:outline-none min-w-0 flex-1 uppercase tracking-wider"
-   />
+ {/* Title input - inline */}
+ <input
+ type="text"
+ value={it.tituloCustom || ''}
+ placeholder="Ej: 🔥 BLOQUE 1: CALENTAMIENTO"
+ onClick={(e) => e.stopPropagation()}
+ onChange={(e) => {
+ const val = e.target.value;
+ setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
+ ...s,
+ items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
+ } : s));
+ }}
+ className="bg-transparent text-[13px] font-extrabold font-mono text-[var(--acc)] border-b border-dashed border-[var(--acc)]/40 focus:outline-none min-w-0 flex-1 uppercase tracking-wider"
+ />
 
-   {/* Spacer */}
-   <div className="flex-1"></div>
+ {/* Spacer */}
+ <div className="flex-1"></div>
 
-   {/* Controls */}
-   <button
-     onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
-     className="p-0.5 text-[var(--acc)] hover:bg-[var(--acc)]/20 rounded transition-colors shrink-0 cursor-pointer"
-     title="Editar Bloque"
-   >
-     <Edit3 className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleRemoveSetlistItem(it.id)}
-     className="p-0.5 text-text-[var(--ink-2)] hover:text-rose-400 transition-colors shrink-0"
-     title="Eliminar Bloque"
-   >
-     <X className="w-3.5 h-3.5" />
-   </button>
+ {/* Controls */}
+ <button
+ onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
+ className="p-0.5 text-[var(--acc)] hover:bg-[var(--acc)]/20 rounded transition-colors shrink-0 cursor-pointer"
+ title="Editar Bloque"
+ >
+ <Edit3 className="w-3.5 h-3.5" />
+ </button>
+ <button
+ onClick={() => handleRemoveSetlistItem(it.id)}
+ className="p-0.5 text-text-[var(--ink-2)] hover:text-rose-400 transition-colors shrink-0"
+ title="Eliminar Bloque"
+ >
+ <X className="w-3.5 h-3.5" />
+ </button>
  </div>
  </div>
  );
@@ -4009,72 +4009,72 @@ export default function RepertorioSetlists({
  }`}
  >
  <div className="flex items-center gap-2 px-2.5 py-1.5">
-   {/* Drag Handle */}
-   <div
-     className="cursor-grab active:cursor-grabbing text-text-[var(--ink-2)] hover:text-amber-400 transition-colors shrink-0"
-     title="Arrastrar y soltar para reordenar"
-     onClick={(e) => e.stopPropagation()}
-   >
-     <GripVertical className="w-3.5 h-3.5" />
-   </div>
+ {/* Drag Handle */}
+ <div
+ className="cursor-grab active:cursor-grabbing text-text-[var(--ink-2)] hover:text-amber-400 transition-colors shrink-0"
+ title="Arrastrar y soltar para reordenar"
+ onClick={(e) => e.stopPropagation()}
+ >
+ <GripVertical className="w-3.5 h-3.5" />
+ </div>
 
-   {/* Icon */}
-   <span className="text-base shrink-0">{typeConfig.icon}</span>
+ {/* Icon */}
+ <span className="text-base shrink-0">{typeConfig.icon}</span>
 
-   {/* Type Label */}
-   <span className={`text-[8px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded-sm border shrink-0 ${typeConfig.text} ${typeConfig.border}`}>
-     {typeConfig.label}
-   </span>
+ {/* Type Label */}
+ <span className={`text-[8px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded-sm shrink-0 ${typeConfig.text} ${typeConfig.border}`}>
+ {typeConfig.label}
+ </span>
 
-   {/* Duration */}
-   <span className="text-[9px] font-mono text-[var(--acc)] font-bold shrink-0">
-     ⏱️ {durationText}
-   </span>
+ {/* Duration */}
+ <span className="text-[9px] font-mono text-[var(--acc)] font-bold shrink-0">
+ ⏱️ {durationText}
+ </span>
 
-   {/* Title - inline */}
-   <input
-     type="text"
-     value={it.tituloCustom || ''}
-     placeholder="Título/Descripción..."
-     onClick={(e) => e.stopPropagation()}
-     onChange={(e) => {
-       const val = e.target.value;
-       setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
-         ...s,
-         items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
-       } : s));
-     }}
-     className="bg-transparent border-b border-dashed border-white/20 text-[13px] font-bold font-mono text-white focus:outline-none min-w-0 flex-1"
-   />
+ {/* Title - inline */}
+ <input
+ type="text"
+ value={it.tituloCustom || ''}
+ placeholder="Título/Descripción..."
+ onClick={(e) => e.stopPropagation()}
+ onChange={(e) => {
+ const val = e.target.value;
+ setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
+ ...s,
+ items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
+ } : s));
+ }}
+ className="bg-transparent border-b border-dashed border-white/20 text-[13px] font-bold font-mono text-white focus:outline-none min-w-0 flex-1"
+ />
 
-   {isSelected && (
-     <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500 text-black shrink-0">
-       📌
-     </span>
-   )}
+ {isSelected && (
+ <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500 text-black shrink-0">
+ 📌
+ </span>
+ )}
 
-   {/* Controls */}
-   <button
-     onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
-     className="p-0.5 text-text-[var(--ink-2)] hover:bg-neutral-800 rounded transition-colors shrink-0"
-     title="Editar detalles"
-   >
-     <Edit3 className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleRemoveSetlistItem(it.id)}
-     className="p-0.5 text-text-[var(--ink-2)] hover:text-rose-400 transition-colors shrink-0"
-     title="Quitar del setlist"
-   >
-     <X className="w-3.5 h-3.5" />
-   </button>
+ {/* Controls */}
+ <button
+ onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
+ className="p-0.5 text-text-[var(--ink-2)] hover:bg-neutral-800 rounded transition-colors shrink-0"
+ title="Editar detalles"
+ >
+ <Edit3 className="w-3.5 h-3.5" />
+ </button>
+ <button
+ onClick={() => handleRemoveSetlistItem(it.id)}
+ className="p-0.5 text-text-[var(--ink-2)] hover:text-rose-400 transition-colors shrink-0"
+ title="Quitar del setlist"
+ >
+ <X className="w-3.5 h-3.5" />
+ </button>
  </div>
 
  {/* SHOW NOTES IF EXIST */}
  {it.notaTema && (
-   <div className="px-2.5 py-1 border-t text-[8px] font-mono text-white/70 truncate" title={it.notaTema}>
-     💡 {it.notaTema}
-   </div>
+ <div className="px-2.5 py-1 border-t text-[8px] font-mono text-white/70 truncate" title={it.notaTema}>
+ 💡 {it.notaTema}
+ </div>
  )}
  </div>
  );
@@ -4095,659 +4095,659 @@ export default function RepertorioSetlists({
  {/* VIEW 2: DISCOGRAFÍA & CATÁLOGO GENERAL DE TEMAS (UNIFICADO) */}
  {activeTab === 'catalogo' && (
  <div className="space-y-4">
-   {catalogoViewMode === 'albumes' ? (
-     <DiscografiaView
-       songs={songs}
-       albumsList={albumsList}
-       colors={colors}
-       isStitchLight={isStitchLight}
-       bandName={bName}
-       setSongs={setSongs}
-       setSetlists={setSetlists}
-       toggleFavoriteSong={handleToggleFavorite}
-       activePlayerSong={activePlayerSong}
-       isPlayerPlaying={isPlayerPlaying}
-       onSelectSong={(song, autoPlay, queue) => selectPlayerSongWithQueue(song, autoPlay, queue || null)}
-       onRequestDeleteAlbum={(albumName, songCount) => setDeleteAlbumData({ albumName, songCount })}
-       onEditAlbum={(albumName) => setAssignSongsModalData({ isOpen: true, albumName })}
-       onCreateAlbum={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
-       onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
-       onOpenChords={(song) => setActiveChordsSong(song)}
-       onOpenStudio={(song) => handleOpenStudioModal(song)}
-       onEditSong={(song) => { setEditingSong(song); setShowSongModal(true); }}
-       onDeleteSong={(songId) => handleDeleteSong(songId)}
-       onShareSong={(song) => handleShareSong(song)}
-     />
-   ) : (
+ {catalogoViewMode === 'albumes' ? (
+ <DiscografiaView
+ songs={songs}
+ albumsList={albumsList}
+ colors={colors}
+ isStitchLight={isStitchLight}
+ bandName={bName}
+ setSongs={setSongs}
+ setSetlists={setSetlists}
+ toggleFavoriteSong={handleToggleFavorite}
+ activePlayerSong={activePlayerSong}
+ isPlayerPlaying={isPlayerPlaying}
+ onSelectSong={(song, autoPlay, queue) => selectPlayerSongWithQueue(song, autoPlay, queue || null)}
+ onRequestDeleteAlbum={(albumName, songCount) => setDeleteAlbumData({ albumName, songCount })}
+ onEditAlbum={(albumName) => setAssignSongsModalData({ isOpen: true, albumName })}
+ onCreateAlbum={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
+ onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
+ onOpenChords={(song) => setActiveChordsSong(song)}
+ onOpenStudio={(song) => handleOpenStudioModal(song)}
+ onEditSong={(song) => { setEditingSong(song); setShowSongModal(true); }}
+ onDeleteSong={(songId) => handleDeleteSong(songId)}
+ onShareSong={(song) => handleShareSong(song)}
+ />
+ ) : (
  <div className="space-y-4">
  {/* CATALOG PLAYLIST HERO BANNER */}
-  <div className={`relative overflow-hidden rounded-[var(--r-l)] sm:rounded-3xl p-4 sm:p-5 border shadow-sm ${
-    isStitchLight
-      ? 'bg-gradient-to-r from-slate-50 via-indigo-50/30 to-slate-50  text-[var(--ink)]'
-      : 'bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 /80 text-white'
-  }`}>
-    <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
-      <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] bg-[var(--surface)] shadow-md overflow-hidden flex items-center justify-center group">
-        <AlbumCover
-          title={`Repertorio ${bName}`}
-          artist={bName}
-          coverUrl={filteredSongs[0]?.portadaUrl}
-          size={64}
-          onPlay={() => {
-            const first = filteredSongs[0];
-            if (first) {
-              selectPlayerSongWithQueue(first, true, null);
-            }
-          }}
-          isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
-        />
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
-        </div>
-      </div>
-
-      <div className="flex-1 min-w-[180px]">
-        <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-indigo-400">
-          <Disc3 className="w-3.5 h-3.5 animate-spin-slow" />
-          <span>Discografía & Canciones</span>
-        </div>
-        <h1 className="text-base sm:text-lg font-bold tracking-tight leading-tight truncate mt-0.5">
-          Discografía de {bName}
-        </h1>
-        <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--ink-3)] mt-1">
-          <span className="text-emerald-400 font-medium">{songs.length} temas</span>
-          <span>•</span>
-          <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min</span>
-          <span>•</span>
-          <span className="text-amber-400 font-medium">{songs.filter(s => s.favoritoGeneral).length} Favoritos</span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2 shrink-0">
-        <button
-          onClick={() => {
-            if (filteredSongs.length > 0) {
-              const first = filteredSongs[0];
-              selectPlayerSongWithQueue(first, true, null);
-            }
-          }}
-          className="w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-500 hover:scale-105 text-white font-medium flex items-center justify-center shadow-md transition-all cursor-pointer active:scale-95"
-          title="Reproducir Catálogo"
-        >
-          {activePlayerSong && isPlayerPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
-        </button>
-
-        <button
-          onClick={() => setCatalogStatusFilter(catalogStatusFilter === 'favoritos' ? 'todos' : 'favoritos')}
-          className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border whitespace-nowrap ${
-            catalogStatusFilter === 'favoritos'
-              ? 'bg-amber-500/20 text-amber-300 /40 shadow-xs'
-              : 'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:bg-[var(--surface)] hover:text-white'
-          }`}
-        >
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>{catalogStatusFilter === 'favoritos' ? 'Solo Favoritos' : 'Filtrar Favoritos'}</span>
-        </button>
-
-        <button
-          id="btn-add-song"
-          onClick={() => { setEditingSong(null); setShowSongModal(true); }}
-          className="px-3.5 py-2 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Añadir Tema</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  {/* CATALOG FILTERS BAR */}
-  <div className={`p-3.5 sm:p-4 rounded-[var(--r-l)] sm:rounded-3xl flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center border shadow-sm ${
-    isStitchLight ? 'bg-white ' : 'bg-[var(--surface)]/60 /80 backdrop-blur-sm'
-  }`}>
-    <div className="relative flex-1">
-      <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--ink-2)] pointer-events-none" />
-      <input
-        id="search-songs"
-        type="text"
-        placeholder="Buscar temas por título, tonalidad, voz principal o notas..."
-        value={catalogSearch}
-        onChange={(e) => setCatalogSearch(e.target.value)}
-        className={`w-full rounded-[var(--r-m)] pl-9.5 ${catalogSearch ? 'pr-8' : 'pr-3'} py-2 text-xs focus:outline-none transition-all border ${
-          isStitchLight 
-            ? 'bg-white text-[var(--ink)]  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 placeholder:text-[var(--ink-3)]' 
-            : 'bg-slate-950/60 text-slate-100  focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
-        }`}
-      />
-      {catalogSearch && (
-        <button
-          id="search-songs-clear"
-          type="button"
-          onClick={() => setCatalogSearch('')}
-          className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
-            isStitchLight ? 'text-[var(--ink-3)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-[var(--ink-3)] hover:text-white hover:bg-[var(--surface)]'
-          }`}
-          title="Borrar búsqueda"
-        >
-          <X className="w-3.5 h-3.5" />
-        </button>
-      )}
-    </div>
-
-    <div className="flex gap-2 flex-wrap sm:flex-nowrap">
-      {/* Album dropdown */}
-      <select
-        value={catalogAlbumFilter}
-        onChange={(e) => setCatalogAlbumFilter(e.target.value)}
-        className={`text-xs py-2 px-3 rounded-[var(--r-m)] focus:outline-none cursor-pointer border ${
-          isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)]/90 text-slate-200 /80'
-        }`}
-      >
-        <option value="todos">Todos los Discos / EPs</option>
-        {albumsList.filter(a => a !== 'todos').map(alb => (
-          <option key={alb} value={alb}>{alb}</option>
-        ))}
-      </select>
-
-      {/* Status dropdown */}
-      <select
-        value={catalogStatusFilter}
-        onChange={(e) => setCatalogStatusFilter(e.target.value)}
-        className={`text-xs py-2 px-3 rounded-[var(--r-m)] focus:outline-none cursor-pointer border ${
-          isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)]/90 text-slate-200 /80'
-        }`}
-      >
-        <option value="todos">Todos los estados</option>
-        <option value="listo">Listo para Directo</option>
-        <option value="ensayando">Ensayando</option>
-        <option value="componiendo">Componiendo</option>
-        <option value="descartado">Descartado</option>
-      </select>
-
-      <button
-        onClick={() => setGroupByAlbum(!groupByAlbum)}
-        className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all border ${
-          groupByAlbum
-            ? isStitchLight
-              ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
-              : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'
-            : isStitchLight
-              ? 'bg-[var(--bg)] text-[var(--ink-2)] '
-              : 'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:bg-[var(--surface)]'
-        }`}
-      >
-        Agrupar por Álbum
-      </button>
-
-      <button
-        id="btn-normalize-titles"
-        type="button"
-        onClick={handleNormalizeCatalogTitles}
-        title="Formatea todos los títulos del catálogo con Mayúsculas de Nombres Propios (evita títulos todos en mayúsculas o minúsculas)"
-        className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all border flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-95 whitespace-nowrap cursor-pointer ${
-          isStitchLight
-            ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 '
-            : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 /30'
-        }`}
-      >
-        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-        <span>Nombres Propios</span>
-      </button>
-
-      <button
-        id="btn-add-song-filter"
-        onClick={() => { setEditingSong(null); setShowSongModal(true); }}
-        className="px-3.5 py-2 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
-      >
-        <Plus className="w-3.5 h-3.5" />
-        <span>Añadir Tema</span>
-      </button>
-    </div>
-  </div>
-
-  {/* BULK ACTIONS BAR */}
-  {selectedCatalogIds.size > 0 && (
-    <div className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 border ${
-      isStitchLight ? 'bg-indigo-50 border-indigo-200 text-indigo-900' : 'bg-indigo-950/40 border-indigo-800/60 text-indigo-200'
-    }`}>
-      <span className="text-xs font-medium">
-        {selectedCatalogIds.size} canciones seleccionadas
-      </span>
-      <div className="flex items-center gap-2 flex-wrap">
-        <button
-          type="button"
-          onClick={() => handleBulkAddSelectedToSetlist(Array.from(selectedCatalogIds))}
-          className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer transition-all flex items-center gap-1.5 shadow-xs"
-        >
-          <ListPlus className="w-3.5 h-3.5" />
-          <span>Añadir a Repertorio…</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => handleBulkDeleteSongs(Array.from(selectedCatalogIds))}
-          className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 cursor-pointer transition-all flex items-center gap-1.5"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-          <span>Eliminar Seleccionadas</span>
-        </button>
-        <button
-          type="button"
-          onClick={clearCatalogSelection}
-          className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] cursor-pointer transition-all"
-        >
-          Cancelar
-        </button>
-      </div>
-    </div>
-  )}
-
-  {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
-  <div className={`rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden shadow-sm border ${isStitchLight ? 'bg-white ' : 'bg-[var(--surface)]/60 /80 backdrop-blur-sm'}`}>
-    {/* Grid Aligned Header with Bulk Select & Column Identifiers */}
-    <div className={`flex items-center justify-between px-4 py-3 border-b text-xs uppercase tracking-wider ${
-      isStitchLight ? 'bg-[var(--bg)]  text-[var(--ink-2)]' : 'bg-slate-950/40 /80 text-[var(--ink-3)]'
-    }`}>
-      <div className="flex items-center gap-2.5 min-w-0">
-        <input
-          type="checkbox"
-          checked={filteredSongs.length > 0 && filteredSongs.every(s => selectedCatalogIds.has(s.id))}
-          onChange={(e) => {
-            if (e.target.checked) {
-              setSelectedCatalogIds(new Set(filteredSongs.map(s => s.id)));
-            } else {
-              clearCatalogSelection();
-            }
-          }}
-          className="w-3.5 h-3.5 cursor-pointer accent-indigo-600"
-          title="Seleccionar todo lo filtrado"
-        />
-        <span className="font-semibold text-slate-200">
-          {selectedCatalogIds.size > 0 ? `${selectedCatalogIds.size} seleccionadas` : `${filteredSongs.length} temas`}
-        </span>
-        <span className="hidden md:inline text-[11px] opacity-60">
-          • Tono · BPM · Duración · Estado
-        </span>
-      </div>
-
-      <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-3)]">
-        <span className="hidden lg:inline opacity-70">Acciones rápidas:</span>
-        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-400 font-medium">Acordes</span>
-        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-indigo-500/15 text-indigo-300 font-medium">Studio</span>
-        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 font-medium">Notas</span>
-        <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-3)] font-medium border ">Editar</span>
-      </div>
-    </div>
-
-    {/* Tracklist List */}
-    <div className="p-2.5 space-y-1.5">
-      {filteredSongs.length === 0 ? (
-        <div className="text-center py-12 text-zinc-500 font-mono text-xs">
-          No se encontraron canciones con los filtros seleccionados.
-        </div>
-      ) : (
-        filteredSongs.map((s, idx) => {
-          const isPlayingCurrent = activePlayerSong?.id === s.id;
-          const isSelected = selectedCatalogIds.has(s.id);
-          const albumLabel = s.albumDisco || s.album || 'Singles / Sin Disco';
-          const prevAlbumLabel = idx > 0 ? (filteredSongs[idx - 1].albumDisco || filteredSongs[idx - 1].album || 'Singles / Sin Disco') : null;
-          const showAlbumHeader = groupByAlbum && albumLabel !== prevAlbumLabel;
-          const isDraggableCatalog = filteredSongs.length > 1 && !catalogSearch.trim() && catalogAlbumFilter === 'todos' && catalogStatusFilter === 'todos';
-          const isDragging = draggedCatalogSongId === s.id;
-          const isDragOver = dragOverCatalogSongId === s.id;
-
-          return (
-            <React.Fragment key={`${s.id}-${idx}`}>
-              {showAlbumHeader && (
-                <div className="pt-3 pb-1 px-2 flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]">
-                  <span>💿 {albumLabel}</span>
-                  <div className={`h-px flex-1 ${isStitchLight ? 'bg-[var(--sunken)]' : 'bg-zinc-800'}`} />
-                </div>
-              )}
-
-              <SongCardRow
-                song={s}
-                index={idx + 1}
-                isPlayingCurrent={isPlayingCurrent}
-                isPlayerPlaying={isPlayerPlaying}
-                onPlay={() => selectPlayerSongWithQueue(s, true, null)}
-                onSelect={() => {
-                  setEditingSong(s);
-                  setShowSongModal(true);
-                }}
-                onToggleFavorite={() => handleUpdateSongFromStudio({ ...s, favoritoGeneral: !s.favoritoGeneral })}
-                showCheckbox={true}
-                isSelected={isSelected}
-                onToggleSelect={() => toggleCatalogSelect(s.id)}
-                onOpenChords={() => setActiveChordsSong(s)}
-                onOpenMemberNotes={() => setActiveMemberNotesSong(s)}
-                onOpenStudio={() => handleOpenStudioModal(s)}
-                onOpenIris={() => handleOpenStudioModal(s, { openIris: true })}
-                onEditSong={() => {
-                  setEditingSong(s);
-                  setShowSongModal(true);
-                }}
-                onDeleteSong={() => handleDeleteSong(s.id)}
-                onShareSong={() => handleShareSong(s)}
-                externalLink={s.enlaceAcordes}
-                showAlbumBadge={!groupByAlbum}
-                draggable={isDraggableCatalog}
-                isDragging={isDragging}
-                isDragOver={isDragOver}
-                onDragStart={(e) => {
-                  e.dataTransfer.effectAllowed = 'move';
-                  setDraggedCatalogSongId(s.id);
-                }}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  e.dataTransfer.dropEffect = 'move';
-                  if (draggedCatalogSongId && dragOverCatalogSongId !== s.id) {
-                    setDragOverCatalogSongId(s.id);
-                  }
-                }}
-                onDragLeave={() => {
-                  if (dragOverCatalogSongId === s.id) {
-                    setDragOverCatalogSongId(null);
-                  }
-                }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  if (draggedCatalogSongId) {
-                    handleDropCatalogSong(draggedCatalogSongId, s.id);
-                  }
-                  setDraggedCatalogSongId(null);
-                  setDragOverCatalogSongId(null);
-                }}
-                onDragEnd={() => {
-                  setDraggedCatalogSongId(null);
-                  setDragOverCatalogSongId(null);
-                }}
-                colors={colors}
-                isStitchLight={isStitchLight}
-              />
-            </React.Fragment>
-          );
-        })
-      )}
-    </div>
-  </div>
+ <div className={`relative overflow-hidden rounded-[var(--r-l)] sm:rounded-3xl p-4 sm:p-5 shadow-sm ${
+ isStitchLight
+ ? 'bg-gradient-to-r from-slate-50 via-indigo-50/30 to-slate-50 text-[var(--ink)]'
+ : 'bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 /80 text-white'
+ }`}>
+ <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
+ <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] bg-[var(--surface)] shadow-md overflow-hidden flex items-center justify-center group">
+ <AlbumCover
+ title={`Repertorio ${bName}`}
+ artist={bName}
+ coverUrl={filteredSongs[0]?.portadaUrl}
+ size={64}
+ onPlay={() => {
+ const first = filteredSongs[0];
+ if (first) {
+ selectPlayerSongWithQueue(first, true, null);
+ }
+ }}
+ isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
+ />
+ <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+ <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
  </div>
-    )}
+ </div>
+
+ <div className="flex-1 min-w-[180px]">
+ <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-indigo-400">
+ <Disc3 className="w-3.5 h-3.5 animate-spin-slow" />
+ <span>Discografía & Canciones</span>
+ </div>
+ <h1 className="text-base sm:text-lg font-bold tracking-tight leading-tight truncate mt-0.5">
+ Discografía de {bName}
+ </h1>
+ <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--ink-3)] mt-1">
+ <span className="text-emerald-400 font-medium">{songs.length} temas</span>
+ <span>•</span>
+ <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min</span>
+ <span>•</span>
+ <span className="text-amber-400 font-medium">{songs.filter(s => s.favoritoGeneral).length} Favoritos</span>
+ </div>
+ </div>
+
+ <div className="flex items-center gap-2 shrink-0">
+ <button
+ onClick={() => {
+ if (filteredSongs.length > 0) {
+ const first = filteredSongs[0];
+ selectPlayerSongWithQueue(first, true, null);
+ }
+ }}
+ className="w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-500 hover:scale-105 text-white font-medium flex items-center justify-center shadow-md transition-all cursor-pointer active:scale-95"
+ title="Reproducir Catálogo"
+ >
+ {activePlayerSong && isPlayerPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+ </button>
+
+ <button
+ onClick={() => setCatalogStatusFilter(catalogStatusFilter === 'favoritos' ? 'todos' : 'favoritos')}
+ className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
+ catalogStatusFilter === 'favoritos'
+ ? 'bg-amber-500/20 text-amber-300 /40 shadow-xs'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:bg-[var(--surface)] hover:text-white'
+ }`}
+ >
+ <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <span>{catalogStatusFilter === 'favoritos' ? 'Solo Favoritos' : 'Filtrar Favoritos'}</span>
+ </button>
+
+ <button
+ id="btn-add-song"
+ onClick={() => { setEditingSong(null); setShowSongModal(true); }}
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+ >
+ <Plus className="w-3.5 h-3.5" />
+ <span>Añadir Tema</span>
+ </button>
+ </div>
+ </div>
+ </div>
+
+ {/* CATALOG FILTERS BAR */}
+ <div className={`p-3.5 sm:p-4 rounded-[var(--r-l)] sm:rounded-3xl flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center shadow-sm ${
+ isStitchLight ? 'bg-white ' : 'bg-[var(--surface)]/60 /80 backdrop-blur-sm'
+ }`}>
+ <div className="relative flex-1">
+ <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--ink-2)] pointer-events-none" />
+ <input
+ id="search-songs"
+ type="text"
+ placeholder="Buscar temas por título, tonalidad, voz principal o notas..."
+ value={catalogSearch}
+ onChange={(e) => setCatalogSearch(e.target.value)}
+ className={`w-full rounded-[var(--r-m)] pl-9.5 ${catalogSearch ? 'pr-8' : 'pr-3'} py-2 text-xs focus:outline-none transition-all ${
+ isStitchLight 
+ ? 'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 placeholder:text-[var(--ink-3)]' 
+ : 'bg-slate-950/60 text-slate-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
+ }`}
+ />
+ {catalogSearch && (
+ <button
+ id="search-songs-clear"
+ type="button"
+ onClick={() => setCatalogSearch('')}
+ className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
+ isStitchLight ? 'text-[var(--ink-3)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-[var(--ink-3)] hover:text-white hover:bg-[var(--surface)]'
+ }`}
+ title="Borrar búsqueda"
+ >
+ <X className="w-3.5 h-3.5" />
+ </button>
+ )}
+ </div>
+
+ <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+ {/* Album dropdown */}
+ <select
+ value={catalogAlbumFilter}
+ onChange={(e) => setCatalogAlbumFilter(e.target.value)}
+ className={`text-xs py-2 px-3 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)]/90 text-slate-200 /80'
+ }`}
+ >
+ <option value="todos">Todos los Discos / EPs</option>
+ {albumsList.filter(a => a !== 'todos').map(alb => (
+ <option key={alb} value={alb}>{alb}</option>
+ ))}
+ </select>
+
+ {/* Status dropdown */}
+ <select
+ value={catalogStatusFilter}
+ onChange={(e) => setCatalogStatusFilter(e.target.value)}
+ className={`text-xs py-2 px-3 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)]/90 text-slate-200 /80'
+ }`}
+ >
+ <option value="todos">Todos los estados</option>
+ <option value="listo">Listo para Directo</option>
+ <option value="ensayando">Ensayando</option>
+ <option value="componiendo">Componiendo</option>
+ <option value="descartado">Descartado</option>
+ </select>
+
+ <button
+ onClick={() => setGroupByAlbum(!groupByAlbum)}
+ className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all ${
+ groupByAlbum
+ ? isStitchLight
+ ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+ : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'
+ : isStitchLight
+ ? 'bg-[var(--bg)] text-[var(--ink-2)] '
+ : 'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:bg-[var(--surface)]'
+ }`}
+ >
+ Agrupar por Álbum
+ </button>
+
+ <button
+ id="btn-normalize-titles"
+ type="button"
+ onClick={handleNormalizeCatalogTitles}
+ title="Formatea todos los títulos del catálogo con Mayúsculas de Nombres Propios (evita títulos todos en mayúsculas o minúsculas)"
+ className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-95 whitespace-nowrap cursor-pointer ${
+ isStitchLight
+ ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 '
+ : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 /30'
+ }`}
+ >
+ <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <span>Nombres Propios</span>
+ </button>
+
+ <button
+ id="btn-add-song-filter"
+ onClick={() => { setEditingSong(null); setShowSongModal(true); }}
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+ >
+ <Plus className="w-3.5 h-3.5" />
+ <span>Añadir Tema</span>
+ </button>
+ </div>
+ </div>
+
+ {/* BULK ACTIONS BAR */}
+ {selectedCatalogIds.size > 0 && (
+ <div className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 ${
+ isStitchLight ? 'bg-indigo-50 border-indigo-200 text-indigo-900' : 'bg-indigo-950/40 border-indigo-800/60 text-indigo-200'
+ }`}>
+ <span className="text-xs font-medium">
+ {selectedCatalogIds.size} canciones seleccionadas
+ </span>
+ <div className="flex items-center gap-2 flex-wrap">
+ <button
+ type="button"
+ onClick={() => handleBulkAddSelectedToSetlist(Array.from(selectedCatalogIds))}
+ className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer transition-all flex items-center gap-1.5 shadow-xs"
+ >
+ <ListPlus className="w-3.5 h-3.5" />
+ <span>Añadir a Repertorio…</span>
+ </button>
+ <button
+ type="button"
+ onClick={() => handleBulkDeleteSongs(Array.from(selectedCatalogIds))}
+ className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 cursor-pointer transition-all flex items-center gap-1.5"
+ >
+ <Trash2 className="w-3.5 h-3.5" />
+ <span>Eliminar Seleccionadas</span>
+ </button>
+ <button
+ type="button"
+ onClick={clearCatalogSelection}
+ className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] cursor-pointer transition-all"
+ >
+ Cancelar
+ </button>
+ </div>
+ </div>
+ )}
+
+ {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
+ <div className={`rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden shadow-sm ${isStitchLight ? 'bg-white ' : 'bg-[var(--surface)]/60 /80 backdrop-blur-sm'}`}>
+ {/* Grid Aligned Header with Bulk Select & Column Identifiers */}
+ <div className={`flex items-center justify-between px-4 py-3 border-b text-xs uppercase tracking-wider ${
+ isStitchLight ? 'bg-[var(--bg)] text-[var(--ink-2)]' : 'bg-slate-950/40 /80 text-[var(--ink-3)]'
+ }`}>
+ <div className="flex items-center gap-2.5 min-w-0">
+ <input
+ type="checkbox"
+ checked={filteredSongs.length > 0 && filteredSongs.every(s => selectedCatalogIds.has(s.id))}
+ onChange={(e) => {
+ if (e.target.checked) {
+ setSelectedCatalogIds(new Set(filteredSongs.map(s => s.id)));
+ } else {
+ clearCatalogSelection();
+ }
+ }}
+ className="w-3.5 h-3.5 cursor-pointer accent-indigo-600"
+ title="Seleccionar todo lo filtrado"
+ />
+ <span className="font-semibold text-slate-200">
+ {selectedCatalogIds.size > 0 ? `${selectedCatalogIds.size} seleccionadas` : `${filteredSongs.length} temas`}
+ </span>
+ <span className="hidden md:inline text-[11px] opacity-60">
+ • Tono · BPM · Duración · Estado
+ </span>
+ </div>
+
+ <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-3)]">
+ <span className="hidden lg:inline opacity-70">Acciones rápidas:</span>
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-400 font-medium">Acordes</span>
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-indigo-500/15 text-indigo-300 font-medium">Studio</span>
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 font-medium">Notas</span>
+ <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-3)] font-medium ">Editar</span>
+ </div>
+ </div>
+
+ {/* Tracklist List */}
+ <div className="p-2.5 space-y-1.5">
+ {filteredSongs.length === 0 ? (
+ <div className="text-center py-12 text-zinc-500 font-mono text-xs">
+ No se encontraron canciones con los filtros seleccionados.
+ </div>
+ ) : (
+ filteredSongs.map((s, idx) => {
+ const isPlayingCurrent = activePlayerSong?.id === s.id;
+ const isSelected = selectedCatalogIds.has(s.id);
+ const albumLabel = s.albumDisco || s.album || 'Singles / Sin Disco';
+ const prevAlbumLabel = idx > 0 ? (filteredSongs[idx - 1].albumDisco || filteredSongs[idx - 1].album || 'Singles / Sin Disco') : null;
+ const showAlbumHeader = groupByAlbum && albumLabel !== prevAlbumLabel;
+ const isDraggableCatalog = filteredSongs.length > 1 && !catalogSearch.trim() && catalogAlbumFilter === 'todos' && catalogStatusFilter === 'todos';
+ const isDragging = draggedCatalogSongId === s.id;
+ const isDragOver = dragOverCatalogSongId === s.id;
+
+ return (
+ <React.Fragment key={`${s.id}-${idx}`}>
+ {showAlbumHeader && (
+ <div className="pt-3 pb-1 px-2 flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]">
+ <span>💿 {albumLabel}</span>
+ <div className={`h-px flex-1 ${isStitchLight ? 'bg-[var(--sunken)]' : 'bg-zinc-800'}`} />
+ </div>
+ )}
+
+ <SongCardRow
+ song={s}
+ index={idx + 1}
+ isPlayingCurrent={isPlayingCurrent}
+ isPlayerPlaying={isPlayerPlaying}
+ onPlay={() => selectPlayerSongWithQueue(s, true, null)}
+ onSelect={() => {
+ setEditingSong(s);
+ setShowSongModal(true);
+ }}
+ onToggleFavorite={() => handleUpdateSongFromStudio({ ...s, favoritoGeneral: !s.favoritoGeneral })}
+ showCheckbox={true}
+ isSelected={isSelected}
+ onToggleSelect={() => toggleCatalogSelect(s.id)}
+ onOpenChords={() => setActiveChordsSong(s)}
+ onOpenMemberNotes={() => setActiveMemberNotesSong(s)}
+ onOpenStudio={() => handleOpenStudioModal(s)}
+ onOpenIris={() => handleOpenStudioModal(s, { openIris: true })}
+ onEditSong={() => {
+ setEditingSong(s);
+ setShowSongModal(true);
+ }}
+ onDeleteSong={() => handleDeleteSong(s.id)}
+ onShareSong={() => handleShareSong(s)}
+ externalLink={s.enlaceAcordes}
+ showAlbumBadge={!groupByAlbum}
+ draggable={isDraggableCatalog}
+ isDragging={isDragging}
+ isDragOver={isDragOver}
+ onDragStart={(e) => {
+ e.dataTransfer.effectAllowed = 'move';
+ setDraggedCatalogSongId(s.id);
+ }}
+ onDragOver={(e) => {
+ e.preventDefault();
+ e.dataTransfer.dropEffect = 'move';
+ if (draggedCatalogSongId && dragOverCatalogSongId !== s.id) {
+ setDragOverCatalogSongId(s.id);
+ }
+ }}
+ onDragLeave={() => {
+ if (dragOverCatalogSongId === s.id) {
+ setDragOverCatalogSongId(null);
+ }
+ }}
+ onDrop={(e) => {
+ e.preventDefault();
+ if (draggedCatalogSongId) {
+ handleDropCatalogSong(draggedCatalogSongId, s.id);
+ }
+ setDraggedCatalogSongId(null);
+ setDragOverCatalogSongId(null);
+ }}
+ onDragEnd={() => {
+ setDraggedCatalogSongId(null);
+ setDragOverCatalogSongId(null);
+ }}
+ colors={colors}
+ isStitchLight={isStitchLight}
+ />
+ </React.Fragment>
+ );
+ })
+ )}
+ </div>
+ </div>
+ </div>
+ )}
  </div>
  )}
 
  {/* MODAL: ADD / EDIT SONG */}
  {/* key fuerza un remount por canción: SongModal se queda siempre montado (isOpen controla un
-     `return null` interno, no un desmontaje), así que sin key su useState de notas por miembro
-     (y duración/álbum) solo se inicializa una vez para toda la sesión con el primer editingSong
-     que se vio (normalmente null) y nunca se resincroniza al abrir otra canción — ver notas del
-     bug en SongModal.tsx: memberNotesState quedaba "congelado" y el guardado de notas por
-     miembro sobrescribía siempre con ese valor obsoleto/vacío. */}
+ `return null` interno, no un desmontaje), así que sin key su useState de notas por miembro
+ (y duración/álbum) solo se inicializa una vez para toda la sesión con el primer editingSong
+ que se vio (normalmente null) y nunca se resincroniza al abrir otra canción — ver notas del
+ bug en SongModal.tsx: memberNotesState quedaba "congelado" y el guardado de notas por
+ miembro sobrescribía siempre con ese valor obsoleto/vacío. */}
  <SongModal
-   key={showSongModal ? (editingSong?.id || 'new-song') : 'closed'}
-   isOpen={showSongModal}
-    bandMembers={bandRosterMembers}
-   editingSong={editingSong}
-   defaultAlbumForNewSong={defaultAlbumForNewSong}
-   albumsList={albumsList}
-   colors={colors}
-   isStitchLight={isStitchLight}
-   onClose={() => setShowSongModal(false)}
-   onSave={handleSaveSong}
+ key={showSongModal ? (editingSong?.id || 'new-song') : 'closed'}
+ isOpen={showSongModal}
+ bandMembers={bandRosterMembers}
+ editingSong={editingSong}
+ defaultAlbumForNewSong={defaultAlbumForNewSong}
+ albumsList={albumsList}
+ colors={colors}
+ isStitchLight={isStitchLight}
+ onClose={() => setShowSongModal(false)}
+ onSave={handleSaveSong}
  />
 
-  {/* MODAL: ASSIGN SETLIST TO CONCERT OR REHEARSAL */}
-  <AssignSetlistModal
-    assigningSetlist={assigningSetlist}
-    colors={colors}
-    isStitchLight={isStitchLight}
-    concerts={concerts}
-    rehearsals={rehearsals}
-    selectedConcertToAssign={selectedConcertToAssign}
-    onSelectEvent={(id) => setSelectedConcertToAssign(id)}
-    onClose={() => setAssigningSetlist(null)}
-    onSave={handleAssignSetlistToConcert}
-  />
+ {/* MODAL: ASSIGN SETLIST TO CONCERT OR REHEARSAL */}
+ <AssignSetlistModal
+ assigningSetlist={assigningSetlist}
+ colors={colors}
+ isStitchLight={isStitchLight}
+ concerts={concerts}
+ rehearsals={rehearsals}
+ selectedConcertToAssign={selectedConcertToAssign}
+ onSelectEvent={(id) => setSelectedConcertToAssign(id)}
+ onClose={() => setAssigningSetlist(null)}
+ onSave={handleAssignSetlistToConcert}
+ />
 
-  {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
-  {showShowItemModal && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-  <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 shadow-2xl ${colors.card}`}>
-  <div className="flex justify-between items-center pb-3 border-b ">
-  <div className="flex items-center gap-2">
-  <span className="p-2 bg-sky-500/20 text-sky-400 rounded-[var(--r-m)]">⚡</span>
-  <div>
-  <h3 className={`text-sm font-extrabold font-mono uppercase ${colors.text}`}>
-  {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}
-  </h3>
-  <p className="text-[10px] text-text-[var(--ink-2)] font-sans">
-  Organiza momentos del directo (beatbox, presentaciones, bloque de temas, pausas).
-  </p>
-  </div>
-  </div>
-  <button 
-  onClick={() => { setShowShowItemModal(false); setEditingShowItem(null); }} 
-  className="text-text-[var(--ink-2)] hover:text-white p-1 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
-  >
-  <X className="w-5 h-5" />
-  </button>
-  </div>
+ {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
+ {showShowItemModal && (
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+ <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 shadow-2xl ${colors.card}`}>
+ <div className="flex justify-between items-center pb-3 border-b ">
+ <div className="flex items-center gap-2">
+ <span className="p-2 bg-sky-500/20 text-sky-400 rounded-[var(--r-m)]">⚡</span>
+ <div>
+ <h3 className={`text-sm font-extrabold font-mono uppercase ${colors.text}`}>
+ {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}
+ </h3>
+ <p className="text-[10px] text-text-[var(--ink-2)] font-sans">
+ Organiza momentos del directo (beatbox, presentaciones, bloque de temas, pausas).
+ </p>
+ </div>
+ </div>
+ <button 
+ onClick={() => { setShowShowItemModal(false); setEditingShowItem(null); }} 
+ className="text-text-[var(--ink-2)] hover:text-white p-1 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
+ >
+ <X className="w-5 h-5" />
+ </button>
+ </div>
 
-  <form onSubmit={(e) => {
-  e.preventDefault();
-  const form = e.currentTarget;
-  const formData = new FormData(form);
-  const tipo = formData.get('tipoItem') as SetlistItem['tipoItem'];
-  const titulo = formData.get('tituloCustom') as string;
-  const min = parseInt(formData.get('minutos') as string, 10) || 0;
-  const seg = parseInt(formData.get('segundos') as string, 10) || 0;
-  const totalSeg = min * 60 + seg;
-  const notas = formData.get('notaTema') as string;
+ <form onSubmit={(e) => {
+ e.preventDefault();
+ const form = e.currentTarget;
+ const formData = new FormData(form);
+ const tipo = formData.get('tipoItem') as SetlistItem['tipoItem'];
+ const titulo = formData.get('tituloCustom') as string;
+ const min = parseInt(formData.get('minutos') as string, 10) || 0;
+ const seg = parseInt(formData.get('segundos') as string, 10) || 0;
+ const totalSeg = min * 60 + seg;
+ const notas = formData.get('notaTema') as string;
 
-  handleSaveShowItem({
-  tipoItem: tipo,
-  tituloCustom: titulo,
-  duracionEstimadaMinutos: Math.ceil(totalSeg / 60),
-  duracionEstimadaSegundos: totalSeg,
-  notaTema: notas
-  });
-  }} className="space-y-4 text-xs font-mono">
+ handleSaveShowItem({
+ tipoItem: tipo,
+ tituloCustom: titulo,
+ duracionEstimadaMinutos: Math.ceil(totalSeg / 60),
+ duracionEstimadaSegundos: totalSeg,
+ notaTema: notas
+ });
+ }} className="space-y-4 text-xs font-mono">
 
-  <div>
-  <label className="block text-neutral-300 font-bold mb-1">Categoría del Evento *</label>
-  <select
-  name="tipoItem"
-  defaultValue={editingShowItem?.tipoItem || 'presentacion'}
-  className={`w-full p-2.5 rounded-[var(--r-m)] border  focus:outline-none cursor-pointer ${
-  isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
-  }`}
-  onChange={(e) => {
-  const val = e.target.value as keyof typeof SHOW_ITEM_TYPES;
-  const titleInput = (e.target.form?.elements.namedItem('tituloCustom') as HTMLInputElement);
-  if (titleInput && (!titleInput.value || Object.values(SHOW_ITEM_TYPES).some(t => t.label === titleInput.value))) {
-  if (SHOW_ITEM_TYPES[val]) {
-  titleInput.value = SHOW_ITEM_TYPES[val].label;
-  }
-  }
-  }}
-  >
-  {Object.entries(SHOW_ITEM_TYPES).map(([key, config]) => (
-  <option key={key} value={key}>
-  {config.icon} {config.label}
-  </option>
-  ))}
-  </select>
-  </div>
+ <div>
+ <label className="block text-neutral-300 font-bold mb-1">Categoría del Evento *</label>
+ <select
+ name="tipoItem"
+ defaultValue={editingShowItem?.tipoItem || 'presentacion'}
+ className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
+ }`}
+ onChange={(e) => {
+ const val = e.target.value as keyof typeof SHOW_ITEM_TYPES;
+ const titleInput = (e.target.form?.elements.namedItem('tituloCustom') as HTMLInputElement);
+ if (titleInput && (!titleInput.value || Object.values(SHOW_ITEM_TYPES).some(t => t.label === titleInput.value))) {
+ if (SHOW_ITEM_TYPES[val]) {
+ titleInput.value = SHOW_ITEM_TYPES[val].label;
+ }
+ }
+ }}
+ >
+ {Object.entries(SHOW_ITEM_TYPES).map(([key, config]) => (
+ <option key={key} value={key}>
+ {config.icon} {config.label}
+ </option>
+ ))}
+ </select>
+ </div>
 
-  <div>
-  <label className="block text-neutral-300 font-bold mb-1">Título / Nombre en la Hoja de Escenario *</label>
-  <input
-  name="tituloCustom"
-  type="text"
-  required
-  defaultValue={editingShowItem?.tituloCustom || 'Presentación de la Banda'}
-  placeholder="Ej: Solo de guitarra, Saludo al público, Intro acústica..."
-  className={`w-full p-2.5 rounded-[var(--r-m)] border  focus:outline-none ${
-  isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
-  }`}
-  />
-  </div>
+ <div>
+ <label className="block text-neutral-300 font-bold mb-1">Título / Nombre en la Hoja de Escenario *</label>
+ <input
+ name="tituloCustom"
+ type="text"
+ required
+ defaultValue={editingShowItem?.tituloCustom || 'Presentación de la Banda'}
+ placeholder="Ej: Solo de guitarra, Saludo al público, Intro acústica..."
+ className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
+ }`}
+ />
+ </div>
 
-  <div className="p-3 bg-black/40 rounded-[var(--r-m)] border  space-y-2">
-  <label className="block text-amber-400 font-bold text-[11px] flex items-center gap-1.5">
-  <Clock className="w-3.5 h-3.5" />
-  Tiempo Asignado al Evento (Minutos y Segundos) *
-  </label>
-  <div className="grid grid-cols-2 gap-3">
-  <div>
-  <span className="text-[10px] text-text-[var(--ink-2)] block mb-1">Minutos:</span>
-  <input
-  name="minutos"
-  type="number"
-  min="0"
-  max="60"
-  defaultValue={editingShowItem?.duracionEstimadaSegundos ? Math.floor(editingShowItem.duracionEstimadaSegundos / 60) : (editingShowItem?.duracionEstimadaMinutos || 2)}
-  className={`w-full p-2 rounded-[var(--r-s)] border  text-center font-bold text-sm ${
-  isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
-  }`}
-  />
-  </div>
-  <div>
-  <span className="text-[10px] text-text-[var(--ink-2)] block mb-1">Segundos:</span>
-  <input
-  name="segundos"
-  type="number"
-  min="0"
-  max="59"
-  defaultValue={editingShowItem?.duracionEstimadaSegundos ? (editingShowItem.duracionEstimadaSegundos % 60) : 0}
-  className={`w-full p-2 rounded-[var(--r-s)] border  text-center font-bold text-sm ${
-  isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
-  }`}
-  />
-  </div>
-  </div>
-  <p className="text-[9px] text-text-[var(--ink-2)] italic">
-  Este tiempo se suma automáticamente a la duración total del concierto.
-  </p>
-  </div>
+ <div className="p-3 bg-black/40 rounded-[var(--r-m)] space-y-2">
+ <label className="block text-amber-400 font-bold text-[11px] flex items-center gap-1.5">
+ <Clock className="w-3.5 h-3.5" />
+ Tiempo Asignado al Evento (Minutos y Segundos) *
+ </label>
+ <div className="grid grid-cols-2 gap-3">
+ <div>
+ <span className="text-[10px] text-text-[var(--ink-2)] block mb-1">Minutos:</span>
+ <input
+ name="minutos"
+ type="number"
+ min="0"
+ max="60"
+ defaultValue={editingShowItem?.duracionEstimadaSegundos ? Math.floor(editingShowItem.duracionEstimadaSegundos / 60) : (editingShowItem?.duracionEstimadaMinutos || 2)}
+ className={`w-full p-2 rounded-[var(--r-s)] text-center font-bold text-sm ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
+ }`}
+ />
+ </div>
+ <div>
+ <span className="text-[10px] text-text-[var(--ink-2)] block mb-1">Segundos:</span>
+ <input
+ name="segundos"
+ type="number"
+ min="0"
+ max="59"
+ defaultValue={editingShowItem?.duracionEstimadaSegundos ? (editingShowItem.duracionEstimadaSegundos % 60) : 0}
+ className={`w-full p-2 rounded-[var(--r-s)] text-center font-bold text-sm ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
+ }`}
+ />
+ </div>
+ </div>
+ <p className="text-[9px] text-text-[var(--ink-2)] italic">
+ Este tiempo se suma automáticamente a la duración total del concierto.
+ </p>
+ </div>
 
-  <div>
-  <label className="block text-neutral-300 font-bold mb-1">Notas / Cues para la Banda / Sonido (Opcional)</label>
-  <textarea
-  name="notaTema"
-  rows={2}
-  defaultValue={editingShowItem?.notaTema || ''}
-  placeholder="Ej: Foco cenital sobre guitarra solista, aviso de merchandising en mesa, cambio a guitarra en Drop D..."
-  className={`w-full p-2.5 rounded-[var(--r-m)] border  focus:outline-none ${
-  isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
-  }`}
-  />
-  </div>
+ <div>
+ <label className="block text-neutral-300 font-bold mb-1">Notas / Cues para la Banda / Sonido (Opcional)</label>
+ <textarea
+ name="notaTema"
+ rows={2}
+ defaultValue={editingShowItem?.notaTema || ''}
+ placeholder="Ej: Foco cenital sobre guitarra solista, aviso de merchandising en mesa, cambio a guitarra en Drop D..."
+ className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
+ }`}
+ />
+ </div>
 
-  <div className="p-3 bg-black/40 rounded-[var(--r-m)] space-y-3">
-  <div className="flex items-center justify-between">
-    <label className="block text-sky-400 font-bold text-[11px] flex items-center gap-1.5">
-      <Mic className="w-3.5 h-3.5" />
-      Audio de la Presentación / Chapa / Ensayo
-    </label>
-    {showItemAudioUrl && (
-      <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold flex items-center gap-1">
-        <Check className="w-3 h-3" /> Audio Guardado
-      </span>
-    )}
-  </div>
+ <div className="p-3 bg-black/40 rounded-[var(--r-m)] space-y-3">
+ <div className="flex items-center justify-between">
+ <label className="block text-sky-400 font-bold text-[11px] flex items-center gap-1.5">
+ <Mic className="w-3.5 h-3.5" />
+ Audio de la Presentación / Chapa / Ensayo
+ </label>
+ {showItemAudioUrl && (
+ <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold flex items-center gap-1">
+ <Check className="w-3 h-3" /> Audio Guardado
+ </span>
+ )}
+ </div>
 
-  <div className="flex flex-wrap items-center gap-2">
-    {isRecordingShowItem ? (
-      <button
-        type="button"
-        onClick={handleStopRecordingShowItem}
-        className="px-3 py-1.5 rounded-[var(--r-s)] bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 animate-pulse cursor-pointer shadow-lg"
-      >
-        <Square className="w-3.5 h-3.5 fill-current" />
-        <span>Detener Grabación ({recordingShowItemSecs}s)</span>
-      </button>
-    ) : (
-      <button
-        type="button"
-        onClick={handleStartRecordingShowItem}
-        className="px-3 py-1.5 rounded-[var(--r-s)] bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-md"
-      >
-        <Mic className="w-3.5 h-3.5" />
-        <span>{showItemAudioUrl ? 'Regrabar Voz' : 'Grabar Voz'}</span>
-      </button>
-    )}
+ <div className="flex flex-wrap items-center gap-2">
+ {isRecordingShowItem ? (
+ <button
+ type="button"
+ onClick={handleStopRecordingShowItem}
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 animate-pulse cursor-pointer shadow-lg"
+ >
+ <Square className="w-3.5 h-3.5 fill-current" />
+ <span>Detener Grabación ({recordingShowItemSecs}s)</span>
+ </button>
+ ) : (
+ <button
+ type="button"
+ onClick={handleStartRecordingShowItem}
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-md"
+ >
+ <Mic className="w-3.5 h-3.5" />
+ <span>{showItemAudioUrl ? 'Regrabar Voz' : 'Grabar Voz'}</span>
+ </button>
+ )}
 
-    <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer border ">
-      <Upload className="w-3.5 h-3.5 text-sky-400" />
-      <span>Subir MP3 / WAV</span>
-      <input
-        type="file"
-        accept="audio/*"
-        onChange={handleShowItemAudioFileUpload}
-        className="hidden"
-      />
-    </label>
+ <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer ">
+ <Upload className="w-3.5 h-3.5 text-sky-400" />
+ <span>Subir MP3 / WAV</span>
+ <input
+ type="file"
+ accept="audio/*"
+ onChange={handleShowItemAudioFileUpload}
+ className="hidden"
+ />
+ </label>
 
-    {showItemAudioUrl && (
-      <button
-        type="button"
-        onClick={() => {
-          setShowItemAudioUrl('');
-          setRecordingShowItemSecs(0);
-        }}
-        className="p-1.5 rounded-[var(--r-s)] text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 cursor-pointer"
-        title="Eliminar Audio"
-      >
-        <Trash2 className="w-3.5 h-3.5" />
-      </button>
-    )}
-  </div>
+ {showItemAudioUrl && (
+ <button
+ type="button"
+ onClick={() => {
+ setShowItemAudioUrl('');
+ setRecordingShowItemSecs(0);
+ }}
+ className="p-1.5 rounded-[var(--r-s)] text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 cursor-pointer"
+ title="Eliminar Audio"
+ >
+ <Trash2 className="w-3.5 h-3.5" />
+ </button>
+ )}
+ </div>
 
-  {showItemAudioUrl && (
-    <div className="pt-1">
-      <audio src={showItemAudioUrl} controls onError={(e) => e.preventDefault()} className="w-full h-8 accent-sky-500" />
-    </div>
-  )}
+ {showItemAudioUrl && (
+ <div className="pt-1">
+ <audio src={showItemAudioUrl} controls onError={(e) => e.preventDefault()} className="w-full h-8 accent-sky-500" />
+ </div>
+ )}
 
-  <p className="text-[9px] text-text-[var(--ink-2)] italic">
-    Graba o sube la charla o performance para medir la duración exacta e incluirla en el reproductor del concierto.
-  </p>
-  </div>
+ <p className="text-[9px] text-text-[var(--ink-2)] italic">
+ Graba o sube la charla o performance para medir la duración exacta e incluirla en el reproductor del concierto.
+ </p>
+ </div>
 
-  <div className="pt-2 flex justify-end gap-2">
-  <button
-  type="button"
-  onClick={() => { setShowShowItemModal(false); setEditingShowItem(null); }}
-  className="px-3 py-2 rounded-[var(--r-m)] text-text-[var(--ink-2)] hover:bg-neutral-800 text-xs font-mono cursor-pointer"
-  >
-  Cancelar
-  </button>
-  <button
-  type="submit"
-  className="px-4 py-2 rounded-[var(--r-m)] bg-sky-500 text-white font-bold hover:bg-sky-400 shadow-lg text-xs font-mono cursor-pointer flex items-center gap-1.5"
-  >
-  <span>Guardar en Setlist</span>
-  </button>
-  </div>
-  </form>
-  </div>
-  </div>
-  )}
+ <div className="pt-2 flex justify-end gap-2">
+ <button
+ type="button"
+ onClick={() => { setShowShowItemModal(false); setEditingShowItem(null); }}
+ className="px-3 py-2 rounded-[var(--r-m)] text-text-[var(--ink-2)] hover:bg-neutral-800 text-xs font-mono cursor-pointer"
+ >
+ Cancelar
+ </button>
+ <button
+ type="submit"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-sky-500 text-white font-bold hover:bg-sky-400 shadow-lg text-xs font-mono cursor-pointer flex items-center gap-1.5"
+ >
+ <span>Guardar en Setlist</span>
+ </button>
+ </div>
+ </form>
+ </div>
+ </div>
+ )}
 
 
-      {/* PDF Preview Modal */}
-      <PdfExportModal
-        bandMembers={bandRosterMembers}
-        bandLogoUrl={isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : (bandLogoUrl || '')}
-        isOpen={showPdfPreview}
-        activeSetlist={activeSetlist}
-        activeSetlistMetrics={activeSetlistMetrics}
-        songs={songs}
-        isStitchLight={isStitchLight}
-        onClose={() => setShowPdfPreview(false)}
-        bandName={bName}
-        onUpdateSong={handleUpdateSongFromStudio}
-      />
+ {/* PDF Preview Modal */}
+ <PdfExportModal
+ bandMembers={bandRosterMembers}
+ bandLogoUrl={isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : (bandLogoUrl || '')}
+ isOpen={showPdfPreview}
+ activeSetlist={activeSetlist}
+ activeSetlistMetrics={activeSetlistMetrics}
+ songs={songs}
+ isStitchLight={isStitchLight}
+ onClose={() => setShowPdfPreview(false)}
+ bandName={bName}
+ onUpdateSong={handleUpdateSongFromStudio}
+ />
 
  {activeStudioSong && (
  <SongStudioModal
@@ -4755,8 +4755,8 @@ export default function RepertorioSetlists({
  colors={colors}
  isStitchLight={isStitchLight}
  onClose={() => {
-   setActiveStudioSong(null);
-   setActiveStudioOpenIris(false);
+ setActiveStudioSong(null);
+ setActiveStudioOpenIris(false);
  }}
  onUpdateSong={handleUpdateSongFromStudio}
  currentUser={currentUser}
@@ -4766,13 +4766,13 @@ export default function RepertorioSetlists({
  )}
 
  {/* Persistent Spotify Music Player Bottom Bar — `songs` es la cola real de Siguiente/Anterior
-     y del fundido: el catálogo completo por defecto, o el repertorio activo cuando se arrancó
-     con "Reproducir desde aquí" (ver playerQueueOverride/selectPlayerSongWithQueue).
-     Portal a document.body a propósito: el shell raíz de la app (App.tsx) tiene
-     `overflow-clip` en todo el layout, y eso atrapa cualquier `position: fixed` anidado dentro
-     — sin el portal, la barra "fixed" quedaba pegada al final del contenido en vez de al fondo
-     real de la ventana, así que solo se veía al hacer scroll hasta abajo del todo. Mismo truco
-     que el popover de energía (ver energyPopoverPos) para el mismo problema de overflow. */}
+ y del fundido: el catálogo completo por defecto, o el repertorio activo cuando se arrancó
+ con "Reproducir desde aquí" (ver playerQueueOverride/selectPlayerSongWithQueue).
+ Portal a document.body a propósito: el shell raíz de la app (App.tsx) tiene
+ `overflow-clip` en todo el layout, y eso atrapa cualquier `position: fixed` anidado dentro
+ — sin el portal, la barra "fixed" quedaba pegada al final del contenido en vez de al fondo
+ real de la ventana, así que solo se veía al hacer scroll hasta abajo del todo. Mismo truco
+ que el popover de energía (ver energyPopoverPos) para el mismo problema de overflow. */}
  {!activeStudioSong && activePlayerSong && createPortal(
  <SpotifyPlayerBar
  song={activePlayerSong}
@@ -4792,232 +4792,232 @@ export default function RepertorioSetlists({
  )}
 
 {assignSongsModalData && assignSongsModalData.isOpen && (
-  <AssignSongsToAlbumModal
-    isOpen={assignSongsModalData.isOpen}
-    albumName={assignSongsModalData.albumName}
-    songs={songs}
-    colors={colors}
-    isStitchLight={isStitchLight}
-    onClose={() => setAssignSongsModalData(null)}
-    onSaveAlbumSongs={handleSaveAlbumSongs}
-  />
+ <AssignSongsToAlbumModal
+ isOpen={assignSongsModalData.isOpen}
+ albumName={assignSongsModalData.albumName}
+ songs={songs}
+ colors={colors}
+ isStitchLight={isStitchLight}
+ onClose={() => setAssignSongsModalData(null)}
+ onSaveAlbumSongs={handleSaveAlbumSongs}
+ />
 )}
 
 {setlistModalData && setlistModalData.isOpen && (
-  <SetlistModal
-    isOpen={setlistModalData.isOpen}
-    setlistToEdit={setlistModalData.setlistToEdit}
-    colors={colors}
-    isStitchLight={isStitchLight}
-    onClose={() => setSetlistModalData(null)}
-    onSave={handleSaveSetlistModal}
-  />
+ <SetlistModal
+ isOpen={setlistModalData.isOpen}
+ setlistToEdit={setlistModalData.setlistToEdit}
+ colors={colors}
+ isStitchLight={isStitchLight}
+ onClose={() => setSetlistModalData(null)}
+ onSave={handleSaveSetlistModal}
+ />
 )}
 
 {isAddSongsModalOpen && activeSetlist && (
-  <AddSongsToSetlistModal
-    isOpen={isAddSongsModalOpen}
-    songs={songs}
-    existingSongIds={activeSetlist.items.map(it => it.songId).filter((id): id is string => Boolean(id))}
-    colors={colors}
-    isStitchLight={isStitchLight}
-    onClose={() => setIsAddSongsModalOpen(false)}
-    onAddSongs={handleAddMultipleSongsToSetlist}
-  />
+ <AddSongsToSetlistModal
+ isOpen={isAddSongsModalOpen}
+ songs={songs}
+ existingSongIds={activeSetlist.items.map(it => it.songId).filter((id): id is string => Boolean(id))}
+ colors={colors}
+ isStitchLight={isStitchLight}
+ onClose={() => setIsAddSongsModalOpen(false)}
+ onAddSongs={handleAddMultipleSongsToSetlist}
+ />
 )}
-  {/* CHORDS AND SUBSTITUTE GUIDE VIEWER MODAL */}
+ {/* CHORDS AND SUBSTITUTE GUIDE VIEWER MODAL */}
 
-  {/* MEMBER NOTES MODAL */}
-  {activeMemberNotesSong && (
-    <MemberNotesModal
-      isOpen={Boolean(activeMemberNotesSong)}
-      song={activeMemberNotesSong}
-      colors={colors}
-      isStitchLight={isStitchLight}
-      bandMembers={bandRosterMembers}
-      onClose={() => setActiveMemberNotesSong(null)}
-      onSaveSongNotes={handleUpdateSongFromStudio}
-    />
-  )}
-  {activeChordsSong && (
-    <SongChordsViewerModal
-      song={activeChordsSong}
-      onClose={() => setActiveChordsSong(null)}
-      onUpdateSong={handleUpdateSongFromChords}
-    />
-  )}
+ {/* MEMBER NOTES MODAL */}
+ {activeMemberNotesSong && (
+ <MemberNotesModal
+ isOpen={Boolean(activeMemberNotesSong)}
+ song={activeMemberNotesSong}
+ colors={colors}
+ isStitchLight={isStitchLight}
+ bandMembers={bandRosterMembers}
+ onClose={() => setActiveMemberNotesSong(null)}
+ onSaveSongNotes={handleUpdateSongFromStudio}
+ />
+ )}
+ {activeChordsSong && (
+ <SongChordsViewerModal
+ song={activeChordsSong}
+ onClose={() => setActiveChordsSong(null)}
+ onUpdateSong={handleUpdateSongFromChords}
+ />
+ )}
 
-  {/* CONFIRM DELETE MODAL DIALOG */}
-  <ConfirmDeleteModal
-    data={confirmDeleteModal}
-    onClose={() => setConfirmDeleteModal(null)}
-  />
+ {/* CONFIRM DELETE MODAL DIALOG */}
+ <ConfirmDeleteModal
+ data={confirmDeleteModal}
+ onClose={() => setConfirmDeleteModal(null)}
+ />
 
-  {/* CONFIRM DELETE ALBUM MODAL DIALOG */}
-  <ConfirmDeleteAlbumModal
-    data={deleteAlbumData}
-    onClose={() => setDeleteAlbumData(null)}
-    onUnassignSongs={handleUnassignAlbumSongs}
-    onDeleteAlbumAndSongs={handleDeleteAlbumAndSongs}
-  />
+ {/* CONFIRM DELETE ALBUM MODAL DIALOG */}
+ <ConfirmDeleteAlbumModal
+ data={deleteAlbumData}
+ onClose={() => setDeleteAlbumData(null)}
+ onUnassignSongs={handleUnassignAlbumSongs}
+ onDeleteAlbumAndSongs={handleDeleteAlbumAndSongs}
+ />
 
-  {/* SHARE MODAL */}
-  <ShareModal
-    isOpen={shareModalData.isOpen}
-    onClose={() => setShareModalData(prev => ({ ...prev, isOpen: false }))}
-    title={shareModalData.title}
-    subtitle={shareModalData.subtitle}
-    initialText={shareModalData.text}
-    itemType={shareModalData.itemType}
-  />
+ {/* SHARE MODAL */}
+ <ShareModal
+ isOpen={shareModalData.isOpen}
+ onClose={() => setShareModalData(prev => ({ ...prev, isOpen: false }))}
+ title={shareModalData.title}
+ subtitle={shareModalData.subtitle}
+ initialText={shareModalData.text}
+ itemType={shareModalData.itemType}
+ />
 
-  {/* SPOTIFY DISCOGRAPHY IMPORT MODAL */}
-  <SpotifyDiscographyModal
-    isOpen={isSpotifyModalOpen}
-    onClose={() => setIsSpotifyModalOpen(false)}
-    bandName={bName}
-    existingSongs={songs}
-    colors={colors}
-    isStitchLight={isStitchLight}
-    onSongsImported={(updatedSongs) => {
-      setSongs(updatedSongs);
-    }}
-  />
+ {/* SPOTIFY DISCOGRAPHY IMPORT MODAL */}
+ <SpotifyDiscographyModal
+ isOpen={isSpotifyModalOpen}
+ onClose={() => setIsSpotifyModalOpen(false)}
+ bandName={bName}
+ existingSongs={songs}
+ colors={colors}
+ isStitchLight={isStitchLight}
+ onSongsImported={(updatedSongs) => {
+ setSongs(updatedSongs);
+ }}
+ />
 
-  {/* LIGHTWEIGHT AI CHORDS/LYRICS ANALYSIS STATUS BANNER */}
-  {statusBanner && (
-    <div
-      className={`fixed bottom-5 right-5 z-[9999] flex items-center gap-2.5 px-4 py-3 rounded-[var(--r-l)] border shadow-2xl text-xs font-mono max-w-sm ${
-        statusBanner.type === 'success'
-          ? 'bg-emerald-950 border-emerald-700/60 text-emerald-100'
-          : statusBanner.type === 'error'
-          ? 'bg-rose-950 border-rose-700/60 text-rose-100'
-          : statusBanner.type === 'warning'
-          ? 'bg-amber-950 /60 text-amber-100'
-          : 'bg-bg-[var(--surface)]  text-bg-[var(--sunken)]'
-      }`}
-    >
-      {statusBanner.type === 'loading' && (
-        <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
-      )}
-      <span>{statusBanner.text}</span>
-    </div>
-  )}
+ {/* LIGHTWEIGHT AI CHORDS/LYRICS ANALYSIS STATUS BANNER */}
+ {statusBanner && (
+ <div
+ className={`fixed bottom-5 right-5 z-[9999] flex items-center gap-2.5 px-4 py-3 rounded-[var(--r-l)] shadow-2xl text-xs font-mono max-w-sm ${
+ statusBanner.type === 'success'
+ ? 'bg-emerald-950 border-emerald-700/60 text-emerald-100'
+ : statusBanner.type === 'error'
+ ? 'bg-rose-950 border-rose-700/60 text-rose-100'
+ : statusBanner.type === 'warning'
+ ? 'bg-amber-950 /60 text-amber-100'
+ : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]'
+ }`}
+ >
+ {statusBanner.type === 'loading' && (
+ <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+ )}
+ <span>{statusBanner.text}</span>
+ </div>
+ )}
 
-  {/* AI SETLIST ANALYSIS MODAL */}
-  <SetlistAIAnalysisModal
-    isOpen={showAIAnalysisModal}
-    onClose={() => {
-      setShowAIAnalysisModal(false);
-      setHighlightedSongIds([]);
-    }}
-    setlistId={activeSetlist?.id || ''}
-    setlistName={activeSetlist?.nombre}
-    initialAnalysis={aiAnalysisResult}
-    onAnalysisComplete={(analysis) => {
-      setAiAnalysisResult(analysis);
-      setAiAnalysisLoading(false);
-    }}
-    onHighlightSongs={setHighlightedSongIds}
-    highlightedSongIds={highlightedSongIds}
-    chartData={chartData}
-    yDomain={yDomain}
-    zonasEnergia={ZONAS_ENERGIA}
-    warnings={energyAnalysis.warnings}
-    onReorder={reorderSetlistItems}
-    onEnergyChange={handleEnergyChartDrag}
-    canUndo={canUndoReorder}
-    onUndo={undoLastReorder}
-    undoSourceKey={undoSourceKey}
-  />
+ {/* AI SETLIST ANALYSIS MODAL */}
+ <SetlistAIAnalysisModal
+ isOpen={showAIAnalysisModal}
+ onClose={() => {
+ setShowAIAnalysisModal(false);
+ setHighlightedSongIds([]);
+ }}
+ setlistId={activeSetlist?.id || ''}
+ setlistName={activeSetlist?.nombre}
+ initialAnalysis={aiAnalysisResult}
+ onAnalysisComplete={(analysis) => {
+ setAiAnalysisResult(analysis);
+ setAiAnalysisLoading(false);
+ }}
+ onHighlightSongs={setHighlightedSongIds}
+ highlightedSongIds={highlightedSongIds}
+ chartData={chartData}
+ yDomain={yDomain}
+ zonasEnergia={ZONAS_ENERGIA}
+ warnings={energyAnalysis.warnings}
+ onReorder={reorderSetlistItems}
+ onEnergyChange={handleEnergyChartDrag}
+ canUndo={canUndoReorder}
+ onUndo={undoLastReorder}
+ undoSourceKey={undoSourceKey}
+ />
 
-  {/* PERFECT SETLIST PLAN MODAL */}
-  <PerfectSetlistModal
-    isOpen={showPerfectSetlistModal}
-    onClose={() => setShowPerfectSetlistModal(false)}
-    setlistName={activeSetlist?.nombre}
-    loading={perfectSetlistLoading}
-    plan={perfectSetlistPlan}
-    error={perfectSetlistError}
-    onGenerate={handleGeneratePerfectSetlist}
-    onApplyAction={applyPerfectSetlistAction}
-    canUndo={canUndoReorder}
-    onUndo={undoLastReorder}
-    undoSourceKey={undoSourceKey}
-    chartData={chartData}
-    yDomain={yDomain}
-    zonasEnergia={ZONAS_ENERGIA}
-    onReorder={reorderSetlistItems}
-    onEnergyChange={handleEnergyChartDrag}
-  />
+ {/* PERFECT SETLIST PLAN MODAL */}
+ <PerfectSetlistModal
+ isOpen={showPerfectSetlistModal}
+ onClose={() => setShowPerfectSetlistModal(false)}
+ setlistName={activeSetlist?.nombre}
+ loading={perfectSetlistLoading}
+ plan={perfectSetlistPlan}
+ error={perfectSetlistError}
+ onGenerate={handleGeneratePerfectSetlist}
+ onApplyAction={applyPerfectSetlistAction}
+ canUndo={canUndoReorder}
+ onUndo={undoLastReorder}
+ undoSourceKey={undoSourceKey}
+ chartData={chartData}
+ yDomain={yDomain}
+ zonasEnergia={ZONAS_ENERGIA}
+ onReorder={reorderSetlistItems}
+ onEnergyChange={handleEnergyChartDrag}
+ />
 
-  {/* IMPORT SETLIST FROM PHOTO/PDF MODAL */}
-  <ImportSetlistModal
-    isOpen={showImportSetlistModal}
-    onClose={() => setShowImportSetlistModal(false)}
-    catalogSongs={songs}
-    onCreated={handleSetlistImported}
-  />
+ {/* IMPORT SETLIST FROM PHOTO/PDF MODAL */}
+ <ImportSetlistModal
+ isOpen={showImportSetlistModal}
+ onClose={() => setShowImportSetlistModal(false)}
+ catalogSongs={songs}
+ onCreated={handleSetlistImported}
+ />
 
-  {/* SETLIST PERFORMANCE VIEW (CONCIERTO EN VIVO O MODO ENSAYO) */}
-  {performanceSetlistId && (
-    <SetlistPerformanceView
-      setlist={setlists.find(s => s.id === performanceSetlistId)!}
-      songs={songs}
-      initialMode={performanceInitialMode}
-      onClose={() => setPerformanceSetlistId(null)}
-      onOpenStudioModal={(song) => handleOpenStudioModal(song)}
-      onUpdateSong={handleUpdateSongFromStudio}
-      currentUser={currentUser}
-    />
-  )}
+ {/* SETLIST PERFORMANCE VIEW (CONCIERTO EN VIVO O MODO ENSAYO) */}
+ {performanceSetlistId && (
+ <SetlistPerformanceView
+ setlist={setlists.find(s => s.id === performanceSetlistId)!}
+ songs={songs}
+ initialMode={performanceInitialMode}
+ onClose={() => setPerformanceSetlistId(null)}
+ onOpenStudioModal={(song) => handleOpenStudioModal(song)}
+ onUpdateSong={handleUpdateSongFromStudio}
+ currentUser={currentUser}
+ />
+ )}
 
-  {/* SONG TRANSITION PREVIEW MODAL (PROBAR UNIÓN Y ENLACE AUDITIVO ENTRE TEMAS) */}
-  {transitionPreviewData?.isOpen && transitionPreviewData.songA && transitionPreviewData.songB && (
-    <SongTransitionPreviewModal
-      isOpen={transitionPreviewData.isOpen}
-      onClose={() => setTransitionPreviewData(null)}
-      songA={transitionPreviewData.songA}
-      songB={transitionPreviewData.songB}
-      itemA={transitionPreviewData.itemA}
-      itemB={transitionPreviewData.itemB}
-      indexA={transitionPreviewData.indexA}
-      indexB={transitionPreviewData.indexB}
-      totalItemsCount={activeSetlist?.items?.length || 0}
-      onNavigateTransition={(newIdxA, newIdxB) => {
-        handleOpenTransitionPreview(newIdxA, newIdxB);
-      }}
-      onSwapSongs={(idxA, idxB) => {
-        reorderSetlistItems(idxA, idxB);
-        setTransitionPreviewData((prev) => (prev ? {
-          ...prev,
-          songA: prev.songB,
-          songB: prev.songA,
-          itemA: prev.itemB,
-          itemB: prev.itemA
-        } : null));
-      }}
-      onInsertInterludio={(afterItemId) => {
-        handleAddItemToSetlist(
-          undefined,
-          'chapa',
-          'Charla / Interludio',
-          1,
-          60,
-          'Transición hablada para modular tono o descanso',
-          afterItemId
-        );
-      }}
-      onUpdateSong={handleUpdateSongFromStudio}
-    />
-  )}
+ {/* SONG TRANSITION PREVIEW MODAL (PROBAR UNIÓN Y ENLACE AUDITIVO ENTRE TEMAS) */}
+ {transitionPreviewData?.isOpen && transitionPreviewData.songA && transitionPreviewData.songB && (
+ <SongTransitionPreviewModal
+ isOpen={transitionPreviewData.isOpen}
+ onClose={() => setTransitionPreviewData(null)}
+ songA={transitionPreviewData.songA}
+ songB={transitionPreviewData.songB}
+ itemA={transitionPreviewData.itemA}
+ itemB={transitionPreviewData.itemB}
+ indexA={transitionPreviewData.indexA}
+ indexB={transitionPreviewData.indexB}
+ totalItemsCount={activeSetlist?.items?.length || 0}
+ onNavigateTransition={(newIdxA, newIdxB) => {
+ handleOpenTransitionPreview(newIdxA, newIdxB);
+ }}
+ onSwapSongs={(idxA, idxB) => {
+ reorderSetlistItems(idxA, idxB);
+ setTransitionPreviewData((prev) => (prev ? {
+ ...prev,
+ songA: prev.songB,
+ songB: prev.songA,
+ itemA: prev.itemB,
+ itemB: prev.itemA
+ } : null));
+ }}
+ onInsertInterludio={(afterItemId) => {
+ handleAddItemToSetlist(
+ undefined,
+ 'chapa',
+ 'Charla / Interludio',
+ 1,
+ 60,
+ 'Transición hablada para modular tono o descanso',
+ afterItemId
+ );
+ }}
+ onUpdateSong={handleUpdateSongFromStudio}
+ />
+ )}
 
-  {/* Tutorial Interactivo Paso a Paso */}
-  <ModuleTutorialModal
-    moduleId="repertorio"
-    isOpen={isTutorialOpen}
-    onClose={closeTutorial}
-  />
+ {/* Tutorial Interactivo Paso a Paso */}
+ <ModuleTutorialModal
+ moduleId="repertorio"
+ isOpen={isTutorialOpen}
+ onClose={closeTutorial}
+ />
 </div>
  );
 }

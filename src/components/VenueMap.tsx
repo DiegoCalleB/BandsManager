@@ -526,13 +526,13 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  let cleanMapImg = lead.imagen_url || '';
  if (cleanMapImg.includes('icon.horse/icon/')) {
-   const domain = cleanMapImg.replace(/https?:\/\/icon\.horse\/icon\//, '').split('/')[0];
-   if (domain) cleanMapImg = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+ const domain = cleanMapImg.replace(/https?:\/\/icon\.horse\/icon\//, '').split('/')[0];
+ if (domain) cleanMapImg = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
  }
 
  const fallbackIcon = (lead.icono && !lead.icono.startsWith('http'))
-   ? lead.icono
-   : (lead.tipo === 'festival' ? '🎪' : lead.tipo === 'ayuntamiento' ? '🏛️' : lead.tipo === 'discoteca' ? '🪩' : lead.tipo === 'medio' ? '📻' : lead.tipo === 'grupo' ? '🎸' : '🏛️');
+ ? lead.icono
+ : (lead.tipo === 'festival' ? '🎪' : lead.tipo === 'ayuntamiento' ? '🏛️' : lead.tipo === 'discoteca' ? '🪩' : lead.tipo === 'medio' ? '📻' : lead.tipo === 'grupo' ? '🎸' : '🏛️');
 
  const venueIconHtml = cleanMapImg ? `
  <img src="${cleanMapImg}" onerror="this.style.display='none'" style="
@@ -764,19 +764,19 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  }, [geoPositions, leads, isStitchLight, mapStyle, activeCityFilter, activeRegionFilter]);
 
  
-  // Invalidate size on container resize (without resetting zoom/bounds on cluster expand)
-  useEffect(() => {
-    if (!leafletMap.current || !mapRef.current) return;
-    const observer = new ResizeObserver(() => {
-      if (leafletMap.current) {
-        leafletMap.current.invalidateSize();
-      }
-    });
-    observer.observe(mapRef.current);
-    return () => observer.disconnect();
-  }, []);
+ // Invalidate size on container resize (without resetting zoom/bounds on cluster expand)
+ useEffect(() => {
+ if (!leafletMap.current || !mapRef.current) return;
+ const observer = new ResizeObserver(() => {
+ if (leafletMap.current) {
+ leafletMap.current.invalidateSize();
+ }
+ });
+ observer.observe(mapRef.current);
+ return () => observer.disconnect();
+ }, []);
 
-  // Focus on selected lead when user selects a venue
+ // Focus on selected lead when user selects a venue
  useEffect(() => {
  if (!leafletMap.current || !selectedLead) return;
  const pos = geoPositions[selectedLead.id];

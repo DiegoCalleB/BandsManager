@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 interface ModalPortalProps {
-  children: React.ReactNode;
-  isOpen?: boolean;
-  onClose?: () => void;
-  lockScroll?: boolean;
+ children: React.ReactNode;
+ isOpen?: boolean;
+ onClose?: () => void;
+ lockScroll?: boolean;
 }
 
 /**
@@ -15,47 +15,47 @@ interface ModalPortalProps {
  * filters, or overflow-hidden stacking contexts on mobile devices and desktops.
  */
 export const ModalPortal: React.FC<ModalPortalProps> = ({
-  children,
-  isOpen = true,
-  onClose,
-  lockScroll = true,
+ children,
+ isOpen = true,
+ onClose,
+ lockScroll = true,
 }) => {
-  const [mounted, setMounted] = useState(false);
+ const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
+ useEffect(() => {
+ setMounted(true);
+ return () => setMounted(false);
+ }, []);
 
-  useEffect(() => {
-    if (!isOpen || !lockScroll || typeof document === 'undefined') return;
+ useEffect(() => {
+ if (!isOpen || !lockScroll || typeof document === 'undefined') return;
 
-    const originalOverflow = document.body.style.overflow;
-    const originalTouchAction = document.body.style.touchAction;
+ const originalOverflow = document.body.style.overflow;
+ const originalTouchAction = document.body.style.touchAction;
 
-    // Prevent background scrolling while modal is open on mobile and desktop
-    document.body.style.overflow = 'hidden';
+ // Prevent background scrolling while modal is open on mobile and desktop
+ document.body.style.overflow = 'hidden';
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && onClose) {
-        onClose();
-      }
-    };
+ const handleKeyDown = (e: KeyboardEvent) => {
+ if (e.key === 'Escape' && onClose) {
+ onClose();
+ }
+ };
 
-    window.addEventListener('keydown', handleKeyDown);
+ window.addEventListener('keydown', handleKeyDown);
 
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.touchAction = originalTouchAction;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, lockScroll, onClose]);
+ return () => {
+ document.body.style.overflow = originalOverflow;
+ document.body.style.touchAction = originalTouchAction;
+ window.removeEventListener('keydown', handleKeyDown);
+ };
+ }, [isOpen, lockScroll, onClose]);
 
-  if (!mounted || !isOpen || typeof document === 'undefined') {
-    return null;
-  }
+ if (!mounted || !isOpen || typeof document === 'undefined') {
+ return null;
+ }
 
-  return createPortal(children, document.body);
+ return createPortal(children, document.body);
 };
 
 export default ModalPortal;

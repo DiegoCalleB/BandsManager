@@ -4,203 +4,203 @@ import { ModalPortal } from '../common/ModalPortal';
 import { Song } from '../../types';
 
 interface SongStudioAiMusicModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  song?: Song;
-  onAddGeneratedAudio?: (audioUrl: string, title: string) => void;
+ isOpen: boolean;
+ onClose: () => void;
+ song?: Song;
+ onAddGeneratedAudio?: (audioUrl: string, title: string) => void;
 }
 
 export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
-  isOpen,
-  onClose,
-  song,
-  onAddGeneratedAudio
+ isOpen,
+ onClose,
+ song,
+ onAddGeneratedAudio
 }) => {
-  const [prompt, setPrompt] = useState(
-    song ? `Soundtrack or background vibe for song "${song.titulo}" (${song.tonalidad || 'C'}, ${song.bpm || 120} BPM)` : 'Epic energetic rock soundtrack for indie band'
-  );
-  const [style, setStyle] = useState('rock independiente / alternativo');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedAudioUrl, setGeneratedAudioUrl] = useState<string | null>(null);
-  const [generatedLyrics, setGeneratedLyrics] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
+ const [prompt, setPrompt] = useState(
+ song ? `Soundtrack or background vibe for song "${song.titulo}" (${song.tonalidad || 'C'}, ${song.bpm || 120} BPM)` : 'Epic energetic rock soundtrack for indie band'
+ );
+ const [style, setStyle] = useState('rock independiente / alternativo');
+ const [isGenerating, setIsGenerating] = useState(false);
+ const [generatedAudioUrl, setGeneratedAudioUrl] = useState<string | null>(null);
+ const [generatedLyrics, setGeneratedLyrics] = useState<string>('');
+ const [error, setError] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+ if (!isOpen) return null;
 
-  const handleGenerate = async () => {
-    setIsGenerating(true);
-    setError(null);
-    setGeneratedAudioUrl(null);
-    setGeneratedLyrics('');
+ const handleGenerate = async () => {
+ setIsGenerating(true);
+ setError(null);
+ setGeneratedAudioUrl(null);
+ setGeneratedLyrics('');
 
-    try {
-      const res = await fetch('/api/ai-music/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt,
-          style,
-          lyrics: song?.notasInternas || song?.titulo || 'Bakandeya independent spirit'
-        })
-      });
+ try {
+ const res = await fetch('/api/ai-music/generate', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({
+ prompt,
+ style,
+ lyrics: song?.notasInternas || song?.titulo || 'Bakandeya independent spirit'
+ })
+ });
 
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Error al generar la música con IA');
-      }
+ const data = await res.json();
+ if (!res.ok || !data.success) {
+ throw new Error(data.error || 'Error al generar la música con IA');
+ }
 
-      // Convert base64 audio to Blob URL
-      const byteCharacters = atob(data.audioBase64);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: data.mimeType || 'audio/wav' });
-      const audioUrl = URL.createObjectURL(blob);
+ // Convert base64 audio to Blob URL
+ const byteCharacters = atob(data.audioBase64);
+ const byteNumbers = new Array(byteCharacters.length);
+ for (let i = 0; i < byteCharacters.length; i++) {
+ byteNumbers[i] = byteCharacters.charCodeAt(i);
+ }
+ const byteArray = new Uint8Array(byteNumbers);
+ const blob = new Blob([byteArray], { type: data.mimeType || 'audio/wav' });
+ const audioUrl = URL.createObjectURL(blob);
 
-      setGeneratedAudioUrl(audioUrl);
-      setGeneratedLyrics(data.lyrics || '');
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || 'Error de conexión con el motor de audio Lyria AI');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+ setGeneratedAudioUrl(audioUrl);
+ setGeneratedLyrics(data.lyrics || '');
+ } catch (err: any) {
+ console.error(err);
+ setError(err.message || 'Error de conexión con el motor de audio Lyria AI');
+ } finally {
+ setIsGenerating(false);
+ }
+ };
 
-  return (
-    <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-        <div className="w-full max-w-xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                <Radio className="w-5 h-5 animate-pulse" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold">Generador AI de Soundtracks & Jingles (Lyria)</h3>
-                <p className="text-xs text-amber-300 font-mono">Creación de música basada en el estilo y letras de la banda</p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-1.5 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+ return (
+ <ModalPortal isOpen={isOpen} onClose={onClose}>
+ <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="w-full max-w-xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+ <div className="flex items-center justify-between border-b border-white/10 pb-3">
+ <div className="flex items-center gap-2.5">
+ <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 flex items-center justify-center">
+ <Radio className="w-5 h-5 animate-pulse" />
+ </div>
+ <div>
+ <h3 className="text-base font-bold">Generador AI de Soundtracks & Jingles (Lyria)</h3>
+ <p className="text-xs text-amber-300 font-mono">Creación de música basada en el estilo y letras de la banda</p>
+ </div>
+ </div>
+ <button
+ type="button"
+ onClick={onClose}
+ className="p-1.5 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white"
+ >
+ <X className="w-5 h-5" />
+ </button>
+ </div>
 
-          <div className="p-3 rounded-[var(--r-m)] bg-amber-950/20 text-xs text-amber-200 space-y-1">
-            <p className="font-semibold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Motor de Audio Generativo IA
-            </p>
-            <p className="text-[11px] text-text-[var(--ink-3)] leading-relaxed">
-              Genera bandas sonoras originales, jingles corporativos o música de fondo para teasers de redes sociales y directos usando el estilo musical, ideología y letras de tu banda.
-            </p>
-          </div>
+ <div className="p-3 rounded-[var(--r-m)] bg-amber-950/20 text-xs text-amber-200 space-y-1">
+ <p className="font-semibold flex items-center gap-1.5">
+ <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Motor de Audio Generativo IA
+ </p>
+ <p className="text-[11px] text-text-[var(--ink-3)] leading-relaxed">
+ Genera bandas sonoras originales, jingles corporativos o música de fondo para teasers de redes sociales y directos usando el estilo musical, ideología y letras de tu banda.
+ </p>
+ </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="text-xs font-mono text-text-[var(--ink-2)] block mb-1">Estilo Musical de la Banda</label>
-              <input
-                type="text"
-                value={style}
-                onChange={(e) => setStyle(e.target.value)}
-                placeholder="Ej: Rock alternativo, post-punk, psicodelia..."
-                className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black border  text-xs text-white focus:outline-none focus: font-mono"
-              />
-            </div>
+ <div className="space-y-4">
+ <div>
+ <label className="text-xs font-mono text-text-[var(--ink-2)] block mb-1">Estilo Musical de la Banda</label>
+ <input
+ type="text"
+ value={style}
+ onChange={(e) => setStyle(e.target.value)}
+ placeholder="Ej: Rock alternativo, post-punk, psicodelia..."
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus: font-mono"
+ />
+ </div>
 
-            <div>
-              <label className="text-xs font-mono text-text-[var(--ink-2)] block mb-1">Prompt / Descripción del Soundtrack o Jingle</label>
-              <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                rows={3}
-                placeholder="Describe la atmósfera, energía, instrumentación o propósito..."
-                className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black border  text-xs text-white focus:outline-none focus: font-mono resize-none leading-relaxed"
-              />
-            </div>
+ <div>
+ <label className="text-xs font-mono text-text-[var(--ink-2)] block mb-1">Prompt / Descripción del Soundtrack o Jingle</label>
+ <textarea
+ value={prompt}
+ onChange={(e) => setPrompt(e.target.value)}
+ rows={3}
+ placeholder="Describe la atmósfera, energía, instrumentación o propósito..."
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus: font-mono resize-none leading-relaxed"
+ />
+ </div>
 
-            {error && (
-              <div className="p-3 rounded-[var(--r-m)] bg-red-950/40 text-xs text-red-300 font-mono">
-                ⚠️ {error}
-              </div>
-            )}
+ {error && (
+ <div className="p-3 rounded-[var(--r-m)] bg-red-950/40 text-xs text-red-300 font-mono">
+ ⚠️ {error}
+ </div>
+ )}
 
-            {generatedAudioUrl && (
-              <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 space-y-3 animate-in fade-in duration-300">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold font-mono text-amber-400 flex items-center gap-1.5">
-                    <Music className="w-4 h-4" /> Soundtrack Generado con Éxito
-                  </span>
-                  <a
-                    href={generatedAudioUrl}
-                    download={`soundtrack-${song?.titulo || 'band'}.wav`}
-                    className="px-3 py-1 bg-amber-500 text-black text-xs font-bold rounded-[var(--r-s)] flex items-center gap-1 hover:bg-amber-400 transition"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Descargar WAV
-                  </a>
-                </div>
+ {generatedAudioUrl && (
+ <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 space-y-3 animate-in fade-in duration-300">
+ <div className="flex items-center justify-between">
+ <span className="text-xs font-bold font-mono text-amber-400 flex items-center gap-1.5">
+ <Music className="w-4 h-4" /> Soundtrack Generado con Éxito
+ </span>
+ <a
+ href={generatedAudioUrl}
+ download={`soundtrack-${song?.titulo || 'band'}.wav`}
+ className="px-3 py-1 bg-amber-500 text-black text-xs font-bold rounded-[var(--r-s)] flex items-center gap-1 hover:bg-amber-400 transition"
+ >
+ <Download className="w-3.5 h-3.5" /> Descargar WAV
+ </a>
+ </div>
 
-                {generatedAudioUrl && (
-                  <audio controls src={generatedAudioUrl} className="w-full h-10" onError={(e) => e.preventDefault()} />
-                )}
+ {generatedAudioUrl && (
+ <audio controls src={generatedAudioUrl} className="w-full h-10" onError={(e) => e.preventDefault()} />
+ )}
 
-                {generatedLyrics && (
-                  <div className="p-2.5 rounded-[var(--r-s)] bg-black/60 border  text-xs font-mono text-text-[var(--ink-3)] max-h-32 overflow-y-auto whitespace-pre-line">
-                    <p className="text-[10px] text-amber-400 font-bold uppercase mb-1">Notas / Letra generada:</p>
-                    {generatedLyrics}
-                  </div>
-                )}
+ {generatedLyrics && (
+ <div className="p-2.5 rounded-[var(--r-s)] bg-black/60 text-xs font-mono text-text-[var(--ink-3)] max-h-32 overflow-y-auto whitespace-pre-line">
+ <p className="text-[10px] text-amber-400 font-bold uppercase mb-1">Notas / Letra generada:</p>
+ {generatedLyrics}
+ </div>
+ )}
 
-                {onAddGeneratedAudio && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onAddGeneratedAudio(generatedAudioUrl, `AI Soundtrack: ${prompt.slice(0, 30)}...`);
-                      onClose();
-                    }}
-                    className="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-black font-bold text-xs uppercase tracking-wider rounded-[var(--r-m)] transition shadow-md"
-                  >
-                    + Añadir Soundtrack a la Canción / Estudio
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
+ {onAddGeneratedAudio && (
+ <button
+ type="button"
+ onClick={() => {
+ onAddGeneratedAudio(generatedAudioUrl, `AI Soundtrack: ${prompt.slice(0, 30)}...`);
+ onClose();
+ }}
+ className="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-black font-bold text-xs uppercase tracking-wider rounded-[var(--r-m)] transition shadow-md"
+ >
+ + Añadir Soundtrack a la Canción / Estudio
+ </button>
+ )}
+ </div>
+ )}
+ </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-text-[var(--ink-2)] hover:text-white"
-            >
-              Cerrar
-            </button>
-            <button
-              type="button"
-              onClick={handleGenerate}
-              disabled={isGenerating || !prompt.trim()}
-              className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 disabled:opacity-50 text-black font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
-            >
-              {isGenerating ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  Componiendo Soundtrack IA...
-                </>
-              ) : (
-                <>
-                  <Wand2 className="w-4 h-4" />
-                  Generar Soundtrack IA
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-    </ModalPortal>
-  );
+ <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
+ <button
+ type="button"
+ onClick={onClose}
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-text-[var(--ink-2)] hover:text-white"
+ >
+ Cerrar
+ </button>
+ <button
+ type="button"
+ onClick={handleGenerate}
+ disabled={isGenerating || !prompt.trim()}
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 disabled:opacity-50 text-black font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
+ >
+ {isGenerating ? (
+ <>
+ <RefreshCw className="w-4 h-4 animate-spin" />
+ Componiendo Soundtrack IA...
+ </>
+ ) : (
+ <>
+ <Wand2 className="w-4 h-4" />
+ Generar Soundtrack IA
+ </>
+ )}
+ </button>
+ </div>
+ </div>
+ </div>
+ </ModalPortal>
+ );
 };

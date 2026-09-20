@@ -37,11 +37,11 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  // Helper for Authorization Headers
  const getHeaders = () => {
-  const token = localStorage.getItem('bakandeya_token');
-  return {
-   'Content-Type': 'application/json',
-   ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-  };
+ const token = localStorage.getItem('bakandeya_token');
+ return {
+ 'Content-Type': 'application/json',
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ };
  };
 
  // Change password state
@@ -113,50 +113,50 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  };
 
  const handleAssociateUser = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!assocEmail) {
-   setError('Por favor, ingresa el email del músico.');
-   return;
-  }
+ e.preventDefault();
+ if (!assocEmail) {
+ setError('Por favor, ingresa el email del músico.');
+ return;
+ }
 
-  setLoading(true);
-  setError(null);
-  setSuccessMsg(null);
+ setLoading(true);
+ setError(null);
+ setSuccessMsg(null);
 
-  try {
-   const response = await fetch('/api/users/associate', {
-    method: 'POST',
-    headers: getHeaders(),
-    body: JSON.stringify({
-     email: assocEmail.trim(),
-     role: assocRole,
-     instrument: assocInstrument.trim()
-    })
-   });
+ try {
+ const response = await fetch('/api/users/associate', {
+ method: 'POST',
+ headers: getHeaders(),
+ body: JSON.stringify({
+ email: assocEmail.trim(),
+ role: assocRole,
+ instrument: assocInstrument.trim()
+ })
+ });
 
-   let data: any = {};
-   const contentType = response.headers.get('content-type') || '';
-   if (contentType.includes('application/json')) {
-     data = await response.json();
-   } else {
-     const text = await response.text();
-     throw new Error(`Error en el servidor (${response.status}): ${text.slice(0, 100)}`);
-   }
+ let data: any = {};
+ const contentType = response.headers.get('content-type') || '';
+ if (contentType.includes('application/json')) {
+ data = await response.json();
+ } else {
+ const text = await response.text();
+ throw new Error(`Error en el servidor (${response.status}): ${text.slice(0, 100)}`);
+ }
 
-   if (!response.ok) {
-    throw new Error(data.error || 'Error al asociar músico');
-   }
+ if (!response.ok) {
+ throw new Error(data.error || 'Error al asociar músico');
+ }
 
-   setSuccessMsg(`¡Músico ${data.name} (@${data.username}) asociado con éxito!`);
-   setAssocEmail('');
-   setAssocInstrument('');
-   onRefreshUsers();
-   setActiveTab('list');
-  } catch (err: any) {
-   setError(err.message || 'Error en el servidor');
-  } finally {
-   setLoading(false);
-  }
+ setSuccessMsg(`¡Músico ${data.name} (@${data.username}) asociado con éxito!`);
+ setAssocEmail('');
+ setAssocInstrument('');
+ onRefreshUsers();
+ setActiveTab('list');
+ } catch (err: any) {
+ setError(err.message || 'Error en el servidor');
+ } finally {
+ setLoading(false);
+ }
  };
 
  const handleChangeRole = async (userId: string, newRole: UserRole, username: string) => {
@@ -251,15 +251,15 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  };
 
  return (
-  <ModalPortal isOpen={true} onClose={onClose}>
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
-      <div 
-        className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
-          isStitchLight 
-            ? 'bg-white -slate-200 text-[var(--ink)]' 
-            : 'bg-bg-[var(--surface)] -neutral-800 text-bg-[var(--sunken)]'
-        }`}
-      >
+ <ModalPortal isOpen={true} onClose={onClose}>
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+ <div 
+ className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
+ isStitchLight 
+ ? 'bg-white -slate-200 text-[var(--ink)]' 
+ : 'bg-bg-[var(--surface)] -neutral-800 text-bg-[var(--sunken)]'
+ }`}
+ >
  <datalist id="instrument-suggestions">
  {STEM_INSTRUMENT_CATEGORIES.map(cat => <option key={cat} value={cat} />)}
  {NON_STEM_ROLES.map(role => <option key={role} value={role} />)}
@@ -317,17 +317,17 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  >
  <UserPlus className="w-3.5 h-3.5" />
  <span>+ Nuevo Músico</span>
-  </button>
-  <button
-    onClick={() => { setActiveTab('associate'); setError(null); setSuccessMsg(null); }}
-    className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
-      activeTab === 'associate'
-        ? 'text-indigo-400 border-b border-indigo-400'
-        : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
-    }`}
-  >
-    <Link2 className="w-3.5 h-3.5" />
-    <span>Asociar Músico Existente</span>
+ </button>
+ <button
+ onClick={() => { setActiveTab('associate'); setError(null); setSuccessMsg(null); }}
+ className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+ activeTab === 'associate'
+ ? 'text-indigo-400 border-b border-indigo-400'
+ : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ }`}
+ >
+ <Link2 className="w-3.5 h-3.5" />
+ <span>Asociar Músico Existente</span>
  </button>
  </div>
 
@@ -617,79 +617,79 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </button>
  </form>
  ) : (
-  /* Associate Existing User Form */
-  <form onSubmit={handleAssociateUser} className="space-y-4">
-    <div className="p-4 bg-indigo-500/5 rounded-[var(--r-l)] text-xs text-text-[var(--ink-3)]">
-      <p className="font-semibold text-indigo-400 mb-1 flex items-center gap-1.5">
-        <Sparkles className="w-3.5 h-3.5" />
-        <span>¿Músico ya registrado en la plataforma?</span>
-      </p>
-      <span>Aquí puedes agregar a tu banda un músico existente (como Wes Borland) que ya tiene cuenta en otra banda sin tener que recrear su usuario ni contraseña.</span>
-    </div>
+ /* Associate Existing User Form */
+ <form onSubmit={handleAssociateUser} className="space-y-4">
+ <div className="p-4 bg-indigo-500/5 rounded-[var(--r-l)] text-xs text-text-[var(--ink-3)]">
+ <p className="font-semibold text-indigo-400 mb-1 flex items-center gap-1.5">
+ <Sparkles className="w-3.5 h-3.5" />
+ <span>¿Músico ya registrado en la plataforma?</span>
+ </p>
+ <span>Aquí puedes agregar a tu banda un músico existente (como Wes Borland) que ya tiene cuenta en otra banda sin tener que recrear su usuario ni contraseña.</span>
+ </div>
 
-    <div className="space-y-1">
-      <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
-        Email del Músico Registrado *
-      </label>
-      <input
-        type="email"
-        value={assocEmail}
-        onChange={(e) => setAssocEmail(e.target.value)}
-        placeholder="Introduce su email exacto..."
-        className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
-          isStitchLight ? 'bg-[var(--bg)] border  text-[var(--ink)]' : 'bg-bg-[var(--surface)] border  text-bg-[var(--sunken)]'
-        }`}
-        required
-      />
-    </div>
+ <div className="space-y-1">
+ <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ Email del Músico Registrado *
+ </label>
+ <input
+ type="email"
+ value={assocEmail}
+ onChange={(e) => setAssocEmail(e.target.value)}
+ placeholder="Introduce su email exacto..."
+ className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
+ isStitchLight ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]'
+ }`}
+ required
+ />
+ </div>
 
-    <div className="space-y-1">
-      <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
-        Rol en esta Banda
-      </label>
-      <select
-        value={assocRole}
-        onChange={(e) => setAssocRole(e.target.value as UserRole)}
-        className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
-          isStitchLight ? 'bg-[var(--bg)] border  text-[var(--ink)]' : 'bg-bg-[var(--surface)] border  text-bg-[var(--sunken)]'
-        }`}
-      >
-        <option value="member">Miembro de Banda (Músico)</option>
-        <option value="leader">Admin / Dirección de Banda</option>
-      </select>
-    </div>
+ <div className="space-y-1">
+ <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ Rol en esta Banda
+ </label>
+ <select
+ value={assocRole}
+ onChange={(e) => setAssocRole(e.target.value as UserRole)}
+ className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
+ isStitchLight ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]'
+ }`}
+ >
+ <option value="member">Miembro de Banda (Músico)</option>
+ <option value="leader">Admin / Dirección de Banda</option>
+ </select>
+ </div>
 
-    <div className="space-y-1">
-      <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
-        Instrumento / Puesto (opcional)
-      </label>
-      <input
-        type="text"
-        list="instrument-suggestions"
-        value={assocInstrument}
-        onChange={(e) => setAssocInstrument(e.target.value)}
-        placeholder="Ej: Guitarra, Bajista, Manager, Coros"
-        className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
-          isStitchLight ? 'bg-[var(--bg)] border  text-[var(--ink)]' : 'bg-bg-[var(--surface)] border  text-bg-[var(--sunken)]'
-        }`}
-      />
-    </div>
+ <div className="space-y-1">
+ <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ Instrumento / Puesto (opcional)
+ </label>
+ <input
+ type="text"
+ list="instrument-suggestions"
+ value={assocInstrument}
+ onChange={(e) => setAssocInstrument(e.target.value)}
+ placeholder="Ej: Guitarra, Bajista, Manager, Coros"
+ className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
+ isStitchLight ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]'
+ }`}
+ />
+ </div>
 
-    <button
-      type="submit"
-      disabled={loading || !assocEmail.trim()}
-      className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-indigo-600/20 active:scale-98"
-    >
-      {loading ? (
-        <span>Asociando músico...</span>
-      ) : (
-        <>
-          <UserPlus className="w-4 h-4" />
-          <span>Asociar Músico a mi Banda</span>
-        </>
-      )}
-    </button>
-  </form>
+ <button
+ type="submit"
+ disabled={loading || !assocEmail.trim()}
+ className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-indigo-600/20 active:scale-98"
+ >
+ {loading ? (
+ <span>Asociando músico...</span>
+ ) : (
+ <>
+ <UserPlus className="w-4 h-4" />
+ <span>Asociar Músico a mi Banda</span>
+ </>
+ )}
+ </button>
+ </form>
  )}
  </div>
 

@@ -10,8 +10,8 @@ import { eventosAMidiBlob } from '../utils/midiExport';
 import { uploadFileToServer } from '../utils/audioStorage';
 
 interface ProposedAction {
-  status?: 'pending' | 'applied' | 'dismissed';
-  type: 'propose_lead_approval' | 'propose_rehearsal' | 'propose_status_change' | 'propose_agent_trigger' | 'propose_concert' | 'propose_add_concert' | 'propose_band' | 'propose_tour' | 'propose_update_logo' | 'propose_send_email' | 'propose_draft_email' | 'propose_add_lead' | 'propose_update_lead' | 'propose_accompaniment' | 'propose_melodic_idea';
+ status?: 'pending' | 'applied' | 'dismissed';
+ type: 'propose_lead_approval' | 'propose_rehearsal' | 'propose_status_change' | 'propose_agent_trigger' | 'propose_concert' | 'propose_add_concert' | 'propose_band' | 'propose_tour' | 'propose_update_logo' | 'propose_send_email' | 'propose_draft_email' | 'propose_add_lead' | 'propose_update_lead' | 'propose_accompaniment' | 'propose_melodic_idea';
  leadId?: string;
  bandId?: string;
  targetType?: 'lead' | 'band';
@@ -35,25 +35,25 @@ interface ProposedAction {
  lead?: any;
  updatedFields?: any;
  accompaniment?: {
-   bpm: number;
-   keyName: string;
-   drumPattern: DrumPatternStyle;
-   includeDrums: boolean;
-   includeBass: boolean;
-   durationSecs: number;
-   songId?: string;
-   songTitle?: string;
+ bpm: number;
+ keyName: string;
+ drumPattern: DrumPatternStyle;
+ includeDrums: boolean;
+ includeBass: boolean;
+ durationSecs: number;
+ songId?: string;
+ songTitle?: string;
  };
  melodicIdea?: {
-   instrument: MelodicInstrument;
-   bpm: number;
-   keyName: string;
-   escala?: 'mayor' | 'menor';
-   durationSecs: number;
-   seccion?: SongAudioIdea['seccion'];
-   songId?: string;
-   songTitle?: string;
-   eventos: MelodicNoteEvent[];
+ instrument: MelodicInstrument;
+ bpm: number;
+ keyName: string;
+ escala?: 'mayor' | 'menor';
+ durationSecs: number;
+ seccion?: SongAudioIdea['seccion'];
+ songId?: string;
+ songTitle?: string;
+ eventos: MelodicNoteEvent[];
  };
 }
 
@@ -67,160 +67,160 @@ interface ChatMessage {
 }
 
 interface ChatbotProps {
-  key?: string;
-  colors: ThemeColors;
-  leads: Lead[];
-  rehearsals: Rehearsal[];
-  concerts: Concert[];
-  epkConfig?: Partial<EPKConfig>;
-  onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void;
-  onCreateLead?: (lead: Lead) => void;
-  onAddRehearsal: (rehearsal: Rehearsal) => void;
-  onAddConcert?: (concert: Concert) => void;
-  onNavigate?: (view: string, options?: any) => void;
-  isFloating?: boolean;
-  onClose?: () => void;
-  userRole?: string;
-  currentUser?: UserType | null;
-  activeBandName?: string;
-  onLoadingChange?: (isLoading: boolean) => void;
+ key?: string;
+ colors: ThemeColors;
+ leads: Lead[];
+ rehearsals: Rehearsal[];
+ concerts: Concert[];
+ epkConfig?: Partial<EPKConfig>;
+ onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void;
+ onCreateLead?: (lead: Lead) => void;
+ onAddRehearsal: (rehearsal: Rehearsal) => void;
+ onAddConcert?: (concert: Concert) => void;
+ onNavigate?: (view: string, options?: any) => void;
+ isFloating?: boolean;
+ onClose?: () => void;
+ userRole?: string;
+ currentUser?: UserType | null;
+ activeBandName?: string;
+ onLoadingChange?: (isLoading: boolean) => void;
 }
 
 export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig, onUpdateLead, onCreateLead, onAddRehearsal, onAddConcert, onNavigate, isFloating, onClose, userRole, currentUser, activeBandName, onLoadingChange }: ChatbotProps) {
-  const isAdmin = userRole === 'admin' || userRole === 'leader' || (currentUser?.role as string) === 'admin' || currentUser?.role === 'leader';
-  const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
-  const bandDisplayName = activeBandName || currentUser?.bandName || 'vuestra banda';
-  const effectiveBandId = currentUser?.band_id || (currentUser as any)?.bandId;
-  const cleanUserName = (() => {
-    const rawName = currentUser?.name || currentUser?.username || '';
-    if (!rawName) return 'equipo';
-    
-    const lowerRaw = rawName.toLowerCase().replace(/^(band|reg)-/, '').trim();
-    const lowerBandDisplay = bandDisplayName.toLowerCase().replace(/^(band|reg)-/, '').trim();
-    
-    if (
-      lowerRaw === lowerBandDisplay ||
-      ['repercusion', 'bakandeya', 'admin', 'user', 'guest', 'leader', 'member', 'banda', 'equipo'].includes(lowerRaw) ||
-      lowerRaw.startsWith('band-') ||
-      lowerRaw.startsWith('reg-')
-    ) {
-      return 'equipo';
-    }
-    const firstName = rawName.split(' ')[0].trim();
-    return firstName || 'equipo';
-  })();
+ const isAdmin = userRole === 'admin' || userRole === 'leader' || (currentUser?.role as string) === 'admin' || currentUser?.role === 'leader';
+ const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
+ const bandDisplayName = activeBandName || currentUser?.bandName || 'vuestra banda';
+ const effectiveBandId = currentUser?.band_id || (currentUser as any)?.bandId;
+ const cleanUserName = (() => {
+ const rawName = currentUser?.name || currentUser?.username || '';
+ if (!rawName) return 'equipo';
+ 
+ const lowerRaw = rawName.toLowerCase().replace(/^(band|reg)-/, '').trim();
+ const lowerBandDisplay = bandDisplayName.toLowerCase().replace(/^(band|reg)-/, '').trim();
+ 
+ if (
+ lowerRaw === lowerBandDisplay ||
+ ['repercusion', 'bakandeya', 'admin', 'user', 'guest', 'leader', 'member', 'banda', 'equipo'].includes(lowerRaw) ||
+ lowerRaw.startsWith('band-') ||
+ lowerRaw.startsWith('reg-')
+ ) {
+ return 'equipo';
+ }
+ const firstName = rawName.split(' ')[0].trim();
+ return firstName || 'equipo';
+ })();
 
-  const storageKey = `bakandeya_chat_messages_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`;
+ const storageKey = `bakandeya_chat_messages_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`;
 
-  const cleanLegacyText = (text: string) => {
-    if (!text) return text;
-    return text
-      .replace(/hoja de datos de Google Sheets \(salas\)/gi, 'base de datos de Supabase (salas)')
-      .replace(/hoja de datos de Google Sheets/gi, 'base de datos de Supabase')
-      .replace(/Google Sheets/gi, 'Supabase')
-      .replace(/GitHub Actions/gi, 'Supabase Native Engine')
-      .replace(/tareas de Python en GitHub Actions/gi, 'tareas nativas en Supabase')
-      .replace(/Agentes Python/gi, 'Agentes Supabase')
-      .replace(/Python/gi, 'Supabase');
-  };
+ const cleanLegacyText = (text: string) => {
+ if (!text) return text;
+ return text
+ .replace(/hoja de datos de Google Sheets \(salas\)/gi, 'base de datos de Supabase (salas)')
+ .replace(/hoja de datos de Google Sheets/gi, 'base de datos de Supabase')
+ .replace(/Google Sheets/gi, 'Supabase')
+ .replace(/GitHub Actions/gi, 'Supabase Native Engine')
+ .replace(/tareas de Python en GitHub Actions/gi, 'tareas nativas en Supabase')
+ .replace(/Agentes Python/gi, 'Agentes Supabase')
+ .replace(/Python/gi, 'Supabase');
+ };
 
-  const getWelcomeMessageText = (name: string, band: string) => {
-    return `👋 **¡Buenas, ${name}!** Soy vuestro **Manager Virtual de ${band}**.\n\nEstoy conectado en tiempo real con vuestra base de datos de Supabase (salas), el calendario de ensayos de banda, la contabilidad y la logística de redes.\n\nPuedes preguntarme cosas como:\n- *¿Qué salas tengo pendientes de aprobación en Madrid o Granada?*\n- *Resúmeme el estado de la semana o hazme una lista de tareas para hoy.*\n- *¿Cuántas salas de Ska, Reggae o Fusión tenemos registradas?*\n\nSi necesitas, puedo **proponer cambios directos** en las salas (como aprobar un correo de contacto) o agendar ensayos, pidiéndote confirmación antes de actuar.`;
-  };
+ const getWelcomeMessageText = (name: string, band: string) => {
+ return `👋 **¡Buenas, ${name}!** Soy vuestro **Manager Virtual de ${band}**.\n\nEstoy conectado en tiempo real con vuestra base de datos de Supabase (salas), el calendario de ensayos de banda, la contabilidad y la logística de redes.\n\nPuedes preguntarme cosas como:\n- *¿Qué salas tengo pendientes de aprobación en Madrid o Granada?*\n- *Resúmeme el estado de la semana o hazme una lista de tareas para hoy.*\n- *¿Cuántas salas de Ska, Reggae o Fusión tenemos registradas?*\n\nSi necesitas, puedo **proponer cambios directos** en las salas (como aprobar un correo de contacto) o agendar ensayos, pidiéndote confirmación antes de actuar.`;
+ };
 
-  let chatMsgSeq = 0;
-  const generateUniqueMsgId = (prefix: string = 'msg'): string => {
-    chatMsgSeq += 1;
-    const rand = Math.random().toString(36).substring(2, 7);
-    return `${prefix}-${Date.now()}-${chatMsgSeq}-${rand}`;
-  };
+ let chatMsgSeq = 0;
+ const generateUniqueMsgId = (prefix: string = 'msg'): string => {
+ chatMsgSeq += 1;
+ const rand = Math.random().toString(36).substring(2, 7);
+ return `${prefix}-${Date.now()}-${chatMsgSeq}-${rand}`;
+ };
 
-  const ensureUniqueMessageIds = (rawMessages: any[]): ChatMessage[] => {
-    const seenIds = new Set<string>();
-    return rawMessages.map((m: any, idx: number) => {
-      let msgId = m.id;
-      if (!msgId || seenIds.has(msgId)) {
-        msgId = generateUniqueMsgId(typeof msgId === 'string' && msgId ? msgId.split('-')[0] : 'msg');
-      }
-      seenIds.add(msgId);
-      return {
-        ...m,
-        id: msgId,
-        text: cleanLegacyText(m.text),
-        timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
-        proposedActions: (m.proposedActions || []).map((act: any) => ({
-          ...act,
-          status: act.status || (m.actionStatus === 'applied' ? 'applied' : m.actionStatus === 'dismissed' ? 'dismissed' : 'pending')
-        }))
-      };
-    });
-  };
+ const ensureUniqueMessageIds = (rawMessages: any[]): ChatMessage[] => {
+ const seenIds = new Set<string>();
+ return rawMessages.map((m: any, idx: number) => {
+ let msgId = m.id;
+ if (!msgId || seenIds.has(msgId)) {
+ msgId = generateUniqueMsgId(typeof msgId === 'string' && msgId ? msgId.split('-')[0] : 'msg');
+ }
+ seenIds.add(msgId);
+ return {
+ ...m,
+ id: msgId,
+ text: cleanLegacyText(m.text),
+ timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
+ proposedActions: (m.proposedActions || []).map((act: any) => ({
+ ...act,
+ status: act.status || (m.actionStatus === 'applied' ? 'applied' : m.actionStatus === 'dismissed' ? 'dismissed' : 'pending')
+ }))
+ };
+ });
+ };
 
-  const [messages, setMessages] = useState<ChatMessage[]>(() => {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return ensureUniqueMessageIds(parsed);
-        }
-      } catch (e) {
-        console.error("Error al cargar historial del chat:", e);
-      }
-    }
-    return [
-      {
-        id: 'welcome-1',
-        sender: 'bot',
-        text: getWelcomeMessageText(cleanUserName, bandDisplayName),
-        timestamp: new Date()
-      }
-    ];
-  });
+ const [messages, setMessages] = useState<ChatMessage[]>(() => {
+ const saved = localStorage.getItem(storageKey);
+ if (saved) {
+ try {
+ const parsed = JSON.parse(saved);
+ if (Array.isArray(parsed) && parsed.length > 0) {
+ return ensureUniqueMessageIds(parsed);
+ }
+ } catch (e) {
+ console.error("Error al cargar historial del chat:", e);
+ }
+ }
+ return [
+ {
+ id: 'welcome-1',
+ sender: 'bot',
+ text: getWelcomeMessageText(cleanUserName, bandDisplayName),
+ timestamp: new Date()
+ }
+ ];
+ });
 
-  // Re-sync messages when storageKey or active band changes
-  useEffect(() => {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setMessages(ensureUniqueMessageIds(parsed));
-          return;
-        }
-      } catch (e) {
-        console.error("Error re-loading chat for band:", e);
-      }
-    }
-    setMessages([
-      {
-        id: generateUniqueMsgId('welcome'),
-        sender: 'bot',
-        text: getWelcomeMessageText(cleanUserName, bandDisplayName),
-        timestamp: new Date()
-      }
-    ]);
-  }, [storageKey, bandDisplayName]);
+ // Re-sync messages when storageKey or active band changes
+ useEffect(() => {
+ const saved = localStorage.getItem(storageKey);
+ if (saved) {
+ try {
+ const parsed = JSON.parse(saved);
+ if (Array.isArray(parsed) && parsed.length > 0) {
+ setMessages(ensureUniqueMessageIds(parsed));
+ return;
+ }
+ } catch (e) {
+ console.error("Error re-loading chat for band:", e);
+ }
+ }
+ setMessages([
+ {
+ id: generateUniqueMsgId('welcome'),
+ sender: 'bot',
+ text: getWelcomeMessageText(cleanUserName, bandDisplayName),
+ timestamp: new Date()
+ }
+ ]);
+ }, [storageKey, bandDisplayName]);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(messages));
-    } catch (e) {
-      console.error("Error al guardar historial del chat:", e);
-    }
-  }, [messages, storageKey]);
+ useEffect(() => {
+ try {
+ localStorage.setItem(storageKey, JSON.stringify(messages));
+ } catch (e) {
+ console.error("Error al guardar historial del chat:", e);
+ }
+ }, [messages, storageKey]);
  const [inputText, setInputText] = useState('');
  const [isLoading, setIsLoading] = useState(false);
 
  // Bases rítmicas generadas al vuelo (síntesis local Web Audio) por 'propose_accompaniment',
  // guardadas por clave "msgId-actionIndex" para no regenerar el audio en cada re-render.
  const [accompanimentAudio, setAccompanimentAudio] = useState<Record<string, {
-   loading: boolean;
-   url?: string;
-   error?: string;
-   saving?: boolean;
-   savedToSong?: string;
-   saveError?: string;
+ loading: boolean;
+ url?: string;
+ error?: string;
+ saving?: boolean;
+ savedToSong?: string;
+ saveError?: string;
  }>>({});
 
  // Cuando el chatbot no ha identificado una canción exacta del repertorio (el usuario pidió la
@@ -231,32 +231,32 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const [songPicker, setSongPicker] = useState<Record<string, { songs: { id: string; titulo: string }[]; selectedId: string }>>({});
 
  const buildBandAuthHeaders = (): Record<string, string> => {
-   const token = localStorage.getItem('bakandeya_token');
-   const activeBandId = currentUser?.band_id || '';
-   return {
-     'Content-Type': 'application/json',
-     'Authorization': token ? `Bearer ${token}` : '',
-     ...(activeBandId ? { 'x-band-id': activeBandId } : {})
-   };
+ const token = localStorage.getItem('bakandeya_token');
+ const activeBandId = currentUser?.band_id || '';
+ return {
+ 'Content-Type': 'application/json',
+ 'Authorization': token ? `Bearer ${token}` : '',
+ ...(activeBandId ? { 'x-band-id': activeBandId } : {})
+ };
  };
 
  const handleGenerateAccompanimentAudio = async (key: string, params: NonNullable<ProposedAction['accompaniment']>) => {
-   setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: true } }));
-   try {
-     const blob = await generateAccompanimentAudioBlob({
-       bpm: params.bpm,
-       durationSecs: params.durationSecs,
-       keyName: params.keyName,
-       includeDrums: params.includeDrums,
-       includeBass: params.includeBass,
-       drumPattern: params.drumPattern
-     });
-     const url = URL.createObjectURL(blob);
-     setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: false, url } }));
-   } catch (err) {
-     console.error('Error generando base rítmica:', err);
-     setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: false, error: 'No se pudo sintetizar el audio en este navegador.' } }));
-   }
+ setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: true } }));
+ try {
+ const blob = await generateAccompanimentAudioBlob({
+ bpm: params.bpm,
+ durationSecs: params.durationSecs,
+ keyName: params.keyName,
+ includeDrums: params.includeDrums,
+ includeBass: params.includeBass,
+ drumPattern: params.drumPattern
+ });
+ const url = URL.createObjectURL(blob);
+ setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: false, url } }));
+ } catch (err) {
+ console.error('Error generando base rítmica:', err);
+ setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: false, error: 'No se pudo sintetizar el audio en este navegador.' } }));
+ }
  };
 
  // Guarda la base ya generada como una nueva idea de audio en una canción existente del
@@ -264,180 +264,180 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  // dbUpsertSong rellena con valores por defecto cualquier campo ausente (ver server/db/repertoire.ts),
  // así que un PUT parcial borraría título, bpm y tonalidad de la canción real.
  const handleSaveAccompanimentToSong = async (key: string, params: NonNullable<ProposedAction['accompaniment']>, overrideSongId?: string) => {
-   const current = accompanimentAudio[key];
-   if (!current?.url) return;
+ const current = accompanimentAudio[key];
+ if (!current?.url) return;
 
-   setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: true, saveError: undefined } }));
-   try {
-     const activeBandId = currentUser?.band_id || '';
-     const headers = buildBandAuthHeaders();
+ setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: true, saveError: undefined } }));
+ try {
+ const activeBandId = currentUser?.band_id || '';
+ const headers = buildBandAuthHeaders();
 
-     const songsRes = await fetch('/api/songs', { headers });
-     const songsData = await songsRes.json().catch(() => null);
-     const allSongs: any[] = songsData?.songs || [];
+ const songsRes = await fetch('/api/songs', { headers });
+ const songsData = await songsRes.json().catch(() => null);
+ const allSongs: any[] = songsData?.songs || [];
 
-     let targetSong = overrideSongId ? allSongs.find(s => s.id === overrideSongId) : undefined;
-     if (!targetSong) {
-       targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
-     }
-     if (!targetSong && params.songTitle) {
-       const lowerTitle = params.songTitle.trim().toLowerCase();
-       targetSong = allSongs.find(s => (s.titulo || '').trim().toLowerCase() === lowerTitle)
-         || allSongs.find(s => (s.titulo || '').toLowerCase().includes(lowerTitle));
-     }
-     // No se ha podido resolver la canción sola (ni por id ni por título, ni el usuario ha
-     // elegido una del desplegable todavía): en vez de fallar sin salida, se ofrece elegir a
-     // mano entre las canciones reales del repertorio.
-     if (!targetSong) {
-       setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false } }));
-       setSongPicker(prev => ({ ...prev, [key]: { songs: allSongs.map(s => ({ id: s.id, titulo: s.titulo })), selectedId: prev[key]?.selectedId || '' } }));
-       return;
-     }
+ let targetSong = overrideSongId ? allSongs.find(s => s.id === overrideSongId) : undefined;
+ if (!targetSong) {
+ targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
+ }
+ if (!targetSong && params.songTitle) {
+ const lowerTitle = params.songTitle.trim().toLowerCase();
+ targetSong = allSongs.find(s => (s.titulo || '').trim().toLowerCase() === lowerTitle)
+ || allSongs.find(s => (s.titulo || '').toLowerCase().includes(lowerTitle));
+ }
+ // No se ha podido resolver la canción sola (ni por id ni por título, ni el usuario ha
+ // elegido una del desplegable todavía): en vez de fallar sin salida, se ofrece elegir a
+ // mano entre las canciones reales del repertorio.
+ if (!targetSong) {
+ setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false } }));
+ setSongPicker(prev => ({ ...prev, [key]: { songs: allSongs.map(s => ({ id: s.id, titulo: s.titulo })), selectedId: prev[key]?.selectedId || '' } }));
+ return;
+ }
 
-     const wavBlob = await (await fetch(current.url)).blob();
-     const fileName = `chatbot-base-${params.drumPattern}-${Date.now()}.wav`;
-     const file = new File([wavBlob], fileName, { type: 'audio/wav' });
-     const uploadedUrl = await uploadFileToServer(file, { bandId: activeBandId });
+ const wavBlob = await (await fetch(current.url)).blob();
+ const fileName = `chatbot-base-${params.drumPattern}-${Date.now()}.wav`;
+ const file = new File([wavBlob], fileName, { type: 'audio/wav' });
+ const uploadedUrl = await uploadFileToServer(file, { bandId: activeBandId });
 
-     const newIdea: SongAudioIdea = {
-       id: `idea-${Date.now()}`,
-       titulo: `Base IA (${params.drumPattern.toUpperCase()} - ${params.keyName})`,
-       seccion: 'general',
-       audioUrl: uploadedUrl,
-       subidoPor: cleanUserName,
-       instrumento: params.includeDrums && params.includeBass ? 'Batería + Bajo (AI)' : params.includeDrums ? 'Batería (AI)' : 'Bajo (AI)',
-       fecha: new Date().toISOString().split('T')[0],
-       notas: `Generada desde el chatbot a ${params.bpm} BPM.`
-     };
+ const newIdea: SongAudioIdea = {
+ id: `idea-${Date.now()}`,
+ titulo: `Base IA (${params.drumPattern.toUpperCase()} - ${params.keyName})`,
+ seccion: 'general',
+ audioUrl: uploadedUrl,
+ subidoPor: cleanUserName,
+ instrumento: params.includeDrums && params.includeBass ? 'Batería + Bajo (AI)' : params.includeDrums ? 'Batería (AI)' : 'Bajo (AI)',
+ fecha: new Date().toISOString().split('T')[0],
+ notas: `Generada desde el chatbot a ${params.bpm} BPM.`
+ };
 
-     const updatedSong = { ...targetSong, audioIdeas: [...(targetSong.audioIdeas || []), newIdea] };
+ const updatedSong = { ...targetSong, audioIdeas: [...(targetSong.audioIdeas || []), newIdea] };
 
-     const putRes = await fetch(`/api/songs/${encodeURIComponent(targetSong.id)}`, {
-       method: 'PUT',
-       headers,
-       body: JSON.stringify(updatedSong)
-     });
-     if (!putRes.ok) throw new Error('El servidor rechazó el guardado de la canción.');
+ const putRes = await fetch(`/api/songs/${encodeURIComponent(targetSong.id)}`, {
+ method: 'PUT',
+ headers,
+ body: JSON.stringify(updatedSong)
+ });
+ if (!putRes.ok) throw new Error('El servidor rechazó el guardado de la canción.');
 
-     setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, savedToSong: targetSong.titulo } }));
-     setSongPicker(prev => { const next = { ...prev }; delete next[key]; return next; });
-   } catch (err: any) {
-     console.error('Error guardando base rítmica en el repertorio:', err);
-     setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, saveError: err?.message || 'No se pudo guardar en el repertorio.' } }));
-   }
+ setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, savedToSong: targetSong.titulo } }));
+ setSongPicker(prev => { const next = { ...prev }; delete next[key]; return next; });
+ } catch (err: any) {
+ console.error('Error guardando base rítmica en el repertorio:', err);
+ setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, saveError: err?.message || 'No se pudo guardar en el repertorio.' } }));
+ }
  };
 
  // Ideas melódicas por instrumento ('propose_melodic_idea', síntesis local Tone.js), misma
  // mecánica que accompanimentAudio: se generan bajo demanda y se guardan por clave "msgId-actionIndex".
  const [melodicIdeaAudio, setMelodicIdeaAudio] = useState<Record<string, {
-   loading: boolean;
-   url?: string;
-   error?: string;
-   saving?: boolean;
-   savedToSong?: string;
-   saveError?: string;
+ loading: boolean;
+ url?: string;
+ error?: string;
+ saving?: boolean;
+ savedToSong?: string;
+ saveError?: string;
  }>>({});
 
  const handleGenerateMelodicIdeaAudio = async (key: string, params: NonNullable<ProposedAction['melodicIdea']>) => {
-   setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: true } }));
-   try {
-     const blob = await renderMelodicIdeaAudioBlob({
-       instrument: params.instrument,
-       bpm: params.bpm,
-       durationSecs: params.durationSecs,
-       eventos: params.eventos
-     });
-     const url = URL.createObjectURL(blob);
-     setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: false, url } }));
-   } catch (err) {
-     console.error('Error generando idea melódica:', err);
-     setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: false, error: 'No se pudo sintetizar el audio en este navegador.' } }));
-   }
+ setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: true } }));
+ try {
+ const blob = await renderMelodicIdeaAudioBlob({
+ instrument: params.instrument,
+ bpm: params.bpm,
+ durationSecs: params.durationSecs,
+ eventos: params.eventos
+ });
+ const url = URL.createObjectURL(blob);
+ setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: false, url } }));
+ } catch (err) {
+ console.error('Error generando idea melódica:', err);
+ setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: false, error: 'No se pudo sintetizar el audio en este navegador.' } }));
+ }
  };
 
  // Descarga la idea como .mid. Un WAV solo se puede escuchar; un MIDI se abre en cualquier DAW o
  // editor de partituras y se edita nota a nota, así que es la forma de que la idea salga de aquí.
  const handleDownloadMelodicIdeaMidi = (params: NonNullable<ProposedAction['melodicIdea']>) => {
-   const instrumentLabel = params.instrument.charAt(0).toUpperCase() + params.instrument.slice(1);
-   const blob = eventosAMidiBlob({
-     eventos: params.eventos,
-     bpm: params.bpm,
-     instrument: params.instrument,
-     nombrePista: `Idea IA ${instrumentLabel} ${params.keyName}`
-   });
+ const instrumentLabel = params.instrument.charAt(0).toUpperCase() + params.instrument.slice(1);
+ const blob = eventosAMidiBlob({
+ eventos: params.eventos,
+ bpm: params.bpm,
+ instrument: params.instrument,
+ nombrePista: `Idea IA ${instrumentLabel} ${params.keyName}`
+ });
 
-   const url = URL.createObjectURL(blob);
-   const enlace = document.createElement('a');
-   enlace.href = url;
-   enlace.download = `idea-${params.instrument}-${params.keyName}-${params.bpm}bpm.mid`;
-   document.body.appendChild(enlace);
-   enlace.click();
-   document.body.removeChild(enlace);
-   URL.revokeObjectURL(url);
+ const url = URL.createObjectURL(blob);
+ const enlace = document.createElement('a');
+ enlace.href = url;
+ enlace.download = `idea-${params.instrument}-${params.keyName}-${params.bpm}bpm.mid`;
+ document.body.appendChild(enlace);
+ enlace.click();
+ document.body.removeChild(enlace);
+ URL.revokeObjectURL(url);
  };
 
  const handleSaveMelodicIdeaToSong = async (key: string, params: NonNullable<ProposedAction['melodicIdea']>, overrideSongId?: string) => {
-   const current = melodicIdeaAudio[key];
-   if (!current?.url) return;
+ const current = melodicIdeaAudio[key];
+ if (!current?.url) return;
 
-   setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: true, saveError: undefined } }));
-   try {
-     const activeBandId = currentUser?.band_id || '';
-     const headers = buildBandAuthHeaders();
+ setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: true, saveError: undefined } }));
+ try {
+ const activeBandId = currentUser?.band_id || '';
+ const headers = buildBandAuthHeaders();
 
-     const songsRes = await fetch('/api/songs', { headers });
-     const songsData = await songsRes.json().catch(() => null);
-     const allSongs: any[] = songsData?.songs || [];
+ const songsRes = await fetch('/api/songs', { headers });
+ const songsData = await songsRes.json().catch(() => null);
+ const allSongs: any[] = songsData?.songs || [];
 
-     let targetSong = overrideSongId ? allSongs.find(s => s.id === overrideSongId) : undefined;
-     if (!targetSong) {
-       targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
-     }
-     if (!targetSong && params.songTitle) {
-       const lowerTitle = params.songTitle.trim().toLowerCase();
-       targetSong = allSongs.find(s => (s.titulo || '').trim().toLowerCase() === lowerTitle)
-         || allSongs.find(s => (s.titulo || '').toLowerCase().includes(lowerTitle));
-     }
-     // Igual que en handleSaveAccompanimentToSong: sin coincidencia automática, se ofrece elegir
-     // a mano en vez de fallar sin salida.
-     if (!targetSong) {
-       setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false } }));
-       setSongPicker(prev => ({ ...prev, [key]: { songs: allSongs.map(s => ({ id: s.id, titulo: s.titulo })), selectedId: prev[key]?.selectedId || '' } }));
-       return;
-     }
+ let targetSong = overrideSongId ? allSongs.find(s => s.id === overrideSongId) : undefined;
+ if (!targetSong) {
+ targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
+ }
+ if (!targetSong && params.songTitle) {
+ const lowerTitle = params.songTitle.trim().toLowerCase();
+ targetSong = allSongs.find(s => (s.titulo || '').trim().toLowerCase() === lowerTitle)
+ || allSongs.find(s => (s.titulo || '').toLowerCase().includes(lowerTitle));
+ }
+ // Igual que en handleSaveAccompanimentToSong: sin coincidencia automática, se ofrece elegir
+ // a mano en vez de fallar sin salida.
+ if (!targetSong) {
+ setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false } }));
+ setSongPicker(prev => ({ ...prev, [key]: { songs: allSongs.map(s => ({ id: s.id, titulo: s.titulo })), selectedId: prev[key]?.selectedId || '' } }));
+ return;
+ }
 
-     const wavBlob = await (await fetch(current.url)).blob();
-     const fileName = `chatbot-idea-${params.instrument}-${Date.now()}.wav`;
-     const file = new File([wavBlob], fileName, { type: 'audio/wav' });
-     const uploadedUrl = await uploadFileToServer(file, { bandId: activeBandId });
+ const wavBlob = await (await fetch(current.url)).blob();
+ const fileName = `chatbot-idea-${params.instrument}-${Date.now()}.wav`;
+ const file = new File([wavBlob], fileName, { type: 'audio/wav' });
+ const uploadedUrl = await uploadFileToServer(file, { bandId: activeBandId });
 
-     const instrumentLabel = params.instrument.charAt(0).toUpperCase() + params.instrument.slice(1);
-     const newIdea: SongAudioIdea = {
-       id: `idea-${Date.now()}`,
-       titulo: `Idea IA de ${instrumentLabel} (${params.keyName})`,
-       seccion: params.seccion || 'general',
-       audioUrl: uploadedUrl,
-       subidoPor: cleanUserName,
-       instrumento: `${instrumentLabel} (AI)`,
-       fecha: new Date().toISOString().split('T')[0],
-       notas: `Generada desde el chatbot a ${params.bpm} BPM.`
-     };
+ const instrumentLabel = params.instrument.charAt(0).toUpperCase() + params.instrument.slice(1);
+ const newIdea: SongAudioIdea = {
+ id: `idea-${Date.now()}`,
+ titulo: `Idea IA de ${instrumentLabel} (${params.keyName})`,
+ seccion: params.seccion || 'general',
+ audioUrl: uploadedUrl,
+ subidoPor: cleanUserName,
+ instrumento: `${instrumentLabel} (AI)`,
+ fecha: new Date().toISOString().split('T')[0],
+ notas: `Generada desde el chatbot a ${params.bpm} BPM.`
+ };
 
-     const updatedSong = { ...targetSong, audioIdeas: [...(targetSong.audioIdeas || []), newIdea] };
+ const updatedSong = { ...targetSong, audioIdeas: [...(targetSong.audioIdeas || []), newIdea] };
 
-     const putRes = await fetch(`/api/songs/${encodeURIComponent(targetSong.id)}`, {
-       method: 'PUT',
-       headers,
-       body: JSON.stringify(updatedSong)
-     });
-     if (!putRes.ok) throw new Error('El servidor rechazó el guardado de la canción.');
+ const putRes = await fetch(`/api/songs/${encodeURIComponent(targetSong.id)}`, {
+ method: 'PUT',
+ headers,
+ body: JSON.stringify(updatedSong)
+ });
+ if (!putRes.ok) throw new Error('El servidor rechazó el guardado de la canción.');
 
-     setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, savedToSong: targetSong.titulo } }));
-     setSongPicker(prev => { const next = { ...prev }; delete next[key]; return next; });
-   } catch (err: any) {
-     console.error('Error guardando idea melódica en el repertorio:', err);
-     setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, saveError: err?.message || 'No se pudo guardar en el repertorio.' } }));
-   }
+ setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, savedToSong: targetSong.titulo } }));
+ setSongPicker(prev => { const next = { ...prev }; delete next[key]; return next; });
+ } catch (err: any) {
+ console.error('Error guardando idea melódica en el repertorio:', err);
+ setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, saveError: err?.message || 'No se pudo guardar en el repertorio.' } }));
+ }
  };
 
  const accompanimentAudioRef = useRef(accompanimentAudio);
@@ -445,32 +445,32 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const melodicIdeaAudioRef = useRef(melodicIdeaAudio);
  melodicIdeaAudioRef.current = melodicIdeaAudio;
  useEffect(() => {
-   return () => {
-     Object.values(accompanimentAudioRef.current).forEach(entry => {
-       if (entry.url) URL.revokeObjectURL(entry.url);
-     });
-     Object.values(melodicIdeaAudioRef.current).forEach(entry => {
-       if (entry.url) URL.revokeObjectURL(entry.url);
-     });
-   };
+ return () => {
+ Object.values(accompanimentAudioRef.current).forEach(entry => {
+ if (entry.url) URL.revokeObjectURL(entry.url);
+ });
+ Object.values(melodicIdeaAudioRef.current).forEach(entry => {
+ if (entry.url) URL.revokeObjectURL(entry.url);
+ });
+ };
  }, []);
 
  const onLoadingChangeRef = useRef(onLoadingChange);
  useEffect(() => {
-   onLoadingChangeRef.current = onLoadingChange;
+ onLoadingChangeRef.current = onLoadingChange;
  }, [onLoadingChange]);
 
  const prevLoadingRef = useRef<boolean>(isLoading);
  useEffect(() => {
-   if (prevLoadingRef.current !== isLoading) {
-     prevLoadingRef.current = isLoading;
-     const timer = setTimeout(() => {
-       if (onLoadingChangeRef.current) {
-         onLoadingChangeRef.current(isLoading);
-       }
-     }, 0);
-     return () => clearTimeout(timer);
-   }
+ if (prevLoadingRef.current !== isLoading) {
+ prevLoadingRef.current = isLoading;
+ const timer = setTimeout(() => {
+ if (onLoadingChangeRef.current) {
+ onLoadingChangeRef.current(isLoading);
+ }
+ }, 0);
+ return () => clearTimeout(timer);
+ }
  }, [isLoading]);
  const messagesEndRef = useRef<HTMLDivElement>(null);
  const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -517,20 +517,20 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  }, []);
 
  useEffect(() => {
-   let isMounted = true;
-   api.getAutonomyConfig()
-     .then((cfg) => {
-       if (isMounted && cfg && cfg.dispatchLevel) {
-         setAutonomyConfig(cfg);
-         try {
-           localStorage.setItem('bakandeya_agent_autonomy', JSON.stringify(cfg));
-         } catch (e) {}
-       }
-     })
-     .catch((e) => {
-       console.warn("Notice fetching initial autonomy config for chat:", e);
-     });
-   return () => { isMounted = false; };
+ let isMounted = true;
+ api.getAutonomyConfig()
+ .then((cfg) => {
+ if (isMounted && cfg && cfg.dispatchLevel) {
+ setAutonomyConfig(cfg);
+ try {
+ localStorage.setItem('bakandeya_agent_autonomy', JSON.stringify(cfg));
+ } catch (e) {}
+ }
+ })
+ .catch((e) => {
+ console.warn("Notice fetching initial autonomy config for chat:", e);
+ });
+ return () => { isMounted = false; };
  }, []);
 
  useEffect(() => {
@@ -855,7 +855,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  // Confirm action callback
  async function handleConfirmAction(msgId: string, actionIndex: number, action: ProposedAction) {
  // 1. Apply changes
-  if (action.type === 'propose_lead_approval') {
+ if (action.type === 'propose_lead_approval') {
  const targetLead = leads.find(l => l.id === action.leadId);
  if (targetLead) {
  const today = new Date().toISOString().split('T')[0];
@@ -1258,64 +1258,64 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  fecha_ultima_respuesta: ''
  };
 
-    let createdLead: Lead = newLeadData;
-    let saveSuccess = false;
-    let saveErrorMessage = '';
+ let createdLead: Lead = newLeadData;
+ let saveSuccess = false;
+ let saveErrorMessage = '';
 
-    try {
-      if (onCreateLead) {
-        const result: any = await onCreateLead(newLeadData);
-        if (result && result.id) createdLead = result;
-        saveSuccess = true;
-      } else {
-        const res: any = await api.createLead(newLeadData);
-        if (res?.lead) createdLead = res.lead;
-        saveSuccess = true;
-      }
-    } catch (e: any) {
-      console.error("Error creating lead from chatbot:", e);
-      saveErrorMessage = e?.message || 'Error al conectar con la base de datos Supabase.';
-    }
+ try {
+ if (onCreateLead) {
+ const result: any = await onCreateLead(newLeadData);
+ if (result && result.id) createdLead = result;
+ saveSuccess = true;
+ } else {
+ const res: any = await api.createLead(newLeadData);
+ if (res?.lead) createdLead = res.lead;
+ saveSuccess = true;
+ }
+ } catch (e: any) {
+ console.error("Error creating lead from chatbot:", e);
+ saveErrorMessage = e?.message || 'Error al conectar con la base de datos Supabase.';
+ }
 
-    if (saveSuccess) {
-      try {
-        window.dispatchEvent(new Event('app-data-updated'));
-      } catch (_) {}
+ if (saveSuccess) {
+ try {
+ window.dispatchEvent(new Event('app-data-updated'));
+ } catch (_) {}
 
-      setMessages(prev => prev.map(m => {
-        if (m.id === msgId) {
-          const updatedActions = (m.proposedActions || []).map((a, idx) =>
-            idx === actionIndex ? { ...a, status: 'applied' as const } : a
-          );
-          return { ...m, actionStatus: 'applied', proposedActions: updatedActions };
-        }
-        return m;
-      }));
+ setMessages(prev => prev.map(m => {
+ if (m.id === msgId) {
+ const updatedActions = (m.proposedActions || []).map((a, idx) =>
+ idx === actionIndex ? { ...a, status: 'applied' as const } : a
+ );
+ return { ...m, actionStatus: 'applied', proposedActions: updatedActions };
+ }
+ return m;
+ }));
 
-      if (onNavigate) {
-        onNavigate(isMedio ? 'medios' : 'booking', {
-          sectionTab: isMedio ? 'medios' : 'salas',
-          statusFilter: 'todos',
-          initialSelectedLeadId: createdLead.id
-        });
-      }
+ if (onNavigate) {
+ onNavigate(isMedio ? 'medios' : 'booking', {
+ sectionTab: isMedio ? 'medios' : 'salas',
+ statusFilter: 'todos',
+ initialSelectedLeadId: createdLead.id
+ });
+ }
 
-      const addSuccessMsg: ChatMessage = {
-        id: `sys-${Date.now()}`,
-        sender: 'bot',
-        text: `✨ **Nuevo Lead / Medio Creado con Éxito:**\n\nSe ha guardado e insertado **"${newLeadData.nombre_sala}"** (${newLeadData.ciudad}) en la base de datos y sincronizado directamente con Supabase.\n\n📍 *Te he redirigido al CRM seleccionando la sala directamente.*`,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, addSuccessMsg]);
-    } else {
-      const addFailMsg: ChatMessage = {
-        id: `sys-${Date.now()}`,
-        sender: 'bot',
-        text: `⚠️ **No se pudo guardar la sala en Supabase:**\n\n${saveErrorMessage}\n\nRevisa la sesión o intenta añadir la sala manualmente en el CRM.`,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, addFailMsg]);
-    }
+ const addSuccessMsg: ChatMessage = {
+ id: `sys-${Date.now()}`,
+ sender: 'bot',
+ text: `✨ **Nuevo Lead / Medio Creado con Éxito:**\n\nSe ha guardado e insertado **"${newLeadData.nombre_sala}"** (${newLeadData.ciudad}) en la base de datos y sincronizado directamente con Supabase.\n\n📍 *Te he redirigido al CRM seleccionando la sala directamente.*`,
+ timestamp: new Date()
+ };
+ setMessages(prev => [...prev, addSuccessMsg]);
+ } else {
+ const addFailMsg: ChatMessage = {
+ id: `sys-${Date.now()}`,
+ sender: 'bot',
+ text: `⚠️ **No se pudo guardar la sala en Supabase:**\n\n${saveErrorMessage}\n\nRevisa la sesión o intenta añadir la sala manualmente en el CRM.`,
+ timestamp: new Date()
+ };
+ setMessages(prev => [...prev, addFailMsg]);
+ }
 
  } else if (action.type === 'propose_update_lead' && action.leadId) {
  const targetLead = leads.find(l => l.id === action.leadId);
@@ -1510,8 +1510,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  }
 
  try {
-    window.dispatchEvent(new Event('app-data-updated'));
-  } catch (_) {}
+ window.dispatchEvent(new Event('app-data-updated'));
+ } catch (_) {}
 
  } else if (action.type === 'propose_agent_trigger' && action.agentName) {
  try {
@@ -1653,17 +1653,17 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  } catch (_) {}
 
  const handleDismissAction = (msgId: string, actionIndex?: number, action?: ProposedAction) => {
-   if (typeof actionIndex === 'number' && action) {
-     updateActionStatusInMessages(msgId, actionIndex, action, 'dismissed');
-   } else {
-     setMessages(prev => prev.map(m => {
-       if (m.id === msgId) {
-         const currentActions = (m.proposedActions || []).map(a => ({ ...a, status: 'dismissed' as const }));
-         return { ...m, proposedActions: currentActions, actionStatus: 'dismissed' };
-       }
-       return m;
-     }));
-   }
+ if (typeof actionIndex === 'number' && action) {
+ updateActionStatusInMessages(msgId, actionIndex, action, 'dismissed');
+ } else {
+ setMessages(prev => prev.map(m => {
+ if (m.id === msgId) {
+ const currentActions = (m.proposedActions || []).map(a => ({ ...a, status: 'dismissed' as const }));
+ return { ...m, proposedActions: currentActions, actionStatus: 'dismissed' };
+ }
+ return m;
+ }));
+ }
  };
 
  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -1744,7 +1744,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <button
  type="button"
  onClick={() => setIsAutonomyModalOpen(true)}
- className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono border font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+ className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
  isStitchLight 
  ? 'bg-purple-100 hover:bg-purple-200 text-purple-800 border-purple-300 shadow-sm' 
  : 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border-purple-500/40 shadow-sm'
@@ -1761,7 +1761,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </button>
  ) : (
  <div 
- className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono border font-semibold opacity-80 ${
+ className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold opacity-80 ${
  isStitchLight 
  ? 'bg-purple-50 text-purple-700 border-purple-200' 
  : 'bg-purple-500/15 text-purple-300 border-purple-500/30'
@@ -1954,12 +1954,12 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
  </div>
  ) : songPicker[audioKey] ? (
- <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${isStitchLight ? 'bg-[var(--bg)] border ' : 'bg-bg-[var(--surface)] border '}`}>
+ <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)] '}`}>
  <p className="text-[10px] font-mono text-text-[var(--ink-2)]">No he identificado la canción. Elige en cuál guardarla:</p>
  <select
  value={songPicker[audioKey].selectedId}
  onChange={(e) => setSongPicker(prev => ({ ...prev, [audioKey]: { ...prev[audioKey], selectedId: e.target.value } }))}
- className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ? 'bg-white border  text-[var(--ink)]' : 'bg-black border  text-bg-[var(--sunken)]'}`}
+ className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-black text-bg-[var(--sunken)]'}`}
  >
  <option value="">— Selecciona una canción —</option>
  {songPicker[audioKey].songs.map(s => (
@@ -2029,7 +2029,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => handleDownloadMelodicIdeaMidi(idea)}
  title="Abre en cualquier DAW o editor de partituras para editarla nota a nota"
- className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-1.5 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${isStitchLight ? 'bg-white hover:bg-[var(--sunken)] text-[var(--ink-2)] border ' : 'bg-transparent hover:bg-bg-[var(--surface)] text-text-[var(--ink-2)] border '}`}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-1.5 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${isStitchLight ? 'bg-white hover:bg-[var(--sunken)] text-[var(--ink-2)] ' : 'bg-transparent hover:bg-bg-[var(--surface)] text-text-[var(--ink-2)] '}`}
  >
  <Download className="w-3.5 h-3.5" /> Descargar .mid
  </button>
@@ -2038,12 +2038,12 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
  </div>
  ) : songPicker[audioKey] ? (
- <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${isStitchLight ? 'bg-[var(--bg)] border ' : 'bg-bg-[var(--surface)] border '}`}>
+ <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)] '}`}>
  <p className="text-[10px] font-mono text-text-[var(--ink-2)]">No he identificado la canción. Elige en cuál guardarla:</p>
  <select
  value={songPicker[audioKey].selectedId}
  onChange={(e) => setSongPicker(prev => ({ ...prev, [audioKey]: { ...prev[audioKey], selectedId: e.target.value } }))}
- className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ? 'bg-white border  text-[var(--ink)]' : 'bg-black border  text-bg-[var(--sunken)]'}`}
+ className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-black text-bg-[var(--sunken)]'}`}
  >
  <option value="">— Selecciona una canción —</option>
  {songPicker[audioKey].songs.map(s => (
@@ -2224,52 +2224,52 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {/* Outcome message feedback */}
  {activeRun.status === 'completed' && activeRun.conclusion === 'success' && (() => {
  const isLector = (activeRun.agentName || '').toLowerCase().includes('lector');
-            const isEnviador = (activeRun.agentName || '').toLowerCase().includes('enviador');
-            const isRedactor = (activeRun.agentName || '').toLowerCase().includes('redactor');
+ const isEnviador = (activeRun.agentName || '').toLowerCase().includes('enviador');
+ const isRedactor = (activeRun.agentName || '').toLowerCase().includes('redactor');
 
-            if (isLector) {
-              return (
-                <div className="p-3.5 bg-emerald-500/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Bandeja Sincronizada!</span>
-                  </div>
-                  <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
-                    El agente Lector ha revisado tu bandeja de correo y actualizado el hilo de respuestas en Supabase.
-                  </p>
-                </div>
-              );
-            }
+ if (isLector) {
+ return (
+ <div className="p-3.5 bg-emerald-500/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
+ <div className="flex items-center gap-2">
+ <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+ <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Bandeja Sincronizada!</span>
+ </div>
+ <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+ El agente Lector ha revisado tu bandeja de correo y actualizado el hilo de respuestas en Supabase.
+ </p>
+ </div>
+ );
+ }
 
-            if (isEnviador) {
-              return (
-                <div className="p-3.5 bg-emerald-500/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Despacho Completado!</span>
-                  </div>
-                  <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
-                    El agente Enviador ha procesado los correos autorizados en Supabase y registrado las fechas de envío.
-                  </p>
-                </div>
-              );
-            }
+ if (isEnviador) {
+ return (
+ <div className="p-3.5 bg-emerald-500/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
+ <div className="flex items-center gap-2">
+ <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+ <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Despacho Completado!</span>
+ </div>
+ <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+ El agente Enviador ha procesado los correos autorizados en Supabase y registrado las fechas de envío.
+ </p>
+ </div>
+ );
+ }
 
-            if (isRedactor) {
-              return (
-                <div className="p-3.5 bg-emerald-500/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Borradores Generados!</span>
-                  </div>
-                  <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
-                    El agente Redactor ha generado propuestas personalizadas en Supabase listas para tu revisión.
-                  </p>
-                </div>
-              );
-            }
+ if (isRedactor) {
+ return (
+ <div className="p-3.5 bg-emerald-500/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
+ <div className="flex items-center gap-2">
+ <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+ <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Borradores Generados!</span>
+ </div>
+ <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+ El agente Redactor ha generado propuestas personalizadas en Supabase listas para tu revisión.
+ </p>
+ </div>
+ );
+ }
 
-            // Get actual new leads
+ // Get actual new leads
  let detectedLeads = leads.filter(l => !activeRun.initialLeadIds?.includes(l.id));
 
  if (activeRun.region) {

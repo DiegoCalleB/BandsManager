@@ -26,14 +26,14 @@ interface ReelsCenterProps {
 }
 
 import {
-  ReelCard,
-  HighlightClip,
-  OptimalTime,
-  getYouTubeId,
-  getStartTimeInSeconds,
-  defaultScheduleDate,
-  validateScheduleReadiness,
-  getCadenceWarnings
+ ReelCard,
+ HighlightClip,
+ OptimalTime,
+ getYouTubeId,
+ getStartTimeInSeconds,
+ defaultScheduleDate,
+ validateScheduleReadiness,
+ getCadenceWarnings
 } from '../utils/reelsUtils';
 import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
 
@@ -128,12 +128,12 @@ export default function ReelsCenter({
  instagramHandle,
  hasAnySocialLink
 }: ReelsCenterProps) {
-  // Tabs: 'pipeline' (existing Kanban + Writer) vs 'analyzer' (new AI Video Highlight Extractor)
-  const [activeTab, setActiveTab] = useState<'pipeline' | 'analyzer'>('pipeline');
+ // Tabs: 'pipeline' (existing Kanban + Writer) vs 'analyzer' (new AI Video Highlight Extractor)
+ const [activeTab, setActiveTab] = useState<'pipeline' | 'analyzer'>('pipeline');
 
-  // Esta pantalla estaba llena de "Bakandeya" a pelo, así que cualquier otra banda veía por
-  // todas partes el nombre de la banda del fundador en vez del suyo.
-  const nombreBanda = (bandName || '').trim() || 'tu banda';
+ // Esta pantalla estaba llena de "Bakandeya" a pelo, así que cualquier otra banda veía por
+ // todas partes el nombre de la banda del fundador en vez del suyo.
+ const nombreBanda = (bandName || '').trim() || 'tu banda';
 
  // Band Tone Analysis State
  const [isBakandeyaToneModalOpen, setIsBakandeyaToneModalOpen] = useState(false);
@@ -148,78 +148,78 @@ export default function ReelsCenter({
  // consultarlo, se lo pisaba con un resultado nuevo de la IA y perdía sus correcciones a mano.
  // Ahora primero se mira qué hay ya guardado; solo se lanza la IA si no hay nada todavía.
  const handleOpenToneModal = async () => {
-   setIsBakandeyaToneModalOpen(true);
-   setIsAnalyzingBakandeyaTone(true);
-   try {
-     const res = await apiFetch('/api/bands/tone-dna');
-     const json = res as any;
-     if (json?.success && json.data) {
-       setBakandeyaToneData(json.data);
-       setToneAnalysisSaved(true);
-       setIsAnalyzingBakandeyaTone(false);
-       return;
-     }
-   } catch (err) {
-     console.error('Error cargando el ADN de tono guardado:', err);
-   }
-   // Sin nada guardado todavía: se cae al análisis con IA de siempre.
-   await handleAnalyzeBakandeyaTone();
+ setIsBakandeyaToneModalOpen(true);
+ setIsAnalyzingBakandeyaTone(true);
+ try {
+ const res = await apiFetch('/api/bands/tone-dna');
+ const json = res as any;
+ if (json?.success && json.data) {
+ setBakandeyaToneData(json.data);
+ setToneAnalysisSaved(true);
+ setIsAnalyzingBakandeyaTone(false);
+ return;
+ }
+ } catch (err) {
+ console.error('Error cargando el ADN de tono guardado:', err);
+ }
+ // Sin nada guardado todavía: se cae al análisis con IA de siempre.
+ await handleAnalyzeBakandeyaTone();
  };
 
  // Refresca solo lo guardado en Supabase (incluidas las reglas de Self-Refining Tone DNA
  // recién generadas por "Entrenar ADN de tono ahora"), sin relanzar el rastreo de redes.
  const handleRefreshLearnedRules = async () => {
-   try {
-     const res = await apiFetch('/api/bands/tone-dna');
-     const json = res as any;
-     if (json?.success && json.data) {
-       setBakandeyaToneData(json.data);
-       setToneAnalysisSaved(true);
-     }
-   } catch (err) {
-     console.error('Error refrescando el ADN de tono aprendido:', err);
-   }
+ try {
+ const res = await apiFetch('/api/bands/tone-dna');
+ const json = res as any;
+ if (json?.success && json.data) {
+ setBakandeyaToneData(json.data);
+ setToneAnalysisSaved(true);
+ }
+ } catch (err) {
+ console.error('Error refrescando el ADN de tono aprendido:', err);
+ }
  };
 
  // Antes esto analizaba siempre @bakandeya en Instagram, sin importar qué banda estuviera
  // usando la app: el botón "Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
  // Instagram del fundador en vez de la suya propia.
  const handleAnalyzeBakandeyaTone = async () => {
-   // El backend ya rastrea Instagram, TikTok, YouTube y Facebook (lee el EPK real de la banda),
-   // así que exigir Instagram en concreto bloqueaba a cualquier banda que solo tuviera, por
-   // ejemplo, TikTok configurado.
-   if (!instagramHandle && !hasAnySocialLink) {
-     alert('Configura al menos una red social de tu banda (Instagram, TikTok, YouTube o Facebook) en el EPK antes de analizar el tono de voz.');
-     return;
-   }
-   setIsAnalyzingBakandeyaTone(true);
-   setIsBakandeyaToneModalOpen(true);
-   setToneAnalysisSaved(false);
-   try {
-     const res = await apiFetch('/api/bands/analyze-tone', {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({
-         nombre_entidad: bandName || 'Tu Banda',
-         instagram: instagramHandle,
-         estilo_musical: '',
-         localizacion: '',
-         tipo: 'Banda / Artista Emisora',
-         is_sender: true
-       })
-     });
-     const json = res as any;
-     if (json?.success && json.data) {
-       setBakandeyaToneData(json.data);
-       // El backend guarda el ADN en Supabase de forma automática cuando is_sender es true;
-       // savedPermanently confirma que la escritura no falló, para poder decírselo al usuario.
-       setToneAnalysisSaved(Boolean(json.savedPermanently));
-     }
-   } catch (err) {
-     console.error('Error analyzing Bakandeya tone:', err);
-   } finally {
-     setIsAnalyzingBakandeyaTone(false);
-   }
+ // El backend ya rastrea Instagram, TikTok, YouTube y Facebook (lee el EPK real de la banda),
+ // así que exigir Instagram en concreto bloqueaba a cualquier banda que solo tuviera, por
+ // ejemplo, TikTok configurado.
+ if (!instagramHandle && !hasAnySocialLink) {
+ alert('Configura al menos una red social de tu banda (Instagram, TikTok, YouTube o Facebook) en el EPK antes de analizar el tono de voz.');
+ return;
+ }
+ setIsAnalyzingBakandeyaTone(true);
+ setIsBakandeyaToneModalOpen(true);
+ setToneAnalysisSaved(false);
+ try {
+ const res = await apiFetch('/api/bands/analyze-tone', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({
+ nombre_entidad: bandName || 'Tu Banda',
+ instagram: instagramHandle,
+ estilo_musical: '',
+ localizacion: '',
+ tipo: 'Banda / Artista Emisora',
+ is_sender: true
+ })
+ });
+ const json = res as any;
+ if (json?.success && json.data) {
+ setBakandeyaToneData(json.data);
+ // El backend guarda el ADN en Supabase de forma automática cuando is_sender es true;
+ // savedPermanently confirma que la escritura no falló, para poder decírselo al usuario.
+ setToneAnalysisSaved(Boolean(json.savedPermanently));
+ }
+ } catch (err) {
+ console.error('Error analyzing Bakandeya tone:', err);
+ } finally {
+ setIsAnalyzingBakandeyaTone(false);
+ }
  };
 
  // Sync state
@@ -271,19 +271,19 @@ export default function ReelsCenter({
  const [isExpandedPreview, setIsExpandedPreview] = useState(false);
 
  useEffect(() => {
-   if (isExpandedPreview) {
-     document.body.style.overflow = 'hidden';
-     setTimeout(() => {
-       const modalEl = document.getElementById('theater-mode-modal');
-       if (modalEl) modalEl.scrollTop = 0;
-       window.scrollTo({ top: 0, behavior: 'instant' as any });
-     }, 10);
-   } else {
-     document.body.style.overflow = '';
-   }
-   return () => {
-     document.body.style.overflow = '';
-   };
+ if (isExpandedPreview) {
+ document.body.style.overflow = 'hidden';
+ setTimeout(() => {
+ const modalEl = document.getElementById('theater-mode-modal');
+ if (modalEl) modalEl.scrollTop = 0;
+ window.scrollTo({ top: 0, behavior: 'instant' as any });
+ }, 10);
+ } else {
+ document.body.style.overflow = '';
+ }
+ return () => {
+ document.body.style.overflow = '';
+ };
  }, [isExpandedPreview]);
 
  const [videoTopic, setVideoTopic] = useState('');
@@ -979,9 +979,9 @@ export default function ReelsCenter({
 
  // Drag & Drop helper
  /**
-  * Cambia el vídeo local revocando antes el blob anterior. Elegir otro archivo sin pasar por
-  * el botón de "eliminar" dejaba el vídeo previo entero retenido en memoria por su object URL.
-  */
+ * Cambia el vídeo local revocando antes el blob anterior. Elegir otro archivo sin pasar por
+ * el botón de "eliminar" dejaba el vídeo previo entero retenido en memoria por su object URL.
+ */
  const cambiarVideoLocal = (file: File | null) => {
  setLocalVideoUrl(prev => {
  if (prev && prev.startsWith('blob:')) {
@@ -1311,11 +1311,11 @@ export default function ReelsCenter({
  
  {/* Header con Sincronización en Excel */}
  <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
-       {/* HEADER / TITULO PRINCIPAL */}
-      <div className="mb-2">
-        <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-zinc-100 mb-2">Medios</h1>
-        <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Analítica Social y Prensa</p>
-      </div>
+ {/* HEADER / TITULO PRINCIPAL */}
+ <div className="mb-2">
+ <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-zinc-100 mb-2">Medios</h1>
+ <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Analítica Social y Prensa</p>
+ </div>
  <div className="flex gap-2.5 items-center flex-wrap">
  <button
  onClick={handleOpenToneModal}
@@ -2268,7 +2268,7 @@ export default function ReelsCenter({
  estrellas + comentario ya existente arriba, y decidir si se recuerda para siempre
  o es solo un ajuste puntual de este corte. */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
- <div className={`p-2 rounded-[var(--r-m)] border space-y-1 ${isStitchLight ? 'bg-white -slate-200' : 'bg-[var(--surface)] -neutral-800'}`}>
+ <div className={`p-2 rounded-[var(--r-m)] space-y-1 ${isStitchLight ? 'bg-white -slate-200' : 'bg-[var(--surface)] -neutral-800'}`}>
  <span className="text-[9px] font-mono uppercase tracking-wider text-text-[var(--ink-2)] block">Tono (versión anterior)</span>
  <div className="flex items-center gap-0.5">
  {[1, 2, 3, 4, 5].map((star) => (
@@ -2284,7 +2284,7 @@ export default function ReelsCenter({
  ))}
  </div>
  </div>
- <div className={`p-2 rounded-[var(--r-m)] border space-y-1 ${isStitchLight ? 'bg-white -slate-200' : 'bg-[var(--surface)] -neutral-800'}`}>
+ <div className={`p-2 rounded-[var(--r-m)] space-y-1 ${isStitchLight ? 'bg-white -slate-200' : 'bg-[var(--surface)] -neutral-800'}`}>
  <span className="text-[9px] font-mono uppercase tracking-wider text-text-[var(--ink-2)] block">Contenido (versión anterior)</span>
  <div className="flex items-center gap-0.5">
  {[1, 2, 3, 4, 5].map((star) => (
@@ -2959,16 +2959,16 @@ export default function ReelsCenter({
  onClick={(e) => e.stopPropagation()}
  className="w-full max-w-6xl mb-2 flex items-center justify-between p-3 rounded-[var(--r-l)] bg-bg-[var(--surface)] -neutral-800 lg:hidden shrink-0 shadow-lg"
  >
-   <div className="flex items-center gap-2">
-     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-     <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">Modo Cine · Reels</span>
-   </div>
-   <button
-     onClick={() => setIsExpandedPreview(false)}
-     className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 text-amber-400 hover:text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer -neutral-700"
-   >
-     <X className="w-4 h-4" /> <span>Cerrar</span>
-   </button>
+ <div className="flex items-center gap-2">
+ <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+ <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">Modo Cine · Reels</span>
+ </div>
+ <button
+ onClick={() => setIsExpandedPreview(false)}
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 text-amber-400 hover:text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer -neutral-700"
+ >
+ <X className="w-4 h-4" /> <span>Cerrar</span>
+ </button>
  </div>
 
  <div 
@@ -4025,29 +4025,29 @@ export default function ReelsCenter({
  </div>
  )}
 
-  {/* Modal de Tono de Expresión de la banda activa */}
-  <BandToneModal
-    isOpen={isBakandeyaToneModalOpen}
-    onClose={() => setIsBakandeyaToneModalOpen(false)}
-    band={{
-      id: instagramHandle || '',
-      nombre_banda: bandName || 'Tu Banda',
-      estilo_musical: '',
-      localizacion: '',
-      estado_relacion: 'colegas_aliados',
-      ultimo_contacto: 'Hoy'
-    }}
-    toneData={bakandeyaToneData}
-    isLoading={isAnalyzingBakandeyaTone}
-    isSaved={toneAnalysisSaved}
-    editable
-    onSaved={(data) => {
-      setBakandeyaToneData(data);
-      setToneAnalysisSaved(true);
-    }}
-    onReAnalyze={handleAnalyzeBakandeyaTone}
-    onRefreshLearnedRules={handleRefreshLearnedRules}
-  />
+ {/* Modal de Tono de Expresión de la banda activa */}
+ <BandToneModal
+ isOpen={isBakandeyaToneModalOpen}
+ onClose={() => setIsBakandeyaToneModalOpen(false)}
+ band={{
+ id: instagramHandle || '',
+ nombre_banda: bandName || 'Tu Banda',
+ estilo_musical: '',
+ localizacion: '',
+ estado_relacion: 'colegas_aliados',
+ ultimo_contacto: 'Hoy'
+ }}
+ toneData={bakandeyaToneData}
+ isLoading={isAnalyzingBakandeyaTone}
+ isSaved={toneAnalysisSaved}
+ editable
+ onSaved={(data) => {
+ setBakandeyaToneData(data);
+ setToneAnalysisSaved(true);
+ }}
+ onReAnalyze={handleAnalyzeBakandeyaTone}
+ onRefreshLearnedRules={handleRefreshLearnedRules}
+ />
 
  </div>
  );

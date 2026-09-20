@@ -1,11 +1,11 @@
 import React from 'react';
 
 interface NoTranslateProps {
-  children: React.ReactNode;
-  className?: string;
-  as?: React.ElementType;
-  title?: string;
-  style?: React.CSSProperties;
+ children: React.ReactNode;
+ className?: string;
+ as?: React.ElementType;
+ title?: string;
+ style?: React.CSSProperties;
 }
 
 /**
@@ -13,22 +13,22 @@ interface NoTranslateProps {
  * and contact emails are NEVER translated by Google Translate or browser translation extensions.
  */
 export const NoTranslate: React.FC<NoTranslateProps> = ({
-  children,
-  className = '',
-  as: Component = 'span',
-  title,
-  style,
+ children,
+ className = '',
+ as: Component = 'span',
+ title,
+ style,
 }) => {
-  return (
-    <Component
-      className={`notranslate ${className}`}
-      translate="no"
-      title={title}
-      style={style}
-    >
-      {children}
-    </Component>
-  );
+ return (
+ <Component
+ className={`notranslate ${className}`}
+ translate="no"
+ title={title}
+ style={style}
+ >
+ {children}
+ </Component>
+ );
 };
 
 export default NoTranslate;
