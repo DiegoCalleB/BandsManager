@@ -417,7 +417,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <Guitar className="w-5 h-5 animate-pulse" />
  </div>
  <div>
- <h3 className="text-base font-bold text-white flex items-center gap-2">
+ <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-2">
  Afinador Pro Guitarra, Bajo & Ukelele
  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300">
  Precision Autocorrelation
@@ -432,7 +432,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  stopReferenceTone();
  onClose();
  }}
- className="p-1.5 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -476,7 +476,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  className={`px-2 py-1 rounded-md font-bold transition-all cursor-pointer ${
  isCatSelected
  ?'bg-emerald-500 text-zinc-950 shadow-xs'
- :'text-[var(--ink-2)] hover:text-white hover:bg-white/5'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/5'
  }`}
  >
  {labels[cat]}
@@ -566,7 +566,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <div className="flex flex-col items-center animate-in zoom-in-95 duration-100">
  <div className="flex items-baseline gap-1">
  <span className={`text-6xl font-black font-display tracking-tight ${
- isTunedIn ?'text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.6)]' :'text-white'
+ isTunedIn ?'text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.6)]' :'text-[var(--ink)]'
  }`}>
  {pitch.noteName}
  </span>
@@ -646,7 +646,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </button>
  <button
  onClick={startTuner}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-white/10 hover:bg-white/20 text-white font-mono text-[10px] transition-colors flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-white/10 hover:bg-white/20 text-[var(--ink)] font-mono text-[10px] transition-colors flex items-center gap-1 cursor-pointer"
  >
  <RefreshCw className="w-3 h-3" />
  Reintentar micrófono
@@ -710,7 +710,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  stopReferenceTone();
  onClose();
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-white font-mono text-xs font-bold transition-all cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-mono text-xs font-bold transition-all cursor-pointer"
  >
  Cerrar
  </button>

@@ -277,7 +277,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800/50 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]/80 transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -359,7 +359,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div className="flex flex-wrap items-center justify-between gap-3">
  <div className="flex items-center gap-3">
  <div
- className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shadow-inner uppercase font-mono text-sm shrink-0"
+ className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] shadow-inner uppercase font-mono text-sm shrink-0"
  style={{ backgroundColor: u.avatarColor ||'#10b981' }}
  >
  {u.name.slice(0, 2)}
@@ -404,7 +404,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold outline-none cursor-pointer transition-all ${
  u.role ==='leader'
  ?'bg-[#d1b375]/15 text-[#d1b375] -amber-500/40 hover:bg-[var(--acc)]/25'
- :'bg-[var(--surface)] text-blue-300 -blue-500/30 hover:bg-neutral-800'
+ :'bg-[var(--surface)] text-blue-300 -blue-500/30 hover:bg-[var(--surface)]/80'
  } ${isSelf ?'opacity-70 cursor-not-allowed' :''}`}
  >
  <option value="member" className="bg-[var(--surface)] text-[var(--sunken)]">Rol: Miembro</option>
@@ -421,7 +421,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  setChangePasswordValue('');
  }
  }}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-mono hover:bg-neutral-800 text-[var(--ink-3)] transition-colors flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-mono hover:bg-[var(--surface)]/80 text-[var(--ink-3)] transition-colors flex items-center gap-1 cursor-pointer"
  >
  <Key className="w-3 h-3 text-[var(--acc)]" />
  <span>{isEditingThisUser ?'Cancelar' :'Contraseña'}</span>
@@ -669,7 +669,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <button
  type="submit"
  disabled={loading || !assocEmail.trim()}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-indigo-600/20 active:scale-98"
+ className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-indigo-600/20 active:scale-98"
  >
  {loading ? (
  <span>Asociando músico...</span>
@@ -690,7 +690,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  }`}>
  <button
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] hover:bg-neutral-800 transition-colors"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] hover:bg-[var(--surface)]/80 transition-colors"
  >
  Cerrar Panel
  </button>

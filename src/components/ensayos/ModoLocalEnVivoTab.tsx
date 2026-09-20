@@ -388,7 +388,7 @@ export function ModoLocalEnVivoTab({
  ?'bg-emerald-500/20 text-emerald-300'
  : item.evaluacion ==='repetir'
  ?'bg-rose-500/20 text-rose-300'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white border-[var(--hair)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]'
  }`}
  >
  <span>{idx + 1}.</span>
@@ -410,7 +410,7 @@ export function ModoLocalEnVivoTab({
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  viewMode ==='escenario'
  ?'bg-[var(--acc)]/60 text-[var(--surface)] shadow-sm'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista Escenario & Estructura"
  >
@@ -423,7 +423,7 @@ export function ModoLocalEnVivoTab({
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  viewMode ==='atril'
  ?'bg-[var(--acc)]/60 text-[var(--surface)] shadow-sm'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Modo Atril / Acordes & Letra (Teleprompter)"
  >
@@ -435,7 +435,7 @@ export function ModoLocalEnVivoTab({
  {/* Fullscreen Button */}
  <button
  onClick={toggleFullscreen}
- className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-3)] hover:text-white hover:/40 transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-3)] hover:text-[var(--ink)] hover:/40 transition-all cursor-pointer"
  title={isFullscreen ?'Salir de pantalla completa' :'Ver a pantalla completa'}
  >
  {isFullscreen ? <Minimize2 className="w-4 h-4 text-[var(--acc)]" /> : <Maximize2 className="w-4 h-4" />}
@@ -460,7 +460,7 @@ export function ModoLocalEnVivoTab({
  {currentItem?.tipo.replace('_','')}
  </span>
  </div>
- <h1 className="text-2xl sm:text-4xl lg:text-5xl font-display font-black text-white tracking-tight truncate">
+ <h1 className="text-2xl sm:text-4xl lg:text-5xl font-display font-black text-[var(--ink)] tracking-tight truncate">
  {currentItem?.titulo}
  </h1>
  </div>
@@ -580,7 +580,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsMetronomeActive(!isMetronomeActive)}
  className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-m)] font-mono font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md ${
  isMetronomeActive
- ?'bg-rose-500 text-white hover:bg-rose-400 shadow-rose-500/20'
+ ?'bg-rose-500 text-[var(--ink)] hover:bg-rose-400 shadow-rose-500/20'
  :'bg-emerald-500 text-[var(--surface)] hover:bg-emerald-400 shadow-emerald-500/20'
  }`}
  >
@@ -598,7 +598,7 @@ export function ModoLocalEnVivoTab({
  ? bIdx === 0
  ?'bg-rose-500 scale-125 shadow-lg shadow-rose-500/50'
  :'bg-[var(--acc)]/60 scale-125 shadow-lg shadow-amber-400/50'
- :'bg-neutral-700'
+ :'bg-[var(--surface)]/70'
  }`}
  />
  ))}
@@ -609,13 +609,13 @@ export function ModoLocalEnVivoTab({
  <div className="flex items-center gap-1 sm:gap-2">
  <button
  onClick={() => setBpm(Math.max(40, bpm - 5))}
- className="px-2 py-1.5 rounded-[var(--r-s)] bg-neutral-800 text-[var(--ink-3)] hover:text-white font-mono text-xs cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
  >
  -5
  </button>
  <button
  onClick={() => setBpm(Math.max(40, bpm - 1))}
- className="px-2 py-1.5 rounded-[var(--r-s)] bg-neutral-800 text-[var(--ink-3)] hover:text-white font-mono text-xs cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
  >
  -1
  </button>
@@ -626,13 +626,13 @@ export function ModoLocalEnVivoTab({
 
  <button
  onClick={() => setBpm(Math.min(280, bpm + 1))}
- className="px-2 py-1.5 rounded-[var(--r-s)] bg-neutral-800 text-[var(--ink-3)] hover:text-white font-mono text-xs cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
  >
  +1
  </button>
  <button
  onClick={() => setBpm(Math.min(280, bpm + 5))}
- className="px-2 py-1.5 rounded-[var(--r-s)] bg-neutral-800 text-[var(--ink-3)] hover:text-white font-mono text-xs cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
  >
  +5
  </button>
@@ -682,7 +682,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('repetir')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='repetir'
- ?'bg-rose-500 text-white shadow-md shadow-rose-500/20'
+ ?'bg-rose-500 text-[var(--ink)] shadow-md shadow-rose-500/20'
  :'bg-rose-500/15 text-rose-300 hover:bg-rose-500/25'
  }`}
  >
@@ -696,7 +696,7 @@ export function ModoLocalEnVivoTab({
  <button
  disabled={activeIndex === 0}
  onClick={() => setActiveIndex(prev => prev - 1)}
- className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2.5 rounded-[var(--r-m)] bg-neutral-800 text-[var(--sunken)] hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 font-mono font-bold text-xs cursor-pointer transition-all"
+ className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--sunken)] hover:bg-[var(--surface)]/70 disabled:opacity-30 disabled:hover:bg-[var(--surface)]/80 font-mono font-bold text-xs cursor-pointer transition-all"
  >
  <ChevronLeft className="w-4 h-4" />
  <span>Anterior</span>
@@ -726,7 +726,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsMetronomeActive(!isMetronomeActive)}
  className={`p-2 rounded-[var(--r-m)] font-mono text-xs font-bold cursor-pointer transition-all ${
  isMetronomeActive
- ?'bg-rose-500 text-white'
+ ?'bg-rose-500 text-[var(--ink)]'
  :'bg-emerald-500 text-[var(--surface)]'
  }`}
  title="Metrónomo Clic"
@@ -743,7 +743,7 @@ export function ModoLocalEnVivoTab({
  ?'bg-rose-500 scale-125'
  : isMetronomeActive
  ?'bg-[var(--acc)]/60'
- :'bg-neutral-700'
+ :'bg-[var(--surface)]/70'
  }`}
  />
  </div>
@@ -756,7 +756,7 @@ export function ModoLocalEnVivoTab({
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold cursor-pointer transition-all ${
  isAutoScrolling
  ?'bg-[var(--acc)]/60 text-[var(--surface)] animate-pulse'
- :'bg-neutral-800 text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  {isAutoScrolling ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
@@ -790,7 +790,7 @@ export function ModoLocalEnVivoTab({
  </span>
  <button
  onClick={() => setTranspose(t => t - 1)}
- className="px-1.5 py-0.5 rounded bg-neutral-800 text-[var(--ink-3)] hover:text-white text-xs font-mono font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
  >
  -1
  </button>
@@ -799,7 +799,7 @@ export function ModoLocalEnVivoTab({
  </span>
  <button
  onClick={() => setTranspose(t => t + 1)}
- className="px-1.5 py-0.5 rounded bg-neutral-800 text-[var(--ink-3)] hover:text-white text-xs font-mono font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
  >
  +1
  </button>
@@ -808,7 +808,7 @@ export function ModoLocalEnVivoTab({
  {/* Notation ES/EN */}
  <button
  onClick={() => setNotation(n => (n ==='ES' ?'EN' :'ES'))}
- className="px-2 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono text-[var(--ink-3)] hover:text-white font-bold cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono text-[var(--ink-3)] hover:text-[var(--ink)] font-bold cursor-pointer"
  title="Cambiar notación Do-Re-Mi vs C-D-E"
  >
  {notation}
@@ -818,7 +818,7 @@ export function ModoLocalEnVivoTab({
  <div className="flex items-center gap-0.5 bg-[var(--surface)] p-1 rounded-[var(--r-m)] border-[var(--hair)]">
  <button
  onClick={() => setFontSizeIndex(i => Math.max(0, i - 1))}
- className="px-1.5 py-0.5 text-xs font-mono text-[var(--ink-2)] hover:text-white cursor-pointer"
+ className="px-1.5 py-0.5 text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  title="Reducir fuente"
  >
  A-
@@ -838,7 +838,7 @@ export function ModoLocalEnVivoTab({
  className={`p-2 rounded-[var(--r-m)] text-xs font-mono cursor-pointer transition-all ${
  showChordDiagrams
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40'
- :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]'
  }`}
  title="Ver diagramas de acordes de guitarra"
  >
@@ -865,7 +865,7 @@ export function ModoLocalEnVivoTab({
  <span>Diagramas de Acordes de este Tema ({uniqueChords.length})</span>
  <button
  onClick={() => setShowChordDiagrams(false)}
- className="text-neutral-500 hover:text-white cursor-pointer"
+ className="text-neutral-500 hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -891,7 +891,7 @@ export function ModoLocalEnVivoTab({
  (Desliza o pulsa flechas para pasar de tema)
  </span>
  </div>
- <h2 className="text-lg sm:text-2xl font-display font-black text-white">
+ <h2 className="text-lg sm:text-2xl font-display font-black text-[var(--ink)]">
  {currentItem?.titulo}
  </h2>
  </div>
@@ -946,7 +946,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('repetir')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='repetir'
- ?'bg-rose-500 text-white font-black'
+ ?'bg-rose-500 text-[var(--ink)] font-black'
  :'bg-rose-500/15 text-rose-300'
  }`}
  >
@@ -963,7 +963,7 @@ export function ModoLocalEnVivoTab({
  <button
  disabled={activeIndex === 0}
  onClick={() => setActiveIndex(prev => prev - 1)}
- className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-[var(--r-m)] bg-neutral-800 text-[var(--ink-3)] hover:text-white text-xs font-mono font-bold disabled:opacity-30 cursor-pointer transition-all"
+ className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] text-xs font-mono font-bold disabled:opacity-30 cursor-pointer transition-all"
  >
  ← Anterior
  </button>

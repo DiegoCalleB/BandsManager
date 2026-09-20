@@ -95,7 +95,7 @@ export function NegotiationSimulationModal({
  <button
  type="button"
  onClick={onClose}
- className={`p-1 rounded-full transition-colors cursor-pointer hover:bg-neutral-800/10 dark:hover:bg-neutral-800 ${textSub}`}
+ className={`p-1 rounded-full transition-colors cursor-pointer hover:bg-[var(--surface)]/80 dark:hover:bg-[var(--surface)]/80 ${textSub}`}
  >
  <X className="w-5 h-5" />
  </button>
@@ -115,11 +115,11 @@ export function NegotiationSimulationModal({
  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='sala'
  ? isStitchLight
- ?'bg-[#d1b375]/15 hover:bg-[var(--acc)]/50/15 text-white shadow-sm'
+ ?'bg-[#d1b375]/15 hover:bg-[var(--acc)]/50/15 text-[var(--ink)] shadow-sm'
  :'bg-[var(--acc)] hover:bg-[#ffe28d] text-[var(--acc-ink)]'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
  <Building className="w-4 h-4" /> Sala o Festival (Entrante)
@@ -130,11 +130,11 @@ export function NegotiationSimulationModal({
  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='banda'
  ? isStitchLight
- ?'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-sm'
- :'bg-sky-500/15 hover:bg-sky-500/15 text-white'
+ ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] shadow-sm'
+ :'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)]'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
  <Users className="w-4 h-4" /> Banda Bakandeya (Saliente)
@@ -234,7 +234,7 @@ export function NegotiationSimulationModal({
  disabled={isGeneratingSimulation || !simulationCustomInstruction}
  className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 ${
  isStitchLight
- ?'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md'
+ ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] shadow-md'
  :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-extrabold shadow-lg'
  }`}
  >
@@ -291,7 +291,7 @@ export function NegotiationSimulationModal({
  className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
  Cancelar
@@ -302,7 +302,7 @@ export function NegotiationSimulationModal({
  disabled={!simulationMessage || isGeneratingSimulation}
  className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all ${
  isStitchLight
- ?'bg-sky-500/15 hover:bg-sky-500/15 text-white'
+ ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)]'
  :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-extrabold'
  }`}
  >

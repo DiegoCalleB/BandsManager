@@ -36,7 +36,7 @@ export function AssignSetlistModal({
  <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
  Asignar Repertorio a Concierto / Ensayo
  </h3>
- <button onClick={onClose} className="text-[var(--ink-2)] hover:text-white">
+ <button onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)]">
  <X className="w-4 h-4" />
  </button>
  </div>
@@ -69,7 +69,7 @@ export function AssignSetlistModal({
  onChange={() => onSelectEvent(c.id)}
  />
  <div>
- <div className="font-bold text-white">{c.sala} ({c.ciudad})</div>
+ <div className="font-bold text-[var(--ink)]">{c.sala} ({c.ciudad})</div>
  <div className="text-[10px] text-[var(--ink-2)]">{c.fecha}</div>
  </div>
  </div>
@@ -99,7 +99,7 @@ export function AssignSetlistModal({
  onChange={() => onSelectEvent(r.id)}
  />
  <div>
- <div className="font-bold text-white">Ensayo en {r.lugar}</div>
+ <div className="font-bold text-[var(--ink)]">Ensayo en {r.lugar}</div>
  <div className="text-[10px] text-[var(--ink-2)]">{r.fecha} a las {r.hora}</div>
  </div>
  </div>
@@ -119,7 +119,7 @@ export function AssignSetlistModal({
  onClick={onSave}
  disabled={!selectedConcertToAssign}
  className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold disabled:opacity-40 ${
- isStitchLight ?'bg-sky-500/15 text-white' :'bg-[var(--acc)] text-black'
+ isStitchLight ?'bg-sky-500/15 text-[var(--ink)]' :'bg-[var(--acc)] text-black'
  }`}
  >
  Guardar Asignación

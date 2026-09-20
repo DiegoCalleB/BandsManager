@@ -71,7 +71,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>Primer Paso Obligatorio / First Step</span>
  </div>
- <h3 className="text-base sm:text-lg font-bold font-display text-white">
+ <h3 className="text-base sm:text-lg font-bold font-display text-[var(--ink)]">
  ¿En qué idioma quieres trabajar con tu banda?
  </h3>
  <p className="text-xs sm:text-sm text-[var(--ink-3)] leading-relaxed">
@@ -123,7 +123,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  </span>
  <div>
  <div className="flex items-center gap-2">
- <h4 className={`text-sm sm:text-base font-bold transition-colors ${isSelected ?'text-[var(--acc)]/70' :'text-white'}`}>
+ <h4 className={`text-sm sm:text-base font-bold transition-colors ${isSelected ?'text-[var(--acc)]/70' :'text-[var(--ink)]'}`}>
  {lang.label}
  </h4>
  {isSelected && (
@@ -141,7 +141,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
  isSelected 
  ?'bg-[var(--acc)]/60 text-stone-950' 
- :'border-[var(--hair)] bg-neutral-800/40 text-transparent'
+ :'border-[var(--hair)] bg-[var(--surface)]/80 text-transparent'
  }`}>
  <Check className="w-3.5 h-3.5 stroke-[3]" />
  </div>

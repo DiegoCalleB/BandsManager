@@ -65,7 +65,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <div className="sm:hidden bg-[var(--surface)] border-stone-800 p-2.5 rounded-[var(--r-m)] shadow-xs space-y-2">
  <div className="flex items-center justify-between gap-2">
  <div className="min-w-0">
- <h2 className="text-sm font-bold font-mono text-white leading-tight truncate">
+ <h2 className="text-sm font-bold font-mono text-[var(--ink)] leading-tight truncate">
  EPK / Dossier
  </h2>
  <button
@@ -85,7 +85,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <button
  type="button"
  onClick={onSave}
- className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-slate-950 font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer"
+ className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer"
  >
  <Save className="w-3.5 h-3.5" />
  <span>Guardar</span>
@@ -99,7 +99,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
  showMobileMenu
  ?'bg-stone-800 text-[var(--acc)]/70'
- :'bg-stone-900 border-stone-700/80 text-stone-300 hover:text-white'
+ :'bg-stone-900 border-stone-700/80 text-stone-300 hover:text-[var(--ink)]'
  }`}
  aria-label="Más acciones del dossier"
  >
@@ -218,7 +218,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className="w-full appearance-none bg-stone-900 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-mono text-[var(--acc)]/70 focus:outline-none focus: cursor-pointer"
  >
  {EPK_BLOCKS.map(block => (
- <option key={block.id} value={block.id} className="bg-stone-900 text-white">
+ <option key={block.id} value={block.id} className="bg-stone-900 text-[var(--ink)]">
  {block.number ? `${block.number}/8. ${block.label}` : block.label}
  </option>
  ))}
@@ -251,7 +251,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  Gestor Modular del Dossier
  </span>
  </div>
- <h2 className="text-lg sm:text-xl font-bold font-mono text-white">
+ <h2 className="text-lg sm:text-xl font-bold font-mono text-[var(--ink)]">
  EPK / Dossier de la Banda
  </h2>
  <p className="text-[var(--ink-3)] text-xs max-w-2xl leading-relaxed">
@@ -306,7 +306,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <button
  type="button"
  onClick={onSave}
- className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold text-xs sm:text-sm rounded-[var(--r-m)] flex items-center gap-2 shadow-md hover:shadow-lg transition cursor-pointer"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs sm:text-sm rounded-[var(--r-m)] flex items-center gap-2 shadow-md hover:shadow-lg transition cursor-pointer"
  >
  <Save className="w-4 h-4" />
  <span>Guardar Cambios</span>
@@ -463,11 +463,11 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock(block.id)}
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
  isActive
- ?'bg-[var(--acc)] text-slate-950 font-bold shadow-sm'
- :'bg-stone-900/90 border-stone-800 text-[var(--ink-3)] hover:text-white hover:border-stone-700'
+ ?'bg-[var(--acc)] text-[var(--ink)] font-bold shadow-sm'
+ :'bg-stone-900/90 border-stone-800 text-[var(--ink-3)] hover:text-[var(--ink)] hover:border-stone-700'
  }`}
  >
- <Icon className={`w-3.5 h-3.5 ${isActive ?'text-slate-950' :'text-[var(--acc)]'}`} />
+ <Icon className={`w-3.5 h-3.5 ${isActive ?'text-[var(--ink)]' :'text-[var(--acc)]'}`} />
  <span>{block.label}</span>
  </button>
  );

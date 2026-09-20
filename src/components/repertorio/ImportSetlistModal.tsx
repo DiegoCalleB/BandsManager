@@ -216,7 +216,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <ImagePlus className="w-5 h-5 text-sky-400" />
  <h2 className="text-base font-bold">Importar Repertorio de Foto/PDF</h2>
  </div>
- <button onClick={handleClose} className="p-2 hover:bg-neutral-800 rounded-[var(--r-s)] transition">
+ <button onClick={handleClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition">
  <X className="w-4 h-4" />
  </button>
  </div>
@@ -233,12 +233,12 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  type="file"
  accept="image/*,.pdf"
  onChange={(e) => setFile(e.target.files?.[0] || null)}
- className="text-xs text-[var(--ink-3)] file:mr-3 file:py-1.5 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:bg-sky-700 file:text-white file:text-xs file:font-medium mx-auto block"
+ className="text-xs text-[var(--ink-3)] file:mr-3 file:py-1.5 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:bg-sky-700 file:text-[var(--ink)] file:text-xs file:font-medium mx-auto block"
  />
  {file && (
  <button
  onClick={handleAnalyze}
- className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-[var(--r-s)] transition font-medium"
+ className="bg-sky-600 hover:bg-sky-700 text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
  >
  Analizar
  </button>
@@ -281,12 +281,12 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  {reviewItems.map((it, idx) => {
  if (it.type ==='block') {
  return (
- <div key={idx} className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${it.included ?'bg-neutral-800' :'bg-[var(--surface)] opacity-50'}`}>
+ <div key={idx} className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${it.included ?'bg-[var(--surface)]/80' :'bg-[var(--surface)] opacity-50'}`}>
  <span className="text-xs text-[var(--sunken)]">📋 {it.titulo} <span className="text-neutral-500">({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})</span></span>
  <button
  type="button"
  onClick={() => toggleBlockIncluded(idx)}
- className="text-[10px] px-2 py-0.5 rounded bg-neutral-700 hover:bg-neutral-600 text-[var(--sunken)] font-mono"
+ className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--sunken)] font-mono"
  >
  {it.included ?'Descartar' :'Incluir'}
  </button>
@@ -296,7 +296,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
 
  const isDiscarded = it.action ==='discard';
  return (
- <div key={idx} className={`p-2 rounded-[var(--r-s)] space-y-1.5 ${isDiscarded ?'bg-[var(--surface)] opacity-50' :'bg-neutral-800'}`}>
+ <div key={idx} className={`p-2 rounded-[var(--r-s)] space-y-1.5 ${isDiscarded ?'bg-[var(--surface)] opacity-50' :'bg-[var(--surface)]/80'}`}>
  <div className="flex items-center justify-between gap-2">
  <span className="text-xs text-[var(--sunken)] flex items-center gap-1.5">
  <Music className="w-3.5 h-3.5 text-neutral-500 shrink-0" />"{it.detectedTitle}"
@@ -351,13 +351,13 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <button
  onClick={handleCreate}
  disabled={creating || !setlistName.trim()}
- className="flex-1 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
+ className="flex-1 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
  >
  {creating ? <Loader className="w-4 h-4 animate-spin" /> :'✓ Crear Repertorio'}
  </button>
  <button
  onClick={handleClose}
- className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  Cancelar
  </button>

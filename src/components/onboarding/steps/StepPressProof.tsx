@@ -41,7 +41,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
  <Award className="w-5 h-5 text-[var(--acc)]" />
- <h3 className="text-base font-semibold text-white">Hitos, Reseñas de Prensa & Social Proof</h3>
+ <h3 className="text-base font-semibold text-[var(--ink)]">Hitos, Reseñas de Prensa & Social Proof</h3>
  </div>
 
  <p className="text-xs text-zinc-400">
@@ -59,7 +59,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  value={cifrasOyentes}
  onChange={(e) => setCifrasOyentes(e.target.value)}
  placeholder="Ej. 12.500 oyentes / mes"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-white text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -72,7 +72,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  value={cifrasDirectos}
  onChange={(e) => setCifrasDirectos(e.target.value)}
  placeholder="Ej. +35 directos en 2025"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-white text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -85,7 +85,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  value={cifrasComunidad}
  onChange={(e) => setCifrasComunidad(e.target.value)}
  placeholder="Ej. +4.800 en Instagram & TikTok"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-white text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
@@ -100,7 +100,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  value={festivalesDestacados}
  onChange={(e) => setFestivalesDestacados(e.target.value)}
  placeholder="Ej. Sonorama Ribera 2024, Sala Sol (Madrid), Finalistas Villa de Madrid, Monkey Week..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -141,7 +141,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  value={newQuoteText}
  onChange={(e) => setNewQuoteText(e.target.value)}
  placeholder="Cita destacada (ej. Una de las propuestas más frescas del año...)"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
  <div>
@@ -150,7 +150,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  value={newQuoteMedia}
  onChange={(e) => setNewQuoteMedia(e.target.value)}
  placeholder="Medio (ej. MondoSonoro, Radio 3)"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
  </div>

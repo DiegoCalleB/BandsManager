@@ -477,7 +477,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <button
  onClick={onClose}
  disabled={!!switchingBandId}
- className="absolute top-5 right-5 p-2 text-[var(--ink-2)] hover:text-white bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] rounded-full transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+ className="absolute top-5 right-5 p-2 text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] rounded-full transition-all cursor-pointer active:scale-95 disabled:opacity-50"
  title="Cerrar"
  >
  <X className="w-5 h-5" />
@@ -489,7 +489,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <Sparkles className="w-3.5 h-3.5" />
  <span>Perfil & Selección de Banda</span>
  </div>
- <h2 className="text-3xl md:text-4xl font-black font-display tracking-tight text-white uppercase">
+ <h2 className="text-3xl md:text-4xl font-black font-display tracking-tight text-[var(--ink)] uppercase">
  ¿Quién toca hoy?
  </h2>
  <p className="text-[var(--ink-2)] text-xs md:text-sm font-sans max-w-lg mt-2">
@@ -505,7 +505,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
  placeholder="Buscar proyecto..."
- className="w-full pl-9 pr-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-white placeholder-neutral-500 focus:outline-none focus:/60"
+ className="w-full pl-9 pr-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] placeholder-neutral-500 focus:outline-none focus:/60"
  />
  </div>
  )}
@@ -565,7 +565,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  className={`p-1.5 rounded-[var(--r-s)] transition-all cursor-pointer flex items-center justify-center z-30 ${
  isMain
  ?'text-[var(--acc)] bg-[var(--acc)]/60/20 shadow-[0_0_8px_rgba(245,158,11,0.25)]'
- :'text-[var(--ink-2)] hover:text-[var(--acc)]/70 bg-black/60 hover:bg-neutral-800 hover:/60'
+ :'text-[var(--ink-2)] hover:text-[var(--acc)]/70 bg-black/60 hover:bg-[var(--surface)]/80 hover:/60'
  }`}
  title={isMain ?'Banda Principal por defecto' :'Fijar como Banda Principal'}
  >
@@ -580,7 +580,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  type="button"
  disabled={index === 0}
  onClick={(e) => handleMoveBand(band.band_id,'left', e)}
- className="p-1 rounded-md bg-black/60 hover:bg-neutral-800 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+ className="p-1 rounded-md bg-black/60 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
  title="Mover a la izquierda"
  >
  <ArrowLeft className="w-3 h-3" />
@@ -589,7 +589,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  type="button"
  disabled={index === array.length - 1}
  onClick={(e) => handleMoveBand(band.band_id,'right', e)}
- className="p-1 rounded-md bg-black/60 hover:bg-neutral-800 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+ className="p-1 rounded-md bg-black/60 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
  title="Mover a la derecha"
  >
  <ArrowRightIcon className="w-3 h-3" />
@@ -613,7 +613,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  onClose();
  onOpenBandManagement(band.band_id);
  }}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 bg-black/60 hover:bg-neutral-800 hover:/60 transition-all cursor-pointer shadow-xs"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 bg-black/60 hover:bg-[var(--surface)]/80 hover:/60 transition-all cursor-pointer shadow-xs"
  title="Gestionar músicos e integrantes"
  >
  <Settings className="w-3.5 h-3.5" />
@@ -668,7 +668,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
  {/* Band Title */}
  <div className="w-full text-center mt-1">
- <h3 className="text-sm font-bold font-display tracking-wide uppercase text-white group-hover:text-[var(--acc)]/70 transition-colors truncate px-1" title={band.bandName}>
+ <h3 className="text-sm font-bold font-display tracking-wide uppercase text-[var(--ink)] group-hover:text-[var(--acc)]/70 transition-colors truncate px-1" title={band.bandName}>
  {band.bandName}
  </h3>
  </div>
@@ -749,7 +749,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </span>
  <button
  onClick={onClose}
- className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white border-[var(--hair)] transition-all cursor-pointer font-medium"
+ className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)] border-[var(--hair)] transition-all cursor-pointer font-medium"
  >
  Mantener banda actual
  </button>
@@ -770,14 +770,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <Guitar className="w-6 h-6" />
  </div>
  <div>
- <h3 className="font-bold text-base text-white font-display tracking-wide">Añadir Nuevo Proyecto Musical</h3>
+ <h3 className="font-bold text-base text-[var(--ink)] font-display tracking-wide">Añadir Nuevo Proyecto Musical</h3>
  <p className="text-xs text-[var(--acc)]/80 font-mono">{SIMPLE_PROMO_ONLY_BAND_CREATION ?'Información del proyecto' :'Paso 1 de 2 • Información del proyecto'}</p>
  </div>
  </div>
  <button
  type="button"
  onClick={() => setShowCreateBandModal(false)}
- className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -802,7 +802,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  placeholder="Ej: Los Nocturnos, KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑, Bakandeya..."
  required
  autoFocus
- className="w-full px-4 py-3 rounded-[var(--r-l)] text-sm bg-[var(--surface)] text-white placeholder-neutral-500 focus:/70 focus:outline-none transition-colors shadow-inner font-bold"
+ className="w-full px-4 py-3 rounded-[var(--r-l)] text-sm bg-[var(--surface)] text-[var(--ink)] placeholder-neutral-500 focus:/70 focus:outline-none transition-colors shadow-inner font-bold"
  />
  </div>
 
@@ -816,7 +816,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={newBandLeaderName}
  onChange={(e) => setNewBandLeaderName(e.target.value)}
  placeholder="Ej: Kurt Cobain (Guitarra & Mánager)"
- className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-white placeholder-neutral-500 focus:/70 focus:outline-none transition-colors"
+ className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-neutral-500 focus:/70 focus:outline-none transition-colors"
  />
  </div>
 
@@ -831,7 +831,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={newBandStyle}
  onChange={(e) => setNewBandStyle(e.target.value)}
  placeholder="Ej: Rock, Indie, Mestizaje, Ska..."
- className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-white placeholder-neutral-500 focus:/70 focus:outline-none transition-colors"
+ className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-neutral-500 focus:/70 focus:outline-none transition-colors"
  />
  </div>
 
@@ -845,7 +845,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={newBandLocation}
  onChange={(e) => setNewBandLocation(e.target.value)}
  placeholder="Ej: Madrid, Barcelona, Valencia..."
- className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-white placeholder-neutral-500 focus:/70 focus:outline-none transition-colors"
+ className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-neutral-500 focus:/70 focus:outline-none transition-colors"
  />
  </div>
  </div>
@@ -895,7 +895,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  type="button"
  onClick={() => setCreateBandStep(1)}
  disabled={isCreatingBand}
- className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-mono text-[var(--ink-3)] hover:text-white border-[var(--hair)] transition-colors cursor-pointer disabled:opacity-50"
+ className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-mono text-[var(--ink-3)] hover:text-[var(--ink)] border-[var(--hair)] transition-colors cursor-pointer disabled:opacity-50"
  >
  <ArrowLeft className="w-3.5 h-3.5" />
  <span>Volver a datos de la banda</span>
@@ -904,7 +904,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  type="button"
  onClick={() => setShowCreateBandModal(false)}
  disabled={isCreatingBand}
- className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -926,7 +926,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
  newBandFeatureCategory ==='all'
  ?'bg-[var(--acc)] text-[var(--surface)] shadow-md shadow-[var(--acc)]/20'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Todas las funciones
@@ -937,7 +937,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
  newBandFeatureCategory ==='booking'
  ?'bg-[var(--acc)] text-[var(--surface)] shadow-md shadow-[var(--acc)]/20'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  🎯 Booking & Salas
@@ -948,7 +948,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
  newBandFeatureCategory ==='media'
  ?'bg-[var(--acc)] text-[var(--surface)] shadow-md shadow-[var(--acc)]/20'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  📱 Redes, EPK & Fans
@@ -959,7 +959,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
  newBandFeatureCategory ==='finance'
  ?'bg-[var(--acc)] text-[var(--surface)] shadow-md shadow-[var(--acc)]/20'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  💼 Finanzas & Agentes 360
@@ -974,11 +974,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <div className="bg-[var(--surface)] rounded-3xl p-5 flex flex-col hover: transition-colors">
  <div className="mb-3">
  <div className="flex items-center justify-between gap-1 mb-1">
- <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-neutral-800 text-[var(--ink-2)]">Gratis</span>
+ <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)]">Gratis</span>
  </div>
  <h3 className="text-base font-bold text-[var(--sunken)]">Ensayo</h3>
  <div className="mt-1.5 flex items-baseline gap-1">
- <span className="text-2xl font-black text-white">0€</span>
+ <span className="text-2xl font-black text-[var(--ink)]">0€</span>
  <span className="text-[11px] text-neutral-500 font-medium">/ siempre</span>
  </div>
  <p className="text-[11px] text-neutral-500 mt-1.5 min-h-[32px]">Para proyectos noveles que arrancan su local.</p>
@@ -1005,11 +1005,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  type="button"
  onClick={() => handleSelectPlanForCreation('ensayo')}
  disabled={isCreatingBand}
- className="w-full py-2.5 rounded-[var(--r-l)] bg-neutral-800 hover:bg-neutral-700 text-white font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+ className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
  >
  {isCreatingBand && creatingPlanKey ==='ensayo' ? (
  <>
- <Loader2 className="w-4 h-4 animate-spin text-white" />
+ <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
  <span>Configurando...</span>
  </>
  ) : (
@@ -1026,7 +1026,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </div>
  <h3 className="text-base font-bold text-[var(--ink-3)]">Local</h3>
  <div className="mt-1.5 flex items-baseline gap-1">
- <span className="text-2xl font-black text-white">12€</span>
+ <span className="text-2xl font-black text-[var(--ink)]">12€</span>
  <span className="text-[11px] text-[var(--ink-2)]">/ mes</span>
  </div>
  <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">El kit esencial para bandas tocando en su circuito local.</p>
@@ -1058,11 +1058,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  type="button"
  onClick={() => handleSelectPlanForCreation('local')}
  disabled={isCreatingBand}
- className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-white font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+ className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
  >
  {isCreatingBand && creatingPlanKey ==='local' ? (
  <>
- <Loader2 className="w-4 h-4 animate-spin text-white" />
+ <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
  <span>Configurando...</span>
  </>
  ) : (
@@ -1081,7 +1081,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <div className="mb-3 mt-1">
  <h3 className="text-base font-bold text-[var(--acc)]">De Gira</h3>
  <div className="mt-1.5 flex items-baseline gap-1">
- <span className="text-2xl font-black text-white">29€</span>
+ <span className="text-2xl font-black text-[var(--ink)]">29€</span>
  <span className="text-[11px] text-[var(--ink-2)]">/ mes</span>
  </div>
  <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">Para bandas que tocan con frecuencia y automatizan con IA.</p>
@@ -1137,7 +1137,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </div>
  <h3 className="text-base font-bold text-emerald-300">Cabeza de Cartel</h3>
  <div className="mt-1.5 flex items-baseline gap-1">
- <span className="text-2xl font-black text-white">79€</span>
+ <span className="text-2xl font-black text-[var(--ink)]">79€</span>
  <span className="text-[11px] text-[var(--ink-2)]">/ mes</span>
  </div>
  <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">Control total para proyectos profesionales y agencias.</p>
@@ -1173,7 +1173,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  >
  {isCreatingBand && creatingPlanKey ==='cabeza_de_cartel' ? (
  <>
- <Loader2 className="w-4 h-4 animate-spin text-white" />
+ <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
  <span>Configurando...</span>
  </>
  ) : (
@@ -1199,13 +1199,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <Trash2 className="w-5 h-5" />
  </div>
  <div>
- <h3 className="font-bold text-sm text-white font-mono">¿Eliminar proyecto?</h3>
+ <h3 className="font-bold text-sm text-[var(--ink)] font-mono">¿Eliminar proyecto?</h3>
  <p className="text-xs text-[var(--ink-2)]">Desvincular de tu usuario</p>
  </div>
  </div>
 
  <p className="text-xs text-[var(--ink-3)] leading-relaxed">
- ¿Estás seguro de que deseas eliminar <strong className="text-white">"{bandToDelete.name}"</strong> de tu cuenta? Perderás el acceso a sus salas, eventos y repertorio.
+ ¿Estás seguro de que deseas eliminar <strong className="text-[var(--ink)]">"{bandToDelete.name}"</strong> de tu cuenta? Perderás el acceso a sus salas, eventos y repertorio.
  </p>
 
  <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--hair)]">
@@ -1219,7 +1219,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <button
  type="button"
  onClick={handleConfirmLeaveBand}
- className="px-4 py-1.5 rounded-[var(--r-m)] bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+ className="px-4 py-1.5 rounded-[var(--r-m)] bg-rose-600 hover:bg-rose-500 text-[var(--ink)] text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-1.5"
  >
  <Trash2 className="w-3.5 h-3.5" />
  <span>Sí, eliminar</span>
@@ -1251,7 +1251,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </div>
  <button
  onClick={() => setShowUpgradeModal(false)}
- className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -1272,7 +1272,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  >
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <span className="font-bold text-xs text-white font-mono">{plan.name}</span>
+ <span className="font-bold text-xs text-[var(--ink)] font-mono">{plan.name}</span>
  {isCurrent && (
  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70">
  Plan Actual
@@ -1356,7 +1356,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <div className="px-6 py-3 bg-[var(--surface)] border-t flex justify-end">
  <button
  onClick={() => setShowUpgradeModal(false)}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] transition-colors cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] transition-colors cursor-pointer"
  >
  Cerrar
  </button>

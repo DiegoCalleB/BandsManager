@@ -142,7 +142,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
  <button
  onClick={onClose}
- className="p-1.5 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -238,7 +238,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  <div className="p-4 bg-[var(--surface)] border-t flex justify-end">
  <button
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 text-zinc-200 font-mono text-xs font-bold hover:bg-neutral-700 transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-zinc-200 font-mono text-xs font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
  >
  Cerrar
  </button>

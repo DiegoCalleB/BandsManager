@@ -155,7 +155,7 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  colorClass:'text-[var(--ink-3)]',
  bgClass:'bg-[var(--surface)]/80',
  borderClass:'',
- hoverClass:'hover:bg-[var(--surface)] hover: hover:text-white'
+ hoverClass:'hover:bg-[var(--surface)] hover: hover:text-[var(--ink)]'
  },
  website: {
  label:'Sitio Web',

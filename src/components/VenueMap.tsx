@@ -750,7 +750,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
  mapStyle === key
- ?'bg-indigo-600 text-white shadow-sm'
+ ?'bg-indigo-600 text-[var(--ink)] shadow-sm'
  : isStitchLight
  ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'hover:bg-zinc-800 text-zinc-300'

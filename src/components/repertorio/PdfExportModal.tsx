@@ -1366,7 +1366,7 @@ export function PdfExportModal({
  </div>
  <div className="min-w-0">
  <div className="flex items-center gap-2">
- <h3 className="font-display font-black text-sm sm:text-lg uppercase tracking-wider text-white truncate">
+ <h3 className="font-display font-black text-sm sm:text-lg uppercase tracking-wider text-[var(--ink)] truncate">
  Generador de Repertorios
  </h3>
  <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase font-mono bg-[var(--surface)] text-black shrink-0">
@@ -1374,7 +1374,7 @@ export function PdfExportModal({
  </span>
  </div>
  <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5 truncate">
- <span className="font-bold text-white">{activeSetlist.nombre}</span>
+ <span className="font-bold text-[var(--ink)]">{activeSetlist.nombre}</span>
  <span className="hidden sm:inline"> ({activeSetlistMetrics.songCount} temas • Letras grandes para el suelo de escenario con notas a mano)</span>
  <span className="sm:hidden"> · {activeSetlistMetrics.songCount} temas</span>
  </p>
@@ -1400,7 +1400,7 @@ export function PdfExportModal({
  className={`p-2 rounded-[var(--r-m)] transition-colors active:scale-95 cursor-pointer ${
  isStitchLight
  ?'hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
- :'hover:bg-neutral-800 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <X className="w-5 h-5" />
@@ -1423,7 +1423,7 @@ export function PdfExportModal({
  setPreviewPageIndex(0);
  }}
  className={`sm:hidden flex-1 min-w-0 p-2 rounded-[var(--r-s)] font-bold cursor-pointer ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="all_members">👥 Todos los Músicos ({resolvedMembers.length} hojas)</option>
@@ -1440,7 +1440,7 @@ export function PdfExportModal({
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='all_members'
  ?'bg-[var(--surface)] text-black shadow-md'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Users className="w-3.5 h-3.5" /> Todos los Músicos ({resolvedMembers.length} hojas individuales)
@@ -1453,7 +1453,7 @@ export function PdfExportModal({
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='single_member'
  ?'bg-[var(--surface)] text-black shadow-md'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <User className="w-3.5 h-3.5" /> 1 Músico Específico
@@ -1466,7 +1466,7 @@ export function PdfExportModal({
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='master'
  ?'bg-[var(--surface)] text-black shadow-md'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <FileText className="w-3.5 h-3.5" /> Master Escenario / Sonido
@@ -1481,7 +1481,7 @@ export function PdfExportModal({
  value={selectedMemberId}
  onChange={(e) => setSelectedMemberId(e.target.value)}
  className={`flex-1 sm:flex-none min-w-0 p-1.5 px-3 rounded-[var(--r-s)] font-bold cursor-pointer ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {resolvedMembers.map((m) => (
@@ -1500,7 +1500,7 @@ export function PdfExportModal({
  <button
  onClick={() => setViewDensity('sentado')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- viewDensity ==='sentado' ?'bg-[var(--surface)] text-black shadow-md' :'text-[var(--ink-2)] hover:text-white'
+ viewDensity ==='sentado' ?'bg-[var(--surface)] text-black shadow-md' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
  >
@@ -1509,7 +1509,7 @@ export function PdfExportModal({
  <button
  onClick={() => setViewDensity('de_pie')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- viewDensity ==='de_pie' ?'bg-[var(--surface)] text-black shadow-md' :'text-[var(--ink-2)] hover:text-white'
+ viewDensity ==='de_pie' ?'bg-[var(--surface)] text-black shadow-md' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
  >
@@ -1564,7 +1564,7 @@ export function PdfExportModal({
  <select
  value={handwritingFont}
  onChange={(e) => setHandwritingFont(e.target.value as any)}
- className="p-1 px-2.5 rounded-[var(--r-s)] bg-black/50 text-white font-bold text-[11px] cursor-pointer"
+ className="p-1 px-2.5 rounded-[var(--r-s)] bg-black/50 text-[var(--ink)] font-bold text-[11px] cursor-pointer"
  >
  <option value="caveat">✍️ Rotulador Fino (Caveat)</option>
  <option value="permanent_marker">🖊️ Sharpie Grueso (Permanent Marker)</option>
@@ -1607,7 +1607,7 @@ export function PdfExportModal({
 
  {/* Feature Toggles (BPM & Duration optional, Logo, etc.) */}
  <div className="flex flex-wrap items-center gap-3">
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showBandLogo}
@@ -1617,7 +1617,7 @@ export function PdfExportModal({
  <span>Logo Grupo</span>
  </label>
 
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showTonality}
@@ -1627,7 +1627,7 @@ export function PdfExportModal({
  <span>Tono</span>
  </label>
 
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showBpm}
@@ -1637,7 +1637,7 @@ export function PdfExportModal({
  <span>BPM</span>
  </label>
 
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showDuration}
@@ -1647,7 +1647,7 @@ export function PdfExportModal({
  <span>Duración</span>
  </label>
 
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showAppBranding}
@@ -2059,7 +2059,7 @@ export function PdfExportModal({
  <div className={`rounded-[var(--r-l)] shadow-2xl max-w-lg w-full p-6 ${
  isStitchLight ?'bg-white' :'bg-[var(--surface)]'
  }`}>
- <h3 className={`text-lg font-black uppercase mb-2 flex items-center gap-2 ${isStitchLight ?'text-[var(--ink)]' :'text-white'}`}>
+ <h3 className={`text-lg font-black uppercase mb-2 flex items-center gap-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  <Zap className="w-5 h-5 text-[var(--acc)]" />
  ¿Cómo prefieres el repertorio?
  </h3>
@@ -2075,7 +2075,7 @@ export function PdfExportModal({
  }}
  className="p-4 rounded-[var(--r-m)] border-2 /40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
  >
- <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-white'}`}>
+ <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  📄 1 sola hoja (letra más pequeña)
  </div>
  <div className={`text-xs ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
@@ -2089,7 +2089,7 @@ export function PdfExportModal({
  }}
  className="p-4 rounded-[var(--r-m)] border-2 border-sky-500/40 bg-sky-500/10 hover:bg-sky-500/20 text-left transition-colors cursor-pointer"
  >
- <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-white'}`}>
+ <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  📄📄 Varias hojas (letra más grande)
  </div>
  <div className={`text-xs ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
@@ -2112,7 +2112,7 @@ export function PdfExportModal({
  <MemberNotesModal
  isOpen={Boolean(editingSongForNotes)}
  song={editingSongForNotes}
- colors={{ card:'bg-[var(--surface)]', text:'text-white' } as any}
+ colors={{ card:'bg-[var(--surface)]', text:'text-[var(--ink)]' } as any}
  isStitchLight={isStitchLight}
  bandMembers={resolvedMembers}
  onClose={() => setEditingSongForNotes(null)}

@@ -28,7 +28,7 @@ export const SongStudioDeleteConfirmModal: React.FC<SongStudioDeleteConfirmModal
  <Trash2 className="w-6 h-6" />
  </div>
  <div>
- <h3 className="text-lg font-bold text-white">{confirmDeleteModal.title}</h3>
+ <h3 className="text-lg font-bold text-[var(--ink)]">{confirmDeleteModal.title}</h3>
  <p className="text-xs text-[var(--ink-3)] mt-1.5 leading-relaxed">{confirmDeleteModal.description}</p>
  </div>
  </div>
@@ -36,7 +36,7 @@ export const SongStudioDeleteConfirmModal: React.FC<SongStudioDeleteConfirmModal
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-white bg-white/5 hover:bg-white/10 transition-all cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-white/5 hover:bg-white/10 transition-all cursor-pointer"
  >
  Cancelar
  </button>
@@ -47,7 +47,7 @@ export const SongStudioDeleteConfirmModal: React.FC<SongStudioDeleteConfirmModal
  onClose();
  action();
  }}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 transition-all cursor-pointer shadow-lg shadow-rose-950/50"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-rose-600 hover:bg-rose-500 transition-all cursor-pointer shadow-lg shadow-rose-950/50"
  >
  Sí, Eliminar
  </button>

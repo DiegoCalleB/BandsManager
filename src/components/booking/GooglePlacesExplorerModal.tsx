@@ -641,7 +641,7 @@ export function GooglePlacesExplorerModal({
 
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-zinc-400 hover:text-[var(--ink)] hover:bg-zinc-800 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -750,7 +750,7 @@ export function GooglePlacesExplorerModal({
  </div>
  <button
  onClick={() => setDiscardToast('')}
- className="text-rose-400 hover:text-white p-1 cursor-pointer"
+ className="text-rose-400 hover:text-[var(--ink)] p-1 cursor-pointer"
  >
  <X className="w-3 h-3" />
  </button>
@@ -932,7 +932,7 @@ export function GooglePlacesExplorerModal({
  Fuente: <strong className="text-[var(--acc)]">{searchSource}</strong>
  </span>
  <span>
- Encontrados: <strong className="text-white">{places.length}</strong> | Con email: <strong className="text-emerald-400">{emailsFoundCount}</strong>
+ Encontrados: <strong className="text-[var(--ink)]">{places.length}</strong> | Con email: <strong className="text-emerald-400">{emailsFoundCount}</strong>
  </span>
  </div>
  )}
@@ -966,7 +966,7 @@ export function GooglePlacesExplorerModal({
  <div className="flex items-center gap-3">
  <button
  onClick={toggleSelectAll}
- className="text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 cursor-pointer font-medium"
+ className="text-xs text-zinc-300 hover:text-[var(--ink)] flex items-center gap-1.5 cursor-pointer font-medium"
  >
  <input
  type="checkbox"
@@ -982,7 +982,7 @@ export function GooglePlacesExplorerModal({
  <button
  onClick={handleExtractBatchEmails}
  disabled={isExtractingBatch || selectedCount === 0}
- className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md"
+ className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md"
  title="Agente Enriquecedor: Investiga las páginas oficiales y fuentes públicas sin inventar emails"
  >
  {isExtractingBatch ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]/70" />}
@@ -992,7 +992,7 @@ export function GooglePlacesExplorerModal({
  <button
  onClick={handleImportToCRM}
  disabled={isImporting || selectedCount === 0}
- className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md"
+ className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md"
  >
  {isImporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PlusCircle className="w-3.5 h-3.5" />}
  <span>📥 Incluir en mis Leads ({selectedCount})</span>
@@ -1126,7 +1126,7 @@ export function GooglePlacesExplorerModal({
  )}
  <div className="flex flex-wrap items-center gap-3 text-zinc-400">
  {place.telefono && (
- <a href={`tel:${place.telefono}`} className="flex items-center gap-1 hover:text-white">
+ <a href={`tel:${place.telefono}`} className="flex items-center gap-1 hover:text-[var(--ink)]">
  <Phone className="w-3 h-3 text-emerald-400" />
  <span>{place.telefono}</span>
  </a>
@@ -1203,7 +1203,7 @@ export function GooglePlacesExplorerModal({
  </div>
  <button
  onClick={() => setShowDiscardedModal(false)}
- className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
+ className="text-zinc-400 hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>

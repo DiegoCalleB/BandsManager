@@ -76,7 +76,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  {/* Switch de activación */}
  <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
- <span className="text-xs font-bold text-white">Activar reproductor de adelanto</span>
+ <span className="text-xs font-bold text-[var(--ink)]">Activar reproductor de adelanto</span>
  <p className="text-[10px] text-[var(--ink-3)]">Si está desactivado, el widget no se mostrará en la landing pública.</p>
  </div>
  <input
@@ -211,7 +211,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <Music className="w-5 h-5 fill-bg-[var(--surface)]" />
  </div>
  <div className="min-w-0 flex-1">
- <div className="flex items-center gap-1.5 text-xs font-bold text-white truncate">
+ <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)] truncate">
  <span className="truncate">
  {config.audioPreview?.tituloTema?.trim() ||
  `${currentUser?.bandName ||'Tu Banda'} · Directo Preview`}
@@ -248,7 +248,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <button
  type="button"
  onClick={anadirVideo}
- className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
+ className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
  >
  + Añadir vídeo
  </button>
@@ -276,7 +276,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  title={v.destacado ?'Vídeo principal' :'Marcar como principal'}
  className={`shrink-0 w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center text-sm transition cursor-pointer ${
  v.destacado
- ?'bg-[var(--acc)] text-slate-950 font-bold'
+ ?'bg-[var(--acc)] text-[var(--ink)] font-bold'
  :' text-[var(--ink-2)] hover:text-[var(--acc)]/70'
  }`}
  >
@@ -287,7 +287,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  value={v.titulo}
  onChange={e => editarVideo(v.id, { titulo: e.target.value })}
  placeholder="Título (ej. Directo en Sala Caracol, 2026)"
- className="flex-1 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
+ className="flex-1 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus: outline-none"
  />
  <button
  type="button"
@@ -303,7 +303,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  value={v.url}
  onChange={e => editarVideo(v.id, { url: e.target.value })}
  placeholder="https://www.youtube.com/watch?v=..."
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs font-mono text-white focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs font-mono text-[var(--ink)] focus: outline-none"
  />
  </div>
  ))}
@@ -326,7 +326,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  value={config.datosContratacion?.numMusicos ??''}
  onChange={e => editarDatoContratacion('numMusicos', e.target.value)}
  placeholder="4"
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus: outline-none"
  />
  </div>
  <div>
@@ -337,7 +337,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  value={config.datosContratacion?.duracionDirecto ??''}
  onChange={e => editarDatoContratacion('duracionDirecto', e.target.value)}
  placeholder="75"
- className="w-full bg-transparent px-3 py-2 text-sm text-white outline-none"
+ className="w-full bg-transparent px-3 py-2 text-sm text-[var(--ink)] outline-none"
  />
  <span className="pr-3 text-xs text-[var(--ink-2)] font-semibold">min</span>
  </div>
@@ -349,7 +349,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  value={config.datosContratacion?.ciudadBase ??''}
  onChange={e => editarDatoContratacion('ciudadBase', e.target.value)}
  placeholder="Madrid"
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus: outline-none"
  />
  </div>
  <div>
@@ -359,7 +359,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  value={config.datosContratacion?.formatos ??''}
  onChange={e => editarDatoContratacion('formatos', e.target.value)}
  placeholder="Banda completa / Acústico"
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus: outline-none"
  />
  </div>
  </div>
@@ -372,7 +372,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  value={config.datosContratacion?.necesidadesEscenario ||''}
  onChange={e => editarDatoContratacion('necesidadesEscenario', e.target.value)}
  placeholder="Escenario mínimo 5x4m, 4 tomas de corriente, PA con 8 canales"
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus: outline-none"
  />
  </div>
  </div>

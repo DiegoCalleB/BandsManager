@@ -122,13 +122,13 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  <FileSpreadsheet className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold text-white">Exportar Leads de Booking</h3>
+ <h3 className="text-base font-bold text-[var(--ink)]">Exportar Leads de Booking</h3>
  <p className="text-xs text-zinc-400">Descarga tu base de contactos en Excel o JSON</p>
  </div>
  </div>
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] text-zinc-400 hover:text-[var(--ink)] hover:bg-zinc-800 transition cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -146,7 +146,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportScope('filtered')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='filtered'
- ?'bg-[var(--acc)]/20 /60 text-white'
+ ?'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
@@ -170,7 +170,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportScope('all')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='all'
- ?'bg-[var(--acc)]/20 /60 text-white'
+ ?'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >
@@ -195,7 +195,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportScope('selected')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
  exportScope ==='selected'
- ?'bg-[var(--acc)]/20 /60 text-white'
+ ?'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >

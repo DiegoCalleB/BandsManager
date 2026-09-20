@@ -607,7 +607,7 @@ export default function TourManager({
  ✓ Convocado
  </span>
  ) : (
- <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-neutral-800 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[var(--surface)]/80 text-[var(--ink-2)]">
  No convocado
  </span>
  )}
@@ -616,7 +616,7 @@ export default function TourManager({
  <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-mono font-bold
  ${tour.estado ==='confirmada' ? colors.badgeGreen : 
  tour.estado ==='planificacion' ? colors.badgeYellow :
- tour.estado ==='cancelada' ? colors.badgeRed :'bg-neutral-800 text-neutral-300'}`}>
+ tour.estado ==='cancelada' ? colors.badgeRed :'bg-[var(--surface)]/80 text-neutral-300'}`}>
  {tour.estado}
  </span>
  <span className={`text-[10px] ${colors.textMuted} flex items-center gap-1 font-mono`}>
@@ -651,7 +651,7 @@ export default function TourManager({
  </div>
  </div>
  <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
- <button onClick={() => handleOpenEditModal(tour)} className="p-1.5 rounded-[var(--r-s)] hover:bg-neutral-800 text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer" title="Editar">
+ <button onClick={() => handleOpenEditModal(tour)} className="p-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer" title="Editar">
  <Edit3 className="w-4 h-4" />
  </button>
  <button onClick={() => handleDelete(tour.id, tour.nombre)} className="p-1.5 rounded-[var(--r-s)] hover:bg-rose-500/15 text-[var(--ink-2)] hover:text-rose-400 transition-colors cursor-pointer" title="Eliminar">
@@ -778,7 +778,7 @@ export default function TourManager({
  </div>
  <button 
  onClick={() => setIsModalOpen(false)}
- className="p-2 rounded-[var(--r-m)] hover:bg-neutral-800 text-[var(--ink-2)] hover:text-white transition-colors text-xl leading-none cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors text-xl leading-none cursor-pointer"
  >
  &times;
  </button>
@@ -835,8 +835,8 @@ export default function TourManager({
  }}
  className={`px-3 py-1 text-xs font-mono font-bold rounded-md transition-all cursor-pointer ${
  formConvocatoriaTipo ==='completa'
- ?'bg-purple-600 text-white shadow-sm'
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-purple-600 text-[var(--ink)] shadow-sm'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  👥 Banda Completa ({availableMembers.length})
@@ -846,8 +846,8 @@ export default function TourManager({
  onClick={() => setFormConvocatoriaTipo('parcial')}
  className={`px-3 py-1 text-xs font-mono font-bold rounded-md transition-all cursor-pointer ${
  formConvocatoriaTipo ==='parcial'
- ?'bg-purple-600 text-white shadow-sm'
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-purple-600 text-[var(--ink)] shadow-sm'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  👤 Formación Parcial / Reducida
@@ -889,12 +889,12 @@ export default function TourManager({
  onClick={() => handleToggleMember(m.id)}
  className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-3 transition-all cursor-pointer ${
  isSelected
- ?'bg-purple-500/20 border-purple-500/50 text-white shadow-sm'
+ ?'bg-purple-500/20 border-purple-500/50 text-[var(--ink)] shadow-sm'
  :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 ${
- isSelected ?'bg-purple-600 text-white' :'border'
+ isSelected ?'bg-purple-600 text-[var(--ink)]' :'border'
  }`}>
  {isSelected && <CheckSquare className="w-3.5 h-3.5" />}
  </div>
@@ -961,7 +961,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => recalculateAllFuelStops()}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] border-[var(--hair)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] border-[var(--hair)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
  title="Aplica la suma de consumos a las distancias de todas las paradas"
  >
  <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" /> Recalcular Paradas
@@ -1001,7 +1001,7 @@ export default function TourManager({
  <select
  onChange={(e) => handleApplyPresetToVehicle(vIdx, e.target.value)}
  defaultValue=""
- className="w-full p-2 rounded-[var(--r-s)] bg-black/60 border-[var(--hair)] text-xs text-white focus:border-sky-500 cursor-pointer"
+ className="w-full p-2 rounded-[var(--r-s)] bg-black/60 border-[var(--hair)] text-xs text-[var(--ink)] focus:border-sky-500 cursor-pointer"
  >
  <option value="" disabled>-- Seleccionar Modelo --</option>
  {VEHICLE_PRESETS.map((p, idx) => (
@@ -1016,7 +1016,7 @@ export default function TourManager({
  value={veh.nombre}
  onChange={e => handleUpdateVehicle(vIdx,'nombre', e.target.value)}
  placeholder="Ej. Furgoneta Principal (Banda)"
- className="w-full p-2 rounded-[var(--r-s)] bg-black/60 border-[var(--hair)] text-xs text-white focus:border-sky-500"
+ className="w-full p-2 rounded-[var(--r-s)] bg-black/60 border-[var(--hair)] text-xs text-[var(--ink)] focus:border-sky-500"
  />
  </div>
 
@@ -1068,7 +1068,7 @@ export default function TourManager({
  <div className="p-3 rounded-[var(--r-m)] bg-black/60 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
  <div className="space-y-1">
  <span className="text-neutral-300 flex items-center gap-1.5">
- 📐 <strong className="text-white">Cálculo de Consumo Combinado:</strong>
+ 📐 <strong className="text-[var(--ink)]">Cálculo de Consumo Combinado:</strong>
  </span>
  <div className="text-[11px] text-[var(--ink-2)]">
  {formVehiculos.map((v, i) => (
@@ -1268,7 +1268,7 @@ export default function TourManager({
  className="rounded border-[var(--hair)] text-sky-500 focus:ring-0 w-4 h-4 cursor-pointer"
  />
  <span>
- <strong className="text-white">📅 Sincronizar paradas en el Calendario oficial de la Banda:</strong> Crea/actualiza automáticamente los conciertos correspondientes con los miembros convocados y badge de gira.
+ <strong className="text-[var(--ink)]">📅 Sincronizar paradas en el Calendario oficial de la Banda:</strong> Crea/actualiza automáticamente los conciertos correspondientes con los miembros convocados y badge de gira.
  </span>
  </label>
  </div>
@@ -1315,7 +1315,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => setIsModalOpen(false)}
- className="px-4 py-2 rounded-[var(--r-m)] text-sm font-medium hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-sm font-medium hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  Cancelar
  </button>
@@ -1343,27 +1343,27 @@ export default function TourManager({
  <Trash2 className="w-6 h-6" />
  </div>
  <div>
- <h3 className="font-bold text-lg text-white font-display">¿Eliminar esta gira?</h3>
+ <h3 className="font-bold text-lg text-[var(--ink)] font-display">¿Eliminar esta gira?</h3>
  <p className="text-xs text-[var(--ink-2)] mt-0.5">Esta acción eliminará la gira y no se puede deshacer.</p>
  </div>
  </div>
 
  <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)] text-sm text-[var(--sunken)]">
- Gira: <strong className="text-white">{tourToDelete.name}</strong>
+ Gira: <strong className="text-[var(--ink)]">{tourToDelete.name}</strong>
  </div>
 
  <div className="flex justify-end gap-3 pt-2">
  <button
  type="button"
  onClick={() => setTourToDelete(null)}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase tracking-wider bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase tracking-wider bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-neutral-300 transition-colors cursor-pointer"
  >
  Cancelar
  </button>
  <button
  type="button"
  onClick={confirmDelete}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase tracking-wider bg-rose-600 hover:bg-rose-500 text-white shadow-md active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase tracking-wider bg-rose-600 hover:bg-rose-500 text-[var(--ink)] shadow-md active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
  >
  <Trash2 className="w-4 h-4" />
  Sí, Eliminar Gira

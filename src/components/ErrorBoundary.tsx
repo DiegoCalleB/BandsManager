@@ -52,13 +52,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
  {this.props.fallbackTitle ||'Ha ocurrido un error al cargar este módulo'}
  </h3>
  </div>
- <p className="text-xs text-[var(--ink-3)] leading-relaxed font-mono bg-slate-950 p-3 rounded-[var(--r-m)] overflow-x-auto">
+ <p className="text-xs text-[var(--ink-3)] leading-relaxed font-mono bg-[var(--surface)] p-3 rounded-[var(--r-m)] overflow-x-auto">
  {this.state.error?.message ||'Error no especificado en la renderización.'}
  </p>
  <div className="flex items-center gap-3 pt-2">
  <button
  onClick={this.handleReset}
- className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 text-xs font-bold rounded-[var(--r-m)] flex items-center gap-2 transition"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-bold rounded-[var(--r-m)] flex items-center gap-2 transition"
  >
  <RefreshCw className="w-4 h-4" /> Reintentar Cargar Módulo
  </button>

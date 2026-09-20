@@ -139,7 +139,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  )}
  {hasAlerts && (
  <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
- dangerAlertsCount > 0 ?'bg-rose-500 text-white animate-pulse' :'bg-[var(--acc)] text-black'
+ dangerAlertsCount > 0 ?'bg-rose-500 text-[var(--ink)] animate-pulse' :'bg-[var(--acc)] text-black'
  }`}>
  {dangerAlertsCount > 0 ?'⚠️ Alerta Clima' :'Aviso Meteo'}
  </span>
@@ -433,7 +433,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <button
  type="button"
  onClick={() => toggleAlertExpand(alert.id)}
- className={`p-1 rounded-md text-[var(--ink-2)] hover:text-white transition-colors shrink-0 cursor-pointer ${
+ className={`p-1 rounded-md text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0 cursor-pointer ${
  isDanger ?'hover:bg-rose-900/40' :'hover:bg-amber-900/40'
  }`}
  title={isExpanded ?'Ocultar recomendaciones' :'Ver recomendaciones técnicas'}

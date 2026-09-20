@@ -55,7 +55,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  </div>
  <button 
  onClick={onClose}
- className="p-1 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
  >
  <X className="w-5 h-5 text-[var(--ink-2)]" />
  </button>
@@ -69,7 +69,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  <select
  value={proposedBakandeyaCity}
  onChange={(e) => setProposedBakandeyaCity(e.target.value as'Madrid' |'Sevilla' |'Ambas')}
- className="w-full bg-neutral-800 text-white px-2 py-1 rounded-[var(--r-s)] text-[10px]"
+ className="w-full bg-[var(--surface)]/80 text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
  >
  <option value="Madrid">Madrid</option>
  <option value="Sevilla">Sevilla</option>
@@ -83,7 +83,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  type="text"
  value={proposedVenueBakandeya}
  onChange={(e) => setProposedVenueBakandeya(e.target.value)}
- className="w-full bg-neutral-800 text-white px-2 py-1 rounded-[var(--r-s)] text-[10px]"
+ className="w-full bg-[var(--surface)]/80 text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
  />
  </div>
 
@@ -93,7 +93,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  type="text"
  value={proposedMonth}
  onChange={(e) => setProposedMonth(e.target.value)}
- className="w-full bg-neutral-800 text-white px-2 py-1 rounded-[var(--r-s)] text-[10px]"
+ className="w-full bg-[var(--surface)]/80 text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
  />
  </div>
  </div>
@@ -114,7 +114,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  {/* Actions Bar */}
  <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
  <div className="text-[10px] font-mono text-neutral-500">
- Destinatario: <strong className="text-white">{band.contacto_nombre || band.nombre_banda}</strong>
+ Destinatario: <strong className="text-[var(--ink)]">{band.contacto_nombre || band.nombre_banda}</strong>
  </div>
 
  <div className="flex items-center gap-2">
@@ -125,7 +125,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  setCopiedPitch(true);
  setTimeout(() => setCopiedPitch(false), 2000);
  }}
- className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] rounded-[var(--r-m)] font-mono text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
+ className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] rounded-[var(--r-m)] font-mono text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
  >
  {copiedPitch ? <Check className="w-4 h-4 text-[#10b981]" /> : <Copy className="w-4 h-4" />}
  <span>{copiedPitch ?'¡Copiado!' :'Copiar Texto'}</span>
@@ -137,7 +137,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  href={`https://wa.me/${band.telefono.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(pitchText)}`}
  target="_blank"
  rel="noreferrer"
- className="px-2 py-1 bg-[var(--surface)]/15 hover:bg-[var(--surface)]/15 text-white font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
+ className="px-2 py-1 bg-[var(--surface)]/15 hover:bg-[var(--surface)]/15 text-[var(--ink)] font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
  >
  <MessageCircle className="w-4 h-4" />
  <span>Enviar WhatsApp</span>
@@ -148,7 +148,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  {band.email && (
  <a
  href={`mailto:${band.email}?subject=${encodeURIComponent(`Propuesta Date Swap: Bakandeya x ${band.nombre_banda}`)}&body=${encodeURIComponent(pitchText)}`}
- className="px-2 py-1 bg-sky-500/15 hover:bg-sky-500/15 text-white font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
+ className="px-2 py-1 bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
  >
  <Send className="w-4 h-4" />
  <span>Enviar Email</span>

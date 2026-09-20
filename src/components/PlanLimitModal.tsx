@@ -49,7 +49,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  {/* Close Button */}
  <button
  onClick={onClose}
- className="absolute top-4 right-4 p-2 text-[var(--ink-2)] hover:text-white rounded-[var(--r-m)] hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="absolute top-4 right-4 p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -137,7 +137,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  onClose();
  onNavigateToPlanes();
  }}
- className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--acc)]/70 text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
  >
  <span>Ver Comparativa Completa</span>
  <ExternalLink className="w-3.5 h-3.5" />

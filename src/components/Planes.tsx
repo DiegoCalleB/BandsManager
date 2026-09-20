@@ -457,7 +457,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  type="button"
  onClick={handleOpenCustomerPortal}
  disabled={isOpeningPortal}
- className="px-4 py-2.5 rounded-[var(--r-m)] bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30 shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+ className="px-4 py-2.5 rounded-[var(--r-m)] bg-rose-600 hover:bg-rose-500 text-[var(--ink)] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30 shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
  >
  {isOpeningPortal ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
  <span>Actualizar tarjeta en Stripe</span>
@@ -480,7 +480,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </span>
  </p>
  <p className="text-xs text-[var(--acc)]/70/90 mt-0.5">
- Tu plan actual <strong className="text-white uppercase font-mono">{currentPlan.replace('_','')}</strong> seguirá 100% activo hasta el final de tu ciclo de facturación
+ Tu plan actual <strong className="text-[var(--ink)] uppercase font-mono">{currentPlan.replace('_','')}</strong> seguirá 100% activo hasta el final de tu ciclo de facturación
  {currentUser.fecha_cambio_plan ? ` (${new Date(currentUser.fecha_cambio_plan).toLocaleDateString('es-ES', { day:'2-digit', month:'long', year:'numeric' })})` :''}.
  Ninguno de tus datos creados será eliminado jamás.
  </p>
@@ -490,7 +490,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  type="button"
  onClick={handleOpenCustomerPortal}
  disabled={isOpeningPortal}
- className="px-4 py-2.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--acc)]/70 font-bold text-xs uppercase tracking-wider transition-all shadow-md shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+ className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 font-bold text-xs uppercase tracking-wider transition-all shadow-md shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
  >
  {isOpeningPortal ? <Loader2 className="w-4 h-4 animate-spin" /> : <ExternalLink className="w-4 h-4" />}
  <span>Gestionar en Portal</span>
@@ -526,7 +526,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  type="button"
  onClick={handleOpenCustomerPortal}
  disabled={isOpeningPortal}
- className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-zinc-100 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+ className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-100 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
  >
  {isOpeningPortal ? (
  <>
@@ -581,7 +581,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <button
  type="button"
  onClick={() => setShowBanner(false)}
- className="p-2 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800/60 transition-colors cursor-pointer"
+ className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  title="Cerrar aviso"
  >
  <X className="w-4 h-4" />
@@ -614,7 +614,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  onClick={() => setBillingPeriod('monthly')}
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-all cursor-pointer ${
  billingPeriod ==='monthly'
- ?'bg-neutral-800 text-zinc-100 shadow-md'
+ ?'bg-[var(--surface)]/80 text-zinc-100 shadow-md'
  :'text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
@@ -665,7 +665,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  const getCtaStyle = (variant: PlanCardData['ctaVariant']) => {
  switch (variant) {
  case'secondary':
- return'bg-neutral-800 hover:bg-neutral-700 text-zinc-100';
+ return'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-100';
  case'silver':
  return'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)]';
  case'gold':
@@ -847,7 +847,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  type="button"
  onClick={handleOpenCustomerPortal}
  disabled={isOpeningPortal}
- className="w-full py-2 px-3 rounded-[var(--r-s)] bg-neutral-800/80 hover:bg-neutral-700 text-[var(--ink-3)] hover:text-white text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+ className="w-full py-2 px-3 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] hover:text-[var(--ink)] text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
  >
  <CreditCard className="w-3.5 h-3.5" />
  <span>Gestionar en Stripe</span>
@@ -874,7 +874,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  type="button"
  onClick={handleOpenCustomerPortal}
  disabled={isOpeningPortal}
- className="w-full py-3 px-4 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
  >
  <ExternalLink className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Bajar a {plan.name}</span>
@@ -906,14 +906,14 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <button
  type="button"
  onClick={expandAllSections}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] cursor-pointer transition-colors"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] cursor-pointer transition-colors"
  >
  Expandir todo
  </button>
  <button
  type="button"
  onClick={collapseAllSections}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] cursor-pointer transition-colors"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] cursor-pointer transition-colors"
  >
  Colapsar todo
  </button>

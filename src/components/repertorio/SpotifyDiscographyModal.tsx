@@ -285,7 +285,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden transition-all ${
  isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-white'
+ :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* Header Modal Bar */}
@@ -312,7 +312,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={onClose}
- className="p-2 rounded-full hover:bg-white/10 text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
+ className="p-2 rounded-full hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -337,7 +337,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#1db954] transition-all ${
  isStitchLight
  ?'bg-white text-[var(--ink)] placeholder:text-[var(--ink-3)]'
- :'bg-[var(--surface)] text-white placeholder:text-neutral-500'
+ :'bg-[var(--surface)] text-[var(--ink)] placeholder:text-neutral-500'
  }`}
  />
  </div>
@@ -449,7 +449,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  type="button"
  onClick={() => setFilterType('todos')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType ==='todos' ?'bg-[var(--surface)] text-black shadow' :'text-[var(--ink-2)] hover:text-white'
+ filterType ==='todos' ?'bg-[var(--surface)] text-black shadow' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Todos ({albums.length})
@@ -458,7 +458,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  type="button"
  onClick={() => setFilterType('album')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType ==='album' ?'bg-[var(--surface)] text-black shadow' :'text-[var(--ink-2)] hover:text-white'
+ filterType ==='album' ?'bg-[var(--surface)] text-black shadow' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Álbumes ({albums.filter((a) => a.albumType ==='album').length})
@@ -467,7 +467,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  type="button"
  onClick={() => setFilterType('single')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType ==='single' ?'bg-[var(--surface)] text-black shadow' :'text-[var(--ink-2)] hover:text-white'
+ filterType ==='single' ?'bg-[var(--surface)] text-black shadow' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Singles y EPs ({albums.filter((a) => a.albumType ==='single').length})
@@ -524,7 +524,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={() => toggleSelectAlbum(album.id)}
- className="text-[var(--ink-2)] hover:text-white cursor-pointer shrink-0"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer shrink-0"
  >
  {isSelected ? (
  <CheckSquare className="w-5 h-5 text-[#1db954]" />
@@ -540,7 +540,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className="w-14 h-14 rounded-[var(--r-m)] object-cover shadow-md border-[var(--hair)] shrink-0"
  />
  ) : (
- <div className="w-14 h-14 rounded-[var(--r-m)] bg-neutral-800 flex items-center justify-center shrink-0">
+ <div className="w-14 h-14 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex items-center justify-center shrink-0">
  <Disc className="w-6 h-6 text-neutral-500" />
  </div>
  )}
@@ -606,7 +606,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  key={track.id}
  className={`px-3 py-2 rounded-[var(--r-m)] flex items-center justify-between gap-3 text-xs font-mono transition-all ${
  isPlaying
- ?'bg-[var(--surface)]/20 border-[var(--hair)]/40 text-white'
+ ?'bg-[var(--surface)]/20 border-[var(--hair)]/40 text-[var(--ink)]'
  :'hover:bg-white/5 text-[var(--ink-3)]'
  }`}
  >

@@ -182,7 +182,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
- <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl max-h-[90vh] overflow-y-auto">
+ <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl max-h-[90vh] overflow-y-auto">
  {/* Header */}
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
@@ -200,7 +200,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  stopCamera();
  onClose();
  }}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  <X className="w-5 h-5" />
  </button>
@@ -251,13 +251,13 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="flex gap-2">
  <button
  onClick={handleCameraCapture}
- className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition"
+ className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-green-600 hover:bg-green-700 text-[var(--ink)] text-sm font-semibold transition"
  >
  📸 Capturar Foto
  </button>
  <button
  onClick={stopCamera}
- className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-neutral-700 hover:bg-neutral-600 text-white text-sm font-semibold transition"
+ className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)] text-sm font-semibold transition"
  >
  Cancelar
  </button>
@@ -273,7 +273,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  className="border-2 border-dashed border-purple-500/30 rounded-[var(--r-s)] p-8 text-center cursor-pointer hover:border-purple-500/60 transition"
  >
  <Upload className="w-8 h-8 mx-auto mb-2 text-purple-400" />
- <p className="text-sm font-semibold text-white">Arrastra un archivo aquí</p>
+ <p className="text-sm font-semibold text-[var(--ink)]">Arrastra un archivo aquí</p>
  <p className="text-xs text-[var(--ink-2)] mt-1">o haz clic para seleccionar</p>
  <p className="text-xs text-neutral-500 mt-2">PDF, JPG, PNG, Word (máx. 10MB)</p>
  </div>
@@ -287,7 +287,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
 
  <button
  onClick={startCamera}
- className="w-full px-4 py-2.5 rounded-[var(--r-s)] bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition flex items-center justify-center gap-2"
+ className="w-full px-4 py-2.5 rounded-[var(--r-s)] bg-blue-600 hover:bg-blue-700 text-[var(--ink)] text-sm font-semibold transition flex items-center justify-center gap-2"
  >
  <Camera className="w-4 h-4" />
  Hacer Foto desde Cámara
@@ -300,7 +300,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="space-y-3">
  <div className="bg-[var(--surface)] rounded-[var(--r-s)] p-3">
  <p className="text-xs text-[var(--ink-2)] mb-2">
- Archivo seleccionado: <span className="text-white font-semibold">{selectedFile.name}</span>
+ Archivo seleccionado: <span className="text-[var(--ink)] font-semibold">{selectedFile.name}</span>
  </p>
  {selectedFile.type.startsWith('image/') && (
  <img src={preview} alt="Preview" className="w-full max-h-64 object-contain rounded" />
@@ -323,14 +323,14 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  setSelectedFile(null);
  setPreview(null);
  }}
- className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-neutral-700 hover:bg-neutral-600 text-white text-sm font-semibold transition"
+ className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)] text-sm font-semibold transition"
  >
  Cambiar Archivo
  </button>
  <button
  onClick={handleProcessWithAI}
  disabled={isProcessing}
- className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-purple-600 hover:bg-purple-700 disabled:bg-neutral-600 text-white text-sm font-semibold transition"
+ className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-purple-600 hover:bg-purple-700 disabled:bg-neutral-600 text-[var(--ink)] text-sm font-semibold transition"
  >
  ✨ Procesar con IA
  </button>
@@ -368,8 +368,8 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  onClick={() => setShowComparison(v => !v)}
  className={`px-3 py-1.5 rounded text-xs font-semibold transition flex items-center gap-1 ${
  showComparison
- ?'bg-purple-600 hover:bg-purple-700 text-white'
- :'bg-white/10 hover:bg-white/20 text-white'
+ ?'bg-purple-600 hover:bg-purple-700 text-[var(--ink)]'
+ :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'
  }`}
  >
  👁️ {showComparison ?'Ocultar' :'Comparar'}
@@ -378,7 +378,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  href={song.estructuraDocumentoUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition flex items-center gap-1"
+ className="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-[var(--ink)] text-xs font-semibold transition flex items-center gap-1"
  >
  <Download className="w-3 h-3" />
  Descargar

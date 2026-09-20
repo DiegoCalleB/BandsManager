@@ -38,10 +38,10 @@ export const AlbumCover: React.FC<AlbumCoverProps> = ({
  return (
  <div 
  onClick={onPlay}
- className={`aspect-square bg-cover bg-center bg-neutral-800 flex items-center justify-center relative transition-all group overflow-hidden ${onPlay ?'cursor-pointer' :''} ${className ||'w-full h-full'}`} 
+ className={`aspect-square bg-cover bg-center bg-[var(--surface)]/80 flex items-center justify-center relative transition-all group overflow-hidden ${onPlay ?'cursor-pointer' :''} ${className ||'w-full h-full'}`} 
  style={{ backgroundImage: resolvedUrl ? `url(${resolvedUrl})` :'none' }}
  >
- {!resolvedUrl && <Disc3 className="w-16 h-16 opacity-20 text-white" />}
+ {!resolvedUrl && <Disc3 className="w-16 h-16 opacity-20 text-[var(--ink)]" />}
  
 
  {/* Floating Green Play Button */}

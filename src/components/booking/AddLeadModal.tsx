@@ -122,7 +122,7 @@ export function AddLeadModal({
  </div>
  <button
  onClick={onClose}
- className="text-[var(--ink-2)] hover:text-white p-1 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -481,7 +481,7 @@ export function AddLeadModal({
  className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
  Cancelar
@@ -490,7 +490,7 @@ export function AddLeadModal({
  type="submit"
  className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg ${
  isStitchLight
- ?'bg-sky-500 hover:bg-sky-400 text-white'
+ ?'bg-sky-500 hover:bg-sky-400 text-[var(--ink)]'
  :'bg-[var(--acc)] hover:bg-[#e2ba40] text-[var(--acc-ink)]'
  }`}
  >

@@ -91,7 +91,7 @@ export function ShareModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
  <div 
- className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-white"
+ className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-[var(--ink)]"
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}
@@ -101,7 +101,7 @@ export function ShareModal({
  {getItemIcon()}
  </div>
  <div>
- <h3 className="text-lg font-bold text-white flex items-center gap-2">
+ <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
  Compartir {title}
  </h3>
  {subtitle && (
@@ -111,7 +111,7 @@ export function ShareModal({
  </div>
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+ className="p-2 rounded-[var(--r-m)] text-zinc-400 hover:text-[var(--ink)] hover:bg-white/10 transition-colors"
  title="Cerrar"
  >
  <X className="w-5 h-5" />
@@ -125,7 +125,7 @@ export function ShareModal({
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
  <button
  onClick={handleWhatsApp}
- className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-all shadow-lg shadow-emerald-900/30 active:scale-95"
+ className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-emerald-900/30 active:scale-95"
  >
  <MessageSquare className="w-4 h-4 fill-white/20" />
  <span>WhatsApp</span>
@@ -133,7 +133,7 @@ export function ShareModal({
 
  <button
  onClick={handleWebShare}
- className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs transition-all shadow-lg shadow-sky-900/30 active:scale-95"
+ className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-sky-600 hover:bg-sky-500 text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-sky-900/30 active:scale-95"
  >
  <Share2 className="w-4 h-4" />
  <span>Otras Apps</span>
@@ -143,7 +143,7 @@ export function ShareModal({
  onClick={handleCopy}
  className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-all shadow-lg active:scale-95 ${
  copied 
- ?'bg-amber-600 text-white' 
+ ?'bg-amber-600 text-[var(--ink)]' 
  :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border-[var(--hair)]'
  }`}
  >
@@ -153,7 +153,7 @@ export function ShareModal({
 
  <button
  onClick={handleEmail}
- className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all shadow-lg shadow-indigo-900/30 active:scale-95"
+ className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-indigo-900/30 active:scale-95"
  >
  <Mail className="w-4 h-4" />
  <span>Email</span>
@@ -176,7 +176,7 @@ export function ShareModal({
  value={phone}
  onChange={(e) => setPhone(e.target.value)}
  placeholder="Ej: +34612345678 o 612345678"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-xs text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
  />
  </div>
 
@@ -220,13 +220,13 @@ export function ShareModal({
  <div className="flex items-center gap-2">
  <button
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-medium text-zinc-400 hover:text-[var(--ink)] hover:bg-white/5 transition-colors"
  >
  Cancelar
  </button>
  <button
  onClick={handleWhatsApp}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors flex items-center gap-1.5 shadow-md"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] transition-colors flex items-center gap-1.5 shadow-md"
  >
  <Send className="w-3.5 h-3.5" />
  Enviar a WhatsApp

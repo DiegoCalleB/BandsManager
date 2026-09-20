@@ -87,7 +87,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
  if (loading) {
  return (
- <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-6">
+ <div className="min-h-screen bg-[var(--surface)] text-[var(--ink)] flex flex-col items-center justify-center p-6">
  <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4"></div>
  <p className="text-[var(--acc)] font-medium">{t('cargando')}</p>
  </div>
@@ -310,11 +310,11 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  href={url}
  target="_blank"
  rel="noopener noreferrer"
- className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-pink-500/40 shadow-sm transition-all duration-200 active:scale-95 text-[var(--ink-3)] hover:text-white"
+ className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-pink-500/40 shadow-sm transition-all duration-200 active:scale-95 text-[var(--ink-3)] hover:text-[var(--ink)]"
  title={interpolate(t('seguirMiembro'), { name: m.nombre })}
  aria-label={interpolate(t('seguirMiembro'), { name: m.nombre })}
  >
- <span className="w-3.5 h-3.5 rounded-[4px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center p-[2px] text-white shrink-0 group-hover/ig:scale-110 transition-transform shadow-xs">
+ <span className="w-3.5 h-3.5 rounded-[4px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center p-[2px] text-[var(--ink)] shrink-0 group-hover/ig:scale-110 transition-transform shadow-xs">
  <Instagram className="w-full h-full stroke-[2.5]" />
  </span>
  <span className="text-[11px] font-mono font-medium truncate max-w-[85px] sm:max-w-[110px]">
@@ -497,7 +497,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <div key={idx} className={`group/foto relative shrink-0 w-[78%] sm:w-[340px] snap-center rounded-[var(--r-m)] overflow-hidden ${styles.card} aspect-video`}>
  <img src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full h-full object-cover" loading="lazy" />
  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/foto:opacity-100 transition p-4 flex items-end justify-between">
- <span className="text-xs font-semibold text-white">{t('fotoPromocional', { n: String(idx + 1) })}</span>
+ <span className="text-xs font-semibold text-[var(--ink)]">{t('fotoPromocional', { n: String(idx + 1) })}</span>
  {safeUrl(photoUrl) && (
  <a href={safeUrl(photoUrl)} target="_blank" rel="noopener noreferrer" className={`p-1.5 ${styles.accentBtn} rounded-[var(--r-s)] text-xs font-bold`}>
  <ExternalLink className="w-3.5 h-3.5" />
@@ -518,7 +518,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  type="button"
  onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior:'smooth' })}
  aria-label={t('fotoAnterior')}
- className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+ className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
  ‹
  </button>
@@ -526,7 +526,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  type="button"
  onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior:'smooth' })}
  aria-label={t('fotoSiguiente')}
- className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+ className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
  ›
  </button>

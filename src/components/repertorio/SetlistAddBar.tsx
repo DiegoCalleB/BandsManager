@@ -91,7 +91,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 text-xs">
  <div className="flex items-center gap-1.5 min-w-0">
  <span className="shrink-0 text-[var(--acc)] font-semibold">📌 Insertando debajo de:</span>
- <span className="truncate font-medium text-white">"{selectedItemLabel}"</span>
+ <span className="truncate font-medium text-[var(--ink)]">"{selectedItemLabel}"</span>
  </div>
  <button
  onClick={() => setSelectedSetlistItemId(null)}
@@ -190,7 +190,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  setShowEventMenu(false);
  handleAddItemToSetlist(undefined, ev.type);
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white transition flex items-center justify-between cursor-pointer"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)] transition flex items-center justify-between cursor-pointer"
  >
  <span className="flex items-center gap-2 font-medium">
  <span>{ev.icon}</span>
@@ -276,7 +276,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  type="button"
  onClick={handleCreateShortcut}
  disabled={!newShortcutLabel.trim()}
- className="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs disabled:opacity-40 cursor-pointer"
+ className="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-medium text-xs disabled:opacity-40 cursor-pointer"
  >
  Guardar
  </button>

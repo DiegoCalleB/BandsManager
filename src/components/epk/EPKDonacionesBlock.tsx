@@ -85,7 +85,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <div className="space-y-3">
  <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
- <span className="text-xs font-bold text-white">Mostrar tarjeta de donación</span>
+ <span className="text-xs font-bold text-[var(--ink)]">Mostrar tarjeta de donación</span>
  <p className="text-[10px] text-[var(--ink-3)]">Activa o desactiva la opción de colaboración</p>
  </div>
  <input
@@ -228,7 +228,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  (config.donacionRevolut?.metodoPorDefecto ||'revolut') ==='revolut'
  ?'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-sky-400" />
@@ -245,7 +245,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='paypal'
  ?'bg-blue-500/20 border-blue-500 text-blue-300 shadow-sm'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-blue-400" />
@@ -262,7 +262,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='bizum'
  ?'bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-sm'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -329,7 +329,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <div className="relative flex items-start gap-3 sm:gap-3.5">
  <div className="min-w-0 flex-1">
  <div className="flex items-center justify-between gap-2">
- <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
+ <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight leading-snug">
  {config.donacionRevolut?.titulo ||'Colabora con la banda'}
  </h3>
  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold shrink-0">
@@ -392,7 +392,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <span className="text-lg" aria-hidden="true">
  {idioma.flag}
  </span>
- <span className="font-bold text-white text-sm">{idioma.label}</span>
+ <span className="font-bold text-[var(--ink)] text-sm">{idioma.label}</span>
  {hayTraduccion && !desactualizada && (
  <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400">
  Al día
@@ -414,7 +414,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  type="button"
  onClick={() => traducirConIA(idioma.code)}
  disabled={estaTraduciendo}
- className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer"
+ className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--ink)] font-bold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer"
  >
  {estaTraduciendo ? (
  <>
@@ -474,7 +474,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  value={traduccion?.[f.campo] ||''}
  onChange={e => editarTraduccion(idioma.code, f.campo, e.target.value)}
  rows={f.filas}
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] p-3 text-xs text-white focus: focus:outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] p-3 text-xs text-[var(--ink)] focus: focus:outline-none"
  />
  </div>
  </div>
@@ -489,7 +489,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  .filter(m => (m.rol ||'').trim() || (m.bio ||'').trim())
  .map(m => (
  <div key={m.id} className="bg-[var(--surface)]/60 rounded-[var(--r-s)] p-3 space-y-2">
- <p className="text-xs font-bold text-white">{m.nombre ||'Sin nombre'}</p>
+ <p className="text-xs font-bold text-[var(--ink)]">{m.nombre ||'Sin nombre'}</p>
  {(m.rol ||'').trim() && (
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
  <div className="text-[11px] text-[var(--ink-2)] pt-1.5">{m.rol}</div>
@@ -500,7 +500,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  editarTraduccionMiembro(idioma.code, m.id,'rol', e.target.value)
  }
  placeholder={`Instrumento en ${idioma.label}`}
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-white focus: focus:outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus: focus:outline-none"
  />
  </div>
  )}
@@ -514,7 +514,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  rows={2}
  placeholder={`Trayectoria en ${idioma.label}`}
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-white focus: focus:outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus: focus:outline-none"
  />
  </div>
  )}

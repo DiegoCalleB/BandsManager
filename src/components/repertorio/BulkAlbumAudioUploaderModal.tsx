@@ -567,7 +567,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :'bg-[var(--surface)] text-white'
+ :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* Modal Header */}
@@ -594,7 +594,7 @@ export function BulkAlbumAudioUploaderModal({
  type="button"
  onClick={onClose}
  disabled={isUploading}
- className="p-2.5 rounded-[var(--r-l)] text-[var(--ink-2)] hover:text-white hover:bg-white/10 transition cursor-pointer disabled:opacity-50"
+ className="p-2.5 rounded-[var(--r-l)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/10 transition cursor-pointer disabled:opacity-50"
  >
  <X className="w-5 h-5" />
  </button>
@@ -617,7 +617,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-emerald-500'
- :'bg-[var(--surface)] text-white focus:border-[var(--hair)]'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--hair)]'
  }`}
  />
  </div>
@@ -725,7 +725,7 @@ export function BulkAlbumAudioUploaderModal({
  {uploadProgress.currentName}
  </span>
  </div>
- <div className="w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
+ <div className="w-full h-2 bg-[var(--surface)]/80 rounded-full overflow-hidden">
  <div
  className="h-full bg-[var(--surface)] transition-all duration-300 rounded-full"
  style={{
@@ -793,7 +793,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :'bg-black text-white'
+ :'bg-black text-[var(--ink)]'
  }`}
  placeholder="Título de la canción"
  />
@@ -821,7 +821,7 @@ export function BulkAlbumAudioUploaderModal({
  item.matchedSongId
  ? isStitchLight
  ?'bg-white border-emerald-400 text-[var(--ink)] font-bold'
- :'bg-black border-[var(--hair)]/50 text-white font-bold'
+ :'bg-black border-[var(--hair)]/50 text-[var(--ink)] font-bold'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)]'
  :'bg-black text-[var(--ink-2)]'

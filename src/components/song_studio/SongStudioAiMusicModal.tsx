@@ -72,7 +72,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="w-full max-w-xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+ <div className="w-full max-w-xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center">
@@ -86,7 +86,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  <X className="w-5 h-5" />
  </button>
@@ -109,7 +109,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  value={style}
  onChange={(e) => setStyle(e.target.value)}
  placeholder="Ej: Rock alternativo, post-punk, psicodelia..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus: font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus: font-mono"
  />
  </div>
 
@@ -120,7 +120,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  onChange={(e) => setPrompt(e.target.value)}
  rows={3}
  placeholder="Describe la atmósfera, energía, instrumentación o propósito..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus: font-mono resize-none leading-relaxed"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus: font-mono resize-none leading-relaxed"
  />
  </div>
 
@@ -176,7 +176,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-[var(--ink-2)] hover:text-white"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  Cerrar
  </button>

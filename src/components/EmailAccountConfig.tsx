@@ -223,7 +223,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  <div className={`space-y-5 p-5 sm:p-6 rounded-[var(--r-l)] transition-all ${
  isStitchLight
  ?'bg-white shadow-sm'
- :'bg-[var(--surface)]/70 text-white'
+ :'bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b /60">
  <div className="flex items-center gap-2">
@@ -282,7 +282,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  type="button"
  onClick={handleDisconnectGmailOAuth}
  disabled={gmailOAuthDisconnecting}
- className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+ className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
  >
  {gmailOAuthDisconnecting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Unlink className="w-3 h-3" />}
  Desconectar
@@ -317,9 +317,9 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
 
  <div className="flex items-center gap-3 text-[11px] font-mono text-neutral-500">
- <div className="h-px flex-1 bg-neutral-800/60" />
+ <div className="h-px flex-1 bg-[var(--surface)]/80" />
  <span>o conecta por SMTP/IMAP (Outlook u otro proveedor)</span>
- <div className="h-px flex-1 bg-neutral-800/60" />
+ <div className="h-px flex-1 bg-[var(--surface)]/80" />
  </div>
 
  {status.connected && !editing ? (
@@ -336,7 +336,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  <button
  type="button"
  onClick={() => setEditing(true)}
- className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
+ className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
  >
  <RefreshCw className="w-3 h-3" />
  Cambiar cuenta
@@ -360,7 +360,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  ?'bg-sky-500/20 border-sky-400/80 text-sky-200 shadow-sm shadow-sky-900/30'
  : isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 /80 text-[var(--ink-2)] hover:bg-neutral-800/50 hover:text-[var(--sunken)]'
+ :'bg-[var(--surface)]/80 /80 text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--sunken)]'
  }`}
  >
  {p ==='gmail' ?'Gmail' : p ==='outlook' ?'Outlook' :'Otro (manual)'}
@@ -459,7 +459,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  <button
  type="button"
  onClick={() => { setEditing(false); setFeedback(null); }}
- className="px-4 py-2.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] font-bold text-xs font-mono transition-all cursor-pointer"
+ className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] font-bold text-xs font-mono transition-all cursor-pointer"
  >
  Cancelar
  </button>

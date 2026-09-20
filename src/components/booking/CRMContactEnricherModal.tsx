@@ -92,7 +92,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <button
  onClick={onClose}
  disabled={isProcessing}
- className="p-1 rounded-[var(--r-s)] hover:bg-neutral-800 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors"
+ className="p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -120,7 +120,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
  <span className="text-[11px] font-semibold text-[var(--ink-2)] uppercase tracking-wider">Contactos actualizados:</span>
  {enrichedResults.map((r, i) => (
- <div key={i} className="p-2.5 rounded-[var(--r-s)] bg-neutral-800/50 flex flex-col gap-1">
+ <div key={i} className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 flex flex-col gap-1">
  <span className="font-bold text-[var(--sunken)]">{r.name}</span>
  <div className="flex flex-wrap gap-3 text-[11px] text-[var(--ink-2)]">
  {r.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-emerald-400" /> {r.email}</span>}

@@ -68,7 +68,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  <button
  id="close-add-transaction-modal"
  onClick={onClose}
- className="absolute top-4 right-4 p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-white transition-colors"
+ className="absolute top-4 right-4 p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -206,7 +206,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  <button
  type="submit"
  disabled={isSubmitting}
- className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-indigo-600 hover:bg-indigo-500 text-[var(--ink)] transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50"
  >
  {isSubmitting ?'Guardando...' :'Guardar Transacción'}
  </button>

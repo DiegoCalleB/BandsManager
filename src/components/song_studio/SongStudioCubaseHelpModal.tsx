@@ -14,7 +14,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  <button
  type="button"
  onClick={onClose}
- className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-white transition-all cursor-pointer"
+ className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -24,7 +24,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  <Keyboard className="w-6 h-6" />
  </div>
  <div>
- <h3 className="text-lg font-bold text-white flex items-center gap-2">
+ <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
  Atajos de Teclado Tipo Cubase DAW
  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/30 text-purple-200">
  Modo Studio

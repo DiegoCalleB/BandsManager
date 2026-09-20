@@ -176,7 +176,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  />
  </div>
  <div>
- <span className="font-extrabold tracking-tight text-white font-mono text-base flex items-center gap-0.5">
+ <span className="font-extrabold tracking-tight text-[var(--ink)] font-mono text-base flex items-center gap-0.5">
  BandManager<span className="text-[var(--acc)]">.io</span>
  </span>
  <span className="text-[10px] font-mono text-[var(--acc)]/80 block -mt-1 tracking-wider uppercase">
@@ -220,7 +220,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
  <button
  onClick={handleBackToOrigin}
- className="text-[11px] underline hover:text-white flex items-center gap-1 font-bold"
+ className="text-[11px] underline hover:text-[var(--ink)] flex items-center gap-1 font-bold"
  >
  <ArrowLeft className="w-3 h-3" />
  {t.backToOrigin.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/,''))}
@@ -250,7 +250,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
  </div>
 
- <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white max-w-3xl mx-auto leading-[1.15]">
+ <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[var(--ink)] max-w-3xl mx-auto leading-[1.15]">
  {t.heroTitle}{''}
  <span className="bg-gradient-to-r from-[var(--acc)] via-amber-300 to-yellow-500 bg-clip-text text-transparent">
  {t.heroHighlight}
@@ -268,7 +268,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <QrCode className="w-5 h-5" />
  </div>
- <h3 className="font-bold text-white text-base font-mono">
+ <h3 className="font-bold text-[var(--ink)] text-base font-mono">
  {t.feature1Title}
  </h3>
  <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
@@ -280,7 +280,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <FileText className="w-5 h-5" />
  </div>
- <h3 className="font-bold text-white text-base font-mono">
+ <h3 className="font-bold text-[var(--ink)] text-base font-mono">
  {t.feature2Title}
  </h3>
  <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
@@ -292,7 +292,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
  <Music className="w-5 h-5" />
  </div>
- <h3 className="font-bold text-white text-base font-mono">
+ <h3 className="font-bold text-[var(--ink)] text-base font-mono">
  {t.feature3Title}
  </h3>
  <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
@@ -325,7 +325,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
 
  <div className="space-y-3">
- <h2 className="text-2xl sm:text-3xl font-black text-white">
+ <h2 className="text-2xl sm:text-3xl font-black text-[var(--ink)]">
  {t.successTitle}
  </h2>
  <p className="text-[var(--acc)] font-mono text-sm font-bold">
@@ -340,7 +340,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  {originInfo.fromBand && (
  <button
  onClick={handleBackToOrigin}
- className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-neutral-800 text-white font-mono text-xs font-bold transition"
+ className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink)] font-mono text-xs font-bold transition"
  >
  {t.successBackToBand.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/,''))}
  </button>
@@ -362,7 +362,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <Users className="w-4 h-4" />
  <span>Early Access Waitlist</span>
  </div>
- <h2 className="text-2xl font-black text-white">
+ <h2 className="text-2xl font-black text-[var(--ink)]">
  {t.formTitle}
  </h2>
  <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
@@ -392,7 +392,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  value={formData.nombreBanda}
  onChange={(e) => setFormData({ ...formData, nombreBanda: e.target.value })}
  placeholder={t.placeholderBandName}
- className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+ className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-neutral-600 outline-none transition font-mono"
  />
  </div>
 
@@ -408,7 +408,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  value={formData.email}
  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
  placeholder={t.placeholderEmail}
- className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+ className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-neutral-600 outline-none transition font-mono"
  />
  </div>
  </div>
@@ -425,7 +425,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  value={formData.instagram}
  onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
  placeholder={t.placeholderInstagram}
- className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+ className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-neutral-600 outline-none transition font-mono"
  />
  </div>
 
@@ -440,7 +440,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  value={formData.nombreContacto}
  onChange={(e) => setFormData({ ...formData, nombreContacto: e.target.value })}
  placeholder={t.placeholderContactName}
- className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+ className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-[var(--surface)] focus:border-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-neutral-600 outline-none transition font-mono"
  />
  </div>
  </div>
@@ -455,7 +455,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  >
  <span className="flex items-center gap-2">
  <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
- <span className="group-hover:text-white transition-colors font-medium">
+ <span className="group-hover:text-[var(--ink)] transition-colors font-medium">
  {showOptionalDetails ? t.moreInfoToggleClose : t.moreInfoToggleOpen}
  </span>
  </span>
@@ -485,7 +485,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  value={formData.genero}
  onChange={(e) => setFormData({ ...formData, genero: e.target.value })}
  placeholder={t.placeholderGenre}
- className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+ className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-neutral-600 outline-none transition font-mono"
  />
  </div>
 
@@ -499,7 +499,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  value={formData.ciudad}
  onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
  placeholder={t.placeholderCity}
- className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+ className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-neutral-600 outline-none transition font-mono"
  />
  </div>
  </div>
@@ -515,7 +515,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  value={formData.telefono}
  onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
  placeholder={t.placeholderPhone}
- className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+ className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-neutral-600 outline-none transition font-mono"
  />
  </div>
 
@@ -529,7 +529,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  value={formData.enlaceMusica}
  onChange={(e) => setFormData({ ...formData, enlaceMusica: e.target.value })}
  placeholder={t.placeholderMusicLink}
- className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+ className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-neutral-600 outline-none transition font-mono"
  />
  </div>
  </div>
@@ -542,7 +542,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <select
  value={formData.interesPrincipal}
  onChange={(e) => setFormData({ ...formData, interesPrincipal: e.target.value })}
- className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-white outline-none transition font-mono"
+ className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-[var(--ink)] outline-none transition font-mono"
  >
  <option value="">{t.optionSelectInterest}</option>
  <option value="fans">{t.optionInterestFans}</option>
@@ -562,7 +562,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  value={formData.notas}
  onChange={(e) => setFormData({ ...formData, notas: e.target.value })}
  placeholder={t.placeholderNotes}
- className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono resize-none"
+ className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 focus:border-[var(--acc)] text-sm text-[var(--ink)] placeholder:text-neutral-600 outline-none transition font-mono resize-none"
  />
  </div>
  </div>

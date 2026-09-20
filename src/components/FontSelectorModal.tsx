@@ -51,7 +51,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800/50 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -110,7 +110,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <div className="flex items-center gap-2">
  {isSelected && (
  <span className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
- isStitchLight ?'bg-indigo-600 text-white' :'bg-[var(--acc)] text-stone-950'
+ isStitchLight ?'bg-indigo-600 text-[var(--ink)]' :'bg-[var(--acc)] text-stone-950'
  }`}>
  <Check className="w-3.5 h-3.5 stroke-[3]" />
  </span>
@@ -152,7 +152,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  onClick={onClose}
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer shadow-sm ${
  isStitchLight 
- ?'bg-indigo-600 hover:bg-indigo-700 text-white' 
+ ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)]' 
  :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950'
  }`}
  >

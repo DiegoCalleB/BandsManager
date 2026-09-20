@@ -105,7 +105,7 @@ export function GlobalCampaignBar({
  onClick={() => onNavigate('booking', { campaignFilter: campaign.id })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
  currentView ==='booking'
- ?'bg-purple-500 text-white shadow-xs'
+ ?'bg-purple-500 text-[var(--ink)] shadow-xs'
  :'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
  }`}
  title="Ver salas objetivo de esta campaña en Booking CRM"
@@ -120,7 +120,7 @@ export function GlobalCampaignBar({
  onClick={() => onNavigate('calendario', { selectedDate: firstTargetDate })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
  currentView ==='calendario'
- ?'bg-purple-500 text-white shadow-xs'
+ ?'bg-purple-500 text-[var(--ink)] shadow-xs'
  :'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
  }`}
  title="Ver fechas de la campaña en el Calendario"
@@ -135,7 +135,7 @@ export function GlobalCampaignBar({
  onClick={() => onNavigate('bandas', { campaignCities: campaign.targetCities })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
  currentView ==='bandas'
- ?'bg-purple-500 text-white shadow-xs'
+ ?'bg-purple-500 text-[var(--ink)] shadow-xs'
  :'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
  }`}
  title="Ver grupos en las ciudades objetivo para Co-booking"
@@ -149,7 +149,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={onOpenManager}
- className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-neutral-800 text-[var(--ink-3)] hover:text-white transition-colors shrink-0"
+ className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors shrink-0"
  title="Gestionar o cambiar campaña activa"
  >
  <Settings2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

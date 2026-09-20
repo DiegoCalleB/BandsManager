@@ -106,7 +106,7 @@ export function EnsayoCronometro({
 
  <div className="flex items-center justify-between gap-3 mb-3">
  <div className="flex items-center gap-2">
- <div className={`p-1.5 rounded-[var(--r-s)] ${isActive ?'bg-[var(--acc)]/60/15 text-[var(--acc)]' :'bg-neutral-800 text-[var(--ink-2)]'}`}>
+ <div className={`p-1.5 rounded-[var(--r-s)] ${isActive ?'bg-[var(--acc)]/60/15 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'}`}>
  <Clock className={`w-4 h-4 ${isActive ?'animate-pulse' :''}`} />
  </div>
  <div>
@@ -164,7 +164,7 @@ export function EnsayoCronometro({
 
  <button
  onClick={resetTimer}
- className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800 transition-colors cursor-pointer border-[var(--hair)]"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer border-[var(--hair)]"
  title="Reiniciar cronómetro"
  >
  <RotateCcw className="w-3.5 h-3.5" />

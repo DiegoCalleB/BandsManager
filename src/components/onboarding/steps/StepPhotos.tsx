@@ -26,7 +26,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
  <Camera className="w-5 h-5 text-[var(--acc)]" />
- <h3 className="text-base font-semibold text-white">Galería de Fotos para Prensa & EPK</h3>
+ <h3 className="text-base font-semibold text-[var(--ink)]">Galería de Fotos para Prensa & EPK</h3>
  </div>
 
  <p className="text-xs text-zinc-400">
@@ -45,7 +45,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  <button
  type="button"
  onClick={() => onRemovePhoto(idx)}
- className="p-1.5 rounded-[var(--r-s)] bg-red-500/80 hover:bg-red-500 text-white transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] bg-red-500/80 hover:bg-red-500 text-[var(--ink)] transition-colors"
  title="Eliminar foto"
  >
  <Trash2 className="w-4 h-4" />
@@ -85,7 +85,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  value={newPhotoUrl}
  onChange={(e) => setNewPhotoUrl(e.target.value)}
  placeholder="O añade una URL de imagen directa (https://...)"
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  <button
  type="button"

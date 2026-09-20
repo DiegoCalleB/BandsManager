@@ -449,7 +449,7 @@ export function DashboardWidgetGrid({
  className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
  widget.wSpan === spanVal
  ?'bg-[var(--acc)] text-stone-950'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {spanVal === 3 ?'25%' : spanVal === 4 ?'33%' : spanVal === 6 ?'50%' : spanVal === 8 ?'66%' :'100%'}
@@ -467,8 +467,8 @@ export function DashboardWidgetGrid({
  onClick={() => handleChangeHSpan(widget.id, hVal)}
  className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
  (widget.hSpan ||'normal') === hVal
- ?'bg-purple-500 text-white'
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-purple-500 text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {hVal ==='compact' ?'Bajo' : hVal ==='normal' ?'Med' :'Alto'}
@@ -482,7 +482,7 @@ export function DashboardWidgetGrid({
  type="button"
  onClick={() => handleMoveWidget(index,'up')}
  disabled={index === 0}
- className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-neutral-800 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
+ className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-[var(--surface)]/80 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
  title="Mover arriba"
  >
  <ArrowUp className="w-3.5 h-3.5" />
@@ -491,7 +491,7 @@ export function DashboardWidgetGrid({
  type="button"
  onClick={() => handleMoveWidget(index,'down')}
  disabled={index === visibleWidgets.length - 1}
- className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-neutral-800 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
+ className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-[var(--surface)]/80 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
  title="Mover abajo"
  >
  <ArrowDown className="w-3.5 h-3.5" />
@@ -553,7 +553,7 @@ export function DashboardWidgetGrid({
  <button
  type="button"
  onClick={() => setIsAddModalOpen(false)}
- className="p-2 rounded-[var(--r-m)] hover:bg-neutral-800 text-[var(--ink-2)] hover:text-white transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -569,7 +569,7 @@ export function DashboardWidgetGrid({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold whitespace-nowrap cursor-pointer transition-all ${
  selectedCategory === cat
  ?'bg-[var(--acc)] text-stone-950 shadow-xs'
- :'bg-neutral-800/60 text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  {cat}
@@ -590,7 +590,7 @@ export function DashboardWidgetGrid({
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-2">
  <span className="text-sm font-bold text-[var(--sunken)]">{item.title}</span>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-800 text-[var(--acc)]">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--acc)]">
  {item.category}
  </span>
  </div>
@@ -617,7 +617,7 @@ export function DashboardWidgetGrid({
  <button
  type="button"
  onClick={() => setIsAddModalOpen(false)}
- className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] font-mono text-xs font-bold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] font-mono text-xs font-bold cursor-pointer"
  >
  Cerrar
  </button>

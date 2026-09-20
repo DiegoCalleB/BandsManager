@@ -65,7 +65,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  </span>
  </div>
 
- <div className="w-full bg-neutral-800 h-1.5 rounded-full overflow-hidden mb-2.5">
+ <div className="w-full bg-[var(--surface)]/80 h-1.5 rounded-full overflow-hidden mb-2.5">
  <div className={`h-full ${barColor} transition-all duration-300`} style={{ width: `${score}%` }} />
  </div>
 

@@ -53,11 +53,11 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <Guitar className="w-4 h-4 text-[var(--acc)]" />
- <h3 className="text-sm font-semibold text-white">Nombre del Proyecto Musical & Ubicación</h3>
+ <h3 className="text-sm font-semibold text-[var(--ink)]">Nombre del Proyecto Musical & Ubicación</h3>
  </div>
- <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-neutral-800 border-[var(--hair)] text-[11px] text-[var(--ink-2)] font-mono">
+ <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[var(--surface)]/80 border-[var(--hair)] text-[11px] text-[var(--ink-2)] font-mono">
  <Globe className="w-3 h-3 text-[var(--acc)]" />
- <span>Idioma: <strong className="text-white">{language ||'Español'}</strong></span>
+ <span>Idioma: <strong className="text-[var(--ink)]">{language ||'Español'}</strong></span>
  </div>
  </div>
 
@@ -72,7 +72,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={localBandName}
  onChange={(e) => setLocalBandName(e.target.value)}
  placeholder="Ej. Linkin Park, Los Delirio, The Midnight Waves..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-white font-medium placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] font-medium placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
  />
  </div>
 
@@ -86,7 +86,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={city}
  onChange={(e) => setCity(e.target.value)}
  placeholder="Ej. Madrid, Barcelona, Valencia, Los Ángeles..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
  />
  </div>
 
@@ -100,7 +100,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={genre}
  onChange={(e) => setGenre(e.target.value)}
  placeholder="Ej. Nu-Metal, Rock Alternativo, Indie Pop, Ska-Rock..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 focus:outline-none focus: text-sm mb-2 shadow-inner"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm mb-2 shadow-inner"
  />
  <div className="flex flex-wrap gap-1.5">
  {commonGenres.slice(0, 8).map((g) => (
@@ -127,7 +127,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <Type className="w-4 h-4 text-[var(--acc)]" />
- <h3 className="text-sm font-semibold text-white">3. Estilo de Tipografía para el Nombre de la Banda</h3>
+ <h3 className="text-sm font-semibold text-[var(--ink)]">3. Estilo de Tipografía para el Nombre de la Banda</h3>
  </div>
  <span className="text-[11px] font-mono text-zinc-400">
  Se aplicará al Dossier EPK, cartelería y cabeceras
@@ -173,7 +173,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  {/* Live Styled Band Name */}
  <div
  className={`text-lg sm:text-xl py-1 truncate leading-tight transition-colors ${
- isSelected ?'text-[var(--acc)]/70' :'text-white group-hover:text-amber-200'
+ isSelected ?'text-[var(--acc)]/70' :'text-[var(--ink)] group-hover:text-amber-200'
  }`}
  style={{ fontFamily: f.fontFamily }}
  >
@@ -207,7 +207,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  Previsualización en Dossier EPK
  </span>
  <div
- className="text-xl sm:text-2xl text-white truncate font-bold leading-tight"
+ className="text-xl sm:text-2xl text-[var(--ink)] truncate font-bold leading-tight"
  style={{ fontFamily: selectedFontFamily }}
  >
  {previewName}
@@ -230,7 +230,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <div className="pt-2 border-t border-[var(--hair)] space-y-2">
  <div className="flex items-center gap-2">
  <Camera className="w-4 h-4 text-[var(--acc)]" />
- <h3 className="text-sm font-semibold text-white">4. Logotipo Oficial o Imagen de Perfil</h3>
+ <h3 className="text-sm font-semibold text-[var(--ink)]">4. Logotipo Oficial o Imagen de Perfil</h3>
  </div>
 
  <div className="flex items-center gap-4">

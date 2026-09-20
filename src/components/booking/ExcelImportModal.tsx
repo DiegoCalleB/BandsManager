@@ -491,7 +491,7 @@ export function ExcelImportModal({
  <button
  type="button"
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-zinc-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-zinc-400 hover:text-[var(--ink)] hover:bg-white/10 transition-all cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -621,7 +621,7 @@ export function ExcelImportModal({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
  defaultCategory === cat.id
  ?'bg-[var(--acc)]/60 text-black font-bold shadow-xs'
- :'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
+ :'bg-zinc-900 text-zinc-400 hover:text-[var(--ink)] border-zinc-800'
  }`}
  >
  <span>{cat.icon}</span>

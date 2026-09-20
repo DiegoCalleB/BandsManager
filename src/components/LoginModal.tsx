@@ -463,7 +463,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  return (
  <div className="space-y-1.5 pt-1 px-0.5">
- <div className="flex gap-1 h-1 w-full bg-neutral-800/80 rounded-full overflow-hidden">
+ <div className="flex gap-1 h-1 w-full bg-[var(--surface)]/80 rounded-full overflow-hidden">
  <div className={`h-full transition-all duration-300 ${score >= 1 ? colors[0] :'bg-transparent'} w-1/3`} />
  <div className={`h-full transition-all duration-300 ${score >= 2 ? colors[1] :'bg-transparent'} w-1/3`} />
  <div className={`h-full transition-all duration-300 ${score >= 3 ? colors[2] :'bg-transparent'} w-1/3`} />
@@ -482,7 +482,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  type="button" 
  onClick={handleGoogleSocialSignIn}
  disabled={loading}
- className="w-full flex items-center justify-center gap-2.5 py-3 bg-[var(--surface)]/80 hover:bg-[var(--surface)] rounded-[var(--r-l)] text-sm font-medium text-[var(--sunken)] hover:text-white transition-all shadow-inner cursor-pointer disabled:opacity-50"
+ className="w-full flex items-center justify-center gap-2.5 py-3 bg-[var(--surface)]/80 hover:bg-[var(--surface)] rounded-[var(--r-l)] text-sm font-medium text-[var(--sunken)] hover:text-[var(--ink)] transition-all shadow-inner cursor-pointer disabled:opacity-50"
  >
  <GoogleIcon />
  <span>{loading ?'Conectando...' :'Continuar con Google'}</span>
@@ -512,7 +512,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ?'bg-[var(--acc)] text-[var(--surface)] font-bold shadow-xs scale-105'
- :'text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800'
+ :'text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]/80'
  }`}
  title={l.label}
  >
@@ -630,7 +630,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  {/* Recordar contraseña & Restablecer contraseña */}
  <div className="flex items-center justify-between text-xs text-[var(--ink-2)] px-1 pt-0.5">
- <label className="flex items-center gap-2 cursor-pointer select-none text-[var(--ink-3)] hover:text-white transition-colors">
+ <label className="flex items-center gap-2 cursor-pointer select-none text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors">
  <div className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ?'bg-[var(--acc)] border-[var(--acc)] text-[var(--surface)] shadow-[0_0_10px_rgba(242,202,80,0.4)]' :'bg-[var(--surface)] /80'}`}>
  <input
  type="checkbox"
@@ -731,7 +731,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  setError(null);
  setView('login');
  }}
- className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer shrink-0"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer shrink-0"
  title="Volver al inicio de sesión"
  >
  <ArrowLeft className="w-4 h-4" />
@@ -1198,7 +1198,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="button"
  onClick={() => setView('register')}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-semibold text-[var(--ink-3)] hover:text-white transition-colors cursor-pointer"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-semibold text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  >
  <ArrowLeft className="w-3.5 h-3.5" />
  <span>Volver al registro</span>
@@ -1218,7 +1218,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <span className="text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
  Festivales & Buskers
  </span>
- <span className="text-xl font-black text-white">0€ <span className="text-xs font-normal text-[var(--ink-2)]">/ gratis</span></span>
+ <span className="text-xl font-black text-[var(--ink)]">0€ <span className="text-xs font-normal text-[var(--ink-2)]">/ gratis</span></span>
  </div>
 
  <ul className="space-y-2 text-xs text-[var(--ink-3)]">

@@ -38,7 +38,7 @@ export const EPKBlockWrapper: React.FC<EPKBlockWrapperProps> = ({
  Bloque {meta.number} de 8
  </span>
  )}
- <h3 className="text-base font-bold text-white font-mono">
+ <h3 className="text-base font-bold text-[var(--ink)] font-mono">
  {meta.label}
  </h3>
  </div>
@@ -64,7 +64,7 @@ export const EPKBlockWrapper: React.FC<EPKBlockWrapperProps> = ({
  onNavigate(prevBlock.id);
  window.scrollTo({ top: 0, behavior:'smooth' });
  }}
- className="px-2.5 sm:px-3.5 py-2 bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-white rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition border-stone-800 cursor-pointer shrink-0"
+ className="px-2.5 sm:px-3.5 py-2 bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-[var(--ink)] rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition border-stone-800 cursor-pointer shrink-0"
  title={`Ir al bloque anterior: ${prevBlock.label}`}
  >
  <ChevronLeft className="w-3.5 h-3.5" />
@@ -80,7 +80,7 @@ export const EPKBlockWrapper: React.FC<EPKBlockWrapperProps> = ({
  <button
  type="button"
  onClick={onSave}
- className="px-3 sm:px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold rounded-[var(--r-m)] text-xs flex items-center gap-1.5 shadow transition cursor-pointer shrink-0"
+ className="px-3 sm:px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center gap-1.5 shadow transition cursor-pointer shrink-0"
  >
  <Save className="w-3.5 h-3.5" />
  <span className="hidden sm:inline">Guardar Cambios</span>

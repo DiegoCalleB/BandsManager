@@ -54,7 +54,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
 
  <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
- <span className="text-xs font-bold text-white">Mostrar cifras clave en el dossier público</span>
+ <span className="text-xs font-bold text-[var(--ink)]">Mostrar cifras clave en el dossier público</span>
  <p className="text-[10px] text-[var(--ink-3)]">
  Si está desactivado, este bloque no aparece en el enlace público aunque haya cifras guardadas.
  </p>
@@ -118,7 +118,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
 
  <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
- <span className="text-xs font-bold text-white">Mostrar reseñas de prensa en el dossier público</span>
+ <span className="text-xs font-bold text-[var(--ink)]">Mostrar reseñas de prensa en el dossier público</span>
  <p className="text-[10px] text-[var(--ink-3)]">
  Si está desactivado, este bloque no aparece en el enlace público aunque haya citas guardadas.
  </p>

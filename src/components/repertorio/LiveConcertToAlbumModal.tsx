@@ -1239,7 +1239,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  }`}
  >
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-[var(--ink)] shadow-lg shadow-amber-500/30">
  <Disc3 className="w-7 h-7 animate-spin-slow" />
  </div>
  <div>
@@ -1278,7 +1278,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Step 1: Input & Parameters */}
  <div
  className={`p-5 rounded-[var(--r-m)] space-y-4 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-slate-950/60'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -1337,7 +1337,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  type="file"
  accept="video/*,audio/*"
  onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
- className={`w-full text-xs text-[var(--ink-3)] file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[var(--acc)] file:text-white hover:file:bg-amber-600 ${
+ className={`w-full text-xs text-[var(--ink-3)] file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[var(--acc)] file:text-[var(--ink)] hover:file:bg-amber-600 ${
  isStitchLight ?'bg-white' :'bg-[var(--surface)]'
  }`}
  />
@@ -1367,7 +1367,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleAnalyzeConcert}
  disabled={isAnalyzing || (!youtubeUrl && !uploadedFile)}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 font-bold text-sm text-white shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shrink-0"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 font-bold text-sm text-[var(--ink)] shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shrink-0"
  >
  {isAnalyzing ? (
  <>
@@ -1447,7 +1447,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  href={`https://cobalt.tools/#${encodeURIComponent(youtubeUrl ||'')}`}
  target="_blank"
  rel="noopener noreferrer"
- className="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-all text-xs shadow-md"
+ className="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-[var(--ink)] font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-all text-xs shadow-md"
  title="Abrir Cobalt para descargar el MP3 completo de YouTube en 5 segundos y adjuntarlo aquí"
  >
  <Download className="w-3.5 h-3.5" />
@@ -1458,14 +1458,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleLoadDemoAudio}
  disabled={isLinkingLocalFile}
- className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-all text-xs shadow-md disabled:opacity-50"
+ className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-all text-xs shadow-md disabled:opacity-50"
  title="Cargar audio de ensayo demo instantáneamente para probar muestras y transcripciones"
  >
  <Sparkles className="w-3.5 h-3.5 text-emerald-200" />
  <span>✨ Cargar Demo</span>
  </button>
 
- <label className="px-3.5 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold rounded-[var(--r-s)] cursor-pointer flex items-center justify-center gap-1.5 transition-all text-xs shadow-md">
+ <label className="px-3.5 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold rounded-[var(--r-s)] cursor-pointer flex items-center justify-center gap-1.5 transition-all text-xs shadow-md">
  <Upload className="w-4 h-4" />
  <span>{isLinkingLocalFile ?'Subiendo...' :'📁 Adjuntar Archivo Local'}</span>
  <input
@@ -1512,7 +1512,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  <div className="flex flex-wrap items-center gap-2">
  {/* Undo & Redo Controls */}
- <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-[var(--r-s)]">
+ <div className="flex items-center gap-1 bg-[var(--surface)] p-1 rounded-[var(--r-s)]">
  <button
  onClick={handleUndo}
  disabled={history.length === 0}
@@ -1556,7 +1556,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`px-2.5 py-1 text-xs font-bold rounded ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :'bg-slate-950 text-[var(--ink-3)]'
+ :'bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  />
  </div>
@@ -1583,7 +1583,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {tracks.some((t) => t.type ==='musica' && typeof t.cueIn ==='number' && t.cueIn > 0.2) && (
  <button
  onClick={handleSnapAllTracksToCues}
- className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-sky-500 text-slate-950 hover:bg-sky-400 shadow-md flex items-center gap-1.5 font-bold animate-pulse"
+ className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-sky-500 text-[var(--ink)] hover:bg-sky-400 shadow-md flex items-center gap-1.5 font-bold animate-pulse"
  title="Ajusta automáticamente los tiempos de inicio de todos los temas musicales al punto CUE exacto de entrada musical"
  >
  <Target className="w-3.5 h-3.5" />
@@ -1627,7 +1627,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {selectedIndices.length >= 2 && (
  <button
  onClick={handleMergeSelectedTracks}
- className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-slate-950 hover:bg-[var(--acc)]/60 shadow-md flex items-center gap-1.5 animate-bounce"
+ className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60 shadow-md flex items-center gap-1.5 animate-bounce"
  >
  <GitMerge className="w-3.5 h-3.5" />
  Fusionar Seleccionadas ({selectedIndices.length})
@@ -1659,7 +1659,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  handleUpdateTrack(1,'title','Presentación e Intro del Concierto');
  }
  }}
- className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-[var(--r-s)] text-xs shrink-0 shadow transition-all flex items-center gap-1"
+ className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-[var(--ink)] font-bold rounded-[var(--r-s)] text-xs shrink-0 shadow transition-all flex items-center gap-1"
  >
  🗣️ Convertir Pista 1 a Speech / Presentación
  </button>
@@ -1668,7 +1668,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Interactive Visual Concert Timeline */}
  {tracks.length > 0 && (
- <div className="bg-slate-950 p-3 rounded-[var(--r-m)] space-y-1.5">
+ <div className="bg-[var(--surface)] p-3 rounded-[var(--r-m)] space-y-1.5">
  <div className="flex items-center justify-between text-[11px] font-mono text-[var(--ink-3)]">
  <span className="flex items-center gap-1 font-bold text-[var(--acc)]">
  <Sliders className="w-3.5 h-3.5" /> Línea del Tiempo del Concierto
@@ -1688,7 +1688,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  style={{ width: `${pct}%` }}
  onClick={() => tr.type ==='musica' && setExpandedChordsIndex(isExpanded ? null : tr.index)}
  className={`h-full rounded relative group cursor-pointer transition-all flex items-center justify-center text-[10px] font-mono font-bold truncate px-1 ${
- isSong ?'bg-[var(--acc)]/80 hover:bg-[var(--acc)]/60 text-slate-950' :'bg-purple-600/80 hover:bg-purple-500 text-white'
+ isSong ?'bg-[var(--acc)]/80 hover:bg-[var(--acc)]/60 text-[var(--ink)]' :'bg-purple-600/80 hover:bg-purple-500 text-[var(--ink)]'
  }`}
  title={`#${tr.index} ${tr.title} (${formatSeconds(tr.duration)})`}
  >
@@ -1714,7 +1714,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </span>
  </div>
  <div className="text-[11px] text-emerald-300/80 truncate max-w-md">
- Pista actual: <span className="font-semibold text-white">"{transcribeAllProgress.title}"</span>
+ Pista actual: <span className="font-semibold text-[var(--ink)]">"{transcribeAllProgress.title}"</span>
  </div>
  </div>
  </div>
@@ -1796,7 +1796,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Timestamps & Actions */}
  <div className="flex flex-wrap items-center gap-2">
  {/* Timestamps */}
- <div className="flex items-center gap-1.5 text-xs font-mono bg-slate-950/80 px-2 py-1 rounded-[var(--r-s)]">
+ <div className="flex items-center gap-1.5 text-xs font-mono bg-[var(--surface)]/80 px-2 py-1 rounded-[var(--r-s)]">
  <span className="text-[var(--ink-3)] text-[11px]">Inicio:</span>
  <input
  type="text"
@@ -1825,14 +1825,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </span>
  <button
  onClick={() => handlePlaySnippetPreview(track, true)}
- className="px-1.5 py-0.5 bg-sky-600 hover:bg-sky-500 text-white rounded font-sans text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer"
+ className="px-1.5 py-0.5 bg-sky-600 hover:bg-sky-500 text-[var(--ink)] rounded font-sans text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer"
  title="Reproducir desde el punto CUE de entrada musical"
  >
  <Play className="w-2.5 h-2.5" /> Desde CUE
  </button>
  <button
  onClick={() => handleSnapTrackStartToCue(track.index)}
- className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)] text-[var(--acc)]/70 hover:text-slate-950 rounded font-sans text-[10px] font-bold transition-all cursor-pointer"
+ className="px-1.5 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)] text-[var(--acc)]/70 hover:text-[var(--ink)] rounded font-sans text-[10px] font-bold transition-all cursor-pointer"
  title="Ajustar tiempo de inicio para que arranque exactamente en este CUE musical"
  >
  ⚡ Ajustar Inicio
@@ -1854,8 +1854,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  disabled={isLoadingPreview}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all ${
  isPlayingThis
- ?'bg-[var(--acc)] text-slate-950 animate-pulse'
- :'bg-[var(--surface)] hover:bg-[var(--acc)] hover:text-slate-950 text-[var(--ink-3)]'
+ ?'bg-[var(--acc)] text-[var(--ink)] animate-pulse'
+ :'bg-[var(--surface)] hover:bg-[var(--acc)] hover:text-[var(--ink)] text-[var(--ink-3)]'
  }`}
  title="Reproducir este trozo para escucharlo y clasificarlo"
  >
@@ -1946,8 +1946,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:'
  : track.type ==='musica'
- ?'bg-slate-950/90 /40 text-amber-100 placeholder-slate-500 focus: focus:ring-1 focus:ring-amber-400'
- :'bg-slate-950/90 border-purple-500/40 text-purple-100 placeholder-slate-500 focus:border-purple-400 focus:ring-1 focus:ring-purple-400'
+ ?'bg-[var(--surface)]/90 /40 text-amber-100 placeholder-slate-500 focus: focus:ring-1 focus:ring-amber-400'
+ :'bg-[var(--surface)]/90 border-purple-500/40 text-purple-100 placeholder-slate-500 focus:border-purple-400 focus:ring-1 focus:ring-purple-400'
  }`}
  placeholder={
  track.type ==='musica'
@@ -2028,7 +2028,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  type="text"
  value={track.tonalidad ||'Mim'}
  onChange={(e) => handleUpdateTrack(track.index,'tonalidad', e.target.value)}
- className="w-14 px-2 py-0.5 text-center bg-slate-950 rounded text-[var(--acc)] font-bold text-xs"
+ className="w-14 px-2 py-0.5 text-center bg-[var(--surface)] rounded text-[var(--acc)] font-bold text-xs"
  placeholder="Mim"
  />
  <span className="text-[var(--ink-3)] font-semibold text-[11px]">BPM:</span>
@@ -2036,7 +2036,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  type="number"
  value={track.bpm || 120}
  onChange={(e) => handleUpdateTrack(track.index,'bpm', parseInt(e.target.value) || 120)}
- className="w-14 px-2 py-0.5 text-center bg-slate-950 rounded text-[var(--acc)] font-bold text-xs"
+ className="w-14 px-2 py-0.5 text-center bg-[var(--surface)] rounded text-[var(--acc)] font-bold text-xs"
  placeholder="120"
  />
  {track.lyricsWithChords ? (
@@ -2076,7 +2076,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {!expandAllChords && expandedChordsIndex !== track.index && track.lyricsWithChords && (
  <div
  onClick={() => setExpandedChordsIndex(track.index)}
- className="p-2.5 bg-slate-950/90 rounded-[var(--r-m)] font-mono text-[11px] text-amber-200/90 cursor-pointer hover:/60 transition-all flex items-center justify-between gap-2 shadow-sm"
+ className="p-2.5 bg-[var(--surface)]/90 rounded-[var(--r-m)] font-mono text-[11px] text-amber-200/90 cursor-pointer hover:/60 transition-all flex items-center justify-between gap-2 shadow-sm"
  >
  <div className="truncate italic flex items-center gap-2">
  <Music2 className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
@@ -2091,7 +2091,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Expanded Chord Sheet Textarea Editor */}
  {(expandAllChords || expandedChordsIndex === track.index) && (
- <div className="p-3 bg-slate-950 rounded-[var(--r-m)] space-y-2 animate-fade-in shadow-inner">
+ <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-2 animate-fade-in shadow-inner">
  <div className="flex items-center justify-between text-xs font-bold text-[var(--ink-3)]">
  <span className="flex items-center gap-1.5 text-[var(--acc)]">
  <Music2 className="w-3.5 h-3.5" /> Editor de Cifrado y Letra (Formato LaCuerda / Ultimate Guitar)
@@ -2131,14 +2131,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => handleUpdateTrack(track.index,'speechTranscription', e.target.value)}
  placeholder="[Intro musical / Palabras del artista al público]..."
  rows={2}
- className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-slate-950 text-purple-100 placeholder-purple-400/50 focus:outline-none focus:border-purple-500 leading-relaxed font-sans"
+ className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-purple-100 placeholder-purple-400/50 focus:outline-none focus:border-purple-500 leading-relaxed font-sans"
  />
  </div>
  )}
 
  {/* Interactive Audio Fragment Scrubber Player - Positioned directly underneath the active track */}
  {activeSnippet && activeSnippet.trackIndex === track.index && (
- <div className="mt-3 p-3.5 bg-slate-950 border-2 /60 rounded-[var(--r-m)] space-y-3 shadow-xl animate-fade-in ring-2 ring-amber-500/20">
+ <div className="mt-3 p-3.5 bg-[var(--surface)] border-2 /60 rounded-[var(--r-m)] space-y-3 shadow-xl animate-fade-in ring-2 ring-amber-500/20">
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-2">
  <div className="flex items-center gap-2">
  <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] shrink-0">
@@ -2209,7 +2209,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  <button
  onClick={() => setActiveSnippet(null)}
- className="p-1 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white"
+ className="p-1 rounded bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]"
  title="Cerrar reproductor"
  >
  <X className="w-4 h-4" />
@@ -2289,7 +2289,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  else snippetAudioRef.current.play();
  }
  }}
- className="px-4 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20"
+ className="px-4 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20"
  >
  {snippetIsPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
  {snippetIsPlaying ?'Pausar' :'Reproducir'}
@@ -2312,7 +2312,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  key={spd}
  onClick={() => handleChangeSnippetSpeed(spd)}
  className={`px-1.5 py-0.5 rounded font-bold ${
- snippetSpeed === spd ?'bg-[var(--acc)] text-slate-950' :'text-[var(--ink-3)] hover:text-white'
+ snippetSpeed === spd ?'bg-[var(--acc)] text-[var(--ink)]' :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  {spd}x
@@ -2334,7 +2334,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleProcessAndSlice}
  disabled={isProcessing}
- className="px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 font-extrabold text-white text-sm shadow-xl shadow-emerald-500/20 flex items-center gap-2 transition-all"
+ className="px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 font-extrabold text-[var(--ink)] text-sm shadow-xl shadow-emerald-500/20 flex items-center gap-2 transition-all"
  >
  {isProcessing ? (
  <>
@@ -2403,7 +2403,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  <button
  onClick={handleSaveToCatalog}
- className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-amber-600 font-extrabold text-slate-950 text-xs shadow-lg shadow-amber-500/20 flex items-center gap-2"
+ className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-amber-600 font-extrabold text-[var(--ink)] text-xs shadow-lg shadow-amber-500/20 flex items-center gap-2"
  >
  <Disc3 className="w-4 h-4" /> 💾 Guardar como Álbum en la Discografía
  </button>
@@ -2434,7 +2434,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  <button
  onClick={() => setCookieModalOpen(false)}
- className="text-[var(--ink-3)] hover:text-white p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)]"
+ className="text-[var(--ink-3)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)]"
  >
  <X className="w-4 h-4" />
  </button>
@@ -2447,7 +2447,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  ) : (
  <>
- <div className="p-3.5 rounded-[var(--r-m)] bg-slate-950/80 text-xs text-[var(--ink-3)] space-y-2 leading-relaxed">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-xs text-[var(--ink-3)] space-y-2 leading-relaxed">
  <p className="font-semibold text-[var(--acc)]/70 flex items-center gap-1.5">
  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
  ¿Por qué es necesario autenticar el canal de la banda?
@@ -2484,7 +2484,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  value={cookiesInputText}
  onChange={(e) => setCookiesInputText(e.target.value)}
  placeholder="# Netscape HTTP Cookie File&#10;.youtube.com TRUE / TRUE 1789000000 SID ..."
- className="w-full font-mono text-[11px] p-3 rounded-[var(--r-m)] bg-slate-950 text-[var(--ink-3)] focus:outline-none focus:ring-2 focus:ring-amber-500"
+ className="w-full font-mono text-[11px] p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-3)] focus:outline-none focus:ring-2 focus:ring-amber-500"
  />
  </div>
 
@@ -2510,7 +2510,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleSaveCookies}
  disabled={isSavingCookies || !cookiesInputText.trim()}
- className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 text-xs font-extrabold shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-extrabold shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center gap-1.5"
  >
  {isSavingCookies ? (
  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -2550,7 +2550,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  <button
  onClick={() => setShowQuickNamingModal(false)}
- className="text-[var(--ink-3)] hover:text-white p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)] transition-colors"
+ className="text-[var(--ink-3)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)] transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -2563,7 +2563,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onClick={() => setQuickNamingActiveTab('table')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all ${
  quickNamingActiveTab ==='table'
- ?'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
+ ?'bg-sky-500 text-[var(--ink)] shadow-md shadow-sky-500/20'
  :'bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink-3)]'
  }`}
  >
@@ -2576,7 +2576,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onClick={() => setQuickNamingActiveTab('paste')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all ${
  quickNamingActiveTab ==='paste'
- ?'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
+ ?'bg-sky-500 text-[var(--ink)] shadow-md shadow-sky-500/20'
  :'bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink-3)]'
  }`}
  >
@@ -2588,7 +2588,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Tab 1: Quick Table */}
  {quickNamingActiveTab ==='table' && (
  <div className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[300px]">
- <div className="text-[11px] text-[var(--ink-3)] bg-slate-950/60 p-2.5 rounded-[var(--r-m)] flex items-center justify-between">
+ <div className="text-[11px] text-[var(--ink-3)] bg-[var(--surface)]/60 p-2.5 rounded-[var(--r-m)] flex items-center justify-between">
  <span>💡 Edita directamente el título de cada corte o cambia su tipo entre 🎵 Canción y 🗣️ Speech. Pulsa Tab para avanzar al siguiente.</span>
  <div className="flex items-center gap-2 text-[10px] font-mono shrink-0">
  <span className="text-[var(--acc)]">🎵 {tracks.filter((t) => t.type ==='musica').length} temas</span>
@@ -2608,7 +2608,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  >
  {/* Index + Type Toggle Button */}
  <div className="flex items-center gap-2 shrink-0">
- <span className="w-7 text-center font-mono font-black text-xs text-[var(--ink-3)] bg-slate-950 px-1.5 py-1 rounded">
+ <span className="w-7 text-center font-mono font-black text-xs text-[var(--ink-3)] bg-[var(--surface)] px-1.5 py-1 rounded">
  #{String(tr.index).padStart(2,'0')}
  </span>
 
@@ -2647,8 +2647,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  placeholder={tr.type ==='musica' ?'Nombre del tema...' :'Nombre de la presentación o speech...'}
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
  tr.type ==='musica'
- ?'bg-slate-950 /30 text-amber-100 focus:'
- :'bg-slate-950 border-purple-500/30 text-purple-100 focus:border-purple-500'
+ ?'bg-[var(--surface)] /30 text-amber-100 focus:'
+ :'bg-[var(--surface)] border-purple-500/30 text-purple-100 focus:border-purple-500'
  }`}
  />
  {tr.title && (
@@ -2732,7 +2732,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Tab 2: Batch Paste */}
  {quickNamingActiveTab ==='paste' && (
  <div className="flex-1 overflow-y-auto space-y-3 min-h-[300px]">
- <div className="p-3.5 rounded-[var(--r-m)] bg-slate-950 text-xs text-[var(--ink-3)] space-y-2">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink-3)] space-y-2">
  <p className="font-bold text-sky-400 flex items-center gap-1.5">
  <Sparkles className="w-4 h-4 text-sky-400" />
  Pega el Setlist o Lista de Canciones y Speeches (una por línea)
@@ -2750,7 +2750,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => setBatchPastedText(e.target.value)}
  rows={10}
  placeholder={`1. Intro y Saludo al Público\n2. Noches de Garaje\n3. Charla sobre el nuevo disco\n4. Ska del Norte\n5. Canto a la Sombra\n6. Presentación de los músicos\n7. Gira Sin Fin`}
- className="w-full p-3 font-mono text-xs rounded-[var(--r-m)] bg-slate-950 text-[var(--ink-3)] placeholder-slate-600 focus:outline-none focus:border-sky-500 leading-relaxed"
+ className="w-full p-3 font-mono text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-3)] placeholder-slate-600 focus:outline-none focus:border-sky-500 leading-relaxed"
  />
 
  <div className="flex items-center justify-between text-xs text-[var(--ink-3)]">
@@ -2766,7 +2766,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  type="button"
  onClick={handleApplyBatchPastedNames}
  disabled={!batchPastedText.trim()}
- className="px-4 py-2 rounded-[var(--r-m)] bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-sky-500/20 disabled:opacity-50 transition-all flex items-center gap-1.5"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-sky-500 hover:bg-sky-400 text-[var(--ink)] font-extrabold text-xs shadow-lg shadow-sky-500/20 disabled:opacity-50 transition-all flex items-center gap-1.5"
  >
  <Check className="w-4 h-4" />
  <span>Aplicar Nombres a las Pistas</span>

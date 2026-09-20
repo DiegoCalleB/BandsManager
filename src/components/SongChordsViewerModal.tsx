@@ -216,7 +216,7 @@ export function SongChordsViewerModal({
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
- <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-white my-auto">
+ <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-[var(--ink)] my-auto">
 
  {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
  <button
@@ -236,7 +236,7 @@ export function SongChordsViewerModal({
  </div>
  <div>
  <div className="flex items-center gap-2">
- <h2 className="text-xl font-bold tracking-tight text-white">{formatSongTitle(song.titulo)}</h2>
+ <h2 className="text-xl font-bold tracking-tight text-[var(--ink)]">{formatSongTitle(song.titulo)}</h2>
  {song.esVersionCovers && (
  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900/60 text-blue-300">
  Cover
@@ -269,7 +269,7 @@ export function SongChordsViewerModal({
  type="button"
  onClick={handleGenerateWithAi}
  disabled={isGeneratingAi}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-purple-950/50 disabled:opacity-50"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-purple-600 hover:bg-purple-500 text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-purple-950/50 disabled:opacity-50"
  title={song.audioPrincipalUrl ?'Reanalizar escuchando el audio real de la canción' :'Generar cifrado y guía con IA (sin audio disponible)'}
  >
  <Wand2 className={`w-4 h-4 text-purple-200 ${isGeneratingAi ?'animate-spin' :''}`} />
@@ -298,7 +298,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => window.print()}
- className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-3)] hover:text-white transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-3)] hover:text-[var(--ink)] transition cursor-pointer"
  title="Imprimir Cifrado"
  >
  <Printer className="w-4 h-4" />
@@ -317,7 +317,7 @@ export function SongChordsViewerModal({
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
  activeTab ==='chords'
  ?'bg-[var(--acc)] text-black shadow'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <FileText className="w-3.5 h-3.5" />
@@ -329,8 +329,8 @@ export function SongChordsViewerModal({
  onClick={() => setActiveTab('substitute')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
  activeTab ==='substitute'
- ?'bg-purple-600 text-white shadow'
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-purple-600 text-[var(--ink)] shadow'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <UserCheck className="w-3.5 h-3.5" />
@@ -342,8 +342,8 @@ export function SongChordsViewerModal({
  onClick={() => setActiveTab('edit')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
  activeTab ==='edit'
- ?'bg-neutral-800 text-white shadow'
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-[var(--surface)]/80 text-[var(--ink)] shadow'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -361,7 +361,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setTranspose(prev => prev - 1)}
- className="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold transition cursor-pointer"
+ className="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-[var(--ink)] font-bold transition cursor-pointer"
  title="Bajar 1 semitono"
  >
  -1
@@ -372,7 +372,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setTranspose(prev => prev + 1)}
- className="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold transition cursor-pointer"
+ className="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-[var(--ink)] font-bold transition cursor-pointer"
  title="Subir 1 semitono"
  >
  +1
@@ -393,7 +393,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setNotation(prev => prev ==='ES' ?'EN' :'ES')}
- className="px-2.5 py-1 rounded-[var(--r-m)] bg-black/40 hover: text-[var(--ink-3)] hover:text-white font-bold transition cursor-pointer flex items-center gap-1"
+ className="px-2.5 py-1 rounded-[var(--r-m)] bg-black/40 hover: text-[var(--ink-3)] hover:text-[var(--ink)] font-bold transition cursor-pointer flex items-center gap-1"
  title="Cambiar entre Cifrado Latino (Do, Re, Mi) e Inglés (C, D, E)"
  >
  <span>Cifrado:</span>
@@ -407,8 +407,8 @@ export function SongChordsViewerModal({
  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
  className={`px-2.5 py-0.5 rounded-[var(--r-s)] font-bold flex items-center gap-1 transition cursor-pointer ${
  isAutoScrolling
- ?'bg-emerald-600 text-white animate-pulse'
- :'bg-white/10 text-[var(--ink-3)] hover:text-white'
+ ?'bg-emerald-600 text-[var(--ink)] animate-pulse'
+ :'bg-white/10 text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Iniciar/Pausar Desfile Automático"
  >
@@ -442,7 +442,7 @@ export function SongChordsViewerModal({
  className={`px-2.5 py-1 rounded-[var(--r-m)] font-bold transition cursor-pointer ${
  showChordDiagrams
  ?'bg-purple-950/40 border-purple-500/50 text-purple-300'
- :'bg-black/40 text-[var(--ink-2)] hover:text-white'
+ :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  🎸 Diagramas
@@ -452,7 +452,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={handleCopyChords}
- className="p-1.5 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-3)] hover:text-white transition cursor-pointer"
+ className="p-1.5 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-3)] hover:text-[var(--ink)] transition cursor-pointer"
  title="Copiar texto de acordes"
  >
  {copiedText ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -476,7 +476,7 @@ export function SongChordsViewerModal({
  </span>
  <button
  onClick={() => setAiSuccessMsg(null)}
- className={aiSuccessMsg.startsWith('⚠️') ?'text-[var(--acc)] hover:text-white' :'text-emerald-400 hover:text-white'}
+ className={aiSuccessMsg.startsWith('⚠️') ?'text-[var(--acc)] hover:text-[var(--ink)]' :'text-emerald-400 hover:text-[var(--ink)]'}
  >
  ✕
  </button>
@@ -505,7 +505,7 @@ export function SongChordsViewerModal({
  </span>
  <button
  onClick={() => setActiveTab('substitute')}
- className="text-[10px] underline text-purple-400 hover:text-white"
+ className="text-[10px] underline text-purple-400 hover:text-[var(--ink)]"
  >
  Ver Ficha Completa →
  </button>
@@ -528,11 +528,11 @@ export function SongChordsViewerModal({
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
  <div className="bg-gradient-to-br from-purple-950/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] shadow-xl space-y-5">
  <div className="flex items-center gap-3 border-b border-purple-500/30 pb-4">
- <div className="p-3 rounded-[var(--r-m)] bg-purple-600 text-white shadow-lg">
+ <div className="p-3 rounded-[var(--r-m)] bg-purple-600 text-[var(--ink)] shadow-lg">
  <UserCheck className="w-6 h-6" />
  </div>
  <div>
- <h3 className="text-lg font-bold text-white">Ficha de Sustitución Urgente</h3>
+ <h3 className="text-lg font-bold text-[var(--ink)]">Ficha de Sustitución Urgente</h3>
  <p className="text-xs text-purple-300 font-mono">
  Resumen express para tocar el tema correctamente en directo o ensayo sin margen de error.
  </p>
@@ -545,7 +545,7 @@ export function SongChordsViewerModal({
  <span className="text-[var(--acc)] font-bold block text-[11px] uppercase tracking-wider">
  1. Estructura Exacta del Tema
  </span>
- <p className="text-white text-sm font-semibold leading-relaxed">
+ <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
  {guiaSustituto.estructura ||'Sin estructura definida.'}
  </p>
  </div>
@@ -554,7 +554,7 @@ export function SongChordsViewerModal({
  <span className="text-emerald-400 font-bold block text-[11px] uppercase tracking-wider">
  2. Progresión Armónica Clave
  </span>
- <p className="text-white text-sm font-semibold leading-relaxed">
+ <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
  {guiaSustituto.progresionClave ||'Ver cifrado completo.'}
  </p>
  </div>
@@ -606,14 +606,14 @@ export function SongChordsViewerModal({
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
  <div className="bg-[var(--surface)]/90 p-5 rounded-[var(--r-l)] space-y-4">
  <div className="flex items-center justify-between border-b pb-3">
- <h3 className="font-bold text-white flex items-center gap-2 text-sm font-mono">
+ <h3 className="font-bold text-[var(--ink)] flex items-center gap-2 text-sm font-mono">
  <Edit3 className="w-4 h-4 text-[var(--acc)]" />
  Editor de Cifrado y Ficha
  </h3>
  <button
  type="button"
  onClick={handleSaveEdits}
- className="px-4 py-2 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-mono font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg"
  >
  <Save className="w-4 h-4" />
  <span>Guardar Cambios</span>
@@ -628,7 +628,7 @@ export function SongChordsViewerModal({
  value={cifradoTexto}
  onChange={(e) => setCifradoTexto(e.target.value)}
  rows={14}
- className="w-full p-3 bg-black rounded-[var(--r-m)] text-white font-mono text-xs focus:outline-none focus: leading-relaxed"
+ className="w-full p-3 bg-black rounded-[var(--r-m)] text-[var(--ink)] font-mono text-xs focus:outline-none focus: leading-relaxed"
  placeholder={`[Intro]\nMim Do Re Mim\n\n[Estribillo]\n[Sol] Que tiene tu [Re] veneno [Mim] ...`}
  />
  </div>
@@ -645,7 +645,7 @@ export function SongChordsViewerModal({
  type="text"
  value={guiaSustituto.estructura ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, estructura: e.target.value })}
- className="w-full p-2 bg-black rounded-[var(--r-s)] text-white"
+ className="w-full p-2 bg-black rounded-[var(--r-s)] text-[var(--ink)]"
  placeholder="Intro -> Verso -> Estribillo -> Outro"
  />
  </div>
@@ -656,7 +656,7 @@ export function SongChordsViewerModal({
  type="text"
  value={guiaSustituto.progresionClave ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, progresionClave: e.target.value })}
- className="w-full p-2 bg-black rounded-[var(--r-s)] text-white"
+ className="w-full p-2 bg-black rounded-[var(--r-s)] text-[var(--ink)]"
  placeholder="Verso: Mim - Do | Estribillo: Sol - Re"
  />
  </div>
@@ -667,7 +667,7 @@ export function SongChordsViewerModal({
  type="text"
  value={guiaSustituto.cortesYClaves ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, cortesYClaves: e.target.value })}
- className="w-full p-2 bg-black rounded-[var(--r-s)] text-white"
+ className="w-full p-2 bg-black rounded-[var(--r-s)] text-[var(--ink)]"
  placeholder="Parón en compás 8..."
  />
  </div>
@@ -678,7 +678,7 @@ export function SongChordsViewerModal({
  type="text"
  value={guiaSustituto.capoTraste ||''}
  onChange={(e) => setGuiaSustituto({ ...guiaSustituto, capoTraste: e.target.value })}
- className="w-full p-2 bg-black rounded-[var(--r-s)] text-white"
+ className="w-full p-2 bg-black rounded-[var(--r-s)] text-[var(--ink)]"
  placeholder="Capo 2º traste"
  />
  </div>
@@ -699,7 +699,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setShowChordDiagrams(false)}
- className="text-neutral-500 hover:text-white text-xs"
+ className="text-neutral-500 hover:text-[var(--ink)] text-xs"
  >
  ✕
  </button>

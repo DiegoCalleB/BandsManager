@@ -228,7 +228,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  </div>
  <div>
  <div className="flex items-center gap-2">
- <h2 className="text-base sm:text-lg font-bold tracking-tight text-white">
+ <h2 className="text-base sm:text-lg font-bold tracking-tight text-[var(--ink)]">
  Detector y Limpiador de Duplicados
  </h2>
  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70">
@@ -247,7 +247,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`p-2 rounded-[var(--r-m)] transition-colors cursor-pointer ${
  isStitchLight
  ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'hover:bg-neutral-800 text-zinc-400 hover:text-white'
+ :'hover:bg-[var(--surface)]/80 text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
  <X className="w-5 h-5" />
@@ -278,7 +278,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
  }`}
  >
  Todos ({reasonCounts.all})
@@ -292,7 +292,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
  }`}
  >
  Mismo Email ({reasonCounts.same_email})
@@ -307,7 +307,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
  }`}
  >
  Mismo Nombre y Ciudad ({reasonCounts.same_name_and_city})
@@ -322,7 +322,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
  }`}
  >
  Nombre Similar ({reasonCounts.similar_name_same_city})
@@ -337,7 +337,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-neutral-800 text-zinc-300 hover:bg-neutral-700'
+ :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70'
  }`}
  >
  Misma Web ({reasonCounts.same_website})
@@ -443,7 +443,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  </div>
  </div>
 
- <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-neutral-800 text-zinc-300 capitalize shrink-0">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--surface)]/80 text-zinc-300 capitalize shrink-0">
  {lead.estado ||'nuevo'}
  </span>
  </div>
@@ -496,7 +496,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
  isSuggested
  ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)]'
- :'bg-neutral-800 hover:bg-neutral-700 text-zinc-200'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200'
  }`}
  title="Conserva este lead y añade todos los teléfonos, notas y datos de los demás"
  >
@@ -537,7 +537,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-m)] font-medium bg-neutral-800 hover:bg-neutral-700 text-zinc-200 transition cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-m)] font-medium bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 transition cursor-pointer"
  >
  Cerrar
  </button>

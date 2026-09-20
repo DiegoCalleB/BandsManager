@@ -208,10 +208,10 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <img 
  src={effectiveBandLogo} 
  alt="Logo" 
- className="w-12 h-12 object-contain rounded-[var(--r-m)] p-1 bg-slate-950 shrink-0" 
+ className="w-12 h-12 object-contain rounded-[var(--r-m)] p-1 bg-[var(--surface)] shrink-0" 
  />
  ) : (
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)] text-slate-950 flex items-center justify-center font-black font-display text-lg shrink-0">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center font-black font-display text-lg shrink-0">
  {effectiveBandName[0] ||'B'}
  </div>
  )}
@@ -222,7 +222,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <Megaphone className="w-2.5 h-2.5" /> Oficial
  </span>
  </div>
- <h3 className="text-white font-bold text-base font-display">
+ <h3 className="text-[var(--ink)] font-bold text-base font-display">
  Comunidad & Red Social de {effectiveBandName}
  </h3>
  </div>
@@ -231,7 +231,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <div className="flex items-center gap-2">
  <button
  onClick={() => setShowNewPostModal(true)}
- className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 text-xs font-mono font-black uppercase tracking-wider rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer shadow-md active:scale-95"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-mono font-black uppercase tracking-wider rounded-[var(--r-m)] transition flex items-center gap-2 cursor-pointer shadow-md active:scale-95"
  >
  <Send className="w-3.5 h-3.5" /> Publicar Comunicado
  </button>
@@ -251,7 +251,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <div className="w-10 h-10 mx-auto rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
  <Megaphone className="w-5 h-5" />
  </div>
- <h4 className="text-white font-bold text-sm">Todavía no has publicado ningún comunicado</h4>
+ <h4 className="text-[var(--ink)] font-bold text-sm">Todavía no has publicado ningún comunicado</h4>
  <p className="text-[var(--ink-3)] text-xs font-mono max-w-sm mx-auto">
  Usa «Publicar Comunicado» para contarle a tu comunidad las próximas fechas, lanzamientos o sorteos.
  </p>
@@ -270,7 +270,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  </div>
  <div>
  <div className="flex items-center gap-2">
- <span className="font-bold text-white text-sm">{ann.autor}</span>
+ <span className="font-bold text-[var(--ink)] text-sm">{ann.autor}</span>
  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)] font-mono font-bold">
  Noticia Banda
  </span>
@@ -281,7 +281,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  </div>
 
  <div className="space-y-1.5 pl-1">
- <h4 className="text-white font-bold text-sm">{ann.titulo}</h4>
+ <h4 className="text-[var(--ink)] font-bold text-sm">{ann.titulo}</h4>
  <p className="text-[var(--ink-3)] text-xs font-sans leading-relaxed whitespace-pre-line">{ann.contenido}</p>
  </div>
 
@@ -289,28 +289,28 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <div className="flex items-center gap-2">
  <button
  onClick={() => handleReactAnnouncement(ann.id,'likes')}
- className="px-2.5 py-1 bg-slate-950 hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] flex items-center gap-1.5 transition active:scale-95"
+ className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] flex items-center gap-1.5 transition active:scale-95"
  >
  <span>❤️</span>
  <span className="font-bold text-[var(--ink-3)]">{ann.reacciones.likes}</span>
  </button>
  <button
  onClick={() => handleReactAnnouncement(ann.id,'fire')}
- className="px-2.5 py-1 bg-slate-950 hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] flex items-center gap-1.5 transition active:scale-95"
+ className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] flex items-center gap-1.5 transition active:scale-95"
  >
  <span>🔥</span>
  <span className="font-bold text-[var(--ink-3)]">{ann.reacciones.fire}</span>
  </button>
  <button
  onClick={() => handleReactAnnouncement(ann.id,'guitars')}
- className="px-2.5 py-1 bg-slate-950 hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] flex items-center gap-1.5 transition active:scale-95"
+ className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] flex items-center gap-1.5 transition active:scale-95"
  >
  <span>🎸</span>
  <span className="font-bold text-[var(--ink-3)]">{ann.reacciones.guitars}</span>
  </button>
  <button
  onClick={() => handleReactAnnouncement(ann.id,'applause')}
- className="px-2.5 py-1 bg-slate-950 hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] flex items-center gap-1.5 transition active:scale-95"
+ className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] flex items-center gap-1.5 transition active:scale-95"
  >
  <span>👏</span>
  <span className="font-bold text-[var(--ink-3)]">{ann.reacciones.applause}</span>
@@ -338,13 +338,13 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <div className="w-12 h-12 mx-auto rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
  <MessageCircle className="w-6 h-6" />
  </div>
- <h4 className="text-white font-bold text-sm">Aún no hay fans en el muro</h4>
+ <h4 className="text-[var(--ink)] font-bold text-sm">Aún no hay fans en el muro</h4>
  <p className="text-[var(--ink-3)] text-xs font-mono max-w-sm mx-auto">
  Comparte el código QR o el enlace público de captura en tus conciertos y redes para que tus seguidores se unan a la comunidad.
  </p>
  <button
  onClick={onOpenAddModal}
- className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 text-xs font-mono font-bold rounded-[var(--r-m)] transition cursor-pointer"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-mono font-bold rounded-[var(--r-m)] transition cursor-pointer"
  >
  Registrar Primer Fan
  </button>
@@ -372,12 +372,12 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  {/* Header with Avatar & Details */}
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-3 min-w-0">
- <div className={`w-11 h-11 rounded-[var(--r-l)] bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold font-display text-base shadow-sm shrink-0`}>
+ <div className={`w-11 h-11 rounded-[var(--r-l)] bg-gradient-to-br ${gradient} flex items-center justify-center text-[var(--ink)] font-bold font-display text-base shadow-sm shrink-0`}>
  {initialLetter}
  </div>
  <div className="min-w-0">
  <div className="flex flex-wrap items-center gap-2">
- <span className="font-bold text-white text-sm truncate">{fan.nombre}</span>
+ <span className="font-bold text-[var(--ink)] text-sm truncate">{fan.nombre}</span>
  <span className={`inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${badge.bg}`}>
  <BadgeIcon className="w-2.5 h-2.5" />
  <span>{badge.label}</span>
@@ -419,7 +419,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <div className="flex items-center gap-1.5 shrink-0">
  <a
  href={`mailto:${fan.email}?subject=¡Un abrazo de ${encodeURIComponent(effectiveBandName)}!`}
- className="p-1.5 text-[var(--ink-3)] hover:text-white bg-slate-950 hover:bg-[var(--surface)] rounded-[var(--r-s)] transition"
+ className="p-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] transition"
  title="Enviar Email de agradecimiento"
  >
  <Mail className="w-3.5 h-3.5" />
@@ -431,7 +431,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onDeleteFan(fan.id);
  }
  }}
- className="p-1.5 text-[var(--ink-2)] hover:text-rose-400 bg-slate-950 hover:bg-rose-500/10 rounded-[var(--r-s)] hover:border-rose-500/30 transition opacity-60 group-hover:opacity-100"
+ className="p-1.5 text-[var(--ink-2)] hover:text-rose-400 bg-[var(--surface)] hover:bg-rose-500/10 rounded-[var(--r-s)] hover:border-rose-500/30 transition opacity-60 group-hover:opacity-100"
  title="Eliminar Fan"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -444,12 +444,12 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  {fan.cancionFavorita && (
  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-xs font-mono text-[var(--acc)]/70">
  <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
- <span>Tema favorito: <strong className="text-white">{fan.cancionFavorita}</strong></span>
+ <span>Tema favorito: <strong className="text-[var(--ink)]">{fan.cancionFavorita}</strong></span>
  </div>
  )}
 
  {/* Fan Post / Message / Shout */}
- <div className="bg-slate-950/70 rounded-[var(--r-m)] p-3.5">
+ <div className="bg-[var(--surface)]/70 rounded-[var(--r-m)] p-3.5">
  {mensajeFan ? (
  <p className="text-[var(--ink-3)] text-xs font-sans leading-relaxed">"{mensajeFan}"
  </p>
@@ -473,7 +473,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.likes 
  ?'bg-rose-500/20 text-rose-300 shadow-xs font-bold' 
- :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)]'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  title="Me gusta"
  >
@@ -487,7 +487,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.fire 
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 shadow-xs font-bold' 
- :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)]'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  title="Fuego / Brutal"
  >
@@ -501,7 +501,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.guitars 
  ?'bg-purple-500/20 text-purple-300 shadow-xs font-bold' 
- :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)]'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  title="Púa de Oro / Rock On"
  >
@@ -515,7 +515,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.applause 
  ?'bg-emerald-500/20 text-emerald-300 shadow-xs font-bold' 
- :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)]'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  title="Aplausos"
  >
@@ -534,7 +534,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onUpdateFan(fan.id, { nivelFan: e.target.value as any });
  }
  }}
- className="bg-slate-950 rounded-[var(--r-s)] px-2 py-0.5 text-[10px] text-[var(--acc)] font-mono outline-none cursor-pointer"
+ className="bg-[var(--surface)] rounded-[var(--r-s)] px-2 py-0.5 text-[10px] text-[var(--acc)] font-mono outline-none cursor-pointer"
  >
  <option value="fiel">Oyente Fiel</option>
  <option value="superfan">Superfan</option>
@@ -551,16 +551,16 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
  {/* New Announcement Modal */}
  {showNewPostModal && (
- <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-[var(--surface)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4 shadow-2xl">
  <div className="flex items-center justify-between border-b pb-3">
- <h3 className="text-base font-bold text-white font-display flex items-center gap-2">
+ <h3 className="text-base font-bold text-[var(--ink)] font-display flex items-center gap-2">
  <Megaphone className="w-5 h-5 text-amber-500" />
  Publicar Comunicado en el Muro Social
  </h3>
  <button 
  onClick={() => setShowNewPostModal(false)}
- className="text-[var(--ink-3)] hover:text-white p-1"
+ className="text-[var(--ink-3)] hover:text-[var(--ink)] p-1"
  >
  ✕
  </button>
@@ -577,7 +577,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  placeholder="Ej: ¡Nuevo single este viernes! / Concierto en Sevilla"
  value={newPostTitle}
  onChange={e => setNewPostTitle(e.target.value)}
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] p-3 text-xs text-white outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-mono"
  />
  </div>
 
@@ -591,7 +591,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  placeholder="Escribe las novedades, agradecimiento o anuncio exclusivo para tus seguidores..."
  value={newPostContent}
  onChange={e => setNewPostContent(e.target.value)}
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] p-3 text-xs text-white outline-none font-sans resize-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"
  />
  </div>
 
@@ -605,7 +605,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  </button>
  <button
  type="submit"
- className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-mono text-xs font-black uppercase tracking-wider rounded-[var(--r-m)] shadow-lg transition cursor-pointer flex items-center gap-1.5"
+ className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-mono text-xs font-black uppercase tracking-wider rounded-[var(--r-m)] shadow-lg transition cursor-pointer flex items-center gap-1.5"
  >
  <Send className="w-3.5 h-3.5" /> Publicar en el Muro
  </button>

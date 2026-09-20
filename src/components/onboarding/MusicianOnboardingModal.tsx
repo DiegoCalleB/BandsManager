@@ -53,7 +53,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <button
  type="button"
  onClick={handleDismiss}
- className="absolute top-5 right-5 p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800/60 transition-colors cursor-pointer"
+ className="absolute top-5 right-5 p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  title="Cerrar guía"
  >
  <X className="w-5 h-5" />
@@ -77,7 +77,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ?'bg-[var(--acc)]/60 text-stone-950 font-bold shadow-sm scale-105'
- :'bg-neutral-800/70 hover:bg-neutral-800 text-[var(--ink-3)] border-[var(--hair)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-3)] border-[var(--hair)]'
  }`}
  title={l.label}
  >
@@ -89,7 +89,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  </div>
  </div>
 
- <h2 className="text-xl sm:text-2xl font-bold font-display text-white tracking-wide">
+ <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--ink)] tracking-wide">
  ¡Hola, {bandName}! ¿Por dónde empezamos hoy?
  </h2>
  <p className="text-xs sm:text-sm text-[var(--ink-2)] mt-1 max-w-lg">
@@ -110,7 +110,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  </div>
  <div className="space-y-1">
  <div className="flex items-center gap-2">
- <h3 className="text-sm font-bold text-white group-hover:text-[var(--acc)] transition-colors">
+ <h3 className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--acc)] transition-colors">
  Tengo un bolo o concierto a la vista
  </h3>
  <span className="text-[9px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
@@ -143,7 +143,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  </div>
  <div className="space-y-1">
  <div className="flex items-center gap-2">
- <h3 className="text-sm font-bold text-white group-hover:text-sky-400 transition-colors">
+ <h3 className="text-sm font-bold text-[var(--ink)] group-hover:text-sky-400 transition-colors">
  Crear mi Dossier (EPK) para salas
  </h3>
  <span className="text-[9px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded bg-sky-400/20 text-sky-300">
@@ -176,7 +176,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  </div>
  <div className="space-y-1">
  <div className="flex items-center gap-2">
- <h3 className="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors">
+ <h3 className="text-sm font-bold text-[var(--ink)] group-hover:text-emerald-400 transition-colors">
  Organizar el repertorio y las canciones
  </h3>
  </div>
@@ -206,7 +206,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <button
  type="button"
  onClick={handleDismiss}
- className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] hover:text-white text-xs font-mono font-bold transition-colors cursor-pointer"
+ className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] hover:text-[var(--ink)] text-xs font-mono font-bold transition-colors cursor-pointer"
  >
  Explorar por mi cuenta
  </button>

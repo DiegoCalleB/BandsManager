@@ -376,7 +376,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  if (!currentItem) {
  return (
- <div className="fixed inset-0 z-[9999] bg-black text-white flex items-center justify-center">
+ <div className="fixed inset-0 z-[9999] bg-black text-[var(--ink)] flex items-center justify-center">
  <div className="text-center">
  <Music className="w-12 h-12 mx-auto mb-4 text-[var(--acc)]" />
  <p>No hay canciones en el repertorio</p>
@@ -416,7 +416,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  return (
  <div
  ref={containerRef}
- className={`fixed inset-0 z-[9999] flex flex-col overflow-hidden select-none ${glareMode ?'bg-white text-black' :'bg-black text-white'}`}
+ className={`fixed inset-0 z-[9999] flex flex-col overflow-hidden select-none ${glareMode ?'bg-white text-black' :'bg-black text-[var(--ink)]'}`}
  onTouchStart={handleTouchStart}
  onTouchEnd={handleTouchEnd}
  >
@@ -445,7 +445,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
  modeArchetype ==='directo'
  ? glareMode ?'bg-[var(--acc)]/60 text-black shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
- : glareMode ?'text-zinc-600 hover:text-black' :'text-zinc-400 hover:text-white'
+ : glareMode ?'text-zinc-600 hover:text-black' :'text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
  Directo
@@ -552,7 +552,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  <button
  onClick={onClose}
- className={`p-1.5 rounded-[var(--r-s)] transition ${glareMode ?'hover:bg-black/10 text-black' :'hover:bg-white/10 text-white'}`}
+ className={`p-1.5 rounded-[var(--r-s)] transition ${glareMode ?'hover:bg-black/10 text-black' :'hover:bg-white/10 text-[var(--ink)]'}`}
  title="Cerrar (ESC)"
  >
  <X className="w-5 h-5" />
@@ -562,7 +562,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowMoreMenu(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-0.5 text-sm ${
- glareMode ?'bg-white border-text-[var(--ink-3)] text-black' :'bg-[var(--surface)] text-white'
+ glareMode ?'bg-white border-text-[var(--ink-3)] text-black' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {/* Studio & Ensayo shortcuts inside menu */}
  {!isBlock && currentSong && (
@@ -752,7 +752,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => handleLaunchStudio()}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-indigo-600 hover:bg-indigo-500 text-[var(--ink)] font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
  >
  <Sparkles className="w-3.5 h-3.5" />
  <span>Separar en Studio</span>
@@ -808,7 +808,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className="absolute left-0 top-0 bottom-0 w-[28%] max-w-32 z-10 flex items-center justify-start pl-2 bg-gradient-to-r from-black/50 to-transparent opacity-40 hover:opacity-100 active:opacity-100 transition-opacity cursor-pointer"
  title="← Anterior"
  >
- <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+ <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10 text-[var(--ink)]" />
  </button>
  )}
  {!isLast && (
@@ -817,7 +817,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className="absolute right-0 top-0 bottom-0 w-[28%] max-w-32 z-10 flex items-center justify-end pr-2 bg-gradient-to-l from-black/50 to-transparent opacity-40 hover:opacity-100 active:opacity-100 transition-opacity cursor-pointer"
  title="Siguiente →"
  >
- <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+ <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10 text-[var(--ink)]" />
  </button>
  )}
 
@@ -870,7 +870,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => setLiveTransposeOffset(v => v - 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-3)] hover:text-white font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-3)] hover:text-[var(--ink)] font-bold cursor-pointer"
  title="Bajar 1 semitono (-1)"
  >
  -
@@ -879,7 +879,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => setLiveTransposeOffset(v => v + 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-3)] hover:text-white font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-3)] hover:text-[var(--ink)] font-bold cursor-pointer"
  title="Subir 1 semitono (+1)"
  >
  +
@@ -908,7 +908,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={handlePrev}
  disabled={isFirst}
  className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 ${
- glareMode ?'bg-black/5 hover:bg-black/10 text-black' :'bg-white/5 hover:bg-white/10 text-white'
+ glareMode ?'bg-black/5 hover:bg-black/10 text-black' :'bg-white/5 hover:bg-white/10 text-[var(--ink)]'
  }`}
  >
  <ChevronLeft className="w-4 h-4" />
@@ -939,7 +939,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={handleNext}
  disabled={isLast}
  className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 ${
- glareMode ?'bg-black/5 hover:bg-black/10 text-black' :'bg-white/5 hover:bg-white/10 text-white'
+ glareMode ?'bg-black/5 hover:bg-black/10 text-black' :'bg-white/5 hover:bg-white/10 text-[var(--ink)]'
  }`}
  >
  <span className="hidden sm:inline text-xs">Siguiente</span>
@@ -995,7 +995,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <ListMusic className="w-4 h-4" />
  </div>
  <div>
- <h3 className="text-sm font-bold text-white uppercase tracking-wider">Repertorio & Pistas Iris</h3>
+ <h3 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">Repertorio & Pistas Iris</h3>
  <p className="text-[11px] text-zinc-400">
  {songsWithIrisCount} de {songsInSetlistCount} temas con pistas Iris listas
  </p>
@@ -1003,7 +1003,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
  <button
  onClick={() => setShowSongListDrawer(false)}
- className="p-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-zinc-400 hover:text-white cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-zinc-400 hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -1066,7 +1066,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {idx + 1}
  </span>
  <div className="min-w-0">
- <h4 className={`text-xs font-bold truncate ${isCurrent ?'text-[var(--acc)]' :'text-white'}`}>
+ <h4 className={`text-xs font-bold truncate ${isCurrent ?'text-[var(--acc)]' :'text-[var(--ink)]'}`}>
  {song.titulo}
  </h4>
  <div className="flex items-center gap-2 text-[10px] text-zinc-400 font-mono">
@@ -1175,7 +1175,7 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
  {item.tituloCustom || meta.label}
  </h2>
  {script ? (
- <p className={`text-xl sm:text-3xl md:text-4xl leading-relaxed max-w-4xl whitespace-pre-wrap font-medium ${glareMode ?'text-black font-bold' :'text-white'}`}>
+ <p className={`text-xl sm:text-3xl md:text-4xl leading-relaxed max-w-4xl whitespace-pre-wrap font-medium ${glareMode ?'text-black font-bold' :'text-[var(--ink)]'}`}>
  {script}
  </p>
  ) : (
@@ -1296,7 +1296,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={() => onLiveTransposeChange(liveTransposeOffset - 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-3)] hover:text-white font-bold transition cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-3)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
  title="Bajar 1 semitono (-1)"
  >
  -
@@ -1307,7 +1307,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={() => onLiveTransposeChange(liveTransposeOffset + 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-3)] hover:text-white font-bold transition cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-3)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
  title="Subir 1 semitono (+1)"
  >
  +
@@ -1336,7 +1336,7 @@ const ChordSheetPage: React.FC<{
  <button
  onClick={onToggleDetails}
  className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition ${
- showDetails ? (glareMode ?'bg-black/15 text-black' :'bg-white/15 text-white') : (glareMode ?'text-neutral-600 hover:text-black' :'text-[var(--ink-2)] hover:text-white')
+ showDetails ? (glareMode ?'bg-black/15 text-black' :'bg-white/15 text-[var(--ink)]') : (glareMode ?'text-neutral-600 hover:text-black' :'text-[var(--ink-2)] hover:text-[var(--ink)]')
  }`}
  title="Estructura y progresión de acordes"
  >
@@ -1353,7 +1353,7 @@ const ChordSheetPage: React.FC<{
  className={`px-2.5 py-1 text-xs font-mono font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 cursor-pointer ${
  teleprompterMode ==='scroll'
  ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 shadow-sm'
- :'bg-neutral-800/80 border-[var(--hair)] text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title={teleprompterMode ==='scroll' ?'Cambiar a modo pedal por secciones' :'Cambiar a modo teleprompter scroll continuo'}
  >
@@ -1385,7 +1385,7 @@ const ChordSheetPage: React.FC<{
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer ${
  isTeleprompterPlaying
  ?'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black'
- :'bg-emerald-600 hover:bg-emerald-500 text-white'
+ :'bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)]'
  }`}
  title="Pausar o reanudar teleprompter (o pulsar Espacio)"
  >
@@ -1405,7 +1405,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={onResetTeleprompterScroll}
- className="px-2.5 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] hover:text-white rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1 transition cursor-pointer"
+ className="px-2.5 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] hover:text-[var(--ink)] rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1 transition cursor-pointer"
  title="Rebobinar al principio"
  >
  <RotateCcw className="w-3.5 h-3.5" />
@@ -1424,7 +1424,7 @@ const ChordSheetPage: React.FC<{
  className={`px-2 py-1 rounded text-xs transition cursor-pointer ${
  teleprompterSpeed === speed
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
- :'bg-neutral-800 text-[var(--ink-2)] hover:text-white'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {speed}x
@@ -1457,14 +1457,14 @@ const ChordSheetPage: React.FC<{
  onClick={onRetreatSection}
  disabled={currentSectionIndex === 0}
  className={`px-4 py-2.5 disabled:opacity-30 rounded-[var(--r-s)] text-sm font-mono font-bold transition ${
- glareMode ?'bg-black/10 hover:bg-black/15 text-black' :'bg-neutral-800 hover:bg-neutral-700 text-white'
+ glareMode ?'bg-black/10 hover:bg-black/15 text-black' :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}
  >
  ◀ Parte anterior
  </button>
  <button
  onClick={onAdvanceSection}
- className="flex-1 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-[var(--r-s)] text-sm font-mono font-bold transition"
+ className="flex-1 py-2.5 bg-purple-600 hover:bg-purple-500 text-[var(--ink)] rounded-[var(--r-s)] text-sm font-mono font-bold transition"
  >
  Siguiente parte ▶
  </button>

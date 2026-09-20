@@ -248,7 +248,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={stopRecording}
- className="px-6 py-2.5 rounded-[var(--r-m)] bg-rose-500 hover:bg-rose-400 text-white font-mono font-bold text-xs uppercase flex items-center gap-2 mx-auto cursor-pointer shadow-lg shadow-rose-500/30 active:scale-95 transition-all"
+ className="px-6 py-2.5 rounded-[var(--r-m)] bg-rose-500 hover:bg-rose-400 text-[var(--ink)] font-mono font-bold text-xs uppercase flex items-center gap-2 mx-auto cursor-pointer shadow-lg shadow-rose-500/30 active:scale-95 transition-all"
  >
  <Square className="w-4 h-4 fill-current" />
  <span>Detener Grabación ({formatTime(recordDuration)})</span>
@@ -295,7 +295,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={() => setRecordingBlobUrl(null)}
- className="px-3 py-1.5 text-xs font-mono text-[var(--ink-2)] hover:text-white"
+ className="px-3 py-1.5 text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  Descartar
  </button>
@@ -316,7 +316,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <span className="text-xs text-[var(--ink-2)]">
  ¿Grabaste con Zoom H4n o grabadora externa?
  </span>
- <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] text-xs font-mono font-bold cursor-pointer transition-colors">
+ <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-xs font-mono font-bold cursor-pointer transition-colors">
  <Upload className="w-3.5 h-3.5" />
  <span>Subir Archivo de Audio</span>
  <input
@@ -356,7 +356,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <span className="text-xs font-bold text-zinc-100 truncate">
  {rec.titulo}
  </span>
- <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-[var(--acc)]/70 uppercase">
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--surface)]/80 text-[var(--acc)]/70 uppercase">
  {rec.tipo.replace('_','')}
  </span>
  </div>

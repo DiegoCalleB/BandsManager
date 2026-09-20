@@ -44,7 +44,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
  <Layers className="w-5 h-5 text-[var(--acc)]" />
- <h3 className="text-base font-semibold text-white">Rider Técnico, Stage Plot & Requerimientos</h3>
+ <h3 className="text-base font-semibold text-[var(--ink)]">Rider Técnico, Stage Plot & Requerimientos</h3>
  </div>
 
  <p className="text-xs text-zinc-400">
@@ -61,7 +61,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  max={64}
  value={canalesMesa}
  onChange={(e) => setCanalesMesa(Number(e.target.value))}
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-white text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -143,7 +143,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <button
  type="button"
  onClick={() => fileInputRef.current?.click()}
- className="text-xs text-zinc-400 hover:text-white underline"
+ className="text-xs text-zinc-400 hover:text-[var(--ink)] underline"
  >
  Cambiar
  </button>
@@ -187,7 +187,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  value={riderTecnicoText}
  onChange={(e) => setRiderTecnicoText(e.target.value)}
  placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus: leading-relaxed"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus: leading-relaxed"
  />
  </div>
  </div>

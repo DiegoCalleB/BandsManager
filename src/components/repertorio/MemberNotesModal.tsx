@@ -179,13 +179,13 @@ export function MemberNotesModal({
  </h3>
  <p className="text-xs text-[var(--ink-2)] font-sans flex items-center gap-1.5 mt-0.5">
  <Music className="w-3.5 h-3.5 text-[#1db954]" />
- Canción: <span className="font-bold text-white">{formatSongTitle(song.titulo)}</span> {song.tonalidad && `(${song.tonalidad})`}
+ Canción: <span className="font-bold text-[var(--ink)]">{formatSongTitle(song.titulo)}</span> {song.tonalidad && `(${song.tonalidad})`}
  </p>
  </div>
  </div>
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -201,7 +201,7 @@ export function MemberNotesModal({
  <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400">🔶 {summary.casiLista} casi</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]">🌱 {summary.aprendiendo} aprendiendo</span>
  {summary.sinOpinar > 0 && (
- <span className="px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-500">{summary.sinOpinar} sin marcar</span>
+ <span className="px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-neutral-500">{summary.sinOpinar} sin marcar</span>
  )}
  </div>
  );
@@ -269,7 +269,7 @@ export function MemberNotesModal({
  value={newMemberName}
  onChange={(e) => setNewMemberName(e.target.value)}
  className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${
- isStitchLight ?'bg-white' :'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  <input
@@ -278,7 +278,7 @@ export function MemberNotesModal({
  value={newMemberInstrument}
  onChange={(e) => setNewMemberInstrument(e.target.value)}
  className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${
- isStitchLight ?'bg-white' :'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  <div className="flex items-center gap-1.5">
@@ -292,7 +292,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={() => setShowAddCustomMember(false)}
- className="px-2 py-2 text-[var(--ink-2)] hover:text-white text-xs cursor-pointer"
+ className="px-2 py-2 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs cursor-pointer"
  >
  Cancelar
  </button>
@@ -322,7 +322,7 @@ export function MemberNotesModal({
  <div className="flex items-center justify-between mb-2">
  <div className="flex items-center gap-2.5">
  <div
- className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-xs text-white uppercase shadow-sm"
+ className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-xs text-[var(--ink)] uppercase shadow-sm"
  style={{ backgroundColor: member.avatarColor ||'#6366f1' }}
  >
  {member.name.charAt(0)}
@@ -385,7 +385,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-3)] hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-3)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
  >
  Cancelar
  </button>
@@ -394,7 +394,7 @@ export function MemberNotesModal({
  onClick={handleSave}
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer shadow-lg ${
  savedSuccess 
- ?'bg-emerald-500 text-white' 
+ ?'bg-emerald-500 text-[var(--ink)]' 
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-black'
  }`}
  >

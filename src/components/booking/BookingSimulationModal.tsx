@@ -103,7 +103,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  </div>
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-white hover:bg-[var(--surface)]/60 transition-colors"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -208,7 +208,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <div className="p-4 border-t flex justify-end gap-3" style={{ borderColor: colors.border }}>
  <button
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-white transition-colors"
+ className="px-4 py-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
  >
  Cancelar
  </button>

@@ -191,7 +191,7 @@ export function CampaignManagerModal({
  </div>
  <button 
  onClick={onClose}
- className="p-2 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors"
+ className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -208,7 +208,7 @@ export function CampaignManagerModal({
  </span>
  <button
  onClick={() => setIsEditing(false)}
- className="text-xs text-[var(--ink-2)] hover:text-white underline cursor-pointer"
+ className="text-xs text-[var(--ink-2)] hover:text-[var(--ink)] underline cursor-pointer"
  >
  Volver a la lista
  </button>
@@ -283,7 +283,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={handleAddCity}
- className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-zinc-200 text-xs font-mono font-bold rounded-[var(--r-m)]"
+ className="px-3 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 text-xs font-mono font-bold rounded-[var(--r-m)]"
  >
  + Añadir
  </button>
@@ -438,14 +438,14 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => setIsEditing(false)}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--ink-2)] hover:text-white bg-neutral-800/80 hover:bg-neutral-700"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70"
  >
  Cancelar
  </button>
  <button
  type="button"
  onClick={handleSave}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-purple-600 hover:bg-purple-500 text-white shadow-md active:scale-95 flex items-center gap-2"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-purple-600 hover:bg-purple-500 text-[var(--ink)] shadow-md active:scale-95 flex items-center gap-2"
  >
  <Check className="w-4 h-4" />
  Guardar Campaña
@@ -474,13 +474,13 @@ export function CampaignManagerModal({
  onClick={() => onSetActiveCampaign(null)}
  className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
  !activeCampaign
- ?'bg-neutral-800/90 shadow-md ring-1 ring-amber-400/30'
+ ?'bg-[var(--surface)]/80 shadow-md ring-1 ring-amber-400/30'
  :'bg-[var(--surface)] hover: text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <div className="flex items-center gap-3">
  <div className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center ${
- !activeCampaign ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70' :'bg-neutral-800 text-neutral-500'
+ !activeCampaign ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70' :'bg-[var(--surface)]/80 text-neutral-500'
  }`}>
  <Compass className="w-4 h-4" />
  </div>
@@ -602,7 +602,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => onSetActiveCampaign(null)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-neutral-800 text-[var(--ink-3)] hover:bg-neutral-700"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--surface)]/80 text-[var(--ink-3)] hover:bg-[var(--surface)]/70"
  >
  Desactivar
  </button>
@@ -611,7 +611,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => onSetActiveCampaign(camp)}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold bg-purple-600 hover:bg-purple-500 text-white shadow-sm flex items-center gap-1.5 transition-all active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold bg-purple-600 hover:bg-purple-500 text-[var(--ink)] shadow-sm flex items-center gap-1.5 transition-all active:scale-95"
  >
  <Target className="w-3.5 h-3.5" /> Activar
  </button>
@@ -620,7 +620,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => handleStartEdit(camp)}
- className="p-1.5 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors"
  title="Editar campaña"
  >
  <Edit3 className="w-4 h-4" />
@@ -633,7 +633,7 @@ export function CampaignManagerModal({
  onDeleteCampaign(camp.id);
  }
  }}
- className="p-1.5 text-[var(--ink-2)] hover:text-red-400 rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors"
+ className="p-1.5 text-[var(--ink-2)] hover:text-red-400 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors"
  title="Eliminar campaña"
  >
  <Trash2 className="w-4 h-4" />
@@ -656,7 +656,7 @@ export function CampaignManagerModal({
  </div>
  <button
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-zinc-200 font-mono font-bold text-xs"
+ className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 font-mono font-bold text-xs"
  >
  Cerrar
  </button>

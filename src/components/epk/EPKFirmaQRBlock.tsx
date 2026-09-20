@@ -131,7 +131,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="Ej: Booking & Management"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
  />
  </div>
 
@@ -147,7 +147,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="Ej: Booking & Management Team"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
  />
  </div>
 
@@ -163,7 +163,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="+34 600 00 00 00"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-mono"
  />
  </div>
 
@@ -179,7 +179,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="booking@tubanda.com"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-mono"
  />
  </div>
  </div>
@@ -199,7 +199,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="Música en directo, energía y directo arrollador"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
  />
  </div>
 
@@ -218,7 +218,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
  />
  <div>
- <p className="text-xs font-bold text-white">Incluir iconos de plataformas musicales y redes</p>
+ <p className="text-xs font-bold text-[var(--ink)]">Incluir iconos de plataformas musicales y redes</p>
  <p className="text-[11px] text-[var(--ink-3)]">
  Añade enlaces directos a Spotify, Instagram, YouTube, etc.
  </p>
@@ -241,7 +241,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
  />
  <div>
- <p className="text-xs font-bold text-white">Adjuntar enlace al Dossier EPK en la firma</p>
+ <p className="text-xs font-bold text-[var(--ink)]">Adjuntar enlace al Dossier EPK en la firma</p>
  <p className="text-[11px] text-[var(--ink-3)]">
  Incluye el botón con enlace al Dossier interactivo en cada propuesta redactada.
  </p>
@@ -351,7 +351,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  href={publicEpkUrl ||'#'}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-white rounded-[var(--r-s)] text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer group"
+ className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer group"
  >
  <FileText className="w-3.5 h-3.5 text-[var(--acc)] group-hover:scale-110 transition-transform" />
  <span>
@@ -475,8 +475,8 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  onClick={handleCopyRichSignature}
  className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md ${
  copiadoFirma ==='rich'
- ?'bg-emerald-500 text-slate-950 ring-2 ring-emerald-400'
- :'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 shadow-amber-500/10'
+ ?'bg-emerald-500 text-[var(--ink)] ring-2 ring-emerald-400'
+ :'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-[var(--ink)] shadow-amber-500/10'
  }`}
  title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"
  >
@@ -501,7 +501,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='html'
  ?'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
- :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Copiar el código fuente HTML puro de la firma"
  >
@@ -516,7 +516,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='text'
  ?'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
- :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  title="Copiar versión en texto plano"
  >
@@ -568,7 +568,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
  instructionTab ==='gmail'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
- :'text-[var(--ink-3)] hover:text-white'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  🔴 Gmail
@@ -579,7 +579,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
  instructionTab ==='outlook'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
- :'text-[var(--ink-3)] hover:text-white'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  🔵 Outlook / Microsoft 365
@@ -590,7 +590,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
  instructionTab ==='apple'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
- :'text-[var(--ink-3)] hover:text-white'
+ :'text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >
  ⚪ Apple Mail / Mac
@@ -656,7 +656,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <button
  type="button"
  onClick={handleCopyUrl}
- className="flex-1 px-3 py-2 bg-[var(--acc)] text-slate-950 font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 hover:bg-[var(--acc)]/60 transition cursor-pointer"
+ className="flex-1 px-3 py-2 bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 hover:bg-[var(--acc)]/60 transition cursor-pointer"
  >
  {copiado ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
  {copiado ?'¡Copiado!' :'Copiar Enlace'}

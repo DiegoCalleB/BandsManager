@@ -112,7 +112,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
  </div>
  <div>
- <h4 className="text-xs sm:text-sm font-bold text-white font-mono uppercase tracking-wider">
+ <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-mono uppercase tracking-wider">
  1. Elige la Plantilla Visual del Dossier
  </h4>
  <p className="hidden sm:block text-xs text-[var(--ink-3)]">
@@ -174,10 +174,10 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <div className="flex items-center justify-between gap-1">
  <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
  <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isSelected ?'text-[var(--acc)]' :'text-stone-400'}`} />
- <span className="text-xs font-bold text-white font-mono truncate">{tpl.name}</span>
+ <span className="text-xs font-bold text-[var(--ink)] font-mono truncate">{tpl.name}</span>
  </div>
  {isSelected && (
- <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[var(--acc)] text-slate-950 flex items-center justify-center shrink-0">
+ <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center shrink-0">
  <Check className="w-2 sm:w-2.5 h-2 sm:h-2.5 stroke-[3]" />
  </span>
  )}
@@ -216,7 +216,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
  </div>
  <div>
- <h4 className="text-xs sm:text-sm font-bold text-white font-mono uppercase tracking-wider">
+ <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-mono uppercase tracking-wider">
  2. Organiza el Orden de las Secciones
  </h4>
  <p className="hidden sm:block text-xs text-[var(--ink-3)]">
@@ -289,7 +289,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  </div>
  <div className="min-w-0">
  <div className="flex items-center gap-2">
- <span className="text-xs font-bold text-white font-mono truncate">
+ <span className="text-xs font-bold text-[var(--ink)] font-mono truncate">
  {item.meta.label}
  </span>
  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-stone-900 text-stone-400 border-stone-800 shrink-0 hidden sm:inline">
@@ -331,7 +331,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
  isFirst
  ?'opacity-30 cursor-not-allowed bg-stone-950 border-stone-900 text-stone-600'
- :'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-white border-stone-800 cursor-pointer'
+ :'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-[var(--ink)] border-stone-800 cursor-pointer'
  }`}
  title="Subir posición"
  >
@@ -346,7 +346,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
  isLast
  ?'opacity-30 cursor-not-allowed bg-stone-950 border-stone-900 text-stone-600'
- :'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-white border-stone-800 cursor-pointer'
+ :'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-[var(--ink)] border-stone-800 cursor-pointer'
  }`}
  title="Bajar posición"
  >

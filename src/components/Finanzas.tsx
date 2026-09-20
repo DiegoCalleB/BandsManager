@@ -155,9 +155,9 @@ export default function Finanzas({
  disabled={isSyncing}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncing
- ?'bg-neutral-800 text-neutral-500 animate-pulse'
+ ?'bg-[var(--surface)]/80 text-neutral-500 animate-pulse'
  : isStitchLight
- ?'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-100'
+ ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-sm shadow-indigo-100'
  :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
  }`}
  title="Sincronizar todas las transacciones financieras"
@@ -292,7 +292,7 @@ export default function Finanzas({
  onClick={() => setIsAddOpen(true)}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isStitchLight 
- ?'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm' 
+ ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-sm' 
  :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-md'
  }`}
  >
@@ -360,7 +360,7 @@ export default function Finanzas({
 
  <div className="overflow-x-auto">
  <table className="w-full text-left text-xs">
- <thead className="bg-slate-950/80 text-[var(--acc)] uppercase font-bold font-mono text-[10px] border-b">
+ <thead className="bg-[var(--surface)]/80 text-[var(--acc)] uppercase font-bold font-mono text-[10px] border-b">
  <tr>
  <th className="p-3">Fecha & Bolo</th>
  <th className="p-3">Ciudad / Sala</th>
@@ -414,7 +414,7 @@ export default function Finanzas({
  return (
  <tr key={c.id} className="hover:bg-[var(--surface)]/30 transition">
  <td className="p-3 font-mono text-[var(--ink-3)]">
- <span className="font-bold text-white block">{c.fecha}</span>
+ <span className="font-bold text-[var(--ink)] block">{c.fecha}</span>
  <span className="text-[10px] text-[var(--ink-2)] capitalize">{c.tipo}</span>
  {c.giraNombre && (
  <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-mono">
@@ -423,7 +423,7 @@ export default function Finanzas({
  )}
  </td>
  <td className="p-3">
- <span className="font-bold text-white block">{c.sala}</span>
+ <span className="font-bold text-[var(--ink)] block">{c.sala}</span>
  <span className="text-[10px] text-[var(--ink-3)]">{c.ciudad}</span>
  {c.convocatoria_tipo ==="parcial" ? (
  <span className="inline-block mt-0.5 text-[9px] text-purple-300 bg-purple-500/10 px-1.5 py-0.2 rounded font-mono" title={c.convocados_nombres?.join(",")}>
@@ -500,15 +500,15 @@ export default function Finanzas({
 
  {/* EDIT CONCERT EXPENSES MODAL */}
  {editingConcertId && (
- <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-[var(--surface)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4 shadow-2xl">
  <div className="flex items-center justify-between border-b pb-3">
- <h3 className="text-lg font-bold text-white flex items-center gap-2">
+ <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
  <Calculator className="w-5 h-5 text-[var(--acc)]" /> Desglose Real de Gastos de Bolo
  </h3>
  <button
  onClick={() => setEditingConcertId(null)}
- className="text-[var(--ink-3)] hover:text-white font-bold"
+ className="text-[var(--ink-3)] hover:text-[var(--ink)] font-bold"
  >
  ✕
  </button>
@@ -522,7 +522,7 @@ export default function Finanzas({
  type="number"
  value={editingGasolina}
  onChange={e => setEditingGasolina(e.target.value)}
- className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
  />
  </div>
  <div>
@@ -531,7 +531,7 @@ export default function Finanzas({
  type="number"
  value={editingDietas}
  onChange={e => setEditingDietas(e.target.value)}
- className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
  />
  </div>
  </div>
@@ -543,7 +543,7 @@ export default function Finanzas({
  type="number"
  value={editingAlquiler}
  onChange={e => setEditingAlquiler(e.target.value)}
- className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
  />
  </div>
  <div>
@@ -552,7 +552,7 @@ export default function Finanzas({
  type="number"
  value={editingAlojamiento}
  onChange={e => setEditingAlojamiento(e.target.value)}
- className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
  />
  </div>
  </div>
@@ -563,7 +563,7 @@ export default function Finanzas({
  type="number"
  value={editingOtros}
  onChange={e => setEditingOtros(e.target.value)}
- className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
  />
  </div>
 
@@ -574,12 +574,12 @@ export default function Finanzas({
  value={editingNotasGastos}
  onChange={e => setEditingNotasGastos(e.target.value)}
  placeholder="Detalles de facturas, tickets guardados..."
- className="w-full bg-slate-950 rounded-[var(--r-m)] p-2.5 text-white"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)]"
  />
  </div>
 
  {/* Total calculation preview */}
- <div className="p-3 bg-slate-950 rounded-[var(--r-m)] flex items-center justify-between font-mono">
+ <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between font-mono">
  <span className="text-[var(--ink-3)] font-bold">TOTAL GASTOS CALCULADOS:</span>
  <span className="text-rose-400 font-black text-sm">
  -{(Number(editingGasolina) || 0) + (Number(editingDietas) || 0) + (Number(editingAlquiler) || 0) + (Number(editingAlojamiento) || 0) + (Number(editingOtros) || 0)}€
@@ -609,7 +609,7 @@ export default function Finanzas({
  }
  setEditingConcertId(null);
  }}
- className="px-4 py-2 bg-[var(--acc)] text-slate-950 text-xs font-bold rounded-[var(--r-m)] shadow-lg"
+ className="px-4 py-2 bg-[var(--acc)] text-[var(--ink)] text-xs font-bold rounded-[var(--r-m)] shadow-lg"
  >
  Guardar Gastos
  </button>
@@ -647,7 +647,7 @@ export default function Finanzas({
  type="button"
  onClick={() => setSearchTerm('')}
  className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
+ isStitchLight ?'text-[var(--ink-3)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  title="Borrar búsqueda"
  >
@@ -725,7 +725,7 @@ export default function Finanzas({
  <div className="flex items-center gap-2">
  <h4 className={`text-xs font-bold font-display truncate ${textTitle}`}>{p.concepto}</h4>
  <span className={`text-[8px] px-1.5 py-0.5 rounded font-mono uppercase tracking-wider ${
- isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-neutral-800 text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
  {p.categoria}
  </span>

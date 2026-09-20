@@ -136,7 +136,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  : isPlayingCurrent
  ? isStitchLight
  ?'bg-emerald-50/90 border-emerald-300 text-emerald-950 shadow-sm ring-1 ring-emerald-400/30'
- :'bg-emerald-500/10 border-emerald-500/30 text-white shadow-sm ring-1 ring-emerald-500/20'
+ :'bg-emerald-500/10 border-emerald-500/30 text-[var(--ink)] shadow-sm ring-1 ring-emerald-500/20'
  : isSelected
  ? isStitchLight
  ?'bg-amber-50/80 text-[var(--ink)]'
@@ -180,7 +180,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-emerald-500 text-black shadow-md scale-105'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-emerald-500 text-[var(--ink-2)] hover:text-black'
- :'bg-neutral-800 hover:bg-emerald-500 text-zinc-300 hover:text-black group-hover:scale-105 shadow-xs'
+ :'bg-[var(--surface)]/80 hover:bg-emerald-500 text-zinc-300 hover:text-black group-hover:scale-105 shadow-xs'
  }`}
  title={isPlaying ?'Pausar canción' : `Reproducir ${displayTitle}`}
  >
@@ -225,7 +225,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  :'text-emerald-400 font-bold'
  : isStitchLight
  ?'text-[var(--ink)] hover:text-indigo-600'
- :'text-[var(--ink-3)] group-hover:text-white'
+ :'text-[var(--ink-3)] group-hover:text-[var(--ink)]'
  }`}
  title={displayTitle}
  >
@@ -258,7 +258,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
  isStitchLight
  ?'bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-neutral-800/90 text-zinc-300'
+ :'bg-[var(--surface)]/80 text-zinc-300'
  }`}
  >
  {song.tonalidad ||'—'}{song.bpm ? ` • ${song.bpm} BPM` :''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ?' 🤖' :''}
@@ -277,7 +277,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-emerald-500/15 text-emerald-300'
  : song.estadoTema ==='ensayando'
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70'
- :'bg-neutral-800 text-zinc-400'
+ :'bg-[var(--surface)]/80 text-zinc-400'
  }`}
  >
  {song.estadoTema ==='listo' ?'Listo' : song.estadoTema ==='ensayando' ?'Ensayando' : song.estadoTema}
@@ -343,14 +343,14 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-amber-200 /40 shadow-xs'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-neutral-800 hover:bg-neutral-700 text-zinc-200 /80'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 /80'
  }`}
  title="Abrir Studio de Grabación Multipista & Pistas"
  >
  <Headphones className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span className="hidden xs:inline text-xs">Studio</span>
  {ideasCount > 0 && (
- <span className="px-1.5 py-0.2 bg-[var(--acc)]/40 text-white rounded-full text-[10px] font-bold">
+ <span className="px-1.5 py-0.2 bg-[var(--acc)]/40 text-[var(--ink)] rounded-full text-[10px] font-bold">
  {ideasCount}
  </span>
  )}
@@ -371,7 +371,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-[var(--acc)]/70 /40 shadow-xs'
  : isStitchLight
  ?'bg-amber-50 hover:bg-amber-100 text-amber-900'
- :'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--acc)]/70 /30'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
  }`}
  title={hasIrisStems(song) ?'Ver pistas e instrumentos separados con Iris' :'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
  >
@@ -390,7 +390,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 /30 shadow-xs'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-neutral-800/80 hover:bg-neutral-700 text-zinc-400 hover:text-zinc-200 /70'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-400 hover:text-zinc-200 /70'
  }`}
  title="Ver y editar notas específicas por miembro de la banda"
  >
@@ -407,7 +407,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'bg-neutral-800/80 hover:bg-neutral-700 text-zinc-400 hover:text-zinc-100 /70'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-400 hover:text-zinc-100 /70'
  }`}
  title="Editar canción (título, tonalidad, BPM, afinación, disco...)"
  >
@@ -423,7 +423,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  type="button"
  disabled={!canMoveUp}
  onClick={onMoveUp}
- className="p-0.5 text-[var(--ink-2)] hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
+ className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 cursor-pointer disabled:cursor-default"
  title="Subir orden"
  >
  <ArrowUp className="w-3 h-3" />
@@ -432,7 +432,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  type="button"
  disabled={!canMoveDown}
  onClick={onMoveDown}
- className="p-0.5 text-[var(--ink-2)] hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
+ className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 cursor-pointer disabled:cursor-default"
  title="Bajar orden"
  >
  <ArrowDown className="w-3 h-3" />
@@ -447,7 +447,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={() => setShowMenu((prev) => !prev)}
  className={`p-1.5 rounded-[var(--r-s)] transition-all cursor-pointer ${
  showMenu
- ?'bg-[var(--surface)] text-white'
+ ?'bg-[var(--surface)] text-[var(--ink)]'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:bg-[var(--sunken)] border-transparent hover:'
  :'text-[var(--ink-3)] hover:text-[var(--ink-3)] hover:bg-[var(--surface)]/80 border-transparent'

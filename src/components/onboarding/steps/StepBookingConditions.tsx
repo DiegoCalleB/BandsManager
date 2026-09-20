@@ -42,7 +42,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
  <DollarSign className="w-5 h-5 text-[var(--acc)]" />
- <h3 className="text-base font-semibold text-white">Caché & Condiciones de Contratación (Booking CRM)</h3>
+ <h3 className="text-base font-semibold text-[var(--ink)]">Caché & Condiciones de Contratación (Booking CRM)</h3>
  </div>
 
  <p className="text-xs text-zinc-400">
@@ -63,7 +63,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={cacheAcustico}
  onChange={(e) => setCacheAcustico(Number(e.target.value))}
  placeholder="400"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-white text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
@@ -80,7 +80,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={cacheSala}
  onChange={(e) => setCacheSala(Number(e.target.value))}
  placeholder="850"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-white text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
@@ -97,7 +97,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={cacheFestival}
  onChange={(e) => setCacheFestival(Number(e.target.value))}
  placeholder="1800"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-white text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
@@ -115,7 +115,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={condicionesKm}
  onChange={(e) => setCondicionesKm(e.target.value)}
  placeholder="Ej. 0,25 €/km a partir de 100 km desde Madrid"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -155,7 +155,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={contactoBookingNombre}
  onChange={(e) => setContactoBookingNombre(e.target.value)}
  placeholder="Ej. Carlos (Booking & Manager)"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -166,7 +166,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={contactoBookingEmail}
  onChange={(e) => setContactoBookingEmail(e.target.value)}
  placeholder="booking@tubanda.com"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -177,7 +177,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={contactoBookingTelefono}
  onChange={(e) => setContactoBookingTelefono(e.target.value)}
  placeholder="+34 600 000 000"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
  </div>

@@ -826,7 +826,7 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  case'sin_contactar':
  default:
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-neutral-800 text-[var(--ink-2)] whitespace-nowrap shrink-0">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--surface)]/80 text-[var(--ink-2)] whitespace-nowrap shrink-0">
  <Radio className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
  <span>Sin Contactar</span>
  </span>
@@ -893,7 +893,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </span>
  </div>
 
- <div className="h-4 w-px bg-neutral-800 hidden sm:block" />
+ <div className="h-4 w-px bg-[var(--surface)]/80 hidden sm:block" />
 
  {/* Sub-tabs segmentadas */}
  <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
@@ -903,7 +903,7 @@ Bakandeya Agent Manager IA & Músicos`;
  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
  subTab ==='co_booking'
  ?'bg-zinc-800 text-zinc-100 shadow-sm'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>Bandas Amigas</span>
@@ -916,7 +916,7 @@ Bakandeya Agent Manager IA & Músicos`;
  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
  subTab ==='registered_bands'
  ?'bg-emerald-500/20 text-emerald-300 shadow-sm'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>Registro</span>
@@ -971,7 +971,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
  title="Exportar Excel Completo (.xlsx)"
  >
  <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
@@ -985,7 +985,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className={`p-5 rounded-[var(--r-l)] ${colors.card} space-y-4 shadow-lg `}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-xl font-bold font-display text-white flex items-center gap-2">
+ <h3 className="text-xl font-bold font-display text-[var(--ink)] flex items-center gap-2">
  <Building2 className="w-5 h-5 text-emerald-400" />
  <span>Registro de Nuevas Bandas Clientes (registro_bandas)</span>
  </h3>
@@ -996,7 +996,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="flex items-center gap-2 shrink-0">
  <button
  onClick={fetchRegisteredBands}
- className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
+ className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isLoadingRegBands ?'animate-spin' :''}`} />
  <span>Actualizar</span>
@@ -1036,9 +1036,9 @@ Bakandeya Agent Manager IA & Músicos`;
  </tr>
  ) : (
  registeredBands.map((band: any, idx: number) => (
- <tr key={band.id || `reg-${idx}`} className="hover:bg-neutral-800/40 transition-colors">
+ <tr key={band.id || `reg-${idx}`} className="hover:bg-[var(--surface)]/80 transition-colors">
  <td className="p-3 font-mono text-[var(--ink-2)]">{band.id || `reg-${idx + 1}`}</td>
- <td className="p-3 font-bold text-white flex items-center gap-2">
+ <td className="p-3 font-bold text-[var(--ink)] flex items-center gap-2">
  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
  <span>{band.nombre_banda || band.nombreBanda || band.contacto_nombre}</span>
  </td>
@@ -1085,12 +1085,12 @@ Bakandeya Agent Manager IA & Músicos`;
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
  placeholder="Buscar por banda, estilo, ciudad o contacto..."
- className="w-full bg-[var(--surface)]/90 text-white pl-9 pr-3 py-2 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 transition-colors"
+ className="w-full bg-[var(--surface)]/90 text-[var(--ink)] pl-9 pr-3 py-2 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 transition-colors"
  />
  {searchTerm && (
  <button 
  onClick={() => setSearchTerm('')} 
- className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-white"
+ className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -1137,7 +1137,7 @@ Bakandeya Agent Manager IA & Músicos`;
  className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
  selectedBandIds.length > 0
  ?'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 hover:bg-[var(--acc)]/25'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={selectedBandIds.length === filteredBands.length ?'Deseleccionar todas' :'Seleccionar todas las filtradas'}
  >
@@ -1159,7 +1159,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="button"
  onClick={() => setViewMode('grid')}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- viewMode ==='grid' ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-white'
+ viewMode ==='grid' ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Tarjetas"
  >
@@ -1170,7 +1170,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="button"
  onClick={() => setViewMode('table')}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- viewMode ==='table' ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-white'
+ viewMode ==='table' ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Lista / Tabla"
  >
@@ -1181,7 +1181,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="button"
  onClick={() => setViewMode('map')}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- viewMode ==='map' ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-white'
+ viewMode ==='map' ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Mapa Interactivo"
  >
@@ -1250,7 +1250,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={(e) => handleToggleSelectBand(band.id, e)}
- className="mt-0.5 p-1 rounded hover:bg-neutral-800/80 text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer shrink-0"
+ className="mt-0.5 p-1 rounded hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer shrink-0"
  title={isSelected ?'Deseleccionar banda' :'Seleccionar banda'}
  >
  {isSelected ? (
@@ -1261,7 +1261,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </button>
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-1.5 min-w-0">
- <h3 className="text-base font-bold font-display tracking-wider uppercase text-white flex items-center gap-2 group-hover:text-[var(--acc)] transition-colors truncate min-w-0">
+ <h3 className="text-base font-bold font-display tracking-wider uppercase text-[var(--ink)] flex items-center gap-2 group-hover:text-[var(--acc)] transition-colors truncate min-w-0">
  {band.imagen_url ? (
  <img src={band.imagen_url} alt={band.nombre_banda} className="w-6 h-6 rounded-full object-cover border-[var(--acc)]/50 shrink-0" />
  ) : (
@@ -1273,12 +1273,12 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  
  <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono text-[var(--ink-2)]">
- <span className="bg-neutral-800 px-2 py-0.5 rounded-md text-[#d1b375] flex items-center gap-1 shrink-0 max-w-[160px]" title={band.estilo_musical}>
+ <span className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-md text-[#d1b375] flex items-center gap-1 shrink-0 max-w-[160px]" title={band.estilo_musical}>
  <Music className="w-3 h-3 text-[#d1b375] shrink-0" />
  <span className="truncate">{band.estilo_musical}</span>
  </span>
 
- <span className="bg-neutral-800/80 px-2 py-0.5 rounded-md text-[var(--ink-3)] flex items-center gap-1 shrink-0 max-w-[140px]" title={band.localizacion}>
+ <span className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-md text-[var(--ink-3)] flex items-center gap-1 shrink-0 max-w-[140px]" title={band.localizacion}>
  <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
  <span className="truncate">{band.localizacion}</span>
  </span>
@@ -1392,7 +1392,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Edit */}
  <button
  onClick={() => handleOpenEditModal(band)}
- className="p-1.5 bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Editar Banda"
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -1463,7 +1463,7 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
  </button>
  </td>
- <td className="py-2 px-3 font-bold text-white align-middle whitespace-nowrap">
+ <td className="py-2 px-3 font-bold text-[var(--ink)] align-middle whitespace-nowrap">
  <div className="flex items-center gap-2 min-w-0">
  {band.imagen_url ? (
  <img src={band.imagen_url} alt={band.nombre_banda} className="w-5 h-5 rounded-full object-cover border-[var(--acc)]/50 shrink-0" />
@@ -1518,7 +1518,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <button
  onClick={() => handleOpenEditModal(band)}
- className="p-1.5 bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Editar"
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -1558,7 +1558,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  <button 
  onClick={() => setIsAddEditModalOpen(false)}
- className="p-1 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors"
+ className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors"
  >
  <X className="w-5 h-5 text-[var(--ink-2)]" />
  </button>
@@ -1596,7 +1596,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formName}
  onChange={(e) => setFormName(e.target.value)}
  placeholder="Ej: Pardiez, La Señora Tomasa, Tarraco Ska..."
- className="w-full bg-[var(--surface)] text-white px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"
  />
  </div>
 
@@ -1715,7 +1715,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <div className="flex flex-wrap items-center gap-3">
  {/* Preview current avatar */}
- <div className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center overflow-hidden shrink-0">
+ <div className="w-10 h-10 rounded-full bg-[var(--surface)]/80 flex items-center justify-center overflow-hidden shrink-0">
  {formImageUrl ? (
  <img src={formImageUrl} alt="Logo Banda" className="w-full h-full object-cover" />
  ) : (
@@ -1734,8 +1734,8 @@ Bakandeya Agent Manager IA & Músicos`;
  onClick={() => { setFormIcon(emoji); }}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  formIcon === emoji && !formImageUrl
- ?'bg-[var(--acc)]/20 border-[var(--acc)] text-white scale-110'
- :'bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)]'
+ ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--ink)] scale-110'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)]'
  }`}
  >
  {emoji}
@@ -1747,7 +1747,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Upload file button */}
  <div className="shrink-0 space-y-1">
  <span className="text-[10px] text-[var(--ink-2)] block font-mono">O subir logo (Supabase):</span>
- <label className="cursor-pointer px-2.5 py-1.5 bg-neutral-800 hover:bg-neutral-700 rounded-[var(--r-m)] text-[10px] font-mono text-zinc-200 flex items-center gap-1.5 transition-all active:scale-95">
+ <label className="cursor-pointer px-2.5 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 rounded-[var(--r-m)] text-[10px] font-mono text-zinc-200 flex items-center gap-1.5 transition-all active:scale-95">
  {isUploadingLogo ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
  ) : (
@@ -1786,7 +1786,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formStyle}
  onChange={(e) => setFormStyle(e.target.value)}
  placeholder="Ej: Balkan Ska, Reggae, Punk, Mestizaje..."
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1799,7 +1799,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formLocation}
  onChange={(e) => setFormLocation(e.target.value)}
  placeholder="Ej: Barcelona, Madrid, Valencia, Sevilla..."
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1809,7 +1809,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <select
  value={formStatus}
  onChange={(e) => setFormStatus(e.target.value as BandRelationshipStatus)}
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
  >
  <option value="sin_contactar">📡 Sin Contactar</option>
  <option value="intercambio_propuesto">🔄 Intercambio Propuesto (Date Swap)</option>
@@ -1828,7 +1828,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formContactName}
  onChange={(e) => setFormContactName(e.target.value)}
  placeholder="Ej: Carlos (Mánager / Teclista)"
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1839,7 +1839,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="date"
  value={formLastContact}
  onChange={(e) => setFormLastContact(e.target.value)}
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1851,7 +1851,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formEmail}
  onChange={(e) => setFormEmail(e.target.value)}
  placeholder="ejemplo@banda.com"
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1863,7 +1863,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formPhone}
  onChange={(e) => setFormPhone(e.target.value)}
  placeholder="+34 600 000 000"
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1875,7 +1875,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formInstagram}
  onChange={(e) => setFormInstagram(e.target.value)}
  placeholder="@nombrebanda"
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1887,7 +1887,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formAforo}
  onChange={(e) => setFormAforo(Number(e.target.value))}
  placeholder="300"
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
  </div>
@@ -1900,7 +1900,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formSpotifyYoutube}
  onChange={(e) => setFormSpotifyYoutube(e.target.value)}
  placeholder="https://open.spotify.com/artist/..."
- className="w-full bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1912,7 +1912,7 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formNotes}
  onChange={(e) => setFormNotes(e.target.value)}
  placeholder="Escribe notas relevantes para la colaboración (ej. Dispuestos a compartir fecha en Sala Apolo, proponen fecha en Noviembre)..."
- className="w-full bg-[var(--surface)] text-white p-3 rounded-[var(--r-m)] text-[10px] font-sans leading-relaxed focus:outline-none focus:-[var(--acc)]/50"
+ className="w-full bg-[var(--surface)] text-[var(--ink)] p-3 rounded-[var(--r-m)] text-[10px] font-sans leading-relaxed focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1921,7 +1921,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={() => setIsAddEditModalOpen(false)}
- className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] font-mono text-[10px] rounded-[var(--r-m)] transition-colors cursor-pointer"
+ className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] font-mono text-[10px] rounded-[var(--r-m)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>

@@ -88,7 +88,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  <button
  id="btn-nueva-cancion"
  onClick={onOpenNewSongModal}
- className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-white shadow-md hover:brightness-110 active:scale-95 transition-all"
+ className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] shadow-md hover:brightness-110 active:scale-95 transition-all"
  style={{ backgroundColor: colors.primary }}
  >
  <Plus className="w-4 h-4" />
@@ -98,7 +98,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  <button
  id="btn-nuevo-setlist"
  onClick={onOpenNewSetlistModal}
- className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-white shadow-md hover:brightness-110 active:scale-95 transition-all"
+ className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] shadow-md hover:brightness-110 active:scale-95 transition-all"
  style={{ backgroundColor: colors.primary }}
  >
  <Plus className="w-4 h-4" />

@@ -87,7 +87,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <span className="p-1.5 rounded-[var(--r-s)] bg-indigo-500/20 text-indigo-400">
  <Sparkles className="w-4 h-4" />
  </span>
- <h3 className={`text-base font-bold font-display uppercase tracking-wider ${isStitchLight ?'text-[var(--ink)]' :'text-white'}`}>
+ <h3 className={`text-base font-bold font-display uppercase tracking-wider ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  Plan de Crecimiento Musical ({growthPlan.horizonDays} Días)
  </h3>
  <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">
@@ -113,8 +113,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => setSelectedHorizon(h)}
  className={`px-2.5 py-1 text-[10px] font-mono rounded-[var(--r-s)] transition-all cursor-pointer ${
  selectedHorizon === h 
- ?'bg-indigo-600 text-white font-bold shadow' 
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-indigo-600 text-[var(--ink)] font-bold shadow' 
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {h} Días
@@ -128,7 +128,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer shadow-md ${
  isGeneratingAI 
  ?'bg-indigo-900/50 text-indigo-300 cursor-wait' 
- :'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white hover:scale-[1.02]'
+ :'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-[var(--ink)] hover:scale-[1.02]'
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isGeneratingAI ?'animate-spin' :''}`} />
@@ -145,7 +145,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <Users className="w-3.5 h-3.5 text-indigo-400" />
  <span>Perfil & Audiencia Actual</span>
  </div>
- <p className="text-xs font-mono font-bold text-white">
+ <p className="text-xs font-mono font-bold text-[var(--ink)]">
  {archetype.label}
  </p>
  <p className="text-[10px] font-mono text-[var(--ink-2)] mt-1">
@@ -184,7 +184,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </span>
  </div>
  <div className="flex items-center gap-3 w-full sm:w-64">
- <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden">
+ <div className="w-full h-2 rounded-full bg-[var(--surface)]/80 overflow-hidden">
  <div 
  className="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 transition-all duration-500 rounded-full"
  style={{ width: `${progressPercent}%` }}
@@ -203,8 +203,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => setSelectedTab('overview')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='overview'
- ?'bg-indigo-600 text-white shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
+ ?'bg-indigo-600 text-[var(--ink)] shadow'
+ : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
  }`}
  >
  <Layers className="w-3.5 h-3.5" />
@@ -215,8 +215,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => setSelectedTab('weekly')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='weekly'
- ?'bg-indigo-600 text-white shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
+ ?'bg-indigo-600 text-[var(--ink)] shadow'
+ : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
  }`}
  >
  <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -227,8 +227,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => setSelectedTab('instagram')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='instagram'
- ?'bg-pink-600 text-white shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
+ ?'bg-pink-600 text-[var(--ink)] shadow'
+ : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
  }`}
  >
  <Instagram className="w-3.5 h-3.5 text-pink-400" />
@@ -239,8 +239,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => setSelectedTab('tiktok')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='tiktok'
- ?'bg-cyan-600 text-white shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
+ ?'bg-cyan-600 text-[var(--ink)] shadow'
+ : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
  }`}
  >
  <Video className="w-3.5 h-3.5 text-cyan-400" />
@@ -251,8 +251,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => setSelectedTab('youtube')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='youtube'
- ?'bg-red-600 text-white shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
+ ?'bg-red-600 text-[var(--ink)] shadow'
+ : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
  }`}
  >
  <Youtube className="w-3.5 h-3.5 text-red-400" />
@@ -263,8 +263,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => setSelectedTab('spotify')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='spotify'
- ?'bg-emerald-600 text-white shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
+ ?'bg-emerald-600 text-[var(--ink)] shadow'
+ : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
  }`}
  >
  <Music2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -290,7 +290,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {p.weightPercentage}% esfuerzo
  </span>
  </div>
- <h4 className={`text-sm font-bold font-display ${isStitchLight ?'text-[var(--ink)]' :'text-white'}`}>
+ <h4 className={`text-sm font-bold font-display ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  {p.pillar}
  </h4>
  <p className="text-xs font-mono text-[var(--ink-2)] mt-2 leading-relaxed">
@@ -383,7 +383,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="flex items-center gap-2">
  <Calendar className="w-4 h-4 text-indigo-400" />
  <div>
- <h4 className="text-xs font-mono font-bold uppercase text-white">Cronograma Semanal de Publicación Optimizado para Músicos</h4>
+ <h4 className="text-xs font-mono font-bold uppercase text-[var(--ink)]">Cronograma Semanal de Publicación Optimizado para Músicos</h4>
  <p className="text-[10px] font-mono text-[var(--ink-2)]">Diseñado para equilibrar ensayos, grabación y bolos sin quemar a los miembros de la banda.</p>
  </div>
  </div>
@@ -396,7 +396,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  }`}>
  <div>
  <div className="flex items-center justify-between border-b /60 pb-2 mb-2">
- <span className="text-xs font-mono font-bold text-white uppercase">{dayPlan.day}</span>
+ <span className="text-xs font-mono font-bold text-[var(--ink)] uppercase">{dayPlan.day}</span>
  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 font-bold flex items-center gap-1">
  <Clock className="w-2.5 h-2.5" /> {dayPlan.optimalPostingTime}
  </span>
@@ -434,10 +434,10 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {currentChannel.platform ==='tiktok' && <Video className="w-5 h-5 text-cyan-400" />}
  {currentChannel.platform ==='youtube' && <Youtube className="w-5 h-5 text-red-500" />}
  {currentChannel.platform ==='spotify' && <Music2 className="w-5 h-5 text-emerald-500" />}
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink)]">
  Estrategia para {currentChannel.name}
  </h3>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-neutral-800 text-[var(--ink-3)]">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-[var(--ink-3)]">
  {currentChannel.growthStage}
  </span>
  </div>
@@ -535,7 +535,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </p>
  <button
  onClick={() => copyToClipboard(hook, `hook-${hIdx}`)}
- className="p-1.5 rounded-md hover:bg-neutral-800 text-[var(--ink-2)] hover:text-white transition-all shrink-0 cursor-pointer"
+ className="p-1.5 rounded-md hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all shrink-0 cursor-pointer"
  title="Copiar gancho"
  >
  {copiedHook === `hook-${hIdx}` ? (
@@ -561,7 +561,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="space-y-3">
  {currentChannel.viralConcepts.map((v, vIdx) => (
  <div key={vIdx} className="p-3 rounded-[var(--r-s)] bg-indigo-950/20 space-y-1.5">
- <h5 className="text-xs font-bold text-white">{v.title}</h5>
+ <h5 className="text-xs font-bold text-[var(--ink)]">{v.title}</h5>
  <p className="text-[11px] font-mono text-[var(--ink-3)]">{v.concept}</p>
  <div className="text-[10px] font-mono text-[var(--acc)]/70 bg-black/40 p-1.5 rounded">
  <b>Gancho:</b> {v.hook}

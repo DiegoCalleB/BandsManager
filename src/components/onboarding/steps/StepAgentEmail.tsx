@@ -26,7 +26,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
  <Sparkles className="w-5 h-5 text-[var(--acc)]" />
- <h3 className="text-base font-semibold text-white">Agentes IA de Booking & Conexión de Correo</h3>
+ <h3 className="text-base font-semibold text-[var(--ink)]">Agentes IA de Booking & Conexión de Correo</h3>
  </div>
 
  {/* Intro info box */}
@@ -39,7 +39,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  </div>
  <p className="text-xs text-zinc-300 leading-relaxed">
  Tus agentes de IA descubren salas (Scout), redactan propuestas hiper-personalizadas (Redactor) y leen respuestas automáticamente. 
- <strong className="text-white font-medium"> Ningún email se envía sin tu aprobación explícita previa</strong>.
+ <strong className="text-[var(--ink)] font-medium"> Ningún email se envía sin tu aprobación explícita previa</strong>.
  </p>
  </div>
 
@@ -55,7 +55,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  value={senderEmail}
  onChange={(e) => setSenderEmail(e.target.value)}
  placeholder="contacto@tubanda.com o tubandaoficial@gmail.com"
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  <p className="text-[11px] text-zinc-500 mt-1">
  Podrás conectar tu cuenta de Gmail con 1-clic o configurar IMAP/SMTP en Ajustes de Correo en cualquier momento.
@@ -76,7 +76,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  value={signatureName}
  onChange={(e) => setSignatureName(e.target.value)}
  placeholder="Ej. Martín"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -87,7 +87,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  value={signatureCargo}
  onChange={(e) => setSignatureCargo(e.target.value)}
  placeholder="Ej. Cantante & Booking"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -98,7 +98,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  value={signaturePhone}
  onChange={(e) => setSignaturePhone(e.target.value)}
  placeholder="+34 600 000 000"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
  </div>

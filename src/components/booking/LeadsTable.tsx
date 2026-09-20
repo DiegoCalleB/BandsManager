@@ -116,7 +116,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <button
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAllFiltered}
- className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900/90 hover:bg-zinc-800 border-zinc-700 text-zinc-300 hover:text-white transition-all cursor-pointer shadow-xs"
+ className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900/90 hover:bg-zinc-800 border-zinc-700 text-zinc-300 hover:text-[var(--ink)] transition-all cursor-pointer shadow-xs"
  >
  {isAllSelected ? (
  <>

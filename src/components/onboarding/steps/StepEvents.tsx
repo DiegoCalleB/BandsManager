@@ -45,7 +45,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
  <Calendar className="w-5 h-5 text-[var(--acc)]" />
- <h3 className="text-base font-semibold text-white">Próximos Conciertos & Ensayos (Agenda)</h3>
+ <h3 className="text-base font-semibold text-[var(--ink)]">Próximos Conciertos & Ensayos (Agenda)</h3>
  </div>
 
  <p className="text-xs text-zinc-400">
@@ -73,7 +73,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  </div>
  <div>
  <div className="flex items-center gap-2">
- <span className="text-sm font-medium text-white">{ev.titulo}</span>
+ <span className="text-sm font-medium text-[var(--ink)]">{ev.titulo}</span>
  <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 capitalize">
  {ev.tipo}
  </span>
@@ -112,7 +112,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  value={newEventTitle}
  onChange={(e) => setNewEventTitle(e.target.value)}
  placeholder="Título / Sala (ej. Concierto Presentación Disco) *"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -120,7 +120,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  <select
  value={newEventType}
  onChange={(e) => setNewEventType(e.target.value as any)}
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  >
  <option value="concierto">Concierto en Sala</option>
  <option value="festival">Festival</option>
@@ -134,7 +134,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  type="date"
  value={newEventDate}
  onChange={(e) => setNewEventDate(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -144,7 +144,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  value={newEventCity}
  onChange={(e) => setNewEventCity(e.target.value)}
  placeholder="Ciudad (ej. Madrid)"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -154,7 +154,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  value={newEventVenue}
  onChange={(e) => setNewEventVenue(e.target.value)}
  placeholder="Sala / Recinto (ej. Sala Copérnico)"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -164,7 +164,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  value={newEventTicketUrl}
  onChange={(e) => setNewEventTicketUrl(e.target.value)}
  placeholder="Enlace de venta de entradas (Wegow, DICE, Eventbrite...)"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
  </div>

@@ -395,7 +395,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`px-3.5 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-xs transition-all ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-neutral-800/90 hover:bg-neutral-700 text-zinc-200 hover:text-white /80'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 hover:text-[var(--ink)] /80'
  }`}
  title="Exportar canciones de la discografía a Excel, M3U playlist, TXT o PDF"
  >
@@ -424,7 +424,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  type="button"
  onClick={() => { setShowCreateAlbumMenu(false); onCreateAlbum(); }}
  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${
- isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-neutral-800/80'
+ isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
  }`}
  >
  <Plus className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
@@ -438,7 +438,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  type="button"
  onClick={() => { setShowCreateAlbumMenu(false); setBulkUploadAlbum({ name:'', songs: [] }); }}
  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${
- isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-neutral-800/80'
+ isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
  }`}
  >
  <FolderUp className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -451,7 +451,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  type="button"
  onClick={() => { setShowCreateAlbumMenu(false); setIsSpotifyModalOpen(true); }}
  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${
- isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-neutral-800/80'
+ isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
  }`}
  >
  <Disc className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -464,7 +464,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  type="button"
  onClick={() => { setShowCreateAlbumMenu(false); setIsLiveConcertModalOpen(true); }}
  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${
- isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-neutral-800/80'
+ isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
  }`}
  >
  <Scissors className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
@@ -499,7 +499,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={() => setSearchQuery('')}
- className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white p-0.5 rounded-full transition-colors cursor-pointer"
+ className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-[var(--ink)] p-0.5 rounded-full transition-colors cursor-pointer"
  title="Limpiar búsqueda"
  >
  <X className="w-3 h-3" />
@@ -553,7 +553,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`p-1.5 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-neutral-800 hover:text-white'
+ :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
  }`}
  title={areAllExpanded ?'Plegar todos los discos' :'Desplegar todos los discos'}
  >
@@ -649,7 +649,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`p-3.5 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer select-none transition-colors ${
  isStitchLight
  ?'hover:bg-[var(--sunken)]/80 border-b'
- :'hover:bg-neutral-800/40 border-b /60'
+ :'hover:bg-[var(--surface)]/80 border-b /60'
  }`}
  >
  {/* Left: Cover & Information */}
@@ -697,7 +697,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={handlePlayAlbum}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
  title={isPlayingAlbum ?'Pausar disco' :'Reproducir disco'}
  >
  {isPlayingAlbum ? (
@@ -721,7 +721,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
  isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-neutral-800/80 text-zinc-200 hover:bg-neutral-700 hover:text-white'
+ :'bg-[var(--surface)]/80 text-zinc-200 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Gestionar las canciones de este álbum"
  >
@@ -741,7 +741,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-amber-50 text-amber-800 hover:bg-amber-100'
- :'bg-neutral-800/80 text-[var(--acc)]/70 hover:bg-neutral-700 hover:text-white'
+ :'bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
  >
@@ -758,7 +758,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-emerald-100'
- :'bg-neutral-800/80 text-emerald-300 hover:bg-neutral-700 hover:text-white'
+ :'bg-[var(--surface)]/80 text-emerald-300 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
  >
@@ -787,7 +787,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  ?'bg-[var(--acc)]/15 /30 text-[var(--acc)]/70'
  : isStitchLight
  ?'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-slate-300'
- :'bg-neutral-800/80 text-zinc-300 hover:bg-neutral-700 hover:text-white'
+ :'bg-[var(--surface)]/80 text-zinc-300 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  >
  <span className="hidden xs:inline">{isExpanded ?'Ocultar' : `Temas (${sortedAlbumSongs.length})`}</span>

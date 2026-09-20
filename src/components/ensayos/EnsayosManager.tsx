@@ -134,7 +134,7 @@ export function EnsayosManager({
  </div>
 
  <div className="space-y-2">
- <h2 className="text-2xl sm:text-3xl font-display font-black text-white">
+ <h2 className="text-2xl sm:text-3xl font-display font-black text-[var(--ink)]">
  Módulo de Ensayos & Local en Vivo
  </h2>
  <p className="text-sm text-[var(--ink-2)] max-w-lg mx-auto">
@@ -202,7 +202,7 @@ export function EnsayosManager({
  ?'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
  : currentRehearsal?.estado ==='en_curso'
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40 animate-pulse'
- :'bg-neutral-800 text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-3)]'
  }`}
  >
  {currentRehearsal?.estado ==='completado'
@@ -219,7 +219,7 @@ export function EnsayosManager({
  setEditingRehearsal(currentRehearsal);
  setShowConvocarModal(true);
  }}
- className="p-1.5 text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Editar datos de este ensayo"
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -281,7 +281,7 @@ export function EnsayosManager({
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab ==='orden_del_dia'
  ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
+ :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]/80'
  }`}
  >
  <ListOrdered className="w-4 h-4 shrink-0" />
@@ -294,7 +294,7 @@ export function EnsayosManager({
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab ==='modo_local'
  ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
+ :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]/80'
  }`}
  >
  <Radio className="w-4 h-4 shrink-0" />
@@ -307,7 +307,7 @@ export function EnsayosManager({
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab ==='grabacion_acta'
  ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
+ :'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]/80'
  }`}
  >
  <Mic className="w-4 h-4 shrink-0" />

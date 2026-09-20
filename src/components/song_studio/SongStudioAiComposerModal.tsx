@@ -112,21 +112,21 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+ <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-indigo-600/30 text-indigo-400 flex items-center justify-center">
  <Sparkles className="w-5 h-5 animate-pulse" />
  </div>
  <div>
- <h3 className="text-base font-bold text-white">Asistente Compositor IA (Músico Virtual)</h3>
+ <h3 className="text-base font-bold text-[var(--ink)]">Asistente Compositor IA (Músico Virtual)</h3>
  <p className="text-xs text-indigo-300 font-mono">Aporta arreglos, riffs y creatividad como un músico de sesión real</p>
  </div>
  </div>
  <button
  type="button"
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -148,7 +148,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <select
  value={estiloMusico}
  onChange={(e) => setEstiloMusico(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-indigo-500 font-mono"
  >
  <option value="Productor y Arreglista General">Productor y Arreglista General</option>
  <option value="Guitarrista Líder (Solos y Riffs)">Guitarrista Líder (Solos y Riffs)</option>
@@ -163,7 +163,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <select
  value={objetivoIdea}
  onChange={(e) => setObjetivoIdea(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-indigo-500 font-mono"
  >
  <option value="Nuevo Riff o Puente Instrumental">Nuevo Riff o Puente Instrumental</option>
  <option value="Variación Armónica para el Estribillo">Variación Armónica para el Estribillo</option>
@@ -180,7 +180,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <select
  value={seccionCancion}
  onChange={(e) => setSeccionCancion(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-indigo-500 font-mono"
  >
  <option value="Intro">Intro</option>
  <option value="Verso">Verso</option>
@@ -200,7 +200,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  value={tiempoMinuto}
  onChange={(e) => setTiempoMinuto(e.target.value)}
  placeholder="Ej: 01:15 o Compás 12"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-indigo-500 font-mono"
  />
  </div>
  </div>
@@ -214,7 +214,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  onChange={(e) => setPromptUsuario(e.target.value)}
  placeholder="Ej: Quiero que el puente tenga tensión al estilo rock alternativo de los 90, con acordes suspendidos y notas de bajo cromáticas..."
  rows={2}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus:border-indigo-500 font-mono resize-none"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-indigo-500 font-mono resize-none"
  />
  </div>
 
@@ -222,7 +222,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  type="button"
  onClick={handleGenerateIdea}
  disabled={isGenerating}
- className="w-full py-3 rounded-[var(--r-m)] bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+ className="w-full py-3 rounded-[var(--r-m)] bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-[var(--ink)] font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
  >
  {isGenerating ? (
  <>
@@ -245,7 +245,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <span className="px-2 py-0.5 rounded bg-indigo-500/30 text-indigo-300 font-mono text-[10px] uppercase font-bold">
  {generatedIdea.instrumentoRol}
  </span>
- <h4 className="font-bold text-sm text-white">{generatedIdea.tituloIdea}</h4>
+ <h4 className="font-bold text-sm text-[var(--ink)]">{generatedIdea.tituloIdea}</h4>
  </div>
  <span className="text-[10px] text-[var(--ink-2)] font-mono">Sugerencia IA Lista</span>
  </div>
@@ -281,14 +281,14 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  type="button"
  onClick={handleGenerateIdea}
  disabled={isGenerating}
- className="px-3 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-xs font-mono font-bold text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-xs font-mono font-bold text-[var(--ink-3)] transition-all cursor-pointer"
  >
  🔄 Probar otra idea
  </button>
  <button
  type="button"
  onClick={handleAcceptAndAddIdea}
- className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-xs font-mono font-bold text-white flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-xs font-mono font-bold text-[var(--ink)] flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95"
  >
  <Plus className="w-4 h-4" />
  <span>Añadir como Nueva Idea al Tema</span>

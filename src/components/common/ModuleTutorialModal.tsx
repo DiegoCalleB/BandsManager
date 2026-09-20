@@ -235,7 +235,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  badgeBg:'bg-purple-500/15 text-purple-300 border-purple-500/30',
  iconBox:'bg-purple-500/20 text-purple-400 border-purple-500/30 shadow-purple-500/10',
  activeDot:'bg-purple-400 w-7',
- primaryBtn:'bg-purple-600 hover:bg-purple-500 text-white shadow-purple-900/30',
+ primaryBtn:'bg-purple-600 hover:bg-purple-500 text-[var(--ink)] shadow-purple-900/30',
  hookBorder:'border-purple-500/25 bg-purple-500/10 text-purple-100',
  highlightText:'text-purple-400',
  targetCard:'border-purple-500/40 bg-purple-500/5',
@@ -279,7 +279,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  badgeBg:'bg-rose-500/15 text-rose-300 border-rose-500/30',
  iconBox:'bg-rose-500/20 text-rose-400 border-rose-500/30 shadow-rose-500/10',
  activeDot:'bg-rose-400 w-7',
- primaryBtn:'bg-rose-500 hover:bg-rose-400 text-white font-bold shadow-rose-900/30',
+ primaryBtn:'bg-rose-500 hover:bg-rose-400 text-[var(--ink)] font-bold shadow-rose-900/30',
  hookBorder:'border-rose-500/25 bg-rose-500/10 text-rose-100',
  highlightText:'text-rose-400',
  targetCard:'border-rose-500/40 bg-rose-500/5',
@@ -315,7 +315,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
 
  {/* Target Tooltip Badge */}
  <div 
- className={`absolute ${targetRect.top < 36 ?'-bottom-7' :'-top-7'} left-0 px-2 py-0.5 rounded-md bg-[var(--acc)] text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider flex items-center gap-1 shadow-lg whitespace-nowrap`}
+ className={`absolute ${targetRect.top < 36 ?'-bottom-7' :'-top-7'} left-0 px-2 py-0.5 rounded-md bg-[var(--acc)] text-[var(--ink)] font-mono font-black text-[10px] uppercase tracking-wider flex items-center gap-1 shadow-lg whitespace-nowrap`}
  >
  <span>👉 {currentStep.uiTarget?.label ||'Aquí'}</span>
  </div>
@@ -410,7 +410,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  id={`tutorial-close-btn-${moduleId}`}
  type="button"
  onClick={() => onClose(dontShowAgain)}
- className="p-1.5 rounded-[var(--r-m)] text-stone-400 hover:text-white hover:bg-stone-800 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-m)] text-stone-400 hover:text-[var(--ink)] hover:bg-stone-800 transition-colors cursor-pointer"
  title="Cerrar guía (Esc)"
  >
  <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -438,7 +438,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400 font-semibold block">
  {currentStep.badge}
  </span>
- <h3 className="text-base sm:text-lg font-bold font-display tracking-tight text-white leading-snug">
+ <h3 className="text-base sm:text-lg font-bold font-display tracking-tight text-[var(--ink)] leading-snug">
  {currentStep.title}
  </h3>
  </div>
@@ -495,7 +495,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  <span className="text-[var(--acc)] font-mono font-black text-xs shrink-0">
  {currentStep.uiTarget.type ==='button' ?'▶' :'▪'}
  </span>
- <span className="font-bold text-white font-mono truncate">
+ <span className="font-bold text-[var(--ink)] font-mono truncate">
  {currentStep.uiTarget.label}
  </span>
  </div>
@@ -528,7 +528,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  >
  <div className="flex items-center gap-1.5">
  <Check className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`} />
- <h4 className="text-xs font-bold text-white font-mono">
+ <h4 className="text-xs font-bold text-[var(--ink)] font-mono">
  {point.title}
  </h4>
  </div>

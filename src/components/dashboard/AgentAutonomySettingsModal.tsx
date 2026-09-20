@@ -585,7 +585,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  <button
  onClick={onClose}
- className="p-1.5 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -753,7 +753,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="space-y-1 leading-relaxed">
  <strong className="font-bold text-[var(--acc)]/70">Garantía de Control Humano (Cierre Inviolable):</strong>
  <p className="text-[var(--ink-3)] text-[11px]">
- Incluso con la máxima autonomía, <strong className="text-white">ningún trato o contrato se da por cerrado ni ningún email final de confirmación se envía sin la validación previa del mánager</strong> o un miembro de {bandName}.
+ Incluso con la máxima autonomía, <strong className="text-[var(--ink)]">ningún trato o contrato se da por cerrado ni ningún email final de confirmación se envía sin la validación previa del mánager</strong> o un miembro de {bandName}.
  </p>
  </div>
  </div>
@@ -1217,14 +1217,14 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={applyPresetCommercial}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] text-[11px] font-mono font-bold transition-all cursor-pointer active:scale-95"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] text-[11px] font-mono font-bold transition-all cursor-pointer active:scale-95"
  >
  🏢 Laborables L-V
  </button>
  <button
  type="button"
  onClick={applyPresetAllDay}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)] text-[11px] font-mono transition-all cursor-pointer active:scale-95"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-[11px] font-mono transition-all cursor-pointer active:scale-95"
  >
  ⚡ Toda la Semana (7d)
  </button>
@@ -1319,21 +1319,21 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setDiasEnviador([1, 2, 3, 4, 5])}
- className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] transition-all cursor-pointer"
  >
  L-V
  </button>
  <button
  type="button"
  onClick={() => setDiasEnviador([1, 2, 3, 4, 5, 6, 7])}
- className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] transition-all cursor-pointer"
  >
  Todos
  </button>
  <button
  type="button"
  onClick={() => setDiasEnviador([])}
- className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-all cursor-pointer"
  >
  Limpiar
  </button>
@@ -1362,7 +1362,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <span className={`text-xs font-mono font-bold ${isSelected ?'text-[var(--acc)]/70' :'text-zinc-300'}`}>
  {day.short}
  </span>
- <span className={`w-2 h-2 rounded-full ${isSelected ?'bg-[var(--acc)]/60' :'bg-neutral-700'}`} />
+ <span className={`w-2 h-2 rounded-full ${isSelected ?'bg-[var(--acc)]/60' :'bg-[var(--surface)]/70'}`} />
  </div>
  <span className="text-[11px] font-sans font-medium leading-tight truncate">
  {day.name}
@@ -1396,14 +1396,14 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setHorasEnviador([9, 10, 11, 12, 13, 14, 15, 16, 17, 18])}
- className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] transition-all cursor-pointer"
  >
  Jornada Completa
  </button>
  <button
  type="button"
  onClick={() => setHorasEnviador([])}
- className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-all cursor-pointer"
  >
  Limpiar
  </button>
@@ -1428,8 +1428,8 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  isSelected
  ?'bg-[var(--acc)] text-stone-950 shadow-sm font-black'
  : isPrimeTime
- ?'bg-[var(--surface)] text-[var(--acc)]/70/90 hover:text-white hover:bg-neutral-800'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
+ ?'bg-[var(--surface)] text-[var(--acc)]/70/90 hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  >
  {formatted}
@@ -1793,7 +1793,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={handleSaveResponseStrategies}
  disabled={isSavingStrategies}
- className="ml-auto px-4 py-2 rounded-[var(--r-m)] bg-purple-500 hover:bg-purple-400 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 transition-all"
+ className="ml-auto px-4 py-2 rounded-[var(--r-m)] bg-purple-500 hover:bg-purple-400 text-[var(--ink)] font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 transition-all"
  >
  {isSavingStrategies ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
  <span>{isSavingStrategies ?'Guardando...' :'Guardar Estrategias de Respuesta'}</span>
@@ -1830,7 +1830,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={loadAuditLogs}
  disabled={loadingAuditLogs}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 cursor-pointer"
  >
  <RefreshCw className={`w-3.5 h-3.5 ${loadingAuditLogs ?'animate-spin' :''}`} />
  <span>Refrescar</span>
@@ -1900,7 +1900,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }`}>
  Agente {log.agente}
  </span>
- <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-[var(--ink-3)]">
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--surface)]/80 text-[var(--ink-3)]">
  {log.motor ||'supabase_edge'}
  </span>
  <span className={`text-[10px] font-mono font-bold ${isSuccess ?'text-emerald-400' : isError ?'text-rose-400' :'text-[var(--acc)]'}`}>
@@ -1949,7 +1949,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  )}
  </div>
  <div className="flex items-center gap-2 shrink-0">
- <span className="px-1.5 py-0.5 rounded text-[9px] bg-neutral-800 text-[var(--ink-3)]">
+ <span className="px-1.5 py-0.5 rounded text-[9px] bg-[var(--surface)]/80 text-[var(--ink-3)]">
  ID: {item.id}
  </span>
  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-300">
@@ -1983,7 +1983,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="flex items-center gap-2">
  <button
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 text-zinc-300 text-xs font-mono font-bold hover:bg-neutral-700 transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-zinc-300 text-xs font-mono font-bold hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
  >
  Cerrar
  </button>

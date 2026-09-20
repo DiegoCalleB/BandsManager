@@ -232,7 +232,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`p-1.5 rounded-[var(--r-m)] transition cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-neutral-800 hover:bg-neutral-700 text-zinc-300 hover:text-white /70'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-300 hover:text-[var(--ink)] /70'
  }`}
  title="Importar repertorio desde foto o PDF impreso"
  >
@@ -301,7 +301,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-neutral-800 hover:bg-neutral-700 text-zinc-200 /80'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 /80'
  }`}
  >
  <Disc3 className="w-3.5 h-3.5 stroke-[2.5]" />

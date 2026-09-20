@@ -99,7 +99,7 @@ export function AIBandScoutModal({
  };
 
  const bgColor = isStitchLight ?"bg-white" :"bg-[var(--surface)]";
- const textColor = isStitchLight ?"text-[var(--ink)]" :"text-white";
+ const textColor = isStitchLight ?"text-[var(--ink)]" :"text-[var(--ink)]";
  const subtextColor = isStitchLight ?"text-[var(--ink-2)]" :"text-gray-400";
  const inputBg = isStitchLight ?"bg-[var(--bg)]" :"bg-[var(--surface)]";
  const borderColor = isStitchLight ?"" :"border-[#333]";
@@ -187,7 +187,7 @@ export function AIBandScoutModal({
  <button
  onClick={handleSearch}
  disabled={isSearching}
- className="px-6 py-2.5 bg-[var(--acc)] hover:bg-amber-600 text-white font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+ className="px-6 py-2.5 bg-[var(--acc)] hover:bg-amber-600 text-[var(--ink)] font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
  >
  {isSearching ? (
  <>
@@ -232,7 +232,7 @@ export function AIBandScoutModal({
  >
  <div className="flex items-center gap-4">
  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0
- ${selectedBands.has(idx) ?'bg-[var(--acc)] text-white' :'border-2'}`}>
+ ${selectedBands.has(idx) ?'bg-[var(--acc)] text-[var(--ink)]' :'border-2'}`}>
  {selectedBands.has(idx) && <CheckCircle2 className="w-4 h-4" />}
  </div>
  
@@ -263,7 +263,7 @@ export function AIBandScoutModal({
  <button
  onClick={handleImport}
  disabled={selectedBands.size === 0}
- className="px-6 py-2 bg-black text-white hover:bg-neutral-800 font-bold text-sm rounded-[var(--r-m)] transition-all shadow disabled:opacity-50 flex items-center gap-2"
+ className="px-6 py-2 bg-black text-[var(--ink)] hover:bg-[var(--surface)]/80 font-bold text-sm rounded-[var(--r-m)] transition-all shadow disabled:opacity-50 flex items-center gap-2"
  >
  <UserPlus className="w-4 h-4" />
  Importar {selectedBands.size} Bandas al CRM

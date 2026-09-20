@@ -50,7 +50,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  </div>
 
  <div>
- <h3 className="text-2xl font-bold text-white mb-1">
+ <h3 className="text-2xl font-bold text-[var(--ink)] mb-1">
  ¡Perfil y Dossier de {bandName ||'tu Banda'} Listos!
  </h3>
  <p className="text-sm text-zinc-400 max-w-md mx-auto">
@@ -83,7 +83,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Globe className="w-5 h-5 text-[var(--acc)]" />
- <h4 className="text-sm font-semibold text-white">Dossier EPK Online</h4>
+ <h4 className="text-sm font-semibold text-[var(--ink)]">Dossier EPK Online</h4>
  </div>
  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
  Para Salas y Festivales
@@ -119,7 +119,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Heart className="w-5 h-5 text-pink-400" />
- <h4 className="text-sm font-semibold text-white">Landing & QR de Fans</h4>
+ <h4 className="text-sm font-semibold text-[var(--ink)]">Landing & QR de Fans</h4>
  </div>
  <span className="text-[10px] px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-medium">
  Para Conciertos
@@ -135,7 +135,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  href="/fans"
  target="_blank"
  rel="noreferrer"
- className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-pink-500 hover:bg-pink-400 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+ className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-pink-500 hover:bg-pink-400 text-[var(--ink)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
  >
  <ExternalLink className="w-3.5 h-3.5" /> Ver Landing Fans
  </a>

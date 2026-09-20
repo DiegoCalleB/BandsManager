@@ -304,7 +304,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {editable && !isLoading && toneData && !isEditing && (
  <button
  onClick={onReAnalyze}
- className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
+ className="p-1.5 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
  title="Volver a rastrear redes con IA (sustituye lo que haya, incluidas ediciones a mano)"
  >
  <RefreshCw className="w-4 h-4" />
@@ -313,7 +313,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {editable && !isLoading && toneData && !isEditing && (
  <button
  onClick={handleStartEdit}
- className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
+ className="p-1.5 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--acc)]"
  title="Editar a mano"
  >
  <Pencil className="w-4 h-4" />
@@ -321,7 +321,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  )}
  <button
  onClick={onClose}
- className="p-1 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
  >
  <X className="w-5 h-5 text-[var(--ink-2)]" />
  </button>
@@ -464,14 +464,14 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <button
  onClick={handleSaveEdit}
  disabled={isSaving}
- className="flex-1 py-2.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+ className="flex-1 py-2.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-[var(--ink)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
  >
  <Save className="w-3.5 h-3.5" /> {isSaving ?'Guardando...' :'Guardar cambios'}
  </button>
  <button
  onClick={handleCancelEdit}
  disabled={isSaving}
- className="py-2.5 px-4 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 text-[var(--ink-3)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+ className="py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 disabled:opacity-50 text-[var(--ink-3)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
  >
  <XCircle className="w-3.5 h-3.5" /> Cancelar
  </button>
@@ -618,7 +618,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </label>
  <button
  onClick={() => handleCopy(toneData.pitch_personalizado_ejemplo ||'')}
- className="px-2 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
+ className="px-2 py-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
  >
  {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
  {copied ?'¡Copiado!' :'Copiar Texto'}
@@ -642,7 +642,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onUseTailoredPitch(toneData.pitch_personalizado_ejemplo ||'');
  onClose();
  }}
- className="w-full py-2.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-900/20 transition-all"
+ className="w-full py-2.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-900/20 transition-all"
  >
  <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch Personalizado en Co-Booking
  </button>

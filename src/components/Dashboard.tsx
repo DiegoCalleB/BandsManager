@@ -697,7 +697,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("epk")}
- className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-purple-500 hover:bg-purple-400 text-white text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+ className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-purple-500 hover:bg-purple-400 text-[var(--ink)] text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
  >
  <BookOpen className="w-4 h-4" />
  <span>Editar Dossier EPK</span>

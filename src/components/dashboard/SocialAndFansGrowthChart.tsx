@@ -405,7 +405,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
  isStitchLight
  ?'bg-white hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-neutral-800/80 hover:bg-neutral-700 text-[var(--acc)]/70'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'
  }`}
  title="Ir al gestor de comunidad, muro y capturas de fans"
  >
@@ -450,7 +450,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </span>
  </div>
  <div className="my-1.5">
- <div className="text-xl font-display font-black text-white">
+ <div className="text-xl font-display font-black text-[var(--ink)]">
  {countInstagram.toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
@@ -476,7 +476,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </span>
  </div>
  <div className="my-1.5">
- <div className="text-xl font-display font-black text-white">
+ <div className="text-xl font-display font-black text-[var(--ink)]">
  {countTikTok.toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
@@ -502,7 +502,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </span>
  </div>
  <div className="my-1.5">
- <div className="text-xl font-display font-black text-white">
+ <div className="text-xl font-display font-black text-[var(--ink)]">
  {countYouTube.toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
@@ -528,7 +528,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </span>
  </div>
  <div className="my-1.5">
- <div className="text-xl font-display font-black text-white">
+ <div className="text-xl font-display font-black text-[var(--ink)]">
  {countSpotify.toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
@@ -589,11 +589,11 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all cursor-pointer ${
  isSelected
  ? isStitchLight
- ?'bg-[var(--acc)] text-slate-950 shadow-xs'
- :'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-sm shadow-amber-950/40'
+ ?'bg-[var(--acc)] text-[var(--ink)] shadow-xs'
+ :'bg-gradient-to-r from-amber-500 to-amber-600 text-[var(--ink)] shadow-sm shadow-amber-950/40'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
- :'text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  title={opt.label}
  >
@@ -624,7 +624,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  className={`text-[9px] font-mono px-2.5 py-1 rounded-[var(--r-s)] transition-all flex items-center gap-1 self-end md:self-auto cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :' bg-neutral-800/60 hover:bg-neutral-700 text-[var(--ink-3)]'
+ :' bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)]'
  }`}
  title="Restaurar y mostrar todos los canales disponibles"
  >

@@ -540,7 +540,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <span className="hidden sm:inline">Modo Studio</span>
  </button>
  )}
- <button onClick={onClose} className="p-2 rounded-[var(--r-s)] hover:bg-neutral-800/60 text-[var(--ink-2)] hover:text-white shrink-0 cursor-pointer">
+ <button onClick={onClose} className="p-2 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] shrink-0 cursor-pointer">
  <X className="w-5 h-5" />
  </button>
  </div>
@@ -604,12 +604,12 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => nudgeBpm(-5)}
  title="-5 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]"
  >-5</button>
  <button
  onClick={() => nudgeBpm(-1)}
  title="-1 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]"
  >-1</button>
  <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ?'text-[var(--acc)]/70' :'text-[var(--sunken)]'}`}>
  {targetBpm} BPM
@@ -617,18 +617,18 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => nudgeBpm(1)}
  title="+1 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]"
  >+1</button>
  <button
  onClick={() => nudgeBpm(5)}
  title="+5 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]"
  >+5</button>
  {speed !== 1 && (
  <button
  onClick={() => changeSpeed(1)}
  title={`Volver al tempo original (${baseBpm} BPM)`}
- className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white"
+ className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  ↺ {baseBpm}
  </button>
@@ -638,14 +638,14 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <div className="flex items-center gap-1.5">
  <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span className="text-[10px] font-mono text-[var(--ink-2)]">Bucle</span>
- <button onClick={markLoopA} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]">
+ <button onClick={markLoopA} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]">
  A {loopA != null ? formatTime(loopA) :'--:--'}
  </button>
- <button onClick={markLoopB} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)]">
+ <button onClick={markLoopB} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)]">
  B {loopB != null ? formatTime(loopB) :'--:--'}
  </button>
  {(loopA != null || loopB != null) && (
- <button onClick={clearLoop} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white">
+ <button onClick={clearLoop} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]">
  Quitar
  </button>
  )}
@@ -680,7 +680,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
  metronomeOn
  ?'bg-[var(--acc)]/20 /40 text-[var(--acc)]/70'
- :'bg-neutral-800 border-transparent text-[var(--ink-2)] hover:text-white'
+ :'bg-[var(--surface)]/80 border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Timer className="w-3.5 h-3.5" /> {targetBpm} BPM
@@ -691,7 +691,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
  beatAnchorSec > 0
  ?'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
- :'bg-neutral-800 border-transparent text-[var(--ink-2)] hover:text-white'
+ :'bg-[var(--surface)]/80 border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Target className="w-3.5 h-3.5" /> {beatAnchorSec > 0 ? `Compás ${formatTime(beatAnchorSec)}` :'Marcar beat de compás'}
@@ -703,7 +703,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  if (metronomeOn && isPlaying) resyncMetronomeAt(currentTime, 0);
  }}
  title="Quitar el compás marcado (volver a asumir que empieza en 0:00)"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white"
+ className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  ✕
  </button>
@@ -741,7 +741,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {isAutoBalancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Scale className="w-3 h-3" />}
  {isAutoBalancing ?'Analizando...' :'Auto-Balance'}
  </button>
- <button onClick={resetOverrides} className="flex items-center gap-1 text-[10px] font-mono text-[var(--ink-2)] hover:text-white">
+ <button onClick={resetOverrides} className="flex items-center gap-1 text-[10px] font-mono text-[var(--ink-2)] hover:text-[var(--ink)]">
  <RotateCcw className="w-3 h-3" /> Restablecer
  </button>
  </div>
@@ -763,14 +763,14 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => toggleMute(tr.id)}
  title="Silenciar (solo en mi mezcla)"
- className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.muted ?'bg-red-500/80 text-white' :'bg-neutral-800 text-[var(--ink-2)] hover:text-white'}`}
+ className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.muted ?'bg-red-500/80 text-[var(--ink)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
  >
  M
  </button>
  <button
  onClick={() => toggleSolo(tr.id)}
  title="Solo (aislar, solo en mi mezcla)"
- className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.solo ?'bg-[var(--acc)]/60 text-black' :'bg-neutral-800 text-[var(--ink-2)] hover:text-white'}`}
+ className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.solo ?'bg-[var(--acc)]/60 text-black' :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
  >
  S
  </button>
@@ -788,7 +788,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  onClick={() => (chords ? setExpandedChordsTrackId(isExpanded ? null : tr.id) : handleAnalyzeTrackChords(tr))}
  title="Detectar acordes escuchando solo esta pista aislada"
  disabled={isLoadingThis}
- className="w-6 h-6 rounded flex items-center justify-center bg-neutral-800 text-[var(--ink-2)] hover:text-indigo-300 disabled:opacity-50"
+ className="w-6 h-6 rounded flex items-center justify-center bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-indigo-300 disabled:opacity-50"
  >
  {isLoadingThis ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Music2 className="w-3.5 h-3.5" />}
  </button>
@@ -844,7 +844,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => handleExport('mezcla-actual')}
  disabled={isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-neutral-800 text-[var(--sunken)] hover:bg-neutral-700 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--sunken)] hover:bg-[var(--surface)]/70 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting ==='mezcla-actual' ?'Generando…' :'Mi mezcla actual'}
  </button>

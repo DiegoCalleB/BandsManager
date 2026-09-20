@@ -103,7 +103,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  };
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--surface)]/80 backdrop-blur-md">
  <div className="bg-[var(--surface)] rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
  {/* Cabecera */}
  <div className="flex items-center justify-between border-b pb-4">
@@ -112,7 +112,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <Sparkles className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-lg font-black text-white font-display tracking-wide">
+ <h3 className="text-lg font-black text-[var(--ink)] font-display tracking-wide">
  Exportar & Imprimir QR en Máxima Calidad
  </h3>
  <p className="text-xs text-[var(--ink-3)] font-mono">
@@ -123,7 +123,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-white hover:bg-[var(--surface)] transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -140,12 +140,12 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  onClick={() => setSelectedFormat('poster-a4')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='poster-a4'
- ?'bg-[var(--acc)]/10 text-white shadow-lg'
- :'bg-slate-950 text-[var(--ink-3)] hover:'
+ ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
- <span className="font-black text-sm flex items-center gap-2 text-white">
+ <span className="font-black text-sm flex items-center gap-2 text-[var(--ink)]">
  <FileText className="w-4 h-4 text-amber-500" />
  Cartel A4 Completo
  </span>
@@ -163,12 +163,12 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  onClick={() => setSelectedFormat('svg')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='svg'
- ?'bg-[var(--acc)]/10 text-white shadow-lg'
- :'bg-slate-950 text-[var(--ink-3)] hover:'
+ ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
- <span className="font-black text-sm flex items-center gap-2 text-white">
+ <span className="font-black text-sm flex items-center gap-2 text-[var(--ink)]">
  <FileCode className="w-4 h-4 text-amber-500" />
  Vectorial SVG (.svg)
  </span>
@@ -186,12 +186,12 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  onClick={() => setSelectedFormat('png-4k')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='png-4k'
- ?'bg-[var(--acc)]/10 text-white shadow-lg'
- :'bg-slate-950 text-[var(--ink-3)] hover:'
+ ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
- <span className="font-black text-sm flex items-center gap-2 text-white">
+ <span className="font-black text-sm flex items-center gap-2 text-[var(--ink)]">
  <ImageIcon className="w-4 h-4 text-amber-500" />
  PNG Ultra HD 4K
  </span>
@@ -209,12 +209,12 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  onClick={() => setSelectedFormat('badge')}
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='badge'
- ?'bg-[var(--acc)]/10 text-white shadow-lg'
- :'bg-slate-950 text-[var(--ink-3)] hover:'
+ ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
- <span className="font-black text-sm flex items-center gap-2 text-white">
+ <span className="font-black text-sm flex items-center gap-2 text-[var(--ink)]">
  <Layers className="w-4 h-4 text-amber-500" />
  Pegatina / Stand de Merchan
  </span>
@@ -230,7 +230,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  </div>
 
  {/* Opciones de Personalización */}
- <div className="space-y-4 bg-slate-950 rounded-[var(--r-l)] p-5">
+ <div className="space-y-4 bg-[var(--surface)] rounded-[var(--r-l)] p-5">
  <label className="text-xs font-bold text-[var(--acc)] uppercase font-mono tracking-wider block">
  2. Personalización:
  </label>
@@ -243,7 +243,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  value={customCta}
  onChange={e => setCustomCta(e.target.value)}
  placeholder="¡ESCANEA CON LA CÁMARA DE TU MÓVIL!"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-mono"
  />
  </div>
  )}
@@ -281,7 +281,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  type="button"
  onClick={handleDownload}
  disabled={isExporting}
- className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-lg disabled:opacity-50"
+ className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-lg disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
  {isExporting ?'Generando archivo en Alta Resolución...' :'Descargar Archivo en Alta Resolución'}

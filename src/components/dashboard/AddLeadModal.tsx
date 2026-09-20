@@ -62,7 +62,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  </h3>
  <button 
  onClick={onClose}
- className="text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>

@@ -371,7 +371,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setProductType('camiseta')}
  className={`py-3 px-4 rounded-[var(--r-m)] font-mono text-xs font-bold uppercase flex flex-col items-center justify-center gap-2 transition-all ${
  productType ==='camiseta'
- ? (isStitchLight ?'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' :'bg-[var(--acc)] text-[#121111] shadow-lg shadow-[var(--acc)]/10')
+ ? (isStitchLight ?'bg-indigo-600 text-[var(--ink)] shadow-lg shadow-indigo-500/20' :'bg-[var(--acc)] text-[#121111] shadow-lg shadow-[var(--acc)]/10')
  : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]')
  }`}
  >
@@ -382,7 +382,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setProductType('pegatina')}
  className={`py-3 px-4 rounded-[var(--r-m)] font-mono text-xs font-bold uppercase flex flex-col items-center justify-center gap-2 transition-all ${
  productType ==='pegatina'
- ? (isStitchLight ?'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' :'bg-[var(--acc)] text-[#121111] shadow-lg shadow-[var(--acc)]/10')
+ ? (isStitchLight ?'bg-indigo-600 text-[var(--ink)] shadow-lg shadow-indigo-500/20' :'bg-[var(--acc)] text-[#121111] shadow-lg shadow-[var(--acc)]/10')
  : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]')
  }`}
  >
@@ -402,7 +402,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className={`py-2 px-2 rounded-[var(--r-s)] font-mono text-[10px] font-bold uppercase flex flex-col items-center justify-center gap-1 transition-all ${
  assetType ==='logo'
  ? (isStitchLight ?'bg-indigo-100 text-indigo-700 border-indigo-200' :'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30')
- : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-neutral-800')
+ : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80')
  }`}
  >
  <Type className="w-4 h-4" />
@@ -413,7 +413,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className={`py-2 px-2 rounded-[var(--r-s)] font-mono text-[10px] font-bold uppercase flex flex-col items-center justify-center gap-1 transition-all ${
  assetType ==='portada'
  ? (isStitchLight ?'bg-indigo-100 text-indigo-700 border-indigo-200' :'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30')
- : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-neutral-800')
+ : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80')
  }`}
  >
  <ImageIcon className="w-4 h-4" />
@@ -427,7 +427,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className={`py-2 px-2 rounded-[var(--r-s)] font-mono text-[10px] font-bold uppercase flex flex-col items-center justify-center gap-1 transition-all ${
  assetType ==='custom'
  ? (isStitchLight ?'bg-indigo-100 text-indigo-700 border-indigo-200' :'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30')
- : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-neutral-800')
+ : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80')
  }`}
  >
  <Upload className="w-4 h-4" />
@@ -523,7 +523,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setRemoveBgMode(m.id as any)}
  className={`py-1.5 px-1 rounded text-[10px] font-mono font-bold transition ${
  removeBgMode === m.id
- ?'bg-[var(--acc)] text-slate-950 shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
  :'bg-[var(--surface)]/60 text-[var(--ink-3)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -580,7 +580,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  :'hover:scale-[1.01] shadow-xl'
  } ${
  isStitchLight
- ?'bg-gradient-to-br from-indigo-600 to-indigo-800 text-white shadow-indigo-500/20'
+ ?'bg-gradient-to-br from-indigo-600 to-indigo-800 text-[var(--ink)] shadow-indigo-500/20'
  :'bg-gradient-to-br from-[var(--acc)] to-[#e0a820] text-[#121111] shadow-[var(--acc)]/10'
  }`}
  >
@@ -631,7 +631,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {generatedDesigns.map((design) => {
  const displayGraphic = design.processedUrl || design.url;
  return (
- <div key={design.id} className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square hover:/50 transition-all shadow-xl flex flex-col items-center justify-center p-6 ${design.type ==='camiseta' ? (isStitchLight ?'bg-[var(--sunken)]' :'bg-slate-950') : (isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]')}`}>
+ <div key={design.id} className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square hover:/50 transition-all shadow-xl flex flex-col items-center justify-center p-6 ${design.type ==='camiseta' ? (isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]') : (isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]')}`}>
  
  {design.type ==='pegatina' ? (
  <div className="w-52 h-52 bg-white shadow-2xl flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 border-4 border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden">
@@ -689,7 +689,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  )}
  
  {/* Hover Overlay */}
- <div className="absolute inset-0 bg-slate-950/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center backdrop-blur-xs gap-3 z-30">
+ <div className="absolute inset-0 bg-[var(--surface)]/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center backdrop-blur-xs gap-3 z-30">
  <button 
  onClick={() => {
  const link = document.createElement('a');
@@ -706,7 +706,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </button>
  <button 
  onClick={() => handleDelete(design.id)}
- className="px-4 py-2 rounded-[var(--r-m)] font-mono text-xs font-bold uppercase flex items-center gap-2 bg-rose-600/90 text-white hover:bg-rose-600 shadow-lg transition"
+ className="px-4 py-2 rounded-[var(--r-m)] font-mono text-xs font-bold uppercase flex items-center gap-2 bg-rose-600/90 text-[var(--ink)] hover:bg-rose-600 shadow-lg transition"
  >
  <Trash2 className="w-4 h-4" />
  Eliminar
@@ -753,7 +753,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <button
  type="button"
  onClick={() => setShowClaimModal(false)}
- className="p-2 text-[var(--ink-2)] hover:text-white rounded-[var(--r-m)] hover:bg-neutral-800/60 transition-colors cursor-pointer"
+ className="p-2 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-m)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  title="Cerrar ventana"
  >
  <X className="w-5 h-5" />
@@ -777,7 +777,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-black font-black flex items-center justify-center text-lg font-display mb-1">
  {bandInitials}
  </div>
- <span className="text-[9px] font-black font-display text-white uppercase tracking-wider">{displayBandName.toUpperCase()}</span>
+ <span className="text-[9px] font-black font-display text-[var(--ink)] uppercase tracking-wider">{displayBandName.toUpperCase()}</span>
  <span className="text-[7px] font-mono text-[var(--acc)] font-bold">Oficial Vinyl</span>
  </div>
 
@@ -930,7 +930,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <button
  type="button"
  onClick={() => setShowClaimModal(false)}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-[var(--ink-2)] hover:text-white cursor-pointer transition-colors"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer transition-colors"
  >
  Cancelar
  </button>
@@ -952,7 +952,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  setShowClaimModal(false);
  setHasGiftPending(false); // Canjeado
  }}
- className="px-6 py-2.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-zinc-100 text-xs font-mono font-bold cursor-pointer transition-colors"
+ className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-100 text-xs font-mono font-bold cursor-pointer transition-colors"
  >
  Entendido, volver al Taller
  </button>

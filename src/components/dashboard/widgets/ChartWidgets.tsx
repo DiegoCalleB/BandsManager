@@ -313,7 +313,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  <div className="bg-stone-900 border-stone-700 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
  <div className="font-bold text-[var(--acc)]">{data.name}</div>
  <div className="text-zinc-300 mt-1">
- Cantidad: <span className="font-bold text-white">{data.count} salas</span>
+ Cantidad: <span className="font-bold text-[var(--ink)]">{data.count} salas</span>
  </div>
  <div className="text-[var(--ink-2)] text-[10px]">
  Representa el {pct}% del total

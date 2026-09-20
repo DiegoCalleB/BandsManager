@@ -233,7 +233,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </button>
  <button 
  onClick={handleSave}
- className="px-4 py-2 text-sm bg-black text-white hover:bg-gray-800 rounded-[var(--r-s)] font-medium flex items-center gap-2"
+ className="px-4 py-2 text-sm bg-black text-[var(--ink)] hover:bg-gray-800 rounded-[var(--r-s)] font-medium flex items-center gap-2"
  >
  <Check className="w-4 h-4" /> Guardar y Activar
  </button>
@@ -243,11 +243,11 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  }
 
  return (
- <div className="mb-6 bg-black text-white rounded-[var(--r-m)] overflow-hidden shadow-lg relative">
+ <div className="mb-6 bg-black text-[var(--ink)] rounded-[var(--r-m)] overflow-hidden shadow-lg relative">
  <div className="absolute top-0 right-0 p-4">
  <button 
  onClick={handleClear}
- className="text-gray-400 hover:text-white bg-white/10 rounded-full p-1"
+ className="text-gray-400 hover:text-[var(--ink)] bg-white/10 rounded-full p-1"
  title="Desactivar campaña"
  >
  <X className="w-4 h-4" />
@@ -296,7 +296,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  }
  setIsEditing(true);
  }}
- className="text-xs font-medium text-white hover:text-gray-300 underline cursor-pointer"
+ className="text-xs font-medium text-[var(--ink)] hover:text-gray-300 underline cursor-pointer"
  >
  Editar parámetros
  </button>

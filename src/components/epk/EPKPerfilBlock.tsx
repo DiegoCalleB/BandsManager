@@ -180,7 +180,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <button
  type="button"
  onClick={anadirMiembro}
- className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
+ className="text-xs bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
  >
  + Añadir miembro
  </button>
@@ -227,7 +227,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  value={m.nombre}
  onChange={e => editarMiembro(m.id, { nombre: e.target.value })}
  placeholder="Nombre del músico"
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-sm font-semibold text-white focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-sm font-semibold text-[var(--ink)] focus: outline-none"
  />
  <input
  type="text"

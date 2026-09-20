@@ -46,7 +46,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  return (
  <ModalPortal isOpen={!!showGenModalForIdea} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="w-full max-w-lg rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+ <div className="w-full max-w-lg rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-purple-600/30 text-purple-400 flex items-center justify-center">
@@ -60,7 +60,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <button
  type="button"
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  <X className="w-5 h-5" />
  </button>
@@ -86,7 +86,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  max={220}
  value={genBpm}
  onChange={(e) => setGenBpm(parseInt(e.target.value) || 120)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus:border-purple-500 font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-purple-500 font-mono"
  />
  </div>
  <div>
@@ -94,7 +94,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <select
  value={genKey}
  onChange={(e) => setGenKey(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-white focus:outline-none focus:border-purple-500 font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-purple-500 font-mono"
  >
  <option value="Do">Do (C)</option>
  <option value="Re">Re (D)</option>
@@ -112,7 +112,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <label className="text-xs font-mono text-[var(--ink-2)] block">Instrumentos a incluir:</label>
  <div className="grid grid-cols-2 gap-3">
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeDrums ?'bg-purple-900/30 border-purple-500 text-white' :'bg-black/40 text-[var(--ink-2)]'
+ includeDrums ?'bg-purple-900/30 border-purple-500 text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"
@@ -124,7 +124,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  </label>
 
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeBass ?'bg-purple-900/30 border-purple-500 text-white' :'bg-black/40 text-[var(--ink-2)]'
+ includeBass ?'bg-purple-900/30 border-purple-500 text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"
@@ -149,8 +149,8 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  onClick={() => setDrumStyle(style)}
  className={`py-2 px-1 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
  drumStyle === style
- ?'bg-purple-600 text-white shadow-lg'
- :'bg-black/40 text-[var(--ink-2)] hover:text-white'
+ ?'bg-purple-600 text-[var(--ink)] shadow-lg'
+ :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {style}
@@ -180,7 +180,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-[var(--ink-2)] hover:text-white"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  Cancelar
  </button>
@@ -188,7 +188,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  type="button"
  onClick={handleGenerateAccompaniment}
  disabled={isGeneratingAccompaniment || (!includeDrums && !includeBass)}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
  >
  {isGeneratingAccompaniment ? (
  <>

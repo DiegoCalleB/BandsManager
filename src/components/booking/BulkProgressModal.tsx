@@ -68,7 +68,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="p-1.5 text-zinc-400 hover:text-white rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer"
+ className="p-1.5 text-zinc-400 hover:text-[var(--ink)] rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>

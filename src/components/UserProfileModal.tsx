@@ -348,7 +348,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }`}>
  <div className="flex items-center gap-3">
  <div 
- className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shadow-inner uppercase font-mono text-sm shrink-0"
+ className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] shadow-inner uppercase font-mono text-sm shrink-0"
  style={{ backgroundColor: avatarColor }}
  >
  {name.slice(0, 2) ||'BK'}
@@ -368,7 +368,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800/50 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -513,7 +513,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <p className="text-xs font-bold text-white">{activeBandName || currentUser.bandName ||'Tu Banda'}</p>
+ <p className="text-xs font-bold text-[var(--ink)]">{activeBandName || currentUser.bandName ||'Tu Banda'}</p>
  {isPromoUser ? (
  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-[var(--acc)]/60/15 text-[var(--acc)]/70">
  <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
@@ -634,7 +634,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandName(e.target.value)}
  placeholder="Ej. Los Nocturnos, Cuarteto Acústico..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none font-medium ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -648,7 +648,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandStyle(e.target.value)}
  placeholder="Ej. Indie Rock, Pop..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -660,7 +660,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandLocation(e.target.value)}
  placeholder="Ej. Madrid, Barcelona..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -703,7 +703,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={() => setShowCreateBandSection(false)}
- className="px-2.5 py-1 rounded-[var(--r-s)] text-xs text-[var(--ink-2)] hover:text-white cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-xs text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  >
  Cancelar
  </button>
@@ -744,7 +744,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={() => setBandToDeleteInProfile(null)}
- className="px-2.5 py-1 rounded-[var(--r-s)] text-xs text-[var(--ink-2)] hover:text-white cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-xs text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  >
  Cancelar
  </button>
@@ -752,7 +752,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={handleConfirmDeleteBandInProfile}
  disabled={!!deletingBandId}
- className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm"
+ className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-600 hover:bg-rose-500 text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm"
  >
  {deletingBandId ? (
  <>
@@ -798,7 +798,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClick={() => setSelectedMainBandId(b.band_id)}
  className="flex items-center gap-2.5 min-w-0 flex-1 text-left cursor-pointer active:scale-98"
  >
- <div className="w-6 h-6 rounded-[var(--r-s)] bg-neutral-800 flex items-center justify-center text-[var(--acc)] shrink-0 text-xs font-mono font-bold">
+ <div className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--surface)]/80 flex items-center justify-center text-[var(--acc)] shrink-0 text-xs font-mono font-bold">
  {b.bandName.slice(0, 2).toUpperCase()}
  </div>
  <div className="min-w-0">
@@ -841,7 +841,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  ) : (
  <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
- <span className="text-xs font-bold text-white">{activeBandName || currentUser.bandName ||'BAKANDEYA'}</span>
+ <span className="text-xs font-bold text-[var(--ink)]">{activeBandName || currentUser.bandName ||'BAKANDEYA'}</span>
  <span className="text-[10px] font-mono text-[var(--acc)]">Principal</span>
  </div>
  )}
@@ -871,7 +871,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  ?'bg-[var(--acc)]/20 /60 text-[var(--acc)]/70 font-bold shadow-xs'
  : isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover: hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover: hover:text-[var(--ink)]'
  }`}
  >
  <div className="flex items-center gap-2 min-w-0">
@@ -1125,7 +1125,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  disabled={loading}
  className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-lg active:scale-98 ${
  isStitchLight
- ?'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20'
+ ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-indigo-600/20'
  :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 shadow-amber-500/20'
  }`}
  >
@@ -1161,7 +1161,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <button
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  Cerrar
  </button>
@@ -1187,7 +1187,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  <button
  onClick={() => setShowUpgradeModal(false)}
- className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -1213,7 +1213,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  if (res.success && res.url) window.location.href = res.url;
  } catch (e) {}
  }}
- className="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-white font-mono font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer whitespace-nowrap"
+ className="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-[var(--ink)] font-mono font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer whitespace-nowrap"
  >
  Actualizar Tarjeta
  </button>
@@ -1251,7 +1251,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  alert('Error al conectar con Stripe:' + err.message);
  }
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--acc)]/70 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer"
  >
  <span>Portal de Stripe</span>
  <ExternalLink className="w-3 h-3" />
@@ -1276,7 +1276,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  >
  <div className="flex items-center justify-between flex-wrap gap-2">
  <div className="flex items-center gap-2">
- <span className="font-bold text-xs text-white font-mono">{plan.name}</span>
+ <span className="font-bold text-xs text-[var(--ink)] font-mono">{plan.name}</span>
  <span 
  className="text-[9px] font-mono font-bold px-2 py-0.5 rounded"
  style={{ backgroundColor: `${plan.color}20`, color: plan.color, borderColor: `${plan.color}40` }}
@@ -1380,7 +1380,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  ) : <span />}
  <button
  onClick={() => setShowUpgradeModal(false)}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] transition-colors cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] transition-colors cursor-pointer"
  >
  Cerrar
  </button>

@@ -253,7 +253,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  ↩️ Deshacer
  </button>
  )}
- <button onClick={onClose} className="p-2 hover:bg-neutral-800 rounded-[var(--r-s)] transition">
+ <button onClick={onClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition">
  <X className="w-4 h-4" />
  </button>
  </div>
@@ -291,7 +291,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  </p>
  <button
  onClick={() => onGenerate()}
- className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-[var(--r-s)] transition font-medium"
+ className="bg-emerald-600 hover:bg-emerald-700 text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
  >
  Generar Plan
  </button>
@@ -320,7 +320,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
  {plan && liveActions && (
  <div className="space-y-4">
- <div className="bg-neutral-800 rounded-[var(--r-s)] p-3">
+ <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
  <p className="text-xs text-[var(--ink-2)] mb-1.5">🪄 Resumen del plan</p>
  <p className="text-sm text-[var(--sunken)]">{plan.summary}</p>
  </div>
@@ -340,7 +340,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  const isInvalid = invalidActionIndices.has(idx);
 
  return (
- <div key={idx} className={`rounded-[var(--r-s)] p-3 flex items-start gap-2.5 ${isInvalid ?'bg-[var(--surface)] opacity-50' :'bg-neutral-800'}`}>
+ <div key={idx} className={`rounded-[var(--r-s)] p-3 flex items-start gap-2.5 ${isInvalid ?'bg-[var(--surface)] opacity-50' :'bg-[var(--surface)]/80'}`}>
  <span className="text-sm mt-0.5">{icon}</span>
  <div className="flex-1">
  <p className="text-sm font-medium text-[var(--sunken)]">{label}</p>
@@ -427,7 +427,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  type="button"
  onClick={() => setFeedbackScope('este_setlist')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
- feedbackScope ==='este_setlist' ?'bg-neutral-700 text-white font-bold' :'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
+ feedbackScope ==='este_setlist' ?'bg-[var(--surface)]/70 text-[var(--ink)] font-bold' :'bg-transparent text-neutral-500 hover:text-[var(--ink-3)]'
  }`}
  >
  Solo este plan
@@ -449,20 +449,20 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <button
  onClick={() => handleGenerateWithFeedback()}
  title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
- className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  🔄 Regenerar
  </button>
  <button
  onClick={() => handleGenerateWithFeedback(true)}
  title="Crea una copia nueva desde cero en vez de reutilizar la actual"
- className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-[var(--sunken)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--sunken)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  🆕 Nueva copia
  </button>
  <button
  onClick={onClose}
- className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  Cerrar
  </button>

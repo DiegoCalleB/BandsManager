@@ -33,7 +33,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  <div className="space-y-6 animate-in fade-in duration-200">
  <div className="flex items-center gap-2 pb-2 border-b border-[var(--hair)]">
  <Users className="w-5 h-5 text-[var(--acc)]" />
- <h3 className="text-base font-semibold text-white">Miembros de la Banda & Invitaciones</h3>
+ <h3 className="text-base font-semibold text-[var(--ink)]">Miembros de la Banda & Invitaciones</h3>
  </div>
 
  {/* List of current members */}
@@ -51,7 +51,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  </div>
  <div>
  <div className="flex items-center gap-2">
- <span className="text-sm font-medium text-white">{m.name}</span>
+ <span className="text-sm font-medium text-[var(--ink)]">{m.name}</span>
  {m.isLeader && (
  <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
  Líder / Creador
@@ -93,7 +93,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  value={newMemberName}
  onChange={(e) => setNewMemberName(e.target.value)}
  placeholder="Nombre y Apellidos *"
- className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
 
  <input
@@ -101,7 +101,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  value={newMemberRole}
  onChange={(e) => setNewMemberRole(e.target.value)}
  placeholder="Instrumento / Rol (ej. Batería, Bajo, Teclados) *"
- className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
 
  <input
@@ -109,7 +109,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  value={newMemberEmail}
  onChange={(e) => setNewMemberEmail(e.target.value)}
  placeholder="Email (para invitarle a acceder al panel)"
- className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
 
  <input
@@ -117,7 +117,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  value={newMemberInstagram}
  onChange={(e) => setNewMemberInstagram(e.target.value)}
  placeholder="Instagram (ej. @nombremusico)"
- className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 

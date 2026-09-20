@@ -459,7 +459,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
  <button
  onClick={() => setShowAuditModal(false)}
- className="p-1 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>

@@ -532,7 +532,7 @@ export function SongTransitionPreviewModal({
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <h2 className="text-xs sm:text-sm font-bold text-white tracking-tight">
+ <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight">
  Comprobar Unión y Transición
  </h2>
  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
@@ -586,7 +586,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={onClose}
- className="p-1 rounded-[var(--r-s)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] text-zinc-400 hover:text-[var(--ink)] hover:bg-zinc-800 transition cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -670,7 +670,7 @@ export function SongTransitionPreviewModal({
  </div>
  </div>
 
- <h3 className="text-xs sm:text-sm font-bold text-white truncate mb-1">
+ <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] truncate mb-1">
  {songA.titulo}
  </h3>
 
@@ -743,7 +743,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={() => fileInputRefA.current?.click()}
- className="text-[9px] text-zinc-400 hover:text-white px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
+ className="text-[9px] text-zinc-400 hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
  title="Subir archivo .mp3/.wav propio para probar"
  >
  📁 Subir
@@ -813,7 +813,7 @@ export function SongTransitionPreviewModal({
  </div>
  </div>
 
- <h3 className="text-xs sm:text-sm font-bold text-white truncate mb-1">
+ <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] truncate mb-1">
  {songB.titulo}
  </h3>
 
@@ -886,7 +886,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={() => fileInputRefB.current?.click()}
- className="text-[9px] text-zinc-400 hover:text-white px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
+ className="text-[9px] text-zinc-400 hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
  title="Subir archivo .mp3/.wav propio para probar"
  >
  📁 Subir
@@ -920,7 +920,7 @@ export function SongTransitionPreviewModal({
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  playbackMode ==='real'
  ?'bg-emerald-500 text-black shadow-sm'
- :'text-zinc-400 hover:text-white'
+ :'text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
  <Disc3 className="w-3 h-3" />
@@ -935,7 +935,7 @@ export function SongTransitionPreviewModal({
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  playbackMode ==='synth'
  ?'bg-[var(--acc)]/60 text-black shadow-sm'
- :'text-zinc-400 hover:text-white'
+ :'text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
  <Music className="w-3 h-3" />
@@ -973,7 +973,7 @@ export function SongTransitionPreviewModal({
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='crossfade'
  ?'bg-[var(--acc)] text-black shadow-sm'
- :'text-zinc-400 hover:text-white'
+ :'text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
  Fundido ({config.fadeDurationSec}s)
@@ -987,7 +987,7 @@ export function SongTransitionPreviewModal({
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='segue'
  ?'bg-[var(--acc)] text-black shadow-sm'
- :'text-zinc-400 hover:text-white'
+ :'text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
  Corte (0s)
@@ -1001,7 +1001,7 @@ export function SongTransitionPreviewModal({
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='pause'
  ?'bg-[var(--acc)] text-black shadow-sm'
- :'text-zinc-400 hover:text-white'
+ :'text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
  Pausa ({config.pauseDurationSec}s)
@@ -1021,7 +1021,7 @@ export function SongTransitionPreviewModal({
  className={`px-1 py-0.2 rounded font-mono text-[9px] transition cursor-pointer ${
  config.fadeDurationSec === sec
  ?'bg-[var(--acc)]/30 text-[var(--acc)] font-bold'
- :'text-zinc-400 hover:text-white'
+ :'text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
  {sec}s
@@ -1070,7 +1070,7 @@ export function SongTransitionPreviewModal({
  {/* Crossfade overlap highlight */}
  {config.style ==='crossfade' && (
  <div
- className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-500/30 to-emerald-500/30 border-x /80 pointer-events-none flex items-center justify-center text-[8px] font-mono font-bold text-white/90"
+ className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-500/30 to-emerald-500/30 border-x /80 pointer-events-none flex items-center justify-center text-[8px] font-mono font-bold text-[var(--ink)]/90"
  style={{
  left: `${(timeline.crossfadeStartSec / timeline.totalDurationSec) * 100}%`,
  width: `${((timeline.crossfadeEndSec - timeline.crossfadeStartSec) / timeline.totalDurationSec) * 100}%`
@@ -1117,7 +1117,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={() => setIsMuted(!isMuted)}
- className="text-zinc-400 hover:text-white transition cursor-pointer"
+ className="text-zinc-400 hover:text-[var(--ink)] transition cursor-pointer"
  >
  {isMuted || volume === 0 ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
  </button>
@@ -1204,7 +1204,7 @@ export function SongTransitionPreviewModal({
  {/* Right Summary Verdict */}
  <div className="text-[10px] text-zinc-400 flex items-center gap-1">
  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
- <span>Recomendado: <strong className="text-white uppercase font-bold">{diagnosis.recommendedStyle}</strong></span>
+ <span>Recomendado: <strong className="text-[var(--ink)] uppercase font-bold">{diagnosis.recommendedStyle}</strong></span>
  </div>
  </div>
 
@@ -1383,7 +1383,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={onClose}
- className="px-3.5 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-white text-[11px] font-bold transition cursor-pointer"
+ className="px-3.5 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] text-[11px] font-bold transition cursor-pointer"
  >
  Cerrar
  </button>

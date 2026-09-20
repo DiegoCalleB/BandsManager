@@ -102,7 +102,7 @@ export const PublicFanCapture: React.FC = () => {
  };
 
  return (
- <div className="min-h-screen bg-slate-950 text-[var(--ink-3)] flex flex-col items-center justify-center p-4 selection:bg-[var(--acc)] selection:text-slate-950">
+ <div className="min-h-screen bg-[var(--surface)] text-[var(--ink-3)] flex flex-col items-center justify-center p-4 selection:bg-[var(--acc)] selection:text-[var(--ink)]">
  {/* Background Glow */}
  <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-500/10 via-slate-950 to-slate-950 pointer-events-none" />
 
@@ -121,12 +121,12 @@ export const PublicFanCapture: React.FC = () => {
  <Music className="w-10 h-10" />
  </div>
  )}
- <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-slate-950 p-1.5 rounded-full shadow-lg">
+ <span className="absolute -bottom-2 -right-2 bg-[var(--acc)] text-[var(--ink)] p-1.5 rounded-full shadow-lg">
  <Heart className="w-4 h-4 fill-slate-950" />
  </span>
  </div>
 
- <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white uppercase">
+ <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[var(--ink)] uppercase">
  {bandInfo.name ? `¡SÚMATE A LA FAMILIA DE ${bandInfo.name.toUpperCase()}!` :'¡SÚMATE A NUESTRA COMUNIDAD!'}
  </h1>
  <p className="text-[var(--ink-3)] text-sm max-w-xs mx-auto">
@@ -157,7 +157,7 @@ export const PublicFanCapture: React.FC = () => {
  value={nombre}
  onChange={e => setNombre(e.target.value)}
  placeholder="Ej: Laura García"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-slate-500 outline-none transition"
  />
  </div>
 
@@ -171,7 +171,7 @@ export const PublicFanCapture: React.FC = () => {
  value={email}
  onChange={e => setEmail(e.target.value)}
  placeholder="tuemail@ejemplo.com"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-slate-500 outline-none transition"
  />
  </div>
 
@@ -185,7 +185,7 @@ export const PublicFanCapture: React.FC = () => {
  value={ciudad}
  onChange={e => setCiudad(e.target.value)}
  placeholder="Ej: Madrid"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white placeholder-slate-500 outline-none transition"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-slate-500 outline-none transition"
  />
  </div>
 
@@ -198,7 +198,7 @@ export const PublicFanCapture: React.FC = () => {
  value={comoConocio}
  onChange={e => setComoConocio(e.target.value)}
  placeholder="Ej: Directo / Instagram"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white placeholder-slate-500 outline-none transition"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-slate-500 outline-none transition"
  />
  </div>
  </div>
@@ -211,7 +211,7 @@ export const PublicFanCapture: React.FC = () => {
  required
  checked={consentimientoRGPD}
  onChange={e => setConsentimientoRGPD(e.target.checked)}
- className="mt-0.5 w-4 h-4 rounded bg-slate-950 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900"
+ className="mt-0.5 w-4 h-4 rounded bg-[var(--surface)] text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900"
  />
  <span>
  Acepto recibir novedades, lanzamientos y fechas de conciertos de <strong>Bakandeya</strong>. 
@@ -225,7 +225,7 @@ export const PublicFanCapture: React.FC = () => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-extrabold text-sm rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
+ className="w-full py-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-extrabold text-sm rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
  >
  {loading ? (
  <span>Guardando...</span>
@@ -245,7 +245,7 @@ export const PublicFanCapture: React.FC = () => {
  </div>
 
  <div className="space-y-2">
- <h2 className="text-xl font-black text-white">¡MUCHAS GRACIAS, {nombre.split('')[0].toUpperCase()}!</h2>
+ <h2 className="text-xl font-black text-[var(--ink)]">¡MUCHAS GRACIAS, {nombre.split('')[0].toUpperCase()}!</h2>
  <p className="text-[var(--ink-3)] text-sm leading-relaxed">
  ¡Ya estás apuntado! Te avisaremos por correo de próximas fechas y novedades.
  </p>

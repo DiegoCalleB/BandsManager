@@ -1016,7 +1016,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  </span>
  )}
  </div>
- <h2 className="text-lg sm:text-xl font-bold text-white mt-1">
+ <h2 className="text-lg sm:text-xl font-bold text-[var(--ink)] mt-1">
  {isCelebrationStep ?'¡Todo Listo!' : currentStepDef?.title}
  </h2>
  </div>
@@ -1024,7 +1024,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+ className="p-2 rounded-[var(--r-m)] text-zinc-500 hover:text-[var(--ink)] hover:bg-zinc-800 transition-colors"
  title="Cerrar asistente"
  >
  <X className="w-5 h-5" />
@@ -1379,7 +1379,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={handleSkipStep}
- className="inline-flex items-center gap-1 px-3 py-2 rounded-[var(--r-m)] text-zinc-400 hover:text-white text-xs transition-colors"
+ className="inline-flex items-center gap-1 px-3 py-2 rounded-[var(--r-m)] text-zinc-400 hover:text-[var(--ink)] text-xs transition-colors"
  >
  <SkipForward className="w-3.5 h-3.5" /> Saltar paso
  </button>

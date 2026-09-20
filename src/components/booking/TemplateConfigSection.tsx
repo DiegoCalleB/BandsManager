@@ -359,7 +359,7 @@ export function TemplateConfigSection({
  onClick={onSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  isStitchLight
- ?'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md shadow-indigo-100'
+ ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] shadow-md shadow-indigo-100'
  :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/10'
  }`}
  >

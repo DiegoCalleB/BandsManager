@@ -1322,9 +1322,9 @@ export default function ReelsCenter({
  disabled={isSyncingReels}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncingReels
- ?'bg-neutral-800 text-neutral-500 animate-pulse'
+ ?'bg-[var(--surface)]/80 text-neutral-500 animate-pulse'
  : isStitchLight
- ?'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-100'
+ ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-sm shadow-indigo-100'
  :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
  }`}
  title="Sincronizar todas las publicaciones de redes sociales"
@@ -1373,11 +1373,11 @@ export default function ReelsCenter({
  className={`px-5 py-2.5 font-mono text-[10px] tracking-widest uppercase transition-all duration-300 rounded-[var(--r-m)] cursor-pointer ${
  activeTab ==='pipeline'
  ? isStitchLight
- ?'bg-indigo-600 text-white font-black shadow-md'
+ ?'bg-indigo-600 text-[var(--ink)] font-black shadow-md'
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-white'
- :'text-[var(--ink-2)] hover:text-white hover:bg-[var(--surface)]/50'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/50'
  }`}
  >
  Pipeline & Redactor de Copy
@@ -1388,11 +1388,11 @@ export default function ReelsCenter({
  className={`px-5 py-2.5 font-mono text-[10px] tracking-widest uppercase transition-all duration-300 rounded-[var(--r-m)] flex items-center gap-1.5 cursor-pointer ${
  activeTab ==='analyzer'
  ? isStitchLight
- ?'bg-indigo-600 text-white font-black shadow-md'
+ ?'bg-indigo-600 text-[var(--ink)] font-black shadow-md'
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-white'
- :'text-[var(--ink-2)] hover:text-white hover:bg-[var(--surface)]/50'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/50'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5" /> Analizador de Vídeos AI
@@ -1438,7 +1438,7 @@ export default function ReelsCenter({
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
  post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-neutral-800 text-neutral-300'
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-neutral-300'
  }`}>
  {post.plataforma}
  </span>
@@ -1486,7 +1486,7 @@ export default function ReelsCenter({
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
  post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-neutral-800 text-neutral-300'
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-neutral-300'
  }`}>
  {post.plataforma}
  </span>
@@ -1540,7 +1540,7 @@ export default function ReelsCenter({
  <div className="flex justify-between items-start gap-1">
  <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
  post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-neutral-800 text-neutral-300'
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-neutral-300'
  }`}>
  {post.plataforma}
  </span>
@@ -1675,8 +1675,8 @@ export default function ReelsCenter({
  onClick={() => { setInputType('file'); setAnalysisError(null); }}
  className={`px-3.5 py-1.5 text-[10px] font-mono rounded-[var(--r-s)] transition-all cursor-pointer ${
  inputType ==='file'
- ? isStitchLight ?'bg-indigo-600 text-white font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
- : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-white'
+ ? isStitchLight ?'bg-indigo-600 text-[var(--ink)] font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  📂 Archivo de Vídeo
@@ -1686,8 +1686,8 @@ export default function ReelsCenter({
  onClick={() => { setInputType('youtube'); setAnalysisError(null); }}
  className={`px-3.5 py-1.5 text-[10px] font-mono rounded-[var(--r-s)] transition-all cursor-pointer ${
  inputType ==='youtube'
- ? isStitchLight ?'bg-indigo-600 text-white font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
- : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-white'
+ ? isStitchLight ?'bg-indigo-600 text-[var(--ink)] font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  📺 Enlace de YouTube
@@ -1845,10 +1845,10 @@ export default function ReelsCenter({
  {formatTime(videoMeta.duration)}
  </span>
  ) : (
- <span className="px-1.5 py-0.5 rounded bg-neutral-800 text-[var(--ink-2)]">duración desconocida</span>
+ <span className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)]">duración desconocida</span>
  )}
  <span className={`px-1.5 py-0.5 rounded font-bold ${
- videoMeta.hasTranscript ?'bg-emerald-500/10 text-emerald-400' :'bg-neutral-800 text-neutral-500'
+ videoMeta.hasTranscript ?'bg-emerald-500/10 text-emerald-400' :'bg-[var(--surface)]/80 text-neutral-500'
  }`}>
  {videoMeta.hasTranscript ? `subtítulos ✓ (${videoMeta.transcriptLines})` :'sin subtítulos'}
  </span>
@@ -1946,17 +1946,17 @@ export default function ReelsCenter({
  ? isStitchLight
  ?'bg-indigo-600 text-white shadow-md hover:bg-indigo-700'
  :'bg-gradient-to-r from-[var(--acc)] to-[var(--accent)] text-[var(--acc-ink)] shadow-lg shadow-[var(--acc)]/10 hover:scale-[1.01]' 
- :'bg-neutral-800 text-neutral-500 cursor-not-allowed'
+ :'bg-[var(--surface)]/80 text-neutral-500 cursor-not-allowed'
  }`}
  >
  {isAnalyzing ? (
  <>
- <RefreshCw className={`w-4 h-4 animate-spin ${isStitchLight ?'text-white' :'text-[var(--acc-ink)]'}`} />
+ <RefreshCw className={`w-4 h-4 animate-spin ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--acc-ink)]'}`} />
  <span>PROCESANDO METRAJE...</span>
  </>
  ) : (
  <>
- <Sparkles className={`w-4 h-4 ${isStitchLight ?'text-white' :'text-[var(--acc-ink)]'}`} />
+ <Sparkles className={`w-4 h-4 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--acc-ink)]'}`} />
  <span>ANALIZAR HIGHLIGHTS CON IA</span>
  </>
  )}
@@ -2112,7 +2112,7 @@ export default function ReelsCenter({
  ))}
  </div>
  <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded self-start z-10 ${
- isStitchLight ?'bg-indigo-600 text-white' :'bg-[var(--acc)] text-[var(--acc-ink)]'
+ isStitchLight ?'bg-indigo-600 text-[var(--ink)]' :'bg-[var(--acc)] text-[var(--acc-ink)]'
  }`}>
  {clip.range}
  </span>
@@ -2222,9 +2222,9 @@ export default function ReelsCenter({
  disabled={isReanalyzingClip}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
  isReanalyzingClip
- ?'bg-neutral-800 text-[var(--ink-2)] cursor-not-allowed animate-pulse'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed animate-pulse'
  : isStitchLight
- ?'bg-indigo-600 hover:bg-indigo-700 text-white'
+ ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)]'
  :'bg-[var(--acc)] hover:bg-[#e0b83f] text-[var(--surface)]'
  }`}
  >
@@ -2295,7 +2295,7 @@ export default function ReelsCenter({
  onClick={() => setClipFeedbackScope('este_reel')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
  clipFeedbackScope ==='este_reel'
- ?'bg-neutral-700 text-white font-bold'
+ ?'bg-[var(--surface)]/70 text-[var(--ink)] font-bold'
  :'bg-transparent text-neutral-500 hover:text-neutral-300'
  }`}
  >
@@ -2388,7 +2388,7 @@ export default function ReelsCenter({
  className={`py-2 px-2 rounded-[var(--r-s)] text-[10px] font-mono text-center transition-all cursor-pointer ${
  selectedPlatform === plat.id
  ? isStitchLight
- ?'bg-indigo-600 text-white font-black'
+ ?'bg-indigo-600 text-[var(--ink)] font-black'
  :'bg-[var(--acc)] -[var(--acc)] text-[var(--acc-ink)] font-black'
  : isStitchLight
  ?'-slate-200 hover:-indigo-200 bg-white text-[var(--ink-2)]'
@@ -2438,9 +2438,9 @@ export default function ReelsCenter({
  disabled={isScheduling}
  className={`w-full py-3.5 rounded-[var(--r-m)] font-mono text-xs font-bold tracking-widest uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isScheduling
- ?'bg-neutral-800 text-neutral-500 cursor-not-allowed'
+ ?'bg-[var(--surface)]/80 text-neutral-500 cursor-not-allowed'
  : isStitchLight
- ?'bg-indigo-600 hover:bg-indigo-700 text-white font-black shadow-md'
+ ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] font-black shadow-md'
  :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-black shadow-lg shadow-[var(--acc)]/15'
  }`}
  >
@@ -2527,7 +2527,7 @@ export default function ReelsCenter({
  <div className="flex items-center gap-2 flex-wrap">
  <span className={`text-[8px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
  post.plataforma ==='Instagram' ?'bg-[var(--accent)]/10 text-[var(--accent)]' :
- post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-neutral-800 text-neutral-300'
+ post.plataforma ==='TikTok' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--surface)]/80 text-neutral-300'
  }`}>
  {post.plataforma}
  </span>
@@ -2588,7 +2588,7 @@ export default function ReelsCenter({
  
  {/* Speaker & camera notch mockup */}
  <div className={`absolute top-2 left-1/2 -translate-x-1/2 w-20 h-4 rounded-full z-20 flex items-center justify-center ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-neutral-800'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80'
  }`}>
  <span className={`w-2 h-2 rounded-full ${isStitchLight ?'bg-slate-300' :'bg-[var(--surface)]'}`} />
  </div>
@@ -2743,7 +2743,7 @@ export default function ReelsCenter({
  id="btn-toggle-sound"
  type="button"
  onClick={() => setIsPreviewMuted(!isPreviewMuted)}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/60 -white/20 text-white hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg select-none"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/60 -white/20 text-[var(--ink)] hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg select-none"
  >
  {isPreviewMuted ? (
  <>
@@ -2763,7 +2763,7 @@ export default function ReelsCenter({
  id="btn-maximize-preview"
  type="button"
  onClick={() => setIsExpandedPreview(true)}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/60 -white/20 text-white hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg select-none"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/60 -white/20 text-[var(--ink)] hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg select-none"
  >
  <Maximize2 className="w-3 h-3 text-sky-400" />
  <span className="text-[7.5px] font-mono font-extrabold tracking-wider uppercase text-sky-200">VER GRANDE</span>
@@ -2788,22 +2788,22 @@ export default function ReelsCenter({
  {/* Right Side Social Action Widgets */}
  <div className="self-end flex flex-col gap-4 items-center z-10 mr-1">
  <div className="flex flex-col items-center gap-1 cursor-pointer">
- <div className="w-8 h-8 rounded-full bg-black/40 -white/10 flex items-center justify-center text-white hover:text-red-500">
+ <div className="w-8 h-8 rounded-full bg-black/40 -white/10 flex items-center justify-center text-[var(--ink)] hover:text-red-500">
  <Heart className="w-4 h-4 fill-white/10" />
  </div>
- <span className="text-[8px] font-mono text-white font-bold">2,108</span>
+ <span className="text-[8px] font-mono text-[var(--ink)] font-bold">2,108</span>
  </div>
  <div className="flex flex-col items-center gap-1 cursor-pointer">
- <div className="w-8 h-8 rounded-full bg-black/40 -white/10 flex items-center justify-center text-white">
+ <div className="w-8 h-8 rounded-full bg-black/40 -white/10 flex items-center justify-center text-[var(--ink)]">
  <MessageCircle className="w-4 h-4" />
  </div>
- <span className="text-[8px] font-mono text-white font-bold">48</span>
+ <span className="text-[8px] font-mono text-[var(--ink)] font-bold">48</span>
  </div>
  <div className="flex flex-col items-center gap-1 cursor-pointer">
- <div className="w-8 h-8 rounded-full bg-black/40 -white/10 flex items-center justify-center text-white">
+ <div className="w-8 h-8 rounded-full bg-black/40 -white/10 flex items-center justify-center text-[var(--ink)]">
  <Share2 className="w-4 h-4" />
  </div>
- <span className="text-[8px] font-mono text-white font-bold">186</span>
+ <span className="text-[8px] font-mono text-[var(--ink)] font-bold">186</span>
  </div>
  </div>
 
@@ -2814,7 +2814,7 @@ export default function ReelsCenter({
  isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--acc)]/20 -[var(--acc)] text-[var(--acc)]'
  }`}>{nombreBanda.charAt(0).toUpperCase()}</span>
  <div>
- <span className="text-[9px] font-bold text-white block truncate max-w-[90px]">{instagramHandle || nombreBanda}</span>
+ <span className="text-[9px] font-bold text-[var(--ink)] block truncate max-w-[90px]">{instagramHandle || nombreBanda}</span>
  <span className={`text-[7px] font-mono block ${isStitchLight ?'text-indigo-200' :'text-[var(--accent)]'}`}>{nombreBanda}</span>
  </div>
  </div>
@@ -2843,7 +2843,7 @@ export default function ReelsCenter({
  <span className={isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}>⏱️ REC CORTE</span>
  <span className="font-mono">{formatTime(start + simulatedTime)} / {formatTime(end)}</span>
  </div>
- <div className="relative w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
+ <div className="relative w-full h-1 bg-[var(--surface)]/80 rounded-full overflow-hidden">
  <div 
  className={`absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-linear ${
  isStitchLight ?'bg-indigo-600' :'bg-gradient-to-r from-amber-500 to-[var(--acc)]'
@@ -2933,7 +2933,7 @@ export default function ReelsCenter({
  e.stopPropagation();
  setIsExpandedPreview(false);
  }}
- className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-neutral-800 text-neutral-300 hover:text-white transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center backdrop-blur-sm"
+ className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)]/80 text-neutral-300 hover:text-[var(--ink)] transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center backdrop-blur-sm"
  title="Cerrar modo cine (ESC o Click fuera)"
  >
  <X className="w-6 h-6" />
@@ -2946,11 +2946,11 @@ export default function ReelsCenter({
  >
  <div className="flex items-center gap-2">
  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
- <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">Modo Cine · Reels</span>
+ <span className="text-xs font-mono font-bold text-[var(--ink)] uppercase tracking-wider">Modo Cine · Reels</span>
  </div>
  <button
  onClick={() => setIsExpandedPreview(false)}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 text-[var(--acc)] hover:text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--acc)] hover:text-[var(--ink)] font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer"
  >
  <X className="w-4 h-4" /> <span>Cerrar</span>
  </button>
@@ -2972,7 +2972,7 @@ export default function ReelsCenter({
  <button
  id="btn-close-theater-mobile"
  onClick={() => setIsExpandedPreview(false)}
- className="absolute top-3 right-4 z-50 p-2.5 rounded-full bg-neutral-800/80 hover:bg-neutral-800 text-[var(--ink-2)] hover:text-white transition-all cursor-pointer lg:hidden"
+ className="absolute top-3 right-4 z-50 p-2.5 rounded-full bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer lg:hidden"
  title="Cerrar modo cine"
  >
  <X className="w-5 h-5" />
@@ -2983,7 +2983,7 @@ export default function ReelsCenter({
  
  {/* Speaker Notch */}
  <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-20 h-4 rounded-full bg-[var(--surface)] -neutral-800/50 z-20 flex items-center justify-center">
- <div className="w-8 h-1 rounded-full bg-neutral-700" />
+ <div className="w-8 h-1 rounded-full bg-[var(--surface)]/70" />
  </div>
 
  {/* Video / Player */}
@@ -3093,7 +3093,7 @@ export default function ReelsCenter({
  que un hookText o subtítulo pegado ahí puede quedar oculto en una red y no en otra. */}
  <div className="absolute right-2 bottom-24 z-20 flex flex-col gap-3 items-center pointer-events-none">
  {PLATFORM_UI_ICONS[selectedPlatform].map((Icon, idx) => (
- <div key={idx} className="w-7 h-7 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center text-white/85">
+ <div key={idx} className="w-7 h-7 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center text-[var(--ink)]/85">
  <Icon className="w-3.5 h-3.5" />
  </div>
  ))}
@@ -3114,7 +3114,7 @@ export default function ReelsCenter({
  <div className="flex items-center gap-1.5">
  <span className="w-5 h-5 rounded-full -[var(--acc)] bg-[var(--acc)]/20 flex items-center justify-center text-[8px] font-mono font-bold text-[var(--acc)]">{nombreBanda.charAt(0).toUpperCase()}</span>
  <div>
- <span className="text-[9px] font-bold text-white block truncate max-w-[120px]">{instagramHandle || nombreBanda}</span>
+ <span className="text-[9px] font-bold text-[var(--ink)] block truncate max-w-[120px]">{instagramHandle || nombreBanda}</span>
  <span className="text-[7px] font-mono text-[var(--ink-2)] block truncate max-w-[120px]">{nombreBanda}</span>
  </div>
  </div>
@@ -3140,7 +3140,7 @@ export default function ReelsCenter({
  <span className="text-[var(--acc)]">⏱️ REC CORTE</span>
  <span className="font-mono">{formatTime(start + simulatedTime)} / {formatTime(end)}</span>
  </div>
- <div className="relative w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
+ <div className="relative w-full h-1 bg-[var(--surface)]/80 rounded-full overflow-hidden">
  <div 
  className="absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-linear bg-gradient-to-r from-amber-500 to-[var(--acc)]"
  style={{ width: `${pct}%` }}
@@ -3170,7 +3170,7 @@ export default function ReelsCenter({
  <button
  id="expanded-mute-btn"
  onClick={() => setIsPreviewMuted(!isPreviewMuted)}
- className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-neutral-300 hover:text-white hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all cursor-pointer shadow-lg select-none text-xs font-mono font-bold"
+ className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-neutral-300 hover:text-[var(--ink)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all cursor-pointer shadow-lg select-none text-xs font-mono font-bold"
  >
  {isPreviewMuted ? (
  <>
@@ -3202,7 +3202,7 @@ export default function ReelsCenter({
  {highlights[selectedHighlightIndex]?.range ||'N/D'}
  </span>
  </div>
- <h2 className="text-xl md:text-2xl font-bold text-white font-sans tracking-tight">
+ <h2 className="text-xl md:text-2xl font-bold text-[var(--ink)] font-sans tracking-tight">
  {highlights[selectedHighlightIndex]?.title ||'Clip sin título'}
  </h2>
  </div>
@@ -3211,7 +3211,7 @@ export default function ReelsCenter({
  <button
  id="btn-close-theater"
  onClick={() => setIsExpandedPreview(false)}
- className="p-2 rounded-[var(--r-m)] bg-neutral-800/50 hover:bg-neutral-800 -neutral-700/50 text-[var(--ink-2)] hover:text-white transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 -neutral-700/50 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
  title="Cerrar modo cine"
  >
  <X className="w-5 h-5" />
@@ -3252,14 +3252,14 @@ export default function ReelsCenter({
  strokeDashoffset={`${2 * Math.PI * 20 * (1 - (highlights[selectedHighlightIndex]?.virality || 90) / 100)}`}
  />
  </svg>
- <span className="absolute text-[11px] font-mono font-extrabold text-white">
+ <span className="absolute text-[11px] font-mono font-extrabold text-[var(--ink)]">
  {highlights[selectedHighlightIndex]?.virality || 95}%
  </span>
  </div>
  <div className="text-left">
  <div className="flex items-center gap-1">
  <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
- <span className="text-xs font-bold text-white">Viralidad</span>
+ <span className="text-xs font-bold text-[var(--ink)]">Viralidad</span>
  </div>
  <span className="text-[9px] font-mono text-[var(--acc)] uppercase tracking-widest block font-bold">POTENCIAL MÁXIMO</span>
  </div>
@@ -3404,7 +3404,7 @@ export default function ReelsCenter({
  style={{ left: `${playheadPct}%` }}
  >
  <div className="absolute -top-1 -left-1 w-2.5 h-2.5 rounded-full bg-red-500" />
- <div className="absolute top-1/2 -translate-y-1/2 left-2 bg-[var(--surface)] rounded px-1.5 py-0.5 text-[8.5px] font-mono text-white whitespace-nowrap shadow-xl">
+ <div className="absolute top-1/2 -translate-y-1/2 left-2 bg-[var(--surface)] rounded px-1.5 py-0.5 text-[8.5px] font-mono text-[var(--ink)] whitespace-nowrap shadow-xl">
  {formatTime(start + simulatedTime)}
  </div>
  </div>
@@ -3418,11 +3418,11 @@ export default function ReelsCenter({
  </div>
 
  <div className="flex justify-between text-[10px] font-mono text-[var(--ink-2)] px-1">
- <span>⏱️ Inicio: <strong className="text-white font-bold">{formatTime(start)}</strong> ({start}s)</span>
+ <span>⏱️ Inicio: <strong className="text-[var(--ink)] font-bold">{formatTime(start)}</strong> ({start}s)</span>
  <span className="text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-0.5 rounded-full font-bold">
  Duración: {duration} segundos
  </span>
- <span>⏱️ Fin: <strong className="text-white font-bold">{formatTime(end)}</strong> ({end}s)</span>
+ <span>⏱️ Fin: <strong className="text-[var(--ink)] font-bold">{formatTime(end)}</strong> ({end}s)</span>
  </div>
  </div>
 
@@ -3434,7 +3434,7 @@ export default function ReelsCenter({
  <span className="text-[10.5px] font-mono text-[var(--ink-2)] font-extrabold uppercase tracking-wider flex items-center gap-1">
  <span>⬅️ Ajustar Inicio (Izquierda)</span>
  </span>
- <span className="text-[10px] font-mono text-white font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
+ <span className="text-[10px] font-mono text-[var(--ink)] font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
  {formatTime(start)}
  </span>
  </div>
@@ -3469,7 +3469,7 @@ export default function ReelsCenter({
  <span className="text-[10.5px] font-mono text-[var(--ink-2)] font-extrabold uppercase tracking-wider flex items-center gap-1">
  <span>➡️ Ajustar Fin (Derecha)</span>
  </span>
- <span className="text-[10px] font-mono text-white font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
+ <span className="text-[10px] font-mono text-[var(--ink)] font-bold bg-[var(--surface)] px-2 py-0.5 rounded">
  {formatTime(end)}
  </span>
  </div>
@@ -3605,7 +3605,7 @@ export default function ReelsCenter({
  <p className="text-[11px] text-[var(--acc)] font-mono pl-8">
  ⚡ {cuttingProgressText}
  </p>
- <div className="w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
+ <div className="w-full h-1 bg-[var(--surface)]/80 rounded-full overflow-hidden">
  <div className="h-full bg-gradient-to-r from-[var(--acc)] to-emerald-500 animate-pulse" style={{ width:'75%' }}></div>
  </div>
  </div>
@@ -3866,7 +3866,7 @@ export default function ReelsCenter({
  id="btn-copy-text"
  type="button"
  onClick={() => handleCopyToClipboard(editedCopy ||'')}
- className="text-xs font-mono text-[var(--acc)] hover:underline flex items-center gap-1 cursor-pointer bg-transparent -none py-1 px-2 rounded-[var(--r-s)] hover:bg-neutral-800"
+ className="text-xs font-mono text-[var(--acc)] hover:underline flex items-center gap-1 cursor-pointer bg-transparent -none py-1 px-2 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80"
  >
  {copySuccess ? (
  <>
@@ -3907,7 +3907,7 @@ export default function ReelsCenter({
  setSelectedPlatform(nuevaPlataforma);
  setEditedCopy(copyForPlatform(highlights[selectedHighlightIndex], nuevaPlataforma));
  }}
- className="w-full text-xs font-mono bg-[var(--surface)] rounded-[var(--r-s)] p-2 text-white focus:outline-none cursor-pointer"
+ className="w-full text-xs font-mono bg-[var(--surface)] rounded-[var(--r-s)] p-2 text-[var(--ink)] focus:outline-none cursor-pointer"
  >
  <option value="Instagram">Instagram Reel</option>
  <option value="TikTok">TikTok Video</option>
@@ -3923,7 +3923,7 @@ export default function ReelsCenter({
  type="date"
  value={scheduledDate}
  onChange={(e) => setScheduledDate(e.target.value)}
- className="w-full text-xs font-mono bg-[var(--surface)] rounded-[var(--r-s)] p-2 text-white focus:outline-none cursor-pointer"
+ className="w-full text-xs font-mono bg-[var(--surface)] rounded-[var(--r-s)] p-2 text-[var(--ink)] focus:outline-none cursor-pointer"
  />
  </div>
 
@@ -3934,7 +3934,7 @@ export default function ReelsCenter({
  type="time"
  value={scheduledTime}
  onChange={(e) => setScheduledTime(e.target.value)}
- className="w-full text-xs font-mono bg-[var(--surface)] rounded-[var(--r-s)] p-2 text-white focus:outline-none cursor-pointer"
+ className="w-full text-xs font-mono bg-[var(--surface)] rounded-[var(--r-s)] p-2 text-[var(--ink)] focus:outline-none cursor-pointer"
  />
  </div>
  </div>
@@ -3984,7 +3984,7 @@ export default function ReelsCenter({
  id="btn-modal-cancel"
  type="button"
  onClick={() => setIsExpandedPreview(false)}
- className="flex-1 sm:flex-none px-5 py-2.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 text-xs font-mono font-bold transition-all cursor-pointer"
+ className="flex-1 sm:flex-none px-5 py-2.5 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 text-xs font-mono font-bold transition-all cursor-pointer"
  >
  Salir de Modo Cine
  </button>

@@ -127,7 +127,7 @@ export function ConvocarEnsayoModal({
  </div>
  <button
  onClick={onClose}
- className="p-1.5 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -247,7 +247,7 @@ export function ConvocarEnsayoModal({
  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono transition-all cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-bold'
- :'bg-neutral-800/60 text-[var(--ink-2)] border-transparent hover:'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-transparent hover:'
  }`}
  >
  <Users className="w-3 h-3" />
@@ -311,7 +311,7 @@ export function ConvocarEnsayoModal({
  <button
  type="button"
  onClick={handleAddObjetivo}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] text-xs font-mono font-bold flex items-center gap-1 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] text-xs font-mono font-bold flex items-center gap-1 cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" /> Añadir
  </button>
@@ -337,7 +337,7 @@ export function ConvocarEnsayoModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  Cancelar
  </button>

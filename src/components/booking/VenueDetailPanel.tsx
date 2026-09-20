@@ -592,7 +592,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
  <button
  onClick={() => setFeedbackBoloMsg(null)}
- className="text-emerald-400 hover:text-white cursor-pointer"
+ className="text-emerald-400 hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -645,7 +645,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  />
  <button
  onClick={handleStartEdit}
- className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-zinc-300 hover:text-white transition-colors cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-zinc-300 hover:text-[var(--ink)] transition-colors cursor-pointer"
  title="Editar ficha completa"
  >
  <Edit3 className="w-4 h-4" />
@@ -653,7 +653,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {onDeleteLead && (
  <button
  onClick={() => onDeleteLead(selectedLead.id, selectedLead.nombre_sala)}
- className="p-2 rounded-[var(--r-m)] bg-rose-950/60 hover:bg-rose-900 text-rose-300 hover:text-white transition-colors cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-rose-950/60 hover:bg-rose-900 text-rose-300 hover:text-[var(--ink)] transition-colors cursor-pointer"
  title="Eliminar y guardar en lista negra"
  >
  <Trash2 className="w-4 h-4 text-rose-400" />
@@ -661,7 +661,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-zinc-400 hover:text-[var(--ink)] transition-colors cursor-pointer"
  title="Cerrar panel"
  >
  <X className="w-4 h-4" />
@@ -1442,7 +1442,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => handleRegeneratePitchWithFeedback()}
  disabled={isRegeneratingPitch}
- className="px-2.5 py-1 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded text-[10px] flex items-center gap-1 transition-all cursor-pointer shrink-0 shadow-sm disabled:opacity-50"
+ className="px-2.5 py-1 bg-purple-600 hover:bg-purple-500 text-[var(--ink)] font-bold rounded text-[10px] flex items-center gap-1 transition-all cursor-pointer shrink-0 shadow-sm disabled:opacity-50"
  title="Reescribe el pitch adaptándolo a las fechas y aforo de esta campaña"
  >
  <Sparkles className="w-3 h-3" />
@@ -1854,7 +1854,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`px-2 py-1 rounded text-[10px] font-bold transition-all cursor-pointer ${
  interactionType === type
  ?'bg-[var(--acc)] text-black font-bold shadow-xs'
- :'text-[var(--ink-2)] hover:text-white'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {type ==='Llamada'
@@ -1902,7 +1902,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  : res ==='Rechazado'
  ?'bg-rose-500/30 text-rose-300 font-bold'
  :'bg-sky-500/30 text-sky-300 font-bold'
- :'bg-zinc-900 text-[var(--ink-2)] hover:text-white border-zinc-800'
+ :'bg-zinc-900 text-[var(--ink-2)] hover:text-[var(--ink)] border-zinc-800'
  }`}
  >
  {res}

@@ -67,7 +67,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  Я
  </div>
  <div>
- <h4 className="text-xs font-bold font-mono text-white flex items-center gap-1.5">
+ <h4 className="text-xs font-bold font-mono text-[var(--ink)] flex items-center gap-1.5">
  <span>Estilos de Banda & Tipografía</span>
  <Zap className="w-3 h-3 text-[var(--acc)]" />
  </h4>
@@ -77,7 +77,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <button
  type="button"
  onClick={() => setIsOpen(false)}
- className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -112,7 +112,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <span>{preset.label}</span>
  <span className="text-xs">{preset.icon}</span>
  </div>
- <div className="text-xs font-bold text-white truncate group-hover:text-amber-200 mt-0.5" title={sampleText}>
+ <div className="text-xs font-bold text-[var(--ink)] truncate group-hover:text-amber-200 mt-0.5" title={sampleText}>
  {sampleText}
  </div>
  </button>
@@ -133,7 +133,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  key={idx}
  type="button"
  onClick={() => handleInsertSymbol(sym)}
- className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--surface)] hover: hover:bg-[var(--acc)]/20 text-[var(--sunken)] hover:text-white font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
+ className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--surface)] hover: hover:bg-[var(--acc)]/20 text-[var(--sunken)] hover:text-[var(--ink)] font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
  title={`Insertar ${sym}`}
  >
  {sym}
@@ -156,7 +156,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <button
  type="button"
  onClick={() => setIsOpen(false)}
- className="px-3 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-white font-mono text-[11px] font-bold transition-colors cursor-pointer"
+ className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-mono text-[11px] font-bold transition-colors cursor-pointer"
  >
  Listo
  </button>

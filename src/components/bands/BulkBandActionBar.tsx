@@ -56,7 +56,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] shadow-xl backdrop-blur-md p-2.5 sm:p-3 transition-all animate-slide-up ${
  isStitchLight
  ?'bg-white/95 /60 text-[var(--ink)] shadow-slate-300/60'
- :'bg-[var(--surface)]/95 border-[var(--acc)]/50 text-white shadow-black/80'
+ :'bg-[var(--surface)]/95 border-[var(--acc)]/50 text-[var(--ink)] shadow-black/80'
  }`}
  >
  <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
@@ -108,7 +108,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`md:hidden p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-[var(--ink)]'
  }`}
  title="Cerrar selección"
  >
@@ -237,7 +237,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`hidden md:flex p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-zinc-400 hover:bg-zinc-800 hover:text-[var(--ink)]'
  }`}
  title="Deseleccionar todo"
  >
@@ -284,7 +284,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  setIsConfirmDeleteOpen(false);
  onBulkDelete();
  }}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-md transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-rose-600 hover:bg-rose-500 text-[var(--ink)] shadow-md transition-colors cursor-pointer"
  >
  Sí, eliminar {selectedCount}
  </button>

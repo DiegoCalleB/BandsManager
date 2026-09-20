@@ -64,7 +64,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </div>
  <div className="min-w-0">
  <div className="flex items-center gap-2">
- <h2 className="text-xs sm:text-sm font-bold text-white font-display uppercase tracking-wider truncate">
+ <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-display uppercase tracking-wider truncate">
  {t('previewModalTitle')}
  </h2>
  <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
@@ -87,8 +87,8 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setPreviewScreen('form')}
  className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  previewScreen ==='form'
- ?'bg-[var(--acc)] text-slate-950 shadow-md font-extrabold'
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-[var(--acc)] text-[var(--ink)] shadow-md font-extrabold'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <FileText className="w-3.5 h-3.5" />
@@ -99,8 +99,8 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setPreviewScreen('success')}
  className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  previewScreen ==='success'
- ?'bg-emerald-500 text-slate-950 shadow-md font-extrabold'
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-emerald-500 text-[var(--ink)] shadow-md font-extrabold'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <CheckCircle2 className="w-3.5 h-3.5" />
@@ -115,8 +115,8 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setDeviceMode('mobile')}
  className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  deviceMode ==='mobile'
- ?'bg-neutral-800 text-[var(--acc)]/70'
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-[var(--surface)]/80 text-[var(--acc)]/70'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={t('previewMobile')}
  >
@@ -128,8 +128,8 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setDeviceMode('desktop')}
  className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  deviceMode ==='desktop'
- ?'bg-neutral-800 text-[var(--acc)]/70'
- :'text-[var(--ink-2)] hover:text-white'
+ ?'bg-[var(--surface)]/80 text-[var(--acc)]/70'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={t('previewDesktop')}
  >
@@ -149,7 +149,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-mono transition-all cursor-pointer ${
  selectedLanguage === l.code
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold shadow-inner'
- :'text-[var(--ink-2)] hover:text-white opacity-75 hover:opacity-100'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] opacity-75 hover:opacity-100'
  }`}
  title={l.label}
  >
@@ -186,7 +186,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  <button
  type="button"
  onClick={handleReset}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] hover:text-white transition cursor-pointer text-xs font-mono"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] transition cursor-pointer text-xs font-mono"
  title={t('previewReset')}
  >
  <RefreshCw className="w-3.5 h-3.5" />
@@ -196,7 +196,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  <button
  type="button"
  onClick={onClose}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-slate-950 font-bold transition cursor-pointer text-xs font-mono shadow-md active:scale-95"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold transition cursor-pointer text-xs font-mono shadow-md active:scale-95"
  title={t('previewClose')}
  >
  <X className="w-4 h-4" />
@@ -214,7 +214,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setPreviewScreen('form')}
  className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all ${
  previewScreen ==='form'
- ?'bg-[var(--acc)] text-slate-950'
+ ?'bg-[var(--acc)] text-[var(--ink)]'
  :'text-[var(--ink-2)]'
  }`}
  >
@@ -225,7 +225,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setPreviewScreen('success')}
  className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all ${
  previewScreen ==='success'
- ?'bg-emerald-500 text-slate-950'
+ ?'bg-emerald-500 text-[var(--ink)]'
  :'text-[var(--ink-2)]'
  }`}
  >
@@ -239,7 +239,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setDeviceMode('mobile')}
  className={`p-1 rounded text-xs transition-all ${
- deviceMode ==='mobile' ?'bg-neutral-800 text-[var(--acc)]/70' :'text-[var(--ink-2)]'
+ deviceMode ==='mobile' ?'bg-[var(--surface)]/80 text-[var(--acc)]/70' :'text-[var(--ink-2)]'
  }`}
  >
  <Smartphone className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  type="button"
  onClick={() => setDeviceMode('desktop')}
  className={`p-1 rounded text-xs transition-all ${
- deviceMode ==='desktop' ?'bg-neutral-800 text-[var(--acc)]/70' :'text-[var(--ink-2)]'
+ deviceMode ==='desktop' ?'bg-[var(--surface)]/80 text-[var(--acc)]/70' :'text-[var(--ink-2)]'
  }`}
  >
  <Monitor className="w-3.5 h-3.5" />

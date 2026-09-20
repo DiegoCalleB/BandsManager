@@ -1133,7 +1133,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setIsMobileToolsOpen(false)}
- className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
+ className="text-zinc-400 hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -1462,7 +1462,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setIsMobileFiltersOpen(false)}
- className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
+ className="text-zinc-400 hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -1478,7 +1478,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyFavoritesFilter
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
- :'bg-black/40 text-[var(--ink-2)] hover:text-white'
+ :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>⭐ Favoritos</span>
@@ -1491,7 +1491,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyVerifiedFilter
  ?'bg-sky-500/20 text-sky-300 border-sky-500/50'
- :'bg-black/40 text-[var(--ink-2)] hover:text-white'
+ :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>✔ Verificados</span>
@@ -1511,7 +1511,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setMinCapacityFilter(0)}
- className="text-neutral-500 hover:text-white cursor-pointer"
+ className="text-neutral-500 hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-3 h-3" />
  </button>
@@ -1537,11 +1537,11 @@ export default function BookingCRM({
  placeholder="Nombre del filtro (ej: Salas BCN > 300)..."
  value={newFilterName}
  onChange={(e) => setNewFilterName(e.target.value)}
- className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-zinc-900 border-[var(--acc)]/50 text-white focus:outline-none w-48 sm:w-56"
+ className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-zinc-900 border-[var(--acc)]/50 text-[var(--ink)] focus:outline-none w-48 sm:w-56"
  />
  <button
  type="submit"
- className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
+ className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
  >
  Guardar
  </button>
@@ -1667,7 +1667,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-all cursor-pointer ${
  selectedCityFilter ===''
  ?'bg-[var(--surface)] text-[var(--acc)] font-bold'
- :'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
+ :'bg-zinc-900 text-zinc-400 hover:text-[var(--ink)] border-zinc-800'
  }`}
  >
  Todas ({activeLeadsForSection.length})
@@ -1683,7 +1683,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)] font-bold border-[var(--acc)]/50'
- :'bg-zinc-900 text-zinc-400 hover:text-white border-zinc-800'
+ :'bg-zinc-900 text-zinc-400 hover:text-[var(--ink)] border-zinc-800'
  }`}
  >
  <span>{cityName}</span>
@@ -1723,37 +1723,37 @@ export default function BookingCRM({
  {selectedCityFilter && (
  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  📍 {selectedCityFilter}
- <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-[var(--ink)] cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
  {typeFilter !=='todos' && (
  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  🏛️ {typeFilter}
- <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-[var(--ink)] cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
  {onlyFavoritesFilter && (
  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  ⭐ Favoritos
- <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-[var(--ink)] cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
  {onlyVerifiedFilter && (
  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 shrink-0">
  ✔ Verificados
- <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-[var(--ink)] cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
  {minCapacityFilter > 0 && (
  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  &gt;{minCapacityFilter} pax
- <button type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ <button type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-[var(--ink)] cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
  {activeSavedFilterId && (
  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/50 shrink-0">
  📌 {savedFilters.find(f => f.id === activeSavedFilterId)?.nombre ||'Búsqueda guardada'}
- <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
+ <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-[var(--ink)] cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
  )}
  <button
@@ -2170,7 +2170,7 @@ export default function BookingCRM({
  {optimizationFeedbackMsg && (
  <div className="p-3 bg-[var(--acc)]/15 text-amber-200 text-[11px] rounded-[var(--r-m)] flex items-center justify-between font-sans animate-in fade-in">
  <span>{optimizationFeedbackMsg}</span>
- <button onClick={() => setOptimizationFeedbackMsg(null)} className="text-[var(--acc)] font-bold ml-2 hover:text-white cursor-pointer">✕</button>
+ <button onClick={() => setOptimizationFeedbackMsg(null)} className="text-[var(--acc)] font-bold ml-2 hover:text-[var(--ink)] cursor-pointer">✕</button>
  </div>
  )}
 
@@ -2378,7 +2378,7 @@ export default function BookingCRM({
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink-2)]'
- :'bg-neutral-700 hover:bg-neutral-600 text-neutral-300'
+ :'bg-[var(--surface)]/70 hover:bg-neutral-600 text-neutral-300'
  }`}
  title="Restaurar valores por defecto de esta plantilla"
  >
@@ -2390,7 +2390,7 @@ export default function BookingCRM({
  onClick={handleSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  isStitchLight
- ?'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md shadow-indigo-100'
+ ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] shadow-md shadow-indigo-100'
  :'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
