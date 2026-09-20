@@ -83,7 +83,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  </div>
  )}
 
- <nav aria-label="Vistas principales de repertorio" className={`p-1 rounded-[var(--r-m)] flex items-center gap-1 ${isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/90 border-white/5'}`}>
+ <nav aria-label="Vistas principales de repertorio" className={`p-1 rounded-[var(--r-m)] flex items-center gap-1 ${isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-[var(--surface)]/90 border-white/5'}`}>
  <button
  id="tab-btn-setlists"
  type="button"
@@ -246,7 +246,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  <div className="flex items-center justify-between w-full gap-2">
  {/* Sub-view switcher inside Catálogo */}
  <div className={`hidden md:flex items-center gap-1 p-0.5 rounded-[var(--r-m)] shrink-0 ${
- isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/90 border-white/5'
+ isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-[var(--surface)]/90 border-white/5'
  }`}>
  <button
  id="btn-subtab-albumes"

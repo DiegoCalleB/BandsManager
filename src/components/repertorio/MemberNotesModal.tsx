@@ -173,11 +173,11 @@ export function MemberNotesModal({
  </div>
  <div>
  <h3 className={`text-base font-black font-display uppercase tracking-wider ${
- isStitchLight ? 'text-[var(--ink)]' : 'text-bg-[var(--sunken)]'
+ isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]'
  }`}>
  Notas para Repertorio por Miembro
  </h3>
- <p className="text-xs text-text-[var(--ink-2)] font-sans flex items-center gap-1.5 mt-0.5">
+ <p className="text-xs text-[var(--ink-2)] font-sans flex items-center gap-1.5 mt-0.5">
  <Music className="w-3.5 h-3.5 text-[#1db954]" />
  Canción: <span className="font-bold text-white">{formatSongTitle(song.titulo)}</span> {song.tonalidad && `(${song.tonalidad})`}
  </p>
@@ -185,7 +185,7 @@ export function MemberNotesModal({
  </div>
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -224,10 +224,10 @@ export function MemberNotesModal({
  <div className="flex-1 overflow-y-auto pr-1 space-y-4 py-1">
  {/* General Repertoire Note */}
  <div className={`p-3.5 rounded-[var(--r-m)] ${
- isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)]/90 '
+ isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)]/90 '
  }`}>
  <label className={`block text-xs font-bold font-mono uppercase mb-1.5 ${
- isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-3)]'
+ isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-3)]'
  }`}>
  📌 Nota General para todo el Grupo (Opcional)
  </label>
@@ -237,7 +237,7 @@ export function MemberNotesModal({
  onChange={(e) => setGeneralRepertorioNote(e.target.value)}
  placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco..."
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)] focus:border-indigo-500' : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)] focus:border-[#1db954]'
+ isStitchLight ? 'bg-white text-[var(--ink)] focus:border-indigo-500' : 'bg-[var(--surface)] text-[var(--sunken)] focus:border-[#1db954]'
  }`}
  />
  </div>
@@ -245,7 +245,7 @@ export function MemberNotesModal({
  <div className="space-y-3">
  <div className="flex items-center justify-between">
  <span className={`text-xs font-mono font-bold uppercase tracking-wider ${
- isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'
+ isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'
  }`}>
  Miembros de la Banda ({allMembersToDisplay.length})
  </span>
@@ -261,7 +261,7 @@ export function MemberNotesModal({
  {/* Add Custom Member Form */}
  {showAddCustomMember && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-wrap items-center gap-2 animate-in fade-in duration-150 ${
- isStitchLight ? 'bg-indigo-50/70 border-indigo-200' : 'bg-bg-[var(--surface)] border-[#1db954]/40'
+ isStitchLight ? 'bg-indigo-50/70 border-indigo-200' : 'bg-[var(--surface)] border-[#1db954]/40'
  }`}>
  <input
  type="text"
@@ -269,7 +269,7 @@ export function MemberNotesModal({
  value={newMemberName}
  onChange={(e) => setNewMemberName(e.target.value)}
  className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${
- isStitchLight ? 'bg-white ' : 'bg-bg-[var(--surface)] text-white'
+ isStitchLight ? 'bg-white ' : 'bg-[var(--surface)] text-white'
  }`}
  />
  <input
@@ -278,7 +278,7 @@ export function MemberNotesModal({
  value={newMemberInstrument}
  onChange={(e) => setNewMemberInstrument(e.target.value)}
  className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${
- isStitchLight ? 'bg-white ' : 'bg-bg-[var(--surface)] text-white'
+ isStitchLight ? 'bg-white ' : 'bg-[var(--surface)] text-white'
  }`}
  />
  <div className="flex items-center gap-1.5">
@@ -292,7 +292,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={() => setShowAddCustomMember(false)}
- className="px-2 py-2 text-text-[var(--ink-2)] hover:text-white text-xs cursor-pointer"
+ className="px-2 py-2 text-[var(--ink-2)] hover:text-white text-xs cursor-pointer"
  >
  Cancelar
  </button>
@@ -313,10 +313,10 @@ export function MemberNotesModal({
  hasNote
  ? isStitchLight
  ? 'bg-emerald-50/40 border-emerald-200'
- : 'bg-bg-[var(--surface)]/90 border-emerald-500/30'
+ : 'bg-[var(--surface)]/90 border-emerald-500/30'
  : isStitchLight
  ? 'bg-[var(--bg)]/70 '
- : 'bg-bg-[var(--surface)]/50 '
+ : 'bg-[var(--surface)]/50 '
  }`}
  >
  <div className="flex items-center justify-between mb-2">
@@ -328,10 +328,10 @@ export function MemberNotesModal({
  {member.name.charAt(0)}
  </div>
  <div>
- <span className={`text-sm font-bold ${isStitchLight ? 'text-[var(--ink)]' : 'text-bg-[var(--sunken)]'}`}>
+ <span className={`text-sm font-bold ${isStitchLight ? 'text-[var(--ink)]' : 'text-[var(--sunken)]'}`}>
  {member.name}
  </span>
- <span className="ml-2 text-[11px] px-2 py-0.5 rounded-md bg-white/10 text-text-[var(--ink-2)] font-mono">
+ <span className="ml-2 text-[11px] px-2 py-0.5 rounded-md bg-white/10 text-[var(--ink-2)] font-mono">
  {member.instrument}
  </span>
  </div>
@@ -371,7 +371,7 @@ export function MemberNotesModal({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors ${
  isStitchLight
  ? 'bg-white text-[var(--ink)] focus:border-indigo-500'
- : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)] focus:border-[#1db954]'
+ : 'bg-[var(--surface)] text-[var(--sunken)] focus:border-[#1db954]'
  }`}
  />
  </div>
@@ -385,7 +385,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs text-text-[var(--ink-3)] hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-3)] hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
  >
  Cancelar
  </button>

@@ -184,14 +184,14 @@ export function CampaignManagerModal({
  {campaigns.length} disponibles
  </span>
  </h2>
- <p className="text-xs text-text-[var(--ink-2)] font-sans mt-0.5">
+ <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">
  Configura los objetivos de fechas, ciudades y aforo. Al activar una campaña, toda la web, el calendario y los pitches de IA se enfocarán en ella.
  </p>
  </div>
  </div>
  <button 
  onClick={onClose}
- className="p-2 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors"
+ className="p-2 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -208,7 +208,7 @@ export function CampaignManagerModal({
  </span>
  <button
  onClick={() => setIsEditing(false)}
- className="text-xs text-text-[var(--ink-2)] hover:text-white underline cursor-pointer"
+ className="text-xs text-[var(--ink-2)] hover:text-white underline cursor-pointer"
  >
  Volver a la lista
  </button>
@@ -217,7 +217,7 @@ export function CampaignManagerModal({
  {/* Name & Color */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div className="sm:col-span-2">
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
  Nombre de la Campaña *
  </label>
  <input
@@ -229,7 +229,7 @@ export function CampaignManagerModal({
  />
  </div>
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
  Color en Calendario
  </label>
  <div className="flex items-center gap-2 mt-1">
@@ -250,7 +250,7 @@ export function CampaignManagerModal({
 
  {/* Target Cities */}
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
  Ciudades Objetivo *
  </label>
  <div className="flex flex-wrap gap-1.5 mb-2">
@@ -293,7 +293,7 @@ export function CampaignManagerModal({
  {/* Capacity Range */}
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
  Aforo Mínimo (pax)
  </label>
  <input
@@ -304,7 +304,7 @@ export function CampaignManagerModal({
  />
  </div>
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
  Aforo Máximo (pax)
  </label>
  <input
@@ -318,7 +318,7 @@ export function CampaignManagerModal({
 
  {/* Target Dates List & Quick Add */}
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
  Fechas Objetivo (se marcarán en Calendario y pitches IA) *
  </label>
  <div className="space-y-2 mb-2.5">
@@ -345,7 +345,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => handleRemoveDate(idx)}
- className="text-text-[var(--ink-2)] hover:text-red-400 ml-1"
+ className="text-[var(--ink-2)] hover:text-red-400 ml-1"
  title="Eliminar fecha"
  >
  <X className="w-3.5 h-3.5" />
@@ -369,14 +369,14 @@ export function CampaignManagerModal({
  </div>
  </div>
  </div>
- <p className="text-[11px] text-text-[var(--ink-2)] italic">
+ <p className="text-[11px] text-[var(--ink-2)] italic">
  💡 Consejo: Las fechas añadidas aparecerán destacadas con badge de campaña en el Calendario y serán propuestas automáticamente por los agentes de IA al redactar pitches a salas.
  </p>
  </div>
 
  {/* Notes / Co-booking details */}
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
  Notas de Enfoque y Co-booking
  </label>
  <textarea
@@ -390,7 +390,7 @@ export function CampaignManagerModal({
 
  {/* Campaign-specific pitch templates, one per lead use case */}
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] mb-1 flex items-center gap-2">
+ <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1 flex items-center gap-2">
  Plantilla de Pitch de Campaña por Caso de Uso (opcional)
  {filledPitchCategoriesCount > 0 && (
  <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">
@@ -410,7 +410,7 @@ export function CampaignManagerModal({
  className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors ${
  isSelected
  ? 'bg-purple-600/30 text-purple-200 border-purple-500/60'
- : 'bg-[var(--surface)] text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] hover:'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:'
  }`}
  >
  <cat.icon className="w-3 h-3" />
@@ -428,7 +428,7 @@ export function CampaignManagerModal({
  placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para "${PITCH_CATEGORIES.find(c => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
  className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-zinc-100 placeholder-neutral-500 focus:border-purple-500"
  />
- <p className="text-[11px] text-text-[var(--ink-2)] italic mt-1">
+ <p className="text-[11px] text-[var(--ink-2)] italic mt-1">
  💡 Cada caso de uso tiene su propio mensaje. Mientras esta campaña esté activa, el Redactor IA prioriza el mensaje de la categoría del lead sobre la plantilla habitual; las categorías sin mensaje definido siguen usando solo la plantilla habitual.
  </p>
  </div>
@@ -438,7 +438,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => setIsEditing(false)}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold text-text-[var(--ink-2)] hover:text-white bg-neutral-800/80 hover:bg-neutral-700"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--ink-2)] hover:text-white bg-neutral-800/80 hover:bg-neutral-700"
  >
  Cancelar
  </button>
@@ -457,7 +457,7 @@ export function CampaignManagerModal({
  <div className="space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <span className="text-xs font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)]">
+ <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
  Campañas Registradas
  </span>
  </div>
@@ -475,7 +475,7 @@ export function CampaignManagerModal({
  className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
  !activeCampaign
  ? 'bg-neutral-800/90 shadow-md ring-1 ring-amber-400/30'
- : 'bg-[#161514] hover: text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : 'bg-[#161514] hover: text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <div className="flex items-center gap-3">
@@ -495,7 +495,7 @@ export function CampaignManagerModal({
  </span>
  )}
  </div>
- <p className="text-[11px] text-text-[var(--ink-2)]">
+ <p className="text-[11px] text-[var(--ink-2)]">
  Muestra todas las salas, bandas y conciertos sin filtrar por una campaña específica.
  </p>
  </div>
@@ -503,7 +503,7 @@ export function CampaignManagerModal({
  {!activeCampaign ? (
  <Check className="w-5 h-5 text-amber-400" />
  ) : (
- <span className="text-[10px] font-mono text-neutral-500 hover:text-text-[var(--ink-3)]">
+ <span className="text-[10px] font-mono text-neutral-500 hover:text-[var(--ink-3)]">
  Seleccionar
  </span>
  )}
@@ -555,7 +555,7 @@ export function CampaignManagerModal({
  )}
  </div>
 
- <div className="flex flex-wrap items-center gap-3 text-xs text-text-[var(--ink-3)] pt-0.5">
+ <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ink-3)] pt-0.5">
  <span className="flex items-center gap-1 text-sky-300">
  <MapPin className="w-3.5 h-3.5 text-sky-400" />
  {camp.targetCities?.join(', ') || 'Cualquier ciudad'}
@@ -577,7 +577,7 @@ export function CampaignManagerModal({
  </div>
 
  {camp.notes && (
- <p className="text-[11px] text-text-[var(--ink-2)] italic font-sans pt-1">
+ <p className="text-[11px] text-[var(--ink-2)] italic font-sans pt-1">
  &ldquo;{camp.notes}&rdquo;
  </p>
  )}
@@ -602,7 +602,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => onSetActiveCampaign(null)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-neutral-800 text-text-[var(--ink-3)] hover:bg-neutral-700 "
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-neutral-800 text-[var(--ink-3)] hover:bg-neutral-700 "
  >
  Desactivar
  </button>
@@ -620,7 +620,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => handleStartEdit(camp)}
- className="p-1.5 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors"
+ className="p-1.5 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors"
  title="Editar campaña"
  >
  <Edit3 className="w-4 h-4" />
@@ -633,7 +633,7 @@ export function CampaignManagerModal({
  onDeleteCampaign(camp.id);
  }
  }}
- className="p-1.5 text-text-[var(--ink-2)] hover:text-red-400 rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors"
+ className="p-1.5 text-[var(--ink-2)] hover:text-red-400 rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors"
  title="Eliminar campaña"
  >
  <Trash2 className="w-4 h-4" />
@@ -649,7 +649,7 @@ export function CampaignManagerModal({
  </div>
 
  {/* Footer */}
- <div className="p-4 border-t border-[#22201e] bg-[#161514] flex justify-between items-center text-xs text-text-[var(--ink-2)]">
+ <div className="p-4 border-t border-[#22201e] bg-[#161514] flex justify-between items-center text-xs text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <ShieldCheck className="w-4 h-4 text-emerald-400" />
  <span>Persistencia en Supabase PostgreSQL</span>

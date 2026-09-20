@@ -312,7 +312,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={onClose}
- className="p-2 rounded-full hover:bg-white/10 text-text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
+ className="p-2 rounded-full hover:bg-white/10 text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -328,7 +328,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className="flex flex-col sm:flex-row gap-2.5"
  >
  <div className="relative flex-1">
- <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-[var(--ink-2)]" />
+ <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
  <input
  type="text"
  value={searchQuery}
@@ -337,7 +337,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#1db954] transition-all ${
  isStitchLight
  ? 'bg-white text-[var(--ink)] placeholder:text-[var(--ink-3)]'
- : 'bg-bg-[var(--surface)] text-white placeholder:text-neutral-500'
+ : 'bg-[var(--surface)] text-white placeholder:text-neutral-500'
  }`}
  />
  </div>
@@ -373,7 +373,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`p-4 rounded-[var(--r-l)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all ${
  isStitchLight
  ? 'bg-white shadow-sm'
- : 'bg-bg-[var(--surface)]/90 '
+ : 'bg-[var(--surface)]/90 '
  }`}
  >
  <div className="flex items-center gap-3.5">
@@ -414,7 +414,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  href={artistProfile.spotifyUrl}
  target="_blank"
  rel="noreferrer"
- className="px-3.5 py-1.5 rounded-[var(--r-m)] border-white/10 hover:border-[#1db954] text-xs font-mono font-bold flex items-center gap-1.5 text-text-[var(--ink-3)] hover:text-[#1db954] transition-all"
+ className="px-3.5 py-1.5 rounded-[var(--r-m)] border-white/10 hover:border-[#1db954] text-xs font-mono font-bold flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[#1db954] transition-all"
  >
  <span>Ver en Spotify</span>
  <ExternalLink className="w-3.5 h-3.5" />
@@ -434,7 +434,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  ) : albums.length === 0 ? (
  <div className="py-16 text-center space-y-3">
  <Disc className="w-12 h-12 text-neutral-600 mx-auto" />
- <p className="font-mono text-sm text-text-[var(--ink-2)]">
+ <p className="font-mono text-sm text-[var(--ink-2)]">
  Escribe el nombre de tu banda arriba o pega tu enlace de artista de Spotify para escanear tus álbumes y canciones.
  </p>
  </div>
@@ -444,12 +444,12 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
  <div className="flex items-center gap-2 flex-wrap">
  {/* Category Filter */}
- <div className={`p-1 rounded-full flex items-center gap-1 ${isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)] '}`}>
+ <div className={`p-1 rounded-full flex items-center gap-1 ${isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-[var(--surface)] '}`}>
  <button
  type="button"
  onClick={() => setFilterType('todos')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType === 'todos' ? 'bg-[#1db954] text-black shadow' : 'text-text-[var(--ink-2)] hover:text-white'
+ filterType === 'todos' ? 'bg-[#1db954] text-black shadow' : 'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  Todos ({albums.length})
@@ -458,7 +458,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  type="button"
  onClick={() => setFilterType('album')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType === 'album' ? 'bg-[#1db954] text-black shadow' : 'text-text-[var(--ink-2)] hover:text-white'
+ filterType === 'album' ? 'bg-[#1db954] text-black shadow' : 'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  Álbumes ({albums.filter((a) => a.albumType === 'album').length})
@@ -467,7 +467,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  type="button"
  onClick={() => setFilterType('single')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType === 'single' ? 'bg-[#1db954] text-black shadow' : 'text-text-[var(--ink-2)] hover:text-white'
+ filterType === 'single' ? 'bg-[#1db954] text-black shadow' : 'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  Singles y EPs ({albums.filter((a) => a.albumType === 'single').length})
@@ -512,10 +512,10 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  isSelected
  ? isStitchLight
  ? 'border-[#1db954] bg-white shadow-md'
- : 'border-[#1db954]/50 bg-bg-[var(--surface)]/90 shadow-lg'
+ : 'border-[#1db954]/50 bg-[var(--surface)]/90 shadow-lg'
  : isStitchLight
  ? ' bg-white/70 opacity-60'
- : ' bg-bg-[var(--surface)]/40 opacity-60'
+ : ' bg-[var(--surface)]/40 opacity-60'
  }`}
  >
  {/* Album Header Bar */}
@@ -524,7 +524,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={() => toggleSelectAlbum(album.id)}
- className="text-text-[var(--ink-2)] hover:text-white cursor-pointer shrink-0"
+ className="text-[var(--ink-2)] hover:text-white cursor-pointer shrink-0"
  >
  {isSelected ? (
  <CheckSquare className="w-5 h-5 text-[#1db954]" />
@@ -572,7 +572,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  href={album.spotifyUrl}
  target="_blank"
  rel="noreferrer"
- className="p-2 rounded-[var(--r-m)] text-text-[var(--ink-2)] hover:text-[#1db954] hover:bg-white/5 transition"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[#1db954] hover:bg-white/5 transition"
  title="Abrir álbum en Spotify"
  >
  <ExternalLink className="w-4 h-4" />
@@ -592,7 +592,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  {/* Expanded Tracklist */}
  {isExpanded && (
  <div className="border-t border-white/10 bg-black/20 p-3 sm:p-4 space-y-1.5">
- <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] px-3 pb-1 flex items-center justify-between">
+ <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] px-3 pb-1 flex items-center justify-between">
  <span>Tracklist Oficial de Spotify ({album.tracks.length} temas)</span>
  <span>Duración / Preview</span>
  </div>
@@ -607,7 +607,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`px-3 py-2 rounded-[var(--r-m)] flex items-center justify-between gap-3 text-xs font-mono transition-all ${
  isPlaying
  ? 'bg-[#1db954]/20 border-[#1db954]/40 text-white'
- : 'hover:bg-white/5 text-text-[var(--ink-3)]'
+ : 'hover:bg-white/5 text-[var(--ink-3)]'
  }`}
  >
  <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -621,7 +621,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`p-1.5 rounded-full transition-all cursor-pointer ${
  isPlaying
  ? 'bg-[#1db954] text-black shadow-md'
- : 'bg-white/10 hover:bg-[#1db954] hover:text-black text-text-[var(--ink-3)]'
+ : 'bg-white/10 hover:bg-[#1db954] hover:text-black text-[var(--ink-3)]'
  }`}
  title={isPlaying ? 'Pausar preview' : 'Reproducir preview 30s de Spotify/Deezer'}
  disabled={loadingPreviewTrackId === track.id}
@@ -646,7 +646,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  {track.tonalidadEstimada}
  </span>
  )}
- <span className="text-text-[var(--ink-2)] font-bold">{track.durationFormatted}</span>
+ <span className="text-[var(--ink-2)] font-bold">{track.durationFormatted}</span>
  </div>
  </div>
  );
@@ -664,7 +664,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  {/* Modal Footer with Options & Import Action */}
  <div className="p-5 sm:p-6 border-t border-white/10 bg-black/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
  <div className="space-y-2">
- <label className="flex items-center gap-2 text-xs font-mono text-text-[var(--ink-3)] cursor-pointer select-none">
+ <label className="flex items-center gap-2 text-xs font-mono text-[var(--ink-3)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={overwriteDuplicates}
@@ -674,7 +674,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <span>Sobrescribir temas existentes con el mismo título</span>
  </label>
 
- <label className="flex items-center gap-2 text-xs font-mono text-text-[var(--ink-3)] cursor-pointer select-none">
+ <label className="flex items-center gap-2 text-xs font-mono text-[var(--ink-3)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={updateEpkUrl}

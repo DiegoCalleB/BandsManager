@@ -53,7 +53,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <button
  type="button"
  onClick={handleDismiss}
- className="absolute top-5 right-5 p-1.5 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white hover:bg-neutral-800/60 transition-colors cursor-pointer"
+ className="absolute top-5 right-5 p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800/60 transition-colors cursor-pointer"
  title="Cerrar guía"
  >
  <X className="w-5 h-5" />
@@ -77,7 +77,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ? 'bg-amber-400 text-stone-950 font-bold shadow-sm scale-105'
- : 'bg-neutral-800/70 hover:bg-neutral-800 text-text-[var(--ink-3)] border-white/5'
+ : 'bg-neutral-800/70 hover:bg-neutral-800 text-[var(--ink-3)] border-white/5'
  }`}
  title={l.label}
  >
@@ -92,7 +92,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <h2 className="text-xl sm:text-2xl font-bold font-display text-white tracking-wide">
  ¡Hola, {bandName}! ¿Por dónde empezamos hoy?
  </h2>
- <p className="text-xs sm:text-sm text-text-[var(--ink-2)] mt-1 max-w-lg">
+ <p className="text-xs sm:text-sm text-[var(--ink-2)] mt-1 max-w-lg">
  Olvídate de paneles complicados o términos de oficina. Elige tu necesidad inmediata y te llevamos directo a la acción:
  </p>
  </div>
@@ -117,7 +117,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  Rápido
  </span>
  </div>
- <p className="text-xs text-text-[var(--ink-2)] leading-relaxed">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed">
  Apunta la sala, fecha, caché y horarios de prueba para que toda la banda tenga la ficha técnica a mano sin preguntar por WhatsApp.
  </p>
  </div>
@@ -150,7 +150,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  Recomendado
  </span>
  </div>
- <p className="text-xs text-text-[var(--ink-2)] leading-relaxed">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed">
  Ten tu web de prensa con biografía, fotos en alta, enlaces de Spotify/YouTube y rider técnico lista para compartir con programadores.
  </p>
  </div>
@@ -180,7 +180,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  Organizar el repertorio y las canciones
  </h3>
  </div>
- <p className="text-xs text-text-[var(--ink-2)] leading-relaxed">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed">
  Crea setlists para conciertos o ensayos. Añade temas, notas de afinación, letras y duraciones para saber exactamente cuánto dura tu show.
  </p>
  </div>
@@ -198,7 +198,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  {/* Footer */}
  <div className="p-4 sm:p-5 border-t border-[#23211e] bg-[#100f0e] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
- <div className="flex items-center gap-2 text-[11px] text-text-[var(--ink-2)]">
+ <div className="flex items-center gap-2 text-[11px] text-[var(--ink-2)]">
  <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
  <span>Tus datos y cambios se guardan automáticamente en tiempo real.</span>
  </div>
@@ -206,7 +206,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <button
  type="button"
  onClick={handleDismiss}
- className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-text-[var(--ink-3)] hover:text-white text-xs font-mono font-bold transition-colors cursor-pointer"
+ className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] hover:text-white text-xs font-mono font-bold transition-colors cursor-pointer"
  >
  Explorar por mi cuenta
  </button>

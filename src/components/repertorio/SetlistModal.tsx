@@ -63,14 +63,14 @@ export function SetlistModal({
  {setlistToEdit ? 'Editar Repertorio' : 'Crear Nuevo Repertorio desde Cero'}
  </h3>
  </div>
- <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white cursor-pointer">
+ <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white cursor-pointer">
  <X className="w-5 h-5" />
  </button>
  </div>
 
  <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-mono">
  <div>
- <label className="block text-text-[var(--ink-3)] font-bold mb-1">Nombre del Repertorio / Setlist *</label>
+ <label className="block text-[var(--ink-3)] font-bold mb-1">Nombre del Repertorio / Setlist *</label>
  <input
  type="text"
  required
@@ -78,18 +78,18 @@ export function SetlistModal({
  onChange={(e) => setNombre(e.target.value)}
  placeholder="ej. Festival Rumba & Rock 2026"
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none focus:border-[var(--acc)] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
  }`}
  />
  </div>
 
  <div>
- <label className="block text-text-[var(--ink-3)] font-bold mb-1">Formato / Tipo de Concierto</label>
+ <label className="block text-[var(--ink-3)] font-bold mb-1">Formato / Tipo de Concierto</label>
  <select
  value={tipoFormato}
  onChange={(e) => setTipoFormato(e.target.value as any)}
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none focus:border-[var(--acc)] cursor-pointer ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
  }`}
  >
  <option value="festival">🔥 Festival (45-60m Caña Directa)</option>
@@ -101,14 +101,14 @@ export function SetlistModal({
  </div>
 
  <div>
- <label className="block text-text-[var(--ink-3)] font-bold mb-1">Descripción / Notas de Escenario</label>
+ <label className="block text-[var(--ink-3)] font-bold mb-1">Descripción / Notas de Escenario</label>
  <textarea
  rows={3}
  value={descripcion}
  onChange={(e) => setDescripcion(e.target.value)}
  placeholder="ej. Setlist pensado para festivales con ritmo alto sin pausas..."
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none focus:border-[var(--acc)] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
  }`}
  />
  </div>
@@ -117,7 +117,7 @@ export function SetlistModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs text-text-[var(--ink-3)] hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-3)] hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
  >
  Cancelar
  </button>

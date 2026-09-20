@@ -55,7 +55,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <Guitar className="w-4 h-4 text-amber-400" />
  <h3 className="text-sm font-semibold text-white">Nombre del Proyecto Musical & Ubicación</h3>
  </div>
- <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-neutral-800 border-white/10 text-[11px] text-text-[var(--ink-2)] font-mono">
+ <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-neutral-800 border-white/10 text-[11px] text-[var(--ink-2)] font-mono">
  <Globe className="w-3 h-3 text-amber-400" />
  <span>Idioma: <strong className="text-white">{language || 'Español'}</strong></span>
  </div>
