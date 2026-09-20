@@ -161,7 +161,7 @@ export function MemberNotesModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden ${
  isStitchLight ?'bg-white' :'bg-[var(--bg)]'
  }`}>
@@ -331,7 +331,7 @@ export function MemberNotesModal({
  <span className={`text-sm font-bold ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}`}>
  {member.name}
  </span>
- <span className="ml-2 text-[11px] px-2 py-0.5 rounded-md bg-white/10 text-[var(--ink-2)] font-mono">
+ <span className="ml-2 text-[11px] px-2 py-0.5 rounded-md bg-[var(--ink)]/10 text-[var(--ink-2)] font-mono">
  {member.instrument}
  </span>
  </div>
@@ -355,7 +355,7 @@ export function MemberNotesModal({
  className={`text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] transition-all ${
  memberReadiness[memberKey] === level.value
  ? level.colorClass
- :'bg-white/5 text-[var(--ink-2)] border-transparent hover:border-[var(--hair)]'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-transparent hover:border-[var(--hair)]'
  }`}
  >
  {level.icon} {level.label}

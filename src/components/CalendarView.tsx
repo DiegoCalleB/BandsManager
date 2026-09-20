@@ -2442,7 +2442,7 @@ export default function CalendarView({
  {totalEvents > 0 && (
  <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
  isSelected
- ?'bg-black/20 text-inherit'
+ ?'bg-[var(--sunken)] text-inherit'
  :'bg-[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  {totalEvents} {totalEvents === 1 ?'evt' :'evts'}
@@ -2504,7 +2504,7 @@ export default function CalendarView({
  setShowCreateModal('concert');
  }}
  title="Añadir evento a este día"
- className="p-1 rounded hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer shrink-0"
+ className="p-1 rounded hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer shrink-0"
  >
  <Plus className="w-3 h-3" />
  </button>
@@ -2538,7 +2538,7 @@ export default function CalendarView({
  <img
  src={bandInfo.logoUrl}
  alt={bandInfo.name}
- className={`w-4 h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 ${isPosible ?'border-[var(--acc)]/60' :'/60'}`}
+ className={`w-4 h-4 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 ${isPosible ?'border-[var(--acc)]/60' :'/60'}`}
  onError={(e) => {
  (e.currentTarget as HTMLElement).style.display ='none';
  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -2603,7 +2603,7 @@ export default function CalendarView({
  <img
  src={bandInfo.logoUrl}
  alt={bandInfo.name}
- className={`w-4 h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 ${isReu ?'border-[var(--acc)]/60' :'border-[var(--ok)]/60'}`}
+ className={`w-4 h-4 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 ${isReu ?'border-[var(--acc)]/60' :'border-[var(--ok)]/60'}`}
  onError={(e) => {
  (e.currentTarget as HTMLElement).style.display ='none';
  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -2799,7 +2799,7 @@ export default function CalendarView({
  <img
  src={bandInfo.logoUrl}
  alt={bandInfo.name}
- className="w-8 h-8 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border-[var(--hair)]20 shadow-xs"
+ className="w-8 h-8 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 border-[var(--hair)]20 shadow-xs"
  onError={(e) => {
  (e.currentTarget as HTMLElement).style.display ='none';
  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -3894,7 +3894,7 @@ export default function CalendarView({
  </div>
 
  {camp.notes && (
- <p className="text-[11px] text-[var(--ink-2)] italic bg-black/20 p-2 rounded-[var(--r-m)]">
+ <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-[var(--r-m)]">
  &ldquo;{camp.notes}&rdquo;
  </p>
  )}
@@ -5305,7 +5305,7 @@ export default function CalendarView({
  {/* UNIFIED CREATE EVENT MODAL (Concierto | Ensayo | Reunión) */}
  {showCreateModal && (
  <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
- <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
@@ -5317,7 +5317,7 @@ export default function CalendarView({
  </button>
 
  {/* Segmented Event Type Selector */}
- <div className="flex items-center justify-between gap-1 p-1 bg-black/30 rounded-[var(--r-m)] mb-5 border-[var(--hair)]5">
+ <div className="flex items-center justify-between gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] mb-5 border-[var(--hair)]5">
  <button
  type="button"
  onClick={() => { setShowCreateModal('concert'); setConcIsPosible(false); }}
@@ -5920,7 +5920,7 @@ export default function CalendarView({
  {/* EDIT CONCERT MODAL (Ficha del Concierto) */}
  {viewingConcert && editDraft && (
  <ModalPortal isOpen={true} onClose={() => setViewingConcert(null)}>
- <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
@@ -6203,7 +6203,7 @@ export default function CalendarView({
  {/* EDIT REHEARSAL MODAL (Ficha del Ensayo) */}
  {viewingRehearsal && editRehearsalDraft && (
  <ModalPortal isOpen={true} onClose={() => setViewingRehearsal(null)}>
- <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
@@ -6427,7 +6427,7 @@ export default function CalendarView({
  {/* Modal de Sincronización Automática con Google Calendar / Apple iCal */}
  {showSyncModal && (
  <ModalPortal>
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-xs animate-in fade-in duration-200">
  <div className={`relative w-full max-w-xl rounded-[var(--r-l)] p-6 shadow-2xl ${
  isStitchLight ?"bg-white text-[var(--ink)]" :"bg-[var(--surface)] /30 text-[var(--ink)] shadow-amber-0/10"
  }`}>
@@ -6467,7 +6467,7 @@ export default function CalendarView({
  </div>
 
  {isMultiBandUser && (
- <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)]10 space-y-2">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)]10 space-y-2">
  <label className="block text-[11px] font-mono uppercase tracking-wider text-[var(--acc)] font-bold">
  ¿Qué bandas quieres incluir en tu agenda?
  </label>
@@ -6602,7 +6602,7 @@ export default function CalendarView({
  {/* Modal de Enviar Recordatorio / Notificación de Calendario */}
  {showReminderModal && (
  <ModalPortal>
- <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+ <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
  <div className={`max-w-md w-full rounded-[var(--r-l)] p-5 shadow-2xl relative ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
@@ -6754,7 +6754,7 @@ export default function CalendarView({
  const modalRoadbook = getCurrentRoadbook(modalRoadbookKey, selectedConcert);
  return (
  <ModalPortal isOpen={showEventFichaModal} onClose={() => setShowEventFichaModal(false)}>
- <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-[var(--scrim)]/70 backdrop-blur-md animate-in fade-in duration-200">
  <div 
  onTouchStart={handleModalTouchStart}
  onTouchMove={handleModalTouchMove}
@@ -6814,7 +6814,7 @@ export default function CalendarView({
  <img
  src={modalBandInfo.logoUrl}
  alt={modalBandInfo.name}
- className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-black/40 p-1 shrink-0 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
+ className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
  onError={(e) => {
  (e.currentTarget as HTMLElement).style.display ='none';
  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
@@ -6993,7 +6993,7 @@ export default function CalendarView({
  <Phone className="w-3.5 h-3.5" />
  <span>2. Contactos Clave</span>
  {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0 && (
- <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-black/25 font-mono">
+ <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-mono">
  {modalRoadbook.contactosClave.length}
  </span>
  )}
@@ -7012,7 +7012,7 @@ export default function CalendarView({
  <Shirt className="w-3.5 h-3.5" />
  <span>3. Control Merchandising</span>
  {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0 && (
- <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-black/25 font-mono">
+ <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-mono">
  {modalRoadbook.merchControl.items.length}
  </span>
  )}
@@ -7034,7 +7034,7 @@ export default function CalendarView({
  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
  modalRoadbook.cierreMaterial.every(i => i.checked)
  ?'bg-emerald-500 text-[var(--acc-ink)] font-black'
- :'bg-black/25'
+ :'bg-[var(--sunken)]'
  }`}>
  {modalRoadbook.cierreMaterial.filter(i => i.checked).length}/{modalRoadbook.cierreMaterial.length}
  </span>
@@ -8338,7 +8338,7 @@ export default function CalendarView({
  ?'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)] line-through'
  : isStitchLight
  ?'bg-white text-[var(--ink)] hover:border-[var(--acc)]'
- :'bg-black/50 /80 text-[var(--ink-2)] hover:border-[var(--acc)]/40'
+ :'bg-[var(--sunken)] /80 text-[var(--ink-2)] hover:border-[var(--acc)]/40'
  }`}
  >
  <div className="flex items-center gap-2.5 min-w-0 flex-1">

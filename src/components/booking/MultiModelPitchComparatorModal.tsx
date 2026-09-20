@@ -213,7 +213,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/85 backdrop-blur-md overflow-y-auto overscroll-contain">
  <div className="relative w-full max-w-6xl bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
  
  {/* HEADER */}
@@ -295,7 +295,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  value={customComment}
  onChange={e => setCustomComment(e.target.value)}
  placeholder="Ajuste puntual opcional: Ej.'Destacar que tenemos 100k streams','Proponer viernes o sábado'..."
- className="w-full px-3 py-2 bg-black/60 rounded-[var(--r-m)] border-[var(--hair)]700 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
+ className="w-full px-3 py-2 bg-[var(--sunken)] rounded-[var(--r-m)] border-[var(--hair)]700 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
  onKeyDown={e => {
  if (e.key ==='Enter') handleRunComparison();
  }}
@@ -341,7 +341,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
  </div>
 
- <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-m)] border-[var(--hair)]800 self-start sm:self-auto">
+ <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-m)] border-[var(--hair)]800 self-start sm:self-auto">
  <span className="text-[10px] text-[var(--ink-2)] px-2 font-mono uppercase">Escala:</span>
  <button
  type="button"
@@ -439,7 +439,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  }`}
  >
  {/* Model Header */}
- <div className="p-3.5 border-b border-[var(--hair)]800/80 flex items-center justify-between bg-black/30 rounded-t-xl">
+ <div className="p-3.5 border-b border-[var(--hair)]800/80 flex items-center justify-between bg-[var(--sunken)] rounded-t-xl">
  <div className="flex items-center gap-2">
  <span className="text-lg">{getProviderIcon(prop.provider)}</span>
  <div>
@@ -469,7 +469,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* Cost & Economics Card Banner */}
- <div className="px-3.5 py-2.5 bg-black/40 border-b border-[var(--hair)]800/70 flex items-center justify-between text-xs">
+ <div className="px-3.5 py-2.5 bg-[var(--sunken)] border-b border-[var(--hair)]800/70 flex items-center justify-between text-xs">
  <div>
  <div className="flex items-center gap-1.5">
  <Coins className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -566,7 +566,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  )}
 
  {/* TABLA COMPARATIVA DE RENTABILIDAD & TARIFAS */}
- <div className="mt-4 p-3.5 bg-black/50 rounded-[var(--r-m)] text-xs space-y-2">
+ <div className="mt-4 p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs space-y-2">
  <div className="flex items-center justify-between">
  <span className="text-[11px] font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5 font-mono">
  <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" />

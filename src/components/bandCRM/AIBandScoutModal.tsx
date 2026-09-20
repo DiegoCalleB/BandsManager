@@ -106,7 +106,7 @@ export function AIBandScoutModal({
 
  return (
  <ModalPortal>
- <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-[var(--scrim)]/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
  <div className={`w-full max-w-4xl ${bgColor} rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}>
  
  {/* Header */}
@@ -120,7 +120,7 @@ export function AIBandScoutModal({
  <p className={`text-xs ${subtextColor}`}>Descubre bandas para Co-booking o Date Swap</p>
  </div>
  </div>
- <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors text-[var(--ink-2)] hover:text-[var(--ink-2)]">
+ <button onClick={onClose} className="p-2 hover:bg-[var(--sunken)] rounded-full transition-colors text-[var(--ink-2)] hover:text-[var(--ink-2)]">
  <X className="w-5 h-5" />
  </button>
  </div>
@@ -253,7 +253,7 @@ export function AIBandScoutModal({
  </div>
 
  {/* Footer */}
- <div className={`p-4 border-t ${borderColor} flex justify-end gap-3 bg-black/5`}>
+ <div className={`p-4 border-t ${borderColor} flex justify-end gap-3 bg-[var(--sunken)]`}>
  <button
  onClick={onClose}
  className={`px-4 py-2 font-medium text-sm rounded-[var(--r-m)] ${subtextColor} hover:${textColor} transition-colors`}

@@ -976,7 +976,7 @@ export default function BookingCRM({
  <Building2 className="w-3.5 h-3.5 shrink-0" />
  <span>Escenarios</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
- sectionTab ==='salas' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
+ sectionTab ==='salas' ?'bg-[var(--sunken)] text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {leads.filter(l => !normalizeType(l.tipo).includes('medio') && !['grupo','agencia','manager','productora','sello'].includes(normalizeType(l.tipo))).length}
  </span>
@@ -995,7 +995,7 @@ export default function BookingCRM({
  <Radio className="w-3.5 h-3.5 shrink-0" />
  <span>Medios y Prensa</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
- sectionTab ==='medios' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
+ sectionTab ==='medios' ?'bg-[var(--sunken)] text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {leads.filter(l => normalizeType(l.tipo) ==='medio').length}
  </span>
@@ -1014,7 +1014,7 @@ export default function BookingCRM({
  <Briefcase className="w-3.5 h-3.5 shrink-0" />
  <span>Management & Productoras</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
- sectionTab ==='grupos' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
+ sectionTab ==='grupos' ?'bg-[var(--sunken)] text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {leads.filter(l => ['agencia','manager','productora','sello','promotora','management'].some(t => normalizeType(l.tipo).includes(t))).length}
  </span>
@@ -1478,7 +1478,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyFavoritesFilter
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
- :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>⭐ Favoritos</span>
@@ -1491,14 +1491,14 @@ export default function BookingCRM({
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyVerifiedFilter
  ?'bg-sky-500/20 text-sky-300 border-[var(--acc)]/50'
- :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>✔ Verificados</span>
  {onlyVerifiedFilter && <X className="w-3 h-3 ml-0.5" />}
  </button>
 
- <div className="flex items-center gap-1.5 bg-black/40 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs">
+ <div className="flex items-center gap-1.5 bg-[var(--sunken)] px-2.5 py-1.5 rounded-[var(--r-s)] text-xs">
  <span className="text-[var(--ink-2)]">Aforo mín:</span>
  <input
  type="number"
@@ -1802,7 +1802,7 @@ export default function BookingCRM({
  <span className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
  isSelected 
  ?'bg-[var(--acc)]/25 text-[var(--acc-ink)]' 
- :'bg-black/10 text-[var(--ink-2)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {count}
  </span>

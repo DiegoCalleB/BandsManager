@@ -1041,7 +1041,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  const shape: GuitarChordShape | undefined = GUITAR_CHORD_DATABASE[chord];
 
  return (
- <div className="bg-black/60 p-2 rounded-[var(--r-m)] text-center space-y-1 hover:/40 transition">
+ <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] text-center space-y-1 hover:/40 transition">
  <div className="text-xs font-bold text-[var(--acc)] font-mono flex items-center justify-center gap-1">
  <span>{chord}</span>
  </div>

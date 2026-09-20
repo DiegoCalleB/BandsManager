@@ -57,7 +57,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
  {/* Backdrop overlay */}
  <div
  onClick={onClose}
- className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity cursor-pointer z-[999998]"
+ className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-md transition-opacity cursor-pointer z-[999998]"
  />
 
  {/* Sheet Drawer Container */}

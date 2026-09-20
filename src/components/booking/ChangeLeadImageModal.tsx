@@ -128,7 +128,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div 
- className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn overflow-y-auto overscroll-contain"
+ className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fadeIn overflow-y-auto overscroll-contain"
  onClick={(e) => {
  e.stopPropagation();
  onClose();
@@ -246,7 +246,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  placeholder="https://ejemplo.com/logo.png"
  value={customUrl}
  onChange={(e) => setCustomUrl(e.target.value)}
- className="flex-1 bg-black/60 border-[var(--hair)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
+ className="flex-1 bg-[var(--sunken)] border-[var(--hair)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
  />
  <button
  type="button"

@@ -2406,7 +2406,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  key={iIdx} 
  className={`p-1.5 rounded text-[9px] font-sans flex flex-col gap-0.5 ${
  isStitchLight 
- ?'bg-white/60 -slate-200/50 text-[var(--ink-2)]' 
+ ?'bg-[var(--ink)]/60 -slate-200/50 text-[var(--ink-2)]' 
  :'bg-[var(--surface)]/40 bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}
  >

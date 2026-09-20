@@ -822,7 +822,7 @@ export default function App() {
  return (
  <>
  <div
- className="md:hidden fixed inset-x-0 top-0 bottom-16 z-40 bg-black/70"
+ className="md:hidden fixed inset-x-0 top-0 bottom-16 z-40 bg-[var(--sunken)]"
  onClick={() => setOpenGroupSheetId(null)}
  />
  <div className="md:hidden fixed inset-x-0 bottom-16 z-40 max-h-[60vh] overflow-y-auto bg-[var(--surface)] rounded-t-[var(--r-xl)]">
@@ -857,7 +857,7 @@ export default function App() {
  <div className="md:hidden fixed inset-0 z-50 flex">
  {/* Backdrop */}
  <div 
- className="fixed inset-0 bg-black/75 backdrop-blur-xs transition-opacity"
+ className="fixed inset-0 bg-[var(--scrim)]/75 backdrop-blur-xs transition-opacity"
  onClick={() => setIsMobileMenuOpen(false)}
  />
  {/* Drawer panel */}

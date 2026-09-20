@@ -52,6 +52,7 @@
   --acc-glow:   rgba(160, 118, 61, 0.1);   /* --acc con 10% opacidad */
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Sombra / divisor en patrones */
   --shadow-soft: rgba(0, 0, 0, 0.15);      /* Sombra muy suave (playhead, etc.) */
+  --scrim:      #000000;                   /* Velo tras un modal — siempre oscuro, no cambia con el tema */
 
   /* Elevación — Espectro es plano. Separa el relleno, no la sombra. */
   --sh-s: none;
@@ -101,6 +102,7 @@
   --ok-glow:    rgba(79, 199, 184, 0.1);   /* --ok (dark) con 10% */
   --acc-glow:   rgba(200, 148, 94, 0.1);   /* --acc (dark) con 10% */
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Mismo negro/sombra */
+  --scrim:      #000000;
 
   color-scheme: dark;
 }
@@ -136,6 +138,7 @@
   --ok-glow:    rgba(16, 185, 129, 0.1);   /* --ok (classic) con 10% */
   --acc-glow:   rgba(242, 202, 80, 0.1);   /* --acc (classic) con 10% */
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Mismo negro/sombra */
+  --scrim:      #000000;
 
   --r-pill: 999px;
   --r-s:    8px;

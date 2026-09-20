@@ -89,7 +89,7 @@ export function ShareModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--scrim)]/75 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
  <div 
  className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-[var(--ink)]"
  onClick={(e) => e.stopPropagation()}
@@ -97,7 +97,7 @@ export function ShareModal({
  {/* Header */}
  <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--hair)] bg-white/[0.02]">
  <div className="flex items-center gap-3">
- <div className="p-2.5 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-center">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-center">
  {getItemIcon()}
  </div>
  <div>
@@ -111,7 +111,7 @@ export function ShareModal({
  </div>
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/10 transition-colors"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-colors"
  title="Cerrar"
  >
  <X className="w-5 h-5" />
@@ -220,7 +220,7 @@ export function ShareModal({
  <div className="flex items-center gap-2">
  <button
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-medium text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/5 transition-colors"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-medium text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5 transition-colors"
  >
  Cancelar
  </button>

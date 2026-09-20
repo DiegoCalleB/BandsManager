@@ -1224,7 +1224,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain">
  <div
  className={`relative w-full max-w-5xl my-auto rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight
@@ -2420,7 +2420,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Modal de Vinculación de Sesión / Cookies de YouTube */}
  {cookieModalOpen && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fade-in">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-4 shadow-2xl text-[var(--ink-2)]">
  <div className="flex items-center justify-between border-b pb-3">
  <div className="flex items-center gap-2">
@@ -2528,7 +2528,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  )}
  {/* Modal: Asistente para Nombrar Temas y Speeches */}
  {showQuickNamingModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-sm animate-fade-in">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-3xl w-full p-6 space-y-4 shadow-2xl text-[var(--ink-2)] max-h-[90vh] flex flex-col">
  {/* Header */}
  <div className="flex items-center justify-between border-b pb-3 shrink-0">

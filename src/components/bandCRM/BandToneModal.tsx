@@ -265,13 +265,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  const inputClass = `w-full p-2 rounded-[var(--r-s)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :'bg-black/40 text-[var(--ink-2)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`;
  const labelClass ='text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] block mb-1';
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
@@ -543,7 +543,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </span>
  <div className="space-y-1">
  {toneData.frases_emblematicas_extraidas.map((quote, idx) => (
- <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-2)] bg-black/30 p-1.5 rounded">"{quote}"
+ <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded">"{quote}"
  </p>
  ))}
  </div>
@@ -558,7 +558,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </span>
  <div className="space-y-1">
  {toneData.frases_directo_extraidas.map((quote, idx) => (
- <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-2)] bg-black/30 p-1.5 rounded">"{quote}"
+ <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded">"{quote}"
  </p>
  ))}
  </div>
@@ -579,7 +579,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  ['facebook','Facebook'],
  ] as const).map(([key, label]) =>
  toneData.matices_por_red?.[key] ? (
- <p key={key} className="text-[10px] font-mono text-[var(--ink-2)] bg-black/30 p-1.5 rounded">
+ <p key={key} className="text-[10px] font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded">
  <span className="text-sky-400 font-bold">{label}:</span> {toneData.matices_por_red[key]}
  </p>
  ) : null
@@ -633,7 +633,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  className={`w-full p-3 rounded-[var(--r-m)] font-mono text-[10px] leading-relaxed focus:outline-none ${
  isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink)]'
- :'bg-black/60 text-[var(--ink-2)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  />
 
@@ -681,7 +681,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  const savingAuto = savingRuleKey === autoKey;
  const savingManual = savingRuleKey === manualKey;
  return (
- <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-black/30 space-y-1.5">
+ <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1.5">
  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-violet-300">
  {CATEGORY_LABELS[cat] || cat}
  </span>
@@ -737,7 +737,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onKeyDown={(e) => { if (e.key ==='Enter') handleAddLearnedRule('pitch', cat); }}
  placeholder="🔒 + añadir regla manual (protegida)..."
  disabled={savingManual}
- className="flex-1 px-2 py-1 rounded bg-black/40 text-[10px] text-[var(--ink)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
+ className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
  />
  <button
  onClick={() => handleAddLearnedRule('pitch', cat)}
@@ -791,7 +791,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  const savingAuto = savingRuleKey === autoKey;
  const savingManual = savingRuleKey === manualKey;
  return (
- <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-black/30 space-y-1.5">
+ <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1.5">
  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-sky-300">
  {CATEGORY_LABELS[cat] || cat}
  </span>
@@ -847,7 +847,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onKeyDown={(e) => { if (e.key ==='Enter') handleAddLearnedRule('reply', cat); }}
  placeholder="🔒 + añadir regla manual (protegida)..."
  disabled={savingManual}
- className="flex-1 px-2 py-1 rounded bg-black/40 text-[10px] text-[var(--ink)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
+ className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
  />
  <button
  onClick={() => handleAddLearnedRule('reply', cat)}

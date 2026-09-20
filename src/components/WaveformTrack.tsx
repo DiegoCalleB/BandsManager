@@ -289,7 +289,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
 
  return (
  <div 
- className="relative w-full h-12 bg-black/60 rounded-[var(--r-s)] overflow-hidden border border-[var(--hair)] cursor-pointer select-none group transition-colors hover:border-[var(--acc)]/40"
+ className="relative w-full h-12 bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden border border-[var(--hair)] cursor-pointer select-none group transition-colors hover:border-[var(--acc)]/40"
  onClick={handleContainerClick}
  title="Haz clic para mover el cabezal de reproducción (Seek Master)"
  >
@@ -345,7 +345,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  {/* Empty DAW Track Grid Region if track audio duration is shorter than master */}
  {trackWidthPercent < 98 && (
  <div 
- className="absolute top-0 bottom-0 right-0 bg-black/40 border-l border-dashed border-[var(--hair)] flex items-center justify-end px-3 pointer-events-none z-10"
+ className="absolute top-0 bottom-0 right-0 bg-[var(--sunken)] border-l border-dashed border-[var(--hair)] flex items-center justify-end px-3 pointer-events-none z-10"
  style={{ left: `${trackWidthPercent}%` }}
  >
  <span className="text-[9px] font-mono text-[var(--ink-2)] font-semibold uppercase tracking-wider">
@@ -364,7 +364,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
 
  {/* Loading Overlay */}
  {!isLoaded && !loadError && (
- <div className="absolute inset-0 flex items-center justify-center text-[10px] text-[var(--ink-2)] font-mono animate-pulse bg-black/70 z-30">
+ <div className="absolute inset-0 flex items-center justify-center text-[10px] text-[var(--ink-2)] font-mono animate-pulse bg-[var(--scrim)]/70 z-30">
  ⚡ Cargando onda de audio...
  </div>
  )}

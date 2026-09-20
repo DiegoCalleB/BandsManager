@@ -111,7 +111,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
@@ -253,7 +253,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <div className="text-xs text-[var(--ink-2)] space-y-2">
  <div>
  <strong className="text-[var(--acc)] font-mono block text-[11px] mb-0.5">Propuesta de Arreglo:</strong>
- <p className="leading-relaxed whitespace-pre-line bg-black/40 p-2.5 rounded-[var(--r-s)] font-sans text-[var(--ink-2)]">
+ <p className="leading-relaxed whitespace-pre-line bg-[var(--sunken)] p-2.5 rounded-[var(--r-s)] font-sans text-[var(--ink-2)]">
  {generatedIdea.descripcionArreglo}
  </p>
  </div>

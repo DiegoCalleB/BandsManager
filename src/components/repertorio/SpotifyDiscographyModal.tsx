@@ -280,7 +280,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  if (!isOpen) return null;
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 backdrop-blur-md animate-fadeIn">
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden transition-all ${
  isStitchLight
@@ -312,7 +312,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={onClose}
- className="p-2 rounded-full hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+ className="p-2 rounded-full hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -478,7 +478,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={() => toggleSelectAll(selectedAlbumsCount < albums.length)}
- className="px-3 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] text-xs font-mono font-bold hover:bg-white/5 transition flex items-center gap-1.5 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] text-xs font-mono font-bold hover:bg-[var(--ink)]/5 transition flex items-center gap-1.5 cursor-pointer"
  >
  {selectedAlbumsCount === albums.length ? (
  <>
@@ -514,7 +514,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  ?'border-[var(--hair)] bg-white shadow-md'
  :'border-[var(--hair)]/50 bg-[var(--surface)]/90 shadow-lg'
  : isStitchLight
- ?' bg-white/70 opacity-60'
+ ?' bg-[var(--ink)]/70 opacity-60'
  :' bg-[var(--surface)]/40 opacity-60'
  }`}
  >
@@ -572,7 +572,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  href={album.spotifyUrl}
  target="_blank"
  rel="noreferrer"
- className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ok)] hover:bg-white/5 transition"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ok)] hover:bg-[var(--ink)]/5 transition"
  title="Abrir álbum en Spotify"
  >
  <ExternalLink className="w-4 h-4" />
@@ -581,7 +581,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={() => toggleExpandAlbum(album.id)}
- className="px-3 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] hover:bg-white/10 text-xs font-mono font-bold flex items-center gap-1 cursor-pointer transition"
+ className="px-3 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] hover:bg-[var(--ink)]/10 text-xs font-mono font-bold flex items-center gap-1 cursor-pointer transition"
  >
  <span>{isExpanded ?'Ocultar Pistas' :'Ver Pistas'}</span>
  {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -591,7 +591,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
 
  {/* Expanded Tracklist */}
  {isExpanded && (
- <div className="border-t border-[var(--hair)] bg-black/20 p-3 sm:p-4 space-y-1.5">
+ <div className="border-t border-[var(--hair)] bg-[var(--sunken)] p-3 sm:p-4 space-y-1.5">
  <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] px-3 pb-1 flex items-center justify-between">
  <span>Tracklist Oficial de Spotify ({album.tracks.length} temas)</span>
  <span>Duración / Preview</span>
@@ -607,7 +607,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`px-3 py-2 rounded-[var(--r-m)] flex items-center justify-between gap-3 text-xs font-mono transition-all ${
  isPlaying
  ?'bg-[var(--surface)]/20 border-[var(--hair)]/40 text-[var(--ink)]'
- :'hover:bg-white/5 text-[var(--ink-2)]'
+ :'hover:bg-[var(--ink)]/5 text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -621,7 +621,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`p-1.5 rounded-full transition-all cursor-pointer ${
  isPlaying
  ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
- :'bg-white/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]'
+ :'bg-[var(--ink)]/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]'
  }`}
  title={isPlaying ?'Pausar preview' :'Reproducir preview 30s de Spotify/Deezer'}
  disabled={loadingPreviewTrackId === track.id}
@@ -642,7 +642,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
 
  <div className="flex items-center gap-3 shrink-0">
  {track.tonalidadEstimada && (
- <span className="px-1.5 py-0.5 rounded bg-white/5 text-[10px] text-[var(--acc)] font-bold">
+ <span className="px-1.5 py-0.5 rounded bg-[var(--ink)]/5 text-[10px] text-[var(--acc)] font-bold">
  {track.tonalidadEstimada}
  </span>
  )}
@@ -662,7 +662,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  </div>
 
  {/* Modal Footer with Options & Import Action */}
- <div className="p-5 sm:p-6 border-t border-[var(--hair)] bg-black/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+ <div className="p-5 sm:p-6 border-t border-[var(--hair)] bg-[var(--sunken)] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
  <div className="space-y-2">
  <label className="flex items-center gap-2 text-xs font-mono text-[var(--ink-2)] cursor-pointer select-none">
  <input
@@ -689,7 +689,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2.5 rounded-[var(--r-l)] border-[var(--hair)] hover:bg-white/5 text-xs font-mono font-bold transition cursor-pointer"
+ className="px-4 py-2.5 rounded-[var(--r-l)] border-[var(--hair)] hover:bg-[var(--ink)]/5 text-xs font-mono font-bold transition cursor-pointer"
  >
  Cancelar
  </button>

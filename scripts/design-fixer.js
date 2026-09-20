@@ -197,6 +197,42 @@ function fixBgTextColors(content) {
   return { content, changed };
 }
 
+// bg-black / bg-white sólidos con opacidad, fuera de la lógica isStitchLight
+// (esa es del color de marca de cada banda, un eje aparte — no se toca aquí).
+// Tres casos, verificados a mano por muestreo antes de aplicar:
+//   1. Velo de modal (inset-0 + bg-black/NN) → siempre oscuro, no cambia con tema → --scrim
+//   2. Chip/panel recessed (bg-black/NN sin backdrop-blur cerca) → en claro se veía
+//      gris sucio en vez de superficie hundida limpia → --sunken (sólido, sin opacidad)
+//   3. Hover lighten (bg-white/NN) → en tema claro era invisible (blanco sobre blanco) →
+//      var(--ink)/NN, que oscurece en claro y aclara en oscuro, siempre visible
+function fixBlackWhiteOverlays(content) {
+  let changed = false;
+  const lines = content.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (/isStitchLight/.test(line)) continue;
+
+    if (/\binset-0\b/.test(line) && /\bbg-black\/\d+\b/.test(line)) {
+      const before = line;
+      line = line.replace(/\bbg-black\/(\d+)\b/g, 'bg-[var(--scrim)]/$1');
+      if (line !== before) changed = true;
+    } else if (/\bbg-black\/\d+\b/.test(line) && !/backdrop-blur/.test(line)) {
+      const before = line;
+      line = line.replace(/\bbg-black\/\d+\b/g, 'bg-[var(--sunken)]');
+      if (line !== before) changed = true;
+    }
+
+    if (/\bbg-white\/\d+\b/.test(line)) {
+      const before = line;
+      line = line.replace(/\bbg-white\/(\d+)\b/g, 'bg-[var(--ink)]/$1');
+      if (line !== before) changed = true;
+    }
+
+    lines[i] = line;
+  }
+  return { content: lines.join('\n'), changed };
+}
+
 function fixFile(filePath) {
   let content = fs.readFileSync(filePath, 'utf-8');
   let changed = false;
@@ -221,6 +257,10 @@ function fixFile(filePath) {
     content = bgTextResult.content;
     if (bgTextResult.changed) changed = true;
   }
+
+  const overlayResult = fixBlackWhiteOverlays(content);
+  content = overlayResult.content;
+  if (overlayResult.changed) changed = true;
 
   if (changed) {
     fs.writeFileSync(filePath, content);

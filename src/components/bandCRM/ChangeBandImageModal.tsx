@@ -106,7 +106,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div 
- className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn overflow-y-auto overscroll-contain"
+ className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fadeIn overflow-y-auto overscroll-contain"
  onClick={onClose}
  >
  <div 
@@ -181,7 +181,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  </button>
  ) : (
  <div className="p-3 bg-[var(--bg)] border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
- <input type="url" placeholder="https://ejemplo.com/logo.png" value={customUrl} onChange={(e) => setCustomUrl(e.target.value)} className="w-full bg-black/60 border-[var(--hair)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]" />
+ <input type="url" placeholder="https://ejemplo.com/logo.png" value={customUrl} onChange={(e) => setCustomUrl(e.target.value)} className="w-full bg-[var(--sunken)] border-[var(--hair)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]" />
  <button onClick={handleSaveCustomUrl} disabled={!customUrl.trim()} className="px-3 py-1.5 bg-[var(--acc)] text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-s)] hover:bg-[var(--acc)]/60">Guardar</button>
  </div>
  )}

@@ -2127,11 +2127,11 @@ export default function ReelsCenter({
  {clip.range}
  </span>
  <div className="absolute inset-0 flex items-center justify-center z-0 opacity-80 group-hover:scale-105 transition-transform">
- <div className="w-8 h-8 rounded-full bg-black/40 -white/20 flex items-center justify-center text-[var(--acc)]">
+ <div className="w-8 h-8 rounded-full bg-[var(--sunken)] -white/20 flex items-center justify-center text-[var(--acc)]">
  <Play className="w-3.5 h-3.5 fill-[var(--acc)] ml-0.5" />
  </div>
  </div>
- <span className="text-[8px] font-mono text-[var(--ink-2)] self-end z-10 bg-black/60 px-1 rounded truncate w-full">
+ <span className="text-[8px] font-mono text-[var(--ink-2)] self-end z-10 bg-[var(--sunken)] px-1 rounded truncate w-full">
  CLIP-{index + 1}.mp4
  </span>
  </div>
@@ -2757,7 +2757,7 @@ export default function ReelsCenter({
  id="btn-toggle-sound"
  type="button"
  onClick={() => setIsPreviewMuted(!isPreviewMuted)}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/60 -white/20 text-[var(--ink)] hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg select-none"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[var(--sunken)] -white/20 text-[var(--ink)] hover:bg-[var(--sunken)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg select-none"
  >
  {isPreviewMuted ? (
  <>
@@ -2777,7 +2777,7 @@ export default function ReelsCenter({
  id="btn-maximize-preview"
  type="button"
  onClick={() => setIsExpandedPreview(true)}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/60 -white/20 text-[var(--ink)] hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg select-none"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[var(--sunken)] -white/20 text-[var(--ink)] hover:bg-[var(--sunken)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg select-none"
  >
  <Maximize2 className="w-3 h-3 text-sky-400" />
  <span className="text-[7.5px] font-mono font-extrabold tracking-wider uppercase text-sky-200">VER GRANDE</span>
@@ -2802,19 +2802,19 @@ export default function ReelsCenter({
  {/* Right Side Social Action Widgets */}
  <div className="self-end flex flex-col gap-4 items-center z-10 mr-1">
  <div className="flex flex-col items-center gap-1 cursor-pointer">
- <div className="w-8 h-8 rounded-full bg-black/40 -white/10 flex items-center justify-center text-[var(--ink)] hover:text-red-500">
+ <div className="w-8 h-8 rounded-full bg-[var(--sunken)] -white/10 flex items-center justify-center text-[var(--ink)] hover:text-red-500">
  <Heart className="w-4 h-4 fill-[var(--surface)]/10" />
  </div>
  <span className="text-[8px] font-mono text-[var(--ink)] font-bold">2,108</span>
  </div>
  <div className="flex flex-col items-center gap-1 cursor-pointer">
- <div className="w-8 h-8 rounded-full bg-black/40 -white/10 flex items-center justify-center text-[var(--ink)]">
+ <div className="w-8 h-8 rounded-full bg-[var(--sunken)] -white/10 flex items-center justify-center text-[var(--ink)]">
  <MessageCircle className="w-4 h-4" />
  </div>
  <span className="text-[8px] font-mono text-[var(--ink)] font-bold">48</span>
  </div>
  <div className="flex flex-col items-center gap-1 cursor-pointer">
- <div className="w-8 h-8 rounded-full bg-black/40 -white/10 flex items-center justify-center text-[var(--ink)]">
+ <div className="w-8 h-8 rounded-full bg-[var(--sunken)] -white/10 flex items-center justify-center text-[var(--ink)]">
  <Share2 className="w-4 h-4" />
  </div>
  <span className="text-[8px] font-mono text-[var(--ink)] font-bold">186</span>
@@ -3115,10 +3115,10 @@ export default function ReelsCenter({
 
  {/* Video Info Overlays inside the phone */}
  <div className="z-10 flex justify-between items-center">
- <span className="text-[8px] font-mono text-[var(--acc)] font-extrabold tracking-widest bg-black/40 py-1 px-2 rounded-full -white/5 uppercase">
+ <span className="text-[8px] font-mono text-[var(--acc)] font-extrabold tracking-widest bg-[var(--sunken)] py-1 px-2 rounded-full -white/5 uppercase">
  Clip #{selectedHighlightIndex + 1}
  </span>
- <div className="flex gap-1 items-center bg-black/40 py-1 px-2 rounded-full -white/5">
+ <div className="flex gap-1 items-center bg-[var(--sunken)] py-1 px-2 rounded-full -white/5">
  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
  <span className="text-[8px] font-mono text-red-400 font-bold">1080P HD</span>
  </div>
@@ -3149,7 +3149,7 @@ export default function ReelsCenter({
  if (duration > 0) {
  const pct = (simulatedTime / duration) * 100;
  return (
- <div className="p-1.5 rounded-[var(--r-m)] -white/10 bg-black/75 text-[var(--ink-2)] space-y-1">
+ <div className="p-1.5 rounded-[var(--r-m)] -white/10 bg-[var(--sunken)] text-[var(--ink-2)] space-y-1">
  <div className="flex justify-between items-center text-[7.5px] font-mono font-bold">
  <span className="text-[var(--acc)]">⏱️ REC CORTE</span>
  <span className="font-mono">{formatTime(start + simulatedTime)} / {formatTime(end)}</span>
@@ -3171,7 +3171,7 @@ export default function ReelsCenter({
  return null;
  })()}
 
- <div className="flex items-center gap-1 text-[8px] font-mono bg-black/60 text-[var(--acc)] bg-[var(--surface)]/50 py-1 px-2 rounded-full max-w-[150px] truncate">
+ <div className="flex items-center gap-1 text-[8px] font-mono bg-[var(--sunken)] text-[var(--acc)] bg-[var(--surface)]/50 py-1 px-2 rounded-full max-w-[150px] truncate">
  <Music className="w-2.5 h-2.5 shrink-0" />
  <span className="truncate">{videoMeta?.title || `Audio original · ${nombreBanda}`}</span>
  </div>

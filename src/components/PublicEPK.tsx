@@ -518,7 +518,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  type="button"
  onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior:'smooth' })}
  aria-label={t('fotoAnterior')}
- className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+ className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
  ‹
  </button>
@@ -526,7 +526,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  type="button"
  onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior:'smooth' })}
  aria-label={t('fotoSiguiente')}
- className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+ className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
  ›
  </button>
@@ -645,7 +645,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </div>
  <div className="flex items-center gap-2 sm:gap-3">
  {/* Selector de idioma */}
- <div className="flex items-center gap-0.5 bg-black/20 border-current/15 rounded-[var(--r-s)] p-0.5" role="group" aria-label={t('selectorIdioma')}>
+ <div className="flex items-center gap-0.5 bg-[var(--sunken)] border-current/15 rounded-[var(--r-s)] p-0.5" role="group" aria-label={t('selectorIdioma')}>
  {availableLanguages.map(l => (
  <button
  key={l.code}
@@ -786,7 +786,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <button
  onClick={() => setStickyPlayerDismissed(true)}
  title={t('playerCerrar')}
- className="p-1.5 opacity-60 hover:opacity-100 rounded-[var(--r-s)] hover:bg-black/10 transition"
+ className="p-1.5 opacity-60 hover:opacity-100 rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition"
  >
  <X className="w-4 h-4" />
  </button>

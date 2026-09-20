@@ -101,7 +101,7 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
  )}
 
  {showCameraHover && onClick && (
- <div className="absolute inset-0 bg-black/75 rounded-[var(--r-s)] opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity border-[var(--acc)]">
+ <div className="absolute inset-0 bg-[var(--scrim)]/75 rounded-[var(--r-s)] opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity border-[var(--acc)]">
  <Camera className={`${cameraIconSize} text-[var(--acc)]`} />
  </div>
  )}

@@ -419,7 +419,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  value={comentarioFeedback}
  onChange={(e) => setComentarioFeedback(e.target.value)}
  placeholder="Ej:'Evita más de una balada seguida','el bis siempre un tema conocido'..."
- className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-[11px] text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
+ className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[11px] text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
  />
  <div className="flex items-center gap-1.5 text-[10px] font-mono">
  <span className="text-[var(--ink-2)] uppercase tracking-wider">Alcance:</span>

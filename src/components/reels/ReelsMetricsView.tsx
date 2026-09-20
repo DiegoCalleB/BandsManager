@@ -1388,14 +1388,14 @@ export function ReelsMetricsView({
  isStitchLight ?'bg-[var(--bg)]/60 /60' :'bg-[var(--surface)]/60'
  }`}>
  {item.thumbnail_url && (
- <div className="w-full h-24 rounded-[var(--r-s)] overflow-hidden relative bg-black/40">
+ <div className="w-full h-24 rounded-[var(--r-s)] overflow-hidden relative bg-[var(--sunken)]">
  <img 
  src={item.thumbnail_url} 
  alt={item.title} 
  className="w-full h-full object-cover"
  referrerPolicy="no-referrer"
  />
- <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/80 text-[8px] font-mono text-[var(--ink)] flex items-center gap-1">
+ <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[8px] font-mono text-[var(--ink)] flex items-center gap-1">
  <Eye className="w-2.5 h-2.5 text-emerald-400" /> {item.views ? item.views.toLocaleString() :'0'}
  </span>
  </div>
@@ -1546,7 +1546,7 @@ export function ReelsMetricsView({
  </button>
 
  {showAdvancedFields && (
- <div className="p-3 rounded-[var(--r-s)] bg-black/20 space-y-2 text-xs">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-2 text-xs">
  <div className="grid grid-cols-2 gap-2">
  <div>
  <label className="text-[8px] font-mono uppercase text-[var(--ink-2)]">Spotify Seguidores</label>
@@ -1555,7 +1555,7 @@ export function ReelsMetricsView({
  placeholder="85"
  value={metricSpotifyFollowers}
  onChange={(e) => setMetricSpotifyFollowers(e.target.value)}
- className="w-full p-1.5 rounded text-xs font-mono bg-black/40 text-[var(--ink)]"
+ className="w-full p-1.5 rounded text-xs font-mono bg-[var(--sunken)] text-[var(--ink)]"
  />
  </div>
  <div>
@@ -1565,7 +1565,7 @@ export function ReelsMetricsView({
  placeholder="18"
  value={metricSpotifyPopularity}
  onChange={(e) => setMetricSpotifyPopularity(e.target.value)}
- className="w-full p-1.5 rounded text-xs font-mono bg-black/40 text-[var(--ink)]"
+ className="w-full p-1.5 rounded text-xs font-mono bg-[var(--sunken)] text-[var(--ink)]"
  />
  </div>
  <div>
@@ -1575,7 +1575,7 @@ export function ReelsMetricsView({
  placeholder="14500"
  value={metricYtViews}
  onChange={(e) => setMetricYtViews(e.target.value)}
- className="w-full p-1.5 rounded text-xs font-mono bg-black/40 text-[var(--ink)]"
+ className="w-full p-1.5 rounded text-xs font-mono bg-[var(--sunken)] text-[var(--ink)]"
  />
  </div>
  <div>
@@ -1585,7 +1585,7 @@ export function ReelsMetricsView({
  placeholder="1200"
  value={metricTkLikes}
  onChange={(e) => setMetricTkLikes(e.target.value)}
- className="w-full p-1.5 rounded text-xs font-mono bg-black/40 text-[var(--ink)]"
+ className="w-full p-1.5 rounded text-xs font-mono bg-[var(--sunken)] text-[var(--ink)]"
  />
  </div>
  </div>
@@ -1770,7 +1770,7 @@ export function ReelsMetricsView({
 
  {/* 4. Instagram Meta Graph API & OAuth Connection Modal */}
  {showIgModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/75 backdrop-blur-sm animate-in fade-in duration-200">
  <div 
  className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
@@ -1868,25 +1868,25 @@ export function ReelsMetricsView({
  {/* If connected with Insights, show mini-dashboard */}
  {igStatus?.connected && (igStatus as any).insights && (
  <div className="mt-4 pt-3 border-t border-[var(--ok)]/20 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
- <div className="p-2 rounded-[var(--r-s)] bg-black/30">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Alcance (Reach)</div>
  <div className="text-sm font-bold font-display text-[var(--ink)] mt-0.5">
  {((igStatus as any).insights?.reach || 0).toLocaleString()}
  </div>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-black/30">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Impresiones</div>
  <div className="text-sm font-bold font-display text-[var(--ink)] mt-0.5">
  {((igStatus as any).insights?.impressions || 0).toLocaleString()}
  </div>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-black/30">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Visitas Perfil</div>
  <div className="text-sm font-bold font-display text-[var(--ink)] mt-0.5">
  {((igStatus as any).insights?.profile_views || 0).toLocaleString()}
  </div>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-black/30">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Interacciones</div>
  <div className="text-sm font-bold font-display text-[var(--ink)] mt-0.5">
  {((igStatus as any).insights?.total_interactions || 0).toLocaleString()}
@@ -1928,7 +1928,7 @@ export function ReelsMetricsView({
  className={`w-full px-4 py-3 rounded-[var(--r-m)] font-mono text-xs focus:outline-none focus:ring-2 ${
  isStitchLight 
  ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-pink-500' 
- :'bg-black/50 text-[var(--ink)] focus:ring-pink-500 focus:border-[var(--alert)]'
+ :'bg-[var(--sunken)] text-[var(--ink)] focus:ring-pink-500 focus:border-[var(--alert)]'
  }`}
  />
  <div className="absolute right-3 top-3 text-[var(--ink-2)]">
@@ -2020,7 +2020,7 @@ export function ReelsMetricsView({
 
  {/* 5. GEMINI MULTIMODAL SCREENSHOT SCANNER MODAL */}
  {showScanModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md animate-in fade-in duration-200">
  <div className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
@@ -2076,7 +2076,7 @@ export function ReelsMetricsView({
  <label className={`border-2 border-dashed rounded-[var(--r-l)] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
  isStitchLight
  ?'border-[var(--acc)] bg-indigo-50/50 hover:bg-indigo-50 hover:border-[var(--acc)]'
- :' bg-black/30 hover:bg-[var(--surface)]/80 hover:border-[var(--acc)]/50'
+ :' bg-[var(--sunken)] hover:bg-[var(--surface)]/80 hover:border-[var(--acc)]/50'
  }`}>
  <div className="w-12 h-12 rounded-[var(--r-l)] bg-indigo-500/15 text-indigo-400 flex items-center justify-center mb-3">
  <UploadCloud className="w-6 h-6" />
@@ -2095,7 +2095,7 @@ export function ReelsMetricsView({
  />
  </label>
  ) : (
- <div className="relative rounded-[var(--r-m)] overflow-hidden bg-black/60 p-3 flex items-center gap-4">
+ <div className="relative rounded-[var(--r-m)] overflow-hidden bg-[var(--sunken)] p-3 flex items-center gap-4">
  <img
  src={scanImageBase64}
  alt="Captura cargada"
@@ -2169,7 +2169,7 @@ export function ReelsMetricsView({
 
  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-center">
  {scanResult.followers !== null && scanResult.followers !== undefined && (
- <div className="p-2.5 rounded-[var(--r-s)] bg-black/40">
+ <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Seguidores / Oyentes</div>
  <div className="text-base font-bold font-display text-[var(--ink)] mt-0.5">
  {Number(scanResult.followers).toLocaleString()}
@@ -2177,7 +2177,7 @@ export function ReelsMetricsView({
  </div>
  )}
  {scanResult.account_handle && (
- <div className="p-2.5 rounded-[var(--r-s)] bg-black/40">
+ <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Usuario</div>
  <div className="text-xs font-bold font-mono text-indigo-300 mt-1 truncate">
  {scanResult.account_handle}
@@ -2185,7 +2185,7 @@ export function ReelsMetricsView({
  </div>
  )}
  {scanResult.posts_count !== null && scanResult.posts_count !== undefined && (
- <div className="p-2.5 rounded-[var(--r-s)] bg-black/40">
+ <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Publicaciones</div>
  <div className="text-base font-bold font-display text-[var(--ink)] mt-0.5">
  {Number(scanResult.posts_count).toLocaleString()}
@@ -2193,7 +2193,7 @@ export function ReelsMetricsView({
  </div>
  )}
  {scanResult.reach !== null && scanResult.reach !== undefined && (
- <div className="p-2.5 rounded-[var(--r-s)] bg-black/40">
+ <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Alcance (Reach)</div>
  <div className="text-base font-bold font-display text-emerald-400 mt-0.5">
  {Number(scanResult.reach).toLocaleString()}
@@ -2201,7 +2201,7 @@ export function ReelsMetricsView({
  </div>
  )}
  {scanResult.impressions !== null && scanResult.impressions !== undefined && (
- <div className="p-2.5 rounded-[var(--r-s)] bg-black/40">
+ <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Impresiones</div>
  <div className="text-base font-bold font-display text-purple-400 mt-0.5">
  {Number(scanResult.impressions).toLocaleString()}
@@ -2209,7 +2209,7 @@ export function ReelsMetricsView({
  </div>
  )}
  {scanResult.confidence && (
- <div className="p-2.5 rounded-[var(--r-s)] bg-black/40">
+ <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Confianza IA</div>
  <div className="text-xs font-bold font-mono text-emerald-400 mt-1 uppercase">
  Alta (99%)

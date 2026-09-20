@@ -106,7 +106,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
  {/* AI Controls */}
  <div className="flex flex-wrap items-center gap-2.5 self-stretch lg:self-auto">
- <div className="flex items-center bg-black/30 p-1 rounded-[var(--r-m)]">
+ <div className="flex items-center bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
  {([30, 60, 90] as const).map(h => (
  <button
  key={h}
@@ -446,7 +446,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </p>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/40 text-right min-w-[200px]">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-right min-w-[200px]">
  <span className="text-[9px] font-mono text-[var(--ink-2)] uppercase block">Horario Recomendado</span>
  <span className="text-xs font-mono font-bold text-[var(--acc)] mt-0.5 block">{currentChannel.recommendedSchedule}</span>
  </div>
@@ -563,7 +563,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div key={vIdx} className="p-3 rounded-[var(--r-s)] bg-indigo-950/20 space-y-1.5">
  <h5 className="text-xs font-bold text-[var(--ink)]">{v.title}</h5>
  <p className="text-[11px] font-mono text-[var(--ink-2)]">{v.concept}</p>
- <div className="text-[10px] font-mono text-[var(--acc)]/70 bg-black/40 p-1.5 rounded">
+ <div className="text-[10px] font-mono text-[var(--acc)]/70 bg-[var(--sunken)] p-1.5 rounded">
  <b>Gancho:</b> {v.hook}
  </div>
  <div className="text-[10px] font-mono text-emerald-400">

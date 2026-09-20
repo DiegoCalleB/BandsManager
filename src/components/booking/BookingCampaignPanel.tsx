@@ -248,7 +248,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <div className="absolute top-0 right-0 p-4">
  <button 
  onClick={handleClear}
- className="text-[var(--ink-2)] hover:text-[var(--ink)] bg-white/10 rounded-full p-1"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/10 rounded-full p-1"
  title="Desactivar campaña"
  >
  <X className="w-4 h-4" />
@@ -262,21 +262,21 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <p className="text-[var(--ink-2)] text-sm mb-4">El Scout IA y el generador de propuestas están configurados para estos objetivos.</p>
  
  <div className="flex flex-wrap gap-4">
- <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
+ <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
  <MapPin className="w-4 h-4 text-blue-300" />
  <span>{activeCampaign?.targetCities.join(',')}</span>
  </div>
- <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
+ <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
  <Users className="w-4 h-4 text-orange-300" />
  <span>{activeCampaign?.minCapacity} - {activeCampaign?.maxCapacity} pax</span>
  </div>
- <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
+ <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
  <Calendar className="w-4 h-4 text-pink-300" />
  <span>{activeCampaign?.targetDates?.length || 0} fechas ({activeCampaign?.targetDatesText})</span>
  </div>
  </div>
  </div>
- <div className="bg-white/5 px-5 py-3 border-t border-[var(--hair)] flex justify-between items-center">
+ <div className="bg-[var(--ink)]/5 px-5 py-3 border-t border-[var(--hair)] flex justify-between items-center">
  <div className="text-xs text-[var(--ink-2)]">
  * Los pitches generados por la IA mencionarán automáticamente estas fechas y el formato de Co-booking.
  </div>

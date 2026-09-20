@@ -45,7 +45,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
 
  return (
  <ModalPortal isOpen={!!showGenModalForIdea} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className="w-full max-w-lg rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
@@ -112,7 +112,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <label className="text-xs font-mono text-[var(--ink-2)] block">Instrumentos a incluir:</label>
  <div className="grid grid-cols-2 gap-3">
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeDrums ?'bg-[var(--acc)]/30 border-[var(--acc)] text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
+ includeDrums ?'bg-[var(--acc)]/30 border-[var(--acc)] text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"
@@ -124,7 +124,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  </label>
 
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeBass ?'bg-[var(--acc)]/30 border-[var(--acc)] text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
+ includeBass ?'bg-[var(--acc)]/30 border-[var(--acc)] text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"
@@ -150,7 +150,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  className={`py-2 px-1 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
  drumStyle === style
  ?'bg-[var(--acc)] text-[var(--ink)] shadow-lg'
- :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {style}

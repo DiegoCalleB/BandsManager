@@ -9,12 +9,12 @@ interface SongStudioCubaseHelpModalProps {
 export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps> = ({ onClose }) => {
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-[var(--ink)] relative my-auto max-h-[90vh] overflow-y-auto">
  <button
  type="button"
  onClick={onClose}
- className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
+ className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -37,86 +37,86 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Play / Pausa</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  Espacio
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Pausar Mantenida</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--acc)]/70 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">
  P
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Detener e ir a Inicio (Stop)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--ink-2)] font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">
  0 / Stop / Home
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Bucle (Loop ON/OFF)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  L / /
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Fijar Cue In (Inicio Bucle)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-indigo-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-indigo-300 font-bold shadow">
  I
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Fijar Cue Out (Fin Bucle)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  O
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Grabar Pista Overdub</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--ink-2)] font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">
  R / Numpad *
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Nueva Idea / Proyecto</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--ink-2)] font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">
  N
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Retroceder 5s / 15s</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  ← / Shift + ←
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Avanzar 5s / 15s</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  → / Shift + →
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Silencio (Mute)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--acc)]/70 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">
  M
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Solo</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--acc)]/70 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">
  S
  </kbd>
  </div>
@@ -124,7 +124,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
  <div className="pt-2 flex items-center justify-between border-t border-[var(--hair)]">
  <span className="text-[11px] text-[var(--ink-2)] font-mono">
- 💡 Presiona <kbd className="px-1 py-0.5 rounded bg-black/50 border-[var(--hair)] text-[var(--ink-2)]">K</kbd> o <kbd className="px-1 py-0.5 rounded bg-black/50 border-[var(--hair)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
+ 💡 Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]">K</kbd> o <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
  </span>
  <button
  type="button"

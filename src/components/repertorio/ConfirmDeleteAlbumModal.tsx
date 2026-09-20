@@ -24,7 +24,7 @@ export function ConfirmDeleteAlbumModal({
 
  return (
  <ModalPortal isOpen={!!data} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-3">
@@ -39,7 +39,7 @@ export function ConfirmDeleteAlbumModal({
  <button
  type="button"
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/10 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -93,7 +93,7 @@ export function ConfirmDeleteAlbumModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-white/5 hover:bg-white/10 transition-all cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 transition-all cursor-pointer"
  >
  Cancelar
  </button>

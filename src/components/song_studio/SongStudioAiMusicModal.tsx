@@ -71,7 +71,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className="w-full max-w-xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
@@ -150,7 +150,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  )}
 
  {generatedLyrics && (
- <div className="p-2.5 rounded-[var(--r-s)] bg-black/60 text-xs font-mono text-[var(--ink-2)] max-h-32 overflow-y-auto whitespace-pre-line">
+ <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-mono text-[var(--ink-2)] max-h-32 overflow-y-auto whitespace-pre-line">
  <p className="text-[10px] text-[var(--acc)] font-bold uppercase mb-1">Notas / Letra generada:</p>
  {generatedLyrics}
  </div>

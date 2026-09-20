@@ -725,7 +725,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  onClick={() => setShowStyleMenu(!showStyleMenu)}
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
  isStitchLight
- ?'bg-white/95 hover:bg-[var(--sunken)] text-[var(--ink)]'
+ ?'bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--bg)]/95 hover:bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -768,7 +768,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  onClick={handleRecenter}
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
  isStitchLight
- ?'bg-white/90 hover:bg-[var(--sunken)] text-[var(--ink)]'
+ ?'bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--bg)]/90 hover:bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >

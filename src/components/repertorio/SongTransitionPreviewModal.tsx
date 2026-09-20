@@ -518,7 +518,7 @@ export function SongTransitionPreviewModal({
 
  return (
  <AnimatePresence>
- <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-3 bg-black/80 backdrop-blur-md overflow-hidden">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-3 bg-[var(--scrim)]/80 backdrop-blur-md overflow-hidden">
  <motion.div
  initial={{ opacity: 0, scale: 0.96, y: 8 }}
  animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -752,7 +752,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* VU Meter for Track A */}
- <div className="w-full bg-black/50 h-1 rounded-full overflow-hidden border-[var(--hair)]800">
+ <div className="w-full bg-[var(--sunken)] h-1 rounded-full overflow-hidden border-[var(--hair)]800">
  <div
  className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--acc-soft)] transition-all duration-75"
  style={{ width: `${Math.min(100, liveGainA * 100)}%` }}
@@ -895,7 +895,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  {/* VU Meter for Track B */}
- <div className="w-full bg-black/50 h-1 rounded-full overflow-hidden border-[var(--hair)]800">
+ <div className="w-full bg-[var(--sunken)] h-1 rounded-full overflow-hidden border-[var(--hair)]800">
  <div
  className="h-full bg-gradient-to-r from-[var(--ok)] to-[var(--ok-soft)] transition-all duration-75"
  style={{ width: `${Math.min(100, liveGainB * 100)}%` }}
@@ -1035,7 +1035,7 @@ export function SongTransitionPreviewModal({
 
  {/* Visual Multi-Track Waveform Timeline with Scrubbing */}
  <div
- className="relative h-7 bg-black/60 rounded-[var(--r-s)] border-[var(--hair)]800 cursor-pointer overflow-hidden p-0.5 select-none"
+ className="relative h-7 bg-[var(--sunken)] rounded-[var(--r-s)] border-[var(--hair)]800 cursor-pointer overflow-hidden p-0.5 select-none"
  onClick={(e) => {
  const rect = e.currentTarget.getBoundingClientRect();
  const ratio = (e.clientX - rect.left) / rect.width;
@@ -1172,7 +1172,7 @@ export function SongTransitionPreviewModal({
  }`}
  >
  <span>Pros y Contras</span>
- <span className="text-[9px] font-mono px-1 rounded bg-black/40 text-[var(--ink-2)]">
+ <span className="text-[9px] font-mono px-1 rounded bg-[var(--sunken)] text-[var(--ink-2)]">
  +{diagnosis.porQueSi.length} / -{diagnosis.porQueNo.length}
  </span>
  </button>
@@ -1272,7 +1272,7 @@ export function SongTransitionPreviewModal({
  <AlertTriangle className="w-2.5 h-2.5 shrink-0" />
  {con.title}
  </span>
- <span className="text-[8px] uppercase px-1 rounded font-mono bg-black/40 text-[var(--ink-2)] shrink-0">
+ <span className="text-[8px] uppercase px-1 rounded font-mono bg-[var(--sunken)] text-[var(--ink-2)] shrink-0">
  {con.severity}
  </span>
  </div>
@@ -1329,7 +1329,7 @@ export function SongTransitionPreviewModal({
  {activeTab ==='stagecraft' && (
  <div className="space-y-1">
  {diagnosis.stageRecommendations.map((rec, idx) => (
- <div key={idx} className="flex items-start gap-1.5 bg-black/30 p-1.5 rounded-[var(--r-s)] text-[10px]">
+ <div key={idx} className="flex items-start gap-1.5 bg-[var(--sunken)] p-1.5 rounded-[var(--r-s)] text-[10px]">
  <Compass className="w-3 h-3 text-[var(--acc)] shrink-0 mt-0.5" />
  <p className="text-[10px] leading-tight text-[var(--ink-2)]">
  {rec}

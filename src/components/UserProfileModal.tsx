@@ -334,7 +334,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div 
  className={`w-full max-w-md rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight 
@@ -1171,7 +1171,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {/* Upgrade Plan Modal */}
  {showUpgradeModal && (
  <ModalPortal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200 text-left">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200 text-left">
  <div className={`w-full max-w-lg rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
  }`}>

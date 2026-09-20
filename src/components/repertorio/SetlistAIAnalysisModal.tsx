@@ -572,7 +572,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  e.stopPropagation();
  onReorder(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex, `warning-${i}`);
  }}
- className="ml-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/25 text-[var(--ink)] font-bold transition"
+ className="ml-1 px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/25 text-[var(--ink)] font-bold transition"
  title={w.suggestedReorder.description}
  >
  ✓ Aplicar

@@ -952,7 +952,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <span>🎸</span> Róster de Artistas & Servicios de Representación
  </p>
  {selectedLead.roster ? (
- <p className="text-xs font-sans text-[var(--ink)] bg-black/40 p-2.5 rounded-[var(--r-s)] border-[var(--hair)]800 leading-relaxed">
+ <p className="text-xs font-sans text-[var(--ink)] bg-[var(--sunken)] p-2.5 rounded-[var(--r-s)] border-[var(--hair)]800 leading-relaxed">
  {selectedLead.roster}
  </p>
  ) : (
@@ -1468,7 +1468,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  rows={6}
  value={editedPitch}
  onChange={(e) => setEditedPitch(e.target.value)}
- className="w-full p-3 bg-black/60 rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
+ className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
  />
  <div className="flex items-center justify-between gap-2">
  <span className="text-[10px] text-[var(--ink-2)] font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa'Regenerar' con estrellas/comentario y marca'Solo para esta sala' en vez de editar aquí.">
@@ -1531,7 +1531,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* Ratings for Tone and Content */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
  {/* Tono Rating */}
- <div className="p-2.5 bg-black/40 rounded-[var(--r-s)] border-[var(--hair)]800 space-y-1.5">
+ <div className="p-2.5 bg-[var(--sunken)] rounded-[var(--r-s)] border-[var(--hair)]800 space-y-1.5">
  <span className="text-[11px] font-bold text-[var(--ink-2)] block">Tono e Intención</span>
  <div className="flex items-center gap-1">
  {[1, 2, 3, 4, 5].map((star) => (
@@ -1554,7 +1554,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {/* Content Rating */}
- <div className="p-2.5 bg-black/40 rounded-[var(--r-s)] border-[var(--hair)]800 space-y-1.5">
+ <div className="p-2.5 bg-[var(--sunken)] rounded-[var(--r-s)] border-[var(--hair)]800 space-y-1.5">
  <span className="text-[11px] font-bold text-[var(--ink-2)] block">Contenido y Estructura</span>
  <div className="flex items-center gap-1">
  {[1, 2, 3, 4, 5].map((star) => (
@@ -1588,12 +1588,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  value={feedbackComment}
  onChange={(e) => setFeedbackComment(e.target.value)}
  placeholder="Ej:'Menciona que tocamos en el Viña Rock','Hazlo más corto y directo','Insiste en fecha para un sábado'..."
- className="w-full p-2.5 bg-black/60 rounded-[var(--r-s)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
+ className="w-full p-2.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
  />
  </div>
 
  {/* Scope Selector: Solo este pitch vs Memoria Global Futura */}
- <div className="p-2.5 bg-black/50 rounded-[var(--r-m)] space-y-2">
+ <div className="p-2.5 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2">
  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-2)] font-mono block">
  🎯 Alcance del entrenamiento IA:
  </span>
@@ -1654,7 +1654,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* Model selection pills for single-click regenerate */}
- <div className="flex items-center justify-between flex-wrap gap-2 p-2 bg-black/40 rounded-[var(--r-m)] border-[var(--hair)]800">
+ <div className="flex items-center justify-between flex-wrap gap-2 p-2 bg-[var(--sunken)] rounded-[var(--r-m)] border-[var(--hair)]800">
  <span className="text-[10px] font-mono text-[var(--ink-2)] font-bold uppercase">
  🤖 Motor de Redacción & Coste:
  </span>
@@ -1678,7 +1678,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  >
  <span>{m.icon}</span>
  <span>{m.name}</span>
- <span className="font-mono text-[9px] text-emerald-400 bg-black/40 px-1 py-0.2 rounded">
+ <span className="font-mono text-[9px] text-emerald-400 bg-[var(--sunken)] px-1 py-0.2 rounded">
  {m.cost}
  </span>
  </button>
@@ -1736,8 +1736,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {selectedLead.historial_feedback_pitch.map((log) => (
  <div key={log.id} className={`p-2.5 rounded-[var(--r-s)] text-[11px] space-y-1.5 transition-all ${
  log.deshecho 
- ?'bg-black/30 border-[var(--hair)]800/50 opacity-60' 
- :'bg-black/50 border-[var(--hair)]800/80'
+ ?'bg-[var(--sunken)] border-[var(--hair)]800/50 opacity-60' 
+ :'bg-[var(--sunken)] border-[var(--hair)]800/80'
  }`}>
  <div className="flex items-center justify-between text-[var(--ink-2)] text-[10px] font-mono">
  <span>{new Date(log.fecha).toLocaleString()}</span>
@@ -1850,7 +1850,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  >
  <div className="flex flex-wrap items-center justify-between gap-2">
  {/* Interaction Type Selector */}
- <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-s)] border-[var(--hair)]800">
+ <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-s)] border-[var(--hair)]800">
  {(['Llamada','WhatsApp','Email','Reunión','Otro'] as const).map((type) => (
  <button
  key={type}
@@ -1923,7 +1923,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  value={interactionNotes}
  onChange={(e) => setInteractionNotes(e.target.value)}
  placeholder="Ej: Hablé con Carlos por WhatsApp. Pide propuesta de fechas para Noviembre..."
- className="w-full bg-black/50 rounded-[var(--r-s)] p-2.5 text-xs text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 resize-none font-sans"
+ className="w-full bg-[var(--sunken)] rounded-[var(--r-s)] p-2.5 text-xs text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 resize-none font-sans"
  />
 
  <button

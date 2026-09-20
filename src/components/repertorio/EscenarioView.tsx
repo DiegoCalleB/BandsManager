@@ -474,13 +474,13 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">Activo</span>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
- <div className="p-2 rounded-[var(--r-s)] bg-black/60">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <span className="font-bold text-[var(--ink)]">🦶 Pista Siguiente:</span> <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">PageDown</code> / <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">→</code> / <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">]</code>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-black/60">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <span className="font-bold text-[var(--ink)]">🦶 Pista Anterior:</span> <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">PageUp</code> / <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">←</code> / <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">[</code>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-black/60">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <span className="font-bold text-[var(--ink)]">🦶 Play / Pausa:</span> <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">Barra Espaciadora</code>
  </div>
  </div>

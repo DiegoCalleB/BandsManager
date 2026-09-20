@@ -41,7 +41,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={isCompleted ? onClose : undefined}>
- <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
+ <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
  <div className="w-full max-w-lg bg-[var(--surface)] border-[var(--acc)]/40 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
  
  {/* Header */}

@@ -241,7 +241,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <Camera className="w-6 h-6 text-[var(--ink-2)]" />
  )}
  {isUploadingLogo && (
- <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+ <div className="absolute inset-0 bg-[var(--scrim)]/70 flex items-center justify-center">
  <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
  </div>
  )}

@@ -243,7 +243,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div 
  className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight 

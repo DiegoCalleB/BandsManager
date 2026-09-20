@@ -594,7 +594,7 @@ export function BulkAlbumAudioUploaderModal({
  type="button"
  onClick={onClose}
  disabled={isUploading}
- className="p-2.5 rounded-[var(--r-l)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/10 transition cursor-pointer disabled:opacity-50"
+ className="p-2.5 rounded-[var(--r-l)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition cursor-pointer disabled:opacity-50"
  >
  <X className="w-5 h-5" />
  </button>
@@ -604,7 +604,7 @@ export function BulkAlbumAudioUploaderModal({
  <div className="p-6 overflow-y-auto space-y-6 flex-1">
  {/* Top Form (Album Title & Cover for New Album) */}
  {isCreatingBrandNewAlbum && (
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-white/5 border-[var(--hair)]">
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 border-[var(--hair)]">
  <div className="md:col-span-2 space-y-2">
  <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
  Nombre del Álbum / Disco
@@ -641,7 +641,7 @@ export function BulkAlbumAudioUploaderModal({
  ?'border-[var(--ok)] text-emerald-400 bg-emerald-500/10'
  : isStitchLight
  ?' bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
- :' bg-[var(--surface)] hover:bg-white/5 text-[var(--ink-2)]'
+ :' bg-[var(--surface)] hover:bg-[var(--ink)]/5 text-[var(--ink-2)]'
  }`}
  >
  <ImageIcon className="w-4 h-4" />
@@ -663,7 +663,7 @@ export function BulkAlbumAudioUploaderModal({
  :'border-[var(--hair)]/30 bg-[var(--surface)]/5'
  : isStitchLight
  ?' hover:border-[var(--ok)] hover:bg-[var(--bg)]'
- :' hover:border-[var(--hair)] hover:bg-white/5'
+ :' hover:border-[var(--hair)] hover:bg-[var(--ink)]/5'
  }`}
  >
  <input
@@ -675,7 +675,7 @@ export function BulkAlbumAudioUploaderModal({
  className="hidden"
  />
 
- <div className="w-14 h-14 rounded-[var(--r-l)] bg-white/10 flex items-center justify-center text-[var(--ok)]">
+ <div className="w-14 h-14 rounded-[var(--r-l)] bg-[var(--ink)]/10 flex items-center justify-center text-[var(--ok)]">
  {isProcessingFiles ? (
  <RefreshCw className="w-7 h-7 animate-spin" />
  ) : (
@@ -715,7 +715,7 @@ export function BulkAlbumAudioUploaderModal({
 
  {/* Upload Progress Bar (when active) */}
  {isUploading && (
- <div className="p-4 rounded-[var(--r-l)] bg-white/5 border-[var(--hair)] space-y-2">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 border-[var(--hair)] space-y-2">
  <div className="flex items-center justify-between text-xs font-mono">
  <span className="flex items-center gap-2 text-emerald-400 font-bold">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -769,7 +769,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-all cursor-pointer ${
  isPlaying
  ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
- :'bg-white/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]'
+ :'bg-[var(--ink)]/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]'
  }`}
  title={isPlaying ?'Pausar audio' :'Escuchar previo'}
  >
@@ -916,12 +916,12 @@ export function BulkAlbumAudioUploaderModal({
  </div>
 
  {/* Modal Footer */}
- <div className="p-5 border-t border-[var(--hair)] flex items-center justify-between shrink-0 bg-black/20">
+ <div className="p-5 border-t border-[var(--hair)] flex items-center justify-between shrink-0 bg-[var(--sunken)]">
  <button
  type="button"
  onClick={onClose}
  disabled={isUploading}
- className="px-5 py-2.5 rounded-[var(--r-l)] border-[var(--hair)] hover:bg-white/5 text-xs font-mono font-bold transition cursor-pointer disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-l)] border-[var(--hair)] hover:bg-[var(--ink)]/5 text-xs font-mono font-bold transition cursor-pointer disabled:opacity-50"
  >
  Cancelar
  </button>

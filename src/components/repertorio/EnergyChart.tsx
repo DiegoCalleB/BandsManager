@@ -341,7 +341,7 @@ export function EnergyChart({
  return (
  <div
  ref={containerRef}
- className={`relative ${compact ?'w-full bg-black/70 rounded-[var(--r-s)] overflow-hidden' :'energy-map-glow w-full bg-black/70 rounded-[var(--r-s)] overflow-hidden'} ${animMode ==='entrance' && !compact ?'energy-map-grand-entrance' :''}`}
+ className={`relative ${compact ?'w-full bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden' :'energy-map-glow w-full bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden'} ${animMode ==='entrance' && !compact ?'energy-map-grand-entrance' :''}`}
  style={{
  height,
  width: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
@@ -377,7 +377,7 @@ export function EnergyChart({
  const placeOnLeft = dragPointerPos.x > containerWidth * 0.6;
  return (
  <div
- className="absolute z-20 bg-black/90 rounded-[var(--r-s)] px-3 py-1.5 text-[12px] font-mono text-[var(--ink)] shadow-xl pointer-events-none whitespace-nowrap"
+ className="absolute z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[12px] font-mono text-[var(--ink)] shadow-xl pointer-events-none whitespace-nowrap"
  style={{
  border: `1px solid ${info.hexColor}99`,
  ...(isTouch
@@ -399,7 +399,7 @@ export function EnergyChart({
  {/* Arrastrando en horizontal (o gesto aún sin decidir): nombre + destino del reordenamiento,
  para saber qué se está moviendo sin tener que leer el número de posición en el eje X. */}
  {draggingFromIndex !== null && dragAxis !=='y' && hoverIndex !== null && (
- <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-black/90 rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-mono text-[var(--ink)] shadow-xl pointer-events-none whitespace-nowrap">
+ <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-mono text-[var(--ink)] shadow-xl pointer-events-none whitespace-nowrap">
  <span className="text-[var(--acc)]/70 font-bold">{chartData[draggingFromIndex]?.name}</span>
  {hoverIndex !== draggingFromIndex && (
  <>

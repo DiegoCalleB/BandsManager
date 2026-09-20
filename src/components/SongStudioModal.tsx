@@ -152,7 +152,7 @@ const LiveMicWaveformCanvas: React.FC<{
  return (
  <canvas
  ref={canvasRef}
- className="w-full h-full block rounded bg-black/50"
+ className="w-full h-full block rounded bg-[var(--sunken)]"
  />
  );
 };
@@ -3019,7 +3019,7 @@ export default function SongStudioModal({
 
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
- <div className={`fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center overflow-y-auto overscroll-contain animate-in fade-in duration-200 ${
+ <div className={`fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center overflow-y-auto overscroll-contain animate-in fade-in duration-200 ${
  isFullScreen ?'p-0' :'p-2 sm:p-4'
  }`}>
  {countInCountdown !== null && (
@@ -3043,7 +3043,7 @@ export default function SongStudioModal({
  }`}>
  
  {/* Header Bar */}
- <div className="p-2.5 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-white/5">
+ <div className="p-2.5 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--ink)]/5">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-tr from-[var(--acc)] to-indigo-600 flex items-center justify-center text-[var(--ink)] shadow-lg">
  <Disc className="w-5 h-5 animate-spin-slow" />
@@ -3084,7 +3084,7 @@ export default function SongStudioModal({
  }}
  title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
  className={`hidden sm:inline-block px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold cursor-pointer outline-none ${
- levelInfo ? levelInfo.colorClass :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]'
+ levelInfo ? levelInfo.colorClass :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
  <option value="" disabled>Mi preparación...</option>
@@ -3100,7 +3100,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setShowToolsMenu(prev => !prev)}
- className="px-3 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-white/10 hover:bg-white/20 text-[var(--ink)] border-[var(--hair)] shadow-sm"
+ className="px-3 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] border-[var(--hair)] shadow-sm"
  title="Herramientas y opciones del Estudio"
  >
  <Sliders className="w-3.5 h-3.5 text-indigo-400" />
@@ -3112,7 +3112,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => { setShowToolsMenu(false); onUpdateSong({ ...song, favoritoGeneral: !song.favoritoGeneral }); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-[var(--acc)]/70 flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--acc)]/70 flex items-center gap-2"
  >
  <Sparkles className={`w-4 h-4 text-[var(--acc)] ${song.favoritoGeneral ?'fill-amber-400' :''}`} />
  {song.favoritoGeneral ?'Quitar de Favoritos' :'Marcar como Favorito'}
@@ -3134,7 +3134,7 @@ export default function SongStudioModal({
  }}
  title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold cursor-pointer outline-none ${
- levelInfo ? levelInfo.colorClass :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]'
+ levelInfo ? levelInfo.colorClass :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
  <option value="" disabled>Mi preparación...</option>
@@ -3148,42 +3148,42 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => { setShowToolsMenu(false); setShowChordsModal(true); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-[var(--acc)]/70 flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--acc)]/70 flex items-center gap-2"
  >
  <FileText className="w-4 h-4 text-[var(--acc)]" /> Acordes & Partitura
  </button>
  <button
  type="button"
  onClick={() => { setShowToolsMenu(false); setShowAiComposerModal(true); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-indigo-300 flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-indigo-300 flex items-center gap-2"
  >
  <Sparkles className="w-4 h-4 text-indigo-400" /> Arreglos IA (Músico Virtual)
  </button>
  <button
  type="button"
  onClick={() => { setShowToolsMenu(false); setShowAiMusicModal(true); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-purple-300 flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-purple-300 flex items-center gap-2"
  >
  <Sparkles className="w-4 h-4 text-purple-400" /> Soundtrack IA (Lyria)
  </button>
  <button
  type="button"
  onClick={() => { setShowToolsMenu(false); setShowCubaseHelp(true); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-[var(--ink-2)] flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2"
  >
  <Keyboard className="w-4 h-4 text-[var(--ink-2)]" /> Atajos Teclado (Cubase)
  </button>
  <button
  type="button"
  onClick={() => { setShowToolsMenu(false); openTutorial(); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-sky-300 flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-sky-300 flex items-center gap-2"
  >
  <Info className="w-4 h-4 text-sky-400" /> Guía rápida
  </button>
  <button
  type="button"
  onClick={() => { setShowToolsMenu(false); handleShareSong(); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-[var(--ink-2)] flex items-center gap-2 border-t border-[var(--hair)] pt-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2 border-t border-[var(--hair)] pt-2"
  >
  <MessageSquare className="w-4 h-4 text-emerald-400" /> Compartir Tema por WhatsApp
  </button>
@@ -3196,7 +3196,7 @@ export default function SongStudioModal({
 
  <div className="flex items-center gap-2">
  {/* Volumen master de salida — control personal de escucha, no se guarda en la canción */}
- <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)]" title="Volumen master de salida (solo tu escucha, no afecta a la mezcla de la banda)">
+ <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)]" title="Volumen master de salida (solo tu escucha, no afecta a la mezcla de la banda)">
  <button
  type="button"
  onClick={() => setMasterVolume(v => v > 0 ? 0 : 1)}
@@ -3222,7 +3222,7 @@ export default function SongStudioModal({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isFullScreen
  ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-lg font-black hover:bg-[var(--acc)]/60'
- :'bg-white/10 hover:bg-white/20 text-[var(--ink)] border-[var(--hair)]'
+ :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] border-[var(--hair)]'
  }`}
  title={isFullScreen ?"Salir de Pantalla Completa" :"Poner Modo Studio en Pantalla Completa"}
  >
@@ -3242,7 +3242,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -3299,7 +3299,7 @@ export default function SongStudioModal({
  value={ideaTitle}
  onChange={(e) => setIdeaTitle(e.target.value)}
  placeholder="Ej: Riff Estribillo / Arreglo Vientos / Base Acústica"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black/40 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)]"
  />
  </div>
 
@@ -3308,7 +3308,7 @@ export default function SongStudioModal({
  <select
  value={ideaSection}
  onChange={(e) => setIdeaSection(e.target.value as any)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black/40 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  {SECCIONES_TEMA.map(sec => (
  <option key={sec.key} value={sec.key} className="bg-[var(--bg)] text-[var(--ink)]">
@@ -3326,7 +3326,7 @@ export default function SongStudioModal({
  type="text"
  value={ideaUploader}
  onChange={(e) => setIdeaUploader(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black/40 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  />
  </div>
 
@@ -3337,13 +3337,13 @@ export default function SongStudioModal({
  value={ideaInstrument}
  onChange={(e) => setIdeaInstrument(e.target.value)}
  placeholder="Ej: Guitarra, Trompeta, Batería, Voz"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black/40 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  />
  </div>
  </div>
 
  {/* Source Selector */}
- <div className="p-4 rounded-[var(--r-m)] border-[var(--hair)] bg-black/30 space-y-3">
+ <div className="p-4 rounded-[var(--r-m)] border-[var(--hair)] bg-[var(--sunken)] space-y-3">
  <span className="text-xs font-mono font-bold text-[var(--ink-2)] block">Fuente de Audio Principal / Base Rítmica:</span>
  
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
@@ -3371,7 +3371,7 @@ export default function SongStudioModal({
  </button>
 
  {/* Option 2: File Upload */}
- <label className="p-3 rounded-[var(--r-m)] border-dashed hover:border-[var(--ok)] bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all">
+ <label className="p-3 rounded-[var(--r-m)] border-dashed hover:border-[var(--ok)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all">
  <Upload className="w-5 h-5 text-emerald-400" />
  <span className="text-xs font-semibold text-[var(--ink)] text-center">
  {selectedAudioFile ? selectedAudioFile.name :'Subir Archivo'}
@@ -3392,7 +3392,7 @@ export default function SongStudioModal({
  </label>
 
  {/* Mic Recording */}
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 flex flex-col items-center justify-center gap-2">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex flex-col items-center justify-center gap-2">
  {!isRecording ? (
  <button
  type="button"
@@ -3430,7 +3430,7 @@ export default function SongStudioModal({
  </div>
 
  {/* Drive Link */}
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 flex flex-col justify-center gap-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex flex-col justify-center gap-1">
  <span className="text-[10px] font-mono font-bold text-[var(--acc)]/70 flex items-center gap-1">
  <Music className="w-3 h-3 text-[var(--acc)]" /> Enlace Google Drive:
  </span>
@@ -3443,7 +3443,7 @@ export default function SongStudioModal({
  setRecordedAudioUrl(null);
  }}
  placeholder="https://drive.google.com/..."
- className="w-full px-2 py-1 rounded-[var(--r-s)] bg-black/50 text-[10px] text-[var(--ink)] focus:outline-none focus: font-mono"
+ className="w-full px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[10px] text-[var(--ink)] focus:outline-none focus: font-mono"
  />
  </div>
 
@@ -3485,7 +3485,7 @@ export default function SongStudioModal({
  </div>
 
  {((song.audioIdeas && song.audioIdeas.length > 0) || song.audioPrincipalUrl) && (
- <div className="flex items-center gap-2 shrink-0 bg-black/60 p-2 rounded-[var(--r-m)] w-full sm:w-auto">
+ <div className="flex items-center gap-2 shrink-0 bg-[var(--sunken)] p-2 rounded-[var(--r-m)] w-full sm:w-auto">
  <span className="text-[10px] text-[var(--acc)] font-bold">Seleccionar Maqueta:</span>
  <select
  value={selectedSongBaseUrl}
@@ -3596,12 +3596,12 @@ export default function SongStudioModal({
  onChange={(e) => setIdeaNotes(e.target.value)}
  placeholder="Explica qué has grabado o la propuesta..."
  rows={2}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black/40 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)] resize-none"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)] resize-none"
  />
  </div>
 
  {/* Status Indicator of Primary Audio Track */}
- <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)] flex flex-wrap items-center justify-between gap-2 font-mono text-xs text-[var(--ink-2)]">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] flex flex-wrap items-center justify-between gap-2 font-mono text-xs text-[var(--ink-2)]">
  <span className="font-bold flex items-center gap-1.5 text-indigo-300">
  <Disc className="w-4 h-4 text-indigo-400" /> Pista 1 de la Idea:
  </span>
@@ -3675,7 +3675,7 @@ export default function SongStudioModal({
  if (activeSectionFilter !=='todas') setIdeaSection(activeSectionFilter as any);
  setShowAddIdea(true);
  }}
- className="px-4 py-2 rounded-[var(--r-m)] bg-white/10 hover:bg-white/20 text-xs text-[var(--ink)] font-bold transition-all cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-xs text-[var(--ink)] font-bold transition-all cursor-pointer"
  >
  + Grabar / Subir la primera idea
  </button>
@@ -3707,7 +3707,7 @@ export default function SongStudioModal({
  className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all space-y-4 ${
  isPlaying 
  ?'bg-indigo-950/30 border-[var(--acc)]/50 shadow-2xl ring-1 ring-indigo-500/30' 
- :'bg-white/5 border-[var(--hair)] hover:border-[var(--hair)]'
+ :'bg-[var(--ink)]/5 border-[var(--hair)] hover:border-[var(--hair)]'
  }`}
  >
  {/* Idea Header: solo lo esencial siempre visible — escuchar, ver de qué va, y un
@@ -3718,7 +3718,7 @@ export default function SongStudioModal({
  type="button"
  onClick={() => toggleIdeaExpanded(idea.id)}
  title={isIdeaExpanded ?'Plegar idea' :'Expandir idea'}
- className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/10 transition-all cursor-pointer shrink-0"
+ className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-all cursor-pointer shrink-0"
  >
  {isIdeaExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
  </button>
@@ -3763,7 +3763,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={(e) => { e.stopPropagation(); setOpenIdeaActionsMenuId(openIdeaActionsMenuId === idea.id ? null : idea.id); }}
- className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)] transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)] transition-all cursor-pointer"
  title="Más opciones"
  >
  <MoreVertical className="w-4 h-4" />
@@ -3774,7 +3774,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => { setOpenIdeaActionsMenuId(null); handleShareIdea(idea); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-[var(--ink-2)] flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2"
  >
  <MessageSquare className="w-4 h-4 text-emerald-400" /> Compartir por WhatsApp
  </button>
@@ -3782,14 +3782,14 @@ export default function SongStudioModal({
  type="button"
  onClick={() => { setOpenIdeaActionsMenuId(null); handleExportMasterMix(idea); }}
  disabled={isExportingMaster}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-indigo-300 flex items-center gap-2 disabled:opacity-50"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-indigo-300 flex items-center gap-2 disabled:opacity-50"
  >
  <Disc className={`w-4 h-4 text-indigo-400 ${isExportingMaster ?'animate-spin' :''}`} /> Exportar mezcla (.WAV)
  </button>
  <button
  type="button"
  onClick={(e) => { setOpenIdeaActionsMenuId(null); handleDuplicateIdea(e, idea.id); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-sky-300 flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-sky-300 flex items-center gap-2"
  >
  <Copy className="w-4 h-4 text-sky-400" /> Duplicar como nueva versión
  </button>
@@ -3803,7 +3803,7 @@ export default function SongStudioModal({
  setAiTrackGenStartOffsetSec(0);
  setShowAiTrackGenModal(idea);
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-purple-300 flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-purple-300 flex items-center gap-2"
  >
  <Wand2 className="w-4 h-4 text-purple-400" /> Generar pista con IA
  </button>
@@ -3815,7 +3815,7 @@ export default function SongStudioModal({
  setGenBpm(song.bpm || 120);
  setGenKey(song.tonalidad ||'Do');
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-purple-300 flex items-center gap-2"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-purple-300 flex items-center gap-2"
  >
  <Wand2 className="w-4 h-4 text-purple-400" /> Base rítmica IA (batería/bajo)
  </button>
@@ -3835,7 +3835,7 @@ export default function SongStudioModal({
  {isIdeaExpanded && (
  <>
  {idea.notas && (
- <p className="text-xs text-[var(--ink-2)] italic bg-black/20 p-2.5 rounded-[var(--r-m)] border-[var(--hair)]">"{idea.notas}"
+ <p className="text-xs text-[var(--ink-2)] italic bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] border-[var(--hair)]">"{idea.notas}"
  </p>
  )}
 
@@ -3886,7 +3886,7 @@ export default function SongStudioModal({
  </div>
 
  {/* MASTER MULTITRACK CONTROLS & TIMELINE */}
- <div className="p-2.5 sm:p-3.5 rounded-[var(--r-m)] bg-black/50 border-[var(--hair)] space-y-2 sm:space-y-3 shadow-inner">
+ <div className="p-2.5 sm:p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] space-y-2 sm:space-y-3 shadow-inner">
  {/* Streamlined Transport Toolbar */}
  <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
  {/* Playback Controls */}
@@ -3910,7 +3910,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => handleStopIdea(idea)}
- className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] border-[var(--hair)] transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] border-[var(--hair)] transition-all cursor-pointer"
  title="Detener e ir al inicio (Atajo: 0 / Home)"
  >
  <Square className="w-4 h-4 fill-current text-rose-400" />
@@ -3927,7 +3927,7 @@ export default function SongStudioModal({
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isLoopEnabled
  ?'bg-purple-600 text-[var(--ink)] border-[var(--acc)] shadow-md ring-1 ring-purple-400/50'
- :'bg-white/5 hover:bg-white/10 text-[var(--ink-2)] border-[var(--hair)]'
+ :'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  title="Bucle ON/OFF (Atajo: L)"
  >
@@ -4020,7 +4020,7 @@ export default function SongStudioModal({
  </div>
 
  {/* MINI DAW TRACK LIST MIXER */}
- <div className="space-y-1.5 sm:space-y-2 bg-black/30 p-2 sm:p-3 rounded-[var(--r-m)] border-[var(--hair)]">
+ <div className="space-y-1.5 sm:space-y-2 bg-[var(--sunken)] p-2 sm:p-3 rounded-[var(--r-m)] border-[var(--hair)]">
  {(() => {
  const hasSoloInIdea = tracks.some(t => t.solo);
  return (
@@ -4097,8 +4097,8 @@ export default function SongStudioModal({
  : isSolo
  ?'bg-[var(--acc)]/10 /80 ring-1 ring-amber-400/40 border-l-4 border-l-[var(--acc)] shadow-lg shadow-amber-950/30'
  : hasSoloInIdea
- ?'bg-black/50 /80 opacity-40 grayscale-[50%]'
- :'bg-white/5 border-[var(--hair)] hover:border-[var(--hair)]'
+ ?'bg-[var(--sunken)] /80 opacity-40 grayscale-[50%]'
+ :'bg-[var(--ink)]/5 border-[var(--hair)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-stretch">
@@ -4110,7 +4110,7 @@ export default function SongStudioModal({
  draggable
  onDragStart={() => setDraggedTrackInfo({ ideaId: idea.id, index: idx })}
  onDragEnd={() => { setDraggedTrackInfo(null); setDragOverTrackIndex(null); }}
- className="w-7 shrink-0 flex items-center justify-center bg-black/30 hover:bg-black/50 active:bg-indigo-500/20 border-r border-[var(--hair)] cursor-grab active:cursor-grabbing touch-none select-none"
+ className="w-7 shrink-0 flex items-center justify-center bg-[var(--sunken)] hover:bg-[var(--sunken)] active:bg-indigo-500/20 border-r border-[var(--hair)] cursor-grab active:cursor-grabbing touch-none select-none"
  title="Arrastrar para reordenar pista"
  >
  <GripVertical className="w-4 h-4 text-[var(--ink-2)]" />
@@ -4120,7 +4120,7 @@ export default function SongStudioModal({
  <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-stretch">
  {/* Sidebar: name + transport controls, 2 compact lines */}
  <div
- className="w-full sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-b sm:border-b-0 sm:border-r border-[var(--hair)] bg-black/25"
+ className="w-full sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-b sm:border-b-0 sm:border-r border-[var(--hair)] bg-[var(--sunken)]"
  title={tr.instrumento || undefined}
  >
  {/* Line 1: number badge (coloreado por familia de instrumento, guiño a Iris) + name + edit */}
@@ -4222,7 +4222,7 @@ export default function SongStudioModal({
  className={`relative p-1 rounded cursor-pointer transition-all shrink-0 ${
  expandedTrackSettingsId === tr.id
  ?'bg-purple-500/30 text-purple-300 border-[var(--acc)]/50'
- :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)] hover:bg-white/10'
+ :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)] hover:bg-[var(--ink)]/10'
  }`}
  title={`Ajustes de Pista: Paneo, Ecualizador 3 Bandas y Ajuste de Latencia${(tr.desfaseMs || 0) !== 0 ? ` · ${formatDesfase(tr.desfaseMs)}` :''}`}
  >
@@ -4235,7 +4235,7 @@ export default function SongStudioModal({
  </div>
 
  {/* Waveform Visualizer: fills remaining width, height = row height */}
- <div className="w-full sm:flex-1 relative bg-black/20">
+ <div className="w-full sm:flex-1 relative bg-[var(--sunken)]">
  <WaveformTrack
  ref={(el) => { trackAudioRefs.current[tr.id] = el as HTMLAudioElement; }}
  audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
@@ -4421,7 +4421,7 @@ export default function SongStudioModal({
  step={1}
  value={tr.desfaseMs || 0}
  onChange={(e) => handleTrackDesfaseChange(idea, tr.id, Number(e.target.value))}
- className="w-full max-w-xs h-1 bg-black/40 rounded appearance-none cursor-pointer accent-amber-400 mx-2"
+ className="w-full max-w-xs h-1 bg-[var(--sunken)] rounded appearance-none cursor-pointer accent-amber-400 mx-2"
  title="Deslizar para sincronizar desfase en tiempo real (-500ms a +500ms)"
  />
 
@@ -4453,7 +4453,7 @@ export default function SongStudioModal({
  type="button"
  onClick={() => handleMoveTrack(idea, tr.id,'up')}
  disabled={idx === 0}
- className="px-1.5 py-1 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
+ className="px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
  title="Subir pista"
  >
  <ChevronUp className="w-3.5 h-3.5" />
@@ -4462,7 +4462,7 @@ export default function SongStudioModal({
  type="button"
  onClick={() => handleMoveTrack(idea, tr.id,'down')}
  disabled={idx === tracks.length - 1}
- className="px-1.5 py-1 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
+ className="px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
  title="Bajar pista"
  >
  <ChevronDown className="w-3.5 h-3.5" />
@@ -4506,7 +4506,7 @@ export default function SongStudioModal({
  </div>
 
  <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
- <div className="text-sm font-mono font-black text-red-400 bg-black/80 px-3 py-1 rounded-[var(--r-s)] shadow">
+ <div className="text-sm font-mono font-black text-red-400 bg-[var(--sunken)] px-3 py-1 rounded-[var(--r-s)] shadow">
  {formatTime(recordingTrackTime)}
  </div>
 
@@ -4523,7 +4523,7 @@ export default function SongStudioModal({
  </div>
 
  {/* Live Waveform Timeline Bar across the track lane */}
- <div className="w-full h-12 relative rounded bg-black/60 p-0.5 overflow-hidden">
+ <div className="w-full h-12 relative rounded bg-[var(--sunken)] p-0.5 overflow-hidden">
  <LiveMicWaveformCanvas 
  stream={activeRecordingStream}
  audioCtx={studioAudioCtxRef.current}
@@ -4553,7 +4553,7 @@ export default function SongStudioModal({
  </button>
  </div>
 
- <div className="p-3 rounded-[var(--r-s)] bg-black/60 space-y-2">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-2">
  <div className="flex items-center gap-2 text-[var(--acc)]/70 text-[11px] font-semibold">
  <Headphones className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span>💡 RECOMENDACIÓN MULTIPISTA ESTUDIO:</span>
@@ -4595,7 +4595,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(120)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 120 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 120 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
  title="Recorte estándar para altavoces o auriculares de cable en PC (120ms)"
  >
  PC (120ms)
@@ -4603,7 +4603,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(240)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 240 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 240 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
  title="Recorte para teléfonos móviles y tablets (240ms)"
  >
  Móvil (240ms)
@@ -4611,7 +4611,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(300)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 300 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 300 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
  title="Recorte para auriculares Bluetooth tipo AirPods o Sony (300ms)"
  >
  Bluetooth (300ms)
@@ -4633,7 +4633,7 @@ export default function SongStudioModal({
  step={10}
  value={autoLatencyTrimMs}
  onChange={(e) => setAutoLatencyTrimMs(Number(e.target.value))}
- className="w-full h-1.5 bg-black/40 rounded-[var(--r-s)] appearance-none cursor-pointer accent-amber-400"
+ className="w-full h-1.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-amber-400"
  />
  </div>
  </div>
@@ -4648,7 +4648,7 @@ export default function SongStudioModal({
  value={newTrackName}
  onChange={(e) => setNewTrackName(e.target.value)}
  placeholder="Ej: Voz Segunda / Solo Guitarra / Batería"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-black/50 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
  />
  </div>
 
@@ -4659,14 +4659,14 @@ export default function SongStudioModal({
  value={newTrackInstrument}
  onChange={(e) => setNewTrackInstrument(e.target.value)}
  placeholder="Ej: Voz, Guitarra, Bajo, Teclado"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-black/50 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
  />
  </div>
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
  {/* Option 1: Live Mic Recording while backing tracks play */}
- <div className="p-3 rounded-[var(--r-m)] bg-black/40 flex flex-col items-center justify-center gap-2">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col items-center justify-center gap-2">
  {!isRecordingTrack ? (
  <button
  type="button"
@@ -4688,7 +4688,7 @@ export default function SongStudioModal({
  </div>
 
  {/* Option 2: Upload audio file */}
- <label className={`p-3 rounded-[var(--r-m)] border-dashed hover:border-[var(--acc)] bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all ${isUploading ?'opacity-50 pointer-events-none' :''}`}>
+ <label className={`p-3 rounded-[var(--r-m)] border-dashed hover:border-[var(--acc)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all ${isUploading ?'opacity-50 pointer-events-none' :''}`}>
  <Upload className={`w-5 h-5 text-sky-400 ${isUploading ?'animate-bounce' :''}`} />
  <span className="text-xs font-semibold text-[var(--ink)]">
  {isUploading ?"Subiendo pista..." :"Subir Archivo de Pista"}
@@ -4741,7 +4741,7 @@ export default function SongStudioModal({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  hasVoted 
  ?'bg-emerald-500/20 text-[var(--ink-2)]' 
- :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/10'
+ :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10'
  }`}
  >
  <ThumbsUp className={`w-3.5 h-3.5 ${hasVoted ?'fill-current' :''}`} />
@@ -4765,7 +4765,7 @@ export default function SongStudioModal({
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
  song.audioPrincipalUrl === idea.audioUrl
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
- :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-white/10'
+ :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-[var(--ink)]/10'
  }`}
  title="Establecer esta idea como la Maqueta Principal del tema"
  >
@@ -4784,7 +4784,7 @@ export default function SongStudioModal({
  {/* Comment items list */}
  <div className="space-y-1.5 max-h-48 overflow-y-auto">
  {(idea.comentarios || []).map((comm) => (
- <div key={comm.id} className="p-2 rounded-[var(--r-m)] bg-black/30 border-[var(--hair)] text-xs flex items-start justify-between gap-2 group">
+ <div key={comm.id} className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] text-xs flex items-start justify-between gap-2 group">
  <div>
  <div className="flex items-center gap-2 flex-wrap">
  <span className="font-bold text-indigo-300 font-mono">{comm.autor}:</span>
@@ -4828,7 +4828,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setCommentTimeTagMap(prev => ({ ...prev, [idea.id]: Math.floor(currentTime) }))}
- className="px-2 py-1 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 border-[var(--hair)] text-[10px] font-mono text-[var(--acc)] font-bold whitespace-nowrap cursor-pointer"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 border-[var(--hair)] text-[10px] font-mono text-[var(--acc)] font-bold whitespace-nowrap cursor-pointer"
  title="Añadir timestamp actual"
  >
  ⏱️ @ {formatTime(currentTime)}
@@ -4839,7 +4839,7 @@ export default function SongStudioModal({
  value={commentTrackTagMap[idea.id] ||''}
  onChange={(e) => setCommentTrackTagMap(prev => ({ ...prev, [idea.id]: e.target.value || null }))}
  title="Referir este comentario a una pista concreta"
- className="px-2 py-1 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 border-[var(--hair)] text-[10px] font-mono text-emerald-400 font-bold cursor-pointer outline-none"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 border-[var(--hair)] text-[10px] font-mono text-emerald-400 font-bold cursor-pointer outline-none"
  >
  <option value="">🎚️ General</option>
  {getIdeaTracks(idea).map(tr => (
@@ -4854,7 +4854,7 @@ export default function SongStudioModal({
  onChange={(e) => setCommentTextMap(prev => ({ ...prev, [idea.id]: e.target.value }))}
  onKeyDown={(e) => e.key ==='Enter' && handleAddComment(idea)}
  placeholder="Escribe tu crítica o sugerencia..."
- className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-black/40 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
+ className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
  />
 
  <button
@@ -4942,12 +4942,12 @@ export default function SongStudioModal({
 
  {/* CUBASE KEYBOARD SHORTCUTS CHEAT SHEET MODAL */}
  {showCubaseHelp && (
- <div className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+ <div className="fixed inset-0 z-[100] bg-[var(--scrim)]/85 backdrop-blur-md flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-[var(--ink)] relative">
  <button
  type="button"
  onClick={() => setShowCubaseHelp(false)}
- className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
+ className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -4970,86 +4970,86 @@ export default function SongStudioModal({
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Play / Pausa</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  Espacio
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Pausar Mantenida</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--acc)]/70 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">
  P
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Detener e ir a Inicio (Stop)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--ink-2)] font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">
  0 / Stop / Home
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Bucle (Loop ON/OFF)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  L / /
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Fijar Cue In (Inicio Bucle)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-indigo-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-indigo-300 font-bold shadow">
  I
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Fijar Cue Out (Fin Bucle)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  O
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Grabar Pista Overdub</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--ink-2)] font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">
  R / Numpad *
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Nueva Idea / Proyecto</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--ink-2)] font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-bold shadow">
  N
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Retroceder 5s / 15s</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  ← / Shift + ←
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Avanzar 5s / 15s</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
  → / Shift + →
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Silencio (Mute)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--acc)]/70 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">
  M
  </kbd>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Solo</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--acc)]/70 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold shadow">
  S
  </kbd>
  </div>
@@ -5057,7 +5057,7 @@ export default function SongStudioModal({
 
  <div className="pt-2 flex items-center justify-between border-t border-[var(--hair)]">
  <span className="text-[11px] text-[var(--ink-2)] font-mono">
- 💡 Presiona <kbd className="px-1 py-0.5 rounded bg-black/50 border-[var(--hair)] text-[var(--ink-2)]">K</kbd> o <kbd className="px-1 py-0.5 rounded bg-black/50 border-[var(--hair)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
+ 💡 Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]">K</kbd> o <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
  </span>
  <button
  type="button"
@@ -5073,7 +5073,7 @@ export default function SongStudioModal({
 
  {/* CONFIRM DELETE MODAL DIALOG */}
  {confirmDeleteModal && (
- <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+ <div className="fixed inset-0 z-[100] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-md w-full p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95">
  <div className="flex items-start gap-3">
  <div className="p-3 rounded-[var(--r-m)] bg-rose-500/20 text-rose-400 shrink-0">
@@ -5088,7 +5088,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setConfirmDeleteModal(null)}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-white/5 hover:bg-white/10 transition-all cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 transition-all cursor-pointer"
  >
  Cancelar
  </button>
@@ -5183,7 +5183,7 @@ export default function SongStudioModal({
 
  {/* MODAL MOISES STEMS SEPARATION & MULTITRACK CONTROL */}
  {showMoisesStemsModal && (
- <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+ <div className="fixed inset-0 z-[100] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4">
  <div className="bg-[var(--bg)] rounded-[var(--r-l)] max-w-2xl w-full p-5 sm:p-6 space-y-5 shadow-2xl text-[var(--ink)] max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b /20 pb-3">
  <div className="flex items-center gap-2 text-[var(--acc)] font-mono font-bold text-sm">
@@ -5207,7 +5207,7 @@ export default function SongStudioModal({
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
  moisesTab ==='stems'
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md'
- :'bg-white/5 hover:bg-white/10 text-[var(--ink-2)]'
+ :'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
  }`}
  >
  <Sliders className="w-3.5 h-3.5" />
@@ -5220,7 +5220,7 @@ export default function SongStudioModal({
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
  moisesTab ==='how_it_works'
  ?'bg-indigo-500 text-[var(--ink)] font-black shadow-md'
- :'bg-white/5 hover:bg-white/10 text-[var(--ink-2)]'
+ :'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
  }`}
  >
  <Cpu className="w-3.5 h-3.5" />
@@ -5233,7 +5233,7 @@ export default function SongStudioModal({
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
  moisesTab ==='upload'
  ?'bg-emerald-500 text-[var(--acc-ink)] font-black shadow-md'
- :'bg-white/5 hover:bg-white/10 text-[var(--ink-2)]'
+ :'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
  }`}
  >
  <Upload className="w-3.5 h-3.5" />
@@ -5249,7 +5249,7 @@ export default function SongStudioModal({
  </p>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-[11px]">
- <div className="p-3 rounded-[var(--r-m)] bg-black/60 text-indigo-200 space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-indigo-200 space-y-1">
  <span className="font-bold text-[var(--ink)] block flex items-center gap-1.5">
  🎤 1. Voz (Vocals)
  </span>
@@ -5258,7 +5258,7 @@ export default function SongStudioModal({
  </p>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/60 text-[var(--ink)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] space-y-1">
  <span className="font-bold text-[var(--ink)] block flex items-center gap-1.5">
  🥁 2. Batería (Drums)
  </span>
@@ -5267,7 +5267,7 @@ export default function SongStudioModal({
  </p>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/60 text-[var(--ink)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] space-y-1">
  <span className="font-bold text-[var(--ink)] block flex items-center gap-1.5">
  🎸 3. Bajo (Bass)
  </span>
@@ -5276,7 +5276,7 @@ export default function SongStudioModal({
  </p>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/60 text-purple-200 space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-purple-200 space-y-1">
  <span className="font-bold text-[var(--ink)] block flex items-center gap-1.5">
  🎹 4. Guitarras & Armonía
  </span>
@@ -5323,7 +5323,7 @@ export default function SongStudioModal({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
  selectedStemEngine ==='mvsep-mdx23'
  ?'bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-amber-0/50 shadow-lg shadow-amber-950/50'
- :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -5349,7 +5349,7 @@ export default function SongStudioModal({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
  selectedStemEngine ==='demucs'
  ?'bg-purple-950/60 border-[var(--acc)] text-purple-200 ring-1 ring-purple-500/50 shadow-lg shadow-purple-950/50'
- :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -5375,7 +5375,7 @@ export default function SongStudioModal({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
  selectedStemEngine ==='dsp-server'
  ?'bg-blue-950/60 border-[var(--acc)] text-blue-200 ring-1 ring-blue-500/50 shadow-lg shadow-blue-950/50'
- :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -5454,28 +5454,28 @@ export default function SongStudioModal({
  </div>
 
  <div className="space-y-2.5 font-mono text-[11px]">
- <div className="p-3 rounded-[var(--r-m)] bg-black/50 border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] space-y-1">
  <span className="font-bold text-[var(--acc)]/70 block">1. Transformada de Fourier (STFT) & Espectrogramas 2D:</span>
  <p className="text-[var(--ink-2)] font-sans">
  El audio estéreo se convierte en un espectrograma 2D donde el eje Y representa la frecuencia (Hz) y el eje X representa el tiempo (ms).
  </p>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/50 border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] space-y-1">
  <span className="font-bold text-indigo-300 block">2. Arquitectura de Dominio Dual (Tiempo + Frecuencia):</span>
  <p className="text-[var(--ink-2)] font-sans">
  A diferencia de filtros clásicos, la red procesa tanto la forma de onda pura en el tiempo (para transitorios de batería) como el espectrograma de frecuencias con capas neuronales especializadas.
  </p>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/50 border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] space-y-1">
  <span className="font-bold text-purple-300 block">3. Máscaras de Fase Compleja & Estimación Tímbrica:</span>
  <p className="text-[var(--ink-2)] font-sans">
  El modelo predice una"máscara" espectral que multiplica el audio original para aislar la firma tímbrica de la voz o del bajo, preservando la fase original para evitar artefactos chirriantes o cancelación de fase.
  </p>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/50 border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] space-y-1">
  <span className="font-bold text-[var(--ink-2)] block">4. Entrenamiento Masivo en Clusters de GPUs:</span>
  <p className="text-[var(--ink-2)] font-sans">
  Estos modelos se entrenan con miles de temas grabados en pistas separadas en estudio. Al procesar, ejecutan inferencia acelerada en servidores de GPU dedicadas.
@@ -5508,7 +5508,7 @@ export default function SongStudioModal({
  <select
  value={uploadingStemInstrument}
  onChange={(e) => setUploadingStemInstrument(e.target.value)}
- className="w-full bg-black/60 rounded-[var(--r-m)] p-2.5 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
+ className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
  >
  <option value="Voz">🎤 Pista: Voz Aislada</option>
  <option value="Batería">🥁 Pista: Batería Aislada</option>
@@ -5554,7 +5554,7 @@ export default function SongStudioModal({
  alert("Ocurrió un error al cargar el archivo de audio Stem.");
  }
  }}
- className="w-full bg-black/60 rounded-[var(--r-m)] p-2.5 text-[var(--ink-2)] text-xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:text-xs file:font-bold file:bg-emerald-500 file:text-[var(--acc-ink)] hover:file:bg-emerald-400"
+ className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink-2)] text-xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:text-xs file:font-bold file:bg-emerald-500 file:text-[var(--acc-ink)] hover:file:bg-emerald-400"
  />
  </div>
  </div>
@@ -5570,7 +5570,7 @@ export default function SongStudioModal({
 
  {/* AI Instrument Track Generator Modal */}
  {showAiTrackGenModal && (
- <div className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
+ <div className="fixed inset-0 z-[120] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
  <div className="bg-gradient-to-b from-zinc-900 via-indigo-950/80 to-zinc-950 rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-3">
  <div className="flex items-center gap-2.5 text-purple-300 font-mono font-bold text-sm">
@@ -5580,7 +5580,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => { setShowAiTrackGenModal(null); setAiTrackGenPreview(null); setAiTrackGenError(null); }}
- className="p-1.5 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -5598,7 +5598,7 @@ export default function SongStudioModal({
  <select
  value={aiTrackGenInstrument}
  onChange={(e) => setAiTrackGenInstrument(e.target.value)}
- className="w-full bg-black/60 rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono text-xs focus:outline-none focus:border-[var(--acc)]"
+ className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono text-xs focus:outline-none focus:border-[var(--acc)]"
  >
  <option value="Guitarra Solista">🎸 Guitarra Solista (Solo / Lead Riff)</option>
  <option value="Sintetizador Lead">🎹 Sintetizador Lead / Teclado Moderno</option>
@@ -5613,7 +5613,7 @@ export default function SongStudioModal({
  <div>
  <label className="block text-purple-300 font-mono font-bold mb-1.5 flex items-center justify-between">
  <span>¿En qué momento de la canción debe empezar a sonar?</span>
- <span className="text-[var(--ink)] bg-black/60 px-2 py-0.5 rounded-[var(--r-s)] text-[11px]">Se colocará en {formatTime(aiTrackGenStartOffsetSec)}</span>
+ <span className="text-[var(--ink)] bg-[var(--sunken)] px-2 py-0.5 rounded-[var(--r-s)] text-[11px]">Se colocará en {formatTime(aiTrackGenStartOffsetSec)}</span>
  </label>
 
  {/* Mini transporte: reproduce la idea real para elegir el punto de oído, no a ciegas con un slider */}
@@ -5659,7 +5659,7 @@ export default function SongStudioModal({
  </div>
 
  {/* Pestañas Presets / Personalizado */}
- <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-black/40 w-fit">
+ <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] w-fit">
  <button
  type="button"
  onClick={() => setAiTrackGenMode('presets')}
@@ -5690,7 +5690,7 @@ export default function SongStudioModal({
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all flex flex-col gap-0.5 ${
  aiTrackGenStyle === preset.style
  ?'bg-purple-950/60 border-[var(--acc)] ring-1 ring-purple-500/50'
- :'bg-black/40 border-[var(--hair)] hover:border-[var(--hair)]'
+ :'bg-[var(--sunken)] border-[var(--hair)] hover:border-[var(--hair)]'
  }`}
  >
  <span className="font-bold text-[11px] text-[var(--ink)] flex items-center gap-1.5">
@@ -5709,7 +5709,7 @@ export default function SongStudioModal({
  value={aiTrackGenPrompt}
  onChange={(e) => setAiTrackGenPrompt(e.target.value)}
  placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
- className="w-full h-20 bg-black/60 rounded-[var(--r-m)] p-2.5 text-[var(--ink)] placeholder-[var(--ink-2)] font-sans text-xs focus:outline-none focus:border-[var(--acc)] resize-none"
+ className="w-full h-20 bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] placeholder-[var(--ink-2)] font-sans text-xs focus:outline-none focus:border-[var(--acc)] resize-none"
  />
  </div>
  )}
@@ -5736,7 +5736,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => { setShowAiTrackGenModal(null); setAiTrackGenPreview(null); setAiTrackGenError(null); }}
- className="px-4 py-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
  >
  Cancelar
  </button>
@@ -5774,7 +5774,7 @@ export default function SongStudioModal({
 
  {/* MODAL DE PROGRESO DE SEPARACIÓN DE STEMS IA */}
  {stemProgressModal && stemProgressModal.isOpen && !stemProgressModal.minimized && (
- <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-[var(--scrim)]/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
  <div className="bg-zinc-950 rounded-[var(--r-l)] max-w-md md:max-w-2xl w-full p-6 text-[var(--ink)] shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
 
  {/* Guiño de marca: rayo blanco entrando en el prisma de Iris, saliendo en arcoíris.
@@ -5894,7 +5894,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setStemProgressModal(prev => prev ? { ...prev, minimized: true } : null)}
- className="p-1.5 rounded-[var(--r-s)] bg-white/5 hover:bg-white/10 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer shrink-0"
+ className="p-1.5 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer shrink-0"
  title="Minimizar y seguir trabajando mientras Iris separa las pistas"
  >
  <Minimize2 className="w-3.5 h-3.5" />
@@ -5913,7 +5913,7 @@ export default function SongStudioModal({
  <Clock className="w-4 h-4 text-[var(--acc)] animate-spin" />
  <span>⏱️ Monitor de Tiempo:</span>
  </div>
- <span className="text-[var(--ink)] font-black bg-black/60 px-2.5 py-1 rounded border-[var(--hair)] text-xs">
+ <span className="text-[var(--ink)] font-black bg-[var(--sunken)] px-2.5 py-1 rounded border-[var(--hair)] text-xs">
  {separationElapsedSeconds}s transcurridos
  </span>
  </div>
@@ -5933,7 +5933,7 @@ export default function SongStudioModal({
  </div>
 
  {/* Animated Equalizer Visualizer */}
- <div className="p-3.5 rounded-[var(--r-m)] bg-black/60 border-[var(--hair)] flex items-center justify-between">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] flex items-center justify-between">
  <div className="flex items-center gap-1.5 h-8">
  <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_100ms]" style={{ height:'60%', backgroundColor: IRIS_PRISM_RAY_COLORS[0] }} />
  <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_300ms]" style={{ height:'90%', backgroundColor: IRIS_PRISM_RAY_COLORS[1] }} />
@@ -6036,7 +6036,7 @@ export default function SongStudioModal({
  </span>
  </div>
  <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
- Procesado con <strong className="text-[var(--ink)] bg-black/40 px-1.5 py-0.5 rounded border-[var(--hair)]">{stemProgressModal.separationEngine ||'Iris'}</strong>. Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, fader de volumen y ecualizador en el mezclador.
+ Procesado con <strong className="text-[var(--ink)] bg-[var(--sunken)] px-1.5 py-0.5 rounded border-[var(--hair)]">{stemProgressModal.separationEngine ||'Iris'}</strong>. Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, fader de volumen y ecualizador en el mezclador.
  </p>
  {stemProgressModal.engineChoice && (
  <p className="text-[10px] text-emerald-400/70 font-mono">
@@ -6059,7 +6059,7 @@ export default function SongStudioModal({
 
  {stemProgressModal.timingBreakdown ? (
  <div className="grid grid-cols-3 gap-2 text-[10px] pt-1">
- <div className="p-2 rounded bg-black/40 border-[var(--hair)] text-center">
+ <div className="p-2 rounded bg-[var(--sunken)] border-[var(--hair)] text-center">
  <span className="text-[var(--ink-2)] block">📥 Prelectura</span>
  <span className="font-bold text-[var(--ink)]">{stemProgressModal.timingBreakdown.preloadSec ||'0.1s'}</span>
  </div>
@@ -6097,7 +6097,7 @@ export default function SongStudioModal({
 
  {/* A/B Quality Comparison / Re-processing Engine Selector */}
  {stemProgressModal.targetIdea && (
- <div className="p-3.5 rounded-[var(--r-m)] bg-black/60 space-y-2.5 font-mono text-[11px]">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2.5 font-mono text-[11px]">
  <div className="flex items-center justify-between">
  <span className="font-bold text-[var(--ink)] flex items-center gap-1.5">
  <Sparkles className="w-3.5 h-3.5 text-indigo-400" /> Banco de Pruebas A/B: Comparar Calidad
@@ -6392,7 +6392,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setStemProgressModal(null)}
- className="px-4 py-2.5 rounded-[var(--r-m)] bg-white/10 hover:bg-white/20 text-[var(--ink)] font-mono text-xs font-bold transition-all cursor-pointer"
+ className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-mono text-xs font-bold transition-all cursor-pointer"
  >
  Cerrar
  </button>
@@ -6411,7 +6411,7 @@ export default function SongStudioModal({
  <span>{showStemErrorDetails ?'Ocultar diagnóstico técnico' :'Ver diagnóstico técnico detallado (logs / error)'}</span>
  </button>
  {showStemErrorDetails && (
- <div className="mt-2 p-3 rounded-[var(--r-m)] bg-black/80 border-[var(--hair)] font-mono text-[11px] text-[var(--ink-2)] space-y-2 animate-in fade-in duration-150">
+ <div className="mt-2 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] font-mono text-[11px] text-[var(--ink-2)] space-y-2 animate-in fade-in duration-150">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-1.5">
  <span className="text-[10px] text-[var(--ink-2)] uppercase font-bold tracking-wider">Detalles técnicos del error:</span>
  <button

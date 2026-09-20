@@ -181,7 +181,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4">
  <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl max-h-[90vh] overflow-y-auto">
  {/* Header */}
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
@@ -369,7 +369,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  className={`px-3 py-1.5 rounded text-xs font-semibold transition flex items-center gap-1 ${
  showComparison
  ?'bg-purple-600 hover:bg-purple-700 text-[var(--ink)]'
- :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'
+ :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'
  }`}
  >
  👁️ {showComparison ?'Ocultar' :'Comparar'}
@@ -410,7 +410,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-[var(--ok)]/20">
  <div className="space-y-1.5">
  <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Documento original</p>
- <div className="bg-black/40 border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden max-h-96">
+ <div className="bg-[var(--sunken)] border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden max-h-96">
  {isImageDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl) ? (
  <img
  src={song.estructuraDocumentoUrl}
@@ -432,7 +432,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  </div>
  <div className="space-y-1.5">
  <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
- <div className="bg-black/40 border-[var(--hair)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
+ <div className="bg-[var(--sunken)] border-[var(--hair)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
  <pre className="text-[11px] font-mono text-[var(--acc)] whitespace-pre-wrap leading-relaxed">
  {song.cifradoTexto ||'Sin acordes guardados todavía.'}
  </pre>

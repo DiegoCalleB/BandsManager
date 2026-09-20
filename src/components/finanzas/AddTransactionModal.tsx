@@ -55,7 +55,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/60 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  id="add-transaction-modal"
  className="w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto"

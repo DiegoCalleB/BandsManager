@@ -1345,7 +1345,7 @@ export function PdfExportModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 z-[9999] overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 bg-[var(--scrim)]/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 z-[9999] overflow-y-auto overscroll-contain">
  <div
  className={`w-full max-w-7xl max-h-[96vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'
@@ -1431,7 +1431,7 @@ export function PdfExportModal({
  <option value="master">📄 Master Escenario / Sonido</option>
  </select>
 
- <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)]">
+ <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)]">
  <button
  onClick={() => {
  setPrintMode('all_members');
@@ -1496,7 +1496,7 @@ export function PdfExportModal({
  {/* Densidad de vista:"sentado" busca el mínimo nº de hojas posible (para leer de
  cerca — atril, mesa de sonido);"de pie" fuerza la letra más grande de todas,
  aceptando más hojas a cambio — para leerlo desde lejos, de pie en el escenario. */}
- <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)]">
+ <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)]">
  <button
  onClick={() => setViewDensity('sentado')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
@@ -1564,7 +1564,7 @@ export function PdfExportModal({
  <select
  value={handwritingFont}
  onChange={(e) => setHandwritingFont(e.target.value as any)}
- className="p-1 px-2.5 rounded-[var(--r-s)] bg-black/50 text-[var(--ink)] font-bold text-[11px] cursor-pointer"
+ className="p-1 px-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] font-bold text-[11px] cursor-pointer"
  >
  <option value="caveat">✍️ Rotulador Fino (Caveat)</option>
  <option value="permanent_marker">🖊️ Sharpie Grueso (Permanent Marker)</option>
@@ -1573,7 +1573,7 @@ export function PdfExportModal({
  </select>
 
  {/* Ink color selector */}
- <div className="flex items-center gap-1 bg-black/40 p-1 rounded-[var(--r-s)] border-[var(--hair)]">
+ <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-s)] border-[var(--hair)]">
  <button
  onClick={() => setHandwritingColor('blue')}
  className={`w-5 h-5 rounded-full bg-blue-600 transition-transform cursor-pointer ${
@@ -1678,14 +1678,14 @@ export function PdfExportModal({
  <button
  disabled={previewPageIndex <= 0}
  onClick={() => setPreviewPageIndex(p => Math.max(0, p - 1))}
- className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-s)] bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
+ className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-s)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
  >
  <ChevronLeft className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Anterior</span>
  </button>
  <button
  disabled={previewPageIndex >= membersToExport.length - 1}
  onClick={() => setPreviewPageIndex(p => Math.min(membersToExport.length - 1, p + 1))}
- className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-s)] bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
+ className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-s)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
  >
  <span className="hidden sm:inline">Siguiente</span> <ChevronRight className="w-3.5 h-3.5" />
  </button>
@@ -2055,7 +2055,7 @@ export function PdfExportModal({
  sizeChoiceDialog / EMERGENCY_TITLE_FONT_PT en handlePrint). Solo aparece cuando el
  auto-ajuste detecta ese caso límite real — nunca decide en nombre del usuario. */}
  {sizeChoiceDialog && (
- <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[10000] p-4">
+ <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center z-[10000] p-4">
  <div className={`rounded-[var(--r-l)] shadow-2xl max-w-lg w-full p-6 ${
  isStitchLight ?'bg-white' :'bg-[var(--surface)]'
  }`}>

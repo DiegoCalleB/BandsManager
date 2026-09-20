@@ -1545,7 +1545,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* 4. MODAL: CREATE / EDIT BAND CONTACT */}
  {isAddEditModalOpen && (
- <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+ <div className="fixed inset-0 bg-[var(--scrim)]/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>

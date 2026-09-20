@@ -3370,7 +3370,7 @@ export default function RepertorioSetlists({
  e.stopPropagation();
  reorderSetlistItems(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex, `warning-${i}`);
  }}
- className="ml-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/25 text-[var(--ink)] font-bold transition"
+ className="ml-1 px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/25 text-[var(--ink)] font-bold transition"
  title={w.suggestedReorder.description}
  >
  ✓ Aplicar
@@ -3907,7 +3907,7 @@ export default function RepertorioSetlists({
  className={`w-full text-[9px] font-mono px-2 py-1 rounded mt-1 ${
  isStitchLight
  ?'bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-2)]'
- :'bg-black/40 text-[var(--ink)] placeholder:text-[var(--ink-2)]'
+ :'bg-[var(--sunken)] text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  }`}
  />
 
@@ -4171,7 +4171,7 @@ export default function RepertorioSetlists({
  }}
  isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
  />
- <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+ <div className="absolute inset-0 bg-[var(--scrim)]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
  <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
  </div>
  </div>
@@ -4544,7 +4544,7 @@ export default function RepertorioSetlists({
 
  {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
  {showShowItemModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm">
  <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 shadow-2xl ${colors.card}`}>
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
@@ -4626,7 +4626,7 @@ export default function RepertorioSetlists({
  />
  </div>
 
- <div className="p-3 bg-black/40 rounded-[var(--r-m)] space-y-2">
+ <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2">
  <label className="block text-[var(--acc)] font-bold text-[11px] flex items-center gap-1.5">
  <Clock className="w-3.5 h-3.5" />
  Tiempo Asignado al Evento (Minutos y Segundos) *
@@ -4677,7 +4677,7 @@ export default function RepertorioSetlists({
  />
  </div>
 
- <div className="p-3 bg-black/40 rounded-[var(--r-m)] space-y-3">
+ <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-3">
  <div className="flex items-center justify-between">
  <label className="block text-sky-400 font-bold text-[11px] flex items-center gap-1.5">
  <Mic className="w-3.5 h-3.5" />

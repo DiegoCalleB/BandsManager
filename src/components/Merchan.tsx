@@ -462,7 +462,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
 
  {customImageUrl ? (
- <div className="relative w-full h-28 rounded-[var(--r-s)] overflow-hidden bg-center bg-contain bg-no-repeat bg-black/40" style={{ backgroundImage: `url(${customImageUrl})` }} />
+ <div className="relative w-full h-28 rounded-[var(--r-s)] overflow-hidden bg-center bg-contain bg-no-repeat bg-[var(--sunken)]" style={{ backgroundImage: `url(${customImageUrl})` }} />
  ) : (
  <button
  onClick={() => fileInputRef.current?.click()}
@@ -729,7 +729,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* 🎁 Modal de Canje de Pegatinas de Bienvenida */}
  {showClaimModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fadeIn">
  <div className="relative w-full max-w-2xl rounded-3xl bg-[var(--surface)] border-2 /50 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
  {/* Modal Header */}
  <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[#141210] border-b border-[var(--hair)] flex items-center justify-between">

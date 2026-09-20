@@ -493,7 +493,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <button
  type="button"
  onClick={() => { setShowMenu(false); onEditSong(); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-[var(--ink-2)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
  >
  <Edit3 className="w-3.5 h-3.5" />
  <span>Editar Canción</span>
@@ -553,7 +553,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  target="_blank"
  rel="noreferrer"
  onClick={() => setShowMenu(false)}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 transition-colors flex items-center gap-2 cursor-pointer"
  >
  <ExternalLink className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Partitura / Enlace</span>
@@ -570,7 +570,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  setShowMenu(false);
  onMoveUp();
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
  >
  <ArrowUp className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Mover arriba</span>
@@ -583,7 +583,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  setShowMenu(false);
  onMoveDown();
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
  >
  <ArrowDown className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Mover abajo</span>

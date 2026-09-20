@@ -53,7 +53,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  return (
  <div 
  id="fans-landing-preview-modal"
- className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
+ className="fixed inset-0 z-50 bg-[var(--scrim)]/95 backdrop-blur-md flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
  >
  {/* BARRA SUPERIOR PRINCIPAL (DESKTOP & MOBILE) */}
  <header className="w-full bg-[var(--surface)] border-b border-[var(--hair)] px-3 sm:px-5 py-2.5 shrink-0 z-30 shadow-2xl flex items-center justify-between gap-2">
@@ -304,7 +304,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </div>
 
  {/* Barra inferior de gestos */}
- <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-24 h-1 bg-white/20 rounded-full z-30 pointer-events-none" />
+ <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-24 h-1 bg-[var(--ink)]/20 rounded-full z-30 pointer-events-none" />
  </div>
  </div>
  ) : (

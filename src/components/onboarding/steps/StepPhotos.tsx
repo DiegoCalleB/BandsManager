@@ -41,7 +41,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  className="aspect-video rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] overflow-hidden relative group"
  >
  <img src={url} alt={`Foto promo ${idx + 1}`} className="w-full h-full object-cover" />
- <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+ <div className="absolute inset-0 bg-[var(--scrim)]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
  <button
  type="button"
  onClick={() => onRemovePhoto(idx)}

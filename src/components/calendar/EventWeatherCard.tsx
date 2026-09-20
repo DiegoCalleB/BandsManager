@@ -213,7 +213,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </div>
 
  {/* Pestañas Concierto vs Prueba de Sonido y Controles */}
- <div className="flex items-center gap-1 bg-black/20 p-0.5 rounded-[var(--r-s)]">
+ <div className="flex items-center gap-1 bg-[var(--sunken)] p-0.5 rounded-[var(--r-s)]">
  <button
  type="button"
  onClick={() => setSelectedSlot('show')}
@@ -318,7 +318,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.rainProbability || 0) >= 40 
  ?'bg-sky-500/20 border-[var(--acc)]/50 text-sky-300 shadow-[0_0_12px_rgba(14,165,233,0.25)]' 
- :'bg-black/20 border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-1 text-[10px] font-mono">
@@ -344,7 +344,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.windGusts || 0) >= 40 
  ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 shadow-[0_0_12px_rgba(245,158,11,0.25)]' 
- :'bg-black/20 border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-1 text-[10px] font-mono">

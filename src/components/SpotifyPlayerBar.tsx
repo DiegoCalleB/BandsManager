@@ -543,7 +543,7 @@ export default function SpotifyPlayerBar({
  </div>
  )}
  {isPlaying && (
- <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-0.5">
+ <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
  <span className="w-0.5 h-3 bg-[var(--surface)] rounded-full animate-pulse" />
  <span className="w-0.5 h-4 bg-[var(--surface)] rounded-full animate-pulse delay-75" />
  <span className="w-0.5 h-2 bg-[var(--surface)] rounded-full animate-pulse delay-150" />
@@ -646,7 +646,7 @@ export default function SpotifyPlayerBar({
  </div>
  )}
  {isPlaying && (
- <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-0.5">
+ <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
  <span className="w-1 h-4 bg-[var(--surface)] rounded-full animate-pulse" />
  <span className="w-1 h-6 bg-[var(--surface)] rounded-full animate-pulse delay-75" />
  <span className="w-1 h-3 bg-[var(--surface)] rounded-full animate-pulse delay-150" />

@@ -544,7 +544,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-md z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
  <div className={`border rounded-[var(--r-l)] w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden shadow-2xl flex flex-col my-auto animate-in zoom-in-95 duration-200 ${
  isStitchLight 
  ?'bg-white text-[var(--ink)]' 
@@ -1643,7 +1643,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
  {Object.entries(learnedResponseRules).map(([cat, reglas]) => (
- <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-black/30 space-y-1">
+ <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1">
  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-300">
  {RESPONSE_LEARNED_CATEGORY_LABELS[cat] || cat}
  </span>

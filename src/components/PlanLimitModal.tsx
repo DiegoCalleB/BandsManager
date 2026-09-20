@@ -44,7 +44,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fade-in">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fade-in">
  <div className="relative w-full max-w-lg rounded-3xl bg-[var(--surface)] border-[var(--hair)] p-6 sm:p-8 shadow-2xl space-y-6 text-[var(--ink)] font-sans my-auto max-h-[90vh] overflow-y-auto">
  {/* Close Button */}
  <button

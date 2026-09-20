@@ -708,7 +708,7 @@ export function OrdenDelDiaTab({
  {/* MODAL: AÑADIR CANCIONES MÚLTIPLES EN EL ORDEN DE SELECCIÓN */}
  {showAddSongModal && (
  <ModalPortal isOpen={showAddSongModal} onClose={() => setShowAddSongModal(false)}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fade-in">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fade-in">
  <div className="w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[92vh] flex flex-col border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)]">
  <div className="flex justify-between items-center pb-3 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2">
@@ -881,7 +881,7 @@ export function OrdenDelDiaTab({
  {/* MODAL: CARGAR SETLIST COMPLETO */}
  {showImportSetlistModal && (
  <ModalPortal isOpen={showImportSetlistModal} onClose={() => setShowImportSetlistModal(false)}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fade-in">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fade-in">
  <div className="w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl my-auto flex flex-col border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)]">
  <div className="flex justify-between items-center pb-3 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2">
@@ -959,7 +959,7 @@ export function OrdenDelDiaTab({
  {/* Modal: Add Custom Block */}
  {showAddBlockModal && (
  <ModalPortal isOpen={showAddBlockModal} onClose={() => setShowAddBlockModal(false)}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fade-in">
  <form onSubmit={handleConfirmAddBlock} className="bg-[var(--surface)] border-[var(--hair)] w-full max-w-md rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col">
  <div className="flex items-center justify-between p-4 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2">

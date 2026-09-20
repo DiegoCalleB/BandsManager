@@ -65,7 +65,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  id="bulk-leads-action-bar"
  className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] shadow-xl backdrop-blur-md p-2.5 sm:p-3 transition-all animate-slide-up ${
  isStitchLight
- ?'bg-white/95 /60 text-[var(--ink)] shadow-slate-300/60'
+ ?'bg-[var(--ink)]/95 /60 text-[var(--ink)] shadow-slate-300/60'
  :'bg-[var(--surface)]/95 border-[var(--acc)]/50 text-[var(--ink)] shadow-black/80'
  }`}
  >
@@ -276,7 +276,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
 
  {/* Confirmation Modal for Bulk Deletion */}
  <ModalPortal isOpen={isConfirmDeleteOpen} onClose={() => setIsConfirmDeleteOpen(false)}>
- <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
+ <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
  <div className="w-full max-w-md bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl p-5 space-y-4 my-auto">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">

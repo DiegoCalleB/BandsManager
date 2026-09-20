@@ -328,7 +328,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  className={
  effectiveFloatingMode
  ? `fixed inset-0 z-[10000] pointer-events-none p-3 sm:p-5 flex ${dockClass} transition-all duration-300`
- :"fixed inset-0 z-[10000] bg-black/85 backdrop-blur-md flex items-center justify-center p-0 md:p-4 overflow-y-auto"
+ :"fixed inset-0 z-[10000] bg-[var(--scrim)]/85 backdrop-blur-md flex items-center justify-center p-0 md:p-4 overflow-y-auto"
  }
  onClick={(e) => {
  if (!effectiveFloatingMode && e.target === e.currentTarget) {

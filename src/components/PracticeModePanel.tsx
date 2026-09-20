@@ -515,7 +515,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {tracks.map(tr => (
  <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={effectiveSemitones} />
  ))}
- <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+ <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
  {/* Header */}
  <div className={`px-5 py-4 flex items-center justify-between border-b ${isStitchLight ?' bg-[var(--bg)]' :' bg-[var(--surface)]/60'}`}>
@@ -803,7 +803,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {chordsSourceLabel(chords.chordsSource).text}
  {chords.esAproximado &&' · ⚠️ aproximado, verifica de oído'}
  </p>
- <pre className="text-[11px] font-mono whitespace-pre-wrap text-[var(--ink-2)] max-h-40 overflow-y-auto bg-black/30 rounded-[var(--r-s)] p-2">
+ <pre className="text-[11px] font-mono whitespace-pre-wrap text-[var(--ink-2)] max-h-40 overflow-y-auto bg-[var(--sunken)] rounded-[var(--r-s)] p-2">
  {chords.cifradoTexto}
  </pre>
  {onApplyAsMainChords && (

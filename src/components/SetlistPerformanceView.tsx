@@ -441,7 +441,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <div className="flex items-center gap-1.5 shrink-0 relative">
  {/* Toggle Directo / Ensayo */}
  <div className={`flex items-center rounded-[var(--r-s)] p-0.5 text-xs font-bold shrink-0 ${
- glareMode ?'bg-zinc-100 border-[var(--hair)]300' :'bg-black/50 border-[var(--hair)]'
+ glareMode ?'bg-zinc-100 border-[var(--hair)]300' :'bg-[var(--sunken)] border-[var(--hair)]'
  }`}>
  <button
  type="button"
@@ -548,7 +548,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  <button
  onClick={() => setShowMoreMenu(v => !v)}
- className={`p-1.5 rounded-[var(--r-s)] transition ${showMoreMenu ? (glareMode ?'bg-black/10' :'bg-white/15') : glareMode ?'hover:bg-black/10 text-[var(--ink-2)]' :'hover:bg-white/10 text-[var(--ink-2)]'}`}
+ className={`p-1.5 rounded-[var(--r-s)] transition ${showMoreMenu ? (glareMode ?'bg-[var(--sunken)]' :'bg-[var(--ink)]/15') : glareMode ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]' :'hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'}`}
  title="Más opciones"
  >
  <MoreVertical className="w-5 h-5" />
@@ -556,7 +556,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  <button
  onClick={onClose}
- className={`p-1.5 rounded-[var(--r-s)] transition ${glareMode ?'hover:bg-black/10 text-[var(--ink)]' :'hover:bg-white/10 text-[var(--ink)]'}`}
+ className={`p-1.5 rounded-[var(--r-s)] transition ${glareMode ?'hover:bg-[var(--sunken)] text-[var(--ink)]' :'hover:bg-[var(--ink)]/10 text-[var(--ink)]'}`}
  title="Cerrar (ESC)"
  >
  <X className="w-5 h-5" />
@@ -575,7 +575,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  onClick={() => { setShowMoreMenu(false); handleLaunchPractice(); }}
  className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition font-semibold ${
- glareMode ?'hover:bg-black/5 text-emerald-800' :'hover:bg-white/10 text-emerald-400'
+ glareMode ?'hover:bg-[var(--sunken)] text-emerald-800' :'hover:bg-[var(--ink)]/10 text-emerald-400'
  }`}
  >
  <Headphones className="w-4 h-4 shrink-0 text-emerald-400" />
@@ -585,7 +585,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  onClick={() => { setShowMoreMenu(false); handleLaunchStudio(); }}
  className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${
- glareMode ?'hover:bg-black/5 text-[var(--ink-2)]' :'hover:bg-white/10 text-[var(--ink-2)]'
+ glareMode ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]' :'hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
  }`}
  title="Abre el Studio para separar las pistas de este tema con el motor de IA Iris"
  >
@@ -601,7 +601,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  onClick={() => { setShowMoreMenu(false); handleLaunchStudio(); }}
  className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${
- glareMode ?'hover:bg-black/5 text-indigo-700' :'hover:bg-white/10 text-indigo-400'
+ glareMode ?'hover:bg-[var(--sunken)] text-indigo-700' :'hover:bg-[var(--ink)]/10 text-indigo-400'
  }`}
  >
  <Sliders className="w-4 h-4 shrink-0 text-indigo-400" />
@@ -615,14 +615,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  <button
  onClick={() => { setGlareMode(v => !v); setShowMoreMenu(false); }}
- className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-black/5' :'hover:bg-white/10'} ${glareMode ?'text-amber-600' :''}`}
+ className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--ink)]/10'} ${glareMode ?'text-amber-600' :''}`}
  >
  <Sun className="w-4 h-4 shrink-0" /> {glareMode ?'Quitar' :'Activar'} alto contraste
  </button>
 
  <button
  onClick={() => { setIsResting(true); setShowMoreMenu(false); }}
- className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-black/5' :'hover:bg-white/10'}`}
+ className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--ink)]/10'}`}
  >
  <Moon className="w-4 h-4 shrink-0" /> Modo descanso (ahorra batería)
  </button>
@@ -630,7 +630,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {!isBlock && notes && (
  <button
  onClick={() => { setShowNotes(v => !v); setShowMoreMenu(false); }}
- className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-black/5' :'hover:bg-white/10'} text-[var(--acc)]`}
+ className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--ink)]/10'} text-[var(--acc)]`}
  >
  <StickyNote className="w-4 h-4 shrink-0" /> {showNotes ?'Ocultar' :'Ver'} notas del tema
  </button>
@@ -639,7 +639,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {!isBlock && hasChordsText && hasScannedSheet && (
  <button
  onClick={() => { setManualViewOverride(effectiveViewMode ==='sheet' ?'chords' :'sheet'); setShowMoreMenu(false); }}
- className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-black/5' :'hover:bg-white/10'}`}
+ className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--ink)]/10'}`}
  >
  {showScannedSheet ? <FileText className="w-4 h-4 shrink-0" /> : <ImageIcon className="w-4 h-4 shrink-0" />}
  Ver {showScannedSheet ?'acordes en texto' :'documento original'}
@@ -649,7 +649,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {!isBlock && !showScannedSheet && (
  <button
  onClick={() => { setFontSizeIdx(i => (i + 1) % FONT_SIZES.length); setShowMoreMenu(false); }}
- className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-black/5' :'hover:bg-white/10'}`}
+ className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--ink)]/10'}`}
  >
  <Type className="w-4 h-4 shrink-0" /> Cambiar tamaño de letra
  </button>
@@ -657,7 +657,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  <button
  onClick={() => { toggleFullscreen(); setShowMoreMenu(false); }}
- className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-black/5' :'hover:bg-white/10'}`}
+ className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--ink)]/10'}`}
  >
  {isFullscreen ? <Minimize className="w-4 h-4 shrink-0" /> : <Maximize className="w-4 h-4 shrink-0" />}
  {isFullscreen ?'Salir de' :'Entrar en'} pantalla completa
@@ -665,7 +665,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  <button
  onClick={() => { setShowFlightModeInfo(v => !v); setShowMoreMenu(false); }}
- className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-black/5' :'hover:bg-white/10'} text-sky-400`}
+ className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--ink)]/10'} text-sky-400`}
  >
  <Plane className="w-4 h-4 shrink-0" /> Sobre el modo avión
  </button>
@@ -870,11 +870,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <div className={`shrink-0 px-3 sm:px-4 py-2 space-y-2 z-20 ${glareMode ?'bg-gradient-to-t from-white to-white/0' :'bg-gradient-to-t from-black to-[var(--sunken)]/0'}`}>
  {!isBlock && !showScannedSheet && currentSong?.tonalidad && (
  <div className="flex items-center justify-center gap-2 text-xs">
- <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded border-[var(--hair)]">
+ <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-0.5 rounded border-[var(--hair)]">
  <button
  type="button"
  onClick={() => setLiveTransposeOffset(v => v - 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold cursor-pointer"
  title="Bajar 1 semitono (-1)"
  >
  -
@@ -883,7 +883,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => setLiveTransposeOffset(v => v + 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold cursor-pointer"
  title="Subir 1 semitono (+1)"
  >
  +
@@ -912,7 +912,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={handlePrev}
  disabled={isFirst}
  className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 ${
- glareMode ?'bg-black/5 hover:bg-black/10 text-[var(--ink)]' :'bg-white/5 hover:bg-white/10 text-[var(--ink)]'
+ glareMode ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink)]'
  }`}
  >
  <ChevronLeft className="w-4 h-4" />
@@ -932,7 +932,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  ?'w-5 h-1.5 bg-[var(--acc)]/60'
  : it.tipoItem ==='bloque'
  ?'w-1.5 h-1.5 bg-indigo-400/60 hover:bg-indigo-400'
- : glareMode ?'w-1.5 h-1.5 bg-black/25 hover:bg-black/50' :'w-1.5 h-1.5 bg-white/25 hover:bg-white/50'
+ : glareMode ?'w-1.5 h-1.5 bg-[var(--sunken)] hover:bg-[var(--sunken)]' :'w-1.5 h-1.5 bg-[var(--ink)]/25 hover:bg-[var(--ink)]/50'
  }`}
  title={itemLabel(it, songs)}
  />
@@ -943,7 +943,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={handleNext}
  disabled={isLast}
  className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 ${
- glareMode ?'bg-black/5 hover:bg-black/10 text-[var(--ink)]' :'bg-white/5 hover:bg-white/10 text-[var(--ink)]'
+ glareMode ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink)]'
  }`}
  >
  <span className="hidden sm:inline text-xs">Siguiente</span>
@@ -990,7 +990,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  {/* Drawer: Repertorio completo, pistas Iris y accesos directos a Studio */}
  {showSongListDrawer && (
- <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
+ <div className="fixed inset-0 z-50 flex justify-end bg-[var(--scrim)]/75 backdrop-blur-xs animate-in fade-in duration-150">
  <div className="w-full max-w-md h-full bg-[var(--surface)] border-l border-[var(--hair)] flex flex-col shadow-2xl text-[var(--ink)]">
  {/* Drawer Header */}
  <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]">
@@ -1007,7 +1007,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
  <button
  onClick={() => setShowSongListDrawer(false)}
- className="p-1.5 rounded-[var(--r-s)] hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -1141,7 +1141,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  setCurrentIndex(idx);
  setShowSongListDrawer(false);
  }}
- className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-black/40 hover:bg-black/60 text-[var(--ink-2)] border-[var(--hair)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+ className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
  title="Mostrar en el atril"
  >
  <Play className="w-3 h-3 text-[var(--acc)]" />
@@ -1293,14 +1293,14 @@ const ChordSheetPage: React.FC<{
  return (
  <div className="w-full h-full flex flex-col overflow-hidden">
  {/* Ficha compacta con transposición en tiempo real y selector de modo */}
- <div className={`shrink-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 px-4 py-2 text-xs sm:text-sm font-mono border-b ${borderClass} ${glareMode ?'bg-black/5' :'bg-black/40'}`}>
+ <div className={`shrink-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 px-4 py-2 text-xs sm:text-sm font-mono border-b ${borderClass} ${glareMode ?'bg-[var(--sunken)]' :'bg-[var(--sunken)]'}`}>
  <div className="flex items-center gap-2 flex-wrap">
  {/* Selector de tono con transposición en tiempo real */}
- <div className="flex items-center gap-1 bg-black/30 px-2 py-0.5 rounded border-[var(--hair)]">
+ <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-0.5 rounded border-[var(--hair)]">
  <button
  type="button"
  onClick={() => onLiveTransposeChange(liveTransposeOffset - 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-[var(--ink)]/15 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
  title="Bajar 1 semitono (-1)"
  >
  -
@@ -1311,7 +1311,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={() => onLiveTransposeChange(liveTransposeOffset + 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-[var(--ink)]/15 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
  title="Subir 1 semitono (+1)"
  >
  +
@@ -1340,7 +1340,7 @@ const ChordSheetPage: React.FC<{
  <button
  onClick={onToggleDetails}
  className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition ${
- showDetails ? (glareMode ?'bg-black/15 text-[var(--ink)]' :'bg-white/15 text-[var(--ink)]') : (glareMode ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]')
+ showDetails ? (glareMode ?'bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--ink)]/15 text-[var(--ink)]') : (glareMode ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]')
  }`}
  title="Estructura y progresión de acordes"
  >
@@ -1367,7 +1367,7 @@ const ChordSheetPage: React.FC<{
  </div>
 
  {showDetails && (structure || progression) && (
- <div className={`shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-2 px-4 py-2 text-xs sm:text-sm border-b ${borderClass} ${glareMode ?'bg-black/5' :'bg-black/20'}`}>
+ <div className={`shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-2 px-4 py-2 text-xs sm:text-sm border-b ${borderClass} ${glareMode ?'bg-[var(--sunken)]' :'bg-[var(--sunken)]'}`}>
  {structure && (
  <p className={glareMode ?'text-indigo-900' :'text-indigo-200'}><span className={glareMode ?'text-indigo-700 font-bold' :'text-indigo-400 font-bold'}>🎵 Estructura: </span>{structure}</p>
  )}
@@ -1381,7 +1381,7 @@ const ChordSheetPage: React.FC<{
  {teleprompterMode ==='scroll' ? (
  <div className="flex-1 flex flex-col overflow-hidden">
  {/* Barra de control del teleprompter */}
- <div className={`shrink-0 flex items-center justify-between gap-3 px-4 py-2 border-b ${borderClass} ${glareMode ?'bg-black/5' :'bg-[var(--surface)]/90'}`}>
+ <div className={`shrink-0 flex items-center justify-between gap-3 px-4 py-2 border-b ${borderClass} ${glareMode ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/90'}`}>
  <div className="flex items-center gap-2">
  <button
  type="button"
@@ -1461,7 +1461,7 @@ const ChordSheetPage: React.FC<{
  onClick={onRetreatSection}
  disabled={currentSectionIndex === 0}
  className={`px-4 py-2.5 disabled:opacity-30 rounded-[var(--r-s)] text-sm font-mono font-bold transition ${
- glareMode ?'bg-black/10 hover:bg-black/15 text-[var(--ink)]' :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'
+ glareMode ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}
  >
  ◀ Parte anterior
