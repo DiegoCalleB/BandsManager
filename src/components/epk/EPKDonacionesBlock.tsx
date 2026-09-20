@@ -283,7 +283,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  })
  }
  placeholder="Colabora con la banda"
- className="w-full bg-[var(--surface)] focus:border-[var(--acc)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
  />
  </div>
 
@@ -299,7 +299,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  })
  }
  placeholder="Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
- className="w-full bg-[var(--surface)] focus:border-[var(--acc)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none resize-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none resize-none"
  />
  </div>
  </div>

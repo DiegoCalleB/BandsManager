@@ -649,7 +649,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => toggleAlbumExpand(album)}
  className={`p-3.5 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer select-none transition-colors ${
  isStitchLight
- ?'hover:bg-[var(--sunken)]/80 border-b'
+ ?'hover:bg-[var(--sunken)]/80'
  :'hover:bg-[var(--surface)]/80 /60'
  }`}
  >

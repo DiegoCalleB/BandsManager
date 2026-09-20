@@ -225,7 +225,7 @@ export function CampaignManagerModal({
  value={formData.name ||''}
  onChange={e => setFormData({ ...formData, name: e.target.value })}
  placeholder="Ej: Campaña Diciembre 2026"
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-[var(--acc)] focus:ring-1 focus:ring-purple-500"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-purple-500"
  />
  </div>
  <div>
@@ -278,8 +278,7 @@ export function CampaignManagerModal({
  onChange={e => setNewCityInput(e.target.value)}
  onKeyDown={e => { if (e.key ==='Enter') { e.preventDefault(); handleAddCity(); } }}
  placeholder="Añadir ciudad (ej. Barcelona) y pulsar Enter"
- className="flex-1 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-1.5 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-[var(--acc)]"
- />
+ className="flex-1 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-1.5 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] />
  <button
  type="button"
  onClick={handleAddCity}
@@ -384,8 +383,7 @@ export function CampaignManagerModal({
  value={formData.notes ||''}
  onChange={e => setFormData({ ...formData, notes: e.target.value })}
  placeholder="Ej: Intercambio con bandas de ska/mestizaje locales para compartir backline y taquilla al 50%."
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-[var(--acc)]"
- />
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] />
  </div>
 
  {/* Campaign-specific pitch templates, one per lead use case */}
@@ -426,8 +424,7 @@ export function CampaignManagerModal({
  value={formData.customPitchTemplates?.[activePitchCategory] ||''}
  onChange={e => handlePitchTemplateChange(activePitchCategory, e.target.value)}
  placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para"${PITCH_CATEGORIES.find(c => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-[var(--acc)]"
- />
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] />
  <p className="text-[11px] text-[var(--ink-2)] italic mt-1">
  💡 Cada caso de uso tiene su propio mensaje. Mientras esta campaña esté activa, el Redactor IA prioriza el mensaje de la categoría del lead sobre la plantilla habitual; las categorías sin mensaje definido siguen usando solo la plantilla habitual.
  </p>

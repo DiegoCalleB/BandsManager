@@ -4240,7 +4240,7 @@ export default function RepertorioSetlists({
  value={catalogSearch}
  onChange={(e) => setCatalogSearch(e.target.value)}
  className={`w-full rounded-[var(--r-m)] pl-9.5 ${catalogSearch ?'pr-8' :'pr-3'} py-2 text-xs focus:outline-none transition-all ${
-' bg-[var(--surface)]/60 text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
+' bg-[var(--surface)]/60 text-[var(--ink)] focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
  }`}
  />
  {catalogSearch && (

@@ -88,7 +88,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  if (loading) {
  return (
  <div className="min-h-screen bg-[var(--surface)] text-[var(--ink)] flex flex-col items-center justify-center p-6">
- <div className="w-12 h-12 border-t-transparent rounded-full animate-spin mb-4"></div>
+ <div className="w-12 h-12 rounded-full animate-spin mb-4"></div>
  <p className="text-[var(--acc)] font-medium">{t('cargando')}</p>
  </div>
  );
@@ -386,7 +386,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </div>
  </div>
 
- <div className="pt-4 border-current/20 print:">
+ <div className="pt-4 print:">
  <a
  href={`mailto:${config.contactoBooking?.email}?subject=${encodeURIComponent(t('asuntoContratacion'))}`}
  className={`w-full py-2.5 ${styles.accentBtn} rounded-[var(--r-m)] flex items-center justify-center gap-2 transition print:hidden`}
@@ -422,7 +422,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <p className="text-sm italic leading-relaxed">"{cita.texto}"
  </p>
  </div>
- <div className="pt-3 border-current/15">
+ <div className="pt-3">
  <span className={`text-xs font-black ${styles.quoteMedium} tracking-wider font-sans`}>
  {cita.medio}
  </span>
@@ -509,7 +509,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </div>
  <div className="hidden print:grid print:grid-cols-2 print:gap-4">
  {validPhotos.map((photoUrl, idx) => (
- <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-[var(--r-m)] border-current/20" />
+ <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-[var(--r-m)]" />
  ))}
  </div>
  {validPhotos.length > 1 && (
@@ -600,7 +600,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </span>
  </div>
  {(c.entradasUrl || c.entradasLugarFisico) && (
- <div className="flex flex-wrap items-center gap-2 pt-2 border-current/10 print:hidden">
+ <div className="flex flex-wrap items-center gap-2 pt-2 print:hidden">
  {c.entradasUrl && (
  <a
  href={c.entradasUrl}
@@ -645,7 +645,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </div>
  <div className="flex items-center gap-2 sm:gap-3">
  {/* Selector de idioma */}
- <div className="flex items-center gap-0.5 bg-[var(--sunken)] border-current/15 rounded-[var(--r-s)] p-0.5" role="group" aria-label={t('selectorIdioma')}>
+ <div className="flex items-center gap-0.5 bg-[var(--sunken)] rounded-[var(--r-s)] p-0.5" role="group" aria-label={t('selectorIdioma')}>
  {availableLanguages.map(l => (
  <button
  key={l.code}

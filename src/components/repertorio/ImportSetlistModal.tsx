@@ -268,8 +268,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  type="text"
  value={setlistName}
  onChange={(e) => setSetlistName(e.target.value)}
- className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-sm text-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
- />
+ className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-sm text-[var(--ink-2)] focus:outline-none />
  </div>
 
  <p className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5">

@@ -598,7 +598,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setActiveTab('autonomy')}
- className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+ className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='autonomy'
  ?' text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -611,7 +611,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setActiveTab('response_strategies')}
- className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+ className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='response_strategies'
  ?' text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -624,7 +624,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setActiveTab('email_dispatch')}
- className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+ className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='email_dispatch'
  ?' text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -640,7 +640,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setActiveTab('schedules')}
- className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+ className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='schedules'
  ?' text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -653,7 +653,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setActiveTab('tone')}
- className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+ className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='tone'
  ?' text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -666,7 +666,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setActiveTab('audit_logs')}
- className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+ className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='audit_logs'
  ?'border-[var(--ok)] text-[var(--ok)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1013,7 +1013,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }
  });
  }}
- className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:border-[var(--acc)] focus:outline-none disabled:opacity-60 ${isBelowMin ?'border-[var(--alert)]' :''}`}
+ className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:outline-none disabled:opacity-60 ${isBelowMin ?'border-[var(--alert)]' :''}`}
  placeholder="—"
  />
  <span className="absolute right-3 top-2.5 text-xs text-[var(--ink-2)] font-sans">€</span>
@@ -1738,7 +1738,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  ?'Pregunta si hay otras fechas disponibles más adelante en la temporada.'
  :'Responde de forma breve y concreta a lo que pregunten, sin extenderte.'
  }`}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:border-[var(--acc)] focus:outline-none disabled:opacity-60 resize-none"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:outline-none disabled:opacity-60 resize-none"
  />
  <p className="text-[10px] text-[var(--ink-2)]">
  Si lo dejas vacío, el agente usa una guía automática genérica para este tipo de respuesta.

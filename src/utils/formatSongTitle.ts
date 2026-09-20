@@ -18,7 +18,7 @@ export function formatSongTitle(rawTitle?: string | null): string {
  const trimmed = rawTitle.trim();
  if (!trimmed) return' ';
 
- // Separar tokens respetando espacios y signos de delimitación (, [ ] ( ) / - _ – — : "'  )
+ // Separar tokens respetando espacios y signos de delimitación (, [ ] ( ) / - _ – — : "' )
  const tokens = trimmed.split(/(\s+|[()\[\]/\-_–—:\",])/);
 
  const formatted = tokens.map((token) => {

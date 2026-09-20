@@ -737,7 +737,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onKeyDown={(e) => { if (e.key ==='Enter') handleAddLearnedRule('pitch', cat); }}
  placeholder="🔒 + añadir regla manual (protegida)..."
  disabled={savingManual}
- className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
+ className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink)] font-sans focus:outline-none disabled:opacity-50"
  />
  <button
  onClick={() => handleAddLearnedRule('pitch', cat)}
@@ -847,7 +847,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onKeyDown={(e) => { if (e.key ==='Enter') handleAddLearnedRule('reply', cat); }}
  placeholder="🔒 + añadir regla manual (protegida)..."
  disabled={savingManual}
- className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
+ className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink)] font-sans focus:outline-none disabled:opacity-50"
  />
  <button
  onClick={() => handleAddLearnedRule('reply', cat)}

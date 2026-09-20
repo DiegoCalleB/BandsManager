@@ -198,7 +198,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="date"
  value={concertDate}
  onChange={(e) => setConcertDate(e.target.value)}
- className="w-full bg-[var(--bg)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:border-[var(--hair)] focus:outline-none"
+ className="w-full bg-[var(--bg)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:outline-none"
  />
  </div>
 

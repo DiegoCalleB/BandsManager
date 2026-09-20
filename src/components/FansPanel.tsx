@@ -575,7 +575,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  id="tab-btn-fans-metrics"
  onClick={() => setActiveTab('metrics')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='metrics' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='metrics' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  <TrendingUp className="w-4 h-4 text-[var(--acc)]" /> 1. Seguimiento & Métricas de Redes
  </button>
@@ -583,21 +583,21 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  id="tab-btn-fans-qr"
  onClick={() => setActiveTab('qr')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='qr' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='qr' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  <QrCode className="w-4 h-4 text-[var(--acc)]" /> {isPromo ?'1' :'2'}. Captura en Vivo & QR
  </button>
  <button
  id="tab-btn-fans-dashboard"
  onClick={() => setActiveTab('dashboard')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='dashboard' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='dashboard' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  <Heart className="w-4 h-4 text-[var(--acc)]" /> {isPromo ?'2' :'3'}. Dashboard & Analítica
  </button>
  <button
  id="tab-btn-fans-directory"
  onClick={() => setActiveTab('fans')}
- className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='fans' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='fans' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  <Users className="w-4 h-4 text-[var(--acc)]" /> {isPromo ?'3' :'4'}. Comunidad & Red Social ({fans.length})
  </button>

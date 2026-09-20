@@ -77,7 +77,7 @@ export function SetlistModal({
  value={nombre}
  onChange={(e) => setNombre(e.target.value)}
  placeholder="ej. Festival Rumba & Rock 2026"
- className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none focus:border-[var(--acc)] ${
+ className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -88,7 +88,7 @@ export function SetlistModal({
  <select
  value={tipoFormato}
  onChange={(e) => setTipoFormato(e.target.value as any)}
- className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none focus:border-[var(--acc)] cursor-pointer ${
+ className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -107,7 +107,7 @@ export function SetlistModal({
  value={descripcion}
  onChange={(e) => setDescripcion(e.target.value)}
  placeholder="ej. Setlist pensado para festivales con ritmo alto sin pausas..."
- className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none focus:border-[var(--acc)] ${
+ className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />

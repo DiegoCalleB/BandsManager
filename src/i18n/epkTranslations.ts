@@ -425,7 +425,7 @@ export const EPK_TRANSLATIONS: Record<EpkLanguage, EpkDict> = { es, en, it, cs }
 // de Londres acabaría recibiendo un pitch en inglés con un enlace a la página en español.
 export const KEYWORDS_ANGLOFONOS = [
 ' reino unido',' united kingdom',' inglaterra',' england',' scotland',' wales',
-' ireland',' irlanda',' estados unidos',' united states','  usa',' u.s.a.',
+' ireland',' irlanda',' estados unidos',' united states',' usa',' u.s.a.',
 ];
 
 /**

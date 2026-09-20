@@ -645,7 +645,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  key={it.id}
  className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isSelectedThis
- ?'bg-[var(--surface)]/15 border-l-4 text-[var(--ink)]' 
+ ?'bg-[var(--surface)]/15 text-[var(--ink)]' 
  :'hover:bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}
  >
@@ -705,7 +705,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  return (
  <div
  key={it.id}
- className="py-3 px-4 bg-gradient-to-r from-[var(--ok)]/20 via-[var(--surface)] to-[var(--sunken)] border-l-4 rounded-[var(--r-m)] font-sans text-[var(--ok)] font-extrabold text-xs tracking-wider flex items-center gap-2 my-2"
+ className="py-3 px-4 bg-gradient-to-r from-[var(--ok)]/20 via-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-m)] font-sans text-[var(--ok)] font-extrabold text-xs tracking-wider flex items-center gap-2 my-2"
  >
  <span className="text-sm">⚡</span>
  <span>{it.tituloCustom ||'SECCIÓN DEL SHOW'}</span>
@@ -722,7 +722,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  key={it.id}
  className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isSelectedThis 
- ?'bg-[var(--acc)]/15 border-l-4 text-[var(--ink)]' 
+ ?'bg-[var(--acc)]/15 text-[var(--ink)]' 
  :'hover:bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}
  onClick={() => {

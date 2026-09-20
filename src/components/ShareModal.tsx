@@ -176,7 +176,7 @@ export function ShareModal({
  value={phone}
  onChange={(e) => setPhone(e.target.value)}
  placeholder="Ej: +34612345678 o 612345678"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)] transition-colors"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none transition-colors"
  />
  </div>
 
@@ -200,7 +200,7 @@ export function ShareModal({
  value={text}
  onChange={(e) => setText(e.target.value)}
  rows={10}
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--bg)] text-xs font-sans text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] leading-relaxed custom-scrollbar"
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--bg)] text-xs font-sans text-[var(--ink)] focus:outline-none leading-relaxed custom-scrollbar"
  />
  ) : (
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)]/90 text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">

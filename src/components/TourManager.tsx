@@ -796,7 +796,7 @@ export default function TourManager({
  value={formNombre}
  onChange={e => setFormNombre(e.target.value)}
  placeholder="Ej. Tour Peninsular Primavera 2026"
- className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ${colors.text} focus:outline-none focus:border-[var(--acc)] transition-colors text-sm`}
+ className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ${colors.text} focus:outline-none transition-colors text-sm`}
  />
  </div>
  
@@ -805,7 +805,7 @@ export default function TourManager({
  <select
  value={formEstado}
  onChange={e => setFormEstado(e.target.value as any)}
- className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ${colors.text} focus:outline-none focus:border-[var(--acc)] transition-colors text-sm cursor-pointer`}
+ className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-[var(--sunken)] ${colors.text} focus:outline-none transition-colors text-sm cursor-pointer`}
  >
  <option value="planificacion">En Planificación</option>
  <option value="confirmada">Confirmada</option>
@@ -1002,7 +1002,7 @@ export default function TourManager({
  <select
  onChange={(e) => handleApplyPresetToVehicle(vIdx, e.target.value)}
  defaultValue=""
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:border-[var(--acc)] cursor-pointer"
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] cursor-pointer"
  >
  <option value="" disabled>-- Seleccionar Modelo --</option>
  {VEHICLE_PRESETS.map((p, idx) => (
@@ -1017,8 +1017,7 @@ export default function TourManager({
  value={veh.nombre}
  onChange={e => handleUpdateVehicle(vIdx,'nombre', e.target.value)}
  placeholder="Ej. Furgoneta Principal (Banda)"
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:border-[var(--acc)]"
- />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] />
  </div>
 
  <div>
@@ -1046,8 +1045,7 @@ export default function TourManager({
  min="0.01"
  value={veh.precioCarburanteEUR ?? 1.55}
  onChange={e => handleUpdateVehicle(vIdx,'precioCarburanteEUR', Number(e.target.value))}
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-bold text-[var(--ink-2)] focus:border-[var(--ok)]"
- />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-bold text-[var(--ink-2)] />
  <select
  value={veh.tipoCombustible ||'diesel'}
  onChange={e => handleUpdateVehicle(vIdx,'tipoCombustible', e.target.value)}
@@ -1152,8 +1150,7 @@ export default function TourManager({
  value={stop.ciudad}
  onChange={e => updateStop(idx,'ciudad', e.target.value)}
  placeholder="Ciudad"
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm focus:border-[var(--acc)]"
- />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm />
  </div>
  <div className="space-y-1">
  <label className="text-[10px] font-sans text-[var(--ink-2)] block">Sala / Festival</label>
@@ -1161,8 +1158,7 @@ export default function TourManager({
  value={stop.sala}
  onChange={e => updateStop(idx,'sala', e.target.value)}
  placeholder="Nombre de la sala"
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm focus:border-[var(--acc)]"
- />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm />
  </div>
  <div className="space-y-1">
  <label className="text-[10px] font-sans text-[var(--ink-2)] block">Fecha</label>
@@ -1170,8 +1166,7 @@ export default function TourManager({
  type="date"
  value={stop.fecha}
  onChange={e => updateStop(idx,'fecha', e.target.value)}
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm focus:border-[var(--acc)]"
- />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm />
  </div>
  <div className="space-y-1">
  <label className="text-[10px] font-sans text-[var(--ink-2)] block flex items-center justify-between">
@@ -1193,8 +1188,7 @@ export default function TourManager({
  value={stop.distanciaAnteriorKm ||''}
  onChange={e => updateStop(idx,'distanciaAnteriorKm', Number(e.target.value))}
  placeholder="Km desde anterior"
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm focus:border-[var(--acc)]"
- />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm />
  </div>
  </div>
 

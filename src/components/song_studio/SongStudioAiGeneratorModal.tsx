@@ -86,7 +86,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  max={220}
  value={genBpm}
  onChange={(e) => setGenBpm(parseInt(e.target.value) || 120)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-sans"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
  />
  </div>
  <div>
@@ -94,7 +94,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <select
  value={genKey}
  onChange={(e) => setGenKey(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-sans"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
  >
  <option value="Do">Do (C)</option>
  <option value="Re">Re (D)</option>

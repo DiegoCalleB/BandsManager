@@ -112,7 +112,7 @@ export function AssignSongsToAlbumModal({
  value={customAlbumName}
  onChange={(e) => setCustomAlbumName(e.target.value)}
  placeholder="ej. Lanzamiento Verano 2026"
- className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -125,7 +125,7 @@ export function AssignSongsToAlbumModal({
  value={albumYear}
  onChange={(e) => setAlbumYear(e.target.value)}
  placeholder="ej. 2026"
- className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -138,7 +138,7 @@ export function AssignSongsToAlbumModal({
  <select
  value={albumType}
  onChange={(e) => setAlbumType(e.target.value)}
- className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -158,7 +158,7 @@ export function AssignSongsToAlbumModal({
  value={coverUrl}
  onChange={(e) => setCoverUrl(e.target.value)}
  placeholder="https://... o sube imagen"
- className={`flex-1 p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`flex-1 p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -177,7 +177,7 @@ export function AssignSongsToAlbumModal({
  value={description}
  onChange={(e) => setDescription(e.target.value)}
  placeholder="Notas sobre la producción, estudio de grabación, concepto..."
- className={`w-full p-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`w-full p-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />

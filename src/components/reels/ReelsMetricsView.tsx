@@ -1439,8 +1439,7 @@ export function ReelsMetricsView({
  value={metricDate}
  onChange={(e) => setMetricDate(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
- }`}
+' bg-[var(--surface)] text-[var(--ink-2)] }`}
  />
  </div>
 
@@ -1455,8 +1454,7 @@ export function ReelsMetricsView({
  value={metricInsta}
  onChange={(e) => setMetricInsta(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
- }`}
+' bg-[var(--surface)] text-[var(--ink-2)] }`}
  />
  </div>
 
@@ -1470,8 +1468,7 @@ export function ReelsMetricsView({
  value={metricTiktok}
  onChange={(e) => setMetricTiktok(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
- }`}
+' bg-[var(--surface)] text-[var(--ink-2)] }`}
  />
  </div>
 
@@ -1485,8 +1482,7 @@ export function ReelsMetricsView({
  value={metricYoutube}
  onChange={(e) => setMetricYoutube(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
- }`}
+' bg-[var(--surface)] text-[var(--ink-2)] }`}
  />
  </div>
 
@@ -1500,8 +1496,7 @@ export function ReelsMetricsView({
  value={metricSpotify}
  onChange={(e) => setMetricSpotify(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
- }`}
+' bg-[var(--surface)] text-[var(--ink-2)] }`}
  />
  </div>
  </div>
@@ -1570,8 +1565,7 @@ export function ReelsMetricsView({
  value={metricNotes}
  onChange={(e) => setMetricNotes(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
- }`}
+' bg-[var(--surface)] text-[var(--ink-2)] }`}
  />
  </div>
 
@@ -1701,7 +1695,7 @@ export function ReelsMetricsView({
  <button
  type="button"
  onClick={() => handleEditMetricClick(m)}
- className="p-1 hover:text-[var(--tentative)] transition-colors cursor-pointer bg-transparent border-none text-[var(--ink-2)]"
+ className="p-1 hover:text-[var(--tentative)] transition-colors cursor-pointer bg-transparent text-[var(--ink-2)]"
  title="Editar snapshot"
  >
  <Edit className="w-3.5 h-3.5" />
@@ -1714,7 +1708,7 @@ export function ReelsMetricsView({
  await onDeleteMetric(m.id);
  }
  }}
- className="p-1 hover:text-[var(--alert)] transition-colors cursor-pointer bg-transparent border-none text-[var(--ink-2)]"
+ className="p-1 hover:text-[var(--alert)] transition-colors cursor-pointer bg-transparent text-[var(--ink-2)]"
  title="Eliminar snapshot"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1892,8 +1886,7 @@ export function ReelsMetricsView({
  value={igTokenInput}
  onChange={(e) => setIgTokenInput(e.target.value)}
  className={`w-full px-4 py-3 rounded-[var(--r-m)] font-sans text-xs focus:outline-none focus:ring-2 ${
-' bg-[var(--sunken)] text-[var(--ink)] focus:ring-pink-500 focus:border-[var(--alert)]'
- }`}
+' bg-[var(--sunken)] text-[var(--ink)] focus:ring-pink-500 }`}
  />
  <div className="absolute right-3 top-3 text-[var(--ink-2)]">
  <Key className="w-4 h-4" />
@@ -2038,7 +2031,7 @@ export function ReelsMetricsView({
 
  {!scanImageBase64 ? (
  <label className={`border-2 rounded-[var(--r-l)] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
-'  bg-[var(--sunken)] hover:bg-[var(--surface)]/80 hover:border-[var(--acc)]/50'
+' bg-[var(--sunken)] hover:bg-[var(--surface)]/80 hover:border-[var(--acc)]/50'
  }`}>
  <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--tentative)]/15 text-[var(--tentative)] flex items-center justify-center mb-3">
  <UploadCloud className="w-6 h-6" />

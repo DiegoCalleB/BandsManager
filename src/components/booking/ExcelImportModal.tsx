@@ -596,8 +596,7 @@ export function ExcelImportModal({
  <select
  value={selectedSheet}
  onChange={e => handleSheetChange(e.target.value)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)]700 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)]700 text-[var(--ink)] focus:outline-none >
  {sheetNames.map(s => (
  <option key={s} value={s}>{s}</option>
  ))}
@@ -657,8 +656,7 @@ export function ExcelImportModal({
  <select
  value={mapping.ciudad}
  onChange={e => setMapping(prev => ({ ...prev, ciudad: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar (Usar'España') --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -672,8 +670,7 @@ export function ExcelImportModal({
  <select
  value={mapping.email_contacto}
  onChange={e => setMapping(prev => ({ ...prev, email_contacto: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -687,8 +684,7 @@ export function ExcelImportModal({
  <select
  value={mapping.telefono}
  onChange={e => setMapping(prev => ({ ...prev, telefono: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -702,8 +698,7 @@ export function ExcelImportModal({
  <select
  value={mapping.aforo}
  onChange={e => setMapping(prev => ({ ...prev, aforo: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar (Usar por defecto) --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -717,8 +712,7 @@ export function ExcelImportModal({
  <select
  value={mapping.instagram}
  onChange={e => setMapping(prev => ({ ...prev, instagram: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -732,8 +726,7 @@ export function ExcelImportModal({
  <select
  value={mapping.website}
  onChange={e => setMapping(prev => ({ ...prev, website: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -747,8 +740,7 @@ export function ExcelImportModal({
  <select
  value={mapping.tipo}
  onChange={e => setMapping(prev => ({ ...prev, tipo: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- Usar categoría por defecto --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -762,8 +754,7 @@ export function ExcelImportModal({
  <select
  value={mapping.contacto_nombre}
  onChange={e => setMapping(prev => ({ ...prev, contacto_nombre: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -777,8 +768,7 @@ export function ExcelImportModal({
  <select
  value={mapping.genero}
  onChange={e => setMapping(prev => ({ ...prev, genero: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -792,8 +782,7 @@ export function ExcelImportModal({
  <select
  value={mapping.direccion}
  onChange={e => setMapping(prev => ({ ...prev, direccion: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -807,8 +796,7 @@ export function ExcelImportModal({
  <select
  value={mapping.notas}
  onChange={e => setMapping(prev => ({ ...prev, notas: e.target.value }))}
- className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none focus:border-[var(--ok)]"
- >
+ className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none >
  <option value="">-- No asignar --</option>
  {rawHeaders.map(h => (
  <option key={h} value={h}>{h}</option>
@@ -844,8 +832,7 @@ export function ExcelImportModal({
  placeholder="Buscar en la vista previa..."
  value={searchPreview}
  onChange={e => setSearchPreview(e.target.value)}
- className="pl-8 pr-3 py-1 rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] text-xs focus:outline-none focus:border-[var(--ok)]"
- />
+ className="pl-8 pr-3 py-1 rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] text-xs focus:outline-none />
  </div>
 
  {duplicatesCount > 0 && (
@@ -912,7 +899,7 @@ export function ExcelImportModal({
 
  {/* PREVIEW TABLE */}
  <div className="border-[var(--hair)] rounded-[var(--r-m)] overflow-hidden bg-[var(--bg)]/80 max-h-[380px] overflow-y-auto">
- <table className="w-full text-left text-xs border-collapse">
+ <table className="w-full text-left text-xs">
  <thead className="sticky top-0 bg-[var(--bg)]/95 text-[var(--ink-2)] z-10 font-bold">
  <tr>
  <th className="p-2.5 w-8">
@@ -967,7 +954,7 @@ export function ExcelImportModal({
  <select
  value={row.tipo}
  onChange={e => handleRowTypeChange(row.id, e.target.value as LeadType)}
- className="px-2 py-1 rounded bg-[var(--bg)]800 text-[var(--ink)] text-[11px] focus:outline-none focus:border-[var(--ok)] cursor-pointer"
+ className="px-2 py-1 rounded bg-[var(--bg)]800 text-[var(--ink)] text-[11px] focus:outline-none cursor-pointer"
  >
  {CATEGORY_OPTIONS.map(c => (
  <option key={c.id} value={c.id}>

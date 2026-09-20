@@ -148,7 +148,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <select
  value={estiloMusico}
  onChange={(e) => setEstiloMusico(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-sans"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
  >
  <option value="Productor y Arreglista General">Productor y Arreglista General</option>
  <option value="Guitarrista Líder (Solos y Riffs)">Guitarrista Líder (Solos y Riffs)</option>
@@ -163,7 +163,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <select
  value={objetivoIdea}
  onChange={(e) => setObjetivoIdea(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-sans"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
  >
  <option value="Nuevo Riff o Puente Instrumental">Nuevo Riff o Puente Instrumental</option>
  <option value="Variación Armónica para el Estribillo">Variación Armónica para el Estribillo</option>
@@ -180,7 +180,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <select
  value={seccionCancion}
  onChange={(e) => setSeccionCancion(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-sans"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
  >
  <option value="Intro">Intro</option>
  <option value="Verso">Verso</option>
@@ -200,7 +200,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  value={tiempoMinuto}
  onChange={(e) => setTiempoMinuto(e.target.value)}
  placeholder="Ej: 01:15 o Compás 12"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-sans"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans"
  />
  </div>
  </div>
@@ -214,7 +214,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  onChange={(e) => setPromptUsuario(e.target.value)}
  placeholder="Ej: Quiero que el puente tenga tensión al estilo rock alternativo de los 90, con acordes suspendidos y notas de bajo cromáticas..."
  rows={2}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-sans resize-none"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none font-sans resize-none"
  />
  </div>
 

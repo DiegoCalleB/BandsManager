@@ -113,7 +113,7 @@ export function AddSongsToSetlistModal({
  value={search}
  onChange={(e) => setSearch(e.target.value)}
  placeholder="Buscar por título o tonalidad..."
- className={`w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />

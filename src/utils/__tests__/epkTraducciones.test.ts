@@ -111,7 +111,7 @@ describe('traduccionDesactualizada / tieneTraduccion', () => {
  });
 
  it('una traducción con todos los campos vacíos no cuenta como traducción', () => {
- expect(tieneTraduccion({ ...base, traducciones: { en: { biografia:' '  } } },' en')).toBe(false);
+ expect(tieneTraduccion({ ...base, traducciones: { en: { biografia:' ' } } },' en')).toBe(false);
  expect(tieneTraduccion(conTraduccion('abc'),' en')).toBe(true);
  });
 });

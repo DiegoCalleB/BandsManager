@@ -563,8 +563,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onChange={(e) => setQrUrl(e.target.value)}
  placeholder="https://instagram.com/tu_banda"
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)]/30 text-[var(--ink-2)] focus:border-[var(--acc)]'
- }`}
+' bg-[var(--surface)]/30 text-[var(--ink-2)] }`}
  />
  </div>
  )}

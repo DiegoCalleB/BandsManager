@@ -578,7 +578,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  <div className="overflow-x-auto">
- <table className="w-full text-left text-[11px] border-collapse">
+ <table className="w-full text-left text-[11px]">
  <thead>
  <tr className="border-b800 text-[var(--ink-2)] font-sans">
  <th className="py-1.5 px-2">Modelo</th>

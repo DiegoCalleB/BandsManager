@@ -1738,7 +1738,7 @@ export function PdfExportModal({
  {/* Top Sheet Header — compacta a propósito: cada mm que se ahorra aquí es un mm
  menos de riesgo de que el repertorio se desborde a una hoja extra. */}
  <div>
- <div className="flex items-center justify-between border-b-2 pb-0.5 mb-1">
+ <div className="flex items-center justify-between pb-0.5 mb-1">
  <div className="flex items-center gap-2">
  {showBandLogo && customLogoUrl && (
  <img

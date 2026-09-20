@@ -116,8 +116,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  <select
  value={categoria}
  onChange={(e) => setCategoria(e.target.value as Payment['categoria'])}
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-[var(--acc)]"
- >
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none >
  <option value="concierto">Concierto / Caché</option>
  <option value="merchandising">Merchandising</option>
  <option value="subvencion">Subvención / Ayuda</option>
@@ -139,8 +138,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  value={concepto}
  onChange={(e) => setConcepto(e.target.value)}
  placeholder="Ej. Caché Concierto Wurlitzer"
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-[var(--acc)]"
- />
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none />
  </div>
 
  <div className="grid grid-cols-2 gap-3">
@@ -155,8 +153,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  value={importe}
  onChange={(e) => setImporte(e.target.value)}
  placeholder="0.00"
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-[var(--acc)]"
- />
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none />
  </div>
  <div>
  <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">
@@ -167,8 +164,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  required
  value={fecha}
  onChange={(e) => setFecha(e.target.value)}
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-[var(--acc)]"
- />
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none />
  </div>
  </div>
 

@@ -237,8 +237,7 @@ export function MemberNotesModal({
  onChange={(e) => setGeneralRepertorioNote(e.target.value)}
  placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco..."
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]' :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
- }`}
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)] :'bg-[var(--surface)] text-[var(--ink-2)] }`}
  />
  </div>
 
@@ -368,9 +367,7 @@ export function MemberNotesModal({
  placeholder={`Notas específicas para ${member.name} (${member.instrument})... ej. Entrada en compás 8, solo con sordina, cambio de afinación...`}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors ${
  isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
- :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
- }`}
+ ?'bg-[var(--surface)] text-[var(--ink)] :'bg-[var(--surface)] text-[var(--ink-2)] }`}
  />
  </div>
  );

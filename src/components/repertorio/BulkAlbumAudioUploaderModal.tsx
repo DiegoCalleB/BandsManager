@@ -616,9 +616,7 @@ export function BulkAlbumAudioUploaderModal({
  placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut..."
  className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${
  isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--ok)]'
- :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--hair)]'
- }`}
+ ?'bg-[var(--surface)] text-[var(--ink)] :'bg-[var(--surface)] text-[var(--ink)] }`}
  />
  </div>
 

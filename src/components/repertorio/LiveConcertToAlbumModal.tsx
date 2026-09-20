@@ -1382,7 +1382,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {useAi && (
- <div className="pl-7 pt-1.5 border-l-2/40 ml-2">
+ <div className="pl-7 pt-1.5 ml-2">
  <label className="flex items-start gap-2.5 cursor-pointer">
  <input
  type="checkbox"
@@ -1943,7 +1943,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  ?'bg-[var(--surface)] text-[var(--ink)] focus:'
  : track.type ==='musica'
  ?'bg-[var(--surface)]/90 /40 text-[var(--acc)] placeholder-[var(--ink-2)] focus: focus:ring-1 focus:ring-amber-400'
- :'bg-[var(--surface)]/90/40 text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-[var(--acc)] focus:ring-1 focus:ring-purple-400'
+ :'bg-[var(--surface)]/90/40 text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-purple-400'
  }`}
  placeholder={
  track.type ==='musica'
@@ -2127,7 +2127,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => handleUpdateTrack(track.index,'speechTranscription', e.target.value)}
  placeholder="[Intro musical / Palabras del artista al público]..."
  rows={2}
- className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] placeholder-purple-400/50 focus:outline-none focus:border-[var(--acc)] leading-relaxed font-sans"
+ className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] placeholder-purple-400/50 focus:outline-none leading-relaxed font-sans"
  />
  </div>
  )}
@@ -2644,8 +2644,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
  tr.type ==='musica'
  ?'bg-[var(--surface)] /30 text-[var(--acc)] focus:'
- :'bg-[var(--surface)]/30 text-[var(--ink)] focus:border-[var(--acc)]'
- }`}
+ :'bg-[var(--surface)]/30 text-[var(--ink)] }`}
  />
  {tr.title && (
  <button
@@ -2746,7 +2745,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => setBatchPastedText(e.target.value)}
  rows={10}
  placeholder={`1. Intro y Saludo al Público\n2. Noches de Garaje\n3. Charla sobre el nuevo disco\n4. Ska del Norte\n5. Canto a la Sombra\n6. Presentación de los músicos\n7. Gira Sin Fin`}
- className="w-full p-3 font-sans text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)] leading-relaxed"
+ className="w-full p-3 font-sans text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] placeholder-[var(--ink-2)] focus:outline-none leading-relaxed"
  />
 
  <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">

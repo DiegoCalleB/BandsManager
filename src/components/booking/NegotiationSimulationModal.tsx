@@ -147,8 +147,7 @@ export function NegotiationSimulationModal({
  value={simulationScenario}
  onChange={(e) => onScenarioChange(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
-' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
- }`}
+' bg-[var(--surface)] text-[var(--ink)] }`}
  >
  {(simulationRole ==='sala'
  ? predefinedScenarios.sala
@@ -173,8 +172,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onSenderNameChange(e.target.value)}
  placeholder="Ej. Kike (Sala Hebe) o Bakandeya Agent Manager IA"
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
-' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
- }`}
+' bg-[var(--surface)] text-[var(--ink)] }`}
  />
  </div>
  <div className="space-y-1.5">
@@ -187,8 +185,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onSubjectChange(e.target.value)}
  placeholder="Ej. Re: Propuesta..."
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
-' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
- }`}
+' bg-[var(--surface)] text-[var(--ink)] }`}
  />
  </div>
  </div>
@@ -209,8 +206,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onCustomInstructionChange(e.target.value)}
  placeholder="Define pautas específicas (ej. propone taquilla 60/40, exige rider técnico especial, etc.)..."
  className={`w-full rounded-[var(--r-s)] p-2.5 text-[10px] focus:outline-none font-sans leading-relaxed ${
-' bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
- }`}
+' bg-[var(--surface)] text-[var(--ink)] }`}
  />
  </div>
 

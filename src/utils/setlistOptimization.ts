@@ -103,7 +103,7 @@ export function findBestSetlistMatch(
  }
 
  if (isFestival && st.tipoFormato ===' festival') {
- reason +='  · Formato festival';
+ reason +=' · Formato festival';
  }
 
  bestMatch = {

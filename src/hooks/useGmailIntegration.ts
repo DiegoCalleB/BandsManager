@@ -48,12 +48,12 @@ export function useGmailIntegration(
  isIframeEnv
  ) {
  setGmailStatusMsg(
-' ⚠️ Restricción de Iframe: El navegador bloqueó o cerró el popup de Google.'  + 
-' Para poder conectar tu cuenta, haz clic en el botón"Abrir en pestaña nueva"'  + 
+' ⚠️ Restricción de Iframe: El navegador bloqueó o cerró el popup de Google.' + 
+' Para poder conectar tu cuenta, haz clic en el botón"Abrir en pestaña nueva"' + 
 ' que ves abajo o en la barra de AI Studio.'
  );
  } else {
- setGmailStatusMsg('No se pudo conectar:'  + (err.message || String(err)));
+ setGmailStatusMsg('No se pudo conectar:' + (err.message || String(err)));
  }
  }
  };
@@ -114,7 +114,7 @@ export function useGmailIntegration(
  setTimeout(() => setGmailStatusMsg(''), 5000);
  } catch (err: any) {
  console.error('Error during Gmail sync:', err);
- setGmailStatusMsg('Error al sincronizar con Gmail:'  + (err.message || String(err)));
+ setGmailStatusMsg('Error al sincronizar con Gmail:' + (err.message || String(err)));
  } finally {
  setIsSyncingGmail(false);
  }

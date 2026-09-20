@@ -331,7 +331,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  ) : (
  /* TABLE VIEW */
  <div className="overflow-x-auto rounded-[var(--r-l)] bg-[var(--surface)] pb-10">
- <table className="w-full text-left border-collapse min-w-[980px]">
+ <table className="w-full text-left min-w-[980px]">
  <thead>
  <tr className="text-[10px] font-semibold tracking-wider text-[var(--ink-2)] bg-[var(--sunken)]">
  

@@ -202,8 +202,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  };
 
  const inputClass = `w-full p-2.5 rounded-[var(--r-m)] text-xs font-sans transition-all outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--acc)]/60'
- }`;
+' bg-[var(--surface)] text-[var(--ink-2)] }`;
  const labelClass ='text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-2';
 
  if (loading) {

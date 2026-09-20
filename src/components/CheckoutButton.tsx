@@ -93,7 +93,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
  )}
  </button>
  {errorMessage && (
- <p className="mt-2 text-xs text-[var(--alert)] text-center font-medium bg-[var(--alert-soft)] p-2 rounded-[var(--r-s)] border-none">
+ <p className="mt-2 text-xs text-[var(--alert)] text-center font-medium bg-[var(--alert-soft)] p-2 rounded-[var(--r-s)]">
  {errorMessage}
  </p>
  )}
