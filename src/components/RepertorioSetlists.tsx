@@ -4071,7 +4071,6 @@ export default function RepertorioSetlists({
  )}
  </div>
  </div>
- </div>
  )}
 
  {/* VIEW 2: DISCOGRAFÍA & CATÁLOGO GENERAL DE TEMAS (UNIFICADO) */}
