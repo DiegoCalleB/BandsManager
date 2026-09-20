@@ -168,7 +168,7 @@ export function MemberNotesModal({
  {/* Header */}
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)] shrink-0">
  <div className="flex items-center gap-2.5">
- <div className={`p-2 rounded-[var(--r-m)] ${isStitchLight ?'bg-emerald-50 text-emerald-600' :'bg-[#1db954]/10 text-[#1db954]'}`}>
+ <div className={`p-2 rounded-[var(--r-m)] ${isStitchLight ?'bg-emerald-50 text-emerald-600' :'bg-[var(--surface)]/10 text-[#1db954]'}`}>
  <Users className="w-5 h-5" />
  </div>
  <div>
@@ -237,7 +237,7 @@ export function MemberNotesModal({
  onChange={(e) => setGeneralRepertorioNote(e.target.value)}
  placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco..."
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)] focus:border-indigo-500' :'bg-[var(--surface)] text-[var(--sunken)] focus:border-[#1db954]'
+ isStitchLight ?'bg-white text-[var(--ink)] focus:border-indigo-500' :'bg-[var(--surface)] text-[var(--sunken)] focus:border-[var(--hair)]'
  }`}
  />
  </div>
@@ -261,7 +261,7 @@ export function MemberNotesModal({
  {/* Add Custom Member Form */}
  {showAddCustomMember && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-wrap items-center gap-2 animate-in fade-in duration-150 ${
- isStitchLight ?'bg-indigo-50/70 border-indigo-200' :'bg-[var(--surface)] border-[#1db954]/40'
+ isStitchLight ?'bg-indigo-50/70 border-indigo-200' :'bg-[var(--surface)] border-[var(--hair)]/40'
  }`}>
  <input
  type="text"
@@ -285,7 +285,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={handleAddCustomMember}
- className="px-3 py-2 bg-[#1db954] hover:bg-[#1ed760] text-black font-bold text-xs rounded-[var(--r-s)] cursor-pointer transition-transform active:scale-95"
+ className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-bold text-xs rounded-[var(--r-s)] cursor-pointer transition-transform active:scale-95"
  >
  Añadir
  </button>
@@ -371,7 +371,7 @@ export function MemberNotesModal({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] text-[var(--sunken)] focus:border-[#1db954]'
+ :'bg-[var(--surface)] text-[var(--sunken)] focus:border-[var(--hair)]'
  }`}
  />
  </div>
@@ -395,7 +395,7 @@ export function MemberNotesModal({
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer shadow-lg ${
  savedSuccess 
  ?'bg-emerald-500 text-white' 
- :'bg-[#1db954] hover:bg-[#1ed760] text-black'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-black'
  }`}
  >
  {savedSuccess ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}

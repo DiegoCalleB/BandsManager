@@ -256,7 +256,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  {musicSubTab ==='manual' && (
  <div className="space-y-4">
  {!showBulkInput ? (
- <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border-[var(--hair)] space-y-3">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <div className="flex items-center justify-between">
  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
  Añadir Canción Individual
@@ -313,7 +313,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  </div>
  </div>
  ) : (
- <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border-[var(--hair)] space-y-3">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <div className="flex items-center justify-between">
  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
  Pegar Títulos en Bloque (Uno por línea)

@@ -645,7 +645,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  />
  <button
  onClick={handleStartEdit}
- className="p-2 rounded-[var(--r-m)] bg-[#252423] hover:bg-[#2e2d2b] text-zinc-300 hover:text-white transition-colors cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-zinc-300 hover:text-white transition-colors cursor-pointer"
  title="Editar ficha completa"
  >
  <Edit3 className="w-4 h-4" />
@@ -661,7 +661,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] bg-[#252423] hover:bg-[#2e2d2b] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-zinc-400 hover:text-white transition-colors cursor-pointer"
  title="Cerrar panel"
  >
  <X className="w-4 h-4" />
@@ -1013,7 +1013,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="space-y-4">
  {/* Edit Form Modal/Inline */}
  {isEditingLeadInfo && (
- <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[#181818] text-zinc-100 shadow-xl">
+ <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--surface)] text-zinc-100 shadow-xl">
  <div className="flex justify-between items-center pb-2 border-b border-zinc-800">
  <span className="font-bold text-xs uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
  <Edit3 className="w-3.5 h-3.5" /> Editar Ficha ({selectedLead.nombre_sala})

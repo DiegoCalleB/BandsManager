@@ -379,7 +379,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </span>
  )}
  {isSelf && (
- <span className="px-1.5 py-0.5 text-[9px] font-mono rounded bg-[#10b981]/15 text-[#10b981]">
+ <span className="px-1.5 py-0.5 text-[9px] font-mono rounded bg-[var(--surface)]/15 text-[#10b981]">
  Tú
  </span>
  )}

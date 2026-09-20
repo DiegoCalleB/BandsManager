@@ -211,7 +211,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden transition-all ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :'bg-[#16161a] text-zinc-100'
+ :'bg-[var(--surface)] text-zinc-100'
  }`}
  >
  {/* Header */}
@@ -417,7 +417,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  isSuggested
  ? isStitchLight
  ?'bg-amber-50/60'
- :'bg-[#1e1c15] /50 shadow-xs'
+ :'bg-[var(--surface)] /50 shadow-xs'
  : isStitchLight
  ?'bg-white'
  :'bg-[var(--surface)]'

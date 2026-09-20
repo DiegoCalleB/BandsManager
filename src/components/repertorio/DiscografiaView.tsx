@@ -366,7 +366,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  return (
  <div
  className={`p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl shadow-xl transition-all ${
- isStitchLight ?'bg-white' :'bg-[#16161a]/95 backdrop-blur-sm'
+ isStitchLight ?'bg-white' :'bg-[var(--surface)]/95 backdrop-blur-sm'
  }`}
  >
  {/* Top Controls Bar (Search + Quick Filters + Actions) */}
@@ -417,7 +417,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
  ?' bg-white text-[var(--ink)]'
- :' bg-[#16161a] text-zinc-200'
+ :' bg-[var(--surface)] text-zinc-200'
  }`}>
  {onCreateAlbum && (
  <button
@@ -887,7 +887,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={() => setSearchQuery('')}
- className="mt-3 px-3 py-1.5 rounded-full bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/30 text-xs font-mono font-bold hover:bg-[#1db954]/30 transition-all cursor-pointer inline-flex items-center gap-1.5"
+ className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[#1ed760] border-[var(--hair)]/30 text-xs font-mono font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5"
  >
  <X className="w-3.5 h-3.5" />
  <span>Limpiar búsqueda</span>

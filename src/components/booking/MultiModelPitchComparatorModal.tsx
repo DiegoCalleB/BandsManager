@@ -214,10 +214,10 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain">
- <div className="relative w-full max-w-6xl bg-[#141312] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
+ <div className="relative w-full max-w-6xl bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
  
  {/* HEADER */}
- <div className="px-5 py-3.5 border-b border-zinc-800 flex items-center justify-between bg-[#191817]/95 sticky top-0 z-10">
+ <div className="px-5 py-3.5 border-b border-zinc-800 flex items-center justify-between bg-[var(--surface)]/95 sticky top-0 z-10">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/15 flex items-center justify-center text-amber-400">
  <Layers className="w-5 h-5" />
@@ -434,8 +434,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  key={prop.provider + idx}
  className={`flex flex-col rounded-[var(--r-m)] transition-all duration-200 ${
  isSelected
- ?'bg-[#1e1c19] border-emerald-500/80 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/40'
- :'bg-[#161514] border-zinc-800 hover:border-zinc-700'
+ ?'bg-[var(--surface)] border-emerald-500/80 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/40'
+ :'bg-[var(--surface)] border-zinc-800 hover:border-zinc-700'
  }`}
  >
  {/* Model Header */}
@@ -617,7 +617,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  {/* FOOTER INFO BAR */}
- <div className="px-5 py-3 border-t border-zinc-800 bg-[#161514] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-400">
+ <div className="px-5 py-3 border-t border-zinc-800 bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-400">
  <div className="flex items-center gap-2">
  <ShieldCheck className="w-4 h-4 text-amber-400" />
  <span>

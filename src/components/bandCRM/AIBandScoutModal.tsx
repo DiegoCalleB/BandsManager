@@ -98,10 +98,10 @@ export function AIBandScoutModal({
  onClose();
  };
 
- const bgColor = isStitchLight ?"bg-white" :"bg-[#1a1a1a]";
+ const bgColor = isStitchLight ?"bg-white" :"bg-[var(--surface)]";
  const textColor = isStitchLight ?"text-[var(--ink)]" :"text-white";
  const subtextColor = isStitchLight ?"text-[var(--ink-2)]" :"text-gray-400";
- const inputBg = isStitchLight ?"bg-[var(--bg)]" :"bg-[#2a2a2a]";
+ const inputBg = isStitchLight ?"bg-[var(--bg)]" :"bg-[var(--surface)]";
  const borderColor = isStitchLight ?"" :"border-[#333]";
 
  return (

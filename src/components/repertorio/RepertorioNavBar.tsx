@@ -47,7 +47,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  const activeSetlist = setlists.find(s => s.id === activeSetlistId) || setlists[0];
 
  return (
- <header className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-[var(--r-l)] ${isStitchLight ?'bg-white' :'bg-[#16161a]/95 /80'} space-y-2.5 shadow-sm`}>
+ <header className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-[var(--r-l)] ${isStitchLight ?'bg-white' :'bg-[var(--surface)]/95 /80'} space-y-2.5 shadow-sm`}>
  {/* Top Row: Title + 2 Main Pillars (Setlists vs Discografía) */}
  <div className="flex items-center justify-between gap-2">
  {/* Module Title */}
@@ -165,7 +165,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  <div className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :' bg-[#16161a] text-zinc-200'
+ :' bg-[var(--surface)] text-zinc-200'
  }`}>
  <div className="px-2.5 py-1.5 text-[11px] uppercase tracking-wider text-zinc-400 font-semibold flex items-center justify-between">
  <span>Tus Setlists ({setlists.length})</span>

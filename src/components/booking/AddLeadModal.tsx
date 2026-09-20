@@ -96,7 +96,7 @@ export function AddLeadModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  className={`w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[#18181b] text-[var(--ink)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <div className="flex items-center justify-between pb-3">
@@ -263,7 +263,7 @@ export function AddLeadModal({
  {isModalScraping && (
  <div
  className={`p-2.5 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 animate-pulse ${
- isStitchLight ?'bg-[#d1b375]/15 text-[#d1b375]' :'bg-[#1f1a10]/30 text-[#d1b375]'
+ isStitchLight ?'bg-[#d1b375]/15 text-[#d1b375]' :'bg-[var(--surface)]/30 text-[#d1b375]'
  }`}
  >
  <Loader2 className="w-4 h-4 animate-spin text-[#d1b375]/80 shrink-0" />
@@ -278,7 +278,7 @@ export function AddLeadModal({
  )}
 
  {modalScrapeSuccessMsg && (
- <div className="p-2.5 rounded-[var(--r-s)] text-[10px] font-sans text-[#10b981] bg-[#10b981]/15">
+ <div className="p-2.5 rounded-[var(--r-s)] text-[10px] font-sans text-[#10b981] bg-[var(--surface)]/15">
  {modalScrapeSuccessMsg}
  </div>
  )}

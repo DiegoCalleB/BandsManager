@@ -112,7 +112,7 @@ export function AddSongsToSetlistModal({
  value={search}
  onChange={(e) => setSearch(e.target.value)}
  placeholder="Buscar por título o tonalidad..."
- className={`w-full pl-8 pr-3 py-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
+ className={`w-full pl-8 pr-3 py-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
@@ -181,14 +181,14 @@ export function AddSongsToSetlistModal({
  onClick={() => toggleSong(s.id)}
  className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
  isSelected
- ?'bg-[#1db954]/15 border-[#1db954]/50'
+ ?'bg-[var(--surface)]/15 border-[var(--hair)]/50'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)] hover:bg-neutral-800'
  }`}
  >
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-mono text-xs font-black transition-all ${
- isSelected ?'bg-[#1db954] border-[#1db954] text-black shadow-sm scale-105' :' text-neutral-500'
+ isSelected ?'bg-[var(--surface)] border-[var(--hair)] text-black shadow-sm scale-105' :' text-neutral-500'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>
@@ -202,7 +202,7 @@ export function AddSongsToSetlistModal({
  </span>
  )}
  {isSelected && (
- <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#1db954]/20 text-[#1db954] font-extrabold shrink-0 ml-auto border-[#1db954]/40">
+ <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-[var(--surface)]/20 text-[#1db954] font-extrabold shrink-0 ml-auto border-[var(--hair)]/40">
  #{selectedIndex + 1} en orden
  </span>
  )}
@@ -235,7 +235,7 @@ export function AddSongsToSetlistModal({
  type="button"
  disabled={selectedIds.length === 0}
  onClick={handleSubmit}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[#1db954] hover:bg-[#1ed760] disabled:opacity-40 disabled:cursor-not-allowed text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
  >
  <ListPlus className="w-4 h-4 stroke-[3]" />
  <span>Añadir {selectedIds.length > 0 ? `${selectedIds.length} Canciones en Orden` :'Canciones'}</span>

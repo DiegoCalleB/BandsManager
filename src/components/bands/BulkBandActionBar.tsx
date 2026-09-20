@@ -56,7 +56,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] shadow-xl backdrop-blur-md p-2.5 sm:p-3 transition-all animate-slide-up ${
  isStitchLight
  ?'bg-white/95 /60 text-[var(--ink)] shadow-slate-300/60'
- :'bg-[#151311]/95 border-[var(--acc)]/50 text-white shadow-black/80'
+ :'bg-[var(--surface)]/95 border-[var(--acc)]/50 text-white shadow-black/80'
  }`}
  >
  <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
@@ -146,7 +146,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <div className={`absolute top-full mt-2 right-0 z-50 w-60 rounded-[var(--r-l)] shadow-2xl p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${
  isStitchLight
  ?'bg-white shadow-slate-400/50'
- :'bg-[#181614] border-zinc-700 shadow-black/90'
+ :'bg-[var(--surface)] border-zinc-700 shadow-black/90'
  }`}>
  <div className={`px-2 py-1 text-[10px] font-mono uppercase font-bold border-b ${
  isStitchLight ?'text-[var(--ink-2)]' :'text-zinc-400 border-zinc-800'
@@ -251,7 +251,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  {/* Confirmation Modal for Bulk Deletion */}
  <ModalPortal isOpen={isConfirmDeleteOpen} onClose={() => setIsConfirmDeleteOpen(false)}>
  <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
- <div className="w-full max-w-md bg-[#141210] rounded-[var(--r-l)] shadow-2xl p-5 space-y-4 my-auto">
+ <div className="w-full max-w-md bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl p-5 space-y-4 my-auto">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
  <Trash2 className="w-5 h-5" />

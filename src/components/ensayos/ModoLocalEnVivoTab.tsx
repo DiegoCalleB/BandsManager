@@ -329,7 +329,7 @@ export function ModoLocalEnVivoTab({
 
  if (agenda.length === 0) {
  return (
- <div className="p-8 sm:p-12 text-center bg-[#141413] border-[#262522] rounded-3xl space-y-4">
+ <div className="p-8 sm:p-12 text-center bg-[var(--surface)] border-[var(--hair)] rounded-3xl space-y-4">
  <Disc3 className="w-12 h-12 text-neutral-600 mx-auto animate-spin-slow" />
  <h3 className="text-base font-bold text-zinc-200">No hay temas en el orden del día</h3>
  <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
@@ -356,7 +356,7 @@ export function ModoLocalEnVivoTab({
  onTouchEnd={handleTouchEnd}
  className={`animate-fade-in select-none ${
  isFullscreen 
- ?'fixed inset-0 z-50 bg-[#090908] h-[100dvh] max-h-[100dvh] w-screen max-w-full overflow-hidden flex flex-col p-2 sm:p-3 justify-between' 
+ ?'fixed inset-0 z-50 bg-[var(--bg)] h-[100dvh] max-h-[100dvh] w-screen max-w-full overflow-hidden flex flex-col p-2 sm:p-3 justify-between' 
  :'space-y-4'
  }`}
  >
@@ -373,7 +373,7 @@ export function ModoLocalEnVivoTab({
  )}
 
  {/* Top Session Progress Bar & Track Selector Carousel */}
- <div className={`flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-[var(--r-l)] bg-[#141413] border-[#262522] ${isFullscreen ?'shrink-0 mb-1.5' :''}`}>
+ <div className={`flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] ${isFullscreen ?'shrink-0 mb-1.5' :''}`}>
  <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 px-1 scrollbar-none flex-1">
  {agenda.map((item, idx) => {
  const isCurrent = idx === activeIndex;
@@ -388,7 +388,7 @@ export function ModoLocalEnVivoTab({
  ?'bg-emerald-500/20 text-emerald-300'
  : item.evaluacion ==='repetir'
  ?'bg-rose-500/20 text-rose-300'
- :'bg-[#1a1918] text-[var(--ink-2)] hover:text-white border-[#2a2825]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white border-[var(--hair)]'
  }`}
  >
  <span>{idx + 1}.</span>
@@ -404,7 +404,7 @@ export function ModoLocalEnVivoTab({
  {/* View Switcher Buttons + Fullscreen Toggle */}
  <div className="flex items-center gap-1.5 shrink-0 pl-1">
  {/* Toggle Escenario vs Atril */}
- <div className="flex items-center p-0.5 bg-[#1a1918] border-[#2e2d2a] rounded-[var(--r-m)]">
+ <div className="flex items-center p-0.5 bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-m)]">
  <button
  onClick={() => setViewMode('escenario')}
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
@@ -435,7 +435,7 @@ export function ModoLocalEnVivoTab({
  {/* Fullscreen Button */}
  <button
  onClick={toggleFullscreen}
- className="p-2 rounded-[var(--r-m)] bg-[#1c1b19] border-[#2e2d2a] text-[var(--ink-3)] hover:text-white hover:/40 transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-3)] hover:text-white hover:/40 transition-all cursor-pointer"
  title={isFullscreen ?'Salir de pantalla completa' :'Ver a pantalla completa'}
  >
  {isFullscreen ? <Minimize2 className="w-4 h-4 text-amber-400" /> : <Maximize2 className="w-4 h-4" />}
@@ -450,7 +450,7 @@ export function ModoLocalEnVivoTab({
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-amber-500/10 blur-3xl pointer-events-none" />
 
  {/* Top Header: Track Title & Musical Meta (100% Mobile Responsive) */}
- <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2a2825] pb-5">
+ <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--hair)] pb-5">
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-2">
  <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-mono font-bold bg-amber-400/20 text-amber-300 uppercase">
@@ -467,7 +467,7 @@ export function ModoLocalEnVivoTab({
 
  {/* Key, BPM & Stopwatch Badges (Grid on Mobile) */}
  <div className="grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-3">
- <div className="p-2.5 sm:p-4 rounded-[var(--r-l)] bg-[#1f1e1c] border-[#33312c] text-center min-w-[75px] sm:min-w-[90px]">
+ <div className="p-2.5 sm:p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] text-center min-w-[75px] sm:min-w-[90px]">
  <span className="block text-[9px] sm:text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">
  Tonalidad
  </span>
@@ -476,7 +476,7 @@ export function ModoLocalEnVivoTab({
  </span>
  </div>
 
- <div className="p-2.5 sm:p-4 rounded-[var(--r-l)] bg-[#1f1e1c] border-[#33312c] text-center min-w-[75px] sm:min-w-[90px]">
+ <div className="p-2.5 sm:p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] text-center min-w-[75px] sm:min-w-[90px]">
  <span className="block text-[9px] sm:text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">
  Tempo
  </span>
@@ -485,7 +485,7 @@ export function ModoLocalEnVivoTab({
  </span>
  </div>
 
- <div className="p-2.5 sm:p-4 rounded-[var(--r-l)] bg-[#1f1e1c] border-[#33312c] text-center min-w-[85px] sm:min-w-[100px]">
+ <div className="p-2.5 sm:p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] text-center min-w-[85px] sm:min-w-[100px]">
  <span className="block text-[9px] sm:text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold flex items-center justify-center gap-1">
  <Clock className="w-3 h-3 text-amber-400" /> Tiempo
  </span>
@@ -523,7 +523,7 @@ export function ModoLocalEnVivoTab({
  {estructuraPills.map((sec, sIdx) => (
  <div
  key={sIdx}
- className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] bg-[#22211f] border-[#33312c] text-xs font-mono font-bold text-zinc-200 shadow-sm"
+ className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono font-bold text-zinc-200 shadow-sm"
  >
  <span className="text-amber-400 text-[10px]">0{sIdx + 1}</span>
  <span>{sec}</span>
@@ -538,7 +538,7 @@ export function ModoLocalEnVivoTab({
  {/* Instrument Specific Advice / Notes */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* Focus Note */}
- <div className="p-4 rounded-[var(--r-l)] bg-[#1a1918] border-[#2a2825] space-y-2">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-2">
  <label className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
  <Flame className="w-3.5 h-3.5" /> Enfoque / Detalle para este ensayo
  </label>
@@ -552,7 +552,7 @@ export function ModoLocalEnVivoTab({
  </div>
 
  {/* Quick Musician Cheatsheet */}
- <div className="p-4 rounded-[var(--r-l)] bg-[#1a1918] border-[#2a2825] space-y-2">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-2">
  <label className="text-xs font-mono font-bold text-[var(--ink-3)] uppercase tracking-wider flex items-center gap-1.5">
  <Music className="w-3.5 h-3.5 text-amber-400" /> Afinación & Arreglos
  </label>
@@ -574,7 +574,7 @@ export function ModoLocalEnVivoTab({
  </div>
 
  {/* Metronome Embedded Strip (100% Mobile Responsive) */}
- <div className="p-3 sm:p-4 rounded-[var(--r-l)] bg-[#161514] border-[#2e2d2a] flex flex-wrap items-center justify-between gap-3">
+ <div className="p-3 sm:p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] flex flex-wrap items-center justify-between gap-3">
  <div className="flex items-center gap-2 sm:gap-3">
  <button
  onClick={() => setIsMetronomeActive(!isMetronomeActive)}
@@ -647,7 +647,7 @@ export function ModoLocalEnVivoTab({
  </div>
 
  {/* Bottom Bar: 1-Tap Evaluation & Track Switcher (100% Mobile Responsive) */}
- <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#2a2825]">
+ <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[var(--hair)]">
  {/* 1-Tap Evaluation Buttons */}
  <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
  <span className="text-xs font-mono text-[var(--ink-2)] uppercase mr-1 hidden xs:inline">
@@ -719,7 +719,7 @@ export function ModoLocalEnVivoTab({
  {viewMode ==='atril' && (
  <div className={`flex flex-col ${isFullscreen ?'flex-1 min-h-0 overflow-hidden space-y-2' :'space-y-4'}`}>
  {/* Atril Control Toolbar (100% Mobile Responsive) */}
- <div className="p-2 sm:p-3.5 rounded-[var(--r-l)] bg-[#161514] border-[#2c2a27] shadow-xl flex flex-wrap items-center justify-between gap-2 shrink-0">
+ <div className="p-2 sm:p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-xl flex flex-wrap items-center justify-between gap-2 shrink-0">
  {/* Left: Metronome click & Tempo pulse */}
  <div className="flex items-center gap-2">
  <button
@@ -750,7 +750,7 @@ export function ModoLocalEnVivoTab({
  </div>
 
  {/* Middle: Auto-Scroll & Speed */}
- <div className="flex items-center gap-1.5 bg-[#1f1e1c] p-1 rounded-[var(--r-m)] border-[#33312c]">
+ <div className="flex items-center gap-1.5 bg-[var(--surface)] p-1 rounded-[var(--r-m)] border-[var(--hair)]">
  <button
  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold cursor-pointer transition-all ${
@@ -784,7 +784,7 @@ export function ModoLocalEnVivoTab({
  {/* Transpose & Notation & Font Size Controls */}
  <div className="flex items-center gap-2">
  {/* Transpose */}
- <div className="flex items-center gap-1 bg-[#1f1e1c] px-2 py-1 rounded-[var(--r-m)] border-[#33312c]">
+ <div className="flex items-center gap-1 bg-[var(--surface)] px-2 py-1 rounded-[var(--r-m)] border-[var(--hair)]">
  <span className="text-[10px] font-mono text-[var(--ink-2)] font-bold uppercase mr-0.5">
  Tono:
  </span>
@@ -808,14 +808,14 @@ export function ModoLocalEnVivoTab({
  {/* Notation ES/EN */}
  <button
  onClick={() => setNotation(n => (n ==='ES' ?'EN' :'ES'))}
- className="px-2 py-1.5 rounded-[var(--r-m)] bg-[#1f1e1c] border-[#33312c] text-xs font-mono text-[var(--ink-3)] hover:text-white font-bold cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono text-[var(--ink-3)] hover:text-white font-bold cursor-pointer"
  title="Cambiar notación Do-Re-Mi vs C-D-E"
  >
  {notation}
  </button>
 
  {/* Font Size */}
- <div className="flex items-center gap-0.5 bg-[#1f1e1c] p-1 rounded-[var(--r-m)] border-[#33312c]">
+ <div className="flex items-center gap-0.5 bg-[var(--surface)] p-1 rounded-[var(--r-m)] border-[var(--hair)]">
  <button
  onClick={() => setFontSizeIndex(i => Math.max(0, i - 1))}
  className="px-1.5 py-0.5 text-xs font-mono text-[var(--ink-2)] hover:text-white cursor-pointer"
@@ -838,7 +838,7 @@ export function ModoLocalEnVivoTab({
  className={`p-2 rounded-[var(--r-m)] text-xs font-mono cursor-pointer transition-all ${
  showChordDiagrams
  ?'bg-amber-400/20 text-amber-300 /40'
- :'bg-[#1f1e1c] text-[var(--ink-2)] border-[#33312c] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)] hover:text-white'
  }`}
  title="Ver diagramas de acordes de guitarra"
  >
@@ -849,7 +849,7 @@ export function ModoLocalEnVivoTab({
  {currentSong && (
  <button
  onClick={() => setEditingSongModal(currentSong)}
- className="p-2 rounded-[var(--r-m)] bg-[#1f1e1c] border-[#33312c] text-[var(--ink-2)] hover:text-amber-400 transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] hover:text-amber-400 transition-all cursor-pointer"
  title="Editar letra y acordes"
  >
  <Edit3 className="w-4 h-4" />
@@ -860,7 +860,7 @@ export function ModoLocalEnVivoTab({
 
  {/* Guitar Chord Shapes Drawer (if open) */}
  {showChordDiagrams && uniqueChords.length > 0 && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-[#141413] border-[#2a2825] space-y-2 animate-fade-in shrink-0">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-2 animate-fade-in shrink-0">
  <div className="flex items-center justify-between text-xs font-mono font-bold text-amber-400 uppercase">
  <span>Diagramas de Acordes de este Tema ({uniqueChords.length})</span>
  <button
@@ -879,9 +879,9 @@ export function ModoLocalEnVivoTab({
  )}
 
  {/* Teleprompter Chords Sheet Card */}
- <div className={`rounded-[var(--r-l)] sm:rounded-3xl bg-[#0f0f0e] border-2 border-[#262522] shadow-2xl p-3.5 sm:p-6 relative flex flex-col ${isFullscreen ?'flex-1 min-h-0 overflow-hidden' :''}`}>
+ <div className={`rounded-[var(--r-l)] sm:rounded-3xl bg-[var(--bg)] border-2 border-[var(--hair)] shadow-2xl p-3.5 sm:p-6 relative flex flex-col ${isFullscreen ?'flex-1 min-h-0 overflow-hidden' :''}`}>
  {/* Header Song Info */}
- <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#242321] pb-3 mb-3 shrink-0">
+ <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--hair)] pb-3 mb-3 shrink-0">
  <div className="space-y-0.5">
  <div className="flex items-center gap-2">
  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-400/20 text-amber-300 uppercase">
@@ -897,13 +897,13 @@ export function ModoLocalEnVivoTab({
  </div>
 
  <div className="flex items-center gap-2 text-xs font-mono">
- <span className="px-2 py-1 rounded-[var(--r-m)] bg-[#1c1b1a] border-[#2e2d2a] text-amber-400 font-bold">
+ <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-amber-400 font-bold">
  Tonalidad: {currentSong?.tonalidad ||'Am'}
  </span>
- <span className="px-2 py-1 rounded-[var(--r-m)] bg-[#1c1b1a] border-[#2e2d2a] text-zinc-300">
+ <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-zinc-300">
  {currentSong?.afinacion ||'Standard E'}
  </span>
- <span className="px-2 py-1 rounded-[var(--r-m)] bg-[#1c1b1a] border-[#2e2d2a] text-[var(--ink-2)]">
+ <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)]">
  ⏱ {formatTime(trackSeconds)}
  </span>
  </div>
@@ -918,7 +918,7 @@ export function ModoLocalEnVivoTab({
  </div>
 
  {/* Bottom Bar inside Atril: 1-Tap Evaluation & Quick Next/Previous */}
- <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 mt-3 border-t border-[#242321] shrink-0">
+ <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 mt-3 border-t border-[var(--hair)] shrink-0">
  <div className="flex items-center gap-1.5 w-full sm:w-auto">
  <button
  onClick={() => handleSetEvaluation('bordada')}

@@ -2624,7 +2624,7 @@ export default function RepertorioSetlists({
  {activeTab ==='setlists' && (
  <div className="w-full">
  {/* MAIN EDITOR FOR ACTIVE SETLIST */}
- <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 ${isStitchLight ?'bg-white' :'bg-[#16161a]/95 /80 backdrop-blur-sm'} shadow-sm`}>
+ <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 ${isStitchLight ?'bg-white' :'bg-[var(--surface)]/95 /80 backdrop-blur-sm'} shadow-sm`}>
  {activeSetlist ? (
  <>
  {/* CABECERA COMPACTA: nombre del setlist + un único menú"⋯" con las acciones secundarias. */}
@@ -2757,7 +2757,7 @@ export default function RepertorioSetlists({
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
  ?' bg-white text-[var(--ink)]'
- :' bg-[#16161a] text-zinc-200'
+ :' bg-[var(--surface)] text-zinc-200'
  }`}>
  <button
  type="button"
@@ -2856,7 +2856,7 @@ export default function RepertorioSetlists({
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
  isStitchLight
  ?' bg-white text-[var(--ink)]'
- :' bg-[#16161a] text-zinc-200'
+ :' bg-[var(--surface)] text-zinc-200'
  }`}>
  <button
  type="button"
@@ -3592,7 +3592,7 @@ export default function RepertorioSetlists({
  setEditingKeyItemId(it.id);
  }}
  className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${
- desiredKey ?'bg-amber-500/20 text-amber-400' :'bg-[#10b981]/15 text-[#10b981]'
+ desiredKey ?'bg-amber-500/20 text-amber-400' :'bg-[var(--surface)]/15 text-[#10b981]'
  }`}
  title={desiredKey
  ? `Original: ${song.tonalidad ||'—'} · Tocar en este repertorio: ${desiredKey}. Clic para cambiar.`

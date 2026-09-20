@@ -111,7 +111,7 @@ export function AssignSongsToAlbumModal({
  value={customAlbumName}
  onChange={(e) => setCustomAlbumName(e.target.value)}
  placeholder="ej. Lanzamiento Verano 2026"
- className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
+ className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
@@ -124,7 +124,7 @@ export function AssignSongsToAlbumModal({
  value={albumYear}
  onChange={(e) => setAlbumYear(e.target.value)}
  placeholder="ej. 2026"
- className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
+ className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
@@ -137,7 +137,7 @@ export function AssignSongsToAlbumModal({
  <select
  value={albumType}
  onChange={(e) => setAlbumType(e.target.value)}
- className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
+ className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  >
@@ -157,7 +157,7 @@ export function AssignSongsToAlbumModal({
  value={coverUrl}
  onChange={(e) => setCoverUrl(e.target.value)}
  placeholder="https://... o sube imagen"
- className={`flex-1 p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
+ className={`flex-1 p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
@@ -176,7 +176,7 @@ export function AssignSongsToAlbumModal({
  value={description}
  onChange={(e) => setDescription(e.target.value)}
  placeholder="Notas sobre la producción, estudio de grabación, concepto..."
- className={`w-full p-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
+ className={`w-full p-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
@@ -213,7 +213,7 @@ export function AssignSongsToAlbumModal({
  onClick={() => toggleSong(song.id)}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition-all ${
  isSelected
- ?'bg-[#1db954]/20 border-[#1db954]/50 text-white'
+ ?'bg-[var(--surface)]/20 border-[var(--hair)]/50 text-white'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-neutral-800/60 hover:bg-neutral-800 border-[var(--hair)] text-[var(--ink-3)]'
@@ -221,7 +221,7 @@ export function AssignSongsToAlbumModal({
  >
  <div className="flex items-center gap-3 truncate pr-2">
  <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 ${
- isSelected ?'bg-[#1db954] text-black' :'bg-neutral-700 text-[var(--ink-2)]'
+ isSelected ?'bg-[var(--surface)] text-black' :'bg-neutral-700 text-[var(--ink-2)]'
  }`}>
  {isSelected ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Plus className="w-3.5 h-3.5" />}
  </div>
@@ -259,7 +259,7 @@ export function AssignSongsToAlbumModal({
  </button>
  <button
  type="submit"
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[#1db954] hover:bg-[#1ed760] text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
  >
  <Check className="w-4 h-4 stroke-[3]" />
  <span>Guardar Disco ({selectedIds.size} temas)</span>

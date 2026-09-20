@@ -2149,7 +2149,7 @@ export default function BookingCRM({
  templateTab ==='medios'
  ? isStitchLight ?'bg-rose-500/15 text-rose-400' :'bg-rose-500/15 text-rose-400'
  : templateTab ==='grupos'
- ? isStitchLight ? (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[#10b981]/15 text-[#10b981]') :'bg-[#10b981]/15/30 text-[#10b981]'
+ ? isStitchLight ? (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[#10b981]') :'bg-[var(--surface)]/15/30 text-[#10b981]'
  : templateTab ==='discotecas'
  ? isStitchLight ?'bg-purple-50 text-purple-900' :'bg-purple-500/10 text-purple-300'
  : templateTab ==='ayuntamientos'
@@ -2420,7 +2420,7 @@ export default function BookingCRM({
  <div className={`rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
  isStitchLight
  ?'bg-white text-[var(--ink-2)]'
- :'bg-[#1c1b1b] text-neutral-300'
+ :'bg-[var(--surface)] text-neutral-300'
  }`}>
  {testPromptResult}
  </div>

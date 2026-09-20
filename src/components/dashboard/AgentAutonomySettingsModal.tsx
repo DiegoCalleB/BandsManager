@@ -553,7 +553,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  
  {/* Modal Header */}
  <div className={`p-4 sm:p-5 border-b flex items-center justify-between shrink-0 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[#141312]'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center gap-3">
  <div className="p-2.5 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-amber-400">
@@ -1973,7 +1973,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Modal Footer */}
  <div className={`p-4 border-t flex flex-wrap items-center justify-between gap-3 shrink-0 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[#141312]'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center gap-2 text-xs font-mono text-[var(--ink-2)]">
  <ShieldCheck className="w-4 h-4 text-emerald-400" />

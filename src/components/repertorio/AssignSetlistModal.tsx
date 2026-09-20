@@ -86,7 +86,7 @@ export function AssignSetlistModal({
  key={r.id}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
  selectedConcertToAssign === r.id
- ?'border-emerald-400 bg-[#10b981]/15'
+ ?'border-emerald-400 bg-[var(--surface)]/15'
  :' bg-[var(--surface)]/60'
  }`}
  >

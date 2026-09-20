@@ -987,9 +987,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {/* Drawer: Repertorio completo, pistas Iris y accesos directos a Studio */}
  {showSongListDrawer && (
  <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
- <div className="w-full max-w-md h-full bg-[#16161a] border-l border-[var(--hair)] flex flex-col shadow-2xl text-zinc-200">
+ <div className="w-full max-w-md h-full bg-[var(--surface)] border-l border-[var(--hair)] flex flex-col shadow-2xl text-zinc-200">
  {/* Drawer Header */}
- <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-[#111114]">
+ <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--surface)]">
  <div className="flex items-center gap-2.5">
  <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 flex items-center justify-center">
  <ListMusic className="w-4 h-4" />
@@ -1055,7 +1055,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`p-3 rounded-[var(--r-m)] transition flex flex-col gap-2.5 ${
  isCurrent
  ?'bg-amber-500/10 /50 shadow-md'
- :'bg-[#1c1b1f] border-zinc-800/80 hover:border-zinc-700'
+ :'bg-[var(--surface)] border-zinc-800/80 hover:border-zinc-700'
  }`}
  >
  <div className="flex items-start justify-between gap-2">

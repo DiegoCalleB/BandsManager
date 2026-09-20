@@ -487,7 +487,7 @@ export default function Dashboard({
  </div>
 
  {/* 1. SECCIÓN PRINCIPAL AL INICIO: PRÓXIMAS FECHAS Y AGENDA */}
- <div className="p-6 rounded-[var(--r-l)] bg-[#18181b]/90 shadow-sm space-y-4">
+ <div className="p-6 rounded-[var(--r-l)] bg-[var(--surface)]/90 shadow-sm space-y-4">
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
@@ -561,7 +561,7 @@ export default function Dashboard({
  className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
  >
  <div className="flex items-start gap-3.5">
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-[#1c1b1b] text-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm">
  <span className="text-lg font-mono font-black leading-none text-amber-400">
  {item.day}
  </span>
@@ -630,7 +630,7 @@ export default function Dashboard({
  {/* 2. TARJETAS RÁPIDAS DE CAPTURA QR, FANS Y DOSSIER */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* Card 1: Códigos QR & Captura de Fans */}
- <div className="p-5 rounded-[var(--r-l)] bg-[#18181b]/90 shadow-sm flex flex-col justify-between space-y-4 hover:/40 transition-all">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 shadow-sm flex flex-col justify-between space-y-4 hover:/40 transition-all">
  <div>
  <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">
@@ -668,7 +668,7 @@ export default function Dashboard({
  </div>
 
  {/* Card 2: Dossier EPK Digital */}
- <div className="p-5 rounded-[var(--r-l)] bg-[#18181b]/90 shadow-sm flex flex-col justify-between space-y-4 hover:border-purple-500/40 transition-all">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 shadow-sm flex flex-col justify-between space-y-4 hover:border-purple-500/40 transition-all">
  <div>
  <div className="flex items-center justify-between pb-3 border-b">
  <div className="flex items-center gap-2.5">

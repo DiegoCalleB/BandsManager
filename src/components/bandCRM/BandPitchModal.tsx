@@ -44,7 +44,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[#1c1b1b] text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
  }`}>
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  href={`https://wa.me/${band.telefono.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(pitchText)}`}
  target="_blank"
  rel="noreferrer"
- className="px-2 py-1 bg-[#10b981]/15 hover:bg-[#10b981]/15 text-white font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
+ className="px-2 py-1 bg-[var(--surface)]/15 hover:bg-[var(--surface)]/15 text-white font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
  >
  <MessageCircle className="w-4 h-4" />
  <span>Enviar WhatsApp</span>

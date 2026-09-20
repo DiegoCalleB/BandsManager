@@ -112,7 +112,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className="fixed inset-0 z-40"
  onClick={() => setShowMobileMenu(false)}
  />
- <div className="absolute right-0 top-full mt-1.5 w-56 bg-[#1b1a18] rounded-[var(--r-m)] shadow-2xl z-50 p-1.5 space-y-1 text-xs">
+ <div className="absolute right-0 top-full mt-1.5 w-56 bg-[var(--surface)] rounded-[var(--r-m)] shadow-2xl z-50 p-1.5 space-y-1 text-xs">
  <a
  href={publicEpkUrl}
  target="_blank"
@@ -200,7 +200,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  </div>
 
  {/* SELECTOR ERGONÓMICO DE BLOQUES EN MÓVIL (< sm) */}
- <div className="sm:hidden flex items-center justify-between gap-1.5 bg-[#141312] border-stone-800 p-1 rounded-[var(--r-m)]">
+ <div className="sm:hidden flex items-center justify-between gap-1.5 bg-[var(--surface)] border-stone-800 p-1 rounded-[var(--r-m)]">
  <button
  type="button"
  onClick={() => prevBlock && onSelectBlock(prevBlock.id)}
@@ -315,7 +315,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  </div>
 
  {/* STATUS & HEALTH BAR ESCRITORIO (>= sm) */}
- <div className="hidden sm:flex items-center justify-between gap-3 px-3 sm:px-4 py-2 bg-[#141312] rounded-[var(--r-m)] text-xs">
+ <div className="hidden sm:flex items-center justify-between gap-3 px-3 sm:px-4 py-2 bg-[var(--surface)] rounded-[var(--r-m)] text-xs">
  <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5 text-[11px] font-mono">
  <span className="text-stone-500 uppercase tracking-wider text-[10px] shrink-0 font-bold">
  Estado:

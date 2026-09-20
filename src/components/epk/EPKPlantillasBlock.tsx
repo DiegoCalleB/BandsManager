@@ -146,7 +146,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  onClick={() => handleSelectTemplate(tpl.id)}
  className={`text-left rounded-[var(--r-m)] sm:rounded-[var(--r-l)] transition relative overflow-hidden flex flex-col justify-between p-2.5 sm:p-4 cursor-pointer ${
  isSelected
- ?'bg-[#221f1c] ring-2 ring-amber-500/20 shadow-lg'
+ ?'bg-[var(--surface)] ring-2 ring-amber-500/20 shadow-lg'
  :'bg-stone-900/70 border-stone-800 hover:border-stone-700 hover:bg-stone-900'
  }`}
  >
@@ -269,7 +269,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  key={item.id}
  className={`flex items-center justify-between gap-3 p-3 rounded-[var(--r-m)] transition ${
  item.isVisible
- ?'bg-[#151413] border-stone-800/90 text-stone-200'
+ ?'bg-[var(--surface)] border-stone-800/90 text-stone-200'
  :'bg-stone-950/60 border-stone-900 text-stone-500 opacity-60'
  }`}
  >

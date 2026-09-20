@@ -56,7 +56,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
  >
  {/* BARRA SUPERIOR PRINCIPAL (DESKTOP & MOBILE) */}
- <header className="w-full bg-[var(--surface)] border-b border-[#2d2a27] px-3 sm:px-5 py-2.5 shrink-0 z-30 shadow-2xl flex items-center justify-between gap-2">
+ <header className="w-full bg-[var(--surface)] border-b border-[var(--hair)] px-3 sm:px-5 py-2.5 shrink-0 z-30 shadow-2xl flex items-center justify-between gap-2">
  {/* Lado Izquierdo: Título y Estado */}
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/15 flex items-center justify-center text-amber-400 shrink-0">
@@ -206,7 +206,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </header>
 
  {/* BARRA SECUNDARIA DE CONTROLES COMPACTA PARA MÓVIL / TABLET */}
- <div className="lg:hidden w-full bg-[#1e1d1b] border-b border-[#2d2a27] px-3 py-1.5 flex items-center justify-between gap-2 shrink-0 overflow-x-auto z-20">
+ <div className="lg:hidden w-full bg-[var(--surface)] border-b border-[var(--hair)] px-3 py-1.5 flex items-center justify-between gap-2 shrink-0 overflow-x-auto z-20">
  {/* Selector de Pantalla */}
  <div className="flex bg-[var(--surface)] rounded-[var(--r-s)] p-0.5 shrink-0">
  <button
@@ -280,10 +280,10 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  /* MOCKUP ELEGANTE DE SMARTPHONE */
  <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-all duration-200">
  {/* Chasis exterior del smartphone */}
- <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[var(--bg)] shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.06)] border-[#3e3b37]/80">
+ <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[var(--bg)] shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.06)] border-[var(--hair)]/80">
  {/* Dynamic Island / Altavoz */}
  <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-20 h-3 bg-black rounded-full z-30 flex items-center justify-center pointer-events-none opacity-80">
- <div className="w-2 h-2 rounded-full bg-[#1b1b2f] border-[#2d2d46]" />
+ <div className="w-2 h-2 rounded-full bg-[var(--surface)] border-[var(--hair)]" />
  </div>
 
  {/* Pantalla del teléfono con altura adaptativa y scroll nativo */}
@@ -346,7 +346,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  </main>
 
  {/* PIE DE PÁGINA INFORMATIVO Y ACCESIBLE */}
- <footer className="w-full bg-[var(--surface)] border-t border-[#2d2a27] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-mono text-[var(--ink-2)] shrink-0 flex items-center justify-between">
+ <footer className="w-full bg-[var(--surface)] border-t border-[var(--hair)] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-mono text-[var(--ink-2)] shrink-0 flex items-center justify-between">
  <div className="flex items-center gap-2 truncate">
  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0 inline-block" />
  <span className="truncate">{t('previewDisclaimer')}</span>

@@ -372,7 +372,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className={`py-3 px-4 rounded-[var(--r-m)] font-mono text-xs font-bold uppercase flex flex-col items-center justify-center gap-2 transition-all ${
  productType ==='camiseta'
  ? (isStitchLight ?'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' :'bg-[var(--acc)] text-[#121111] shadow-lg shadow-[var(--acc)]/10')
- : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[#1a1919] text-[var(--ink-2)] hover:bg-[#252525]')
+ : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]')
  }`}
  >
  <Shirt className="w-6 h-6" />
@@ -383,7 +383,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className={`py-3 px-4 rounded-[var(--r-m)] font-mono text-xs font-bold uppercase flex flex-col items-center justify-center gap-2 transition-all ${
  productType ==='pegatina'
  ? (isStitchLight ?'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' :'bg-[var(--acc)] text-[#121111] shadow-lg shadow-[var(--acc)]/10')
- : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[#1a1919] text-[var(--ink-2)] hover:bg-[#252525]')
+ : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]')
  }`}
  >
  <Tag className="w-6 h-6" />
@@ -447,7 +447,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* Custom Upload Preview / Selector */}
  {assetType ==='custom' && (
- <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[#1a1919]'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
  <div className="flex items-center justify-between">
  <label className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Imagen Personalizada Subida
@@ -483,7 +483,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  )}
 
  {assetType ==='portada' && (
- <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[#1a1919]'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
  <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider mb-2 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Selecciona Álbum / EP
  </label>
@@ -730,9 +730,9 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {/* 🎁 Modal de Canje de Pegatinas de Bienvenida */}
  {showClaimModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
- <div className="relative w-full max-w-2xl rounded-3xl bg-[#141312] border-2 /50 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+ <div className="relative w-full max-w-2xl rounded-3xl bg-[var(--surface)] border-2 /50 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
  {/* Modal Header */}
- <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[#141210] border-b border-[#262422] flex items-center justify-between">
+ <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[#141210] border-b border-[var(--hair)] flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-400 text-black flex items-center justify-center font-bold">
  <Gift className="w-5 h-5 stroke-[2.5]" />
@@ -771,7 +771,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <span>1. Previsualización del Diseño Elegido</span>
  </label>
 
- <div className="p-4 rounded-[var(--r-l)] bg-[#0f0e0d] border-[#262422] flex flex-col sm:flex-row items-center gap-5">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] flex flex-col sm:flex-row items-center gap-5">
  {/* Sticker Preview visual */}
  <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] border-4 border-[var(--hair)] shadow-xl p-2 flex flex-col items-center justify-center transform -rotate-3">
  <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-400 text-black font-black flex items-center justify-center text-lg font-display mb-1">
@@ -805,7 +805,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <span>2. Dirección de Envío (España)</span>
  </label>
 
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-[var(--r-l)] bg-[#0f0e0d] border-[#262422]">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)]">
  <div className="sm:col-span-2 space-y-1">
  <label className="text-[10px] font-mono text-[var(--ink-2)] uppercase">
  Nombre del Destinatario / Banda
@@ -901,16 +901,16 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </p>
  </div>
 
- <div className="p-4 rounded-[var(--r-l)] bg-[#0f0e0d] border-[#262422] text-left w-full max-w-md space-y-2 text-xs font-mono">
- <div className="flex items-center justify-between pb-2 border-b border-[#262422]">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] text-left w-full max-w-md space-y-2 text-xs font-mono">
+ <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <span className="text-[var(--ink-2)]">Destinatario:</span>
  <span className="text-zinc-200 font-bold">{shippingForm.nombre}</span>
  </div>
- <div className="flex items-center justify-between pb-2 border-b border-[#262422]">
+ <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <span className="text-[var(--ink-2)]">Dirección:</span>
  <span className="text-zinc-200">{shippingForm.direccion}, {shippingForm.cp} {shippingForm.ciudad}</span>
  </div>
- <div className="flex items-center justify-between pb-2 border-b border-[#262422]">
+ <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <span className="text-[var(--ink-2)]">Pack:</span>
  <span className="text-amber-400 font-bold">500 Pegatinas Vinilo Oficial</span>
  </div>
@@ -924,7 +924,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
 
  {/* Modal Footer */}
- <div className="p-4 bg-[#0f0e0d] border-t border-[#262422] flex items-center justify-between">
+ <div className="p-4 bg-[var(--bg)] border-t border-[var(--hair)] flex items-center justify-between">
  {claimStep ==='form' ? (
  <>
  <button

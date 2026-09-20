@@ -91,7 +91,7 @@ export function ShareModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
  <div 
- className="w-full max-w-xl rounded-[var(--r-l)] bg-[#141820] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-white"
+ className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-white"
  onClick={(e) => e.stopPropagation()}
  >
  {/* Header */}

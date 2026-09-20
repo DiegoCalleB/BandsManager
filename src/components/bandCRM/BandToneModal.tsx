@@ -272,7 +272,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[#1c1b1b] text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
  }`}>
  {/* Header */}
  <div className="flex items-center justify-between pb-3 border-b /10">

@@ -162,7 +162,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  onClick={() => onSelectLead(lead)}
  className={`p-4 rounded-[var(--r-l)] transition-all cursor-pointer flex flex-col justify-between gap-3 relative group ${
  isChecked
- ?'bg-[#1e1c17] border-2 border-[var(--acc)] shadow-xl ring-2 ring-[var(--acc)]/25'
+ ?'bg-[var(--surface)] border-2 border-[var(--acc)] shadow-xl ring-2 ring-[var(--acc)]/25'
  : isDetailOpen
  ?'bg-[#1A1918] border-2 border-purple-400 shadow-xl ring-1 ring-purple-400/30'
  :'bg-[var(--bg)] hover:bg-[#1A1918] hover:border-zinc-700 shadow-md'

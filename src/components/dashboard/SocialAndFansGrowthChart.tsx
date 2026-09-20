@@ -371,7 +371,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`p-5 rounded-[var(--r-l)] transition-all ${
  isStitchLight 
  ?'bg-[var(--bg)]/90 shadow-sm text-[var(--ink)]' 
- :'bg-[#18181b]/90 shadow-sm text-zinc-100'
+ :'bg-[var(--surface)]/90 shadow-sm text-zinc-100'
  }`}>
  {/* Header Section */}
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 border-b /60">

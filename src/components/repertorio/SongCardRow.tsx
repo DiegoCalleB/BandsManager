@@ -143,7 +143,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  :'bg-amber-500/10 /30 text-zinc-100'
  : isStitchLight
  ?'bg-white hover:bg-[var(--bg)] /80 text-[var(--ink)] shadow-xs'
- :'bg-[#16161a]/90 hover:bg-[#1f1f24] /80 hover: text-zinc-200 shadow-xs'
+ :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-zinc-200 shadow-xs'
  } ${draggable ?'cursor-grab active:cursor-grabbing' :''}`}
  >
  <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto">

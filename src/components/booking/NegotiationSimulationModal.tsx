@@ -73,7 +73,7 @@ export function NegotiationSimulationModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[#18181b] text-[var(--ink)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <div className="flex justify-between items-start border-b border-[var(--sunken)] dark: pb-3">
@@ -153,7 +153,7 @@ export function NegotiationSimulationModal({
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[#1c1b1b] text-[var(--ink)] focus:border-[var(--acc)]'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  >
  {(simulationRole ==='sala'
@@ -181,7 +181,7 @@ export function NegotiationSimulationModal({
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[#1c1b1b] text-[var(--ink)] focus:border-[var(--acc)]'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -197,7 +197,7 @@ export function NegotiationSimulationModal({
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[#1c1b1b] text-[var(--ink)] focus:border-[var(--acc)]'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -221,7 +221,7 @@ export function NegotiationSimulationModal({
  className={`w-full rounded-[var(--r-s)] p-2.5 text-[10px] focus:outline-none font-sans leading-relaxed ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[#1c1b1b] text-[var(--ink)] focus:border-[var(--acc)]'
+ :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -261,7 +261,7 @@ export function NegotiationSimulationModal({
  >
  ✨ Vista Previa del Correo Generado (Editable)
  </label>
- <span className="text-[10px] font-sans uppercase bg-[#10b981]/15 text-[#10b981]/80 px-2 py-1 rounded">
+ <span className="text-[10px] font-sans uppercase bg-[var(--surface)]/15 text-[#10b981]/80 px-2 py-1 rounded">
  Listo para Ajustar
  </span>
  </div>

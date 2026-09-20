@@ -655,7 +655,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => trackClick('paypal', paypalUrl, contextType)}
- className={`group relative w-full flex items-center justify-center ${isFull ?'gap-3.5 p-4 min-h-[64px]' :'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[#003087] hover:bg-[#00266e] hover:border-sky-300 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ?'animate-donate-cta-glow-delayed' :''}`}
+ className={`group relative w-full flex items-center justify-center ${isFull ?'gap-3.5 p-4 min-h-[64px]' :'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--bg)] hover:border-sky-300 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ?'animate-donate-cta-glow-delayed' :''}`}
  >
  <span
  className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"

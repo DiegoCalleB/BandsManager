@@ -172,7 +172,7 @@ export function CampaignManagerModal({
  <div className="bg-[var(--bg)] border-[var(--hair)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
  
  {/* Header */}
- <div className="p-5 border-b border-[#22201e] flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[var(--bg)]">
+ <div className="p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[var(--bg)]">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-purple-500/20 text-purple-300 flex items-center justify-center">
  <Target className="w-5 h-5" />
@@ -326,7 +326,7 @@ export function CampaignManagerModal({
  {formData.targetDates?.map((date, idx) => (
  <div 
  key={idx}
- className="flex flex-col gap-1 bg-[#1a1918] px-2.5 py-1.5 rounded-[var(--r-m)] text-zinc-100"
+ className="flex flex-col gap-1 bg-[var(--surface)] px-2.5 py-1.5 rounded-[var(--r-m)] text-zinc-100"
  >
  <div className="flex items-center gap-1.5">
  <Calendar className="w-3.5 h-3.5 text-purple-400 shrink-0" />
@@ -475,7 +475,7 @@ export function CampaignManagerModal({
  className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
  !activeCampaign
  ?'bg-neutral-800/90 shadow-md ring-1 ring-amber-400/30'
- :'bg-[#161514] hover: text-[var(--ink-2)] hover:text-[var(--sunken)]'
+ :'bg-[var(--surface)] hover: text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <div className="flex items-center gap-3">
@@ -519,8 +519,8 @@ export function CampaignManagerModal({
  key={camp.id}
  className={`p-4 rounded-[var(--r-m)] transition-all relative overflow-hidden ${
  isActive
- ?'bg-[#1c1a19] border-purple-500/60 shadow-lg ring-1 ring-purple-500/30'
- :'bg-[#151413] hover:'
+ ?'bg-[var(--surface)] border-purple-500/60 shadow-lg ring-1 ring-purple-500/30'
+ :'bg-[var(--surface)] hover:'
  }`}
  >
  {/* Left accent stripe */}
@@ -649,7 +649,7 @@ export function CampaignManagerModal({
  </div>
 
  {/* Footer */}
- <div className="p-4 border-t border-[#22201e] bg-[#161514] flex justify-between items-center text-xs text-[var(--ink-2)]">
+ <div className="p-4 border-t border-[var(--hair)] bg-[var(--surface)] flex justify-between items-center text-xs text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <ShieldCheck className="w-4 h-4 text-emerald-400" />
  <span>Persistencia en Supabase PostgreSQL</span>

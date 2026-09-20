@@ -42,7 +42,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={isCompleted ? onClose : undefined}>
  <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
- <div className="w-full max-w-lg bg-[#141210] border-[var(--acc)]/40 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
+ <div className="w-full max-w-lg bg-[var(--surface)] border-[var(--acc)]/40 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
  
  {/* Header */}
  <div className="p-4 sm:p-5 border-b border-zinc-800 bg-gradient-to-r from-[var(--surface)] to-[var(--bg)] flex items-center justify-between">
@@ -76,7 +76,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  {/* Progress bar */}
- <div className="p-4 sm:p-5 space-y-3 bg-[#181715]/60 border-b border-zinc-800">
+ <div className="p-4 sm:p-5 space-y-3 bg-[var(--surface)]/60 border-b border-zinc-800">
  <div className="flex items-center justify-between text-xs font-mono">
  <span className="text-zinc-300 font-bold">Progreso global</span>
  <span className="text-[var(--acc)] font-bold">{percentage}% ({isCompleted ? totalCount : currentIndex}/{totalCount})</span>

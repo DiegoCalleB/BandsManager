@@ -77,7 +77,7 @@ export function EnsayoCronometro({
 
  if (isCompact) {
  return (
- <div className="flex items-center gap-2 bg-[#141413] border-[#262522] rounded-[var(--r-m)] px-3 py-1.5 shadow-sm">
+ <div className="flex items-center gap-2 bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-m)] px-3 py-1.5 shadow-sm">
  <Clock className={`w-3.5 h-3.5 ${isActive ?'text-amber-400 animate-pulse' :'text-[var(--ink-2)]'}`} />
  <span className={`font-mono font-bold text-sm tracking-wider ${isOvertime ?'text-rose-400' :'text-zinc-100'}`}>
  {formatTime(seconds)}
@@ -98,7 +98,7 @@ export function EnsayoCronometro({
  }
 
  return (
- <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] border-[#2a2825] shadow-lg relative overflow-hidden">
+ <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] border-[var(--hair)] shadow-lg relative overflow-hidden">
  {/* Background soft glow when running */}
  {isActive && (
  <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -164,7 +164,7 @@ export function EnsayoCronometro({
 
  <button
  onClick={resetTimer}
- className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800 transition-colors cursor-pointer border-[#2a2825]"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800 transition-colors cursor-pointer border-[var(--hair)]"
  title="Reiniciar cronómetro"
  >
  <RotateCcw className="w-3.5 h-3.5" />

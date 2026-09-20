@@ -174,7 +174,7 @@ export function EnsayosManager({
  return (
  <div className="space-y-6 animate-fade-in pb-12">
  {/* Top Header Card: Active Rehearsal Details & Session Selector */}
- <div className="p-4 sm:p-6 rounded-3xl bg-[#141413] border-[#262522] shadow-xl space-y-4">
+ <div className="p-4 sm:p-6 rounded-3xl bg-[var(--surface)] border-[var(--hair)] shadow-xl space-y-4">
  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
  {/* Left: Rehearsal Picker & Title */}
  <div className="space-y-2">
@@ -184,7 +184,7 @@ export function EnsayosManager({
  <select
  value={currentRehearsal?.id ||''}
  onChange={e => setSelectedRehearsalId(e.target.value)}
- className="appearance-none bg-[#1c1b1a] border-[#2e2d2a] text-zinc-100 px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-mono font-bold hover: focus: outline-none cursor-pointer"
+ className="appearance-none bg-[var(--surface)] border-[var(--hair)] text-zinc-100 px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-mono font-bold hover: focus: outline-none cursor-pointer"
  >
  {sortedRehearsals.map(r => (
  <option key={r.id} value={r.id}>
@@ -275,7 +275,7 @@ export function EnsayosManager({
  </div>
 
  {/* Master Navigation Tabs - 100% Mobile Responsive */}
- <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[#100f0e] rounded-[var(--r-l)] border-[#262522]">
+ <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[var(--surface)] rounded-[var(--r-l)] border-[var(--hair)]">
  <button
  onClick={() => setActiveTab('orden_del_dia')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${

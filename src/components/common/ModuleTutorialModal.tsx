@@ -345,8 +345,8 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  transition={{ type:'spring', stiffness: 350, damping: 30 }}
  className={
  effectiveFloatingMode
- ?"pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[#131217]/95 backdrop-blur-md border-2 /50 rounded-[var(--r-l)] shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
- :"relative w-full h-full md:h-auto md:max-w-xl bg-[#131217] border-0 md:border md:border-stone-800/90 rounded-none md:rounded-3xl shadow-2xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
+ ?"pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95 backdrop-blur-md border-2 /50 rounded-[var(--r-l)] shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
+ :"relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] border-0 md:border md:border-stone-800/90 rounded-none md:rounded-3xl shadow-2xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
  }
  >
  {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}

@@ -143,7 +143,7 @@ export function SongModal({
  <button
  type="button"
  onClick={() => fileInputRef.current?.click()}
- className="px-2.5 py-1 text-[10px] rounded-[var(--r-s)] bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold cursor-pointer transition-transform active:scale-95"
+ className="px-2.5 py-1 text-[10px] rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-extrabold cursor-pointer transition-transform active:scale-95"
  >
  Examinar...
  </button>
@@ -289,7 +289,7 @@ export function SongModal({
  value={customAlbumInput}
  onChange={(e) => setCustomAlbumInput(e.target.value)}
  placeholder="Escribe el nombre del nuevo disco..."
- className={`w-full mt-1.5 p-2 rounded-[var(--r-s)] focus:outline-none border-[#1db954]/50 ${
+ className={`w-full mt-1.5 p-2 rounded-[var(--r-s)] focus:outline-none border-[var(--hair)]/50 ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-white'
  }`}
  />
@@ -501,7 +501,7 @@ export function SongModal({
  </button>
  <button
  type="submit"
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[#1db954] hover:bg-[#1ed760] text-black transition-transform active:scale-95 cursor-pointer shadow-lg"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-black transition-transform active:scale-95 cursor-pointer shadow-lg"
  >
  Guardar Canción
  </button>

@@ -1369,7 +1369,7 @@ export function PdfExportModal({
  <h3 className="font-display font-black text-sm sm:text-lg uppercase tracking-wider text-white truncate">
  Generador de Repertorios
  </h3>
- <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase font-mono bg-[#1db954] text-black shrink-0">
+ <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase font-mono bg-[var(--surface)] text-black shrink-0">
  Rock Stage Edition
  </span>
  </div>
@@ -1384,7 +1384,7 @@ export function PdfExportModal({
  <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
  <button
  onClick={() => handlePrint()}
- className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[#1db954] hover:bg-[#1ed760] text-black active:scale-95 hover:shadow-[#1db954]/20"
+ className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-black active:scale-95 hover:shadow-[#1db954]/20"
  >
  <Printer className="w-4 h-4" />
  {/*"Músico(s)", no"Hoja(s)": cada uno puede generar más de una página física según
@@ -1439,7 +1439,7 @@ export function PdfExportModal({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='all_members'
- ?'bg-[#1db954] text-black shadow-md'
+ ?'bg-[var(--surface)] text-black shadow-md'
  :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
@@ -1452,7 +1452,7 @@ export function PdfExportModal({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='single_member'
- ?'bg-[#1db954] text-black shadow-md'
+ ?'bg-[var(--surface)] text-black shadow-md'
  :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
@@ -1465,7 +1465,7 @@ export function PdfExportModal({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='master'
- ?'bg-[#1db954] text-black shadow-md'
+ ?'bg-[var(--surface)] text-black shadow-md'
  :'text-[var(--ink-2)] hover:text-white'
  }`}
  >
@@ -1500,7 +1500,7 @@ export function PdfExportModal({
  <button
  onClick={() => setViewDensity('sentado')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- viewDensity ==='sentado' ?'bg-[#1db954] text-black shadow-md' :'text-[var(--ink-2)] hover:text-white'
+ viewDensity ==='sentado' ?'bg-[var(--surface)] text-black shadow-md' :'text-[var(--ink-2)] hover:text-white'
  }`}
  title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
  >
@@ -1509,7 +1509,7 @@ export function PdfExportModal({
  <button
  onClick={() => setViewDensity('de_pie')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- viewDensity ==='de_pie' ?'bg-[#1db954] text-black shadow-md' :'text-[var(--ink-2)] hover:text-white'
+ viewDensity ==='de_pie' ?'bg-[var(--surface)] text-black shadow-md' :'text-[var(--ink-2)] hover:text-white'
  }`}
  title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
  >
@@ -1664,7 +1664,7 @@ export function PdfExportModal({
  texto competía por ancho con el badge del músico en pantallas pequeñas). */}
  {membersToExport.length > 1 && (
  <div className={`px-3 sm:px-6 py-1.5 sm:py-2 border-b flex items-center justify-between gap-2 text-xs font-mono shrink-0 ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[#151515] text-[var(--ink-3)]'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-3)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <span className="hidden sm:inline font-bold text-[var(--ink-2)] shrink-0">Previsualizando hoja {previewPageIndex + 1} de {membersToExport.length}:</span>

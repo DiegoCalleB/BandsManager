@@ -1377,7 +1377,7 @@ export default function ReelsCenter({
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-white'
- :'text-[var(--ink-2)] hover:text-white hover:bg-[#1c1b1b]/50'
+ :'text-[var(--ink-2)] hover:text-white hover:bg-[var(--surface)]/50'
  }`}
  >
  Pipeline & Redactor de Copy
@@ -1392,7 +1392,7 @@ export default function ReelsCenter({
  :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-white'
- :'text-[var(--ink-2)] hover:text-white hover:bg-[#1c1b1b]/50'
+ :'text-[var(--ink-2)] hover:text-white hover:bg-[var(--surface)]/50'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5" /> Analizador de Vídeos AI
@@ -1428,7 +1428,7 @@ export default function ReelsCenter({
  key={post.id} 
  onClick={() => setSelectedPostInPhone(post)}
  className={` rounded-md p-2.5 cursor-pointer transition-all space-y-1.5 ${
- isStitchLight ?'bg-white' :'bg-[#1c1b1b]'
+ isStitchLight ?'bg-white' :'bg-[var(--surface)]'
  } ${
  selectedPostInPhone?.id === post.id
  ? isStitchLight ?'-indigo-600 shadow-sm' :'-[var(--acc)]'
@@ -1476,7 +1476,7 @@ export default function ReelsCenter({
  key={post.id} 
  onClick={() => setSelectedPostInPhone(post)}
  className={` rounded-md p-2.5 cursor-pointer transition-all space-y-1.5 ${
- isStitchLight ?'bg-white' :'bg-[#1c1b1b]'
+ isStitchLight ?'bg-white' :'bg-[var(--surface)]'
  } ${
  selectedPostInPhone?.id === post.id
  ? isStitchLight ?'-indigo-600 shadow-sm' :'-[var(--acc)]'
@@ -1530,7 +1530,7 @@ export default function ReelsCenter({
  key={post.id} 
  onClick={() => setSelectedPostInPhone(post)}
  className={` rounded-md p-2.5 cursor-pointer transition-all space-y-1.5 ${
- isStitchLight ?'bg-white' :'bg-[#1c1b1b]'
+ isStitchLight ?'bg-white' :'bg-[var(--surface)]'
  } ${
  selectedPostInPhone?.id === post.id
  ?'-emerald-500'
@@ -2534,7 +2534,7 @@ export default function ReelsCenter({
  <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
  <Clock className="w-3.5 h-3.5 text-neutral-500" /> {post.fecha}
  </span>
- <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-[#10b981]/15 text-[#10b981] font-bold uppercase tracking-wider">
+ <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface)]/15 text-[#10b981] font-bold uppercase tracking-wider">
  {post.estado}
  </span>
  </div>
@@ -3619,7 +3619,7 @@ export default function ReelsCenter({
  </span>
  </div>
  <div className="flex gap-1 shrink-0">
- <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[#10b981]/15 text-[#10b981] font-extrabold -emerald-500/30">
+ <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[var(--surface)]/15 text-[#10b981] font-extrabold -emerald-500/30">
  {cropMode ==='none' ?'ORIGINAL' : cropMode ==='blur' ?'9:16 BLUR' :'9:16'}
  </span>
  {renderedBurnedSubs && (
@@ -3740,7 +3740,7 @@ export default function ReelsCenter({
  <span className="text-[9.5px] font-mono font-extrabold uppercase text-[var(--ink-2)] tracking-wider flex items-center gap-1">
  <span>⚡ Offsets de Palabras Sincronizados ({wordOffsets.length})</span>
  </span>
- <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[#10b981]/15 text-[#10b981] font-bold -emerald-500/20">
+ <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[var(--surface)]/15 text-[#10b981] font-bold -emerald-500/20">
  SINCRO LOCAL
  </span>
  </div>

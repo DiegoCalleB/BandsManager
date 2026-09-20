@@ -534,7 +534,7 @@ export default function SpotifyPlayerBar({
  className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer group"
  title="Haz clic para expandir el reproductor"
  >
- <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden border-[var(--hair)]">
+ <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[var(--surface)] shadow-md overflow-hidden border-[var(--hair)]">
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
@@ -544,9 +544,9 @@ export default function SpotifyPlayerBar({
  )}
  {isPlaying && (
  <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-0.5">
- <span className="w-0.5 h-3 bg-[#1db954] rounded-full animate-pulse" />
- <span className="w-0.5 h-4 bg-[#1ed760] rounded-full animate-pulse delay-75" />
- <span className="w-0.5 h-2 bg-[#1db954] rounded-full animate-pulse delay-150" />
+ <span className="w-0.5 h-3 bg-[var(--surface)] rounded-full animate-pulse" />
+ <span className="w-0.5 h-4 bg-[var(--surface)] rounded-full animate-pulse delay-75" />
+ <span className="w-0.5 h-2 bg-[var(--surface)] rounded-full animate-pulse delay-150" />
  </div>
  )}
  </div>
@@ -596,7 +596,7 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={togglePlayPause}
- className="w-8 h-8 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-bold flex items-center justify-center shadow-md cursor-pointer transition hover:scale-105 active:scale-95"
+ className="w-8 h-8 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-bold flex items-center justify-center shadow-md cursor-pointer transition hover:scale-105 active:scale-95"
  title={isPlaying ?"Pausar" :"Reproducir"}
  >
  {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
@@ -637,7 +637,7 @@ export default function SpotifyPlayerBar({
  {/* Left: Song Info */}
  <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
  <div className="flex items-center gap-3.5 min-w-0">
- <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden group border-[var(--hair)]">
+ <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[var(--surface)] shadow-md overflow-hidden group border-[var(--hair)]">
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
@@ -647,9 +647,9 @@ export default function SpotifyPlayerBar({
  )}
  {isPlaying && (
  <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-0.5">
- <span className="w-1 h-4 bg-[#1db954] rounded-full animate-pulse" />
- <span className="w-1 h-6 bg-[#1ed760] rounded-full animate-pulse delay-75" />
- <span className="w-1 h-3 bg-[#1db954] rounded-full animate-pulse delay-150" />
+ <span className="w-1 h-4 bg-[var(--surface)] rounded-full animate-pulse" />
+ <span className="w-1 h-6 bg-[var(--surface)] rounded-full animate-pulse delay-75" />
+ <span className="w-1 h-3 bg-[var(--surface)] rounded-full animate-pulse delay-150" />
  </div>
  )}
  </div>
@@ -725,7 +725,7 @@ export default function SpotifyPlayerBar({
  onClick={() => setIsLooping(!isLooping)}
  className={`p-1.5 rounded-full transition-all cursor-pointer ${
  isLooping
- ?'text-[#1db954] bg-[#1db954]/10'
+ ?'text-[#1db954] bg-[var(--surface)]/10'
  :'text-[#b3b3b3] hover:text-white'
  }`}
  title={isLooping ?"Repetir tema activado" :"Activar Bucle"}
@@ -745,7 +745,7 @@ export default function SpotifyPlayerBar({
  {/* Play / Pause - Authentic Spotify Green Circle */}
  <button
  onClick={togglePlayPause}
- className="w-10 h-10 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-bold flex items-center justify-center shadow-lg cursor-pointer transition-all hover:scale-105 active:scale-95"
+ className="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-bold flex items-center justify-center shadow-lg cursor-pointer transition-all hover:scale-105 active:scale-95"
  title={isPlaying ?"Pausar" :"Reproducir Canción"}
  >
  {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
@@ -777,7 +777,7 @@ export default function SpotifyPlayerBar({
  <select
  value={playbackRate}
  onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
- className="bg-[#282828] text-[#1db954] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)]"
+ className="bg-[var(--surface)] text-[#1db954] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)]"
  title="Velocidad de Reproducción"
  >
  <option value={0.5}>0.5x</option>
@@ -791,7 +791,7 @@ export default function SpotifyPlayerBar({
  <select
  value={transposeSemitones}
  onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
- className={`bg-[#282828] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)] ${
+ className={`bg-[var(--surface)] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)] ${
  transposeSemitones !== 0 ?'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' :'text-[#b3b3b3]'
  }`}
  title="Trasposición de Tono (Nativa en tiempo real Web Audio)"
@@ -841,7 +841,7 @@ export default function SpotifyPlayerBar({
  href={song.enlaceAcordes}
  target="_blank"
  rel="noopener noreferrer"
- className="p-2 rounded-[var(--r-s)] bg-[#282828] hover:bg-[#3e3e3e] text-[#b3b3b3] hover:text-white text-xs font-mono flex items-center gap-1 transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[#b3b3b3] hover:text-white text-xs font-mono flex items-center gap-1 transition-all cursor-pointer"
  title="Ver Acordes / Partitura"
  >
  <FileText className="w-3.5 h-3.5 text-[#1db954]" />
@@ -852,7 +852,7 @@ export default function SpotifyPlayerBar({
  {/* Studio / Arreglos Button */}
  <button
  onClick={() => onOpenStudio(song)}
- className="px-3 py-1.5 rounded-full bg-[#1db954]/15 hover:bg-[#1db954]/25 text-[#1ed760] border-[#1db954]/30 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+ className="px-3 py-1.5 rounded-full bg-[var(--surface)]/15 hover:bg-[var(--surface)]/25 text-[#1ed760] border-[var(--hair)]/30 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
  title="Abrir Estudio de Arreglos e Ideas"
  >
  <Sliders className="w-3.5 h-3.5" />

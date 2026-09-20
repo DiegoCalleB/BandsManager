@@ -43,13 +43,13 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <div 
  role="dialog"
  aria-modal="true"
- className="relative w-full max-w-2xl bg-[#141312] border-[#2b2926] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
+ className="relative w-full max-w-2xl bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
  >
  {/* Decorative Top Ambient Glow */}
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-24 bg-amber-500/10 blur-3xl pointer-events-none" />
 
  {/* Header */}
- <div className="p-5 sm:p-6 pb-4 border-b border-[#23211e] relative shrink-0">
+ <div className="p-5 sm:p-6 pb-4 border-b border-[var(--hair)] relative shrink-0">
  <button
  type="button"
  onClick={handleDismiss}
@@ -102,7 +102,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  {/* Misión 1: Bolo / Concierto */}
  <div
  onClick={() => handleChooseMission('calendario')}
- className="group relative p-4 rounded-[var(--r-m)] bg-[#1b1917] hover:bg-[#23201d] border-[#2b2926] hover:/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-amber-500/5"
+ className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-amber-500/5"
  >
  <div className="flex items-start gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 shrink-0 group-hover:scale-105 transition-transform">
@@ -135,7 +135,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  {/* Misión 2: Dossier / EPK */}
  <div
  onClick={() => handleChooseMission('epk')}
- className="group relative p-4 rounded-[var(--r-m)] bg-[#1b1917] hover:bg-[#23201d] border-[#2b2926] hover:border-sky-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-sky-500/5"
+ className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-sky-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-sky-500/5"
  >
  <div className="flex items-start gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-sky-500/20 text-sky-400 shrink-0 group-hover:scale-105 transition-transform">
@@ -168,7 +168,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  {/* Misión 3: Repertorio / Setlist */}
  <div
  onClick={() => handleChooseMission('repertorio')}
- className="group relative p-4 rounded-[var(--r-m)] bg-[#1b1917] hover:bg-[#23201d] border-[#2b2926] hover:border-emerald-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-emerald-500/5"
+ className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-emerald-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-emerald-500/5"
  >
  <div className="flex items-start gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
@@ -197,7 +197,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  </div>
 
  {/* Footer */}
- <div className="p-4 sm:p-5 border-t border-[#23211e] bg-[#100f0e] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+ <div className="p-4 sm:p-5 border-t border-[var(--hair)] bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
  <div className="flex items-center gap-2 text-[11px] text-[var(--ink-2)]">
  <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
  <span>Tus datos y cambios se guardan automáticamente en tiempo real.</span>

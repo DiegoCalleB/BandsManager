@@ -143,7 +143,7 @@ export function TemplateConfigSection({
  : templateTab ==='grupos'
  ? isStitchLight
  ?'bg-emerald-100 text-emerald-700'
- :'bg-[#10b981]/15 text-[#10b981]'
+ :'bg-[var(--surface)]/15 text-[#10b981]'
  : templateTab ==='discotecas'
  ? isStitchLight
  ?'bg-purple-50 text-purple-900'
@@ -403,7 +403,7 @@ export function TemplateConfigSection({
  className={`border rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
  isStitchLight
  ?'bg-white text-[var(--ink-2)]'
- :'bg-[#1c1b1b] text-neutral-300'
+ :'bg-[var(--surface)] text-neutral-300'
  }`}
  >
  {testPromptResult}

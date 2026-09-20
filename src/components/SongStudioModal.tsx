@@ -3039,7 +3039,7 @@ export default function SongStudioModal({
  ?'fixed inset-0 z-[9999] w-screen h-screen max-w-none max-h-none rounded-none m-0 shadow-none border-none' 
  :'max-w-4xl rounded-[var(--r-l)] shadow-2xl overflow-hidden my-auto max-h-[92vh]'
  } flex flex-col ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink-3)]' :'bg-[#0f0f15] border-zinc-800 text-zinc-100'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink-3)]' :'bg-[var(--bg)] border-zinc-800 text-zinc-100'
  }`}>
  
  {/* Header Bar */}
@@ -4943,7 +4943,7 @@ export default function SongStudioModal({
  {/* CUBASE KEYBOARD SHORTCUTS CHEAT SHEET MODAL */}
  {showCubaseHelp && (
  <div className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
- <div className="bg-[#12111d] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-zinc-100 relative">
+ <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-zinc-100 relative">
  <button
  type="button"
  onClick={() => setShowCubaseHelp(false)}

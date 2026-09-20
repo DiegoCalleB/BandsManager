@@ -133,7 +133,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  </div>
  )}
 
- <div className="p-3 rounded-[var(--r-m)] bg-[#19191d] border-[var(--hair)] space-y-2.5">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-2.5">
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
  <div className="sm:col-span-2">
  <input

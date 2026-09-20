@@ -567,13 +567,13 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden ${
  isStitchLight
  ?'bg-white text-[var(--ink)]'
- :'bg-[#141414] text-white'
+ :'bg-[var(--surface)] text-white'
  }`}
  >
  {/* Modal Header */}
  <div className="p-6 border-b border-[var(--hair)] flex items-center justify-between shrink-0 bg-gradient-to-r from-emerald-500/10 to-transparent">
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-[var(--r-l)] bg-[#1db954]/20 border-[#1db954]/40 flex items-center justify-center text-[#1db954] shadow-inner">
+ <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[#1db954] shadow-inner">
  <FolderUp className="w-6 h-6" />
  </div>
  <div>
@@ -617,7 +617,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-emerald-500'
- :'bg-[var(--surface)] text-white focus:border-[#1db954]'
+ :'bg-[var(--surface)] text-white focus:border-[var(--hair)]'
  }`}
  />
  </div>
@@ -660,10 +660,10 @@ export function BulkAlbumAudioUploaderModal({
  items.length > 0
  ? isStitchLight
  ?'border-emerald-300 bg-emerald-50/30'
- :'border-[#1db954]/30 bg-[#1db954]/5'
+ :'border-[var(--hair)]/30 bg-[var(--surface)]/5'
  : isStitchLight
  ?' hover:border-emerald-500 hover:bg-[var(--bg)]'
- :' hover:border-[#1db954] hover:bg-white/5'
+ :' hover:border-[var(--hair)] hover:bg-white/5'
  }`}
  >
  <input
@@ -727,7 +727,7 @@ export function BulkAlbumAudioUploaderModal({
  </div>
  <div className="w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
  <div
- className="h-full bg-[#1db954] transition-all duration-300 rounded-full"
+ className="h-full bg-[var(--surface)] transition-all duration-300 rounded-full"
  style={{
  width: `${(uploadProgress.current / Math.max(1, uploadProgress.total)) * 100}%`
  }}
@@ -768,8 +768,8 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => togglePlayAudio(idx)}
  className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-all cursor-pointer ${
  isPlaying
- ?'bg-[#1db954] text-black shadow-md'
- :'bg-white/10 hover:bg-[#1db954] hover:text-black text-[var(--ink-3)]'
+ ?'bg-[var(--surface)] text-black shadow-md'
+ :'bg-white/10 hover:bg-[var(--surface)] hover:text-black text-[var(--ink-3)]'
  }`}
  title={isPlaying ?'Pausar audio' :'Escuchar previo'}
  >
@@ -821,7 +821,7 @@ export function BulkAlbumAudioUploaderModal({
  item.matchedSongId
  ? isStitchLight
  ?'bg-white border-emerald-400 text-[var(--ink)] font-bold'
- :'bg-black border-[#1db954]/50 text-white font-bold'
+ :'bg-black border-[var(--hair)]/50 text-white font-bold'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)]'
  :'bg-black text-[var(--ink-2)]'
@@ -930,7 +930,7 @@ export function BulkAlbumAudioUploaderModal({
  type="button"
  onClick={handleStartUpload}
  disabled={isUploading || items.length === 0}
- className="px-6 py-2.5 rounded-[var(--r-l)] bg-[#1db954] hover:bg-[#1ed760] text-black text-xs font-mono font-bold shadow-lg flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-black text-xs font-mono font-bold shadow-lg flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isUploading ? (
  <>

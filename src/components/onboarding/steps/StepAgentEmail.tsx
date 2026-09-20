@@ -63,7 +63,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  </div>
 
  {/* Firma de correo del redactor */}
- <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border-[var(--hair)] space-y-3">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
  Firma de Correo para las Propuestas
  </h4>

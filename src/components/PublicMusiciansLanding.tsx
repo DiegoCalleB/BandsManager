@@ -319,7 +319,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  {submitted ? (
  /* SUCCESS CONFIRMATION */
- <div className="p-8 sm:p-12 rounded-3xl bg-[#141312] shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95">
+ <div className="p-8 sm:p-12 rounded-3xl bg-[var(--surface)] shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95">
  <div className="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.2)]">
  <CheckCircle2 className="w-10 h-10" />
  </div>
@@ -356,7 +356,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
  ) : (
  /* EARLY ACCESS FORM */
- <div className="p-6 sm:p-10 rounded-3xl bg-[#141312] shadow-2xl space-y-6">
+ <div className="p-6 sm:p-10 rounded-3xl bg-[var(--surface)] shadow-2xl space-y-6">
  <div className="space-y-2 border-b pb-6 text-center sm:text-left">
  <div className="inline-flex items-center gap-2 text-amber-400 font-mono text-xs font-bold uppercase tracking-wider">
  <Users className="w-4 h-4" />

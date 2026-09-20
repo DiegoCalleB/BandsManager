@@ -790,7 +790,7 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  switch (status) {
  case'colegas_aliados':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[#10b981]/15 text-[#10b981] whitespace-nowrap shrink-0">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--surface)]/15 text-[#10b981] whitespace-nowrap shrink-0">
  <Handshake className="w-3 h-3 text-[#10b981] shrink-0" />
  <span>Colegas / Aliados</span>
  </span>
@@ -1240,7 +1240,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div
  key={band.id}
  className={`p-5 rounded-[var(--r-l)] transition-all flex flex-col justify-between space-y-4 ${colors.card} shadow-md group relative overflow-hidden ${
- isSelected ?'ring-2 ring-[var(--acc)] border-[var(--acc)]/70 bg-[#1e1c17]' :'hover:-amber-500/40'
+ isSelected ?'ring-2 ring-[var(--acc)] border-[var(--acc)]/70 bg-[var(--surface)]' :'hover:-amber-500/40'
  }`}
  >
  <div className="space-y-3">
@@ -1547,7 +1547,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {isAddEditModalOpen && (
  <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[#1c1b1b] text-[var(--sunken)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--sunken)]'
  }`}>
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">

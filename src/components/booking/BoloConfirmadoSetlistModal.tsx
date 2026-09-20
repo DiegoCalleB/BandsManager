@@ -198,7 +198,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="date"
  value={concertDate}
  onChange={(e) => setConcertDate(e.target.value)}
- className="w-full bg-zinc-900 border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-white font-mono focus:border-[#1ed760] focus:outline-none"
+ className="w-full bg-zinc-900 border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-white font-mono focus:border-[var(--hair)] focus:outline-none"
  />
  </div>
 
@@ -234,7 +234,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  }}
  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-all cursor-pointer text-center ${
  targetDurationMin === mins
- ?'bg-[#1db954]/20 border-[#1ed760] text-[#1ed760] shadow-sm'
+ ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[#1ed760] shadow-sm'
  :'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
  }`}
  >
@@ -267,7 +267,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  Calculando duraciones y repertorios óptimos...
  </div>
  ) : generateNewSetlist ? (
- <div className="p-3.5 rounded-[var(--r-l)] bg-[#1db954]/10 border-[#1db954]/40 space-y-2 animate-fadeIn">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 border-[var(--hair)]/40 space-y-2 animate-fadeIn">
  <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#1ed760]">
  <Zap className="w-4 h-4 text-[#1ed760]" />
  <span>Se creará un nuevo setlist automático:</span>
@@ -281,7 +281,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  <button
  type="button"
  onClick={() => setGenerateNewSetlist(true)}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[#1ed760] text-black font-bold text-[11px] cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-black font-bold text-[11px] cursor-pointer"
  >
  ⚡ Autogenerar Setlist ({targetDurationMin} min)
  </button>

@@ -55,7 +55,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
- <div className="bg-[#1c1b1b] rounded-[var(--r-m)] w-full max-w-lg overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-200 my-auto max-h-[90vh] overflow-y-auto">
+ <div className="bg-[var(--surface)] rounded-[var(--r-m)] w-full max-w-lg overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-200 my-auto max-h-[90vh] overflow-y-auto">
  <div className="p-4 flex justify-between items-center bg-[#1A1918]">
  <h3 className="text-sm font-bold font-display uppercase tracking-widest text-zinc-100 flex items-center gap-1.5">
  <Plus className="w-4 h-4" /> Agregar Nueva Sala a la Hoja

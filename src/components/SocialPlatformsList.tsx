@@ -174,9 +174,9 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  paypal: {
  label:'PayPal',
  colorClass:'text-sky-400',
- bgClass:'bg-[#003087]/15',
- borderClass:'border-[#0070ba]/40',
- hoverClass:'hover:bg-[#003087]/25 hover:border-[#0070ba]/60 hover:text-sky-300'
+ bgClass:'bg-[var(--bg)]/15',
+ borderClass:'border-[var(--hair)]/40',
+ hoverClass:'hover:bg-[var(--bg)]/25 hover:border-[var(--hair)]/60 hover:text-sky-300'
  },
  whatsapp: {
  label:'WhatsApp',

@@ -148,7 +148,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  {/* PayPal */}
  <div className="p-3 bg-slate-950/80 rounded-[var(--r-m)] space-y-1.5">
  <div className="flex items-center gap-1.5">
- <div className="w-5 h-5 rounded-md bg-[#003087] text-[#0079C1] flex items-center justify-center p-0.5 shadow-sm">
+ <div className="w-5 h-5 rounded-md bg-[var(--bg)] text-[#0079C1] flex items-center justify-center p-0.5 shadow-sm">
  <PayPalLogo className="w-full h-full fill-white" />
  </div>
  <label className="text-xs font-semibold text-blue-200">PayPal (paypal.me)</label>

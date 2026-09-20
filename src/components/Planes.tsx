@@ -499,7 +499,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  )}
 
  {/* Stripe Customer Portal Floating / Top Bar */}
- <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[#141312] border-[#2c2a28]">
+ <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)]">
  <div className="flex items-center gap-3">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-400/10 flex items-center justify-center text-amber-400 shrink-0">
  <ShieldCheck className="w-5 h-5" />
@@ -608,7 +608,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
  {/* Toggle Mensual / Anual con badge"-20% · 2 meses gratis" */}
  <div className="pt-4 flex flex-col sm:flex-row items-center gap-3">
- <div className="inline-flex p-1.5 rounded-[var(--r-l)] bg-[var(--surface)] border-[#2c2a28] shadow-inner">
+ <div className="inline-flex p-1.5 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-inner">
  <button
  type="button"
  onClick={() => setBillingPeriod('monthly')}
@@ -681,7 +681,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  className={`relative flex flex-col justify-between rounded-3xl p-6 transition-all duration-300 ${
  plan.isPopular
  ?'bg-gradient-to-b from-[var(--surface)] via-[var(--surface)] to-[var(--sunken)] border-2 /80 shadow-2xl shadow-amber-500/10 lg:-translate-y-2.5 z-10'
- :'bg-[#141312] border-[#262422] hover: shadow-xl'
+ :'bg-[var(--surface)] border-[var(--hair)] hover: shadow-xl'
  }`}
  >
  {/* Popular Floating Badge */}
@@ -710,7 +710,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </p>
 
  {/* Price block */}
- <div className="pt-2 pb-1 border-y border-[#262422]">
+ <div className="pt-2 pb-1 border-y border-[var(--hair)]">
  <div className="flex items-baseline gap-1">
  <span className="text-4xl sm:text-5xl font-black font-display tracking-tight text-zinc-100">
  {priceDisplay}
@@ -835,7 +835,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  {/* CTA Button */}
- <div id={`btn-plan-${plan.id}`} className="pt-6 mt-4 border-t border-[#262422]">
+ <div id={`btn-plan-${plan.id}`} className="pt-6 mt-4 border-t border-[var(--hair)]">
  {plan.id === currentPlan ? (
  <div className="space-y-2">
  <div className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-amber-400/15 text-amber-300 font-bold text-xs font-mono uppercase text-center flex items-center justify-center gap-1.5 shadow-sm">
@@ -892,7 +892,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
  {/* 4. Complete Comparison Table */}
  <div className="pt-8 space-y-6">
- <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2 border-b border-[#262422]">
+ <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2 border-b border-[var(--hair)]">
  <div className="text-center sm:text-left">
  <h2 className="text-2xl sm:text-3xl font-black font-display uppercase tracking-wider text-zinc-100">
  Tabla Comparativa de Módulos
@@ -921,9 +921,9 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  {/* Table Container */}
- <div className="rounded-3xl border-[#262422] bg-[#141312] overflow-hidden shadow-2xl">
+ <div className="rounded-3xl border-[var(--hair)] bg-[var(--surface)] overflow-hidden shadow-2xl">
  {/* Header Row on Desktop */}
- <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[#1a1918] border-b border-[#262422] text-xs font-mono font-bold uppercase text-[var(--ink-2)]">
+ <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[var(--surface)] border-b border-[var(--hair)] text-xs font-mono font-bold uppercase text-[var(--ink-2)]">
  <div className="col-span-4">Módulo / Funcionalidad</div>
  <div className="col-span-2 text-center text-sky-400">Ensayo (0€)</div>
  <div className="col-span-2 text-center text-[var(--ink-3)]">Local (12€/m)</div>
@@ -943,7 +943,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <button
  type="button"
  onClick={() => toggleSection(section.title)}
- className="w-full p-4 sm:p-5 flex items-center justify-between bg-[#171615] hover:bg-[#1c1b1a] transition-colors cursor-pointer text-left"
+ className="w-full p-4 sm:p-5 flex items-center justify-between bg-[var(--surface)] hover:bg-[var(--surface)] transition-colors cursor-pointer text-left"
  >
  <div className="flex items-center gap-3">
  <div className="p-2 rounded-[var(--r-m)] bg-amber-500/10 text-amber-400">
@@ -1042,7 +1042,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  {/* 5. Transparencia, Upgrades/Downgrades y Degradación No Destructiva */}
- <div className="rounded-3xl p-6 sm:p-8 bg-[#141312] border-[#262422] space-y-6">
+ <div className="rounded-3xl p-6 sm:p-8 bg-[var(--surface)] border-[var(--hair)] space-y-6">
  <div className="flex items-center gap-3">
  <div className="p-2.5 rounded-[var(--r-m)] bg-amber-400/10 text-amber-400">
  <ShieldCheck className="w-6 h-6" />
