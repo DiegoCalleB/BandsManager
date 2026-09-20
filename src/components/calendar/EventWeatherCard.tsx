@@ -110,7 +110,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  ?'bg-amber-50 text-[var(--ink)] shadow-xs'
  :'bg-[var(--bg)] text-[var(--ink)]'
  : hasAlerts
- ?'bg-amber-950/30 /40 text-[var(--sunken)] shadow-xs'
+ ?'bg-[var(--acc-soft)] /40 text-[var(--sunken)] shadow-xs'
  :'bg-[var(--surface)]/80 text-[var(--sunken)]'
  }`}>
  <div className="flex items-center gap-2.5 min-w-0 flex-1">
@@ -391,11 +391,11 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  className={`rounded-[var(--r-m)] p-3 transition-all duration-200 ${
  isDanger
  ? isStitchLight
- ?'bg-rose-100/70 border-rose-300 text-rose-950 shadow-xs'
- :'bg-rose-950/40 border-rose-500/50 text-rose-100 shadow-rose-950/30 shadow-md'
+ ?'bg-rose-100/70 border-rose-300 text-[var(--alert)] shadow-xs'
+ :'bg-[var(--alert-soft)] border-rose-500/50 text-rose-100 shadow-rose-950/30 shadow-md'
  : isStitchLight
- ?'bg-amber-100/70 text-amber-950 shadow-xs'
- :'bg-amber-950/35 /40 text-amber-100 shadow-amber-950/20 shadow-md'
+ ?'bg-amber-100/70 text-[var(--acc)] shadow-xs'
+ :'bg-[var(--acc-soft)] /40 text-amber-100 shadow-amber-950/20 shadow-md'
  }`}
  >
  <div className="flex items-start justify-between gap-2">
@@ -434,7 +434,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  type="button"
  onClick={() => toggleAlertExpand(alert.id)}
  className={`p-1 rounded-md text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0 cursor-pointer ${
- isDanger ?'hover:bg-rose-900/40' :'hover:bg-amber-900/40'
+ isDanger ?'hover:bg-[var(--alert-soft)]' :'hover:bg-[var(--acc-soft)]'
  }`}
  title={isExpanded ?'Ocultar recomendaciones' :'Ver recomendaciones técnicas'}
  >
@@ -451,7 +451,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  exit={{ opacity: 0, height: 0 }}
  transition={{ duration: 0.2 }}
  className={`mt-2.5 pt-2.5 border-t space-y-1.5 text-[10px] font-sans overflow-hidden ${
- isDanger ?'border-rose-500/20 text-rose-200/90' :'/20 text-amber-200/90'
+ isDanger ?'border-rose-500/20 text-[var(--ink)]/90' :'/20 text-[var(--ink)]/90'
  }`}
  >
  <div className="font-mono uppercase tracking-wider text-[9px] font-bold text-[var(--acc)]/90 mb-1 flex items-center gap-1">

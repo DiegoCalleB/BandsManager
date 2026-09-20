@@ -25,9 +25,9 @@ const BAND_STATUS_OPTIONS: { status: BandRelationshipStatus; label: string; colo
  { status:'sin_contactar', label:'Sin Contactar', color:'bg-zinc-700/40 text-zinc-300 border-zinc-600', icon: Clock },
  { status:'intercambio_propuesto', label:'Intercambio Propuesto', color:'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Repeat },
  { status:'pendiente_respuesta', label:'Pendiente Respuesta', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
- { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-emerald-500/30 text-emerald-200 border-emerald-400', icon: CheckCircle2 },
+ { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-emerald-500/30 text-[var(--ink)] border-emerald-400', icon: CheckCircle2 },
  { status:'colegas_aliados', label:'Colegas / Aliados de Gira', color:'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: Users },
- { status:'no_disponible', label:'No Disponible / Descartado', color:'bg-rose-500/20 text-rose-300 border-rose-500/40', icon: ShieldAlert },
+ { status:'no_disponible', label:'No Disponible / Descartado', color:'bg-rose-500/20 text-[var(--ink-2)] border-rose-500/40', icon: ShieldAlert },
 ];
 
 export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
@@ -127,7 +127,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
  ?'bg-amber-100 hover:bg-amber-200 text-amber-900'
- :'bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 /50 text-amber-200'
+ :'bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 /50 text-[var(--ink)]'
  }`}
  title="Cambiar estado de relación de las bandas seleccionadas"
  >
@@ -226,7 +226,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <button
  type="button"
  onClick={() => setIsConfirmDeleteOpen(true)}
- className="p-1.5 bg-rose-950/60 hover:bg-rose-900 text-rose-300 rounded-[var(--r-m)] transition-all cursor-pointer"
+ className="p-1.5 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] transition-all cursor-pointer"
  title={`Eliminar ${selectedCount} bandas`}
  >
  <Trash2 className="w-4 h-4 text-rose-400" />
@@ -266,7 +266,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-rose-950/30 text-xs text-rose-200 font-mono">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert-soft)] text-xs text-[var(--ink)] font-mono">
  ⚠️ Se borrarán definitivamente {selectedCount} bandas aliadas.
  </div>
 

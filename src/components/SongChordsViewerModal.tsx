@@ -222,7 +222,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={onClose}
- className="absolute top-3 right-3 z-20 p-1.5 rounded-full bg-black/50 hover:bg-rose-500/30 text-[var(--ink-3)] hover:text-rose-300 transition cursor-pointer"
+ className="absolute top-3 right-3 z-20 p-1.5 rounded-full bg-black/50 hover:bg-rose-500/30 text-[var(--ink-3)] hover:text-[var(--ink-2)] transition cursor-pointer"
  title="Cerrar"
  >
  <X className="w-5 h-5" />
@@ -289,7 +289,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setShowShareModal(true)}
- className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-emerald-500/20 text-[var(--ink-3)] hover:text-emerald-300 transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-emerald-500/20 text-[var(--ink-3)] hover:text-[var(--ink-2)] transition cursor-pointer"
  title="Compartir canción y acordes por WhatsApp o App"
  >
  <MessageSquare className="w-4 h-4" />
@@ -466,8 +466,8 @@ export function SongChordsViewerModal({
  <div
  className={`border-b px-4 py-2 text-xs font-mono flex items-center justify-between animate-in fade-in ${
  aiSuccessMsg.startsWith('⚠️')
- ?'bg-amber-950/80 /40 text-[var(--acc)]/70'
- :'bg-emerald-950/80 border-emerald-500/40 text-emerald-300'
+ ?'bg-[var(--acc-soft)] /40 text-[var(--acc)]/70'
+ :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink-2)]'
  }`}
  >
  <span className="flex items-center gap-2">
@@ -772,7 +772,7 @@ function renderFormattedChordSheet(text: string) {
  return (
  <span
  key={pIdx}
- className="font-bold text-[var(--acc)] bg-amber-950/40 px-1 py-0.5 rounded mx-0.5 text-xs shadow-sm"
+ className="font-bold text-[var(--acc)] bg-[var(--acc-soft)] px-1 py-0.5 rounded mx-0.5 text-xs shadow-sm"
  >
  {chordName}
  </span>

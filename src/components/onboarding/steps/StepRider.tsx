@@ -133,7 +133,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <div className="flex items-center gap-3">
  <FileText className="w-6 h-6 text-emerald-400" />
  <div>
- <span className="text-xs font-semibold text-emerald-300 block">
+ <span className="text-xs font-semibold text-[var(--ink-2)] block">
  {riderPdfName ||'Rider_Tecnico_Oficial.pdf'}
  </span>
  <span className="text-[10px] text-emerald-400/80">Documento listo en el EPK interactivo</span>

@@ -265,26 +265,26 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  targetBtn:'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-sky-500/40'
  },
  emerald: {
- badgeBg:'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+ badgeBg:'bg-emerald-500/15 text-[var(--ink-2)] border-emerald-500/30',
  iconBox:'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 shadow-emerald-500/10',
  activeDot:'bg-emerald-400 w-7',
  primaryBtn:'bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black shadow-emerald-900/30',
  hookBorder:'border-emerald-500/25 bg-emerald-500/10 text-emerald-100',
  highlightText:'text-emerald-400',
  targetCard:'border-emerald-500/40 bg-emerald-500/5',
- targetBadge:'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
- targetBtn:'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/40'
+ targetBadge:'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/30',
+ targetBtn:'bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] border-emerald-500/40'
  },
  rose: {
- badgeBg:'bg-rose-500/15 text-rose-300 border-rose-500/30',
+ badgeBg:'bg-rose-500/15 text-[var(--ink-2)] border-rose-500/30',
  iconBox:'bg-rose-500/20 text-rose-400 border-rose-500/30 shadow-rose-500/10',
  activeDot:'bg-rose-400 w-7',
  primaryBtn:'bg-rose-500 hover:bg-rose-400 text-[var(--ink)] font-bold shadow-rose-900/30',
  hookBorder:'border-rose-500/25 bg-rose-500/10 text-rose-100',
  highlightText:'text-rose-400',
  targetCard:'border-rose-500/40 bg-rose-500/5',
- targetBadge:'bg-rose-500/20 text-rose-300 border-rose-500/30',
- targetBtn:'bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border-rose-500/40'
+ targetBadge:'bg-rose-500/20 text-[var(--ink-2)] border-rose-500/30',
+ targetBtn:'bg-rose-500/20 hover:bg-rose-500/30 text-[var(--ink-2)] border-rose-500/40'
  }
  }[tutorialConfig.accent];
 
@@ -346,11 +346,11 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  className={
  effectiveFloatingMode
  ?"pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95 backdrop-blur-md border-2 /50 rounded-[var(--r-l)] shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
- :"relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] border-0 md:border md:border-stone-800/90 rounded-none md:rounded-3xl shadow-2xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
+ :"relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] border-0 md:border md:border-[var(--hair)]/90 rounded-none md:rounded-3xl shadow-2xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
  }
  >
  {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}
- <div className="p-3.5 sm:p-4 border-b border-stone-800/70 flex items-center justify-between bg-stone-900/50 shrink-0">
+ <div className="p-3.5 sm:p-4 border-b border-[var(--hair)]/70 flex items-center justify-between bg-[var(--surface)]/80 shrink-0">
  <div className="flex items-center gap-2">
  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase ${accentStyles.badgeBg}`}>
  {tutorialConfig.badge}
@@ -372,7 +372,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  setTimeout(() => locateTargetElement(true), 150);
  }
  }}
- className="p-1.5 px-2 rounded-[var(--r-s)] text-stone-400 hover:text-[var(--acc)]/70 hover:bg-stone-800/80 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono"
+ className="p-1.5 px-2 rounded-[var(--r-s)] text-stone-400 hover:text-[var(--acc)]/70 hover:bg-[var(--surface)]/60 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono"
  title={isFloatingMode ?"Expandir a tarjeta centrada" :"Fijar como tarjeta flotante en esquina para ver la pantalla"}
  >
  {isFloatingMode ? (
@@ -410,7 +410,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  id={`tutorial-close-btn-${moduleId}`}
  type="button"
  onClick={() => onClose(dontShowAgain)}
- className="p-1.5 rounded-[var(--r-m)] text-stone-400 hover:text-[var(--ink)] hover:bg-stone-800 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-m)] text-stone-400 hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors cursor-pointer"
  title="Cerrar guía (Esc)"
  >
  <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -491,7 +491,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  </div>
 
  {/* Nombre del elemento simulando botón o control */}
- <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-stone-950/90 border-stone-800 text-xs shadow-inner">
+ <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-stone-950/90 border-[var(--hair)] text-xs shadow-inner">
  <span className="text-[var(--acc)] font-mono font-black text-xs shrink-0">
  {currentStep.uiTarget.type ==='button' ?'▶' :'▪'}
  </span>
@@ -524,7 +524,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  {currentStep.keyPoints.map((point, i) => (
  <div 
  key={i}
- className="p-2.5 rounded-[var(--r-m)] bg-stone-900/70 flex flex-col justify-between space-y-0.5 hover:border-stone-700/80 transition-colors"
+ className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex flex-col justify-between space-y-0.5 hover:border-stone-700/80 transition-colors"
  >
  <div className="flex items-center gap-1.5">
  <Check className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`} />
@@ -543,7 +543,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  </div>
 
  {/* BOTTOM ACTIONS BAR */}
- <div className="p-3.5 sm:p-4 border-t border-stone-800/80 bg-stone-950/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
+ <div className="p-3.5 sm:p-4 border-t border-[var(--hair)]/80 bg-stone-950/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
  {/* Don't show again toggle */}
  <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-mono text-stone-400 hover:text-stone-300">
  <input
@@ -551,7 +551,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  type="checkbox"
  checked={dontShowAgain}
  onChange={(e) => setDontShowAgain(e.target.checked)}
- className="rounded border-stone-700 bg-stone-900 text-amber-500 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
+ className="rounded border-stone-700 bg-[var(--surface)]/80 text-amber-500 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
  />
  <span className="truncate">No volver a abrir automáticamente</span>
  </label>
@@ -563,7 +563,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  id={`tutorial-prev-btn-${moduleId}`}
  type="button"
  onClick={handlePrev}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-stone-700 text-stone-200 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
  >
  <ChevronLeft className="w-3.5 h-3.5" />
  <span>Anterior</span>

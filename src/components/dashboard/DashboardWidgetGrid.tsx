@@ -439,7 +439,7 @@ export function DashboardWidgetGrid({
 
  <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
  {/* Width options */}
- <div className="flex items-center gap-0.5 bg-stone-900 border-stone-800 p-0.5 rounded-[var(--r-s)] text-[10px]">
+ <div className="flex items-center gap-0.5 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)] text-[10px]">
  <span className="text-neutral-500 px-1 font-bold">Ancho:</span>
  {([3, 4, 6, 8, 12] as const).map(spanVal => (
  <button
@@ -458,7 +458,7 @@ export function DashboardWidgetGrid({
  </div>
 
  {/* Height options */}
- <div className="flex items-center gap-0.5 bg-stone-900 border-stone-800 p-0.5 rounded-[var(--r-s)] text-[10px]">
+ <div className="flex items-center gap-0.5 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)] text-[10px]">
  <span className="text-neutral-500 px-1 font-bold">Alto:</span>
  {(['compact','normal','tall'] as const).map(hVal => (
  <button
@@ -482,7 +482,7 @@ export function DashboardWidgetGrid({
  type="button"
  onClick={() => handleMoveWidget(index,'up')}
  disabled={index === 0}
- className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-[var(--surface)]/80 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
+ className="p-1 rounded bg-[var(--surface)]/80 border-[var(--hair)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
  title="Mover arriba"
  >
  <ArrowUp className="w-3.5 h-3.5" />
@@ -491,7 +491,7 @@ export function DashboardWidgetGrid({
  type="button"
  onClick={() => handleMoveWidget(index,'down')}
  disabled={index === visibleWidgets.length - 1}
- className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-[var(--surface)]/80 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
+ className="p-1 rounded bg-[var(--surface)]/80 border-[var(--hair)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
  title="Mover abajo"
  >
  <ArrowDown className="w-3.5 h-3.5" />

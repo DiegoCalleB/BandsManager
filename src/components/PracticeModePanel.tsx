@@ -549,7 +549,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <div className="overflow-y-auto p-5 space-y-4">
  {/* Aviso: qué instrumento detectó / instrucción si no hay ninguno */}
  {myTrack ? (
- <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-emerald-500/10 text-emerald-300">
+ <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-emerald-500/10 text-[var(--ink-2)]">
  Tu instrumento (<strong>{currentUser?.instrument}</strong>) coincide con la pista <strong>{myTrack.nombre}</strong>.
  </div>
  ) : (
@@ -690,7 +690,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  title="Marcar beat de compás — ponte en el primer golpe fuerte del compás (en cualquier punto de la canción) y pulsa aquí: la claqueta recalcula toda su rejilla a partir de ese instante"
  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
  beatAnchorSec > 0
- ?'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+ ?'bg-emerald-500/20 border-emerald-500/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/80 border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

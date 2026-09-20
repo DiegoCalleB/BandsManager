@@ -146,7 +146,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  <div className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] bg-emerald-500/10">
  <div className="flex items-center gap-2.5">
  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
- <span className="text-xs font-medium text-emerald-300 truncate max-w-sm">
+ <span className="text-xs font-medium text-[var(--ink-2)] truncate max-w-sm">
  {leadMagnetFileName ||'Archivo_de_Regalo.mp3'}
  </span>
  </div>

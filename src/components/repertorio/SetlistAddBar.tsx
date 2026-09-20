@@ -95,7 +95,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  </div>
  <button
  onClick={() => setSelectedSetlistItemId(null)}
- className="px-2 py-0.5 rounded-md bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-amber-200 text-xs whitespace-nowrap cursor-pointer transition-colors"
+ className="px-2 py-0.5 rounded-md bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] text-xs whitespace-nowrap cursor-pointer transition-colors"
  title="Deseleccionar e insertar al final de la lista"
  >
  ✕ Deseleccionar
@@ -111,7 +111,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => setIsAddSongsModalOpen(true)}
- className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs shrink-0"
+ className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-emerald-500/15 text-[var(--ink-2)] hover:bg-emerald-500/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs shrink-0"
  title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
  >
  <ListPlus className="w-3.5 h-3.5 text-emerald-400" />

@@ -247,7 +247,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  {canUndo && (
  <button
  onClick={onUndo}
- className="px-2 py-1 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-[var(--acc)]/70 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
  title="Deshacer el último cambio del setlist"
  >
  ↩️ Deshacer
@@ -354,7 +354,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <button
  type="button"
  onClick={() => handleUndo(idx)}
- className="shrink-0 px-2 py-0.5 rounded bg-amber-900/40 hover:bg-amber-800/60 text-[var(--acc)]/70 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
  title="Deshacer este cambio"
  >
  ↩️ Deshacer

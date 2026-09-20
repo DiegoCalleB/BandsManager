@@ -1806,7 +1806,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono transition-colors ${
  agentsEnabled 
  ? (isStitchLight ?'bg-amber-50/80 -amber-200/80 text-amber-900' :'bg-[var(--acc)]/10 -amber-500/20 text-[var(--acc)]/70')
- : (isStitchLight ?'bg-emerald-50/80 -emerald-200/80 text-emerald-900' :'bg-emerald-500/10 -emerald-500/20 text-emerald-300')
+ : (isStitchLight ?'bg-emerald-50/80 -emerald-200/80 text-emerald-900' :'bg-emerald-500/10 -emerald-500/20 text-[var(--ink-2)]')
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ?'bg-[var(--acc)]/60 animate-pulse' :'bg-emerald-400'}`} />
@@ -2444,7 +2444,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <span>Incidencia en Motor de Agentes Supabase</span>
  </p>
  </div>
- <p className="text-[10px] leading-normal text-rose-300/90">
+ <p className="text-[10px] leading-normal text-[var(--ink-2)]/90">
  El agente encontró un problema durante su ejecución contra Supabase. Verifica tu conexión con la base de datos y vuelve a intentarlo.
  </p>
  </div>

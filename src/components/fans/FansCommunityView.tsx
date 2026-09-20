@@ -168,7 +168,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  return {
  label:'Superfan Directos',
  icon: Flame,
- bg:'bg-rose-500/15 text-rose-300 border-rose-500/30',
+ bg:'bg-rose-500/15 text-[var(--ink-2)] border-rose-500/30',
  dot:'bg-rose-400'
  };
  case'backstage':
@@ -182,7 +182,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  return {
  label:'Oyente Fiel',
  icon: Music,
- bg:'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+ bg:'bg-emerald-500/15 text-[var(--ink-2)] border-emerald-500/30',
  dot:'bg-emerald-400'
  };
  }
@@ -472,7 +472,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onClick={() => handleReactFan(fan.id,'likes')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.likes 
- ?'bg-rose-500/20 text-rose-300 shadow-xs font-bold' 
+ ?'bg-rose-500/20 text-[var(--ink-2)] shadow-xs font-bold' 
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  title="Me gusta"
@@ -514,7 +514,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onClick={() => handleReactFan(fan.id,'applause')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.applause 
- ?'bg-emerald-500/20 text-emerald-300 shadow-xs font-bold' 
+ ?'bg-emerald-500/20 text-[var(--ink-2)] shadow-xs font-bold' 
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)]'
  }`}
  title="Aplausos"

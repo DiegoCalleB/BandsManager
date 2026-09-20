@@ -135,7 +135,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'border-emerald-500 ring-2 ring-emerald-500/50 bg-emerald-500/10'
  : isPlayingCurrent
  ? isStitchLight
- ?'bg-emerald-50/90 border-emerald-300 text-emerald-950 shadow-sm ring-1 ring-emerald-400/30'
+ ?'bg-emerald-50/90 border-emerald-300 text-[var(--ok)] shadow-sm ring-1 ring-emerald-400/30'
  :'bg-emerald-500/10 border-emerald-500/30 text-[var(--ink)] shadow-sm ring-1 ring-emerald-500/20'
  : isSelected
  ? isStitchLight
@@ -274,7 +274,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <span
  className={`px-2 py-0.5 rounded-full text-[10px] font-medium tracking-wide ${
  song.estadoTema ==='listo'
- ?'bg-emerald-500/15 text-emerald-300'
+ ?'bg-emerald-500/15 text-[var(--ink-2)]'
  : song.estadoTema ==='ensayando'
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70'
  :'bg-[var(--surface)]/80 text-zinc-400'
@@ -294,7 +294,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
  {/* Audio Indicator */}
  {song.audioPrincipalUrl ? (
- <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300">
+ <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-[var(--ink-2)]">
  <Volume2 className="w-2.5 h-2.5" />
  <span>{isDriveAudio ?'Drive' :'Audio'}</span>
  </span>
@@ -324,7 +324,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
- :'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/25'
+ :'bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/25'
  }`}
  title="Ver cifrado de acordes, armonía y letra (LaCuerda.net)"
  >
@@ -340,7 +340,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenStudio}
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  ideasCount > 0
- ?'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-amber-200 /40 shadow-xs'
+ ?'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] /40 shadow-xs'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-zinc-200 /80'

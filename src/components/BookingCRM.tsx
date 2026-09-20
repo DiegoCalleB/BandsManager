@@ -1147,7 +1147,7 @@ export default function BookingCRM({
  setIsMobileToolsOpen(false);
  handleTriggerEnviadorAgent();
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-emerald-200 transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-[var(--ink)] transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
  >
  <span className="flex items-center gap-2">
  {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" /> : <Send className="w-4 h-4 text-emerald-400" />}
@@ -1176,7 +1176,7 @@ export default function BookingCRM({
  setIsExcelImportOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200 transition-all cursor-pointer shadow-sm active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-[var(--ink)] transition-all cursor-pointer shadow-sm active:scale-98"
  >
  <span className="flex items-center gap-2">
  <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
@@ -1227,7 +1227,7 @@ export default function BookingCRM({
  setIsAgentConfigOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-amber-200 transition-all cursor-pointer active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] transition-all cursor-pointer active:scale-98"
  >
  <span className="flex items-center gap-2">
  <Bot className="w-4 h-4 text-[var(--acc)]" />
@@ -1242,7 +1242,7 @@ export default function BookingCRM({
  setIsMobileToolsOpen(false);
  setIsExportLeadsOpen(true);
  }}
- className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 transition-all cursor-pointer active:scale-98"
+ className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] transition-all cursor-pointer active:scale-98"
  >
  <Download className="w-3.5 h-3.5 text-emerald-400" />
  <span>Exportar Leads (A la vista / Todos / Excel)</span>
@@ -1580,7 +1580,7 @@ export default function BookingCRM({
  >
  <span>📌 {sf.nombre}</span>
  {sf.minCapacityFilter ? (
- <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-amber-200">
+ <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-[var(--ink)]">
  &gt;{sf.minCapacityFilter}
  </span>
  ) : null}
@@ -2168,7 +2168,7 @@ export default function BookingCRM({
  {/* Form Side */}
  <div className="space-y-4">
  {optimizationFeedbackMsg && (
- <div className="p-3 bg-[var(--acc)]/15 text-amber-200 text-[11px] rounded-[var(--r-m)] flex items-center justify-between font-sans animate-in fade-in">
+ <div className="p-3 bg-[var(--acc)]/15 text-[var(--ink)] text-[11px] rounded-[var(--r-m)] flex items-center justify-between font-sans animate-in fade-in">
  <span>{optimizationFeedbackMsg}</span>
  <button onClick={() => setOptimizationFeedbackMsg(null)} className="text-[var(--acc)] font-bold ml-2 hover:text-[var(--ink)] cursor-pointer">✕</button>
  </div>
@@ -2248,7 +2248,7 @@ export default function BookingCRM({
  {/* Tono y Estilo */}
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
+ <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {templateToneRating > 0 ? `${templateToneRating}/5` :'Sin calificar'}
  </span>
@@ -2273,7 +2273,7 @@ export default function BookingCRM({
  {/* Contenido y Estructura */}
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
+ <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {templateContentRating > 0 ? `${templateContentRating}/5` :'Sin calificar'}
  </span>
@@ -2442,7 +2442,7 @@ export default function BookingCRM({
  {/* Tono */}
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
+ <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {templateToneRating > 0 ? `${templateToneRating}/5` :'⭐'}
  </span>
@@ -2467,7 +2467,7 @@ export default function BookingCRM({
  {/* Contenido */}
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
+ <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {templateContentRating > 0 ? `${templateContentRating}/5` :'⭐'}
  </span>

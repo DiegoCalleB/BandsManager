@@ -480,7 +480,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <span className="hidden sm:inline">Pistas & Repertorio</span>
  <span className="sm:hidden">Temas</span>
  {songsWithIrisCount > 0 && (
- <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-emerald-500/30 text-emerald-300">
+ <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-emerald-500/30 text-[var(--ink-2)]">
  {songsWithIrisCount}
  </span>
  )}
@@ -495,7 +495,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
  glareMode
  ?'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-emerald-300'
- :'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 hover:border-emerald-400'
+ :'bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] hover:border-emerald-400'
  }`}
  title="Modo Ensayo: practica este tema con pistas separadas por Iris (silenciar/aislar pistas, tempo, bucle A/B)"
  >
@@ -721,7 +721,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <div className={`shrink-0 px-3 sm:px-4 py-2 border-b flex items-center justify-between gap-3 text-xs z-20 ${
  glareMode
  ?'bg-emerald-50 border-emerald-300 text-emerald-900'
- :'bg-emerald-950/80 border-emerald-500/40 text-emerald-200'
+ :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <div className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
@@ -773,7 +773,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {/* NOTES BANNER — cosas como"cambio de afinación","entra el segundo cantante", que un
  músico necesita ver ANTES de tocar el tema, no descubrirlas a mitad. */}
  {!isBlock && showNotes && notes && (
- <div className="shrink-0 bg-amber-950/90 border-y /40 px-4 py-2.5 text-sm text-amber-100 whitespace-pre-wrap z-20">
+ <div className="shrink-0 bg-[var(--acc-soft)] border-y /40 px-4 py-2.5 text-sm text-amber-100 whitespace-pre-wrap z-20">
  {notes}
  </div>
  )}
@@ -1078,7 +1078,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
 
  {songIrisIdea ? (
- <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 flex items-center gap-1">
+ <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-[var(--ink-2)] flex items-center gap-1">
  <Headphones className="w-2.5 h-2.5" />
  {stemCount > 0 ? `${stemCount} pistas` :'Iris'}
  </span>
@@ -1097,7 +1097,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  setShowSongListDrawer(false);
  handleLaunchPractice(song, songIrisIdea);
  }}
- className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+ className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
  title="Modo Ensayo individual con las pistas aisladas de este tema"
  >
  <Headphones className="w-3.5 h-3.5 text-emerald-400" />
@@ -1330,7 +1330,7 @@ const ChordSheetPage: React.FC<{
  </span>
  )}
  {bpm && <span className={glareMode ?'text-indigo-700' :'text-indigo-300'}>{bpm} BPM</span>}
- {duracion && <span className={glareMode ?'text-emerald-700' :'text-emerald-300'}>{duracion}</span>}
+ {duracion && <span className={glareMode ?'text-emerald-700' :'text-[var(--ink-2)]'}>{duracion}</span>}
  {afinacion && <span className={glareMode ?'text-purple-700' :'text-purple-300'}>{afinacion}</span>}
  {(structure || progression) && (
  <button

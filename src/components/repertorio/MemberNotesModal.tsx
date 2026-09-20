@@ -209,7 +209,7 @@ export function MemberNotesModal({
 
  {/* Informational Tip */}
  <div className={`p-3 rounded-[var(--r-m)] my-3 text-xs flex items-start gap-2.5 ${
- isStitchLight ?'bg-indigo-50 border-indigo-200 text-indigo-900' :'bg-emerald-950/40 text-emerald-300'
+ isStitchLight ?'bg-indigo-50 border-indigo-200 text-indigo-900' :'bg-[var(--ok-soft)] text-[var(--ink-2)]'
  }`}>
  <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
  <div>

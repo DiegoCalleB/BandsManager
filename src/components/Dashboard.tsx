@@ -508,7 +508,7 @@ export default function Dashboard({
  <div className="flex items-center gap-2.5 flex-wrap">
  {/* Band Filter Mode Toggle */}
  <div className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-stone-900 border-stone-800'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80 border-[var(--hair)]'
  }`}>
  <button
  id="dashboard-promo-agenda-all-bands-btn"
@@ -575,12 +575,12 @@ export default function Dashboard({
  <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
  item.type ==='concierto'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
- :'bg-emerald-500/20 text-emerald-300'
+ :'bg-emerald-500/20 text-[var(--ink-2)]'
  }`}>
  {item.type}
  </span>
  {(agendaFilterMode ==='all' || hasMultipleBands) && item.bandName && (
- <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold bg-stone-800/80 text-[var(--acc)]/70/90 truncate max-w-[120px] flex items-center gap-1">
+ <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold bg-[var(--surface)]/60 text-[var(--acc)]/70/90 truncate max-w-[120px] flex items-center gap-1">
  <Music className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
  <span className="truncate">{item.bandName}</span>
  </span>

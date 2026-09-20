@@ -95,12 +95,12 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
 
  {/* Stats summary */}
  <div className="flex items-center gap-3 text-xs font-mono pt-1">
- <span className="inline-flex items-center gap-1 text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded">
+ <span className="inline-flex items-center gap-1 text-emerald-400 bg-[var(--ok-soft)] px-2 py-0.5 rounded">
  <CheckCircle2 className="w-3 h-3" />
  {successCount} completados
  </span>
  {errorCount > 0 && (
- <span className="inline-flex items-center gap-1 text-rose-400 bg-rose-950/50 px-2 py-0.5 rounded">
+ <span className="inline-flex items-center gap-1 text-rose-400 bg-[var(--alert-soft)] px-2 py-0.5 rounded">
  <AlertTriangle className="w-3 h-3" />
  {errorCount} con incidencias
  </span>

@@ -26,14 +26,14 @@ interface BulkLeadsActionBarProps {
 const STATUS_OPTIONS: { status: LeadStatus; label: string; color: string; icon: any }[] = [
  { status:'nuevo', label:'Nuevo Lead', color:'bg-blue-500/20 text-blue-300 border-blue-500/40', icon: Sparkles },
  { status:'pendiente_aprobacion', label:'Pendiente Aprobación', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
- { status:'aprobado', label:'Aprobado (Listo para envío)', color:'bg-emerald-500/20 text-emerald-300 border-emerald-500/40', icon: CheckCircle2 },
+ { status:'aprobado', label:'Aprobado (Listo para envío)', color:'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/40', icon: CheckCircle2 },
  { status:'esperando_respuesta', label:'Esperando Respuesta', color:'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Send },
  { status:'contactado', label:'Contactado', color:'bg-cyan-500/20 text-cyan-300 border-cyan-500/40', icon: MessageSquare },
  { status:'respondido', label:'Respondido / Conversación', color:'bg-indigo-500/20 text-indigo-300 border-indigo-500/40', icon: MessageSquare },
  { status:'negociando', label:'Negociando Caché / Fecha', color:'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: ArrowRight },
- { status:'confirmado', label:'Confirmado (Cerrado)', color:'bg-emerald-500/30 text-emerald-200 border-emerald-400', icon: CheckCircle2 },
+ { status:'confirmado', label:'Confirmado (Cerrado)', color:'bg-emerald-500/30 text-[var(--ink)] border-emerald-400', icon: CheckCircle2 },
  { status:'aplazado', label:'Aplazado (Próxima temp.)', color:'bg-zinc-700/50 text-zinc-300 border-zinc-600', icon: Clock },
- { status:'no_interesado', label:'No Interesado / Descartado', color:'bg-rose-500/20 text-rose-300 border-rose-500/40', icon: ShieldAlert },
+ { status:'no_interesado', label:'No Interesado / Descartado', color:'bg-rose-500/20 text-[var(--ink-2)] border-rose-500/40', icon: ShieldAlert },
 ];
 
 export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
@@ -137,7 +137,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
  ?'bg-amber-100 hover:bg-amber-200 text-amber-900'
- :'bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 /50 text-amber-200'
+ :'bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 /50 text-[var(--ink)]'
  }`}
  title="Cambiar el estado de todos los seleccionados"
  >
@@ -252,7 +252,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  <button
  type="button"
  onClick={() => setIsConfirmDeleteOpen(true)}
- className="p-1.5 bg-rose-950/60 hover:bg-rose-900 text-rose-300 rounded-[var(--r-m)] transition-all cursor-pointer"
+ className="p-1.5 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] transition-all cursor-pointer"
  title={`Eliminar ${selectedCount} ${itemLabel}`}
  >
  <Trash2 className="w-4 h-4 text-rose-400" />
@@ -292,7 +292,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-rose-950/30 text-xs text-rose-200 font-mono">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert-soft)] text-xs text-[var(--ink)] font-mono">
  ⚠️ Se borrarán definitivamente {selectedCount} elementos del CRM.
  </div>
 

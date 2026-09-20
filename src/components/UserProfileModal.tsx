@@ -584,7 +584,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={() => setShowCreateBandSection(!showCreateBandSection)}
- className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 cursor-pointer font-bold"
+ className="text-[11px] font-mono text-emerald-400 hover:text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer font-bold"
  >
  <Plus className="w-3 h-3" />
  <span>{showCreateBandSection ?'Cerrar' :'+ Crear Proyecto'}</span>
@@ -608,7 +608,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {/* Creation Form Accordion */}
  {showCreateBandSection && (
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 ${
- isStitchLight ?'bg-emerald-50/50 border-emerald-200' :'bg-emerald-950/20 border-emerald-800/50'
+ isStitchLight ?'bg-emerald-50/50 border-emerald-200' :'bg-[var(--ok-soft)] border-emerald-800/50'
  }`}>
  <div className="flex items-center justify-between">
  <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
@@ -953,7 +953,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClick={() => onFontChange(p.id)}
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-0.5 ${
  isSelected
- ?'bg-emerald-500/15 border-emerald-500/50 text-emerald-300 font-bold'
+ ?'bg-emerald-500/15 border-emerald-500/50 text-[var(--ink-2)] font-bold'
  :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
  }`}
  >
@@ -1195,7 +1195,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
  {currentUser?.estado_suscripcion ==='pago_pendiente' && (
- <div className="p-3.5 rounded-[var(--r-m)] bg-rose-500/20 text-rose-200 text-xs flex items-center justify-between gap-3">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-rose-500/20 text-[var(--ink)] text-xs flex items-center justify-between gap-3">
  <div className="flex items-center gap-2">
  <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
  <span>Pago pendiente. Actualiza tu método de pago para mantener tus funciones.</span>
@@ -1221,7 +1221,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  )}
 
  {currentUser?.plan_pendiente && (
- <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-amber-200 text-xs flex items-center gap-2.5">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)] text-xs flex items-center gap-2.5">
  <Calendar className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span>
  Cambio programado a <strong className="uppercase font-mono text-[var(--acc)]/70">{currentUser.plan_pendiente.replace('_','')}</strong> al finalizar el ciclo.

@@ -97,7 +97,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"easeInOut" 
  }}
- className="relative z-10 text-amber-200/95 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
+ className="relative z-10 text-[var(--ink)]/95 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
  >
  <CloudSun className={currentSize.icon} />
  </motion.div>
@@ -365,27 +365,27 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
  switch (alert.icon) {
  case'lightning':
  return {
- bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-yellow-500/20 /50 text-yellow-300',
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-[var(--ink)]' :'bg-yellow-500/20 /50 text-yellow-300',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(234,179,8,0.3)]'
  };
  case'rain':
  return {
- bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-sky-500/20 border-sky-500/50 text-sky-300',
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-[var(--ink)]' :'bg-sky-500/20 border-sky-500/50 text-sky-300',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(14,165,233,0.3)]'
  };
  case'snow':
  return {
- bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-cyan-500/20 border-cyan-500/50 text-cyan-300',
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-[var(--ink)]' :'bg-cyan-500/20 border-cyan-500/50 text-cyan-300',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(6,182,212,0.3)]'
  };
  case'wind':
  return {
- bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  default:
  return {
- bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-rose-200' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
+ bg: isDanger ?'bg-rose-500/25 border-rose-500/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  }

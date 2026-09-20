@@ -1208,7 +1208,7 @@ export function ReelsMetricsView({
  selectedChannels.spotify
  ? isStitchLight
  ?'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-sm'
- :'bg-emerald-950/30 border-emerald-500/40 text-emerald-300 shadow-sm shadow-emerald-950/20'
+ :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink-2)] shadow-sm shadow-emerald-950/20'
  :'bg-[var(--surface)]/30 text-neutral-500 opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -2053,7 +2053,7 @@ export function ReelsMetricsView({
  </div>
  )}
  {scanSuccess && (
- <div className="p-3.5 rounded-[var(--r-m)] bg-emerald-950/20 text-emerald-300 text-xs flex items-center gap-2">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok-soft)] text-[var(--ink-2)] text-xs flex items-center gap-2">
  <Check className="w-4 h-4 shrink-0 text-emerald-400" />
  <span>{scanSuccess}</span>
  </div>

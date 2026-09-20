@@ -188,7 +188,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  <button
  type="button"
- className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-emerald-500/15 group-hover:bg-emerald-500 text-emerald-300 group-hover:text-stone-950 text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-emerald-500/15 group-hover:bg-emerald-500 text-[var(--ink-2)] group-hover:text-stone-950 text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
  >
  <span>Ver Repertorios</span>
  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

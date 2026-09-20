@@ -106,7 +106,7 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  colorClass:'text-emerald-400',
  bgClass:'bg-emerald-500/10',
  borderClass:'border-emerald-500/30',
- hoverClass:'hover:bg-emerald-500/20 hover:border-emerald-500/50 hover:text-emerald-300'
+ hoverClass:'hover:bg-emerald-500/20 hover:border-emerald-500/50 hover:text-[var(--ink-2)]'
  },
  instagram: {
  label:'Instagram',
@@ -134,7 +134,7 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  colorClass:'text-rose-400',
  bgClass:'bg-rose-500/10',
  borderClass:'border-rose-500/30',
- hoverClass:'hover:bg-rose-500/20 hover:border-rose-500/50 hover:text-rose-300'
+ hoverClass:'hover:bg-rose-500/20 hover:border-rose-500/50 hover:text-[var(--ink-2)]'
  },
  bandcamp: {
  label:'Bandcamp',
@@ -183,7 +183,7 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  colorClass:'text-emerald-400',
  bgClass:'bg-emerald-600/10',
  borderClass:'border-emerald-500/30',
- hoverClass:'hover:bg-emerald-600/20 hover:border-emerald-500/50 hover:text-emerald-300'
+ hoverClass:'hover:bg-emerald-600/20 hover:border-emerald-500/50 hover:text-[var(--ink-2)]'
  }
 };
 

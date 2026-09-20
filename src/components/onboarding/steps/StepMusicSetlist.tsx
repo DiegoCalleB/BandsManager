@@ -384,7 +384,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  </h4>
  </div>
  {createdSetlistName && (
- <span className="text-[11px] px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 flex items-center gap-1">
+ <span className="text-[11px] px-2 py-0.5 rounded-md bg-emerald-500/20 text-[var(--ink-2)] flex items-center gap-1">
  <CheckCircle2 className="w-3 h-3" /> {createdSetlistName} Creado
  </span>
  )}

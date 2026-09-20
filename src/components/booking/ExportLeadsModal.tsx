@@ -227,7 +227,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportFormat('csv')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
  exportFormat ==='csv'
- ?'bg-emerald-500/20 border-emerald-500/60 text-emerald-200 font-bold'
+ ?'bg-emerald-500/20 border-emerald-500/60 text-[var(--ink)] font-bold'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
  }`}
  >

@@ -512,13 +512,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </div>
 
  {errorMessage && (
- <div className="mb-4 p-3 bg-rose-500/15 text-rose-300 text-xs rounded-[var(--r-m)] font-medium">
+ <div className="mb-4 p-3 bg-rose-500/15 text-[var(--ink-2)] text-xs rounded-[var(--r-m)] font-medium">
  {errorMessage}
  </div>
  )}
 
  {successMessage && (
- <div className="mb-4 p-3 bg-emerald-500/15 text-emerald-300 text-xs rounded-[var(--r-m)] font-medium flex items-center justify-center gap-2">
+ <div className="mb-4 p-3 bg-emerald-500/15 text-[var(--ink-2)] text-xs rounded-[var(--r-m)] font-medium flex items-center justify-center gap-2">
  <Check className="w-4 h-4 text-emerald-400" />
  <span>{successMessage}</span>
  </div>
@@ -628,7 +628,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  handleRequestLeaveBand(band.band_id, band.bandName);
  }}
  disabled={!!leavingBandId}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-rose-400 bg-black/60 hover:bg-rose-950/40 hover:border-rose-500/50 transition-all cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-rose-400 bg-black/60 hover:bg-[var(--alert-soft)] hover:border-rose-500/50 transition-all cursor-pointer"
  title="Eliminar esta banda de mi usuario"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1133,9 +1133,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <div className="bg-[var(--surface)] rounded-3xl p-5 flex flex-col hover:border-emerald-600 transition-colors">
  <div className="mb-3">
  <div className="flex items-center justify-between gap-1 mb-1">
- <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300">Élite 360</span>
+ <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[var(--ok-soft)] text-[var(--ink-2)]">Élite 360</span>
  </div>
- <h3 className="text-base font-bold text-emerald-300">Cabeza de Cartel</h3>
+ <h3 className="text-base font-bold text-[var(--ink-2)]">Cabeza de Cartel</h3>
  <div className="mt-1.5 flex items-baseline gap-1">
  <span className="text-2xl font-black text-[var(--ink)]">79€</span>
  <span className="text-[11px] text-[var(--ink-2)]">/ mes</span>
@@ -1143,7 +1143,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">Control total para proyectos profesionales y agencias.</p>
  </div>
 
- <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-emerald-950/50 flex items-center gap-1.5 text-[10px] font-mono text-emerald-300 font-bold">
+ <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--ok-soft)] flex items-center gap-1.5 text-[10px] font-mono text-[var(--ink-2)] font-bold">
  <Sparkles className="w-3 h-3 text-emerald-400 shrink-0" />
  <span>🎁 1.000 pegatinas + Express</span>
  </div>
@@ -1169,7 +1169,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  type="button"
  onClick={() => handleSelectPlanForCreation('cabeza_de_cartel')}
  disabled={isCreatingBand}
- className="w-full py-2.5 rounded-[var(--r-l)] bg-emerald-900/60 hover:bg-emerald-800 text-emerald-200 font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+ className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
  >
  {isCreatingBand && creatingPlanKey ==='cabeza_de_cartel' ? (
  <>

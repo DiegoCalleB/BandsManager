@@ -87,7 +87,7 @@ export function EnsayoCronometro({
  className={`p-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  isActive
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30'
- :'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30'
+ :'bg-emerald-500/20 text-[var(--ink-2)] hover:bg-emerald-500/30'
  }`}
  title={isActive ?'Pausar Cronómetro' :'Iniciar Cronómetro'}
  >
@@ -120,7 +120,7 @@ export function EnsayoCronometro({
  </div>
 
  {isOvertime && (
- <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/15 text-rose-300 animate-pulse">
+ <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/15 text-[var(--ink-2)] animate-pulse">
  <AlertCircle className="w-3 h-3" /> Tiempo excedido
  </span>
  )}

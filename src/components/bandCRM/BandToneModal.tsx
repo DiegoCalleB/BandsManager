@@ -590,7 +590,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  {/* 3. Pitch Recommendation & Connection Points */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px]">
- <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${isStitchLight ?'bg-amber-50/50 text-amber-900' :'bg-amber-950/20 /40 text-amber-200'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${isStitchLight ?'bg-amber-50/50 text-amber-900' :'bg-[var(--acc-soft)] /40 text-[var(--ink)]'}`}>
  <span className="font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1 text-[9px]">
  <Flame className="w-3 h-3" /> Punto de Conexión con Bakandeya
  </span>
@@ -687,7 +687,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
  <ul className="space-y-0.5">
  {reglas.reglas_manuales.map((r, idx) => (
- <li key={idx} className="text-[10px] font-sans text-amber-200 flex items-start justify-between gap-1.5 group">
+ <li key={idx} className="text-[10px] font-sans text-[var(--ink)] flex items-start justify-between gap-1.5 group">
  <span>🔒 {r}</span>
  <button
  onClick={() => handleDeleteLearnedRule('pitch', cat,'manual', idx)}
@@ -797,7 +797,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
  <ul className="space-y-0.5">
  {reglas.reglas_manuales.map((r, idx) => (
- <li key={idx} className="text-[10px] font-sans text-amber-200 flex items-start justify-between gap-1.5 group">
+ <li key={idx} className="text-[10px] font-sans text-[var(--ink)] flex items-start justify-between gap-1.5 group">
  <span>🔒 {r}</span>
  <button
  onClick={() => handleDeleteLearnedRule('reply', cat,'manual', idx)}

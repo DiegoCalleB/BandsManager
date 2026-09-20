@@ -468,7 +468,7 @@ export function ExcelImportModal({
  <h3 className="text-base sm:text-lg font-bold font-display">
  Importar Listado de Salas, Ayuntamientos o Bandas
  </h3>
- <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-emerald-500/20 text-emerald-300">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-emerald-500/20 text-[var(--ink-2)]">
  Excel / CSV
  </span>
  </div>
@@ -504,21 +504,21 @@ export function ExcelImportModal({
  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ?'bg-emerald-500 text-black' : step > 1 ?'bg-emerald-500/20 text-emerald-400' :'bg-zinc-800 text-zinc-500'}`}>
  {step > 1 ? <Check className="w-3 h-3" /> :'1'}
  </div>
- <span className={step === 1 ?'font-bold text-emerald-300' :'text-zinc-400'}>1. Subir archivo</span>
+ <span className={step === 1 ?'font-bold text-[var(--ink-2)]' :'text-zinc-400'}>1. Subir archivo</span>
  </div>
  <div className="w-8 h-px bg-zinc-800" />
  <div className="flex items-center gap-2">
  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ?'bg-emerald-500 text-black' : step > 2 ?'bg-emerald-500/20 text-emerald-400' :'bg-zinc-800 text-zinc-500'}`}>
  {step > 2 ? <Check className="w-3 h-3" /> :'2'}
  </div>
- <span className={step === 2 ?'font-bold text-emerald-300' :'text-zinc-400'}>2. Mapear columnas</span>
+ <span className={step === 2 ?'font-bold text-[var(--ink-2)]' :'text-zinc-400'}>2. Mapear columnas</span>
  </div>
  <div className="w-8 h-px bg-zinc-800" />
  <div className="flex items-center gap-2">
  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ?'bg-emerald-500 text-black' :'bg-zinc-800 text-zinc-500'}`}>
  3
  </div>
- <span className={step === 3 ?'font-bold text-emerald-300' :'text-zinc-400'}>3. Validar y Guardar</span>
+ <span className={step === 3 ?'font-bold text-[var(--ink-2)]' :'text-zinc-400'}>3. Validar y Guardar</span>
  </div>
  </div>
 
@@ -531,7 +531,7 @@ export function ExcelImportModal({
  onDragOver={e => e.preventDefault()}
  onDrop={handleFileDrop}
  onClick={() => fileInputRef.current?.click()}
- className="w-full max-w-2xl p-10 border-2 border-dashed border-zinc-700 hover:border-emerald-500/70 rounded-[var(--r-l)] bg-zinc-900/40 hover:bg-emerald-950/10 transition-all flex flex-col items-center justify-center text-center cursor-pointer group shadow-inner"
+ className="w-full max-w-2xl p-10 border-2 border-dashed border-zinc-700 hover:border-emerald-500/70 rounded-[var(--r-l)] bg-zinc-900/40 hover:bg-[var(--ok-soft)] transition-all flex flex-col items-center justify-center text-center cursor-pointer group shadow-inner"
  >
  <input
  ref={fileInputRef}
@@ -543,7 +543,7 @@ export function ExcelImportModal({
  <div className="w-16 h-16 rounded-[var(--r-l)] bg-emerald-500/10 group-hover:bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4 transition-all group-hover:scale-110 shadow-sm">
  <Upload className="w-8 h-8" />
  </div>
- <h4 className="text-base font-bold text-zinc-100 group-hover:text-emerald-300 transition-colors">
+ <h4 className="text-base font-bold text-zinc-100 group-hover:text-[var(--ink-2)] transition-colors">
  Haz clic para seleccionar o arrastra tu archivo Excel / CSV
  </h4>
  <p className="text-xs text-zinc-400 mt-1 max-w-md">
@@ -567,7 +567,7 @@ export function ExcelImportModal({
  <button
  type="button"
  onClick={handleDownloadTemplate}
- className="px-3 py-2 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
+ className="px-3 py-2 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
  >
  <Download className="w-3.5 h-3.5" />
  <span>Descargar Plantilla</span>
@@ -608,7 +608,7 @@ export function ExcelImportModal({
 
  {/* CATEGORY DEFAULT SELECTOR */}
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-between flex-wrap gap-3">
- <div className="flex items-center gap-2 text-xs text-amber-200">
+ <div className="flex items-center gap-2 text-xs text-[var(--ink)]">
  <Building2 className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span>Categoría por defecto si el Excel no especifica tipo:</span>
  </div>
@@ -635,7 +635,7 @@ export function ExcelImportModal({
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
  {/* Nombre Sala (Obligatorio) */}
  <div className="p-3 rounded-[var(--r-m)] bg-zinc-900/80 space-y-1.5">
- <label className="text-xs font-bold text-emerald-300 flex items-center justify-between">
+ <label className="text-xs font-bold text-[var(--ink-2)] flex items-center justify-between">
  <span>Nombre Sala / Contacto / Banda *</span>
  <span className="text-[10px] text-emerald-400 font-mono">Requerido</span>
  </label>
@@ -978,7 +978,7 @@ export function ExcelImportModal({
  </td>
  <td className="p-2.5">
  {row.email_contacto ? (
- <span className="text-emerald-300 font-mono">{row.email_contacto}</span>
+ <span className="text-[var(--ink-2)] font-mono">{row.email_contacto}</span>
  ) : (
  <span className="text-zinc-500 italic">Sin correo</span>
  )}

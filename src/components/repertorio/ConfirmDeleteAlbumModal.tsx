@@ -33,7 +33,7 @@ export function ConfirmDeleteAlbumModal({
  </div>
  <div>
  <h3 className="text-lg font-bold text-[var(--ink)]">Eliminar Disco</h3>
- <p className="text-xs text-rose-300 font-mono mt-0.5">"{data.albumName}"</p>
+ <p className="text-xs text-[var(--ink-2)] font-mono mt-0.5">"{data.albumName}"</p>
  </div>
  </div>
  <button
@@ -63,7 +63,7 @@ export function ConfirmDeleteAlbumModal({
  </div>
  <div>
  <div className="text-xs font-bold text-[var(--acc)]/70">Desvincular canciones (Recomendado)</div>
- <div className="text-[11px] text-amber-200/70 mt-0.5">
+ <div className="text-[11px] text-[var(--ink)]/70 mt-0.5">
  Elimina el disco de la discografía pero mantiene sus canciones en el catálogo como"Sin Disco".
  </div>
  </div>
@@ -81,8 +81,8 @@ export function ConfirmDeleteAlbumModal({
  <Trash2 className="w-5 h-5" />
  </div>
  <div>
- <div className="text-xs font-bold text-rose-300">Eliminar disco y todas sus canciones</div>
- <div className="text-[11px] text-rose-200/70 mt-0.5">
+ <div className="text-xs font-bold text-[var(--ink-2)]">Eliminar disco y todas sus canciones</div>
+ <div className="text-[11px] text-[var(--ink)]/70 mt-0.5">
  Elimina permanentemente el disco y sus {data.songCount} canciones del catálogo y repertorios.
  </div>
  </div>

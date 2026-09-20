@@ -267,7 +267,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setCatalogoViewMode('canciones')}
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
  catalogoViewMode ==='canciones'
- ?'bg-emerald-500/20 text-emerald-300 shadow-xs font-bold'
+ ?'bg-emerald-500/20 text-[var(--ink-2)] shadow-xs font-bold'
  :'text-zinc-400 hover:text-zinc-200'
  }`}
  >

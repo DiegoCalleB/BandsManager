@@ -396,18 +396,18 @@ export default function Finanzas({
 
  let alertBadge = {
  label:'🟢 Rentable',
- bgColor:'bg-emerald-950/80 border-emerald-500/40 text-emerald-400'
+ bgColor:'bg-[var(--ok-soft)] border-emerald-500/40 text-emerald-400'
  };
 
  if (beneficioNeto < 0) {
  alertBadge = {
  label:'🔴 En Pérdidas',
- bgColor:'bg-rose-950/80 border-rose-500/50 text-rose-400'
+ bgColor:'bg-[var(--alert-soft)] border-rose-500/50 text-rose-400'
  };
  } else if (beneficioNeto < 150) {
  alertBadge = {
  label:'🟡 Ajustado',
- bgColor:'bg-amber-950/80 /40 text-[var(--acc)]/70'
+ bgColor:'bg-[var(--acc-soft)] /40 text-[var(--acc)]/70'
  };
  }
 

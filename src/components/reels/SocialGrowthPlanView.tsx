@@ -158,7 +158,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <AlertCircle className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Cuello de Botella a Resolver</span>
  </div>
- <p className="text-xs font-mono text-amber-200 leading-snug">
+ <p className="text-xs font-mono text-[var(--ink)] leading-snug">
  {archetype.primaryBottleneck}
  </p>
  </div>
@@ -168,7 +168,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <Target className="w-3.5 h-3.5 text-emerald-400" />
  <span>Objetivo de Conversión a Salas</span>
  </div>
- <p className="text-xs font-mono text-emerald-300 leading-snug">
+ <p className="text-xs font-mono text-[var(--ink-2)] leading-snug">
  {archetype.conversionFocus}
  </p>
  </div>
@@ -340,7 +340,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => toggleActionCompleted(action.id)}
  className={`p-2.5 rounded-[var(--r-s)] flex items-start gap-2.5 cursor-pointer transition-all ${
  completedActions[action.id] 
- ?'bg-emerald-950/20 border-emerald-500/30 line-through opacity-70' 
+ ?'bg-[var(--ok-soft)] border-emerald-500/30 line-through opacity-70' 
  : isStitchLight ?'bg-[var(--bg)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)]/50 hover:bg-[var(--surface)]'
  }`}
  >
@@ -478,7 +478,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => toggleActionCompleted(action.id)}
  className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isDone 
- ?'bg-emerald-950/20 border-emerald-500/30 opacity-75' 
+ ?'bg-[var(--ok-soft)] border-emerald-500/30 opacity-75' 
  : isStitchLight ?'bg-white hover:bg-[var(--bg)] shadow-sm' :'bg-[var(--surface)] hover:bg-[var(--surface)] shadow'
  }`}
  >

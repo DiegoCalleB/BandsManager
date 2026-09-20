@@ -192,7 +192,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <div className="w-5 h-5 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center p-0.5 shadow-sm">
  <BizumLogo className="w-4 h-4" />
  </div>
- <label className="text-xs font-semibold text-emerald-200">Bizum (Teléfono)</label>
+ <label className="text-xs font-semibold text-[var(--ink)]">Bizum (Teléfono)</label>
  </div>
  <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:border-emerald-500 rounded-[var(--r-s)] px-2.5">
  <span className="text-[10px] text-[var(--ink-2)] font-mono">TLF:</span>
@@ -208,7 +208,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }));
  }}
  placeholder="+34 600 000 000"
- className="w-full bg-transparent py-1.5 text-xs text-emerald-300 font-bold outline-none font-mono"
+ className="w-full bg-transparent py-1.5 text-xs text-[var(--ink-2)] font-bold outline-none font-mono"
  />
  </div>
  </div>
@@ -261,7 +261,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='bizum'
- ?'bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-sm'
+ ?'bg-emerald-500/20 border-emerald-500 text-[var(--ink-2)] shadow-sm'
  :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]'
  }`}
  >

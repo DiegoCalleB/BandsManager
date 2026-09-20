@@ -85,7 +85,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
  {/* Notification Badge */}
  {copiedNotification && (
- <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
+ <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-emerald-500/20 text-[var(--ink-2)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
  <Check className="w-3 h-3 text-emerald-400" />
  <span>¡Estilo aplicado al nombre!</span>
  </div>
@@ -112,7 +112,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <span>{preset.label}</span>
  <span className="text-xs">{preset.icon}</span>
  </div>
- <div className="text-xs font-bold text-[var(--ink)] truncate group-hover:text-amber-200 mt-0.5" title={sampleText}>
+ <div className="text-xs font-bold text-[var(--ink)] truncate group-hover:text-[var(--ink)] mt-0.5" title={sampleText}>
  {sampleText}
  </div>
  </button>
@@ -147,7 +147,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <button
  type="button"
  onClick={handleClean}
- className="inline-flex items-center gap-1 text-[10px] font-mono text-[var(--ink-2)] hover:text-rose-300 transition-colors cursor-pointer"
+ className="inline-flex items-center gap-1 text-[10px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
  title="Restaurar a texto estándar sin caracteres especiales"
  >
  <RotateCcw className="w-3 h-3" />

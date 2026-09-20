@@ -62,7 +62,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  {/* ============================================================ */}
  {/* 1. VERSIÓN MÓVIL (< sm): ULTRA COMPACTA, LIMPIA Y SIN RUIDO */}
  {/* ============================================================ */}
- <div className="sm:hidden bg-[var(--surface)] border-stone-800 p-2.5 rounded-[var(--r-m)] shadow-xs space-y-2">
+ <div className="sm:hidden bg-[var(--surface)] border-[var(--hair)] p-2.5 rounded-[var(--r-m)] shadow-xs space-y-2">
  <div className="flex items-center justify-between gap-2">
  <div className="min-w-0">
  <h2 className="text-sm font-bold font-mono text-[var(--ink)] leading-tight truncate">
@@ -98,8 +98,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => setShowMobileMenu(prev => !prev)}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
  showMobileMenu
- ?'bg-stone-800 text-[var(--acc)]/70'
- :'bg-stone-900 border-stone-700/80 text-stone-300 hover:text-[var(--ink)]'
+ ?'bg-[var(--surface)]/60 text-[var(--acc)]/70'
+ :'bg-[var(--surface)]/80 border-stone-700/80 text-stone-300 hover:text-[var(--ink)]'
  }`}
  aria-label="Más acciones del dossier"
  >
@@ -118,7 +118,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => setShowMobileMenu(false)}
- className="flex items-center gap-2 px-3 py-2 text-[var(--acc)]/70 hover:bg-stone-800/80 rounded-[var(--r-s)] transition"
+ className="flex items-center gap-2 px-3 py-2 text-[var(--acc)]/70 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition"
  >
  <ExternalLink className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span className="font-semibold">Ver EPK público</span>
@@ -130,7 +130,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onCopyUrl();
  setShowMobileMenu(false);
  }}
- className="w-full text-left flex items-center gap-2 px-3 py-2 text-stone-200 hover:bg-stone-800/80 rounded-[var(--r-s)] transition cursor-pointer"
+ className="w-full text-left flex items-center gap-2 px-3 py-2 text-stone-200 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer"
  >
  {copiedPublicUrl ? (
  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
@@ -147,7 +147,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onOpenTutorial();
  setShowMobileMenu(false);
  }}
- className="w-full text-left flex items-center gap-2 px-3 py-2 text-purple-300 hover:bg-stone-800/80 rounded-[var(--r-s)] transition cursor-pointer"
+ className="w-full text-left flex items-center gap-2 px-3 py-2 text-purple-300 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer"
  >
  <HelpCircle className="w-3.5 h-3.5 text-purple-400 shrink-0" />
  <span>Guía interactiva EPK</span>
@@ -161,7 +161,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  setShowAiNotice(prev => !prev);
  setShowMobileMenu(false);
  }}
- className="w-full text-left flex items-center gap-2 px-3 py-2 text-stone-300 hover:bg-stone-800/80 rounded-[var(--r-s)] transition cursor-pointer border-t border-stone-800/80 mt-1 pt-1.5"
+ className="w-full text-left flex items-center gap-2 px-3 py-2 text-stone-300 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer border-t border-[var(--hair)]/80 mt-1 pt-1.5"
  >
  <Bot className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span>Conexión con Agentes IA</span>
@@ -176,7 +176,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
  {/* DESGLOSE DESPLEGABLE DE SALUD */}
  {showHealthDetails && (
- <div className="pt-2 border-t border-stone-800/80 flex flex-wrap gap-1 text-[10px] font-mono">
+ <div className="pt-2 border-t border-[var(--hair)]/80 flex flex-wrap gap-1 text-[10px] font-mono">
  {healthItems.map(item => (
  <button
  key={item.key}
@@ -188,7 +188,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded flex items-center gap-1 transition ${
  item.ok
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-stone-900 text-stone-400 border-stone-800'
+ :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)]'
  }`}
  >
  <span>{item.label}</span>
@@ -200,12 +200,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  </div>
 
  {/* SELECTOR ERGONÓMICO DE BLOQUES EN MÓVIL (< sm) */}
- <div className="sm:hidden flex items-center justify-between gap-1.5 bg-[var(--surface)] border-stone-800 p-1 rounded-[var(--r-m)]">
+ <div className="sm:hidden flex items-center justify-between gap-1.5 bg-[var(--surface)] border-[var(--hair)] p-1 rounded-[var(--r-m)]">
  <button
  type="button"
  onClick={() => prevBlock && onSelectBlock(prevBlock.id)}
  disabled={!prevBlock}
- className="p-2 rounded-[var(--r-s)] bg-stone-900 border-stone-800 text-stone-300 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
+ className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 border-[var(--hair)] text-stone-300 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
  title="Bloque anterior"
  >
  <ChevronLeft className="w-4 h-4" />
@@ -215,10 +215,10 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <select
  value={activeBlock}
  onChange={(e) => onSelectBlock(e.target.value as EPKBlockId)}
- className="w-full appearance-none bg-stone-900 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-mono text-[var(--acc)]/70 focus:outline-none focus: cursor-pointer"
+ className="w-full appearance-none bg-[var(--surface)]/80 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-mono text-[var(--acc)]/70 focus:outline-none focus: cursor-pointer"
  >
  {EPK_BLOCKS.map(block => (
- <option key={block.id} value={block.id} className="bg-stone-900 text-[var(--ink)]">
+ <option key={block.id} value={block.id} className="bg-[var(--surface)]/80 text-[var(--ink)]">
  {block.number ? `${block.number}/8. ${block.label}` : block.label}
  </option>
  ))}
@@ -230,7 +230,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  type="button"
  onClick={() => nextBlock && onSelectBlock(nextBlock.id)}
  disabled={!nextBlock}
- className="p-2 rounded-[var(--r-s)] bg-stone-900 border-stone-800 text-stone-300 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
+ className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 border-[var(--hair)] text-stone-300 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
  title="Siguiente bloque"
  >
  <ChevronRight className="w-4 h-4" />
@@ -240,7 +240,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  {/* ============================================================ */}
  {/* 2. VERSIÓN ESCRITORIO (>= sm): COMPLETA Y ESPACIOSA */}
  {/* ============================================================ */}
- <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] border-stone-800 p-4 sm:p-5 rounded-[var(--r-l)] shadow-sm">
+ <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] border-[var(--hair)] p-4 sm:p-5 rounded-[var(--r-l)] shadow-sm">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] text-[10px] font-mono font-bold uppercase">
@@ -296,7 +296,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  href={publicEpkUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]/70 hover:text-amber-200 text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition"
+ className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)]/70 hover:text-[var(--ink)] text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition"
  title="Abrir vista pública del EPK"
  >
  <ExternalLink className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -327,7 +327,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasLogo
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Logo de la banda (Bloque Archivos)"
  >
@@ -340,7 +340,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasBio
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Biografía oficial (Bloque Perfil)"
  >
@@ -353,7 +353,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasDossier
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Dossier en PDF (Bloque Archivos)"
  >
@@ -366,7 +366,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasRider
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Rider técnico (Bloque Archivos)"
  >
@@ -379,7 +379,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numMiembros > 0
  ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
- :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Miembros de la formación (Bloque Perfil)"
  >
@@ -392,7 +392,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numTemas > 0
  ?'bg-sky-500/10 text-sky-400 border-sky-500/20'
- :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Temas y audio preview (Bloque Música)"
  >
@@ -405,7 +405,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numTraducciones > 0
  ?'bg-purple-500/10 text-purple-300 border-purple-500/20'
- :'bg-stone-900 text-stone-400 border-stone-800 hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-stone-200'
  }`}
  title="Versiones en otros idiomas (Bloque Donaciones & Idiomas)"
  >
@@ -420,7 +420,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-semibold flex items-center gap-1.5 transition ${
  showAiNotice
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
- :'bg-stone-900/60 text-stone-400 border-stone-800 hover:text-[var(--acc)]/70'
+ :'bg-[var(--surface)]/80 text-stone-400 border-[var(--hair)] hover:text-[var(--acc)]/70'
  }`}
  title="Ver integración con Chatbot y Agentes de IA"
  >
@@ -464,7 +464,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
  isActive
  ?'bg-[var(--acc)] text-[var(--ink)] font-bold shadow-sm'
- :'bg-stone-900/90 border-stone-800 text-[var(--ink-3)] hover:text-[var(--ink)] hover:border-stone-700'
+ :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-3)] hover:text-[var(--ink)] hover:border-stone-700'
  }`}
  >
  <Icon className={`w-3.5 h-3.5 ${isActive ?'text-[var(--ink)]' :'text-[var(--acc)]'}`} />

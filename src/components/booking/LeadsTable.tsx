@@ -258,7 +258,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  target="_blank"
  rel="noreferrer"
  onClick={(e) => e.stopPropagation()}
- className="p-2 sm:px-2.5 sm:py-1.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs min-h-[38px]"
+ className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs min-h-[38px]"
  title="Enviar WhatsApp directo a la sala"
  >
  <MessageCircle className="w-4 h-4 text-emerald-400" />
@@ -316,7 +316,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  e.stopPropagation();
  onDeleteLead(lead.id, lead.nombre_sala);
  }}
- className="p-2 bg-rose-950/60 hover:bg-rose-900 text-rose-300 rounded-[var(--r-m)] transition-all cursor-pointer min-h-[38px] flex items-center justify-center"
+ className="p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] transition-all cursor-pointer min-h-[38px] flex items-center justify-center"
  title="Eliminar y guardar en lista negra"
  >
  <Trash2 className="w-4 h-4 text-rose-400" />

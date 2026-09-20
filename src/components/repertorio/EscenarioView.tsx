@@ -293,7 +293,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <span className="flex items-center gap-1.5 font-bold text-[var(--acc)]/70">
  <span className={`w-2 h-2 rounded-full transition-all duration-75 ${
  stageIsPlaying 
- ? (metronomeTick ?'bg-[var(--acc)]/60 scale-125 shadow-[0_0_8px_#f59e0b]' :'bg-amber-950 scale-90')
+ ? (metronomeTick ?'bg-[var(--acc)]/60 scale-125 shadow-[0_0_8px_#f59e0b]' :'bg-[var(--acc-soft)] scale-90')
  :'bg-zinc-600'
  }`} />
  {currentStageSong.bpm || 120} BPM
@@ -464,7 +464,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  {/* Bluetooth Pedal / Foot Controller Helper Banner */}
  {showPedalShortcuts && (
- <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-amber-200 text-xs font-mono space-y-2 animate-fadeIn">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink)] text-xs font-mono space-y-2 animate-fadeIn">
  <div className="flex items-center justify-between font-bold text-[var(--acc)]/70">
  <span className="flex items-center gap-1.5">
  <Footprints className="w-4 h-4 text-[var(--acc)]" />
@@ -604,7 +604,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  {/* Musician/Substitute notes if present */}
  {currentStageSong?.notasRepertorio && (
- <div className="p-2.5 rounded bg-zinc-900/80 border-zinc-800 text-xs font-mono text-amber-200/90">
+ <div className="p-2.5 rounded bg-zinc-900/80 border-zinc-800 text-xs font-mono text-[var(--ink)]/90">
  <span className="font-bold text-[var(--acc)]">💡 Nota de directo:</span> {currentStageSong.notasRepertorio}
  </div>
  )}

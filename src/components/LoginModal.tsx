@@ -526,7 +526,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  {/* --- ERROR ALERT --- */}
  {error && view !=='plans' && (
- <div className="w-full p-3.5 bg-rose-500/10 rounded-[var(--r-l)] text-xs text-rose-300 flex flex-col gap-2 animate-in fade-in duration-200">
+ <div className="w-full p-3.5 bg-rose-500/10 rounded-[var(--r-l)] text-xs text-[var(--ink-2)] flex flex-col gap-2 animate-in fade-in duration-200">
  <div className="flex items-start gap-2">
  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
  <span className="leading-relaxed">{error}</span>

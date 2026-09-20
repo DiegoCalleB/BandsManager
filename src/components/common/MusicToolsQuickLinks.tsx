@@ -33,7 +33,7 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
 
  <button
  onClick={onOpenTuner}
- className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 transition-all cursor-pointer text-left active:scale-95 group"
+ className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] transition-all cursor-pointer text-left active:scale-95 group"
  title="Abrir Afinador de Guitarra, Bajo y Ukelele"
  >
  <div className="p-1 rounded-[var(--r-s)] bg-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
@@ -64,7 +64,7 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
 
  <button
  onClick={onOpenTuner}
- className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 transition-all cursor-pointer text-left active:scale-95"
+ className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] transition-all cursor-pointer text-left active:scale-95"
  title="Abrir Afinador de Guitarra, Bajo y Ukelele"
  >
  <Guitar className="w-4 h-4 text-emerald-400 shrink-0" />

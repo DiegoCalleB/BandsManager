@@ -410,12 +410,12 @@ export function CalendarWidget({
  onClick={() => setSelectedDayStr(dateKey === selectedDayStr ? null : dateKey)}
  className={`p-1.5 min-h-[38px] rounded-[var(--r-s)] text-xs flex flex-col items-center justify-between transition-all cursor-pointer relative ${
  isSelected
- ?'bg-[var(--acc)]/20 text-amber-200 font-bold shadow-xs'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] font-bold shadow-xs'
  : isToday
- ?'bg-stone-800 /40 text-[var(--acc)] font-black'
+ ?'bg-[var(--surface)]/60 /40 text-[var(--acc)] font-black'
  : dayEvents.length > 0
  ?'bg-[var(--surface)] /80 text-[var(--sunken)] hover:/30'
- :'bg-[var(--surface)]/50 /40 text-[var(--ink-2)] hover:bg-stone-900'
+ :'bg-[var(--surface)]/50 /40 text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  >
  <span className="leading-none">{dayNum}</span>
@@ -442,11 +442,11 @@ export function CalendarWidget({
  <div
  key={evt.id}
  onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: evt.id, selectedDate: evt.dateStr })}
- className="p-2 rounded-[var(--r-s)] bg-stone-900 hover:/40 flex items-center justify-between cursor-pointer"
+ className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:/40 flex items-center justify-between cursor-pointer"
  >
  <div>
  <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
- evt.type ==='concierto' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-emerald-500/20 text-emerald-300'
+ evt.type ==='concierto' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-emerald-500/20 text-[var(--ink-2)]'
  }`}>
  {evt.type}
  </span>
@@ -497,7 +497,7 @@ export function CalendarWidget({
  key={e.id}
  onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: e.id, selectedDate: e.dateStr })}
  className={`text-[9px] p-1 rounded font-bold truncate cursor-pointer ${
- e.type ==='concierto' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-emerald-500/20 text-emerald-300'
+ e.type ==='concierto' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-emerald-500/20 text-[var(--ink-2)]'
  }`}
  title={`${e.type.toUpperCase()}: ${e.title}`}
  >

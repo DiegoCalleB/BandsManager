@@ -221,7 +221,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {isRecording && (
- <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-rose-500/20 text-rose-300 animate-pulse">
+ <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-rose-500/20 text-[var(--ink-2)] animate-pulse">
  <span className="w-2 h-2 rounded-full bg-rose-500" /> REC {formatTime(recordDuration)}
  </span>
  )}
@@ -421,7 +421,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {acta && (
  <button
  onClick={handleCopyToWhatsApp}
- className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-xs font-mono font-bold transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-emerald-500/20 text-[var(--ink-2)] hover:bg-emerald-500/30 text-xs font-mono font-bold transition-all cursor-pointer"
  title="Copiar formato listo para WhatsApp"
  >
  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}

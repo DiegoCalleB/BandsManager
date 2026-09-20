@@ -361,7 +361,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  </form>
 
  {errorMsg && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-rose-500/15 text-rose-300 text-xs font-mono flex items-center gap-2.5">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-rose-500/15 text-[var(--ink-2)] text-xs font-mono flex items-center gap-2.5">
  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
  <span>{errorMsg}</span>
  </div>

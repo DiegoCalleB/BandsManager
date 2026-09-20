@@ -399,7 +399,7 @@ export function OrdenDelDiaTab({
  key={obj.id}
  className={`flex items-start justify-between gap-2 p-2.5 rounded-[var(--r-m)] transition-all ${
  obj.completado
- ?'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+ ?'bg-emerald-500/10 border-emerald-500/30 text-[var(--ink-2)]'
  :'bg-[var(--surface)] border-[var(--surface)] text-zinc-200 hover:'
  }`}
  >
@@ -615,7 +615,7 @@ export function OrdenDelDiaTab({
 
  {/* Evaluation badge if set */}
  {item.evaluacion ==='bordada' && (
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-[var(--ink-2)]">
  🟢 Bordada
  </span>
  )}
@@ -625,7 +625,7 @@ export function OrdenDelDiaTab({
  </span>
  )}
  {item.evaluacion ==='repetir' && (
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-[var(--ink-2)]">
  🔴 Repetir
  </span>
  )}

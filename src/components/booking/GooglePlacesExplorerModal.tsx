@@ -631,7 +631,7 @@ export function GooglePlacesExplorerModal({
  <button
  type="button"
  onClick={() => setShowDiscardedModal(true)}
- className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 transition-all cursor-pointer"
+ className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-500/10 hover:bg-rose-500/20 text-[var(--ink-2)] transition-all cursor-pointer"
  title="Ver y gestionar sugerencias marcadas como no deseadas"
  >
  <Ban className="w-3.5 h-3.5 text-rose-400" />
@@ -664,7 +664,7 @@ export function GooglePlacesExplorerModal({
  Prospección Masiva de Campaña
  </span>
  {activeCampaign && (
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/60/20 text-amber-200 font-mono">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/60/20 text-[var(--ink)] font-mono">
  {activeCampaign.name}
  </span>
  )}
@@ -743,7 +743,7 @@ export function GooglePlacesExplorerModal({
 
  {/* Discard Toast */}
  {discardToast && (
- <div className="p-2.5 rounded-[var(--r-m)] bg-rose-500/15 text-rose-300 text-xs flex items-center justify-between animate-in fade-in duration-200">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-rose-500/15 text-[var(--ink-2)] text-xs flex items-center justify-between animate-in fade-in duration-200">
  <div className="flex items-center gap-2">
  <Ban className="w-4 h-4 text-rose-400 shrink-0" />
  <span>{discardToast}</span>
@@ -938,7 +938,7 @@ export function GooglePlacesExplorerModal({
  )}
 
  {searchError && (
- <div className="p-3 bg-rose-500/10 text-rose-300 text-xs rounded-[var(--r-m)] flex items-center gap-2">
+ <div className="p-3 bg-rose-500/10 text-[var(--ink-2)] text-xs rounded-[var(--r-m)] flex items-center gap-2">
  <AlertCircle className="w-4 h-4 shrink-0" />
  <span>{searchError}</span>
  </div>
@@ -952,7 +952,7 @@ export function GooglePlacesExplorerModal({
  )}
 
  {importSuccessMsg && (
- <div className="p-3 bg-emerald-500/10 text-emerald-300 text-xs rounded-[var(--r-m)] flex items-center gap-2 animate-fadeIn">
+ <div className="p-3 bg-emerald-500/10 text-[var(--ink-2)] text-xs rounded-[var(--r-m)] flex items-center gap-2 animate-fadeIn">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
  <span>{importSuccessMsg}</span>
  </div>
@@ -1042,7 +1042,7 @@ export function GooglePlacesExplorerModal({
  </span>
  )}
  {place.capacityMatch === false && (
- <span className="text-[9px] px-1.5 py-0.2 bg-rose-500/20 text-rose-300 rounded font-medium shrink-0" title="El aforo estimado difiere de los filtros de la campaña">
+ <span className="text-[9px] px-1.5 py-0.2 bg-rose-500/20 text-[var(--ink-2)] rounded font-medium shrink-0" title="El aforo estimado difiere de los filtros de la campaña">
  ⚠️ Aforo fuera de rango
  </span>
  )}
@@ -1148,12 +1148,12 @@ export function GooglePlacesExplorerModal({
  {/* Email Status & Extractor */}
  <div className="pt-1">
  {place.email_contacto ? (
- <div className="p-2 rounded-[var(--r-s)] bg-emerald-500/10 text-emerald-300 text-[11px] flex items-center justify-between font-mono">
+ <div className="p-2 rounded-[var(--r-s)] bg-emerald-500/10 text-[var(--ink-2)] text-[11px] flex items-center justify-between font-mono">
  <div className="flex items-center gap-1.5 truncate">
  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
  <span className="font-bold truncate">{place.email_contacto}</span>
  </div>
- <span className="text-[9px] px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 rounded uppercase font-bold shrink-0">
+ <span className="text-[9px] px-1.5 py-0.5 bg-emerald-500/20 text-[var(--ink-2)] rounded uppercase font-bold shrink-0">
  Verificado
  </span>
  </div>
@@ -1243,7 +1243,7 @@ export function GooglePlacesExplorerModal({
  <button
  type="button"
  onClick={handleClearAllDiscarded}
- className="text-xs font-bold text-rose-400 hover:text-rose-300 flex items-center gap-1 cursor-pointer"
+ className="text-xs font-bold text-rose-400 hover:text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
  >
  <Trash2 className="w-3.5 h-3.5" />
  <span>Restablecer todas</span>

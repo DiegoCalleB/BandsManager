@@ -165,7 +165,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
  </div>
  <div className="text-right">
  <span className="text-xs font-mono text-[var(--ink-3)] font-bold">{concerts.length} conciertos</span>
- <p className="text-[10px] font-mono text-emerald-300">Caché medio: {concerts.length > 0 ? Math.round(totalCache / concerts.length) : 0} €</p>
+ <p className="text-[10px] font-mono text-[var(--ink-2)]">Caché medio: {concerts.length > 0 ? Math.round(totalCache / concerts.length) : 0} €</p>
  </div>
  </div>
  </div>
@@ -299,7 +299,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
  <span className="text-lg font-mono font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
  <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Pendientes de Aprobación Humana</p>
  </div>
- <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold">
+ <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-[var(--ink-2)] text-[10px] font-mono font-bold">
  ● Activo
  </span>
  </div>

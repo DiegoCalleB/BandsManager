@@ -523,7 +523,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-emerald-400 flex items-center gap-1">
  <Music2 className="w-3.5 h-3.5 text-emerald-500" /> Spotify
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300 font-mono">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-[var(--ink-2)] font-mono">
  Oyentes/mes
  </span>
  </div>
@@ -606,7 +606,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Period Summary Indicator */}
  {periodGrowthSummary && (
  <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-[9px] font-mono ${
- isStitchLight ?'bg-emerald-50 text-emerald-800 border-emerald-200' :'bg-emerald-950/20 text-emerald-300 border-emerald-500/20'
+ isStitchLight ?'bg-emerald-50 text-emerald-800 border-emerald-200' :'bg-[var(--ok-soft)] text-[var(--ink-2)] border-emerald-500/20'
  }`}>
  <TrendingUp className="w-3 h-3 text-emerald-400" />
  <span>
@@ -745,7 +745,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  selectedChannels.spotify
  ? isStitchLight
  ?'bg-emerald-50 border-emerald-300 text-emerald-700'
- :'bg-emerald-950/30 border-emerald-500/40 text-emerald-300'
+ :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
  }`}>
  <button
@@ -777,7 +777,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  selectedChannels.fans
  ? isStitchLight
  ?'bg-amber-50 text-amber-800 font-bold shadow-xs'
- :'bg-amber-950/40 /60 text-amber-200 font-bold shadow-sm shadow-amber-950/30'
+ :'bg-[var(--acc-soft)] /60 text-[var(--ink)] font-bold shadow-sm shadow-amber-950/30'
  :'bg-[var(--surface)]/30 text-neutral-500 opacity-60'
  }`}>
  <button

@@ -331,7 +331,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <span className="text-xs font-bold text-zinc-200">
  Calculadora de Inversión y Coste por Envío:
  </span>
- <span className="text-[10px] px-1.5 py-0.2 bg-emerald-500/10 text-emerald-300 rounded font-mono">
+ <span className="text-[10px] px-1.5 py-0.2 bg-emerald-500/10 text-[var(--ink-2)] rounded font-mono">
  Tarifas Oficiales 2025/2026
  </span>
  </div>
@@ -381,7 +381,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  {/* NOTIFICATION */}
  {appliedSuccess && (
- <div className="mx-4 mt-3 p-3 bg-emerald-500/20 rounded-[var(--r-m)] text-emerald-300 text-xs font-medium flex items-center gap-2 animate-fadeIn">
+ <div className="mx-4 mt-3 p-3 bg-emerald-500/20 rounded-[var(--r-m)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-2 animate-fadeIn">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
  <span>{appliedSuccess}</span>
  </div>
@@ -473,7 +473,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div>
  <div className="flex items-center gap-1.5">
  <Coins className="w-3.5 h-3.5 text-emerald-400" />
- <span className="font-bold text-emerald-300 font-mono text-sm">
+ <span className="font-bold text-[var(--ink-2)] font-mono text-sm">
  {displayCost}
  </span>
  <span className="text-[10px] text-zinc-400 font-sans">
@@ -488,7 +488,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="text-right">
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
  isDeepSeek
- ?'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+ ?'bg-emerald-500/15 text-[var(--ink-2)] border-emerald-500/30'
  :'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30'
  }`}>
  {isDeepSeek ?'10x más barato' :'Ultra rápido'}
@@ -500,7 +500,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
  {prop.status ==='error' ? (
  <div className="space-y-2.5">
- <div className="p-2.5 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-amber-200 text-xs flex items-start gap-2">
+ <div className="p-2.5 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-[var(--ink)] text-xs flex items-start gap-2">
  <AlertCircle className="w-4 h-4 shrink-0 text-[var(--acc)] mt-0.5" />
  <div>
  <p className="font-bold text-[var(--acc)]/70">Aviso de Cuota / Saldo API</p>

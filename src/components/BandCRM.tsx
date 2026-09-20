@@ -915,12 +915,12 @@ Bakandeya Agent Manager IA & Músicos`;
  onClick={() => { setSubTab('registered_bands'); fetchRegisteredBands(); }}
  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
  subTab ==='registered_bands'
- ?'bg-emerald-500/20 text-emerald-300 shadow-sm'
+ ?'bg-emerald-500/20 text-[var(--ink-2)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>Registro</span>
- <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/30 text-emerald-200 font-bold">
+ <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/30 text-[var(--ink)] font-bold">
  {registeredBands.length}
  </span>
  </button>
@@ -1004,7 +1004,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
+ className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
  >
  <FileSpreadsheet className="w-3.5 h-3.5" />
  <span>Excel (.xlsx)</span>
@@ -1609,9 +1609,9 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
 
  {aiError && (
- <div className="md:col-span-2 p-3 bg-rose-950/40 rounded-[var(--r-m)] flex items-center justify-between text-xs text-rose-300 font-mono">
+ <div className="md:col-span-2 p-3 bg-[var(--alert-soft)] rounded-[var(--r-m)] flex items-center justify-between text-xs text-[var(--ink-2)] font-mono">
  <span>⚠️ {aiError}</span>
- <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-rose-900/50 rounded">
+ <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-[var(--alert-soft)] rounded">
  <X className="w-3.5 h-3.5" />
  </button>
  </div>

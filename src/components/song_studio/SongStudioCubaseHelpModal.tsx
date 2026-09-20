@@ -53,7 +53,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
  <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-3)]">Detener e ir a Inicio (Stop)</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-rose-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--ink-2)] font-bold shadow">
  0 / Stop / Home
  </kbd>
  </div>
@@ -81,14 +81,14 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
  <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-3)]">Grabar Pista Overdub</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-rose-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--ink-2)] font-bold shadow">
  R / Numpad *
  </kbd>
  </div>
 
  <div className="p-3 rounded-[var(--r-m)] bg-white/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-3)]">Nueva Idea / Proyecto</span>
- <kbd className="px-2 py-1 rounded bg-black/80 text-emerald-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-black/80 text-[var(--ink-2)] font-bold shadow">
  N
  </kbd>
  </div>

@@ -817,7 +817,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={(e) => handleRemoveCityTab(city, e)}
  className={`p-0.5 rounded-full hover:bg-rose-500/30 transition opacity-60 group-hover/city:opacity-100 ${
- isSelected ?'hover:text-rose-950 text-[var(--ink)]' :'hover:text-rose-300 text-[var(--ink-3)]'
+ isSelected ?'hover:text-[var(--alert)] text-[var(--ink)]' :'hover:text-[var(--ink-2)] text-[var(--ink-3)]'
  }`}
  title={`Eliminar pestaña ${city}`}
  >
@@ -1266,7 +1266,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  type="button"
  onClick={() => { setShowQrMoreMenu(false); handleShareWhatsApp(); }}
- className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-emerald-300 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
+ className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
  >
  <MessageCircle className="w-3.5 h-3.5 shrink-0" /> Compartir por WhatsApp
  </button>

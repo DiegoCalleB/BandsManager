@@ -439,7 +439,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className="w-full max-w-7xl mx-auto space-y-8 pb-16 font-sans">
  {/* Pending Payment Alert */}
  {currentUser?.estado_suscripcion ==='pago_pendiente' && (
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-rose-500/15 border-2 border-rose-500/50 text-rose-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-rose-500/15 border-2 border-rose-500/50 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
  <div className="flex items-start sm:items-center gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-rose-500/20 text-rose-400 shrink-0">
  <AlertTriangle className="w-6 h-6 animate-pulse" />
@@ -448,7 +448,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <p className="text-sm sm:text-base font-bold text-rose-100">
  Problema con el cobro de tu suscripción
  </p>
- <p className="text-xs text-rose-300/90 mt-0.5">
+ <p className="text-xs text-[var(--ink-2)]/90 mt-0.5">
  Stripe no pudo procesar tu último pago. Actualiza tu método de pago para evitar la interrupción de tus servicios y créditos agénticos.
  </p>
  </div>
@@ -467,7 +467,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
  {/* Scheduled Downgrade Notice Banner */}
  {currentUser?.plan_pendiente && (
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/15 border-2 /40 text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--acc)]/15 border-2 /40 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
  <div className="flex items-start sm:items-center gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0">
  <Calendar className="w-6 h-6" />
@@ -658,7 +658,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  case'gold':
  return'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50';
  case'emerald':
- return'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+ return'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/40';
  }
  };
 
@@ -735,7 +735,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  {/* IA Credits Highlight Chip */}
  <div className={`p-3 rounded-[var(--r-l)] flex items-start gap-2.5 ${
  plan.isPopular
- ?'bg-[var(--acc)]/60/10 /30 text-amber-200'
+ ?'bg-[var(--acc)]/60/10 /30 text-[var(--ink)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-3)]'
  }`}>
  <Sparkles className={`w-4 h-4 mt-0.5 shrink-0 ${plan.isPopular ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
@@ -774,7 +774,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  plan.isPopular
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70'
  : plan.id ==='cabeza_de_cartel'
- ?'bg-emerald-400/20 text-emerald-300'
+ ?'bg-emerald-400/20 text-[var(--ink-2)]'
  :'bg-slate-400/20 text-[var(--ink-3)]'
  }`}>
  {plan.stickerGift.tag}
@@ -1027,7 +1027,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <X className="w-4 h-4 text-neutral-600" />
  )
  ) : (
- <span className="text-emerald-300 text-center font-mono font-bold">{row.cabeza_de_cartel}</span>
+ <span className="text-[var(--ink-2)] text-center font-mono font-bold">{row.cabeza_de_cartel}</span>
  )}
  </div>
  </div>
@@ -1079,7 +1079,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/60 space-y-2">
- <div className="flex items-center gap-2 text-emerald-300 font-mono font-bold text-xs">
+ <div className="flex items-center gap-2 text-[var(--ink-2)] font-mono font-bold text-xs">
  <Gift className="w-4 h-4 text-emerald-400" />
  <span>Pegatinas y Regalos Tuyos</span>
  </div>

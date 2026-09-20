@@ -163,7 +163,7 @@ export function TemplateConfigSection({
  {/* Form Side */}
  <div className="space-y-4">
  {optimizationFeedbackMsg && (
- <div className="p-3 bg-[var(--acc)]/15 text-amber-200 text-[11px] rounded-[var(--r-m)] font-sans animate-in fade-in">
+ <div className="p-3 bg-[var(--acc)]/15 text-[var(--ink)] text-[11px] rounded-[var(--r-m)] font-sans animate-in fade-in">
  {optimizationFeedbackMsg}
  </div>
  )}
@@ -259,7 +259,7 @@ export function TemplateConfigSection({
  {/* Tono y Estilo */}
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
+ <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {toneRating > 0 ? `${toneRating}/5` :'Sin calificar'}
  </span>
@@ -284,7 +284,7 @@ export function TemplateConfigSection({
  {/* Contenido y Estructura */}
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
+ <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {contentRating > 0 ? `${contentRating}/5` :'Sin calificar'}
  </span>
@@ -426,7 +426,7 @@ export function TemplateConfigSection({
  {/* Tono */}
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
+ <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {toneRating > 0 ? `${toneRating}/5` :'⭐'}
  </span>
@@ -451,7 +451,7 @@ export function TemplateConfigSection({
  {/* Contenido */}
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
+ <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
  {contentRating > 0 ? `${contentRating}/5` :'⭐'}
  </span>

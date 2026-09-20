@@ -485,7 +485,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
  format ==='zip'
  ?'bg-gradient-to-br from-[#1db954]/30 to-emerald-900/40 border-[var(--hair)] text-[var(--ink)] shadow-lg ring-1 ring-[#1ed760]/40'
- :'bg-emerald-500/10 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20'
+ :'bg-emerald-500/10 border-emerald-500/30 text-[var(--ink-2)] hover:bg-emerald-500/20'
  }`}
  >
  <Archive className={`w-5 h-5 ${format ==='zip' ?'text-[#1ed760]' :'text-emerald-400'}`} />
@@ -567,7 +567,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  {/* Audio Availability Banner (for ZIP mode) */}
  {format ==='zip' && (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 border-[var(--hair)]/30 flex items-center justify-between gap-3 text-xs">
- <div className="flex items-center gap-2 text-emerald-300">
+ <div className="flex items-center gap-2 text-[var(--ink-2)]">
  <Music className="w-4 h-4 text-[#1ed760] shrink-0" />
  <span>
  Audios listos para comprimir:{''}
@@ -611,8 +611,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
  {/* ZIP Progress Bar */}
  {zipLoading && (
- <div className="p-4 rounded-[var(--r-l)] bg-emerald-950/60 space-y-2 animate-in fade-in">
- <div className="flex items-center justify-between text-xs font-medium text-emerald-300">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--ok-soft)] space-y-2 animate-in fade-in">
+ <div className="flex items-center justify-between text-xs font-medium text-[var(--ink-2)]">
  <span className="flex items-center gap-2">
  <Loader2 className="w-4 h-4 text-[#1ed760] animate-spin" />
  <span>{zipProgress.status ||'Procesando paquete ZIP...'}</span>
@@ -636,7 +636,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
  {/* ZIP Error Alert */}
  {zipError && (
- <div className="p-3 bg-rose-500/10 rounded-[var(--r-l)] text-xs text-rose-300 flex items-center gap-2">
+ <div className="p-3 bg-rose-500/10 rounded-[var(--r-l)] text-xs text-[var(--ink-2)] flex items-center gap-2">
  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
  <span>{zipError}</span>
  </div>

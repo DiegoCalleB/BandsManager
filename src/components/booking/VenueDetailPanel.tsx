@@ -585,7 +585,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="w-full space-y-5 relative">
  {/* Feedback Alert for Bolo Confirmado */}
  {feedbackBoloMsg && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold flex items-center justify-between gap-2 shadow-lg animate-fadeIn">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-emerald-500/20 text-[var(--ink-2)] font-mono text-xs font-bold flex items-center justify-between gap-2 shadow-lg animate-fadeIn">
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-emerald-400" />
  <span>{feedbackBoloMsg}</span>
@@ -653,7 +653,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {onDeleteLead && (
  <button
  onClick={() => onDeleteLead(selectedLead.id, selectedLead.nombre_sala)}
- className="p-2 rounded-[var(--r-m)] bg-rose-950/60 hover:bg-rose-900 text-rose-300 hover:text-[var(--ink)] transition-colors cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  title="Eliminar y guardar en lista negra"
  >
  <Trash2 className="w-4 h-4 text-rose-400" />
@@ -743,7 +743,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  href={`https://wa.me/${phoneClean}`}
  target="_blank"
  rel="noreferrer"
- className="py-2.5 px-3 bg-emerald-950/90 hover:bg-emerald-900 text-emerald-300 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+ className="py-2.5 px-3 bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
  >
  <MessageCircle className="w-4 h-4 text-emerald-400" />
  <span>WhatsApp Directo</span>
@@ -820,7 +820,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0 ml-1" />
  <div className="min-w-0">
- <p className="text-xs font-bold text-emerald-300">
+ <p className="text-xs font-bold text-[var(--ink-2)]">
  🚀 {rawStatus ==='aprobado_respuesta' ?'Respuesta Aprobada' :'Propuesta Aprobada'} — En cola del Agente Enviador
  </p>
  <p className="text-[10px] text-zinc-400">
@@ -1253,7 +1253,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, email_secundario: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 text-amber-200 focus:outline-none text-xs"
+ className="w-full p-2 rounded bg-zinc-900 text-[var(--ink)] focus:outline-none text-xs"
  />
  </div>
 
@@ -1299,7 +1299,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onChange={(e) =>
  setEditedLeadInfo({ ...editedLeadInfo, roster: e.target.value })
  }
- className="w-full p-2 rounded bg-zinc-900 text-amber-200 focus:outline-none text-xs"
+ className="w-full p-2 rounded bg-zinc-900 text-[var(--ink)] focus:outline-none text-xs"
  />
  </div>
 
@@ -1601,7 +1601,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setFeedbackScope('este_pitch')}
  className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
  feedbackScope ==='este_pitch'
- ?'bg-[var(--acc)]/15 /60 text-amber-200'
+ ?'bg-[var(--acc)]/15 /60 text-[var(--ink)]'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
  }`}
  >
@@ -1622,7 +1622,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setFeedbackScope('global')}
  className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
  feedbackScope ==='global'
- ?'bg-[var(--acc)]/15 /60 text-amber-200'
+ ?'bg-[var(--acc)]/15 /60 text-[var(--ink)]'
  :'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
  }`}
  >
@@ -1646,7 +1646,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* Success Banner */}
  {feedbackSuccessMsg && (
- <div className="p-2 bg-emerald-500/20 rounded-[var(--r-s)] text-emerald-300 text-xs font-medium flex items-center gap-2">
+ <div className="p-2 bg-emerald-500/20 rounded-[var(--r-s)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-2">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
  <span>{feedbackSuccessMsg}</span>
  </div>
@@ -1753,7 +1753,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
  <span>Tono: {log.tono_rating ? `${log.tono_rating}/5` :'-'} | Contenido: {log.contenido_rating ? `${log.contenido_rating}/5` :'-'}</span>
  {log.deshecho && (
- <span className="px-1.5 py-0.5 bg-amber-950/60 text-[var(--acc)] rounded text-[9px] font-bold">
+ <span className="px-1.5 py-0.5 bg-[var(--acc-soft)] text-[var(--acc)] rounded text-[9px] font-bold">
  [Deshecho]
  </span>
  )}
@@ -1761,7 +1761,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {log.comentario && (
- <p className="text-amber-200/90 italic font-sans">
+ <p className="text-[var(--ink)]/90 italic font-sans">
  &ldquo;{log.comentario}&rdquo;
  </p>
  )}
@@ -1805,7 +1805,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  key={msg.id}
  className={`p-3.5 rounded-[var(--r-m)] space-y-1.5 text-xs font-sans ${
  msg.remitente ==='sala'
- ?'bg-amber-950/20 /40 text-amber-100'
+ ?'bg-[var(--acc-soft)] /40 text-amber-100'
  :'bg-[var(--bg)] border-zinc-800 text-zinc-200'
  }`}
  >
@@ -1898,9 +1898,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all cursor-pointer ${
  interactionResultado === res
  ? res ==='Interesado' || res ==='Acuerdo cerrado'
- ?'bg-emerald-500/30 text-emerald-300 font-bold'
+ ?'bg-emerald-500/30 text-[var(--ink-2)] font-bold'
  : res ==='Rechazado'
- ?'bg-rose-500/30 text-rose-300 font-bold'
+ ?'bg-rose-500/30 text-[var(--ink-2)] font-bold'
  :'bg-sky-500/30 text-sky-300 font-bold'
  :'bg-zinc-900 text-[var(--ink-2)] hover:text-[var(--ink)] border-zinc-800'
  }`}

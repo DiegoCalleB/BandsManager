@@ -173,7 +173,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  {/* Live Styled Band Name */}
  <div
  className={`text-lg sm:text-xl py-1 truncate leading-tight transition-colors ${
- isSelected ?'text-[var(--acc)]/70' :'text-[var(--ink)] group-hover:text-amber-200'
+ isSelected ?'text-[var(--acc)]/70' :'text-[var(--ink)] group-hover:text-[var(--ink)]'
  }`}
  style={{ fontFamily: f.fontFamily }}
  >

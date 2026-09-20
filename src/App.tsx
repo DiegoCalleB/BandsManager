@@ -626,7 +626,7 @@ export default function App() {
 
   if (isMusicianRoute) {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-[#0d0c0c] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" /></div>}>
+      <Suspense fallback={<div className="min-h-screen bg-[#0d0c0c] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" /></div>}>
         <PublicMusiciansLanding />
       </Suspense>
     );
@@ -634,7 +634,7 @@ export default function App() {
 
   if (isEpkRoute) {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-[#121111] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" /></div>}>
+      <Suspense fallback={<div className="min-h-screen bg-[var(--bg)] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" /></div>}>
         <PublicEPK />
       </Suspense>
     );
@@ -642,7 +642,7 @@ export default function App() {
 
   if (isFanRoute) {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-[#121111] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" /></div>}>
+      <Suspense fallback={<div className="min-h-screen bg-[var(--bg)] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" /></div>}>
         <FansLanding
           currentBandId={currentActiveBandId}
           currentBandName={currentActiveBandName}
@@ -1046,7 +1046,7 @@ export default function App() {
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-3)] uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.io</span>
+ BANDMANAGER<span className="text-[var(--acc)]">.io</span>
  </span>
  </div>
  </div>
@@ -1313,7 +1313,7 @@ export default function App() {
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-3)] uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.io</span>
+ BANDMANAGER<span className="text-[var(--acc)]">.io</span>
  </span>
  </div>
  </div>
@@ -1366,13 +1366,13 @@ export default function App() {
  <div key={currentView} className="flex-1 h-full min-h-[500px] flex flex-col animate-fade-in">
  {isLoading ? (
  <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
- <RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" />
+ <RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" />
  <p className="text-xs text-neutral-400 font-mono">Cargando base de datos Bakandeya...</p>
  </div>
  ) : (
  <Suspense fallback={
  <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
- <RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" />
+ <RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" />
  </div>
  }>
  {currentView === 'resumen' && (

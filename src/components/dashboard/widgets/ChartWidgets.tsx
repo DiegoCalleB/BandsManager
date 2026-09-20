@@ -211,7 +211,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-stone-900 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50 max-w-[200px]">
+ <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50 max-w-[200px]">
  <div className="font-bold text-[var(--acc)] text-sm truncate">#{data.num} {data.title}</div>
  <div className="text-[11px] text-zinc-300 mt-1 space-y-0.5">
  <div>Energía: <span className="font-bold" style={{ color: data.hexColor }}>{data.energy}/20 ({data.label})</span></div>
@@ -291,7 +291,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  )}
  </div>
 
- <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-stone-800 text-xs font-mono">
+ <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono">
  <span className="text-[var(--ink-2)]">Tasa de Conversión a Conciertos:</span>
  <span className="font-bold text-emerald-400 flex items-center gap-1">
  <TrendingUp className="w-3.5 h-3.5" /> {conversionRate}% ({counts.confirmado} cierres)
@@ -310,7 +310,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  const data = payload[0].payload;
  const pct = ((data.count / total) * 100).toFixed(1);
  return (
- <div className="bg-stone-900 border-stone-700 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
+ <div className="bg-[var(--surface)]/80 border-stone-700 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
  <div className="font-bold text-[var(--acc)]">{data.name}</div>
  <div className="text-zinc-300 mt-1">
  Cantidad: <span className="font-bold text-[var(--ink)]">{data.count} salas</span>
@@ -403,7 +403,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-stone-900 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
+ <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
  <div className="font-bold text-emerald-400">{data.month}</div>
  <div className="text-zinc-300 mt-1 space-y-0.5">
  <div>Ingresos: <span className="font-bold text-emerald-400">+{data.ingresos}€</span></div>
@@ -487,7 +487,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-stone-900 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
+ <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
  <div className="font-bold text-purple-400">{data.mes}</div>
  <div className="text-zinc-300 mt-1 space-y-0.5">
  <div>Fans acumulados: <span className="font-bold text-purple-300">{data.fans}</span></div>

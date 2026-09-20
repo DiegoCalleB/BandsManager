@@ -92,7 +92,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  </button>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-amber-950/20 text-xs text-amber-200 space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-xs text-[var(--ink)] space-y-1">
  <p className="font-semibold flex items-center gap-1.5">
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Motor de Audio Generativo IA
  </p>

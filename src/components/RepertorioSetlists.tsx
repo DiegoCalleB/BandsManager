@@ -2690,8 +2690,8 @@ export default function RepertorioSetlists({
  }}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
  isStitchLight 
- ?'bg-amber-100 hover:bg-amber-200 text-amber-950'
- :'bg-amber-950/40 hover:bg-amber-900/60 text-amber-200 hover:text-[var(--ink)] shadow-[0_0_12px_rgba(245,158,11,0.18)]'
+ ?'bg-amber-100 hover:bg-amber-200 text-[var(--acc)]'
+ :'bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--ink)] hover:text-[var(--ink)] shadow-[0_0_12px_rgba(245,158,11,0.18)]'
  }`}
  title="Optimizar IA: Generar el setlist perfecto con orden dinámico ideal y clímax de concierto"
  >
@@ -2730,7 +2730,7 @@ export default function RepertorioSetlists({
  setPerformanceSetlistId(activeSetlist.id);
  }
  }}
- className="shrink-0 px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+ className="shrink-0 px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
  title="Modo Ensayo: atril optimizado para ensayo con pistas Iris, silenciamiento de instrumentos y metrónomo"
  >
  <Headphones className="w-3.5 h-3.5 text-emerald-400" />
@@ -2808,7 +2808,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDeleteSetlist(activeSetlist.id); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-rose-400 transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'hover:bg-rose-50' :'hover:bg-rose-950/40'
+ isStitchLight ?'hover:bg-rose-50' :'hover:bg-[var(--alert-soft)]'
  }`}
  >
  <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar setlist
@@ -2845,7 +2845,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => setShowAssistantChooser((v) => !v)}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 hover:text-amber-200 transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-xs"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 hover:text-[var(--ink)] transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-xs"
  title="Asistente IA del repertorio"
  >
  🧠 <span className="hidden xs:inline">Asistente IA</span>
@@ -2925,7 +2925,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={undoLastReorder}
- className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-[var(--acc)]/70 hover:text-amber-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-amber-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
  title="Deshacer el último reordenamiento del setlist"
  >
  ↩️ Deshacer
@@ -2935,7 +2935,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={optimizeSetlistTransitions}
- className="px-2 py-0.5 rounded-[var(--r-s)] bg-emerald-900/40 hover:bg-emerald-800/60 text-emerald-300 hover:text-emerald-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] hover:text-emerald-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
  title="Reordena las canciones (nunca las chapas/bloques) para suavizar los saltos de tonalidad, tempo y energía entre temas consecutivos — sin tocar tu canción de apertura"
  >
  🎯 Optimizar orden
@@ -3073,7 +3073,7 @@ export default function RepertorioSetlists({
  💡 Toca un punto para reordenar o cambiar su energía — la energía es de la canción, se aplica en todos tus repertorios.
  </p>
  {optimizeSummary && (
- <p className="text-[10px] font-mono text-emerald-300 bg-emerald-900/20 rounded-[var(--r-s)] px-2 py-1">
+ <p className="text-[10px] font-mono text-[var(--ink-2)] bg-[var(--ok-soft)] rounded-[var(--r-s)] px-2 py-1">
  {optimizeSummary}
  </p>
  )}
@@ -3246,13 +3246,13 @@ export default function RepertorioSetlists({
  onClick={() => handleOpenTransitionPreview(selectedIndex - 1, selectedIndex)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
  evalPrev?.status ==='ok'
- ?'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-[var(--ink)] border-emerald-500/35 hover:border-emerald-500/70'
- :'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-[var(--ink)] border-rose-500/35 hover:border-rose-500/70'
+ ?'bg-emerald-500/15 hover:bg-emerald-500/25 text-[var(--ink-2)] hover:text-[var(--ink)] border-emerald-500/35 hover:border-emerald-500/70'
+ :'bg-rose-500/15 hover:bg-rose-500/25 text-[var(--ink-2)] hover:text-[var(--ink)] border-rose-500/35 hover:border-rose-500/70'
  }`}
  title={evalPrev ? `${evalPrev.title}: ${evalPrev.motivos.join(',')}` : `Comprobar cómo suena la unión de"${prevName}" con"${point.name}"`}
  >
  <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
- evalPrev?.status ==='ok' ?'bg-emerald-500/30 text-emerald-200' :'bg-rose-500/30 text-rose-200'
+ evalPrev?.status ==='ok' ?'bg-emerald-500/30 text-[var(--ink)]' :'bg-rose-500/30 text-[var(--ink)]'
  }`}>
  {evalPrev ? evalPrev.icon :'⚡'}
  </span>
@@ -3273,13 +3273,13 @@ export default function RepertorioSetlists({
  onClick={() => handleOpenTransitionPreview(selectedIndex, selectedIndex + 1)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
  evalNext?.status ==='ok'
- ?'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-[var(--ink)] border-emerald-500/35 hover:border-emerald-500/70'
- :'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-[var(--ink)] border-rose-500/35 hover:border-rose-500/70'
+ ?'bg-emerald-500/15 hover:bg-emerald-500/25 text-[var(--ink-2)] hover:text-[var(--ink)] border-emerald-500/35 hover:border-emerald-500/70'
+ :'bg-rose-500/15 hover:bg-rose-500/25 text-[var(--ink-2)] hover:text-[var(--ink)] border-rose-500/35 hover:border-rose-500/70'
  }`}
  title={evalNext ? `${evalNext.title}: ${evalNext.motivos.join(',')}` : `Comprobar cómo suena la unión de"${point.name}" con"${nextName}"`}
  >
  <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
- evalNext?.status ==='ok' ?'bg-emerald-500/30 text-emerald-200' :'bg-rose-500/30 text-rose-200'
+ evalNext?.status ==='ok' ?'bg-emerald-500/30 text-[var(--ink)]' :'bg-rose-500/30 text-[var(--ink)]'
  }`}>
  {evalNext ? evalNext.icon :'⚡'}
  </span>
@@ -3329,7 +3329,7 @@ export default function RepertorioSetlists({
  w.type ==='warning'
  ?'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
  : w.type ==='success'
- ?'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+ ?'bg-emerald-500/10 text-[var(--ink-2)] border-emerald-500/30'
  :'bg-sky-500/10 text-sky-300 border-sky-500/30'
  } ${isHighlighted ?'ring-2 ring-white/60' :''}`}
  style={{ cursor: hasSongs ?'pointer' :'default' }}
@@ -3776,8 +3776,8 @@ export default function RepertorioSetlists({
  }}
  className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0 ${
  evalUnion?.status ==='ok'
- ?'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border-emerald-500/35 hover:border-emerald-500/60'
- :'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border-rose-500/35 hover:border-rose-500/60'
+ ?'bg-emerald-500/15 hover:bg-emerald-500/25 text-[var(--ink-2)] border-emerald-500/35 hover:border-emerald-500/60'
+ :'bg-rose-500/15 hover:bg-rose-500/25 text-[var(--ink-2)] border-rose-500/35 hover:border-rose-500/60'
  }`}
  title={evalUnion ? `🎧 Probar unión con #${index} (${prevSong?.titulo}): ${evalUnion.title} · ${evalUnion.motivos.join(',')}` :"🎧 Probar unión y transición con la canción anterior"}
  >
@@ -4324,7 +4324,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={() => handleBulkDeleteSongs(Array.from(selectedCatalogIds))}
- className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 cursor-pointer transition-all flex items-center gap-1.5"
+ className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-rose-500/20 hover:bg-rose-500/30 text-[var(--ink-2)] cursor-pointer transition-all flex items-center gap-1.5"
  >
  <Trash2 className="w-3.5 h-3.5" />
  <span>Eliminar Seleccionadas</span>
@@ -4649,7 +4649,7 @@ export default function RepertorioSetlists({
  Audio de la Presentación / Chapa / Ensayo
  </label>
  {showItemAudioUrl && (
- <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold flex items-center gap-1">
+ <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-[var(--ink-2)] font-bold flex items-center gap-1">
  <Check className="w-3 h-3" /> Audio Guardado
  </span>
  )}
@@ -4694,7 +4694,7 @@ export default function RepertorioSetlists({
  setShowItemAudioUrl('');
  setRecordingShowItemSecs(0);
  }}
- className="p-1.5 rounded-[var(--r-s)] text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-rose-400 hover:text-[var(--ink-2)] hover:bg-[var(--alert-soft)] cursor-pointer"
  title="Eliminar Audio"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -4888,11 +4888,11 @@ export default function RepertorioSetlists({
  <div
  className={`fixed bottom-5 right-5 z-[9999] flex items-center gap-2.5 px-4 py-3 rounded-[var(--r-l)] shadow-2xl text-xs font-mono max-w-sm ${
  statusBanner.type ==='success'
- ?'bg-emerald-950 border-emerald-700/60 text-emerald-100'
+ ?'bg-[var(--ok-soft)] border-emerald-700/60 text-emerald-100'
  : statusBanner.type ==='error'
- ?'bg-rose-950 border-rose-700/60 text-rose-100'
+ ?'bg-[var(--alert-soft)] border-rose-700/60 text-rose-100'
  : statusBanner.type ==='warning'
- ?'bg-amber-950 /60 text-amber-100'
+ ?'bg-[var(--acc-soft)] /60 text-amber-100'
  :'bg-[var(--surface)] text-[var(--sunken)]'
  }`}
  >

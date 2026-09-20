@@ -343,12 +343,12 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  {/* Current Document Info — se mantiene visible incluso justo después de un
  procesado con éxito: es precisamente cuando el usuario necesita comparar. */}
  {song.estructuraDocumentoUrl && (
- <div className="p-3 rounded-[var(--r-s)] bg-emerald-950/20 text-sm text-emerald-200 space-y-2">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--ok-soft)] text-sm text-[var(--ink)] space-y-2">
  <div className="flex items-center justify-between gap-2">
  <p className="font-semibold">Estructura actual guardada</p>
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 ${
  song.estructuraVerificada
- ?'bg-emerald-500/20 text-emerald-300'
+ ?'bg-emerald-500/20 text-[var(--ink-2)]'
  :'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  }`}>
  <ShieldCheck className="w-3 h-3" />
@@ -357,7 +357,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  </div>
  <div className="flex items-center justify-between gap-2">
  <div className="min-w-0">
- <p className="text-xs text-emerald-300 truncate">{song.estructuraDocumentoNombre ||'Documento'}</p>
+ <p className="text-xs text-[var(--ink-2)] truncate">{song.estructuraDocumentoNombre ||'Documento'}</p>
  <p className="text-xs text-[var(--ink-2)] mt-1">
  Procesado el {new Date(song.estructuraDocumentoProcesadoEn ||'').toLocaleDateString('es-ES')}
  </p>
@@ -394,7 +394,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  disabled={isSavingVerified}
  className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-semibold transition flex items-center justify-center gap-1.5 disabled:opacity-50 ${
  song.estructuraVerificada
- ?'bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30'
+ ?'bg-emerald-600/20 text-[var(--ink-2)] hover:bg-emerald-600/30'
  :'bg-amber-600/20 text-[var(--acc)]/70 hover:bg-amber-600/30'
  }`}
  >

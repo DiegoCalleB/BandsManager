@@ -1924,7 +1924,7 @@ export default function ReelsCenter({
  clips sugeridos sin haber pulsado"Analizar" en esta visita. */}
  {loadedFromSaveAt && highlights.length > 0 && !isAnalyzing && (
  <div className={`p-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 ${
- isStitchLight ?'bg-emerald-50 text-emerald-700' :'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
+ isStitchLight ?'bg-emerald-50 text-emerald-700' :'bg-emerald-500/10 -emerald-500/20 text-[var(--ink-2)]'
  }`}>
  <CheckCircle2 className="w-4 h-4 shrink-0" />
  <span>
@@ -2753,7 +2753,7 @@ export default function ReelsCenter({
  ) : (
  <>
  <Volume2 className="w-3 h-3 text-emerald-400 animate-bounce" />
- <span className="text-[7.5px] font-mono font-extrabold tracking-wider uppercase text-emerald-200">CON SONIDO</span>
+ <span className="text-[7.5px] font-mono font-extrabold tracking-wider uppercase text-[var(--ink)]">CON SONIDO</span>
  </>
  )}
  </button>
@@ -3378,7 +3378,7 @@ export default function ReelsCenter({
  </div>
 
  <span className="text-[8px] font-mono text-[var(--acc)]/70 font-extrabold tracking-tight select-none pointer-events-none pl-1">START</span>
- <span className="text-[8px] font-mono text-amber-200 select-none hidden sm:inline pointer-events-none">Recorte ({duration}s)</span>
+ <span className="text-[8px] font-mono text-[var(--ink)] select-none hidden sm:inline pointer-events-none">Recorte ({duration}s)</span>
  <span className="text-[8px] font-mono text-[var(--acc)]/70 font-extrabold tracking-tight select-none pointer-events-none pr-1">END</span>
 
  {/* Right Grab Handle (End) */}
@@ -3564,7 +3564,7 @@ export default function ReelsCenter({
  :'Graba los subtítulos dentro de la imagen, que es como se ven en Reels y TikTok sin activar nada.'}
  className={`w-full px-3 py-1.5 rounded-[var(--r-s)] text-[9.5px] font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
  burnSubtitles
- ?'bg-emerald-500/15 -emerald-500/40 text-emerald-300'
+ ?'bg-emerald-500/15 -emerald-500/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
@@ -3610,11 +3610,11 @@ export default function ReelsCenter({
  </div>
  </div>
  ) : renderedClipUrl ? (
- <div className="bg-emerald-950/20 p-4 rounded-[var(--r-m)] -emerald-800/40 space-y-3">
+ <div className="bg-[var(--ok-soft)] p-4 rounded-[var(--r-m)] -emerald-800/40 space-y-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
- <span className="text-xs font-mono font-extrabold text-emerald-200 uppercase tracking-wider">
+ <span className="text-xs font-mono font-extrabold text-[var(--ink)] uppercase tracking-wider">
  ¡Reel Renderizado con Éxito!
  </span>
  </div>
@@ -3638,7 +3638,7 @@ export default function ReelsCenter({
  próximo despliegue del servidor. */}
  <div className={`p-2 rounded-[var(--r-s)] text-[10px] font-mono flex items-center gap-2 ${
  renderedStoredPermanently
- ?'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
+ ?'bg-emerald-500/10 -emerald-500/20 text-[var(--ink-2)]'
  :'bg-[var(--acc)]/10 -amber-500/20 text-[var(--acc)]/70'
  }`}>
  <span>
@@ -3670,7 +3670,7 @@ export default function ReelsCenter({
  href={renderedSubUrl}
  download="subtitulos.vtt"
  rel="noreferrer noopener"
- className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:-neutral-700 text-[11px] font-mono font-bold text-emerald-300 flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+ className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:-neutral-700 text-[11px] font-mono font-bold text-[var(--ink-2)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
  >
  <ExternalLink className="w-3.5 h-3.5" />
  <span>Descargar .VTT</span>

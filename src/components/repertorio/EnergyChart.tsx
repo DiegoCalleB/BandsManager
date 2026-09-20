@@ -404,7 +404,7 @@ export function EnergyChart({
  {hoverIndex !== draggingFromIndex && (
  <>
  <span className="text-neutral-500"> → posición de </span>
- <span className="text-emerald-300">"{chartData[hoverIndex]?.name}"</span>
+ <span className="text-[var(--ink-2)]">"{chartData[hoverIndex]?.name}"</span>
  </>
  )}
  </div>
@@ -582,13 +582,13 @@ export function EnergyChart({
  )}
  {d.transitionFromPrev && (
  <div className={`mt-1.5 pt-1 border-t ${
- d.transitionFromPrev.status ==='ok' ?'text-emerald-300' :'text-rose-300'
+ d.transitionFromPrev.status ==='ok' ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-1 font-bold">
  <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${
  d.transitionFromPrev.status ==='ok'
- ?'bg-emerald-500/20 text-emerald-300'
- :'bg-rose-500/20 text-rose-300'
+ ?'bg-emerald-500/20 text-[var(--ink-2)]'
+ :'bg-rose-500/20 text-[var(--ink-2)]'
  }`}>
  {d.transitionFromPrev.icon}
  </span>

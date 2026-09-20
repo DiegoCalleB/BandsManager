@@ -385,9 +385,9 @@ export function ModoLocalEnVivoTab({
  isCurrent
  ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20 scale-102'
  : item.evaluacion ==='bordada'
- ?'bg-emerald-500/20 text-emerald-300'
+ ?'bg-emerald-500/20 text-[var(--ink-2)]'
  : item.evaluacion ==='repetir'
- ?'bg-rose-500/20 text-rose-300'
+ ?'bg-rose-500/20 text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]'
  }`}
  >
@@ -659,7 +659,7 @@ export function ModoLocalEnVivoTab({
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='bordada'
  ?'bg-emerald-500 text-[var(--surface)] shadow-md shadow-emerald-500/20'
- :'bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25'
+ :'bg-emerald-500/15 text-[var(--ink-2)] hover:bg-emerald-500/25'
  }`}
  >
  <span>🟢</span>
@@ -683,7 +683,7 @@ export function ModoLocalEnVivoTab({
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='repetir'
  ?'bg-rose-500 text-[var(--ink)] shadow-md shadow-rose-500/20'
- :'bg-rose-500/15 text-rose-300 hover:bg-rose-500/25'
+ :'bg-rose-500/15 text-[var(--ink-2)] hover:bg-rose-500/25'
  }`}
  >
  <span>🔴</span>
@@ -925,7 +925,7 @@ export function ModoLocalEnVivoTab({
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='bordada'
  ?'bg-emerald-500 text-[var(--surface)] font-black'
- :'bg-emerald-500/15 text-emerald-300'
+ :'bg-emerald-500/15 text-[var(--ink-2)]'
  }`}
  >
  <span>🟢 Bordada</span>
@@ -947,7 +947,7 @@ export function ModoLocalEnVivoTab({
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='repetir'
  ?'bg-rose-500 text-[var(--ink)] font-black'
- :'bg-rose-500/15 text-rose-300'
+ :'bg-rose-500/15 text-[var(--ink-2)]'
  }`}
  >
  <span>🔴 Repetir</span>

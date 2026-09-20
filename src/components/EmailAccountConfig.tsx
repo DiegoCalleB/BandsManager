@@ -270,7 +270,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
  ) : gmailOAuthStatus.connected ? (
  <div className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 ${
- isStitchLight ?'bg-emerald-50 border-emerald-200 text-emerald-900' :'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
+ isStitchLight ?'bg-emerald-50 border-emerald-200 text-emerald-900' :'bg-emerald-500/10 border-emerald-500/20 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
@@ -303,8 +303,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  {gmailOAuthFeedback && (
  <div className={`p-2.5 rounded-[var(--r-s)] text-[11px] flex items-center gap-2 animate-fadeIn ${
  gmailOAuthFeedback.type ==='success'
- ?'bg-emerald-500/10 text-emerald-300'
- :'bg-rose-500/10 text-rose-300'
+ ?'bg-emerald-500/10 text-[var(--ink-2)]'
+ :'bg-rose-500/10 text-[var(--ink-2)]'
  }`}>
  {gmailOAuthFeedback.type ==='success' ? (
  <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
@@ -325,7 +325,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  {status.connected && !editing ? (
  <div className="space-y-3">
  <div className={`p-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 ${
- isStitchLight ?'bg-emerald-50 border-emerald-200 text-emerald-900' :'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
+ isStitchLight ?'bg-emerald-50 border-emerald-200 text-emerald-900' :'bg-emerald-500/10 border-emerald-500/20 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
@@ -441,8 +441,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  {feedback && (
  <div className={`p-3 rounded-[var(--r-m)] text-xs flex items-center gap-2 animate-fadeIn ${
  feedback.type ==='success'
- ?'bg-emerald-500/10 text-emerald-300'
- :'bg-rose-500/10 text-rose-300'
+ ?'bg-emerald-500/10 text-[var(--ink-2)]'
+ :'bg-rose-500/10 text-[var(--ink-2)]'
  }`}>
  {feedback.type ==='success' ? (
  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />

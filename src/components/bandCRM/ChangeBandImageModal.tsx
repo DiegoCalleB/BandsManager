@@ -139,7 +139,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  </div>
 
  {statusMsg && (
- <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${statusMsg.type ==='success' ?'bg-emerald-950/80 border-emerald-800 text-emerald-300' :'bg-rose-950/80 border-rose-800 text-rose-300'}`}>
+ <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${statusMsg.type ==='success' ?'bg-[var(--ok-soft)] border-emerald-800 text-[var(--ink-2)]' :'bg-[var(--alert-soft)] border-rose-800 text-[var(--ink-2)]'}`}>
  {statusMsg.type ==='success' && <Check className="w-4 h-4" />}
  <span>{statusMsg.text}</span>
  </div>
@@ -187,7 +187,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  )}
 
  {band.imagen_url && (
- <button type="button" onClick={handleRemoveImage} className="w-full p-2 bg-rose-950/40 hover:bg-rose-950/80 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-rose-300 transition-all cursor-pointer">
+ <button type="button" onClick={handleRemoveImage} className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-all cursor-pointer">
  <Trash2 className="w-4 h-4 text-rose-400" />
  <span>Eliminar imagen actual</span>
  </button>
