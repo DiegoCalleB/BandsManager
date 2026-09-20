@@ -2,6 +2,7 @@ import React, { useState } from'react';
 import { BandContact } from'../../types';
 import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw, Brain, GraduationCap } from'lucide-react';
 import { ModalPortal } from'../common/ModalPortal';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 import { apiFetch } from'../../utils/api';
 import { api } from'../../services/api';
 
@@ -872,8 +873,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  )}
  </div>
  ) : (
- <div className="py-8 text-center space-y-3">
- <p className="text-xs text-[var(--ink-2)] font-mono">No hay análisis generado para esta banda todavía.</p>
+ <div className="py-8 text-center space-y-4 flex flex-col items-center">
+ <PublicoSilhouette opacity={12} size="medium" />
+ <div className="space-y-1">
+ <p className="text-sm font-medium text-[var(--ink)]">Sin análisis de tono</p>
+ <p className="text-xs text-[var(--ink-2)]">Analiza el perfil de tu banda para entender mejor a tu audiencia.</p>
+ </div>
  <button
  onClick={onReAnalyze}
  className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 font-mono font-bold text-xs uppercase tracking-wider cursor-pointer"
