@@ -256,10 +256,10 @@ export function PdfExportModal({
  isOpen,
  activeSetlist,
  activeSetlistMetrics,
- songs
+ songs,
  bandMembers = [],
- bandName ='Tu Banda',
- bandLogoUrl ='',
+ bandName = 'Tu Banda',
+ bandLogoUrl = '',
  onClose,
  onUpdateSong
 }: PdfExportModalProps) {

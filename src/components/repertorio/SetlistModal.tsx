@@ -14,9 +14,10 @@ interface SetlistModalProps {
 export function SetlistModal({
  isOpen,
  setlistToEdit,
- colors
+ colors,
  onClose,
- onSave}: SetlistModalProps) {
+ onSave
+}: SetlistModalProps) {
  const [nombre, setNombre] = useState('');
  const [descripcion, setDescripcion] = useState('');
  const [tipoFormato, setTipoFormato] = useState<Setlist['tipoFormato']>('festival');

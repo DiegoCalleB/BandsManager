@@ -20,12 +20,12 @@ interface SongModalProps {
 export function SongModal({
  isOpen,
  editingSong,
- colors
+ colors,
  onClose,
  onSave,
  albumsList = [],
- defaultAlbum ='',
- defaultAlbumForNewSong ='',
+ defaultAlbum = '',
+ defaultAlbumForNewSong = '',
  bandMembers = []
 }: SongModalProps) {
  const effectiveDefaultAlbum = defaultAlbumForNewSong || defaultAlbum ||'';

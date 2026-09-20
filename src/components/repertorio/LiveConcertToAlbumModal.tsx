@@ -62,10 +62,11 @@ const parseTimeToSeconds = (str: string): number => {
 export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = ({
  isOpen,
  onClose,
- bandName ='Nuestra Banda',
- colors
+ bandName = 'Nuestra Banda',
+ colors,
  onSaveAlbumToCatalog,
- onSaveSetlist}) => {
+ onSaveSetlist
+}) => {
  const [youtubeUrl, setYoutubeUrl] = useState('');
  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
  const [useAi, setUseAi] = useState(true);
