@@ -480,7 +480,7 @@ export function CampaignManagerModal({
  >
  <div className="flex items-center gap-3">
  <div className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center ${
- !activeCampaign ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70' :'bg-[var(--surface)]/80 text-neutral-500'
+ !activeCampaign ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
  <Compass className="w-4 h-4" />
  </div>
@@ -503,7 +503,7 @@ export function CampaignManagerModal({
  {!activeCampaign ? (
  <Check className="w-5 h-5 text-[var(--acc)]" />
  ) : (
- <span className="text-[10px] font-mono text-neutral-500 hover:text-[var(--ink-3)]">
+ <span className="text-[10px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-3)]">
  Seleccionar
  </span>
  )}

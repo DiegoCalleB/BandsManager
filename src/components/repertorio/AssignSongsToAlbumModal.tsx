@@ -193,7 +193,7 @@ export function AssignSongsToAlbumModal({
  </div>
 
  <div className="relative mb-2">
- <Search className="w-4 h-4 absolute left-3 top-2.5 text-neutral-500" />
+ <Search className="w-4 h-4 absolute left-3 top-2.5 text-[var(--ink-2)]" />
  <input
  type="text"
  value={search}
@@ -231,7 +231,7 @@ export function AssignSongsToAlbumModal({
  <span>{formatSongTitle(song.titulo)}</span>
  {song.tonalidad && <span className="text-[10px] text-[var(--ok)] font-mono">({song.tonalidad})</span>}
  </div>
- <div className="text-[10px] text-neutral-500 truncate">
+ <div className="text-[10px] text-[var(--ink-2)] truncate">
  {song.albumDisco ? `Álbum actual: ${song.albumDisco}` :'Sin álbum asignado'}
  </div>
  </div>
