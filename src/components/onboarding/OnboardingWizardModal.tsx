@@ -1004,7 +1004,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <div className="relative w-full max-w-3xl rounded-3xl bg-[var(--surface)] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
  
  {/* Header */}
- <div className="p-5 sm:p-6 border-b border-[var(--hair)] flex items-center justify-between bg-zinc-900/50">
+ <div className="p-5 sm:p-6 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--bg)]/50">
  <div>
  <div className="flex items-center gap-2">
  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold uppercase tracking-wider">
@@ -1024,7 +1024,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-zinc-500 hover:text-[var(--ink)] hover:bg-zinc-800 transition-colors"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors"
  title="Cerrar asistente"
  >
  <X className="w-5 h-5" />
@@ -1047,7 +1047,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
  : isPassed
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 hover:bg-[var(--acc)]/25'
- :'text-zinc-500 hover:text-[var(--ink-2)]'
+ :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'
  }`}
  >
  {isPassed ? (
@@ -1360,7 +1360,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={handlePrevStep}
- className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-zinc-900 hover:bg-zinc-800 text-[var(--ink-2)] text-xs font-medium transition-colors"
+ className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-medium transition-colors"
  >
  <ArrowLeft className="w-3.5 h-3.5" /> Anterior
  </button>
@@ -1368,7 +1368,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="text-xs text-zinc-500 hover:text-[var(--ink-2)]"
+ className="text-xs text-[var(--ink-3)] hover:text-[var(--ink-2)]"
  >
  Configurar más tarde
  </button>

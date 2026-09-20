@@ -623,7 +623,7 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={onClosePlayer}
- className="p-1.5 text-zinc-500 hover:text-[var(--ink)] transition cursor-pointer"
+ className="p-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] transition cursor-pointer"
  title="Cerrar Reproductor"
  >
  <X className="w-4 h-4" />
@@ -894,7 +894,7 @@ export default function SpotifyPlayerBar({
  {/* Close Player */}
  <button
  onClick={onClosePlayer}
- className="p-1.5 text-zinc-500 hover:text-[var(--ink)] transition-all ml-1"
+ className="p-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] transition-all ml-1"
  title="Cerrar Reproductor"
  >
  <X className="w-4 h-4" />

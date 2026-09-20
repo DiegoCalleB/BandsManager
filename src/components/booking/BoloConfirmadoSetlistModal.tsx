@@ -181,7 +181,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
  <button
  onClick={onClose}
- className="p-1 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-zinc-800 transition-colors"
+ className="p-1 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -198,7 +198,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="date"
  value={concertDate}
  onChange={(e) => setConcertDate(e.target.value)}
- className="w-full bg-zinc-900 border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus:border-[var(--hair)] focus:outline-none"
+ className="w-full bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus:border-[var(--hair)] focus:outline-none"
  />
  </div>
 
@@ -212,7 +212,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  placeholder="Ej. 600"
  value={cacheAmount}
  onChange={(e) => setCacheAmount(e.target.value)}
- className="w-full bg-zinc-900 border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus: focus:outline-none"
+ className="w-full bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus: focus:outline-none"
  />
  </div>
  </div>
@@ -235,7 +235,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-all cursor-pointer text-center ${
  targetDurationMin === mins
  ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ok)] shadow-sm'
- :'bg-zinc-900 border-[var(--hair)]800 text-[var(--ink-2)] hover:text-[var(--ink)]'
+ :'bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {mins} min
@@ -263,7 +263,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
 
  {isLoadingData ? (
- <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)]800 text-center text-xs font-mono text-zinc-500 animate-pulse">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)]800 text-center text-xs font-mono text-[var(--ink-3)] animate-pulse">
  Calculando duraciones y repertorios óptimos...
  </div>
  ) : generateNewSetlist ? (
@@ -276,7 +276,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </p>
  </div>
  ) : setlists.length === 0 ? (
- <div className="p-4 rounded-[var(--r-l)] bg-zinc-900 border-[var(--hair)]800 text-center space-y-2 text-xs font-mono text-[var(--ink-2)]">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)]800 text-center space-y-2 text-xs font-mono text-[var(--ink-2)]">
  <p>No tienes ningún setlist guardado aún.</p>
  <button
  type="button"
@@ -306,7 +306,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  ?'bg-[var(--acc)]/15 /80 shadow-md'
  : isOptimal
  ?'bg-emerald-500/10 border-emerald-500/40 hover:bg-emerald-500/15'
- :'bg-zinc-900/60 border-[var(--hair)]800 hover:border-[var(--hair)]700'
+ :'bg-[var(--bg)]/60 border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  >
  <div className="space-y-0.5">

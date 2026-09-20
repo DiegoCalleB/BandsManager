@@ -463,7 +463,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  {/* Header Overlay */}
  <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
  <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] backdrop-blur-md shadow-md flex items-center gap-2 font-mono text-xs ${
- isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-zinc-900/90 text-[var(--ink)]'
+ isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}>
  <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
  <div>
@@ -486,7 +486,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <button
  onClick={() => setShowStyleMenu(!showStyleMenu)}
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
- isStitchLight ?'bg-white/95 text-[var(--ink)]' :'bg-zinc-900/95 text-[var(--ink)]'
+ isStitchLight ?'bg-white/95 text-[var(--ink)]' :'bg-[var(--bg)]/95 text-[var(--ink)]'
  }`}
  >
  <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -494,7 +494,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  </button>
 
  {showStyleMenu && (
- <div className="absolute right-0 top-11 w-60 p-2 rounded-[var(--r-m)] shadow-2xl backdrop-blur-md space-y-1 font-mono text-xs z-[1100] bg-zinc-900/95 text-[var(--ink)]">
+ <div className="absolute right-0 top-11 w-60 p-2 rounded-[var(--r-m)] shadow-2xl backdrop-blur-md space-y-1 font-mono text-xs z-[1100] bg-[var(--bg)]/95 text-[var(--ink)]">
  {(Object.keys(MAP_STYLES) as MapStyleKey[]).map(key => (
  <button
  key={key}
@@ -503,7 +503,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  setShowStyleMenu(false);
  }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
- mapStyle === key ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'hover:bg-zinc-800 text-[var(--ink-2)]'
+ mapStyle === key ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'hover:bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <span>{MAP_STYLES[key].name}</span>
@@ -517,7 +517,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <button
  onClick={handleRecenter}
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
- isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-zinc-900/90 text-[var(--ink)]'
+ isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}
  >
  <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />

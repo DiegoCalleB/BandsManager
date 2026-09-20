@@ -60,17 +60,17 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
 
  {/* Stats Summary Pills */}
  <div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalSongs} Temas
  </span>
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Globe className="w-3.5 h-3.5 text-red-400" /> {totalVideos} Vídeos
  </span>
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Calendar className="w-3.5 h-3.5 text-blue-400" /> {totalEvents} Fechas
  </span>
  {hasRider && (
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Layers className="w-3.5 h-3.5 text-emerald-400" /> Rider Técnico
  </span>
  )}
@@ -79,7 +79,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  {/* Action Cards for EPK and Fans */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto pt-2">
  {/* EPK Card */}
- <div className="p-5 rounded-[var(--r-l)] bg-zinc-900/90 shadow-lg space-y-3 relative overflow-hidden group">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--bg)]/90 shadow-lg space-y-3 relative overflow-hidden group">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Globe className="w-5 h-5 text-[var(--acc)]" />
@@ -106,7 +106,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <button
  type="button"
  onClick={() => copyToClipboard(epkUrl,'epk')}
- className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace EPK"
  >
  {copiedEpk ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -115,7 +115,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  </div>
 
  {/* Fans Landing Card */}
- <div className="p-5 rounded-[var(--r-l)] bg-zinc-900/90 shadow-lg space-y-3 relative overflow-hidden group">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--bg)]/90 shadow-lg space-y-3 relative overflow-hidden group">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Heart className="w-5 h-5 text-pink-400" />
@@ -142,7 +142,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <button
  type="button"
  onClick={() => copyToClipboard(fansUrl,'fans')}
- className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace Fans"
  >
  {copiedFans ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}

@@ -68,7 +68,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAll}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer shrink-0 ${
- isStitchLight ?'hover:bg-[var(--sunken)] text-amber-700' :'hover:bg-zinc-800 text-[var(--acc)]'
+ isStitchLight ?'hover:bg-[var(--sunken)] text-amber-700' :'hover:bg-[var(--surface)] text-[var(--acc)]'
  }`}
  title={isAllSelected ?'Deseleccionar todo' : `Seleccionar las ${totalFilteredCount} bandas`}
  >
@@ -108,7 +108,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`md:hidden p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-zinc-800 hover:text-[var(--ink)]'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
  }`}
  title="Cerrar selección"
  >
@@ -164,7 +164,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  setIsStatusDropdownOpen(false);
  }}
  className={`w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer ${
- isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-zinc-800'
+ isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]'
  } ${opt.color}`}
  >
  <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -200,7 +200,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-amber-600'
- :'bg-zinc-800 hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--acc)]/70'
+ :'bg-[var(--sunken)] hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--acc)]/70'
  }`}
  title="Marcar bandas como favoritas"
  >
@@ -214,7 +214,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-semibold transition-all flex items-center gap-1 cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-zinc-800 hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--ink)]'
+ :'bg-[var(--sunken)] hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--ink)]'
  }`}
  title="Exportar bandas seleccionadas a CSV"
  >
@@ -237,7 +237,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`hidden md:flex p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-zinc-800 hover:text-[var(--ink)]'
+ isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
  }`}
  title="Deseleccionar todo"
  >
@@ -274,7 +274,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <button
  type="button"
  onClick={() => setIsConfirmDeleteOpen(false)}
- className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] transition-colors cursor-pointer"
+ className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>

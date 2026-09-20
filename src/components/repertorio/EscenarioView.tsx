@@ -250,7 +250,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <Mic className="w-6 h-6 text-sky-400 animate-pulse" />
  )
  ) : (
- <Radio className="w-6 h-6 text-zinc-500" />
+ <Radio className="w-6 h-6 text-[var(--ink-3)]" />
  )}
  </div>
 
@@ -328,7 +328,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {currentStageSong && (
  <button
  onClick={() => toggleFavoriteSong(currentStageSong.id)}
- className="p-2.5 rounded-full hover:bg-zinc-800 transition-all cursor-pointer group flex items-center justify-center shrink-0 ml-1"
+ className="p-2.5 rounded-full hover:bg-[var(--surface)] transition-all cursor-pointer group flex items-center justify-center shrink-0 ml-1"
  title={isCurrentSongFavorited ?"Quitar de tus temas favoritos" :"Guardar en tus favoritos (Spotify)"}
  >
  <Heart 
@@ -424,7 +424,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div className="space-y-1.5 pt-1">
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-2)] font-bold px-0.5">
  <span>{formatSecondsToMmSs(stageCurrentTime)}</span>
- <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-mono">
+ <span className="text-[10px] text-[var(--ink-3)] uppercase tracking-widest font-mono">
  {stageIsPlaying ?'• EN REPRODUCCIÓN' :'PAUSADO'}
  </span>
  <span>{formatSecondsToMmSs(stageItemDuration)}</span>
@@ -475,13 +475,13 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
  <div className="p-2 rounded-[var(--r-s)] bg-black/60">
- <span className="font-bold text-[var(--ink)]">🦶 Pista Siguiente:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-[var(--acc)]/70">PageDown</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-[var(--acc)]/70">→</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-[var(--acc)]/70">]</code>
+ <span className="font-bold text-[var(--ink)]">🦶 Pista Siguiente:</span> <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">PageDown</code> / <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">→</code> / <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">]</code>
  </div>
  <div className="p-2 rounded-[var(--r-s)] bg-black/60">
- <span className="font-bold text-[var(--ink)]">🦶 Pista Anterior:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-[var(--acc)]/70">PageUp</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-[var(--acc)]/70">←</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-[var(--acc)]/70">[</code>
+ <span className="font-bold text-[var(--ink)]">🦶 Pista Anterior:</span> <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">PageUp</code> / <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">←</code> / <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">[</code>
  </div>
  <div className="p-2 rounded-[var(--r-s)] bg-black/60">
- <span className="font-bold text-[var(--ink)]">🦶 Play / Pausa:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-[var(--acc)]/70">Barra Espaciadora</code>
+ <span className="font-bold text-[var(--ink)]">🦶 Play / Pausa:</span> <code className="bg-[var(--sunken)] px-1.5 py-0.5 rounded text-[var(--acc)]/70">Barra Espaciadora</code>
  </div>
  </div>
  </div>
@@ -520,12 +520,12 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {currentStageSong && (
  <div className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-2">
  {currentStageSong.tonalidad && (
- <span className="px-2 py-0.5 rounded bg-zinc-800 text-[var(--acc)]/70 font-bold">
+ <span className="px-2 py-0.5 rounded bg-[var(--sunken)] text-[var(--acc)]/70 font-bold">
  Tono: {currentStageSong.tonalidad}
  </span>
  )}
  {currentStageSong.bpm && (
- <span className="px-2 py-0.5 rounded bg-zinc-800 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">
  {currentStageSong.bpm} BPM
  </span>
  )}
@@ -543,7 +543,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {currentStageSong ? formatSongTitle(currentStageSong.titulo) :'Sin tema seleccionado'}
  </h4>
  {currentStageSong?.afinacion && (
- <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-[var(--ink-2)]">
+ <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">
  {currentStageSong.afinacion}
  </span>
  )}
@@ -551,32 +551,32 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  {/* Font Size controls for stage readability */}
  <div className="flex items-center gap-1.5 text-[11px] font-mono">
- <span className="text-zinc-500 mr-1 text-[10px] uppercase font-bold">Tamaño:</span>
+ <span className="text-[var(--ink-3)] mr-1 text-[10px] uppercase font-bold">Tamaño:</span>
  <button
  type="button"
  onClick={() => setChordsFontSize('sm')}
- className={`px-2 py-0.5 rounded ${chordsFontSize ==='sm' ?'bg-[var(--surface)] text-black font-bold' :'bg-zinc-800 text-[var(--ink-2)]'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='sm' ?'bg-[var(--surface)] text-black font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  A-
  </button>
  <button
  type="button"
  onClick={() => setChordsFontSize('base')}
- className={`px-2 py-0.5 rounded ${chordsFontSize ==='base' ?'bg-[var(--surface)] text-black font-bold' :'bg-zinc-800 text-[var(--ink-2)]'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='base' ?'bg-[var(--surface)] text-black font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  A
  </button>
  <button
  type="button"
  onClick={() => setChordsFontSize('lg')}
- className={`px-2 py-0.5 rounded ${chordsFontSize ==='lg' ?'bg-[var(--surface)] text-black font-bold' :'bg-zinc-800 text-[var(--ink-2)]'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='lg' ?'bg-[var(--surface)] text-black font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  A+
  </button>
  <button
  type="button"
  onClick={() => setChordsFontSize('xl')}
- className={`px-2 py-0.5 rounded ${chordsFontSize ==='xl' ?'bg-[var(--surface)] text-black font-bold' :'bg-zinc-800 text-[var(--ink-2)]'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='xl' ?'bg-[var(--surface)] text-black font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  A++
  </button>
@@ -608,7 +608,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  {/* Musician/Substitute notes if present */}
  {currentStageSong?.notasRepertorio && (
- <div className="p-2.5 rounded bg-zinc-900/80 border-[var(--hair)]800 text-xs font-mono text-[var(--ink)]/90">
+ <div className="p-2.5 rounded bg-[var(--bg)]/80 border-[var(--hair)]800 text-xs font-mono text-[var(--ink)]/90">
  <span className="font-bold text-[var(--acc)]">💡 Nota de directo:</span> {currentStageSong.notasRepertorio}
  </div>
  )}
@@ -646,7 +646,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isSelectedThis
  ?'bg-[var(--surface)]/15 border-l-4 border-[var(--hair)] text-[var(--ink)]' 
- :'hover:bg-zinc-800/60 text-[var(--ink-2)]'
+ :'hover:bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}
  >
  <div className="col-span-1 flex items-center gap-2">
@@ -664,7 +664,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  >
  {isPlayingThis ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
  </button>
- <span className="font-mono text-xs font-bold text-zinc-500">{idx + 1}</span>
+ <span className="font-mono text-xs font-bold text-[var(--ink-3)]">{idx + 1}</span>
  </div>
 
  <div className="col-span-6">
@@ -723,7 +723,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isSelectedThis 
  ?'bg-sky-500/15 border-l-4 border-sky-400 text-[var(--ink)]' 
- :'hover:bg-zinc-800/60 text-[var(--ink-2)]'
+ :'hover:bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}
  onClick={() => {
  setStagePlayingIndex(idx);
@@ -750,7 +750,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  >
  {isPlayingThis ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
  </button>
- <span className="font-mono text-xs font-bold text-zinc-500">{idx + 1}</span>
+ <span className="font-mono text-xs font-bold text-[var(--ink-3)]">{idx + 1}</span>
  </div>
 
  <div className="col-span-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -793,7 +793,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </span>
  </div>
 
- <div className="col-span-1 text-center font-mono text-xs text-zinc-500">
+ <div className="col-span-1 text-center font-mono text-xs text-[var(--ink-3)]">
  —
  </div>
 

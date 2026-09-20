@@ -1255,7 +1255,7 @@ export default function BookingCRM({
  setIsMobileToolsOpen(false);
  handleEnrichAddresses();
  }}
- className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-[var(--ink)] border-[var(--hair)]700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+ className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
  >
  <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>{isEnrichingAddresses ?'Rellenando direcciones...' :'Autocompletar Direcciones'}</span>
@@ -1537,7 +1537,7 @@ export default function BookingCRM({
  placeholder="Nombre del filtro (ej: Salas BCN > 300)..."
  value={newFilterName}
  onChange={(e) => setNewFilterName(e.target.value)}
- className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-zinc-900 border-[var(--acc)]/50 text-[var(--ink)] focus:outline-none w-48 sm:w-56"
+ className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--acc)]/50 text-[var(--ink)] focus:outline-none w-48 sm:w-56"
  />
  <button
  type="submit"
@@ -1548,7 +1548,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setIsSavingFilterOpen(false)}
- className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-[var(--ink-2)] rounded-[var(--r-s)] cursor-pointer"
+ className="p-1.5 bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] rounded-[var(--r-s)] cursor-pointer"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -1570,7 +1570,7 @@ export default function BookingCRM({
  className={`group relative shrink-0 flex items-center rounded-full transition-all cursor-pointer ${
  isActive
  ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold shadow-xs'
- :'bg-zinc-900/80 hover:bg-zinc-800 border-[var(--hair)]800 text-[var(--ink)]'
+ :'bg-[var(--bg)]/80 hover:bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink)]'
  }`}
  >
  <button
@@ -1637,7 +1637,7 @@ export default function BookingCRM({
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
  typeFilter === t.key
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
- :'bg-zinc-800 text-[var(--ink-2)] hover:bg-zinc-700'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-zinc-700'
  }`}
  >
  {t.label}
@@ -1667,7 +1667,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-all cursor-pointer ${
  selectedCityFilter ===''
  ?'bg-[var(--surface)] text-[var(--acc)] font-bold'
- :'bg-zinc-900 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
+ :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
  }`}
  >
  Todas ({activeLeadsForSection.length})
@@ -1683,7 +1683,7 @@ export default function BookingCRM({
  className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)] font-bold border-[var(--acc)]/50'
- :'bg-zinc-900 text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
+ :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
  }`}
  >
  <span>{cityName}</span>
@@ -2377,7 +2377,7 @@ export default function BookingCRM({
  onClick={handleResetTemplate}
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
- ?'bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink-2)]'
+ ?'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
  :'bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)]'
  }`}
  title="Restaurar valores por defecto de esta plantilla"
@@ -2391,7 +2391,7 @@ export default function BookingCRM({
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  isStitchLight
  ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] shadow-md shadow-indigo-100'
- :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
+ :'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
  Guardar Plantillas y Directrices

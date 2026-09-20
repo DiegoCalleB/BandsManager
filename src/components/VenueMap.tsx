@@ -695,7 +695,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
  {/* City Info Card */}
  <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] backdrop-blur-md shadow-md flex items-center gap-2 font-mono text-xs ${
- isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-zinc-900/90 text-[var(--ink)]'
+ isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}>
  <MapPin className="w-4 h-4 text-amber-500 animate-bounce" />
  <div>
@@ -726,7 +726,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-white/95 hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-zinc-900/95 hover:bg-zinc-800 text-[var(--ink)]'
+ :'bg-[var(--bg)]/95 hover:bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <Layers className="w-3.5 h-3.5 text-amber-500" />
@@ -735,7 +735,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  {showStyleMenu && (
  <div className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] shadow-2xl backdrop-blur-md space-y-1 font-mono text-xs z-[1100] ${
- isStitchLight ?'bg-white/95 text-[var(--ink)] shadow-slate-300/50' :'bg-zinc-900/95 text-[var(--ink)] shadow-black/80'
+ isStitchLight ?'bg-white/95 text-[var(--ink)] shadow-slate-300/50' :'bg-[var(--bg)]/95 text-[var(--ink)] shadow-black/80'
  }`}>
  <div className="text-[10px] uppercase font-bold text-[var(--ink-3)] px-2 py-1 flex items-center justify-between">
  <span>Elegir Capa de Mapa</span>
@@ -753,7 +753,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  ?'bg-indigo-600 text-[var(--ink)] shadow-sm'
  : isStitchLight
  ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'hover:bg-zinc-800 text-[var(--ink-2)]'
+ :'hover:bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <span className="truncate">{MAP_STYLES[key].name}</span>
@@ -769,7 +769,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-white/90 hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-zinc-900/90 hover:bg-zinc-800 text-[var(--ink)]'
+ :'bg-[var(--bg)]/90 hover:bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -780,7 +780,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  {/* Floating Legend */}
  <div className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] backdrop-blur-md font-mono text-[10px] space-y-1 shadow-md hidden sm:block ${
- isStitchLight ?'bg-white/90 text-[var(--ink-2)]' :'bg-zinc-900/90 text-[var(--ink-2)]'
+ isStitchLight ?'bg-white/90 text-[var(--ink-2)]' :'bg-[var(--bg)]/90 text-[var(--ink-2)]'
  }`}>
  <div className="font-bold text-[9px] uppercase tracking-wider mb-1 text-[var(--ink-3)]">Leyenda</div>
  <div className="flex items-center gap-2">

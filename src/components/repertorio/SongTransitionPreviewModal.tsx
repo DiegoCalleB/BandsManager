@@ -587,7 +587,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={onClose}
- className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-zinc-800 transition cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -650,11 +650,11 @@ export function SongTransitionPreviewModal({
  #{indexA + 1} Anterior
  </span>
  <div className="flex items-center gap-1">
- <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-[var(--hair)]700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
  🎼 {itemA?.tonalidadDeseada || songA.tonalidad ||'Sin tono'}
  </span>
  {songA.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-[var(--hair)]700 text-sky-300 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-sky-300 font-mono text-[9px] font-semibold">
  🥁 {songA.bpm} BPM
  </span>
  )}
@@ -744,7 +744,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={() => fileInputRefA.current?.click()}
- className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
+ className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-[var(--sunken)] hover:bg-zinc-700 transition cursor-pointer shrink-0"
  title="Subir archivo .mp3/.wav propio para probar"
  >
  📁 Subir
@@ -772,7 +772,7 @@ export function SongTransitionPreviewModal({
  >
  <ArrowRight className="w-3.5 h-3.5" />
  </div>
- <span className="text-[8px] font-mono text-zinc-500 mt-0.5 uppercase font-bold text-center">
+ <span className="text-[8px] font-mono text-[var(--ink-3)] mt-0.5 uppercase font-bold text-center">
  {config.style ==='crossfade' ? `${config.fadeDurationSec}s` : config.style ==='segue' ?'0s' :'pausa'}
  </span>
  </div>
@@ -793,11 +793,11 @@ export function SongTransitionPreviewModal({
  #{indexB + 1} Siguiente
  </span>
  <div className="flex items-center gap-1">
- <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-[var(--hair)]700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
  🎼 {itemB?.tonalidadDeseada || songB.tonalidad ||'Sin tono'}
  </span>
  {songB.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-zinc-800 border-[var(--hair)]700 text-sky-300 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-sky-300 font-mono text-[9px] font-semibold">
  🥁 {songB.bpm} BPM
  </span>
  )}
@@ -887,7 +887,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={() => fileInputRefB.current?.click()}
- className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer shrink-0"
+ className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-[var(--sunken)] hover:bg-zinc-700 transition cursor-pointer shrink-0"
  title="Subir archivo .mp3/.wav propio para probar"
  >
  📁 Subir
@@ -1167,7 +1167,7 @@ export function SongTransitionPreviewModal({
  onClick={() => setActiveTab('pros_cons')}
  className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
  activeTab ==='pros_cons'
- ?'bg-zinc-800 text-[var(--acc)]/70'
+ ?'bg-[var(--sunken)] text-[var(--acc)]/70'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1182,7 +1182,7 @@ export function SongTransitionPreviewModal({
  onClick={() => setActiveTab('metrics')}
  className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
  activeTab ==='metrics'
- ?'bg-zinc-800 text-[var(--acc)]/70'
+ ?'bg-[var(--sunken)] text-[var(--acc)]/70'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1194,7 +1194,7 @@ export function SongTransitionPreviewModal({
  onClick={() => setActiveTab('stagecraft')}
  className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
  activeTab ==='stagecraft'
- ?'bg-zinc-800 text-[var(--acc)]/70'
+ ?'bg-[var(--sunken)] text-[var(--acc)]/70'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1240,7 +1240,7 @@ export function SongTransitionPreviewModal({
  </div>
  ))}
  {diagnosis.porQueSi.length === 0 && (
- <div className="p-1.5 rounded-[var(--r-s)] bg-zinc-900/50 border-[var(--hair)]800 text-[10px] text-[var(--ink-2)] text-center">
+ <div className="p-1.5 rounded-[var(--r-s)] bg-[var(--bg)]/50 border-[var(--hair)]800 text-[10px] text-[var(--ink-2)] text-center">
  Sin factores musicales especialmente favorables.
  </div>
  )}
@@ -1262,7 +1262,7 @@ export function SongTransitionPreviewModal({
  ?'bg-[var(--alert-soft)] border-rose-500/40'
  : con.severity ==='aviso'
  ?'bg-[var(--acc-soft)] /30'
- :'bg-zinc-900/60 border-[var(--hair)]800'
+ :'bg-[var(--bg)]/60 border-[var(--hair)]800'
  }`}
  >
  <div className="flex items-center justify-between gap-1">
@@ -1373,7 +1373,7 @@ export function SongTransitionPreviewModal({
  onSwapSongs(indexA, indexB);
  onClose();
  }}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
  >
  <ArrowLeftRight className="w-3 h-3" />
  <span>Invertir (A ⇄ B)</span>
@@ -1384,7 +1384,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={onClose}
- className="px-3.5 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] text-[11px] font-bold transition cursor-pointer"
+ className="px-3.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] text-[11px] font-bold transition cursor-pointer"
  >
  Cerrar
  </button>

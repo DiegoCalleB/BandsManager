@@ -123,15 +123,15 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  <p className="text-xs text-[var(--ink-2)] font-sans">{band.nombre_banda}</p>
  </div>
  </div>
- <button onClick={onClose} className="p-1.5 hover:bg-zinc-800 rounded-[var(--r-s)] text-[var(--ink-2)]"><X className="w-5 h-5" /></button>
+ <button onClick={onClose} className="p-1.5 hover:bg-[var(--surface)] rounded-[var(--r-s)] text-[var(--ink-2)]"><X className="w-5 h-5" /></button>
  </div>
 
- <div className="flex items-center justify-center py-2 bg-zinc-900/80 rounded-[var(--r-m)]">
+ <div className="flex items-center justify-center py-2 bg-[var(--bg)]/80 rounded-[var(--r-m)]">
  <div className="relative">
  {band.imagen_url ? (
  <img src={band.imagen_url} alt={band.nombre_banda} className="w-20 h-20 rounded-[var(--r-l)] object-cover border-2 border-[var(--acc)] shadow-lg" />
  ) : (
- <div className="w-20 h-20 rounded-[var(--r-l)] bg-zinc-800 border-2 border-[var(--hair)]700 flex items-center justify-center text-3xl shadow-inner">
+ <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--sunken)] border-2 border-[var(--hair)]700 flex items-center justify-center text-3xl shadow-inner">
  {band.icono ||'🎸'}
  </div>
  )}
@@ -146,9 +146,9 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  )}
 
  <div className="flex flex-col gap-2.5">
- <label className="w-full p-3 bg-zinc-900 hover:bg-zinc-800 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer">
+ <label className="w-full p-3 bg-[var(--bg)] hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer">
  <div className="flex items-center gap-3">
- <div className="p-2 bg-zinc-800 text-[var(--acc)] rounded-[var(--r-s)]">{isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}</div>
+ <div className="p-2 bg-[var(--sunken)] text-[var(--acc)] rounded-[var(--r-s)]">{isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}</div>
  <div>
  <span className="block font-bold text-xs text-[var(--ink)]">{isUploading ?'Subiendo...' :'Subir desde dispositivo'}</span>
  <span className="block text-[11px] text-[var(--ink-2)] font-sans">Formatos JPG, PNG, WEBP o SVG</span>
@@ -175,12 +175,12 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  </button>
 
  {!showUrlInput ? (
- <button type="button" onClick={() => setShowUrlInput(true)} className="w-full p-2.5 bg-zinc-900/60 hover:bg-zinc-800 border-[var(--hair)]800 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all">
+ <button type="button" onClick={() => setShowUrlInput(true)} className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] border-[var(--hair)]800 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all">
  <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Pegar URL directa de imagen</span>
  </button>
  ) : (
- <div className="p-3 bg-zinc-900 border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
+ <div className="p-3 bg-[var(--bg)] border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
  <input type="url" placeholder="https://ejemplo.com/logo.png" value={customUrl} onChange={(e) => setCustomUrl(e.target.value)} className="w-full bg-black/60 border-[var(--hair)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]" />
  <button onClick={handleSaveCustomUrl} disabled={!customUrl.trim()} className="px-3 py-1.5 bg-[var(--acc)] text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-s)] hover:bg-[var(--acc)]/60">Guardar</button>
  </div>

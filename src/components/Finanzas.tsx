@@ -294,7 +294,7 @@ export default function Finanzas({
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isStitchLight 
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-sm' 
- :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] shadow-md'
+ :'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-md'
  }`}
  >
  <Plus className="w-3.5 h-3.5" /> Registrar Operación

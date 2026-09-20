@@ -131,7 +131,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  )}
 
  {generatedAudioUrl && (
- <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 space-y-3 animate-in fade-in duration-300">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] space-y-3 animate-in fade-in duration-300">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold font-mono text-[var(--acc)] flex items-center gap-1.5">
  <Music className="w-4 h-4" /> Soundtrack Generado con Éxito

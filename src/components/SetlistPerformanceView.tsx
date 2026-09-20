@@ -449,7 +449,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
  modeArchetype ==='directo'
  ? glareMode ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
- : glareMode ?'text-zinc-600 hover:text-black' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ : glareMode ?'text-[var(--ink-2)] hover:text-black' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Directo
@@ -460,7 +460,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 cursor-pointer ${
  modeArchetype ==='ensayo'
  ?'bg-emerald-500 text-black shadow-sm'
- : glareMode ?'text-zinc-600 hover:text-emerald-700' :'text-[var(--ink-2)] hover:text-emerald-400'
+ : glareMode ?'text-[var(--ink-2)] hover:text-emerald-700' :'text-[var(--ink-2)] hover:text-emerald-400'
  }`}
  >
  <Headphones className="w-3 h-3" />
@@ -517,7 +517,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
  glareMode
  ?'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border-[var(--hair)]300'
- :'bg-zinc-800/80 hover:bg-zinc-700 text-[var(--ink-2)]'
+ :'bg-[var(--sunken)]/80 hover:bg-zinc-700 text-[var(--ink-2)]'
  }`}
  title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
  >
@@ -765,7 +765,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => handleLaunchStudio()}
- className="px-2 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] text-xs font-semibold flex items-center gap-1 border-[var(--hair)]700 transition active:scale-95 cursor-pointer"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] text-xs font-semibold flex items-center gap-1 border-[var(--hair)]700 transition active:scale-95 cursor-pointer"
  >
  <Sliders className="w-3.5 h-3.5 text-indigo-300" />
  <span>Studio</span>
@@ -1034,17 +1034,17 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`p-3 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition ${
  isCurrent
  ?'bg-purple-950/40 border-purple-500/50 text-purple-200'
- :'bg-zinc-900/60 border-[var(--hair)]800 hover:border-[var(--hair)]700 text-[var(--ink-2)]'
+ :'bg-[var(--bg)]/60 border-[var(--hair)]800 hover:border-[var(--hair)]700 text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-2.5">
  <span className="text-lg">{meta.icon}</span>
  <div>
  <div className="text-xs font-bold text-[var(--ink)]">{item.tituloCustom || meta.label}</div>
- <div className="text-[10px] text-zinc-500 font-mono">Bloque de escenario</div>
+ <div className="text-[10px] text-[var(--ink-3)] font-mono">Bloque de escenario</div>
  </div>
  </div>
- <span className="px-2 py-1 rounded bg-zinc-800 text-[10px] text-[var(--ink-2)] font-mono">
+ <span className="px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink-2)] font-mono">
  Ir al bloque
  </span>
  </div>
@@ -1065,7 +1065,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <div className="flex items-start justify-between gap-2">
  <div className="flex items-center gap-2 min-w-0">
  <span className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-mono font-bold shrink-0 ${
- isCurrent ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'bg-zinc-800 text-[var(--ink-2)]'
+ isCurrent ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {idx + 1}
  </span>
@@ -1087,7 +1087,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {stemCount > 0 ? `${stemCount} pistas` :'Iris'}
  </span>
  ) : (
- <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] text-zinc-500 bg-zinc-800/50">
+ <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] text-[var(--ink-3)] bg-[var(--sunken)]/50">
  Sin Iris
  </span>
  )}
@@ -1128,7 +1128,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  setShowSongListDrawer(false);
  handleLaunchStudio(song);
  }}
- className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]700 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+ className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]700 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
  title="Abrir Studio multipista completo de este tema"
  >
  <Sliders className="w-3.5 h-3.5 text-indigo-300" />

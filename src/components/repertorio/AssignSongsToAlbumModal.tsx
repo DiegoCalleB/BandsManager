@@ -162,7 +162,7 @@ export function AssignSongsToAlbumModal({
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
- <label className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 border-[var(--hair)] flex items-center gap-1 text-xs">
+ <label className="px-3 py-2 bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 border-[var(--hair)] flex items-center gap-1 text-xs">
  <Upload className="w-3.5 h-3.5 text-[var(--ok)]" />
  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
  </label>

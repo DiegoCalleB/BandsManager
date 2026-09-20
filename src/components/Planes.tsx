@@ -764,7 +764,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-sm'
  : plan.id ==='cabeza_de_cartel'
  ?'bg-emerald-400 text-black shadow-sm'
- :'bg-slate-300 text-black'
+ :'bg-[var(--surface)] text-black'
  }`}>
  <Gift className="w-4 h-4 stroke-[2.5]" />
  </div>

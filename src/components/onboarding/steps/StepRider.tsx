@@ -53,7 +53,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
 
  {/* Quick Specs Grid */}
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
- <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)]">Canales de Mesa Mínimos</label>
  <input
  type="number"
@@ -61,7 +61,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  max={64}
  value={canalesMesa}
  onChange={(e) => setCanalesMesa(Number(e.target.value))}
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -71,14 +71,14 @@ export const StepRider: React.FC<StepRiderProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  llevaMicrofoniaPropia
  ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
- :'bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ :'bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
  <span className="text-xs font-semibold">Microfonía Propia</span>
  {llevaMicrofoniaPropia && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
  </div>
- <span className="text-[10px] text-zinc-500 block mt-1">Llevamos set propio de micros</span>
+ <span className="text-[10px] text-[var(--ink-3)] block mt-1">Llevamos set propio de micros</span>
  </button>
 
  <button
@@ -87,14 +87,14 @@ export const StepRider: React.FC<StepRiderProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  llevaInEars
  ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
- :'bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ :'bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
  <span className="text-xs font-semibold">Monitoraje In-Ears</span>
  {llevaInEars && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
  </div>
- <span className="text-[10px] text-zinc-500 block mt-1">Sistema propio de monitores</span>
+ <span className="text-[10px] text-[var(--ink-3)] block mt-1">Sistema propio de monitores</span>
  </button>
 
  <button
@@ -103,14 +103,14 @@ export const StepRider: React.FC<StepRiderProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
  necesitaBacklineBateria
  ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
- :'bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+ :'bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className="flex items-center justify-between">
  <span className="text-xs font-semibold">Backline Sala</span>
  {necesitaBacklineBateria && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
  </div>
- <span className="text-[10px] text-zinc-500 block mt-1">Batería básica aportada por sala</span>
+ <span className="text-[10px] text-[var(--ink-3)] block mt-1">Batería básica aportada por sala</span>
  </button>
  </div>
 
@@ -150,7 +150,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <button
  type="button"
  onClick={() => { setRiderPdfUrl(''); setRiderPdfName(''); }}
- className="p-1 rounded text-zinc-500 hover:text-red-400"
+ className="p-1 rounded text-[var(--ink-3)] hover:text-red-400"
  >
  <Trash2 className="w-4 h-4" />
  </button>
@@ -159,13 +159,13 @@ export const StepRider: React.FC<StepRiderProps> = ({
  ) : (
  <div
  onClick={() => fileInputRef.current?.click()}
- className="border-2 border-dashed border-[var(--hair)] hover:/40 rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-zinc-900/40 hover:bg-zinc-900/70 transition-colors"
+ className="border-2 border-dashed border-[var(--hair)] hover:/40 rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
  >
- <Upload className="w-6 h-6 text-zinc-500 mx-auto mb-1.5" />
+ <Upload className="w-6 h-6 text-[var(--ink-3)] mx-auto mb-1.5" />
  <span className="text-xs font-medium text-[var(--ink-2)] block">
  Subir PDF de Rider Técnico o imagen de Stage Plot
  </span>
- <span className="text-[10px] text-zinc-500">
+ <span className="text-[10px] text-[var(--ink-3)]">
  PDF, JPG o PNG hasta 20 MB
  </span>
  {isUploadingRider && (
@@ -187,7 +187,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  value={riderTecnicoText}
  onChange={(e) => setRiderTecnicoText(e.target.value)}
  placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus: leading-relaxed"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus: leading-relaxed"
  />
  </div>
  </div>

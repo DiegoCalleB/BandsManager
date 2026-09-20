@@ -155,14 +155,14 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  </div>
  <button
  onClick={onClose}
- className="p-1.5 hover:bg-zinc-800 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+ className="p-1.5 hover:bg-[var(--surface)] rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
  </div>
 
  {/* Current Preview */}
- <div className="flex items-center justify-center py-2 bg-zinc-900/80 rounded-[var(--r-m)]">
+ <div className="flex items-center justify-center py-2 bg-[var(--bg)]/80 rounded-[var(--r-m)]">
  <LeadAvatar lead={lead} size="lg" showCameraHover={false} />
  </div>
 
@@ -180,9 +180,9 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  {/* Options Stack */}
  <div className="flex flex-col gap-2.5">
  {/* Option 1: File Upload */}
- <label className="w-full p-3 bg-zinc-900 hover:bg-zinc-800 hover:/50 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group">
+ <label className="w-full p-3 bg-[var(--bg)] hover:bg-[var(--surface)] hover:/50 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group">
  <div className="flex items-center gap-3">
- <div className="p-2 bg-zinc-800 group-hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-s)] transition-colors">
+ <div className="p-2 bg-[var(--sunken)] group-hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-s)] transition-colors">
  {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
  </div>
  <div className="text-left">
@@ -230,13 +230,13 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  <button
  type="button"
  onClick={() => setShowUrlInput(true)}
- className="w-full p-2.5 bg-zinc-900/60 hover:bg-zinc-800 border-[var(--hair)]800 hover:border-[var(--hair)]700 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
+ className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] border-[var(--hair)]800 hover:border-[var(--hair)]700 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
  >
  <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Pegar URL directa de imagen</span>
  </button>
  ) : (
- <div className="p-3 bg-zinc-900 border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
+ <div className="p-3 bg-[var(--bg)] border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
  <label className="block text-[10px] uppercase font-sans tracking-wider text-[var(--ink-2)]">
  Pegar enlace de imagen (URL)
  </label>

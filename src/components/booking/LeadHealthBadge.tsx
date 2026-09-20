@@ -98,7 +98,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
  return {
  type:'neutral',
  label:'✨ Activo',
- badgeClass:'bg-zinc-800/80 text-[var(--ink-2)] font-medium',
+ badgeClass:'bg-[var(--sunken)]/80 text-[var(--ink-2)] font-medium',
  icon:'✨',
  description:'En seguimiento regular'
  };

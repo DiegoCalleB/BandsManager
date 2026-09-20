@@ -41,11 +41,11 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  {members.map((m, idx) => (
  <div
  key={m.id || idx}
- className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] hover:border-[var(--hair)] transition-colors"
+ className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] hover:border-[var(--hair)] transition-colors"
  >
  <div className="flex items-center gap-3">
  <div className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold text-xs ${
- m.isLeader ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-zinc-800 text-[var(--ink-2)] border-[var(--hair)]'
+ m.isLeader ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]'
  }`}>
  {m.name.charAt(0).toUpperCase()}
  </div>
@@ -60,8 +60,8 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  </div>
  <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] mt-0.5">
  <span>{m.role ||'Músico'}</span>
- {m.email && <span className="text-zinc-500">· {m.email}</span>}
- {m.instagram && <span className="text-zinc-500">· @{m.instagram.replace('@','')}</span>}
+ {m.email && <span className="text-[var(--ink-3)]">· {m.email}</span>}
+ {m.instagram && <span className="text-[var(--ink-3)]">· @{m.instagram.replace('@','')}</span>}
  </div>
  </div>
  </div>
@@ -70,7 +70,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  <button
  type="button"
  onClick={() => onRemoveMember(m.id)}
- className="p-1.5 rounded-[var(--r-s)] text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-3)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
  title="Quitar miembro"
  >
  <Trash2 className="w-4 h-4" />
@@ -93,7 +93,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  value={newMemberName}
  onChange={(e) => setNewMemberName(e.target.value)}
  placeholder="Nombre y Apellidos *"
- className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
 
  <input
@@ -101,7 +101,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  value={newMemberRole}
  onChange={(e) => setNewMemberRole(e.target.value)}
  placeholder="Instrumento / Rol (ej. Batería, Bajo, Teclados) *"
- className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
 
  <input
@@ -109,7 +109,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  value={newMemberEmail}
  onChange={(e) => setNewMemberEmail(e.target.value)}
  placeholder="Email (para invitarle a acceder al panel)"
- className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
 
  <input
@@ -117,7 +117,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  value={newMemberInstagram}
  onChange={(e) => setNewMemberInstagram(e.target.value)}
  placeholder="Instagram (ej. @nombremusico)"
- className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 

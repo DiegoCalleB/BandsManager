@@ -51,7 +51,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
  {/* Caché estimado por formato */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
- <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)]">
  Caché Acústico / Showcase (€)
  </label>
@@ -63,12 +63,12 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={cacheAcustico}
  onChange={(e) => setCacheAcustico(Number(e.target.value))}
  placeholder="400"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)]">
  Caché Sala / Concierto Estándar (€)
  </label>
@@ -80,12 +80,12 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={cacheSala}
  onChange={(e) => setCacheSala(Number(e.target.value))}
  placeholder="850"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)]">
  Caché Festival / Fiesta Mayor (€)
  </label>
@@ -97,7 +97,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={cacheFestival}
  onChange={(e) => setCacheFestival(Number(e.target.value))}
  placeholder="1800"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
@@ -115,7 +115,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={condicionesKm}
  onChange={(e) => setCondicionesKm(e.target.value)}
  placeholder="Ej. 0,25 €/km a partir de 100 km desde Madrid"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -126,14 +126,14 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all flex items-center justify-between ${
  requiereAlojamiento
  ?'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
- :'bg-zinc-900 border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-2">
  <Hotel className="w-4 h-4 text-[var(--acc)]" />
  <div>
  <span className="text-xs font-semibold block">Hotel si distancia &gt; 150 km</span>
- <span className="text-[10px] text-zinc-500">Incluir pernocta en presupuestos fuera de la provincia</span>
+ <span className="text-[10px] text-[var(--ink-3)]">Incluir pernocta en presupuestos fuera de la provincia</span>
  </div>
  </div>
  {requiereAlojamiento && <Check className="w-4 h-4 text-[var(--acc)]" />}
@@ -155,7 +155,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={contactoBookingNombre}
  onChange={(e) => setContactoBookingNombre(e.target.value)}
  placeholder="Ej. Carlos (Booking & Manager)"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -166,7 +166,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={contactoBookingEmail}
  onChange={(e) => setContactoBookingEmail(e.target.value)}
  placeholder="booking@tubanda.com"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -177,7 +177,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  value={contactoBookingTelefono}
  onChange={(e) => setContactoBookingTelefono(e.target.value)}
  placeholder="+34 600 000 000"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
  </div>

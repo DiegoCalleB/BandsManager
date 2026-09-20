@@ -2859,9 +2859,9 @@ export default function RepertorioSetlists({
  title={showSetlistStats ?'Ocultar métricas secundarias' :'Ver interludios, bloques y perfil de dinámica'}
  >
  <span className="font-semibold text-[var(--ink)]">⏱️ {activeSetlistMetrics.formattedTime}</span>
- <span className="text-zinc-600">·</span>
+ <span className="text-[var(--ink-2)]">·</span>
  <span className="font-bold text-[var(--acc)]">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
- <span className="text-zinc-500 text-[10px]">{showSetlistStats ?'▲' :'▼'}</span>
+ <span className="text-[var(--ink-3)] text-[10px]">{showSetlistStats ?'▲' :'▼'}</span>
  </button>
 
  <div className="relative shrink-0">
@@ -3580,7 +3580,7 @@ export default function RepertorioSetlists({
  </button>
 
  {/* Title + metadata */}
- <span className={`text-sm font-semibold tracking-tight ${isStitchLight ?'text-[var(--ink)]' :'text-slate-100'} truncate shrink-0 max-w-[42vw] sm:max-w-[220px]`} title={formatSongTitle(song.titulo)}>
+ <span className={`text-sm font-semibold tracking-tight ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'} truncate shrink-0 max-w-[42vw] sm:max-w-[220px]`} title={formatSongTitle(song.titulo)}>
  {formatSongTitle(song.titulo)}
  </span>
 
@@ -4246,7 +4246,7 @@ export default function RepertorioSetlists({
  className={`w-full rounded-[var(--r-m)] pl-9.5 ${catalogSearch ?'pr-8' :'pr-3'} py-2 text-xs focus:outline-none transition-all ${
  isStitchLight 
  ?'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 placeholder:text-[var(--ink-3)]' 
- :'bg-[var(--surface)]/60 text-slate-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
+ :'bg-[var(--surface)]/60 text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
  }`}
  />
  {catalogSearch && (
@@ -4434,7 +4434,7 @@ export default function RepertorioSetlists({
  {showAlbumHeader && (
  <div className="pt-3 pb-1 px-2 flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]">
  <span>💿 {albumLabel}</span>
- <div className={`h-px flex-1 ${isStitchLight ?'bg-[var(--sunken)]' :'bg-zinc-800'}`} />
+ <div className={`h-px flex-1 ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--sunken)]'}`} />
  </div>
  )}
 

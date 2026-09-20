@@ -685,7 +685,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <span>{sortedAlbumSongs.length} {sortedAlbumSongs.length === 1 ?'canción' :'canciones'}</span>
  <span>•</span>
  <span className="flex items-center gap-1">
- <Clock className="w-3 h-3 text-zinc-500" />
+ <Clock className="w-3 h-3 text-[var(--ink-3)]" />
  {formatTotalDuration(sortedAlbumSongs)}
  </span>
  </div>
@@ -787,7 +787,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  isExpanded
  ?'bg-[var(--acc)]/15 /30 text-[var(--acc)]/70'
  : isStitchLight
- ?'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-slate-300'
+ ?'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  >

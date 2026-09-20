@@ -2451,7 +2451,7 @@ export default function ReelsCenter({
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  : isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] font-black shadow-md'
- :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] font-black shadow-lg shadow-[var(--acc)]/15'
+ :'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] font-black shadow-lg shadow-[var(--acc)]/15'
  }`}
  >
  {isScheduling ? (
@@ -2604,7 +2604,7 @@ export default function ReelsCenter({
  <div className={`absolute top-2 left-1/2 -translate-x-1/2 w-20 h-4 rounded-full z-20 flex items-center justify-center ${
  isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80'
  }`}>
- <span className={`w-2 h-2 rounded-full ${isStitchLight ?'bg-slate-300' :'bg-[var(--surface)]'}`} />
+ <span className={`w-2 h-2 rounded-full ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'}`} />
  </div>
 
  {/* Dynamic Video Mockup Content with Analog Synth pattern as background */}

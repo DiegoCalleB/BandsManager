@@ -38,7 +38,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  {photos.map((url, idx) => (
  <div
  key={idx}
- className="aspect-video rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] overflow-hidden relative group"
+ className="aspect-video rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] overflow-hidden relative group"
  >
  <img src={url} alt={`Foto promo ${idx + 1}`} className="w-full h-full object-cover" />
  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -57,7 +57,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  {/* Upload box */}
  <div
  onClick={() => photoInputRef.current?.click()}
- className="aspect-video rounded-[var(--r-m)] border-2 border-dashed border-[var(--hair)] hover:/40 bg-zinc-900/40 hover:bg-zinc-900/70 flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-colors"
+ className="aspect-video rounded-[var(--r-m)] border-2 border-dashed border-[var(--hair)] hover:/40 bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-colors"
  >
  <input
  type="file"
@@ -71,7 +71,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
  ) : (
  <>
- <Upload className="w-5 h-5 text-zinc-500 mb-1" />
+ <Upload className="w-5 h-5 text-[var(--ink-3)] mb-1" />
  <span className="text-[11px] font-medium text-[var(--ink-2)]">Subir desde dispositivo</span>
  </>
  )}
@@ -85,13 +85,13 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  value={newPhotoUrl}
  onChange={(e) => setNewPhotoUrl(e.target.value)}
  placeholder="O añade una URL de imagen directa (https://...)"
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  <button
  type="button"
  onClick={onAddPhotoUrl}
  disabled={!newPhotoUrl.trim()}
- className="px-3 py-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] text-xs font-medium transition-colors disabled:opacity-50 flex items-center gap-1"
+ className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] text-xs font-medium transition-colors disabled:opacity-50 flex items-center gap-1"
  >
  <Plus className="w-3.5 h-3.5" /> Añadir
  </button>

@@ -144,7 +144,7 @@ export function ShareModal({
  className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-all shadow-lg active:scale-95 ${
  copied 
  ?'bg-amber-600 text-[var(--ink)]' 
- :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]'
+ :'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]'
  }`}
  >
  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -167,7 +167,7 @@ export function ShareModal({
  <Phone className="w-3.5 h-3.5 text-emerald-400" />
  Número de WhatsApp (Opcional)
  </span>
- <span className="text-[10px] text-zinc-500">
+ <span className="text-[10px] text-[var(--ink-3)]">
  Déjalo en blanco para elegir contacto en la app
  </span>
  </label>
@@ -176,7 +176,7 @@ export function ShareModal({
  value={phone}
  onChange={(e) => setPhone(e.target.value)}
  placeholder="Ej: +34612345678 o 612345678"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-xs text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-xs text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
  />
  </div>
 
@@ -200,10 +200,10 @@ export function ShareModal({
  value={text}
  onChange={(e) => setText(e.target.value)}
  rows={10}
- className="w-full p-3 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] leading-relaxed custom-scrollbar"
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] leading-relaxed custom-scrollbar"
  />
  ) : (
- <div className="p-3.5 rounded-[var(--r-m)] bg-zinc-900/90 border-[var(--hair)] text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)]/90 border-[var(--hair)] text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">
  {text}
  </div>
  )}
@@ -213,7 +213,7 @@ export function ShareModal({
 
  {/* Footer */}
  <div className="p-4 border-t border-[var(--hair)] bg-white/[0.02] flex items-center justify-between">
- <span className="text-[11px] text-zinc-500 flex items-center gap-1">
+ <span className="text-[11px] text-[var(--ink-3)] flex items-center gap-1">
  <Sparkles className="w-3 h-3 text-[#d1b375]" />
  Listos para WhatsApp, Telegram, Signal o Email
  </span>

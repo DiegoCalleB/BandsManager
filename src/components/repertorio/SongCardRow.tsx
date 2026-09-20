@@ -150,7 +150,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  {/* Drag Handle (when draggable) */}
  {draggable && (
  <div 
- className="shrink-0 text-zinc-500 hover:text-[var(--ink-2)] cursor-grab active:cursor-grabbing -mr-0.5"
+ className="shrink-0 text-[var(--ink-3)] hover:text-[var(--ink-2)] cursor-grab active:cursor-grabbing -mr-0.5"
  title="Arrastrar para reordenar canción"
  >
  <GripVertical className="w-4 h-4 opacity-40 group-hover:opacity-100 transition-opacity" />

@@ -55,9 +55,9 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  value={senderEmail}
  onChange={(e) => setSenderEmail(e.target.value)}
  placeholder="contacto@tubanda.com o tubandaoficial@gmail.com"
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
- <p className="text-[11px] text-zinc-500 mt-1">
+ <p className="text-[11px] text-[var(--ink-3)] mt-1">
  Podrás conectar tu cuenta de Gmail con 1-clic o configurar IMAP/SMTP en Ajustes de Correo en cualquier momento.
  </p>
  </div>
@@ -76,7 +76,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  value={signatureName}
  onChange={(e) => setSignatureName(e.target.value)}
  placeholder="Ej. Martín"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -87,7 +87,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  value={signatureCargo}
  onChange={(e) => setSignatureCargo(e.target.value)}
  placeholder="Ej. Cantante & Booking"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -98,7 +98,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  value={signaturePhone}
  onChange={(e) => setSignaturePhone(e.target.value)}
  placeholder="+34 600 000 000"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
  </div>
  </div>

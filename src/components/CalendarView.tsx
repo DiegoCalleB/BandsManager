@@ -2971,7 +2971,7 @@ export default function CalendarView({
  onClick={() => setShowSyncModal(true)}
  className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
  isStitchLight
- ?"bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink)]"
+ ?"bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)]"
  :"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70"
  }`}
  title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
@@ -2992,7 +2992,7 @@ export default function CalendarView({
  <button
  onClick={handlePrevMonth}
  className={`p-1.5 rounded-[var(--r-s)] transition-all cursor-pointer ${
- isStitchLight ?"bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink-2)]" :"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]"
+ isStitchLight ?"bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]" :"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]"
  }`}
  title="Meses anteriores (o desliza a la derecha)"
  >
@@ -3001,7 +3001,7 @@ export default function CalendarView({
  <button
  onClick={handleNextMonth}
  className={`p-1.5 rounded-[var(--r-s)] transition-all cursor-pointer ${
- isStitchLight ?"bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink-2)]" :"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]"
+ isStitchLight ?"bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]" :"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]"
  }`}
  title="Meses siguientes (o desliza a la izquierda)"
  >
@@ -3113,7 +3113,7 @@ export default function CalendarView({
  title="Configurar vista por defecto (1M o 2M) diferenciada por tipo de dispositivo y sincronizada en Supabase"
  className={`px-1.5 py-0.5 text-[10px] rounded transition-all cursor-pointer flex items-center justify-center relative ${
  showViewConfigPopover
- ? isStitchLight ?"bg-slate-300 text-[var(--ink)]" :"bg-[var(--surface)]/80 text-[#d1b375]"
+ ? isStitchLight ?"bg-[var(--surface)] text-[var(--ink)]" :"bg-[var(--surface)]/80 text-[#d1b375]"
  :"text-[var(--ink-2)] hover:text-[var(--sunken)]"
  }`}
  >
@@ -3133,7 +3133,7 @@ export default function CalendarView({
  isCalendarFullscreen
  ?"bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-lg shadow-amber-500/20"
  : isStitchLight
- ?"bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink)]"
+ ?"bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)]"
  :"bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30"
  }`}
  >
@@ -3314,7 +3314,7 @@ export default function CalendarView({
  {/* Band Filter Mode Segment Toggle */}
  {isMultiBandUser && (
  <div className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 shrink-0 ${
- isStitchLight ?"bg-[var(--sunken)]" :"bg-zinc-900/90 border-[var(--hair)]800"
+ isStitchLight ?"bg-[var(--sunken)]" :"bg-[var(--bg)]/90 border-[var(--hair)]800"
  }`}>
  <button
  id="calendar-view-all-bands-btn"
@@ -4068,7 +4068,7 @@ export default function CalendarView({
  {evt.type ==='campaña' ?'🎯 Posible Bolo' : evt.type}
  </span>
  {evt.bandName && (
- <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-zinc-800/80 text-[var(--ink)] truncate max-w-[100px]" title={evt.bandName}>
+ <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-[var(--sunken)]/80 text-[var(--ink)] truncate max-w-[100px]" title={evt.bandName}>
  {evt.bandName}
  </span>
  )}

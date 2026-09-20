@@ -703,7 +703,7 @@ export default function TourManager({
  <div className="flex items-center justify-between text-xs">
  <div className="flex items-center gap-2 min-w-0">
  <span className="text-sky-400 font-mono text-xs font-bold">{idx + 1}.</span>
- <span className="font-bold truncate text-slate-100 text-xs sm:text-sm">{stop.ciudad ||'Por determinar'}</span>
+ <span className="font-bold truncate text-[var(--ink)] text-xs sm:text-sm">{stop.ciudad ||'Por determinar'}</span>
  <span className="text-[var(--ink-2)] text-xs font-semibold truncate">({stop.sala ||'Sala tbd'})</span>
  </div>
  <div className="flex items-center gap-2 shrink-0 font-mono text-xs">

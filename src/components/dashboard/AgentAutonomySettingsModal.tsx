@@ -1507,7 +1507,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  </div>
  </div>
- <span className="text-[10px] font-mono text-[var(--ink-2)] bg-zinc-800 px-2 py-0.5 rounded font-bold">
+ <span className="text-[10px] font-mono text-[var(--ink-2)] bg-[var(--sunken)] px-2 py-0.5 rounded font-bold">
  {horasEnviador.length > 0 && diasEnviador.length > 0 ?'Programado' :'Pausado'}
  </span>
  </div>

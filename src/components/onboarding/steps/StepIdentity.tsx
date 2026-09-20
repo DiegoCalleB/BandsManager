@@ -72,7 +72,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={localBandName}
  onChange={(e) => setLocalBandName(e.target.value)}
  placeholder="Ej. Linkin Park, Los Delirio, The Midnight Waves..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] font-medium placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] font-medium placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
  />
  </div>
 
@@ -86,7 +86,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={city}
  onChange={(e) => setCity(e.target.value)}
  placeholder="Ej. Madrid, Barcelona, Valencia, Los Ángeles..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
  />
  </div>
 
@@ -100,7 +100,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={genre}
  onChange={(e) => setGenre(e.target.value)}
  placeholder="Ej. Nu-Metal, Rock Alternativo, Indie Pop, Ska-Rock..."
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm mb-2 shadow-inner"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm mb-2 shadow-inner"
  />
  <div className="flex flex-wrap gap-1.5">
  {commonGenres.slice(0, 8).map((g) => (
@@ -111,7 +111,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className={`text-[11px] px-2.5 py-1 rounded-[var(--r-s)] transition-colors cursor-pointer ${
  genre.toLowerCase().includes(g.toLowerCase())
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 font-semibold'
- :'bg-zinc-800/60 text-[var(--ink-2)] border-[var(--hair)] hover:border-[var(--hair)]'
+ :'bg-[var(--sunken)]/60 text-[var(--ink-2)] border-[var(--hair)] hover:border-[var(--hair)]'
  }`}
  >
  {g}
@@ -150,7 +150,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className={`p-3.5 rounded-[var(--r-m)] text-left transition-all relative overflow-hidden group cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/10 /60 shadow-lg shadow-amber-500/10 ring-1 ring-amber-500/30'
- :'bg-zinc-900/90 border-[var(--hair)] hover:/30 hover:bg-zinc-850'
+ :'bg-[var(--bg)]/90 border-[var(--hair)] hover:/30 hover:bg-zinc-850'
  }`}
  >
  <div className="flex items-center justify-between gap-2 mb-2">
@@ -158,7 +158,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className={`text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded-full ${
  isSelected
  ?'bg-[var(--acc)] text-[var(--acc-ink)]'
- :'bg-zinc-800 text-[var(--ink-2)] border-[var(--hair)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
  {f.badge}
@@ -234,11 +234,11 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  </div>
 
  <div className="flex items-center gap-4">
- <div className="w-20 h-20 rounded-[var(--r-l)] bg-zinc-900 border-[var(--hair)] flex items-center justify-center overflow-hidden flex-shrink-0 relative group shadow-inner">
+ <div className="w-20 h-20 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] flex items-center justify-center overflow-hidden flex-shrink-0 relative group shadow-inner">
  {logoUrl ? (
  <img src={logoUrl} alt="Logo de la banda" className="w-full h-full object-cover" />
  ) : (
- <Camera className="w-6 h-6 text-zinc-600" />
+ <Camera className="w-6 h-6 text-[var(--ink-2)]" />
  )}
  {isUploadingLogo && (
  <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
@@ -271,7 +271,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  value={logoUrl}
  onChange={(e) => setLogoUrl(e.target.value)}
  placeholder="O pega aquí una URL directa (https://...)"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900/60 border-[var(--hair)] text-[var(--ink-2)] placeholder-zinc-600 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)]/60 border-[var(--hair)] text-[var(--ink-2)] placeholder-zinc-600 text-xs focus:outline-none focus:"
  />
  </div>
  </div>

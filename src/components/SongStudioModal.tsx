@@ -3254,7 +3254,7 @@ export default function SongStudioModal({
 
  {/* Sleek Top Action Bar:"Atajos" y"Cargar Tema Original" viven ya en Herramientas
  y en el propio formulario de nueva idea — un único botón de acción aquí basta */}
- <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-zinc-900/80 rounded-[var(--r-l)] border-[var(--hair)] shadow-md">
+ <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--bg)]/80 rounded-[var(--r-l)] border-[var(--hair)] shadow-md">
  <span className="text-xs font-mono font-bold text-[var(--ink-3)] uppercase tracking-wider flex items-center gap-1.5">
  <Music className="w-4 h-4 text-indigo-400 animate-pulse" /> Ideas & Grabaciones
  </span>
@@ -3311,7 +3311,7 @@ export default function SongStudioModal({
  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black/40 text-xs text-[var(--ink)] focus:outline-none focus:border-emerald-500"
  >
  {SECCIONES_TEMA.map(sec => (
- <option key={sec.key} value={sec.key} className="bg-zinc-900 text-[var(--ink)]">
+ <option key={sec.key} value={sec.key} className="bg-[var(--bg)] text-[var(--ink)]">
  {sec.icon} {sec.label}
  </option>
  ))}
@@ -3490,7 +3490,7 @@ export default function SongStudioModal({
  <select
  value={selectedSongBaseUrl}
  onChange={(e) => setSelectedSongBaseUrl(e.target.value)}
- className="px-2 py-1 rounded-[var(--r-s)] bg-zinc-900 text-[11px] text-[var(--ink)] font-mono focus:outline-none focus: flex-1 min-w-0"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-[11px] text-[var(--ink)] font-mono focus:outline-none focus: flex-1 min-w-0"
  >
  {song.audioPrincipalUrl && (
  <option value={song.audioPrincipalUrl}>🎵 Tema Original ({song.titulo})</option>
@@ -5184,7 +5184,7 @@ export default function SongStudioModal({
  {/* MODAL MOISES STEMS SEPARATION & MULTITRACK CONTROL */}
  {showMoisesStemsModal && (
  <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
- <div className="bg-zinc-900 rounded-[var(--r-l)] max-w-2xl w-full p-5 sm:p-6 space-y-5 shadow-2xl text-[var(--ink)] max-h-[90vh] overflow-y-auto">
+ <div className="bg-[var(--bg)] rounded-[var(--r-l)] max-w-2xl w-full p-5 sm:p-6 space-y-5 shadow-2xl text-[var(--ink)] max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b /20 pb-3">
  <div className="flex items-center gap-2 text-[var(--acc)] font-mono font-bold text-sm">
  <Sliders className="w-5 h-5 text-[var(--acc)]" />
@@ -5297,7 +5297,7 @@ export default function SongStudioModal({
  </div>
 
  {/* SELECTOR DE MOTOR IRIS: STUDIO / CLOUD / BÁSICO */}
- <div className="p-3.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] space-y-3 font-mono text-[11px]">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-3 font-mono text-[11px]">
  <div className="flex items-center justify-between">
  <span className="font-bold text-[var(--ink)] flex items-center gap-1.5">
  <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" /> Selecciona el Motor de Iris Espectro:
@@ -5483,7 +5483,7 @@ export default function SongStudioModal({
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-zinc-800/80 border-[var(--hair)]700 text-[var(--ink-2)] text-[11px] font-mono">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/80 border-[var(--hair)]700 text-[var(--ink-2)] text-[11px] font-mono">
  💡 <strong>Integración en BandManager:</strong> Nuestra app combina filtros DSP en tiempo real mediante Web Audio API con ruteo de nodos `BiquadFilterNode` para silenciar la voz o batería en vivo, y te permite subir pistas ya separadas en otro programa para máxima calidad.
  </div>
  </div>
@@ -5559,7 +5559,7 @@ export default function SongStudioModal({
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-zinc-800/80 border-[var(--hair)]700 text-[var(--ink-2)] text-[10px] font-mono">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/80 border-[var(--hair)]700 text-[var(--ink-2)] text-[10px] font-mono">
  📌 Los archivos subidos se sincronizan con Supabase Storage y estarán disponibles inmediatamente para el resto de miembros de la banda.
  </div>
  </div>
@@ -5908,7 +5908,7 @@ export default function SongStudioModal({
  <div className="space-y-4">
  
  {/* Live Elapsed Time Monitor */}
- <div className="p-3 rounded-[var(--r-m)] bg-zinc-900/90 flex items-center justify-between font-mono text-[11px]">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/90 flex items-center justify-between font-mono text-[11px]">
  <div className="flex items-center gap-2 text-[var(--acc)]/70 font-bold">
  <Clock className="w-4 h-4 text-[var(--acc)] animate-spin" />
  <span>⏱️ Monitor de Tiempo:</span>
@@ -5924,7 +5924,7 @@ export default function SongStudioModal({
  <span className="text-[var(--ink-3)] text-[11px]">Progreso del Proceso</span>
  <span className="font-bold text-[var(--acc)]">{Math.round(stemProgressModal.progressPct)}%</span>
  </div>
- <div className="w-full h-3 bg-zinc-900 rounded-full overflow-hidden border-[var(--hair)] p-0.5">
+ <div className="w-full h-3 bg-[var(--bg)] rounded-full overflow-hidden border-[var(--hair)] p-0.5">
  <div 
  className="h-full bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400 rounded-full transition-all duration-300"
  style={{ width: `${Math.max(5, stemProgressModal.progressPct)}%` }}
@@ -5956,7 +5956,7 @@ export default function SongStudioModal({
  <div className={`p-2.5 rounded-[var(--r-s)] flex items-center gap-2.5 transition-all ${
  stemProgressModal.stage ==='preparing' 
  ?'bg-[var(--acc-soft)] /50 text-[var(--ink)]' 
- :'bg-zinc-900/60 border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-[var(--bg)]/60 border-[var(--hair)] text-[var(--ink-2)]'
  }`}>
  {stemProgressModal.stage ==='preparing' ? (
  <RefreshCw className="w-3.5 h-3.5 animate-spin text-[var(--acc)] shrink-0" />
@@ -5970,8 +5970,8 @@ export default function SongStudioModal({
  stemProgressModal.stage ==='demucs' 
  ?'bg-purple-950/40 border-purple-500/50 text-purple-200' 
  : stemProgressModal.stage ==='persisting'
- ?'bg-zinc-900/60 border-[var(--hair)] text-[var(--ink-2)]'
- :'bg-zinc-900/30 border-[var(--hair)] text-[var(--ink-2)]'
+ ?'bg-[var(--bg)]/60 border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-[var(--bg)]/30 border-[var(--hair)] text-[var(--ink-2)]'
  }`}>
  {stemProgressModal.stage ==='demucs' ? (
  <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-400 shrink-0" />
@@ -5990,7 +5990,7 @@ export default function SongStudioModal({
  <div className={`p-2.5 rounded-[var(--r-s)] flex items-center gap-2.5 transition-all ${
  stemProgressModal.stage ==='persisting' 
  ?'bg-[var(--ok-soft)] border-emerald-500/50 text-[var(--ink)]' 
- :'bg-zinc-900/30 border-[var(--hair)] text-[var(--ink-2)]'
+ :'bg-[var(--bg)]/30 border-[var(--hair)] text-[var(--ink-2)]'
  }`}>
  {stemProgressModal.stage ==='persisting' ? (
  <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-400 shrink-0" />
@@ -6047,7 +6047,7 @@ export default function SongStudioModal({
  )}
 
  {/* TELEMETRY TIMING CARD */}
- <div className="p-3.5 rounded-[var(--r-m)] bg-zinc-900 border-[var(--hair)] font-mono text-xs space-y-2">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] font-mono text-xs space-y-2">
  <div className="flex items-center justify-between">
  <span className="text-[var(--acc)]/70 font-bold flex items-center gap-1.5">
  <Clock className="w-4 h-4 text-[var(--acc)]" /> Telemetría de Rendimiento:
@@ -6081,16 +6081,16 @@ export default function SongStudioModal({
 
  {/* Stems generated display */}
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono">
- <div className="p-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] flex items-center gap-1.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] flex items-center gap-1.5">
  <span>🎤</span> <span className="truncate">Voz Principal</span>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] flex items-center gap-1.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] flex items-center gap-1.5">
  <span>🥁</span> <span className="truncate">Batería</span>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] flex items-center gap-1.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] flex items-center gap-1.5">
  <span>🎸</span> <span className="truncate">Bajo</span>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-zinc-900 border-[var(--hair)] flex items-center gap-1.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] flex items-center gap-1.5">
  <span>🎹</span> <span className="truncate">Guitarras/Tecl.</span>
  </div>
  </div>
@@ -6120,7 +6120,7 @@ export default function SongStudioModal({
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1 ${
  stemProgressModal.engineChoice ==='mvsep-mdx23'
  ?'bg-[var(--acc)]/20 /60 text-[var(--ink)] ring-1 ring-amber-400/40'
- :'bg-zinc-900/90 border-[var(--hair)] text-[var(--ink-3)] hover:/50 hover:bg-zinc-800'
+ :'bg-[var(--bg)]/90 border-[var(--hair)] text-[var(--ink-3)] hover:/50 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -6142,7 +6142,7 @@ export default function SongStudioModal({
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1 ${
  stemProgressModal.engineChoice ==='demucs'
  ?'bg-purple-500/20 border-purple-500/60 text-purple-200 ring-1 ring-purple-400/40'
- :'bg-zinc-900/90 border-[var(--hair)] text-[var(--ink-3)] hover:border-purple-400/50 hover:bg-zinc-800'
+ :'bg-[var(--bg)]/90 border-[var(--hair)] text-[var(--ink-3)] hover:border-purple-400/50 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -6164,7 +6164,7 @@ export default function SongStudioModal({
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1 ${
  stemProgressModal.engineChoice ==='dsp-server'
  ?'bg-emerald-500/20 border-emerald-500/60 text-[var(--ink)] ring-1 ring-emerald-400/40'
- :'bg-zinc-900/90 border-[var(--hair)] text-[var(--ink-3)] hover:border-emerald-400/50 hover:bg-zinc-800'
+ :'bg-[var(--bg)]/90 border-[var(--hair)] text-[var(--ink-3)] hover:border-emerald-400/50 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -6204,7 +6204,7 @@ export default function SongStudioModal({
  ?'bg-[var(--ok-soft)] border-emerald-500/50 text-[var(--ink)]'
  : stemProgressModal.errorProvider ==='supabase'
  ?'bg-[var(--acc-soft)] /50 text-[var(--ink)]'
- :'bg-zinc-900 border-[var(--hair)]700 text-[var(--ink-2)]'
+ :'bg-[var(--bg)] border-[var(--hair)]700 text-[var(--ink-2)]'
  }`}>
  {stemProgressModal.errorProvider ==='replicate' && <Cpu className="w-3.5 h-3.5 text-purple-400" />}
  {stemProgressModal.errorProvider ==='gemini' && <Bot className="w-3.5 h-3.5 text-sky-400" />}
@@ -6270,7 +6270,7 @@ export default function SongStudioModal({
 
  {/* Recommended Solution Card */}
  {stemProgressModal.actionAdvice && (
- <div className="p-3.5 rounded-[var(--r-m)] bg-zinc-900/90 space-y-1.5">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)]/90 space-y-1.5">
  <div className="flex items-center gap-2 text-emerald-400 font-mono font-bold text-[11px]">
  <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
  <span>💡 Solución Recomendada:</span>
@@ -6481,7 +6481,7 @@ export default function SongStudioModal({
  )}
  <Maximize2 className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
  </div>
- <div className="mt-2 w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border-[var(--hair)]">
+ <div className="mt-2 w-full h-1.5 bg-[var(--bg)] rounded-full overflow-hidden border-[var(--hair)]">
  <div
  className={`h-full rounded-full transition-all duration-300 ${
  !terminado ?'bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400' : esError ?'bg-rose-500' :'bg-emerald-400'

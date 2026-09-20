@@ -1039,7 +1039,7 @@ export function ReelsMetricsView({
  ?'bg-indigo-600 text-[var(--ink)] shadow-xs'
  :'bg-indigo-600 text-[var(--ink)] shadow-sm shadow-indigo-950/40'
  : isStitchLight
- ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-slate-300/60'
+ ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  title={opt.label}
@@ -1616,7 +1616,7 @@ export function ReelsMetricsView({
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  : isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-md'
- :'bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/15'
+ :'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/15'
  }`}
  >
  {isSavingMetric ?'Guardando...' : editingMetricId ?'Actualizar Snapshot' :'Añadir Snapshot'}

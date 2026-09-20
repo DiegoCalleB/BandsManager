@@ -116,7 +116,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <button
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAllFiltered}
- className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900/90 hover:bg-zinc-800 border-[var(--hair)]700 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer shadow-xs"
+ className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)]/90 hover:bg-[var(--surface)] border-[var(--hair)]700 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer shadow-xs"
  >
  {isAllSelected ? (
  <>
@@ -184,7 +184,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
  isChecked 
  ?'bg-[var(--acc)] border-[var(--acc)] text-black shadow-xs' 
- :'border-[var(--hair)]600 group-hover:border-[var(--hair)]400 bg-zinc-900/80 hover:'
+ :'border-[var(--hair)]600 group-hover:border-[var(--hair)]400 bg-[var(--bg)]/80 hover:'
  }`}>
  {isChecked && <CheckSquare className="w-3.5 h-3.5" />}
  </div>
@@ -204,7 +204,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <div className="flex flex-col min-w-0 flex-1">
  <div className="flex items-start justify-between gap-1.5">
  <div className="flex items-center gap-1.5 min-w-0 flex-1">
- <h4 className="font-display font-bold text-base sm:text-lg tracking-wide text-zinc-50 truncate notranslate" translate="no">
+ <h4 className="font-display font-bold text-base sm:text-lg tracking-wide text-[var(--ink)] truncate notranslate" translate="no">
  {lead.nombre_sala}
  </h4>
  <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />
@@ -303,7 +303,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center gap-1 min-h-[38px] ${
  isDetailOpen
  ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
- :'bg-zinc-800 text-[var(--ink)] hover:bg-zinc-700'
+ :'bg-[var(--sunken)] text-[var(--ink)] hover:bg-zinc-700'
  }`}
  >
  <Eye className="w-3.5 h-3.5" />
