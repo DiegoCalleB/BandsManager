@@ -52,7 +52,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
  {this.props.fallbackTitle ||'Ha ocurrido un error al cargar este módulo'}
  </h3>
  </div>
- <p className="text-xs text-[var(--ink-2)] leading-relaxed font-mono bg-[var(--surface)] p-3 rounded-[var(--r-m)] overflow-x-auto">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans bg-[var(--surface)] p-3 rounded-[var(--r-m)] overflow-x-auto">
  {this.state.error?.message ||'Error no especificado en la renderización.'}
  </p>
  <div className="flex items-center gap-3 pt-2">

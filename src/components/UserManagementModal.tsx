@@ -264,13 +264,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <Users className="w-5 h-5" />
  </div>
  <div>
- <h3 className="font-bold font-display uppercase tracking-wider text-base flex items-center gap-2">
+ <h3 className="font-bold font-display tracking-wider text-base flex items-center gap-2">
  <span>Gestión de Miembros de la Banda</span>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">
+ <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">
  Panel Admin
  </span>
  </h3>
- <p className="text-[11px] text-[var(--ink-2)] font-mono">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans">
  Crea cuentas, administra roles y gestiona contraseñas para el equipo
  </p>
  </div>
@@ -289,7 +289,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  }`}>
  <button
  onClick={() => { setActiveTab('list'); setError(null); setSuccessMsg(null); }}
- className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+ className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='list'
  ?'-indigo-400 text-[var(--tentative)]'
  :'-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -300,7 +300,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </button>
  <button
  onClick={() => { setActiveTab('create'); setError(null); setSuccessMsg(null); }}
- className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+ className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='create'
  ?'-indigo-400 text-[var(--tentative)]'
  :'-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -311,7 +311,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </button>
  <button
  onClick={() => { setActiveTab('associate'); setError(null); setSuccessMsg(null); }}
- className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+ className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='associate'
  ?'text-[var(--tentative)] border-b border-[var(--acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -359,7 +359,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div className="flex flex-wrap items-center justify-between gap-3">
  <div className="flex items-center gap-3">
  <div
- className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] shadow-inner uppercase font-mono text-sm shrink-0"
+ className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] shadow-inner font-sans text-sm shrink-0"
  style={{ backgroundColor: u.avatarColor ||'var(--ok)' }}
  >
  {u.name.slice(0, 2)}
@@ -367,19 +367,19 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div>
  <div className="flex items-center gap-2">
  <strong className="font-bold text-sm font-sans">{u.name}</strong>
- <span className="text-xs text-[var(--ink-2)] font-mono">@{u.username}</span>
+ <span className="text-xs text-[var(--ink-2)] font-sans">@{u.username}</span>
  {isLeader ? (
- <span className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/30 flex items-center gap-1">
+ <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/30 flex items-center gap-1">
  <Shield className="w-2.5 h-2.5" />
  <span>Admin</span>
  </span>
  ) : (
- <span className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -blue-500/30">
+ <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -blue-500/30">
  Miembro
  </span>
  )}
  {isSelf && (
- <span className="px-1.5 py-0.5 text-[9px] font-mono rounded bg-[var(--surface)]/15 text-[var(--ok)]">
+ <span className="px-1.5 py-0.5 text-[9px] font-sans rounded bg-[var(--surface)]/15 text-[var(--ok)]">
  Tú
  </span>
  )}
@@ -401,7 +401,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => handleChangeRole(u.id, e.target.value as UserRole, u.username)}
  disabled={loading || isSelf}
  title={isSelf ?"No puedes cambiar tu propio rol desde aquí" :"Cambiar rol del usuario"}
- className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold outline-none cursor-pointer transition-all ${
+ className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-all ${
  u.role ==='leader'
  ?'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/40 hover:bg-[var(--acc)]/25'
  :'bg-[var(--surface)] text-[var(--acc)]/80 -blue-500/30 hover:bg-[var(--surface)]/80'
@@ -421,7 +421,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  setChangePasswordValue('');
  }
  }}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-mono hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-sans hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
  >
  <Key className="w-3 h-3 text-[var(--acc)]" />
  <span>{isEditingThisUser ?'Cancelar' :'Contraseña'}</span>
@@ -448,7 +448,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  value={changePasswordValue}
  onChange={(e) => setChangePasswordValue(e.target.value)}
  placeholder="Nueva contraseña secreta..."
- className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono outline-none ${
+ className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none ${
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  }`}
  />
@@ -472,7 +472,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <form onSubmit={handleCreateUser} className="space-y-4">
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Usuario (para login) *
  </label>
  <input
@@ -488,7 +488,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Email *
  </label>
  <input
@@ -506,7 +506,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Nombre Completo *
  </label>
  <input
@@ -522,7 +522,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Contraseña Inicial *
  </label>
  <input
@@ -539,7 +539,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Rol en la App
  </label>
  <select
@@ -555,7 +555,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Instrumento / Puesto
  </label>
  <input
@@ -574,7 +574,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1.5">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Color Identificador
  </label>
  <div className="flex items-center gap-2">
@@ -619,7 +619,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Email del Músico Registrado *
  </label>
  <input
@@ -635,7 +635,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Rol en esta Banda
  </label>
  <select
@@ -651,7 +651,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
  Instrumento / Puesto (opcional)
  </label>
  <input
@@ -690,7 +690,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  }`}>
  <button
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
  >
  Cerrar Panel
  </button>

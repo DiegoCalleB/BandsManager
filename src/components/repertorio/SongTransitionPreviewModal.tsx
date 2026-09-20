@@ -536,7 +536,7 @@ export function SongTransitionPreviewModal({
  <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight">
  Comprobar Unión y Transición
  </h2>
- <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
+ <span className="px-1.5 py-0.2 rounded-full text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
  #{indexA + 1} ➔ #{indexB + 1}
  </span>
  <span className={`hidden sm:inline-flex px-1.5 py-0.2 rounded-full text-[9px] font-bold ${diagnosis.verdict.badgeClass}`}>
@@ -564,7 +564,7 @@ export function SongTransitionPreviewModal({
  >
  <ChevronLeft className="w-3.5 h-3.5" />
  </button>
- <span className="text-[10px] font-mono px-1.5 text-[var(--ink-2)]">
+ <span className="text-[10px] font-sans px-1.5 text-[var(--ink-2)]">
  {indexA + 1}/{totalItemsCount || indexB + 1}
  </span>
  <button
@@ -645,21 +645,21 @@ export function SongTransitionPreviewModal({
  >
  <div>
  <div className="flex items-center justify-between mb-0.5">
- <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[10px] font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1">
  <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60" />
  #{indexA + 1} Anterior
  </span>
  <div className="flex items-center gap-1">
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--acc)]/70 font-sans text-[9px] font-semibold">
  🎼 {itemA?.tonalidadDeseada || songA.tonalidad ||'Sin tono'}
  </span>
  {songA.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--ink-3)] font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--ink-3)] font-sans text-[9px] font-semibold">
  🥁 {songA.bpm} BPM
  </span>
  )}
  <span
- className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full"
+ className="text-[9px] font-sans font-bold px-1.5 py-0.2 rounded-full"
  style={{
  backgroundColor: `${energyInfoA.hexColor}20`,
  borderColor: `${energyInfoA.hexColor}50`,
@@ -678,7 +678,7 @@ export function SongTransitionPreviewModal({
  {/* Auto-CUE Out info for Song A */}
  {autoCueEnabled && cueAnalysisA && (cueAnalysisA.outroSilenceSec > 0.3 || cueAnalysisA.hasApplauseOutro || songA.cueOut) && (
  <div className="flex items-center justify-between gap-1 mb-1 px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[9px]">
- <span className="text-[var(--acc)]/70 font-mono flex items-center gap-1 truncate">
+ <span className="text-[var(--acc)]/70 font-sans flex items-center gap-1 truncate">
  <Scissors className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
  CUE Out: {formatSec(cueAnalysisA.cueOut)}
  {cueAnalysisA.hasApplauseOutro && <span className="text-[var(--ink)]">👏 Aplausos fin</span>}
@@ -772,7 +772,7 @@ export function SongTransitionPreviewModal({
  >
  <ArrowRight className="w-3.5 h-3.5" />
  </div>
- <span className="text-[8px] font-mono text-[var(--ink-2)] mt-0.5 uppercase font-bold text-center">
+ <span className="text-[8px] font-sans text-[var(--ink-2)] mt-0.5 font-bold text-center">
  {config.style ==='crossfade' ? `${config.fadeDurationSec}s` : config.style ==='segue' ?'0s' :'pausa'}
  </span>
  </div>
@@ -788,21 +788,21 @@ export function SongTransitionPreviewModal({
  >
  <div>
  <div className="flex items-center justify-between mb-0.5">
- <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[10px] font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1">
  <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" />
  #{indexB + 1} Siguiente
  </span>
  <div className="flex items-center gap-1">
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--acc)]/70 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--acc)]/70 font-sans text-[9px] font-semibold">
  🎼 {itemB?.tonalidadDeseada || songB.tonalidad ||'Sin tono'}
  </span>
  {songB.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--ink-3)] font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--ink-3)] font-sans text-[9px] font-semibold">
  🥁 {songB.bpm} BPM
  </span>
  )}
  <span
- className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full"
+ className="text-[9px] font-sans font-bold px-1.5 py-0.2 rounded-full"
  style={{
  backgroundColor: `${energyInfoB.hexColor}20`,
  borderColor: `${energyInfoB.hexColor}50`,
@@ -821,7 +821,7 @@ export function SongTransitionPreviewModal({
  {/* Auto-CUE In info for Song B */}
  {autoCueEnabled && cueAnalysisB && (cueAnalysisB.introSilenceSec > 0.3 || cueAnalysisB.hasApplauseIntro || songB.cueIn) && (
  <div className="flex items-center justify-between gap-1 mb-1 px-1.5 py-0.5 rounded bg-[var(--ok)]/10 text-[9px]">
- <span className="text-[var(--ink-2)] font-mono flex items-center gap-1 truncate">
+ <span className="text-[var(--ink-2)] font-sans flex items-center gap-1 truncate">
  <Scissors className="w-2.5 h-2.5 text-[var(--ok)] shrink-0" />
  CUE In: {formatSec(cueAnalysisB.cueIn)}
  {cueAnalysisB.hasApplauseIntro && <span className="text-[var(--ink)]">👏 Aplausos inicio</span>}
@@ -1019,7 +1019,7 @@ export function SongTransitionPreviewModal({
  stopPlayback();
  setConfig((c) => ({ ...c, fadeDurationSec: sec }));
  }}
- className={`px-1 py-0.2 rounded font-mono text-[9px] transition cursor-pointer ${
+ className={`px-1 py-0.2 rounded font-sans text-[9px] transition cursor-pointer ${
  config.fadeDurationSec === sec
  ?'bg-[var(--acc)]/30 text-[var(--acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1049,7 +1049,7 @@ export function SongTransitionPreviewModal({
  width: `${(timeline.songAEndSec / timeline.totalDurationSec) * 100}%`
  }}
  >
- <span className="text-[8px] font-mono font-bold text-[var(--acc)]/70 truncate flex items-center gap-0.5">
+ <span className="text-[8px] font-sans font-bold text-[var(--acc)]/70 truncate flex items-center gap-0.5">
  {autoCueEnabled && cueAnalysisA?.outroSilenceSec ? <Scissors className="w-2 h-2 text-[var(--acc)] shrink-0" /> : null}
  Fin #{indexA + 1}
  </span>
@@ -1062,7 +1062,7 @@ export function SongTransitionPreviewModal({
  left: `${(timeline.songBStartSec / timeline.totalDurationSec) * 100}%`
  }}
  >
- <span className="text-[8px] font-mono font-bold text-[var(--ink-2)] truncate flex items-center gap-0.5">
+ <span className="text-[8px] font-sans font-bold text-[var(--ink-2)] truncate flex items-center gap-0.5">
  {autoCueEnabled && cueAnalysisB?.introSilenceSec ? <Scissors className="w-2 h-2 text-[var(--ok)] shrink-0" /> : null}
  Inicio #{indexB + 1}
  </span>
@@ -1071,7 +1071,7 @@ export function SongTransitionPreviewModal({
  {/* Crossfade overlap highlight */}
  {config.style ==='crossfade' && (
  <div
- className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-0/30 to-emerald-500/30 border-x /80 pointer-events-none flex items-center justify-center text-[8px] font-mono font-bold text-[var(--ink)]/90"
+ className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-0/30 to-emerald-500/30 border-x /80 pointer-events-none flex items-center justify-center text-[8px] font-sans font-bold text-[var(--ink)]/90"
  style={{
  left: `${(timeline.crossfadeStartSec / timeline.totalDurationSec) * 100}%`,
  width: `${((timeline.crossfadeEndSec - timeline.crossfadeStartSec) / timeline.totalDurationSec) * 100}%`
@@ -1143,7 +1143,7 @@ export function SongTransitionPreviewModal({
 
  {/* Progress Time & Status */}
  <div className="flex items-center gap-1.5">
- <span className="font-mono text-[var(--ink-2)] font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded text-[10px] border-[var(--hair)]800">
+ <span className="font-sans text-[var(--ink-2)] font-bold bg-[var(--surface)] px-1.5 py-0.5 rounded text-[10px] border-[var(--hair)]800">
  ⏱️ {currentTime.toFixed(1)}s / {timeline.totalDurationSec.toFixed(1)}s
  </span>
  {isPlaying && (
@@ -1172,7 +1172,7 @@ export function SongTransitionPreviewModal({
  }`}
  >
  <span>Pros y Contras</span>
- <span className="text-[9px] font-mono px-1 rounded bg-[var(--sunken)] text-[var(--ink-2)]">
+ <span className="text-[9px] font-sans px-1 rounded bg-[var(--sunken)] text-[var(--ink-2)]">
  +{diagnosis.porQueSi.length} / -{diagnosis.porQueNo.length}
  </span>
  </button>
@@ -1205,7 +1205,7 @@ export function SongTransitionPreviewModal({
  {/* Right Summary Verdict */}
  <div className="text-[10px] text-[var(--ink-2)] flex items-center gap-1">
  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
- <span>Recomendado: <strong className="text-[var(--ink)] uppercase font-bold">{diagnosis.recommendedStyle}</strong></span>
+ <span>Recomendado: <strong className="text-[var(--ink)] font-bold">{diagnosis.recommendedStyle}</strong></span>
  </div>
  </div>
 
@@ -1215,7 +1215,7 @@ export function SongTransitionPreviewModal({
  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
  {/* POR QUÉ SÍ */}
  <div className="space-y-1">
- <div className="flex items-center gap-1 text-[10px] font-bold text-[var(--ok)] uppercase tracking-wide">
+ <div className="flex items-center gap-1 text-[10px] font-bold text-[var(--ok)] tracking-wide">
  <ThumbsUp className="w-2.5 h-2.5" />
  <span>Por qué SÍ funciona ({diagnosis.porQueSi.length})</span>
  </div>
@@ -1230,7 +1230,7 @@ export function SongTransitionPreviewModal({
  <CheckCircle2 className="w-2.5 h-2.5 text-[var(--ok)] shrink-0" />
  {pro.title}
  </span>
- <span className="text-[8px] uppercase px-1 rounded font-mono bg-[var(--ok)]/20 text-[var(--ink-2)] shrink-0">
+ <span className="text-[8px] px-1 rounded font-sans bg-[var(--ok)]/20 text-[var(--ink-2)] shrink-0">
  {pro.category}
  </span>
  </div>
@@ -1249,7 +1249,7 @@ export function SongTransitionPreviewModal({
 
  {/* POR QUÉ NO / CRÍTICA */}
  <div className="space-y-1">
- <div className="flex items-center gap-1 text-[10px] font-bold text-[var(--alert)] uppercase tracking-wide">
+ <div className="flex items-center gap-1 text-[10px] font-bold text-[var(--alert)] tracking-wide">
  <ThumbsDown className="w-2.5 h-2.5" />
  <span>Puntos a vigilar ({diagnosis.porQueNo.length})</span>
  </div>
@@ -1272,7 +1272,7 @@ export function SongTransitionPreviewModal({
  <AlertTriangle className="w-2.5 h-2.5 shrink-0" />
  {con.title}
  </span>
- <span className="text-[8px] uppercase px-1 rounded font-mono bg-[var(--sunken)] text-[var(--ink-2)] shrink-0">
+ <span className="text-[8px] px-1 rounded font-sans bg-[var(--sunken)] text-[var(--ink-2)] shrink-0">
  {con.severity}
  </span>
  </div>

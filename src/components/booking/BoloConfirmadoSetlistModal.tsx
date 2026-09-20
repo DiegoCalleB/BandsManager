@@ -168,14 +168,14 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  {/* Header */}
  <div className="flex justify-between items-start border-b border-[var(--hair)]800/80 pb-3">
  <div>
- <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] font-mono text-[10px] font-black uppercase tracking-wider mb-1">
+ <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[10px] font-black tracking-wider mb-1">
  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
  Concierto Confirmado
  </div>
- <h3 className="text-lg sm:text-xl font-black font-mono text-[var(--ink)]">
+ <h3 className="text-lg sm:text-xl font-black font-sans text-[var(--ink)]">
  {lead.nombre_sala}
  </h3>
- <p className="text-xs text-[var(--ink-2)] font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-sans">
  {lead.ciudad} {lead.region ? `• ${lead.region}` :''}
  </p>
  </div>
@@ -188,7 +188,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
 
  {/* Quick Details Form (Fecha y Duración pactada) */}
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
  <div className="space-y-1">
  <label className="text-[var(--ink-2)] flex items-center gap-1 font-bold">
  <Calendar className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -198,7 +198,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="date"
  value={concertDate}
  onChange={(e) => setConcertDate(e.target.value)}
- className="w-full bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus:border-[var(--hair)] focus:outline-none"
+ className="w-full bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:border-[var(--hair)] focus:outline-none"
  />
  </div>
 
@@ -212,18 +212,18 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  placeholder="Ej. 600"
  value={cacheAmount}
  onChange={(e) => setCacheAmount(e.target.value)}
- className="w-full bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-mono focus: focus:outline-none"
+ className="w-full bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus: focus:outline-none"
  />
  </div>
  </div>
 
  {/* Duración Pactada / Formato Selector */}
  <div className="space-y-1.5">
- <label className="text-xs font-mono font-bold text-[var(--ink-2)] flex items-center justify-between">
+ <label className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center justify-between">
  <span>Duración pactada para el pase:</span>
  <span className="text-[var(--ok)]">{targetDurationMin} min</span>
  </label>
- <div className="grid grid-cols-4 gap-1.5 font-mono text-[11px]">
+ <div className="grid grid-cols-4 gap-1.5 font-sans text-[11px]">
  {[45, 60, 75, 90].map((mins) => (
  <button
  key={mins}
@@ -246,7 +246,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
 
  {/* Setlists Section: Sugerencia óptima o selector */}
  <div className="space-y-2 pt-1">
- <div className="flex items-center justify-between text-xs font-mono">
+ <div className="flex items-center justify-between text-xs font-sans">
  <span className="text-[var(--ink-2)] font-bold flex items-center gap-1.5">
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  Asignación de Repertorio Óptimo:
@@ -263,20 +263,20 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
 
  {isLoadingData ? (
- <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)]800 text-center text-xs font-mono text-[var(--ink-2)] animate-pulse">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)]800 text-center text-xs font-sans text-[var(--ink-2)] animate-pulse">
  Calculando duraciones y repertorios óptimos...
  </div>
  ) : generateNewSetlist ? (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 border-[var(--hair)]/40 space-y-2 animate-fadeIn">
- <div className="flex items-center gap-2 text-xs font-mono font-bold text-[var(--ok)]">
+ <div className="flex items-center gap-2 text-xs font-sans font-bold text-[var(--ok)]">
  <Zap className="w-4 h-4 text-[var(--ok)]" />
  <span>Se creará un nuevo setlist automático:</span>
  </div>
- <p className="text-[11px] font-mono text-[var(--ink-2)]">"Bolo {lead.nombre_sala} ({targetDurationMin} min)" seleccionando canciones de tu catálogo según la energía requerida.
+ <p className="text-[11px] font-sans text-[var(--ink-2)]">"Bolo {lead.nombre_sala} ({targetDurationMin} min)" seleccionando canciones de tu catálogo según la energía requerida.
  </p>
  </div>
  ) : setlists.length === 0 ? (
- <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)]800 text-center space-y-2 text-xs font-mono text-[var(--ink-2)]">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)]800 text-center space-y-2 text-xs font-sans text-[var(--ink-2)]">
  <p>No tienes ningún setlist guardado aún.</p>
  <button
  type="button"
@@ -312,16 +312,16 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  <div className="space-y-0.5">
  <div className="flex items-center gap-2">
  <Music className={`w-3.5 h-3.5 ${isSelected ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
- <span className="font-mono text-xs font-bold text-[var(--ink)]">
+ <span className="font-sans text-xs font-bold text-[var(--ink)]">
  {st.nombre}
  </span>
  {isOptimal && (
- <span className="px-2 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] font-mono text-[9px] font-black uppercase">
+ <span className="px-2 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[9px] font-black">
  ✨ Sugerido
  </span>
  )}
  </div>
- <p className="text-[10px] font-mono text-[var(--ink-2)]">
+ <p className="text-[10px] font-sans text-[var(--ink-2)]">
  {durationMin} min aprox. • {st.items?.length || 0} items
  {isOptimal && ` • ${bestMatch?.reason}`}
  </p>
@@ -345,7 +345,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="button"
  disabled={isSubmitting || (!selectedSetlistId && !generateNewSetlist)}
  onClick={handleSaveAndLink}
- className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] text-[var(--ink)] font-mono font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] text-[var(--ink)] font-sans font-black text-xs tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
  >
  <Check className="w-4 h-4 stroke-[3]" />
  <span>{isSubmitting ?'Guardando...' :'Confirmar Bolo y Asignar Setlist'}</span>
@@ -355,7 +355,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="button"
  disabled={isSubmitting}
  onClick={onConfirmWithoutSetlist}
- className="w-full py-2 px-3 text-center text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono transition-colors cursor-pointer"
+ className="w-full py-2 px-3 text-center text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-sans transition-colors cursor-pointer"
  >
  Confirmar solo en CRM (asignar repertorio más tarde)
  </button>

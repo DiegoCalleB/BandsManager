@@ -59,7 +59,7 @@ export function SetlistModal({
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <Layers className="w-5 h-5 text-[var(--acc)]" />
- <h3 className="text-sm font-bold font-mono uppercase text-[var(--ink)]">
+ <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
  {setlistToEdit ?'Editar Repertorio' :'Crear Nuevo Repertorio desde Cero'}
  </h3>
  </div>
@@ -68,7 +68,7 @@ export function SetlistModal({
  </button>
  </div>
 
- <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-mono">
+ <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-sans">
  <div>
  <label className="block text-[var(--ink-2)] font-bold mb-1">Nombre del Repertorio / Setlist *</label>
  <input

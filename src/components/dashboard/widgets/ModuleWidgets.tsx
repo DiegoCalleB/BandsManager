@@ -94,17 +94,17 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
  <Music className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
  Repertorio & Setlists
  </h3>
- <p className="text-xs font-mono text-[var(--ink-2)]">Canciones e Iris Stems</p>
+ <p className="text-xs font-sans text-[var(--ink-2)]">Canciones e Iris Stems</p>
  </div>
  </div>
  {onNavigate && (
  <button
  type="button"
  onClick={() => onNavigate('repertorio')}
- className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Ver Temas</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -116,11 +116,11 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
  <div className="flex items-center gap-3">
  <Disc3 className="w-8 h-8 text-[var(--acc)] animate-spin-slow shrink-0" />
  <div>
- <span className="text-xl font-mono font-bold text-[var(--ink-2)]">{songCount}</span>
- <p className="text-xs font-mono text-[var(--ink-2)]">Temas guardados en catálogo</p>
+ <span className="text-xl font-sans font-bold text-[var(--ink-2)]">{songCount}</span>
+ <p className="text-xs font-sans text-[var(--ink-2)]">Temas guardados en catálogo</p>
  </div>
  </div>
- <span className="text-[10px] font-mono px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold">
+ <span className="text-[10px] font-sans px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold">
  Iris IA Activo
  </span>
  </div>
@@ -140,17 +140,17 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
  <DollarSign className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
  Balance & Cachés
  </h3>
- <p className="text-xs font-mono text-[var(--ink-2)]">Recaudación bruta proyectada</p>
+ <p className="text-xs font-sans text-[var(--ink-2)]">Recaudación bruta proyectada</p>
  </div>
  </div>
  {onNavigate && (
  <button
  type="button"
  onClick={() => onNavigate('finanzas')}
- className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Finanzas</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -160,12 +160,12 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
  <div>
- <span className="text-2xl font-mono font-black text-[var(--ok)]">{totalCache.toLocaleString('es-ES')} €</span>
- <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Suma de cachés de bolos</p>
+ <span className="text-2xl font-sans font-black text-[var(--ok)]">{totalCache.toLocaleString('es-ES')} €</span>
+ <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-0.5">Suma de cachés de bolos</p>
  </div>
  <div className="text-right">
- <span className="text-xs font-mono text-[var(--ink-2)] font-bold">{concerts.length} conciertos</span>
- <p className="text-[10px] font-mono text-[var(--ink-2)]">Caché medio: {concerts.length > 0 ? Math.round(totalCache / concerts.length) : 0} €</p>
+ <span className="text-xs font-sans text-[var(--ink-2)] font-bold">{concerts.length} conciertos</span>
+ <p className="text-[10px] font-sans text-[var(--ink-2)]">Caché medio: {concerts.length > 0 ? Math.round(totalCache / concerts.length) : 0} €</p>
  </div>
  </div>
  </div>
@@ -182,17 +182,17 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
  <Users className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
  Fans & Captación
  </h3>
- <p className="text-xs font-mono text-[var(--ink-2)]">Comunidad y códigos QR</p>
+ <p className="text-xs font-sans text-[var(--ink-2)]">Comunidad y códigos QR</p>
  </div>
  </div>
  {onNavigate && (
  <button
  type="button"
  onClick={() => onNavigate('fans')}
- className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Ver Fans</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -202,8 +202,8 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
 
  <div className="grid grid-cols-2 gap-3">
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]">
- <span className="text-2xl font-mono font-bold text-[var(--acc)]">{fans.length}</span>
- <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-1">Fans Registrados</p>
+ <span className="text-2xl font-sans font-bold text-[var(--acc)]">{fans.length}</span>
+ <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-1">Fans Registrados</p>
  </div>
  <button
  type="button"
@@ -211,7 +211,7 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
  className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all flex flex-col items-center justify-center cursor-pointer"
  >
  <QrCode className="w-5 h-5 text-[var(--acc)] mb-1" />
- <span className="text-[11px] font-mono font-bold">Generar QR de Concierto</span>
+ <span className="text-[11px] font-sans font-bold">Generar QR de Concierto</span>
  </button>
  </div>
  </div>
@@ -228,17 +228,17 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
  <BookOpen className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
  Dossier EPK Público
  </h3>
- <p className="text-xs font-mono text-[var(--ink-2)]">Presencia y prensa para salas</p>
+ <p className="text-xs font-sans text-[var(--ink-2)]">Presencia y prensa para salas</p>
  </div>
  </div>
  {onNavigate && (
  <button
  type="button"
  onClick={() => onNavigate('epk')}
- className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Editar EPK</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -248,14 +248,14 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
  <div>
- <span className="text-xs font-mono font-bold text-[var(--tentative)]/80">EPK Activo & Listo</span>
- <p className="text-[10px] font-mono text-[var(--ink-2)]">Optimizado para agentes y programadores</p>
+ <span className="text-xs font-sans font-bold text-[var(--tentative)]/80">EPK Activo & Listo</span>
+ <p className="text-[10px] font-sans text-[var(--ink-2)]">Optimizado para agentes y programadores</p>
  </div>
  <a
  href="/epk"
  target="_blank"
  rel="noopener noreferrer"
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-mono text-xs font-bold hover:bg-[var(--tentative)]/30 transition-all"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-sans text-xs font-bold hover:bg-[var(--tentative)]/30 transition-all"
  >
  Ver EPK Vivo ↗
  </a>
@@ -276,17 +276,17 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
  <Bot className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
  Agente IA de Booking
  </h3>
- <p className="text-xs font-mono text-[var(--ink-2)]">Redactor & Lector Autónomo</p>
+ <p className="text-xs font-sans text-[var(--ink-2)]">Redactor & Lector Autónomo</p>
  </div>
  </div>
  {onNavigate && (
  <button
  type="button"
  onClick={() => onNavigate('booking')}
- className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Agentes</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -296,10 +296,10 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
  <div>
- <span className="text-lg font-mono font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
- <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Pendientes de Aprobación Humana</p>
+ <span className="text-lg font-sans font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
+ <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-0.5">Pendientes de Aprobación Humana</p>
  </div>
- <span className="px-2.5 py-1 rounded-full bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-mono font-bold">
+ <span className="px-2.5 py-1 rounded-full bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-sans font-bold">
  ● Activo
  </span>
  </div>
@@ -317,17 +317,17 @@ export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) 
  <Truck className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
  Giras & Logística
  </h3>
- <p className="text-xs font-mono text-[var(--ink-2)]">Rutas de conciertos y producción</p>
+ <p className="text-xs font-sans text-[var(--ink-2)]">Rutas de conciertos y producción</p>
  </div>
  </div>
  {onNavigate && (
  <button
  type="button"
  onClick={() => onNavigate('tour')}
- className="text-xs font-mono text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-sans text-[var(--acc)] hover:underline font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Ver Giras</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -337,8 +337,8 @@ export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) 
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
  <div>
- <span className="text-sm font-mono font-bold text-[var(--ink-2)]">{tours.length} Giras Programadas</span>
- <p className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5">Rutas y hoteles unificados</p>
+ <span className="text-sm font-sans font-bold text-[var(--ink-2)]">{tours.length} Giras Programadas</span>
+ <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">Rutas y hoteles unificados</p>
  </div>
  </div>
  </div>

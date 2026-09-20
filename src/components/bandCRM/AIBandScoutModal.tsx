@@ -142,7 +142,7 @@ export function AIBandScoutModal({
  {/* Search Form */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
  <div>
- <label className={`block text-xs font-bold mb-1.5 uppercase tracking-wider ${subtextColor}`}>Ciudad Origen de la Banda</label>
+ <label className={`block text-xs font-bold mb-1.5 tracking-wider ${subtextColor}`}>Ciudad Origen de la Banda</label>
  <div className="relative">
  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
  <input
@@ -156,7 +156,7 @@ export function AIBandScoutModal({
  </div>
  
  <div>
- <label className={`block text-xs font-bold mb-1.5 uppercase tracking-wider ${subtextColor}`}>Estilo / Género Musical</label>
+ <label className={`block text-xs font-bold mb-1.5 tracking-wider ${subtextColor}`}>Estilo / Género Musical</label>
  <div className="relative">
  <Music className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
  <input
@@ -170,7 +170,7 @@ export function AIBandScoutModal({
  </div>
 
  <div>
- <label className={`block text-xs font-bold mb-1.5 uppercase tracking-wider ${subtextColor}`}>Cantidad (Max 10)</label>
+ <label className={`block text-xs font-bold mb-1.5 tracking-wider ${subtextColor}`}>Cantidad (Max 10)</label>
  <select
  value={count}
  onChange={(e) => setCount(Number(e.target.value))}
@@ -213,7 +213,7 @@ export function AIBandScoutModal({
  {/* Results */}
  {results.length > 0 && (
  <div className="space-y-4">
- <h4 className={`font-bold text-sm uppercase tracking-wider ${subtextColor} flex items-center justify-between`}>
+ <h4 className={`font-bold text-sm tracking-wider ${subtextColor} flex items-center justify-between`}>
  Resultados del Scout
  <span className="text-xs font-normal">
  {selectedBands.size} seleccionadas

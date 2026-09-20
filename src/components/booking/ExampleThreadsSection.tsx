@@ -150,7 +150,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  return (
  <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/5">
  <div className="flex items-center justify-between">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+ <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
  <MessageSquareText className="w-3.5 h-3.5 text-[var(--acc)]" /> Hilos de Email Reales de Ejemplo
  </label>
  <button

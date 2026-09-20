@@ -580,7 +580,7 @@ export function BulkAlbumAudioUploaderModal({
  <h3 className="text-xl sm:text-2xl font-display font-black tracking-tight flex items-center gap-2">
  <span>{isCreatingBrandNewAlbum ?'Crear Álbum desde Carpeta / MP3s' :'Subir Canciones Completas del Disco'}</span>
  </h3>
- <p className="text-xs font-mono opacity-60 mt-0.5 flex items-center gap-1.5">
+ <p className="text-xs font-sans opacity-60 mt-0.5 flex items-center gap-1.5">
  <Disc3 className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span className="font-bold text-[var(--ok)]">
  {currentAlbumName ||'Nuevo Álbum'}
@@ -606,7 +606,7 @@ export function BulkAlbumAudioUploaderModal({
  {isCreatingBrandNewAlbum && (
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 border-[var(--hair)]">
  <div className="md:col-span-2 space-y-2">
- <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
  Nombre del Álbum / Disco
  </label>
  <input
@@ -623,7 +623,7 @@ export function BulkAlbumAudioUploaderModal({
  </div>
 
  <div className="space-y-2">
- <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
+ <label className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
  Portada del Disco
  </label>
  <input
@@ -636,7 +636,7 @@ export function BulkAlbumAudioUploaderModal({
  <button
  type="button"
  onClick={() => coverInputRef.current?.click()}
- className={`w-full py-2.5 px-3 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs font-mono font-bold cursor-pointer transition ${
+ className={`w-full py-2.5 px-3 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs font-sans font-bold cursor-pointer transition ${
  coverPreviewUrl
  ?'border-[var(--ok)] text-[var(--ok)] bg-[var(--ok)]/10'
  : isStitchLight
@@ -689,7 +689,7 @@ export function BulkAlbumAudioUploaderModal({
  ? `${items.length} archivos de audio cargados`
  :'Arrastra aquí todos los archivos de audio del disco'}
  </p>
- <p className="text-xs font-mono opacity-60 mt-1">
+ <p className="text-xs font-sans opacity-60 mt-1">
  o haz clic para explorar tu carpeta de música (MP3, WAV, FLAC, M4A)
  </p>
  </div>
@@ -698,7 +698,7 @@ export function BulkAlbumAudioUploaderModal({
  {/* Feedback messages */}
  {feedbackMsg && (
  <div
- className={`p-4 rounded-[var(--r-l)] flex items-center gap-3 text-xs font-mono ${
+ className={`p-4 rounded-[var(--r-l)] flex items-center gap-3 text-xs font-sans ${
  feedbackMsg.type ==='success'
  ?'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ok)]'
  :'bg-[var(--alert)]/10 border-[var(--alert)]/30 text-[var(--alert)]'
@@ -716,7 +716,7 @@ export function BulkAlbumAudioUploaderModal({
  {/* Upload Progress Bar (when active) */}
  {isUploading && (
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 border-[var(--hair)] space-y-2">
- <div className="flex items-center justify-between text-xs font-mono">
+ <div className="flex items-center justify-between text-xs font-sans">
  <span className="flex items-center gap-2 text-[var(--ok)] font-bold">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
  Subiendo pista {uploadProgress.current} de {uploadProgress.total}...
@@ -739,7 +739,7 @@ export function BulkAlbumAudioUploaderModal({
  {/* Tracks List / Matching Table */}
  {items.length > 0 && (
  <div className="space-y-3">
- <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] px-1">
+ <div className="flex items-center justify-between text-xs font-sans font-bold tracking-wider text-[var(--ink-2)] px-1">
  <span>{isCreatingBrandNewAlbum ?'Pistas del Nuevo Álbum' :'Archivos de Audio & Asignación'}</span>
  <span>{items.length} {items.length === 1 ?'pista' :'pistas'}</span>
  </div>
@@ -783,7 +783,7 @@ export function BulkAlbumAudioUploaderModal({
  <div className="min-w-0 flex-1">
  {isCreatingBrandNewAlbum ? (
  <div className="flex items-center gap-2">
- <span className="text-xs font-mono text-[var(--ink-2)] w-5">
+ <span className="text-xs font-sans text-[var(--ink-2)] w-5">
  #{item.trackNumber || idx + 1}
  </span>
  <input
@@ -804,7 +804,7 @@ export function BulkAlbumAudioUploaderModal({
  <span className="truncate">{item.fileName}</span>
  </p>
  )}
- <p className="text-[11px] font-mono text-[var(--ink-2)] mt-0.5">
+ <p className="text-[11px] font-sans text-[var(--ink-2)] mt-0.5">
  {item.fileSizeFormatted} • {formatSecondsToMmSs(item.durationSeconds)}
  </p>
  </div>
@@ -817,7 +817,7 @@ export function BulkAlbumAudioUploaderModal({
  value={item.matchedSongId ||''}
  disabled={isUploading || item.status ==='success'}
  onChange={(e) => handleAssignChange(idx, e.target.value)}
- className={`w-full text-xs font-mono rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
+ className={`w-full text-xs font-sans rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
  item.matchedSongId
  ? isStitchLight
  ?'bg-[var(--surface)] border-[var(--ok)] text-[var(--ink)] font-bold'
@@ -874,7 +874,7 @@ export function BulkAlbumAudioUploaderModal({
  <div className="flex items-center justify-end">
  {item.status ==='success' && (
  <span
- className={`px-2 py-1 rounded text-[11px] font-mono flex items-center gap-1 ${
+ className={`px-2 py-1 rounded text-[11px] font-sans flex items-center gap-1 ${
  item.chordsSource ==='plantilla_generica'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]'
  :'bg-[var(--ok)]/20 text-[var(--ok)]'
@@ -896,12 +896,12 @@ export function BulkAlbumAudioUploaderModal({
  </span>
  )}
  {item.status ==='uploading' && (
- <span className="px-2 py-1 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[11px] font-mono flex items-center gap-1">
+ <span className="px-2 py-1 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[11px] font-sans flex items-center gap-1">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Subiendo
  </span>
  )}
  {item.status ==='transcribing' && (
- <span className="px-2 py-1 rounded bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-[11px] font-mono flex items-center gap-1">
+ <span className="px-2 py-1 rounded bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-[11px] font-sans flex items-center gap-1">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Analizando acordes (IA)
  </span>
  )}
@@ -921,7 +921,7 @@ export function BulkAlbumAudioUploaderModal({
  type="button"
  onClick={onClose}
  disabled={isUploading}
- className="px-5 py-2.5 rounded-[var(--r-l)] border-[var(--hair)] hover:bg-[var(--ink)]/5 text-xs font-mono font-bold transition cursor-pointer disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-l)] border-[var(--hair)] hover:bg-[var(--ink)]/5 text-xs font-sans font-bold transition cursor-pointer disabled:opacity-50"
  >
  Cancelar
  </button>
@@ -930,7 +930,7 @@ export function BulkAlbumAudioUploaderModal({
  type="button"
  onClick={handleStartUpload}
  disabled={isUploading || items.length === 0}
- className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] text-xs font-mono font-bold shadow-lg flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] text-xs font-sans font-bold shadow-lg flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isUploading ? (
  <>

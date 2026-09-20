@@ -23,7 +23,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
+ <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
  {t('booking.total_leads','Total Leads / Salas')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]">
@@ -45,7 +45,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
+ <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
  {t('booking.approved_dates','Fechas Aprobadas')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)]">
@@ -69,7 +69,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
+ <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
  Tasa de Respuesta
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/50/10 text-[var(--tentative)]">
@@ -91,7 +91,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
+ <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
  Aforo Total Potencial
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]">

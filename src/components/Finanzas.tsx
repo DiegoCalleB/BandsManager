@@ -146,15 +146,15 @@ export default function Finanzas({
  {/* Header con Sincronización en Excel */}
  <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <div>
- <h4 className={`text-xs font-mono uppercase tracking-widest ${'text-[var(--acc)]'}`}>Finanzas & Libro Contable</h4>
- <h2 className={`text-xl font-bold font-display uppercase tracking-wider mt-1 ${textTitle}`}>CONTABILIDAD DE BANDA</h2>
+ <h4 className={`text-xs font-sans tracking-widest ${'text-[var(--acc)]'}`}>Finanzas & Libro Contable</h4>
+ <h2 className={`text-xl font-bold font-display tracking-wider mt-1 ${textTitle}`}>CONTABILIDAD DE BANDA</h2>
  </div>
  <div className="flex gap-2.5 items-center flex-wrap">
  <button
  id="sync-finanzas-excel-btn"
  onClick={handleSyncFinanzas}
  disabled={isSyncing}
- className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
+ className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncing
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] animate-pulse'
  : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
@@ -165,7 +165,7 @@ export default function Finanzas({
  {isSyncing ?'Sincronizando...' :'Actualizar en Excel'}
  </button>
  
- <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
+ <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-sans font-bold ${
  'bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping shrink-0" /> Auto-sync
@@ -181,8 +181,8 @@ export default function Finanzas({
  :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ok)]'
  }`}>
  <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
- <span className="flex-1 font-mono text-[10px]">{syncSuccess}</span>
- <button onClick={() => setSyncSuccess('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-mono">×</button>
+ <span className="flex-1 font-sans text-[10px]">{syncSuccess}</span>
+ <button onClick={() => setSyncSuccess('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-sans">×</button>
  </div>
  )}
  {syncError && (
@@ -192,8 +192,8 @@ export default function Finanzas({
  :'bg-[var(--alert)]/10 -rose-500/20 text-[var(--alert)]'
  }`}>
  <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
- <span className="flex-1 font-mono text-[10px]">{syncError}</span>
- <button onClick={() => setSyncError('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-mono">×</button>
+ <span className="flex-1 font-sans text-[10px]">{syncError}</span>
+ <button onClick={() => setSyncError('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-sans">×</button>
  </div>
  )}
 
@@ -201,14 +201,14 @@ export default function Finanzas({
  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
  {/* Total revenue */}
  <div className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden`}>
- <div className="flex justify-between items-center text-xs font-mono font-bold text-[var(--ok)] uppercase tracking-wider">
+ <div className="flex justify-between items-center text-xs font-sans font-bold text-[var(--ok)] tracking-wider">
  <span>Ingresos Cobrados</span>
  <TrendingUp className="w-4 h-4" />
  </div>
  <h3 className={`text-2xl font-black font-display tracking-tight ${textTitle}`}>
  +{totalIngresos.toLocaleString('es-ES')}€
  </h3>
- <p className={`text-[10px] font-mono ${textSub}`}>
+ <p className={`text-[10px] font-sans ${textSub}`}>
  {totalPendienteIngresos > 0 ? `+${totalPendienteIngresos.toLocaleString('es-ES')}€ pendientes de cobro` :'Al día'}
  </p>
  <div className="absolute right-[-10px] bottom-[-15px] opacity-5 pointer-events-none text-[var(--ok)]">
@@ -218,14 +218,14 @@ export default function Finanzas({
 
  {/* Total expenses */}
  <div className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden`}>
- <div className="flex justify-between items-center text-xs font-mono font-bold text-[var(--alert)] uppercase tracking-wider">
+ <div className="flex justify-between items-center text-xs font-sans font-bold text-[var(--alert)] tracking-wider">
  <span>Gastos Liquidados</span>
  <TrendingDown className="w-4 h-4" />
  </div>
  <h3 className={`text-2xl font-black font-display tracking-tight ${textTitle}`}>
  -{totalGastos.toLocaleString('es-ES')}€
  </h3>
- <p className={`text-[10px] font-mono ${textSub}`}>
+ <p className={`text-[10px] font-sans ${textSub}`}>
  {totalPendienteGastos > 0 ? `-${totalPendienteGastos.toLocaleString('es-ES')}€ pendientes de pago` :'Al día'}
  </p>
  <div className="absolute right-[-10px] bottom-[-15px] pointer-events-none opacity-5 text-[var(--alert)]">
@@ -237,7 +237,7 @@ export default function Finanzas({
  <div className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden ${
  balanceNeto >= 0 ?'-emerald-500/20' :'-rose-500/20'
  }`}>
- <div className={`flex justify-between items-center text-xs font-mono font-bold uppercase tracking-wider ${
+ <div className={`flex justify-between items-center text-xs font-sans font-bold tracking-wider ${
  balanceNeto >= 0 ?'text-[var(--ok)]' :'text-[var(--alert)]'
  }`}>
  <span>Balance de Caja Neto</span>
@@ -246,7 +246,7 @@ export default function Finanzas({
  <h3 className={`text-2xl font-black font-display tracking-tight ${textTitle}`}>
  {balanceNeto >= 0 ? `+${balanceNeto.toLocaleString('es-ES')}€` : `${balanceNeto.toLocaleString('es-ES')}€`}
  </h3>
- <p className={`text-[10px] font-mono ${textSub}`}>
+ <p className={`text-[10px] font-sans ${textSub}`}>
  Caja total real cobrada menos gastos pagados
  </p>
  </div>
@@ -257,7 +257,7 @@ export default function Finanzas({
  <div className="flex gap-2 flex-wrap">
  <button
  onClick={() => setActiveTab('rentabilidad')}
- className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
+ className={`px-3 py-1.5 font-sans text-[10px] font-bold tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  activeTab ==='rentabilidad'
  ? colors.primary
  : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -267,7 +267,7 @@ export default function Finanzas({
  </button>
  <button
  onClick={() => setActiveTab('ledger')}
- className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
+ className={`px-3 py-1.5 font-sans text-[10px] font-bold tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
  activeTab ==='ledger'
  ? colors.primary
  : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -277,7 +277,7 @@ export default function Finanzas({
  </button>
  <button
  onClick={() => setActiveTab('analytics')}
- className={`px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
+ className={`px-3 py-1.5 font-sans text-[10px] font-bold tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
  activeTab ==='analytics'
  ? colors.primary
  : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -289,7 +289,7 @@ export default function Finanzas({
 
  <button
  onClick={() => setIsAddOpen(true)}
- className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
+ className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
  isStitchLight 
  ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] shadow-sm' 
  :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-md'
@@ -317,19 +317,19 @@ export default function Finanzas({
  return (
  <>
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
- <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Total Caché Contratado</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold">Total Caché Contratado</span>
  <h4 className="text-xl font-black text-[var(--acc)]">{totalConcertCache.toLocaleString('es-ES')}€</h4>
  <p className="text-[10px] text-[var(--ink-2)]">{concerts.length} conciertos en catálogo</p>
  </div>
 
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
- <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Total Gastos Gira</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold">Total Gastos Gira</span>
  <h4 className="text-xl font-black text-[var(--alert)]">-{totalConcertGastos.toLocaleString('es-ES')}€</h4>
  <p className="text-[10px] text-[var(--ink-2)]">Gasolina, dietas, furgoneta, hoteles</p>
  </div>
 
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
- <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Beneficio Neto Acumulado</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold">Beneficio Neto Acumulado</span>
  <h4 className={`text-xl font-black ${totalBeneficioNeto >= 0 ?'text-[var(--ok)]' :'text-[var(--alert)]'}`}>
  {totalBeneficioNeto >= 0 ? `+${totalBeneficioNeto.toLocaleString('es-ES')}€` : `${totalBeneficioNeto.toLocaleString('es-ES')}€`}
  </h4>
@@ -337,7 +337,7 @@ export default function Finanzas({
  </div>
 
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
- <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Beneficio Medio / Bolo</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold">Beneficio Medio / Bolo</span>
  <h4 className="text-xl font-black text-[var(--acc)]/70">
  {mediaBeneficio >= 0 ? `+${Math.round(mediaBeneficio)}€` : `${Math.round(mediaBeneficio)}€`}
  </h4>
@@ -351,7 +351,7 @@ export default function Finanzas({
  {/* Concert Profitability Table */}
  <div className={`${colors.card} p-5 rounded-[var(--r-m)] space-y-4`}>
  <div className="flex items-center justify-between border-b /80 pb-3">
- <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-2">
+ <h3 className="text-sm font-bold tracking-wider text-[var(--acc)] flex items-center gap-2">
  <Calculator className="w-4 h-4" /> Desglose de Gastos & Rentabilidad por Bolo
  </h3>
  <span className="text-xs text-[var(--ink-2)]">Haz clic en"Gastos" para desglosar peajes, gasolina, hotel y dietas.</span>
@@ -368,7 +368,7 @@ export default function Finanzas({
  ) : (
  <div className="overflow-x-auto">
  <table className="w-full text-left text-xs">
- <thead className="bg-[var(--surface)]/80 text-[var(--acc)] uppercase font-bold font-mono text-[10px] border-b border-[var(--hair)]">
+ <thead className="bg-[var(--surface)]/80 text-[var(--acc)] font-bold font-sans text-[10px] border-b border-[var(--hair)]">
  <tr>
  <th className="p-3">Fecha & Bolo</th>
  <th className="p-3">Ciudad / Sala</th>
@@ -420,11 +420,11 @@ export default function Finanzas({
 
  return (
  <tr key={c.id} className="hover:bg-[var(--surface)]/30 transition">
- <td className="p-3 font-mono text-[var(--ink-2)]">
+ <td className="p-3 font-sans text-[var(--ink-2)]">
  <span className="font-bold text-[var(--ink)] block">{c.fecha}</span>
  <span className="text-[10px] text-[var(--ink-2)] capitalize">{c.tipo}</span>
  {c.giraNombre && (
- <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink-3)] font-mono">
+ <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink-3)] font-sans">
  🚐 {c.giraNombre}
  </span>
  )}
@@ -433,32 +433,32 @@ export default function Finanzas({
  <span className="font-bold text-[var(--ink)] block">{c.sala}</span>
  <span className="text-[10px] text-[var(--ink-2)]">{c.ciudad}</span>
  {c.convocatoria_tipo ==="parcial" ? (
- <span className="inline-block mt-0.5 text-[9px] text-[var(--tentative)]/80 bg-[var(--tentative)]/10 px-1.5 py-0.2 rounded font-mono" title={c.convocados_nombres?.join(",")}>
+ <span className="inline-block mt-0.5 text-[9px] text-[var(--tentative)]/80 bg-[var(--tentative)]/10 px-1.5 py-0.2 rounded font-sans" title={c.convocados_nombres?.join(",")}>
  👤 Parcial ({numConvocados} miembros)
  </span>
  ) : (
- <span className="inline-block mt-0.5 text-[9px] text-[var(--ok)]/80 font-mono">
+ <span className="inline-block mt-0.5 text-[9px] text-[var(--ok)]/80 font-sans">
  👥 Banda completa
  </span>
  )}
  </td>
- <td className="p-3 font-mono font-bold text-[var(--acc)] text-sm">
+ <td className="p-3 font-sans font-bold text-[var(--acc)] text-sm">
  {c.cache ? `${c.cache}€` :'0€'}
  </td>
  <td className="p-3 text-[11px] text-[var(--ink-2)]">
  {hasCustomGastos ? (
  <div className="space-y-0.5">
- <div>Gasolina: <span className="font-mono text-[var(--ink-2)]">{gasolina}€</span> | Dietas: <span className="font-mono text-[var(--ink-2)]">{dietas}€</span></div>
- <div>Furgoneta: <span className="font-mono text-[var(--ink-2)]">{alquiler}€</span> | Hotel: <span className="font-mono text-[var(--ink-2)]">{alojamiento}€</span></div>
+ <div>Gasolina: <span className="font-sans text-[var(--ink-2)]">{gasolina}€</span> | Dietas: <span className="font-sans text-[var(--ink-2)]">{dietas}€</span></div>
+ <div>Furgoneta: <span className="font-sans text-[var(--ink-2)]">{alquiler}€</span> | Hotel: <span className="font-sans text-[var(--ink-2)]">{alojamiento}€</span></div>
  </div>
  ) : (
  <span className="text-[var(--ink-2)] italic">Estimación típica (~150€)</span>
  )}
  </td>
- <td className="p-3 font-mono text-[var(--alert)] font-semibold">
+ <td className="p-3 font-sans text-[var(--alert)] font-semibold">
  -{totalGastosBolo}€
  </td>
- <td className="p-3 font-mono font-black text-sm">
+ <td className="p-3 font-sans font-black text-sm">
  <span className={beneficioNeto >= 0 ?'text-[var(--ok)]' :'text-[var(--alert)]'}>
  {beneficioNeto >= 0 ? `+${beneficioNeto}€` : `${beneficioNeto}€`}
  </span>
@@ -523,7 +523,7 @@ export default function Finanzas({
  type="number"
  value={editingGasolina}
  onChange={e => setEditingGasolina(e.target.value)}
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
  />
  </div>
  <div>
@@ -532,7 +532,7 @@ export default function Finanzas({
  type="number"
  value={editingDietas}
  onChange={e => setEditingDietas(e.target.value)}
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
  />
  </div>
  </div>
@@ -544,7 +544,7 @@ export default function Finanzas({
  type="number"
  value={editingAlquiler}
  onChange={e => setEditingAlquiler(e.target.value)}
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
  />
  </div>
  <div>
@@ -553,7 +553,7 @@ export default function Finanzas({
  type="number"
  value={editingAlojamiento}
  onChange={e => setEditingAlojamiento(e.target.value)}
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
  />
  </div>
  </div>
@@ -564,7 +564,7 @@ export default function Finanzas({
  type="number"
  value={editingOtros}
  onChange={e => setEditingOtros(e.target.value)}
- className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans"
  />
  </div>
 
@@ -580,7 +580,7 @@ export default function Finanzas({
  </div>
 
  {/* Total calculation preview */}
- <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between font-mono">
+ <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between font-sans">
  <span className="text-[var(--ink-2)] font-bold">TOTAL GASTOS CALCULADOS:</span>
  <span className="text-[var(--alert)] font-black text-sm">
  -{(Number(editingGasolina) || 0) + (Number(editingDietas) || 0) + (Number(editingAlquiler) || 0) + (Number(editingAlojamiento) || 0) + (Number(editingOtros) || 0)}€
@@ -636,7 +636,7 @@ export default function Finanzas({
  placeholder="Buscar transacciones por concepto..."
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
- className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-1.5 text-xs focus:outline-none font-mono transition-all ${
+ className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-1.5 text-xs focus:outline-none font-sans transition-all ${
  'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-[var(--ink-2)]'
  }`}
  />
@@ -660,7 +660,7 @@ export default function Finanzas({
  <select
  value={typeFilter}
  onChange={(e) => setTypeFilter(e.target.value as any)}
- className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-mono focus:outline-none ${
+ className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
  }`}
  >
@@ -673,7 +673,7 @@ export default function Finanzas({
  <select
  value={categoryFilter}
  onChange={(e) => setCategoryFilter(e.target.value)}
- className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-mono focus:outline-none ${
+ className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
  }`}
  >
@@ -685,7 +685,7 @@ export default function Finanzas({
  <select
  value={statusFilter}
  onChange={(e) => setStatusFilter(e.target.value as any)}
- className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-mono focus:outline-none ${
+ className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
  }`}
  >
@@ -727,13 +727,13 @@ export default function Finanzas({
  <div className="min-w-0">
  <div className="flex items-center gap-2">
  <h4 className={`text-xs font-bold font-display truncate ${textTitle}`}>{p.concepto}</h4>
- <span className={`text-[8px] px-1.5 py-0.5 rounded font-mono uppercase tracking-wider ${
+ <span className={`text-[8px] px-1.5 py-0.5 rounded font-sans tracking-wider ${
  isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
  {p.categoria}
  </span>
  </div>
- <div className={`flex gap-3 text-[10px] font-mono mt-1 ${textSub}`}>
+ <div className={`flex gap-3 text-[10px] font-sans mt-1 ${textSub}`}>
  <span className="flex items-center gap-1"><Calendar className="w-3 h-3 shrink-0" /> {p.fecha}</span>
  </div>
  </div>
@@ -741,7 +741,7 @@ export default function Finanzas({
 
  <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 sm: pt-2 sm:pt-0">
  {/* Amount */}
- <span className={`text-sm font-black font-mono tracking-tight ${
+ <span className={`text-sm font-black font-sans tracking-tight ${
  p.tipo ==='ingreso' ?'text-[var(--ok)]' :'text-[var(--alert)]'
  }`}>
  {p.tipo ==='ingreso' ?'+' :'-'}{p.importe.toLocaleString('es-ES')}€
@@ -750,7 +750,7 @@ export default function Finanzas({
  {/* Status checkbox toggle */}
  <button
  onClick={() => handleToggleEstado(p)}
- className={`px-2.5 py-1 text-[9px] font-mono rounded font-bold uppercase transition-all flex items-center gap-1 cursor-pointer active:scale-95 ${
+ className={`px-2.5 py-1 text-[9px] font-sans rounded font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95 ${
  p.estado ==='pagado'
  ? isStitchLight
  ?'bg-[var(--ok)]/10 text-[var(--ok)]'
@@ -772,8 +772,8 @@ export default function Finanzas({
  {/* Quick Stats sidebar panel */}
  <div className="space-y-4">
  <div className={`p-4 rounded-[var(--r-m)] ${colors.card} ${cardBorder} space-y-4`}>
- <h3 className={`text-xs font-mono font-bold uppercase tracking-wider ${textTitle}`}>Resumen Contable</h3>
- <div className="space-y-3 font-mono text-[11px]">
+ <h3 className={`text-xs font-sans font-bold tracking-wider ${textTitle}`}>Resumen Contable</h3>
+ <div className="space-y-3 font-sans text-[11px]">
  <div className="flex justify-between pb-2 -dashed">
  <span className={textSub}>Operaciones Registradas</span>
  <span className={`${textTitle} font-bold`}>{payments.length}</span>
@@ -798,7 +798,7 @@ export default function Finanzas({
  <div className={`p-4 rounded-[var(--r-m)] ${colors.card} ${cardBorder} text-xs leading-relaxed space-y-2`}>
  <div className={`flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <FileText className="w-4 h-4" />
- <strong className="font-mono uppercase tracking-wider">Libro en Excel</strong>
+ <strong className="font-sans tracking-wider">Libro en Excel</strong>
  </div>
  <p className={textSub}>
  Cualquier cambio que realices desde este panel de control se guardará automáticamente en Supabase.
@@ -813,8 +813,8 @@ export default function Finanzas({
  /* Analytics of Expenses by Categories */
  <div className={`p-5 rounded-[var(--r-m)] ${colors.card} ${cardBorder} space-y-6`}>
  <div>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest ${'text-[var(--acc)]'}`}>Análisis de Gastos por Categoría</h3>
- <p className={`text-[10px] font-mono mt-0.5 ${textSub}`}>Proporciones totales liquidadas para cada categoría de costes operativos del proyecto</p>
+ <h3 className={`text-sm font-bold font-display tracking-widest ${'text-[var(--acc)]'}`}>Análisis de Gastos por Categoría</h3>
+ <p className={`text-[10px] font-sans mt-0.5 ${textSub}`}>Proporciones totales liquidadas para cada categoría de costes operativos del proyecto</p>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -837,7 +837,7 @@ export default function Finanzas({
 
  return (
  <div key={item.cat} className="space-y-1">
- <div className="flex justify-between text-[11px] font-mono">
+ <div className="flex justify-between text-[11px] font-sans">
  <span className={`uppercase font-bold ${textTitle}`}>{item.cat}</span>
  <span className={`${textSub}`}>{totalInCat.toLocaleString('es-ES')}€ ({percent.toFixed(1)}%)</span>
  </div>
@@ -851,8 +851,8 @@ export default function Finanzas({
 
  <div className="space-y-4">
  <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/40'} space-y-3 text-xs leading-relaxed`}>
- <h4 className={`font-mono font-bold uppercase tracking-wider ${textTitle}`}>Auditoría Operativa</h4>
- <div className="space-y-2 text-[11px] font-mono text-[var(--ink-2)]">
+ <h4 className={`font-sans font-bold tracking-wider ${textTitle}`}>Auditoría Operativa</h4>
+ <div className="space-y-2 text-[11px] font-sans text-[var(--ink-2)]">
  <div className="flex justify-between">
  <span>Gasto en Viajes (Transporte/Hotel):</span>
  <span className={`${textTitle}`}>

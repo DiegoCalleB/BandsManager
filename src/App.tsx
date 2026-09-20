@@ -1019,7 +1019,7 @@ export default function App() {
     className="flex items-center gap-3 w-full cursor-pointer text-left group"
    >
     <div 
-     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
+     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform group-hover:scale-105"
      style={{ backgroundColor: currentUser.avatarColor || 'var(--acc)' }}
     >
      {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
@@ -1046,7 +1046,7 @@ export default function App() {
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
- <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-2)] uppercase leading-none">
+ <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-2)] leading-none">
  BANDMANAGER<span className="text-[var(--acc)]">.io</span>
  </span>
  </div>
@@ -1285,7 +1285,7 @@ export default function App() {
     className="flex items-center gap-3 w-full cursor-pointer text-left group"
    >
     <div 
-     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
+     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform group-hover:scale-105"
      style={{ backgroundColor: currentUser.avatarColor || 'var(--acc)' }}
     >
      {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
@@ -1313,7 +1313,7 @@ export default function App() {
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
- <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-2)] uppercase leading-none">
+ <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-2)] leading-none">
  BANDMANAGER<span className="text-[var(--acc)]">.io</span>
  </span>
  </div>
@@ -1357,7 +1357,7 @@ export default function App() {
  </div>
  <button
  onClick={() => fetchState()}
- className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 border-[var(--alert)]/20 text-[var(--alert)]/60 font-mono text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
+ className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 border-[var(--alert)]/20 text-[var(--alert)]/60 font-sans text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
  >
  Reintentar Conexión
  </button>
@@ -1369,7 +1369,7 @@ export default function App() {
  {isLoading ? (
  <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
  <RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" />
- <p className="text-xs text-[var(--ink-3)] font-mono">Cargando base de datos Bakandeya...</p>
+ <p className="text-xs text-[var(--ink-3)] font-sans">Cargando base de datos Bakandeya...</p>
  </div>
  ) : (
  <Suspense fallback={
@@ -1603,7 +1603,7 @@ export default function App() {
  ) : (
  <div className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}>
  <ShieldAlert className="w-10 h-10 text-[var(--alert)] mx-auto" />
- <h3 className="text-sm font-mono font-bold text-[var(--alert)]/60 uppercase tracking-wider">Acceso Restringido</h3>
+ <h3 className="text-sm font-sans font-bold text-[var(--alert)]/60 tracking-wider">Acceso Restringido</h3>
  <p className="text-xs text-[var(--ink-3)] max-w-md mx-auto">
  El apartado de Finanzas es confidencial y solo está accesible para los administradores de la banda.
  </p>
@@ -1758,7 +1758,7 @@ export default function App() {
  <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--acc)]/80 animate-ping' : 'bg-[var(--ok)]/60 animate-ping'}`} />
  <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--tentative)]/50' : 'bg-[var(--ok)]'}`} />
  </div>
- <span className="text-xs font-mono font-bold uppercase tracking-wider hidden sm:inline-block pr-1">
+ <span className="text-xs font-sans font-bold tracking-wider hidden sm:inline-block pr-1">
  {isChatLoading ? 'Ejecutando...' : 'Agente AI'}
  </span>
  </>

@@ -50,7 +50,7 @@ export default function DirectionsCard({
  )}
 
  {/* Action: Cómo llegar Button */}
- <div className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all shrink-0 ${
+ <div className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all shrink-0 ${
  'bg-[var(--sunken)]/90 border-[var(--hair)]700/80 text-[var(--ink)] group-hover:bg-[var(--acc)] group-hover:text-[var(--ink)] group-hover:border-[var(--acc)]'
  }`}>
  <Navigation className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />

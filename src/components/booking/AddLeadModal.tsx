@@ -109,7 +109,7 @@ export function AddLeadModal({
  <Building2 className="w-5 h-5 text-[var(--acc)]/80" />
  )}
  <h3
- className={`text-sm font-bold font-display uppercase tracking-widest ${
+ className={`text-sm font-bold font-display tracking-widest ${
  'text-[var(--acc)]'
  }`}
  >
@@ -131,7 +131,7 @@ export function AddLeadModal({
  <form onSubmit={onSubmit} className="space-y-3.5">
  <div>
  <div className="flex justify-between items-center mb-1">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
  {sectionTab ==='medios'
  ?'Nombre del Medio / Revista *'
  : sectionTab ==='grupos'
@@ -174,7 +174,7 @@ export function AddLeadModal({
  {/* Logo Selector */}
  <div className="bg-[var(--bg)]/60 p-3 rounded-[var(--r-m)] border-[var(--hair)]800 space-y-2.5">
  <div className="flex items-center justify-between flex-wrap gap-2">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
  Icono o Logo del Medio / Sala
  </label>
  <div className="flex items-center gap-2">
@@ -280,7 +280,7 @@ export function AddLeadModal({
  )}
 
  <div>
- <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
  Dirección Exacta (Calle, Número...)
  </label>
  <input
@@ -296,7 +296,7 @@ export function AddLeadModal({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
  Ciudad
  </label>
  <input
@@ -310,7 +310,7 @@ export function AddLeadModal({
  />
  </div>
  <div>
- <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
  Región / Alcance
  </label>
  <input
@@ -327,7 +327,7 @@ export function AddLeadModal({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
  Email Principal (Contratación)
  </label>
  <input
@@ -342,7 +342,7 @@ export function AddLeadModal({
  </div>
 
  <div>
- <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
  Email Secundario / Promotora
  </label>
  <input
@@ -358,7 +358,7 @@ export function AddLeadModal({
  </div>
 
  <div>
- <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
  {sectionTab ==='medios' ?'Tipo de Medio' : sectionTab ==='grupos' ?'Tipo de Organización' :'Tipo de Espacio'}
  </label>
  {sectionTab ==='medios' ? (
@@ -399,7 +399,7 @@ export function AddLeadModal({
 
  {(newLeadData.tipo ==='agencia' || newLeadData.tipo ==='manager' || newLeadData.tipo ==='productora' || newLeadData.tipo ==='sello' || newLeadData.tipo ==='grupo' || sectionTab ==='grupos') && (
  <div>
- <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
  Róster de Artistas / Bandas Representadas
  </label>
  <input
@@ -415,7 +415,7 @@ export function AddLeadModal({
  )}
 
  <div>
- <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
  {sectionTab ==='medios'
  ?'Nota de Prensa / Propuesta de Presentación'
  :'Propuesta de Concierto'}
@@ -436,7 +436,7 @@ export function AddLeadModal({
  </div>
 
  <div>
- <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
  Notas Internas
  </label>
  <input
@@ -454,7 +454,7 @@ export function AddLeadModal({
  <button
  type="button"
  onClick={onClose}
- className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+ className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -464,7 +464,7 @@ export function AddLeadModal({
  </button>
  <button
  type="submit"
- className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg ${
+ className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider transition-all cursor-pointer shadow-lg ${
  'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
  }`}
  >

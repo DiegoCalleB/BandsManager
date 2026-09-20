@@ -382,15 +382,15 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <TrendingUp className="w-5 h-5" />
  </div>
  <div>
- <h3 className={`text-sm font-bold font-display uppercase tracking-wider flex items-center gap-2 ${
+ <h3 className={`text-sm font-bold font-display tracking-wider flex items-center gap-2 ${
  isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'
  }`}>
  Evolución de Redes Sociales & Base de Fans en BBDD
- <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)] font-mono font-normal flex items-center gap-1">
+ <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
  <CheckCircle2 className="w-2.5 h-2.5" /> Supabase Conectada
  </span>
  </h3>
- <p className="text-[10px] font-mono mt-0.5 text-[var(--ink-2)]">
+ <p className="text-[10px] font-sans mt-0.5 text-[var(--ink-2)]">
  Seguimiento unificado de audiencia digital, escuchas y fans registrados mediante el formulario público de Únete.
  </p>
  </div>
@@ -402,7 +402,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => onNavigate('fans')}
- className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
+ className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
  'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'
  }`}
  title="Ir al gestor de comunidad, muro y capturas de fans"
@@ -414,7 +414,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => onNavigate('reels')}
- className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
+ className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
  'bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)]'
  }`}
  title="Abrir el panel completo de métricas y sincronización"
@@ -436,10 +436,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  'bg-[var(--surface)]/60 border-[var(--alert)]/40'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
+ <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
  <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" /> Instagram
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)]/60 font-mono">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)]/60 font-sans">
  Seguidores
  </span>
  </div>
@@ -447,7 +447,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="text-xl font-display font-black text-[var(--ink)]">
  {countInstagram.toLocaleString()}
  </div>
- <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
+ <div className="text-[9px] font-sans text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
  <span>{latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}% ER` :'Audiencia activa'}</span>
  </div>
  </div>
@@ -460,10 +460,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  'bg-[var(--surface)]/60 border-[var(--acc)]/40'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
+ <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
  <Video className="w-3.5 h-3.5 text-[var(--acc)]" /> TikTok
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/80 font-mono">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/80 font-sans">
  Comunidad
  </span>
  </div>
@@ -471,7 +471,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="text-xl font-display font-black text-[var(--ink)]">
  {countTikTok.toLocaleString()}
  </div>
- <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
+ <div className="text-[9px] font-sans text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
  <span>{latestMetric?.tiktok_total_likes ? `${(latestMetric.tiktok_total_likes / 1000).toFixed(1)}k likes` :'Contenido viral'}</span>
  </div>
  </div>
@@ -484,10 +484,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  'bg-[var(--surface)]/60 border-[var(--alert)]/40'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
+ <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
  <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" /> YouTube
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)]/60 font-mono">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)]/60 font-sans">
  Suscriptores
  </span>
  </div>
@@ -495,7 +495,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="text-xl font-display font-black text-[var(--ink)]">
  {countYouTube.toLocaleString()}
  </div>
- <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
+ <div className="text-[9px] font-sans text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
  <span>{latestMetric?.youtube_total_views ? `${(latestMetric.youtube_total_views / 1000).toFixed(1)}k views` :'Canal oficial'}</span>
  </div>
  </div>
@@ -508,10 +508,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  'bg-[var(--surface)]/60 border-[var(--ok)]/40'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[var(--ok)] flex items-center gap-1">
+ <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--ok)] flex items-center gap-1">
  <Music2 className="w-3.5 h-3.5 text-[var(--ok)]" /> Spotify
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ink-2)] font-mono">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ink-2)] font-sans">
  Oyentes/mes
  </span>
  </div>
@@ -519,7 +519,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="text-xl font-display font-black text-[var(--ink)]">
  {countSpotify.toLocaleString()}
  </div>
- <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
+ <div className="text-[9px] font-sans text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
  <span>{latestMetric?.spotify_followers ? `${latestMetric.spotify_followers} seguidores` :'Streaming mensual'}</span>
  </div>
  </div>
@@ -533,10 +533,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  :'bg-gradient-to-br from-amber-950/30 to-[var(--surface)] /40 shadow-sm shadow-amber-950/20'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
+ <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
  <Heart className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/20" /> Fans BBDD
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-mono font-bold">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-sans font-bold">
  Formulario Únete
  </span>
  </div>
@@ -545,9 +545,9 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <span className="text-2xl font-display font-black text-[var(--acc)]">
  {totalFans}
  </span>
- <span className="text-[10px] font-mono text-[var(--acc)]/70/80">fans totales</span>
+ <span className="text-[10px] font-sans text-[var(--acc)]/70/80">fans totales</span>
  </div>
- <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center justify-between gap-1 mt-1 border-t /20 pt-1">
+ <div className="text-[9px] font-sans text-[var(--ink-2)] flex items-center justify-between gap-1 mt-1 border-t /20 pt-1">
  <span className="text-[var(--acc)]/70 font-bold">✨ {uneteFans} vía Únete</span>
  {directoFans > 0 && <span className="text-[var(--ink-2)]">🎤 {directoFans} directo</span>}
  <span className="text-[var(--ok)] font-bold">✓ RGPD</span>
@@ -560,7 +560,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3 pb-3 border-b /40">
  {/* Time Period Selector */}
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
  <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span className="font-bold">Periodo:</span>
  </span>
@@ -574,7 +574,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  key={opt.id}
  type="button"
  onClick={() => setSelectedPeriod(opt.id)}
- className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all cursor-pointer ${
+ className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold transition-all cursor-pointer ${
  isSelected
  ? 'bg-gradient-to-r from-[var(--acc)] to-amber-600 text-[var(--ink)] shadow-sm shadow-amber-950/40'
  : isStitchLight
@@ -591,7 +591,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
  {/* Period Summary Indicator */}
  {periodGrowthSummary && (
- <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-[9px] font-mono ${
+ <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-[9px] font-sans ${
  'bg-[var(--ok-soft)] text-[var(--ink-2)] border-[var(--ok)]/20'
  }`}>
  <TrendingUp className="w-3 h-3 text-[var(--ok)]" />
@@ -607,7 +607,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={selectAllChannels}
- className={`text-[9px] font-mono px-2.5 py-1 rounded-[var(--r-s)] transition-all flex items-center gap-1 self-end md:self-auto cursor-pointer ${
+ className={`text-[9px] font-sans px-2.5 py-1 rounded-[var(--r-s)] transition-all flex items-center gap-1 self-end md:self-auto cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :' bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
@@ -622,7 +622,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Interactive Channel Filters & Toggles */}
  <div className="flex items-center justify-between gap-2 mb-3 pb-3 border-b /40 flex-wrap">
  <div className="flex flex-wrap items-center gap-2">
- <span className="text-[10px] font-mono text-[var(--ink-2)] mr-1 flex items-center gap-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] mr-1 flex items-center gap-1">
  <SlidersHorizontal className="w-3 h-3 text-[var(--ink-2)]" /> Curvas del Gráfico:
  </span>
 
@@ -636,12 +636,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => toggleChannel('instagram')}
- className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
+ className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
  >
  <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ?'bg-[var(--alert)] animate-pulse' :'bg-[var(--sunken)]'}`}></span>
  <Instagram className="w-3 h-3 text-[var(--alert)]" />
  <span>Instagram</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-mono font-bold">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-sans font-bold">
  {countInstagram.toLocaleString()}
  </span>
  {selectedChannels.instagram ? <Eye className="w-3 h-3 text-[var(--alert)]" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
@@ -649,7 +649,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => selectOnlyChannel('instagram')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-[var(--alert)]/20 text-[var(--alert)] cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-sans border-l border-[var(--alert)]/20 hover:bg-[var(--alert)]/20 text-[var(--alert)] cursor-pointer"
  title="Aislar sólo Instagram"
  >
  Solo
@@ -667,12 +667,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => toggleChannel('tiktok')}
- className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
+ className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
  >
  <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ?'bg-[var(--acc)]/80 animate-pulse' :'bg-[var(--sunken)]'}`}></span>
  <Video className="w-3 h-3 text-[var(--acc)]" />
  <span>TikTok</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--acc)]/15 font-mono font-bold">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--acc)]/15 font-sans font-bold">
  {countTikTok.toLocaleString()}
  </span>
  {selectedChannels.tiktok ? <Eye className="w-3 h-3 text-[var(--acc)]" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
@@ -680,7 +680,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => selectOnlyChannel('tiktok')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--acc)]/20 hover:bg-[var(--acc)]/20 text-[var(--acc)] cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-sans border-l border-[var(--acc)]/20 hover:bg-[var(--acc)]/20 text-[var(--acc)] cursor-pointer"
  title="Aislar sólo TikTok"
  >
  Solo
@@ -698,12 +698,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => toggleChannel('youtube')}
- className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
+ className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
  >
  <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ?'bg-[var(--alert)] animate-pulse' :'bg-[var(--sunken)]'}`}></span>
  <Youtube className="w-3 h-3 text-[var(--alert)]" />
  <span>YouTube</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-mono font-bold">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-sans font-bold">
  {countYouTube.toLocaleString()}
  </span>
  {selectedChannels.youtube ? <Eye className="w-3 h-3 text-[var(--alert)]" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
@@ -711,7 +711,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => selectOnlyChannel('youtube')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-[var(--alert)]/20 text-[var(--alert)] cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-sans border-l border-[var(--alert)]/20 hover:bg-[var(--alert)]/20 text-[var(--alert)] cursor-pointer"
  title="Aislar sólo YouTube"
  >
  Solo
@@ -729,12 +729,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => toggleChannel('spotify')}
- className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
+ className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
  >
  <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ?'bg-[var(--ok)] animate-pulse' :'bg-[var(--sunken)]'}`}></span>
  <Music2 className="w-3 h-3 text-[var(--ok)]" />
  <span>Spotify</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--ok)]/15 font-mono font-bold">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--ok)]/15 font-sans font-bold">
  {countSpotify.toLocaleString()}
  </span>
  {selectedChannels.spotify ? <Eye className="w-3 h-3 text-[var(--ok)]" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
@@ -742,7 +742,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => selectOnlyChannel('spotify')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--ok)]/20 hover:bg-[var(--ok)]/20 text-[var(--ok)] cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-sans border-l border-[var(--ok)]/20 hover:bg-[var(--ok)]/20 text-[var(--ok)] cursor-pointer"
  title="Aislar sólo Spotify"
  >
  Solo
@@ -759,12 +759,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => toggleChannel('fans')}
- className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono cursor-pointer"
+ className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans cursor-pointer"
  >
  <span className={`w-2 h-2 rounded-full ${selectedChannels.fans ?'bg-[var(--acc)]/60 animate-pulse' :'bg-[var(--sunken)]'}`}></span>
  <Heart className="w-3 h-3 text-[var(--acc)] fill-amber-400/30" />
  <span>Fans BD (Únete)</span>
- <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-mono font-black">
+ <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-sans font-black">
  {totalFans}
  </span>
  {selectedChannels.fans ? <Eye className="w-3 h-3 text-[var(--acc)]" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
@@ -772,7 +772,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => selectOnlyChannel('fans')}
- className="px-1.5 py-1 text-[8px] font-mono border-l /30 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 cursor-pointer font-black"
+ className="px-1.5 py-1 text-[8px] font-sans border-l /30 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 cursor-pointer font-black"
  title="Aislar y ver sólo la curva de Fans registrados"
  >
  Solo
@@ -786,14 +786,14 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {!hasAnyChannelSelected ? (
  <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border-dashed rounded-[var(--r-m)] bg-[var(--surface)]/20">
  <SlidersHorizontal className="w-8 h-8 text-[var(--ink-2)] mb-2" />
- <p className="text-xs font-mono font-medium text-[var(--ink-2)]">Todos los canales están ocultos</p>
- <p className="text-[10px] font-mono text-[var(--ink-2)] mt-1 max-w-xs">
+ <p className="text-xs font-sans font-medium text-[var(--ink-2)]">Todos los canales están ocultos</p>
+ <p className="text-[10px] font-sans text-[var(--ink-2)] mt-1 max-w-xs">
  Haz clic en cualquiera de las etiquetas superiores para activar sus curvas y reescalar el gráfico.
  </p>
  <button
  type="button"
  onClick={selectAllChannels}
- className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-mono text-[10px] font-bold transition-all cursor-pointer"
+ className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-[10px] font-bold transition-all cursor-pointer"
  >
  Activar todos los canales
  </button>
@@ -936,7 +936,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </div>
 
  {/* Footer Info & Direct Links */}
- <div className="mt-4 pt-3 border-t /60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-mono text-[var(--ink-2)]">
+ <div className="mt-4 pt-3 border-t /60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-sans text-[var(--ink-2)]">
  <div className="flex items-center gap-3 flex-wrap">
  <span className="flex items-center gap-1 text-[var(--ok)]">
  <ShieldCheck className="w-3.5 h-3.5" /> 100% Consentimiento RGPD ({verifiedRgpd} registros)

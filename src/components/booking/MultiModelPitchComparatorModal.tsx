@@ -250,7 +250,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
  {/* Venue Badge */}
  <div className="flex items-center gap-2 text-xs">
- <span className="text-[var(--ink-2)] font-mono text-[11px]">SALA DESTINO:</span>
+ <span className="text-[var(--ink-2)] font-sans text-[11px]">SALA DESTINO:</span>
  <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]700 text-[var(--acc)]/70 font-bold">
  🏟️ {lead.nombre_sala} ({lead.ciudad ||'España'})
  </span>
@@ -261,7 +261,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  {/* Provider Selector Badges */}
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className="text-[11px] text-[var(--ink-2)] mr-1 font-mono">Motores activos:</span>
+ <span className="text-[11px] text-[var(--ink-2)] mr-1 font-sans">Motores activos:</span>
  {[
  { id:'deepseek', name:'DeepSeek V3', icon:'🚀' },
  { id:'gemini', name:'Gemini 3.7 Flash', icon:'⚡' }
@@ -331,7 +331,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <span className="text-xs font-bold text-[var(--ink)]">
  Calculadora de Inversión y Coste por Envío:
  </span>
- <span className="text-[10px] px-1.5 py-0.2 bg-[var(--ok)]/10 text-[var(--ink-2)] rounded font-mono">
+ <span className="text-[10px] px-1.5 py-0.2 bg-[var(--ok)]/10 text-[var(--ink-2)] rounded font-sans">
  Tarifas Oficiales 2025/2026
  </span>
  </div>
@@ -342,7 +342,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-m)] border-[var(--hair)]800 self-start sm:self-auto">
- <span className="text-[10px] text-[var(--ink-2)] px-2 font-mono uppercase">Escala:</span>
+ <span className="text-[10px] text-[var(--ink-2)] px-2 font-sans">Escala:</span>
  <button
  type="button"
  onClick={() => setVolumeScale('1')}
@@ -447,11 +447,11 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <span className="text-xs font-bold text-[var(--ink)]">
  {getProviderDisplayName(prop.provider)}
  </span>
- <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold ${getProviderBadge(prop.provider)}`}>
+ <span className={`text-[9px] px-1.5 py-0.5 rounded font-sans font-semibold ${getProviderBadge(prop.provider)}`}>
  {isDeepSeek ?'🚀 Más Económico' :'⚡ Instantáneo'}
  </span>
  </div>
- <p className="text-[10px] text-[var(--ink-2)] font-mono">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans">
  {prop.modelName} {prop.durationMs > 0 && `• ${prop.durationMs}ms`}
  </p>
  </div>
@@ -473,14 +473,14 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div>
  <div className="flex items-center gap-1.5">
  <Coins className="w-3.5 h-3.5 text-[var(--ok)]" />
- <span className="font-bold text-[var(--ink-2)] font-mono text-sm">
+ <span className="font-bold text-[var(--ink-2)] font-sans text-sm">
  {displayCost}
  </span>
  <span className="text-[10px] text-[var(--ink-2)] font-sans">
  ({scaleLabel})
  </span>
  </div>
- <div className="text-[9px] text-[var(--ink-2)] font-mono mt-0.5">
+ <div className="text-[9px] text-[var(--ink-2)] font-sans mt-0.5">
  Tokens: {cost.inputTokens} in / {cost.outputTokens} out (Total: {cost.totalTokens})
  </div>
  </div>
@@ -509,7 +509,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
  {prop.fallbackText && (
  <div className="space-y-1">
- <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-mono">
+ <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-sans">
  <span>⚡ Borrador Inteligente Adaptado (Modo Local):</span>
  </div>
  <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
@@ -526,7 +526,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  {/* Footer Metrics & Selection Button */}
  <div className="pt-2 border-t border-[var(--hair)]800/60 space-y-2">
- <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-mono">
+ <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-sans">
  <span>{wordCount} palabras ({charCount} car.)</span>
  {isDeepSeek ? (
  <span className="text-[var(--acc)]">Tono: Directo y comercial</span>
@@ -568,11 +568,11 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  {/* TABLA COMPARATIVA DE RENTABILIDAD & TARIFAS */}
  <div className="mt-4 p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-[11px] font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5 font-mono">
+ <span className="text-[11px] font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5 font-sans">
  <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" />
  Resumen de Costes & ROI para la Banda
  </span>
- <span className="text-[10px] text-[var(--ink-2)] font-mono">
+ <span className="text-[10px] text-[var(--ink-2)] font-sans">
  1 USD ≈ 0.925 EUR
  </span>
  </div>
@@ -580,7 +580,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="overflow-x-auto">
  <table className="w-full text-left text-[11px] border-collapse">
  <thead>
- <tr className="border-b border-[var(--hair)]800 text-[var(--ink-2)] font-mono">
+ <tr className="border-b border-[var(--hair)]800 text-[var(--ink-2)] font-sans">
  <th className="py-1.5 px-2">Modelo</th>
  <th className="py-1.5 px-2">Entrada (1M tok)</th>
  <th className="py-1.5 px-2">Salida (1M tok)</th>
@@ -594,21 +594,21 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
  <span>🚀</span> DeepSeek V3
  </td>
- <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,14 $ (0,13 €)</td>
- <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,28 $ (0,26 €)</td>
- <td className="py-1.5 px-2 font-mono font-bold text-[var(--ok)]">~0,00014 €</td>
- <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,014 €</td>
- <td className="py-1.5 px-2 font-mono font-bold text-[var(--ok)]">~0,14 € (Máximo ROI)</td>
+ <td className="py-1.5 px-2 font-sans text-[var(--ink-2)]">0,14 $ (0,13 €)</td>
+ <td className="py-1.5 px-2 font-sans text-[var(--ink-2)]">0,28 $ (0,26 €)</td>
+ <td className="py-1.5 px-2 font-sans font-bold text-[var(--ok)]">~0,00014 €</td>
+ <td className="py-1.5 px-2 font-sans font-bold text-[var(--acc)]/70">~0,014 €</td>
+ <td className="py-1.5 px-2 font-sans font-bold text-[var(--ok)]">~0,14 € (Máximo ROI)</td>
  </tr>
  <tr className="hover:bg-[var(--surface)]/40">
  <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
  <span>⚡</span> Google Gemini 3.7 Flash
  </td>
- <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,10 $ (0,09 €)</td>
- <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,40 $ (0,37 €)</td>
- <td className="py-1.5 px-2 font-mono font-bold text-[var(--ok)]">~0,00018 €</td>
- <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,018 €</td>
- <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,18 € (o 0 € con Free Tier)</td>
+ <td className="py-1.5 px-2 font-sans text-[var(--ink-2)]">0,10 $ (0,09 €)</td>
+ <td className="py-1.5 px-2 font-sans text-[var(--ink-2)]">0,40 $ (0,37 €)</td>
+ <td className="py-1.5 px-2 font-sans font-bold text-[var(--ok)]">~0,00018 €</td>
+ <td className="py-1.5 px-2 font-sans font-bold text-[var(--acc)]/70">~0,018 €</td>
+ <td className="py-1.5 px-2 font-sans font-bold text-[var(--acc)]/70">~0,18 € (o 0 € con Free Tier)</td>
  </tr>
  </tbody>
  </table>

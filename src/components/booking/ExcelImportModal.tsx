@@ -468,7 +468,7 @@ export function ExcelImportModal({
  <h3 className="text-base sm:text-lg font-bold font-display">
  Importar Listado de Salas, Ayuntamientos o Bandas
  </h3>
- <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-[var(--ok)]/20 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink-2)]">
  Excel / CSV
  </span>
  </div>
@@ -583,7 +583,7 @@ export function ExcelImportModal({
  <div>
  <h4 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
  <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
- Archivo cargado: <span className="text-[var(--ok)] font-mono">{fileName}</span>
+ Archivo cargado: <span className="text-[var(--ok)] font-sans">{fileName}</span>
  </h4>
  <p className="text-xs text-[var(--ink-2)]">
  Se han detectado {rawRows.length} filas. Revisa la correspondencia de columnas antes de importar.
@@ -637,7 +637,7 @@ export function ExcelImportModal({
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)] flex items-center justify-between">
  <span>Nombre Sala / Contacto / Banda *</span>
- <span className="text-[10px] text-[var(--ok)] font-mono">Requerido</span>
+ <span className="text-[10px] text-[var(--ok)] font-sans">Requerido</span>
  </label>
  <select
  value={mapping.nombre_sala}
@@ -956,7 +956,7 @@ export function ExcelImportModal({
  <div className="flex items-center gap-1.5">
  <span>{row.nombre_sala}</span>
  {row.isDuplicate && (
- <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+ <span className="px-1.5 py-0.2 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
  Existente
  </span>
  )}
@@ -978,7 +978,7 @@ export function ExcelImportModal({
  </td>
  <td className="p-2.5">
  {row.email_contacto ? (
- <span className="text-[var(--ink-2)] font-mono">{row.email_contacto}</span>
+ <span className="text-[var(--ink-2)] font-sans">{row.email_contacto}</span>
  ) : (
  <span className="text-[var(--ink-2)] italic">Sin correo</span>
  )}
@@ -986,7 +986,7 @@ export function ExcelImportModal({
  <td className="p-2.5 text-[var(--ink-2)]">
  {row.telefono || row.instagram ||'-'}
  </td>
- <td className="p-2.5 font-mono text-[var(--ink-2)]">
+ <td className="p-2.5 font-sans text-[var(--ink-2)]">
  {row.aforo > 0 ? `${row.aforo} pax` :'-'}
  </td>
  <td className="p-2.5 text-right">

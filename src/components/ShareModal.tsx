@@ -200,7 +200,7 @@ export function ShareModal({
  value={text}
  onChange={(e) => setText(e.target.value)}
  rows={10}
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] leading-relaxed custom-scrollbar"
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-xs font-sans text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] leading-relaxed custom-scrollbar"
  />
  ) : (
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)]/90 border-[var(--hair)] text-xs text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">

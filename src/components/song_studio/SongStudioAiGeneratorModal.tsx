@@ -54,7 +54,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  </div>
  <div>
  <h3 className="text-base font-bold">Generar Base de Batería y Bajo</h3>
- <p className="text-xs text-[var(--acc)] font-mono">Sintetizador Web Audio de Referencia</p>
+ <p className="text-xs text-[var(--acc)] font-sans">Sintetizador Web Audio de Referencia</p>
  </div>
  </div>
  <button
@@ -79,22 +79,22 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  {/* BPM & Tonalidad */}
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="text-xs font-mono text-[var(--ink-2)] block mb-1">Tempo (BPM)</label>
+ <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Tempo (BPM)</label>
  <input
  type="number"
  min={60}
  max={220}
  value={genBpm}
  onChange={(e) => setGenBpm(parseInt(e.target.value) || 120)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-sans"
  />
  </div>
  <div>
- <label className="text-xs font-mono text-[var(--ink-2)] block mb-1">Tonalidad (Raíz del Bajo)</label>
+ <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Tonalidad (Raíz del Bajo)</label>
  <select
  value={genKey}
  onChange={(e) => setGenKey(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-sans"
  >
  <option value="Do">Do (C)</option>
  <option value="Re">Re (D)</option>
@@ -109,7 +109,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
 
  {/* Instrument Checkboxes */}
  <div className="space-y-2">
- <label className="text-xs font-mono text-[var(--ink-2)] block">Instrumentos a incluir:</label>
+ <label className="text-xs font-sans text-[var(--ink-2)] block">Instrumentos a incluir:</label>
  <div className="grid grid-cols-2 gap-3">
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
  includeDrums ?'bg-[var(--acc)]/30 border-[var(--acc)] text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
@@ -120,7 +120,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  onChange={(e) => setIncludeDrums(e.target.checked)}
  className="accent-purple-500"
  />
- <span className="text-xs font-bold font-mono">🥁 Batería Synth</span>
+ <span className="text-xs font-bold font-sans">🥁 Batería Synth</span>
  </label>
 
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
@@ -132,7 +132,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  onChange={(e) => setIncludeBass(e.target.checked)}
  className="accent-purple-500"
  />
- <span className="text-xs font-bold font-mono">🎸 Bajo Tónica</span>
+ <span className="text-xs font-bold font-sans">🎸 Bajo Tónica</span>
  </label>
  </div>
  </div>
@@ -140,14 +140,14 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  {/* Drum Style Selector */}
  {includeDrums && (
  <div>
- <label className="text-xs font-mono text-[var(--ink-2)] block mb-1">Patrón Rítmico de Batería</label>
+ <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Patrón Rítmico de Batería</label>
  <div className="grid grid-cols-4 gap-2">
  {(['rock','pop','funk','reggae','ska','cumbia','punk'] as const).map(style => (
  <button
  key={style}
  type="button"
  onClick={() => setDrumStyle(style)}
- className={`py-2 px-1 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
+ className={`py-2 px-1 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
  drumStyle === style
  ?'bg-[var(--acc)] text-[var(--ink)] shadow-lg'
  :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -162,7 +162,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
 
  {/* Duration */}
  <div>
- <label className="text-xs font-mono text-[var(--ink-2)] block mb-1">Duración del Bucle ({genDuration} segundos)</label>
+ <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Duración del Bucle ({genDuration} segundos)</label>
  <input
  type="range"
  min={10}
@@ -180,7 +180,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)]"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  Cancelar
  </button>
@@ -188,7 +188,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  type="button"
  onClick={handleGenerateAccompaniment}
  disabled={isGeneratingAccompaniment || (!includeDrums && !includeBass)}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-indigo-600 hover:from-purple-400 hover:to-indigo-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-indigo-600 hover:from-purple-400 hover:to-indigo-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
  >
  {isGeneratingAccompaniment ? (
  <>

@@ -65,13 +65,13 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <div className="sm:hidden bg-[var(--surface)] border-[var(--hair)] p-2.5 rounded-[var(--r-m)] shadow-xs space-y-2">
  <div className="flex items-center justify-between gap-2">
  <div className="min-w-0">
- <h2 className="text-sm font-bold font-mono text-[var(--ink)] leading-tight truncate">
+ <h2 className="text-sm font-bold font-sans text-[var(--ink)] leading-tight truncate">
  EPK / Dossier
  </h2>
  <button
  type="button"
  onClick={() => setShowHealthDetails(prev => !prev)}
- className="mt-0.5 text-[10px] font-mono flex items-center gap-1 cursor-pointer transition text-[var(--ink-2)] hover:text-[var(--acc)]/70"
+ className="mt-0.5 text-[10px] font-sans flex items-center gap-1 cursor-pointer transition text-[var(--ink-2)] hover:text-[var(--acc)]/70"
  >
  <span className={completedCount >= 5 ?'text-[var(--ok)] font-semibold' :'text-[var(--acc)] font-semibold'}>
  ● {completedCount}/{totalCount} requisitos listos
@@ -176,7 +176,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
  {/* DESGLOSE DESPLEGABLE DE SALUD */}
  {showHealthDetails && (
- <div className="pt-2 border-t border-[var(--hair)]/80 flex flex-wrap gap-1 text-[10px] font-mono">
+ <div className="pt-2 border-t border-[var(--hair)]/80 flex flex-wrap gap-1 text-[10px] font-sans">
  {healthItems.map(item => (
  <button
  key={item.key}
@@ -215,7 +215,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <select
  value={activeBlock}
  onChange={(e) => onSelectBlock(e.target.value as EPKBlockId)}
- className="w-full appearance-none bg-[var(--surface)]/80 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-mono text-[var(--acc)]/70 focus:outline-none focus: cursor-pointer"
+ className="w-full appearance-none bg-[var(--surface)]/80 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-sans text-[var(--acc)]/70 focus:outline-none focus: cursor-pointer"
  >
  {EPK_BLOCKS.map(block => (
  <option key={block.id} value={block.id} className="bg-[var(--surface)]/80 text-[var(--ink)]">
@@ -243,7 +243,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] border-[var(--hair)] p-4 sm:p-5 rounded-[var(--r-l)] shadow-sm">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
- <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] text-[10px] font-mono font-bold uppercase">
+ <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] text-[10px] font-sans font-bold">
  Kit de Prensa & EPK
  </span>
  <span className="text-[11px] text-[var(--ink-2)] hidden sm:inline">•</span>
@@ -251,7 +251,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  Gestor Modular del Dossier
  </span>
  </div>
- <h2 className="text-lg sm:text-xl font-bold font-mono text-[var(--ink)]">
+ <h2 className="text-lg sm:text-xl font-bold font-sans text-[var(--ink)]">
  EPK / Dossier de la Banda
  </h2>
  <p className="text-[var(--ink-2)] text-xs max-w-2xl leading-relaxed">
@@ -268,7 +268,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  id="tutorial-trigger-epk"
  type="button"
  onClick={onOpenTutorial}
- className="px-3 py-2 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-mono font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
+ className="px-3 py-2 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
  title="Abrir guía interactiva del Dossier EPK"
  >
  <HelpCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
@@ -316,8 +316,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
  {/* STATUS & HEALTH BAR ESCRITORIO (>= sm) */}
  <div className="hidden sm:flex items-center justify-between gap-3 px-3 sm:px-4 py-2 bg-[var(--surface)] rounded-[var(--r-m)] text-xs">
- <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5 text-[11px] font-mono">
- <span className="text-[var(--ink-2)] uppercase tracking-wider text-[10px] shrink-0 font-bold">
+ <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5 text-[11px] font-sans">
+ <span className="text-[var(--ink-2)] tracking-wider text-[10px] shrink-0 font-bold">
  Estado:
  </span>
 

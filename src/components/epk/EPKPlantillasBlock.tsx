@@ -112,7 +112,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
  </div>
  <div>
- <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-mono uppercase tracking-wider">
+ <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-sans tracking-wider">
  1. Elige la Plantilla Visual del Dossier
  </h4>
  <p className="hidden sm:block text-xs text-[var(--ink-2)]">
@@ -153,7 +153,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  {/* PREVIEW MINIATURA GRÁFICA */}
  <div className={`w-full h-16 sm:h-24 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] mb-2 sm:mb-3 p-2 sm:p-2.5 flex flex-col justify-between ${tpl.preview.bg}`}>
  <div className="flex items-center justify-between">
- <span className={`text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-md ${tpl.preview.pill}`}>
+ <span className={`text-[9px] sm:text-[10px] font-sans font-bold px-1.5 sm:px-2 py-0.5 rounded-md ${tpl.preview.pill}`}>
  {tpl.badge}
  </span>
  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[var(--sunken)]/60" />
@@ -174,7 +174,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <div className="flex items-center justify-between gap-1">
  <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
  <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isSelected ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
- <span className="text-xs font-bold text-[var(--ink)] font-mono truncate">{tpl.name}</span>
+ <span className="text-xs font-bold text-[var(--ink)] font-sans truncate">{tpl.name}</span>
  </div>
  {isSelected && (
  <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center shrink-0">
@@ -193,7 +193,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  {/* BOTÓN DE ESTADO */}
  <div className="pt-2 sm:pt-3 mt-1.5 sm:mt-2 border-t border-[var(--hair)]/60">
  <span
- className={`block w-full py-0.5 sm:py-1 text-center rounded-md sm:rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-bold font-mono transition ${
+ className={`block w-full py-0.5 sm:py-1 text-center rounded-md sm:rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-bold font-sans transition ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink)]/80'
@@ -216,7 +216,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
  </div>
  <div>
- <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-mono uppercase tracking-wider">
+ <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-sans tracking-wider">
  2. Organiza el Orden de las Secciones
  </h4>
  <p className="hidden sm:block text-xs text-[var(--ink-2)]">
@@ -275,7 +275,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  >
  {/* ÍNDICE Y METADATOS */}
  <div className="flex items-center gap-3 min-w-0">
- <span className="w-6 text-center font-mono text-xs font-bold text-[var(--ink-2)] shrink-0">
+ <span className="w-6 text-center font-sans text-xs font-bold text-[var(--ink-2)] shrink-0">
  #{index + 1}
  </span>
  <div
@@ -289,14 +289,14 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  </div>
  <div className="min-w-0">
  <div className="flex items-center gap-2">
- <span className="text-xs font-bold text-[var(--ink)] font-mono truncate">
+ <span className="text-xs font-bold text-[var(--ink)] font-sans truncate">
  {item.meta.label}
  </span>
- <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] shrink-0 hidden sm:inline">
+ <span className="text-[10px] font-sans px-1.5 py-0.2 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] shrink-0 hidden sm:inline">
  {item.meta.defaultBadge}
  </span>
  {!item.isVisible && (
- <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[var(--alert)]/10 text-[var(--alert)] shrink-0">
+ <span className="text-[10px] font-sans px-1.5 py-0.2 rounded bg-[var(--alert)]/10 text-[var(--alert)] shrink-0">
  Oculta
  </span>
  )}

@@ -80,7 +80,7 @@ export function NegotiationSimulationModal({
  <div>
  <div className="flex items-center gap-2">
  <Sparkles className="w-5 h-5 text-[var(--acc)] animate-pulse" />
- <h3 className="text-sm font-bold font-display uppercase tracking-widest">
+ <h3 className="text-sm font-bold font-display tracking-widest">
  Simulador de Negociación Personalizado
  </h3>
  </div>
@@ -105,14 +105,14 @@ export function NegotiationSimulationModal({
  <div className="space-y-4 select-text">
  {/* Role selector buttons */}
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
  ¿Quién emite la respuesta simulada?
  </label>
  <div className="grid grid-cols-2 gap-2">
  <button
  type="button"
  onClick={() => onRoleChange('sala')}
- className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+ className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='sala'
  ? 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
  : isStitchLight
@@ -125,7 +125,7 @@ export function NegotiationSimulationModal({
  <button
  type="button"
  onClick={() => onRoleChange('banda')}
- className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+ className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='banda'
  ? 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
  : isStitchLight
@@ -140,7 +140,7 @@ export function NegotiationSimulationModal({
 
  {/* Scenario selector */}
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
  Instrucciones de Situación / Pauta Inicial
  </label>
  <select
@@ -164,7 +164,7 @@ export function NegotiationSimulationModal({
  {/* Sender Name & Subject */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
  Nombre del Emisor
  </label>
  <input
@@ -178,7 +178,7 @@ export function NegotiationSimulationModal({
  />
  </div>
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
  Asunto del Correo
  </label>
  <input
@@ -196,7 +196,7 @@ export function NegotiationSimulationModal({
  {/* Simulation Instructions Prompt Area */}
  <div className="space-y-1.5">
  <div className="flex justify-between items-center">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
+ <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
  Instrucciones Detalladas de Negociación para la IA
  </label>
  <span className={`text-[10px] font-sans ${textMuted}`}>
@@ -220,7 +220,7 @@ export function NegotiationSimulationModal({
  type="button"
  onClick={onGenerate}
  disabled={isGeneratingSimulation || !simulationCustomInstruction}
- className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 ${
+ className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 ${
  isStitchLight
  ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)] shadow-md'
  :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-extrabold shadow-lg'
@@ -243,13 +243,13 @@ export function NegotiationSimulationModal({
  <div className="space-y-2 border-t border-[var(--sunken)] pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
  <div className="flex justify-between items-center">
  <label
- className={`block text-[10px] uppercase font-sans tracking-wider ${
+ className={`block text-[10px] font-sans tracking-wider ${
  'text-[var(--acc)]'
  }`}
  >
  ✨ Vista Previa del Correo Generado (Editable)
  </label>
- <span className="text-[10px] font-sans uppercase bg-[var(--surface)]/15 text-[var(--ok)]/80 px-2 py-1 rounded">
+ <span className="text-[10px] font-sans bg-[var(--surface)]/15 text-[var(--ok)]/80 px-2 py-1 rounded">
  Listo para Ajustar
  </span>
  </div>
@@ -276,7 +276,7 @@ export function NegotiationSimulationModal({
  <button
  type="button"
  onClick={onClose}
- className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+ className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -288,7 +288,7 @@ export function NegotiationSimulationModal({
  type="button"
  onClick={onCommit}
  disabled={!simulationMessage || isGeneratingSimulation}
- className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all ${
+ className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all ${
  isStitchLight
  ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
  :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-extrabold'

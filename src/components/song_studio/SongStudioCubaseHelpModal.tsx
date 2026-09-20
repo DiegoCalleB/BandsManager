@@ -26,7 +26,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  <div>
  <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
  Atajos de Teclado Tipo Cubase DAW
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--acc)]/40">
+ <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--acc)]/40">
  Modo Studio
  </span>
  </h3>
@@ -36,7 +36,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  </div>
  </div>
 
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Play / Pausa</span>
  <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
@@ -123,7 +123,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  </div>
 
  <div className="pt-2 flex items-center justify-between border-t border-[var(--hair)]">
- <span className="text-[11px] text-[var(--ink-2)] font-mono">
+ <span className="text-[11px] text-[var(--ink-2)] font-sans">
  💡 Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]">K</kbd> o <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
  </span>
  <button

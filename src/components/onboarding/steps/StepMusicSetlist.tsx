@@ -258,7 +258,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  {!showBulkInput ? (
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <div className="flex items-center justify-between">
- <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider">
  Añadir Canción Individual
  </h4>
  <button
@@ -315,7 +315,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  ) : (
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <div className="flex items-center justify-between">
- <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider">
  Pegar Títulos en Bloque (Uno por línea)
  </h4>
  <button
@@ -331,7 +331,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  value={bulkText}
  onChange={(e) => setBulkText(e.target.value)}
  placeholder={"1. El Despertar\n2. Noche en el Puerto\n3. Tormenta Eléctrica\n4. Último Baile"}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus: font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus: font-sans"
  />
  <div className="flex justify-end">
  <button

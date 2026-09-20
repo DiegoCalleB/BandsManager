@@ -2241,7 +2241,7 @@ export default function CalendarView({
  return (
  <div key={`month-grid-${year}-${month}`} data-modulo="sala" className="flex-1 min-w-[280px]">
  {showMonthHeader && (
- <div className={`text-center font-bold font-display uppercase tracking-wider text-[10px] mb-3 pb-1 ${
+ <div className={`text-center font-bold font-display tracking-wider text-[10px] mb-3 pb-1 ${
  'text-[var(--acc)]'
  }`}>
  {monthNames[month]} {year}
@@ -2249,7 +2249,7 @@ export default function CalendarView({
  )}
 
  {/* Weekday Labels */}
- <div className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono mb-2.5 font-bold uppercase ${textSub} bg-[var(--surface)]/60 p-2 rounded-[var(--r-m)]`}>
+ <div className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-sans mb-2.5 font-bold ${textSub} bg-[var(--surface)]/60 p-2 rounded-[var(--r-m)]`}>
  {weekdays.map(day => (
  <div key={day} className="py-0.5 tracking-wider">{day}</div>
  ))}
@@ -2311,7 +2311,7 @@ export default function CalendarView({
  className={`relative min-h-[62px] sm:min-h-[76px] lg:min-h-[82px] aspect-auto sm:aspect-square p-1 sm:p-1.5 rounded-[var(--r-m)] flex flex-col justify-between transition-all duration-200 cursor-pointer overflow-hidden ${borderAndBgClass}`}
  >
  <div className="flex items-center justify-between w-full">
- <span className={`text-[11px] sm:text-xs font-mono font-bold ${isSelected ?'text-[var(--acc-ink)] font-black' : isToday ?'text-[var(--acc)]' :''}`}>
+ <span className={`text-[11px] sm:text-xs font-sans font-bold ${isSelected ?'text-[var(--acc-ink)] font-black' : isToday ?'text-[var(--acc)]' :''}`}>
  {cell.day}
  </span>
  <div className="flex items-center gap-1">
@@ -2337,7 +2337,7 @@ export default function CalendarView({
  e.stopPropagation();
  handleSelectEvent(c);
  }}
- className={`text-[8px] sm:text-[9.5px] font-mono font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
+ className={`text-[8px] sm:text-[9.5px] font-sans font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
  isSelected 
  ?'bg-[var(--bg)]/25 text-[var(--acc-ink)] font-black' 
  : isPosible
@@ -2371,7 +2371,7 @@ export default function CalendarView({
  e.stopPropagation();
  handleSelectEvent(r);
  }}
- className={`text-[8px] sm:text-[9.5px] font-mono font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
+ className={`text-[8px] sm:text-[9.5px] font-sans font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
  isSelected
  ?'bg-[var(--bg)]/25 text-[var(--acc-ink)] font-black'
  : isReu
@@ -2388,7 +2388,7 @@ export default function CalendarView({
  );
  })}
  {dayEvents.length > (dayConcerts.length > 0 ? 2 : 2) && (
- <div className="text-[7.5px] sm:text-[8.5px] font-mono text-center font-bold text-[var(--acc)]/70 opacity-90">
+ <div className="text-[7.5px] sm:text-[8.5px] font-sans text-center font-bold text-[var(--acc)]/70 opacity-90">
  +{dayEvents.length - 2} más
  </div>
  )}
@@ -2429,14 +2429,14 @@ export default function CalendarView({
  :'bg-[var(--surface)]/90 text-[var(--ink-2)] hover:/50'
  }`}
  >
- <span className="text-[10px] font-mono uppercase tracking-wider opacity-80">
+ <span className="text-[10px] font-sans tracking-wider opacity-80">
  {fullWeekdays[idx].slice(0, 3)}
  </span>
- <span className="text-sm sm:text-base font-bold font-mono my-0.5">
+ <span className="text-sm sm:text-base font-bold font-sans my-0.5">
  {d.getDate()}
  </span>
  {totalEvents > 0 && (
- <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+ <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-sans font-bold ${
  isSelected
  ?'bg-[var(--sunken)] text-inherit'
  :'bg-[var(--acc)]/20 text-[var(--acc)]'
@@ -2479,7 +2479,7 @@ export default function CalendarView({
  >
  <div className="flex items-center justify-between pb-2 mb-2 border-b /50">
  <div className="flex items-center gap-1.5 min-w-0">
- <span className={`text-xs font-mono font-bold truncate ${isSelected ?'text-[var(--acc)]' : isToday ?'text-[var(--acc)]/70' :'text-[var(--ink-2)]'}`}>
+ <span className={`text-xs font-sans font-bold truncate ${isSelected ?'text-[var(--acc)]' : isToday ?'text-[var(--acc)]/70' :'text-[var(--ink-2)]'}`}>
  {fullWeekdays[idx].slice(0, 3)} {d.getDate()}
  </span>
  {(() => {
@@ -2549,7 +2549,7 @@ export default function CalendarView({
  {bandInfo.name}
  </span>
  {isPosible && (
- <span className="ml-auto text-[8px] font-mono uppercase font-black px-1.5 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--tentative)]/80">
+ <span className="ml-auto text-[8px] font-sans font-black px-1.5 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--tentative)]/80">
  Posible
  </span>
  )}
@@ -2565,7 +2565,7 @@ export default function CalendarView({
  )}
  <HolidayDateWarning date={c.fecha} city={c.ciudad} compact className="mt-1" />
  {((c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) :'')) && (
- <div className="text-[9px] font-mono text-[var(--ink-2)] mt-1">
+ <div className="text-[9px] font-sans text-[var(--ink-2)] mt-1">
  🕒 {(c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) :'')}
  </div>
  )}
@@ -2619,7 +2619,7 @@ export default function CalendarView({
  <span className="truncate">{isReu ? (r.asunto ||'Reunión') : r.lugar}</span>
  </div>
  {r.hora && (
- <div className="text-[9px] font-mono text-[var(--ink-2)] mt-1">
+ <div className="text-[9px] font-sans text-[var(--ink-2)] mt-1">
  🕒 {r.hora}
  </div>
  )}
@@ -2701,13 +2701,13 @@ export default function CalendarView({
  <div className="flex items-center justify-between pb-2 border-b /80">
  <div className="flex items-center gap-2">
  <List className="w-4 h-4 text-[var(--acc)]" />
- <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
+ <span className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
  Agenda Cronológica ({allEventsList.length} eventos programados)
  </span>
  </div>
  <button
  onClick={() => setShowCreateModal('concert')}
- className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold font-mono bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/50/90 transition-all cursor-pointer flex items-center gap-1.5"
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold font-sans bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/50/90 transition-all cursor-pointer flex items-center gap-1.5"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Añadir Evento</span>
@@ -2742,13 +2742,13 @@ export default function CalendarView({
  >
  <div className="flex items-center justify-between mb-2.5 pb-2 border-b /60">
  <div className="flex items-center gap-2">
- <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
+ <span className={`text-xs font-sans font-bold px-2 py-0.5 rounded ${
  isToday ?'bg-[var(--acc)] text-[var(--on-acc)] font-black' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  {dayName}, {d.getDate()} de {monthNames[d.getMonth()]}
  </span>
  {isToday && (
- <span className="text-[10px] font-mono font-bold uppercase text-[var(--acc)] flex items-center gap-1">
+ <span className="text-[10px] font-sans font-bold text-[var(--acc)] flex items-center gap-1">
  <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 animate-ping" />
  Hoy
  </span>
@@ -2809,7 +2809,7 @@ export default function CalendarView({
 
  <div className="min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <span className={`text-xs font-bold font-mono px-1.5 py-0.2 rounded ${
+ <span className={`text-xs font-bold font-sans px-1.5 py-0.2 rounded ${
  isConcert
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40'
  : isReu
@@ -2834,7 +2834,7 @@ export default function CalendarView({
 
  <div className="flex items-center gap-3 shrink-0">
  {((evt as any).hora || ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) :'')) && (
- <span className="text-xs font-mono text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-1">
  <Clock className="w-3 h-3 text-[var(--ink-2)]" />
  {(evt as any).hora || ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) :'')}
  </span>
@@ -2869,10 +2869,10 @@ export default function CalendarView({
  {/* Top title & Action buttons */}
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div className="min-w-0">
- <h4 className={`text-[10px] font-mono uppercase tracking-widest ${"text-[var(--acc)]"}`}>
+ <h4 className={`text-[10px] font-sans tracking-widest ${"text-[var(--acc)]"}`}>
  Calendario de Directos, Ensayos y Reuniones
  </h4>
- <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold mt-1 overflow-x-auto no-scrollbar pb-0.5 max-w-full">
+ <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold mt-1 overflow-x-auto no-scrollbar pb-0.5 max-w-full">
  <span className="shrink-0 px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1" title="Eventos visibles vs Total">
  <Calendar className="w-3 h-3" /> {filteredConcerts.length + filteredRehearsals.length}/{concerts.length + rehearsals.length}
  </span>
@@ -2903,7 +2903,7 @@ export default function CalendarView({
  <button
  id="create-event-unified-btn"
  onClick={() => setShowAddEventDropdown(!showAddEventDropdown)}
- className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
+ className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
  "bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold"
  }`}
  title="Añadir Concierto, Ensayo o Reunión"
@@ -2919,13 +2919,13 @@ export default function CalendarView({
  <div className={`absolute right-0 mt-1.5 w-48 rounded-[var(--r-m)] shadow-2xl z-50 py-1.5 overflow-hidden animate-in fade-in duration-150 backdrop-blur-md ${
  isStitchLight ?"bg-[var(--surface)]/95 text-[var(--ink)]" :"bg-[var(--surface)]/95 border-[var(--hair)]800 text-[var(--ink-2)]"
  }`}>
- <div className="px-3 py-1 text-[9px] font-mono uppercase tracking-widest text-[var(--ink-2)] border-b /40 mb-1">
+ <div className="px-3 py-1 text-[9px] font-sans tracking-widest text-[var(--ink-2)] border-b /40 mb-1">
  Añadir al Calendario
  </div>
  <button
  type="button"
  onClick={() => { setShowAddEventDropdown(false); setConcIsPosible(false); setShowCreateModal('concert'); }}
- className="w-full px-3 py-2 text-left text-xs font-mono font-bold flex items-center gap-2 hover:bg-[var(--acc)]/15 hover:text-[var(--acc)] transition-colors cursor-pointer"
+ className="w-full px-3 py-2 text-left text-xs font-sans font-bold flex items-center gap-2 hover:bg-[var(--acc)]/15 hover:text-[var(--acc)] transition-colors cursor-pointer"
  >
  <span>🎸</span>
  <span>+ Concierto</span>
@@ -2933,7 +2933,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => { setShowAddEventDropdown(false); setConcIsPosible(true); setShowCreateModal('concert'); }}
- className="w-full px-3 py-2 text-left text-xs font-mono font-bold flex items-center gap-2 hover:bg-[var(--tentative)]/15 hover:text-[var(--tentative)] transition-colors cursor-pointer"
+ className="w-full px-3 py-2 text-left text-xs font-sans font-bold flex items-center gap-2 hover:bg-[var(--tentative)]/15 hover:text-[var(--tentative)] transition-colors cursor-pointer"
  >
  <span>🎯</span>
  <span>+ Bolo Posible</span>
@@ -2941,7 +2941,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => { setShowAddEventDropdown(false); setShowCreateModal('rehearsal'); }}
- className="w-full px-3 py-2 text-left text-xs font-mono font-bold flex items-center gap-2 hover:bg-[var(--ok)]/15 hover:text-[var(--ok)] transition-colors cursor-pointer"
+ className="w-full px-3 py-2 text-left text-xs font-sans font-bold flex items-center gap-2 hover:bg-[var(--ok)]/15 hover:text-[var(--ok)] transition-colors cursor-pointer"
  >
  <span>🥁</span>
  <span>+ Ensayo</span>
@@ -2949,7 +2949,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => { setShowAddEventDropdown(false); setShowCreateModal('reunion'); }}
- className="w-full px-3 py-2 text-left text-xs font-mono font-bold flex items-center gap-2 hover:bg-[var(--tentative)]/15 hover:text-[var(--tentative)] transition-colors cursor-pointer"
+ className="w-full px-3 py-2 text-left text-xs font-sans font-bold flex items-center gap-2 hover:bg-[var(--tentative)]/15 hover:text-[var(--tentative)] transition-colors cursor-pointer"
  >
  <span>🤝</span>
  <span>+ Reunión</span>
@@ -2963,7 +2963,7 @@ export default function CalendarView({
  <button
  id="export-ics-btn"
  onClick={() => setShowSyncModal(true)}
- className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
+ className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
  "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70"
  }`}
  title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
@@ -3001,17 +3001,17 @@ export default function CalendarView({
  </button>
  <button
  onClick={handleGoToday}
- className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-md bg-[var(--acc)]/15 text-[var(--acc)] hover:bg-[var(--acc)]/50/25 transition-all cursor-pointer shrink-0"
+ className="text-[11px] font-sans font-bold px-2.5 py-1 rounded-md bg-[var(--acc)]/15 text-[var(--acc)] hover:bg-[var(--acc)]/50/25 transition-all cursor-pointer shrink-0"
  title="Ir al mes y día actual"
  >
  Hoy
  </button>
  </div>
 
- <h2 className={`text-base sm:text-lg lg:text-xl font-bold font-display uppercase tracking-wider truncate min-w-0 ${textTitle}`}>
+ <h2 className={`text-base sm:text-lg lg:text-xl font-bold font-display tracking-wider truncate min-w-0 ${textTitle}`}>
  {calendarViewMode ==='2m' ? (
  <>
- {monthNames[currentMonth]} - {monthNames[nextMonth]} <span className="text-[var(--acc)] font-mono text-base">{currentYear === nextMonthYear ? currentYear : `${currentYear}/${nextMonthYear}`}</span>
+ {monthNames[currentMonth]} - {monthNames[nextMonth]} <span className="text-[var(--acc)] font-sans text-base">{currentYear === nextMonthYear ? currentYear : `${currentYear}/${nextMonthYear}`}</span>
  </>
  ) : calendarViewMode ==='week' ? (
  (() => {
@@ -3020,17 +3020,17 @@ export default function CalendarView({
  const last = week[6];
  return (
  <>
- Semana {first.getDate()} {monthNames[first.getMonth()].slice(0, 3)} - {last.getDate()} {monthNames[last.getMonth()].slice(0, 3)} <span className="text-[var(--acc)] font-mono text-base">{last.getFullYear()}</span>
+ Semana {first.getDate()} {monthNames[first.getMonth()].slice(0, 3)} - {last.getDate()} {monthNames[last.getMonth()].slice(0, 3)} <span className="text-[var(--acc)] font-sans text-base">{last.getFullYear()}</span>
  </>
  );
  })()
  ) : calendarViewMode ==='agenda' ? (
  <>
- Agenda <span className="text-[var(--acc)] font-mono text-base">{monthNames[currentMonth]} {currentYear}</span>
+ Agenda <span className="text-[var(--acc)] font-sans text-base">{monthNames[currentMonth]} {currentYear}</span>
  </>
  ) : (
  <>
- {monthNames[currentMonth]} <span className="text-[var(--acc)] font-mono text-base">{currentYear}</span>
+ {monthNames[currentMonth]} <span className="text-[var(--acc)] font-sans text-base">{currentYear}</span>
  </>
  )}
  </h2>
@@ -3050,7 +3050,7 @@ export default function CalendarView({
  setTwoMonthsMode(false);
  }}
  title={devicePrefs[currentDeviceType] ==='1' ?"Ver 1 mes (predeterminado al iniciar en este dispositivo)" :"Ver 1 mes"}
- className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
+ className={`px-2 py-0.5 text-[10px] font-sans font-bold rounded transition-all cursor-pointer ${
  calendarViewMode ==='1m'
  ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3065,7 +3065,7 @@ export default function CalendarView({
  setTwoMonthsMode(true);
  }}
  title={devicePrefs[currentDeviceType] ==='2' ?"Ver 2 meses (predeterminado al iniciar en este dispositivo)" :"Ver 2 meses"}
- className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
+ className={`px-2 py-0.5 text-[10px] font-sans font-bold rounded transition-all cursor-pointer ${
  calendarViewMode ==='2m'
  ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3077,7 +3077,7 @@ export default function CalendarView({
  id="calendar-view-week-btn"
  onClick={() => setCalendarViewMode('week')}
  title="Vista Semana estilo Google Calendar (7 días detallados)"
- className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
+ className={`px-2 py-0.5 text-[10px] font-sans font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
  calendarViewMode ==='week'
  ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3090,7 +3090,7 @@ export default function CalendarView({
  id="calendar-view-agenda-btn"
  onClick={() => setCalendarViewMode('agenda')}
  title="Vista Agenda / Lista estilo Google Calendar"
- className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
+ className={`px-2 py-0.5 text-[10px] font-sans font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
  calendarViewMode ==='agenda'
  ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3121,7 +3121,7 @@ export default function CalendarView({
  id="calendar-fullscreen-btn"
  onClick={toggleCalendarFullscreen}
  title={isCalendarFullscreen ?"Salir de pantalla completa (Esc)" :"Ver el calendario a pantalla completa"}
- className={`px-2 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
+ className={`px-2 py-1 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
  isCalendarFullscreen
  ?"bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-lg shadow-amber-0/20"
  : "bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30"
@@ -3144,10 +3144,10 @@ export default function CalendarView({
  <Settings className="w-3.5 h-3.5" />
  </div>
  <div>
- <h4 className="text-xs font-bold font-display uppercase tracking-wider">
+ <h4 className="text-xs font-bold font-display tracking-wider">
  Vista por defecto
  </h4>
- <p className={`text-[10px] font-mono ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <p className={`text-[10px] font-sans ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Diferenciada por dispositivo · Supabase
  </p>
  </div>
@@ -3167,7 +3167,7 @@ export default function CalendarView({
  }`}>
  <button
  onClick={() => setSelectedConfigDevice('mobile')}
- className={`flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+ className={`flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  selectedConfigDevice ==='mobile'
  ? "bg-[var(--surface)]/80 text-[var(--acc)]/70 shadow-xs"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3184,7 +3184,7 @@ export default function CalendarView({
  </button>
  <button
  onClick={() => setSelectedConfigDevice('desktop')}
- className={`flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+ className={`flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  selectedConfigDevice ==='desktop'
  ? "bg-[var(--surface)]/80 text-[var(--acc)]/70 shadow-xs"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3202,7 +3202,7 @@ export default function CalendarView({
  </div>
 
  <div className="mb-2">
- <span className={`text-[10px] font-mono block ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <span className={`text-[10px] font-sans block ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Al entrar desde un <strong>{selectedConfigDevice ==='mobile' ?'móvil o pantalla estrecha' :'ordenador o pantalla ancha'}</strong>:
  </span>
  </div>
@@ -3222,8 +3222,8 @@ export default function CalendarView({
  >
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5">
- <span className="font-bold text-xs font-mono">1 Mes</span>
- <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-semibold ${
+ <span className="font-bold text-xs font-sans">1 Mes</span>
+ <span className={`text-[9px] font-sans px-1.5 py-0.2 rounded font-semibold ${
  devicePrefs[selectedConfigDevice] ==='1'
  ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  : isStitchLight ?"bg-[var(--sunken)] text-[var(--ink-2)]" :"bg-[var(--surface)]/80 text-[var(--ink-2)]"
@@ -3254,8 +3254,8 @@ export default function CalendarView({
  >
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5">
- <span className="font-bold text-xs font-mono">2 Meses</span>
- <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-semibold ${
+ <span className="font-bold text-xs font-sans">2 Meses</span>
+ <span className={`text-[9px] font-sans px-1.5 py-0.2 rounded font-semibold ${
  devicePrefs[selectedConfigDevice] ==='2'
  ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  : isStitchLight ?"bg-[var(--sunken)] text-[var(--ink-2)]" :"bg-[var(--surface)]/80 text-[var(--ink-2)]"
@@ -3275,13 +3275,13 @@ export default function CalendarView({
 
  {/* Toast feedback */}
  {configToast && (
- <div className="mt-3 p-2 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] text-[10px] font-mono flex items-center gap-1.5 animate-in fade-in">
+ <div className="mt-3 p-2 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] text-[10px] font-sans flex items-center gap-1.5 animate-in fade-in">
  <Check className="w-3.5 h-3.5 shrink-0" />
  <span>{configToast}</span>
  </div>
  )}
 
- <div className={`mt-3 pt-2.5 border-t border-[var(--hair)]10 flex items-center justify-between text-[10px] font-mono ${
+ <div className={`mt-3 pt-2.5 border-t border-[var(--hair)]10 flex items-center justify-between text-[10px] font-sans ${
  isStitchLight ?"text-[var(--ink-2)]" :"text-[var(--ink-2)]"
  }`}>
  <span className="flex items-center gap-1.5">
@@ -3305,7 +3305,7 @@ export default function CalendarView({
  <button
  id="calendar-view-all-bands-btn"
  onClick={() => setFilterBandMode("all")}
- className={`flex-1 md:flex-initial px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 ${
+ className={`flex-1 md:flex-initial px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 ${
  filterBandMode ==="all"
  ? "bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-xs"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3314,7 +3314,7 @@ export default function CalendarView({
  >
  <Users className="w-3 h-3 shrink-0" />
  <span className="truncate">Todas las bandas</span>
- <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-extrabold shrink-0 ${
+ <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-sans font-extrabold shrink-0 ${
  filterBandMode ==="all" ?"bg-[var(--sunken)] text-[var(--ink)]" :"bg-[var(--sunken)]/50 text-[var(--ink-2)]"
  }`}>
  <span className="inline-flex items-center gap-0.5 text-[var(--ok)]" title={`${concerts.length} directos totales`}>
@@ -3332,7 +3332,7 @@ export default function CalendarView({
  <button
  id="calendar-view-active-band-btn"
  onClick={() => setFilterBandMode("active")}
- className={`flex-1 md:flex-initial px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 ${
+ className={`flex-1 md:flex-initial px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 ${
  filterBandMode ==="active"
  ? "bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-xs"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -3341,7 +3341,7 @@ export default function CalendarView({
  >
  <Music className="w-3 h-3 shrink-0" />
  <span className="truncate max-w-[90px] sm:max-w-none">{activeBandName}</span>
- <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-extrabold shrink-0 ${
+ <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-sans font-extrabold shrink-0 ${
  filterBandMode ==="active" ?"bg-[var(--sunken)] text-[var(--ink)]" :"bg-[var(--sunken)]/50 text-[var(--ink-2)]"
  }`}>
  <span className="inline-flex items-center gap-0.5 text-[var(--ok)]" title={`${activeBandConcerts.length} directos`}>
@@ -3368,8 +3368,8 @@ export default function CalendarView({
  : ('bg-[var(--surface)]/15 text-[var(--ok)]')
  }`}>
  <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
- <span className="flex-1 font-mono text-[10px]">{syncSuccessMessage}</span>
- <button onClick={() => setSyncSuccessMessage('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-mono">×</button>
+ <span className="flex-1 font-sans text-[10px]">{syncSuccessMessage}</span>
+ <button onClick={() => setSyncSuccessMessage('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-sans">×</button>
  </div>
  )}
  {syncErrorMessage && (
@@ -3379,8 +3379,8 @@ export default function CalendarView({
  :'bg-[var(--alert)]/15 text-[var(--alert)]'
  }`}>
  <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
- <span className="flex-1 font-mono text-[10px]">{syncErrorMessage}</span>
- <button onClick={() => setSyncErrorMessage('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-mono">×</button>
+ <span className="flex-1 font-sans text-[10px]">{syncErrorMessage}</span>
+ <button onClick={() => setSyncErrorMessage('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-sans">×</button>
  </div>
  )}
 
@@ -3447,11 +3447,11 @@ export default function CalendarView({
  >
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--hair)]10">
  <div className="flex items-center gap-3">
- <div className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-mono font-black shrink-0 ${
+ <div className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-sans font-black shrink-0 ${
  'bg-[var(--acc)]/15 /40 text-[var(--acc)]/70'
  }`}>
  <span className="text-sm leading-none">{selectedDate.getDate()}</span>
- <span className="text-[8px] uppercase tracking-wider mt-0.5 opacity-80">
+ <span className="text-[8px] tracking-wider mt-0.5 opacity-80">
  {monthNames[selectedDate.getMonth()]?.slice(0, 3)}
  </span>
  </div>
@@ -3461,12 +3461,12 @@ export default function CalendarView({
  {selectedDate.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long', year:'numeric' })}
  </h4>
  {dayEventsList.length > 0 && (
- <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
  {dayEventsList.length} {dayEventsList.length === 1 ?'evento' :'eventos'}
  </span>
  )}
  </div>
- <p className={`text-[11px] font-mono ${textSub}`}>
+ <p className={`text-[11px] font-sans ${textSub}`}>
  {dayEventsList.length === 0
  ?'Día libre · Sin actividad programada'
  : selectedConcert
@@ -3483,14 +3483,14 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowCreateModal('concert')}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
  >
  <span>🎸</span> + Concierto
  </button>
  <button
  type="button"
  onClick={() => setShowCreateModal('rehearsal')}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
  >
  <span>🥁</span> + Ensayo
  </button>
@@ -3513,7 +3513,7 @@ export default function CalendarView({
  {/* Selector de eventos si el día tiene más de uno */}
  {hasMultipleDayEvents && (
  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 mb-2">
- <span className="text-[10px] font-mono text-[var(--ink-2)] shrink-0 mr-1">Ver evento:</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] shrink-0 mr-1">Ver evento:</span>
  {dayEventsList.map(evt => {
  const isActive = evt.id === activeDayEventId;
  return (
@@ -3521,7 +3521,7 @@ export default function CalendarView({
  key={evt.id}
  type="button"
  onClick={() => setSelectedEventId(evt.id)}
- className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold transition-all cursor-pointer shrink-0 ${
+ className={`px-2.5 py-1 rounded-full text-[10px] font-sans font-bold transition-all cursor-pointer shrink-0 ${
  isActive
  ? evt.kind ==='concert'
  ?'bg-[var(--acc)]/30 text-[var(--ink)] shadow-xs'
@@ -3544,18 +3544,18 @@ export default function CalendarView({
  <div className="flex items-start justify-between gap-3 flex-wrap">
  <div className="min-w-0">
  <div className="flex items-center gap-2 flex-wrap mb-1">
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--on-acc)] shadow-xs">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--acc)] text-[var(--on-acc)] shadow-xs">
  🎸 Concierto
  </span>
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--surface)]/80 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink-2)]">
  {bandInfo.name}
  </span>
  {selectedConcert.cache ? (
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black text-[var(--acc)]/70 bg-[var(--acc)]/10">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black text-[var(--acc)]/70 bg-[var(--acc)]/10">
  💰 {selectedConcert.cache.toLocaleString('es-ES')} €
  </span>
  ) : null}
- <span className={`px-2 py-0.5 rounded-md text-[9px] font-mono font-bold uppercase ${
+ <span className={`px-2 py-0.5 rounded-md text-[9px] font-sans font-bold ${
  selectedConcert.estado_pago ==='pagado'
  ?'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  : selectedConcert.estado_pago ==='anticipo'
@@ -3574,7 +3574,7 @@ export default function CalendarView({
  )}
  </h3>
  {selectedConcert.direccion && (
- <p className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5">
+ <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">
  📍 {selectedConcert.direccion}
  </p>
  )}
@@ -3588,7 +3588,7 @@ export default function CalendarView({
  setModalActiveTab('tecnica');
  setShowEventFichaModal(true);
  }}
- className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--ink-3)]/10 hover:bg-[var(--ink-3)]/15 text-[var(--ink-3)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+ className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ink-3)]/10 hover:bg-[var(--ink-3)]/15 text-[var(--ink-3)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
  title="1. Logística técnica y rider"
  >
  <Wrench className="w-3 h-3" />
@@ -3600,7 +3600,7 @@ export default function CalendarView({
  setModalActiveTab('contactos');
  setShowEventFichaModal(true);
  }}
- className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+ className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
  title="2. Contactos clave y WhatsApp directo"
  >
  <Phone className="w-3 h-3" />
@@ -3612,7 +3612,7 @@ export default function CalendarView({
  setModalActiveTab('cierre');
  setShowEventFichaModal(true);
  }}
- className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+ className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
  title="5. Checklist de cierre de material y carga de furgoneta"
  >
  <ShieldCheck className="w-3 h-3" />
@@ -3624,7 +3624,7 @@ export default function CalendarView({
  setModalActiveTab('resumen');
  setShowEventFichaModal(true);
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-black bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center gap-1.5 cursor-pointer shadow-md shadow-amber-0/20 transition-all active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-black bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center gap-1.5 cursor-pointer shadow-md shadow-amber-0/20 transition-all active:scale-95"
  >
  <Maximize2 className="w-3.5 h-3.5" />
  <span>Abrir Ficha Completa</span>
@@ -3633,7 +3633,7 @@ export default function CalendarView({
  </div>
 
  {/* Fila de metadatos adicionales */}
- <div className="flex items-center gap-3 text-[10px] font-mono text-[var(--ink)] flex-wrap pt-1 border-t /20">
+ <div className="flex items-center gap-3 text-[10px] font-sans text-[var(--ink)] flex-wrap pt-1 border-t /20">
  {selectedConcert.aforo_total ? (
  <span className="flex items-center gap-1">
  <span>👥</span> Aforo: {selectedConcert.aforo_vendido || 0} / {selectedConcert.aforo_total}
@@ -3643,7 +3643,7 @@ export default function CalendarView({
  <span>📄</span> {selectedConcert.contrato_firmado ?'Contrato firmado' :'Contrato pendiente'}
  </span>
  {selectedConcert.tipo && (
- <span className="flex items-center gap-1 uppercase opacity-80">
+ <span className="flex items-center gap-1 opacity-80">
  <span>🏷️</span> Tipo: {selectedConcert.tipo}
  </span>
  )}
@@ -3659,7 +3659,7 @@ export default function CalendarView({
  setReminderErrorMsg(null);
  setShowReminderModal(true);
  }}
- className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] flex items-center gap-1 cursor-pointer"
  >
  <Bell className="w-3 h-3 text-[var(--ink-2)]" />
  <span>Notificar Banda</span>
@@ -3667,7 +3667,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setViewingConcert(selectedConcert)}
- className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer"
  >
  <Edit className="w-3 h-3 text-[var(--acc)]" />
  <span>Editar Concierto</span>
@@ -3679,7 +3679,7 @@ export default function CalendarView({
  )}`}
  target="_blank"
  rel="noopener noreferrer"
- className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
  >
  <MapPin className="w-3 h-3 text-[var(--ok)]" />
  <span>Google Maps</span>
@@ -3703,16 +3703,16 @@ export default function CalendarView({
  <div className="flex items-start justify-between gap-3 flex-wrap">
  <div className="min-w-0">
  <div className="flex items-center gap-2 flex-wrap mb-1">
- <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider ${
+ <span className={`px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider ${
  isReu ?'bg-[var(--tentative)] text-[var(--ink)]' :'bg-[var(--ok)] text-[var(--ink)]'
  }`}>
  {isReu ?'🤝 Reunión' :'🥁 Ensayo'}
  </span>
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--surface)]/80 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink-2)]">
  {bandInfo.name}
  </span>
  {selectedRehearsal.hora && (
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-[var(--ink)] bg-[var(--surface)]/80">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold text-[var(--ink)] bg-[var(--surface)]/80">
  🕒 {selectedRehearsal.hora}
  </span>
  )}
@@ -3721,12 +3721,12 @@ export default function CalendarView({
  {isReu ? (selectedRehearsal.asunto ||'Reunión de Banda') : selectedRehearsal.lugar}
  </h3>
  {isReu && selectedRehearsal.enlace_reunion && (
- <p className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5 truncate">
+ <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5 truncate">
  🔗 {selectedRehearsal.enlace_reunion}
  </p>
  )}
  {!isReu && selectedRehearsal.notas && (
- <p className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5 line-clamp-2">
+ <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5 line-clamp-2">
  📝 {selectedRehearsal.notas}
  </p>
  )}
@@ -3736,7 +3736,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowEventFichaModal(true)}
- className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-black flex items-center gap-1.5 cursor-pointer shadow-md transition-all active:scale-95 ${
+ className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-black flex items-center gap-1.5 cursor-pointer shadow-md transition-all active:scale-95 ${
  isReu
  ?'bg-[var(--tentative)] hover:bg-[var(--tentative)]/80 text-[var(--ink)] shadow-[var(--tentative)]/20'
  :'bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--ink)] shadow-[var(--ok)]/20'
@@ -3767,7 +3767,7 @@ export default function CalendarView({
  }
  if (list.length === 0) return null;
  return (
- <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--ink)] flex-wrap pt-1 border-t border-[var(--hair)]10">
+ <div className="flex items-center gap-2 text-[10px] font-sans text-[var(--ink)] flex-wrap pt-1 border-t border-[var(--hair)]10">
  <span className="text-[var(--ink-2)]">Convocados:</span>
  {list.map((a, i) => (
  <span key={i} className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)]">
@@ -3788,7 +3788,7 @@ export default function CalendarView({
  setReminderErrorMsg(null);
  setShowReminderModal(true);
  }}
- className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] flex items-center gap-1 cursor-pointer"
  >
  <Bell className="w-3 h-3 text-[var(--ink-2)]" />
  <span>Notificar Convocatoria</span>
@@ -3796,7 +3796,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setViewingRehearsal(selectedRehearsal)}
- className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
  >
  <Edit className="w-3 h-3 text-[var(--ok)]" />
  <span>Editar Ensayo</span>
@@ -3810,7 +3810,7 @@ export default function CalendarView({
  </div>
 
  {/* Legend */}
- <div className={`flex flex-wrap gap-4 text-[10px] font-mono pt-4 mt-6 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <div className={`flex flex-wrap gap-4 text-[10px] font-sans pt-4 mt-6 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  <div className="flex items-center gap-1.5">
  <span className={`w-2 h-2 rounded-full ${'bg-[var(--acc)] shadow-[0_0_8px_var(--acc)]'}`} />
  <span>Concierto</span>
@@ -3842,10 +3842,10 @@ export default function CalendarView({
  <Target className="w-4 h-4" />
  </div>
  <div>
- <span className="text-[9px] font-mono font-extrabold uppercase tracking-wider text-[var(--tentative)]/80 bg-[var(--tentative)]/20 px-2 py-0.5 rounded-full">
+ <span className="text-[9px] font-sans font-extrabold tracking-wider text-[var(--tentative)]/80 bg-[var(--tentative)]/20 px-2 py-0.5 rounded-full">
  🎯 Fecha Objetivo de Campaña
  </span>
- <p className="text-[11px] font-mono text-[var(--ink-2)] font-bold mt-0.5">
+ <p className="text-[11px] font-sans text-[var(--ink-2)] font-bold mt-0.5">
  {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
  </p>
  </div>
@@ -3860,7 +3860,7 @@ export default function CalendarView({
  {camp.name}
  </h4>
  {camp.isActive && (
- <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-[var(--tentative)] text-[var(--ink)]">
+ <span className="text-[8px] font-sans font-black px-1.5 py-0.5 rounded bg-[var(--tentative)] text-[var(--ink)]">
  ACTIVA
  </span>
  )}
@@ -3888,7 +3888,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
- className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--tentative)]/80/30 hover:bg-[var(--tentative)]/80/50 text-[var(--tentative)]/80 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+ className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-sans font-bold bg-[var(--tentative)]/80/30 hover:bg-[var(--tentative)]/80/50 text-[var(--tentative)]/80 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
  >
  <Building2 className="w-3 h-3 text-[var(--tentative)]/80" />
  <span>Salas CRM</span>
@@ -3903,7 +3903,7 @@ export default function CalendarView({
  setConcNotas(`Concierto agendado para la campaña"${camp.name}".`);
  setShowCreateModal('concert');
  }}
- className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+ className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-sans font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
  >
  <Plus className="w-3 h-3" />
  <span>Confirmar Concierto</span>
@@ -3918,13 +3918,13 @@ export default function CalendarView({
  <Calendar className="w-6 h-6" />
  </div>
  <div>
- <p className={`text-xs font-mono font-bold uppercase tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <p className={`text-xs font-sans font-bold tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
  </p>
  <h4 className={`text-sm font-bold font-display mt-1 ${textTitle}`}>
  Día sin eventos agendados
  </h4>
- <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
+ <p className={`text-[10px] font-sans mt-1 ${textSub}`}>
  Selecciona un día con concierto en el calendario para ver su logística y ubicación GPS.
  </p>
  </div>
@@ -3932,7 +3932,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowCreateModal('rehearsal')}
- className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+ className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  'bg-[var(--surface)]/20 text-[var(--ok)] hover:bg-[var(--surface)]/30'
  }`}
  >
@@ -3943,7 +3943,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowCreateModal('concert')}
- className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+ className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  'bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/50/30'
  }`}
  >
@@ -3957,7 +3957,7 @@ export default function CalendarView({
  {/* Quick GPS & Upcoming Events List */}
  <div className={`w-full text-left mt-4 pt-3 space-y-2.5 ${isStitchLight ?'border-t' :'border-t'}`}>
  <div className="flex items-center justify-between gap-1 flex-wrap">
- <div className={`flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider ${'text-[var(--acc)]'}`}>
+ <div className={`flex items-center gap-1.5 text-xs font-sans font-bold tracking-wider ${'text-[var(--acc)]'}`}>
  <MapPin className="w-3.5 h-3.5" />
  <span>Próximas Fechas ({upcomingCalendarEvents.length})</span>
  </div>
@@ -3972,7 +3972,7 @@ export default function CalendarView({
  <button
  key={f.id}
  onClick={() => setUpcomingFilter(f.id as any)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold transition-all cursor-pointer ${
+ className={`px-1.5 py-0.5 rounded text-[9px] font-sans font-bold transition-all cursor-pointer ${
  upcomingFilter === f.id
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -4024,12 +4024,12 @@ export default function CalendarView({
  ?'bg-[var(--tentative)]/15 border-[var(--acc)]/40 text-[var(--tentative)]/80'
  : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
  }`}>
- <span className={`text-base font-mono font-black leading-none ${
+ <span className={`text-base font-sans font-black leading-none ${
  evt.type ==='campaña' ?'text-[var(--tentative)]/80' : 'text-[var(--acc)]'
  }`}>
  {evt.day}
  </span>
- <span className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${
+ <span className={`text-[9px] font-sans font-extrabold tracking-widest mt-0.5 ${
  evt.type ==='campaña' ?'text-[var(--tentative)]/80' : 'text-[var(--acc)]/70'
  }`}>
  {evt.month}
@@ -4038,7 +4038,7 @@ export default function CalendarView({
 
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
+ <span className={`text-[9px] px-1.5 py-0.5 rounded font-sans font-bold tracking-wider ${
  evt.type ==='concierto'
  ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  : evt.type ==='campaña'
@@ -4048,7 +4048,7 @@ export default function CalendarView({
  {evt.type ==='campaña' ?'🎯 Posible Bolo' : evt.type}
  </span>
  {evt.bandName && (
- <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-[var(--sunken)]/80 text-[var(--ink)] truncate max-w-[100px]" title={evt.bandName}>
+ <span className="text-[9px] px-1.5 py-0.5 rounded font-sans font-bold bg-[var(--sunken)]/80 text-[var(--ink)] truncate max-w-[100px]" title={evt.bandName}>
  {evt.bandName}
  </span>
  )}
@@ -4069,7 +4069,7 @@ export default function CalendarView({
  />
  </div>
  ) : (
- <p className="text-[10px] font-mono text-[var(--tentative)]/80/80 mt-0.5">
+ <p className="text-[10px] font-sans text-[var(--tentative)]/80/80 mt-0.5">
  {evt.salaOrLugar}
  </p>
  )}
@@ -4087,24 +4087,24 @@ export default function CalendarView({
  <div className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 shadow-sm ${
  isStitchLight ?'bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
  }`}>
- <span className={`text-base font-mono font-black leading-none ${'text-[var(--acc)]'}`}>
+ <span className={`text-base font-sans font-black leading-none ${'text-[var(--acc)]'}`}>
  {selectedDate.getDate()}
  </span>
- <span className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${'text-[var(--acc)]/70'}`}>
+ <span className={`text-[9px] font-sans font-extrabold tracking-widest mt-0.5 ${'text-[var(--acc)]/70'}`}>
  {monthNames[selectedDate.getMonth()]?.slice(0, 3).toUpperCase()}
  </span>
  </div>
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
- <div className={`text-[10px] font-mono uppercase tracking-widest font-bold ${'text-[var(--acc)]'}`}>Logística de Ensayos y Conciertos</div>
+ <div className={`text-[10px] font-sans tracking-widest font-bold ${'text-[var(--acc)]'}`}>Logística de Ensayos y Conciertos</div>
  {(selectedConcert || selectedRehearsal) && (
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shadow-xs flex items-center gap-1">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shadow-xs flex items-center gap-1">
  🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
  </span>
  )}
  </div>
  <h3 className={`text-lg font-bold font-display tracking-wide mt-0.5 ${textTitle}`}>{selectedEventTitle}</h3>
- <p className={`text-[10px] font-mono mt-0.5 ${textSub}`}>
+ <p className={`text-[10px] font-sans mt-0.5 ${textSub}`}>
  {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
  </p>
  </div>
@@ -4113,7 +4113,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowEventFichaModal(true)}
- className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer items-center gap-1 ${
+ className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer items-center gap-1 ${
  'bg-gradient-to-r from-amber-0/20 to-yellow-600/20 /60 text-[var(--acc)]/70 hover:from-amber-0/30 hover:to-yellow-600/30'
  }`}
  title="Ampliar esta ficha en un modal centrado"
@@ -4131,7 +4131,7 @@ export default function CalendarView({
  setReminderErrorMsg(null);
  setShowReminderModal(true);
  }}
- className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
+ className={`px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
  'bg-[var(--surface)] border-[var(--acc)]/40 text-[var(--ink-3)] hover:bg-[var(--surface)]/80'
  }`}
  title="Enviar un recordatorio por correo/notificación a los convocados"
@@ -4143,7 +4143,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setViewingConcert(selectedConcert)}
- className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
+ className={`px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
  'bg-[var(--surface)] /40 text-[var(--acc)]/70 hover:bg-[var(--surface)]/80'
  }`}
  title="Editar ficha completa del concierto"
@@ -4155,7 +4155,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setViewingRehearsal(selectedRehearsal)}
- className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
+ className={`px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
  'bg-[var(--surface)] border-[var(--ok)]/40 text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  title="Editar ficha completa del ensayo"
@@ -4172,7 +4172,7 @@ export default function CalendarView({
  onDeleteConcert(selectedConcert.id);
  }
  }}
- className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert)]/20 border-[var(--alert)]/40 text-[var(--alert)]/80 hover:bg-[var(--alert)]/30"
+ className="px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert)]/20 border-[var(--alert)]/40 text-[var(--alert)]/80 hover:bg-[var(--alert)]/30"
  >
  🗑 Eliminar
  </button>
@@ -4186,7 +4186,7 @@ export default function CalendarView({
  onDeleteRehearsal(selectedRehearsal.id);
  }
  }}
- className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert)]/20 border-[var(--alert)]/40 text-[var(--alert)]/80 hover:bg-[var(--alert)]/30"
+ className="px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert)]/20 border-[var(--alert)]/40 text-[var(--alert)]/80 hover:bg-[var(--alert)]/30"
  >
  🗑 Eliminar
  </button>
@@ -4205,7 +4205,7 @@ export default function CalendarView({
  key={evt.id}
  type="button"
  onClick={() => setSelectedEventId(evt.id)}
- className={`px-2 py-1 rounded-full text-[9px] font-mono font-bold transition-colors cursor-pointer ${
+ className={`px-2 py-1 rounded-full text-[9px] font-sans font-bold transition-colors cursor-pointer ${
  isActive
  ? (evt.kind ==='concert'
  ?'bg-[var(--acc)]/30 text-[var(--ink)]'
@@ -4240,17 +4240,17 @@ export default function CalendarView({
  }`}>
  <div className="flex items-center gap-2 text-[10px]">
  <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
- <span className={`font-mono ${textSub}`}>Hora:</span>
- <span className={`font-bold font-mono ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
+ <span className={`font-sans ${textSub}`}>Hora:</span>
+ <span className={`font-bold font-sans ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
  </div>
  <div className="flex items-start gap-2 text-[10px]">
  <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
  <div className="flex-1">
- <span className={`font-mono ${textSub}`}>Lugar:</span>
+ <span className={`font-sans ${textSub}`}>Lugar:</span>
  <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
  {selectedEventDetails.direccion && (
  <p className={`text-[10px] font-sans mt-1 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>
- <span className="font-semibold font-mono">Dirección:</span> {selectedEventDetails.direccion}
+ <span className="font-semibold font-sans">Dirección:</span> {selectedEventDetails.direccion}
  </p>
  )}
  </div>
@@ -4268,8 +4268,8 @@ export default function CalendarView({
  {!isPromoPlan && selectedEventDetails.type ==='concert' && (
  <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${isStitchLight ?'-slate-100' :'-bg-[var(--surface)]'}`}>
  <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
- <span className={`font-mono ${textSub}`}>Compensación:</span>
- <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
+ <span className={`font-sans ${textSub}`}>Compensación:</span>
+ <span className="text-[var(--ok)] font-bold font-sans">{selectedEventDetails.fee}</span>
  </div>
  )}
  {selectedEventDetails.type ==='concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
@@ -4279,7 +4279,7 @@ export default function CalendarView({
  href={selectedEventDetails.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]/80 transition-colors w-fit"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]/80 transition-colors w-fit"
  >
  <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
  </a>
@@ -4287,8 +4287,8 @@ export default function CalendarView({
  {selectedEventDetails.entradasLugarFisico && (
  <div className="flex items-center gap-2 text-[10px]">
  <MapPin className="w-4 h-4 text-[var(--ok)] shrink-0" />
- <span className={`font-mono ${textSub}`}>También en:</span>
- <span className="font-semibold font-mono">{selectedEventDetails.entradasLugarFisico}</span>
+ <span className={`font-sans ${textSub}`}>También en:</span>
+ <span className="font-semibold font-sans">{selectedEventDetails.entradasLugarFisico}</span>
  </div>
  )}
  </div>
@@ -4299,8 +4299,8 @@ export default function CalendarView({
  const net = (selectedConcert.cache || 0) - totalG;
  return (
  <div className={`flex items-center justify-between text-[10px] pt-1.5 mt-1`}>
- <span className={`font-mono ${textSub}`}>Rentabilidad neta:</span>
- <span className={`font-bold font-mono px-2 py-0.5 rounded-full ${
+ <span className={`font-sans ${textSub}`}>Rentabilidad neta:</span>
+ <span className={`font-bold font-sans px-2 py-0.5 rounded-full ${
  net < 0 ?'bg-[var(--alert-soft)] text-[var(--alert)]' :
  net < 150 ?'bg-[var(--acc-soft)] text-[var(--acc)]/70' :'bg-[var(--ok-soft)] text-[var(--ok)]'
  }`}>
@@ -4318,8 +4318,8 @@ export default function CalendarView({
  {selectedConcert?.giraNombre && (
  <div className="flex items-center gap-2 text-[10px] pt-2 border-t /60 mt-2">
  <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
- <span className={`font-mono ${textSub}`}>Gira:</span>
- <span className="font-bold font-mono text-[var(--acc)]">
+ <span className={`font-sans ${textSub}`}>Gira:</span>
+ <span className="font-bold font-sans text-[var(--acc)]">
  🚐 {selectedConcert.giraNombre}
  </span>
  </div>
@@ -4328,8 +4328,8 @@ export default function CalendarView({
  {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
  <div className="flex items-center gap-2 text-[10px] pt-2 border-t /60 mt-2">
  <Users className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
- <span className={`font-mono ${textSub}`}>Convocatoria:</span>
- <span className="font-bold font-mono text-[var(--ink-2)]">
+ <span className={`font-sans ${textSub}`}>Convocatoria:</span>
+ <span className="font-bold font-sans text-[var(--ink-2)]">
  {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) ==='completa'
  ?'Banda Completa'
  : `Parcial (${(() => {
@@ -4354,7 +4354,7 @@ export default function CalendarView({
  return (
  <div className={`mt-3 pt-3 border-t ${isStitchLight ?'' :'/80'}`}>
  <div className="flex items-center justify-between gap-1 mb-2">
- <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[var(--acc)]">
+ <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold text-[var(--acc)]">
  <QrCode className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
  <span>QR Bolo & Captación Fans:</span>
  </div>
@@ -4362,7 +4362,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => onNavigate('fans', { concertId: selectedConcert.id })}
- className="text-[9px] font-mono text-[var(--acc)]/90 hover:text-[var(--acc)]/70 hover:underline flex items-center gap-1 cursor-pointer font-bold"
+ className="text-[9px] font-sans text-[var(--acc)]/90 hover:text-[var(--acc)]/70 hover:underline flex items-center gap-1 cursor-pointer font-bold"
  title="Configurar el QR y la experiencia del fan para este concierto"
  >
  <Settings className="w-3 h-3 text-[var(--acc)]" />
@@ -4383,7 +4383,7 @@ export default function CalendarView({
  </div>
 
  <div className="flex-1 min-w-0 space-y-1.5">
- <p className="text-[9px] font-mono text-[var(--ink-2)] truncate break-all bg-[var(--surface)]/60 p-1 rounded text-[var(--acc)]/70 font-semibold" title={targetQrUrl}>
+ <p className="text-[9px] font-sans text-[var(--ink-2)] truncate break-all bg-[var(--surface)]/60 p-1 rounded text-[var(--acc)]/70 font-semibold" title={targetQrUrl}>
  {targetQrUrl}
  </p>
  <div className="flex items-center gap-1.5">
@@ -4391,7 +4391,7 @@ export default function CalendarView({
  href={targetQrUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="px-2 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors"
+ className="px-2 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 rounded text-[9px] font-sans font-bold flex items-center gap-1 transition-colors"
  >
  <ExternalLink className="w-2.5 h-2.5" /> Abrir
  </a>
@@ -4402,7 +4402,7 @@ export default function CalendarView({
  setCopiedQrId(selectedConcert.id);
  setTimeout(() => setCopiedQrId(null), 2000);
  }}
- className="px-2 py-0.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors cursor-pointer"
+ className="px-2 py-0.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-[9px] font-sans font-bold flex items-center gap-1 transition-colors cursor-pointer"
  >
  {copiedQrId === selectedConcert.id ? (
  <>
@@ -4426,11 +4426,11 @@ export default function CalendarView({
  {selectedRehearsal?.tipo_evento ==='reunion' && (
  <div className={`mt-3 pt-3 border-t ${isStitchLight ?'' :'/80'}`}>
  <div className="flex items-center justify-between gap-1 mb-2">
- <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[var(--tentative)]">
+ <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold text-[var(--tentative)]">
  <Video className="w-3.5 h-3.5 shrink-0 text-[var(--tentative)]" />
  <span>Detalles de la Reunión:</span>
  </div>
- <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[var(--tentative)]/15 text-[var(--tentative)]/80">
+ <span className="text-[9px] font-sans px-2 py-0.5 rounded-full bg-[var(--tentative)]/15 text-[var(--tentative)]/80">
  🤝 Coordinación
  </span>
  </div>
@@ -4453,7 +4453,7 @@ export default function CalendarView({
  href={selectedRehearsal.enlace_reunion.startsWith('http') ? selectedRehearsal.enlace_reunion : `https://${selectedRehearsal.enlace_reunion}`}
  target="_blank"
  rel="noopener noreferrer"
- className="flex-1 px-3 py-1.5 bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center justify-center gap-1.5 shadow-md shadow-[var(--tentative)]/20 transition-all cursor-pointer"
+ className="flex-1 px-3 py-1.5 bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 shadow-md shadow-[var(--tentative)]/20 transition-all cursor-pointer"
  >
  <Video className="w-3.5 h-3.5" />
  <span>Unirse a Videollamada</span>
@@ -4469,12 +4469,12 @@ export default function CalendarView({
  {(!isPromoPlan || hasModuleAccess(currentUser?.plan,'repertorio')) && (selectedConcert || selectedRehearsal) && (
  <div className={` pt-2.5 mt-2.5 ${isStitchLight ?'-slate-100' :'-bg-[var(--surface)]'}`}>
  <div className="flex items-center justify-between gap-2 mb-1.5">
- <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[var(--acc)]">
+ <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold text-[var(--acc)]">
  <Disc3 className="w-3.5 h-3.5 shrink-0 animate-spin-slow" />
  <span>Repertorio Asignado:</span>
  </div>
  {assignedSetlist && (
- <span className="text-[10px] font-mono px-2 py-1 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold">
+ <span className="text-[10px] font-sans px-2 py-1 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold">
  {assignedSetlist.items?.length || 0} canciones/ítems
  </span>
  )}
@@ -4490,7 +4490,7 @@ export default function CalendarView({
  onUpdateRehearsal(selectedRehearsal.id, { setlistId: val });
  }
  }}
- className={`w-full text-[10px] font-mono p-1.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer ${
+ className={`w-full text-[10px] font-sans p-1.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer ${
  'bg-[var(--surface)] text-[var(--acc)] font-bold'
  }`}
  >
@@ -4511,7 +4511,7 @@ export default function CalendarView({
  setActiveStageInitialMode(selectedConcert ?'directo' :'ensayo');
  setActiveStageSetlist(assignedSetlist);
  }}
- className="flex-1 py-2 px-3 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-0/20 transition-all cursor-pointer"
+ className="flex-1 py-2 px-3 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-0/20 transition-all cursor-pointer"
  title="Lanzar Modo Escenario / Vista de Directo para este evento"
  >
  <Radio className="w-3.5 h-3.5 animate-pulse text-[var(--ink)]" />
@@ -4528,7 +4528,7 @@ export default function CalendarView({
  <button
  id="calendar-subtab-runofshow"
  onClick={() => setActiveTab('runofshow')}
- className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
+ className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors ${
  activeTab ==='runofshow'
  ? 'bg-[var(--acc)]/60/20 text-[var(--acc)] font-bold'
  : isStitchLight
@@ -4541,7 +4541,7 @@ export default function CalendarView({
  <button
  id="calendar-subtab-tecnica"
  onClick={() => setActiveTab('tecnica')}
- className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
+ className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
  activeTab ==='tecnica'
  ? isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)] font-bold'
@@ -4557,7 +4557,7 @@ export default function CalendarView({
  <button
  id="calendar-subtab-contactos"
  onClick={() => setActiveTab('contactos')}
- className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
+ className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
  activeTab ==='contactos'
  ? isStitchLight
  ?'bg-[var(--ok)]-soft text-[var(--ink)] font-bold'
@@ -4573,7 +4573,7 @@ export default function CalendarView({
  <button
  id="calendar-subtab-merchan"
  onClick={() => setActiveTab('merchan')}
- className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
+ className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
  activeTab ==='merchan'
  ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
  : isStitchLight
@@ -4587,7 +4587,7 @@ export default function CalendarView({
  <button
  id="calendar-subtab-cierre"
  onClick={() => setActiveTab('cierre')}
- className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
+ className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
  activeTab ==='cierre'
  ? isStitchLight
  ?'bg-[var(--tentative)]-soft text-[var(--tentative)]/dark font-bold'
@@ -4603,7 +4603,7 @@ export default function CalendarView({
  <button
  id="calendar-subtab-roadbook"
  onClick={() => setActiveTab('roadbook')}
- className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
+ className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors ${
  activeTab ==='roadbook'
  ? 'bg-[var(--ok)]/20 text-[var(--ok)] font-bold'
  : isStitchLight
@@ -4616,7 +4616,7 @@ export default function CalendarView({
  <button
  id="calendar-subtab-gear"
  onClick={() => setActiveTab('gear')}
- className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
+ className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors ${
  activeTab ==='gear'
  ? 'bg-[var(--acc)]/20 text-[var(--acc)]/80 font-bold'
  : isStitchLight
@@ -4646,11 +4646,11 @@ export default function CalendarView({
  <div className="space-y-3">
  <div className={`p-3 rounded-[var(--r-s)] space-y-2 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/70'}`}>
  <div className="flex items-center justify-between">
- <span className={`text-[10px] font-mono uppercase font-bold ${'text-[var(--ok)]'}`}>📞 Contacto Producción & Hotel</span>
+ <span className={`text-[10px] font-sans font-bold ${'text-[var(--ok)]'}`}>📞 Contacto Producción & Hotel</span>
  </div>
  <div className="grid grid-cols-2 gap-2 text-[10px]">
  <div>
- <label className={`block text-[10px] font-mono uppercase ${textSub}`}>Promotor / Sala</label>
+ <label className={`block text-[10px] font-sans ${textSub}`}>Promotor / Sala</label>
  <input
  type="text"
  value={currentRb.contactoPromotor}
@@ -4659,7 +4659,7 @@ export default function CalendarView({
  />
  </div>
  <div>
- <label className={`block text-[10px] font-mono uppercase ${textSub}`}>Teléfono</label>
+ <label className={`block text-[10px] font-sans ${textSub}`}>Teléfono</label>
  <input
  type="text"
  value={currentRb.telefonoPromotor}
@@ -4670,7 +4670,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className={`block text-[10px] font-mono uppercase ${textSub}`}>Hotel Alojamientos</label>
+ <label className={`block text-[10px] font-sans ${textSub}`}>Hotel Alojamientos</label>
  <input
  type="text"
  value={currentRb.hotelNombre}
@@ -4680,7 +4680,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className={`block text-[10px] font-mono uppercase ${textSub}`}>Catering & Menús</label>
+ <label className={`block text-[10px] font-sans ${textSub}`}>Catering & Menús</label>
  <input
  type="text"
  value={currentRb.cateringInfo}
@@ -4691,12 +4691,12 @@ export default function CalendarView({
  </div>
 
  <div className={`p-3 rounded-[var(--r-s)] space-y-1.5 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/70'}`}>
- <span className={`text-[10px] font-mono uppercase font-bold ${'text-[var(--acc)]'}`}>🎸 Input List / Rider de Canales</span>
+ <span className={`text-[10px] font-sans font-bold ${'text-[var(--acc)]'}`}>🎸 Input List / Rider de Canales</span>
  <textarea
  rows={4}
  value={currentRb.inputList}
  onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, inputList: e.target.value })}
- className={`w-full p-2 rounded font-mono text-[10px] ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black text-[var(--ink-2)]'}`}
+ className={`w-full p-2 rounded font-sans text-[10px] ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black text-[var(--ink-2)]'}`}
  />
  </div>
 
@@ -4713,12 +4713,12 @@ export default function CalendarView({
  <title>Hoja de Ruta Bakandeya - ${selectedConcert ? selectedConcert.sala :'Concierto'}</title>
  <style>
  body { font-family: system-ui, -apple-system, sans-serif; margin: 30px; color: #111; line-height: 1.5; }
- h1 { font-size: 22px; margin: 0; text-transform: uppercase; color: #d97706; }
+ h1 { font-size: 22px; margin: 0; text-transform:; color: #d97706; }
  h2 { font-size: 14px; color: #555; margin-top: 2px; margin-bottom: 20px; font-weight: normal; }
  .badge { display: inline-block; padding: 4px 10px; background: #fef3c7; color: #92400e; font-weight: bold; border-radius: 4px; font-size: 11px; font-family: monospace; }
  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
  .card { border: 1px solid #e5e7eb; padding: 12px 15px; border-radius: 8px; background: #fafafa; }
- .card-title { font-size: 11px; text-transform: uppercase; font-weight: bold; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 6px; }
+ .card-title { font-size: 11px; text-transform:; font-weight: bold; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 6px; }
  .item-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #e5e7eb; font-size: 12px; }
  .time { font-weight: bold; font-family: monospace; color: #d97706; width: 60px; }
  pre { font-family: monospace; font-size: 11px; background: #fff; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; white-space: pre-wrap; margin: 0; }
@@ -4790,7 +4790,7 @@ export default function CalendarView({
  `);
  printWindow.document.close();
  }}
- className={`w-full py-2 px-3 rounded-[var(--r-m)] font-mono text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm ${
+ className={`w-full py-2 px-3 rounded-[var(--r-m)] font-sans text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm ${
  'bg-gradient-to-r from-[var(--ok)] to-teal-500 text-[var(--acc-ink)] font-extrabold'
  }`}
  >
@@ -4809,7 +4809,7 @@ export default function CalendarView({
  <div className="space-y-2.5">
  <div className={`p-2.5 rounded-[var(--r-s)] ${'bg-[var(--surface)] border-[var(--acc)]/40'}`}>
  <div className="flex items-center justify-between mb-2">
- <span className="font-bold flex items-center gap-1 text-[var(--ink-2)] font-mono uppercase text-[10px]">
+ <span className="font-bold flex items-center gap-1 text-[var(--ink-2)] font-sans text-[10px]">
  <Wrench className="w-3 h-3" /> 1. Logística Técnica
  </span>
  <button
@@ -4818,32 +4818,32 @@ export default function CalendarView({
  setModalActiveTab('tecnica');
  setShowEventFichaModal(true);
  }}
- className="text-[9px] underline text-[var(--ink-2)] hover:text-[var(--ink-3)] font-mono cursor-pointer"
+ className="text-[9px] underline text-[var(--ink-2)] hover:text-[var(--ink-3)] font-sans cursor-pointer"
  >
  Editar Completo →
  </button>
  </div>
  <div className="grid grid-cols-2 gap-1.5 text-[9px]">
  <div className={`p-1.5 rounded ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/80'}`}>
- <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Prueba de Sonido</span>
+ <span className="block text-[var(--ink-2)] font-sans text-[8px]">Prueba de Sonido</span>
  <span className="font-bold text-[var(--acc)]">{currentRb.horaPruebaSonido ||'18:00'}</span>
  </div>
  <div className={`p-1.5 rounded ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/80'}`}>
- <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Horario Show</span>
+ <span className="block text-[var(--ink-2)] font-sans text-[8px]">Horario Show</span>
  <span className="font-bold text-[var(--ok)]">{currentRb.horaShow ||'21:30'}</span>
  </div>
  <div className={`p-1.5 rounded ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/80'}`}>
- <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Técnico Sonido FOH</span>
+ <span className="block text-[var(--ink-2)] font-sans text-[8px]">Técnico Sonido FOH</span>
  <span className="font-medium truncate">{currentRb.tecnicoSonido ||'Propio / Sala'}</span>
  </div>
  <div className={`p-1.5 rounded ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/80'}`}>
- <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Sistema P.A.</span>
+ <span className="block text-[var(--ink-2)] font-sans text-[8px]">Sistema P.A.</span>
  <span className="font-medium truncate">{currentRb.paEspecificaciones ?'Especificado' :'Estándar Sala'}</span>
  </div>
  </div>
  {currentRb.backlineInfo && (
  <div className={`mt-2 p-1.5 rounded text-[9px] ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/80'}`}>
- <span className="block text-[var(--ink-2)] font-mono uppercase text-[8px]">Backline & Rider</span>
+ <span className="block text-[var(--ink-2)] font-sans text-[8px]">Backline & Rider</span>
  <p className="line-clamp-2 text-[var(--ink)]">{currentRb.backlineInfo}</p>
  </div>
  )}
@@ -4854,7 +4854,7 @@ export default function CalendarView({
  setModalActiveTab('tecnica');
  setShowEventFichaModal(true);
  }}
- className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--ink-3)]/10 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/15 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+ className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ink-3)]/10 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/15 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
  >
  <Wrench className="w-3 h-3" />
  <span>Abrir Logística Técnica Completa</span>
@@ -4871,7 +4871,7 @@ export default function CalendarView({
  return (
  <div className="space-y-2">
  <div className="flex items-center justify-between">
- <span className="font-mono uppercase font-bold text-[var(--ok)] text-[10px] flex items-center gap-1">
+ <span className="font-sans font-bold text-[var(--ok)] text-[10px] flex items-center gap-1">
  <Users className="w-3 h-3" /> 2. Contactos Clave ({contacts.length})
  </span>
  <button
@@ -4880,7 +4880,7 @@ export default function CalendarView({
  setModalActiveTab('contactos');
  setShowEventFichaModal(true);
  }}
- className="text-[9px] underline text-[var(--ok)] hover:text-[var(--ink-2)] font-mono cursor-pointer"
+ className="text-[9px] underline text-[var(--ok)] hover:text-[var(--ink-2)] font-sans cursor-pointer"
  >
  + Gestionar →
  </button>
@@ -4893,8 +4893,8 @@ export default function CalendarView({
  <div key={c.id} className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/80'}`}>
  <div className="min-w-0">
  <div className="font-bold truncate text-[10px]">{c.nombre}</div>
- <div className="text-[9px] text-[var(--ink-2)] font-mono flex items-center gap-1">
- <span className="px-1 py-0.2 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[8px] uppercase">{c.rol}</span>
+ <div className="text-[9px] text-[var(--ink-2)] font-sans flex items-center gap-1">
+ <span className="px-1 py-0.2 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[8px]">{c.rol}</span>
  <span>{c.telefono}</span>
  </div>
  </div>
@@ -4930,7 +4930,7 @@ export default function CalendarView({
  setModalActiveTab('contactos');
  setShowEventFichaModal(true);
  }}
- className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+ className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
  >
  <Plus className="w-3 h-3" />
  <span>Añadir Contactos Clave</span>
@@ -4955,16 +4955,16 @@ export default function CalendarView({
  return (
  <div className="space-y-2">
  <div className="flex items-center justify-between">
- <span className="font-mono uppercase font-bold text-[var(--acc)] text-[10px] flex items-center gap-1">
+ <span className="font-sans font-bold text-[var(--acc)] text-[10px] flex items-center gap-1">
  <Shirt className="w-3 h-3" /> 3. Merch ({totalVendidas}/{totalInicial} uds)
  </span>
- <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70">
+ <span className="text-[9px] font-sans font-bold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70">
  {totalTeorico.toFixed(0)}€ ventas
  </span>
  </div>
 
  {/* Arqueo Rápido */}
- <div className="grid grid-cols-2 gap-1.5 text-[9px] font-mono">
+ <div className="grid grid-cols-2 gap-1.5 text-[9px] font-sans">
  <div className="p-1.5 rounded bg-[var(--ok)]/10 flex flex-col">
  <span className="text-[var(--ok)]/80 text-[8px] flex items-center gap-0.5">
  <Banknote className="w-2.5 h-2.5" /> Efectivo
@@ -4983,7 +4983,7 @@ export default function CalendarView({
  </div>
  </div>
 
- <div className="flex items-center justify-between text-[8.5px] font-mono px-1 py-0.5 rounded bg-[var(--surface)]/60">
+ <div className="flex items-center justify-between text-[8.5px] font-sans px-1 py-0.5 rounded bg-[var(--surface)]/60">
  <span className="text-[var(--ink-2)]">Total cobrado: <strong className="text-[var(--ink)]">{totalCobrado.toFixed(0)}€</strong></span>
  <span className={`font-bold ${cuadreDiff === 0 ?'text-[var(--ok)]' : cuadreDiff > 0 ?'text-[var(--ink-2)]' :'text-[var(--acc)]'}`}>
  {cuadreDiff === 0 ?'✓ Cuadrada' : cuadreDiff > 0 ? `+${cuadreDiff.toFixed(0)}€ propina` : `${cuadreDiff.toFixed(0)}€ descuadre`}
@@ -5005,15 +5005,15 @@ export default function CalendarView({
  <p className="font-medium truncate text-[9.5px]">
  {item.nombre} {item.talla ? `(${item.talla})` :''}
  </p>
- <p className="text-[8px] text-[var(--ink-2)] font-mono">
+ <p className="text-[8px] text-[var(--ink-2)] font-sans">
  {item.stockInicial} furgón ➔ {item.stockFinal} quedan
  </p>
  </div>
  <div className="text-right shrink-0">
- <span className="text-[9px] font-mono font-bold text-[var(--acc)]">
+ <span className="text-[9px] font-sans font-bold text-[var(--acc)]">
  {vendidas} vend.
  </span>
- <p className="text-[8px] font-mono text-[var(--ink-2)]">
+ <p className="text-[8px] font-sans text-[var(--ink-2)]">
  {(vendidas * item.precioUnitario).toFixed(0)}€
  </p>
  </div>
@@ -5023,7 +5023,7 @@ export default function CalendarView({
  </div>
 
  {items.length > 4 && (
- <p className="text-[8px] text-center font-mono text-[var(--ink-2)]">
+ <p className="text-[8px] text-center font-sans text-[var(--ink-2)]">
  +{items.length - 4} productos más en inventario
  </p>
  )}
@@ -5034,7 +5034,7 @@ export default function CalendarView({
  setModalActiveTab('merchan');
  setShowEventFichaModal(true);
  }}
- className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+ className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
  >
  <Shirt className="w-3 h-3" />
  <span>Control Merchandising Completo</span>
@@ -5053,10 +5053,10 @@ export default function CalendarView({
  return (
  <div className="space-y-2">
  <div className="flex items-center justify-between">
- <span className="font-mono uppercase font-bold text-[var(--tentative)] text-[10px] flex items-center gap-1">
+ <span className="font-sans font-bold text-[var(--tentative)] text-[10px] flex items-center gap-1">
  <ShieldCheck className="w-3 h-3" /> 5. Cierre Material ({checkedCount}/{items.length})
  </span>
- <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${progress === 100 ?'bg-[var(--ok)]/20 text-[var(--ok)]' :'bg-[var(--tentative)]/20 text-[var(--tentative)]/80'}`}>
+ <span className={`text-[9px] font-sans font-bold px-1.5 py-0.5 rounded ${progress === 100 ?'bg-[var(--ok)]/20 text-[var(--ok)]' :'bg-[var(--tentative)]/20 text-[var(--tentative)]/80'}`}>
  {progress}%
  </span>
  </div>
@@ -5084,7 +5084,7 @@ export default function CalendarView({
  className="rounded text-[var(--tentative)] h-3 w-3 cursor-pointer"
  />
  <span className="flex-1 truncate text-[9.5px]">{item.item}</span>
- <span className="text-[8px] font-mono uppercase px-1 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] shrink-0">
+ <span className="text-[8px] font-sans px-1 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] shrink-0">
  {item.categoria}
  </span>
  </div>
@@ -5096,7 +5096,7 @@ export default function CalendarView({
  setModalActiveTab('cierre');
  setShowEventFichaModal(true);
  }}
- className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--tentative)]/20 text-[var(--tentative)] hover:bg-[var(--tentative)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+ className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--tentative)]/20 text-[var(--tentative)] hover:bg-[var(--tentative)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
  >
  <ShieldCheck className="w-3 h-3" />
  <span>Checklist Cierre Completo</span>
@@ -5116,7 +5116,7 @@ export default function CalendarView({
  placeholder="17:30"
  value={newRunTime}
  onChange={(e) => setNewRunTime(e.target.value)}
- className={`w-16 px-2 py-1 text-[10px] font-mono rounded outline-none ${
+ className={`w-16 px-2 py-1 text-[10px] font-sans rounded outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
@@ -5185,7 +5185,7 @@ export default function CalendarView({
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:-[#99907c]/35'
  }`}
  >
- <span className={`font-mono text-[10px] font-bold shrink-0 ${
+ <span className={`font-sans text-[10px] font-bold shrink-0 ${
  isItemDone 
  ? isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]' 
  : 'text-[var(--acc)]'
@@ -5254,7 +5254,7 @@ export default function CalendarView({
  )}
 
  {/* Footer info */}
- <div className={` pt-4 mt-6 flex justify-between items-center text-[10px] font-mono ${
+ <div className={` pt-4 mt-6 flex justify-between items-center text-[10px] font-sans ${
  isStitchLight ?'-slate-100 text-[var(--ink-2)]' :'-[#99907c]/15 text-[var(--ink-2)]'
  }`}>
  <span>Huso Horario: Madrid (UTC+2)</span>
@@ -5281,7 +5281,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => { setShowCreateModal('concert'); setConcIsPosible(false); }}
- className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+ className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
  showCreateModal ==='concert' && !concIsPosible
  ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-md font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -5293,7 +5293,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => { setShowCreateModal('concert'); setConcIsPosible(true); }}
- className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+ className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
  showCreateModal ==='concert' && concIsPosible
  ?'bg-[var(--tentative)] text-[var(--ink)] shadow-md font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -5305,7 +5305,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowCreateModal('rehearsal')}
- className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+ className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
  showCreateModal ==='rehearsal'
  ?'bg-[var(--ok)] text-[var(--ink)] shadow-md font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -5317,7 +5317,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowCreateModal('reunion')}
- className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+ className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
  showCreateModal ==='reunion'
  ?'bg-[var(--tentative)] text-[var(--ink)] shadow-md font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -5353,7 +5353,7 @@ export default function CalendarView({
  {showCreateModal ==='rehearsal' &&'Crear Nuevo Ensayo'}
  {showCreateModal ==='reunion' &&'Crear Nueva Reunión'}
  </h3>
- <p className="text-[10px] font-mono text-[var(--ink-2)]">
+ <p className="text-[10px] font-sans text-[var(--ink-2)]">
  Fecha: {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
  </p>
  </div>
@@ -5363,14 +5363,14 @@ export default function CalendarView({
  {showCreateModal ==='reunion' && (
  <form onSubmit={handleSaveNewReunion} className="space-y-4">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold">Asunto / Objetivo de la Reunión</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold">Asunto / Objetivo de la Reunión</label>
  <input
  type="text"
  value={reuAsunto}
  onChange={(e) => setReuAsunto(e.target.value)}
  placeholder="ej. Coordinación de gira de verano y reparto de tareas"
  required
- className={`w-full px-2 py-1.5 text-xs rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1.5 text-xs rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -5378,20 +5378,20 @@ export default function CalendarView({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Horario</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Horario</label>
  <input
  type="text"
  value={reuHora}
  onChange={(e) => setReuHora(e.target.value)}
  placeholder="ej. 19:00 - 20:00"
  required
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Lugar / Plataforma</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Lugar / Plataforma</label>
  <input
  type="text"
  value={reuLugar}
@@ -5406,7 +5406,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 flex items-center gap-1.5">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 flex items-center gap-1.5">
  <Video className="w-3.5 h-3.5 text-[var(--tentative)]" />
  <span>Enlace a Videollamada (Opcional)</span>
  </label>
@@ -5415,7 +5415,7 @@ export default function CalendarView({
  value={reuEnlace}
  onChange={(e) => setReuEnlace(e.target.value)}
  placeholder="https://meet.google.com/xxx-xxxx-xxx o Zoom"
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -5423,11 +5423,11 @@ export default function CalendarView({
 
  {isMultiBandUser && (
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Banda del Evento</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Banda del Evento</label>
  <select
  value={selectedBandIdForNewEvent}
  onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -5440,7 +5440,7 @@ export default function CalendarView({
 
  {/* Convocatoria selector */}
  <div className="space-y-2 border-t pt-3">
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center gap-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center gap-1">
  <Users className="w-3 h-3 text-[var(--tentative)]" />
  <span>Asistentes Convocados</span>
  </label>
@@ -5453,7 +5453,7 @@ export default function CalendarView({
  setConvocadosIds(effectiveBandMembers.map(m => m.id));
  }
  }}
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -5465,12 +5465,12 @@ export default function CalendarView({
  <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink-2)]'
  }`}>
- <span className="font-mono font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
+ <span className="font-sans font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
  <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
  {effectiveBandMembers.map(member => {
  const isChecked = convocadosIds.includes(member.id);
  return (
- <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-mono">
+ <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-sans">
  <input
  type="checkbox"
  checked={isChecked}
@@ -5493,7 +5493,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Orden del Día / Notas</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Orden del Día / Notas</label>
  <textarea
  value={rehNotas}
  onChange={(e) => setRehNotas(e.target.value)}
@@ -5509,13 +5509,13 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowCreateModal(null)}
- className="px-2 py-1 text-[10px] font-mono rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+ className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  Cancelar
  </button>
  <button
  type="submit"
- className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
+ className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
  isStitchLight ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]' :'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-bold shadow-[var(--tentative)]/20'
  }`}
  >
@@ -5529,21 +5529,21 @@ export default function CalendarView({
  {showCreateModal ==='rehearsal' && (
  <form onSubmit={handleSaveNewRehearsal} className="space-y-4">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Horario del Ensayo</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Horario del Ensayo</label>
  <input
  type="text"
  value={rehTime}
  onChange={(e) => setRehTime(e.target.value)}
  placeholder="ej. 18:00 - 21:00"
  required
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Lugar / Local</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Lugar / Local</label>
  <input
  type="text"
  value={rehLugar}
@@ -5558,11 +5558,11 @@ export default function CalendarView({
 
  {isMultiBandUser && (
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Banda del Evento</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Banda del Evento</label>
  <select
  value={selectedBandIdForNewEvent}
  onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -5575,7 +5575,7 @@ export default function CalendarView({
 
  {/* Convocatoria selector */}
  <div className="space-y-2 border-t pt-3">
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center gap-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center gap-1">
  <Users className="w-3 h-3 text-[var(--ink-2)]" />
  <span>Tipo de Convocatoria</span>
  </label>
@@ -5588,7 +5588,7 @@ export default function CalendarView({
  setConvocadosIds(effectiveBandMembers.map(m => m.id));
  }
  }}
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -5600,12 +5600,12 @@ export default function CalendarView({
  <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink-2)]'
  }`}>
- <span className="font-mono font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
+ <span className="font-sans font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
  <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
  {effectiveBandMembers.map(member => {
  const isChecked = convocadosIds.includes(member.id);
  return (
- <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-mono">
+ <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-sans">
  <input
  type="checkbox"
  checked={isChecked}
@@ -5623,7 +5623,7 @@ export default function CalendarView({
  );
  })}
  </div>
- <p className="text-[9px] text-[var(--acc)] font-mono italic mt-1">
+ <p className="text-[9px] text-[var(--acc)] font-sans italic mt-1">
  * Este ensayo solo aparecerá en el calendario de los miembros convocados.
  </p>
  </div>
@@ -5631,7 +5631,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Estado</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado</label>
  <select
  value={rehEstado}
  onChange={(e) => setRehEstado(e.target.value as any)}
@@ -5646,13 +5646,13 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
  <span className="flex items-center gap-1 text-[var(--ok)]">
  <Music className="w-3 h-3" />
  <span>Repertorio / Setlist a Ensayar</span>
  </span>
  {rehSetlistId && (
- <span className="text-[9px] font-mono text-[var(--ok)]">
+ <span className="text-[9px] font-sans text-[var(--ok)]">
  {availableSetlists.find((s: any) => s.id === rehSetlistId)?.items?.length || 0} temas
  </span>
  )}
@@ -5660,7 +5660,7 @@ export default function CalendarView({
  <select
  value={rehSetlistId}
  onChange={(e) => setRehSetlistId(e.target.value)}
- className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -5674,7 +5674,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Notas / Objetivo del Ensayo</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Notas / Objetivo del Ensayo</label>
  <textarea
  value={rehNotas}
  onChange={(e) => setRehNotas(e.target.value)}
@@ -5690,13 +5690,13 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowCreateModal(null)}
- className="px-2 py-1 text-[10px] font-mono rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+ className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  Cancelar
  </button>
  <button
  type="submit"
- className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
+ className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
  'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc-ink)] font-bold shadow-[var(--ok)]/20'
  }`}
  >
@@ -5711,7 +5711,7 @@ export default function CalendarView({
  <form onSubmit={handleSaveNewConcert} className="space-y-3.5">
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Ciudad</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Ciudad</label>
  <input
  type="text"
  value={concCiudad}
@@ -5724,7 +5724,7 @@ export default function CalendarView({
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Sala / Recinto</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Sala / Recinto</label>
  <input
  type="text"
  value={concSala}
@@ -5739,7 +5739,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Dirección Exacta</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Dirección Exacta</label>
  <input
  type="text"
  value={concDireccion}
@@ -5756,19 +5756,19 @@ export default function CalendarView({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Caché (€)</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Caché (€)</label>
  <input
  type="number"
  value={concCache}
  onChange={(e) => setConcCache(e.target.value)}
  placeholder="800"
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Estado de Pago</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado de Pago</label>
  <select
  value={concEstadoPago}
  onChange={(e) => setConcEstadoPago(e.target.value as any)}
@@ -5785,11 +5785,11 @@ export default function CalendarView({
 
  {isMultiBandUser && (
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Banda del Evento</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Banda del Evento</label>
  <select
  value={selectedBandIdForNewEvent}
  onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -5801,13 +5801,13 @@ export default function CalendarView({
  )}
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
  <span className="flex items-center gap-1 text-[var(--acc)]">
  <Music className="w-3 h-3" />
  <span>Repertorio / Setlist del Concierto</span>
  </span>
  {concSetlistId && (
- <span className="text-[9px] font-mono text-[var(--ok)]">
+ <span className="text-[9px] font-sans text-[var(--ok)]">
  {availableSetlists.find((s: any) => s.id === concSetlistId)?.items?.length || 0} temas
  </span>
  )}
@@ -5815,7 +5815,7 @@ export default function CalendarView({
  <select
  value={concSetlistId}
  onChange={(e) => setConcSetlistId(e.target.value)}
- className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -5836,7 +5836,7 @@ export default function CalendarView({
  onChange={(e) => setConcIsPosible(e.target.checked)}
  className="rounded text-[var(--tentative)] focus:ring-0 w-4 h-4 cursor-pointer"
  />
- <label htmlFor="concIsPosibleCheck" className="text-[10px] font-mono cursor-pointer select-none font-bold text-[var(--tentative)]/80 flex items-center gap-1">
+ <label htmlFor="concIsPosibleCheck" className="text-[10px] font-sans cursor-pointer select-none font-bold text-[var(--tentative)]/80 flex items-center gap-1">
  🎯 Concierto Posible / En negociación (Bolo Tentativo)
  </label>
  </div>
@@ -5857,13 +5857,13 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowCreateModal(null)}
- className="px-2 py-1 text-[10px] font-mono rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+ className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  Cancelar
  </button>
  <button
  type="submit"
- className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
+ className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
  'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold shadow-amber-0/20'
  }`}
  >
@@ -5896,14 +5896,14 @@ export default function CalendarView({
  </span>
  <div>
  <h3 className="font-bold text-base font-display">Ficha del Concierto</h3>
- <p className="text-[10px] font-mono text-[var(--ink-2)]">{viewingConcert.sala} · {viewingConcert.ciudad}</p>
+ <p className="text-[10px] font-sans text-[var(--ink-2)]">{viewingConcert.sala} · {viewingConcert.ciudad}</p>
  </div>
  </div>
 
  <form onSubmit={handleSaveConcertEdit} className="space-y-3.5">
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Ciudad</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Ciudad</label>
  <input
  type="text"
  value={editDraft.ciudad}
@@ -5915,7 +5915,7 @@ export default function CalendarView({
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Sala / Evento</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Sala / Evento</label>
  <input
  type="text"
  value={editDraft.sala}
@@ -5929,13 +5929,13 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Fecha</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Fecha</label>
  <input
  type="date"
  value={editDraft.fecha}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, fecha: e.target.value } : prev)}
  required
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -5944,24 +5944,24 @@ export default function CalendarView({
  <div className={isPromoPlan ?"grid grid-cols-1 gap-3" :"grid grid-cols-2 gap-3"}>
  {!isPromoPlan && (
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Caché (€)</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Caché (€)</label>
  <input
  type="number"
  value={editDraft.cache}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, cache: Number(e.target.value) } : prev)}
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
  )}
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Aforo Máximo</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Aforo Máximo</label>
  <input
  type="number"
  value={editDraft.aforo_total}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, aforo_total: Number(e.target.value) } : prev)}
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -5970,7 +5970,7 @@ export default function CalendarView({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Dirección de la Sala</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Dirección de la Sala</label>
  <input
  type="text"
  value={editDraft.direccion ||''}
@@ -5982,12 +5982,12 @@ export default function CalendarView({
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Entradas Vendidas</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Entradas Vendidas</label>
  <input
  type="number"
  value={editDraft.aforo_vendido || 0}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, aforo_vendido: Number(e.target.value) } : prev)}
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -5996,7 +5996,7 @@ export default function CalendarView({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 flex items-center gap-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 flex items-center gap-1">
  <Ticket className="w-3 h-3 text-[var(--ok)]" />
  Enlace para Comprar Entradas
  </label>
@@ -6011,7 +6011,7 @@ export default function CalendarView({
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Punto de Venta Físico</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Punto de Venta Físico</label>
  <input
  type="text"
  value={editDraft.entradasLugarFisico ||''}
@@ -6026,7 +6026,7 @@ export default function CalendarView({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Tipo de Evento</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Tipo de Evento</label>
  <select
  value={editDraft.tipo}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, tipo: e.target.value as any } : prev)}
@@ -6040,7 +6040,7 @@ export default function CalendarView({
  </select>
  </div>
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Estado de Pago</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado de Pago</label>
  <select
  value={editDraft.estado_pago}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, estado_pago: e.target.value as any } : prev)}
@@ -6056,7 +6056,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Idioma del formulario"Únete" (QR de fans)</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Idioma del formulario"Únete" (QR de fans)</label>
  <select
  value={editDraft.idioma ||''}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, idioma: e.target.value } : prev)}
@@ -6079,7 +6079,7 @@ export default function CalendarView({
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, contrato_firmado: e.target.checked } : prev)}
  className="rounded text-[var(--acc)] focus:ring-0 w-4 h-4 cursor-pointer"
  />
- <label htmlFor="editContrato" className="text-[10px] font-mono cursor-pointer select-none">
+ <label htmlFor="editContrato" className="text-[10px] font-sans cursor-pointer select-none">
  Contrato firmado y verificado
  </label>
  </div>
@@ -6092,19 +6092,19 @@ export default function CalendarView({
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, is_posible: e.target.checked } : prev)}
  className="rounded text-[var(--tentative)] focus:ring-0 w-4 h-4 cursor-pointer"
  />
- <label htmlFor="editIsPosibleCheck" className="text-[10px] font-mono cursor-pointer select-none font-bold text-[var(--tentative)]/80 flex items-center gap-1">
+ <label htmlFor="editIsPosibleCheck" className="text-[10px] font-sans cursor-pointer select-none font-bold text-[var(--tentative)]/80 flex items-center gap-1">
  🎯 Concierto Posible / En negociación (Bolo Tentativo)
  </label>
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
  <span className="flex items-center gap-1 text-[var(--acc)]">
  <Disc3 className="w-3 h-3" />
  <span>Repertorio / Setlist Asignado</span>
  </span>
  {editDraft.setlistId && (
- <span className="text-[9px] font-mono text-[var(--ok)]">
+ <span className="text-[9px] font-sans text-[var(--ok)]">
  {availableSetlists.find((s: any) => s.id === editDraft.setlistId)?.items?.length || 0} temas
  </span>
  )}
@@ -6112,7 +6112,7 @@ export default function CalendarView({
  <select
  value={editDraft.setlistId ||''}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, setlistId: e.target.value || undefined } : prev)}
- className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -6126,7 +6126,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Notas / Cláusulas Técnicas</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Notas / Cláusulas Técnicas</label>
  <textarea
  value={editDraft.notas}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, notas: e.target.value } : prev)}
@@ -6141,13 +6141,13 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setViewingConcert(null)}
- className="px-2 py-1 text-[10px] font-mono rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+ className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  Cancelar
  </button>
  <button
  type="submit"
- className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
+ className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
  'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold shadow-amber-0/20'
  }`}
  >
@@ -6183,20 +6183,20 @@ export default function CalendarView({
  <h3 className="font-bold text-base font-display">
  {editRehearsalDraft.tipo_evento ==='reunion' ?'Ficha de la Reunión' :'Ficha del Ensayo'}
  </h3>
- <p className="text-[10px] font-mono text-[var(--ink-2)]">{editRehearsalDraft.lugar} · {editRehearsalDraft.fecha}</p>
+ <p className="text-[10px] font-sans text-[var(--ink-2)]">{editRehearsalDraft.lugar} · {editRehearsalDraft.fecha}</p>
  </div>
  </div>
 
  <form onSubmit={handleSaveRehearsalEdit} className="space-y-3.5">
  {editRehearsalDraft.tipo_evento ==='reunion' && (
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold">Asunto / Objetivo</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold">Asunto / Objetivo</label>
  <input
  type="text"
  value={editRehearsalDraft.asunto ||''}
  onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, asunto: e.target.value } : prev)}
  placeholder="ej. Coordinación de gira y reparto de tareas"
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -6205,7 +6205,7 @@ export default function CalendarView({
 
  {editRehearsalDraft.tipo_evento ==='reunion' && (
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 flex items-center gap-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 flex items-center gap-1">
  <Video className="w-3 h-3 text-[var(--tentative)]" />
  <span>Enlace a Videollamada</span>
  </label>
@@ -6214,7 +6214,7 @@ export default function CalendarView({
  value={editRehearsalDraft.enlace_reunion ||''}
  onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, enlace_reunion: e.target.value } : prev)}
  placeholder="https://meet.google.com/xxx o Zoom"
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -6222,21 +6222,21 @@ export default function CalendarView({
  )}
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Horario</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Horario</label>
  <input
  type="text"
  value={editRehearsalDraft.hora}
  onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, hora: e.target.value } : prev)}
  placeholder="ej. 18:00 - 21:00"
  required
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Lugar / Local de Ensayo</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Lugar / Local de Ensayo</label>
  <input
  type="text"
  value={editRehearsalDraft.lugar}
@@ -6250,7 +6250,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Estado del Ensayo</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado del Ensayo</label>
  <select
  value={editRehearsalDraft.estado ||'programado'}
  onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, estado: e.target.value as any } : prev)}
@@ -6266,7 +6266,7 @@ export default function CalendarView({
 
  {/* Convocatoria selector */}
  <div className="space-y-2 border-t pt-3">
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center gap-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center gap-1">
  <Users className="w-3 h-3 text-[var(--ink-2)]" />
  <span>Tipo de Convocatoria</span>
  </label>
@@ -6280,7 +6280,7 @@ export default function CalendarView({
  convocados_ids: val ==='completa' ? effectiveBandMembers.map(m => m.id) : (prev.convocados_ids || [])
  } : prev);
  }}
- className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -6292,13 +6292,13 @@ export default function CalendarView({
  <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink-2)]'
  }`}>
- <span className="font-mono font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
+ <span className="font-sans font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
  <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
  {effectiveBandMembers.map(member => {
  const currentIds = editRehearsalDraft.convocados_ids || [];
  const isChecked = currentIds.includes(member.id);
  return (
- <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-mono">
+ <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-sans">
  <input
  type="checkbox"
  checked={isChecked}
@@ -6321,13 +6321,13 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
  <span className="flex items-center gap-1 text-[var(--ok)]">
  <Music className="w-3 h-3" />
  <span>Repertorio / Setlist a Ensayar</span>
  </span>
  {editRehearsalDraft.setlistId && (
- <span className="text-[9px] font-mono text-[var(--ok)]">
+ <span className="text-[9px] font-sans text-[var(--ok)]">
  {availableSetlists.find((s: any) => s.id === editRehearsalDraft.setlistId)?.items?.length || 0} temas
  </span>
  )}
@@ -6335,7 +6335,7 @@ export default function CalendarView({
  <select
  value={editRehearsalDraft.setlistId ||''}
  onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, setlistId: e.target.value || undefined } : prev)}
- className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-mono ${
+ className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -6349,7 +6349,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">Notas / Objetivo del Ensayo</label>
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Notas / Objetivo del Ensayo</label>
  <textarea
  value={editRehearsalDraft.notas}
  onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, notas: e.target.value } : prev)}
@@ -6365,13 +6365,13 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setViewingRehearsal(null)}
- className="px-2 py-1 text-[10px] font-mono rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+ className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  Cancelar
  </button>
  <button
  type="submit"
- className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
+ className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
  'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc-ink)] font-bold shadow-[var(--ok)]/20'
  }`}
  >
@@ -6397,7 +6397,7 @@ export default function CalendarView({
  <Radio className="w-5 h-5 animate-pulse" />
  </div>
  <div>
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--acc)]">
+ <h3 className="text-base font-bold font-display tracking-wider text-[var(--acc)]">
  Sincronización Automática en Tiempo Real
  </h3>
  <p className="text-xs text-[var(--ink-2)]">
@@ -6428,7 +6428,7 @@ export default function CalendarView({
 
  {isMultiBandUser && (
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)]10 space-y-2">
- <label className="block text-[11px] font-mono uppercase tracking-wider text-[var(--acc)] font-bold">
+ <label className="block text-[11px] font-sans tracking-wider text-[var(--acc)] font-bold">
  ¿Qué bandas quieres incluir en tu agenda?
  </label>
  <div className="grid grid-cols-2 gap-2">
@@ -6476,7 +6476,7 @@ export default function CalendarView({
  )}
 
  <div>
- <label className="block text-[11px] font-mono uppercase tracking-wider text-[var(--ink-2)] mb-1.5 font-bold">
+ <label className="block text-[11px] font-sans tracking-wider text-[var(--ink-2)] mb-1.5 font-bold">
  URL de Suscripción en Tiempo Real:
  </label>
  <div className="flex items-center gap-2">
@@ -6484,7 +6484,7 @@ export default function CalendarView({
  type="text"
  readOnly
  value={errorFeed || urlFeedAbsoluta ||'Generando enlace...'}
- className={`flex-1 px-3 py-2 text-xs font-mono rounded-[var(--r-s)] outline-none select-all ${
+ className={`flex-1 px-3 py-2 text-xs font-sans rounded-[var(--r-s)] outline-none select-all ${
  "bg-[var(--surface)] text-[var(--acc)]/70"
  }`}
  />
@@ -6495,7 +6495,7 @@ export default function CalendarView({
  setCopiedFeed(true);
  setTimeout(() => setCopiedFeed(false), 2500);
  }}
- className={`px-3 py-2 rounded-[var(--r-s)] font-mono font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
+ className={`px-3 py-2 rounded-[var(--r-s)] font-sans font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
  copiedFeed
  ?"bg-[var(--ok)]/80 text-[var(--ink)]"
  :"bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)]"
@@ -6542,7 +6542,7 @@ export default function CalendarView({
  <a
  href={rutaFeed || undefined}
  download={`calendar-${activeBandId ||'band'}.ics`}
- className="text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--acc)]/70 underline flex items-center gap-1"
+ className="text-[11px] font-sans text-[var(--ink-2)] hover:text-[var(--acc)]/70 underline flex items-center gap-1"
  >
  <Download className="w-3 h-3" />
  <span>O si prefieres, descargar archivo .ics puntual</span>
@@ -6573,7 +6573,7 @@ export default function CalendarView({
  </div>
  <div>
  <h3 className="font-bold text-sm">Enviar Recordatorio a la Banda</h3>
- <p className="text-[10px] text-[var(--ink-2)] font-mono truncate max-w-[200px]">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans truncate max-w-[200px]">
  {selectedConcert ? `Concierto: ${selectedConcert.sala}` : (selectedRehearsal?.asunto || selectedRehearsal?.lugar ||'Evento')}
  </p>
  </div>
@@ -6588,31 +6588,31 @@ export default function CalendarView({
 
  <div className="py-4 space-y-4 text-xs">
  {reminderSuccessMsg && (
- <div className="p-3 bg-[var(--ok)]/10 text-[var(--ok)] rounded-[var(--r-m)] font-mono text-[11px]">
+ <div className="p-3 bg-[var(--ok)]/10 text-[var(--ok)] rounded-[var(--r-m)] font-sans text-[11px]">
  {reminderSuccessMsg}
  </div>
  )}
 
  {reminderErrorMsg && (
- <div className="p-3 bg-[var(--alert)]/10 text-[var(--alert)] rounded-[var(--r-m)] font-mono text-[11px]">
+ <div className="p-3 bg-[var(--alert)]/10 text-[var(--alert)] rounded-[var(--r-m)] font-sans text-[11px]">
  {reminderErrorMsg}
  </div>
  )}
 
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/80'}`}>
- <div className="font-mono text-[10px] text-[var(--ink-2)] font-bold mb-1 uppercase tracking-wider">Detalles del Evento</div>
+ <div className="font-sans text-[10px] text-[var(--ink-2)] font-bold mb-1 tracking-wider">Detalles del Evento</div>
  <p className="font-semibold">{selectedConcert ? `Concierto en ${selectedConcert.sala} (${selectedConcert.ciudad})` : (selectedRehearsal?.asunto || selectedRehearsal?.lugar ||'Ensayo/Reunión')}</p>
- <p className="text-[11px] text-[var(--ink-2)] font-mono mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
  📅 {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
  {selectedRehearsal?.hora ? ` a las ${selectedRehearsal.hora}` :''}
  </p>
  </div>
 
  <div>
- <label className="block text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)] mb-1">
  Destinatarios ({effectiveBandMembers.length} miembros)
  </label>
- <div className="flex flex-wrap gap-1 font-mono text-[10px]">
+ <div className="flex flex-wrap gap-1 font-sans text-[10px]">
  {effectiveBandMembers.map((m: any, idx: number) => (
  <span key={idx} className="px-2 py-0.5 rounded-md bg-[var(--ink-3)]/10 text-[var(--ink-3)]">
  👤 {m.name} {m.email ? `(${m.email})` :''}
@@ -6622,7 +6622,7 @@ export default function CalendarView({
  </div>
 
  <div>
- <label className="block text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)] mb-1">
  Nota adicional / Indicaciones (Opcional)
  </label>
  <textarea
@@ -6645,7 +6645,7 @@ export default function CalendarView({
  onChange={(e) => setReminderSendPush(e.target.checked)}
  className="rounded cursor-pointer accent-sky-500"
  />
- <label htmlFor="chk-send-push" className="text-[11px] text-[var(--ink-3)] cursor-pointer font-mono font-medium flex items-center gap-1">
+ <label htmlFor="chk-send-push" className="text-[11px] text-[var(--ink-3)] cursor-pointer font-sans font-medium flex items-center gap-1">
  📱 Notificación Push en móvil / navegador (PWA)
  </label>
  </div>
@@ -6658,7 +6658,7 @@ export default function CalendarView({
  onChange={(e) => setReminderSendEmail(e.target.checked)}
  className="rounded cursor-pointer accent-sky-500"
  />
- <label htmlFor="chk-send-email" className="text-[11px] text-[var(--ink)] cursor-pointer font-mono flex items-center gap-1">
+ <label htmlFor="chk-send-email" className="text-[11px] text-[var(--ink)] cursor-pointer font-sans flex items-center gap-1">
  📧 Enviar correo electrónico a la banda
  </label>
  </div>
@@ -6669,7 +6669,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowReminderModal(false)}
- className="px-3 py-1.5 rounded-[var(--r-m)] text-xs text-[var(--ink)] hover:bg-[var(--surface)]/80 font-mono cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] text-xs text-[var(--ink)] hover:bg-[var(--surface)]/80 font-sans cursor-pointer"
  >
  Cancelar
  </button>
@@ -6677,7 +6677,7 @@ export default function CalendarView({
  type="button"
  disabled={reminderSending}
  onClick={handleSendEventReminder}
- className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-xs font-bold text-[var(--ink)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-all shadow-md"
+ className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-xs font-bold text-[var(--ink)] font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-all shadow-md"
  >
  {reminderSending ? (
  <>
@@ -6730,7 +6730,7 @@ export default function CalendarView({
  type="button"
  onClick={() => goToAdjacentEvent(-1)}
  disabled={allChronologicalEvents.length === 0 || activeChronoIndex <= 0}
- className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+ className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
  title="Evento anterior (←)"
  >
  <ChevronLeft className="w-4 h-4" />
@@ -6738,9 +6738,9 @@ export default function CalendarView({
  </button>
 
  <div className="flex flex-col items-center min-w-0">
- <span className="text-[9px] font-mono uppercase tracking-widest text-[var(--acc)]/80 font-bold">Ficha de Evento</span>
+ <span className="text-[9px] font-sans tracking-widest text-[var(--acc)]/80 font-bold">Ficha de Evento</span>
  {modalPosLabel && (
- <span className={`text-[10px] font-mono font-bold ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>{modalPosLabel}</span>
+ <span className={`text-[10px] font-sans font-bold ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>{modalPosLabel}</span>
  )}
  </div>
 
@@ -6749,7 +6749,7 @@ export default function CalendarView({
  type="button"
  onClick={() => goToAdjacentEvent(1)}
  disabled={allChronologicalEvents.length === 0 || activeChronoIndex < 0 || activeChronoIndex >= allChronologicalEvents.length - 1}
- className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+ className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
  title="Evento siguiente (→)"
  >
  <span className="hidden sm:inline">Siguiente</span>
@@ -6786,11 +6786,11 @@ export default function CalendarView({
  {modalBandInfo.initials}
  </span>
  <div className="min-w-0 flex-1">
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 inline-flex items-center gap-1">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 inline-flex items-center gap-1">
  🎸 {modalBandInfo.name}
  </span>
  <h3 className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}>{selectedEventTitle}</h3>
- <p className={`text-[11px] font-mono mt-0.5 ${textSub}`}>
+ <p className={`text-[11px] font-sans mt-0.5 ${textSub}`}>
  {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
  </p>
  {modalWeatherAlerts.length > 0 && (
@@ -6813,7 +6813,7 @@ export default function CalendarView({
  if (selectedConcert) setViewingConcert(selectedConcert);
  if (selectedRehearsal) setViewingRehearsal(selectedRehearsal);
  }}
- className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--surface)] /40 text-[var(--acc)]/70 hover:bg-[var(--surface)]/80 flex items-center gap-1"
+ className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--surface)] /40 text-[var(--acc)]/70 hover:bg-[var(--surface)]/80 flex items-center gap-1"
  title="Editar todos los campos de este evento"
  >
  ✎ Editar
@@ -6822,7 +6822,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
- className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)] hover:bg-[var(--ok-soft)] flex items-center gap-1"
+ className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)] hover:bg-[var(--ok-soft)] flex items-center gap-1"
  title="Compartir convocatoria por WhatsApp"
  >
  <Share2 className="w-3.5 h-3.5" />
@@ -6832,7 +6832,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
- className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--surface)] border-[var(--acc)]/40 text-[var(--ink-3)] hover:bg-[var(--surface)]/70 flex items-center gap-1"
+ className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--surface)] border-[var(--acc)]/40 text-[var(--ink-3)] hover:bg-[var(--surface)]/70 flex items-center gap-1"
  title="Enviar recordatorio / notificación push a los músicos"
  >
  <Bell className="w-3.5 h-3.5" />
@@ -6842,7 +6842,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => handleCopyEventFicha(modalEvent, isConcert)}
- className={`px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
+ className={`px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
  copiedEventModalId === modalEvent.id
  ?'bg-[var(--ok)] border-[var(--ok)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--surface)]/80'
@@ -6856,7 +6856,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setDeletingEventConfirmId(modalEvent.id)}
- className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert-soft)] border-[var(--alert)]/40 text-[var(--ink-2)] hover:bg-[var(--alert-soft)] flex items-center gap-1"
+ className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert-soft)] border-[var(--alert)]/40 text-[var(--ink-2)] hover:bg-[var(--alert-soft)] flex items-center gap-1"
  title="Eliminar este evento del calendario"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -6872,7 +6872,7 @@ export default function CalendarView({
  <div className="flex items-center gap-2">
  <AlertTriangle className="w-5 h-5 text-[var(--alert)] shrink-0" />
  <div>
- <p className="text-xs font-mono font-bold text-[var(--ink)]">
+ <p className="text-xs font-sans font-bold text-[var(--ink)]">
  ¿Confirmas que deseas eliminar este {isConcert ?'concierto' :'ensayo'}?
  </p>
  <p className="text-[10px] text-[var(--ink-2)]/80 font-sans">
@@ -6884,14 +6884,14 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setDeletingEventConfirmId(null)}
- className="px-3 py-1.5 text-xs font-mono rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink)] transition-colors cursor-pointer"
+ className="px-3 py-1.5 text-xs font-sans rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>
  <button
  type="button"
  onClick={() => handleDeleteEventFromModal(modalEvent.id, isConcert)}
- className="px-3.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-s)] bg-[var(--alert)]/80 hover:bg-[var(--alert)]/60 text-[var(--ink)] shadow-lg transition-colors cursor-pointer"
+ className="px-3.5 py-1.5 text-xs font-sans font-bold rounded-[var(--r-s)] bg-[var(--alert)]/80 hover:bg-[var(--alert)]/60 text-[var(--ink)] shadow-lg transition-colors cursor-pointer"
  >
  Sí, Eliminar Definitivamente
  </button>
@@ -6915,7 +6915,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setModalActiveTab('resumen')}
- className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+ className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
  modalActiveTab ==='resumen'
  ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
  : isStitchLight
@@ -6928,7 +6928,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setModalActiveTab('tecnica')}
- className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+ className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
  modalActiveTab ==='tecnica'
  ?'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
  : isStitchLight
@@ -6942,7 +6942,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setModalActiveTab('contactos')}
- className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+ className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
  modalActiveTab ==='contactos'
  ?'bg-[var(--ok)] text-[var(--ink)] shadow-sm'
  : isStitchLight
@@ -6953,7 +6953,7 @@ export default function CalendarView({
  <Phone className="w-3.5 h-3.5" />
  <span>2. Contactos Clave</span>
  {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0 && (
- <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-mono">
+ <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-sans">
  {modalRoadbook.contactosClave.length}
  </span>
  )}
@@ -6961,7 +6961,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setModalActiveTab('merchan')}
- className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+ className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
  modalActiveTab ==='merchan'
  ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
  : isStitchLight
@@ -6972,7 +6972,7 @@ export default function CalendarView({
  <Shirt className="w-3.5 h-3.5" />
  <span>3. Control Merchandising</span>
  {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0 && (
- <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-mono">
+ <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-sans">
  {modalRoadbook.merchControl.items.length}
  </span>
  )}
@@ -6980,7 +6980,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setModalActiveTab('cierre')}
- className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+ className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
  modalActiveTab ==='cierre'
  ?'bg-[var(--tentative)] text-[var(--ink)] shadow-sm'
  : isStitchLight
@@ -6991,7 +6991,7 @@ export default function CalendarView({
  <ShieldCheck className="w-3.5 h-3.5" />
  <span>5. Cierre Material</span>
  {modalRoadbook.cierreMaterial && modalRoadbook.cierreMaterial.length > 0 && (
- <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+ <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-sans ${
  modalRoadbook.cierreMaterial.every(i => i.checked)
  ?'bg-[var(--ok)] text-[var(--ink)] font-black'
  :'bg-[var(--sunken)]'
@@ -7008,17 +7008,17 @@ export default function CalendarView({
  <div className={`space-y-3 rounded-[var(--r-m)] p-4 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/80'}`}>
  <div className="flex items-center gap-2 text-[11px]">
  <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
- <span className={`font-mono ${textSub}`}>Hora:</span>
- <span className={`font-bold font-mono ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
+ <span className={`font-sans ${textSub}`}>Hora:</span>
+ <span className={`font-bold font-sans ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
  </div>
  <div className="flex items-start gap-2 text-[11px]">
  <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
  <div className="flex-1 min-w-0">
- <span className={`font-mono ${textSub}`}>Lugar:</span>
+ <span className={`font-sans ${textSub}`}>Lugar:</span>
  <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
  {selectedEventDetails.direccion && (
  <p className={`text-[11px] font-sans mt-1 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>
- <span className="font-semibold font-mono">Dirección:</span> {selectedEventDetails.direccion}
+ <span className="font-semibold font-sans">Dirección:</span> {selectedEventDetails.direccion}
  </p>
  )}
  </div>
@@ -7036,8 +7036,8 @@ export default function CalendarView({
  {!isPromoPlan && selectedEventDetails.type ==='concert' && (
  <div className="flex items-center gap-2 text-[11px] pt-2 border-t /40">
  <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
- <span className={`font-mono ${textSub}`}>Compensación:</span>
- <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
+ <span className={`font-sans ${textSub}`}>Compensación:</span>
+ <span className="text-[var(--ok)] font-bold font-sans">{selectedEventDetails.fee}</span>
  </div>
  )}
  {selectedEventDetails.type ==='concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
@@ -7047,7 +7047,7 @@ export default function CalendarView({
  href={selectedEventDetails.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]/80 transition-colors w-fit"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]/80 transition-colors w-fit"
  >
  <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
  </a>
@@ -7055,8 +7055,8 @@ export default function CalendarView({
  {selectedEventDetails.entradasLugarFisico && (
  <div className="flex items-center gap-2 text-[11px]">
  <MapPin className="w-4 h-4 text-[var(--ok)] shrink-0" />
- <span className={`font-mono ${textSub}`}>También en:</span>
- <span className="font-semibold font-mono">{selectedEventDetails.entradasLugarFisico}</span>
+ <span className={`font-sans ${textSub}`}>También en:</span>
+ <span className="font-semibold font-sans">{selectedEventDetails.entradasLugarFisico}</span>
  </div>
  )}
  </div>
@@ -7064,15 +7064,15 @@ export default function CalendarView({
  {selectedConcert?.giraNombre && (
  <div className="flex items-center gap-2 text-[11px] pt-2 border-t /40">
  <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
- <span className={`font-mono ${textSub}`}>Gira:</span>
- <span className="font-bold font-mono text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
+ <span className={`font-sans ${textSub}`}>Gira:</span>
+ <span className="font-bold font-sans text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
  </div>
  )}
  {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
  <div className="flex items-center gap-2 text-[11px] pt-2 border-t /40">
  <Users className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
- <span className={`font-mono ${textSub}`}>Convocatoria:</span>
- <span className="font-bold font-mono text-[var(--ink-2)]">
+ <span className={`font-sans ${textSub}`}>Convocatoria:</span>
+ <span className="font-bold font-sans text-[var(--ink-2)]">
  {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) ==='completa'
  ?'Banda Completa'
  : `Parcial (${(() => {
@@ -7099,14 +7099,14 @@ export default function CalendarView({
  'bg-[var(--surface)] border-[var(--acc)]/30'
  }`}
  >
- <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-mono font-bold text-xs mb-1">
+ <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-sans font-bold text-xs mb-1">
  <Wrench className="w-3.5 h-3.5" />
  <span>1. Logística Técnica</span>
  </div>
- <p className={`text-[11px] font-mono ${textSub}`}>
+ <p className={`text-[11px] font-sans ${textSub}`}>
  {modalRoadbook.horaPruebaSonido ? `Prueba: ${modalRoadbook.horaPruebaSonido}` :'Configurar rider, P.A. y horarios'}
  </p>
- <span className="text-[10px] text-[var(--ink-2)] font-mono font-semibold underline mt-1 inline-block">
+ <span className="text-[10px] text-[var(--ink-2)] font-sans font-semibold underline mt-1 inline-block">
  Abrir sección técnica →
  </span>
  </div>
@@ -7117,16 +7117,16 @@ export default function CalendarView({
  'bg-[var(--ok-soft)] border-[var(--ok)]/30'
  }`}
  >
- <div className="flex items-center gap-1.5 text-[var(--ok)] font-mono font-bold text-xs mb-1">
+ <div className="flex items-center gap-1.5 text-[var(--ok)] font-sans font-bold text-xs mb-1">
  <Phone className="w-3.5 h-3.5" />
  <span>2. Contactos Clave</span>
  </div>
- <p className={`text-[11px] font-mono ${textSub}`}>
+ <p className={`text-[11px] font-sans ${textSub}`}>
  {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0
  ? `${modalRoadbook.contactosClave.length} contactos (WhatsApp directo)`
  :'Añadir contactos de sala y técnicos'}
  </p>
- <span className="text-[10px] text-[var(--ok)] font-mono font-semibold underline mt-1 inline-block">
+ <span className="text-[10px] text-[var(--ok)] font-sans font-semibold underline mt-1 inline-block">
  Ver directorio →
  </span>
  </div>
@@ -7137,16 +7137,16 @@ export default function CalendarView({
  'bg-[var(--acc-soft)] /30'
  }`}
  >
- <div className="flex items-center gap-1.5 text-[var(--acc)] font-mono font-bold text-xs mb-1">
+ <div className="flex items-center gap-1.5 text-[var(--acc)] font-sans font-bold text-xs mb-1">
  <Shirt className="w-3.5 h-3.5" />
  <span>3. Control Merchandising</span>
  </div>
- <p className={`text-[11px] font-mono ${textSub}`}>
+ <p className={`text-[11px] font-sans ${textSub}`}>
  {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0
  ? `${modalRoadbook.merchControl.items.length} productos | ${(modalRoadbook.merchControl.ingresosEfectivo || 0) + (modalRoadbook.merchControl.ingresosBizum || 0)}€ arqueo`
  :'Stock furgón vs final, Bizum y efectivo'}
  </p>
- <span className="text-[10px] text-[var(--acc)] font-mono font-semibold underline mt-1 inline-block">
+ <span className="text-[10px] text-[var(--acc)] font-sans font-semibold underline mt-1 inline-block">
  Abrir control de ventas →
  </span>
  </div>
@@ -7157,16 +7157,16 @@ export default function CalendarView({
  'bg-[var(--tentative)]/10 border-[var(--acc)]/30'
  }`}
  >
- <div className="flex items-center gap-1.5 text-[var(--tentative)] font-mono font-bold text-xs mb-1">
+ <div className="flex items-center gap-1.5 text-[var(--tentative)] font-sans font-bold text-xs mb-1">
  <ShieldCheck className="w-3.5 h-3.5" />
  <span>5. Cierre Material</span>
  </div>
- <p className={`text-[11px] font-mono ${textSub}`}>
+ <p className={`text-[11px] font-sans ${textSub}`}>
  {modalRoadbook.cierreMaterial
  ? `${modalRoadbook.cierreMaterial.filter(i => i.checked).length}/${modalRoadbook.cierreMaterial.length} verificados`
  :'Checklist de carga de furgoneta'}
  </p>
- <span className="text-[10px] text-[var(--tentative)] font-mono font-semibold underline mt-1 inline-block">
+ <span className="text-[10px] text-[var(--tentative)] font-sans font-semibold underline mt-1 inline-block">
  Hacer checklist →
  </span>
  </div>
@@ -7179,81 +7179,81 @@ export default function CalendarView({
  <div className="space-y-4">
  <div className="flex items-center justify-between pb-1 border-b border-[var(--acc)]/20">
  <div className="flex items-center gap-2">
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--ink)]">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--acc)] text-[var(--ink)]">
  Sección 1
  </span>
- <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
+ <h3 className={`text-sm font-sans font-bold ${textTitle}`}>
  Logística Técnica, Horarios & Rider
  </h3>
  </div>
- <span className="text-[10px] font-mono text-[var(--ink-2)]">
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">
  Guardado automático local
  </span>
  </div>
 
  {/* Horarios de Producción */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <h4 className="text-xs font-mono font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+ <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
  <Clock className="w-3.5 h-3.5" />
  <span>Cronograma de Producción del Día</span>
  </h4>
  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>Llegada / Descarga</label>
+ <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Llegada / Descarga</label>
  <input
  type="text"
  value={modalRoadbook.horaLlegada ||'17:00'}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaLlegada: e.target.value })}
  placeholder="17:00"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>Prueba Sonido</label>
+ <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Prueba Sonido</label>
  <input
  type="text"
  value={modalRoadbook.horaPruebaSonido ||'18:00 - 19:30'}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaPruebaSonido: e.target.value })}
  placeholder="18:00 - 19:30"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>Apertura Puertas</label>
+ <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Apertura Puertas</label>
  <input
  type="text"
  value={modalRoadbook.horaAperturaPuertas ||'20:30'}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaAperturaPuertas: e.target.value })}
  placeholder="20:30"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 text-[var(--acc)]`}>Show / Directo</label>
+ <label className={`block text-[10px] font-sans font-bold mb-1 text-[var(--acc)]`}>Show / Directo</label>
  <input
  type="text"
  value={modalRoadbook.horaShow ||'21:30'}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaShow: e.target.value })}
  placeholder="21:30"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold ${
  'bg-[var(--acc-soft)] text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>Toque de Queda</label>
+ <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Toque de Queda</label>
  <input
  type="text"
  value={modalRoadbook.horaCierreToque ||'01:00'}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaCierreToque: e.target.value })}
  placeholder="01:00"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
@@ -7263,13 +7263,13 @@ export default function CalendarView({
 
  {/* Sonido P.A. & Monitores */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <h4 className="text-xs font-mono font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+ <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
  <Wrench className="w-3.5 h-3.5" />
  <span>Sistema de Sonido (P.A. & Monitoreo)</span>
  </h4>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>
  Especificaciones P.A. de Sala
  </label>
  <textarea
@@ -7277,13 +7277,13 @@ export default function CalendarView({
  value={modalRoadbook.paEspecificaciones ||''}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { paEspecificaciones: e.target.value })}
  placeholder="Ej: Line Array L-Acoustics / D&B, subwoofers estéreo, presión homogénea"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>
  Monitoreo (In-Ears / Cuñas)
  </label>
  <textarea
@@ -7291,14 +7291,14 @@ export default function CalendarView({
  value={modalRoadbook.monitoresTipo ||''}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { monitoresTipo: e.target.value })}
  placeholder="Ej: In-Ears estéreo de la banda (traemos transmisores) + 2 cuñas de refuerzo"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
  </div>
  </div>
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>
  Canales de Envíos Auxiliares
  </label>
  <input
@@ -7306,7 +7306,7 @@ export default function CalendarView({
  value={modalRoadbook.canalesMonitores ||''}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { canalesMonitores: e.target.value })}
  placeholder="Ej: 4 envíos auxiliares XLR independientes a rack de IEMs"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
@@ -7315,13 +7315,13 @@ export default function CalendarView({
 
  {/* Backline y Electricidad */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <h4 className="text-xs font-mono font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+ <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
  <Truck className="w-3.5 h-3.5" />
  <span>Backline Aportado vs Traído & Toma Eléctrica</span>
  </h4>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>
  Backline (Sala vs Banda)
  </label>
  <textarea
@@ -7329,13 +7329,13 @@ export default function CalendarView({
  value={modalRoadbook.backlineInfo ||''}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { backlineInfo: e.target.value })}
  placeholder="Sala aporta: Batería básica. Banda trae: Platos, pedal, guitarras, amplificadores y teclado."
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+ <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>
  Potencia y Tomas Eléctricas en Escenario
  </label>
  <textarea
@@ -7343,7 +7343,7 @@ export default function CalendarView({
  value={modalRoadbook.potenciaElectrica ||''}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { potenciaElectrica: e.target.value })}
  placeholder="Ej: 2 líneas independientes Schuko 220V 16A limpias (frontal y trasera)"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
@@ -7354,11 +7354,11 @@ export default function CalendarView({
  {/* Input List / Rider de Canales */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-2.5 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
  <div className="flex items-center justify-between">
- <h4 className="text-xs font-mono font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+ <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
  <span>🎛️</span>
  <span>Input List / Lista de Canales de Microfonía</span>
  </h4>
- <span className="text-[10px] font-mono text-[var(--ink-2)]">
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">
  {(modalRoadbook.inputList ||'').split('\n').filter(Boolean).length} canales especificados
  </span>
  </div>
@@ -7367,7 +7367,7 @@ export default function CalendarView({
  value={modalRoadbook.inputList ||''}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { inputList: e.target.value })}
  placeholder="1. Bombo (Beta 52)&#10;2. Caja Top (SM57)&#10;3. Bajo (D.I. Radial)&#10;4. Guitarra (e906)&#10;5. Voz (Beta 58)..."
- className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-mono leading-relaxed ${
+ className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-sans leading-relaxed ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/80 text-[var(--ink)]'
  }`}
  />
@@ -7375,7 +7375,7 @@ export default function CalendarView({
 
  {/* Notas de Producción y Carga */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-2 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <label className={`block text-[10px] font-mono uppercase font-bold ${textSub}`}>
+ <label className={`block text-[10px] font-sans font-bold ${textSub}`}>
  Notas de Acceso, Muelle de Carga & Observaciones
  </label>
  <textarea
@@ -7383,7 +7383,7 @@ export default function CalendarView({
  value={modalRoadbook.notasTecnicas ||''}
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { notasTecnicas: e.target.value })}
  placeholder="Ej: Acceso por puerta trasera calle peatonal. Se requiere autorización de matrícula para la furgoneta."
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/60 text-[var(--ink)]'
  }`}
  />
@@ -7396,17 +7396,17 @@ export default function CalendarView({
  <div className="space-y-4">
  <div className="flex items-center justify-between pb-1 border-b border-[var(--ok)]/20 flex-wrap gap-2">
  <div className="flex items-center gap-2">
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--ok)] text-[var(--ink)]">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--ok)] text-[var(--ink)]">
  Sección 2
  </span>
- <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
+ <h3 className={`text-sm font-sans font-bold ${textTitle}`}>
  Directorio de Contactos Clave de Producción
  </h3>
  </div>
  <button
  type="button"
  onClick={() => setShowAddContactForm(!showAddContactForm)}
- className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
  >
  <span>+</span> Añadir Contacto
  </button>
@@ -7420,27 +7420,27 @@ export default function CalendarView({
  'bg-[var(--ok-soft)] border-[var(--ok)]/40'
  }`}
  >
- <h4 className="text-xs font-mono font-bold text-[var(--ok)]">Nuevo Contacto Clave</h4>
+ <h4 className="text-xs font-sans font-bold text-[var(--ok)]">Nuevo Contacto Clave</h4>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
  <div>
- <label className="block text-[10px] font-mono uppercase font-bold text-[var(--ink)] mb-1">Nombre y Apellidos *</label>
+ <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Nombre y Apellidos *</label>
  <input
  type="text"
  required
  value={newContactNombre}
  onChange={(e) => setNewContactNombre(e.target.value)}
  placeholder="Ej: Manuel Producción"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/70 text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono uppercase font-bold text-[var(--ink)] mb-1">Rol / Cargo</label>
+ <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Rol / Cargo</label>
  <select
  value={newContactRol}
  onChange={(e) => setNewContactRol(e.target.value)}
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/70 text-[var(--ink)]'
  }`}
  >
@@ -7455,39 +7455,39 @@ export default function CalendarView({
  </select>
  </div>
  <div>
- <label className="block text-[10px] font-mono uppercase font-bold text-[var(--ink)] mb-1">Teléfono (WhatsApp) *</label>
+ <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Teléfono (WhatsApp) *</label>
  <input
  type="tel"
  required
  value={newContactTelefono}
  onChange={(e) => setNewContactTelefono(e.target.value)}
  placeholder="+34 600 000 000"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/70 text-[var(--ink)]'
  }`}
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono uppercase font-bold text-[var(--ink)] mb-1">Email</label>
+ <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Email</label>
  <input
  type="email"
  value={newContactEmail}
  onChange={(e) => setNewContactEmail(e.target.value)}
  placeholder="produccion@sala.com"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/70 text-[var(--ink)]'
  }`}
  />
  </div>
  </div>
  <div>
- <label className="block text-[10px] font-mono uppercase font-bold text-[var(--ink)] mb-1">Notas u observaciones</label>
+ <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Notas u observaciones</label>
  <input
  type="text"
  value={newContactNotas}
  onChange={(e) => setNewContactNotas(e.target.value)}
  placeholder="Ej: Contacto para cobro de taquilla y apertura de puerta muelle"
- className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black/70 text-[var(--ink)]'
  }`}
  />
@@ -7496,13 +7496,13 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowAddContactForm(false)}
- className="px-3 py-1.5 text-xs font-mono rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink)] transition-colors"
+ className="px-3 py-1.5 text-xs font-sans rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink)] transition-colors"
  >
  Cancelar
  </button>
  <button
  type="submit"
- className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--ink)] transition-colors"
+ className="px-4 py-1.5 text-xs font-sans font-bold rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--ink)] transition-colors"
  >
  Guardar Contacto
  </button>
@@ -7513,7 +7513,7 @@ export default function CalendarView({
  {/* Lista de Contactos */}
  <div className="space-y-2.5">
  {(modalRoadbook.contactosClave || []).length === 0 ? (
- <div className="text-center py-6 text-[var(--ink-2)] font-mono text-xs">
+ <div className="text-center py-6 text-[var(--ink-2)] font-sans text-xs">
  No hay contactos clave registrados para este concierto.
  <p className="text-[10px] mt-1 text-[var(--ok)]">Pulsa en &ldquo;+ Añadir Contacto&rdquo; para registrar promotor, técnico de sonido o producción.</p>
  </div>
@@ -7527,14 +7527,14 @@ export default function CalendarView({
  >
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-2 flex-wrap mb-1">
- <span className="text-xs font-mono font-bold text-[var(--ink)]">
+ <span className="text-xs font-sans font-bold text-[var(--ink)]">
  {contact.nombre}
  </span>
- <span className="px-2 py-0.5 rounded-md text-[9px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded-md text-[9px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
  {contact.rol}
  </span>
  </div>
- <p className="text-xs font-mono text-[var(--ink)]">
+ <p className="text-xs font-sans text-[var(--ink)]">
  📞 {contact.telefono}
  {contact.email && <span className="ml-2 text-[var(--ink-2)]">✉️ {contact.email}</span>}
  </p>
@@ -7550,7 +7550,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => openWhatsAppContact(contact, eventDateStr, selectedEventDetails.lugar ||'la sala')}
- className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95 shadow-sm"
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95 shadow-sm"
  title="Abrir WhatsApp directo con mensaje predefinido"
  >
  <MessageSquare className="w-3.5 h-3.5" />
@@ -7558,7 +7558,7 @@ export default function CalendarView({
  </button>
  <a
  href={`tel:${contact.telefono.replace(/\s+/g,'')}`}
- className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold text-[var(--ink-2)] hover:bg-[var(--ok)]/10 flex items-center gap-1 transition-colors"
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold text-[var(--ink-2)] hover:bg-[var(--ok)]/10 flex items-center gap-1 transition-colors"
  title="Llamar directamente por teléfono"
  >
  <Phone className="w-3.5 h-3.5" />
@@ -7605,14 +7605,14 @@ export default function CalendarView({
  {/* Cabecera de la Sección de Merchan */}
  <div className="flex items-center justify-between pb-1 border-b /20 flex-wrap gap-2">
  <div className="flex items-center gap-2">
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--acc)] text-[var(--on-acc)]">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--acc)] text-[var(--on-acc)]">
  Sección 3
  </span>
  <div>
- <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
+ <h3 className={`text-sm font-sans font-bold ${textTitle}`}>
  Control de Merchandising por Bolo
  </h3>
- <p className={`text-[11px] font-mono ${textSub}`}>
+ <p className={`text-[11px] font-sans ${textSub}`}>
  Inventario que sube a la furgoneta vs. stock final de noche, arqueo de Efectivo y Bizum
  </p>
  </div>
@@ -7621,7 +7621,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
- className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
  title="Copiar arqueo y balance para WhatsApp"
  >
  {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Copy className="w-3.5 h-3.5" />}
@@ -7630,7 +7630,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => setShowAddMerchForm(!showAddMerchForm)}
- className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>{showAddMerchForm ?'Cerrar' :'+ Añadir Producto'}</span>
@@ -7643,7 +7643,7 @@ export default function CalendarView({
  <motion.div
  initial={{ opacity: 0, y: -6 }}
  animate={{ opacity: 1, y: 0 }}
- className="p-2.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-xs font-mono flex items-center gap-2"
+ className="p-2.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-xs font-sans flex items-center gap-2"
  >
  <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
  <span>¡Resumen de arqueo y ventas copiado al portapapeles con formato WhatsApp para el grupo de la banda!</span>
@@ -7653,58 +7653,58 @@ export default function CalendarView({
  {/* KPI Grid: Cuadre y Métricas Principales */}
  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
  <div className={`p-2.5 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
- <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
  <Truck className="w-3 h-3 text-[var(--ink-2)]" /> Sube a Furgón
  </span>
  <div className="mt-1 flex items-baseline gap-1">
- <span className={`text-lg font-bold font-mono ${textTitle}`}>{totalInicial}</span>
- <span className="text-[10px] text-[var(--ink-2)] font-mono">uds</span>
+ <span className={`text-lg font-bold font-sans ${textTitle}`}>{totalInicial}</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-sans">uds</span>
  </div>
- <p className="text-[9px] text-[var(--ink-2)] font-mono">Inventario de salida</p>
+ <p className="text-[9px] text-[var(--ink-2)] font-sans">Inventario de salida</p>
  </div>
 
  <div className={`p-2.5 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
- <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
  <ShoppingBag className="w-3 h-3 text-[var(--acc)]" /> Stock Final
  </span>
  <div className="mt-1 flex items-baseline gap-1">
- <span className={`text-lg font-bold font-mono ${textTitle}`}>{totalFinal}</span>
- <span className="text-[10px] text-[var(--ink-2)] font-mono">uds</span>
+ <span className={`text-lg font-bold font-sans ${textTitle}`}>{totalFinal}</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-sans">uds</span>
  </div>
- <p className="text-[9px] text-[var(--ink-2)] font-mono">Quedan en furgoneta</p>
+ <p className="text-[9px] text-[var(--ink-2)] font-sans">Quedan en furgoneta</p>
  </div>
 
  <div className={`p-2.5 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
- <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
  <Zap className="w-3 h-3 text-[var(--ok)]" /> Vendidas
  </span>
  <div className="mt-1 flex items-baseline gap-1">
- <span className="text-lg font-bold font-mono text-[var(--ok)]">{totalVendidas}</span>
- <span className="text-[10px] text-[var(--ok)]/70 font-mono font-bold">({porcentajeVendido}%)</span>
+ <span className="text-lg font-bold font-sans text-[var(--ok)]">{totalVendidas}</span>
+ <span className="text-[10px] text-[var(--ok)]/70 font-sans font-bold">({porcentajeVendido}%)</span>
  </div>
- <p className="text-[9px] text-[var(--ink-2)] font-mono">Salidas del bolo</p>
+ <p className="text-[9px] text-[var(--ink-2)] font-sans">Salidas del bolo</p>
  </div>
 
  <div className={`p-2.5 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
- <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
  <Calculator className="w-3 h-3 text-[var(--tentative)]" /> Venta Teórica
  </span>
  <div className="mt-1 flex items-baseline gap-1">
- <span className="text-lg font-bold font-mono text-[var(--tentative)]">{totalVentaTeorica.toFixed(2)}</span>
- <span className="text-[10px] text-[var(--ink-2)] font-mono">€</span>
+ <span className="text-lg font-bold font-sans text-[var(--tentative)]">{totalVentaTeorica.toFixed(2)}</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-sans">€</span>
  </div>
- <p className="text-[9px] text-[var(--ink-2)] font-mono">Según inventario</p>
+ <p className="text-[9px] text-[var(--ink-2)] font-sans">Según inventario</p>
  </div>
 
  <div className={`p-2.5 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
- <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
  <Coins className="w-3 h-3 text-[var(--ok)]" /> Cobrado Real
  </span>
  <div className="mt-1 flex items-baseline gap-1">
- <span className="text-lg font-bold font-mono text-[var(--ok)]">{totalCobradoReal.toFixed(2)}</span>
- <span className="text-[10px] text-[var(--ink-2)] font-mono">€</span>
+ <span className="text-lg font-bold font-sans text-[var(--ok)]">{totalCobradoReal.toFixed(2)}</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-sans">€</span>
  </div>
- <p className="text-[9px] text-[var(--ink-2)] font-mono">Efectivo + Bizum</p>
+ <p className="text-[9px] text-[var(--ink-2)] font-sans">Efectivo + Bizum</p>
  </div>
 
  <div className={`p-2.5 rounded-[var(--r-m)] ${
@@ -7714,18 +7714,18 @@ export default function CalendarView({
  ? 'bg-[var(--surface)]/80 border-[var(--acc)]/40'
  : 'bg-[var(--alert-soft)] border-[var(--alert)]/40'
  }`}>
- <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
  <ShieldCheck className="w-3 h-3" /> Cuadre Caja
  </span>
  <div className="mt-1 flex items-baseline gap-1">
- <span className={`text-base font-bold font-mono ${
+ <span className={`text-base font-bold font-sans ${
  diferenciaCuadre === 0 ?'text-[var(--ok)]' : diferenciaCuadre > 0 ?'text-[var(--ink-2)]' :'text-[var(--alert)]'
  }`}>
  {diferenciaCuadre === 0 ?'0.00' : (diferenciaCuadre > 0 ? `+${diferenciaCuadre.toFixed(2)}` : diferenciaCuadre.toFixed(2))}
  </span>
- <span className="text-[10px] font-mono text-[var(--ink-2)]">€</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">€</span>
  </div>
- <p className={`text-[9px] font-mono font-bold ${
+ <p className={`text-[9px] font-sans font-bold ${
  diferenciaCuadre === 0 ?'text-[var(--ok)]' : diferenciaCuadre > 0 ?'text-[var(--ink-2)]' :'text-[var(--alert)]'
  }`}>
  {diferenciaCuadre === 0 ?'✓ Caja exacta' : diferenciaCuadre > 0 ?'Superávit / Propinas' :'Descuadre faltante'}
@@ -7746,19 +7746,19 @@ export default function CalendarView({
  }`}
  >
  <div className="flex items-center justify-between">
- <span className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
+ <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
  <Plus className="w-3.5 h-3.5" /> Nuevo Artículo de Merchandising para este Concierto
  </span>
  <button
  type="button"
  onClick={() => setShowAddMerchForm(false)}
- className="text-[var(--ink-2)] hover:text-[var(--ink-2)] text-xs font-mono cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--ink-2)] text-xs font-sans cursor-pointer"
  >
  ✕ Cancelar
  </button>
  </div>
 
- <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs font-mono">
+ <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs font-sans">
  <div className="md:col-span-2">
  <label className={`block text-[10px] mb-1 ${textSub}`}>Nombre del Producto *</label>
  <input
@@ -7812,7 +7812,7 @@ export default function CalendarView({
  min="0"
  value={newMerchPrecio}
  onChange={(e) => setNewMerchPrecio(e.target.value)}
- className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs font-mono ${
+ className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
@@ -7824,7 +7824,7 @@ export default function CalendarView({
  min="0"
  value={newMerchStockInicial}
  onChange={(e) => setNewMerchStockInicial(e.target.value)}
- className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs font-mono ${
+ className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
@@ -7835,7 +7835,7 @@ export default function CalendarView({
  <div className="flex justify-end pt-1">
  <button
  type="submit"
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
  >
  <Check className="w-3.5 h-3.5" />
  <span>Guardar Producto en el Bolo</span>
@@ -7848,10 +7848,10 @@ export default function CalendarView({
  {/* Tabla de Artículos: Sube a Furgoneta vs Stock Final Noche */}
  <div className={`rounded-[var(--r-m)] overflow-hidden ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/90'}`}>
  <div className="p-3 border-b /80 flex items-center justify-between flex-wrap gap-2">
- <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+ <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
  <Shirt className="w-4 h-4" /> Inventario de Merchandising ({items.length} productos)
  </span>
- <span className={`text-[11px] font-mono ${textSub}`}>
+ <span className={`text-[11px] font-sans ${textSub}`}>
  Ajusta las unidades al subir a la furgoneta y al terminar el bolo
  </span>
  </div>
@@ -7859,13 +7859,13 @@ export default function CalendarView({
  {items.length === 0 ? (
  <div className="p-8 text-center space-y-2">
  <Shirt className="w-8 h-8 text-[var(--ink-2)] mx-auto" />
- <p className={`text-xs font-mono ${textSub}`}>
+ <p className={`text-xs font-sans ${textSub}`}>
  Aún no has registrado productos para este bolo.
  </p>
  <button
  type="button"
  onClick={() => setShowAddMerchForm(true)}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Añadir primer producto</span>
@@ -7897,12 +7897,12 @@ export default function CalendarView({
  {item.nombre}
  </h4>
  {item.talla && (
- <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-[var(--surface)]/80 text-[var(--ink)]">
+ <span className="px-1.5 py-0.2 rounded text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink)]">
  {item.talla}
  </span>
  )}
  </div>
- <div className="flex items-center gap-2 mt-0.5 text-[10px] font-mono text-[var(--ink-2)]">
+ <div className="flex items-center gap-2 mt-0.5 text-[10px] font-sans text-[var(--ink-2)]">
  <span>Precio: <strong className="text-[var(--acc)]">{item.precioUnitario}€</strong></span>
  <span>•</span>
  <span>{catConfig.label}</span>
@@ -7914,7 +7914,7 @@ export default function CalendarView({
  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 items-center flex-1 max-w-lg">
  {/* Sube a Furgoneta */}
  <div className={`p-1.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
- <span className="block text-[9px] font-mono text-[var(--ink-2)] mb-1 flex items-center gap-1">
+ <span className="block text-[9px] font-sans text-[var(--ink-2)] mb-1 flex items-center gap-1">
  <Truck className="w-2.5 h-2.5 text-[var(--ink-2)]" /> Sube Furgón
  </span>
  <div className="flex items-center gap-1">
@@ -7923,7 +7923,7 @@ export default function CalendarView({
  onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, {
  stockInicial: Math.max(0, (item.stockInicial || 0) - 1)
  })}
- className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-mono cursor-pointer shrink-0"
+ className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
  >
  -
  </button>
@@ -7934,7 +7934,7 @@ export default function CalendarView({
  onChange={(e) => handleUpdateMerchItem(modalRoadbookKey, item.id, {
  stockInicial: Math.max(0, parseInt(e.target.value, 10) || 0)
  })}
- className={`w-12 text-center text-xs font-mono font-bold py-0.5 rounded outline-none ${
+ className={`w-12 text-center text-xs font-sans font-bold py-0.5 rounded outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
@@ -7943,7 +7943,7 @@ export default function CalendarView({
  onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, {
  stockInicial: (item.stockInicial || 0) + 1
  })}
- className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-mono cursor-pointer shrink-0"
+ className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
  >
  +
  </button>
@@ -7953,13 +7953,13 @@ export default function CalendarView({
  {/* Stock Final (Fin de Noche) */}
  <div className={`p-1.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
  <div className="flex items-center justify-between mb-1">
- <span className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[9px] font-sans text-[var(--ink-2)] flex items-center gap-1">
  <DoorClosed className="w-2.5 h-2.5 text-[var(--acc)]" /> Stock Final
  </span>
  <button
  type="button"
  onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, { stockFinal: 0 })}
- className="text-[8px] font-mono px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 cursor-pointer"
+ className="text-[8px] font-sans px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 cursor-pointer"
  title="Marcar como agotado tras el concierto"
  >
  Agotado (0)
@@ -7971,7 +7971,7 @@ export default function CalendarView({
  onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, {
  stockFinal: Math.max(0, (item.stockFinal || 0) - 1)
  })}
- className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-mono cursor-pointer shrink-0"
+ className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
  >
  -
  </button>
@@ -7982,7 +7982,7 @@ export default function CalendarView({
  onChange={(e) => handleUpdateMerchItem(modalRoadbookKey, item.id, {
  stockFinal: Math.max(0, parseInt(e.target.value, 10) || 0)
  })}
- className={`w-12 text-center text-xs font-mono font-bold py-0.5 rounded outline-none ${
+ className={`w-12 text-center text-xs font-sans font-bold py-0.5 rounded outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
@@ -7991,7 +7991,7 @@ export default function CalendarView({
  onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, {
  stockFinal: (item.stockFinal || 0) + 1
  })}
- className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-mono cursor-pointer shrink-0"
+ className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
  >
  +
  </button>
@@ -8001,10 +8001,10 @@ export default function CalendarView({
  {/* Resumen Ventas del Artículo */}
  <div className="col-span-2 sm:col-span-1 flex flex-col items-end justify-center pr-2">
  <div className="text-right">
- <span className="text-xs font-mono font-black text-[var(--acc)]">
+ <span className="text-xs font-sans font-black text-[var(--acc)]">
  {vendidas} vendidas
  </span>
- <span className="block text-xs font-mono font-bold text-[var(--ok)]">
+ <span className="block text-xs font-sans font-bold text-[var(--ok)]">
  {subtotal.toFixed(2)} €
  </span>
  </div>
@@ -8040,10 +8040,10 @@ export default function CalendarView({
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/50'
  }`}>
  <div className="flex items-center justify-between border-b pb-2">
- <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ok)] flex items-center gap-1.5">
+ <span className="text-xs font-sans font-bold tracking-wider text-[var(--ok)] flex items-center gap-1.5">
  <Coins className="w-4 h-4" /> Arqueo de Caja y Métodos de Cobro
  </span>
- <span className="text-[10px] font-mono text-[var(--ink-2)]">
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">
  Introduce los importes reales cobrados durante la noche
  </span>
  </div>
@@ -8053,11 +8053,11 @@ export default function CalendarView({
  <div className={`p-3 rounded-[var(--r-m)] ${
  'bg-[var(--surface)] border-[var(--ok)]/30'
  }`}>
- <div className="flex items-center gap-1.5 text-[var(--ok)] font-mono font-bold text-xs mb-1">
+ <div className="flex items-center gap-1.5 text-[var(--ok)] font-sans font-bold text-xs mb-1">
  <Banknote className="w-4 h-4" />
  <span>Efectivo en Caja (€)</span>
  </div>
- <p className="text-[10px] text-[var(--ink-2)] font-mono mb-2">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">
  Billetes y monedas cobrados en el bolo
  </p>
  <div className="flex items-center gap-1.5">
@@ -8069,11 +8069,11 @@ export default function CalendarView({
  onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, {
  ingresosEfectivo: Math.max(0, parseFloat(e.target.value) || 0)
  })}
- className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-mono font-bold text-sm outline-none ${
+ className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-sans font-bold text-sm outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
- <span className="font-mono text-xs font-bold text-[var(--ink-2)]">€</span>
+ <span className="font-sans text-xs font-bold text-[var(--ink-2)]">€</span>
  </div>
  </div>
 
@@ -8081,11 +8081,11 @@ export default function CalendarView({
  <div className={`p-3 rounded-[var(--r-m)] ${
  'bg-[var(--surface)] border-[var(--acc)]/30'
  }`}>
- <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-mono font-bold text-xs mb-1">
+ <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-sans font-bold text-xs mb-1">
  <Smartphone className="w-4 h-4" />
  <span>Bizum / TPV (€)</span>
  </div>
- <p className="text-[10px] text-[var(--ink-2)] font-mono mb-2">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">
  Pagos por móvil y datáfono del bolo
  </p>
  <div className="flex items-center gap-1.5">
@@ -8097,11 +8097,11 @@ export default function CalendarView({
  onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, {
  ingresosBizum: Math.max(0, parseFloat(e.target.value) || 0)
  })}
- className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-mono font-bold text-sm outline-none ${
+ className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-sans font-bold text-sm outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
- <span className="font-mono text-xs font-bold text-[var(--ink-2)]">€</span>
+ <span className="font-sans text-xs font-bold text-[var(--ink-2)]">€</span>
  </div>
  </div>
 
@@ -8109,11 +8109,11 @@ export default function CalendarView({
  <div className={`p-3 rounded-[var(--r-m)] ${
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)] /30'
  }`}>
- <div className="flex items-center gap-1.5 text-[var(--acc)] font-mono font-bold text-xs mb-1">
+ <div className="flex items-center gap-1.5 text-[var(--acc)] font-sans font-bold text-xs mb-1">
  <Coins className="w-4 h-4" />
  <span>Fondo de Caja (€)</span>
  </div>
- <p className="text-[10px] text-[var(--ink-2)] font-mono mb-2">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">
  Cambio que se llevó al inicio para la mesa
  </p>
  <div className="flex items-center gap-1.5">
@@ -8125,11 +8125,11 @@ export default function CalendarView({
  onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, {
  fondoCajaInicial: Math.max(0, parseFloat(e.target.value) || 0)
  })}
- className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-mono font-bold text-sm outline-none ${
+ className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-sans font-bold text-sm outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
- <span className="font-mono text-xs font-bold text-[var(--ink-2)]">€</span>
+ <span className="font-sans text-xs font-bold text-[var(--ink-2)]">€</span>
  </div>
  </div>
  </div>
@@ -8139,21 +8139,21 @@ export default function CalendarView({
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  }`}>
  <div className="space-y-0.5">
- <span className="text-xs font-mono font-bold text-[var(--ink)]">
+ <span className="text-xs font-sans font-bold text-[var(--ink)]">
  Resumen del Dinero Recaudado en el Puesto:
  </span>
- <p className="text-[11px] font-mono text-[var(--ink-2)]">
+ <p className="text-[11px] font-sans text-[var(--ink-2)]">
  💵 {(merch.ingresosEfectivo || 0).toFixed(2)}€ Efectivo + 📱 {(merch.ingresosBizum || 0).toFixed(2)}€ Bizum = <strong className="text-[var(--ok)]">{totalCobradoReal.toFixed(2)}€ Total Ventas</strong>
  </p>
  {merch.fondoCajaInicial ? (
- <p className="text-[10px] font-mono text-[var(--ink-2)]">
+ <p className="text-[10px] font-sans text-[var(--ink-2)]">
  (Efectivo físico total a retirar del cajón incluyendo fondo de caja: {((merch.ingresosEfectivo || 0) + (merch.fondoCajaInicial || 0)).toFixed(2)} €)
  </p>
  ) : null}
  </div>
 
  <div className="text-right shrink-0">
- <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold ${
+ <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold ${
  diferenciaCuadre === 0
  ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/40'
  : diferenciaCuadre > 0
@@ -8182,7 +8182,7 @@ export default function CalendarView({
 
  {/* Observaciones y Notas del Puesto de Merch */}
  <div>
- <label className="block text-[10px] font-mono uppercase text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Notas del Puesto de Merchandising / Incidencias
  </label>
  <textarea
@@ -8190,7 +8190,7 @@ export default function CalendarView({
  placeholder="Ej: Encargado de mesa: Andrea. Las camisetas talla L se agotaron antes del bis. Mucha demanda de púas."
  value={merch.notas ||''}
  onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, { notas: e.target.value })}
- className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono outline-none resize-none ${
+ className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans outline-none resize-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
@@ -8205,10 +8205,10 @@ export default function CalendarView({
  <div className="space-y-4">
  <div className="flex items-center justify-between pb-1 border-b border-[var(--acc)]/20 flex-wrap gap-2">
  <div className="flex items-center gap-2">
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--tentative)] text-[var(--ink)]">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--tentative)] text-[var(--ink)]">
  Sección 5
  </span>
- <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
+ <h3 className={`text-sm font-sans font-bold ${textTitle}`}>
  Checklist de Cierre de Material & Carga de Furgoneta
  </h3>
  </div>
@@ -8216,14 +8216,14 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => handleToggleAllCierreItems(modalRoadbookKey, true)}
- className="px-2 py-1 rounded text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 transition-colors cursor-pointer"
+ className="px-2 py-1 rounded text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 transition-colors cursor-pointer"
  >
  ✓ Marcar Todo
  </button>
  <button
  type="button"
  onClick={() => handleToggleAllCierreItems(modalRoadbookKey, false)}
- className="px-2 py-1 rounded text-[10px] font-mono font-bold bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
+ className="px-2 py-1 rounded text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
  >
  ↺ Desmarcar
  </button>
@@ -8240,7 +8240,7 @@ export default function CalendarView({
 
  return (
  <div className="space-y-2">
- <div className="flex items-center justify-between text-xs font-mono font-bold">
+ <div className="flex items-center justify-between text-xs font-sans font-bold">
  <span className="text-[var(--tentative)]/80">
  {checkedCount} de {totalCount} elementos verificados
  </span>
@@ -8258,12 +8258,12 @@ export default function CalendarView({
  </div>
 
  {isCompleted ? (
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok-soft)] text-[var(--ink)] text-xs font-mono flex items-center gap-2">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok-soft)] text-[var(--ink)] text-xs font-sans flex items-center gap-2">
  <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span>¡TODO EL MATERIAL VERIFICADO! Escenario y camerinos despejados. Furgoneta cerrada y lista para partir.</span>
  </div>
  ) : (
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-xs font-mono flex items-center gap-2">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-xs font-sans flex items-center gap-2">
  <ShieldCheck className="w-4 h-4 text-[var(--tentative)] shrink-0" />
  <span>Verifica uno a uno antes de cerrar la furgoneta para garantizar cero olvidos de cables, instrumentos o ropa.</span>
  </div>
@@ -8281,10 +8281,10 @@ export default function CalendarView({
  return (
  <div key={catKey} className={`p-3.5 rounded-[var(--r-m)] space-y-2 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
  <div className="flex items-center justify-between">
- <h4 className="text-xs font-mono font-bold text-[var(--tentative)]/80">
+ <h4 className="text-xs font-sans font-bold text-[var(--tentative)]/80">
  {catLabel}
  </h4>
- <span className="text-[10px] font-mono text-[var(--ink-2)]">
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">
  {catItems.filter(i => i.checked).length}/{catItems.length}
  </span>
  </div>
@@ -8307,7 +8307,7 @@ export default function CalendarView({
  onClick={(e) => e.stopPropagation()}
  className="w-4 h-4 rounded text-[var(--tentative)] focus:ring-[var(--tentative)] cursor-pointer"
  />
- <span className="text-xs font-mono font-medium">
+ <span className="text-xs font-sans font-medium">
  {item.item}
  </span>
  </div>
@@ -8339,7 +8339,7 @@ export default function CalendarView({
  <select
  value={newCierreItemCat}
  onChange={(e) => setNewCierreItemCat(e.target.value as any)}
- className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black text-[var(--ink)]'
  }`}
  >
@@ -8352,14 +8352,14 @@ export default function CalendarView({
  value={newCierreItemText}
  onChange={(e) => setNewCierreItemText(e.target.value)}
  placeholder="Añadir ítem a comprobar (ej: soporte de guitarra, cargador portátil)..."
- className={`flex-1 min-w-[200px] px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono ${
+ className={`flex-1 min-w-[200px] px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black text-[var(--ink)]'
  }`}
  />
  <button
  type="submit"
  disabled={!newCierreItemText.trim()}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
  >
  + Añadir Ítem
  </button>

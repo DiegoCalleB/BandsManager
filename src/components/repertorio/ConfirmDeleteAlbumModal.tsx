@@ -33,7 +33,7 @@ export function ConfirmDeleteAlbumModal({
  </div>
  <div>
  <h3 className="text-lg font-bold text-[var(--ink)]">Eliminar Disco</h3>
- <p className="text-xs text-[var(--ink-2)] font-mono mt-0.5">"{data.albumName}"</p>
+ <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">"{data.albumName}"</p>
  </div>
  </div>
  <button

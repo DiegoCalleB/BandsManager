@@ -180,7 +180,7 @@ export function CampaignManagerModal({
  <div>
  <h2 className="text-base sm:text-lg font-bold font-display text-[var(--ink)] flex items-center gap-2">
  Gestor de Campañas de Booking
- <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
+ <span className="text-[10px] font-sans font-bold tracking-wider px-2 py-0.5 rounded-full bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
  {campaigns.length} disponibles
  </span>
  </h2>
@@ -203,7 +203,7 @@ export function CampaignManagerModal({
  /* Editing / Creation Form */
  <div className="space-y-4">
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
- <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)]">
+ <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)]">
  {editingCampaignId ?'✎ Editar Campaña' :'➕ Crear Nueva Campaña'}
  </span>
  <button
@@ -217,7 +217,7 @@ export function CampaignManagerModal({
  {/* Name & Color */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div className="sm:col-span-2">
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
  Nombre de la Campaña *
  </label>
  <input
@@ -229,7 +229,7 @@ export function CampaignManagerModal({
  />
  </div>
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
  Color en Calendario
  </label>
  <div className="flex items-center gap-2 mt-1">
@@ -250,7 +250,7 @@ export function CampaignManagerModal({
 
  {/* Target Cities */}
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
  Ciudades Objetivo *
  </label>
  <div className="flex flex-wrap gap-1.5 mb-2">
@@ -283,7 +283,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={handleAddCity}
- className="px-3 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-mono font-bold rounded-[var(--r-m)]"
+ className="px-3 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-sans font-bold rounded-[var(--r-m)]"
  >
  + Añadir
  </button>
@@ -293,7 +293,7 @@ export function CampaignManagerModal({
  {/* Capacity Range */}
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
  Aforo Mínimo (pax)
  </label>
  <input
@@ -304,7 +304,7 @@ export function CampaignManagerModal({
  />
  </div>
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
  Aforo Máximo (pax)
  </label>
  <input
@@ -318,7 +318,7 @@ export function CampaignManagerModal({
 
  {/* Target Dates List & Quick Add */}
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
  Fechas Objetivo (se marcarán en Calendario y pitches IA) *
  </label>
  <div className="space-y-2 mb-2.5">
@@ -340,7 +340,7 @@ export function CampaignManagerModal({
  next.sort();
  setFormData({ ...formData, targetDates: next });
  }}
- className="bg-transparent text-xs font-mono font-bold text-[var(--ink)] border-0 p-0 focus:ring-0 cursor-pointer"
+ className="bg-transparent text-xs font-sans font-bold text-[var(--ink)] border-0 p-0 focus:ring-0 cursor-pointer"
  />
  <button
  type="button"
@@ -357,14 +357,14 @@ export function CampaignManagerModal({
 
  <div className="flex items-center gap-1.5 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 border-dashed rounded-[var(--r-m)] px-2.5 py-1 text-[var(--tentative)]/80">
  <Plus className="w-3.5 h-3.5" />
- <span className="text-[11px] font-mono font-bold">Añadir Fecha:</span>
+ <span className="text-[11px] font-sans font-bold">Añadir Fecha:</span>
  <input
  type="date"
  onChange={(e) => {
  handleAddDate(e.target.value);
  e.target.value ='';
  }}
- className="bg-transparent text-xs font-mono text-[var(--acc)]/40 border-0 p-0 focus:ring-0 cursor-pointer"
+ className="bg-transparent text-xs font-sans text-[var(--acc)]/40 border-0 p-0 focus:ring-0 cursor-pointer"
  />
  </div>
  </div>
@@ -376,7 +376,7 @@ export function CampaignManagerModal({
 
  {/* Notes / Co-booking details */}
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1">
+ <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
  Notas de Enfoque y Co-booking
  </label>
  <textarea
@@ -390,10 +390,10 @@ export function CampaignManagerModal({
 
  {/* Campaign-specific pitch templates, one per lead use case */}
  <div>
- <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] mb-1 flex items-center gap-2">
+ <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1 flex items-center gap-2">
  Plantilla de Pitch de Campaña por Caso de Uso (opcional)
  {filledPitchCategoriesCount > 0 && (
- <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
+ <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
  {filledPitchCategoriesCount}/{PITCH_CATEGORIES.length} definidas
  </span>
  )}
@@ -438,14 +438,14 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => setIsEditing(false)}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70"
  >
  Cancelar
  </button>
  <button
  type="button"
  onClick={handleSave}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] shadow-md active:scale-95 flex items-center gap-2"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] shadow-md active:scale-95 flex items-center gap-2"
  >
  <Check className="w-4 h-4" />
  Guardar Campaña
@@ -457,13 +457,13 @@ export function CampaignManagerModal({
  <div className="space-y-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
+ <span className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
  Campañas Registradas
  </span>
  </div>
  <button
  onClick={handleStartCreate}
- className="px-3 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--tentative)]/80 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all active:scale-95"
+ className="px-3 py-1.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--tentative)]/80 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center gap-1.5 transition-all active:scale-95"
  >
  <Plus className="w-3.5 h-3.5" /> + Nueva Campaña
  </button>
@@ -490,7 +490,7 @@ export function CampaignManagerModal({
  Modo General (Sin Filtro de Campaña)
  </span>
  {!activeCampaign && (
- <span className="text-[9px] font-mono font-extrabold uppercase px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
+ <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
  ACTIVO
  </span>
  )}
@@ -503,7 +503,7 @@ export function CampaignManagerModal({
  {!activeCampaign ? (
  <Check className="w-5 h-5 text-[var(--acc)]" />
  ) : (
- <span className="text-[10px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-2)]">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)]">
  Seleccionar
  </span>
  )}
@@ -540,7 +540,7 @@ export function CampaignManagerModal({
  {camp.name}
  </h3>
  {isActive ? (
- <span className="inline-flex items-center gap-1 text-[9px] font-mono font-extrabold uppercase px-2 py-0.5 rounded-full bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
+ <span className="inline-flex items-center gap-1 text-[9px] font-sans font-extrabold px-2 py-0.5 rounded-full bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
  <Flame className="w-2.5 h-2.5 text-[var(--acc)]" />
  MODO ACTIVO EN LA WEB
  </span>
@@ -548,7 +548,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => onSetActiveCampaign(camp)}
- className="text-[10px] font-mono font-bold text-[var(--acc)] hover:text-[var(--tentative)]/80 underline cursor-pointer"
+ className="text-[10px] font-sans font-bold text-[var(--acc)] hover:text-[var(--tentative)]/80 underline cursor-pointer"
  >
  Activar Modo Campaña
  </button>
@@ -594,7 +594,7 @@ export function CampaignManagerModal({
  onClose();
  onNavigate('calendario', { selectedDate: camp.targetDates?.[0] });
  }}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--tentative)]/20 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/30 flex items-center gap-1"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--tentative)]/20 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/30 flex items-center gap-1"
  >
  <Calendar className="w-3 h-3" /> Ver en Calendario
  </button>
@@ -602,7 +602,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => onSetActiveCampaign(null)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70"
  >
  Desactivar
  </button>
@@ -611,7 +611,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => onSetActiveCampaign(camp)}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] shadow-sm flex items-center gap-1.5 transition-all active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] shadow-sm flex items-center gap-1.5 transition-all active:scale-95"
  >
  <Target className="w-3.5 h-3.5" /> Activar
  </button>
@@ -656,7 +656,7 @@ export function CampaignManagerModal({
  </div>
  <button
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-mono font-bold text-xs"
+ className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-sans font-bold text-xs"
  >
  Cerrar
  </button>

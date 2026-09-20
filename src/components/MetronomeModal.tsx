@@ -203,7 +203,7 @@ export function MetronomeModal({
  <div>
  <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-1.5">
  Metrónomo Pro
- <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+ <span className="px-1.5 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
  WebAudio API
  </span>
  </h3>
@@ -245,7 +245,7 @@ export function MetronomeModal({
 
  {/* Large BPM Display & Quick Adjustment */}
  <div className="flex flex-col items-center justify-center bg-[var(--sunken)] border-[var(--hair)] rounded-[var(--r-l)] p-6 relative overflow-hidden">
- <div className="text-xs font-mono font-bold text-[var(--acc)] uppercase tracking-widest mb-1 flex items-center gap-1">
+ <div className="text-xs font-sans font-bold text-[var(--acc)] tracking-widest mb-1 flex items-center gap-1">
  <Zap className="w-3.5 h-3.5" /> Tempo Actual
  </div>
 
@@ -266,10 +266,10 @@ export function MetronomeModal({
  </button>
 
  <div className="flex flex-col items-center">
- <span className="text-5xl font-black font-mono tracking-tight text-[var(--ink)] drop-shadow-md">
+ <span className="text-5xl font-black font-sans tracking-tight text-[var(--ink)] drop-shadow-md">
  {bpm}
  </span>
- <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">
  Pulsaciones por Minuto
  </span>
  </div>
@@ -307,7 +307,7 @@ export function MetronomeModal({
  <span className="font-semibold flex items-center gap-1">
  Compás ({timeSignature}/4):
  </span>
- <span className="font-mono text-[var(--acc)]/70 font-bold">
+ <span className="font-sans text-[var(--acc)]/70 font-bold">
  Golpe {isPlaying ? currentBeat + 1 :'-'} / {timeSignature}
  </span>
  </div>
@@ -320,7 +320,7 @@ export function MetronomeModal({
  return (
  <div
  key={idx}
- className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-mono font-bold text-sm transition-all duration-75 ${
+ className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-sans font-bold text-sm transition-all duration-75 ${
  isActive
  ? isAccent
  ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-lg shadow-amber-0/50 scale-105'
@@ -364,7 +364,7 @@ export function MetronomeModal({
  onClick={handleTapTempo}
  className="bg-gradient-to-br from-amber-0/20 to-orange-500/20 hover:from-amber-0/30 hover:to-orange-500/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
  >
- <span className="text-xs font-black text-[var(--acc)]/70 uppercase tracking-wider group-hover:scale-105 transition-transform">
+ <span className="text-xs font-black text-[var(--acc)]/70 tracking-wider group-hover:scale-105 transition-transform">
  👆 TAP TEMPO
  </span>
  <span className="text-[10px] text-[var(--ink-2)]">Toca el ritmo 4 veces</span>

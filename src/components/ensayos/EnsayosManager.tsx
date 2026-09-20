@@ -147,7 +147,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-mono font-black text-sm uppercase tracking-wider hover:bg-[var(--acc)] shadow-xl shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:bg-[var(--acc)] shadow-xl shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-4 h-4" />
  <span>Convocar Primer Ensayo</span>
@@ -184,7 +184,7 @@ export function EnsayosManager({
  <select
  value={currentRehearsal?.id ||''}
  onChange={e => setSelectedRehearsalId(e.target.value)}
- className="appearance-none bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-mono font-bold hover: focus: outline-none cursor-pointer"
+ className="appearance-none bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-sans font-bold hover: focus: outline-none cursor-pointer"
  >
  {sortedRehearsals.map(r => (
  <option key={r.id} value={r.id}>
@@ -197,7 +197,7 @@ export function EnsayosManager({
 
  {/* Status Badge */}
  <span
- className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
+ className={`px-2.5 py-1 rounded-full text-[10px] font-sans font-bold tracking-wider ${
  currentRehearsal?.estado ==='completado'
  ?'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30'
  : currentRehearsal?.estado ==='en_curso'
@@ -228,7 +228,7 @@ export function EnsayosManager({
  </div>
 
  {/* Rehearsal Headline */}
- <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[var(--ink-2)]">
+ <div className="flex flex-wrap items-center gap-4 text-xs font-sans text-[var(--ink-2)]">
  <span className="flex items-center gap-1.5 text-[var(--ink)] font-bold">
  <Calendar className="w-4 h-4 text-[var(--acc)]" />
  {currentRehearsal?.fecha} ({currentRehearsal?.hora ||'19:30'} - {currentRehearsal?.horaFin ||'21:30'})
@@ -266,7 +266,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>+ Convocar Ensayo</span>
@@ -278,7 +278,7 @@ export function EnsayosManager({
  <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[var(--surface)] rounded-[var(--r-l)] border-[var(--hair)]">
  <button
  onClick={() => setActiveTab('orden_del_dia')}
- className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
+ className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
  activeTab ==='orden_del_dia'
  ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black shadow-md shadow-amber-400/20'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
@@ -291,7 +291,7 @@ export function EnsayosManager({
 
  <button
  onClick={() => setActiveTab('modo_local')}
- className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
+ className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
  activeTab ==='modo_local'
  ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black shadow-md shadow-amber-400/20'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
@@ -304,7 +304,7 @@ export function EnsayosManager({
 
  <button
  onClick={() => setActiveTab('grabacion_acta')}
- className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
+ className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
  activeTab ==='grabacion_acta'
  ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black shadow-md shadow-amber-400/20'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'

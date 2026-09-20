@@ -243,7 +243,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  return (
  <div className="space-y-2">
  {showTitle && (
- <p className="text-xs text-[var(--ink-2)] font-semibold uppercase tracking-wider text-center">
+ <p className="text-xs text-[var(--ink-2)] font-semibold tracking-wider text-center">
  {title}
  </p>
  )}
@@ -272,7 +272,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  <IconComp className="w-4 h-4 shrink-0" />
  <span>{label}</span>
  {showClickCounts && typeof count ==='number' && count > 0 && (
- <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]">
+ <span className="text-[10px] font-sans px-1.5 py-0.2 rounded-full bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]">
  {count}
  </span>
  )}
@@ -288,7 +288,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  <div className="space-y-3">
  {showTitle && (
  <div className="text-center">
- <p className="text-xs text-[var(--acc)] font-bold uppercase tracking-wider">
+ <p className="text-xs text-[var(--acc)] font-bold tracking-wider">
  {title}
  </p>
  <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
@@ -336,7 +336,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
  <span className={isFullWidth ?"text-sm font-black tracking-wide" :"truncate"}>{label}</span>
  {showClickCounts && typeof count ==='number' && count > 0 && (
- <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)] shrink-0 ml-auto">
+ <span className="text-[10px] font-sans px-1.5 py-0.5 rounded-full bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)] shrink-0 ml-auto">
  {count}
  </span>
  )}

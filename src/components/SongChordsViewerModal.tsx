@@ -238,12 +238,12 @@ export function SongChordsViewerModal({
  <div className="flex items-center gap-2">
  <h2 className="text-xl font-bold tracking-tight text-[var(--ink)]">{formatSongTitle(song.titulo)}</h2>
  {song.esVersionCovers && (
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--tentative)]/60 text-[var(--acc)]/80">
+ <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/60 text-[var(--acc)]/80">
  Cover
  </span>
  )}
  </div>
- <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] font-mono mt-0.5">
+ <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] font-sans mt-0.5">
  <span>Tonalidad: <strong className="text-[var(--acc)]">{song.tonalidad ||'Mim'}</strong></span>
  <span>•</span>
  <span>Tempo: <strong className="text-[var(--ok)]">{song.bpm || 120} BPM</strong></span>
@@ -269,7 +269,7 @@ export function SongChordsViewerModal({
  type="button"
  onClick={handleGenerateWithAi}
  disabled={isGeneratingAi}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-purple-950/50 disabled:opacity-50"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-purple-950/50 disabled:opacity-50"
  title={song.audioPrincipalUrl ?'Reanalizar escuchando el audio real de la canción' :'Generar cifrado y guía con IA (sin audio disponible)'}
  >
  <Wand2 className={`w-4 h-4 text-[var(--acc)]/40 ${isGeneratingAi ?'animate-spin' :''}`} />
@@ -307,7 +307,7 @@ export function SongChordsViewerModal({
  </div>
 
  {/* TOOLBAR CONTROLS BAR (LaCuerda / Ultimate Guitar Toolbar) */}
- <div className="bg-[var(--surface)]/80 px-4 py-2.5 border-b flex flex-wrap items-center justify-between gap-3 text-xs font-mono shrink-0">
+ <div className="bg-[var(--surface)]/80 px-4 py-2.5 border-b flex flex-wrap items-center justify-between gap-3 text-xs font-sans shrink-0">
  
  {/* TABS SELECTOR */}
  <div className="flex items-center bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
@@ -464,7 +464,7 @@ export function SongChordsViewerModal({
  {/* AI SUCCESS NOTIFICATION BANNER */}
  {aiSuccessMsg && (
  <div
- className={`border-b px-4 py-2 text-xs font-mono flex items-center justify-between animate-in fade-in ${
+ className={`border-b px-4 py-2 text-xs font-sans flex items-center justify-between animate-in fade-in ${
  aiSuccessMsg.startsWith('⚠️')
  ?'bg-[var(--acc-soft)] /40 text-[var(--acc)]/70'
  :'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)]'
@@ -497,7 +497,7 @@ export function SongChordsViewerModal({
  
  {/* SUBSTITUTE QUICK SUMMARY BANNER */}
  {guiaSustituto?.estructura && (
- <div className="bg-gradient-to-r from-purple-950/40 via-[var(--surface)] to-[var(--sunken)] p-3.5 rounded-[var(--r-m)] text-xs font-mono space-y-1.5">
+ <div className="bg-gradient-to-r from-purple-950/40 via-[var(--surface)] to-[var(--sunken)] p-3.5 rounded-[var(--r-m)] text-xs font-sans space-y-1.5">
  <div className="flex items-center justify-between text-[var(--tentative)]/80 font-bold">
  <span className="flex items-center gap-1.5">
  <Zap className="w-4 h-4 text-[var(--acc)]" />
@@ -517,7 +517,7 @@ export function SongChordsViewerModal({
  )}
 
  {/* THE CHORD SHEET DISPLAY */}
- <div className="bg-[var(--sunken)] p-6 rounded-[var(--r-l)] shadow-inner font-mono text-sm leading-relaxed whitespace-pre-wrap select-text">
+ <div className="bg-[var(--sunken)] p-6 rounded-[var(--r-l)] shadow-inner font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
  {renderFormattedChordSheet(processedText)}
  </div>
  </div>
@@ -533,16 +533,16 @@ export function SongChordsViewerModal({
  </div>
  <div>
  <h3 className="text-lg font-bold text-[var(--ink)]">Ficha de Sustitución Urgente</h3>
- <p className="text-xs text-[var(--tentative)]/80 font-mono">
+ <p className="text-xs text-[var(--tentative)]/80 font-sans">
  Resumen express para tocar el tema correctamente en directo o ensayo sin margen de error.
  </p>
  </div>
  </div>
 
  {/* GUIDES GRID */}
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
  <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
- <span className="text-[var(--acc)] font-bold block text-[11px] uppercase tracking-wider">
+ <span className="text-[var(--acc)] font-bold block text-[11px] tracking-wider">
  1. Estructura Exacta del Tema
  </span>
  <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
@@ -551,7 +551,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
- <span className="text-[var(--ok)] font-bold block text-[11px] uppercase tracking-wider">
+ <span className="text-[var(--ok)] font-bold block text-[11px] tracking-wider">
  2. Progresión Armónica Clave
  </span>
  <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
@@ -560,7 +560,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
- <span className="text-[var(--alert)] font-bold block text-[11px] uppercase tracking-wider">
+ <span className="text-[var(--alert)] font-bold block text-[11px] tracking-wider">
  3. Cortes, Entradas y Claves
  </span>
  <p className="text-[var(--ink-2)] leading-relaxed">
@@ -569,7 +569,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
- <span className="text-[var(--tentative)]/80 font-bold block text-[11px] uppercase tracking-wider">
+ <span className="text-[var(--tentative)]/80 font-bold block text-[11px] tracking-wider">
  4. Capo / Afinación
  </span>
  <p className="text-[var(--ink-2)] leading-relaxed">
@@ -578,7 +578,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div className="sm:col-span-2 bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
- <span className="text-[var(--acc)] font-bold block text-[11px] uppercase tracking-wider">
+ <span className="text-[var(--acc)] font-bold block text-[11px] tracking-wider">
  5. Protagonismo de Instrumentos / Arreglos
  </span>
  <p className="text-[var(--ink-2)] leading-relaxed">
@@ -591,7 +591,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setActiveTab('edit')}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/80/60 hover:bg-[var(--acc)] text-[var(--acc)]/40 text-xs font-mono font-bold transition cursor-pointer flex items-center gap-2"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/80/60 hover:bg-[var(--acc)] text-[var(--acc)]/40 text-xs font-sans font-bold transition cursor-pointer flex items-center gap-2"
  >
  <Edit3 className="w-4 h-4" />
  <span>Editar esta Ficha de Sustitución</span>
@@ -606,14 +606,14 @@ export function SongChordsViewerModal({
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
  <div className="bg-[var(--surface)]/90 p-5 rounded-[var(--r-l)] space-y-4">
  <div className="flex items-center justify-between border-b pb-3">
- <h3 className="font-bold text-[var(--ink)] flex items-center gap-2 text-sm font-mono">
+ <h3 className="font-bold text-[var(--ink)] flex items-center gap-2 text-sm font-sans">
  <Edit3 className="w-4 h-4 text-[var(--acc)]" />
  Editor de Cifrado y Ficha
  </h3>
  <button
  type="button"
  onClick={handleSaveEdits}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg"
  >
  <Save className="w-4 h-4" />
  <span>Guardar Cambios</span>
@@ -621,24 +621,24 @@ export function SongChordsViewerModal({
  </div>
 
  <div>
- <label className="text-xs font-mono font-bold text-[var(--acc)] block mb-1">
+ <label className="text-xs font-sans font-bold text-[var(--acc)] block mb-1">
  Texto con Letra y Acordes (Formato LaCuerda o [Acorde] inline):
  </label>
  <textarea
  value={cifradoTexto}
  onChange={(e) => setCifradoTexto(e.target.value)}
  rows={14}
- className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-[var(--ink)] font-mono text-xs focus:outline-none focus: leading-relaxed"
+ className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-[var(--ink)] font-sans text-xs focus:outline-none focus: leading-relaxed"
  placeholder={`[Intro]\nMim Do Re Mim\n\n[Estribillo]\n[Sol] Que tiene tu [Re] veneno [Mim] ...`}
  />
  </div>
 
  <div className="pt-3 border-t space-y-3">
- <h4 className="text-xs font-mono font-bold text-[var(--tentative)]/80 uppercase tracking-wider">
+ <h4 className="text-xs font-sans font-bold text-[var(--tentative)]/80 tracking-wider">
  Campos de la Ficha del Músico Sustituto:
  </h4>
 
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
  <div>
  <label className="text-[var(--ink-2)] block mb-0.5">Estructura Exacta del Tema:</label>
  <input
@@ -693,7 +693,7 @@ export function SongChordsViewerModal({
  {activeTab ==='chords' && showChordDiagrams && (
  <div className="w-full md:w-64 bg-[var(--surface)] border-t md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
  <div className="flex items-center justify-between border-b pb-2">
- <span className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
+ <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
  🎸 Posiciones de Acordes ({uniqueChords.length})
  </span>
  <button
@@ -706,7 +706,7 @@ export function SongChordsViewerModal({
  </div>
 
  {uniqueChords.length === 0 ? (
- <p className="text-xs text-[var(--ink-2)] font-mono italic">
+ <p className="text-xs text-[var(--ink-2)] font-sans italic">
  No se detectaron acordes en el texto.
  </p>
  ) : (
@@ -816,14 +816,14 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
 
  return (
  <div className="bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 hover:/40 transition">
- <div className="text-xs font-bold text-[var(--acc)] font-mono flex items-center justify-center gap-1">
+ <div className="text-xs font-bold text-[var(--acc)] font-sans flex items-center justify-center gap-1">
  <span>{chord}</span>
  </div>
 
  {shape ? (
  <div className="flex justify-center pt-1">
  {/* Simple 6-string Guitar Fretboard Grid Representation */}
- <div className="w-24 bg-[var(--surface)] p-1.5 rounded text-[9px] font-mono">
+ <div className="w-24 bg-[var(--surface)] p-1.5 rounded text-[9px] font-sans">
  {shape.baseFret && shape.baseFret > 1 && (
  <div className="text-[8px] text-[var(--acc)] font-bold text-left pl-1">
  Traste {shape.baseFret}
@@ -849,7 +849,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  </div>
  </div>
  ) : (
- <p className="text-[10px] text-[var(--ink-2)] font-mono">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans">
  [Acorde Estándar]
  </p>
  )}

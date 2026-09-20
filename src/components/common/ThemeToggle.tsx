@@ -37,7 +37,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ compact = false, openU
       >
         <Palette className="w-4 h-4" />
         {!compact && (
-          <span className="text-[11px] font-mono font-bold uppercase tracking-wider">
+          <span className="text-[11px] font-sans font-bold tracking-wider">
             {prefEspectro === 'system' ? 'Auto' : prefEspectro === 'light' ? 'Claro' : prefEspectro === 'dark' ? 'Oscuro' : 'Clásico'}
           </span>
         )}
@@ -56,7 +56,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ compact = false, openU
                 <button
                   key={p.id}
                   onClick={() => handleThemeChange(p.id)}
-                  className={`w-full px-3 py-2 text-left text-[11px] font-mono font-semibold flex items-center justify-between gap-2 transition-colors ${
+                  className={`w-full px-3 py-2 text-left text-[11px] font-sans font-semibold flex items-center justify-between gap-2 transition-colors ${
                     isSelected
                       ? 'bg-[var(--acc)]/15 text-[var(--acc)]'
                       : 'text-[var(--ink-2)] hover:bg-[var(--surface)]/60'

@@ -55,7 +55,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <Guitar className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-semibold text-[var(--ink)]">Nombre del Proyecto Musical & Ubicación</h3>
  </div>
- <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[var(--surface)]/80 border-[var(--hair)] text-[11px] text-[var(--ink-2)] font-mono">
+ <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[var(--surface)]/80 border-[var(--hair)] text-[11px] text-[var(--ink-2)] font-sans">
  <Globe className="w-3 h-3 text-[var(--acc)]" />
  <span>Idioma: <strong className="text-[var(--ink)]">{language ||'Español'}</strong></span>
  </div>
@@ -129,7 +129,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <Type className="w-4 h-4 text-[var(--acc)]" />
  <h3 className="text-sm font-semibold text-[var(--ink)]">3. Estilo de Tipografía para el Nombre de la Banda</h3>
  </div>
- <span className="text-[11px] font-mono text-[var(--ink-2)]">
+ <span className="text-[11px] font-sans text-[var(--ink-2)]">
  Se aplicará al Dossier EPK, cartelería y cabeceras
  </span>
  </div>
@@ -155,7 +155,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  >
  <div className="flex items-center justify-between gap-2 mb-2">
  <span
- className={`text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded-full ${
+ className={`text-[10px] font-sans font-bold px-2 py-0.5 rounded-full ${
  isSelected
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]'
@@ -164,7 +164,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  {f.badge}
  </span>
  {isSelected && (
- <span className="flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] font-mono">
+ <span className="flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] font-sans">
  <Check className="w-3.5 h-3.5" /> Seleccionada
  </span>
  )}
@@ -203,7 +203,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  </div>
  )}
  <div className="min-w-0">
- <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--acc)] font-bold block">
+ <span className="text-[10px] font-sans tracking-wider text-[var(--acc)] font-bold block">
  Previsualización en Dossier EPK
  </span>
  <div
@@ -219,7 +219,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  </div>
 
  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
- <span className="text-xs text-[var(--ink-2)] font-mono">
+ <span className="text-xs text-[var(--ink-2)] font-sans">
  Fuente activa: <strong className="text-[var(--acc)]/70">{BAND_FONT_OPTIONS.find(f => f.id === fontStyle)?.name ||'Headline Rock'}</strong>
  </span>
  </div>

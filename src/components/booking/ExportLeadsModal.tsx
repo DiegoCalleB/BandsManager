@@ -136,7 +136,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
  {/* 1. Scope selection */}
  <div className="space-y-2">
- <label className="text-xs font-bold text-[var(--acc)]/70 uppercase tracking-wider block">
+ <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">
  1. ¿Qué contactos quieres exportar?
  </label>
  <div className="grid grid-cols-1 gap-2">
@@ -154,7 +154,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Contactos a la vista con filtro actual</span>
- <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
+ <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
  {filteredLeads.length} contactos
  </span>
  </div>
@@ -178,7 +178,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Todos los contactos del CRM</span>
- <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--sunken)] text-[var(--ink-2)]">
+ <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--sunken)] text-[var(--ink-2)]">
  {allLeads.length} contactos
  </span>
  </div>
@@ -203,7 +203,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Solo contactos seleccionados</span>
- <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
+ <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
  {selectedLeads.length} seleccionados
  </span>
  </div>
@@ -218,7 +218,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
  {/* 2. Format selection */}
  <div className="space-y-2">
- <label className="text-xs font-bold text-[var(--acc)]/70 uppercase tracking-wider block">
+ <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">
  2. Formato de descarga
  </label>
  <div className="grid grid-cols-2 gap-3">

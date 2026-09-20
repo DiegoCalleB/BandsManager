@@ -458,7 +458,7 @@ export function printHighQualityFlyer(options: {
             font-size: 32px;
             font-weight: 900;
             color: #0f172a;
-            text-transform: uppercase;
+            text-transform:;
             letter-spacing: 1px;
             line-height: 1.1;
             margin-bottom: 6px;
@@ -467,7 +467,7 @@ export function printHighQualityFlyer(options: {
             font-size: 22px;
             font-weight: 800;
             color: #d97706;
-            text-transform: uppercase;
+            text-transform:;
             margin-bottom: 4px;
           }
           p.date-city {

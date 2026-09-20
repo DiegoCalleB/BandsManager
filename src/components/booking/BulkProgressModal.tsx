@@ -58,7 +58,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <h3 className="text-base font-bold text-[var(--ink)] font-display">
  {title}
  </h3>
- <p className="text-xs text-[var(--ink-2)] font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-sans">
  {subtitle || (isCompleted ?'Proceso completado' : `Procesando ${currentIndex + 1} de ${totalCount}...`)}
  </p>
  </div>
@@ -77,7 +77,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
 
  {/* Progress bar */}
  <div className="p-4 sm:p-5 space-y-3 bg-[var(--surface)]/60 border-b border-[var(--hair)]800">
- <div className="flex items-center justify-between text-xs font-mono">
+ <div className="flex items-center justify-between text-xs font-sans">
  <span className="text-[var(--ink-2)] font-bold">Progreso global</span>
  <span className="text-[var(--acc)] font-bold">{percentage}% ({isCompleted ? totalCount : currentIndex}/{totalCount})</span>
  </div>
@@ -94,7 +94,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  </div>
 
  {/* Stats summary */}
- <div className="flex items-center gap-3 text-xs font-mono pt-1">
+ <div className="flex items-center gap-3 text-xs font-sans pt-1">
  <span className="inline-flex items-center gap-1 text-[var(--ok)] bg-[var(--ok-soft)] px-2 py-0.5 rounded">
  <CheckCircle2 className="w-3 h-3" />
  {successCount} completados
@@ -111,7 +111,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  {/* Items List */}
  <div className="p-3 sm:p-4 overflow-y-auto space-y-2 flex-1 divide-y divide-zinc-800/40">
  {items.map((item, idx) => (
- <div key={item.id || idx} className="pt-2 first:pt-0 flex items-center justify-between gap-2 text-xs font-mono">
+ <div key={item.id || idx} className="pt-2 first:pt-0 flex items-center justify-between gap-2 text-xs font-sans">
  <div className="flex items-center gap-2 min-w-0 flex-1">
  {item.status ==='processing' && (
  <Loader2 className="w-3.5 h-3.5 text-[var(--acc)] animate-spin shrink-0" />
@@ -151,7 +151,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <button
  type="button"
  onClick={onCancel}
- className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>
@@ -160,7 +160,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-md transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-md transition-colors cursor-pointer"
  >
  Cerrar y ver resultados
  </button>

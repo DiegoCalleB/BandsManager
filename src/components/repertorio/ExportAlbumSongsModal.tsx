@@ -446,9 +446,9 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <div className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
  {/* 1. Album Selector */}
  <div className="space-y-1.5">
- <label className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)] flex items-center justify-between">
+ <label className="text-xs font-semibold tracking-wider text-[var(--ink-2)] flex items-center justify-between">
  <span>Seleccionar Álbum / Disco</span>
- <span className="text-[var(--ok)] font-mono font-bold text-[11px]">
+ <span className="text-[var(--ok)] font-sans font-bold text-[11px]">
  {targetSongs.length} {targetSongs.length === 1 ?'canción' :'canciones'} ({formattedTotalDuration})
  </span>
  </label>
@@ -474,7 +474,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
  {/* 2. Format Selection Tabs */}
  <div className="space-y-2">
- <label className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
+ <label className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
  Formato de Exportación
  </label>
  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -492,7 +492,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <div>
  <div className="text-xs font-extrabold flex items-center gap-1">
  <span>ZIP MP3s</span>
- <span className="px-1 bg-[var(--surface)] text-[var(--ink)] text-[9px] font-black rounded uppercase">Pack</span>
+ <span className="px-1 bg-[var(--surface)] text-[var(--ink)] text-[9px] font-black rounded">Pack</span>
  </div>
  <div className="text-[10px] opacity-80">Audios + letras</div>
  </div>
@@ -571,8 +571,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <Music className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span>
  Audios listos para comprimir:{''}
- <strong className="text-[var(--ink)] font-mono">{songsWithAudio.length}</strong> de{''}
- <strong className="text-[var(--ink)] font-mono">{targetSongs.length}</strong> temas
+ <strong className="text-[var(--ink)] font-sans">{songsWithAudio.length}</strong> de{''}
+ <strong className="text-[var(--ink)] font-sans">{targetSongs.length}</strong> temas
  </span>
  </div>
  {songsWithAudio.length < targetSongs.length && (
@@ -618,7 +618,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <span>{zipProgress.status ||'Procesando paquete ZIP...'}</span>
  </span>
  {zipProgress.total > 0 && (
- <span className="font-mono text-[var(--ok)] font-bold">
+ <span className="font-sans text-[var(--ok)] font-bold">
  {Math.round((zipProgress.current / zipProgress.total) * 100)}%
  </span>
  )}
@@ -645,13 +645,13 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  {/* 4. Live Preview Box */}
  <div className="space-y-1.5">
  <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">
- <span className="font-semibold uppercase tracking-wider">Vista previa del archivo</span>
- <span className="font-mono text-[11px] text-[var(--ink-2)]">
+ <span className="font-semibold tracking-wider">Vista previa del archivo</span>
+ <span className="font-sans text-[11px] text-[var(--ink-2)]">
  formato .{getContentForFormat().extension}
  </span>
  </div>
  <div
- className={`p-3 rounded-[var(--r-l)] font-mono text-xs max-h-44 overflow-y-auto custom-scrollbar select-all ${
+ className={`p-3 rounded-[var(--r-l)] font-sans text-xs max-h-44 overflow-y-auto custom-scrollbar select-all ${
  isStitchLight
  ?'bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ok)]/90'

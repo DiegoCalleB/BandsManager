@@ -117,7 +117,7 @@ export function SongModal({
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <Music className="w-5 h-5 text-[var(--ok)]" />
- <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
+ <h3 className={`text-sm font-bold font-sans ${colors.text}`}>
  {editingSong ?'Editar Canción' :'Añadir Nueva Canción al Catálogo'}
  </h3>
  </div>
@@ -126,7 +126,7 @@ export function SongModal({
  </button>
  </div>
 
- <form onSubmit={onSave} className="space-y-3 text-[10px] font-mono flex flex-col flex-1 overflow-hidden pt-3">
+ <form onSubmit={onSave} className="space-y-3 text-[10px] font-sans flex flex-col flex-1 overflow-hidden pt-3">
  <input type="hidden" name="audioPrincipalUrl" value={audioFileName ?'' : audioFileUrl} />
  <input type="hidden" name="albumDisco" value={finalAlbumValue} />
 
@@ -426,7 +426,7 @@ export function SongModal({
  <button
  type="button"
  onClick={() => setShowMemberNotesSection(p => !p)}
- className={`w-full p-3 flex items-center justify-between font-mono text-xs font-bold uppercase transition-colors cursor-pointer ${
+ className={`w-full p-3 flex items-center justify-between font-sans text-xs font-bold transition-colors cursor-pointer ${
  'hover:bg-[var(--surface)]/80 text-[var(--ok)]'
  }`}
  >
@@ -444,7 +444,7 @@ export function SongModal({
  </p>
 
  <div>
- <label className="block text-[var(--ink-2)] text-[10px] mb-1 font-mono">
+ <label className="block text-[var(--ink-2)] text-[10px] mb-1 font-sans">
  📌 Nota General de Repertorio
  </label>
  <input

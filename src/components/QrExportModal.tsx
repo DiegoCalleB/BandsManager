@@ -115,7 +115,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <h3 className="text-lg font-black text-[var(--ink)] font-display tracking-wide">
  Exportar & Imprimir QR en Máxima Calidad
  </h3>
- <p className="text-xs text-[var(--ink-2)] font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-sans">
  Formatos vectoriales para imprenta, Ultra HD (300 DPI) y carteles listos para colgar.
  </p>
  </div>
@@ -131,7 +131,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
  {/* Selector de Formato de Exportación */}
  <div className="space-y-3">
- <label className="text-xs font-bold text-[var(--acc)] uppercase font-mono tracking-wider block">
+ <label className="text-xs font-bold text-[var(--acc)] font-sans tracking-wider block">
  1. Elige el formato de exportación:
  </label>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -149,7 +149,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <FileText className="w-4 h-4 text-[var(--acc)]" />
  Cartel A4 Completo
  </span>
- <span className="text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] px-2 py-0.5 rounded-md">
+ <span className="text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)] px-2 py-0.5 rounded-md">
  Recomendado
  </span>
  </div>
@@ -172,7 +172,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <FileCode className="w-4 h-4 text-[var(--acc)]" />
  Vectorial SVG (.svg)
  </span>
- <span className="text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-md">
+ <span className="text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-md">
  Imprentas / Lonas
  </span>
  </div>
@@ -195,7 +195,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <ImageIcon className="w-4 h-4 text-[var(--acc)]" />
  PNG Ultra HD 4K
  </span>
- <span className="text-[10px] font-mono font-bold bg-[var(--tentative)]/20 text-[var(--acc)] px-2 py-0.5 rounded-md">
+ <span className="text-[10px] font-sans font-bold bg-[var(--tentative)]/20 text-[var(--acc)] px-2 py-0.5 rounded-md">
  3000 x 3000 px
  </span>
  </div>
@@ -218,7 +218,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <Layers className="w-4 h-4 text-[var(--acc)]" />
  Pegatina / Stand de Merchan
  </span>
- <span className="text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] px-2 py-0.5 rounded-md">
+ <span className="text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ok)] px-2 py-0.5 rounded-md">
  Cuadrado 2400px
  </span>
  </div>
@@ -231,19 +231,19 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
  {/* Opciones de Personalización */}
  <div className="space-y-4 bg-[var(--surface)] rounded-[var(--r-l)] p-5">
- <label className="text-xs font-bold text-[var(--acc)] uppercase font-mono tracking-wider block">
+ <label className="text-xs font-bold text-[var(--acc)] font-sans tracking-wider block">
  2. Personalización:
  </label>
 
  {selectedFormat ==='poster-a4' && (
  <div className="space-y-1.5">
- <label className="text-[11px] font-mono text-[var(--ink-2)]">Texto de llamada a la acción (Titular):</label>
+ <label className="text-[11px] font-sans text-[var(--ink-2)]">Texto de llamada a la acción (Titular):</label>
  <input
  type="text"
  value={customCta}
  onChange={e => setCustomCta(e.target.value)}
  placeholder="¡ESCANEA CON LA CÁMARA DE TU MÓVIL!"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
  />
  </div>
  )}
@@ -262,14 +262,14 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  </label>
  )}
 
- <div className="pt-2 border-t /80 flex items-center justify-between text-[11px] font-mono text-[var(--ink-2)]">
+ <div className="pt-2 border-t /80 flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
  <span>Destino QR: <strong className="text-[var(--acc)]/70">{url}</strong></span>
  </div>
  </div>
 
  {/* Mensaje de Éxito */}
  {exportSuccess && (
- <div className="p-3 bg-[var(--ok)]/10 rounded-[var(--r-m)] text-[var(--ok)] text-xs font-mono flex items-center gap-2">
+ <div className="p-3 bg-[var(--ok)]/10 rounded-[var(--r-m)] text-[var(--ok)] text-xs font-sans flex items-center gap-2">
  <Check className="w-4 h-4 shrink-0" />
  <span>{exportSuccess}</span>
  </div>
@@ -281,7 +281,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  type="button"
  onClick={handleDownload}
  disabled={isExporting}
- className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-lg disabled:opacity-50"
+ className="w-full sm:flex-1 py-3 px-4 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-lg disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
  {isExporting ?'Generando archivo en Alta Resolución...' :'Descargar Archivo en Alta Resolución'}
@@ -290,7 +290,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <button
  type="button"
  onClick={handlePrint}
- className="w-full sm:w-auto py-3 px-5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-md"
+ className="w-full sm:w-auto py-3 px-5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc)] font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-md"
  >
  <Printer className="w-4 h-4" />
  Imprimir en A4 / Guardar PDF

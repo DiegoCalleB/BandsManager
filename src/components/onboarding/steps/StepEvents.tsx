@@ -64,7 +64,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  <div className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-bold text-xs ${
  ev.tipo ==='ensayo' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--acc)]/10 text-[var(--acc)]'
  }`}>
- <span className="text-[9px] uppercase font-semibold">
+ <span className="text-[9px] font-semibold">
  {ev.fecha ? new Date(ev.fecha).toLocaleDateString('es-ES', { month:'short' }) :'DÍA'}
  </span>
  <span className="text-sm leading-none">
@@ -100,7 +100,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
 
  {/* Add Event Form */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
- <h4 className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5">
+ <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
  <Plus className="w-3.5 h-3.5 text-[var(--acc)]" />
  Añadir Fecha a la Agenda
  </h4>

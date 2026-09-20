@@ -1364,10 +1364,10 @@ export function PdfExportModal({
  </div>
  <div className="min-w-0">
  <div className="flex items-center gap-2">
- <h3 className="font-display font-black text-sm sm:text-lg uppercase tracking-wider text-[var(--ink)] truncate">
+ <h3 className="font-display font-black text-sm sm:text-lg tracking-wider text-[var(--ink)] truncate">
  Generador de Repertorios
  </h3>
- <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase font-mono bg-[var(--surface)] text-[var(--ink)] shrink-0">
+ <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black font-sans bg-[var(--surface)] text-[var(--ink)] shrink-0">
  Rock Stage Edition
  </span>
  </div>
@@ -1382,7 +1382,7 @@ export function PdfExportModal({
  <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
  <button
  onClick={() => handlePrint()}
- className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-95 hover:shadow-[var(--ok)]/20"
+ className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-sans text-xs font-black transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-95 hover:shadow-[var(--ok)]/20"
  >
  <Printer className="w-4 h-4" />
  {/*"Músico(s)", no"Hoja(s)": cada uno puede generar más de una página física según
@@ -1407,7 +1407,7 @@ export function PdfExportModal({
  </div>
 
  {/* Customization Control Panel */}
- <div className={`p-3 sm:px-6 border-b flex flex-col gap-3 text-xs font-mono shrink-0 ${
+ <div className={`p-3 sm:px-6 border-b flex flex-col gap-3 text-xs font-sans shrink-0 ${
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/90'
  }`}>
  {/* Row 1: Mode & Target Selector — en móvil un <select> compacto (los 3 botones en
@@ -1661,7 +1661,7 @@ export function PdfExportModal({
  {/* Pager Navigation for Multiple Sheets — recortado en móvil: sin el texto largo"Previsualizando hoja X de Y", y los botones Anterior/Siguiente solo con icono (el
  texto competía por ancho con el badge del músico en pantallas pequeñas). */}
  {membersToExport.length > 1 && (
- <div className={`px-3 sm:px-6 py-1.5 sm:py-2 border-b flex items-center justify-between gap-2 text-xs font-mono shrink-0 ${
+ <div className={`px-3 sm:px-6 py-1.5 sm:py-2 border-b flex items-center justify-between gap-2 text-xs font-sans shrink-0 ${
  isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
@@ -1727,7 +1727,7 @@ export function PdfExportModal({
  />
  ) : (
  <span
- className="whitespace-nowrap font-['Anton',sans-serif] font-black uppercase"
+ className="whitespace-nowrap font-['Anton',sans-serif] font-black"
  style={{ fontSize:'70pt', letterSpacing:'4px', color: getInkColorHex(), opacity: 0.14, transform:'rotate(-20deg)' }}
  >
  {bandName}
@@ -1751,7 +1751,7 @@ export function PdfExportModal({
  />
  )}
  <div>
- <h1 className="text-[14pt] font-black uppercase tracking-tighter m-0 leading-none text-[var(--ink)] font-['Anton',sans-serif]">
+ <h1 className="text-[14pt] font-black tracking-tighter m-0 leading-none text-[var(--ink)] font-['Anton',sans-serif]">
  {bandName.toUpperCase()}
  </h1>
  <div className="text-[9pt] font-bold text-[var(--ink-2)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-full font-['Oswald',sans-serif]">
@@ -1761,13 +1761,13 @@ export function PdfExportModal({
  </div>
 
  <div className="border-2 border-[var(--hair)] bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap shadow-sm">
- <div className="text-[6pt] font-mono font-bold text-[var(--ink-2)] uppercase tracking-widest">
+ <div className="text-[6pt] font-sans font-bold text-[var(--ink-2)] tracking-widest">
  {!isCurrentMaster ?'REPERTORIO PERSONALIZADO' :'COPIA DE CONTROL'}
  </div>
- <div className="text-[10pt] font-black uppercase text-[var(--ink)] leading-tight font-['Anton',sans-serif]">
+ <div className="text-[10pt] font-black text-[var(--ink)] leading-tight font-['Anton',sans-serif]">
  👤 {currentPreviewMember.name}
  </div>
- <div className="text-[7pt] font-mono font-bold text-[var(--ink)]">
+ <div className="text-[7pt] font-sans font-bold text-[var(--ink)]">
  🎵 {currentPreviewMember.instrument}
  </div>
  </div>
@@ -1901,7 +1901,7 @@ export function PdfExportModal({
  <div className="flex items-baseline gap-1.5 flex-nowrap">
  <div className="flex items-baseline gap-2.5 min-w-0 flex-nowrap overflow-hidden">
  {showSongNumbers && (
- <span className="font-mono text-[20pt] text-[var(--ink-2)] font-black min-w-[32px] shrink-0">
+ <span className="font-sans text-[20pt] text-[var(--ink-2)] font-black min-w-[32px] shrink-0">
  {index + 1}.
  </span>
  )}
@@ -1909,7 +1909,7 @@ export function PdfExportModal({
  por sitio en esta fila (noteLayout.mode ==='inline'); si no,
  el título vuelve a poder ocupar toda su anchura natural. */}
  <span
- className={`font-black uppercase tracking-wide text-[var(--ink)] leading-none ${
+ className={`font-black tracking-wide text-[var(--ink)] leading-none ${
  noteLayout && noteLayout.mode ==='inline' ?'truncate min-w-0' :''
  }`}
  style={{ fontFamily:"'Anton','Oswald', sans-serif", fontSize: `${titleFontPt}pt` }}
@@ -1918,19 +1918,19 @@ export function PdfExportModal({
  </span>
 
  {showTonality && s.tonalidad && (
- <span className="font-mono text-[11pt] font-black border-2 border-[var(--hair)] px-1.5 py-0.5 rounded bg-[var(--surface)] text-[var(--ink)] leading-none ml-1 shrink-0">
+ <span className="font-sans text-[11pt] font-black border-2 border-[var(--hair)] px-1.5 py-0.5 rounded bg-[var(--surface)] text-[var(--ink)] leading-none ml-1 shrink-0">
  {s.tonalidad}
  </span>
  )}
 
  {showBpm && s.bpm && (
- <span className="font-mono text-[10.5pt] font-bold text-[var(--ink-2)] ml-1 shrink-0">
+ <span className="font-sans text-[10.5pt] font-bold text-[var(--ink-2)] ml-1 shrink-0">
  {s.bpm} BPM
  </span>
  )}
 
  {showDuration && s.duracion && (
- <span className="font-mono text-[10.5pt] font-bold text-[var(--ink-2)] ml-1 shrink-0">
+ <span className="font-sans text-[10.5pt] font-bold text-[var(--ink-2)] ml-1 shrink-0">
  {s.duracion}
  </span>
  )}
@@ -1968,7 +1968,7 @@ export function PdfExportModal({
  <button
  onClick={() => setEditingSongForNotes(s)}
  title="Editar notas manuscritas de esta canción"
- className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--sunken)] border-text-[var(--ink-2)] rounded font-mono text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
+ className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--sunken)] border-text-[var(--ink-2)] rounded font-sans text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
  >
  <Edit3 className="w-3 h-3 text-[var(--ok)]" />
  <span>Editar Nota</span>
@@ -1995,7 +1995,7 @@ export function PdfExportModal({
  return (
  <div key={item.id} className="flex items-center gap-2 my-0.5">
  <div className="flex-1 h-px bg-black" />
- <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-[var(--ink)] whitespace-nowrap">
+ <span className="font-['Oswald',sans-serif] text-[10pt] font-black tracking-wider text-[var(--ink)] whitespace-nowrap">
  {item.tituloCustom ||'BLOQUE'}
  </span>
  <div className="flex-1 h-px bg-black" />
@@ -2005,7 +2005,7 @@ export function PdfExportModal({
  return (
  <div key={item.id} className="flex items-center gap-2 my-0.5">
  <div className="flex-1 h-px bg-black" />
- <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-[var(--ink)] whitespace-nowrap">
+ <span className="font-['Oswald',sans-serif] text-[10pt] font-black tracking-wider text-[var(--ink)] whitespace-nowrap">
  {item.tituloCustom ||'BIS / ENCORE'}
  </span>
  <div className="flex-1 h-px bg-black" />
@@ -2013,7 +2013,7 @@ export function PdfExportModal({
  );
  } else {
  return (
- <div key={item.id} className="pl-9 py-0.5 text-[var(--ink)] font-mono text-[11pt] font-bold">
+ <div key={item.id} className="pl-9 py-0.5 text-[var(--ink)] font-sans text-[11pt] font-bold">
  <span className="text-[var(--ink-2)]">****</span> {(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem ||'INTERLUDIO').toUpperCase()} <span className="text-[var(--ink-2)]">****</span>
  {(item.notas || (item as any).notaTema) && item.tituloCustom && (
  <span className="text-[10pt] text-[var(--ink-2)] font-normal italic ml-2">
@@ -2030,7 +2030,7 @@ export function PdfExportModal({
 
  {/* Bottom Footer with BandManager & link */}
  {showAppBranding && (
- <div className="flex justify-between items-center border-t border-[var(--hair)] pt-1 mt-2 font-mono text-[7.5pt] text-[var(--ink-2)]">
+ <div className="flex justify-between items-center border-t border-[var(--hair)] pt-1 mt-2 font-sans text-[7.5pt] text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <span className="font-black text-[var(--ink)]">⚡ BandManager</span>
  <span>•</span>
@@ -2057,7 +2057,7 @@ export function PdfExportModal({
  <div className={`rounded-[var(--r-l)] shadow-2xl max-w-lg w-full p-6 ${
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  }`}>
- <h3 className={`text-lg font-black uppercase mb-2 flex items-center gap-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
+ <h3 className={`text-lg font-black mb-2 flex items-center gap-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  <Zap className="w-5 h-5 text-[var(--acc)]" />
  ¿Cómo prefieres el repertorio?
  </h3>
@@ -2073,7 +2073,7 @@ export function PdfExportModal({
  }}
  className="p-4 rounded-[var(--r-m)] border-2 /40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
  >
- <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
+ <div className={`font-black text-sm mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  📄 1 sola hoja (letra más pequeña)
  </div>
  <div className={`text-xs ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
@@ -2087,7 +2087,7 @@ export function PdfExportModal({
  }}
  className="p-4 rounded-[var(--r-m)] border-2 border-[var(--acc)]/40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
  >
- <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
+ <div className={`font-black text-sm mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  📄📄 Varias hojas (letra más grande)
  </div>
  <div className={`text-xs ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
@@ -2097,7 +2097,7 @@ export function PdfExportModal({
  </div>
  <button
  onClick={() => setSizeChoiceDialog(null)}
- className={`mt-4 text-xs font-mono cursor-pointer ${isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink-2)]' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`mt-4 text-xs font-sans cursor-pointer ${isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink-2)]' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  Cancelar
  </button>

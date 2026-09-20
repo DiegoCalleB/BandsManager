@@ -113,7 +113,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <AtSign className="w-5 h-5" /> Configurar Firma de Correo
  </h3>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
+ <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
  HTML Automático
  </span>
  </div>
@@ -163,7 +163,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="+34 600 00 00 00"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
  />
  </div>
 
@@ -179,7 +179,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="booking@tubanda.com"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
  />
  </div>
  </div>
@@ -252,7 +252,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  {/* REDES VINCULADAS */}
  <div className="pt-2 border-t space-y-2">
  <div className="flex items-center justify-between flex-wrap gap-2">
- <span className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5">
+ <span className="text-xs font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
  <Share2 className="w-3.5 h-3.5" /> Redes enlazadas
  </span>
  {onNavigateToBlock && (
@@ -273,7 +273,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  return (
  <span
  key={key}
- className="px-2 py-0.5 rounded bg-[var(--surface)] text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1"
  >
  <span>{platform?.icon ||'🔗'}</span>
  <span className="font-semibold">{platform?.label || key}</span>
@@ -292,7 +292,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <Mail className="w-5 h-5" /> Vista Previa de la Firma
  </h3>
- <span className="text-[10px] text-[var(--ink-2)] font-mono">Renderizado Email</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-sans">Renderizado Email</span>
  </div>
 
  <div className="bg-[var(--surface)] text-[var(--ink)] p-4 sm:p-5 rounded-[var(--r-l)] shadow-md space-y-3 font-sans text-xs">
@@ -532,7 +532,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <Check className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
  <div className="leading-snug">
  {copiadoFirma ==='rich' && (
- <span><strong>¡Firma visual copiada!</strong> Ahora ve a los ajustes de firma de tu correo (Gmail, Outlook, Apple Mail...) y pulsa <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-mono text-[10px]">Ctrl + V</kbd> (o <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-mono text-[10px]">Cmd + V</kbd>) para pegarla con todos sus enlaces y logos.</span>
+ <span><strong>¡Firma visual copiada!</strong> Ahora ve a los ajustes de firma de tu correo (Gmail, Outlook, Apple Mail...) y pulsa <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-sans text-[10px]">Ctrl + V</kbd> (o <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-sans text-[10px]">Cmd + V</kbd>) para pegarla con todos sus enlaces y logos.</span>
  )}
  {copiadoFirma ==='html' && (
  <span><strong>¡Código HTML copiado!</strong> Puedes pegarlo en clientes de correo o editores que admitan código HTML directo.</span>
@@ -603,7 +603,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <li>Haz clic arriba en <strong>"Copiar Firma Formateada"</strong>.</li>
  <li>Abre tu Gmail y pulsa en la rueda de <strong>Ajustes (⚙️)</strong> &gt; <strong>Ver todos los ajustes</strong>.</li>
  <li>En la pestaña <em>General</em>, baja hasta <strong>Firma</strong> y pulsa en <em>Crear nueva</em> (o edita la actual).</li>
- <li>Haz clic dentro del recuadro de firma y pulsa <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-mono">Ctrl + V</kbd> (o <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-mono">Cmd + V</kbd> en Mac).</li>
+ <li>Haz clic dentro del recuadro de firma y pulsa <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-sans">Ctrl + V</kbd> (o <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-sans">Cmd + V</kbd> en Mac).</li>
  <li>Baja al final de la página de Gmail y pulsa <strong>Guardar cambios</strong>.</li>
  </ol>
  )}
@@ -612,7 +612,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <ol className="list-decimal list-inside space-y-1.5 text-[var(--ink-2)] pl-1 leading-relaxed">
  <li>Haz clic arriba en <strong>"Copiar Firma Formateada"</strong>.</li>
  <li>En Outlook Web o App, entra en <strong>Configuración (⚙️)</strong> &gt; <strong>Correo</strong> &gt; <strong>Redactar y responder</strong>.</li>
- <li>En <em>Firma de correo electrónico</em>, crea una nueva firma y pega con <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-mono">Ctrl + V</kbd>.</li>
+ <li>En <em>Firma de correo electrónico</em>, crea una nueva firma y pega con <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-sans">Ctrl + V</kbd>.</li>
  <li>Haz clic en <strong>Guardar</strong>.</li>
  </ol>
  )}
@@ -622,7 +622,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <li>Haz clic arriba en <strong>"Copiar Firma Formateada"</strong>.</li>
  <li>En la app Mail de Mac, ve al menú superior <strong>Mail</strong> &gt; <strong>Ajustes...</strong> &gt; <strong>Firmas</strong>.</li>
  <li>Añade una firma con el botón <strong>+</strong> y desmarca la casilla <em>"Usar siempre el tipo de letra predeterminado"</em>.</li>
- <li>Pega en el editor con <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-mono">Cmd + V</kbd>.</li>
+ <li>Pega en el editor con <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-sans">Cmd + V</kbd>.</li>
  </ol>
  )}
  </div>
@@ -637,7 +637,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <QrCode className="w-5 h-5" /> Código QR Oficial del Dossier
  </h3>
- <span className="text-[10px] font-mono text-[var(--ink-2)]">Difusión Rápida</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">Difusión Rápida</span>
  </div>
 
  <p className="text-xs text-[var(--ink-2)] text-left">
@@ -649,7 +649,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </div>
 
  <div className="space-y-2 text-left">
- <p className="text-xs font-mono text-[var(--acc)]/70 bg-[var(--surface)] py-2 px-3 rounded-[var(--r-m)] truncate">
+ <p className="text-xs font-sans text-[var(--acc)]/70 bg-[var(--surface)] py-2 px-3 rounded-[var(--r-m)] truncate">
  {publicEpkUrl}
  </p>
  <div className="flex flex-wrap gap-2 pt-1">

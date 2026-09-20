@@ -247,7 +247,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  {canUndo && (
  <button
  onClick={onUndo}
- className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-[11px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-[11px] font-sans font-medium flex items-center gap-1"
  title="Deshacer el último cambio del setlist"
  >
  ↩️ Deshacer
@@ -347,25 +347,25 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <p className="text-xs text-[var(--ink-2)] mt-0.5">{action.reason}</p>
  </div>
  {isInvalid ? (
- <span className="shrink-0 text-[10px] text-[var(--ink-2)] font-mono font-medium whitespace-nowrap" title="Un cambio anterior afectó al item que esta acción necesitaba">
+ <span className="shrink-0 text-[10px] text-[var(--ink-2)] font-sans font-medium whitespace-nowrap" title="Un cambio anterior afectó al item que esta acción necesitaba">
  ⚠️ Ya no aplica
  </span>
  ) : isCurrentUndo ? (
  <button
  type="button"
  onClick={() => handleUndo(idx)}
- className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-[10px] font-sans transition whitespace-nowrap"
  title="Deshacer este cambio"
  >
  ↩️ Deshacer
  </button>
  ) : isApplied ? (
- <span className="shrink-0 text-[10px] text-[var(--ok)] font-mono font-medium whitespace-nowrap">✓ Aplicado</span>
+ <span className="shrink-0 text-[10px] text-[var(--ok)] font-sans font-medium whitespace-nowrap">✓ Aplicado</span>
  ) : (
  <button
  type="button"
  onClick={() => handleApply(idx)}
- className="shrink-0 px-2 py-0.5 rounded bg-[var(--ok)]/50 hover:bg-[var(--ok)] text-[var(--ok)] font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-[var(--ok)]/50 hover:bg-[var(--ok)] text-[var(--ok)] font-bold text-[10px] font-sans transition whitespace-nowrap"
  title="Aplicar este cambio al setlist"
  >
  ✓ Aplicar
@@ -386,7 +386,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 space-y-2">
  <div className="flex flex-wrap items-center gap-2">
  <div className="flex items-center gap-1">
- <span className="text-[9px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Intensidad</span>
+ <span className="text-[9px] font-sans tracking-wider text-[var(--ink-2)]">Intensidad</span>
  {[1, 2, 3, 4, 5].map((star) => (
  <button
  key={`intensidad-${star}`}
@@ -400,7 +400,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  ))}
  </div>
  <div className="flex items-center gap-1">
- <span className="text-[9px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Contenido</span>
+ <span className="text-[9px] font-sans tracking-wider text-[var(--ink-2)]">Contenido</span>
  {[1, 2, 3, 4, 5].map((star) => (
  <button
  key={`contenido-${star}`}
@@ -421,8 +421,8 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  placeholder="Ej:'Evita más de una balada seguida','el bis siempre un tema conocido'..."
  className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[11px] text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
  />
- <div className="flex items-center gap-1.5 text-[10px] font-mono">
- <span className="text-[var(--ink-2)] uppercase tracking-wider">Alcance:</span>
+ <div className="flex items-center gap-1.5 text-[10px] font-sans">
+ <span className="text-[var(--ink-2)] tracking-wider">Alcance:</span>
  <button
  type="button"
  onClick={() => setFeedbackScope('este_setlist')}

@@ -312,14 +312,14 @@ export function CalendarWidget({
  <span className="text-base font-bold leading-none text-[var(--acc-ink)] tabular-nums">
  {item.day}
  </span>
- <span className="text-[9px] font-semibold uppercase tracking-wide text-[var(--acc-ink)]/80 mt-0.5">
+ <span className="text-[9px] font-semibold tracking-wide text-[var(--acc-ink)]/80 mt-0.5">
  {item.month}
  </span>
  </div>
 
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className={`text-[9px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold uppercase tracking-wide ${
+ <span className={`text-[9px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tracking-wide ${
  item.type ==='concierto'
  ?'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
  :'bg-[var(--ok-soft)] text-[var(--ok)]'
@@ -367,7 +367,7 @@ export function CalendarWidget({
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
- <span className="text-sm font-mono font-bold capitalize text-[var(--acc)]/70">
+ <span className="text-sm font-sans font-bold capitalize text-[var(--acc)]/70">
  {fullMonthName}
  </span>
  <button
@@ -380,9 +380,9 @@ export function CalendarWidget({
  </div>
 
  {/* Grid of days */}
- <div className="grid grid-cols-7 gap-1 text-center font-mono text-xs">
+ <div className="grid grid-cols-7 gap-1 text-center font-sans text-xs">
  {['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d => (
- <div key={d} className="text-[10px] text-[var(--ink-2)] font-bold py-1 uppercase">{d}</div>
+ <div key={d} className="text-[10px] text-[var(--ink-2)] font-bold py-1">{d}</div>
  ))}
 
  {/* Empty slots for start padding */}
@@ -432,7 +432,7 @@ export function CalendarWidget({
 
  {/* Details for selected day if clicked */}
  {selectedDayStr && (
- <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-mono space-y-2">
+ <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-sans space-y-2">
  <div className="flex items-center justify-between text-[var(--ink-2)] pb-1.5 border-b border-[var(--hair)]">
  <span className="font-bold text-[var(--acc)]/70">Eventos para {selectedDayStr}:</span>
  <button type="button" onClick={() => setSelectedDayStr(null)} className="text-[var(--ink-2)] hover:text-[var(--ink-2)]">✕</button>
@@ -445,7 +445,7 @@ export function CalendarWidget({
  className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:/40 flex items-center justify-between cursor-pointer"
  >
  <div>
- <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
+ <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
  evt.type ==='concierto' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' :'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  }`}>
  {evt.type}
@@ -467,7 +467,7 @@ export function CalendarWidget({
  {/* VISTA 3: AGENDA SEMANAL COMPACTA */}
  {viewMode ==='weekly_grid' && (
  <div className="space-y-3">
- <p className="text-xs font-mono text-[var(--ink-2)]">Próximos 7 días de actividad programada:</p>
+ <p className="text-xs font-sans text-[var(--ink-2)]">Próximos 7 días de actividad programada:</p>
  <div className="grid grid-cols-1 sm:grid-cols-7 gap-2">
  {Array.from({ length: 7 }).map((_, idx) => {
  const date = new Date();
@@ -480,7 +480,7 @@ export function CalendarWidget({
  return (
  <div
  key={dateStr}
- className={`p-2.5 rounded-[var(--r-m)] text-xs font-mono flex flex-col justify-between min-h-[90px] transition-all ${
+ className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans flex flex-col justify-between min-h-[90px] transition-all ${
  dayEvts.length > 0
  ?'bg-[var(--surface)] /40'
  :'bg-[var(--surface)]/60'

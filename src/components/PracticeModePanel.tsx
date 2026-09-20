@@ -524,7 +524,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <Headphones className="w-5 h-5" />
  </div>
  <div className="min-w-0">
- <h3 className="font-bold font-display uppercase tracking-wider text-sm truncate">Sala de Ensayo Individual</h3>
+ <h3 className="font-bold font-display tracking-wider text-sm truncate">Sala de Ensayo Individual</h3>
  <p className="text-[11px] text-[var(--ink-2)] truncate">{song.titulo} · {idea.titulo}</p>
  </div>
  </div>
@@ -566,7 +566,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
  >
  <Headphones className="w-4 h-4" />
- <span className="text-[11px] font-mono font-semibold text-center">Tocar con la banda<br />(silencia mi pista)</span>
+ <span className="text-[11px] font-sans font-semibold text-center">Tocar con la banda<br />(silencia mi pista)</span>
  </button>
  <button
  onClick={applyPresetLearnMyPart}
@@ -574,7 +574,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]/50 hover:bg-[var(--tentative)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
  >
  <GraduationCap className="w-4 h-4" />
- <span className="text-[11px] font-mono font-semibold text-center">Aprender mi parte<br />(aísla mi pista)</span>
+ <span className="text-[11px] font-sans font-semibold text-center">Aprender mi parte<br />(aísla mi pista)</span>
  </button>
  </div>
 
@@ -584,7 +584,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 hover:bg-[var(--ok)]">
  {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
  </button>
- <span className="text-[11px] font-mono text-[var(--ink-2)] w-10 text-right">{formatTime(currentTime)}</span>
+ <span className="text-[11px] font-sans text-[var(--ink-2)] w-10 text-right">{formatTime(currentTime)}</span>
  <input
  type="range"
  min={0}
@@ -594,41 +594,41 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  onChange={(e) => handleSeekBarChange(Number(e.target.value))}
  className="flex-1 accent-emerald-500"
  />
- <span className="text-[11px] font-mono text-[var(--ink-2)] w-10">{formatTime(duration)}</span>
+ <span className="text-[11px] font-sans text-[var(--ink-2)] w-10">{formatTime(duration)}</span>
  </div>
 
  <div className="flex flex-wrap items-center gap-3">
  <div className="flex items-center gap-1">
  <Gauge className="w-3.5 h-3.5 text-[var(--ink-2)]" />
- <span className="text-[10px] font-mono text-[var(--ink-2)] mr-0.5">Tempo</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] mr-0.5">Tempo</span>
  <button
  onClick={() => nudgeBpm(-5)}
  title="-5 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
+ className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
  >-5</button>
  <button
  onClick={() => nudgeBpm(-1)}
  title="-1 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
+ className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
  >-1</button>
- <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ?'text-[var(--acc)]/70' :'text-[var(--ink-2)]'}`}>
+ <span className={`text-xs font-sans font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ?'text-[var(--acc)]/70' :'text-[var(--ink-2)]'}`}>
  {targetBpm} BPM
  </span>
  <button
  onClick={() => nudgeBpm(1)}
  title="+1 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
+ className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
  >+1</button>
  <button
  onClick={() => nudgeBpm(5)}
  title="+5 BPM"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
+ className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
  >+5</button>
  {speed !== 1 && (
  <button
  onClick={() => changeSpeed(1)}
  title={`Volver al tempo original (${baseBpm} BPM)`}
- className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+ className="text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  ↺ {baseBpm}
  </button>
@@ -637,15 +637,15 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
 
  <div className="flex items-center gap-1.5">
  <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
- <span className="text-[10px] font-mono text-[var(--ink-2)]">Bucle</span>
- <button onClick={markLoopA} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]">
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">Bucle</span>
+ <button onClick={markLoopA} className="text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]">
  A {loopA != null ? formatTime(loopA) :'--:--'}
  </button>
- <button onClick={markLoopB} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]">
+ <button onClick={markLoopB} className="text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]">
  B {loopB != null ? formatTime(loopB) :'--:--'}
  </button>
  {(loopA != null || loopB != null) && (
- <button onClick={clearLoop} className="text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]">
+ <button onClick={clearLoop} className="text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]">
  Quitar
  </button>
  )}
@@ -653,12 +653,12 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
 
  <div className="flex items-center gap-1.5">
  <ArrowUpDown className="w-3.5 h-3.5 text-[var(--ink-2)]" />
- <span className="text-[10px] font-mono text-[var(--ink-2)]">Tono</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">Tono</span>
  <select
  value={semitonesOffset}
  onChange={(e) => setSemitonesOffset(Number(e.target.value))}
  title="Trasposición de tono en tiempo real — útil para ensayar en el tono acordado para un bolo concreto"
- className={`text-xs font-mono rounded-[var(--r-s)] px-2 py-1 outline-none ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'} ${semitonesOffset !== 0 ?'text-[var(--ink-2)] font-bold' :''}`}
+ className={`text-xs font-sans rounded-[var(--r-s)] px-2 py-1 outline-none ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'} ${semitonesOffset !== 0 ?'text-[var(--ink-2)] font-bold' :''}`}
  >
  {TRANSPOSE_SEMITONE_OPTIONS.map(st => {
  const origKey = song.tonalidad?.trim();
@@ -677,7 +677,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => setMetronomeOn(v => !v)}
  title={`Metrónomo (claqueta) — sigue el tempo de arriba, sube y baja a la vez con la canción. Ahora mismo: ${targetBpm} BPM`}
- className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
+ className={`flex items-center gap-1 text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] ${
  metronomeOn
  ?'bg-[var(--acc)]/20 /40 text-[var(--acc)]/70'
  :'bg-[var(--surface)]/80 border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -688,7 +688,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={markBeatAnchor}
  title="Marcar beat de compás — ponte en el primer golpe fuerte del compás (en cualquier punto de la canción) y pulsa aquí: la claqueta recalcula toda su rejilla a partir de ese instante"
- className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
+ className={`flex items-center gap-1 text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] ${
  beatAnchorSec > 0
  ?'bg-[var(--ok)]/20 border-[var(--ok)]/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/80 border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -703,7 +703,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  if (metronomeOn && isPlaying) resyncMetronomeAt(currentTime, 0);
  }}
  title="Quitar el compás marcado (volver a asumir que empieza en 0:00)"
- className="text-[10px] font-mono px-1.5 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+ className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  ✕
  </button>
@@ -712,7 +712,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  </div>
 
  <div className="flex items-center gap-2 px-0.5">
- <span className="text-[10px] font-mono text-[var(--ink-2)] w-10 text-right">{Math.round(baseBpm * 0.4)}</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] w-10 text-right">{Math.round(baseBpm * 0.4)}</span>
  <input
  type="range"
  min={Math.round(baseBpm * 0.4)}
@@ -723,25 +723,25 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  title="Ajuste fino de tempo — arrastra para cualquier BPM exacto"
  className="flex-1 accent-amber-500"
  />
- <span className="text-[10px] font-mono text-[var(--ink-2)] w-10">{Math.round(baseBpm * 1.6)}</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] w-10">{Math.round(baseBpm * 1.6)}</span>
  </div>
  </div>
 
  {/* Mezcla manual por pista */}
  <div className="space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-[11px] font-mono font-semibold text-[var(--ink-2)] uppercase">Mi mezcla (solo la ves tú)</span>
+ <span className="text-[11px] font-sans font-semibold text-[var(--ink-2)]">Mi mezcla (solo la ves tú)</span>
  <div className="flex items-center gap-3">
  <button
  onClick={handleAutoBalance}
  disabled={isAutoBalancing}
  title="Analiza el volumen real de cada pista y nivela los faders automáticamente"
- className="flex items-center gap-1 text-[10px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-3)] disabled:opacity-50"
+ className="flex items-center gap-1 text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-3)] disabled:opacity-50"
  >
  {isAutoBalancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Scale className="w-3 h-3" />}
  {isAutoBalancing ?'Analizando...' :'Auto-Balance'}
  </button>
- <button onClick={resetOverrides} className="flex items-center gap-1 text-[10px] font-mono text-[var(--ink-2)] hover:text-[var(--ink)]">
+ <button onClick={resetOverrides} className="flex items-center gap-1 text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink)]">
  <RotateCcw className="w-3 h-3" /> Restablecer
  </button>
  </div>
@@ -758,19 +758,19 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <div className="flex items-center gap-2 px-3 py-2">
  <span className="text-xs font-semibold truncate flex-1 min-w-0">
  {tr.nombre}
- {isMine && <span className="ml-1.5 text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)]">TÚ</span>}
+ {isMine && <span className="ml-1.5 text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)]">TÚ</span>}
  </span>
  <button
  onClick={() => toggleMute(tr.id)}
  title="Silenciar (solo en mi mezcla)"
- className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.muted ?'bg-[var(--alert)]/80 text-[var(--ink)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+ className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.muted ?'bg-[var(--alert)]/80 text-[var(--ink)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
  >
  M
  </button>
  <button
  onClick={() => toggleSolo(tr.id)}
  title="Solo (aislar, solo en mi mezcla)"
- className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.solo ?'bg-[var(--acc)]/60 text-[var(--on-acc)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+ className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.solo ?'bg-[var(--acc)]/60 text-[var(--on-acc)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
  >
  S
  </button>
@@ -799,17 +799,17 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {chordsErr && <p className="text-[11px] text-[var(--alert)]">{chordsErr}</p>}
  {chords && (
  <>
- <p className={`text-[10px] font-mono ${chordsSourceLabel(chords.chordsSource).tone}`}>
+ <p className={`text-[10px] font-sans ${chordsSourceLabel(chords.chordsSource).tone}`}>
  {chordsSourceLabel(chords.chordsSource).text}
  {chords.esAproximado &&' · ⚠️ aproximado, verifica de oído'}
  </p>
- <pre className="text-[11px] font-mono whitespace-pre-wrap text-[var(--ink-2)] max-h-40 overflow-y-auto bg-[var(--sunken)] rounded-[var(--r-s)] p-2">
+ <pre className="text-[11px] font-sans whitespace-pre-wrap text-[var(--ink-2)] max-h-40 overflow-y-auto bg-[var(--sunken)] rounded-[var(--r-s)] p-2">
  {chords.cifradoTexto}
  </pre>
  {onApplyAsMainChords && (
  <button
  onClick={() => onApplyAsMainChords(chords.cifradoTexto, chords.guiaSustituto)}
- className="flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/15 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/25"
+ className="flex items-center gap-1.5 text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/15 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/25"
  >
  <CheckCircle2 className="w-3 h-3" /> Usar como cifrado principal de la canción
  </button>
@@ -825,26 +825,26 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
 
  {/* Exportar */}
  <div className={`rounded-[var(--r-m)] p-3 space-y-2 ${cardBg}`}>
- <span className="text-[11px] font-mono font-semibold text-[var(--ink-2)] uppercase">Descargar para escuchar offline</span>
+ <span className="text-[11px] font-sans font-semibold text-[var(--ink-2)]">Descargar para escuchar offline</span>
  <div className="flex flex-wrap gap-2">
  <button
  onClick={() => handleExport('sin-mi-pista')}
  disabled={!myTrack || isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting ==='sin-mi-pista' ?'Generando…' :'Sin mi pista'}
  </button>
  <button
  onClick={() => handleExport('solo-mi-pista')}
  disabled={!myTrack || isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--acc)]/50 hover:bg-[var(--tentative)]/20 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--acc)]/50 hover:bg-[var(--tentative)]/20 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting ==='solo-mi-pista' ?'Generando…' :'Solo mi pista'}
  </button>
  <button
  onClick={() => handleExport('mezcla-actual')}
  disabled={isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting ==='mezcla-actual' ?'Generando…' :'Mi mezcla actual'}
  </button>

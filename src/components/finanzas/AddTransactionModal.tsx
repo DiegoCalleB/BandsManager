@@ -80,7 +80,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
  <form onSubmit={handleSubmit} className="space-y-4">
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
+ <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">
  Tipo
  </label>
  <div className="grid grid-cols-2 gap-2">
@@ -110,7 +110,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
+ <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">
  Categoría
  </label>
  <select
@@ -130,7 +130,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
+ <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">
  Concepto / Descripción
  </label>
  <input
@@ -145,7 +145,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
+ <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">
  Importe (€)
  </label>
  <input
@@ -159,7 +159,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  />
  </div>
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
+ <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">
  Fecha
  </label>
  <input
@@ -173,7 +173,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
+ <label className="block text-xs font-semibold tracking-wider mb-2 text-[var(--ink-2)]">
  Estado
  </label>
  <div className="grid grid-cols-2 gap-2">

@@ -29,7 +29,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = fa
  <button
  type="button"
  onClick={() => setIsOpen(!isOpen)}
- className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-medium transition-all duration-200 cursor-pointer active:scale-95 ${
+ className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-medium transition-all duration-200 cursor-pointer active:scale-95 ${
  isOpen
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 shadow-xs'
  :'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--surface)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
@@ -38,13 +38,13 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = fa
  >
  <span className="text-sm leading-none">{currentLangObj.flag}</span>
  {!compact && <span className="font-sans font-bold text-xs">{currentLangObj.label}</span>}
- <span className="text-[10px] uppercase text-[var(--acc)]/90 font-mono">({currentLangObj.code})</span>
+ <span className="text-[10px] text-[var(--acc)]/90 font-sans">({currentLangObj.code})</span>
  <ChevronDown className={`w-3.5 h-3.5 text-[var(--ink-2)] transition-transform duration-200 ${isOpen ?'rotate-180 text-[var(--acc)]' :''}`} />
  </button>
 
  {isOpen && (
  <div className="absolute right-0 mt-2 w-44 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--surface)] shadow-2xl z-50 overflow-hidden py-1 backdrop-blur-md animate-in fade-in zoom-in-95 duration-100">
- <div className="px-3 py-1.5 border-b border-[var(--surface)]/60 text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
+ <div className="px-3 py-1.5 border-b border-[var(--surface)]/60 text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
  <Globe className="w-3 h-3 text-[var(--acc)]" />
  <span>Seleccionar Idioma</span>
  </div>

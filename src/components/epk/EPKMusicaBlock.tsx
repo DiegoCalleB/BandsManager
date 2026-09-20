@@ -63,7 +63,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <Music className="w-5 h-5" /> Canción / Adelanto en Audio Preview (Landing de Fans & EPK)
  </h3>
- <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-full">
+ <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-full">
  Player Interactivo
  </span>
  </div>
@@ -101,7 +101,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center justify-between">
  <span>Elegir tema de vuestro repertorio</span>
  {songs.length > 0 && (
- <span className="text-[10px] text-[var(--acc)] font-mono">{songs.length} temas disponibles</span>
+ <span className="text-[10px] text-[var(--acc)] font-sans">{songs.length} temas disponibles</span>
  )}
  </label>
  <select
@@ -190,14 +190,14 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  })
  }
  placeholder="https://.../tema-adelanto.mp3"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
  />
  </div>
  </div>
 
  {/* Vista previa en vivo del reproductor */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] flex flex-col justify-center space-y-3">
- <span className="text-[10px] uppercase font-mono font-bold text-[var(--ink-2)]">
+ <span className="text-[10px] font-sans font-bold text-[var(--ink-2)]">
  Previsualización del reproductor
  </span>
  <div
@@ -217,7 +217,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  `${currentUser?.bandName ||'Tu Banda'} · Directo Preview`}
  </span>
  </div>
- <p className="text-[10px] text-[var(--ink-2)] font-mono truncate">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans truncate">
  {config.audioPreview?.subtitulo?.trim() ||'Dale al play para escuchar cómo sonamos'}
  </p>
  </div>
@@ -228,7 +228,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  </div>
  </div>
  {config.audioPreview?.habilitado === false && (
- <p className="text-[11px] text-[var(--acc)]/90 font-mono text-center">
+ <p className="text-[11px] text-[var(--acc)]/90 font-sans text-center">
  ⚠️ Reproductor actualmente desactivado para los fans.
  </p>
  )}
@@ -303,7 +303,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  value={v.url}
  onChange={e => editarVideo(v.id, { url: e.target.value })}
  placeholder="https://www.youtube.com/watch?v=..."
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs font-mono text-[var(--ink)] focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs font-sans text-[var(--ink)] focus: outline-none"
  />
  </div>
  ))}

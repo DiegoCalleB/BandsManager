@@ -509,7 +509,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  key={l.code}
  type="button"
  onClick={() => setAppLang(l.code)}
- className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
+ className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-sans font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ?'bg-[var(--acc)] text-[var(--ink)] font-bold shadow-xs scale-105'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
@@ -799,7 +799,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  onChange={(e) => setResetCode(e.target.value)}
  placeholder="Código de 6 dígitos"
  maxLength={6}
- className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--ink-2)] font-mono tracking-wider placeholder:font-sans placeholder:tracking-normal placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--ink-2)] font-sans tracking-wider placeholder:font-sans placeholder:tracking-normal placeholder:text-[var(--ink-2)] outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -913,7 +913,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="space-y-1">
  <div className="flex items-center justify-between px-1">
- <span className="text-[11px] font-mono text-[var(--ink-2)]">Proyecto Musical:</span>
+ <span className="text-[11px] font-sans text-[var(--ink-2)]">Proyecto Musical:</span>
  <BandNameStylerHelper
  value={regBandName}
  onChange={(styled) => setRegBandName(styled)}
@@ -1215,7 +1215,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="bg-[var(--surface)] border-[var(--acc)]/50 rounded-3xl p-6 flex flex-col space-y-4 shadow-xl">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
+ <span className="text-[10px] font-sans font-bold px-2.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
  Festivales & Buskers
  </span>
  <span className="text-xl font-black text-[var(--ink)]">0€ <span className="text-xs font-normal text-[var(--ink-2)]">/ gratis</span></span>

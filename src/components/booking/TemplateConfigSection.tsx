@@ -82,7 +82,7 @@ export function TemplateConfigSection({
  >
  <div>
  <h3
- className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-2 ${
+ className={`text-sm font-bold font-display tracking-widest flex items-center gap-2 ${
  'text-[var(--acc)]'
  }`}
  >
@@ -117,7 +117,7 @@ export function TemplateConfigSection({
  type="button"
  id={`template-tab-${tab.id}`}
  onClick={() => onSelectTemplateTab(tab.id as TemplateCategory)}
- className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
+ className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold shadow-md'
  : isStitchLight
@@ -166,7 +166,7 @@ export function TemplateConfigSection({
 
  <div className="space-y-1.5">
  <label
- className={`block text-[10px] uppercase font-sans tracking-wider ${
+ className={`block text-[10px] font-sans tracking-wider ${
  isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'
  }`}
  >
@@ -185,7 +185,7 @@ export function TemplateConfigSection({
 
  <div className="space-y-1.5">
  <label
- className={`block text-[10px] uppercase font-sans tracking-wider ${
+ className={`block text-[10px] font-sans tracking-wider ${
  isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'
  }`}
  >
@@ -205,7 +205,7 @@ export function TemplateConfigSection({
 
  <div className="space-y-1.5">
  <label
- className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${
+ className={`block text-[10px] font-sans tracking-wider flex items-center gap-1.5 ${
  'text-[var(--acc)]'
  }`}
  >
@@ -226,7 +226,7 @@ export function TemplateConfigSection({
  {/* Evaluation & Training Box for Template */}
  <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10">
  <div className="flex items-center justify-between">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
+ <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
  <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
  </label>
  {(toneRating > 0 || contentRating > 0 || customInstruction) && (
@@ -250,7 +250,7 @@ export function TemplateConfigSection({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
+ <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
  {toneRating > 0 ? `${toneRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -275,7 +275,7 @@ export function TemplateConfigSection({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
+ <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
  {contentRating > 0 ? `${contentRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -299,7 +299,7 @@ export function TemplateConfigSection({
 
  {/* Comentario / Instrucción */}
  <div className="space-y-1 pt-1">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
+ <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
  <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Comentario o Corrección Directa
  </label>
  <textarea
@@ -347,7 +347,7 @@ export function TemplateConfigSection({
  <button
  id="template-btn-save"
  onClick={onSaveTemplates}
- className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
+ className={`flex-1 py-2 font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
@@ -373,7 +373,7 @@ export function TemplateConfigSection({
  'bg-[var(--acc)]'
  }`}
  />
- <h4 className={`text-[10px] font-sans uppercase tracking-widest ${textSub}`}>
+ <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>
  Sandbox de Simulación de Redacción AI
  </h4>
  </div>
@@ -400,11 +400,11 @@ export function TemplateConfigSection({
  {/* Valoración directa del resultado generado en la simulación */}
  <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-[var(--acc)]/70 uppercase tracking-wider flex items-center gap-1.5 font-sans">
+ <span className="text-[10px] font-bold text-[var(--acc)]/70 tracking-wider flex items-center gap-1.5 font-sans">
  <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Valorar esta plantilla / resultado
  </span>
  {(toneRating > 0 || contentRating > 0) && (
- <span className="text-[9px] text-[var(--acc)] font-mono">
+ <span className="text-[9px] text-[var(--acc)] font-sans">
  Tono: {toneRating ||'-'}/5 | Contenido: {contentRating ||'-'}/5
  </span>
  )}
@@ -415,7 +415,7 @@ export function TemplateConfigSection({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
+ <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
  {toneRating > 0 ? `${toneRating}/5` :'⭐'}
  </span>
  </div>
@@ -440,7 +440,7 @@ export function TemplateConfigSection({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
+ <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
  {contentRating > 0 ? `${contentRating}/5` :'⭐'}
  </span>
  </div>

@@ -23,7 +23,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
+ <span className="text-xs font-semibold tracking-wider" style={{ color: colors.textMuted }}>
  {t('finances.total_income','Ingresos Totales')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)]">
@@ -49,7 +49,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
+ <span className="text-xs font-semibold tracking-wider" style={{ color: colors.textMuted }}>
  {t('finances.total_expenses','Gastos Totales')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--alert)]/10 text-[var(--alert)]">
@@ -75,7 +75,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
+ <span className="text-xs font-semibold tracking-wider" style={{ color: colors.textMuted }}>
  Beneficio Neto
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]">
@@ -101,7 +101,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
+ <span className="text-xs font-semibold tracking-wider" style={{ color: colors.textMuted }}>
  Margen de Beneficio
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]">

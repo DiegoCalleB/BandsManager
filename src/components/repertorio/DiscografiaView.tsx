@@ -569,7 +569,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  type="button"
  onClick={handleAnalyzeAllDynamics}
  disabled={dynamicsAnalysis?.running}
- className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink-3)] hover:text-[var(--tentative)]/40 font-bold text-[11px] font-mono flex items-center gap-1 cursor-pointer shadow-sm transition-all"
+ className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink-3)] hover:text-[var(--tentative)]/40 font-bold text-[11px] font-sans flex items-center gap-1 cursor-pointer shadow-sm transition-all"
  title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
  >
  {dynamicsAnalysis?.running ? (
@@ -864,7 +864,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  })}
 
  {sortedAlbumSongs.length === 0 && (
- <div className="text-center py-6 text-[var(--ink-2)] text-xs italic font-mono bg-[var(--ink)]/5 rounded-[var(--r-l)] border-dashed border-[var(--hair)]">
+ <div className="text-center py-6 text-[var(--ink-2)] text-xs italic font-sans bg-[var(--ink)]/5 rounded-[var(--r-l)] border-dashed border-[var(--hair)]">
  Disco sin canciones asignadas. Haz clic en"Gestionar" para añadir temas a este álbum.
  </div>
  )}
@@ -891,7 +891,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={() => setSearchQuery('')}
- className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/30 text-xs font-mono font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
+ className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/30 text-xs font-sans font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
  >
  <X className="w-3.5 h-3.5" />
  <span>Limpiar búsqueda</span>

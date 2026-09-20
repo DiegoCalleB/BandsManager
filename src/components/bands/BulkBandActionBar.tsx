@@ -80,7 +80,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  </button>
 
  <div className="flex items-center gap-2">
- <span className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-bold flex items-center justify-center text-xs shadow-xs font-mono shrink-0">
+ <span className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-bold flex items-center justify-center text-xs shadow-xs font-sans shrink-0">
  {selectedCount}
  </span>
  <div className="leading-tight">
@@ -90,7 +90,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <button
  type="button"
  onClick={onSelectAll}
- className="text-[11px] text-[var(--acc)] hover:underline font-mono cursor-pointer font-semibold underline-offset-2"
+ className="text-[11px] text-[var(--acc)] hover:underline font-sans cursor-pointer font-semibold underline-offset-2"
  title={`Seleccionar las ${totalFilteredCount} bandas`}
  >
  (Seleccionar las {totalFilteredCount})
@@ -122,7 +122,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <button
  type="button"
  onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
- className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
  ?'bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]'
  :'bg-gradient-to-r from-amber-0/20 to-amber-600/20 hover:from-amber-0/30 hover:to-amber-600/30 /50 text-[var(--ink)]'
@@ -146,7 +146,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  ?'bg-[var(--surface)] shadow-slate-400/50'
  :'bg-[var(--surface)] border-[var(--hair)]700 shadow-black/90'
  }`}>
- <div className={`px-2 py-1 text-[10px] font-mono uppercase font-bold border-b ${
+ <div className={`px-2 py-1 text-[10px] font-sans font-bold border-b ${
  isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)] border-[var(--hair)]800'
  }`}>
  Mover {selectedCount} bandas a:
@@ -161,7 +161,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  onBulkStatusChange(opt.status);
  setIsStatusDropdownOpen(false);
  }}
- className={`w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer ${
+ className={`w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer ${
  isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]'
  } ${opt.color}`}
  >
@@ -179,7 +179,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <button
  type="button"
  onClick={onBulkGeneratePitch}
- className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-[var(--acc)]/50 text-[var(--acc)]/40'
  }`}
  title="Redactar propuestas de intercambio (Date Swaps) con IA"
@@ -205,7 +205,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <button
  type="button"
  onClick={onBulkExportCsv}
- className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-semibold transition-all flex items-center gap-1 cursor-pointer ${
+ className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-semibold transition-all flex items-center gap-1 cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 border-[var(--hair)]700 text-[var(--ink)]'
@@ -254,13 +254,13 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <h3 className="text-base font-bold text-[var(--ink)] font-display">
  ¿Eliminar {selectedCount} bandas?
  </h3>
- <p className="text-xs text-[var(--ink-2)] font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-sans">
  Esta acción eliminará los contactos de las bandas seleccionadas.
  </p>
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert-soft)] text-xs text-[var(--ink)] font-mono">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert-soft)] text-xs text-[var(--ink)] font-sans">
  ⚠️ Se borrarán definitivamente {selectedCount} bandas aliadas.
  </div>
 
@@ -268,7 +268,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <button
  type="button"
  onClick={() => setIsConfirmDeleteOpen(false)}
- className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
+ className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>
@@ -278,7 +278,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  setIsConfirmDeleteOpen(false);
  onBulkDelete();
  }}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-md transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-md transition-colors cursor-pointer"
  >
  Sí, eliminar {selectedCount}
  </button>

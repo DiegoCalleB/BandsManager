@@ -34,11 +34,11 @@ export const EPKBlockWrapper: React.FC<EPKBlockWrapperProps> = ({
  <div>
  <div className="flex items-center gap-2">
  {meta.number && (
- <span className="text-[10px] font-mono font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-1.5 py-0.5 rounded">
+ <span className="text-[10px] font-sans font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-1.5 py-0.5 rounded">
  Bloque {meta.number} de 8
  </span>
  )}
- <h3 className="text-base font-bold text-[var(--ink)] font-mono">
+ <h3 className="text-base font-bold text-[var(--ink)] font-sans">
  {meta.label}
  </h3>
  </div>

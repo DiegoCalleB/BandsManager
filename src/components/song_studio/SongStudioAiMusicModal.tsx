@@ -80,7 +80,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  </div>
  <div>
  <h3 className="text-base font-bold">Generador AI de Soundtracks & Jingles (Lyria)</h3>
- <p className="text-xs text-[var(--acc)]/70 font-mono">Creación de música basada en el estilo y letras de la banda</p>
+ <p className="text-xs text-[var(--acc)]/70 font-sans">Creación de música basada en el estilo y letras de la banda</p>
  </div>
  </div>
  <button
@@ -103,29 +103,29 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
  <div className="space-y-4">
  <div>
- <label className="text-xs font-mono text-[var(--ink-2)] block mb-1">Estilo Musical de la Banda</label>
+ <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Estilo Musical de la Banda</label>
  <input
  type="text"
  value={style}
  onChange={(e) => setStyle(e.target.value)}
  placeholder="Ej: Rock alternativo, post-punk, psicodelia..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus: font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus: font-sans"
  />
  </div>
 
  <div>
- <label className="text-xs font-mono text-[var(--ink-2)] block mb-1">Prompt / Descripción del Soundtrack o Jingle</label>
+ <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Prompt / Descripción del Soundtrack o Jingle</label>
  <textarea
  value={prompt}
  onChange={(e) => setPrompt(e.target.value)}
  rows={3}
  placeholder="Describe la atmósfera, energía, instrumentación o propósito..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus: font-mono resize-none leading-relaxed"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none focus: font-sans resize-none leading-relaxed"
  />
  </div>
 
  {error && (
- <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/40 text-xs text-[var(--alert)] font-mono">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/40 text-xs text-[var(--alert)] font-sans">
  ⚠️ {error}
  </div>
  )}
@@ -133,7 +133,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  {generatedAudioUrl && (
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] space-y-3 animate-in fade-in duration-300">
  <div className="flex items-center justify-between">
- <span className="text-xs font-bold font-mono text-[var(--acc)] flex items-center gap-1.5">
+ <span className="text-xs font-bold font-sans text-[var(--acc)] flex items-center gap-1.5">
  <Music className="w-4 h-4" /> Soundtrack Generado con Éxito
  </span>
  <a
@@ -150,8 +150,8 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  )}
 
  {generatedLyrics && (
- <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-mono text-[var(--ink-2)] max-h-32 overflow-y-auto whitespace-pre-line">
- <p className="text-[10px] text-[var(--acc)] font-bold uppercase mb-1">Notas / Letra generada:</p>
+ <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-sans text-[var(--ink-2)] max-h-32 overflow-y-auto whitespace-pre-line">
+ <p className="text-[10px] text-[var(--acc)] font-bold mb-1">Notas / Letra generada:</p>
  {generatedLyrics}
  </div>
  )}
@@ -163,7 +163,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  onAddGeneratedAudio(generatedAudioUrl, `AI Soundtrack: ${prompt.slice(0, 30)}...`);
  onClose();
  }}
- className="w-full py-2 bg-gradient-to-r from-[var(--acc)] to-orange-600 hover:from-amber-400 hover:to-orange-500 text-[var(--ink)] font-bold text-xs uppercase tracking-wider rounded-[var(--r-m)] transition shadow-md"
+ className="w-full py-2 bg-gradient-to-r from-[var(--acc)] to-orange-600 hover:from-amber-400 hover:to-orange-500 text-[var(--ink)] font-bold text-xs tracking-wider rounded-[var(--r-m)] transition shadow-md"
  >
  + Añadir Soundtrack a la Canción / Estudio
  </button>
@@ -176,7 +176,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)]"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)]"
  >
  Cerrar
  </button>
@@ -184,7 +184,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  type="button"
  onClick={handleGenerate}
  disabled={isGenerating || !prompt.trim()}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-orange-600 hover:from-amber-400 hover:to-orange-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-orange-600 hover:from-amber-400 hover:to-orange-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
  >
  {isGenerating ? (
  <>

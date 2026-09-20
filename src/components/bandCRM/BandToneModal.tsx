@@ -262,12 +262,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  }
  };
 
- const inputClass = `w-full p-2 rounded-[var(--r-s)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${
+ const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`;
- const labelClass ='text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] block mb-1';
+ const labelClass ='text-[9px] font-sans font-bold tracking-wider text-[var(--ink-2)] block mb-1';
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
@@ -282,19 +282,19 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <Sparkles className="w-4 h-4 animate-pulse" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--acc)]">
+ <h3 className="text-sm font-bold font-display tracking-wider text-[var(--acc)]">
  Análisis de ADN de Expresión y Tono: {band.nombre_banda}
  </h3>
- <p className="text-[10px] text-[var(--ink-2)] font-mono">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans">
  Rastreo IA Grounding de redes sociales y notas de prensa oficiales
  </p>
  {!isLoading && toneData && !isEditing && isSaved !== undefined && (
  isSaved ? (
- <p className="text-[10px] text-[var(--ok)] font-mono flex items-center gap-1 mt-0.5">
+ <p className="text-[10px] text-[var(--ok)] font-sans flex items-center gap-1 mt-0.5">
  <Check className="w-3 h-3" /> Guardado: la IA usará este tono en tus próximos Reels, Shorts y TikToks
  </p>
  ) : (
- <p className="text-[10px] text-[var(--acc)] font-mono mt-0.5">
+ <p className="text-[10px] text-[var(--acc)] font-sans mt-0.5">
  ⚠️ No se pudo guardar de forma permanente. Vuelve a analizarlo antes de usarlo en tus próximos posts.
  </p>
  )
@@ -336,10 +336,10 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <Radio className="w-6 h-6" />
  </div>
  <div className="space-y-1">
- <h4 className="text-xs font-bold font-mono text-[var(--acc)] uppercase tracking-widest">
+ <h4 className="text-xs font-bold font-sans text-[var(--acc)] tracking-widest">
  Scrapeando redes sociales de {band.nombre_banda}...
  </h4>
- <p className="text-[10px] text-[var(--ink-2)] font-mono max-w-md">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans max-w-md">
  Analizando publicaciones de Instagram, TikTok, estilo de comunicación, muletillas y tono de voz con Gemini Search Grounding...
  </p>
  </div>
@@ -458,21 +458,21 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
 
  {saveError && (
- <p className="text-[10px] font-mono text-[var(--alert)]">{saveError}</p>
+ <p className="text-[10px] font-sans text-[var(--alert)]">{saveError}</p>
  )}
 
  <div className="flex items-center gap-2 pt-1">
  <button
  onClick={handleSaveEdit}
  disabled={isSaving}
- className="flex-1 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 text-[var(--ink)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+ className="flex-1 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 text-[var(--ink)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
  >
  <Save className="w-3.5 h-3.5" /> {isSaving ?'Guardando...' :'Guardar cambios'}
  </button>
  <button
  onClick={handleCancelEdit}
  disabled={isSaving}
- className="py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 disabled:opacity-50 text-[var(--ink-2)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+ className="py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 disabled:opacity-50 text-[var(--ink-2)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
  >
  <XCircle className="w-3.5 h-3.5" /> Cancelar
  </button>
@@ -481,23 +481,23 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  ) : toneData ? (
  <div className="space-y-4">
  {/* 1. Main Tone Cards */}
- <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px] font-mono">
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px] font-sans">
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <span className="text-[var(--ink-2)] uppercase tracking-wider block text-[9px]">Tono General</span>
+ <span className="text-[var(--ink-2)] tracking-wider block text-[9px]">Tono General</span>
  <span className="font-bold text-[var(--acc)] block text-xs mt-0.5">
  {toneData.tono_comunicacion ||'No especificado'}
  </span>
  </div>
 
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <span className="text-[var(--ink-2)] uppercase tracking-wider block text-[9px]">Tratamiento</span>
+ <span className="text-[var(--ink-2)] tracking-wider block text-[9px]">Tratamiento</span>
  <span className="font-bold text-[var(--ink-2)] block text-xs mt-0.5">
  {toneData.tratamiento_habitual ||'Tú / Informal'}
  </span>
  </div>
 
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
- <span className="text-[var(--ink-2)] uppercase tracking-wider block text-[9px]">Nivel de Energía</span>
+ <span className="text-[var(--ink-2)] tracking-wider block text-[9px]">Nivel de Energía</span>
  <span className="font-bold text-[var(--ok)] block text-xs mt-0.5">
  {toneData.nivel_energia ||'Alta / Explosiva'}
  </span>
@@ -507,12 +507,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* 2. Key Vocabulary, Quotes & Emojis */}
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
  <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Vocabulario Clave & Muletillas
  </span>
  {toneData.emojis_frecuentes && toneData.emojis_frecuentes.length > 0 && (
  <div className="flex items-center gap-1 text-sm">
- <span className="text-[9px] font-mono text-[var(--ink-2)] uppercase mr-1">Emojis:</span>
+ <span className="text-[9px] font-sans text-[var(--ink-2)] mr-1">Emojis:</span>
  {toneData.emojis_frecuentes.map((e, idx) => (
  <span key={idx}>{e}</span>
  ))}
@@ -525,25 +525,25 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  toneData.vocabulario_clave.map((word, idx) => (
  <span
  key={idx}
- className="px-2 py-1 rounded-md text-[10px] font-mono bg-[var(--acc)]/10 text-[var(--acc)]/70"
+ className="px-2 py-1 rounded-md text-[10px] font-sans bg-[var(--acc)]/10 text-[var(--acc)]/70"
  >
  #{word}
  </span>
  ))
  ) : (
- <span className="text-[10px] font-mono text-[var(--ink-2)]">No se detectaron términos específicos.</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">No se detectaron términos específicos.</span>
  )}
  </div>
 
  {/* Extracted Quotes from Reels/Posts */}
  {toneData.frases_emblematicas_extraidas && toneData.frases_emblematicas_extraidas.length > 0 && (
  <div className="pt-1.5 border-t space-y-1">
- <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]/90 block">
+ <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--acc)]/90 block">
  💬 Expresiones extraídas de sus Reels & Posts:
  </span>
  <div className="space-y-1">
  {toneData.frases_emblematicas_extraidas.map((quote, idx) => (
- <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded">"{quote}"
+ <p key={idx} className="text-[10px] font-sans italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded">"{quote}"
  </p>
  ))}
  </div>
@@ -553,12 +553,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* Frases reales de directo: se acumulan solas desde transcripciones de conciertos, no se editan aquí. */}
  {toneData.frases_directo_extraidas && toneData.frases_directo_extraidas.length > 0 && (
  <div className="pt-1.5 border-t space-y-1">
- <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ok)]/90 block">
+ <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--ok)]/90 block">
  🎤 Frases reales dichas en directo (de vuestros propios conciertos):
  </span>
  <div className="space-y-1">
  {toneData.frases_directo_extraidas.map((quote, idx) => (
- <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded">"{quote}"
+ <p key={idx} className="text-[10px] font-sans italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded">"{quote}"
  </p>
  ))}
  </div>
@@ -568,7 +568,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* Per-platform tone nuances: el tono no es idéntico en todas las redes. */}
  {toneData.matices_por_red && Object.values(toneData.matices_por_red).some((v) => v && v.trim()) && (
  <div className="pt-1.5 border-t space-y-1.5">
- <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]/90 block">
+ <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--ink-2)]/90 block">
  🎚️ Matices de tono según la red:
  </span>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
@@ -579,7 +579,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  ['facebook','Facebook'],
  ] as const).map(([key, label]) =>
  toneData.matices_por_red?.[key] ? (
- <p key={key} className="text-[10px] font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded">
+ <p key={key} className="text-[10px] font-sans text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded">
  <span className="text-[var(--ink-2)] font-bold">{label}:</span> {toneData.matices_por_red[key]}
  </p>
  ) : null
@@ -592,7 +592,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* 3. Pitch Recommendation & Connection Points */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px]">
  <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${'bg-[var(--acc-soft)] /40 text-[var(--ink)]'}`}>
- <span className="font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1 text-[9px]">
+ <span className="font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1 text-[9px]">
  <Flame className="w-3 h-3" /> Punto de Conexión con Bakandeya
  </span>
  <p className="font-sans leading-relaxed text-[11px]">
@@ -601,7 +601,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
 
  <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${'bg-[var(--bg)]/20 border-[var(--acc)]/40 text-[var(--tentative)]/40'}`}>
- <span className="font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1 text-[9px]">
+ <span className="font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1 text-[9px]">
  <HeartHandshake className="w-3 h-3" /> Recomendación de Contacto
  </span>
  <p className="font-sans leading-relaxed text-[11px]">
@@ -614,12 +614,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {toneData.pitch_personalizado_ejemplo && (
  <div className="space-y-1.5 pt-1">
  <div className="flex items-center justify-between">
- <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--ok)] flex items-center gap-1.5">
+ <label className="text-[10px] font-sans font-bold tracking-wider text-[var(--ok)] flex items-center gap-1.5">
  <MessageCircle className="w-3.5 h-3.5" /> Pitch Adaptado a su Forma de Expresarse
  </label>
  <button
  onClick={() => handleCopy(toneData.pitch_personalizado_ejemplo ||'')}
- className="px-2 py-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
+ className="px-2 py-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-sans text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
  >
  {copied ? <Check className="w-3 h-3 text-[var(--ok)]" /> : <Copy className="w-3 h-3" />}
  {copied ?'¡Copiado!' :'Copiar Texto'}
@@ -630,7 +630,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  readOnly
  rows={6}
  value={toneData.pitch_personalizado_ejemplo}
- className={`w-full p-3 rounded-[var(--r-m)] font-mono text-[10px] leading-relaxed focus:outline-none ${
+ className={`w-full p-3 rounded-[var(--r-m)] font-sans text-[10px] leading-relaxed focus:outline-none ${
  isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink)]'
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
@@ -643,7 +643,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onUseTailoredPitch(toneData.pitch_personalizado_ejemplo ||'');
  onClose();
  }}
- className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-900/20 transition-all"
+ className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-900/20 transition-all"
  >
  <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch Personalizado en Co-Booking
  </button>
@@ -655,13 +655,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {editable && (
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--acc)]/10 border-[var(--acc)]/40'}`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--tentative)] flex items-center gap-1.5">
+ <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--tentative)] flex items-center gap-1.5">
  <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus Correcciones (Self-Refining Tone DNA)
  </span>
  <button
  onClick={handleTrainToneDna}
  disabled={isTraining}
- className="px-2 py-1 rounded bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--acc)]/50 font-mono text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+ className="px-2 py-1 rounded bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--acc)]/50 font-sans text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
  title="Fuerza el análisis de tus correcciones acumuladas ahora mismo, en vez de esperar al refinamiento automático"
  >
  {isTraining ? <RefreshCw className="w-3 h-3 animate-spin" /> : <GraduationCap className="w-3 h-3" />}
@@ -670,7 +670,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
 
  {trainMessage && (
- <p className="text-[10px] font-mono text-[var(--acc)]/50/90">{trainMessage}</p>
+ <p className="text-[10px] font-sans text-[var(--acc)]/50/90">{trainMessage}</p>
  )}
 
  {(toneData.reglas_por_categoria && Object.keys(toneData.reglas_por_categoria).length > 0) ? (
@@ -682,7 +682,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  const savingManual = savingRuleKey === manualKey;
  return (
  <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1.5">
- <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]/50">
+ <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--acc)]/50">
  {CATEGORY_LABELS[cat] || cat}
  </span>
  {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
@@ -720,12 +720,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </ul>
  )}
  {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
- <p className="text-[9px] font-mono text-[var(--ok)]/80">
+ <p className="text-[9px] font-sans text-[var(--ok)]/80">
  Vocabulario favorito: {reglas.vocabulario_aprendido.join(',')}
  </p>
  )}
  {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
- <p className="text-[9px] font-mono text-[var(--alert)]/80">
+ <p className="text-[9px] font-sans text-[var(--alert)]/80">
  Términos prohibidos: {reglas.terminos_a_evitar.join(',')}
  </p>
  )}
@@ -752,11 +752,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  })}
  </div>
  ) : (
- <p className="text-[10px] font-mono text-[var(--ink-2)]">
+ <p className="text-[10px] font-sans text-[var(--ink-2)]">
  Todavía no hay reglas aprendidas. Corrige al menos 2 pitches para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa"Entrenar ADN de tono ahora". Para no esperar a eso, puedes pegar directamente conversaciones reales buenas en <strong className="text-[var(--acc)]/50">Booking CRM → Plantillas de Email → Hilos de Email de Ejemplo</strong>.
  </p>
  )}
- <p className="text-[9px] font-mono text-[var(--ink-2)]">
+ <p className="text-[9px] font-sans text-[var(--ink-2)]">
  🔒 = regla escrita a mano, nunca se pierde al re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se fusiona con lo anterior en cada re-entrenamiento
  </p>
  </div>
@@ -769,13 +769,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {editable && (
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--bg)]/20 border-[var(--acc)]/40'}`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
  <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus RESPUESTAS a salas (Self-Refining Tone DNA)
  </span>
  <button
  onClick={handleTrainToneDna}
  disabled={isTraining}
- className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-3)] font-mono text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+ className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-3)] font-sans text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
  title="Fuerza el análisis de tus correcciones acumuladas ahora mismo (pitches y respuestas), en vez de esperar al refinamiento automático"
  >
  {isTraining ? <RefreshCw className="w-3 h-3 animate-spin" /> : <GraduationCap className="w-3 h-3" />}
@@ -792,7 +792,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  const savingManual = savingRuleKey === manualKey;
  return (
  <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1.5">
- <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ink-3)]">
+ <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--ink-3)]">
  {CATEGORY_LABELS[cat] || cat}
  </span>
  {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
@@ -830,12 +830,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </ul>
  )}
  {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
- <p className="text-[9px] font-mono text-[var(--ok)]/80">
+ <p className="text-[9px] font-sans text-[var(--ok)]/80">
  Vocabulario favorito: {reglas.vocabulario_aprendido.join(',')}
  </p>
  )}
  {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
- <p className="text-[9px] font-mono text-[var(--alert)]/80">
+ <p className="text-[9px] font-sans text-[var(--alert)]/80">
  Términos prohibidos: {reglas.terminos_a_evitar.join(',')}
  </p>
  )}
@@ -862,11 +862,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  })}
  </div>
  ) : (
- <p className="text-[10px] font-mono text-[var(--ink-2)]">
+ <p className="text-[10px] font-sans text-[var(--ink-2)]">
  Todavía no hay reglas aprendidas de respuestas. Corrige al menos 2 respuestas para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa"Entrenar ADN de tono ahora". Para no esperar a eso, puedes pegar directamente conversaciones reales buenas en <strong className="text-[var(--ink-3)]">Booking CRM → Plantillas de Email → Hilos de Email de Ejemplo</strong>.
  </p>
  )}
- <p className="text-[9px] font-mono text-[var(--ink-2)]">
+ <p className="text-[9px] font-sans text-[var(--ink-2)]">
  🔒 = regla escrita a mano, nunca se pierde al re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se fusiona con lo anterior en cada re-entrenamiento
  </p>
  </div>
@@ -881,7 +881,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
  <button
  onClick={onReAnalyze}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-mono font-bold text-xs uppercase tracking-wider cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans font-bold text-xs tracking-wider cursor-pointer"
  >
  Iniciar Análisis de Tono
  </button>

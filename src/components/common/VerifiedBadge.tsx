@@ -44,7 +44,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
  </span>
 
  {showLabel && (
- <span className="text-[11px] font-bold tracking-wide text-[var(--acc)]/70 uppercase bg-[var(--acc)]/10 px-1.5 py-0.5 rounded-md">
+ <span className="text-[11px] font-bold tracking-wide text-[var(--acc)]/70 bg-[var(--acc)]/10 px-1.5 py-0.5 rounded-md">
  Verificado
  </span>
  )}

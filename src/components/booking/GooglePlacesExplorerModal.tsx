@@ -614,10 +614,10 @@ export function GooglePlacesExplorerModal({
  </div>
  <div>
  <div className="flex items-center gap-2">
- <h2 className="text-base font-bold font-display uppercase tracking-wider text-[var(--acc)]">
+ <h2 className="text-base font-bold font-display tracking-wider text-[var(--acc)]">
  Buscador de Salas & Nuevos Leads (Scout Descubridor)
  </h2>
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]/70 font-mono font-bold">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]/70 font-sans font-bold">
  IA + Google Places
  </span>
  </div>
@@ -661,11 +661,11 @@ export function GooglePlacesExplorerModal({
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <span className="text-xs font-bold font-display uppercase tracking-wider text-[var(--acc)]/70">
+ <span className="text-xs font-bold font-display tracking-wider text-[var(--acc)]/70">
  Prospección Masiva de Campaña
  </span>
  {activeCampaign && (
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/60/20 text-[var(--ink)] font-mono">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/60/20 text-[var(--ink)] font-sans">
  {activeCampaign.name}
  </span>
  )}
@@ -699,7 +699,7 @@ export function GooglePlacesExplorerModal({
  {/* Selector de Tipos de Espacio para la prospección masiva */}
  <div className="pt-2 border-t border-[var(--hair)]800/80 flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className="text-[10px] uppercase font-mono text-[var(--ink-2)] font-bold mr-1">Espacios a rastrear:</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold mr-1">Espacios a rastrear:</span>
  {[
  { id:'sala', label:'Salas & Recintos', icon:'🏛️' },
  { id:'local', label:'Locales & Bares', icon:'☕' },
@@ -735,7 +735,7 @@ export function GooglePlacesExplorerModal({
  </div>
 
  {activeCampaign?.targetCities && activeCampaign.targetCities.length > 0 && (
- <span className="text-[10px] text-[var(--ink-2)] font-mono">
+ <span className="text-[10px] text-[var(--ink-2)] font-sans">
  Ciudades ({activeCampaign.targetCities.length}): <strong className="text-[var(--ink)]">{activeCampaign.targetCities.join(',')}</strong>
  </span>
  )}
@@ -764,14 +764,14 @@ export function GooglePlacesExplorerModal({
  {/* Category Selector Pills (8 Categorías) */}
  <div className="space-y-1.5">
  <div className="flex items-center justify-between">
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] font-bold">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] font-bold">
  Categoría a Descubrir:
  </label>
  {discardedList.length > 0 && (
  <button
  type="button"
  onClick={() => setShowDiscardedModal(true)}
- className="sm:hidden text-[10px] text-[var(--alert)] underline font-mono flex items-center gap-1 cursor-pointer"
+ className="sm:hidden text-[10px] text-[var(--alert)] underline font-sans flex items-center gap-1 cursor-pointer"
  >
  <Ban className="w-3 h-3" />
  {discardedList.length} no deseadas
@@ -841,7 +841,7 @@ export function GooglePlacesExplorerModal({
 
  {/* Number of Venues limit (1 a 10) */}
  <div className="md:col-span-3 flex items-center gap-1.5 bg-[var(--bg)] px-3 py-1 rounded-[var(--r-m)] border-[var(--hair)]800">
- <span className="text-[10px] font-mono text-[var(--ink-2)] whitespace-nowrap">Cantidad:</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)] whitespace-nowrap">Cantidad:</span>
  <input
  type="range"
  min="1"
@@ -850,7 +850,7 @@ export function GooglePlacesExplorerModal({
  onChange={e => setSearchLimit(Number(e.target.value))}
  className="w-full accent-[var(--acc)] cursor-pointer"
  />
- <span className="text-xs font-bold font-mono text-[var(--acc)] w-4 text-center">
+ <span className="text-xs font-bold font-sans text-[var(--acc)] w-4 text-center">
  {searchLimit}
  </span>
  </div>
@@ -861,7 +861,7 @@ export function GooglePlacesExplorerModal({
  <button
  type="button"
  onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
- className="text-[11px] text-[var(--ink-2)] hover:text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer font-mono"
+ className="text-[11px] text-[var(--ink-2)] hover:text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer font-sans"
  >
  <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>{showAdvancedFilters ?'Ocultar Filtros de Aforo' :'Filtros Avanzados de Aforo'}</span>
@@ -881,7 +881,7 @@ export function GooglePlacesExplorerModal({
  {showAdvancedFilters && (
  <div className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-2 gap-3 animate-fadeIn text-xs">
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Aforo Mínimo (personas)
  </label>
  <input
@@ -893,7 +893,7 @@ export function GooglePlacesExplorerModal({
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Aforo Máximo (personas)
  </label>
  <input
@@ -909,7 +909,7 @@ export function GooglePlacesExplorerModal({
 
  {/* Quick City Chips */}
  <div className="flex flex-wrap items-center gap-1.5 pt-1">
- <span className="text-[10px] text-[var(--ink-2)] font-bold uppercase tracking-wider mr-1">Ciudades rápidas:</span>
+ <span className="text-[10px] text-[var(--ink-2)] font-bold tracking-wider mr-1">Ciudades rápidas:</span>
  {QUICK_CITIES.map(city => (
  <button
  key={city}
@@ -1038,7 +1038,7 @@ export function GooglePlacesExplorerModal({
  {place.nombre_sala}
  </h4>
  {place.alreadyInCrm && (
- <span className="text-[9px] px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded font-bold uppercase tracking-wider shrink-0" title="Este contacto ya existe en tu CRM de Leads">
+ <span className="text-[9px] px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded font-bold tracking-wider shrink-0" title="Este contacto ya existe en tu CRM de Leads">
  En CRM ({place.crmStatus ||'Registrado'})
  </span>
  )}
@@ -1080,7 +1080,7 @@ export function GooglePlacesExplorerModal({
  {/* Category & Tags Row */}
  <div className="flex flex-wrap items-center justify-between gap-1.5 pt-0.5 text-[10px]">
  <div className="flex items-center gap-1.5">
- <span className="text-[var(--ink-2)] font-mono">Categoría:</span>
+ <span className="text-[var(--ink-2)] font-sans">Categoría:</span>
  <select
  value={String(place.tipo ||'sala').toLowerCase()}
  onChange={(e) => handlePlaceCategoryChange(place.place_id, e.target.value as LeadType)}
@@ -1102,7 +1102,7 @@ export function GooglePlacesExplorerModal({
  </span>
  )}
  {place.aforo ? (
- <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--sunken)] text-[var(--ink-2)] font-mono shrink-0">
+ <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--sunken)] text-[var(--ink-2)] font-sans shrink-0">
  <Users className="w-2.5 h-2.5 text-[var(--ink-2)]" />
  <span>~{place.aforo}</span>
  </span>
@@ -1121,7 +1121,7 @@ export function GooglePlacesExplorerModal({
  )}
 
  {/* Address & Phone */}
- <div className="text-[10px] text-[var(--ink-2)] space-y-1 bg-[var(--bg)] p-2 rounded-[var(--r-s)] font-mono">
+ <div className="text-[10px] text-[var(--ink-2)] space-y-1 bg-[var(--bg)] p-2 rounded-[var(--r-s)] font-sans">
  {place.direccion && (
  <p className="truncate text-[var(--ink-2)]">{place.direccion}</p>
  )}
@@ -1149,12 +1149,12 @@ export function GooglePlacesExplorerModal({
  {/* Email Status & Extractor */}
  <div className="pt-1">
  {place.email_contacto ? (
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ink-2)] text-[11px] flex items-center justify-between font-mono">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ink-2)] text-[11px] flex items-center justify-between font-sans">
  <div className="flex items-center gap-1.5 truncate">
  <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
  <span className="font-bold truncate">{place.email_contacto}</span>
  </div>
- <span className="text-[9px] px-1.5 py-0.5 bg-[var(--ok)]/20 text-[var(--ink-2)] rounded uppercase font-bold shrink-0">
+ <span className="text-[9px] px-1.5 py-0.5 bg-[var(--ok)]/20 text-[var(--ink-2)] rounded font-bold shrink-0">
  Verificado
  </span>
  </div>
@@ -1227,7 +1227,7 @@ export function GooglePlacesExplorerModal({
  >
  <div className="min-w-0">
  <p className="font-bold text-[var(--ink)] truncate">{item.nombre_sala}</p>
- <p className="text-[10px] text-[var(--ink-2)] font-mono">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans">
  {item.ciudad ? `${item.ciudad} • ` :''}Descartada el {new Date(item.discarded_at).toLocaleDateString()}
  </p>
  </div>

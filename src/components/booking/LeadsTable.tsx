@@ -112,7 +112,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
  {/* Quick select buttons in Grid view */}
  {viewMode ==='grid' && onToggleSelectLead && (
- <div className="flex items-center gap-2 text-xs font-mono ml-auto">
+ <div className="flex items-center gap-2 text-xs font-sans ml-auto">
  <button
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAllFiltered}
@@ -333,7 +333,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <div className="overflow-x-auto rounded-[var(--r-l)] bg-[var(--surface)] pb-10">
  <table className="w-full text-left border-collapse min-w-[980px]">
  <thead>
- <tr className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ink-2)] bg-[var(--sunken)]">
+ <tr className="text-[10px] font-semibold tracking-wider text-[var(--ink-2)] bg-[var(--sunken)]">
  
  {/* Select All Checkbox Header */}
  {onToggleSelectLead && (

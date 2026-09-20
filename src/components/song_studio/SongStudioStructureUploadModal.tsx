@@ -191,7 +191,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  </div>
  <div>
  <h3 className="text-base font-bold">Subir Estructura de Canción</h3>
- <p className="text-xs text-[var(--tentative)]/80 font-mono">PDF, imagen o Word → IA extrae acordes</p>
+ <p className="text-xs text-[var(--tentative)]/80 font-sans">PDF, imagen o Word → IA extrae acordes</p>
  </div>
  </div>
  <button
@@ -409,7 +409,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  {showComparison && (
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-[var(--ok)]/20">
  <div className="space-y-1.5">
- <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Documento original</p>
+ <p className="text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Documento original</p>
  <div className="bg-[var(--sunken)] border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden max-h-96">
  {isImageDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl) ? (
  <img
@@ -431,9 +431,9 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  </div>
  </div>
  <div className="space-y-1.5">
- <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
+ <p className="text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
  <div className="bg-[var(--sunken)] border-[var(--hair)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
- <pre className="text-[11px] font-mono text-[var(--acc)] whitespace-pre-wrap leading-relaxed">
+ <pre className="text-[11px] font-sans text-[var(--acc)] whitespace-pre-wrap leading-relaxed">
  {song.cifradoTexto ||'Sin acordes guardados todavía.'}
  </pre>
  </div>

@@ -1007,7 +1007,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <div className="p-5 sm:p-6 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--bg)]/50">
  <div>
  <div className="flex items-center gap-2">
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold uppercase tracking-wider">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold tracking-wider">
  Configuración Inicial · Plan {userPlanId.toUpperCase().replace('_','')}
  </span>
  {!isCelebrationStep && (

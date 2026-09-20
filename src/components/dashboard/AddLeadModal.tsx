@@ -57,7 +57,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className="bg-[var(--surface)] rounded-[var(--r-m)] w-full max-w-lg overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-200 my-auto max-h-[90vh] overflow-y-auto">
  <div className="p-4 flex justify-between items-center bg-[var(--sunken)]">
- <h3 className="text-sm font-bold font-display uppercase tracking-widest text-[var(--ink)] flex items-center gap-1.5">
+ <h3 className="text-sm font-bold font-display tracking-widest text-[var(--ink)] flex items-center gap-1.5">
  <Plus className="w-4 h-4" /> Agregar Nueva Sala a la Hoja
  </h3>
  <button 
@@ -71,7 +71,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  <form onSubmit={onAddSubmit} className="p-5 space-y-4 text-[10px] font-sans">
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div className="space-y-1.5">
- <label className="block text-[10px] uppercase font-mono tracking-wider text-[var(--ink-2)]">Nombre de la Sala*</label>
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Nombre de la Sala*</label>
  <input
  id="new-lead-sala"
  type="text"
@@ -79,12 +79,12 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newSala}
  onChange={(e) => setNewSala(e.target.value)}
  placeholder="Ej: Sala Apolo"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
  <div className="space-y-1.5">
- <label className="block text-[10px] uppercase font-mono tracking-wider text-[var(--ink-2)]">Ciudad*</label>
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Ciudad*</label>
  <input
  id="new-lead-ciudad"
  type="text"
@@ -92,51 +92,51 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newCiudad}
  onChange={(e) => setNewCiudad(e.target.value)}
  placeholder="Ej: Barcelona"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
  <div className="space-y-1.5">
- <label className="block text-[10px] uppercase font-mono tracking-wider text-[var(--ink-2)]">Región / Provincia</label>
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Región / Provincia</label>
  <input
  id="new-lead-region"
  type="text"
  value={newRegion}
  onChange={(e) => setNewRegion(e.target.value)}
  placeholder="Ej: Cataluña"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
  <div className="space-y-1.5">
- <label className="block text-[10px] uppercase font-mono tracking-wider text-[var(--ink-2)]">Aforo Estimado (Pax)</label>
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Aforo Estimado (Pax)</label>
  <input
  id="new-lead-aforo"
  type="number"
  value={newAforo}
  onChange={(e) => setNewAforo(Number(e.target.value))}
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
  <div className="space-y-1.5">
- <label className="block text-[10px] uppercase font-mono tracking-wider text-[var(--ink-2)]">Género Musical Preferente</label>
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Género Musical Preferente</label>
  <input
  id="new-lead-genero"
  type="text"
  value={newGenero}
  onChange={(e) => setNewGenero(e.target.value)}
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
  <div className="space-y-1.5">
- <label className="block text-[10px] uppercase font-mono tracking-wider text-[var(--ink-2)]">Categoría de Contacto</label>
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Categoría de Contacto</label>
  <select
  id="new-lead-tipo"
  value={newTipo}
  onChange={(e) => setNewTipo(e.target.value as LeadType)}
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono cursor-pointer"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans cursor-pointer"
  >
  <option value="sala">🏛️ Sala / Teatro (Booking directo)</option>
  <option value="festival">🎪 Festival (Escenarios / Carteles)</option>
@@ -148,32 +148,32 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  </div>
 
  <div className="space-y-1.5">
- <label className="block text-[10px] uppercase font-mono tracking-wider text-[var(--ink-2)]">Usuario de Instagram (@)</label>
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Usuario de Instagram (@)</label>
  <input
  id="new-lead-instagram"
  type="text"
  value={newInstagram}
  onChange={(e) => setNewInstagram(e.target.value)}
  placeholder="Ej: @sala_apolo"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
  />
  </div>
  </div>
 
  <div className="space-y-1.5 col-span-2">
- <label className="block text-[10px] uppercase font-mono tracking-wider text-[var(--ink-2)]">Email de Contacto (Opcional, sino Scout lo buscará)</label>
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Email de Contacto (Opcional, sino Scout lo buscará)</label>
  <input
  id="new-lead-email"
  type="email"
  value={newEmail}
  onChange={(e) => setNewEmail(e.target.value)}
  placeholder="Ej: booking@salaapolo.com"
- className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans"
  />
  </div>
 
  <div className="space-y-1.5 col-span-2">
- <label className="block text-[10px] uppercase font-mono tracking-wider text-[var(--ink-2)]">Notas Iniciales</label>
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Notas Iniciales</label>
  <textarea
  id="new-lead-notes"
  rows={3}
@@ -189,14 +189,14 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  id="btn-add-cancel"
  type="button"
  onClick={onClose}
- className="px-2 py-1 bg-[var(--surface)] text-[var(--ink-2)] font-mono text-[10px] uppercase rounded-[var(--r-s)] transition-all cursor-pointer"
+ className="px-2 py-1 bg-[var(--surface)] text-[var(--ink-2)] font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer"
  >
  Cancelar
  </button>
  <button
  id="btn-add-submit"
  type="submit"
- className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-mono font-bold text-[10px] uppercase rounded-[var(--r-s)] transition-all cursor-pointer shadow-lg shadow-zinc-500/10"
+ className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-sans font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer shadow-lg shadow-zinc-500/10"
  >
  Confirmar Registro
  </button>

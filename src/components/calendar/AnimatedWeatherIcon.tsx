@@ -413,7 +413,7 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
  <motion.div
  initial={{ opacity: 0, scale: 0.95 }}
  animate={{ opacity: 1, scale: 1 }}
- className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold tracking-tight backdrop-blur-sm ${style.bg} ${style.glow}`}
+ className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-tight backdrop-blur-sm ${style.bg} ${style.glow}`}
  >
  <AnimatedWeatherIcon
  iconType={alert.icon}

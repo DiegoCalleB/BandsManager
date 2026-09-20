@@ -126,7 +126,7 @@ export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({
  <span>{health.label}</span>
  </span>
  {showDescription && (
- <span className="text-[10px] text-[var(--ink-2)] font-mono tracking-tight pl-1">
+ <span className="text-[10px] text-[var(--ink-2)] font-sans tracking-tight pl-1">
  {health.description}
  </span>
  )}

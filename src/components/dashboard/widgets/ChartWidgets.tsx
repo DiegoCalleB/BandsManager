@@ -264,10 +264,10 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  <Building2 className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
  Embudo de Contrataciones
  </h3>
- <p className="text-[11px] font-mono text-[var(--ink-2)]">Conversión de Salas & Festivales</p>
+ <p className="text-[11px] font-sans text-[var(--ink-2)]">Conversión de Salas & Festivales</p>
  </div>
  </div>
 
@@ -275,7 +275,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  <button
  type="button"
  onClick={() => onNavigate('booking')}
- className="text-xs font-mono text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-sans text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Ver CRM</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -283,7 +283,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  )}
  </div>
 
- <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono">
+ <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-sans">
  <span className="text-[var(--ink-2)]">Tasa de Conversión a Conciertos:</span>
  <span className="font-bold text-[var(--ok)] flex items-center gap-1">
  <TrendingUp className="w-3.5 h-3.5" /> {conversionRate}% ({counts.confirmado} cierres)
@@ -339,10 +339,10 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  <DollarSign className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
  Evolución Financiera & Caché
  </h3>
- <p className="text-[11px] font-mono text-[var(--ink-2)]">Ingresos vs Gastos de Directos</p>
+ <p className="text-[11px] font-sans text-[var(--ink-2)]">Ingresos vs Gastos de Directos</p>
  </div>
  </div>
 
@@ -350,7 +350,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  <button
  type="button"
  onClick={() => onNavigate('finanzas')}
- className="text-xs font-mono text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-sans text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Finanzas</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -358,13 +358,13 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  )}
  </div>
 
- <div className="grid grid-cols-2 gap-2 font-mono text-xs text-center">
+ <div className="grid grid-cols-2 gap-2 font-sans text-xs text-center">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
- <span className="text-[10px] text-[var(--ink-2)] block uppercase">Ingresos Totales</span>
+ <span className="text-[10px] text-[var(--ink-2)] block">Ingresos Totales</span>
  <span className="font-bold text-[var(--ok)] text-sm">+{totalIngresos}€</span>
  </div>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
- <span className="text-[10px] text-[var(--ink-2)] block uppercase">Neto / Beneficio</span>
+ <span className="text-[10px] text-[var(--ink-2)] block">Neto / Beneficio</span>
  <span className="font-bold text-[var(--acc)] text-sm">+{beneficio}€</span>
  </div>
  </div>
@@ -380,7 +380,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-[var(--ink)] z-50">
+ <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] shadow-xl font-sans text-xs text-[var(--ink)] z-50">
  <div className="font-bold text-[var(--ok)]">{data.month}</div>
  <div className="text-[var(--ink-2)] mt-1 space-y-0.5">
  <div>Ingresos: <span className="font-bold text-[var(--ok)]">+{data.ingresos}€</span></div>
@@ -423,10 +423,10 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  <Users className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
  Captación de Fans & QR
  </h3>
- <p className="text-[11px] font-mono text-[var(--ink-2)]">Crecimiento en Registro de Seguidores</p>
+ <p className="text-[11px] font-sans text-[var(--ink-2)]">Crecimiento en Registro de Seguidores</p>
  </div>
  </div>
 
@@ -434,7 +434,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  <button
  type="button"
  onClick={() => onNavigate('fans')}
- className="text-xs font-mono text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
+ className="text-xs font-sans text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
  >
  <span>Captura QR</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -442,7 +442,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  )}
  </div>
 
- <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono">
+ <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans">
  <span className="text-[var(--ink-2)]">Fans Registrados:</span>
  <span className="font-bold text-[var(--acc)] text-sm">{fansCount > 0 ? fansCount : 85} seguidores</span>
  </div>

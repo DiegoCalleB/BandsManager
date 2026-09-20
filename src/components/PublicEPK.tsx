@@ -217,14 +217,14 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  { label: t('etiquetaFormatos'), valor: contenido.dato('formatos') }
  ].filter(d => d.valor).map(d => (
  <div key={d.label} className={`${styles.card} rounded-[var(--r-m)] p-4`}>
- <p className="text-[10px] uppercase tracking-wider opacity-60 font-semibold">{d.label}</p>
+ <p className="text-[10px] tracking-wider opacity-60 font-semibold">{d.label}</p>
  <p className="font-bold mt-1 text-sm">{d.valor}</p>
  </div>
  ))}
  </div>
  {contenido.dato('necesidadesEscenario') && (
  <div className={`${styles.card} rounded-[var(--r-m)] p-4`}>
- <p className="text-[10px] uppercase tracking-wider opacity-60 font-semibold">{t('etiquetaNecesidades')}</p>
+ <p className="text-[10px] tracking-wider opacity-60 font-semibold">{t('etiquetaNecesidades')}</p>
  <p className="text-sm mt-1 opacity-80">{contenido.dato('necesidadesEscenario')}</p>
  </div>
  )}
@@ -317,7 +317,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <span className="w-3.5 h-3.5 rounded-[4px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center p-[2px] text-[var(--ink)] shrink-0 group-hover/ig:scale-110 transition-transform shadow-xs">
  <Instagram className="w-full h-full stroke-[2.5]" />
  </span>
- <span className="text-[11px] font-mono font-medium truncate max-w-[85px] sm:max-w-[110px]">
+ <span className="text-[11px] font-sans font-medium truncate max-w-[85px] sm:max-w-[110px]">
  @{username}
  </span>
  <span className="text-[10px] font-semibold text-[var(--alert)] group-hover/ig:text-[var(--alert)]/60 shrink-0 ml-0.5">
@@ -361,16 +361,16 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <span className={`w-2 h-2 rounded-full ${styles.accentBtn.includes('fuchsia') ?'bg-[var(--tentative)]/80' : styles.accentBtn.includes('orange') ?'bg-[var(--acc)]/80' :'bg-[var(--acc)]/60'} shrink-0`}></span>
  <span>{config.contactoBooking?.nombre || t('managerPorDefecto')}</span>
  </div>
- <div className="flex items-center gap-2.5 font-mono">
+ <div className="flex items-center gap-2.5 font-sans">
  <Mail className="w-4 h-4 shrink-0 opacity-80" />
  <a href={`mailto:${config.contactoBooking?.email}`} className="hover:underline">{config.contactoBooking?.email}</a>
  </div>
- <div className="flex items-center gap-2.5 font-mono">
+ <div className="flex items-center gap-2.5 font-sans">
  <Phone className="w-4 h-4 shrink-0 opacity-80" />
  <a href={`tel:${config.contactoBooking?.telefono}`} className="hover:underline">{config.contactoBooking?.telefono}</a>
  </div>
  {config.enlacesRedes?.website && (
- <div className="flex items-center gap-2.5 font-mono">
+ <div className="flex items-center gap-2.5 font-sans">
  <Globe className="w-4 h-4 shrink-0 opacity-80" />
  <a
  href={safeUrl(config.enlacesRedes.website)}
@@ -410,7 +410,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
  {t('seccionPrensa')}
  </h2>
- <p className="text-xs sm:text-sm opacity-70 font-mono pt-1">
+ <p className="text-xs sm:text-sm opacity-70 font-sans pt-1">
  {t('prensaSubtitulo')}
  </p>
  </div>
@@ -423,7 +423,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </p>
  </div>
  <div className="pt-3 border-t border-current/15">
- <span className={`text-xs font-black ${styles.quoteMedium} uppercase tracking-wider font-mono`}>
+ <span className={`text-xs font-black ${styles.quoteMedium} tracking-wider font-sans`}>
  {cita.medio}
  </span>
  </div>
@@ -585,7 +585,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <div key={c.id} className={`${styles.card} rounded-[var(--r-m)] p-3.5 space-y-2.5`}>
  <div className="flex items-center justify-between gap-4">
  <div className="flex items-center gap-3">
- <span className={`px-2.5 py-1 rounded ${styles.badge} font-mono text-xs font-bold shrink-0 border`}>
+ <span className={`px-2.5 py-1 rounded ${styles.badge} font-sans text-xs font-bold shrink-0 border`}>
  {c.fecha}
  </span>
  <div>
@@ -656,7 +656,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  className={`px-2 py-1 rounded-md text-xs font-bold transition ${language === l.code ? styles.accentBtn :'opacity-70 hover:opacity-100'}`}
  >
  <span aria-hidden="true">{l.flag}</span>
- <span className="hidden sm:inline ml-1 uppercase">{l.code}</span>
+ <span className="hidden sm:inline ml-1">{l.code}</span>
  </button>
  ))}
  </div>
@@ -774,7 +774,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  {isCurrentlyPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
  </button>
  <div className="min-w-0 pr-1">
- <p className={`text-[10px] ${styles.accentText} font-bold uppercase tracking-wider flex items-center gap-1`}>
+ <p className={`text-[10px] ${styles.accentText} font-bold tracking-wider flex items-center gap-1`}>
  <Music className="w-3 h-3 animate-pulse" /> {isCurrentlyPlaying ? t('playerPista') :'Audio Demo'}
  </p>
  <p className="text-xs font-bold truncate">{activeSong.titulo}</p>

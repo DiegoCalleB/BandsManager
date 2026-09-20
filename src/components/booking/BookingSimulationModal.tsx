@@ -198,7 +198,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  rows={5}
  value={simulationMessage}
  onChange={(e) => setSimulationMessage(e.target.value)}
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] font-mono text-[11px] outline-none"
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] font-sans text-[11px] outline-none"
  style={{ borderColor: colors.border }}
  />
  </div>

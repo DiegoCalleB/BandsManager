@@ -253,7 +253,7 @@ export function processChordText(
     // If line contains bracketed chords, it's already handled
     if (line.includes('[')) return line;
 
-    // Check if line is purely a chord line (mostly uppercase chord tokens with spaces)
+    // Check if line is purely a chord line (mostly chord tokens with spaces)
     const tokens = line.trim().split(/\s+/);
     if (tokens.length === 0 || line.trim() === '') return line;
 

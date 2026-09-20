@@ -34,7 +34,7 @@ export function AssignSetlistModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] space-y-4 shadow-2xl my-auto max-h-[90vh] overflow-y-auto ${colors.card}`}>
  <div className="flex justify-between items-center pb-3">
- <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
+ <h3 className={`text-sm font-bold font-sans ${colors.text}`}>
  Asignar Repertorio a Concierto / Ensayo
  </h3>
  <button onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)]">
@@ -44,11 +44,11 @@ export function AssignSetlistModal({
 
  <p className="text-[10px] text-[var(--ink-2)] font-sans">
  Selecciona el concierto o ensayo al que deseas vincular el repertorio{''}
- <strong className="text-[var(--acc)] font-mono">"{assigningSetlist.nombre}"</strong>:
+ <strong className="text-[var(--acc)] font-sans">"{assigningSetlist.nombre}"</strong>:
  </p>
 
- <div className="space-y-2 max-h-60 overflow-y-auto pr-1 text-[10px] font-mono">
- <div className="text-[10px] text-[var(--acc)] uppercase font-bold pt-1">Próximos Conciertos:</div>
+ <div className="space-y-2 max-h-60 overflow-y-auto pr-1 text-[10px] font-sans">
+ <div className="text-[10px] text-[var(--acc)] font-bold pt-1">Próximos Conciertos:</div>
  {concerts.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-6">
  <PublicoSilhouette opacity={12} size="small" />
@@ -82,7 +82,7 @@ export function AssignSetlistModal({
  ))
  )}
 
- <div className="text-[10px] text-[var(--ok)] uppercase font-bold pt-3">Próximos Ensayos:</div>
+ <div className="text-[10px] text-[var(--ok)] font-bold pt-3">Próximos Ensayos:</div>
  {rehearsals.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-6">
  <PublicoSilhouette opacity={12} size="small" />
@@ -120,14 +120,14 @@ export function AssignSetlistModal({
  <div className="pt-3 flex justify-end gap-2">
  <button
  onClick={onClose}
- className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] text-[10px] font-mono"
+ className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] text-[10px] font-sans"
  >
  Cancelar
  </button>
  <button
  onClick={onSave}
  disabled={!selectedConcertToAssign}
- className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold disabled:opacity-40 ${
+ className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold disabled:opacity-40 ${
  'bg-[var(--acc)] text-[var(--on-acc)]'
  }`}
  >

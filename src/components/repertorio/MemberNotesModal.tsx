@@ -172,7 +172,7 @@ export function MemberNotesModal({
  <Users className="w-5 h-5" />
  </div>
  <div>
- <h3 className={`text-base font-black font-display uppercase tracking-wider ${
+ <h3 className={`text-base font-black font-display tracking-wider ${
  isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'
  }`}>
  Notas para Repertorio por Miembro
@@ -195,8 +195,8 @@ export function MemberNotesModal({
  {(() => {
  const summary = getReadinessSummary({ notasPorMiembro: Object.entries(memberReadiness).filter(([, v]) => v).map(([k, v]) => ({ memberName: k, estadoPreparacion: v })) }, allMembersToDisplay.length);
  return (
- <div className="flex items-center gap-2 flex-wrap pt-3 text-[11px] font-mono">
- <span className="text-[var(--ink-2)] uppercase font-bold">Preparación de la banda:</span>
+ <div className="flex items-center gap-2 flex-wrap pt-3 text-[11px] font-sans">
+ <span className="text-[var(--ink-2)] font-bold">Preparación de la banda:</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--ok)]/10 text-[var(--ok)]">✅ {summary.lista} listos</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]/80">🔶 {summary.casiLista} casi</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]">🌱 {summary.aprendiendo} aprendiendo</span>
@@ -226,7 +226,7 @@ export function MemberNotesModal({
  <div className={`p-3.5 rounded-[var(--r-m)] ${
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/90'
  }`}>
- <label className={`block text-xs font-bold font-mono uppercase mb-1.5 ${
+ <label className={`block text-xs font-bold font-sans mb-1.5 ${
  isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
  }`}>
  📌 Nota General para todo el Grupo (Opcional)
@@ -244,7 +244,7 @@ export function MemberNotesModal({
 
  <div className="space-y-3">
  <div className="flex items-center justify-between">
- <span className={`text-xs font-mono font-bold uppercase tracking-wider ${
+ <span className={`text-xs font-sans font-bold tracking-wider ${
  isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
  }`}>
  Miembros de la Banda ({allMembersToDisplay.length})
@@ -252,7 +252,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={() => setShowAddCustomMember(true)}
- className="text-xs text-[var(--ok)] hover:text-[var(--ok)] font-mono flex items-center gap-1 font-bold cursor-pointer transition-colors"
+ className="text-xs text-[var(--ok)] hover:text-[var(--ok)] font-sans flex items-center gap-1 font-bold cursor-pointer transition-colors"
  >
  <Plus className="w-3.5 h-3.5" /> + Añadir Músico / Suplente
  </button>
@@ -320,7 +320,7 @@ export function MemberNotesModal({
  <div className="flex items-center justify-between mb-2">
  <div className="flex items-center gap-2.5">
  <div
- className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-xs text-[var(--ink)] uppercase shadow-sm"
+ className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-xs text-[var(--ink)] shadow-sm"
  style={{ backgroundColor: member.avatarColor ||'#6366f1' }}
  >
  {member.name.charAt(0)}
@@ -329,14 +329,14 @@ export function MemberNotesModal({
  <span className={`text-sm font-bold ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}`}>
  {member.name}
  </span>
- <span className="ml-2 text-[11px] px-2 py-0.5 rounded-md bg-[var(--ink)]/10 text-[var(--ink-2)] font-mono">
+ <span className="ml-2 text-[11px] px-2 py-0.5 rounded-md bg-[var(--ink)]/10 text-[var(--ink-2)] font-sans">
  {member.instrument}
  </span>
  </div>
  </div>
 
  {hasNote && (
- <span className="text-[10px] font-mono font-bold text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+ <span className="text-[10px] font-sans font-bold text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded-full flex items-center gap-1">
  <Check className="w-3 h-3" /> Con notas
  </span>
  )}
@@ -350,7 +350,7 @@ export function MemberNotesModal({
  type="button"
  onClick={() => handleReadinessChange(memberKey, level.value)}
  title={level.label}
- className={`text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] transition-all ${
+ className={`text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] transition-all ${
  memberReadiness[memberKey] === level.value
  ? level.colorClass
  :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-transparent hover:border-[var(--hair)]'

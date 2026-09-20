@@ -586,7 +586,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="w-full space-y-5 relative">
  {/* Feedback Alert for Bolo Confirmado */}
  {feedbackBoloMsg && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--ok)]/20 text-[var(--ink-2)] font-mono text-xs font-bold flex items-center justify-between gap-2 shadow-lg animate-fadeIn">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--ok)]/20 text-[var(--ink-2)] font-sans text-xs font-bold flex items-center justify-between gap-2 shadow-lg animate-fadeIn">
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-[var(--ok)]" />
  <span>{feedbackBoloMsg}</span>
@@ -680,7 +680,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex flex-wrap items-center gap-2">
  {/* Category / Type Recategorizer */}
  <div className="flex items-center gap-1.5 bg-[var(--bg)] px-2.5 py-1 rounded-[var(--r-m)]">
- <span className="text-[10px] text-[var(--acc)] font-mono font-bold uppercase">Tipo:</span>
+ <span className="text-[10px] text-[var(--acc)] font-sans font-bold">Tipo:</span>
  <select
  value={String(selectedLead.tipo ||'sala').toLowerCase()}
  onChange={(e) => {
@@ -885,17 +885,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* CONTACT & LOCATION CARD */}
  <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2.5 border-[var(--hair)]800">
  <div className="flex items-center justify-between">
- <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-[var(--ink-2)]">
+ <p className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)]">
  Ficha de Contacto & Ubicación
  </p>
  <div className="flex items-center gap-2 flex-wrap justify-end">
  {selectedLead.email_contacto && (
- <span className="text-xs text-[var(--acc)]/70 font-mono font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Principal: ${selectedLead.email_contacto}`}>
+ <span className="text-xs text-[var(--acc)]/70 font-sans font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Principal: ${selectedLead.email_contacto}`}>
  ✉️ {selectedLead.email_contacto}
  </span>
  )}
  {selectedLead.email_secundario && (
- <span className="text-xs text-[var(--acc)]/80 font-mono font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Secundario / Promotora: ${selectedLead.email_secundario}`}>
+ <span className="text-xs text-[var(--acc)]/80 font-sans font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Secundario / Promotora: ${selectedLead.email_secundario}`}>
  ✉️2 {selectedLead.email_secundario}
  </span>
  )}
@@ -912,7 +912,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {enrichStatusMsg && (
- <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--acc)]/70 text-[11px] font-mono flex items-center gap-1.5 animate-fadeIn">
+ <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-[var(--acc)]/70 text-[11px] font-sans flex items-center gap-1.5 animate-fadeIn">
  <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
  <span>{enrichStatusMsg}</span>
  </div>
@@ -948,7 +948,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* ROSTER / ARTISTAS REPRESENTADOS (Si aplica) */}
  {(selectedLead.roster || ['agencia','manager','productora','sello','grupo'].includes(String(selectedLead.tipo ||'').toLowerCase())) && (
  <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2">
- <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+ <p className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
  <span>🎸</span> Róster de Artistas & Servicios de Representación
  </p>
  {selectedLead.roster ? (
@@ -968,7 +968,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={() => setActiveTab('info')}
- className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 cursor-pointer ${
+ className={`pb-2 text-xs font-sans font-bold tracking-wide transition-all px-3 cursor-pointer ${
  activeTab ==='info'
  ?'border-b-2 border-[var(--acc)] text-[var(--acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -980,7 +980,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={() => setActiveTab('emails')}
- className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
+ className={`pb-2 text-xs font-sans font-bold tracking-wide transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
  activeTab ==='emails'
  ?'border-b-2 border-[var(--acc)] text-[var(--acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -998,7 +998,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={() => setActiveTab('bitacora')}
- className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
+ className={`pb-2 text-xs font-sans font-bold tracking-wide transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
  activeTab ==='bitacora'
  ?'border-b-2 border-[var(--acc)] text-[var(--acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1016,7 +1016,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {isEditingLeadInfo && (
  <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--surface)] text-[var(--ink)] shadow-xl">
  <div className="flex justify-between items-center pb-2 border-b border-[var(--hair)]800">
- <span className="font-bold text-xs uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+ <span className="font-bold text-xs tracking-wider text-[var(--acc)] flex items-center gap-1.5">
  <Edit3 className="w-3.5 h-3.5" /> Editar Ficha ({selectedLead.nombre_sala})
  </span>
  <div className="flex gap-2">
@@ -1038,7 +1038,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="space-y-3 text-xs">
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Nombre Sala / Espacio / Contacto
  </label>
  <input
@@ -1052,7 +1052,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--acc)] font-bold mb-1">
+ <label className="block text-[10px] font-sans text-[var(--acc)] font-bold mb-1">
  Tipo / Categoría de Lead
  </label>
  <select
@@ -1079,7 +1079,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* Logo Selector */}
  <div className="bg-[var(--bg)]/60 p-3 rounded-[var(--r-m)] border-[var(--hair)]800 space-y-2.5">
  <div className="flex items-center justify-between flex-wrap gap-2">
- <label className="block text-[10px] uppercase font-sans tracking-wider text-[var(--ink-2)]">
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
  Icono o Logo del Medio / Sala
  </label>
  <div className="flex items-center gap-2">
@@ -1167,7 +1167,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* DIRECCIÓN / CALLE */}
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
+ <label className="block text-[10px] font-sans text-[var(--acc)] font-bold mb-1 flex items-center gap-1">
  📍 Dirección Exacta (Calle, Número...)
  </label>
  <input
@@ -1183,7 +1183,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Ciudad
  </label>
  <input
@@ -1197,7 +1197,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Región / Provincia
  </label>
  <input
@@ -1214,7 +1214,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Persona de Contacto
  </label>
  <input
@@ -1228,7 +1228,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Email Principal (Contratación)
  </label>
  <input
@@ -1244,7 +1244,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--acc)] font-bold mb-1">
+ <label className="block text-[10px] font-sans text-[var(--acc)] font-bold mb-1">
  ✉️ Email Secundario / Promotora / Alternativo
  </label>
  <input
@@ -1260,7 +1260,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Teléfono
  </label>
  <input
@@ -1274,7 +1274,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Aforo (personas)
  </label>
  <input
@@ -1290,7 +1290,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="block text-[10px] uppercase font-mono text-[var(--acc)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--acc)] mb-1">
  Róster de Artistas / Bandas que representa
  </label>
  <input
@@ -1306,7 +1306,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <div className="space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] uppercase font-mono text-[var(--acc)]">
+ <span className="text-[10px] font-sans text-[var(--acc)]">
  🎪 Fechas del Festival (Inicio / Fin)
  </span>
  <button
@@ -1322,7 +1322,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Inicio Festival (dd/mm/yyyy)
  </label>
  <input
@@ -1335,7 +1335,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--acc)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--acc)] mb-1">
  🎪 Fin Festival (dd/mm/yyyy)
  </label>
  <input
@@ -1352,7 +1352,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Sitio Web
  </label>
  <input
@@ -1366,7 +1366,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  />
  </div>
  <div>
- <label className="block text-[10px] uppercase font-mono text-[var(--ink-2)] mb-1">
+ <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
  Instagram
  </label>
  <input
@@ -1387,7 +1387,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* Pitch Generator Section */}
  <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-3 border-[var(--hair)]800">
  <div className="flex items-center justify-between flex-wrap gap-2">
- <span className="text-xs font-bold font-sans uppercase text-[var(--acc)] tracking-wider">
+ <span className="text-xs font-bold font-sans text-[var(--acc)] tracking-wider">
  {isReplyStage ?'💬 Respuesta Redactada por IA' :'✉️ Propuesta de Pitch Redactada'}
  </span>
  <div className="flex items-center gap-1.5 flex-wrap">
@@ -1471,7 +1471,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
  />
  <div className="flex items-center justify-between gap-2">
- <span className="text-[10px] text-[var(--ink-2)] font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa'Regenerar' con estrellas/comentario y marca'Solo para esta sala' en vez de editar aquí.">
+ <span className="text-[10px] text-[var(--ink-2)] font-sans" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa'Regenerar' con estrellas/comentario y marca'Solo para esta sala' en vez de editar aquí.">
  ✏️ Esta edición se usará también para entrenar al Redactor
  </span>
  <div className="flex gap-2 shrink-0">
@@ -1510,9 +1510,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-[var(--acc)]" />
- <span className="text-xs font-bold text-[var(--acc)]/70 font-sans uppercase tracking-wider flex items-center gap-1.5">
+ <span className="text-xs font-bold text-[var(--acc)]/70 font-sans tracking-wider flex items-center gap-1.5">
  Aprendizaje Agéntico & ADN de Tono
- <span className="text-[9px] bg-[var(--acc)]/20 text-[var(--acc)]/70 px-1.5 py-0.5 rounded font-mono font-normal">
+ <span className="text-[9px] bg-[var(--acc)]/20 text-[var(--acc)]/70 px-1.5 py-0.5 rounded font-sans font-normal">
  Dynamic Few-Shot
  </span>
  </span>
@@ -1521,7 +1521,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={() => setShowFeedbackHistory(!showFeedbackHistory)}
- className="text-[10px] text-[var(--acc)]/80 hover:text-[var(--acc)]/70 underline font-mono cursor-pointer"
+ className="text-[10px] text-[var(--acc)]/80 hover:text-[var(--acc)]/70 underline font-sans cursor-pointer"
  >
  {showFeedbackHistory ?'Ocultar historial' : `Historial (${selectedLead.historial_feedback_pitch.length})`}
  </button>
@@ -1547,7 +1547,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <Star className="w-4 h-4 fill-current" />
  </button>
  ))}
- <span className="text-[10px] font-mono text-[var(--ink-2)] ml-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] ml-1">
  {toneRating > 0 ? `${toneRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -1570,7 +1570,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <Star className="w-4 h-4 fill-current" />
  </button>
  ))}
- <span className="text-[10px] font-mono text-[var(--ink-2)] ml-1">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] ml-1">
  {contentRating > 0 ? `${contentRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -1594,7 +1594,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* Scope Selector: Solo este pitch vs Memoria Global Futura */}
  <div className="p-2.5 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2">
- <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-2)] font-mono block">
+ <span className="text-[10px] font-bold tracking-wider text-[var(--ink-2)] font-sans block">
  🎯 Alcance del entrenamiento IA:
  </span>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -1655,7 +1655,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* Model selection pills for single-click regenerate */}
  <div className="flex items-center justify-between flex-wrap gap-2 p-2 bg-[var(--sunken)] rounded-[var(--r-m)] border-[var(--hair)]800">
- <span className="text-[10px] font-mono text-[var(--ink-2)] font-bold uppercase">
+ <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold">
  🤖 Motor de Redacción & Coste:
  </span>
  <div className="flex items-center gap-1.5 flex-wrap">
@@ -1678,7 +1678,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  >
  <span>{m.icon}</span>
  <span>{m.name}</span>
- <span className="font-mono text-[9px] text-[var(--ok)] bg-[var(--sunken)] px-1 py-0.2 rounded">
+ <span className="font-sans text-[9px] text-[var(--ok)] bg-[var(--sunken)] px-1 py-0.2 rounded">
  {m.cost}
  </span>
  </button>
@@ -1729,7 +1729,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* History drawer if enabled */}
  {showFeedbackHistory && selectedLead.historial_feedback_pitch && selectedLead.historial_feedback_pitch.length > 0 && (
  <div className="mt-3 pt-3 border-t border-[var(--hair)]800 space-y-2">
- <span className="text-[11px] font-bold text-[var(--acc)] font-mono block uppercase">
+ <span className="text-[11px] font-bold text-[var(--acc)] font-sans block">
  Historial de Aprendizaje e Iteraciones IA
  </span>
  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
@@ -1739,7 +1739,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  ?'bg-[var(--sunken)] border-[var(--hair)]800/50 opacity-60' 
  :'bg-[var(--sunken)] border-[var(--hair)]800/80'
  }`}>
- <div className="flex items-center justify-between text-[var(--ink-2)] text-[10px] font-mono">
+ <div className="flex items-center justify-between text-[var(--ink-2)] text-[10px] font-sans">
  <span>{new Date(log.fecha).toLocaleString()}</span>
  <div className="flex items-center gap-2">
  {log.alcance ==='global' ? (
@@ -1769,14 +1769,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {log.pitch_previo && !log.deshecho && (
  <div className="flex items-center justify-between pt-1 border-t border-[var(--hair)]800/60">
- <span className="text-[10px] text-[var(--ink-2)] font-mono truncate max-w-[220px]" title={log.pitch_previo}>
+ <span className="text-[10px] text-[var(--ink-2)] font-sans truncate max-w-[220px]" title={log.pitch_previo}>
  Pitch previo: {log.pitch_previo.slice(0, 38)}...
  </span>
  <button
  type="button"
  onClick={() => handleRevertPitch(log.id)}
  disabled={isRevertingPitch}
- className="text-[10px] text-[var(--acc)] hover:text-[var(--acc)]/70 font-mono underline flex items-center gap-1 cursor-pointer shrink-0"
+ className="text-[10px] text-[var(--acc)] hover:text-[var(--acc)]/70 font-sans underline flex items-center gap-1 cursor-pointer shrink-0"
  >
  <RotateCcw className="w-3 h-3" />
  Volver a este pitch anterior
@@ -1818,7 +1818,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <span className={msg.remitente ==='sala' ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}>
  {msg.remitente_nombre} ({msg.remitente ==='sala' ?'Programador' :'Bakandeya'})
  </span>
- <span className="text-[var(--ink-2)] text-[10px] font-mono">{msg.fecha}</span>
+ <span className="text-[var(--ink-2)] text-[10px] font-sans">{msg.fecha}</span>
  </div>
  <div className="font-bold text-[var(--ink)]">{msg.asunto}</div>
  <p className="whitespace-pre-wrap text-[var(--ink-2)] leading-snug">{msg.mensaje}</p>
@@ -1834,11 +1834,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <History className="w-4 h-4 text-[var(--acc)]" />
- <h4 className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider font-sans">
+ <h4 className="text-xs font-bold text-[var(--ink)] tracking-wider font-sans">
  Bitácora de Contacto y Llamadas
  </h4>
  </div>
- <span className="text-[10px] text-[var(--acc)]/80 font-mono">
+ <span className="text-[10px] text-[var(--acc)]/80 font-sans">
  {(selectedLead.historial_contacto || []).length} registros
  </span>
  </div>
@@ -1888,7 +1888,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* Result Outcome Pills */}
  <div className="space-y-1">
- <span className="text-[9px] uppercase tracking-wider text-[var(--ink-2)] font-sans">
+ <span className="text-[9px] tracking-wider text-[var(--ink-2)] font-sans">
  Resultado del contacto:
  </span>
  <div className="flex flex-wrap gap-1">
@@ -1967,7 +1967,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <span className="text-[var(--ink-2)]">{log.autor ||'Agente'}</span>
  </div>
  <div className="flex items-center gap-2">
- <span className="text-[var(--ink-2)] font-mono">{log.fecha}</span>
+ <span className="text-[var(--ink-2)] font-sans">{log.fecha}</span>
  <button
  type="button"
  onClick={() => handleDeleteInteractionLog(log.id)}

@@ -122,7 +122,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  value={config.logoUrl ||''}
  onChange={e => setConfig({ ...config, logoUrl: e.target.value })}
  placeholder="https://ejemplo.com/logo.jpg"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-mono text-[var(--ink)] outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
  />
  </div>
  </div>
@@ -221,7 +221,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  })
  }
  placeholder="https://drive.google.com/file/d/..."
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-mono text-[var(--ink)] outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
  />
  </div>
  </div>
@@ -232,7 +232,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
  <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca Interna)
  </h3>
- <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-full">
+ <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-full">
  Solo visible aquí
  </span>
  </div>
@@ -315,7 +315,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  onChange={e => setConfig({ ...config, riderTecnico: e.target.value })}
  placeholder="Canales, microfonía, DIs, etc..."
  rows={4}
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-mono leading-relaxed resize-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-sans leading-relaxed resize-none"
  />
  </div>
  </div>

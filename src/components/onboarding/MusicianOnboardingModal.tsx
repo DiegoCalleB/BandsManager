@@ -60,7 +60,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  </button>
 
  <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
- <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-mono font-bold tracking-wider uppercase">
+ <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-sans font-bold tracking-wider">
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Primeros Pasos para Músicos</span>
  </div>
@@ -74,7 +74,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  key={l.code}
  type="button"
  onClick={() => setAppLang(l.code)}
- className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
+ className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-sans font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ?'bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold shadow-sm scale-105'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)]'
@@ -113,7 +113,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <h3 className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--acc)] transition-colors">
  Tengo un bolo o concierto a la vista
  </h3>
- <span className="text-[9px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
+ <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
  Rápido
  </span>
  </div>
@@ -125,7 +125,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  <button
  type="button"
- className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)]/70 group-hover:text-[var(--on-acc)] text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)]/70 group-hover:text-[var(--on-acc)] text-xs font-sans font-bold transition-all shrink-0 cursor-pointer"
  >
  <span>Ir al Calendario</span>
  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -146,7 +146,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <h3 className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--acc)] transition-colors">
  Crear mi Dossier (EPK) para salas
  </h3>
- <span className="text-[9px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
+ <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
  Recomendado
  </span>
  </div>
@@ -158,7 +158,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  <button
  type="button"
- className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)] group-hover:text-[var(--on-acc)] text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)] group-hover:text-[var(--on-acc)] text-xs font-sans font-bold transition-all shrink-0 cursor-pointer"
  >
  <span>Configurar Dossier</span>
  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -188,7 +188,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  <button
  type="button"
- className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--ok)]/15 group-hover:bg-[var(--ok)] text-[var(--ink-2)] group-hover:text-[var(--acc-ink)] text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--ok)]/15 group-hover:bg-[var(--ok)] text-[var(--ink-2)] group-hover:text-[var(--acc-ink)] text-xs font-sans font-bold transition-all shrink-0 cursor-pointer"
  >
  <span>Ver Repertorios</span>
  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -206,7 +206,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <button
  type="button"
  onClick={handleDismiss}
- className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono font-bold transition-colors cursor-pointer"
+ className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-sans font-bold transition-colors cursor-pointer"
  >
  Explorar por mi cuenta
  </button>

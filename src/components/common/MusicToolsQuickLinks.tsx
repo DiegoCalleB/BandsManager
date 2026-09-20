@@ -27,7 +27,7 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
  </div>
  <div className="flex flex-col min-w-0">
  <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
- <span className="text-[9px] text-[var(--acc)]/80 font-mono truncate">Click & Tap</span>
+ <span className="text-[9px] text-[var(--acc)]/80 font-sans truncate">Click & Tap</span>
  </div>
  </button>
 
@@ -41,7 +41,7 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
  </div>
  <div className="flex flex-col min-w-0">
  <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
- <span className="text-[9px] text-[var(--ok)]/80 font-mono truncate">Guitar, Bass & Uke</span>
+ <span className="text-[9px] text-[var(--ok)]/80 font-sans truncate">Guitar, Bass & Uke</span>
  </div>
  </button>
  </div>
@@ -58,7 +58,7 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
  <Clock className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <div className="flex flex-col min-w-0">
  <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
- <span className="text-[9px] text-[var(--acc)]/70 font-mono truncate">Tap Tempo</span>
+ <span className="text-[9px] text-[var(--acc)]/70 font-sans truncate">Tap Tempo</span>
  </div>
  </button>
 
@@ -70,7 +70,7 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
  <Guitar className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <div className="flex flex-col min-w-0">
  <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
- <span className="text-[9px] text-[var(--ok)]/70 font-mono truncate">Guitar, Bass & Uke</span>
+ <span className="text-[9px] text-[var(--ok)]/70 font-sans truncate">Guitar, Bass & Uke</span>
  </div>
  </button>
  </div>

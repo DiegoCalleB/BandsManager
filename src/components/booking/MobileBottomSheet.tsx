@@ -68,7 +68,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
  <div className="w-full flex justify-between items-center pb-3 border-b border-[var(--hair)]800 mb-3 shrink-0">
  <div className="flex items-center gap-2 truncate pr-2">
  <Building2 className="w-4 h-4 text-[var(--acc)] shrink-0" />
- <span className="text-xs font-mono uppercase tracking-widest text-[var(--acc)] font-bold truncate">
+ <span className="text-xs font-sans tracking-widest text-[var(--acc)] font-bold truncate">
  Ficha: {selectedLead.nombre_sala}
  </span>
  </div>

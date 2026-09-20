@@ -263,7 +263,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  {reviewItems && (
  <div className="space-y-4">
  <div>
- <label className="text-[11px] font-mono uppercase tracking-wider text-[var(--ink-2)] block mb-1">Nombre del repertorio</label>
+ <label className="text-[11px] font-sans tracking-wider text-[var(--ink-2)] block mb-1">Nombre del repertorio</label>
  <input
  type="text"
  value={setlistName}
@@ -272,7 +272,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  />
  </div>
 
- <p className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1.5">
+ <p className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5">
  <ListChecks className="w-3.5 h-3.5" />
  {matchedCount}/{songItemsCount} temas ya vinculados automáticamente al catálogo
  </p>
@@ -286,7 +286,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <button
  type="button"
  onClick={() => toggleBlockIncluded(idx)}
- className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] font-mono"
+ className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] font-sans"
  >
  {it.included ?'Descartar' :'Incluir'}
  </button>
@@ -302,14 +302,14 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <Music className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />"{it.detectedTitle}"
  </span>
  {it.action ==='link_matched' && (
- <span className="text-[10px] text-[var(--ok)] font-mono whitespace-nowrap">✓ {it.matchedSongTitle}</span>
+ <span className="text-[10px] text-[var(--ok)] font-sans whitespace-nowrap">✓ {it.matchedSongTitle}</span>
  )}
  </div>
  <div className="flex flex-wrap items-center gap-1.5">
  <select
  value={it.action}
  onChange={(e) => updateSongItem(idx, { action: e.target.value as SongAction })}
- className="text-[10px] bg-[var(--sunken)] rounded px-1.5 py-1 text-[var(--ink-2)] font-mono"
+ className="text-[10px] bg-[var(--sunken)] rounded px-1.5 py-1 text-[var(--ink-2)] font-sans"
  >
  {it.matchedSongId && <option value="link_matched">Vincular a"{it.matchedSongTitle}"</option>}
  <option value="create_new">Crear canción nueva</option>

@@ -92,7 +92,7 @@ export function AssignSongsToAlbumModal({
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <Disc3 className="w-5 h-5 text-[var(--ok)]" />
- <h3 className="text-sm font-bold font-mono uppercase text-[var(--ink)]">
+ <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
  {albumName ? `Editar Disco: ${albumName}` :'Crear Nuevo Disco / Lanzamiento'}
  </h3>
  </div>
@@ -112,7 +112,7 @@ export function AssignSongsToAlbumModal({
  value={customAlbumName}
  onChange={(e) => setCustomAlbumName(e.target.value)}
  placeholder="ej. Lanzamiento Verano 2026"
- className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -125,7 +125,7 @@ export function AssignSongsToAlbumModal({
  value={albumYear}
  onChange={(e) => setAlbumYear(e.target.value)}
  placeholder="ej. 2026"
- className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -138,7 +138,7 @@ export function AssignSongsToAlbumModal({
  <select
  value={albumType}
  onChange={(e) => setAlbumType(e.target.value)}
- className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -158,7 +158,7 @@ export function AssignSongsToAlbumModal({
  value={coverUrl}
  onChange={(e) => setCoverUrl(e.target.value)}
  placeholder="https://... o sube imagen"
- className={`flex-1 p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`flex-1 p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -177,7 +177,7 @@ export function AssignSongsToAlbumModal({
  value={description}
  onChange={(e) => setDescription(e.target.value)}
  placeholder="Notas sobre la producción, estudio de grabación, concepto..."
- className={`w-full p-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
+ className={`w-full p-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none focus:border-[var(--hair)] ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -185,7 +185,7 @@ export function AssignSongsToAlbumModal({
  </div>
 
  <div className="border-t border-[var(--hair)] pt-3 flex flex-col flex-1 overflow-hidden">
- <div className="flex items-center justify-between text-xs font-mono text-[var(--ink-2)] mb-2">
+ <div className="flex items-center justify-between text-xs font-sans text-[var(--ink-2)] mb-2">
  <span className="font-bold flex items-center gap-1.5">
  <Disc3 className="w-4 h-4 text-[var(--ok)]" />
  <span>Seleccionar Canciones del Disco ({selectedIds.size} seleccionadas):</span>
@@ -199,7 +199,7 @@ export function AssignSongsToAlbumModal({
  value={search}
  onChange={(e) => setSearch(e.target.value)}
  placeholder="Buscar canción en el catálogo para incluir..."
- className={`w-full pl-9 pr-3 py-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none ${
+ className={`w-full pl-9 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
@@ -229,7 +229,7 @@ export function AssignSongsToAlbumModal({
  <div className="truncate">
  <div className="text-xs font-bold truncate flex items-center gap-1.5">
  <span>{formatSongTitle(song.titulo)}</span>
- {song.tonalidad && <span className="text-[10px] text-[var(--ok)] font-mono">({song.tonalidad})</span>}
+ {song.tonalidad && <span className="text-[10px] text-[var(--ok)] font-sans">({song.tonalidad})</span>}
  </div>
  <div className="text-[10px] text-[var(--ink-2)] truncate">
  {song.albumDisco ? `Álbum actual: ${song.albumDisco}` :'Sin álbum asignado'}
@@ -237,7 +237,7 @@ export function AssignSongsToAlbumModal({
  </div>
  </div>
 
- <span className="text-[10px] font-mono opacity-60 shrink-0">{song.duracion}</span>
+ <span className="text-[10px] font-sans opacity-60 shrink-0">{song.duracion}</span>
  </div>
  );
  })}

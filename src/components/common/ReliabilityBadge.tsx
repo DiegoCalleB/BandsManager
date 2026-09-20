@@ -44,7 +44,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  onMouseLeave={() => setShowTooltip(false)}
  >
  <div 
- className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] font-mono font-semibold transition-all cursor-help ${badgeColor} ${
+ className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold transition-all cursor-help ${badgeColor} ${
  isSmall ?'text-[10px]' :'text-xs'
  }`}
  >
@@ -60,7 +60,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  <Target className="w-3.5 h-3.5 text-[var(--acc)]" />
  Autodetector de Fiabilidad
  </span>
- <span className={`font-mono font-bold text-xs ${score >= 50 ?'text-[var(--ok)]' :'text-[var(--acc)]'}`}>
+ <span className={`font-sans font-bold text-xs ${score >= 50 ?'text-[var(--ok)]' :'text-[var(--acc)]'}`}>
  {score}%
  </span>
  </div>

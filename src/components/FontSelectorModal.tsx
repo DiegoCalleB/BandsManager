@@ -37,13 +37,13 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <Type className="w-5 h-5" />
  </div>
  <div>
- <h3 className="font-bold uppercase tracking-wider text-sm flex items-center gap-2">
+ <h3 className="font-bold tracking-wider text-sm flex items-center gap-2">
  <span>Selección de Tipografía & Fuente</span>
- <span className="text-[10px] font-mono font-normal px-2 py-0.5 rounded-full bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20">
+ <span className="text-[10px] font-sans font-normal px-2 py-0.5 rounded-full bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20">
  En tiempo real
  </span>
  </h3>
- <p className="text-[11px] text-[var(--ink-2)] font-mono">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans">
  Elige la fuente que mejor se adapte a tu gusto visual
  </p>
  </div>
@@ -62,7 +62,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  isStitchLight ?'bg-[var(--tentative)]/5/70 text-[var(--tentative)]' :'bg-[var(--surface)]/40 text-[var(--ink-2)]'
  }`}>
  <Info className="w-4 h-4 text-[var(--acc)] shrink-0" />
- <p className="text-[11px] leading-relaxed font-mono">
+ <p className="text-[11px] leading-relaxed font-sans">
  ¿La fuente original te resultaba demasiado intensa o pesada? Prueba con <strong className="text-[var(--acc)]">Plus Jakarta Sans</strong> u <strong className="text-[var(--acc)]">Outfit</strong> para una lectura mucho más suave y ligera.
  </p>
  </div>
@@ -90,7 +90,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <span className="font-bold text-sm tracking-tight" style={{ fontFamily: preset.displayFont }}>
  {preset.name}
  </span>
- <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+ <span className={`text-[9px] font-sans font-bold px-2 py-0.5 rounded-full tracking-wider ${
  preset.id ==='plus_jakarta'
  ?'bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/30'
  : preset.isSoft
@@ -100,7 +100,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  {preset.badge}
  </span>
  </div>
- <span className="text-[10px] text-[var(--ink-2)] font-mono block mt-0.5">
+ <span className="text-[10px] text-[var(--ink-2)] font-sans block mt-0.5">
  {preset.subtitle}
  </span>
  </div>
@@ -116,7 +116,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  </div>
  </div>
 
- <p className="text-xs text-[var(--ink-2)] leading-relaxed mb-3 font-mono">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed mb-3 font-sans">
  {preset.description}
  </p>
 
@@ -143,7 +143,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <div className={`px-6 py-3 flex justify-between items-center shrink-0 ${
  isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
  }`}>
- <span className="text-[10px] font-mono text-[var(--ink-2)]">
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">
  Cambio instantáneo guardado en tu navegador
  </span>
  <button

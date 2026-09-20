@@ -411,8 +411,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => setIsResting(false)}
  >
  <span className="text-5xl mb-4">😴</span>
- <p className="text-[var(--ink-2)] text-sm font-mono mb-1">Modo descanso — ahorrando batería</p>
- <p className="text-[var(--ink)] text-xs font-mono">Toca la pantalla para volver a"{itemLabel(currentItem, songs)}"</p>
+ <p className="text-[var(--ink-2)] text-sm font-sans mb-1">Modo descanso — ahorrando batería</p>
+ <p className="text-[var(--ink)] text-xs font-sans">Toca la pantalla para volver a"{itemLabel(currentItem, songs)}"</p>
  </div>
  );
  }
@@ -484,7 +484,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <span className="hidden sm:inline">Pistas & Repertorio</span>
  <span className="sm:hidden">Temas</span>
  {songsWithIrisCount > 0 && (
- <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-[var(--ok)]/30 text-[var(--ink-2)]">
+ <span className="px-1.5 py-0.2 rounded-full text-[10px] font-sans bg-[var(--ok)]/30 text-[var(--ink-2)]">
  {songsWithIrisCount}
  </span>
  )}
@@ -592,7 +592,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <Headphones className="w-4 h-4 shrink-0 text-[var(--ink-2)]" />
  <span className="flex items-center justify-between flex-1">
  <span>Separar pistas con Iris</span>
- <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)]/50 font-mono">Studio</span>
+ <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)]/50 font-sans">Studio</span>
  </span>
  </button>
  )}
@@ -678,7 +678,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {/* Segunda línea: datos pasivos que no compiten con el título — posición en el
  repertorio, batería (si el navegador la soporta) y si hace falta revisar los
  acordes de este tema. */}
- <div className="flex items-center gap-2 mt-1 pl-7 text-[11px] font-mono flex-wrap">
+ <div className="flex items-center gap-2 mt-1 pl-7 text-[11px] font-sans flex-wrap">
  <span className={glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>{currentIndex + 1}/{allItems.length}</span>
 
  {batteryLevel !== null && (
@@ -735,7 +735,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
  <div className="truncate">
  <span className="font-bold text-[var(--ok)]">Modo Ensayo Activo</span>
- <span className="opacity-80 ml-2 font-mono text-[11px]">
+ <span className="opacity-80 ml-2 font-sans text-[11px]">
  {currentSong.tonalidad ? `Tono: ${currentSong.tonalidad}` :''}
  {currentSong.bpm ? ` · ${currentSong.bpm} BPM` :''}
  {irisStemIdea ? ` · ${getIdeaTracks(irisStemIdea).length} pistas Iris` :' · Sin pistas separadas'}
@@ -879,7 +879,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  >
  -
  </button>
- <span className="text-[var(--acc)] font-bold font-mono">🎯 {transposedKey}</span>
+ <span className="text-[var(--acc)] font-bold font-sans">🎯 {transposedKey}</span>
  <button
  type="button"
  onClick={() => setLiveTransposeOffset(v => v + 1)}
@@ -900,7 +900,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  )}
  </div>
  {effectiveTranspose !== 0 && (
- <span className="text-[var(--ink-2)] font-mono text-[11px] hidden sm:inline">
+ <span className="text-[var(--ink-2)] font-sans text-[11px] hidden sm:inline">
  (original {currentSong?.tonalidad})
  </span>
  )}
@@ -952,7 +952,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
 
  {nextItem && (
- <p className={`text-center text-[11px] font-mono truncate ${glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <p className={`text-center text-[11px] font-sans truncate ${glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Siguiente: <span className={glareMode ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}>{itemLabel(nextItem, songs)}</span>
  {nextItem.tipoItem ==='cancion' && songs.find(s => s.id === nextItem.songId)?.tonalidad && (
  <span> · {songs.find(s => s.id === nextItem.songId)?.tonalidad}</span>
@@ -999,7 +999,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <ListMusic className="w-4 h-4" />
  </div>
  <div>
- <h3 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">Repertorio & Pistas Iris</h3>
+ <h3 className="text-sm font-bold text-[var(--ink)] tracking-wider">Repertorio & Pistas Iris</h3>
  <p className="text-[11px] text-[var(--ink-2)]">
  {songsWithIrisCount} de {songsInSetlistCount} temas con pistas Iris listas
  </p>
@@ -1041,10 +1041,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <span className="text-lg">{meta.icon}</span>
  <div>
  <div className="text-xs font-bold text-[var(--ink)]">{item.tituloCustom || meta.label}</div>
- <div className="text-[10px] text-[var(--ink-2)] font-mono">Bloque de escenario</div>
+ <div className="text-[10px] text-[var(--ink-2)] font-sans">Bloque de escenario</div>
  </div>
  </div>
- <span className="px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink-2)] font-mono">
+ <span className="px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink-2)] font-sans">
  Ir al bloque
  </span>
  </div>
@@ -1064,7 +1064,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  >
  <div className="flex items-start justify-between gap-2">
  <div className="flex items-center gap-2 min-w-0">
- <span className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-mono font-bold shrink-0 ${
+ <span className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-sans font-bold shrink-0 ${
  isCurrent ?'bg-[var(--acc)] text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {idx + 1}
@@ -1073,7 +1073,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <h4 className={`text-xs font-bold truncate ${isCurrent ?'text-[var(--acc)]' :'text-[var(--ink)]'}`}>
  {song.titulo}
  </h4>
- <div className="flex items-center gap-2 text-[10px] text-[var(--ink-2)] font-mono">
+ <div className="flex items-center gap-2 text-[10px] text-[var(--ink-2)] font-sans">
  {song.tonalidad && <span className="text-[var(--acc)]/70">Tono: {song.tonalidad}</span>}
  {song.bpm ? <span>· {song.bpm} BPM</span> : null}
  {song.duracion ? <span>· {song.duracion}</span> : null}
@@ -1175,7 +1175,7 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
  glareMode ?'bg-[var(--surface)]' :'bg-gradient-to-b from-indigo-950/40 via-[var(--surface)] to-[var(--sunken)]'
  }`}>
  <span className="text-5xl sm:text-7xl mb-6">{meta.icon}</span>
- <h2 className={`text-2xl sm:text-4xl font-bold mb-6 uppercase tracking-wide ${glareMode ?'text-[var(--ink)]' :'text-[var(--acc)]/70'}`}>
+ <h2 className={`text-2xl sm:text-4xl font-bold mb-6 tracking-wide ${glareMode ?'text-[var(--ink)]' :'text-[var(--acc)]/70'}`}>
  {item.tituloCustom || meta.label}
  </h2>
  {script ? (
@@ -1186,7 +1186,7 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
  <p className="text-[var(--ink-2)] text-lg">{meta.label}</p>
  )}
  {duration && (
- <p className="mt-8 text-[var(--ink-2)] font-mono text-sm">⏱ {duration}</p>
+ <p className="mt-8 text-[var(--ink-2)] font-sans text-sm">⏱ {duration}</p>
  )}
  </div>
  );
@@ -1293,7 +1293,7 @@ const ChordSheetPage: React.FC<{
  return (
  <div className="w-full h-full flex flex-col overflow-hidden">
  {/* Ficha compacta con transposición en tiempo real y selector de modo */}
- <div className={`shrink-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 px-4 py-2 text-xs sm:text-sm font-mono border-b ${borderClass} ${glareMode ?'bg-[var(--sunken)]' :'bg-[var(--sunken)]'}`}>
+ <div className={`shrink-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 px-4 py-2 text-xs sm:text-sm font-sans border-b ${borderClass} ${glareMode ?'bg-[var(--sunken)]' :'bg-[var(--sunken)]'}`}>
  <div className="flex items-center gap-2 flex-wrap">
  {/* Selector de tono con transposición en tiempo real */}
  <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-0.5 rounded border-[var(--hair)]">
@@ -1354,7 +1354,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={onToggleTeleprompterMode}
- className={`px-2.5 py-1 text-xs font-mono font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 cursor-pointer ${
+ className={`px-2.5 py-1 text-xs font-sans font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 cursor-pointer ${
  teleprompterMode ==='scroll'
  ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 shadow-sm'
  :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1386,7 +1386,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={onToggleTeleprompterPlay}
- className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition cursor-pointer ${
  isTeleprompterPlaying
  ?'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
  :'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)]'
@@ -1409,7 +1409,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={onResetTeleprompterScroll}
- className="px-2.5 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1 transition cursor-pointer"
+ className="px-2.5 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] text-xs font-sans flex items-center gap-1 transition cursor-pointer"
  title="Rebobinar al principio"
  >
  <RotateCcw className="w-3.5 h-3.5" />
@@ -1418,7 +1418,7 @@ const ChordSheetPage: React.FC<{
  </div>
 
  {/* Velocidades */}
- <div className="flex items-center gap-1 text-[11px] font-mono">
+ <div className="flex items-center gap-1 text-[11px] font-sans">
  <span className="text-[var(--ink-2)] hidden sm:inline mr-1">Vel:</span>
  {[0.5, 1, 1.5, 2].map(speed => (
  <button
@@ -1439,7 +1439,7 @@ const ChordSheetPage: React.FC<{
 
  {/* Contenedor de lectura continua */}
  <div ref={teleprompterScrollRef} className="flex-1 overflow-y-auto p-4 sm:p-8 scroll-smooth">
- <pre className={`max-w-4xl mx-auto font-mono whitespace-pre-wrap leading-relaxed break-words pb-32 ${fontSizeClass} ${chordTextClass}`}>
+ <pre className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words pb-32 ${fontSizeClass} ${chordTextClass}`}>
  {chords}
  </pre>
  </div>
@@ -1447,12 +1447,12 @@ const ChordSheetPage: React.FC<{
  ) : hasMultipleSections ? (
  // NAVEGACIÓN POR SECCIONES (PEDAL / TAP)
  <div className="flex-1 flex flex-col overflow-hidden">
- <div className={`shrink-0 text-center py-1.5 text-[11px] font-mono border-b ${borderClass} ${glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <div className={`shrink-0 text-center py-1.5 text-[11px] font-sans border-b ${borderClass} ${glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  Parte {currentSectionIndex + 1}/{sections.length}
  {currentSection?.title && <span className={glareMode ?'text-[var(--acc)] font-bold' :'text-[var(--tentative)]/80 font-bold'}> · {currentSection.title}</span>}
  </div>
  <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex items-center justify-center">
- <pre className={`max-w-4xl mx-auto font-mono whitespace-pre-wrap leading-relaxed break-words text-center ${fontSizeClass} ${chordTextClass}`}>
+ <pre className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words text-center ${fontSizeClass} ${chordTextClass}`}>
  {currentSection?.body}
  </pre>
  </div>
@@ -1460,7 +1460,7 @@ const ChordSheetPage: React.FC<{
  <button
  onClick={onRetreatSection}
  disabled={currentSectionIndex === 0}
- className={`px-4 py-2.5 disabled:opacity-30 rounded-[var(--r-s)] text-sm font-mono font-bold transition ${
+ className={`px-4 py-2.5 disabled:opacity-30 rounded-[var(--r-s)] text-sm font-sans font-bold transition ${
  glareMode ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}
  >
@@ -1468,7 +1468,7 @@ const ChordSheetPage: React.FC<{
  </button>
  <button
  onClick={onAdvanceSection}
- className="flex-1 py-2.5 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] rounded-[var(--r-s)] text-sm font-mono font-bold transition"
+ className="flex-1 py-2.5 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] rounded-[var(--r-s)] text-sm font-sans font-bold transition"
  >
  Siguiente parte ▶
  </button>
@@ -1477,7 +1477,7 @@ const ChordSheetPage: React.FC<{
  ) : (
  // Sin encabezados de sección detectados: se muestra todo el cifrado de una vez, con scroll manual
  <div className="flex-1 overflow-y-auto p-4 sm:p-6">
- <pre className={`max-w-4xl mx-auto font-mono whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}>
+ <pre className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}>
  {chords}
  </pre>
  </div>

@@ -58,7 +58,7 @@ export function GlobalCampaignBar({
 
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className="text-[8px] font-mono font-extrabold uppercase tracking-wider px-1 py-0.2 rounded bg-[var(--tentative)]/25 text-[var(--acc)]/40 shrink-0">
+ <span className="text-[8px] font-sans font-extrabold tracking-wider px-1 py-0.2 rounded bg-[var(--tentative)]/25 text-[var(--acc)]/40 shrink-0">
  🎯 CAMPAÑA
  </span>
  <h2 className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] truncate" title={campaign.name}>
@@ -73,12 +73,12 @@ export function GlobalCampaignBar({
  {campaign.targetCities?.join(',') ||'Todas las ciudades'}
  </span>
  <span className="text-[var(--ink-2)]">•</span>
- <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-mono">
+ <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-sans">
  <Users className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
  {campaign.minCapacity}-{campaign.maxCapacity} pax
  </span>
  <span className="text-[var(--ink-2)]">•</span>
- <span className="inline-flex items-center gap-1 text-[var(--alert)]/60 font-mono font-semibold truncate max-w-[180px]">
+ <span className="inline-flex items-center gap-1 text-[var(--alert)]/60 font-sans font-semibold truncate max-w-[180px]">
  <Calendar className="w-2.5 h-2.5 text-[var(--alert)] shrink-0" />
  {campaign.targetDatesText || `${campaign.targetDates?.length || 0} fechas`}
  </span>
@@ -103,7 +103,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={() => onNavigate('booking', { campaignFilter: campaign.id })}
- className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
+ className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
  currentView ==='booking'
  ?'bg-[var(--tentative)] text-[var(--ink)] shadow-xs'
  :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
@@ -118,7 +118,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={() => onNavigate('calendario', { selectedDate: firstTargetDate })}
- className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
+ className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
  currentView ==='calendario'
  ?'bg-[var(--tentative)] text-[var(--ink)] shadow-xs'
  :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
@@ -133,7 +133,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={() => onNavigate('bandas', { campaignCities: campaign.targetCities })}
- className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
+ className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
  currentView ==='bandas'
  ?'bg-[var(--tentative)] text-[var(--ink)] shadow-xs'
  :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
@@ -177,11 +177,11 @@ export function GlobalCampaignBar({
  <span>{campaign.targetCities?.join(',') ||'Todas las ciudades'}</span>
  </div>
  <div className="flex items-center justify-between text-[var(--ink-2)]">
- <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-mono">
+ <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-sans">
  <Users className="w-3 h-3 text-[var(--acc)] shrink-0" />
  {campaign.minCapacity} - {campaign.maxCapacity} pax
  </span>
- <span className="inline-flex items-center gap-1 text-[var(--alert)]/60 font-mono font-semibold">
+ <span className="inline-flex items-center gap-1 text-[var(--alert)]/60 font-sans font-semibold">
  <Calendar className="w-3 h-3 text-[var(--alert)] shrink-0" />
  {campaign.targetDatesText || `${campaign.targetDates?.length || 0} fechas`}
  </span>

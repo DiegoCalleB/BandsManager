@@ -237,7 +237,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  </button>
  ) : (
  <div className="p-3 bg-[var(--bg)] border-[var(--hair)]700 rounded-[var(--r-m)] space-y-2">
- <label className="block text-[10px] uppercase font-sans tracking-wider text-[var(--ink-2)]">
+ <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
  Pegar enlace de imagen (URL)
  </label>
  <div className="flex gap-2">

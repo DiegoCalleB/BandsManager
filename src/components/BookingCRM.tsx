@@ -1470,7 +1470,7 @@ export default function BookingCRM({
 
  {/* 1. Quick Toggles (Favoritos, Verificados, Aforo) */}
  <div className="space-y-1.5">
- <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Opciones rápidas</p>
+ <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Opciones rápidas</p>
  <div className="flex items-center gap-2 flex-wrap">
  <button
  type="button"
@@ -1560,7 +1560,7 @@ export default function BookingCRM({
  {/* Saved Filters List */}
  {savedFilters.length > 0 && (
  <div className="space-y-1.5">
- <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Búsquedas guardadas</p>
+ <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Búsquedas guardadas</p>
  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
  {savedFilters.map((sf) => {
  const isActive = activeSavedFilterId === sf.id;
@@ -1602,7 +1602,7 @@ export default function BookingCRM({
 
  {/* 2. Tipo Filter */}
  <div className="space-y-1.5">
- <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Tipo de espacio / contacto</p>
+ <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Tipo de espacio / contacto</p>
  <div className="flex items-center gap-1.5 flex-wrap">
  {(sectionTab ==='medios'
  ? [
@@ -1649,7 +1649,7 @@ export default function BookingCRM({
  {/* 3. Ciudad Filter */}
  <div className="space-y-1.5">
  <div className="flex items-center justify-between">
- <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider">Ciudad / Localidad</p>
+ <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Ciudad / Localidad</p>
  {selectedCityFilter && (
  <button
  type="button"
@@ -1719,7 +1719,7 @@ export default function BookingCRM({
  {/* Active Filters Pill Bar (Responsive on all screen sizes) */}
  {activeFiltersCount > 0 && !isMobileFiltersOpen && (
  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
- <span className="text-[10px] uppercase font-bold text-[var(--acc)] shrink-0">Filtros:</span>
+ <span className="text-[10px] font-bold text-[var(--acc)] shrink-0">Filtros:</span>
  {selectedCityFilter && (
  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
  📍 {selectedCityFilter}
@@ -2096,7 +2096,7 @@ export default function BookingCRM({
  <div className="mt-5 pt-4 border-t border-[var(--hair)]800/80 space-y-6">
  <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <div>
- <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
+ <h4 className={`text-xs font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
  Pautas diferenciadas por categoría
  </h4>
  </div>
@@ -2122,7 +2122,7 @@ export default function BookingCRM({
  type="button"
  id={`template-tab-${tab.id}`}
  onClick={() => setTemplateTab(tab.id as TemplateCategory)}
- className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
+ className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold shadow-md'
  : isStitchLight
@@ -2173,7 +2173,7 @@ export default function BookingCRM({
  )}
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>Asunto del Email por Defecto</label>
+ <label className={`block text-[10px] font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>Asunto del Email por Defecto</label>
  <input
  id="template-subject"
  type="text"
@@ -2186,7 +2186,7 @@ export default function BookingCRM({
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
+ <label className={`block text-[10px] font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
  <textarea
  id="template-body"
  rows={8}
@@ -2200,7 +2200,7 @@ export default function BookingCRM({
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
+ <label className={`block text-[10px] font-sans tracking-wider flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
  </label>
  <textarea
@@ -2217,7 +2217,7 @@ export default function BookingCRM({
 
  <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10">
  <div className="flex items-center justify-between">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
+ <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
  <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
  </label>
  {(templateToneRating > 0 || templateContentRating > 0 || templateCustomInstruction) && (
@@ -2241,7 +2241,7 @@ export default function BookingCRM({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
+ <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
  {templateToneRating > 0 ? `${templateToneRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -2266,7 +2266,7 @@ export default function BookingCRM({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
+ <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
  {templateContentRating > 0 ? `${templateContentRating}/5` :'Sin calificar'}
  </span>
  </div>
@@ -2289,7 +2289,7 @@ export default function BookingCRM({
  </div>
 
  <div className="space-y-1 pt-1">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
+ <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
  <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Comentario o Corrección Directa
  </label>
  <textarea
@@ -2312,11 +2312,11 @@ export default function BookingCRM({
  {templateStats && templateStats[templateTab] && (
  <div className="space-y-2 pt-3 pb-2">
  <div className="flex flex-wrap gap-2 items-center">
- <span className="text-[9px] font-mono text-[var(--ink-2)]">📊 Resultados:</span>
- <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ?'bg-[var(--tentative)]/10 text-[var(--tentative)]' :'bg-[var(--tentative)]/10 text-[var(--acc)]/80'}`}>
+ <span className="text-[9px] font-sans text-[var(--ink-2)]">📊 Resultados:</span>
+ <span className={`text-[9px] font-sans px-2 py-1 rounded ${isStitchLight ?'bg-[var(--tentative)]/10 text-[var(--tentative)]' :'bg-[var(--tentative)]/10 text-[var(--acc)]/80'}`}>
  {templateStats[templateTab].totalUses} usos
  </span>
- <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ?'bg-[var(--ok)]/10 text-[var(--ok)]' :'bg-[var(--ok)]/10 text-[var(--ok)]') : (isStitchLight ?'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]' :'bg-[var(--accent-alt)]/10 text-[var(--acc)]/80')}`}>
+ <span className={`text-[9px] font-sans px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ?'bg-[var(--ok)]/10 text-[var(--ok)]' :'bg-[var(--ok)]/10 text-[var(--ok)]') : (isStitchLight ?'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]' :'bg-[var(--accent-alt)]/10 text-[var(--acc)]/80')}`}>
  {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
  </span>
  </div>
@@ -2380,7 +2380,7 @@ export default function BookingCRM({
  <button
  id="template-btn-save"
  onClick={handleSaveTemplates}
- className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
+ className={`flex-1 py-2 font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
@@ -2398,7 +2398,7 @@ export default function BookingCRM({
  <div className="space-y-3">
  <div className={`flex items-center gap-2 pb-2 ${isStitchLight ?'-slate-200' :'-bg-[var(--surface)]'}`}>
  <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${'bg-[var(--acc)]'}`} />
- <h4 className={`text-[10px] font-sans uppercase tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
+ <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
  </div>
  
  <div className={`text-[10px] leading-relaxed font-sans ${textSub}`}>
@@ -2418,11 +2418,11 @@ export default function BookingCRM({
  {/* Valoración directa del resultado generado en la simulación */}
  <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-[var(--acc)]/70 uppercase tracking-wider flex items-center gap-1.5 font-sans">
+ <span className="text-[10px] font-bold text-[var(--acc)]/70 tracking-wider flex items-center gap-1.5 font-sans">
  <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Valorar esta plantilla / resultado
  </span>
  {(templateToneRating > 0 || templateContentRating > 0) && (
- <span className="text-[9px] text-[var(--acc)] font-mono">
+ <span className="text-[9px] text-[var(--acc)] font-sans">
  Tono: {templateToneRating ||'-'}/5 | Contenido: {templateContentRating ||'-'}/5
  </span>
  )}
@@ -2433,7 +2433,7 @@ export default function BookingCRM({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
+ <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
  {templateToneRating > 0 ? `${templateToneRating}/5` :'⭐'}
  </span>
  </div>
@@ -2458,7 +2458,7 @@ export default function BookingCRM({
  <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-[var(--acc)] font-bold">
+ <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
  {templateContentRating > 0 ? `${templateContentRating}/5` :'⭐'}
  </span>
  </div>

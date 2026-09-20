@@ -368,7 +368,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  title={hasIrisStems(song) ?'Ver pistas e instrumentos separados con Iris' :'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 animate-pulse" />
- <span className="hidden sm:inline text-xs font-mono">Iris</span>
+ <span className="hidden sm:inline text-xs font-sans">Iris</span>
  </button>
  )}
 
