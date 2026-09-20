@@ -735,7 +735,7 @@ export default function App() {
    className={`px-2 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
      activeCampaign
        ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-       : 'bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)]'
+       : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
    }`}
    title="Gestionar Campañas de Booking"
   >
@@ -805,7 +805,7 @@ export default function App() {
        title={slotLabel}
      >
        <span className={`flex items-center justify-center w-10 h-10 rounded-[var(--r-pill)] transition-colors ${
-         isActive ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'text-[var(--ink-3)]'
+         isActive ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'text-[var(--ink-2)]'
        }`}>
          <IconComp className="w-5 h-5" />
        </span>
@@ -827,7 +827,7 @@ export default function App() {
  />
  <div className="md:hidden fixed inset-x-0 bottom-16 z-40 max-h-[60vh] overflow-y-auto bg-[var(--surface)] rounded-t-[var(--r-xl)]">
  <div className="w-9 h-1 rounded-[var(--r-pill)] bg-[var(--sunken)] mx-auto mt-2.5 mb-1" />
- <div className="px-4 pt-1 pb-2 text-[12px] font-semibold text-[var(--ink-3)]">
+ <div className="px-4 pt-1 pb-2 text-[12px] font-semibold text-[var(--ink-2)]">
  {t(group.titleKey, group.titleDefault)}
  </div>
  <div className="px-3 pb-4 flex flex-col gap-1">
@@ -883,13 +883,13 @@ export default function App() {
  </h1>
  <div className="flex items-center gap-1.5 mt-1">
  <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)] animate-pulse'}`} />
- <span className="text-[10px] font-sans text-[var(--ink-3)]">Banda activa</span>
+ <span className="text-[10px] font-sans text-[var(--ink-2)]">Banda activa</span>
  </div>
  </div>
  </div>
  <button
  onClick={() => setIsMobileMenuOpen(false)}
- className="p-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -995,7 +995,7 @@ export default function App() {
            style={{ width: `${pct}%` }}
          />
        </div>
-       <div className="flex items-center justify-between text-[10px] text-[var(--ink-3)] mt-1">
+       <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] mt-1">
          <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
          <span className="text-[var(--acc-ink)] font-semibold transition-colors">Planes →</span>
        </div>
@@ -1027,7 +1027,7 @@ export default function App() {
      <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
       {currentUser.name}
      </span>
-     <span className="text-[10px] text-[var(--ink-3)] truncate" title={currentUser.email || currentUser.username}>
+     <span className="text-[10px] text-[var(--ink-2)] truncate" title={currentUser.email || currentUser.username}>
       {currentUser.email || currentUser.username}
      </span>
     </div>
@@ -1045,14 +1045,14 @@ export default function App() {
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
- <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-3)] uppercase leading-none">
+ <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-2)] uppercase leading-none">
  BANDMANAGER<span className="text-[var(--acc)]">.io</span>
  </span>
  </div>
  </div>
  <button
  onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
- className="p-1.5 text-[var(--ink-3)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
  title="Cerrar Sesión"
  >
  <LogOut className="w-4 h-4" />
@@ -1195,7 +1195,7 @@ export default function App() {
  {!isPromoPlan && (
    <div className="px-3 pt-3 pb-2 space-y-1.5">
      <div className="flex items-center justify-between px-1">
-       <p className="text-[11px] font-semibold text-[var(--ink-3)]">Campañas</p>
+       <p className="text-[11px] font-semibold text-[var(--ink-2)]">Campañas</p>
        <button
          onClick={() => setShowCampaignModal(true)}
          className="text-[11px] font-semibold text-[var(--acc-ink)] hover:brightness-90 flex items-center gap-1 cursor-pointer"
@@ -1212,19 +1212,19 @@ export default function App() {
        className={`w-full flex items-center justify-between p-2 rounded-[var(--r-m)] text-left transition-colors cursor-pointer group ${
          activeCampaign
            ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-           : 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-3)] hover:text-[var(--ink-2)]'
+           : 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
        }`}
        title="Configurar y activar campañas de booking con fechas objetivo"
      >
        <div className="flex items-center gap-2 min-w-0">
-         <div className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' : 'bg-[var(--surface)] text-[var(--ink-3)]'}`}>
+         <div className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' : 'bg-[var(--surface)] text-[var(--ink-2)]'}`}>
            <Target className="w-3.5 h-3.5" />
          </div>
          <div className="flex flex-col min-w-0">
            <span className="text-[11px] font-bold truncate leading-tight">
              {activeCampaign ? activeCampaign.name : 'Modo Campaña'}
            </span>
-           <span className="text-[10px] text-[var(--ink-3)] truncate">
+           <span className="text-[10px] text-[var(--ink-2)] truncate">
              {activeCampaign ? `${activeCampaign.targetDates?.length || 0} fechas en calendario` : 'Sin campaña activa'}
            </span>
          </div>
@@ -1265,7 +1265,7 @@ export default function App() {
            style={{ width: `${pct}%` }} 
          />
        </div>
-       <div className="flex items-center justify-between text-[10px] text-[var(--ink-3)] mt-1">
+       <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] mt-1">
          <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
          <span className="text-[var(--acc-ink)] font-semibold transition-colors">Planes →</span>
        </div>
@@ -1293,7 +1293,7 @@ export default function App() {
      <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
       {currentUser.name}
      </span>
-     <span className="text-[10px] text-[var(--ink-3)] truncate" title={currentUser.email || currentUser.username}>
+     <span className="text-[10px] text-[var(--ink-2)] truncate" title={currentUser.email || currentUser.username}>
       {currentUser.email || currentUser.username}
      </span>
     </div>
@@ -1312,7 +1312,7 @@ export default function App() {
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
- <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-3)] uppercase leading-none">
+ <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-2)] uppercase leading-none">
  BANDMANAGER<span className="text-[var(--acc)]">.io</span>
  </span>
  </div>
@@ -1320,7 +1320,7 @@ export default function App() {
  <div className="flex items-center gap-1.5">
   <button
   onClick={handleLogout}
-  className="p-1.5 text-[var(--ink-3)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
+  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
   title="Cerrar Sesión"
   >
   <LogOut className="w-4 h-4" />
