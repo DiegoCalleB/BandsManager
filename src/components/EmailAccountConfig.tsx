@@ -206,7 +206,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  ?'bg-[var(--bg)] text-[var(--ink)] focus:border-indigo-500'
  :'bg-[var(--surface)] text-[var(--sunken)] focus:border-sky-500/60'
  }`;
- const labelClass ='text-xs font-mono font-semibold text-[var(--ink-3)] flex items-center gap-2';
+ const labelClass ='text-xs font-mono font-semibold text-[var(--ink-2)] flex items-center gap-2';
 
  if (loading) {
  return (
@@ -459,7 +459,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  <button
  type="button"
  onClick={() => { setEditing(false); setFeedback(null); }}
- className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] font-bold text-xs font-mono transition-all cursor-pointer"
+ className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-bold text-xs font-mono transition-all cursor-pointer"
  >
  Cancelar
  </button>

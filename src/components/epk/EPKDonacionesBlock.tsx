@@ -76,7 +76,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  Crowdfunding Directo
  </span>
  </div>
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Permite a tus fans y salas hacer aportaciones por Revolut, PayPal o Bizum sin intermediarios. Se muestra en el formulario público y en el Dossier EPK.
  </p>
 
@@ -86,7 +86,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
  <span className="text-xs font-bold text-[var(--ink)]">Mostrar tarjeta de donación</span>
- <p className="text-[10px] text-[var(--ink-3)]">Activa o desactiva la opción de colaboración</p>
+ <p className="text-[10px] text-[var(--ink-2)]">Activa o desactiva la opción de colaboración</p>
  </div>
  <input
  type="checkbox"
@@ -215,7 +215,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
 
  {/* Método por defecto */}
  <div className="space-y-1">
- <label className="text-xs font-semibold text-[var(--ink-3)]">Método preferente</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)]">Método preferente</label>
  <div className="grid grid-cols-3 gap-2">
  <button
  type="button"
@@ -228,7 +228,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  (config.donacionRevolut?.metodoPorDefecto ||'revolut') ==='revolut'
  ?'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-sky-400" />
@@ -245,7 +245,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='paypal'
  ?'bg-blue-500/20 border-blue-500 text-blue-300 shadow-sm'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-blue-400" />
@@ -262,7 +262,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='bizum'
  ?'bg-emerald-500/20 border-emerald-500 text-[var(--ink-2)] shadow-sm'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -272,7 +272,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
 
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)]">Título de la tarjeta</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)]">Título de la tarjeta</label>
  <input
  type="text"
  value={config.donacionRevolut?.titulo ||''}
@@ -288,7 +288,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
 
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)]">Descripción del destino</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)]">Descripción del destino</label>
  <textarea
  rows={2}
  value={config.donacionRevolut?.descripcion ||''}
@@ -359,12 +359,12 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
  <Languages className="w-5 h-5" /> Versiones del EPK en otros idiomas
  </h3>
- <div className="text-xs text-[var(--ink-3)] space-y-1">
+ <div className="text-xs text-[var(--ink-2)] space-y-1">
  <p>
  Traduce automáticamente biografía, lema y formación a otros idiomas para festivales y programadores internacionales.
  </p>
  <p>
- <strong className="text-[var(--ink-3)]">Gasta tokens solo al pulsar el botón</strong>. La IA genera el borrador y puedes repasarlo antes de dejarlo público.
+ <strong className="text-[var(--ink-2)]">Gasta tokens solo al pulsar el botón</strong>. La IA genera el borrador y puedes repasarlo antes de dejarlo público.
  </p>
  </div>
 

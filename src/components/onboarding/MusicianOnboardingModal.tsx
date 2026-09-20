@@ -77,7 +77,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold shadow-sm scale-105'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-3)] border-[var(--hair)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  title={l.label}
  >
@@ -206,7 +206,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  <button
  type="button"
  onClick={handleDismiss}
- className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] hover:text-[var(--ink)] text-xs font-mono font-bold transition-colors cursor-pointer"
+ className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono font-bold transition-colors cursor-pointer"
  >
  Explorar por mi cuenta
  </button>

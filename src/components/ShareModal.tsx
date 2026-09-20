@@ -167,7 +167,7 @@ export function ShareModal({
  <Phone className="w-3.5 h-3.5 text-emerald-400" />
  Número de WhatsApp (Opcional)
  </span>
- <span className="text-[10px] text-[var(--ink-3)]">
+ <span className="text-[10px] text-[var(--ink-2)]">
  Déjalo en blanco para elegir contacto en la app
  </span>
  </label>
@@ -213,7 +213,7 @@ export function ShareModal({
 
  {/* Footer */}
  <div className="p-4 border-t border-[var(--hair)] bg-white/[0.02] flex items-center justify-between">
- <span className="text-[11px] text-[var(--ink-3)] flex items-center gap-1">
+ <span className="text-[11px] text-[var(--ink-2)] flex items-center gap-1">
  <Sparkles className="w-3 h-3 text-[#d1b375]" />
  Listos para WhatsApp, Telegram, Signal o Email
  </span>

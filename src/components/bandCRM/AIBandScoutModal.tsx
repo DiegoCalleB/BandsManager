@@ -120,7 +120,7 @@ export function AIBandScoutModal({
  <p className={`text-xs ${subtextColor}`}>Descubre bandas para Co-booking o Date Swap</p>
  </div>
  </div>
- <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors text-[var(--ink-2)] hover:text-[var(--ink-3)]">
+ <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors text-[var(--ink-2)] hover:text-[var(--ink-2)]">
  <X className="w-5 h-5" />
  </button>
  </div>

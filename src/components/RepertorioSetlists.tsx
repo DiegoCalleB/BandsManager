@@ -2861,7 +2861,7 @@ export default function RepertorioSetlists({
  <span className="font-semibold text-[var(--ink)]">⏱️ {activeSetlistMetrics.formattedTime}</span>
  <span className="text-[var(--ink-2)]">·</span>
  <span className="font-bold text-[var(--acc)]">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
- <span className="text-[var(--ink-3)] text-[10px]">{showSetlistStats ?'▲' :'▼'}</span>
+ <span className="text-[var(--ink-2)] text-[10px]">{showSetlistStats ?'▲' :'▼'}</span>
  </button>
 
  <div className="relative shrink-0">
@@ -2936,7 +2936,7 @@ export default function RepertorioSetlists({
  <div className={`p-3 sm:p-4 rounded-[var(--r-l)] space-y-2.5 animate-fadeIn ${
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60 /80'
  }`}>
- <div className="flex items-center justify-between gap-2 text-xs text-[var(--ink-3)]">
+ <div className="flex items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
  <span
  className="font-semibold uppercase tracking-wider text-[var(--ink-2)] truncate text-[11px]"
  title="Arrastra un punto en horizontal para reordenar el setlist, o en vertical para cambiar su energía. También puedes seleccionarlo y usar las flechas."
@@ -3573,7 +3573,7 @@ export default function RepertorioSetlists({
  </div>
  ) : (
  <>
- <span className="sm:group-hover:hidden text-xs font-semibold text-[var(--ink-3)]">{songIndex + 1}</span>
+ <span className="sm:group-hover:hidden text-xs font-semibold text-[var(--ink-2)]">{songIndex + 1}</span>
  <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-[var(--ink)]" />
  </>
  )}
@@ -3906,7 +3906,7 @@ export default function RepertorioSetlists({
  onChange={(e) => handleUpdateItemNote(it.id, e.target.value)}
  className={`w-full text-[9px] font-mono px-2 py-1 rounded mt-1 ${
  isStitchLight
- ?'bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-3)]'
+ ?'bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-2)]'
  :'bg-black/40 text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  }`}
  />
@@ -4184,7 +4184,7 @@ export default function RepertorioSetlists({
  <h1 className="text-base sm:text-lg font-bold tracking-tight leading-tight truncate mt-0.5">
  Discografía de {bName}
  </h1>
- <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--ink-3)] mt-1">
+ <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--ink-2)] mt-1">
  <span className="text-emerald-400 font-medium">{songs.length} temas</span>
  <span>•</span>
  <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min</span>
@@ -4212,7 +4212,7 @@ export default function RepertorioSetlists({
  className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
  catalogStatusFilter ==='favoritos'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 shadow-xs'
- :'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:bg-[var(--surface)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:bg-[var(--surface)] hover:text-[var(--ink)]'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -4245,7 +4245,7 @@ export default function RepertorioSetlists({
  onChange={(e) => setCatalogSearch(e.target.value)}
  className={`w-full rounded-[var(--r-m)] pl-9.5 ${catalogSearch ?'pr-8' :'pr-3'} py-2 text-xs focus:outline-none transition-all ${
  isStitchLight 
- ?'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 placeholder:text-[var(--ink-3)]' 
+ ?'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 placeholder:text-[var(--ink-2)]' 
  :'bg-[var(--surface)]/60 text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
  }`}
  />
@@ -4255,7 +4255,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setCatalogSearch('')}
  className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
+ isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  title="Borrar búsqueda"
  >
@@ -4303,7 +4303,7 @@ export default function RepertorioSetlists({
  :'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'
  : isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:bg-[var(--surface)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:bg-[var(--surface)]'
  }`}
  >
  Agrupar por Álbum
@@ -4363,7 +4363,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={clearCatalogSelection}
- className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] cursor-pointer transition-all"
+ className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] cursor-pointer transition-all"
  >
  Cancelar
  </button>
@@ -4375,7 +4375,7 @@ export default function RepertorioSetlists({
  <div className={`rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden shadow-sm ${isStitchLight ?'bg-white' :'bg-[var(--surface)]/60 /80 backdrop-blur-sm'}`}>
  {/* Grid Aligned Header with Bulk Select & Column Identifiers */}
  <div className={`flex items-center justify-between px-4 py-3 border-b text-xs uppercase tracking-wider ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)]' :'bg-[var(--surface)]/40 /80 text-[var(--ink-3)]'
+ isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)]' :'bg-[var(--surface)]/40 /80 text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2.5 min-w-0">
  <input
@@ -4399,12 +4399,12 @@ export default function RepertorioSetlists({
  </span>
  </div>
 
- <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-3)]">
+ <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-2)]">
  <span className="hidden lg:inline opacity-70">Acciones rápidas:</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-400 font-medium">Acordes</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-indigo-500/15 text-indigo-300 font-medium">Studio</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-medium">Notas</span>
- <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-3)] font-medium">Editar</span>
+ <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)] font-medium">Editar</span>
  </div>
  </div>
 

@@ -561,7 +561,7 @@ export function EnergyChart({
  </p>
  ) : (
  <>
- <p className="text-[var(--ink-3)] flex items-center gap-1 mt-0.5">
+ <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
  <span>{d.icon}</span> {d.label} ({d.score}/20)
  </p>
  {typeof d.bpm ==='number' && (

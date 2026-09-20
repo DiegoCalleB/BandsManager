@@ -70,7 +70,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <p className="font-semibold flex items-center gap-1.5">
  <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Pista de Referencia Orientativa
  </p>
- <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
+ <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
  Genera una secuencia rítmica sintetizada de bajo y batería para escuchar cómo sonaría tu guitarra o voz con acompañamiento. Podrás añadirla como una pista más en el mezclador multipista.
  </p>
  </div>

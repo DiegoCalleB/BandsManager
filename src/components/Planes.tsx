@@ -654,7 +654,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  case'blue':
  return'bg-sky-500/15 text-sky-300 border-sky-500/30';
  case'silver':
- return'bg-slate-400/15 text-[var(--ink-3)] /30';
+ return'bg-slate-400/15 text-[var(--ink-2)] /30';
  case'gold':
  return'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50';
  case'emerald':
@@ -667,7 +667,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  case'secondary':
  return'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]';
  case'silver':
- return'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)]';
+ return'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]';
  case'gold':
  return'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:brightness-110 text-black font-black shadow-lg shadow-amber-500/20';
  case'emerald':
@@ -736,7 +736,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className={`p-3 rounded-[var(--r-l)] flex items-start gap-2.5 ${
  plan.isPopular
  ?'bg-[var(--acc)]/60/10 /30 text-[var(--ink)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
  <Sparkles className={`w-4 h-4 mt-0.5 shrink-0 ${plan.isPopular ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
  <div className="flex flex-col">
@@ -775,7 +775,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70'
  : plan.id ==='cabeza_de_cartel'
  ?'bg-emerald-400/20 text-[var(--ink-2)]'
- :'bg-slate-400/20 text-[var(--ink-3)]'
+ :'bg-slate-400/20 text-[var(--ink-2)]'
  }`}>
  {plan.stickerGift.tag}
  </span>
@@ -823,7 +823,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  feat.included
  ? feat.highlight
  ?'text-[var(--ink)] font-bold'
- :'text-[var(--ink-3)]'
+ :'text-[var(--ink-2)]'
  :'text-[var(--ink-2)] line-through'
  }`}>
  {feat.text}
@@ -847,7 +847,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  type="button"
  onClick={handleOpenCustomerPortal}
  disabled={isOpeningPortal}
- className="w-full py-2 px-3 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] hover:text-[var(--ink)] text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+ className="w-full py-2 px-3 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
  >
  <CreditCard className="w-3.5 h-3.5" />
  <span>Gestionar en Stripe</span>
@@ -906,14 +906,14 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <button
  type="button"
  onClick={expandAllSections}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] cursor-pointer transition-colors"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-pointer transition-colors"
  >
  Expandir todo
  </button>
  <button
  type="button"
  onClick={collapseAllSections}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] cursor-pointer transition-colors"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-pointer transition-colors"
  >
  Colapsar todo
  </button>
@@ -926,7 +926,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[var(--surface)] border-b border-[var(--hair)] text-xs font-mono font-bold uppercase text-[var(--ink-2)]">
  <div className="col-span-4">Módulo / Funcionalidad</div>
  <div className="col-span-2 text-center text-sky-400">Ensayo (0€)</div>
- <div className="col-span-2 text-center text-[var(--ink-3)]">Local (12€/m)</div>
+ <div className="col-span-2 text-center text-[var(--ink-2)]">Local (12€/m)</div>
  <div className="col-span-2 text-center text-[var(--acc)]/70 font-black">De Gira (29€/m) ⭐</div>
  <div className="col-span-2 text-center text-emerald-400 font-black">Cabeza de Cartel (79€/m)</div>
  </div>
@@ -984,7 +984,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <X className="w-4 h-4 text-[var(--ink-2)]" />
  )
  ) : (
- <span className="text-[var(--ink-3)] text-center font-mono">{row.ensayo}</span>
+ <span className="text-[var(--ink-2)] text-center font-mono">{row.ensayo}</span>
  )}
  </div>
 
@@ -997,7 +997,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <X className="w-4 h-4 text-[var(--ink-2)]" />
  )
  ) : (
- <span className="text-[var(--ink-3)] text-center font-mono">{row.local}</span>
+ <span className="text-[var(--ink-2)] text-center font-mono">{row.local}</span>
  )}
  </div>
 

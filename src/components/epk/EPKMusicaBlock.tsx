@@ -67,7 +67,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  Player Interactivo
  </span>
  </div>
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Permite a fans y programadores escuchar un fragmento o tema destacado de la banda. Puedes activar el reproductor, elegir una canción del repertorio o pegar una URL de audio directa.
  </p>
 
@@ -77,7 +77,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
  <span className="text-xs font-bold text-[var(--ink)]">Activar reproductor de adelanto</span>
- <p className="text-[10px] text-[var(--ink-3)]">Si está desactivado, el widget no se mostrará en la landing pública.</p>
+ <p className="text-[10px] text-[var(--ink-2)]">Si está desactivado, el widget no se mostrará en la landing pública.</p>
  </div>
  <input
  type="checkbox"
@@ -98,7 +98,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  {/* Selector de canción del repertorio */}
  {!isPromoUser && (
  <div className="space-y-1.5">
- <label className="text-xs font-semibold text-[var(--ink-3)] flex items-center justify-between">
+ <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center justify-between">
  <span>Elegir tema de vuestro repertorio</span>
  {songs.length > 0 && (
  <span className="text-[10px] text-[var(--acc)] font-mono">{songs.length} temas disponibles</span>
@@ -135,7 +135,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  {/* Título y subtítulo visual del reproductor */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1">
- <label className="text-xs font-semibold text-[var(--ink-3)]">Título mostrado en el reproductor</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)]">Título mostrado en el reproductor</label>
  <input
  type="text"
  value={config.audioPreview?.tituloTema ??''}
@@ -153,7 +153,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  />
  </div>
  <div className="space-y-1">
- <label className="text-xs font-semibold text-[var(--ink-3)]">Subtítulo / Mensaje de escucha</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)]">Subtítulo / Mensaje de escucha</label>
  <input
  type="text"
  value={config.audioPreview?.subtitulo ??''}
@@ -174,7 +174,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
 
  {/* URL del archivo de audio */}
  <div className="space-y-1">
- <label className="text-xs font-semibold text-[var(--ink-3)]">
+ <label className="text-xs font-semibold text-[var(--ink-2)]">
  URL del archivo de audio (MP3 / OGG / WAV)
  </label>
  <input
@@ -197,7 +197,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
 
  {/* Vista previa en vivo del reproductor */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] flex flex-col justify-center space-y-3">
- <span className="text-[10px] uppercase font-mono font-bold text-[var(--ink-3)]">
+ <span className="text-[10px] uppercase font-mono font-bold text-[var(--ink-2)]">
  Previsualización del reproductor
  </span>
  <div
@@ -253,11 +253,11 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  + Añadir vídeo
  </button>
  </div>
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Pega enlaces de YouTube o Vimeo. El vídeo marcado con la estrella se muestra destacado: elige el mejor directo que tengáis.
  </p>
  {videos.length === 0 && (
- <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-3)]">
+ <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-2)]">
  Todavía no hay vídeos añadidos. Es el material que más convence al programar — añade al menos uno en directo.
  </div>
  )}
@@ -315,12 +315,12 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 border-b pb-3">
  <Info className="w-5 h-5" /> Datos de Gira y Contratación
  </h3>
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Lo que un programador siempre necesita saber antes de cerrar fecha. Cuanto más claro, menos correos de ida y vuelta.
  </p>
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">Nº de músicos en escena</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1">Nº de músicos en escena</label>
  <input
  type="number"
  value={config.datosContratacion?.numMusicos ??''}
@@ -330,7 +330,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  />
  </div>
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">Duración del directo</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1">Duración del directo</label>
  <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-s)] focus-within:">
  <input
  type="number"
@@ -343,7 +343,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  </div>
  </div>
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">Ciudad base</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1">Ciudad base</label>
  <input
  type="text"
  value={config.datosContratacion?.ciudadBase ??''}
@@ -353,7 +353,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  />
  </div>
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">Formatos disponibles</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1">Formatos disponibles</label>
  <input
  type="text"
  value={config.datosContratacion?.formatos ??''}
@@ -364,7 +364,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  </div>
  </div>
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">
+ <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1">
  Necesidades de escenario (resumen corto)
  </label>
  <input

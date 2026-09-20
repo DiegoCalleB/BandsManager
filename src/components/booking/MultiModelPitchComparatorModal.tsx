@@ -254,7 +254,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)]700 text-[var(--acc)]/70 font-bold">
  🏟️ {lead.nombre_sala} ({lead.ciudad ||'España'})
  </span>
- <span className="text-[var(--ink-3)] text-[11px]">
+ <span className="text-[var(--ink-2)] text-[11px]">
  • Tipo: {lead.tipo ||'sala'} • Aforo: {lead.aforo ||'N/D'}
  </span>
  </div>
@@ -275,7 +275,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
- :'bg-[var(--bg)]/60 text-[var(--ink-3)] border-[var(--hair)]800 hover:border-[var(--hair)]700'
+ :'bg-[var(--bg)]/60 text-[var(--ink-2)] border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  >
  <span>{prov.icon}</span>
@@ -342,7 +342,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
 
  <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-m)] border-[var(--hair)]800 self-start sm:self-auto">
- <span className="text-[10px] text-[var(--ink-3)] px-2 font-mono uppercase">Escala:</span>
+ <span className="text-[10px] text-[var(--ink-2)] px-2 font-mono uppercase">Escala:</span>
  <button
  type="button"
  onClick={() => setVolumeScale('1')}
@@ -402,7 +402,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </div>
  </div>
  ) : proposals.length === 0 ? (
- <div className="py-16 text-center space-y-3 text-[var(--ink-3)]">
+ <div className="py-16 text-center space-y-3 text-[var(--ink-2)]">
  <Sparkles className="w-8 h-8 mx-auto text-[var(--ink-2)]" />
  <p className="text-xs">Haz clic en"Generar y Comparar Propuestas" para ver las opciones A/B y sus costes detallados.</p>
  </div>
@@ -480,7 +480,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  ({scaleLabel})
  </span>
  </div>
- <div className="text-[9px] text-[var(--ink-3)] font-mono mt-0.5">
+ <div className="text-[9px] text-[var(--ink-2)] font-mono mt-0.5">
  Tokens: {cost.inputTokens} in / {cost.outputTokens} out (Total: {cost.totalTokens})
  </div>
  </div>
@@ -572,7 +572,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" />
  Resumen de Costes & ROI para la Banda
  </span>
- <span className="text-[10px] text-[var(--ink-3)] font-mono">
+ <span className="text-[10px] text-[var(--ink-2)] font-mono">
  1 USD ≈ 0.925 EUR
  </span>
  </div>

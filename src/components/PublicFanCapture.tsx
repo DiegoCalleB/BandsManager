@@ -102,7 +102,7 @@ export const PublicFanCapture: React.FC = () => {
  };
 
  return (
- <div className="min-h-screen bg-[var(--surface)] text-[var(--ink-3)] flex flex-col items-center justify-center p-4 selection:bg-[var(--acc)] selection:text-[var(--ink)]">
+ <div className="min-h-screen bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center p-4 selection:bg-[var(--acc)] selection:text-[var(--ink)]">
  {/* Background Glow */}
  <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-500/10 via-slate-950 to-slate-950 pointer-events-none" />
 
@@ -129,7 +129,7 @@ export const PublicFanCapture: React.FC = () => {
  <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[var(--ink)] uppercase">
  {bandInfo.name ? `¡SÚMATE A LA FAMILIA DE ${bandInfo.name.toUpperCase()}!` :'¡SÚMATE A NUESTRA COMUNIDAD!'}
  </h1>
- <p className="text-[var(--ink-3)] text-sm max-w-xs mx-auto">
+ <p className="text-[var(--ink-2)] text-sm max-w-xs mx-auto">
  {conciertoOrigenNombre ? (
  <span>Gracias por bailar con nosotros en <strong className="text-[var(--acc)]">{conciertoOrigenNombre}</strong>. Recibe información directa en tu correo.</span>
  ) : (
@@ -177,7 +177,7 @@ export const PublicFanCapture: React.FC = () => {
 
  <div className="grid grid-cols-2 gap-3">
  <div className="space-y-1.5">
- <label className="text-xs font-bold text-[var(--ink-3)] uppercase tracking-wider flex items-center gap-1">
+ <label className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1">
  <MapPin className="w-3 h-3 text-[var(--acc)]" /> Ciudad
  </label>
  <input
@@ -190,7 +190,7 @@ export const PublicFanCapture: React.FC = () => {
  </div>
 
  <div className="space-y-1.5">
- <label className="text-xs font-bold text-[var(--ink-3)] uppercase tracking-wider flex items-center gap-1">
+ <label className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1">
  <Music className="w-3 h-3 text-[var(--acc)]" /> ¿Origen?
  </label>
  <input
@@ -205,7 +205,7 @@ export const PublicFanCapture: React.FC = () => {
 
  {/* MANDATORY GDPR CHECKBOX */}
  <div className="pt-2 border-t /80">
- <label className="flex items-start gap-2.5 cursor-pointer text-xs text-[var(--ink-3)] leading-relaxed select-none">
+ <label className="flex items-start gap-2.5 cursor-pointer text-xs text-[var(--ink-2)] leading-relaxed select-none">
  <input
  type="checkbox"
  required
@@ -246,7 +246,7 @@ export const PublicFanCapture: React.FC = () => {
 
  <div className="space-y-2">
  <h2 className="text-xl font-black text-[var(--ink)]">¡MUCHAS GRACIAS, {nombre.split('')[0].toUpperCase()}!</h2>
- <p className="text-[var(--ink-3)] text-sm leading-relaxed">
+ <p className="text-[var(--ink-2)] text-sm leading-relaxed">
  ¡Ya estás apuntado! Te avisaremos por correo de próximas fechas y novedades.
  </p>
  </div>
@@ -268,10 +268,10 @@ export const PublicFanCapture: React.FC = () => {
  <Music className="w-4 h-4" />
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-xs font-bold text-[var(--ink-3)] group-hover:text-[var(--acc)]/70 transition-colors">
+ <p className="text-xs font-bold text-[var(--ink-2)] group-hover:text-[var(--acc)]/70 transition-colors">
  ¿Eres músico o tienes una banda?
  </p>
- <p className="text-[11px] text-[var(--ink-3)]">
+ <p className="text-[11px] text-[var(--ink-2)]">
  Consigue una página como esta para tu grupo con BandManager →
  </p>
  </div>

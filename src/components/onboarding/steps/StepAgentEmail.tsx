@@ -57,7 +57,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
  placeholder="contacto@tubanda.com o tubandaoficial@gmail.com"
  className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
  />
- <p className="text-[11px] text-[var(--ink-3)] mt-1">
+ <p className="text-[11px] text-[var(--ink-2)] mt-1">
  Podrás conectar tu cuenta de Gmail con 1-clic o configurar IMAP/SMTP en Ajustes de Correo en cualquier momento.
  </p>
  </div>

@@ -32,7 +32,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = fa
  className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-medium transition-all duration-200 cursor-pointer active:scale-95 ${
  isOpen
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 shadow-xs'
- :'bg-[var(--sunken)] text-[var(--ink-3)] border-[var(--surface)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--surface)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
  }`}
  title="Cambiar idioma / Change language"
  >
@@ -67,7 +67,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = fa
  className={`w-full flex items-center justify-between px-3 py-2 text-xs font-sans text-left transition-colors cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold'
- :'text-[var(--ink-3)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]'
  }`}
  >
  <div className="flex items-center gap-2.5">

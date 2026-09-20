@@ -118,7 +118,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`md:hidden p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
+ isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
  }`}
  title="Cerrar selección"
  >
@@ -263,7 +263,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onDeselectAll}
  className={`hidden md:flex p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
+ isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
  }`}
  title="Deseleccionar todo"
  >

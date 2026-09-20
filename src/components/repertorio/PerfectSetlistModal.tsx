@@ -281,7 +281,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  {!plan && !loading && !error && (
  <div className="text-center py-8">
  <Wand2 className="w-12 h-12 text-emerald-400/50 mx-auto mb-4" />
- <p className="text-[var(--ink-3)] mb-3">
+ <p className="text-[var(--ink-2)] mb-3">
  Deja que la IA revise este setlist Y el resto de tu catálogo, y te proponga un plan
  de cambios: reordenar canciones, quitar las que no encajen, añadir otras del
  repertorio que sí, y sugerir bloques (presentación, pausa, bis...) donde falten.
@@ -392,7 +392,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  key={`intensidad-${star}`}
  type="button"
  onClick={() => setIntensidadRating(intensidadRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  title={`Valorar la intensidad/energía: ${star}/5`}
  >
  <Star className="w-3 h-3 fill-current" />
@@ -406,7 +406,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  key={`contenido-${star}`}
  type="button"
  onClick={() => setContenidoRating(contenidoRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  title={`Valorar el contenido/selección de temas: ${star}/5`}
  >
  <Star className="w-3 h-3 fill-current" />
@@ -427,7 +427,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  type="button"
  onClick={() => setFeedbackScope('este_setlist')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
- feedbackScope ==='este_setlist' ?'bg-[var(--surface)]/70 text-[var(--ink)] font-bold' :'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-3)]'
+ feedbackScope ==='este_setlist' ?'bg-[var(--surface)]/70 text-[var(--ink)] font-bold' :'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  Solo este plan
@@ -436,7 +436,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  type="button"
  onClick={() => setFeedbackScope('global')}
  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all flex items-center gap-1 ${
- feedbackScope ==='global' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold' :'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-3)]'
+ feedbackScope ==='global' ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold' :'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  title="La IA recordará esta corrección también para futuros setlists de la banda"
  >

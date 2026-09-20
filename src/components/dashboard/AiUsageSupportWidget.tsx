@@ -75,9 +75,9 @@ export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => 
  </span>
  <div className="flex-1 min-w-0">
  <h3 className="text-xs sm:text-sm font-bold text-[var(--acc-ink)] transition-colors">Apoya BandManager económicamente</h3>
- <p className="text-[11px] text-[var(--ink-3)] mt-0.5">Cualquier aportación ayuda a mantener el proyecto y sus agentes de IA en marcha.</p>
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">Cualquier aportación ayuda a mantener el proyecto y sus agentes de IA en marcha.</p>
  </div>
- <span className="text-[10px] text-[var(--ink-3)] shrink-0 hidden sm:block">vía Ko-fi →</span>
+ <span className="text-[10px] text-[var(--ink-2)] shrink-0 hidden sm:block">vía Ko-fi →</span>
  </a>
  );
 };
@@ -106,7 +106,7 @@ export const AiUsageCard: React.FC<AiUsageCardProps> = () => {
  </div>
  <div>
  <h3 className="text-xs font-bold">Consumo de IA este mes</h3>
- <p className="text-[11px] text-[var(--ink-3)] mt-0.5">Tu banda ha gastado <strong className="text-[var(--acc-ink)]">{costeLabel}</strong> en generación de IA (copys, acordes, música, análisis de reels).</p>
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">Tu banda ha gastado <strong className="text-[var(--acc-ink)]">{costeLabel}</strong> en generación de IA (copys, acordes, música, análisis de reels).</p>
  </div>
  </div>
  );

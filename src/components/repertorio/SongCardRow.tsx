@@ -150,7 +150,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  {/* Drag Handle (when draggable) */}
  {draggable && (
  <div 
- className="shrink-0 text-[var(--ink-3)] hover:text-[var(--ink-2)] cursor-grab active:cursor-grabbing -mr-0.5"
+ className="shrink-0 text-[var(--ink-2)] hover:text-[var(--ink-2)] cursor-grab active:cursor-grabbing -mr-0.5"
  title="Arrastrar para reordenar canción"
  >
  <GripVertical className="w-4 h-4 opacity-40 group-hover:opacity-100 transition-opacity" />
@@ -225,7 +225,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  :'text-emerald-400 font-bold'
  : isStitchLight
  ?'text-[var(--ink)] hover:text-indigo-600'
- :'text-[var(--ink-3)] group-hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] group-hover:text-[var(--ink)]'
  }`}
  title={displayTitle}
  >
@@ -286,7 +286,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
  {/* Album Badge (if displayed in full catalog mode) */}
  {showAlbumBadge && albumLabel !=='Sin Disco' && (
- <span className="hidden sm:inline-flex items-center gap-1 text-[var(--ink-3)] text-xs max-w-[140px] truncate">
+ <span className="hidden sm:inline-flex items-center gap-1 text-[var(--ink-2)] text-xs max-w-[140px] truncate">
  <span>•</span>
  <span className="truncate">{albumLabel}</span>
  </span>
@@ -450,7 +450,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ?'bg-[var(--surface)] text-[var(--ink)]'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:bg-[var(--sunken)] border-transparent hover:'
- :'text-[var(--ink-3)] hover:text-[var(--ink-3)] hover:bg-[var(--surface)]/80 border-transparent'
+ :'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 border-transparent'
  }`}
  title="Más opciones del tema"
  aria-label="Más opciones"
@@ -464,7 +464,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 shadow-2xl text-xs backdrop-blur-md ${
  isStitchLight
  ?'bg-white text-[var(--ink)] divide-y divide-slate-100'
- :'bg-[var(--surface)]/95 /80 text-[var(--ink-3)] divide-y divide-slate-800/60'
+ :'bg-[var(--surface)]/95 /80 text-[var(--ink-2)] divide-y divide-slate-800/60'
  }`}
  >
  <div className="py-1 space-y-0.5">

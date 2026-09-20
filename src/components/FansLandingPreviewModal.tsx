@@ -186,7 +186,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  <button
  type="button"
  onClick={handleReset}
- className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] transition cursor-pointer text-xs font-mono"
+ className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer text-xs font-mono"
  title={t('previewReset')}
  >
  <RefreshCw className="w-3.5 h-3.5" />

@@ -472,7 +472,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <button
  onClick={handleCancelEdit}
  disabled={isSaving}
- className="py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 disabled:opacity-50 text-[var(--ink-3)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+ className="py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 disabled:opacity-50 text-[var(--ink-2)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
  >
  <XCircle className="w-3.5 h-3.5" /> Cancelar
  </button>
@@ -543,7 +543,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </span>
  <div className="space-y-1">
  {toneData.frases_emblematicas_extraidas.map((quote, idx) => (
- <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-3)] bg-black/30 p-1.5 rounded">"{quote}"
+ <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-2)] bg-black/30 p-1.5 rounded">"{quote}"
  </p>
  ))}
  </div>
@@ -558,7 +558,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </span>
  <div className="space-y-1">
  {toneData.frases_directo_extraidas.map((quote, idx) => (
- <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-3)] bg-black/30 p-1.5 rounded">"{quote}"
+ <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-2)] bg-black/30 p-1.5 rounded">"{quote}"
  </p>
  ))}
  </div>
@@ -579,7 +579,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  ['facebook','Facebook'],
  ] as const).map(([key, label]) =>
  toneData.matices_por_red?.[key] ? (
- <p key={key} className="text-[10px] font-mono text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
+ <p key={key} className="text-[10px] font-mono text-[var(--ink-2)] bg-black/30 p-1.5 rounded">
  <span className="text-sky-400 font-bold">{label}:</span> {toneData.matices_por_red[key]}
  </p>
  ) : null
@@ -619,7 +619,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </label>
  <button
  onClick={() => handleCopy(toneData.pitch_personalizado_ejemplo ||'')}
- className="px-2 py-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
+ className="px-2 py-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
  >
  {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
  {copied ?'¡Copiado!' :'Copiar Texto'}
@@ -705,7 +705,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
  <ul className="space-y-0.5">
  {reglas.reglas_estilo_aprendidas.map((r, idx) => (
- <li key={idx} className="text-[10px] font-sans text-[var(--ink-3)] flex items-start justify-between gap-1.5 group">
+ <li key={idx} className="text-[10px] font-sans text-[var(--ink-2)] flex items-start justify-between gap-1.5 group">
  <span>⭐ {r}</span>
  <button
  onClick={() => handleDeleteLearnedRule('pitch', cat,'auto', idx)}
@@ -815,7 +815,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
  <ul className="space-y-0.5">
  {reglas.reglas_estilo_aprendidas.map((r, idx) => (
- <li key={idx} className="text-[10px] font-sans text-[var(--ink-3)] flex items-start justify-between gap-1.5 group">
+ <li key={idx} className="text-[10px] font-sans text-[var(--ink-2)] flex items-start justify-between gap-1.5 group">
  <span>⭐ {r}</span>
  <button
  onClick={() => handleDeleteLearnedRule('reply', cat,'auto', idx)}

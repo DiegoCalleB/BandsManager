@@ -437,7 +437,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  )}
  </div>
  <div className="flex items-center gap-1 text-xs text-[var(--ink-2)] mt-0.5">
- <MapPin className="w-3 h-3 text-[var(--ink-3)] shrink-0" />
+ <MapPin className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
  <span>{lead.ciudad ||'Sin ciudad'}</span>
  {lead.region && <span>· {lead.region}</span>}
  </div>
@@ -456,7 +456,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <span className="truncate">{lead.email_contacto}</span>
  </div>
  ) : (
- <div className="text-[11px] text-[var(--ink-3)] italic">Sin correo electrónico</div>
+ <div className="text-[11px] text-[var(--ink-2)] italic">Sin correo electrónico</div>
  )}
 
  {lead.telefono && (

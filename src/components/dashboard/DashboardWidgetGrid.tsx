@@ -322,7 +322,7 @@ export function DashboardWidgetGrid({
  Arrastra para reordenar
  </span>
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-0.5">
+ <p className="text-xs text-[var(--ink-2)] mt-0.5">
  {visibleWidgets.length} widgets activos · se guardan solos
  </p>
  </div>
@@ -362,7 +362,7 @@ export function DashboardWidgetGrid({
  <button
  type="button"
  onClick={handleResetDefault}
- className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)] text-xs transition-colors cursor-pointer flex items-center gap-1"
+ className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs transition-colors cursor-pointer flex items-center gap-1"
  title="Restablecer disposición por defecto"
  >
  <RotateCcw className="w-3.5 h-3.5" />
@@ -482,7 +482,7 @@ export function DashboardWidgetGrid({
  type="button"
  onClick={() => handleMoveWidget(index,'up')}
  disabled={index === 0}
- className="p-1 rounded bg-[var(--surface)]/80 border-[var(--hair)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
+ className="p-1 rounded bg-[var(--surface)]/80 border-[var(--hair)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
  title="Mover arriba"
  >
  <ArrowUp className="w-3.5 h-3.5" />
@@ -491,7 +491,7 @@ export function DashboardWidgetGrid({
  type="button"
  onClick={() => handleMoveWidget(index,'down')}
  disabled={index === visibleWidgets.length - 1}
- className="p-1 rounded bg-[var(--surface)]/80 border-[var(--hair)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
+ className="p-1 rounded bg-[var(--surface)]/80 border-[var(--hair)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
  title="Mover abajo"
  >
  <ArrowDown className="w-3.5 h-3.5" />
@@ -617,7 +617,7 @@ export function DashboardWidgetGrid({
  <button
  type="button"
  onClick={() => setIsAddModalOpen(false)}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] font-mono text-xs font-bold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-mono text-xs font-bold cursor-pointer"
  >
  Cerrar
  </button>

@@ -23,7 +23,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-3)]">
+ <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
  {t('booking.total_leads','Total Leads / Salas')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-indigo-500/10 text-indigo-500">
@@ -33,7 +33,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <div className="text-2xl font-bold" style={{ color: colors.text }}>
  {metrics.totalLeads}
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-1">{t('booking.in_pipeline','En pipeline activo')}</p>
+ <p className="text-xs text-[var(--ink-2)] mt-1">{t('booking.in_pipeline','En pipeline activo')}</p>
  </div>
 
  <div
@@ -45,7 +45,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-3)]">
+ <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
  {t('booking.approved_dates','Fechas Aprobadas')}
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-500">
@@ -55,7 +55,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <div className="text-2xl font-bold text-emerald-500">
  {metrics.leadsPorEstado['aprobado'] || 0}
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-1">
+ <p className="text-xs text-[var(--ink-2)] mt-1">
  {t('booking.conversion_rate','Tasa conversión')}: <span className="text-emerald-400 font-semibold">{metrics.tasaConversion}%</span>
  </p>
  </div>
@@ -69,7 +69,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-3)]">
+ <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
  Tasa de Respuesta
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-blue-500/10 text-blue-500">
@@ -79,7 +79,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <div className="text-2xl font-bold text-blue-400">
  {metrics.tasaRespuesta}%
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-1">Feedback de programadores</p>
+ <p className="text-xs text-[var(--ink-2)] mt-1">Feedback de programadores</p>
  </div>
 
  <div
@@ -91,7 +91,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  }}
  >
  <div className="flex items-center justify-between mb-2">
- <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-3)]">
+ <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
  Aforo Total Potencial
  </span>
  <div className="p-2 rounded-[var(--r-m)] bg-purple-500/10 text-purple-500">
@@ -101,7 +101,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <div className="text-2xl font-bold" style={{ color: colors.text }}>
  {metrics.aforoTotalPotencial.toLocaleString('es-ES')} pax
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-1">
+ <p className="text-xs text-[var(--ink-2)] mt-1">
  Promedio: ~{metrics.aforoPromedio} pax/sala
  </p>
  </div>

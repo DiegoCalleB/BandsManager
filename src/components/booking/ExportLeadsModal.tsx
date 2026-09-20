@@ -150,7 +150,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
- <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='filtered' ?'text-[var(--acc)]' :'text-[var(--ink-3)]'}`} />
+ <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='filtered' ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Contactos a la vista con filtro actual</span>
@@ -174,7 +174,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
- <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='all' ?'text-[var(--acc)]' :'text-[var(--ink-3)]'}`} />
+ <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='all' ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Todos los contactos del CRM</span>
@@ -199,7 +199,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
- <CheckSquare className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='selected' ?'text-[var(--acc)]' :'text-[var(--ink-3)]'}`} />
+ <CheckSquare className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope ==='selected' ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
  <div className="flex-1">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold">Solo contactos seleccionados</span>

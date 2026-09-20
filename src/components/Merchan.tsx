@@ -467,7 +467,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <button
  onClick={() => fileInputRef.current?.click()}
  disabled={isUploading}
- className="w-full h-24 rounded-[var(--r-s)] border-2 border-dashed hover: flex flex-col items-center justify-center gap-2 text-[var(--ink-3)] hover:text-[var(--acc)] transition"
+ className="w-full h-24 rounded-[var(--r-s)] border-2 border-dashed hover: flex flex-col items-center justify-center gap-2 text-[var(--ink-2)] hover:text-[var(--acc)] transition"
  >
  {isUploading ? (
  <RefreshCw className="w-6 h-6 animate-spin" />
@@ -509,7 +509,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-700' :'text-indigo-400'}`}>
  <Scissors className="w-3.5 h-3.5 text-[var(--acc)]" /> Recorte de Fondo (Canvas Layering)
  </label>
- <p className="text-[10px] font-mono text-[var(--ink-3)]">
+ <p className="text-[10px] font-mono text-[var(--ink-2)]">
  Aplica el arte directamente en capas sobre la tela sin redibujar la prenda.
  </p>
  <div className="grid grid-cols-3 gap-1.5 pt-1">
@@ -524,7 +524,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className={`py-1.5 px-1 rounded text-[10px] font-mono font-bold transition ${
  removeBgMode === m.id
  ?'bg-[var(--acc)] text-[var(--ink)] shadow-sm'
- :'bg-[var(--surface)]/60 text-[var(--ink-3)] hover:bg-[var(--surface)]'
+ :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]'
  }`}
  >
  {m.label}
@@ -604,7 +604,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  isStitchLight ?'bg-white' :'bg-[var(--bg)]'
  }`}>
  <div className="flex items-center justify-between">
- <h2 className={`font-mono text-xs uppercase font-bold tracking-widest flex items-center gap-2 ${isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-2)]'}`}>
+ <h2 className={`font-mono text-xs uppercase font-bold tracking-widest flex items-center gap-2 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  <Layers className="w-4 h-4 text-amber-500" /> Galería de Diseños Producidos ({generatedDesigns.length})
  </h2>
  </div>
@@ -613,12 +613,12 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {generatedDesigns.length === 0 && !isGenerating ? (
  <div className="h-full flex flex-col items-center justify-center gap-4 text-center p-10">
  <div className={`w-20 h-20 rounded-full flex items-center justify-center border-2 border-dashed ${
- isStitchLight ?' bg-[var(--bg)] text-[var(--ink-3)]' :' bg-[var(--surface)] text-[var(--ink-2)]'
+ isStitchLight ?' bg-[var(--bg)] text-[var(--ink-2)]' :' bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <ImageIcon className="w-8 h-8" />
  </div>
  <div>
- <p className={`font-display text-lg font-bold mb-1 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-3)]'}`}>
+ <p className={`font-display text-lg font-bold mb-1 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  El taller está listo
  </p>
  <p className={`font-mono text-xs max-w-sm ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
@@ -714,7 +714,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
  
  <div className={`absolute bottom-3 left-3 px-2 py-1 rounded-md text-[9px] font-mono uppercase font-bold z-20 ${
- isStitchLight ?'bg-white/90 text-[var(--ink-2)] shadow-sm' :'bg-[var(--surface)]/90 text-[var(--ink-3)]'
+ isStitchLight ?'bg-white/90 text-[var(--ink-2)] shadow-sm' :'bg-[var(--surface)]/90 text-[var(--ink-2)]'
  }`}>
  {design.type} • {design.assetType ==='custom' ?'Imagen propia' : design.assetType}
  </div>
@@ -766,7 +766,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <>
  {/* 1. Previsualización del diseño elegido */}
  <div className="space-y-3">
- <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-3)] flex items-center gap-2">
+ <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-2">
  <Palette className="w-4 h-4 text-[var(--acc)]" />
  <span>1. Previsualización del Diseño Elegido</span>
  </label>
@@ -800,7 +800,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* 2. Formulario de dirección de envío */}
  <div className="space-y-3 pt-2">
- <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-3)] flex items-center gap-2">
+ <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-2">
  <MapPin className="w-4 h-4 text-[var(--acc)]" />
  <span>2. Dirección de Envío (España)</span>
  </label>

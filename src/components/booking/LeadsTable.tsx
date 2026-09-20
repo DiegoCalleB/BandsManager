@@ -83,7 +83,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <div className="p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)] my-4">
  <Sparkles className="w-8 h-8 text-[var(--acc-ink)] mx-auto mb-2 opacity-60" />
  <p className="text-[var(--ink-2)] font-bold text-sm">No se encontraron medios o espacios</p>
- <p className="text-[var(--ink-3)] text-xs mt-1">Prueba a cambiar los filtros o los términos de búsqueda.</p>
+ <p className="text-[var(--ink-2)] text-xs mt-1">Prueba a cambiar los filtros o los términos de búsqueda.</p>
  </div>
  );
  }
@@ -333,7 +333,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <div className="overflow-x-auto rounded-[var(--r-l)] bg-[var(--surface)] pb-10">
  <table className="w-full text-left border-collapse min-w-[980px]">
  <thead>
- <tr className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ink-3)] bg-[var(--sunken)]">
+ <tr className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ink-2)] bg-[var(--sunken)]">
  
  {/* Select All Checkbox Header */}
  {onToggleSelectLead && (
@@ -436,7 +436,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  </span>
  <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />
  </div>
- <span className="text-[10px] text-[var(--ink-3)] font-sans font-normal truncate block">
+ <span className="text-[10px] text-[var(--ink-2)] font-sans font-normal truncate block">
  {lead.genero ||'Sin género'}
  </span>
  </div>
@@ -505,11 +505,11 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  })()}
  </>
  ) : (
- <span className="text-[var(--ink-3)] italic text-[11px]">Sin email</span>
+ <span className="text-[var(--ink-2)] italic text-[11px]">Sin email</span>
  )}
  </div>
  {phoneClean && (
- <div className="flex items-center gap-1.5 text-[var(--ink-3)]">
+ <div className="flex items-center gap-1.5 text-[var(--ink-2)]">
  <span>{lead.telefono}</span>
  </div>
  )}
@@ -528,7 +528,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  className="p-1.5 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] rounded-[var(--r-s)] transition-colors inline-flex items-center"
  title="WhatsApp directo"
  >
- <MessageCircle className="w-3.5 h-3.5 text-[var(--ink-3)]" />
+ <MessageCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  </a>
  )}
 
@@ -539,7 +539,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  className="p-1.5 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] rounded-[var(--r-s)] transition-colors inline-flex items-center"
  title="Llamar teléfono"
  >
- <PhoneCall className="w-3.5 h-3.5 text-[var(--ink-3)]" />
+ <PhoneCall className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  </a>
  )}
 

@@ -1295,7 +1295,7 @@ export default function ReelsCenter({
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-2)]';
+ const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
 
  return (
  <div data-modulo="reels" className={`space-y-6 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>
@@ -2272,7 +2272,7 @@ export default function ReelsCenter({
  key={`clip-tone-${star}`}
  type="button"
  onClick={() => setClipToneRating(clipToneRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${clipToneRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${clipToneRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  title={`Valorar el tono: ${star}/5`}
  >
  <Star className="w-3.5 h-3.5 fill-current" />
@@ -2288,7 +2288,7 @@ export default function ReelsCenter({
  key={`clip-content-${star}`}
  type="button"
  onClick={() => setClipContentRating(clipContentRating === star ? 0 : star)}
- className={`p-0.5 rounded cursor-pointer transition-colors ${clipContentRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'}`}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${clipContentRating >= star ?'text-[var(--acc)]' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  title={`Valorar el contenido: ${star}/5`}
  >
  <Star className="w-3.5 h-3.5 fill-current" />
@@ -2512,7 +2512,7 @@ export default function ReelsCenter({
  </p>
  </div>
  <span className={`text-[8px] font-mono px-2 py-0.5 rounded uppercase ${
- isStitchLight ?'-slate-200 text-[var(--ink-3)] bg-[var(--bg)]' :'-neutral-800 text-[var(--ink-2)]'
+ isStitchLight ?'-slate-200 text-[var(--ink-2)] bg-[var(--bg)]' :'-neutral-800 text-[var(--ink-2)]'
  }`}>
  Live Database
  </span>
@@ -3094,7 +3094,7 @@ export default function ReelsCenter({
  </div>
  ) : (
  <div className="absolute inset-0 z-0 bg-[var(--surface)] flex flex-col items-center justify-center p-4">
- <AlertCircle className="w-8 h-8 text-[var(--ink-3)] mb-2" />
+ <AlertCircle className="w-8 h-8 text-[var(--ink-2)] mb-2" />
  <span className="text-xs font-mono text-[var(--ink-2)]">No hay vídeo cargado</span>
  </div>
  )}

@@ -971,7 +971,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
  title="Exportar Excel Completo (.xlsx)"
  >
  <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
@@ -996,7 +996,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="flex items-center gap-2 shrink-0">
  <button
  onClick={fetchRegisteredBands}
- className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
+ className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isLoadingRegBands ?'animate-spin' :''}`} />
  <span>Actualizar</span>
@@ -1042,7 +1042,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
  <span>{band.nombre_banda || band.nombreBanda || band.contacto_nombre}</span>
  </td>
- <td className="p-3 text-[var(--ink-3)]">{band.email ||'—'}</td>
+ <td className="p-3 text-[var(--ink-2)]">{band.email ||'—'}</td>
  <td className="p-3">
  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-indigo-500/15 text-indigo-300">
  {band.plan ||'emergente'}
@@ -1211,7 +1211,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {filteredBands.length === 0 ? (
  <div className={`p-12 rounded-[var(--r-l)] text-center space-y-3 ${colors.card} `}>
  <AlertCircle className="w-10 h-10 text-[var(--ink-2)] mx-auto" />
- <h3 className="text-sm font-mono font-bold text-[var(--ink-3)] uppercase tracking-wider">
+ <h3 className="text-sm font-mono font-bold text-[var(--ink-2)] uppercase tracking-wider">
  No se encontraron bandas
  </h3>
  <p className="text-[10px] text-[var(--ink-2)] max-w-md mx-auto font-sans">
@@ -1256,7 +1256,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {isSelected ? (
  <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
  ) : (
- <Square className="w-4 h-4 text-[var(--ink-2)] hover:text-[var(--ink-3)]" />
+ <Square className="w-4 h-4 text-[var(--ink-2)] hover:text-[var(--ink-2)]" />
  )}
  </button>
  <div className="space-y-1 min-w-0">
@@ -1278,7 +1278,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <span className="truncate">{band.estilo_musical}</span>
  </span>
 
- <span className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-md text-[var(--ink-3)] flex items-center gap-1 shrink-0 max-w-[140px]" title={band.localizacion}>
+ <span className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-md text-[var(--ink-2)] flex items-center gap-1 shrink-0 max-w-[140px]" title={band.localizacion}>
  <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
  <span className="truncate">{band.localizacion}</span>
  </span>
@@ -1301,7 +1301,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* Contact & Audience Row */}
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[10px] font-mono space-y-2">
- <div className="flex items-center justify-between text-[var(--ink-3)]">
+ <div className="flex items-center justify-between text-[var(--ink-2)]">
  <span className="text-[10px] text-[var(--ink-2)] uppercase">Contacto:</span>
  <span className="font-bold text-[#d1b375]">{band.contacto_nombre ||'Sin especificar'}</span>
  </div>
@@ -1332,7 +1332,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* Notes & Collaboration Ideas */}
  {band.notas_colaboracion && (
- <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-[10px] font-sans text-[var(--ink-3)] leading-relaxed italic">"{band.notas_colaboracion}"
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-[10px] font-sans text-[var(--ink-2)] leading-relaxed italic">"{band.notas_colaboracion}"
  </div>
  )}
  </div>
@@ -1392,7 +1392,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Edit */}
  <button
  onClick={() => handleOpenEditModal(band)}
- className="p-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Editar Banda"
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -1444,7 +1444,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <th className="py-2.5 px-3 whitespace-nowrap min-w-[130px] text-right">Acciones</th>
  </tr>
  </thead>
- <tbody className="divide-y divide-[var(--hair)]800/60 text-[var(--ink-3)]">
+ <tbody className="divide-y divide-[var(--hair)]800/60 text-[var(--ink-2)]">
  {filteredBands.map((band) => {
  const isRowSelected = selectedBandIds.includes(band.id);
  return (
@@ -1459,7 +1459,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {isRowSelected ? (
  <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
  ) : (
- <Square className="w-4 h-4 text-[var(--ink-2)] hover:text-[var(--ink-3)]" />
+ <Square className="w-4 h-4 text-[var(--ink-2)] hover:text-[var(--ink-2)]" />
  )}
  </button>
  </td>
@@ -1479,7 +1479,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </span>
  </td>
  <td className="py-2 px-3 align-middle whitespace-nowrap">
- <span className="inline-flex items-center gap-1 text-[var(--ink-3)] max-w-[140px] sm:max-w-[190px]" title={band.localizacion}>
+ <span className="inline-flex items-center gap-1 text-[var(--ink-2)] max-w-[140px] sm:max-w-[190px]" title={band.localizacion}>
  <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
  <span className="truncate">{band.localizacion}</span>
  </span>
@@ -1491,7 +1491,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="text-[10px] text-[var(--ink-2)] truncate" title={band.email || band.telefono}>{band.email || band.telefono ||'-'}</div>
  </div>
  </td>
- <td className="py-2 px-3 font-mono align-middle whitespace-nowrap text-[var(--ink-3)]">{band.aforo_promedio ? `${band.aforo_promedio} pers.` :'-'}</td>
+ <td className="py-2 px-3 font-mono align-middle whitespace-nowrap text-[var(--ink-2)]">{band.aforo_promedio ? `${band.aforo_promedio} pers.` :'-'}</td>
  <td className="py-2 px-3 text-[var(--ink-2)] align-middle whitespace-nowrap">{band.ultimo_contacto ||'-'}</td>
  <td className="py-2 px-3 text-right align-middle whitespace-nowrap">
  <div className="flex items-center justify-end gap-1.5">
@@ -1518,7 +1518,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <button
  onClick={() => handleOpenEditModal(band)}
- className="p-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Editar"
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -1647,49 +1647,49 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-[var(--ink-2)]">
  {aiProposal.estilo_musical && (
  <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
- <div className="truncate pr-2"><span className="text-[var(--ink-3)] font-bold">Estilo:</span> {aiProposal.estilo_musical}</div>
+ <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Estilo:</span> {aiProposal.estilo_musical}</div>
  <button type="button" onClick={() => setFormStyle(aiProposal.estilo_musical)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.localizacion && (
  <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
- <div className="truncate pr-2"><span className="text-[var(--ink-3)] font-bold">Origen:</span> {aiProposal.localizacion}</div>
+ <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Origen:</span> {aiProposal.localizacion}</div>
  <button type="button" onClick={() => setFormLocation(aiProposal.localizacion)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.contacto_nombre && (
  <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
- <div className="truncate pr-2"><span className="text-[var(--ink-3)] font-bold">Contacto:</span> {aiProposal.contacto_nombre}</div>
+ <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Contacto:</span> {aiProposal.contacto_nombre}</div>
  <button type="button" onClick={() => setFormContactName(aiProposal.contacto_nombre)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.email && (
  <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
- <div className="truncate pr-2"><span className="text-[var(--ink-3)] font-bold">Email:</span> {aiProposal.email}</div>
+ <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Email:</span> {aiProposal.email}</div>
  <button type="button" onClick={() => setFormEmail(aiProposal.email)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.telefono && (
  <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
- <div className="truncate pr-2"><span className="text-[var(--ink-3)] font-bold">Tel:</span> {aiProposal.telefono}</div>
+ <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Tel:</span> {aiProposal.telefono}</div>
  <button type="button" onClick={() => setFormPhone(aiProposal.telefono)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.instagram && (
  <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800">
- <div className="truncate pr-2"><span className="text-[var(--ink-3)] font-bold">Instagram:</span> {aiProposal.instagram}</div>
+ <div className="truncate pr-2"><span className="text-[var(--ink-2)] font-bold">Instagram:</span> {aiProposal.instagram}</div>
  <button type="button" onClick={() => setFormInstagram(aiProposal.instagram)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {(aiProposal.spotify_url || aiProposal.youtube_url) && (
  <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800 sm:col-span-2">
- <div className="truncate max-w-[80%]"><span className="text-[var(--ink-3)] font-bold">Música / Media:</span> {aiProposal.spotify_url || aiProposal.youtube_url}</div>
+ <div className="truncate max-w-[80%]"><span className="text-[var(--ink-2)] font-bold">Música / Media:</span> {aiProposal.spotify_url || aiProposal.youtube_url}</div>
  <button type="button" onClick={() => setFormSpotifyYoutube(aiProposal.spotify_url || aiProposal.youtube_url)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
@@ -1697,7 +1697,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {aiProposal.biografia && (
  <div className="bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-[var(--hair)]800 sm:col-span-2 space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[var(--ink-3)] font-bold">Resumen / Bio:</span>
+ <span className="text-[var(--ink-2)] font-bold">Resumen / Bio:</span>
  <button type="button" onClick={() => setFormNotes(prev => prev ? `${prev}\n\n[Bio IA]: ${aiProposal.biografia}` : aiProposal.biografia)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Añadir a Notas</button>
  </div>
  <p className="text-[10px] text-[var(--ink-2)] italic leading-relaxed">{aiProposal.biografia}</p>
@@ -1735,7 +1735,7 @@ Bakandeya Agent Manager IA & Músicos`;
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  formIcon === emoji && !formImageUrl
  ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--ink)] scale-110'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
  }`}
  >
  {emoji}
@@ -1921,7 +1921,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={() => setIsAddEditModalOpen(false)}
- className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] font-mono text-[10px] rounded-[var(--r-m)] transition-colors cursor-pointer"
+ className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-mono text-[10px] rounded-[var(--r-m)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>

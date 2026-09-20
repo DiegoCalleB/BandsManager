@@ -67,7 +67,7 @@ export function GlobalCampaignBar({
  </div>
 
  {/* Desktop / Tablet Inline details */}
- <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-[var(--ink-3)] mt-0.5">
+ <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-[var(--ink-2)] mt-0.5">
  <span className="inline-flex items-center gap-1 text-sky-300 font-medium truncate max-w-[200px]">
  <MapPin className="w-2.5 h-2.5 text-sky-400 shrink-0" />
  {campaign.targetCities?.join(',') ||'Todas las ciudades'}
@@ -149,7 +149,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={onOpenManager}
- className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors shrink-0"
+ className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0"
  title="Gestionar o cambiar campaña activa"
  >
  <Settings2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -171,12 +171,12 @@ export function GlobalCampaignBar({
 
  {/* Mobile Collapsible Details */}
  {isMobileExpanded && (
- <div className="sm:hidden pt-2 mt-2 border-t border-purple-500/20 text-[10px] text-[var(--ink-3)] flex flex-col gap-1 animate-fade-in relative z-10">
+ <div className="sm:hidden pt-2 mt-2 border-t border-purple-500/20 text-[10px] text-[var(--ink-2)] flex flex-col gap-1 animate-fade-in relative z-10">
  <div className="flex items-center gap-1.5 text-sky-300 font-medium">
  <MapPin className="w-3 h-3 text-sky-400 shrink-0" />
  <span>{campaign.targetCities?.join(',') ||'Todas las ciudades'}</span>
  </div>
- <div className="flex items-center justify-between text-[var(--ink-3)]">
+ <div className="flex items-center justify-between text-[var(--ink-2)]">
  <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-mono">
  <Users className="w-3 h-3 text-[var(--acc)] shrink-0" />
  {campaign.minCapacity} - {campaign.maxCapacity} pax

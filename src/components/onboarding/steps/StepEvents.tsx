@@ -78,7 +78,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  {ev.tipo}
  </span>
  </div>
- <div className="flex items-center gap-3 text-xs text-[var(--ink-3)] mt-0.5">
+ <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] mt-0.5">
  {ev.ciudad && <span>{ev.ciudad}</span>}
  {ev.lugar && <span>· {ev.lugar}</span>}
  {ev.hora && <span>· {ev.hora}h</span>}
@@ -89,7 +89,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  <button
  type="button"
  onClick={() => onRemoveEvent(ev.id)}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-3)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
  >
  <Trash2 className="w-4 h-4" />
  </button>

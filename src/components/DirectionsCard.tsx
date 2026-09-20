@@ -54,7 +54,7 @@ export default function DirectionsCard({
  {/* Action: Cómo llegar Button */}
  <div className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all shrink-0 ${
  isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-3)] group-hover:bg-indigo-600 group-hover:text-[var(--ink)] group-hover:border-indigo-500'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] group-hover:bg-indigo-600 group-hover:text-[var(--ink)] group-hover:border-indigo-500'
  :'bg-[var(--sunken)]/90 border-[var(--hair)]700/80 text-[var(--ink)] group-hover:bg-purple-600 group-hover:text-[var(--ink)] group-hover:border-purple-500'
  }`}>
  <Navigation className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />

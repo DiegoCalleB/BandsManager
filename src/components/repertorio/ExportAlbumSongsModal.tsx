@@ -585,7 +585,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
  {/* 3. Export Options / Toggles */}
  <div className="p-3.5 rounded-[var(--r-l)] bg-white/5 border-[var(--hair)] space-y-2.5">
- <span className="text-xs font-semibold text-[var(--ink-3)]">Contenido a incluir en la exportación:</span>
+ <span className="text-xs font-semibold text-[var(--ink-2)]">Contenido a incluir en la exportación:</span>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
  <label className="flex items-center gap-2 cursor-pointer select-none">
  <input

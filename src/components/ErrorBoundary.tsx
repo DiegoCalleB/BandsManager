@@ -45,14 +45,14 @@ export class ErrorBoundary extends React.Component<Props, State> {
  render() {
  if (this.state.hasError) {
  return (
- <div className="p-8 rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink-3)] space-y-4 max-w-2xl mx-auto my-8">
+ <div className="p-8 rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink-2)] space-y-4 max-w-2xl mx-auto my-8">
  <div className="flex items-center gap-3 text-[var(--acc)]">
  <AlertTriangle className="w-8 h-8 shrink-0 text-amber-500" />
  <h3 className="text-lg font-bold">
  {this.props.fallbackTitle ||'Ha ocurrido un error al cargar este módulo'}
  </h3>
  </div>
- <p className="text-xs text-[var(--ink-3)] leading-relaxed font-mono bg-[var(--surface)] p-3 rounded-[var(--r-m)] overflow-x-auto">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed font-mono bg-[var(--surface)] p-3 rounded-[var(--r-m)] overflow-x-auto">
  {this.state.error?.message ||'Error no especificado en la renderización.'}
  </p>
  <div className="flex items-center gap-3 pt-2">
@@ -64,7 +64,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
  </button>
  <button
  onClick={() => window.location.reload()}
- className="px-4 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] text-xs font-semibold rounded-[var(--r-m)] transition"
+ className="px-4 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-semibold rounded-[var(--r-m)] transition"
  >
  Recargar Aplicación
  </button>

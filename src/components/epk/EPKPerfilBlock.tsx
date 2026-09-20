@@ -84,9 +84,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  </span>
  </div>
  <div className="space-y-1.5">
- <label className="text-xs font-semibold text-[var(--ink-3)]">Biografía de Presentación</label>
- <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[11px] text-[var(--ink-3)] space-y-1.5">
- <p className="text-[var(--ink-3)] font-semibold">
+ <label className="text-xs font-semibold text-[var(--ink-2)]">Biografía de Presentación</label>
+ <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[11px] text-[var(--ink-2)] space-y-1.5">
+ <p className="text-[var(--ink-2)] font-semibold">
  Escribid UN texto de banda, no la trayectoria de cada uno por separado (eso va en &quot;Formación de la Banda&quot;, con su foto).
  </p>
  <p>Un programador de sala lee esto en 15 segundos antes de decidir si sigue mirando. En este orden:</p>
@@ -105,7 +105,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  }
  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed placeholder:text-[var(--ink-2)]"
  />
- <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
+ <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-2)]">
  <span>Mínimo 80 caracteres para completar el perfil</span>
  <span className={(config.biografia ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-[var(--acc)] font-bold'}>
  {(config.biografia ||'').trim().length} / 80 min.
@@ -144,7 +144,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  </div>
  </div>
 
- <p className="text-xs text-[var(--ink-3)] leading-relaxed">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed">
  Escribe notas y detalles de la banda (trayectoria, integrantes, estilo, hitos, prensa, etc.) para enriquecer la documentación del proyecto.
  </p>
  <p className="text-[11px] text-[var(--acc)]/90 font-semibold bg-[var(--acc)]/5 rounded-[var(--r-s)] px-3 py-2">
@@ -159,7 +159,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  placeholder="Ejemplo: La banda cuenta con 4 integrantes (voz, guitarra, bajo y batería). Formato versátil para salas y festivales según aforo y requisitos técnicos. Ofrecemos un show potente y enérgico de 90 minutos concebido para hacer vibrar al público..."
  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed font-sans"
  />
- <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
+ <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-2)]">
  <span>Mínimo 80 caracteres para marcar como completado (si no hay PDF)</span>
  <span className={(config.dossierTextoExtra ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-[var(--acc)] font-bold'}>
  {(config.dossierTextoExtra ||'').trim().length} / 80 min.
@@ -185,11 +185,11 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  + Añadir miembro
  </button>
  </div>
- <div className="text-xs text-[var(--ink-3)] space-y-1">
+ <div className="text-xs text-[var(--ink-2)] space-y-1">
  <p>Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre, instrumento y breve descripción de cada integrante.</p>
  </div>
  {miembros.length === 0 && (
- <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-3)]">
+ <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-2)]">
  Todavía no has añadido a nadie. Añade a los integrantes con su foto y descripción para que el dossier tenga cercanía.
  </div>
  )}
@@ -247,7 +247,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  </button>
  </div>
  <div className="space-y-1">
- <label className="text-[10px] font-semibold text-[var(--ink-3)] uppercase tracking-wider block">
+ <label className="text-[10px] font-semibold text-[var(--ink-2)] uppercase tracking-wider block">
  Breve descripción / Trayectoria (opcional)
  </label>
  <textarea
@@ -259,7 +259,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  />
  </div>
  <div className="space-y-1">
- <label className="text-[10px] font-semibold text-[var(--ink-3)] uppercase tracking-wider block">
+ <label className="text-[10px] font-semibold text-[var(--ink-2)] uppercase tracking-wider block">
  Instagram personal (opcional)
  </label>
  <div className="relative">
@@ -287,7 +287,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <div className="space-y-4">
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)]">Nombre / Cargo Mánager</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)]">Nombre / Cargo Mánager</label>
  <input
  type="text"
  value={config.contactoBooking?.nombre ||''}
@@ -302,7 +302,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  </div>
 
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)]">Email de Contacto</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)]">Email de Contacto</label>
  <input
  type="email"
  value={config.contactoBooking?.email ||''}
@@ -317,7 +317,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  </div>
 
  <div>
- <label className="text-xs font-semibold text-[var(--ink-3)]">Teléfono Mánager</label>
+ <label className="text-xs font-semibold text-[var(--ink-2)]">Teléfono Mánager</label>
  <input
  type="text"
  value={config.contactoBooking?.telefono ||''}
@@ -342,7 +342,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  Dossier EPK + Fans Landing
  </span>
  </div>
- <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
+ <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
  Si vuestra banda ya dispone de un sitio web oficial o dominio propio, incluidlo aquí. Se enlazará de forma destacada en el Dossier EPK y en la Landing de Fans.
  </p>
  <input
@@ -376,7 +376,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <label className="text-xs font-bold text-[var(--acc)]/70 uppercase flex items-center gap-1.5">
  <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes & Plataformas Oficiales
  </label>
- <p className="text-[11px] text-[var(--ink-3)]">
+ <p className="text-[11px] text-[var(--ink-2)]">
  Fuente única: se sincronizan automáticamente en tu Dossier EPK, firma de email, landing de fans y plataformas oficiales.
  </p>
  </div>
@@ -388,7 +388,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
  {unifiedPlatforms.filter(item => item.key !=='website').map(item => (
  <div key={item.key} className="space-y-1">
- <label className="text-[11px] font-semibold text-[var(--ink-3)] flex items-center gap-1">
+ <label className="text-[11px] font-semibold text-[var(--ink-2)] flex items-center gap-1">
  <span>{item.icon}</span>
  <span>{item.label}</span>
  </label>

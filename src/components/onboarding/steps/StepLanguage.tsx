@@ -74,7 +74,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <h3 className="text-base sm:text-lg font-bold font-display text-[var(--ink)]">
  ¿En qué idioma quieres trabajar con tu banda?
  </h3>
- <p className="text-xs sm:text-sm text-[var(--ink-3)] leading-relaxed">
+ <p className="text-xs sm:text-sm text-[var(--ink-2)] leading-relaxed">
  Selecciona tu idioma principal. Esta configuración adapta al instante la interfaz, el estilo de redacción de los agentes de IA y tu dossier de prensa oficial.
  </p>
  </div>
@@ -149,7 +149,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
 
  {/* Bottom Row: Details & AI Note */}
  <div className="space-y-1.5 pt-2 border-t border-[var(--hair)]">
- <p className="text-xs text-[var(--ink-3)] leading-snug">
+ <p className="text-xs text-[var(--ink-2)] leading-snug">
  {details.description}
  </p>
  <div className="flex items-center gap-1.5 text-[11px] text-[var(--acc)]/70/80 font-mono">

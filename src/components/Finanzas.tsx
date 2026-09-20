@@ -137,7 +137,7 @@ export default function Finanzas({
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-2)]';
+ const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const cardBorder = isStitchLight ?'-slate-200' :'-neutral-800';
 
  return (
@@ -319,19 +319,19 @@ export default function Finanzas({
  return (
  <>
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
- <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Total Caché Contratado</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Total Caché Contratado</span>
  <h4 className="text-xl font-black text-[var(--acc)]">{totalConcertCache.toLocaleString('es-ES')}€</h4>
  <p className="text-[10px] text-[var(--ink-2)]">{concerts.length} conciertos en catálogo</p>
  </div>
 
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
- <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Total Gastos Gira</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Total Gastos Gira</span>
  <h4 className="text-xl font-black text-rose-400">-{totalConcertGastos.toLocaleString('es-ES')}€</h4>
  <p className="text-[10px] text-[var(--ink-2)]">Gasolina, dietas, furgoneta, hoteles</p>
  </div>
 
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
- <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Beneficio Neto Acumulado</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Beneficio Neto Acumulado</span>
  <h4 className={`text-xl font-black ${totalBeneficioNeto >= 0 ?'text-emerald-400' :'text-rose-400'}`}>
  {totalBeneficioNeto >= 0 ? `+${totalBeneficioNeto.toLocaleString('es-ES')}€` : `${totalBeneficioNeto.toLocaleString('es-ES')}€`}
  </h4>
@@ -339,7 +339,7 @@ export default function Finanzas({
  </div>
 
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
- <span className="text-[10px] font-mono text-[var(--ink-3)] uppercase font-bold">Beneficio Medio / Bolo</span>
+ <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Beneficio Medio / Bolo</span>
  <h4 className="text-xl font-black text-[var(--acc)]/70">
  {mediaBeneficio >= 0 ? `+${Math.round(mediaBeneficio)}€` : `${Math.round(mediaBeneficio)}€`}
  </h4>
@@ -356,7 +356,7 @@ export default function Finanzas({
  <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-2">
  <Calculator className="w-4 h-4" /> Desglose de Gastos & Rentabilidad por Bolo
  </h3>
- <span className="text-xs text-[var(--ink-3)]">Haz clic en"Gastos" para desglosar peajes, gasolina, hotel y dietas.</span>
+ <span className="text-xs text-[var(--ink-2)]">Haz clic en"Gastos" para desglosar peajes, gasolina, hotel y dietas.</span>
  </div>
 
  {concerts.length === 0 ? (
@@ -422,7 +422,7 @@ export default function Finanzas({
 
  return (
  <tr key={c.id} className="hover:bg-[var(--surface)]/30 transition">
- <td className="p-3 font-mono text-[var(--ink-3)]">
+ <td className="p-3 font-mono text-[var(--ink-2)]">
  <span className="font-bold text-[var(--ink)] block">{c.fecha}</span>
  <span className="text-[10px] text-[var(--ink-2)] capitalize">{c.tipo}</span>
  {c.giraNombre && (
@@ -433,7 +433,7 @@ export default function Finanzas({
  </td>
  <td className="p-3">
  <span className="font-bold text-[var(--ink)] block">{c.sala}</span>
- <span className="text-[10px] text-[var(--ink-3)]">{c.ciudad}</span>
+ <span className="text-[10px] text-[var(--ink-2)]">{c.ciudad}</span>
  {c.convocatoria_tipo ==="parcial" ? (
  <span className="inline-block mt-0.5 text-[9px] text-purple-300 bg-purple-500/10 px-1.5 py-0.2 rounded font-mono" title={c.convocados_nombres?.join(",")}>
  👤 Parcial ({numConvocados} miembros)
@@ -447,11 +447,11 @@ export default function Finanzas({
  <td className="p-3 font-mono font-bold text-[var(--acc)] text-sm">
  {c.cache ? `${c.cache}€` :'0€'}
  </td>
- <td className="p-3 text-[11px] text-[var(--ink-3)]">
+ <td className="p-3 text-[11px] text-[var(--ink-2)]">
  {hasCustomGastos ? (
  <div className="space-y-0.5">
- <div>Gasolina: <span className="font-mono text-[var(--ink-3)]">{gasolina}€</span> | Dietas: <span className="font-mono text-[var(--ink-3)]">{dietas}€</span></div>
- <div>Furgoneta: <span className="font-mono text-[var(--ink-3)]">{alquiler}€</span> | Hotel: <span className="font-mono text-[var(--ink-3)]">{alojamiento}€</span></div>
+ <div>Gasolina: <span className="font-mono text-[var(--ink-2)]">{gasolina}€</span> | Dietas: <span className="font-mono text-[var(--ink-2)]">{dietas}€</span></div>
+ <div>Furgoneta: <span className="font-mono text-[var(--ink-2)]">{alquiler}€</span> | Hotel: <span className="font-mono text-[var(--ink-2)]">{alojamiento}€</span></div>
  </div>
  ) : (
  <span className="text-[var(--ink-2)] italic">Estimación típica (~150€)</span>
@@ -511,7 +511,7 @@ export default function Finanzas({
  </h3>
  <button
  onClick={() => setEditingConcertId(null)}
- className="text-[var(--ink-3)] hover:text-[var(--ink)] font-bold"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] font-bold"
  >
  ✕
  </button>
@@ -520,7 +520,7 @@ export default function Finanzas({
  <div className="space-y-3 text-xs">
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="text-[var(--ink-3)] font-semibold">Gasolina & Peajes (€)</label>
+ <label className="text-[var(--ink-2)] font-semibold">Gasolina & Peajes (€)</label>
  <input
  type="number"
  value={editingGasolina}
@@ -529,7 +529,7 @@ export default function Finanzas({
  />
  </div>
  <div>
- <label className="text-[var(--ink-3)] font-semibold">Dietas / Comidas (€)</label>
+ <label className="text-[var(--ink-2)] font-semibold">Dietas / Comidas (€)</label>
  <input
  type="number"
  value={editingDietas}
@@ -541,7 +541,7 @@ export default function Finanzas({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="text-[var(--ink-3)] font-semibold">Alquiler Furgoneta / Backline (€)</label>
+ <label className="text-[var(--ink-2)] font-semibold">Alquiler Furgoneta / Backline (€)</label>
  <input
  type="number"
  value={editingAlquiler}
@@ -550,7 +550,7 @@ export default function Finanzas({
  />
  </div>
  <div>
- <label className="text-[var(--ink-3)] font-semibold">Alojamiento / Hoteles (€)</label>
+ <label className="text-[var(--ink-2)] font-semibold">Alojamiento / Hoteles (€)</label>
  <input
  type="number"
  value={editingAlojamiento}
@@ -561,7 +561,7 @@ export default function Finanzas({
  </div>
 
  <div>
- <label className="text-[var(--ink-3)] font-semibold">Otros Gastos Extra (€)</label>
+ <label className="text-[var(--ink-2)] font-semibold">Otros Gastos Extra (€)</label>
  <input
  type="number"
  value={editingOtros}
@@ -571,7 +571,7 @@ export default function Finanzas({
  </div>
 
  <div>
- <label className="text-[var(--ink-3)] font-semibold">Notas sobre Gastos</label>
+ <label className="text-[var(--ink-2)] font-semibold">Notas sobre Gastos</label>
  <textarea
  rows={2}
  value={editingNotasGastos}
@@ -583,7 +583,7 @@ export default function Finanzas({
 
  {/* Total calculation preview */}
  <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between font-mono">
- <span className="text-[var(--ink-3)] font-bold">TOTAL GASTOS CALCULADOS:</span>
+ <span className="text-[var(--ink-2)] font-bold">TOTAL GASTOS CALCULADOS:</span>
  <span className="text-rose-400 font-black text-sm">
  -{(Number(editingGasolina) || 0) + (Number(editingDietas) || 0) + (Number(editingAlquiler) || 0) + (Number(editingAlojamiento) || 0) + (Number(editingOtros) || 0)}€
  </span>
@@ -593,7 +593,7 @@ export default function Finanzas({
  <div className="pt-2 flex justify-end gap-2">
  <button
  onClick={() => setEditingConcertId(null)}
- className="px-4 py-2 bg-[var(--surface)] text-[var(--ink-3)] text-xs font-bold rounded-[var(--r-m)]"
+ className="px-4 py-2 bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold rounded-[var(--r-m)]"
  >
  Cancelar
  </button>
@@ -650,7 +650,7 @@ export default function Finanzas({
  type="button"
  onClick={() => setSearchTerm('')}
  className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-3)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
+ isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  title="Borrar búsqueda"
  >

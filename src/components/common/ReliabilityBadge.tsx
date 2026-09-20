@@ -75,7 +75,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
 
  <ul className="space-y-1">
  {details.map((detail, idx) => (
- <li key={idx} className="flex items-center gap-1.5 text-[11px] text-[var(--ink-3)]">
+ <li key={idx} className="flex items-center gap-1.5 text-[11px] text-[var(--ink-2)]">
  <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
  <span>{detail}</span>
  </li>

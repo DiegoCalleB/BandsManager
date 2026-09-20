@@ -136,7 +136,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <p className="font-semibold flex items-center gap-1.5">
  <Wand2 className="w-3.5 h-3.5 text-indigo-400" /> Creación de Ideas Avanzadas
  </p>
- <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
+ <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
  ¿Te has quedado estancado en el local de ensayo? Nuestro músico virtual analiza la tonalidad ({song.tonalidad ||'Sin definir'}), el tempo ({song.bpm} BPM) y los acordes de"{song.titulo}" para proponerte arreglos profesionales, melodías, puentes o variaciones armónicas originales.
  </p>
  </div>
@@ -253,7 +253,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <div className="text-xs text-[var(--sunken)] space-y-2">
  <div>
  <strong className="text-indigo-300 font-mono block text-[11px] mb-0.5">Propuesta de Arreglo:</strong>
- <p className="leading-relaxed whitespace-pre-line bg-black/40 p-2.5 rounded-[var(--r-s)] font-sans text-[var(--ink-3)]">
+ <p className="leading-relaxed whitespace-pre-line bg-black/40 p-2.5 rounded-[var(--r-s)] font-sans text-[var(--ink-2)]">
  {generatedIdea.descripcionArreglo}
  </p>
  </div>
@@ -281,7 +281,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  type="button"
  onClick={handleGenerateIdea}
  disabled={isGenerating}
- className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-xs font-mono font-bold text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-xs font-mono font-bold text-[var(--ink-2)] transition-all cursor-pointer"
  >
  🔄 Probar otra idea
  </button>

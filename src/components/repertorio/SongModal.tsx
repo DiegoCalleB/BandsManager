@@ -495,7 +495,7 @@ export function SongModal({
  <button
  type="button"
  onClick={onClose}
- className="px-3 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-3)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
+ className="px-3 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
  >
  Cancelar
  </button>

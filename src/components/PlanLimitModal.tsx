@@ -75,7 +75,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
  <span>Tus datos actuales están 100% seguros y protegidos</span>
  </div>
- <p className="text-xs text-[var(--ink-3)] leading-relaxed">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed">
  Puedes consultar, editar, filtrar y exportar todas tus {currentCount} {info.plural} creadas sin ninguna limitación. Para añadir nuevas {info.plural}, mejora tu plan a <strong className="text-[var(--acc)]/70 font-semibold">{targetPlanDef.name}</strong>.
  </p>
  </div>
@@ -94,11 +94,11 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  </span>
  </div>
 
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  {targetPlanDef.description}
  </p>
 
- <ul className="space-y-1.5 text-xs text-[var(--ink-3)]">
+ <ul className="space-y-1.5 text-xs text-[var(--ink-2)]">
  {targetPlanDef.features.slice(0, 3).map((feat, idx) => (
  <li key={idx} className="flex items-center gap-2">
  <Check className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 stroke-[3]" />

@@ -306,12 +306,12 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <img src={preview} alt="Preview" className="w-full max-h-64 object-contain rounded" />
  )}
  {selectedFile.type ==='application/pdf' && (
- <div className="bg-red-950/20 rounded p-3 text-center text-sm text-[var(--ink-3)]">
+ <div className="bg-red-950/20 rounded p-3 text-center text-sm text-[var(--ink-2)]">
  📄 PDF - Se procesará con IA para extraer acordes
  </div>
  )}
  {selectedFile.type.includes('word') && (
- <div className="bg-blue-950/20 rounded p-3 text-center text-sm text-[var(--ink-3)]">
+ <div className="bg-blue-950/20 rounded p-3 text-center text-sm text-[var(--ink-2)]">
  📝 Documento Word - Se procesará con IA para extraer acordes
  </div>
  )}

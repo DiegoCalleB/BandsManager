@@ -134,7 +134,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  <div className="space-y-4">
  <form onSubmit={onSearchSpotify} className="flex gap-2">
  <div className="relative flex-1">
- <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-3)]" />
+ <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-2)]" />
  <input
  type="text"
  value={spotifyQuery}
@@ -161,7 +161,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  <img src={album.coverUrl} alt={album.name} className="w-10 h-10 rounded-[var(--r-s)] object-cover" />
  <div>
  <h4 className="text-xs font-semibold text-[var(--ink)]">{album.name}</h4>
- <span className="text-[10px] text-[var(--ink-3)]">{album.releaseYear} · {album.totalTracks} temas</span>
+ <span className="text-[10px] text-[var(--ink-2)]">{album.releaseYear} · {album.totalTracks} temas</span>
  </div>
  </div>
  <button
@@ -188,7 +188,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  }`}
  >
  <span className="truncate pr-2">{track.name}</span>
- <span className="text-[10px] text-[var(--ink-3)] flex-shrink-0">{track.durationFormatted}</span>
+ <span className="text-[10px] text-[var(--ink-2)] flex-shrink-0">{track.durationFormatted}</span>
  </button>
  );
  })}

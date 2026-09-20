@@ -250,7 +250,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <Mic className="w-6 h-6 text-sky-400 animate-pulse" />
  )
  ) : (
- <Radio className="w-6 h-6 text-[var(--ink-3)]" />
+ <Radio className="w-6 h-6 text-[var(--ink-2)]" />
  )}
  </div>
 
@@ -424,7 +424,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div className="space-y-1.5 pt-1">
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-2)] font-bold px-0.5">
  <span>{formatSecondsToMmSs(stageCurrentTime)}</span>
- <span className="text-[10px] text-[var(--ink-3)] uppercase tracking-widest font-mono">
+ <span className="text-[10px] text-[var(--ink-2)] uppercase tracking-widest font-mono">
  {stageIsPlaying ?'• EN REPRODUCCIÓN' :'PAUSADO'}
  </span>
  <span>{formatSecondsToMmSs(stageItemDuration)}</span>
@@ -551,7 +551,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  {/* Font Size controls for stage readability */}
  <div className="flex items-center gap-1.5 text-[11px] font-mono">
- <span className="text-[var(--ink-3)] mr-1 text-[10px] uppercase font-bold">Tamaño:</span>
+ <span className="text-[var(--ink-2)] mr-1 text-[10px] uppercase font-bold">Tamaño:</span>
  <button
  type="button"
  onClick={() => setChordsFontSize('sm')}
@@ -664,7 +664,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  >
  {isPlayingThis ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
  </button>
- <span className="font-mono text-xs font-bold text-[var(--ink-3)]">{idx + 1}</span>
+ <span className="font-mono text-xs font-bold text-[var(--ink-2)]">{idx + 1}</span>
  </div>
 
  <div className="col-span-6">
@@ -750,7 +750,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  >
  {isPlayingThis ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
  </button>
- <span className="font-mono text-xs font-bold text-[var(--ink-3)]">{idx + 1}</span>
+ <span className="font-mono text-xs font-bold text-[var(--ink-2)]">{idx + 1}</span>
  </div>
 
  <div className="col-span-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -793,7 +793,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </span>
  </div>
 
- <div className="col-span-1 text-center font-mono text-xs text-[var(--ink-3)]">
+ <div className="col-span-1 text-center font-mono text-xs text-[var(--ink-2)]">
  —
  </div>
 

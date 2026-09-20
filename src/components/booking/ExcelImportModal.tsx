@@ -501,21 +501,21 @@ export function ExcelImportModal({
  {/* STEP PROGRESS INDICATOR */}
  <div className="flex items-center justify-between px-6 py-2.5 bg-zinc-950/60 border-b border-[var(--hair)] text-xs">
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ?'bg-emerald-500 text-black' : step > 1 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-3)]'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ?'bg-emerald-500 text-black' : step > 1 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  {step > 1 ? <Check className="w-3 h-3" /> :'1'}
  </div>
  <span className={step === 1 ?'font-bold text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>1. Subir archivo</span>
  </div>
  <div className="w-8 h-px bg-[var(--sunken)]" />
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ?'bg-emerald-500 text-black' : step > 2 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-3)]'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ?'bg-emerald-500 text-black' : step > 2 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  {step > 2 ? <Check className="w-3 h-3" /> :'2'}
  </div>
  <span className={step === 2 ?'font-bold text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>2. Mapear columnas</span>
  </div>
  <div className="w-8 h-px bg-[var(--sunken)]" />
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ?'bg-emerald-500 text-black' :'bg-[var(--sunken)] text-[var(--ink-3)]'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ?'bg-emerald-500 text-black' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  3
  </div>
  <span className={step === 3 ?'font-bold text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>3. Validar y Guardar</span>
@@ -980,7 +980,7 @@ export function ExcelImportModal({
  {row.email_contacto ? (
  <span className="text-[var(--ink-2)] font-mono">{row.email_contacto}</span>
  ) : (
- <span className="text-[var(--ink-3)] italic">Sin correo</span>
+ <span className="text-[var(--ink-2)] italic">Sin correo</span>
  )}
  </td>
  <td className="p-2.5 text-[var(--ink-2)]">
@@ -993,7 +993,7 @@ export function ExcelImportModal({
  <button
  type="button"
  onClick={() => handleRowDelete(row.id)}
- className="p-1 rounded text-[var(--ink-3)] hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+ className="p-1 rounded text-[var(--ink-2)] hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
  title="Eliminar de la importación"
  >
  <Trash2 className="w-3.5 h-3.5" />

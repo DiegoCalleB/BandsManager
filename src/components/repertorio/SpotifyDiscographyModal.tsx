@@ -336,7 +336,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  placeholder="Nombre de tu banda o URL de Spotify (https://open.spotify.com/artist/...)"
  className={`w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--ok)] transition-all ${
  isStitchLight
- ?'bg-white text-[var(--ink)] placeholder:text-[var(--ink-3)]'
+ ?'bg-white text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  }`}
  />
@@ -414,7 +414,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  href={artistProfile.spotifyUrl}
  target="_blank"
  rel="noreferrer"
- className="px-3.5 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] hover:border-[var(--hair)] text-xs font-mono font-bold flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ok)] transition-all"
+ className="px-3.5 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] hover:border-[var(--hair)] text-xs font-mono font-bold flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ok)] transition-all"
  >
  <span>Ver en Spotify</span>
  <ExternalLink className="w-3.5 h-3.5" />
@@ -607,7 +607,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`px-3 py-2 rounded-[var(--r-m)] flex items-center justify-between gap-3 text-xs font-mono transition-all ${
  isPlaying
  ?'bg-[var(--surface)]/20 border-[var(--hair)]/40 text-[var(--ink)]'
- :'hover:bg-white/5 text-[var(--ink-3)]'
+ :'hover:bg-white/5 text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -621,7 +621,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`p-1.5 rounded-full transition-all cursor-pointer ${
  isPlaying
  ?'bg-[var(--surface)] text-black shadow-md'
- :'bg-white/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-3)]'
+ :'bg-white/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]'
  }`}
  title={isPlaying ?'Pausar preview' :'Reproducir preview 30s de Spotify/Deezer'}
  disabled={loadingPreviewTrackId === track.id}
@@ -664,7 +664,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  {/* Modal Footer with Options & Import Action */}
  <div className="p-5 sm:p-6 border-t border-[var(--hair)] bg-black/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
  <div className="space-y-2">
- <label className="flex items-center gap-2 text-xs font-mono text-[var(--ink-3)] cursor-pointer select-none">
+ <label className="flex items-center gap-2 text-xs font-mono text-[var(--ink-2)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={overwriteDuplicates}
@@ -674,7 +674,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <span>Sobrescribir temas existentes con el mismo título</span>
  </label>
 
- <label className="flex items-center gap-2 text-xs font-mono text-[var(--ink-3)] cursor-pointer select-none">
+ <label className="flex items-center gap-2 text-xs font-mono text-[var(--ink-2)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={updateEpkUrl}

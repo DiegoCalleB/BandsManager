@@ -70,7 +70,7 @@ export function SetlistModal({
 
  <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-mono">
  <div>
- <label className="block text-[var(--ink-3)] font-bold mb-1">Nombre del Repertorio / Setlist *</label>
+ <label className="block text-[var(--ink-2)] font-bold mb-1">Nombre del Repertorio / Setlist *</label>
  <input
  type="text"
  required
@@ -84,7 +84,7 @@ export function SetlistModal({
  </div>
 
  <div>
- <label className="block text-[var(--ink-3)] font-bold mb-1">Formato / Tipo de Concierto</label>
+ <label className="block text-[var(--ink-2)] font-bold mb-1">Formato / Tipo de Concierto</label>
  <select
  value={tipoFormato}
  onChange={(e) => setTipoFormato(e.target.value as any)}
@@ -101,7 +101,7 @@ export function SetlistModal({
  </div>
 
  <div>
- <label className="block text-[var(--ink-3)] font-bold mb-1">Descripción / Notas de Escenario</label>
+ <label className="block text-[var(--ink-2)] font-bold mb-1">Descripción / Notas de Escenario</label>
  <textarea
  rows={3}
  value={descripcion}
@@ -117,7 +117,7 @@ export function SetlistModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-3)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
  >
  Cancelar
  </button>

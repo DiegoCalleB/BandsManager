@@ -337,7 +337,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  }
  };
 
- const inputClass ="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-3)] outline-none focus:ring-2 focus:ring-[var(--acc)] transition-colors duration-200";
+ const inputClass ="w-full pl-11 pr-4 py-3.5 bg-[var(--sunken)] rounded-[var(--r-s)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] outline-none focus:ring-2 focus:ring-[var(--acc)] transition-colors duration-200";
 
  return (
  <ModalPortal isOpen={true}>
@@ -374,11 +374,11 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  )}
  <form onSubmit={handleLoginSubmit} className="w-full space-y-3.5">
  <div className="relative flex items-center">
- <Mail className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
+ <Mail className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Correo electrónico o Usuario" className={inputClass} required />
  </div>
  <div className="relative flex items-center">
- <Lock className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
+ <Lock className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type={showPassword ?'text' :'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Contraseña" className={`${inputClass} pr-11`} required />
  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer">
  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -399,7 +399,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  <div className="w-full h-px bg-[var(--hair)]"></div>
  </div>
  <div className="relative flex justify-center text-xs">
- <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-3)] font-medium">O continuar con</span>
+ <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">O continuar con</span>
  </div>
  </div>
 
@@ -420,7 +420,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  </button>
  </p>
 
- <div className="pt-3 text-center text-[11px] text-[var(--ink-3)] flex items-center justify-center gap-1.5">
+ <div className="pt-3 text-center text-[11px] text-[var(--ink-2)] flex items-center justify-center gap-1.5">
  <Music className="w-3.5 h-3.5" />
  <span>Tus salas, tu repertorio y tu gira, en el mismo sitio</span>
  </div>
@@ -438,26 +438,26 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  <LoginBrandVideo />
  </div>
  </div>
- <p className="mt-3 text-sm text-[var(--ink-3)] font-medium">
+ <p className="mt-3 text-sm text-[var(--ink-2)] font-medium">
  Crea tu dossier, QR y calendario en 30 segundos.
  </p>
  </div>
 
  <form onSubmit={handleRegisterSubmit} className="w-full space-y-3.5">
  <div className="relative flex items-center">
- <Guitar className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
+ <Guitar className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type="text" value={regBandName} onChange={(e) => setRegBandName(e.target.value)} placeholder="Nombre de tu banda" className={inputClass} required />
  </div>
  <div className="relative flex items-center">
- <UserIcon className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
+ <UserIcon className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type="text" value={regLeaderName} onChange={(e) => setRegLeaderName(e.target.value)} placeholder="Tu nombre" className={inputClass} required />
  </div>
  <div className="relative flex items-center">
- <Mail className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
+ <Mail className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type="email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} placeholder="Correo electrónico" className={inputClass} required />
  </div>
  <div className="relative flex items-center">
- <Lock className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
+ <Lock className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type={showRegPassword ?'text' :'password'} value={regPassword} onChange={(e) => setRegPassword(e.target.value)} placeholder="Contraseña" className={`${inputClass} pr-11`} required />
  <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer">
  {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -505,7 +505,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  {resetStep === 1 ? (
  <form onSubmit={handleRequestReset} className="w-full space-y-3.5">
  <div className="relative flex items-center">
- <Mail className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
+ <Mail className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type="text" value={resetEmailOrUsername} onChange={(e) => setResetEmailOrUsername(e.target.value)} placeholder="Tu correo o usuario" className={inputClass} required />
  </div>
  <button type="submit" disabled={loading} className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--surface)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer">

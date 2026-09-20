@@ -56,7 +56,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
  <ShieldCheck className="w-4 h-4 text-[var(--acc)]" />
  <span>Lead Verificado por IA</span>
  </div>
- <p className="text-[11px] text-[var(--ink-3)] leading-tight">
+ <p className="text-[11px] text-[var(--ink-2)] leading-tight">
  Este contacto ha sido verificado mediante interacción y conversación real lograda por los agentes de IA de Booking.
  </p>
  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-bg-[var(--surface)]/95" />

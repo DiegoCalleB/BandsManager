@@ -138,7 +138,7 @@ export function ConvocarEnsayoModal({
  {/* Fecha y Horarios */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1.5">
  Fecha
  </label>
  <input
@@ -150,7 +150,7 @@ export function ConvocarEnsayoModal({
  />
  </div>
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1.5">
  Hora Inicio
  </label>
  <input
@@ -162,7 +162,7 @@ export function ConvocarEnsayoModal({
  />
  </div>
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1.5">
  Hora Fin (Estimada)
  </label>
  <input
@@ -177,7 +177,7 @@ export function ConvocarEnsayoModal({
  {/* Lugar y Duración */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div className="sm:col-span-2">
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1.5">
  Lugar / Local
  </label>
  <div className="relative">
@@ -193,7 +193,7 @@ export function ConvocarEnsayoModal({
  </div>
  </div>
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1.5">
  Duración (Min)
  </label>
  <input
@@ -210,7 +210,7 @@ export function ConvocarEnsayoModal({
 
  {/* Setlist Asociado */}
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1.5">
  Repertorio / Setlist a Repasar (Opcional)
  </label>
  <div className="relative">
@@ -233,7 +233,7 @@ export function ConvocarEnsayoModal({
  {/* Músicos Convocados */}
  {bandUsers.length > 0 && (
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1.5">
  Músicos Convocados
  </label>
  <div className="flex flex-wrap gap-2 p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)]">
@@ -265,7 +265,7 @@ export function ConvocarEnsayoModal({
  {/* Objetivos del Ensayo */}
  <div>
  <div className="flex items-center justify-between mb-1.5">
- <label className="text-xs font-mono font-bold text-[var(--ink-3)] uppercase">
+ <label className="text-xs font-mono font-bold text-[var(--ink-2)] uppercase">
  Objetivos Principales de la Sesión
  </label>
  <span className="text-[10px] font-mono text-[var(--ink-2)]">
@@ -320,7 +320,7 @@ export function ConvocarEnsayoModal({
 
  {/* Notas Generales */}
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1.5">
  Notas / Material a Llevar
  </label>
  <textarea

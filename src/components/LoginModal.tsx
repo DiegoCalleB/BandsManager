@@ -630,7 +630,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  {/* Recordar contraseña & Restablecer contraseña */}
  <div className="flex items-center justify-between text-xs text-[var(--ink-2)] px-1 pt-0.5">
- <label className="flex items-center gap-2 cursor-pointer select-none text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors">
+ <label className="flex items-center gap-2 cursor-pointer select-none text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors">
  <div className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ?'bg-[var(--acc)] border-[var(--acc)] text-[var(--surface)] shadow-[0_0_10px_rgba(242,202,80,0.4)]' :'bg-[var(--surface)] /80'}`}>
  <input
  type="checkbox"
@@ -697,7 +697,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  >
  Crear banda
  </button>
- <span className="text-[var(--ink-3)]">•</span>
+ <span className="text-[var(--ink-2)]">•</span>
  <button 
  type="button"
  onClick={() => {
@@ -1048,7 +1048,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  </form>
 
  {activateEmail.trim().length > 2 && (
- <div className="p-3 bg-[var(--surface)] rounded-[var(--r-l)] text-xs text-[var(--ink-3)] space-y-2 animate-in fade-in">
+ <div className="p-3 bg-[var(--surface)] rounded-[var(--r-l)] text-xs text-[var(--ink-2)] space-y-2 animate-in fade-in">
  <p className="font-medium text-[var(--sunken)]">
  ¿Quieres registrar tu propia banda en vez de activar una invitación?
  </p>
@@ -1083,10 +1083,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="text-center space-y-2 mb-4">
  <h2 className="text-lg font-bold text-[var(--sunken)]">¡Invitación Encontrada!</h2>
  <div className="p-3 bg-[var(--acc)]/5 border-[var(--acc)]/20 rounded-[var(--r-l)] text-xs text-[var(--acc)] space-y-1">
- <p className="font-semibold text-center text-[var(--ink-3)]">Banda(s) detectada(s):</p>
+ <p className="font-semibold text-center text-[var(--ink-2)]">Banda(s) detectada(s):</p>
  <ul className="list-disc pl-4 space-y-0.5 text-left max-h-24 overflow-y-auto">
  {activateBandsFound.map((b, idx) => (
- <li key={idx} className="text-[var(--ink-3)]">
+ <li key={idx} className="text-[var(--ink-2)]">
  <span className="font-semibold text-[var(--sunken)]">{b.bandName}</span> ({b.role ==='leader' ?'Director' :'Músico'})
  </li>
  ))}
@@ -1198,7 +1198,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="button"
  onClick={() => setView('register')}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-semibold text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-semibold text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  >
  <ArrowLeft className="w-3.5 h-3.5" />
  <span>Volver al registro</span>
@@ -1221,7 +1221,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <span className="text-xl font-black text-[var(--ink)]">0€ <span className="text-xs font-normal text-[var(--ink-2)]">/ gratis</span></span>
  </div>
 
- <ul className="space-y-2 text-xs text-[var(--ink-3)]">
+ <ul className="space-y-2 text-xs text-[var(--ink-2)]">
  <li className="flex items-center gap-2">
  <Check className="w-4 h-4 text-[var(--acc)]" />
  <span>Dossier de Prensa Interactivo (EPK)</span>

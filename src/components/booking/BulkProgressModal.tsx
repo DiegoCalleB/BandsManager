@@ -133,7 +133,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <span className={`text-[11px] shrink-0 truncate max-w-[180px] ${
  item.status ==='processing' ?'text-[var(--acc)]' :
  item.status ==='success' ?'text-emerald-400' :
- item.status ==='error' ?'text-rose-400' :'text-[var(--ink-3)]'
+ item.status ==='error' ?'text-rose-400' :'text-[var(--ink-2)]'
  }`}>
  {item.message || (
  item.status ==='processing' ?'Procesando...' :

@@ -133,7 +133,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
  <Hotel className="w-4 h-4 text-[var(--acc)]" />
  <div>
  <span className="text-xs font-semibold block">Hotel si distancia &gt; 150 km</span>
- <span className="text-[10px] text-[var(--ink-3)]">Incluir pernocta en presupuestos fuera de la provincia</span>
+ <span className="text-[10px] text-[var(--ink-2)]">Incluir pernocta en presupuestos fuera de la provincia</span>
  </div>
  </div>
  {requiereAlojamiento && <Check className="w-4 h-4 text-[var(--acc)]" />}

@@ -60,8 +60,8 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  </div>
  <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] mt-0.5">
  <span>{m.role ||'Músico'}</span>
- {m.email && <span className="text-[var(--ink-3)]">· {m.email}</span>}
- {m.instagram && <span className="text-[var(--ink-3)]">· @{m.instagram.replace('@','')}</span>}
+ {m.email && <span className="text-[var(--ink-2)]">· {m.email}</span>}
+ {m.instagram && <span className="text-[var(--ink-2)]">· @{m.instagram.replace('@','')}</span>}
  </div>
  </div>
  </div>
@@ -70,7 +70,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  <button
  type="button"
  onClick={() => onRemoveMember(m.id)}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-3)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
  title="Quitar miembro"
  >
  <Trash2 className="w-4 h-4" />

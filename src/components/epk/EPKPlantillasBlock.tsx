@@ -115,7 +115,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-mono uppercase tracking-wider">
  1. Elige la Plantilla Visual del Dossier
  </h4>
- <p className="hidden sm:block text-xs text-[var(--ink-3)]">
+ <p className="hidden sm:block text-xs text-[var(--ink-2)]">
  Personaliza los colores, tipografía, estilo de tarjetas y fondo para que coincida con el sonido de tu banda.
  </p>
  </div>
@@ -182,7 +182,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  </span>
  )}
  </div>
- <p className="hidden sm:block text-[11px] text-[var(--ink-3)] leading-snug">
+ <p className="hidden sm:block text-[11px] text-[var(--ink-2)] leading-snug">
  {tpl.description}
  </p>
  <p className="text-[10px] text-[var(--ink-2)] sm:text-[var(--ink-2)] truncate pt-0.5 sm:pt-1">
@@ -219,7 +219,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-mono uppercase tracking-wider">
  2. Organiza el Orden de las Secciones
  </h4>
- <p className="hidden sm:block text-xs text-[var(--ink-3)]">
+ <p className="hidden sm:block text-xs text-[var(--ink-2)]">
  Usa las flechas para subir o bajar cualquier sección. Puedes ocultar las que aún no tengas listas.
  </p>
  </div>
@@ -301,7 +301,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  </span>
  )}
  </div>
- <p className="text-[11px] text-[var(--ink-3)] truncate hidden sm:block">
+ <p className="text-[11px] text-[var(--ink-2)] truncate hidden sm:block">
  {item.meta.subtitle}
  </p>
  </div>

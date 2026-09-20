@@ -435,7 +435,7 @@ export function ModoLocalEnVivoTab({
  {/* Fullscreen Button */}
  <button
  onClick={toggleFullscreen}
- className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-3)] hover:text-[var(--ink)] hover:/40 transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:/40 transition-all cursor-pointer"
  title={isFullscreen ?'Salir de pantalla completa' :'Ver a pantalla completa'}
  >
  {isFullscreen ? <Minimize2 className="w-4 h-4 text-[var(--acc)]" /> : <Maximize2 className="w-4 h-4" />}
@@ -553,10 +553,10 @@ export function ModoLocalEnVivoTab({
 
  {/* Quick Musician Cheatsheet */}
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-2">
- <label className="text-xs font-mono font-bold text-[var(--ink-3)] uppercase tracking-wider flex items-center gap-1.5">
+ <label className="text-xs font-mono font-bold text-[var(--ink-2)] uppercase tracking-wider flex items-center gap-1.5">
  <Music className="w-3.5 h-3.5 text-[var(--acc)]" /> Afinación & Arreglos
  </label>
- <p className="text-xs text-[var(--ink-3)] font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-mono">
  {currentSong?.afinacion ? `Afinación: ${currentSong.afinacion}` :'Afinación estándar (E A D G B E)'}
  {currentSong?.guiaSustituto?.capoTraste ? ` • Capo: ${currentSong.guiaSustituto.capoTraste}` :''}
  </p>
@@ -609,13 +609,13 @@ export function ModoLocalEnVivoTab({
  <div className="flex items-center gap-1 sm:gap-2">
  <button
  onClick={() => setBpm(Math.max(40, bpm - 5))}
- className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
  >
  -5
  </button>
  <button
  onClick={() => setBpm(Math.max(40, bpm - 1))}
- className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
  >
  -1
  </button>
@@ -626,13 +626,13 @@ export function ModoLocalEnVivoTab({
 
  <button
  onClick={() => setBpm(Math.min(280, bpm + 1))}
- className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
  >
  +1
  </button>
  <button
  onClick={() => setBpm(Math.min(280, bpm + 5))}
- className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-mono text-xs cursor-pointer"
  >
  +5
  </button>
@@ -756,7 +756,7 @@ export function ModoLocalEnVivoTab({
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold cursor-pointer transition-all ${
  isAutoScrolling
  ?'bg-[var(--acc)]/60 text-[var(--surface)] animate-pulse'
- :'bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  {isAutoScrolling ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
@@ -772,7 +772,7 @@ export function ModoLocalEnVivoTab({
  className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold cursor-pointer ${
  scrollSpeed === spd
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70'
- :'text-[var(--ink-2)] hover:text-[var(--ink-3)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  {spd}x
@@ -790,7 +790,7 @@ export function ModoLocalEnVivoTab({
  </span>
  <button
  onClick={() => setTranspose(t => t - 1)}
- className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
  >
  -1
  </button>
@@ -799,7 +799,7 @@ export function ModoLocalEnVivoTab({
  </span>
  <button
  onClick={() => setTranspose(t => t + 1)}
- className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
  >
  +1
  </button>
@@ -808,7 +808,7 @@ export function ModoLocalEnVivoTab({
  {/* Notation ES/EN */}
  <button
  onClick={() => setNotation(n => (n ==='ES' ?'EN' :'ES'))}
- className="px-2 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono text-[var(--ink-3)] hover:text-[var(--ink)] font-bold cursor-pointer"
+ className="px-2 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)] font-bold cursor-pointer"
  title="Cambiar notación Do-Re-Mi vs C-D-E"
  >
  {notation}
@@ -963,7 +963,7 @@ export function ModoLocalEnVivoTab({
  <button
  disabled={activeIndex === 0}
  onClick={() => setActiveIndex(prev => prev - 1)}
- className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-[var(--ink)] text-xs font-mono font-bold disabled:opacity-30 cursor-pointer transition-all"
+ className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono font-bold disabled:opacity-30 cursor-pointer transition-all"
  >
  ← Anterior
  </button>

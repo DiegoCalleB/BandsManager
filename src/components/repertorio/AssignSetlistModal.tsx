@@ -42,7 +42,7 @@ export function AssignSetlistModal({
  </button>
  </div>
 
- <p className="text-[10px] text-[var(--ink-3)] font-sans">
+ <p className="text-[10px] text-[var(--ink-2)] font-sans">
  Selecciona el concierto o ensayo al que deseas vincular el repertorio{''}
  <strong className="text-[#d1b375] font-mono">"{assigningSetlist.nombre}"</strong>:
  </p>
@@ -120,7 +120,7 @@ export function AssignSetlistModal({
  <div className="pt-3 flex justify-end gap-2">
  <button
  onClick={onClose}
- className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-3)] text-[10px] font-mono"
+ className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] text-[10px] font-mono"
  >
  Cancelar
  </button>

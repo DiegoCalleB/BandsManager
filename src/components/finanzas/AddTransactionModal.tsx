@@ -68,7 +68,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  <button
  id="close-add-transaction-modal"
  onClick={onClose}
- className="absolute top-4 right-4 p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
+ className="absolute top-4 right-4 p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -80,7 +80,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
  <form onSubmit={handleSubmit} className="space-y-4">
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
+ <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
  Tipo
  </label>
  <div className="grid grid-cols-2 gap-2">
@@ -90,7 +90,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
  tipo ==='ingreso'
  ?'bg-emerald-500/20 text-emerald-400 border-emerald-500'
- :'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent hover:bg-[var(--surface)]'
+ :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent hover:bg-[var(--surface)]'
  }`}
  >
  Ingreso (+€)
@@ -101,7 +101,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
  tipo ==='gasto'
  ?'bg-rose-500/20 text-rose-400 border-rose-500'
- :'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent hover:bg-[var(--surface)]'
+ :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent hover:bg-[var(--surface)]'
  }`}
  >
  Gasto (-€)
@@ -110,7 +110,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
+ <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
  Categoría
  </label>
  <select
@@ -130,7 +130,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
+ <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
  Concepto / Descripción
  </label>
  <input
@@ -145,7 +145,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
+ <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
  Importe (€)
  </label>
  <input
@@ -159,7 +159,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  />
  </div>
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
+ <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
  Fecha
  </label>
  <input
@@ -173,7 +173,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  </div>
 
  <div>
- <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
+ <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-2)]">
  Estado
  </label>
  <div className="grid grid-cols-2 gap-2">
@@ -183,7 +183,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
  estado ==='pagado'
  ?'bg-emerald-500/20 text-emerald-400 border-emerald-500'
- :'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent'
+ :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent'
  }`}
  >
  Pagado / Completado
@@ -194,7 +194,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
  estado ==='pendiente'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]'
- :'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent'
+ :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent'
  }`}
  >
  Pendiente / Cobro futuro

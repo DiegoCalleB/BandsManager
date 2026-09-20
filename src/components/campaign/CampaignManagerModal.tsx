@@ -503,7 +503,7 @@ export function CampaignManagerModal({
  {!activeCampaign ? (
  <Check className="w-5 h-5 text-[var(--acc)]" />
  ) : (
- <span className="text-[10px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-3)]">
+ <span className="text-[10px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-2)]">
  Seleccionar
  </span>
  )}
@@ -555,7 +555,7 @@ export function CampaignManagerModal({
  )}
  </div>
 
- <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ink-3)] pt-0.5">
+ <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ink-2)] pt-0.5">
  <span className="flex items-center gap-1 text-sky-300">
  <MapPin className="w-3.5 h-3.5 text-sky-400" />
  {camp.targetCities?.join(',') ||'Cualquier ciudad'}
@@ -602,7 +602,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => onSetActiveCampaign(null)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--surface)]/80 text-[var(--ink-3)] hover:bg-[var(--surface)]/70"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70"
  >
  Desactivar
  </button>

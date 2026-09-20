@@ -225,7 +225,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  {!reviewItems && !analyzing && (
  <div className="text-center py-8 space-y-4">
  <ImagePlus className="w-12 h-12 text-sky-400/50 mx-auto" />
- <p className="text-[var(--ink-3)]">
+ <p className="text-[var(--ink-2)]">
  Sube una foto o PDF de un repertorio ya impreso (a mano o a máquina) — la IA lee los
  temas en orden y los casa contra tu catálogo antes de crear nada.
  </p>
@@ -233,7 +233,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  type="file"
  accept="image/*,.pdf"
  onChange={(e) => setFile(e.target.files?.[0] || null)}
- className="text-xs text-[var(--ink-3)] file:mr-3 file:py-1.5 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:bg-sky-700 file:text-[var(--ink)] file:text-xs file:font-medium mx-auto block"
+ className="text-xs text-[var(--ink-2)] file:mr-3 file:py-1.5 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:bg-sky-700 file:text-[var(--ink)] file:text-xs file:font-medium mx-auto block"
  />
  {file && (
  <button

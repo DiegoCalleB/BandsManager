@@ -945,7 +945,7 @@ export default function BookingCRM({
  const subCardBg = isStitchLight ?'bg-[var(--bg)]/60' :'bg-[var(--surface)]';
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-3)]';
+ const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCityFilter ? 1 : 0) + (statusFilter !=='todos' ? 1 : 0) + (typeFilter !=='todos' ? 1 : 0) + (minCapacityFilter > 0 ? 1 : 0) + (onlyFavoritesFilter ? 1 : 0) + (onlyVerifiedFilter ? 1 : 0) + (activeSavedFilterId ? 1 : 0);
 
  return (
@@ -970,13 +970,13 @@ export default function BookingCRM({
  className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
  sectionTab ==='salas'
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Building2 className="w-3.5 h-3.5 shrink-0" />
  <span>Escenarios</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
- sectionTab ==='salas' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-3)]'
+ sectionTab ==='salas' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {leads.filter(l => !normalizeType(l.tipo).includes('medio') && !['grupo','agencia','manager','productora','sello'].includes(normalizeType(l.tipo))).length}
  </span>
@@ -989,13 +989,13 @@ export default function BookingCRM({
  className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
  sectionTab ==='medios'
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Radio className="w-3.5 h-3.5 shrink-0" />
  <span>Medios y Prensa</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
- sectionTab ==='medios' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-3)]'
+ sectionTab ==='medios' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {leads.filter(l => normalizeType(l.tipo) ==='medio').length}
  </span>
@@ -1008,13 +1008,13 @@ export default function BookingCRM({
  className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
  sectionTab ==='grupos'
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Briefcase className="w-3.5 h-3.5 shrink-0" />
  <span>Management & Productoras</span>
  <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
- sectionTab ==='grupos' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-3)]'
+ sectionTab ==='grupos' ?'bg-black/15 text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {leads.filter(l => ['agencia','manager','productora','sello','promotora','management'].some(t => normalizeType(l.tipo).includes(t))).length}
  </span>
@@ -1030,13 +1030,13 @@ export default function BookingCRM({
  onSectionChange('bandas');
  }
  }}
- className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer text-[var(--ink-3)] hover:text-[var(--ink)]"
+ className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--ink)]"
  title="Ver Red de Co-Booking y Grupos Amigos"
  >
  <Users className="w-3.5 h-3.5 shrink-0 text-[var(--acc-ink)]" />
  <span>Grupos</span>
  {typeof bandsCount ==='number' && bandsCount > 0 && (
- <span className="text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums bg-[var(--sunken)] text-[var(--ink-3)]">
+ <span className="text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums bg-[var(--sunken)] text-[var(--ink-2)]">
  {bandsCount}
  </span>
  )}
@@ -1088,7 +1088,7 @@ export default function BookingCRM({
  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] active:scale-95 cursor-pointer"
  title="Exportar base de datos a Excel / CSV o JSON"
  >
- <Download className="w-3.5 h-3.5 text-[var(--ink-3)]" />
+ <Download className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span className="hidden sm:inline">Exportar Leads</span>
  <span className="sm:hidden">Exportar</span>
  </button>
@@ -1100,7 +1100,7 @@ export default function BookingCRM({
  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
  isMobileToolsOpen
  ?'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
- :'bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Herramientas, Scout, Excel y Agentes IA"
  >
@@ -1276,14 +1276,14 @@ export default function BookingCRM({
  placeholder={sectionTab ==='medios' ?"🔍 Buscar medio..." : sectionTab ==='grupos' ?"🔍 Buscar management..." :"🔍 Buscar escenario..."}
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
- className={`w-full rounded-[var(--r-m)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-2 text-xs font-semibold font-sans transition-colors bg-[var(--sunken)] text-[var(--ink)] focus:ring-2 focus:ring-[var(--acc)]/40 placeholder:text-[var(--ink-3)]`}
+ className={`w-full rounded-[var(--r-m)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-2 text-xs font-semibold font-sans transition-colors bg-[var(--sunken)] text-[var(--ink)] focus:ring-2 focus:ring-[var(--acc)]/40 placeholder:text-[var(--ink-2)]`}
  />
  {searchTerm && (
  <button
  id="crm-search-clear"
  type="button"
  onClick={() => setSearchTerm('')}
- className="absolute right-2.5 top-2.5 p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
+ className="absolute right-2.5 top-2.5 p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
  title="Borrar búsqueda"
  >
  <X className="w-3.5 h-3.5" />
@@ -1389,7 +1389,7 @@ export default function BookingCRM({
  className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
  viewMode ==='grid'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Tarjetas"
  >
@@ -1403,7 +1403,7 @@ export default function BookingCRM({
  className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
  viewMode ==='table'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Detalles / Tabla"
  >
@@ -1417,11 +1417,11 @@ export default function BookingCRM({
  className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
  viewMode ==='map'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Mapa GPS Interactivo"
  >
- <MapIcon className={`w-3.5 h-3.5 ${viewMode ==='map' ?'text-[var(--on-acc)]' :'text-[var(--ink-3)]'}`} />
+ <MapIcon className={`w-3.5 h-3.5 ${viewMode ==='map' ?'text-[var(--on-acc)]' :'text-[var(--ink-2)]'}`} />
  <span>Mapa</span>
  </button>
  </div>
@@ -1438,7 +1438,7 @@ export default function BookingCRM({
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2">
- <MapPin className={`w-4 h-4 shrink-0 animate-bounce ${enrichStatusMsg.includes('¡Éxito!') ?'text-[var(--ok)]' :'text-[var(--ink-3)]'}`} />
+ <MapPin className={`w-4 h-4 shrink-0 animate-bounce ${enrichStatusMsg.includes('¡Éxito!') ?'text-[var(--ok)]' :'text-[var(--ink-2)]'}`} />
  <span>{enrichStatusMsg}</span>
  </div>
  <button 
@@ -1795,14 +1795,14 @@ export default function BookingCRM({
  className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-colors shrink-0 cursor-pointer flex items-center gap-1.5 ${
  isSelected
  ?'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
- :'text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--sunken)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--sunken)]'
  }`}
  >
  <span>{tab.label}</span>
  <span className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
  isSelected 
  ?'bg-[var(--acc)]/25 text-[var(--acc-ink)]' 
- :'bg-black/10 text-[var(--ink-3)]'
+ :'bg-black/10 text-[var(--ink-2)]'
  }`}>
  {count}
  </span>
@@ -2067,7 +2067,7 @@ export default function BookingCRM({
  <h3 className="text-sm font-bold font-display flex items-center gap-2 text-[var(--ink)]">
  Configuración de plantillas y pautas AI (Redactor)
  </h3>
- <p className="text-[11px] font-sans mt-0.5 text-[var(--ink-3)]">
+ <p className="text-[11px] font-sans mt-0.5 text-[var(--ink-2)]">
  Personaliza el correo por defecto y las directrices del Redactor AI para Salas, Festivales, Medios y Grupos.
  </p>
  </div>
@@ -2504,7 +2504,7 @@ export default function BookingCRM({
  ) : (
  <div className={`border-2 border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
  isStitchLight
- ?' text-[var(--ink-3)]'
+ ?' text-[var(--ink-2)]'
  :' text-[var(--ink-2)]'
  }`}>
  Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus directrices actuales.

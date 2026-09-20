@@ -444,7 +444,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  {/* Instrument Filter & Preset Selector */}
  <div className="space-y-2.5">
  <div className="flex items-center justify-between">
- <label className="text-xs font-semibold text-[var(--ink-3)] flex items-center gap-1.5">
+ <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
  <Radio className="w-3.5 h-3.5 text-emerald-400" />
  Instrumento y Afinación:
  </label>
@@ -497,7 +497,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  className={`p-2.5 rounded-[var(--r-m)] text-left text-xs font-medium transition-all cursor-pointer flex items-start justify-between gap-2 ${
  selectedPresetId === p.id
  ?'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/60 font-bold shadow-sm'
- :'bg-white/5 text-[var(--ink-3)] border-[var(--hair)]5 hover:bg-white/10'
+ :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-white/10'
  }`}
  >
  <div className="flex flex-col min-w-0 flex-1">
@@ -576,7 +576,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </div>
 
  <div className="flex items-center gap-3 mt-1.5 font-mono text-xs">
- <span className="text-[var(--ink-3)] font-bold">
+ <span className="text-[var(--ink-2)] font-bold">
  {pitch.freq} Hz
  </span>
  <span className={`px-2 py-0.5 rounded-md font-bold ${
@@ -659,7 +659,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  {/* Interactive String Pitch Buttons & Reference Tones */}
  <div className="space-y-2">
  <div className="flex items-center justify-between">
- <span className="text-xs font-semibold text-[var(--ink-3)] flex items-center gap-1.5">
+ <span className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
  <Volume2 className="w-3.5 h-3.5 text-[var(--acc)]" />
  Cuerdas Objetivo & Tonos de Referencia:
  </span>
@@ -683,7 +683,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  ?'bg-[var(--acc)] text-zinc-950 font-black shadow-md scale-105'
  : isSelected
  ?'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/60 font-bold'
- :'bg-white/5 text-[var(--ink-3)] border-[var(--hair)]5 hover:bg-white/10 hover:border-[var(--hair)]20'
+ :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-white/10 hover:border-[var(--hair)]20'
  }`}
  >
  <div className="flex items-center gap-1">

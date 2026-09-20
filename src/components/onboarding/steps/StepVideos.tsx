@@ -68,7 +68,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  href={vid.url}
  target="_blank"
  rel="noreferrer"
- className="text-xs text-[var(--ink-3)] hover:text-[var(--acc)] transition-colors truncate block max-w-md"
+ className="text-xs text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors truncate block max-w-md"
  >
  {vid.url}
  </a>
@@ -80,7 +80,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  type="button"
  onClick={() => onToggleHighlightVideo(vid.id)}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition-colors ${
- vid.destacado ?'text-[var(--acc)] bg-[var(--acc)]/10' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'
+ vid.destacado ?'text-[var(--acc)] bg-[var(--acc)]/10' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  title={vid.destacado ?'Quitar destacado' :'Marcar como vídeo principal'}
  >
@@ -89,7 +89,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  <button
  type="button"
  onClick={() => onRemoveVideo(vid.id)}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-3)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
  title="Eliminar vídeo"
  >
  <Trash2 className="w-4 h-4" />

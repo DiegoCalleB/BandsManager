@@ -128,7 +128,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  }}
  defaultValue=""
  className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-indigo-500/50 cursor-pointer font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${
- isStitchLight ?'bg-white text-[var(--ink)] hover:' :'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:'
+ isStitchLight ?'bg-white text-[var(--ink)] hover:' :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:'
  }`}
  >
  <option value="">+ Añadir 1 Tema...</option>
@@ -178,7 +178,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 backdrop-blur-md shadow-2xl p-2 space-y-2 text-xs">
  {/* Standard Preset Events */}
  <div>
- <div className="text-[10px] uppercase tracking-wider text-[var(--ink-3)] px-2 py-1 font-semibold">
+ <div className="text-[10px] uppercase tracking-wider text-[var(--ink-2)] px-2 py-1 font-semibold">
  Eventos de Show
  </div>
  <div className="grid grid-cols-1 gap-0.5">
@@ -190,7 +190,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  setShowEventMenu(false);
  handleAddItemToSetlist(undefined, ev.type);
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-[var(--ink)] transition flex items-center justify-between cursor-pointer"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition flex items-center justify-between cursor-pointer"
  >
  <span className="flex items-center gap-2 font-medium">
  <span>{ev.icon}</span>
@@ -260,7 +260,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  />
  </div>
  <div className="flex items-center justify-between gap-2 pt-0.5">
- <div className="flex items-center gap-1 text-xs text-[var(--ink-3)]">
+ <div className="flex items-center gap-1 text-xs text-[var(--ink-2)]">
  <span>Duración:</span>
  <input
  type="number"
@@ -283,7 +283,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => setIsAddingShortcut(false)}
- className="px-2 py-1 text-[var(--ink-3)] hover:text-[var(--ink-3)] text-xs cursor-pointer"
+ className="px-2 py-1 text-[var(--ink-2)] hover:text-[var(--ink-2)] text-xs cursor-pointer"
  >
  Cancelar
  </button>

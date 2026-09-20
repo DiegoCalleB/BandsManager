@@ -1130,7 +1130,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <p className="text-[10px] text-[var(--ink-2)] font-bold truncate">
  {editedLeadInfo.imagen_url}
  </p>
- <p className="text-[9px] text-[var(--ink-3)]">Logo oficial guardado</p>
+ <p className="text-[9px] text-[var(--ink-2)]">Logo oficial guardado</p>
  </div>
  <button
  type="button"
@@ -1471,7 +1471,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="w-full p-3 bg-black/60 rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
  />
  <div className="flex items-center justify-between gap-2">
- <span className="text-[10px] text-[var(--ink-3)] font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa'Regenerar' con estrellas/comentario y marca'Solo para esta sala' en vez de editar aquí.">
+ <span className="text-[10px] text-[var(--ink-2)] font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa'Regenerar' con estrellas/comentario y marca'Solo para esta sala' en vez de editar aquí.">
  ✏️ Esta edición se usará también para entrenar al Redactor
  </span>
  <div className="flex gap-2 shrink-0">
@@ -1818,7 +1818,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <span className={msg.remitente ==='sala' ?'text-[var(--acc)]' :'text-sky-400'}>
  {msg.remitente_nombre} ({msg.remitente ==='sala' ?'Programador' :'Bakandeya'})
  </span>
- <span className="text-[var(--ink-3)] text-[10px] font-mono">{msg.fecha}</span>
+ <span className="text-[var(--ink-2)] text-[10px] font-mono">{msg.fecha}</span>
  </div>
  <div className="font-bold text-[var(--ink)]">{msg.asunto}</div>
  <p className="whitespace-pre-wrap text-[var(--ink-2)] leading-snug">{msg.mensaje}</p>
@@ -1967,7 +1967,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <span className="text-[var(--ink-2)]">{log.autor ||'Agente'}</span>
  </div>
  <div className="flex items-center gap-2">
- <span className="text-[var(--ink-3)] font-mono">{log.fecha}</span>
+ <span className="text-[var(--ink-2)] font-mono">{log.fecha}</span>
  <button
  type="button"
  onClick={() => handleDeleteInteractionLog(log.id)}

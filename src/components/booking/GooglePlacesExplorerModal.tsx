@@ -724,7 +724,7 @@ export function GooglePlacesExplorerModal({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
  isChecked
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50 shadow-sm'
- :'bg-[var(--bg)]/80 text-[var(--ink-3)] border-[var(--hair)]800 hover:text-[var(--ink-2)]'
+ :'bg-[var(--bg)]/80 text-[var(--ink-2)] border-[var(--hair)]800 hover:text-[var(--ink-2)]'
  }`}
  >
  <span>{item.icon}</span>
@@ -818,7 +818,7 @@ export function GooglePlacesExplorerModal({
  {selectedCity && (
  <button
  onClick={() => setSelectedCity('')}
- className="absolute right-2.5 top-2.5 text-[var(--ink-3)] hover:text-[var(--ink-2)]"
+ className="absolute right-2.5 top-2.5 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  title="Limpiar ciudad"
  >
  <X className="w-3.5 h-3.5" />
@@ -1069,7 +1069,7 @@ export function GooglePlacesExplorerModal({
  <button
  type="button"
  onClick={() => handleDiscardPlace(place)}
- className="p-1 rounded-[var(--r-s)] text-[var(--ink-3)] hover:text-rose-400 hover:bg-rose-500/15 transition-all cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-rose-400 hover:bg-rose-500/15 transition-all cursor-pointer"
  title="Marcar como no deseada (descartar para futuras búsquedas)"
  >
  <Ban className="w-3.5 h-3.5" />
@@ -1160,7 +1160,7 @@ export function GooglePlacesExplorerModal({
  </div>
  ) : (
  <div className="p-2 rounded-[var(--r-s)] bg-zinc-950 border-[var(--hair)]800 text-[10px] flex items-center justify-between gap-2">
- <span className="text-[var(--ink-3)] italic">Sin correo extraído aún</span>
+ <span className="text-[var(--ink-2)] italic">Sin correo extraído aún</span>
  <button
  onClick={() => handleExtractSingleEmail(place.place_id)}
  disabled={place.extractingEmail}
@@ -1186,7 +1186,7 @@ export function GooglePlacesExplorerModal({
  <div className="p-10 text-center space-y-3 bg-[var(--bg)]/40 rounded-[var(--r-l)]">
  <Building2 className="w-12 h-12 text-[var(--ink-2)] mx-auto" />
  <h3 className="text-sm font-bold text-[var(--ink-2)]">Descubre nuevas oportunidades de booking</h3>
- <p className="text-xs text-[var(--ink-3)] max-w-md mx-auto">
+ <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
  Selecciona la categoría deseada (Salas, Ayuntamientos, Festivales, Grupos, Agencias, Sellos o Medios), la ciudad y la cantidad a buscar (1 a 10). Revisa los resultados y añádelos a tu base de datos de leads con un solo clic.
  </p>
  </div>
@@ -1227,7 +1227,7 @@ export function GooglePlacesExplorerModal({
  >
  <div className="min-w-0">
  <p className="font-bold text-[var(--ink)] truncate">{item.nombre_sala}</p>
- <p className="text-[10px] text-[var(--ink-3)] font-mono">
+ <p className="text-[10px] text-[var(--ink-2)] font-mono">
  {item.ciudad ? `${item.ciudad} • ` :''}Descartada el {new Date(item.discarded_at).toLocaleDateString()}
  </p>
  </div>

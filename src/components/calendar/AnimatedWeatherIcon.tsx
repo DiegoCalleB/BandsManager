@@ -133,7 +133,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"easeInOut" 
  }}
- className="relative z-10 text-[var(--ink-3)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
+ className="relative z-10 text-[var(--ink-2)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
  >
  <Cloud className={currentSize.icon} />
  </motion.div>
@@ -271,7 +271,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"easeInOut" 
  }}
- className="relative z-10 text-[var(--ink-3)] drop-shadow-[0_0_6px_rgba(148,163,184,0.3)]"
+ className="relative z-10 text-[var(--ink-2)] drop-shadow-[0_0_6px_rgba(148,163,184,0.3)]"
  >
  <CloudFog className={currentSize.icon} />
  </motion.div>

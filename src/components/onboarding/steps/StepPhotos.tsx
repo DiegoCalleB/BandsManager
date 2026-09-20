@@ -71,7 +71,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
  ) : (
  <>
- <Upload className="w-5 h-5 text-[var(--ink-3)] mb-1" />
+ <Upload className="w-5 h-5 text-[var(--ink-2)] mb-1" />
  <span className="text-[11px] font-medium text-[var(--ink-2)]">Subir desde dispositivo</span>
  </>
  )}

@@ -1525,7 +1525,7 @@ export function PdfExportModal({
  <button
  onClick={() => setShowAdvancedSettings(v => !v)}
  className={`sm:hidden w-full flex items-center justify-between px-3 py-2 rounded-[var(--r-s)] font-bold cursor-pointer transition-colors ${
- isStitchLight ?'bg-white text-[var(--ink-2)]' :'bg-black/40 border-[var(--hair)] text-[var(--ink-3)]'
+ isStitchLight ?'bg-white text-[var(--ink-2)]' :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
  <span className="flex items-center gap-1.5">
@@ -1607,7 +1607,7 @@ export function PdfExportModal({
 
  {/* Feature Toggles (BPM & Duration optional, Logo, etc.) */}
  <div className="flex flex-wrap items-center gap-3">
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showBandLogo}
@@ -1617,7 +1617,7 @@ export function PdfExportModal({
  <span>Logo Grupo</span>
  </label>
 
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showTonality}
@@ -1627,7 +1627,7 @@ export function PdfExportModal({
  <span>Tono</span>
  </label>
 
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showBpm}
@@ -1637,7 +1637,7 @@ export function PdfExportModal({
  <span>BPM</span>
  </label>
 
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showDuration}
@@ -1647,7 +1647,7 @@ export function PdfExportModal({
  <span>Duración</span>
  </label>
 
- <label className="flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer select-none">
+ <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
  <input
  type="checkbox"
  checked={showAppBranding}
@@ -1664,7 +1664,7 @@ export function PdfExportModal({
  texto competía por ancho con el badge del músico en pantallas pequeñas). */}
  {membersToExport.length > 1 && (
  <div className={`px-3 sm:px-6 py-1.5 sm:py-2 border-b flex items-center justify-between gap-2 text-xs font-mono shrink-0 ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-3)]'
+ isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <span className="hidden sm:inline font-bold text-[var(--ink-2)] shrink-0">Previsualizando hoja {previewPageIndex + 1} de {membersToExport.length}:</span>
@@ -1702,7 +1702,7 @@ export function PdfExportModal({
  {/* Authentic Real Stage Paper Sheet */}
  <div
  ref={sheetRef}
- className="relative overflow-hidden bg-white text-black p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-3)] transition-all"
+ className="relative overflow-hidden bg-white text-black p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
  style={{
  width:'210mm',
  minHeight:'297mm',
@@ -1756,7 +1756,7 @@ export function PdfExportModal({
  <h1 className="text-[14pt] font-black uppercase tracking-tighter m-0 leading-none text-black font-['Anton',sans-serif]">
  {bandName.toUpperCase()}
  </h1>
- <div className="text-[9pt] font-bold text-[var(--ink-3)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-full font-['Oswald',sans-serif]">
+ <div className="text-[9pt] font-bold text-[var(--ink-2)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-full font-['Oswald',sans-serif]">
  {activeSetlist.nombre.toUpperCase()}
  </div>
  </div>
@@ -1970,7 +1970,7 @@ export function PdfExportModal({
  <button
  onClick={() => setEditingSongForNotes(s)}
  title="Editar notas manuscritas de esta canción"
- className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--sunken)] border-text-[var(--ink-3)] rounded font-mono text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
+ className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--sunken)] border-text-[var(--ink-2)] rounded font-mono text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
  >
  <Edit3 className="w-3 h-3 text-emerald-600" />
  <span>Editar Nota</span>
@@ -2099,7 +2099,7 @@ export function PdfExportModal({
  </div>
  <button
  onClick={() => setSizeChoiceDialog(null)}
- className={`mt-4 text-xs font-mono cursor-pointer ${isStitchLight ?'text-[var(--ink-3)] hover:text-[var(--ink-2)]' :'text-[var(--ink-2)] hover:text-[var(--ink-3)]'}`}
+ className={`mt-4 text-xs font-mono cursor-pointer ${isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink-2)]' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  Cancelar
  </button>

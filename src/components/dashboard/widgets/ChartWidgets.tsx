@@ -135,7 +135,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  <h3 className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
  Energía del repertorio
  </h3>
- <p className="text-[11px] text-[var(--ink-3)]">
+ <p className="text-[11px] text-[var(--ink-2)]">
  {activeSetlist ? activeSetlist.nombre ||'Setlist activo' :'Perfil de ritmo del bolo'}
  </p>
  </div>
@@ -172,15 +172,15 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  {/* Stats Summary Bar */}
  <div className="grid grid-cols-3 gap-2 text-center text-xs">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
- <span className="text-[10px] text-[var(--ink-3)] block">Temas</span>
+ <span className="text-[10px] text-[var(--ink-2)] block">Temas</span>
  <span className="font-semibold text-[var(--acc-ink)] text-sm tabular-nums">{chartData.length}</span>
  </div>
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
- <span className="text-[10px] text-[var(--ink-3)] block">Energía media</span>
+ <span className="text-[10px] text-[var(--ink-2)] block">Energía media</span>
  <span className="font-semibold text-[var(--ink)] text-sm tabular-nums">{avgEnergy} / 20</span>
  </div>
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
- <span className="text-[10px] text-[var(--ink-3)] block">Duración</span>
+ <span className="text-[10px] text-[var(--ink-2)] block">Duración</span>
  <span className="font-semibold text-[var(--ok)] text-sm tabular-nums">~{totalDuration} min</span>
  </div>
  </div>

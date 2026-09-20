@@ -548,7 +548,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  <button
  onClick={() => setShowMoreMenu(v => !v)}
- className={`p-1.5 rounded-[var(--r-s)] transition ${showMoreMenu ? (glareMode ?'bg-black/10' :'bg-white/15') : glareMode ?'hover:bg-black/10 text-[var(--ink-3)]' :'hover:bg-white/10 text-[var(--ink-3)]'}`}
+ className={`p-1.5 rounded-[var(--r-s)] transition ${showMoreMenu ? (glareMode ?'bg-black/10' :'bg-white/15') : glareMode ?'hover:bg-black/10 text-[var(--ink-2)]' :'hover:bg-white/10 text-[var(--ink-2)]'}`}
  title="Más opciones"
  >
  <MoreVertical className="w-5 h-5" />
@@ -566,7 +566,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowMoreMenu(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-0.5 text-sm ${
- glareMode ?'bg-white border-text-[var(--ink-3)] text-black' :'bg-[var(--surface)] text-[var(--ink)]'
+ glareMode ?'bg-white border-text-[var(--ink-2)] text-black' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {/* Studio & Ensayo shortcuts inside menu */}
  {!isBlock && currentSong && (
@@ -585,7 +585,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  onClick={() => { setShowMoreMenu(false); handleLaunchStudio(); }}
  className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${
- glareMode ?'hover:bg-black/5 text-[var(--ink-3)]' :'hover:bg-white/10 text-[var(--ink-3)]'
+ glareMode ?'hover:bg-black/5 text-[var(--ink-2)]' :'hover:bg-white/10 text-[var(--ink-2)]'
  }`}
  title="Abre el Studio para separar las pistas de este tema con el motor de IA Iris"
  >
@@ -874,7 +874,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => setLiveTransposeOffset(v => v - 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-3)] hover:text-[var(--ink)] font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold cursor-pointer"
  title="Bajar 1 semitono (-1)"
  >
  -
@@ -883,7 +883,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => setLiveTransposeOffset(v => v + 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-3)] hover:text-[var(--ink)] font-bold cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-white/10 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold cursor-pointer"
  title="Subir 1 semitono (+1)"
  >
  +
@@ -953,7 +953,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  {nextItem && (
  <p className={`text-center text-[11px] font-mono truncate ${glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
- Siguiente: <span className={glareMode ?'text-[var(--ink)]' :'text-[var(--ink-3)]'}>{itemLabel(nextItem, songs)}</span>
+ Siguiente: <span className={glareMode ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}>{itemLabel(nextItem, songs)}</span>
  {nextItem.tipoItem ==='cancion' && songs.find(s => s.id === nextItem.songId)?.tonalidad && (
  <span> · {songs.find(s => s.id === nextItem.songId)?.tonalidad}</span>
  )}
@@ -1041,7 +1041,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <span className="text-lg">{meta.icon}</span>
  <div>
  <div className="text-xs font-bold text-[var(--ink)]">{item.tituloCustom || meta.label}</div>
- <div className="text-[10px] text-[var(--ink-3)] font-mono">Bloque de escenario</div>
+ <div className="text-[10px] text-[var(--ink-2)] font-mono">Bloque de escenario</div>
  </div>
  </div>
  <span className="px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink-2)] font-mono">
@@ -1087,7 +1087,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {stemCount > 0 ? `${stemCount} pistas` :'Iris'}
  </span>
  ) : (
- <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] text-[var(--ink-3)] bg-[var(--sunken)]/50">
+ <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] text-[var(--ink-2)] bg-[var(--sunken)]/50">
  Sin Iris
  </span>
  )}
@@ -1300,7 +1300,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={() => onLiveTransposeChange(liveTransposeOffset - 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-3)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
  title="Bajar 1 semitono (-1)"
  >
  -
@@ -1311,7 +1311,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={() => onLiveTransposeChange(liveTransposeOffset + 1)}
- className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-3)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
+ className="px-1.5 py-0.5 rounded hover:bg-white/15 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer"
  title="Subir 1 semitono (+1)"
  >
  +
@@ -1357,7 +1357,7 @@ const ChordSheetPage: React.FC<{
  className={`px-2.5 py-1 text-xs font-mono font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 cursor-pointer ${
  teleprompterMode ==='scroll'
  ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 shadow-sm'
- :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={teleprompterMode ==='scroll' ?'Cambiar a modo pedal por secciones' :'Cambiar a modo teleprompter scroll continuo'}
  >
@@ -1409,7 +1409,7 @@ const ChordSheetPage: React.FC<{
  <button
  type="button"
  onClick={onResetTeleprompterScroll}
- className="px-2.5 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] hover:text-[var(--ink)] rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1 transition cursor-pointer"
+ className="px-2.5 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1 transition cursor-pointer"
  title="Rebobinar al principio"
  >
  <RotateCcw className="w-3.5 h-3.5" />

@@ -491,7 +491,7 @@ export function TemplateConfigSection({
  <div
  className={`border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
  isStitchLight
- ?' text-[var(--ink-3)]'
+ ?' text-[var(--ink-2)]'
  :' text-[var(--ink-2)]'
  }`}
  >

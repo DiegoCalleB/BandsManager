@@ -152,7 +152,7 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  },
  twitter: {
  label:'X / Twitter',
- colorClass:'text-[var(--ink-3)]',
+ colorClass:'text-[var(--ink-2)]',
  bgClass:'bg-[var(--surface)]/80',
  borderClass:'',
  hoverClass:'hover:bg-[var(--surface)] hover: hover:text-[var(--ink)]'
@@ -243,7 +243,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  return (
  <div className="space-y-2">
  {showTitle && (
- <p className="text-xs text-[var(--ink-3)] font-semibold uppercase tracking-wider text-center">
+ <p className="text-xs text-[var(--ink-2)] font-semibold uppercase tracking-wider text-center">
  {title}
  </p>
  )}
@@ -251,7 +251,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  {validEntries.map(([key, url]) => {
  const config = PLATFORM_CONFIG[key] || {
  label: key ==='website' ? getWebsiteLabel() : key,
- colorClass:'text-[var(--ink-3)]',
+ colorClass:'text-[var(--ink-2)]',
  bgClass:'bg-[var(--surface)]',
  borderClass:'',
  hoverClass:'hover:bg-[var(--surface)]'
@@ -272,7 +272,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  <IconComp className="w-4 h-4 shrink-0" />
  <span>{label}</span>
  {showClickCounts && typeof count ==='number' && count > 0 && (
- <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/40 text-[var(--ink-3)] border-[var(--hair)]">
+ <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/40 text-[var(--ink-2)] border-[var(--hair)]">
  {count}
  </span>
  )}
@@ -291,7 +291,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  <p className="text-xs text-[var(--acc)] font-bold uppercase tracking-wider">
  {title}
  </p>
- <p className="text-[11px] text-[var(--ink-3)] mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  {subtitle || getDefaultSubtitle()}
  </p>
  </div>
@@ -315,7 +315,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
 
  const config = PLATFORM_CONFIG[key] || {
  label: key ==='website' ? getWebsiteLabel() : key,
- colorClass:'text-[var(--ink-3)]',
+ colorClass:'text-[var(--ink-2)]',
  bgClass:'bg-[var(--surface)]',
  borderClass:'',
  hoverClass:'hover:bg-[var(--surface)]'
@@ -336,7 +336,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
  <span className={isFullWidth ?"text-sm font-black tracking-wide" :"truncate"}>{label}</span>
  {showClickCounts && typeof count ==='number' && count > 0 && (
- <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-black/40 text-[var(--ink-3)] border-[var(--hair)] shrink-0 ml-auto">
+ <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-black/40 text-[var(--ink-2)] border-[var(--hair)] shrink-0 ml-auto">
  {count}
  </span>
  )}

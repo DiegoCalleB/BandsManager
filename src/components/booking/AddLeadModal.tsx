@@ -224,7 +224,7 @@ export function AddLeadModal({
  <p className="text-[10px] text-[var(--ink-2)] font-bold truncate">
  {newLeadData.imagen_url}
  </p>
- <p className="text-[9px] text-[var(--ink-3)]">Logo oficial guardado</p>
+ <p className="text-[9px] text-[var(--ink-2)]">Logo oficial guardado</p>
  </div>
  <button
  type="button"

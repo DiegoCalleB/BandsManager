@@ -59,7 +59,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  {/* Informative banner */}
  <div className={`px-6 py-3 text-xs flex items-center gap-2.5 ${
- isStitchLight ?'bg-indigo-50/70 text-indigo-900' :'bg-[var(--surface)]/40 text-[var(--ink-3)]'
+ isStitchLight ?'bg-indigo-50/70 text-indigo-900' :'bg-[var(--surface)]/40 text-[var(--ink-2)]'
  }`}>
  <Info className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <p className="text-[11px] leading-relaxed font-mono">

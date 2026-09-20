@@ -87,7 +87,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  >
  {summary.beneficioNeto.toLocaleString('es-ES')} €
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-1 font-medium">
+ <p className="text-xs text-[var(--ink-2)] mt-1 font-medium">
  Cashflow acumulado
  </p>
  </div>
@@ -111,7 +111,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  <div className="text-2xl font-bold" style={{ color: colors.text }}>
  {summary.margenBeneficioPorcentaje} %
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-1 font-medium">
+ <p className="text-xs text-[var(--ink-2)] mt-1 font-medium">
  Rentabilidad sobre ingresos
  </p>
  </div>

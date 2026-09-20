@@ -406,7 +406,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <span className="text-xs font-mono text-[var(--ink-2)] uppercase tracking-wide">Plan:</span>
  <span className="text-xs font-bold text-[var(--acc)]/70 font-mono">{currentPlanDef.name}</span>
  </div>
- <p className="text-[11px] text-[var(--ink-3)] mt-0.5">{currentPlanDef.description}</p>
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">{currentPlanDef.description}</p>
  </div>
  </div>
 
@@ -737,7 +737,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
  <span>¿Eliminar proyecto"{bandToDeleteInProfile.name}"?</span>
  </p>
- <p className="text-[11px] text-[var(--ink-3)]">
+ <p className="text-[11px] text-[var(--ink-2)]">
  Se desvinculará este proyecto de tu cuenta de usuario. Esta acción no se puede deshacer.
  </p>
  <div className="flex items-center justify-end gap-2 pt-1">
@@ -790,7 +790,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  ?'bg-[var(--acc)]/15 /50 text-[var(--acc)]/70 shadow-sm'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)]'
- :'bg-[var(--surface)] text-[var(--ink-3)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <button
@@ -871,7 +871,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  ?'bg-[var(--acc)]/20 /60 text-[var(--acc)]/70 font-bold shadow-xs'
  : isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover: hover:text-[var(--ink)]'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover: hover:text-[var(--ink)]'
  }`}
  >
  <div className="flex items-center gap-2 min-w-0">
@@ -893,7 +893,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={() => setShowAppearance(!showAppearance)}
  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -925,7 +925,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-1.5 ${
  isSelected
  ?'bg-[var(--acc)]/15 /50 text-[var(--acc)]/70 font-bold'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <span className="text-[11px] font-mono truncate">{t.name}</span>
@@ -954,7 +954,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-0.5 ${
  isSelected
  ?'bg-emerald-500/15 border-emerald-500/50 text-[var(--ink-2)] font-bold'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <div className="flex items-center justify-between gap-1 w-full">
@@ -1004,7 +1004,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-1.5 ${
  isSelected
  ?'bg-[var(--acc)]/15 /50 text-[var(--acc)]/70 font-bold'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  title={p.descripcion}
  >
@@ -1031,7 +1031,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={() => setShowAgentConfig(true)}
  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -1161,7 +1161,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <button
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-3)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
  >
  Cerrar
  </button>
@@ -1232,7 +1232,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className="flex items-center justify-between gap-2 p-3 rounded-[var(--r-m)] bg-[var(--surface)]/80">
  <div className="flex items-center gap-2">
  <CreditCard className="w-4 h-4 text-[var(--acc)] shrink-0" />
- <span className="text-xs text-[var(--ink-3)] font-mono">Facturación & Tarjetas en Stripe:</span>
+ <span className="text-xs text-[var(--ink-2)] font-mono">Facturación & Tarjetas en Stripe:</span>
  </div>
  <button
  type="button"
@@ -1258,7 +1258,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </button>
  </div>
 
- <p className="text-xs text-[var(--ink-3)] leading-relaxed">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed">
  Tu proyecto tiene actualmente activo el <strong className="text-[var(--acc)]/70">{currentPlanDef.name}</strong>. Puedes cambiar de plan al instante haciendo clic en el botón de la opción que desees:
  </p>
 
@@ -1301,12 +1301,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <div className="flex items-center justify-between text-[11px] font-mono text-[var(--ink-2)] mt-1.5">
  <span>{plan.description}</span>
- <span className="text-[var(--ink-3)] font-bold shrink-0">{plan.credits}</span>
+ <span className="text-[var(--ink-2)] font-bold shrink-0">{plan.credits}</span>
  </div>
 
  <ul className="mt-2.5 space-y-1 font-sans">
  {plan.features.map((feat, idx) => (
- <li key={idx} className="text-[10.5px] text-[var(--ink-3)] flex items-center gap-1.5">
+ <li key={idx} className="text-[10.5px] text-[var(--ink-2)] flex items-center gap-1.5">
  <Check className="w-3 h-3 text-emerald-400 shrink-0" />
  <span>{feat}</span>
  </li>

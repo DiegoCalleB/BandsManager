@@ -27,17 +27,17 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
  }`}
  >
  <div className="flex items-center gap-3">
- <IconComp className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isSelected ?'text-[var(--acc-ink)] scale-110' :'text-[var(--ink-3)]'}`} />
+ <IconComp className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isSelected ?'text-[var(--acc-ink)] scale-110' :'text-[var(--ink-2)]'}`} />
  <span className="whitespace-nowrap">{label}</span>
  </div>
  {!isAllowed ? (
- <span className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-3)]">
+ <span className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
  <Lock className="w-3 h-3" />
  <span>Plan</span>
  </span>
  ) : badge !== undefined && (
  <span className={`text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums transition-colors ${
- isSelected ?'bg-[var(--acc)]/20 text-[var(--acc-ink)]' :'bg-[var(--sunken)] text-[var(--ink-3)]'
+ isSelected ?'bg-[var(--acc)]/20 text-[var(--acc-ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {badge}
  </span>
@@ -53,7 +53,7 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
  isSelected
  ?'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
  : !isAllowed
- ?'text-[var(--ink-3)] hover:bg-[var(--sunken)]'
+ ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]'
  }`}
  >
@@ -63,14 +63,14 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
  </div>
  <div className="flex items-center gap-1.5">
  {!isAllowed && (
- <span className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-3)]">
+ <span className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
  <Lock className="w-3 h-3" />
  <span>Upgrade</span>
  </span>
  )}
  {badge !== undefined && isAllowed && (
  <span className={`text-xs px-2 py-0.5 rounded-[var(--r-pill)] font-sans font-bold tabular-nums ${
- isSelected ?'bg-[var(--acc)]/20 text-[var(--acc-ink)]' :'bg-[var(--sunken)] text-[var(--ink-3)]'
+ isSelected ?'bg-[var(--acc)]/20 text-[var(--acc-ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {badge}
  </span>

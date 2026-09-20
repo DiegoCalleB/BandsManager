@@ -559,7 +559,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </span>
  <span className="text-[10px] font-mono text-[var(--acc)]/70/80">fans totales</span>
  </div>
- <div className="text-[9px] font-mono text-[var(--ink-3)] flex items-center justify-between gap-1 mt-1 border-t /20 pt-1">
+ <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center justify-between gap-1 mt-1 border-t /20 pt-1">
  <span className="text-[var(--acc)]/70 font-bold">✨ {uneteFans} vía Únete</span>
  {directoFans > 0 && <span className="text-[var(--ink-2)]">🎤 {directoFans} directo</span>}
  <span className="text-emerald-400 font-bold">✓ RGPD</span>
@@ -624,7 +624,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  className={`text-[9px] font-mono px-2.5 py-1 rounded-[var(--r-s)] transition-all flex items-center gap-1 self-end md:self-auto cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :' bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)]'
+ :' bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
  }`}
  title="Restaurar y mostrar todos los canales disponibles"
  >
@@ -810,7 +810,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {!hasAnyChannelSelected ? (
  <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border-dashed rounded-[var(--r-m)] bg-[var(--surface)]/20">
  <SlidersHorizontal className="w-8 h-8 text-[var(--ink-2)] mb-2" />
- <p className="text-xs font-mono font-medium text-[var(--ink-3)]">Todos los canales están ocultos</p>
+ <p className="text-xs font-mono font-medium text-[var(--ink-2)]">Todos los canales están ocultos</p>
  <p className="text-[10px] font-mono text-[var(--ink-2)] mt-1 max-w-xs">
  Haz clic en cualquiera de las etiquetas superiores para activar sus curvas y reescalar el gráfico.
  </p>

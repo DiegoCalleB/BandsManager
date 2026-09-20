@@ -77,7 +77,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  if (!activeCampaign && !isEditing) {
  return (
  <div className="mb-6 p-6 border-dashed rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col items-center justify-center gap-3 text-[var(--ink-2)]">
- <Target className="w-5 h-5 text-[var(--ink-3)]" />
+ <Target className="w-5 h-5 text-[var(--ink-2)]" />
  <div className="text-center">
  <p className="font-medium text-[var(--ink)]">Sin campaña de booking activa</p>
  <p className="text-xs text-[var(--ink-2)] mt-1">Define objetivos de aforo y fechas para activar el Scout IA.</p>
@@ -106,7 +106,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
  <div>
- <label className="block text-xs text-[var(--ink-3)] font-medium mb-1 uppercase tracking-wider">Nombre</label>
+ <label className="block text-xs text-[var(--ink-2)] font-medium mb-1 uppercase tracking-wider">Nombre</label>
  <input 
  type="text" 
  value={campaignForm.name} 
@@ -115,7 +115,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  />
  </div>
  <div>
- <label className="block text-xs text-[var(--ink-3)] font-medium mb-1 uppercase tracking-wider">Ciudad/Región</label>
+ <label className="block text-xs text-[var(--ink-2)] font-medium mb-1 uppercase tracking-wider">Ciudad/Región</label>
  <input 
  type="text" 
  value={campaignForm.targetCities?.join(',')} 
@@ -125,7 +125,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  />
  </div>
  <div>
- <label className="block text-xs text-[var(--ink-3)] font-medium mb-1 uppercase tracking-wider">Aforo Objetivo</label>
+ <label className="block text-xs text-[var(--ink-2)] font-medium mb-1 uppercase tracking-wider">Aforo Objetivo</label>
  <div className="flex items-center gap-2">
  <input 
  type="number" 
@@ -144,11 +144,11 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  
  <div className="md:col-span-2 lg:col-span-3">
- <label className="block text-xs text-[var(--ink-3)] font-medium mb-2 uppercase tracking-wider">Fechas Clave del Concierto</label>
+ <label className="block text-xs text-[var(--ink-2)] font-medium mb-2 uppercase tracking-wider">Fechas Clave del Concierto</label>
  <div className="flex gap-2 flex-wrap items-center">
  {campaignForm.targetDates?.map((date, idx) => (
  <div key={idx} className="flex items-center gap-1.5 hover:bg-[var(--surface)] hover:bg-[var(--surface)]/80 px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors">
- <Calendar className="w-3.5 h-3.5 text-[var(--ink-3)] shrink-0" />
+ <Calendar className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
  <input
  type="date"
  value={date}
@@ -200,11 +200,11 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
 
  <div className="md:col-span-2 lg:col-span-3">
- <label className="block text-xs text-[var(--ink-3)] font-medium mb-2 uppercase tracking-wider">🎪 Rango de Fechas para Filtrar Festivales/Eventos</label>
+ <label className="block text-xs text-[var(--ink-2)] font-medium mb-2 uppercase tracking-wider">🎪 Rango de Fechas para Filtrar Festivales/Eventos</label>
  <p className="text-xs text-[var(--ink-2)] mb-2">Define el rango de fechas para mostrar solo los festivales y fiestas que coincidan con esta campaña.</p>
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-xs text-[var(--ink-3)] mb-1">Desde</label>
+ <label className="block text-xs text-[var(--ink-2)] mb-1">Desde</label>
  <input
  type="date"
  value={campaignForm.campaignStartDate ||''}
@@ -213,7 +213,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  />
  </div>
  <div>
- <label className="block text-xs text-[var(--ink-3)] mb-1">Hasta</label>
+ <label className="block text-xs text-[var(--ink-2)] mb-1">Hasta</label>
  <input
  type="date"
  value={campaignForm.campaignEndDate ||''}

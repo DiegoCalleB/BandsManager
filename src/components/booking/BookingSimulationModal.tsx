@@ -96,14 +96,14 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <h3 className="text-lg font-bold" style={{ color: colors.text }}>
  Simulador de Correo Entrante / Saliente
  </h3>
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Genera una respuesta realista con IA para probar el flujo de hilo de correos
  </p>
  </div>
  </div>
  <button
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60 transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -112,7 +112,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <div className="p-6 overflow-y-auto space-y-4 text-xs">
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="block text-[var(--ink-3)] mb-1 font-semibold">Rol del Remitente</label>
+ <label className="block text-[var(--ink-2)] mb-1 font-semibold">Rol del Remitente</label>
  <select
  value={simulationRole}
  onChange={(e) => {
@@ -133,7 +133,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  </div>
 
  <div>
- <label className="block text-[var(--ink-3)] mb-1 font-semibold">Escenario</label>
+ <label className="block text-[var(--ink-2)] mb-1 font-semibold">Escenario</label>
  <select
  value={simulationScenario}
  onChange={(e) => setSimulationScenario(e.target.value)}
@@ -149,7 +149,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  </div>
 
  <div>
- <label className="block text-[var(--ink-3)] mb-1 font-semibold">Nombre del Remitente</label>
+ <label className="block text-[var(--ink-2)] mb-1 font-semibold">Nombre del Remitente</label>
  <input
  type="text"
  value={simulationSenderName}
@@ -160,7 +160,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  </div>
 
  <div>
- <label className="block text-[var(--ink-3)] mb-1 font-semibold">Instrucción Especial / Contexto</label>
+ <label className="block text-[var(--ink-2)] mb-1 font-semibold">Instrucción Especial / Contexto</label>
  <textarea
  rows={2}
  value={simulationCustomInstruction}
@@ -189,7 +189,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  {simulationGenerated && (
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 space-y-3" style={{ borderColor: colors.border }}>
  <div className="flex items-center justify-between border-b pb-2" style={{ borderColor: colors.border }}>
- <span className="font-semibold text-[var(--ink-3)]">Vista Previa del Mensaje</span>
+ <span className="font-semibold text-[var(--ink-2)]">Vista Previa del Mensaje</span>
  <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">
  Listo para registrar
  </span>
@@ -208,7 +208,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <div className="p-4 border-t flex justify-end gap-3" style={{ borderColor: colors.border }}>
  <button
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
+ className="px-4 py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
  >
  Cancelar
  </button>

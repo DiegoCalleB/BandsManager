@@ -24,7 +24,7 @@ interface OrdenDelDiaTabProps {
 const BLOCK_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
  cancion: { label:'Canción de Repertorio', icon:'🎵', bg:'bg-[var(--acc)]/10', text:'text-[var(--acc)]', border:'/20' },
  calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-orange-500/10', text:'text-orange-400', border:'border-orange-500/20' },
- pausa: { label:'Pausa / Descanso / Birra', icon:'☕', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-3)]', border:'' },
+ pausa: { label:'Pausa / Descanso / Birra', icon:'☕', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]', border:'' },
  seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-purple-500/10', text:'text-purple-400', border:'border-purple-500/20' },
  improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-emerald-500/10', text:'text-emerald-400', border:'border-emerald-500/20' },
  outro: { label:'Repaso Final / Feedback', icon:'🏁', bg:'bg-sky-500/10', text:'text-sky-400', border:'border-sky-500/20' },
@@ -609,7 +609,7 @@ export function OrdenDelDiaTab({
  </span>
  )}
  {matchedSong?.bpm && (
- <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[var(--surface)]/80 text-[var(--ink-3)]">
+ <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[var(--surface)]/80 text-[var(--ink-2)]">
  {matchedSong.bpm} BPM
  </span>
  )}
@@ -770,7 +770,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={selectAllFiltered}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-3)] border-[var(--hair)] hover:text-[var(--ink)] transition-colors"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)] transition-colors"
  >
  Seleccionar todo ({filteredSongs.length})
  </button>
@@ -975,7 +975,7 @@ export function OrdenDelDiaTab({
 
  <div className="p-4 space-y-3.5">
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1">
  Tipo de Bloque
  </label>
  <div className="grid grid-cols-2 gap-2">
@@ -1001,7 +1001,7 @@ export function OrdenDelDiaTab({
  </div>
 
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1">
  Título del Bloque
  </label>
  <input
@@ -1014,7 +1014,7 @@ export function OrdenDelDiaTab({
  </div>
 
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1">
  Duración Estimada (Minutos)
  </label>
  <input
@@ -1028,7 +1028,7 @@ export function OrdenDelDiaTab({
  </div>
 
  <div>
- <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-2)] uppercase mb-1">
  Enfoque / Instrucciones
  </label>
  <input

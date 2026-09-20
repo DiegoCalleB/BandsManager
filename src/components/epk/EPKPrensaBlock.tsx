@@ -48,14 +48,14 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  {config.cifrasClave?.habilitado ?'✓ Visible en EPK' :'Oculto'}
  </span>
  </div>
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Bloque de 4 cifras destacadas (oyentes, directos, comunidad, ciudades) al principio del dossier público. Si dejas alguna vacía, no se muestra.
  </p>
 
  <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
  <span className="text-xs font-bold text-[var(--ink)]">Mostrar cifras clave en el dossier público</span>
- <p className="text-[10px] text-[var(--ink-3)]">
+ <p className="text-[10px] text-[var(--ink-2)]">
  Si está desactivado, este bloque no aparece en el enlace público aunque haya cifras guardadas.
  </p>
  </div>
@@ -82,7 +82,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  ] as const
  ).map(campo => (
  <div key={campo.key} className="space-y-1">
- <label className="text-[10px] font-semibold text-[var(--ink-3)] uppercase tracking-wider block">
+ <label className="text-[10px] font-semibold text-[var(--ink-2)] uppercase tracking-wider block">
  {campo.label}
  </label>
  <input
@@ -112,14 +112,14 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  {config.resenasPrensa?.habilitado ?'✓ Visible en EPK' :'Oculto'}
  </span>
  </div>
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Citas de medios, radios o blogs musicales. Añade citas reales; el bloque no se muestra hasta que lo actives y tenga al menos una cita.
  </p>
 
  <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
  <span className="text-xs font-bold text-[var(--ink)]">Mostrar reseñas de prensa en el dossier público</span>
- <p className="text-[10px] text-[var(--ink-3)]">
+ <p className="text-[10px] text-[var(--ink-2)]">
  Si está desactivado, este bloque no aparece en el enlace público aunque haya citas guardadas.
  </p>
  </div>
@@ -187,7 +187,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  ];
  setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
  }}
- className="w-full py-2 rounded-[var(--r-m)] border-dashed text-[var(--ink-3)] hover:text-[var(--acc)] hover:/50 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+ className="w-full py-2 rounded-[var(--r-m)] border-dashed text-[var(--ink-2)] hover:text-[var(--acc)] hover:/50 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
  >
  <Plus className="w-4 h-4" /> Añadir Reseña de Prensa
  </button>

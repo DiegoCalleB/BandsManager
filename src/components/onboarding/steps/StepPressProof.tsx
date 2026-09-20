@@ -124,7 +124,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  <button
  type="button"
  onClick={() => onRemoveQuote(q.id)}
- className="p-1 rounded text-[var(--ink-3)] hover:text-red-400"
+ className="p-1 rounded text-[var(--ink-2)] hover:text-red-400"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>

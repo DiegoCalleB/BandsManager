@@ -301,7 +301,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
  <button
  onClick={() => setShowAuditModal(true)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-stone-700 text-[var(--ink-3)] text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-stone-700 text-[var(--ink-2)] text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
  >
  <HelpCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Info</span>

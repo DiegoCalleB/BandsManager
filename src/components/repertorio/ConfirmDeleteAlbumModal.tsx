@@ -45,7 +45,7 @@ export function ConfirmDeleteAlbumModal({
  </button>
  </div>
 
- <p className="text-xs text-[var(--ink-3)] leading-relaxed bg-[var(--surface)]/80 p-3 rounded-[var(--r-m)] border-[var(--hair)]">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed bg-[var(--surface)]/80 p-3 rounded-[var(--r-m)] border-[var(--hair)]">
  Este disco contiene <strong className="text-[var(--ink)] font-bold">{data.songCount} {data.songCount === 1 ?'canción' :'canciones'}</strong>. Selecciona la opción que prefieras para las canciones:
  </p>
 

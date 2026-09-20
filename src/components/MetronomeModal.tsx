@@ -224,7 +224,7 @@ export function MetronomeModal({
  {/* Song Selector Sync */}
  {songs.length > 0 && (
  <div className="bg-white/5 rounded-[var(--r-m)] p-3 border-[var(--hair)] flex flex-col gap-1.5">
- <label className="text-xs font-semibold text-[var(--ink-3)] flex items-center gap-1.5">
+ <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
  <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
  Sincronizar BPM desde Repertorio:
  </label>
@@ -350,7 +350,7 @@ export function MetronomeModal({
  className={`py-1 text-xs font-bold rounded-[var(--r-s)] transition-colors cursor-pointer ${
  timeSignature === sig
  ?'bg-[var(--acc)] text-[var(--ink)]'
- :'bg-black/40 text-[var(--ink-3)] hover:bg-white/10'
+ :'bg-black/40 text-[var(--ink-2)] hover:bg-white/10'
  }`}
  >
  {sig}/4
@@ -390,7 +390,7 @@ export function MetronomeModal({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium cursor-pointer transition-colors ${
  bpm === p.val
  ?'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 font-bold'
- :'bg-white/5 border-[var(--hair)] text-[var(--ink-3)] hover:bg-white/10'
+ :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10'
  }`}
  >
  {p.label}

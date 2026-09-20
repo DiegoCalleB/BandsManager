@@ -202,7 +202,7 @@ export function EnsayosManager({
  ?'bg-emerald-500/15 text-[var(--ink-2)] border-emerald-500/30'
  : currentRehearsal?.estado ==='en_curso'
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40 animate-pulse'
- :'bg-[var(--surface)]/80 text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
  {currentRehearsal?.estado ==='completado'
@@ -228,7 +228,7 @@ export function EnsayosManager({
  </div>
 
  {/* Rehearsal Headline */}
- <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[var(--ink-3)]">
+ <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[var(--ink-2)]">
  <span className="flex items-center gap-1.5 text-[var(--ink)] font-bold">
  <Calendar className="w-4 h-4 text-[var(--acc)]" />
  {currentRehearsal?.fecha} ({currentRehearsal?.hora ||'19:30'} - {currentRehearsal?.horaFin ||'21:30'})

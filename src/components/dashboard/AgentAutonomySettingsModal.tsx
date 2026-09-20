@@ -752,7 +752,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <ShieldCheck className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
  <div className="space-y-1 leading-relaxed">
  <strong className="font-bold text-[var(--acc)]/70">Garantía de Control Humano (Cierre Inviolable):</strong>
- <p className="text-[var(--ink-3)] text-[11px]">
+ <p className="text-[var(--ink-2)] text-[11px]">
  Incluso con la máxima autonomía, <strong className="text-[var(--ink)]">ningún trato o contrato se da por cerrado ni ningún email final de confirmación se envía sin la validación previa del mánager</strong> o un miembro de {bandName}.
  </p>
  </div>
@@ -1026,7 +1026,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  <div className="pt-2 border-t flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
- <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-3)] font-sans">
+ <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)] font-sans">
  <input
  type="checkbox"
  disabled={!isAdmin}
@@ -1037,7 +1037,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <span>Rechazar amablemente si no se alcanza el caché mínimo</span>
  </label>
 
- <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-3)] font-sans">
+ <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)] font-sans">
  <input
  type="checkbox"
  disabled={!isAdmin}
@@ -1060,7 +1060,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <Mail className="w-5 h-5 text-sky-400 shrink-0 mt-0.5" />
  <div className="space-y-1 leading-relaxed">
  <strong className="font-bold text-sky-200">Configuración Central de Email para Agentes IA:</strong>
- <p className="text-[var(--ink-3)] text-[11px]">
+ <p className="text-[var(--ink-2)] text-[11px]">
  Aquí defines el buzón oficial y la identidad con la que los agentes redactarán propuestas, crearán borradores en Gmail y gestionarán las respuestas con las salas y promotores.
  </p>
  </div>
@@ -1217,7 +1217,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={applyPresetCommercial}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] text-[11px] font-mono font-bold transition-all cursor-pointer active:scale-95"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-[11px] font-mono font-bold transition-all cursor-pointer active:scale-95"
  >
  🏢 Laborables L-V
  </button>
@@ -1243,19 +1243,19 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  +45% Tasa de Respuesta
  </span>
  </div>
- <p className="leading-relaxed text-[var(--ink-3)] text-[11px]">
+ <p className="leading-relaxed text-[var(--ink-2)] text-[11px]">
  En la industria del directo, los programadores de salas y festivales dedican el <strong>martes a jueves (10:00 - 14:00)</strong> a cerrar contrataciones. Los lunes gestionan incidencias del fin de semana y los viernes/sábados están en montaje de conciertos en vivo.
  </p>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[10px]">
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] flex flex-col gap-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] flex flex-col gap-0.5">
  <span className="text-[var(--acc)] font-bold">🔥 Martes a Jueves</span>
  <span className="text-[var(--ink-2)] font-sans text-[10px]">Ventana dorada de contratación y respuesta.</span>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] flex flex-col gap-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] flex flex-col gap-0.5">
  <span className="text-sky-400 font-bold">⏰ 10:00 a 14:00</span>
  <span className="text-[var(--ink-2)] font-sans text-[10px]">Franja de máxima apertura y lectura de email.</span>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] flex flex-col gap-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] flex flex-col gap-0.5">
  <span className="text-emerald-400 font-bold">🛡️ Smart Gate Supabase</span>
  <span className="text-[var(--ink-2)] font-sans text-[10px]">Los agentes solo envían en los días/horas elegidos.</span>
  </div>
@@ -1319,14 +1319,14 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setDiasEnviador([1, 2, 3, 4, 5])}
- className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-all cursor-pointer"
  >
  L-V
  </button>
  <button
  type="button"
  onClick={() => setDiasEnviador([1, 2, 3, 4, 5, 6, 7])}
- className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-all cursor-pointer"
  >
  Todos
  </button>
@@ -1396,7 +1396,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setHorasEnviador([9, 10, 11, 12, 13, 14, 15, 16, 17, 18])}
- className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-all cursor-pointer"
  >
  Jornada Completa
  </button>
@@ -1547,7 +1547,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <Sparkles className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
  <div className="space-y-1 leading-relaxed">
  <strong className="font-bold text-[var(--ink)]">El tono y la biografía se entrenan en Gestión de Banda</strong>
- <p className="text-[var(--ink-3)] text-[11px]">
+ <p className="text-[var(--ink-2)] text-[11px]">
  Para que el Agente Redactor escriba con la voz real de {bandName}, el tono de comunicación, vocabulario propio y biografía se configuran en <strong className="text-[var(--ink)]">ADN de Tono</strong>, dentro de la ficha de la banda - no aquí. Ese es el único sitio donde esos datos llegan de verdad a los pitches y respuestas generados.
  </p>
  </div>
@@ -1559,7 +1559,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h4 className="text-xs font-mono font-bold text-[var(--acc)]/70 uppercase tracking-wider">
  ¿Quieres entrenar el tono de voz de la banda?
  </h4>
- <p className="text-[11px] text-[var(--ink-3)] font-sans mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
  Analiza automáticamente vuestras redes sociales, o edita a mano el tono, tratamiento y vocabulario propio en ADN de Tono, dentro de Gestión de Banda.
  </p>
  </div>
@@ -1587,7 +1587,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h4 className="text-xs font-mono font-bold text-[var(--acc)]/70 uppercase tracking-wider">
  ¿Quieres afinar las plantillas de correo?
  </h4>
- <p className="text-[11px] text-[var(--ink-3)] font-sans mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
  Puedes personalizar las plantillas específicas para Salas, Festivales, Discotecas y Medios desde Booking CRM.
  </p>
  </div>
@@ -1616,7 +1616,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <MessageSquare className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
  <div className="space-y-1 leading-relaxed">
  <strong className="font-bold text-purple-200">¿Cómo debe responder el agente cuando una sala contesta?</strong>
- <p className="text-[var(--ink-3)] text-[11px]">
+ <p className="text-[var(--ink-2)] text-[11px]">
  Cuando una sala responde a un correo, el Agente Lector detecta automáticamente de qué tipo de mensaje se trata y redacta un borrador. Aquí puedes darle instrucciones concretas para cada tipo de situación, además del tono a aplicar. El borrador siempre queda pendiente de tu aprobación antes de enviarse.
  </p>
  </div>
@@ -1636,7 +1636,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <span className="text-xs font-bold text-sky-200 block">
  Lo que el sistema ya ha aprendido solo de tus respuestas reales
  </span>
- <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
+ <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
  Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice"sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio. Si una regla concreta no encaja, puedes quitarla desde <strong className="text-sky-200">ADN de Tono → Reglas Aprendidas de tus Respuestas</strong> (ahí también se pueden borrar o añadir a mano).
  </p>
  </div>
@@ -1657,7 +1657,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 ? (
  <ul className="space-y-0.5">
  {reglas.reglas_estilo_aprendidas.map((r, idx) => (
- <li key={idx} className="text-[10px] font-sans text-[var(--ink-3)]">⭐ {r}</li>
+ <li key={idx} className="text-[10px] font-sans text-[var(--ink-2)]">⭐ {r}</li>
  ))}
  </ul>
  ) : (!reglas.reglas_manuales || reglas.reglas_manuales.length === 0) && (
@@ -1682,7 +1682,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h4 className="text-xs font-mono font-bold text-sky-300 uppercase tracking-wider">
  ¿Quieres que aprenda rápido, sin esperar a corregir borradores?
  </h4>
- <p className="text-[11px] text-[var(--ink-3)] font-sans mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
  Pega 2-3 conversaciones reales (vuestro mensaje + la respuesta de la sala) en Hilos de Email de Ejemplo. Alimentan al instante tanto el pitch inicial como las respuestas, sin esperar a acumular correcciones.
  </p>
  </div>
@@ -1769,7 +1769,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  </div>
 
- <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-3)] font-sans text-[11px]">
+ <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)] font-sans text-[11px]">
  <input
  type="checkbox"
  disabled={!isAdmin}
@@ -1787,7 +1787,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {isAdmin && (
  <div className="flex items-center justify-between gap-3 pt-1">
  {strategiesFeedback && (
- <span className="text-[11px] font-mono text-[var(--ink-3)]">{strategiesFeedback}</span>
+ <span className="text-[11px] font-mono text-[var(--ink-2)]">{strategiesFeedback}</span>
  )}
  <button
  type="button"
@@ -1830,7 +1830,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={loadAuditLogs}
  disabled={loadingAuditLogs}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] text-xs font-mono flex items-center gap-1.5 cursor-pointer"
  >
  <RefreshCw className={`w-3.5 h-3.5 ${loadingAuditLogs ?'animate-spin' :''}`} />
  <span>Refrescar</span>
@@ -1900,7 +1900,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }`}>
  Agente {log.agente}
  </span>
- <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--surface)]/80 text-[var(--ink-3)]">
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--surface)]/80 text-[var(--ink-2)]">
  {log.motor ||'supabase_edge'}
  </span>
  <span className={`text-[10px] font-mono font-bold ${isSuccess ?'text-emerald-400' : isError ?'text-rose-400' :'text-[var(--acc)]'}`}>
@@ -1949,7 +1949,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  )}
  </div>
  <div className="flex items-center gap-2 shrink-0">
- <span className="px-1.5 py-0.5 rounded text-[9px] bg-[var(--surface)]/80 text-[var(--ink-3)]">
+ <span className="px-1.5 py-0.5 rounded text-[9px] bg-[var(--surface)]/80 text-[var(--ink-2)]">
  ID: {item.id}
  </span>
  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/10 text-[var(--ink-2)]">

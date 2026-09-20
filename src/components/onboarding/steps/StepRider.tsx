@@ -78,7 +78,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <span className="text-xs font-semibold">Microfonía Propia</span>
  {llevaMicrofoniaPropia && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
  </div>
- <span className="text-[10px] text-[var(--ink-3)] block mt-1">Llevamos set propio de micros</span>
+ <span className="text-[10px] text-[var(--ink-2)] block mt-1">Llevamos set propio de micros</span>
  </button>
 
  <button
@@ -94,7 +94,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <span className="text-xs font-semibold">Monitoraje In-Ears</span>
  {llevaInEars && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
  </div>
- <span className="text-[10px] text-[var(--ink-3)] block mt-1">Sistema propio de monitores</span>
+ <span className="text-[10px] text-[var(--ink-2)] block mt-1">Sistema propio de monitores</span>
  </button>
 
  <button
@@ -110,7 +110,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <span className="text-xs font-semibold">Backline Sala</span>
  {necesitaBacklineBateria && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
  </div>
- <span className="text-[10px] text-[var(--ink-3)] block mt-1">Batería básica aportada por sala</span>
+ <span className="text-[10px] text-[var(--ink-2)] block mt-1">Batería básica aportada por sala</span>
  </button>
  </div>
 
@@ -150,7 +150,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <button
  type="button"
  onClick={() => { setRiderPdfUrl(''); setRiderPdfName(''); }}
- className="p-1 rounded text-[var(--ink-3)] hover:text-red-400"
+ className="p-1 rounded text-[var(--ink-2)] hover:text-red-400"
  >
  <Trash2 className="w-4 h-4" />
  </button>
@@ -161,11 +161,11 @@ export const StepRider: React.FC<StepRiderProps> = ({
  onClick={() => fileInputRef.current?.click()}
  className="border-2 border-dashed border-[var(--hair)] hover:/40 rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
  >
- <Upload className="w-6 h-6 text-[var(--ink-3)] mx-auto mb-1.5" />
+ <Upload className="w-6 h-6 text-[var(--ink-2)] mx-auto mb-1.5" />
  <span className="text-xs font-medium text-[var(--ink-2)] block">
  Subir PDF de Rider Técnico o imagen de Stage Plot
  </span>
- <span className="text-[10px] text-[var(--ink-3)]">
+ <span className="text-[10px] text-[var(--ink-2)]">
  PDF, JPG o PNG hasta 20 MB
  </span>
  {isUploadingRider && (

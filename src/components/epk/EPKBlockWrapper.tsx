@@ -42,7 +42,7 @@ export const EPKBlockWrapper: React.FC<EPKBlockWrapperProps> = ({
  {meta.label}
  </h3>
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-0.5">
+ <p className="text-xs text-[var(--ink-2)] mt-0.5">
  {meta.description}
  </p>
  </div>

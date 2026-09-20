@@ -448,7 +448,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <h4 className="text-xs font-mono font-bold text-[var(--acc)] uppercase tracking-wider flex items-center gap-1.5">
  📝 Resumen Ejecutivo
  </h4>
- <p className="text-xs text-[var(--ink-3)] leading-relaxed font-sans">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
  {acta.resumenEjecutivo}
  </p>
  </div>
@@ -459,7 +459,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <h4 className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider mb-1.5">
  🟢 Temas Bordados
  </h4>
- <ul className="text-xs text-[var(--ink-3)] space-y-1 pl-4 list-disc">
+ <ul className="text-xs text-[var(--ink-2)] space-y-1 pl-4 list-disc">
  {(acta.cancionesDestacadas || acta.cancionesBordadas || []).map((c, i) => (
  <li key={i}>{c}</li>
  ))}
@@ -470,7 +470,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <h4 className="text-xs font-mono font-bold text-rose-400 uppercase tracking-wider mb-1.5">
  🔴 A Repasar Próximo Día
  </h4>
- <ul className="text-xs text-[var(--ink-3)] space-y-1 pl-4 list-disc">
+ <ul className="text-xs text-[var(--ink-2)] space-y-1 pl-4 list-disc">
  {(acta.cancionesAPulir || acta.cancionesParaRepetir || []).map((c, i) => (
  <li key={i}>{c}</li>
  ))}
@@ -487,7 +487,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {(acta.deberesPorMiembro || []).map((d, i) => (
  <div key={i} className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)] text-xs">
  <span className="font-mono font-bold text-[var(--acc)]/70 block">{d.miembro}:</span>
- <span className="text-[var(--ink-3)]">{d.tarea}</span>
+ <span className="text-[var(--ink-2)]">{d.tarea}</span>
  </div>
  ))}
  </div>

@@ -772,7 +772,7 @@ export function SongTransitionPreviewModal({
  >
  <ArrowRight className="w-3.5 h-3.5" />
  </div>
- <span className="text-[8px] font-mono text-[var(--ink-3)] mt-0.5 uppercase font-bold text-center">
+ <span className="text-[8px] font-mono text-[var(--ink-2)] mt-0.5 uppercase font-bold text-center">
  {config.style ==='crossfade' ? `${config.fadeDurationSec}s` : config.style ==='segue' ?'0s' :'pausa'}
  </span>
  </div>

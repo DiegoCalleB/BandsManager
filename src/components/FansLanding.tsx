@@ -738,7 +738,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  {t('revolutBadge') ||'Contribución'}
  </span>
  </div>
- <p className="text-[11px] text-[var(--ink-3)]/90 leading-relaxed mt-1">
+ <p className="text-[11px] text-[var(--ink-2)]/90 leading-relaxed mt-1">
  {descText}
  </p>
  </div>
@@ -902,7 +902,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <PartyPopper className="w-6 h-6 text-[var(--acc)]" />
  {t('welcomeTitle', { bandName })}
  </h2>
- <p className="text-[var(--ink-3)] font-mono text-sm leading-relaxed max-w-xs mx-auto">
+ <p className="text-[var(--ink-2)] font-mono text-sm leading-relaxed max-w-xs mx-auto">
  {successData.alreadyRegistered
  ? successData.message
  : ((incentivo.mensajeAgradecimiento && language ==='es') || !t('registeredDefaultMessage', { bandName })
@@ -948,7 +948,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <Share2 className="w-3.5 h-3.5" /> {t('shareWithFriend') ||'Pásaselo a un colega'}
  </span>
  </div>
- <p className="text-[11px] text-[var(--ink-3)] font-mono leading-relaxed">
+ <p className="text-[11px] text-[var(--ink-2)] font-mono leading-relaxed">
  {t('shareCardPrompt') ||'¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos.'}
  </p>
  <div className="grid grid-cols-2 gap-2 pt-1">
@@ -1022,7 +1022,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  {t('bookingBadgeLive')}
  </span>
  </div>
- <p className="text-[11px] font-mono text-[var(--ink-3)] leading-relaxed">
+ <p className="text-[11px] font-mono text-[var(--ink-2)] leading-relaxed">
  {renderBold(t('bookingQuestion', { bandName }))}
  </p>
  <div className="space-y-1.5 pt-1">
@@ -1068,7 +1068,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <Sparkles className="w-4 h-4 text-[var(--acc)]" />
  <span>{t('musicianBannerTitle')}</span>
  </div>
- <p className="text-[11px] font-mono text-[var(--ink-3)] leading-relaxed">
+ <p className="text-[11px] font-mono text-[var(--ink-2)] leading-relaxed">
  {t('musicianBannerSubtitle')}
  </p>
  <div className="pt-1">
@@ -1269,7 +1269,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <span className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--acc)]/70 transition block truncate tracking-tight">
  {t('epkCardTitle') || `Conócenos · ${bandName ||'La Banda'}`}
  </span>
- <span className="text-[11px] text-[var(--ink-3)] font-mono block truncate mt-0.5">
+ <span className="text-[11px] text-[var(--ink-2)] font-mono block truncate mt-0.5">
  {t('epkCardSubtitle') ||'Historia, miembros, fotos y dossier'}
  </span>
  </div>
@@ -1291,7 +1291,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </div>
  ))}
  {miembros.length > 3 && (
- <div className="w-7 h-7 rounded-full border-2 border-[var(--surface)] bg-[var(--surface)]/80 flex items-center justify-center text-[9px] font-bold text-[var(--ink-3)] shadow-sm">
+ <div className="w-7 h-7 rounded-full border-2 border-[var(--surface)] bg-[var(--surface)]/80 flex items-center justify-center text-[9px] font-bold text-[var(--ink-2)] shadow-sm">
  +{miembros.length - 3}
  </div>
  )}
@@ -1390,7 +1390,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* CAMPOS OBLIGATORIOS (Rápidos y sin fricción) */}
  <div>
- <label className="text-[10px] font-black text-[var(--ink-3)] uppercase font-mono tracking-widest mb-1.5 block">{t('labelName')} *</label>
+ <label className="text-[10px] font-black text-[var(--ink-2)] uppercase font-mono tracking-widest mb-1.5 block">{t('labelName')} *</label>
  <input
  type="text"
  required
@@ -1401,7 +1401,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  />
  </div>
  <div>
- <label className="text-[10px] font-black text-[var(--ink-3)] uppercase font-mono tracking-widest mb-1.5 block">{t('labelEmail')} *</label>
+ <label className="text-[10px] font-black text-[var(--ink-2)] uppercase font-mono tracking-widest mb-1.5 block">{t('labelEmail')} *</label>
  <input
  type="email"
  required
@@ -1500,7 +1500,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  />
  <Check className="w-3.5 h-3.5 text-[var(--surface)] absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" strokeWidth={4} />
  </div>
- <span className="text-[10px] text-[var(--ink-2)] font-mono leading-relaxed group-hover:text-[var(--ink-3)] transition-colors pt-0.5">
+ <span className="text-[10px] text-[var(--ink-2)] font-mono leading-relaxed group-hover:text-[var(--ink-2)] transition-colors pt-0.5">
  {t('consentPrefix')}<button type="button" onClick={() => setShowPrivacyModal(true)} className="text-[var(--acc)] underline hover:text-[var(--acc)]/70 font-bold inline">{t('consentPrivacyLink')}</button>{t('consentMiddle')}<strong className="text-[var(--sunken)]">{t('consentExplicit')}</strong>{t('consentSuffix')}
  </span>
  </label>
@@ -1562,7 +1562,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </span>
  </div>
 
- <p className="text-[11px] font-mono text-[var(--ink-3)] leading-relaxed">
+ <p className="text-[11px] font-mono text-[var(--ink-2)] leading-relaxed">
  {renderBold(t('bookingQuestion', { bandName }))}
  </p>
 
@@ -1613,7 +1613,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <Sparkles className="w-4 h-4 text-[var(--acc)]" />
  <span>{t('musicianBannerTitle')}</span>
  </div>
- <p className="text-[11px] font-mono text-[var(--ink-3)] leading-relaxed">
+ <p className="text-[11px] font-mono text-[var(--ink-2)] leading-relaxed">
  {t('musicianBannerSubtitle')}
  </p>
  <div className="pt-1">
@@ -1644,7 +1644,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </button>
  </div>
 
- <div className="text-xs text-[var(--ink-3)] font-mono space-y-3 leading-relaxed">
+ <div className="text-xs text-[var(--ink-2)] font-mono space-y-3 leading-relaxed">
  <p>{renderBold(t('privacyPara1', { bandName }))}</p>
  <p>{renderBold(t('privacyPara2', { bandName }))}</p>
  <p>{renderBold(t('privacyPara3', { bandName }))}</p>

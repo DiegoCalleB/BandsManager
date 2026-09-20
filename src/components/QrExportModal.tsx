@@ -115,7 +115,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <h3 className="text-lg font-black text-[var(--ink)] font-display tracking-wide">
  Exportar & Imprimir QR en Máxima Calidad
  </h3>
- <p className="text-xs text-[var(--ink-3)] font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-mono">
  Formatos vectoriales para imprenta, Ultra HD (300 DPI) y carteles listos para colgar.
  </p>
  </div>
@@ -123,7 +123,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -141,7 +141,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='poster-a4'
  ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -153,7 +153,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  Recomendado
  </span>
  </div>
- <p className="text-[11px] text-[var(--ink-3)] leading-relaxed font-sans">
+ <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
  Cartel vertical A4 maquetado a 300 DPI con nombre de la banda, sala, fecha, instrucciones y QR central.
  </p>
  </button>
@@ -164,7 +164,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='svg'
  ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -176,7 +176,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  Imprentas / Lonas
  </span>
  </div>
- <p className="text-[11px] text-[var(--ink-3)] leading-relaxed font-sans">
+ <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
  Curvas matemáticas vectoriales sin pérdida de calidad. Escala infinita para lonas gigantes o diseñadores.
  </p>
  </button>
@@ -187,7 +187,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='png-4k'
  ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -199,7 +199,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  3000 x 3000 px
  </span>
  </div>
- <p className="text-[11px] text-[var(--ink-3)] leading-relaxed font-sans">
+ <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
  Código QR aislado en altísima resolución con fondo blanco y logo central. Para insertar en flyers o redes.
  </p>
  </button>
@@ -210,7 +210,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
  selectedFormat ==='badge'
  ?'bg-[var(--acc)]/10 text-[var(--ink)] shadow-lg'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -222,7 +222,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  Cuadrado 2400px
  </span>
  </div>
- <p className="text-[11px] text-[var(--ink-3)] leading-relaxed font-sans">
+ <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
  Formato cuadrado con marco y título. Perfecto para pegar en la mesa de venta de camisetas o vinilos.
  </p>
  </button>
@@ -237,7 +237,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
  {selectedFormat ==='poster-a4' && (
  <div className="space-y-1.5">
- <label className="text-[11px] font-mono text-[var(--ink-3)]">Texto de llamada a la acción (Titular):</label>
+ <label className="text-[11px] font-mono text-[var(--ink-2)]">Texto de llamada a la acción (Titular):</label>
  <input
  type="text"
  value={customCta}
@@ -256,13 +256,13 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  onChange={e => setIncludeLogo(e.target.checked)}
  className="w-4 h-4 rounded text-amber-500 focus:ring-amber-500 bg-[var(--surface)]"
  />
- <span className="text-xs text-[var(--ink-3)] font-medium">
+ <span className="text-xs text-[var(--ink-2)] font-medium">
  Incrustar el logo oficial en el centro del código QR
  </span>
  </label>
  )}
 
- <div className="pt-2 border-t /80 flex items-center justify-between text-[11px] font-mono text-[var(--ink-3)]">
+ <div className="pt-2 border-t /80 flex items-center justify-between text-[11px] font-mono text-[var(--ink-2)]">
  <span>Destino QR: <strong className="text-[var(--acc)]/70">{url}</strong></span>
  </div>
  </div>

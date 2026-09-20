@@ -263,7 +263,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
 
  {isLoadingData ? (
- <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)]800 text-center text-xs font-mono text-[var(--ink-3)] animate-pulse">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)]800 text-center text-xs font-mono text-[var(--ink-2)] animate-pulse">
  Calculando duraciones y repertorios óptimos...
  </div>
  ) : generateNewSetlist ? (

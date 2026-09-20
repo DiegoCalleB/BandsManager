@@ -65,7 +65,7 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
  type="button"
  onClick={handleHeaderClick}
  className={`w-full flex items-center justify-between ${headerPadding} py-1.5 text-[11px] font-semibold transition-colors cursor-pointer ${
- isGroupActive ?'text-[var(--acc-ink)]' :'text-[var(--ink-3)] hover:text-[var(--ink-2)]'
+ isGroupActive ?'text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  aria-expanded={isOpen}
  >

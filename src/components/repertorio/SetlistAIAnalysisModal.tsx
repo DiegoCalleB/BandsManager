@@ -590,7 +590,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {!analysis && !loading && !error && (
  <div className="text-center py-8">
  <Brain className="w-12 h-12 text-purple-400/50 mx-auto mb-4" />
- <p className="text-[var(--ink-3)] mb-6">
+ <p className="text-[var(--ink-2)] mb-6">
  Haz un análisis profundo de tu setlist con IA. Te daremos sugerencias personalizadas sobre pacing, narrativa y psicología del público.
  </p>
  <button
@@ -630,7 +630,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {/* Score */}
  <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
  <div className="flex items-center justify-between mb-2">
- <span className="text-sm text-[var(--ink-3)] font-medium">Score General</span>
+ <span className="text-sm text-[var(--ink-2)] font-medium">Score General</span>
  <span className="text-lg font-bold text-purple-400">{analysis.overallScore}/100</span>
  </div>
  <div className="w-full bg-[var(--surface)]/70 rounded-full h-1.5">
@@ -757,7 +757,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="space-y-1.5 text-xs ml-7">
  <div>
  <p className="text-[var(--ink-2)]">🔍 Problema:</p>
- <p className="text-[var(--ink-3)]">{sugg.issue}</p>
+ <p className="text-[var(--ink-2)]">{sugg.issue}</p>
  </div>
  <div>
  <p className="text-[var(--ink-2)]">💡 Sugerencia:</p>
@@ -765,12 +765,12 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  </div>
  <div>
  <p className="text-[var(--ink-2)]">⭐ Impacto:</p>
- <p className="text-[var(--ink-3)]">{sugg.impact}</p>
+ <p className="text-[var(--ink-2)]">{sugg.impact}</p>
  </div>
  {sugg.songs_involved && sugg.songs_involved.length > 0 && (
  <div>
  <p className="text-[var(--ink-2)]">🎵 Canciones:</p>
- <p className="text-[var(--ink-3)]">{sugg.songs_involved.join(',')}</p>
+ <p className="text-[var(--ink-2)]">{sugg.songs_involved.join(',')}</p>
  </div>
  )}
  </div>

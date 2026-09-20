@@ -26,7 +26,7 @@ export function ConfirmDeleteModal({ data, onClose }: ConfirmDeleteModalProps) {
  </div>
  <div>
  <h3 className="text-lg font-bold text-[var(--ink)]">{data.title}</h3>
- <p className="text-xs text-[var(--ink-3)] mt-1.5 leading-relaxed">{data.description}</p>
+ <p className="text-xs text-[var(--ink-2)] mt-1.5 leading-relaxed">{data.description}</p>
  </div>
  </div>
  <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--hair)]">

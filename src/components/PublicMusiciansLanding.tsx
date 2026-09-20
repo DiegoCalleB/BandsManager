@@ -257,7 +257,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </span>
  </h1>
 
- <p className="text-[var(--ink-3)] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-normal">
+ <p className="text-[var(--ink-2)] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-normal">
  {t.heroSubtitle}
  </p>
  </section>
@@ -307,7 +307,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
  <Rocket className="w-5 h-5" />
  </div>
- <p className="text-[var(--ink-3)] text-xs sm:text-sm leading-relaxed">
+ <p className="text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
  <span className="text-[var(--acc)] font-bold">{t.roadmapTeaserLead}</span>{''}
  {t.roadmapTeaserText}
  </p>
@@ -331,7 +331,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <p className="text-[var(--acc)] font-mono text-sm font-bold">
  {t.successSubtitle.replace('{bandName}', formData.nombreBanda ||'tu banda')}
  </p>
- <p className="text-[var(--ink-3)] text-sm max-w-lg mx-auto leading-relaxed">
+ <p className="text-[var(--ink-2)] text-sm max-w-lg mx-auto leading-relaxed">
  {t.successMessage}
  </p>
  </div>
@@ -416,7 +416,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  {/* Instagram */}
  <div className="space-y-1.5">
- <label className="text-[11px] font-bold font-mono uppercase text-[var(--ink-3)] tracking-wider flex items-center justify-between">
+ <label className="text-[11px] font-bold font-mono uppercase text-[var(--ink-2)] tracking-wider flex items-center justify-between">
  <span>{t.labelInstagram}</span>
  <span className="text-[var(--ink-2)] text-[10px] font-normal lowercase tracking-normal">recomendado</span>
  </label>
@@ -431,7 +431,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  {/* Contact Person Name */}
  <div className="space-y-1.5">
- <label className="text-[11px] font-bold font-mono uppercase text-[var(--ink-3)] tracking-wider flex items-center justify-between">
+ <label className="text-[11px] font-bold font-mono uppercase text-[var(--ink-2)] tracking-wider flex items-center justify-between">
  <span>{t.labelContactName}</span>
  <span className="text-[var(--ink-2)] text-[10px] font-normal lowercase tracking-normal">opcional</span>
  </label>
@@ -451,7 +451,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <button
  type="button"
  onClick={() => setShowOptionalDetails(!showOptionalDetails)}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/70 hover:bg-[var(--surface)] hover: text-xs font-mono text-[var(--ink-3)] flex items-center justify-between transition-colors group"
+ className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/70 hover:bg-[var(--surface)] hover: text-xs font-mono text-[var(--ink-2)] flex items-center justify-between transition-colors group"
  >
  <span className="flex items-center gap-2">
  <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -578,7 +578,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  onChange={(e) => setFormData({ ...formData, consentimiento: e.target.checked })}
  className="mt-0.5 w-4 h-4 rounded bg-[var(--surface)] text-[var(--acc)] focus:ring-[var(--acc)]"
  />
- <span className="text-xs font-mono text-[var(--ink-2)] group-hover:text-[var(--ink-3)] leading-relaxed">
+ <span className="text-xs font-mono text-[var(--ink-2)] group-hover:text-[var(--ink-2)] leading-relaxed">
  {t.consentCheckbox}
  </span>
  </label>

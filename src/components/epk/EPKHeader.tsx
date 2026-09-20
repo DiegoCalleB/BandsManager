@@ -254,7 +254,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  <h2 className="text-lg sm:text-xl font-bold font-mono text-[var(--ink)]">
  EPK / Dossier de la Banda
  </h2>
- <p className="text-[var(--ink-3)] text-xs max-w-2xl leading-relaxed">
+ <p className="text-[var(--ink-2)] text-xs max-w-2xl leading-relaxed">
  {isPromoPlan
  ?'Configura por bloques tu dossier oficial: identidad, archivos, audio, vídeos y rider listos para festivales y salas.'
  :'Configura por bloques tu dossier oficial: identidad, archivos, audio, vídeos y rider. Sincronizado para el EPK público y los agentes de contratación.'}
@@ -437,13 +437,13 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
  {/* AVISO EXPANDIBLE DE AGENTES DE IA (COLAPSADO POR DEFECTO PARA NO COMER ESPACIO) */}
  {!isPromoPlan && showAiNotice && (
- <div className="p-3.5 bg-[var(--acc)]/10 rounded-[var(--r-l)] text-xs text-[var(--ink-3)] flex items-start gap-3 transition">
+ <div className="p-3.5 bg-[var(--acc)]/10 rounded-[var(--r-l)] text-xs text-[var(--ink-2)] flex items-start gap-3 transition">
  <Bot className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
  <div className="space-y-1">
  <p className="font-bold text-[var(--acc)]/70 text-xs">
  Conexión Automática con Agentes de IA y Chatbot
  </p>
- <p className="text-[var(--ink-3)] leading-relaxed text-[11px]">
+ <p className="text-[var(--ink-2)] leading-relaxed text-[11px]">
  Toda la información del dossier (biografía, integrantes, PDF oficial, rider técnico y cifras) se sincroniza en el servidor. El Chatbot y los Agentes autónomos de Redacción de Emails la consultan en tiempo real para personalizar los correos y propuestas enviadas a programadores de salas y festivales.
  </p>
  </div>
@@ -464,7 +464,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
  isActive
  ?'bg-[var(--acc)] text-[var(--ink)] font-bold shadow-sm'
- :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-3)] hover:text-[var(--ink)] hover:border-stone-700'
+ :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:border-stone-700'
  }`}
  >
  <Icon className={`w-3.5 h-3.5 ${isActive ?'text-[var(--ink)]' :'text-[var(--acc)]'}`} />

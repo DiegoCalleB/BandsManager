@@ -641,7 +641,7 @@ export function BulkAlbumAudioUploaderModal({
  ?'border-emerald-400 text-emerald-400 bg-emerald-500/10'
  : isStitchLight
  ?' bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
- :' bg-[var(--surface)] hover:bg-white/5 text-[var(--ink-3)]'
+ :' bg-[var(--surface)] hover:bg-white/5 text-[var(--ink-2)]'
  }`}
  >
  <ImageIcon className="w-4 h-4" />
@@ -769,7 +769,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-all cursor-pointer ${
  isPlaying
  ?'bg-[var(--surface)] text-black shadow-md'
- :'bg-white/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-3)]'
+ :'bg-white/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]'
  }`}
  title={isPlaying ?'Pausar audio' :'Escuchar previo'}
  >

@@ -99,7 +99,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </span>
  )}
  </div>
- <p className="text-xs font-mono text-[var(--ink-3)] mt-2 max-w-3xl leading-relaxed">
+ <p className="text-xs font-mono text-[var(--ink-2)] mt-2 max-w-3xl leading-relaxed">
  {growthPlan.executiveSummary}
  </p>
  </div>
@@ -178,7 +178,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {/* Global Progress Bar */}
  <div className="mt-4 pt-4 border-t /40 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
  <div className="flex items-center gap-3">
- <span className="text-xs font-mono text-[var(--ink-3)] flex items-center gap-1.5">
+ <span className="text-xs font-mono text-[var(--ink-2)] flex items-center gap-1.5">
  <Target className="w-3.5 h-3.5 text-indigo-400" />
  Ejecución del Plan: <b>{completedCount} / {allActionItems.length}</b> tácticas completadas
  </span>
@@ -328,7 +328,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </span>
  </div>
 
- <p className="text-xs font-mono text-[var(--ink-3)] mb-3 leading-relaxed">
+ <p className="text-xs font-mono text-[var(--ink-2)] mb-3 leading-relaxed">
  {channel.primaryObjective}
  </p>
 
@@ -437,11 +437,11 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink)]">
  Estrategia para {currentChannel.name}
  </h3>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-[var(--ink-3)]">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-[var(--ink-2)]">
  {currentChannel.growthStage}
  </span>
  </div>
- <p className="text-xs font-mono text-[var(--ink-3)] mt-2 max-w-3xl leading-relaxed">
+ <p className="text-xs font-mono text-[var(--ink-2)] mt-2 max-w-3xl leading-relaxed">
  {currentChannel.coreStrategy}
  </p>
  </div>
@@ -530,7 +530,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="space-y-2.5">
  {currentChannel.hookFormulas.map((hook, hIdx) => (
  <div key={hIdx} className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 flex items-start justify-between gap-2 group">
- <p className="text-xs font-mono text-[var(--ink-3)] italic">
+ <p className="text-xs font-mono text-[var(--ink-2)] italic">
  {hook}
  </p>
  <button
@@ -562,7 +562,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {currentChannel.viralConcepts.map((v, vIdx) => (
  <div key={vIdx} className="p-3 rounded-[var(--r-s)] bg-indigo-950/20 space-y-1.5">
  <h5 className="text-xs font-bold text-[var(--ink)]">{v.title}</h5>
- <p className="text-[11px] font-mono text-[var(--ink-3)]">{v.concept}</p>
+ <p className="text-[11px] font-mono text-[var(--ink-2)]">{v.concept}</p>
  <div className="text-[10px] font-mono text-[var(--acc)]/70 bg-black/40 p-1.5 rounded">
  <b>Gancho:</b> {v.hook}
  </div>
@@ -581,7 +581,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <AlertCircle className="w-4 h-4" />
  Errores Típicos de Músicos a Evitar
  </h4>
- <ul className="space-y-2 text-xs font-mono text-[var(--ink-3)]">
+ <ul className="space-y-2 text-xs font-mono text-[var(--ink-2)]">
  {currentChannel.donts.map((d, dIdx) => (
  <li key={dIdx} className="flex items-start gap-2">
  <span className="text-red-400 shrink-0 mt-0.5">✕</span>

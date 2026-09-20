@@ -161,7 +161,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  <button
  type="button"
  onClick={() => { setFanRewardLink(''); setLeadMagnetFileName(''); }}
- className="p-1 text-[var(--ink-3)] hover:text-red-400"
+ className="p-1 text-[var(--ink-2)] hover:text-red-400"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>

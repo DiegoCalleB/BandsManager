@@ -227,7 +227,7 @@ export function MemberNotesModal({
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/90'
  }`}>
  <label className={`block text-xs font-bold font-mono uppercase mb-1.5 ${
- isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-3)]'
+ isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
  }`}>
  📌 Nota General para todo el Grupo (Opcional)
  </label>
@@ -385,7 +385,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-3)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
  >
  Cancelar
  </button>

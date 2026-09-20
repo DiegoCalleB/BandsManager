@@ -737,7 +737,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] shadow-2xl backdrop-blur-md space-y-1 font-mono text-xs z-[1100] ${
  isStitchLight ?'bg-white/95 text-[var(--ink)] shadow-slate-300/50' :'bg-[var(--bg)]/95 text-[var(--ink)] shadow-black/80'
  }`}>
- <div className="text-[10px] uppercase font-bold text-[var(--ink-3)] px-2 py-1 flex items-center justify-between">
+ <div className="text-[10px] uppercase font-bold text-[var(--ink-2)] px-2 py-1 flex items-center justify-between">
  <span>Elegir Capa de Mapa</span>
  <span className="text-[9px] font-normal text-[var(--ink-2)]">({Object.keys(MAP_STYLES).length} opciones)</span>
  </div>
@@ -782,7 +782,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] backdrop-blur-md font-mono text-[10px] space-y-1 shadow-md hidden sm:block ${
  isStitchLight ?'bg-white/90 text-[var(--ink-2)]' :'bg-[var(--bg)]/90 text-[var(--ink-2)]'
  }`}>
- <div className="font-bold text-[9px] uppercase tracking-wider mb-1 text-[var(--ink-3)]">Leyenda</div>
+ <div className="font-bold text-[9px] uppercase tracking-wider mb-1 text-[var(--ink-2)]">Leyenda</div>
  <div className="flex items-center gap-2">
  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
  <span>Aprobado / Confirmado</span>

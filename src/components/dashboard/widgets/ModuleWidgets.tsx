@@ -37,7 +37,7 @@ export function CrmPipelineWidget({ leads = [], onNavigate, isStitchLight }: Mod
  <h3 className="text-base font-semibold text-[var(--ink)]">
  Booking
  </h3>
- <p className="text-xs text-[var(--ink-3)]">Resumen de contrataciones</p>
+ <p className="text-xs text-[var(--ink-2)]">Resumen de contrataciones</p>
  </div>
  </div>
  {onNavigate && (
@@ -55,7 +55,7 @@ export function CrmPipelineWidget({ leads = [], onNavigate, isStitchLight }: Mod
  <div className="grid grid-cols-3 gap-3 text-center">
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]">
  <span className="text-xl font-bold text-[var(--ink)] tabular-nums">{urgentRepliesNeeded.length}</span>
- <p className="text-[10px] text-[var(--ink-3)] mt-1">Negociando</p>
+ <p className="text-[10px] text-[var(--ink-2)] mt-1">Negociando</p>
  </div>
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)]">
  <span className="text-xl font-bold text-[var(--acc-ink)] tabular-nums">{urgentApprovalsNeeded.length}</span>
@@ -67,7 +67,7 @@ export function CrmPipelineWidget({ leads = [], onNavigate, isStitchLight }: Mod
  </div>
  </div>
 
- <div className="text-xs text-[var(--ink-3)] flex items-center justify-between pt-1">
+ <div className="text-xs text-[var(--ink-2)] flex items-center justify-between pt-1">
  <span>Total de salas y eventos en el embudo</span>
  <span className="font-semibold text-[var(--ink-2)] tabular-nums">{leads.length}</span>
  </div>
@@ -164,7 +164,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
  <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Suma de cachés de bolos</p>
  </div>
  <div className="text-right">
- <span className="text-xs font-mono text-[var(--ink-3)] font-bold">{concerts.length} conciertos</span>
+ <span className="text-xs font-mono text-[var(--ink-2)] font-bold">{concerts.length} conciertos</span>
  <p className="text-[10px] font-mono text-[var(--ink-2)]">Caché medio: {concerts.length > 0 ? Math.round(totalCache / concerts.length) : 0} €</p>
  </div>
  </div>

@@ -292,7 +292,7 @@ export default function Dashboard({
  const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink)]';
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-2)]';
+ const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
 
  // Calculate real metrics from leads
  const isMedio = (l: Lead) => {
@@ -652,7 +652,7 @@ export default function Dashboard({
  {totalFansCount} / {maxPromoFans} Fans
  </span>
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-3 leading-relaxed">
+ <p className="text-xs text-[var(--ink-2)] mt-3 leading-relaxed">
  Genera códigos QR de alta resolución (SVG y PNG 4K) y flyers imprimibles listos para proyectar o colocar en salas y festivales.
  </p>
  </div>
@@ -690,7 +690,7 @@ export default function Dashboard({
  Público
  </span>
  </div>
- <p className="text-xs text-[var(--ink-3)] mt-3 leading-relaxed">
+ <p className="text-xs text-[var(--ink-2)] mt-3 leading-relaxed">
  Tu carta de presentación oficial para festivales, promotores y medios. Personalizable y accesible desde cualquier dispositivo.
  </p>
  </div>
@@ -726,11 +726,11 @@ export default function Dashboard({
  <div>
  <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[var(--ink)]">Panel</h1>
  <div className="flex items-center gap-2 mt-1 flex-wrap">
- <p className="text-xs text-[var(--ink-3)] font-medium">
+ <p className="text-xs text-[var(--ink-2)] font-medium">
  {activeBandName}
  </p>
- <span className="text-[var(--ink-3)] hidden sm:inline">•</span>
- <span className="text-xs text-[var(--ink-3)] tabular-nums">
+ <span className="text-[var(--ink-2)] hidden sm:inline">•</span>
+ <span className="text-xs text-[var(--ink-2)] tabular-nums">
  {leads.length} contactos en CRM · {upcomingEvents.length} fechas agendadas
  </span>
  </div>

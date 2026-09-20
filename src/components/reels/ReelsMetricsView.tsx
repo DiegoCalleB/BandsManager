@@ -796,7 +796,7 @@ export function ReelsMetricsView({
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)] hover:bg-[var(--bg)]'
- :'bg-[var(--surface)] text-[var(--ink-3)] hover:bg-[var(--surface)]/80'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isSyncingMetrics ?'animate-spin' :''}`} />
@@ -1056,7 +1056,7 @@ export function ReelsMetricsView({
  className={`text-[9px] font-mono px-2.5 py-1 rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1 ${
  isStitchLight 
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]' 
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  title="Mostrar todos los canales disponibles"
  >
@@ -1245,7 +1245,7 @@ export function ReelsMetricsView({
  {(!selectedChannels.instagram && !selectedChannels.tiktok && !selectedChannels.youtube && (!hasSpotify || !selectedChannels.spotify)) ? (
  <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border-dashed rounded-[var(--r-m)] bg-[var(--surface)]/20">
  <SlidersHorizontal className="w-8 h-8 text-[var(--ink-2)] mb-2" />
- <p className="text-xs font-mono font-medium text-[var(--ink-3)]">Todos los canales están ocultos</p>
+ <p className="text-xs font-mono font-medium text-[var(--ink-2)]">Todos los canales están ocultos</p>
  <p className="text-[10px] font-mono text-[var(--ink-2)] mt-1 max-w-xs">
  Haz clic en las etiquetas de Instagram, TikTok o YouTube para activar su curva y ver la escala ajustada.
  </p>
@@ -1829,7 +1829,7 @@ export function ReelsMetricsView({
  ?'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
  : isStitchLight
  ?'bg-amber-50 text-amber-800'
- :'bg-[var(--surface)]/80 text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-2.5">
@@ -1911,7 +1911,7 @@ export function ReelsMetricsView({
  {/* Token Input & Authorization */}
  <div className="space-y-3">
  <div className="flex items-center justify-between">
- <label className="block text-xs font-mono uppercase tracking-wider font-bold text-[var(--ink-3)]">
+ <label className="block text-xs font-mono uppercase tracking-wider font-bold text-[var(--ink-2)]">
  Vincular Token de Instagram Insights API
  </label>
  <span className="text-[10px] text-pink-400 font-mono">
@@ -1974,7 +1974,7 @@ export function ReelsMetricsView({
  <div className={`p-4 rounded-[var(--r-m)] space-y-2 text-xs ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)]' :'bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}>
- <div className="font-bold font-mono uppercase tracking-wider text-[11px] text-[var(--ink-3)] flex items-center gap-1.5">
+ <div className="font-bold font-mono uppercase tracking-wider text-[11px] text-[var(--ink-2)] flex items-center gap-1.5">
  <span>📘</span> Pasos según la documentación oficial de Meta Insights:
  </div>
  <ol className="list-decimal list-inside space-y-1.5 text-[11px] leading-relaxed">
@@ -2008,7 +2008,7 @@ export function ReelsMetricsView({
  className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-mono uppercase tracking-wider font-bold transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
  }`}
  >
  Cerrar
@@ -2068,7 +2068,7 @@ export function ReelsMetricsView({
 
  {/* Upload Dropzone */}
  <div className="space-y-3">
- <label className="block text-xs font-mono uppercase tracking-wider font-bold text-[var(--ink-3)]">
+ <label className="block text-xs font-mono uppercase tracking-wider font-bold text-[var(--ink-2)]">
  1. Cargar captura de pantalla (Móvil o Web)
  </label>
 
@@ -2163,7 +2163,7 @@ export function ReelsMetricsView({
  </span>
  </div>
 
- <div className="text-xs text-[var(--ink-3)] leading-relaxed font-sans">
+ <div className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
  {scanResult.summary}
  </div>
 
@@ -2236,7 +2236,7 @@ export function ReelsMetricsView({
  className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-mono uppercase tracking-wider font-bold transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
  }`}
  >
  Cerrar

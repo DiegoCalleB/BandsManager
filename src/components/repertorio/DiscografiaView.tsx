@@ -685,7 +685,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <span>{sortedAlbumSongs.length} {sortedAlbumSongs.length === 1 ?'canción' :'canciones'}</span>
  <span>•</span>
  <span className="flex items-center gap-1">
- <Clock className="w-3 h-3 text-[var(--ink-3)]" />
+ <Clock className="w-3 h-3 text-[var(--ink-2)]" />
  {formatTotalDuration(sortedAlbumSongs)}
  </span>
  </div>

@@ -105,7 +105,7 @@ export function AssignSongsToAlbumModal({
  <div className="space-y-3 overflow-y-auto pr-1 max-h-[220px]">
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div className="sm:col-span-2">
- <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Nombre del Álbum / Disco *</label>
+ <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Nombre del Álbum / Disco *</label>
  <input
  type="text"
  required
@@ -119,7 +119,7 @@ export function AssignSongsToAlbumModal({
  </div>
 
  <div>
- <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Año de Lanzamiento</label>
+ <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Año de Lanzamiento</label>
  <input
  type="text"
  value={albumYear}
@@ -134,7 +134,7 @@ export function AssignSongsToAlbumModal({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div>
- <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Tipo de Trabajo</label>
+ <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Tipo de Trabajo</label>
  <select
  value={albumType}
  onChange={(e) => setAlbumType(e.target.value)}
@@ -151,7 +151,7 @@ export function AssignSongsToAlbumModal({
  </div>
 
  <div>
- <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Imagen de Portada (Upload o URL)</label>
+ <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Imagen de Portada (Upload o URL)</label>
  <div className="flex gap-2 items-center">
  <input
  type="text"
@@ -171,7 +171,7 @@ export function AssignSongsToAlbumModal({
  </div>
 
  <div>
- <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Descripción / Notas de Lanzamiento</label>
+ <label className="block text-xs font-bold text-[var(--ink-2)] mb-1">Descripción / Notas de Lanzamiento</label>
  <textarea
  rows={2}
  value={description}
@@ -185,7 +185,7 @@ export function AssignSongsToAlbumModal({
  </div>
 
  <div className="border-t border-[var(--hair)] pt-3 flex flex-col flex-1 overflow-hidden">
- <div className="flex items-center justify-between text-xs font-mono text-[var(--ink-3)] mb-2">
+ <div className="flex items-center justify-between text-xs font-mono text-[var(--ink-2)] mb-2">
  <span className="font-bold flex items-center gap-1.5">
  <Disc3 className="w-4 h-4 text-[var(--ok)]" />
  <span>Seleccionar Canciones del Disco ({selectedIds.size} seleccionadas):</span>
@@ -217,7 +217,7 @@ export function AssignSongsToAlbumModal({
  ?'bg-[var(--surface)]/20 border-[var(--hair)]/50 text-[var(--ink)]'
  : isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-3 truncate pr-2">
@@ -258,7 +258,7 @@ export function AssignSongsToAlbumModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-3)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors font-semibold cursor-pointer"
  >
  Cancelar
  </button>

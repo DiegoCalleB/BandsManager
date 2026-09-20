@@ -178,7 +178,7 @@ export function CalendarWidget({
  <h3 className="text-base font-semibold text-[var(--ink)] flex items-center gap-2">
  Agenda
  </h3>
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  {agendaFilterMode ==='all' ?'Eventos de todas las bandas' : `Eventos de ${activeBandName}`}
  </p>
  </div>
@@ -194,7 +194,7 @@ export function CalendarWidget({
  className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
  viewMode ==='list'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista Lista Próximos"
  >
@@ -207,7 +207,7 @@ export function CalendarWidget({
  className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
  viewMode ==='mini_month'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista Mensual Compacta"
  >
@@ -220,7 +220,7 @@ export function CalendarWidget({
  className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
  viewMode ==='weekly_grid'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista Agenda Semanal"
  >
@@ -254,7 +254,7 @@ export function CalendarWidget({
  className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
  filterType ==='all'
  ?'bg-[var(--sunken)] text-[var(--acc-ink)] font-semibold'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Todos
@@ -265,7 +265,7 @@ export function CalendarWidget({
  className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
  filterType ==='concierto'
  ?'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Bolos
@@ -276,7 +276,7 @@ export function CalendarWidget({
  className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
  filterType ==='ensayo'
  ?'bg-[var(--ok-soft)] text-[var(--ok)] font-semibold'
- :'text-[var(--ink-3)] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Ensayos
@@ -337,7 +337,7 @@ export function CalendarWidget({
  {item.title}
  </h4>
 
- <p className="text-xs text-[var(--ink-3)] truncate mt-0.5 flex items-center gap-1">
+ <p className="text-xs text-[var(--ink-2)] truncate mt-0.5 flex items-center gap-1">
  <MapPin className="w-3 h-3 shrink-0" />
  <span className="truncate">{item.location}</span>
  </p>
@@ -347,9 +347,9 @@ export function CalendarWidget({
  </div>
  ) : (
  <div className="p-8 text-center bg-[var(--sunken)] rounded-[var(--r-m)]">
- <Calendar className="w-8 h-8 text-[var(--ink-3)] mx-auto mb-2 opacity-60" />
+ <Calendar className="w-8 h-8 text-[var(--ink-2)] mx-auto mb-2 opacity-60" />
  <p className="text-sm font-semibold text-[var(--ink-2)]">Todavía no hay nada en la agenda</p>
- <p className="text-xs text-[var(--ink-3)] mt-1">Añade un bolo o un ensayo y aquí aparece lo próximo.</p>
+ <p className="text-xs text-[var(--ink-2)] mt-1">Añade un bolo o un ensayo y aquí aparece lo próximo.</p>
  </div>
  )}
  </>
@@ -433,9 +433,9 @@ export function CalendarWidget({
  {/* Details for selected day if clicked */}
  {selectedDayStr && (
  <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-mono space-y-2">
- <div className="flex items-center justify-between text-[var(--ink-3)] pb-1.5 border-b border-[var(--hair)]">
+ <div className="flex items-center justify-between text-[var(--ink-2)] pb-1.5 border-b border-[var(--hair)]">
  <span className="font-bold text-[var(--acc)]/70">Eventos para {selectedDayStr}:</span>
- <button type="button" onClick={() => setSelectedDayStr(null)} className="text-[var(--ink-2)] hover:text-[var(--ink-3)]">✕</button>
+ <button type="button" onClick={() => setSelectedDayStr(null)} className="text-[var(--ink-2)] hover:text-[var(--ink-2)]">✕</button>
  </div>
  {(eventsByDayMap.get(selectedDayStr) || []).length > 0 ? (
  (eventsByDayMap.get(selectedDayStr) || []).map(evt => (

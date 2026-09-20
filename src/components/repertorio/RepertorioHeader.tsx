@@ -41,7 +41,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  <h1 className="text-2xl font-bold tracking-tight" style={{ color: colors.text }}>
  Repertorio & Setlists
  </h1>
- <p className="text-xs text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-2)]">
  {songCount} canciones en catálogo • {setlistCount} setlists de concierto
  </p>
  </div>
