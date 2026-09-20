@@ -111,9 +111,9 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  instagram: {
  label:'Instagram',
  colorClass:'text-pink-400',
- bgClass:'bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-amber-0/10',
+ bgClass:'bg-gradient-to-r from-[var(--acc)]/10 via-pink-500/10 to-amber-0/10',
  borderClass:'border-pink-500/30',
- hoverClass:'hover:from-purple-500/20 hover:via-pink-500/20 hover:to-amber-0/20 hover:border-pink-500/50 hover:text-pink-300'
+ hoverClass:'hover:from-[var(--acc)]/20 hover:via-pink-500/20 hover:to-amber-0/20 hover:border-pink-500/50 hover:text-pink-300'
  },
  youtube: {
  label:'YouTube',

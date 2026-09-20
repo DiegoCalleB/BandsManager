@@ -635,7 +635,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  </div>
  <div className="w-full bg-[var(--surface)]/70 rounded-full h-1.5">
  <div
- className="bg-gradient-to-r from-purple-500 to-purple-400 h-1.5 rounded-full transition-all"
+ className="bg-gradient-to-r from-[var(--acc)] to-[var(--acc-soft)] h-1.5 rounded-full transition-all"
  style={{ width: `${analysis.overallScore}%` }}
  />
  </div>

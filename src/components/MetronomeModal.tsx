@@ -406,7 +406,7 @@ export function MetronomeModal({
  className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 shadow-xl transition-all cursor-pointer active:scale-98 ${
  isPlaying
  ?'bg-rose-500 hover:bg-rose-600 text-[var(--ink)] shadow-rose-500/25'
- :'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] shadow-amber-0/25'
+ :'bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] shadow-amber-0/25'
  }`}
  >
  {isPlaying ? (

@@ -127,7 +127,7 @@ export function ShareModal({
  onClick={handleWhatsApp}
  className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-emerald-900/30 active:scale-95"
  >
- <MessageSquare className="w-4 h-4 fill-white/20" />
+ <MessageSquare className="w-4 h-4 fill-[var(--surface)]/20" />
  <span>WhatsApp</span>
  </button>
 

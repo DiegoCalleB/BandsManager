@@ -138,7 +138,7 @@ export default function Finanzas({
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const cardBorder = isStitchLight ?'-slate-200' :'-neutral-800';
+ const cardBorder = isStitchLight ?'-slate-200' :'bg-[var(--surface)]';
 
  return (
  <div className={`space-y-6 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>

@@ -2173,7 +2173,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  {/* Steps sequencer */}
  {activeRun.steps && activeRun.steps.length > 0 && (
- <div className="mt-3 space-y-2 pt-2 -dashed dark:-neutral-800">
+ <div className="mt-3 space-y-2 pt-2 -dashed dark:bg-[var(--surface)]">
  <div className="flex items-center gap-1.5 text-[9px] text-[var(--ink-2)] uppercase tracking-wider">
  <Terminal className="w-3 h-3" /> Secuencia de Pasos:
  </div>
@@ -2236,7 +2236,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
  <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Despacho Completado!</span>
  </div>
- <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+ <p className="text-[10px] leading-normal text-[var(--ok)]">
  El agente Enviador ha procesado los correos autorizados en Supabase y registrado las fechas de envío.
  </p>
  </div>
@@ -2250,7 +2250,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
  <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Borradores Generados!</span>
  </div>
- <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+ <p className="text-[10px] leading-normal text-[var(--ok)]">
  El agente Redactor ha generado propuestas personalizadas en Supabase listas para tu revisión.
  </p>
  </div>
@@ -2381,7 +2381,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Búsqueda Finalizada!</span>
  </div>
  
- <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+ <p className="text-[10px] leading-normal text-[var(--ok)]">
  El agente ha terminado con éxito y ha enviado los resultados directos a Supabase. Tu Gestor de Booking se ha actualizado en tiempo real.
  </p>
 
@@ -2407,7 +2407,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  className={`p-1.5 rounded text-[9px] font-sans flex flex-col gap-0.5 ${
  isStitchLight 
  ?'bg-white/60 -slate-200/50 text-[var(--ink-2)]' 
- :'bg-[var(--surface)]/40 -neutral-800/60 text-[var(--ink-2)]'
+ :'bg-[var(--surface)]/40 bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}
  >
  <div className="flex justify-between items-start">
@@ -2480,7 +2480,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  className={`p-2.5 rounded-[var(--r-m)] font-bold transition-all flex items-center justify-center shrink-0 cursor-pointer active:scale-95 active:opacity-90 mb-0.5 disabled:opacity-30 disabled:cursor-not-allowed ${
  isListening
  ?'bg-red-500 text-[var(--ink)] animate-pulse'
- : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] text-[var(--ink-2)] -neutral-800/40')
+ : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] text-[var(--ink-2)] bg-[var(--surface)]/40')
  }`}
  >
  <Mic className="w-4 h-4" />
@@ -2492,7 +2492,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  className={`p-2.5 rounded-[var(--r-m)] font-bold transition-all flex items-center justify-center shrink-0 cursor-pointer active:scale-95 active:opacity-90 mb-0.5 ${
  inputText.trim() 
  ? (isStitchLight ?'bg-indigo-600 text-[var(--ink)]' : colors.primary) 
- : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] text-[var(--ink-2)] -neutral-800/40')
+ : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] text-[var(--ink-2)] bg-[var(--surface)]/40')
  }`}
  >
  <Send className={`w-4 h-4 ${isStitchLight && inputText.trim() ?'text-[var(--ink)]' :'text-[var(--acc-ink)]'}`} />

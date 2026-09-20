@@ -1239,7 +1239,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  }`}
  >
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-[var(--ink)] shadow-lg shadow-amber-0/30">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)] to-amber-600 flex items-center justify-center text-[var(--ink)] shadow-lg shadow-amber-0/30">
  <Disc3 className="w-7 h-7 animate-spin-slow" />
  </div>
  <div>
@@ -1367,7 +1367,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleAnalyzeConcert}
  disabled={isAnalyzing || (!youtubeUrl && !uploadedFile)}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 font-bold text-sm text-[var(--ink)] shadow-lg shadow-amber-0/20 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shrink-0"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-600 hover:to-amber-700 font-bold text-sm text-[var(--ink)] shadow-lg shadow-amber-0/20 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shrink-0"
  >
  {isAnalyzing ? (
  <>
@@ -1720,7 +1720,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  <div className="w-full sm:w-48 bg-[var(--surface)] h-2.5 rounded-full overflow-hidden">
  <div
- className="bg-gradient-to-r from-emerald-500 to-teal-300 h-full transition-all duration-300"
+ className="bg-gradient-to-r from-[var(--ok)] to-[var(--ok-soft)] h-full transition-all duration-300"
  style={{ width: `${(transcribeAllProgress.current / transcribeAllProgress.total) * 100}%` }}
  />
  </div>
@@ -2334,7 +2334,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleProcessAndSlice}
  disabled={isProcessing}
- className="px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 font-extrabold text-[var(--ink)] text-sm shadow-xl shadow-emerald-500/20 flex items-center gap-2 transition-all"
+ className="px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 font-extrabold text-[var(--ink)] text-sm shadow-xl shadow-emerald-500/20 flex items-center gap-2 transition-all"
  >
  {isProcessing ? (
  <>

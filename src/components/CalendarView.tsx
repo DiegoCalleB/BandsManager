@@ -4539,7 +4539,7 @@ export default function CalendarView({
  setActiveStageInitialMode(selectedConcert ?'directo' :'ensayo');
  setActiveStageSetlist(assignedSetlist);
  }}
- className="flex-1 py-2 px-3 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-0/20 transition-all cursor-pointer"
+ className="flex-1 py-2 px-3 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-0/20 transition-all cursor-pointer"
  title="Lanzar Modo Escenario / Vista de Directo para este evento"
  >
  <Radio className="w-3.5 h-3.5 animate-pulse text-[var(--ink)]" />
@@ -4829,7 +4829,7 @@ export default function CalendarView({
  className={`w-full py-2 px-3 rounded-[var(--r-m)] font-mono text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm ${
  isStitchLight
  ?'bg-gradient-to-r from-indigo-600 to-blue-600 text-[var(--ink)]'
- :'bg-gradient-to-r from-emerald-500 to-teal-500 text-[var(--acc-ink)] font-extrabold'
+ :'bg-gradient-to-r from-[var(--ok)] to-teal-500 text-[var(--acc-ink)] font-extrabold'
  }`}
  >
  <Download className="w-3.5 h-3.5" />

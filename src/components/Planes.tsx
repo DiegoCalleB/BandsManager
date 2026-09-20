@@ -688,7 +688,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  {plan.isPopular && (
  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--ink)] text-[10px] font-black uppercase font-mono tracking-widest shadow-md">
- <Star className="w-3 h-3 fill-black" />
+ <Star className="w-3 h-3 fill-[var(--ink)]" />
  <span>MÁS POPULAR</span>
  </span>
  </div>
@@ -755,8 +755,8 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  plan.isPopular
  ?'bg-gradient-to-r from-amber-0/20 via-amber-400/10 to-amber-0/15 /50 shadow-md shadow-amber-0/10'
  : plan.id ==='cabeza_de_cartel'
- ?'bg-gradient-to-r from-emerald-500/20 via-emerald-400/10 to-emerald-500/15 border-emerald-400/50 shadow-md shadow-emerald-500/10'
- :'bg-gradient-to-r from-slate-500/20 via-neutral-800 to-slate-500/10 /30'
+ ?'bg-gradient-to-r from-[var(--ok)]/20 via-emerald-400/10 to-emerald-500/15 border-emerald-400/50 shadow-md shadow-emerald-500/10'
+ :'bg-gradient-to-r from-slate-500/20 viabg-[var(--surface)] to-slate-500/10 /30'
  }`}>
  <div className="flex items-start gap-2.5">
  <div className={`p-1.5 rounded-[var(--r-m)] shrink-0 ${

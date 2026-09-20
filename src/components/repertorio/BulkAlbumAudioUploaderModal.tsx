@@ -571,7 +571,7 @@ export function BulkAlbumAudioUploaderModal({
  }`}
  >
  {/* Modal Header */}
- <div className="p-6 border-b border-[var(--hair)] flex items-center justify-between shrink-0 bg-gradient-to-r from-emerald-500/10 to-transparent">
+ <div className="p-6 border-b border-[var(--hair)] flex items-center justify-between shrink-0 bg-gradient-to-r from-[var(--ok)]/10 to-transparent">
  <div className="flex items-center gap-3">
  <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[var(--ok)] shadow-inner">
  <FolderUp className="w-6 h-6" />

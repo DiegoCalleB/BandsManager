@@ -3023,7 +3023,7 @@ export default function SongStudioModal({
  isFullScreen ?'p-0' :'p-2 sm:p-4'
  }`}>
  {countInCountdown !== null && (
- <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-[var(--ink)] font-mono font-black px-6 py-3 rounded-[var(--r-l)] shadow-2xl flex items-center gap-3 border-2 animate-pulse">
+ <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-gradient-to-r from-[var(--acc)] via-orange-500 to-amber-500 text-[var(--ink)] font-mono font-black px-6 py-3 rounded-[var(--r-l)] shadow-2xl flex items-center gap-3 border-2 animate-pulse">
  <span className="text-2xl">🥁</span>
  <div className="text-sm">
  <div>PREPARANDO GRABACIÓN MULTIPISTA...</div>
@@ -3045,7 +3045,7 @@ export default function SongStudioModal({
  {/* Header Bar */}
  <div className="p-2.5 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-white/5">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-[var(--ink)] shadow-lg">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-tr from-[var(--acc)] to-indigo-600 flex items-center justify-center text-[var(--ink)] shadow-lg">
  <Disc className="w-5 h-5 animate-spin-slow" />
  </div>
  <div>
@@ -3844,7 +3844,7 @@ export default function SongStudioModal({
  Motor" (en la cabecera del mezclador) — no hace falta tenerlo doblado aquí. */}
  <div className="flex items-center gap-2 flex-wrap justify-end">
  {!idea.stemEngineUsed && (
- <div className="flex items-center rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 shadow-md overflow-hidden">
+ <div className="flex items-center rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-amber-600 shadow-md overflow-hidden">
  <button
  type="button"
  onClick={() => handlePerformAiStemSeparation(idea)}
@@ -5412,9 +5412,9 @@ export default function SongStudioModal({
  }}
  className={`w-full py-3 rounded-[var(--r-m)] font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center flex items-center justify-center gap-2 ${
  selectedStemEngine ==='mvsep-mdx23'
- ?'bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-[var(--ink)] shadow-amber-900/30'
+ ?'bg-gradient-to-r from-[var(--acc)] via-orange-600 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-[var(--ink)] shadow-amber-900/30'
  : selectedStemEngine ==='demucs'
- ?'bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-[var(--ink)] shadow-purple-900/30'
+ ?'bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-600 hover:from-[var(--acc)] hover:to-violet-500 text-[var(--ink)] shadow-purple-900/30'
  :'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-[var(--ink)] shadow-blue-900/30'
  }`}
  >
@@ -5753,7 +5753,7 @@ export default function SongStudioModal({
  type="button"
  disabled={isGeneratingAiTrack}
  onClick={() => showAiTrackGenModal && handleGenerateAiInstrumentTrack(showAiTrackGenModal)}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
  >
  {isGeneratingAiTrack ? (
  <>
@@ -5926,7 +5926,7 @@ export default function SongStudioModal({
  </div>
  <div className="w-full h-3 bg-[var(--bg)] rounded-full overflow-hidden border-[var(--hair)] p-0.5">
  <div 
- className="h-full bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400 rounded-full transition-all duration-300"
+ className="h-full bg-gradient-to-r from-[var(--acc)] via-purple-500 to-emerald-400 rounded-full transition-all duration-300"
  style={{ width: `${Math.max(5, stemProgressModal.progressPct)}%` }}
  />
  </div>
@@ -6182,7 +6182,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setStemProgressModal(null)}
- className="w-full py-3 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-[var(--acc-ink)] font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2"
+ className="w-full py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-[var(--acc-ink)] font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2"
  >
  <Sliders className="w-4 h-4" />
  <span>Abrir Mezclador Multipista</span>
@@ -6289,7 +6289,7 @@ export default function SongStudioModal({
  href="https://replicate.com/account/billing"
  target="_blank"
  rel="noopener noreferrer"
- className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-[var(--acc-ink)] font-mono text-xs font-black transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+ className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-[var(--acc-ink)] font-mono text-xs font-black transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
  >
  <CreditCard className="w-4 h-4" />
  <span>Recargar Saldo del Proveedor de IA</span>
@@ -6317,7 +6317,7 @@ export default function SongStudioModal({
  const idea = stemProgressModal.targetIdea;
  if (idea) handlePerformAiStemSeparation(idea, stemProgressModal.engineChoice ||'demucs');
  }}
- className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-[var(--ink)] font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+ className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-[var(--acc)] hover:to-indigo-500 text-[var(--ink)] font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
  >
  <RefreshCw className="w-4 h-4" />
  <span>Reintentar en la Nube</span>
@@ -6484,7 +6484,7 @@ export default function SongStudioModal({
  <div className="mt-2 w-full h-1.5 bg-[var(--bg)] rounded-full overflow-hidden border-[var(--hair)]">
  <div
  className={`h-full rounded-full transition-all duration-300 ${
- !terminado ?'bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400' : esError ?'bg-rose-500' :'bg-emerald-400'
+ !terminado ?'bg-gradient-to-r from-[var(--acc)] via-purple-500 to-emerald-400' : esError ?'bg-rose-500' :'bg-emerald-400'
  }`}
  style={{ width: `${terminado ? 100 : Math.max(5, stemProgressModal.progressPct)}%` }}
  />

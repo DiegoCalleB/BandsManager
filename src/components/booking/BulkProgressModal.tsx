@@ -86,8 +86,8 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <div
  className={`h-full transition-all duration-300 rounded-full ${
  isCompleted 
- ?'bg-gradient-to-r from-emerald-500 to-teal-400' 
- :'bg-gradient-to-r from-amber-500 via-[var(--acc)] to-yellow-300'
+ ?'bg-gradient-to-r from-[var(--ok)] to-teal-400' 
+ :'bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-yellow-300'
  }`}
  style={{ width: `${Math.min(100, Math.max(0, percentage))}%` }}
  />

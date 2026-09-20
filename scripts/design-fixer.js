@@ -49,6 +49,24 @@ const FIXES = [
 
   // Insufficient contrast → fix
   { find: /text-\[var\(--ink-3\)\]/g, replace: 'text-[var(--ink-2)]', desc: '--ink-3 → --ink-2 (contrast)' },
+
+  // SVG fills/strokes → tokens
+  { find: /fill-black\b/g, replace: 'fill-[var(--ink)]', desc: 'fill-black → --ink' },
+  { find: /fill-white\b/g, replace: 'fill-[var(--surface)]', desc: 'fill-white → --surface' },
+
+  // Gradients with Tailwind colors → var(--acc)
+  { find: /from-amber-500/g, replace: 'from-[var(--acc)]', desc: 'gradient amber → --acc' },
+  { find: /to-amber-300/g, replace: 'to-[var(--acc-soft)]', desc: 'gradient amber soft → --acc-soft' },
+  { find: /from-emerald-500/g, replace: 'from-[var(--ok)]', desc: 'gradient emerald → --ok' },
+  { find: /to-emerald-300/g, replace: 'to-[var(--ok-soft)]', desc: 'gradient emerald soft → --ok-soft' },
+  { find: /to-teal-300/g, replace: 'to-[var(--ok-soft)]', desc: 'gradient teal → --ok-soft' },
+  { find: /from-purple-500/g, replace: 'from-[var(--acc)]', desc: 'gradient purple → --acc' },
+  { find: /to-purple-400/g, replace: 'to-[var(--acc-soft)]', desc: 'gradient purple soft → --acc-soft' },
+
+  // Manual dark: prefixes with Tailwind colors → tokens
+  { find: /text-emerald-500\/90 dark:text-emerald-400\/80/g, replace: 'text-[var(--ok)]', desc: 'emerald dark: prefix → --ok' },
+  { find: /text-emerald-500\/90/g, replace: 'text-[var(--ok)]', desc: 'emerald text → --ok' },
+  { find: /-neutral-800/g, replace: 'bg-[var(--surface)]', desc: 'neutral-800 → --surface' },
 ];
 
 function fixFile(filePath) {

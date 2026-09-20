@@ -257,7 +257,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </datalist>
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-neutral-800 bg-[var(--surface)]/60'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-indigo-500/10 -indigo-500/20 text-indigo-400 flex items-center justify-center">
@@ -285,7 +285,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Tab Selection */}
  <div className={`px-6 pt-3 flex gap-2 ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]/50' :'-neutral-800/80 bg-[var(--surface)]/40'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]/50' :'bg-[var(--surface)]/80 bg-[var(--surface)]/40'
  }`}>
  <button
  onClick={() => { setActiveTab('list'); setError(null); setSuccessMsg(null); }}
@@ -353,7 +353,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`p-4 rounded-[var(--r-m)] transition-all ${
  isStitchLight 
  ?'bg-[var(--bg)] -slate-200/80 hover:-slate-300' 
- :'bg-[var(--surface)]/60 -neutral-800/80 hover:-neutral-700/80'
+ :'bg-[var(--surface)]/60 bg-[var(--surface)]/80 hover:-neutral-700/80'
  }`}
  >
  <div className="flex flex-wrap items-center justify-between gap-3">
@@ -442,7 +442,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Quick Password Reset Subform */}
  {isEditingThisUser && (
- <div className="mt-3 pt-3 -neutral-800/80 flex items-center gap-2 animate-in fade-in duration-200">
+ <div className="mt-3 pt-3 bg-[var(--surface)]/80 flex items-center gap-2 animate-in fade-in duration-200">
  <input
  type="text"
  value={changePasswordValue}
@@ -686,7 +686,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Modal Footer */}
  <div className={`px-6 py-3 text-right ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-neutral-800 bg-[var(--surface)]/60'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
  }`}>
  <button
  onClick={onClose}

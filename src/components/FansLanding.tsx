@@ -631,7 +631,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  aria-hidden="true"
  />
  <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-white text-[var(--ink)] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}>
- <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+ <svg className="w-full h-full fill-[var(--ink)]" viewBox="0 0 24 24">
  <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
  </svg>
  </div>
@@ -1098,7 +1098,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  return (
  <div className={`${isPreview ?'min-h-full p-2 sm:p-4' :'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[var(--bg)] flex items-start justify-center`}>
  <div className={`max-w-md w-full bg-[var(--surface)] rounded-[var(--r-l)] ${isPreview ?'p-4 sm:p-6' :'p-6 sm:p-8'} space-y-6 shadow-2xl relative overflow-hidden`}>
- <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-neutral-800 to-neutral-700" />
+ <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r frombg-[var(--surface)] to-neutral-700" />
  
  <div className="text-center space-y-4 pt-2">
  {logoUrl && !imgError ? (
@@ -1190,7 +1190,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  onClick={() => setActiveTab('redes')}
  className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
  activeTab ==='redes' 
- ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-0/20 font-black' 
+ ?'bg-gradient-to-r from-[var(--acc)] to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-0/20 font-black' 
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1201,7 +1201,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  onClick={() => setActiveTab('form')}
  className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
  activeTab ==='form'
- ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-0/20 font-black'
+ ?'bg-gradient-to-r from-[var(--acc)] to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-0/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

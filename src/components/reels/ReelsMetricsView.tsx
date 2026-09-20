@@ -668,7 +668,7 @@ export function ReelsMetricsView({
  activeMainSection ==='growth_plan'
  ? isStitchLight
  ?'bg-white text-indigo-600 shadow-sm'
- :'bg-gradient-to-r from-amber-500 to-indigo-500 text-[var(--ink)] shadow-md shadow-amber-0/20 font-black'
+ :'bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)] shadow-md shadow-amber-0/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

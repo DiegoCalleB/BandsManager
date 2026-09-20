@@ -344,7 +344,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  >
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-neutral-800 bg-[var(--surface)]/60'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-3">
  <div 
@@ -415,7 +415,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={() => setShowUpgradeModal(true)}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] text-xs font-bold font-mono transition-all duration-200 shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] text-xs font-bold font-mono transition-all duration-200 shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
  >
  <Sparkles className="w-3.5 h-3.5 fill-stone-950" />
  <span>Upgrade</span>
@@ -810,7 +810,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className="flex items-center gap-1.5 shrink-0">
  {isSelected ? (
  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--acc)]/60 text-[var(--acc-ink)] text-[9px] font-black uppercase font-mono">
- <Star className="w-2.5 h-2.5 fill-black" />
+ <Star className="w-2.5 h-2.5 fill-[var(--ink)]" />
  <span>Principal</span>
  </span>
  ) : (
@@ -1046,7 +1046,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  )}
 
- <div className="pt-2 -neutral-800/80 space-y-3">
+ <div className="pt-2 bg-[var(--surface)]/80 space-y-3">
  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[var(--acc)]">
  <Key className="w-4 h-4" />
  <span>Cambiar Contraseña</span>
@@ -1087,7 +1087,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  {/* Admin Band Management Section inside Profile */}
  {(isAdmin || currentUser.role ==='leader' || currentUser.role ==='admin') && onOpenBandManagement && (
- <div className="pt-2 -neutral-800/80 space-y-2">
+ <div className="pt-2 bg-[var(--surface)]/80 space-y-2">
  <label className="text-xs font-mono font-semibold text-[var(--ink-2)] flex items-center justify-between">
  <span className="flex items-center gap-1.5">
  <Shield className="w-3.5 h-3.5 text-indigo-400" />
@@ -1142,7 +1142,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  {/* Modal Footer */}
  <div className={`px-6 py-3 flex justify-between items-center ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-neutral-800 bg-[var(--surface)]/60'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
  }`}>
  {(isAdmin || currentUser.role ==='leader' || currentUser.role ==='admin') && onOpenBandManagement ? (
  <button
@@ -1351,7 +1351,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  alert(e?.message ||'No se pudo cambiar el plan. Reintenta en unos instantes.');
  }
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
  >
  <Sparkles className="w-3 h-3 fill-stone-950" />
  <span>Seleccionar {plan.name}</span>

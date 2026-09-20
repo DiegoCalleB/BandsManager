@@ -288,7 +288,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
  <button
  type="button"
  onClick={handleAcceptAndAddIdea}
- className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-xs font-mono font-bold text-[var(--ink)] flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-[var(--ok)] hover:to-teal-500 text-xs font-mono font-bold text-[var(--ink)] flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95"
  >
  <Plus className="w-4 h-4" />
  <span>Añadir como Nueva Idea al Tema</span>

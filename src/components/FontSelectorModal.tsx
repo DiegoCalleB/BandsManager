@@ -28,7 +28,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  >
  {/* Header */}
  <div className={`px-6 py-4 flex justify-between items-center shrink-0 ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-neutral-800 bg-[var(--surface)]/60'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shadow-inner shrink-0 ${
@@ -125,7 +125,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  {/* Live Preview Sample */}
  <div 
  className={`p-3 rounded-[var(--r-s)] text-sm transition-all ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] -neutral-800/80 text-[var(--ink-2)]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  style={{ fontFamily: preset.displayFont }}
  >
@@ -143,7 +143,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  {/* Footer */}
  <div className={`px-6 py-3 flex justify-between items-center shrink-0 ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'-neutral-800 bg-[var(--surface)]/60'
+ isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
  }`}>
  <span className="text-[10px] font-mono text-[var(--ink-2)]">
  Cambio instantáneo guardado en tu navegador

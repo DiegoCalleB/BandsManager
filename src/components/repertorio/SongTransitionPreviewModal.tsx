@@ -754,7 +754,7 @@ export function SongTransitionPreviewModal({
  {/* VU Meter for Track A */}
  <div className="w-full bg-black/50 h-1 rounded-full overflow-hidden border-[var(--hair)]800">
  <div
- className="h-full bg-gradient-to-r from-amber-500 to-amber-300 transition-all duration-75"
+ className="h-full bg-gradient-to-r from-[var(--acc)] to-[var(--acc-soft)] transition-all duration-75"
  style={{ width: `${Math.min(100, liveGainA * 100)}%` }}
  />
  </div>
@@ -897,7 +897,7 @@ export function SongTransitionPreviewModal({
  {/* VU Meter for Track B */}
  <div className="w-full bg-black/50 h-1 rounded-full overflow-hidden border-[var(--hair)]800">
  <div
- className="h-full bg-gradient-to-r from-emerald-500 to-emerald-300 transition-all duration-75"
+ className="h-full bg-gradient-to-r from-[var(--ok)] to-[var(--ok-soft)] transition-all duration-75"
  style={{ width: `${Math.min(100, liveGainB * 100)}%` }}
  />
  </div>
@@ -1101,7 +1101,7 @@ export function SongTransitionPreviewModal({
  className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)] font-bold flex items-center justify-center shadow transition active:scale-95 cursor-pointer"
  title={isPlaying ?'Pausar comprobación' :'Reproducir unión'}
  >
- {isPlaying ? <Pause className="w-3.5 h-3.5 fill-black" /> : <Play className="w-3.5 h-3.5 fill-black ml-0.5" />}
+ {isPlaying ? <Pause className="w-3.5 h-3.5 fill-[var(--ink)]" /> : <Play className="w-3.5 h-3.5 fill-[var(--ink)] ml-0.5" />}
  </button>
 
  <button

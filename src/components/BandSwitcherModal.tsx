@@ -861,7 +861,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <button
  type="submit"
  disabled={!newBandName.trim() || (SIMPLE_PROMO_ONLY_BAND_CREATION && isCreatingBand)}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
  isCreatingBand ? (
@@ -1340,7 +1340,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  alert(e?.message ||'No se pudo actualizar el plan. Reintenta en unos instantes.');
  }
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
  >
  <Sparkles className="w-3 h-3 fill-stone-950" />
  <span>Seleccionar {plan.name}</span>

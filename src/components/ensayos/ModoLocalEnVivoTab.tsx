@@ -912,7 +912,7 @@ export function ModoLocalEnVivoTab({
  {/* Scrollable Chord Content Container */}
  <div
  ref={atrilScrollRef}
- className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-neutral-800 space-y-1 font-mono select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ?'flex-1 min-h-0' :'max-h-[60vh]'}`}
+ className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-mono select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ?'flex-1 min-h-0' :'max-h-[60vh]'}`}
  >
  {renderFormattedChords(rawChordText, transpose, notation)}
  </div>

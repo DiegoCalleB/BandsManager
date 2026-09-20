@@ -37,7 +37,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
  onMouseLeave={() => setShowTooltip(false)}
  >
  <span 
- className={`inline-flex items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-[var(--ink)] font-black shadow-md shadow-amber-0/20 ring-1 ring-amber-300/50 ${sizeClasses[size]}`}
+ className={`inline-flex items-center justify-center rounded-full bg-gradient-to-tr from-[var(--acc)] via-amber-400 to-yellow-300 text-[var(--ink)] font-black shadow-md shadow-amber-0/20 ring-1 ring-amber-300/50 ${sizeClasses[size]}`}
  title="Lead Verificado • Conversación activa mediante agentes de IA"
  >
  <Check className={`${iconSizes[size]} stroke-[3.5]`} />
