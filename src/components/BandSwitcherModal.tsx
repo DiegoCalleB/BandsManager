@@ -1113,7 +1113,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  type="button"
  onClick={() => handleSelectPlanForCreation('de_gira')}
  disabled={isCreatingBand}
- className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-xs transition-colors cursor-pointer shadow-md shadow-[var(--acc)]/20 flex items-center justify-center gap-1.5 disabled:opacity-50"
+ className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--surface)] font-bold text-xs transition-colors cursor-pointer shadow-md shadow-[var(--acc)]/20 flex items-center justify-center gap-1.5 disabled:opacity-50"
  >
  {isCreatingBand && creatingPlanKey ==='de_gira' ? (
  <>

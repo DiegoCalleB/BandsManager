@@ -144,7 +144,7 @@ export function AddLeadModal({
  disabled={isModalScraping || !newLeadData.nombre_sala}
  className={`px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
- ?'bg-[#d1b375]/15 hover:bg-[#d1b375]/15 text-[#d1b375] disabled:opacity-50'
+ ?'bg-[#d1b375]/15 hover:bg-[var(--acc)]/50/15 text-[#d1b375] disabled:opacity-50'
  :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'
  }`}
  title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"

@@ -1847,7 +1847,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  }}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
  agentsEnabled
- ? (isStitchLight ?'bg-amber-200 hover:bg-[#d1b375]/15 text-[#d1b375]' :'bg-amber-500/20 hover:bg-[#d1b375]/15 text-[#d1b375] -amber-500/40')
+ ? (isStitchLight ?'bg-amber-200 hover:bg-[var(--acc)]/50/15 text-[#d1b375]' :'bg-amber-500/20 hover:bg-[var(--acc)]/50/15 text-[#d1b375] -amber-500/40')
  : (isStitchLight ?'bg-emerald-200 hover:bg-[var(--surface)]/15 text-[#10b981]' :'bg-emerald-500/20 hover:bg-[var(--surface)]/15 text-[#10b981] -emerald-500/40')
  }`}
  title={agentsEnabled ?"Desactivar motor de agentes de Supabase y usar solo Gemini" :"Activar motor de agentes en Supabase"}

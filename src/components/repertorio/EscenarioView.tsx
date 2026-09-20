@@ -202,7 +202,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  <button
  onClick={() => setShowPdfPreview(true)}
- className="px-2 py-1 bg-[var(--acc)] text-black font-mono font-extrabold text-[10px] rounded-[var(--r-m)] hover:bg-[#d1b375]/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+ className="px-2 py-1 bg-[var(--acc)] text-black font-mono font-extrabold text-[10px] rounded-[var(--r-m)] hover:bg-[var(--acc)]/50/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
  >
  <Printer className="w-4 h-4" />
  <span>Imprimir / Exportar</span>

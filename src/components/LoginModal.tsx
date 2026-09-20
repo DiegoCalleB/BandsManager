@@ -540,7 +540,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  setError(null);
  setView('register');
  }}
- className="px-3 py-1.5 bg-[var(--acc)] text-[var(--surface)] font-bold text-xs rounded-[var(--r-m)] hover:bg-[#f5d778] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
+ className="px-3 py-1.5 bg-[var(--acc)] text-[var(--surface)] font-bold text-xs rounded-[var(--r-m)] hover:bg-[var(--acc)]/30 transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
  >
  <Zap className="w-3.5 h-3.5" />
  <span>Crear / Acceder con Email en 10s</span>
@@ -776,7 +776,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
@@ -857,7 +857,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading || (resetConfirmPassword.length > 0 && resetNewPassword !== resetConfirmPassword)}
- className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
@@ -969,7 +969,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
@@ -1034,7 +1034,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
@@ -1059,7 +1059,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  setError(null);
  setView('register');
  }}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold transition-all cursor-pointer text-xs flex items-center justify-center gap-2"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--surface)] font-bold transition-all cursor-pointer text-xs flex items-center justify-center gap-2"
  >
  <Zap className="w-3.5 h-3.5" />
  <span>Crear Banda Nueva con {activateEmail}</span>
@@ -1144,7 +1144,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
@@ -1244,7 +1244,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  type="button"
  onClick={() => handlePlanSelect('promo')}
  disabled={loading}
- className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all cursor-pointer shadow-md disabled:opacity-50"
+ className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--surface)] font-bold text-sm tracking-wide transition-all cursor-pointer shadow-md disabled:opacity-50"
  >
  {loading ?'Creando cuenta...' :'Crear mi Dossier y QR Gratis'}
  </button>

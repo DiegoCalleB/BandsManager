@@ -2710,7 +2710,7 @@ export default function CalendarView({
  </div>
  <button
  onClick={() => setShowCreateModal('concert')}
- className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold font-mono bg-[#d1b375] text-stone-950 hover:bg-[#d1b375]/90 transition-all cursor-pointer flex items-center gap-1.5"
+ className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold font-mono bg-[#d1b375] text-stone-950 hover:bg-[var(--acc)]/50/90 transition-all cursor-pointer flex items-center gap-1.5"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Añadir Evento</span>
@@ -3008,7 +3008,7 @@ export default function CalendarView({
  </button>
  <button
  onClick={handleGoToday}
- className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-md bg-[#d1b375]/15 text-[#d1b375] hover:bg-[#d1b375]/25 transition-all cursor-pointer shrink-0"
+ className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-md bg-[#d1b375]/15 text-[#d1b375] hover:bg-[var(--acc)]/50/25 transition-all cursor-pointer shrink-0"
  title="Ir al mes y día actual"
  >
  Hoy
@@ -3962,7 +3962,7 @@ export default function CalendarView({
  className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight 
  ?'bg-amber-500/15 text-amber-600 hover:bg-amber-500/25' 
- :'bg-[#d1b375]/20 text-[#d1b375] hover:bg-[#d1b375]/30'
+ :'bg-[#d1b375]/20 text-[#d1b375] hover:bg-[var(--acc)]/50/30'
  }`}
  >
  <Plus className="w-3.5 h-3.5" />
@@ -5168,7 +5168,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`p-1.5 rounded transition-colors cursor-pointer ${
- isStitchLight ?'bg-sky-500/15 text-white hover:bg-sky-500/15' :'bg-[#d1b375]/15 text-stone-950 hover:bg-[#d1b375]/15 font-bold'
+ isStitchLight ?'bg-sky-500/15 text-white hover:bg-sky-500/15' :'bg-[#d1b375]/15 text-stone-950 hover:bg-[var(--acc)]/50/15 font-bold'
  }`}
  title="Añadir horario"
  >
@@ -5189,7 +5189,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`p-1.5 rounded transition-colors cursor-pointer ${
- isStitchLight ?'bg-sky-500/15 text-white hover:bg-sky-500/15' :'bg-[#d1b375]/15 text-stone-950 hover:bg-[#d1b375]/15 font-bold'
+ isStitchLight ?'bg-sky-500/15 text-white hover:bg-sky-500/15' :'bg-[#d1b375]/15 text-stone-950 hover:bg-[var(--acc)]/50/15 font-bold'
  }`}
  title="Añadir material"
  >
