@@ -56,7 +56,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className="bg-[var(--surface)] rounded-[var(--r-m)] w-full max-w-lg overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-200 my-auto max-h-[90vh] overflow-y-auto">
- <div className="p-4 flex justify-between items-center bg-[#1A1918]">
+ <div className="p-4 flex justify-between items-center bg-[var(--sunken)]">
  <h3 className="text-sm font-bold font-display uppercase tracking-widest text-[var(--ink)] flex items-center gap-1.5">
  <Plus className="w-4 h-4" /> Agregar Nueva Sala a la Hoja
  </h3>
@@ -79,7 +79,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newSala}
  onChange={(e) => setNewSala(e.target.value)}
  placeholder="Ej: Sala Apolo"
- className="w-full bg-[#1A1918] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
  />
  </div>
 
@@ -92,7 +92,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newCiudad}
  onChange={(e) => setNewCiudad(e.target.value)}
  placeholder="Ej: Barcelona"
- className="w-full bg-[#1A1918] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
  />
  </div>
 
@@ -104,7 +104,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newRegion}
  onChange={(e) => setNewRegion(e.target.value)}
  placeholder="Ej: Cataluña"
- className="w-full bg-[#1A1918] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
  />
  </div>
 
@@ -115,7 +115,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  type="number"
  value={newAforo}
  onChange={(e) => setNewAforo(Number(e.target.value))}
- className="w-full bg-[#1A1918] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
  />
  </div>
 
@@ -126,7 +126,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  type="text"
  value={newGenero}
  onChange={(e) => setNewGenero(e.target.value)}
- className="w-full bg-[#1A1918] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
  />
  </div>
 
@@ -136,7 +136,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  id="new-lead-tipo"
  value={newTipo}
  onChange={(e) => setNewTipo(e.target.value as LeadType)}
- className="w-full bg-[#1A1918] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono cursor-pointer"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono cursor-pointer"
  >
  <option value="sala">🏛️ Sala / Teatro (Booking directo)</option>
  <option value="festival">🎪 Festival (Escenarios / Carteles)</option>
@@ -155,7 +155,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newInstagram}
  onChange={(e) => setNewInstagram(e.target.value)}
  placeholder="Ej: @sala_apolo"
- className="w-full bg-[#1A1918] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
  />
  </div>
  </div>
@@ -168,7 +168,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newEmail}
  onChange={(e) => setNewEmail(e.target.value)}
  placeholder="Ej: booking@salaapolo.com"
- className="w-full bg-[#1A1918] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
+ className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-mono"
  />
  </div>
 
@@ -180,7 +180,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  value={newNotas}
  onChange={(e) => setNewNotas(e.target.value)}
  placeholder="Alguna instrucción de booking, contacto recomendado..."
- className="w-full bg-[#1A1918] rounded p-3 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans leading-relaxed"
+ className="w-full bg-[var(--sunken)] rounded p-3 focus:outline-none focus:-zinc-500/50 text-[var(--ink)] font-sans leading-relaxed"
  />
  </div>
 

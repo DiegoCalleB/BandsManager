@@ -289,7 +289,7 @@ export default function Dashboard({
  });
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
- const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[#1A1918] text-[var(--ink)]';
+ const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink)]';
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--sunken)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const textMuted = isStitchLight ?'text-[var(--ink-3)]' :'text-[var(--ink-2)]';

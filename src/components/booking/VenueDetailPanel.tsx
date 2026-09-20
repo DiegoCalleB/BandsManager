@@ -601,7 +601,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* HEADER CARD */}
- <div className="bg-[#1A1918] rounded-[var(--r-l)] p-4 sm:p-5 border-[var(--hair)]800 shadow-xl space-y-4">
+ <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-4 sm:p-5 border-[var(--hair)]800 shadow-xl space-y-4">
  {/* Title Bar */}
  <div className="flex justify-between items-start gap-2">
  <div className="flex items-center gap-3">
@@ -883,7 +883,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </div>
 
  {/* CONTACT & LOCATION CARD */}
- <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-2.5 border-[var(--hair)]800">
+ <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2.5 border-[var(--hair)]800">
  <div className="flex items-center justify-between">
  <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-[var(--ink-2)]">
  Ficha de Contacto & Ubicación
@@ -947,7 +947,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* ROSTER / ARTISTAS REPRESENTADOS (Si aplica) */}
  {(selectedLead.roster || ['agencia','manager','productora','sello','grupo'].includes(String(selectedLead.tipo ||'').toLowerCase())) && (
- <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-2">
+ <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2">
  <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
  <span>🎸</span> Róster de Artistas & Servicios de Representación
  </p>
@@ -1385,7 +1385,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  )}
 
  {/* Pitch Generator Section */}
- <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-3 border-[var(--hair)]800">
+ <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-3 border-[var(--hair)]800">
  <div className="flex items-center justify-between flex-wrap gap-2">
  <span className="text-xs font-bold font-sans uppercase text-[var(--acc)] tracking-wider">
  {isReplyStage ?'💬 Respuesta Redactada por IA' :'✉️ Propuesta de Pitch Redactada'}
@@ -1830,7 +1830,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* TAB 3: CONTACT BITÁCORA */}
  {activeTab ==='bitacora' && (
- <div className="bg-[#1A1918] rounded-[var(--r-m)] p-4 space-y-3">
+ <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <History className="w-4 h-4 text-[var(--acc)]" />

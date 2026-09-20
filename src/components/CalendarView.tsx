@@ -4103,7 +4103,7 @@ export default function CalendarView({
  ) : (
  <div id="calendar-event-detail-sidebar" className="concert-detail-view">
  {/* Day details */}
- <div className={`pb-4 mb-4 flex items-center gap-3 border-b ${isStitchLight ?'' :'border-[#99907c]/15'}`}>
+ <div className={`pb-4 mb-4 flex items-center gap-3 border-b ${isStitchLight ?'' :'border-[var(--hair)]'}`}>
  <div className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 shadow-sm ${
  isStitchLight ?'bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--sunken)]'
  }`}>

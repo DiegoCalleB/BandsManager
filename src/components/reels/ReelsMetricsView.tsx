@@ -1363,7 +1363,7 @@ export function ReelsMetricsView({
 
  {/* 3. Vistas de Videos & Contenidos Reales (YouTube / Reels) */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={`border-b pb-2 flex items-center justify-between ${isStitchLight ?'' :'border-[#99907c]/15'}`}>
+ <div className={`border-b pb-2 flex items-center justify-between ${isStitchLight ?'' :'border-[var(--hair)]'}`}>
  <div>
  <h3 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Video className="w-3.5 h-3.5 text-emerald-500" /> Monitoreo de Views y Contenidos Indexados
@@ -1441,7 +1441,7 @@ export function ReelsMetricsView({
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
  {/* Guardar/Editar Log Form (5 columns) */}
  <div className={`lg:col-span-5 ${colors.card} p-5 space-y-4`}>
- <div className={`border-b pb-2 ${isStitchLight ?'' :'border-[#99907c]/15'}`}>
+ <div className={`border-b pb-2 ${isStitchLight ?'' :'border-[var(--hair)]'}`}>
  <h3 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Plus className="w-3.5 h-3.5" /> {editingMetricId ?'Editar Checkpoint' :'Nuevo Checkpoint Manual'}
  </h3>
@@ -1461,7 +1461,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[#99907c]/15 text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1479,7 +1479,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[#99907c]/15 text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1496,7 +1496,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[#99907c]/15 text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1513,7 +1513,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[#99907c]/15 text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1530,7 +1530,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[#99907c]/15 text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1602,7 +1602,7 @@ export function ReelsMetricsView({
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
  isStitchLight
  ?'bg-white text-[var(--ink)] focus:border-indigo-500'
- :'bg-[var(--surface)] border-[#99907c]/15 text-[var(--sunken)] focus:border-[var(--acc)]/30'
+ :'bg-[var(--surface)] border-[var(--hair)] text-[var(--sunken)] focus:border-[var(--acc)]/30'
  }`}
  />
  </div>
@@ -1641,7 +1641,7 @@ export function ReelsMetricsView({
 
  {/* Historial Tabla (7 columns) */}
  <div className={`lg:col-span-7 ${colors.card} p-5 space-y-4 flex flex-col min-w-0`}>
- <div className={`border-b pb-2 ${isStitchLight ?'' :'border-[#99907c]/15'}`}>
+ <div className={`border-b pb-2 ${isStitchLight ?'' :'border-[var(--hair)]'}`}>
  <h3 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
  <Table className="w-3.5 h-3.5" /> Registros Históricos en Supabase ({metrics.length})
  </h3>

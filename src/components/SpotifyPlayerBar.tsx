@@ -560,7 +560,7 @@ export default function SpotifyPlayerBar({
  </span>
  )}
  </div>
- <div className="flex items-center gap-1.5 text-[10px] text-[#b3b3b3] font-mono mt-0.5 truncate">
+ <div className="flex items-center gap-1.5 text-[10px] text-[var(--ink-2)] font-mono mt-0.5 truncate">
  <span className="text-[var(--ink)] font-medium">{song.artista ||'Banda'}</span>
  <span>•</span>
  <span className="text-[var(--ok)] font-semibold">
@@ -587,7 +587,7 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={() => handlePrev()}
- className="p-1.5 text-[#b3b3b3] hover:text-[var(--ink)] transition cursor-pointer active:scale-90"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer active:scale-90"
  title="Canción Anterior"
  >
  <SkipBack className="w-4 h-4 fill-current" />
@@ -605,7 +605,7 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={() => handleNext(false)}
- className="p-1.5 text-[#b3b3b3] hover:text-[var(--ink)] transition cursor-pointer active:scale-90"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer active:scale-90"
  title="Siguiente Canción"
  >
  <SkipForward className="w-4 h-4 fill-current" />
@@ -673,7 +673,7 @@ export default function SpotifyPlayerBar({
  </span>
  )}
  </div>
- <div className="flex items-center gap-2 text-[11px] text-[#b3b3b3] font-mono mt-0.5 truncate">
+ <div className="flex items-center gap-2 text-[11px] text-[var(--ink-2)] font-mono mt-0.5 truncate">
  <span className="text-[var(--ink)] font-medium">{song.artista ||'Banda'}</span>
  <span>•</span>
  <span className="text-[var(--ok)] font-semibold">
@@ -726,7 +726,7 @@ export default function SpotifyPlayerBar({
  className={`p-1.5 rounded-full transition-all cursor-pointer ${
  isLooping
  ?'text-[var(--ok)] bg-[var(--surface)]/10'
- :'text-[#b3b3b3] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={isLooping ?"Repetir tema activado" :"Activar Bucle"}
  >
@@ -736,7 +736,7 @@ export default function SpotifyPlayerBar({
  {/* Prev Song */}
  <button
  onClick={() => handlePrev()}
- className="p-1 text-[#b3b3b3] hover:text-[var(--ink)] transition-all cursor-pointer active:scale-90"
+ className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer active:scale-90"
  title="Canción Anterior"
  >
  <SkipBack className="w-5 h-5 fill-current" />
@@ -754,7 +754,7 @@ export default function SpotifyPlayerBar({
  {/* Next Song */}
  <button
  onClick={() => handleNext(false)}
- className="p-1 text-[#b3b3b3] hover:text-[var(--ink)] transition-all cursor-pointer active:scale-90"
+ className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer active:scale-90"
  title="Siguiente Canción"
  >
  <SkipForward className="w-5 h-5 fill-current" />
@@ -766,7 +766,7 @@ export default function SpotifyPlayerBar({
  className={`p-1.5 rounded-full transition-all cursor-pointer text-sm ${
  crossfadeEnabled
  ?'text-sky-400 bg-sky-400/10'
- :'text-[#b3b3b3] hover:text-[var(--ink)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={crossfadeEnabled ?"Fundido entre temas activado (5s)" :"Activar fundido entre temas (5s)"}
  >
@@ -792,7 +792,7 @@ export default function SpotifyPlayerBar({
  value={transposeSemitones}
  onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
  className={`bg-[var(--surface)] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)] ${
- transposeSemitones !== 0 ?'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' :'text-[#b3b3b3]'
+ transposeSemitones !== 0 ?'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' :'text-[var(--ink-2)]'
  }`}
  title="Trasposición de Tono (Nativa en tiempo real Web Audio)"
  >
@@ -813,7 +813,7 @@ export default function SpotifyPlayerBar({
  </div>
 
  {/* Timeline Slider */}
- <div className="w-full flex items-center gap-2 text-[11px] font-mono text-[#b3b3b3]">
+ <div className="w-full flex items-center gap-2 text-[11px] font-mono text-[var(--ink-2)]">
  <span className="w-9 text-right shrink-0">{formatSecs(currentTime)}</span>
 
  <div className="relative flex-1 flex items-center">
@@ -841,7 +841,7 @@ export default function SpotifyPlayerBar({
  href={song.enlaceAcordes}
  target="_blank"
  rel="noopener noreferrer"
- className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[#b3b3b3] hover:text-[var(--ink)] text-xs font-mono flex items-center gap-1 transition-all cursor-pointer"
+ className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-mono flex items-center gap-1 transition-all cursor-pointer"
  title="Ver Acordes / Partitura"
  >
  <FileText className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -873,7 +873,7 @@ export default function SpotifyPlayerBar({
  <div className="hidden sm:flex items-center gap-1.5 pl-2 border-l border-[var(--hair)]">
  <button
  onClick={() => setIsMuted(!isMuted)}
- className="text-[#b3b3b3] hover:text-[var(--ink)] p-1"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"
  >
  {isMuted || volume === 0 ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4" />}
  </button>

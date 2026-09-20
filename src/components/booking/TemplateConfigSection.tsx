@@ -77,7 +77,7 @@ export function TemplateConfigSection({
  <div className={`${colors.card} p-5 space-y-6`}>
  <div
  className={`pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 border-b ${
- isStitchLight ?'' :'border-[#99907c]/15'
+ isStitchLight ?'' :'border-[var(--hair)]'
  }`}
  >
  <div>
