@@ -175,6 +175,12 @@
   --color-slate-200: var(--hair);
   --color-slate-100: var(--sunken);
 
+  /* Remap black for theme-aware backgrounds (501 instances).
+     Light: bg-black → --sunken (#E8EBEF, light gray for dark UI in light mode)
+     Dark: bg-black → --bg (#101216, very dark)
+     text-white stays literal (1321 instances on dark backgrounds). */
+  --color-black: var(--sunken);
+
   /* Remap zinc (31 files using it) */
   --color-zinc-950: var(--sunken);
   --color-zinc-900: var(--bg);
