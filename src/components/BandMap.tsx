@@ -87,21 +87,31 @@ function offsetCoords(base: [number, number], index: number): [number, number] {
 
 const GEO_CACHE: Record<string, [number, number]> = {};
 
+function getTokenColor(tokenName: string): string {
+ const style = getComputedStyle(document.documentElement);
+ return style.getPropertyValue(tokenName).trim() || '#666666';
+}
+
 function getStatusBadgeConfig(status: BandRelationshipStatus) {
+ const okColor = getTokenColor('--ok');
+ const accColor = getTokenColor('--acc');
+ const alertColor = getTokenColor('--alert');
+ const ink3Color = getTokenColor('--ink-3');
+
  switch (status) {
  case'colegas_aliados':
- return { text:'🤝 Colegas / Aliados', color:'#10b981', bg:'rgba(16, 185, 129, 0.15)' };
+ return { text:'🤝 Colegas / Aliados', color: okColor, bg: okColor + '26' };
  case'concierto_agendado':
- return { text:'⚡ Concierto Agendado', color:'#d1b375', bg:'rgba(209, 179, 117, 0.15)' };
+ return { text:'⚡ Concierto Agendado', color: accColor, bg: accColor + '26' };
  case'intercambio_propuesto':
- return { text:'🔄 Date Swap Propuesto', color:'#0284c7', bg:'rgba(2, 132, 199, 0.15)' };
+ return { text:'🔄 Date Swap Propuesto', color: okColor, bg: okColor + '26' };
  case'pendiente_respuesta':
- return { text:'⏳ Pendiente Respuesta', color:'#d946ef', bg:'rgba(217, 70, 239, 0.15)' };
+ return { text:'⏳ Pendiente Respuesta', color: accColor, bg: accColor + '26' };
  case'no_disponible':
- return { text:'❌ No Disponible', color:'#f43f5e', bg:'rgba(244, 63, 94, 0.15)' };
+ return { text:'❌ No Disponible', color: alertColor, bg: alertColor + '26' };
  case'sin_contactar':
  default:
- return { text:'📡 Sin Contactar', color:'#a3a3a3', bg:'rgba(163, 163, 163, 0.15)' };
+ return { text:'📡 Sin Contactar', color: ink3Color, bg: ink3Color + '26' };
  }
 }
 
@@ -284,6 +294,10 @@ export const BandMap: React.FC<BandMapProps> = ({
  validCount++;
 
  const badgeCfg = getStatusBadgeConfig(band.estado_relacion);
+ const inkColor = getTokenColor('--ink');
+ const ink2Color = getTokenColor('--ink-2');
+ const accColor = getTokenColor('--acc');
+ const surfaceColor = getTokenColor('--surface');
 
  const bandIconHtml = band.imagen_url ? `
  <img src="${escapeHtml(band.imagen_url)}" style="
@@ -322,7 +336,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <div style="
  display: inline-flex;
  align-items: center;
- background: #18181b;
+ background: ${surfaceColor};
  border: 1.5px solid ${badgeCfg.color};
  border-radius: 20px;
  padding: 3px 8px 3px 4px;
@@ -333,7 +347,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  font-family: system-ui, sans-serif;
  font-size: 11px;
  font-weight: 700;
- color: #f5f5f5;">
+ color: ${inkColor};">
  ${escapeHtml(band.nombre_banda)}
  </span>
  </div>
@@ -349,13 +363,13 @@ export const BandMap: React.FC<BandMapProps> = ({
  popupHtml.className ='font-sans p-1 min-w-[220px] text-zinc-800';
  popupHtml.innerHTML = `
  <div style="font-family: system-ui, sans-serif;">
- <div style="font-size: 14px; font-weight: 800; color: #09090b; margin-bottom: 2px;">
+ <div style="font-size: 14px; font-weight: 800; color: ${inkColor}; margin-bottom: 2px;">
  ${escapeHtml(band.nombre_banda)}
  </div>
- <div style="font-size: 11px; color: #52525b; margin-bottom: 6px;">
+ <div style="font-size: 11px; color: ${ink2Color}; margin-bottom: 6px;">
  📍 ${escapeHtml(band.localizacion)}
  </div>
- <div style="font-size: 11px; font-weight: 600; color: #d1b375; margin-bottom: 8px;">
+ <div style="font-size: 11px; font-weight: 600; color: ${accColor}; margin-bottom: 8px;">
  🎵 ${escapeHtml(band.estilo_musical)}
  </div>
  <div style="margin-bottom: 8px;">
@@ -372,21 +386,21 @@ export const BandMap: React.FC<BandMapProps> = ({
  </span>
  </div>
  ${band.contacto_nombre ? `
- <div style="font-size: 11px; color: #27272a; margin-bottom: 4px;">
+ <div style="font-size: 11px; color: ${inkColor}; margin-bottom: 4px;">
  👤 <strong>Contacto:</strong> ${escapeHtml(band.contacto_nombre)}
  </div>
  ` :''}
  ${band.email ? `
- <div style="font-size: 10px; font-family: monospace; color: #0284c7; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis;">
+ <div style="font-size: 10px; font-family: monospace; color: ${accColor}; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis;">
  ✉️ ${escapeHtml(band.email)}
  </div>
  ` :''}
  <div style="margin-top: 10px;">
  <button id="pop-band-select-${band.id}" style="
  width: 100%;
- background: #18181b;
- color: var(--acc);
- border: 1px solid #3f3f46;
+ background: ${surfaceColor};
+ color: ${accColor};
+ border: none;
  padding: 6px 10px;
  border-radius: 8px;
  font-size: 11px;
