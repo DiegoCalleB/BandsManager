@@ -90,7 +90,7 @@ export function AssignSongsToAlbumModal({
  <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[92vh] flex flex-col ${colors.card} text-[var(--ink)]`}>
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
- <Disc3 className="w-5 h-5 text-[#1db954]" />
+ <Disc3 className="w-5 h-5 text-[var(--ok)]" />
  <h3 className="text-sm font-bold font-mono uppercase text-[var(--ink)]">
  {albumName ? `Editar Disco: ${albumName}` :'Crear Nuevo Disco / Lanzamiento'}
  </h3>
@@ -162,7 +162,7 @@ export function AssignSongsToAlbumModal({
  }`}
  />
  <label className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 border-[var(--hair)] flex items-center gap-1 text-xs">
- <Upload className="w-3.5 h-3.5 text-[#1db954]" />
+ <Upload className="w-3.5 h-3.5 text-[var(--ok)]" />
  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
  </label>
  </div>
@@ -186,7 +186,7 @@ export function AssignSongsToAlbumModal({
  <div className="border-t border-[var(--hair)] pt-3 flex flex-col flex-1 overflow-hidden">
  <div className="flex items-center justify-between text-xs font-mono text-[var(--ink-3)] mb-2">
  <span className="font-bold flex items-center gap-1.5">
- <Disc3 className="w-4 h-4 text-[#1db954]" />
+ <Disc3 className="w-4 h-4 text-[var(--ok)]" />
  <span>Seleccionar Canciones del Disco ({selectedIds.size} seleccionadas):</span>
  </span>
  </div>
@@ -228,7 +228,7 @@ export function AssignSongsToAlbumModal({
  <div className="truncate">
  <div className="text-xs font-bold truncate flex items-center gap-1.5">
  <span>{formatSongTitle(song.titulo)}</span>
- {song.tonalidad && <span className="text-[10px] text-[#1db954] font-mono">({song.tonalidad})</span>}
+ {song.tonalidad && <span className="text-[10px] text-[var(--ok)] font-mono">({song.tonalidad})</span>}
  </div>
  <div className="text-[10px] text-neutral-500 truncate">
  {song.albumDisco ? `Álbum actual: ${song.albumDisco}` :'Sin álbum asignado'}

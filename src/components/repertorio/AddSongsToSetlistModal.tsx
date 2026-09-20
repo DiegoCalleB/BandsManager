@@ -94,7 +94,7 @@ export function AddSongsToSetlistModal({
  <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[92vh] flex flex-col ${colors.card} text-[var(--ink)]`}>
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
- <ListPlus className="w-5 h-5 text-[#1db954]" />
+ <ListPlus className="w-5 h-5 text-[var(--ok)]" />
  <h3 className="text-sm font-bold font-mono uppercase text-[var(--ink)]">
  Añadir Varias Canciones al Repertorio
  </h3>
@@ -202,7 +202,7 @@ export function AddSongsToSetlistModal({
  </span>
  )}
  {isSelected && (
- <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-[var(--surface)]/20 text-[#1db954] font-extrabold shrink-0 ml-auto border-[var(--hair)]/40">
+ <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-[var(--surface)]/20 text-[var(--ok)] font-extrabold shrink-0 ml-auto border-[var(--hair)]/40">
  #{selectedIndex + 1} en orden
  </span>
  )}

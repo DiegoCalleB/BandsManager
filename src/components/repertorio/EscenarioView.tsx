@@ -162,7 +162,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4">
  <div>
  <div className="flex flex-wrap items-center gap-2 mb-1">
- <span className="px-2.5 py-0.5 rounded-full bg-[var(--surface)]/20 border-[var(--hair)]/40 text-[#1ed760] font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5">
+ <span className="px-2.5 py-0.5 rounded-full bg-[var(--surface)]/20 border-[var(--hair)]/40 text-[var(--ok)] font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5">
  <span className="w-2 h-2 rounded-full bg-[var(--surface)] animate-ping" />
  Directo & Concierto
  </span>
@@ -234,7 +234,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {activeSetlist && activeSetlist.items.length > 0 && (
  <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] space-y-4 shadow-2xl relative overflow-hidden">
  {/* Subtle top glow line */}
- <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#1db954]/60 to-transparent" />
+ <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--ok)]/60 to-transparent" />
 
  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
  {/* Active Track Metadata & Heart Favorite */}
@@ -244,7 +244,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <img src={currentStageSong.portadaUrl} alt={currentStageSong.titulo} className="w-full h-full object-cover" />
  ) : stagePlayingIndex !== null ? (
  currentStageItem?.tipoItem ==='cancion' ? (
- <Music className="w-6 h-6 text-[#1ed760] animate-bounce" />
+ <Music className="w-6 h-6 text-[var(--ok)] animate-bounce" />
  ) : (
  <Mic className="w-6 h-6 text-sky-400 animate-pulse" />
  )
@@ -261,7 +261,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  :'Reproductor de Concierto'}
  </span>
  {stageResolvedUrl ? (
- <span className="px-2 py-0.5 rounded-full text-[9px] bg-[var(--surface)]/20 text-[#1ed760] border-[var(--hair)]/30 font-bold">
+ <span className="px-2 py-0.5 rounded-full text-[9px] bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/30 font-bold">
  Audio Real
  </span>
  ) : stagePlayingIndex !== null ? (
@@ -333,7 +333,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <Heart 
  className={`w-5 h-5 transition-all transform group-active:scale-125 ${
  isCurrentSongFavorited 
- ?'fill-[#1db954] text-[#1db954] drop-shadow-[0_0_8px_rgba(29,185,84,0.5)] scale-110' 
+ ?'fill-[var(--ok)] text-[var(--ok)] drop-shadow-[0_0_8px_rgba(29,185,84,0.5)] scale-110' 
  :'text-zinc-400 group-hover:text-[var(--ink)]'
  }`}
  />
@@ -371,7 +371,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {/* Play / Pause Circular Main Button */}
  <button
  onClick={toggleStagePlayPause}
- className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-extrabold flex items-center justify-center shadow-xl shadow-[#1db954]/25 cursor-pointer hover:scale-105 active:scale-95 transition-all"
+ className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-extrabold flex items-center justify-center shadow-xl shadow-[var(--ok)]/25 cursor-pointer hover:scale-105 active:scale-95 transition-all"
  title={stageIsPlaying ?"Pausar show" :"Iniciar directo"}
  >
  {stageIsPlaying ? (
@@ -395,7 +395,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setStageAutoplayNext(!stageAutoplayNext)}
  className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  stageAutoplayNext
- ?'bg-[var(--surface)]/20 text-[#1ed760] border-[var(--hair)]/50 shadow-sm'
+ ?'bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/50 shadow-sm'
  :'bg-[var(--surface)] text-zinc-400 border-transparent hover:text-[var(--ink)]'
  }`}
  title={stageAutoplayNext ?"Autoplay continuo activado" :"Autoplay desactivado"}
@@ -439,7 +439,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  />
 
  <div 
- className="h-full bg-gradient-to-r from-[#1db954] via-[#1ed760] to-[#20df64] transition-all duration-150 relative shadow-[0_0_12px_rgba(29,185,84,0.4)]"
+ className="h-full bg-gradient-to-r from-[var(--ok)] via-[var(--ok)] to-[#20df64] transition-all duration-150 relative shadow-[0_0_12px_rgba(29,185,84,0.4)]"
  style={{ width: `${stageProgressPct}%` }}
  >
  <div 
@@ -507,11 +507,11 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  onClick={() => setShowChordsPanel(!showChordsPanel)}
  className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
  showChordsPanel 
- ?'bg-[var(--surface)]/20 text-[#1ed760] border-[var(--hair)]/50 shadow-sm' 
+ ?'bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/50 shadow-sm' 
  :'bg-[var(--surface)] text-zinc-300 hover:text-[var(--ink)] border-[var(--hair)]'
  }`}
  >
- <FileText className="w-3.5 h-3.5 text-[#1ed760]" />
+ <FileText className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>{showChordsPanel ?'Ocultar Letra/Acordes' :'📜 Letra y Acordes en Directo'}</span>
  </button>
  </div>
@@ -537,7 +537,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-zinc-800 space-y-3 animate-fadeIn">
  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-2.5">
  <div className="flex items-center gap-2">
- <FileText className="w-4 h-4 text-[#1ed760]" />
+ <FileText className="w-4 h-4 text-[var(--ok)]" />
  <h4 className="font-mono text-sm font-black text-[var(--ink)]">
  {currentStageSong ? formatSongTitle(currentStageSong.titulo) :'Sin tema seleccionado'}
  </h4>
@@ -654,7 +654,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  isPlayingThis
  ?'bg-[var(--surface)] text-black font-bold scale-105 shadow-md' 
- :'bg-[var(--surface)] text-[#1db954] hover:bg-[var(--surface)] hover:text-black'
+ :'bg-[var(--surface)] text-[var(--ok)] hover:bg-[var(--surface)] hover:text-black'
  }`}
  title={isPlayingThis ?'Pausar' :'Reproducir este tema'}
  >
@@ -683,7 +683,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </div>
 
  <div className="col-span-2 text-center">
- <span className="px-2.5 py-1 bg-[var(--surface)]/20 text-[#1ed760] border-[var(--hair)]/30 rounded-md text-xs font-mono font-black">
+ <span className="px-2.5 py-1 bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/30 rounded-md text-xs font-mono font-black">
  {s.tonalidad ||'Am'}
  </span>
  </div>
@@ -701,7 +701,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  return (
  <div
  key={it.id}
- className="py-3 px-4 bg-gradient-to-r from-[#1db954]/20 via-[var(--surface)] to-[var(--sunken)] border-l-4 border-[var(--hair)] rounded-[var(--r-m)] font-mono text-[#1ed760] font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 my-2 shadow-md"
+ className="py-3 px-4 bg-gradient-to-r from-[var(--ok)]/20 via-[var(--surface)] to-[var(--sunken)] border-l-4 border-[var(--hair)] rounded-[var(--r-m)] font-mono text-[var(--ok)] font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 my-2 shadow-md"
  >
  <span className="text-sm">⚡</span>
  <span>{it.tituloCustom ||'SECCIÓN DEL SHOW'}</span>

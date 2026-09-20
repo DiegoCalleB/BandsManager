@@ -538,8 +538,8 @@ export default function SpotifyPlayerBar({
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
- <div className="w-full h-full bg-gradient-to-br from-[#1db954]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
- <Disc className={`w-5 h-5 ${isPlaying ?'animate-spin-slow text-[#1db954]' :'text-zinc-400'}`} />
+ <div className="w-full h-full bg-gradient-to-br from-[var(--ok)]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
+ <Disc className={`w-5 h-5 ${isPlaying ?'animate-spin-slow text-[var(--ok)]' :'text-zinc-400'}`} />
  </div>
  )}
  {isPlaying && (
@@ -553,7 +553,7 @@ export default function SpotifyPlayerBar({
 
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-2">
- <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] truncate group-hover:text-[#1db954] transition">{song.titulo}</h4>
+ <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] truncate group-hover:text-[var(--ok)] transition">{song.titulo}</h4>
  {isDrive && (
  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 shrink-0">
  Drive
@@ -563,7 +563,7 @@ export default function SpotifyPlayerBar({
  <div className="flex items-center gap-1.5 text-[10px] text-[#b3b3b3] font-mono mt-0.5 truncate">
  <span className="text-[var(--ink)] font-medium">{song.artista ||'Banda'}</span>
  <span>•</span>
- <span className="text-[#1db954] font-semibold">
+ <span className="text-[var(--ok)] font-semibold">
  {song.tonalidad ||'Am'}
  {transposeSemitones !== 0 && (
  <span className="text-[#ff6b9d] ml-1 font-bold">
@@ -617,7 +617,7 @@ export default function SpotifyPlayerBar({
  className="p-1.5 text-zinc-400 hover:text-[var(--ink)] cursor-pointer ml-1"
  title="Expandir Reproductor"
  >
- <ChevronUp className="w-5 h-5 text-[#1db954]" />
+ <ChevronUp className="w-5 h-5 text-[var(--ok)]" />
  </button>
 
  <button
@@ -641,8 +641,8 @@ export default function SpotifyPlayerBar({
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
- <div className="w-full h-full bg-gradient-to-br from-[#1db954]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
- <Disc className={`w-7 h-7 ${isPlaying ?'animate-spin-slow text-[#1db954]' :'text-zinc-400'}`} />
+ <div className="w-full h-full bg-gradient-to-br from-[var(--ok)]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
+ <Disc className={`w-7 h-7 ${isPlaying ?'animate-spin-slow text-[var(--ok)]' :'text-zinc-400'}`} />
  </div>
  )}
  {isPlaying && (
@@ -661,10 +661,10 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={() => onUpdateSong({ ...song, favoritoGeneral: !song.favoritoGeneral })}
- className="text-zinc-400 hover:text-[#1db954] transition cursor-pointer p-0.5"
+ className="text-zinc-400 hover:text-[var(--ok)] transition cursor-pointer p-0.5"
  title={song.favoritoGeneral ?"Guardado en Favoritos" :"Guardar en Favoritos"}
  >
- <Sparkles className={`w-4 h-4 ${song.favoritoGeneral ?'text-[#1db954] fill-[#1db954]' :''}`} />
+ <Sparkles className={`w-4 h-4 ${song.favoritoGeneral ?'text-[var(--ok)] fill-[var(--ok)]' :''}`} />
  </button>
  )}
  {isDrive && (
@@ -676,7 +676,7 @@ export default function SpotifyPlayerBar({
  <div className="flex items-center gap-2 text-[11px] text-[#b3b3b3] font-mono mt-0.5 truncate">
  <span className="text-[var(--ink)] font-medium">{song.artista ||'Banda'}</span>
  <span>•</span>
- <span className="text-[#1db954] font-semibold">
+ <span className="text-[var(--ok)] font-semibold">
  {song.tonalidad ||'Am'}
  {transposeSemitones !== 0 && (
  <span className="text-[#ff6b9d] ml-1 font-bold">
@@ -725,7 +725,7 @@ export default function SpotifyPlayerBar({
  onClick={() => setIsLooping(!isLooping)}
  className={`p-1.5 rounded-full transition-all cursor-pointer ${
  isLooping
- ?'text-[#1db954] bg-[var(--surface)]/10'
+ ?'text-[var(--ok)] bg-[var(--surface)]/10'
  :'text-[#b3b3b3] hover:text-[var(--ink)]'
  }`}
  title={isLooping ?"Repetir tema activado" :"Activar Bucle"}
@@ -777,7 +777,7 @@ export default function SpotifyPlayerBar({
  <select
  value={playbackRate}
  onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
- className="bg-[var(--surface)] text-[#1db954] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)]"
+ className="bg-[var(--surface)] text-[var(--ok)] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)]"
  title="Velocidad de Reproducción"
  >
  <option value={0.5}>0.5x</option>
@@ -824,7 +824,7 @@ export default function SpotifyPlayerBar({
  step={0.5}
  value={currentTime}
  onChange={(e) => handleSeek(parseFloat(e.target.value))}
- className="w-full h-1 bg-[#4d4d4d] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[#1db954] hover:accent-[#1ed760] focus:outline-none"
+ className="w-full h-1 bg-[#4d4d4d] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--ok)] hover:accent-[var(--ok)] focus:outline-none"
  />
  </div>
 
@@ -844,7 +844,7 @@ export default function SpotifyPlayerBar({
  className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[#b3b3b3] hover:text-[var(--ink)] text-xs font-mono flex items-center gap-1 transition-all cursor-pointer"
  title="Ver Acordes / Partitura"
  >
- <FileText className="w-3.5 h-3.5 text-[#1db954]" />
+ <FileText className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span className="hidden lg:inline text-[11px]">Acordes</span>
  </a>
  )}
@@ -852,7 +852,7 @@ export default function SpotifyPlayerBar({
  {/* Studio / Arreglos Button */}
  <button
  onClick={() => onOpenStudio(song)}
- className="px-3 py-1.5 rounded-full bg-[var(--surface)]/15 hover:bg-[var(--surface)]/25 text-[#1ed760] border-[var(--hair)]/30 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+ className="px-3 py-1.5 rounded-full bg-[var(--surface)]/15 hover:bg-[var(--surface)]/25 text-[var(--ok)] border-[var(--hair)]/30 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
  title="Abrir Estudio de Arreglos e Ideas"
  >
  <Sliders className="w-3.5 h-3.5" />
@@ -887,7 +887,7 @@ export default function SpotifyPlayerBar({
  setVolume(parseFloat(e.target.value));
  setIsMuted(false);
  }}
- className="w-16 h-1 bg-[#4d4d4d] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[#1db954]"
+ className="w-16 h-1 bg-[#4d4d4d] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--ok)]"
  />
  </div>
 

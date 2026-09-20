@@ -191,7 +191,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
  <div className="space-y-1">
  <label className="text-zinc-400 flex items-center gap-1 font-bold">
- <Calendar className="w-3.5 h-3.5 text-[#1ed760]" />
+ <Calendar className="w-3.5 h-3.5 text-[var(--ok)]" />
  Fecha del Concierto:
  </label>
  <input
@@ -221,7 +221,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  <div className="space-y-1.5">
  <label className="text-xs font-mono font-bold text-zinc-300 flex items-center justify-between">
  <span>Duración pactada para el pase:</span>
- <span className="text-[#1ed760]">{targetDurationMin} min</span>
+ <span className="text-[var(--ok)]">{targetDurationMin} min</span>
  </label>
  <div className="grid grid-cols-4 gap-1.5 font-mono text-[11px]">
  {[45, 60, 75, 90].map((mins) => (
@@ -234,7 +234,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  }}
  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-all cursor-pointer text-center ${
  targetDurationMin === mins
- ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[#1ed760] shadow-sm'
+ ?'bg-[var(--surface)]/20 border-[var(--hair)] text-[var(--ok)] shadow-sm'
  :'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
@@ -255,7 +255,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="button"
  onClick={() => setGenerateNewSetlist(!generateNewSetlist)}
  className={`text-[11px] underline decoration-dotted transition-colors ${
- generateNewSetlist ?'text-[#1ed760] font-bold' :'text-zinc-400 hover:text-[var(--ink)]'
+ generateNewSetlist ?'text-[var(--ok)] font-bold' :'text-zinc-400 hover:text-[var(--ink)]'
  }`}
  >
  {generateNewSetlist ?'← Elegir de mis setlists' :'⚡ Crear setlist a medida'}
@@ -268,8 +268,8 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
  ) : generateNewSetlist ? (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 border-[var(--hair)]/40 space-y-2 animate-fadeIn">
- <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#1ed760]">
- <Zap className="w-4 h-4 text-[#1ed760]" />
+ <div className="flex items-center gap-2 text-xs font-mono font-bold text-[var(--ok)]">
+ <Zap className="w-4 h-4 text-[var(--ok)]" />
  <span>Se creará un nuevo setlist automático:</span>
  </div>
  <p className="text-[11px] font-mono text-zinc-300">"Bolo {lead.nombre_sala} ({targetDurationMin} min)" seleccionando canciones de tu catálogo según la energía requerida.
@@ -345,7 +345,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="button"
  disabled={isSubmitting || (!selectedSetlistId && !generateNewSetlist)}
  onClick={handleSaveAndLink}
- className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-[#1ed760] text-black font-mono font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-[var(--ok)] text-black font-mono font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
  >
  <Check className="w-4 h-4 stroke-[3]" />
  <span>{isSubmitting ?'Guardando...' :'Confirmar Bolo y Asignar Setlist'}</span>

@@ -887,7 +887,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={() => setSearchQuery('')}
- className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[#1ed760] border-[var(--hair)]/30 text-xs font-mono font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5"
+ className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/30 text-xs font-mono font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5"
  >
  <X className="w-3.5 h-3.5" />
  <span>Limpiar búsqueda</span>

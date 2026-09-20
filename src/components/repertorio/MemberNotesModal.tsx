@@ -168,7 +168,7 @@ export function MemberNotesModal({
  {/* Header */}
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)] shrink-0">
  <div className="flex items-center gap-2.5">
- <div className={`p-2 rounded-[var(--r-m)] ${isStitchLight ?'bg-emerald-50 text-emerald-600' :'bg-[var(--surface)]/10 text-[#1db954]'}`}>
+ <div className={`p-2 rounded-[var(--r-m)] ${isStitchLight ?'bg-emerald-50 text-emerald-600' :'bg-[var(--surface)]/10 text-[var(--ok)]'}`}>
  <Users className="w-5 h-5" />
  </div>
  <div>
@@ -178,7 +178,7 @@ export function MemberNotesModal({
  Notas para Repertorio por Miembro
  </h3>
  <p className="text-xs text-[var(--ink-2)] font-sans flex items-center gap-1.5 mt-0.5">
- <Music className="w-3.5 h-3.5 text-[#1db954]" />
+ <Music className="w-3.5 h-3.5 text-[var(--ok)]" />
  Canción: <span className="font-bold text-[var(--ink)]">{formatSongTitle(song.titulo)}</span> {song.tonalidad && `(${song.tonalidad})`}
  </p>
  </div>
@@ -252,7 +252,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={() => setShowAddCustomMember(true)}
- className="text-xs text-[#1db954] hover:text-[#1ed760] font-mono flex items-center gap-1 font-bold cursor-pointer transition-colors"
+ className="text-xs text-[var(--ok)] hover:text-[var(--ok)] font-mono flex items-center gap-1 font-bold cursor-pointer transition-colors"
  >
  <Plus className="w-3.5 h-3.5" /> + Añadir Músico / Suplente
  </button>

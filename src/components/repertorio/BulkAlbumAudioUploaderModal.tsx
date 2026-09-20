@@ -573,7 +573,7 @@ export function BulkAlbumAudioUploaderModal({
  {/* Modal Header */}
  <div className="p-6 border-b border-[var(--hair)] flex items-center justify-between shrink-0 bg-gradient-to-r from-emerald-500/10 to-transparent">
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[#1db954] shadow-inner">
+ <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[var(--ok)] shadow-inner">
  <FolderUp className="w-6 h-6" />
  </div>
  <div>
@@ -581,8 +581,8 @@ export function BulkAlbumAudioUploaderModal({
  <span>{isCreatingBrandNewAlbum ?'Crear Álbum desde Carpeta / MP3s' :'Subir Canciones Completas del Disco'}</span>
  </h3>
  <p className="text-xs font-mono opacity-60 mt-0.5 flex items-center gap-1.5">
- <Disc3 className="w-3.5 h-3.5 text-[#1db954]" />
- <span className="font-bold text-[#1db954]">
+ <Disc3 className="w-3.5 h-3.5 text-[var(--ok)]" />
+ <span className="font-bold text-[var(--ok)]">
  {currentAlbumName ||'Nuevo Álbum'}
  </span>
  <span>• {isCreatingBrandNewAlbum ? `${items.length} pistas seleccionadas` : `${albumSongs.length} temas en catálogo`}</span>
@@ -675,7 +675,7 @@ export function BulkAlbumAudioUploaderModal({
  className="hidden"
  />
 
- <div className="w-14 h-14 rounded-[var(--r-l)] bg-white/10 flex items-center justify-center text-[#1db954]">
+ <div className="w-14 h-14 rounded-[var(--r-l)] bg-white/10 flex items-center justify-center text-[var(--ok)]">
  {isProcessingFiles ? (
  <RefreshCw className="w-7 h-7 animate-spin" />
  ) : (

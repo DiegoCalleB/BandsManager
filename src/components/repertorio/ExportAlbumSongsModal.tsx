@@ -417,9 +417,9 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  }`}
  >
  {/* Header */}
- <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between gap-3 bg-gradient-to-r from-[#1db954]/10 via-transparent to-transparent">
+ <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between gap-3 bg-gradient-to-r from-[var(--ok)]/10 via-transparent to-transparent">
  <div className="flex items-center gap-3 min-w-0">
- <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[#1ed760] shrink-0 shadow-inner">
+ <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 border-[var(--hair)]/40 flex items-center justify-center text-[var(--ok)] shrink-0 shadow-inner">
  <Download className="w-5 h-5 sm:w-6 sm:h-6" />
  </div>
  <div className="min-w-0">
@@ -448,14 +448,14 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <div className="space-y-1.5">
  <label className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)] flex items-center justify-between">
  <span>Seleccionar Álbum / Disco</span>
- <span className="text-[#1ed760] font-mono font-bold text-[11px]">
+ <span className="text-[var(--ok)] font-mono font-bold text-[11px]">
  {targetSongs.length} {targetSongs.length === 1 ?'canción' :'canciones'} ({formattedTotalDuration})
  </span>
  </label>
  <select
  value={selectedAlbum}
  onChange={(e) => setSelectedAlbum(e.target.value)}
- className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#1db954]/50 transition-all ${
+ className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--ok)]/50 transition-all ${
  isStitchLight
  ?'bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)]'
@@ -484,11 +484,11 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  onClick={() => setFormat('zip')}
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
  format ==='zip'
- ?'bg-gradient-to-br from-[#1db954]/30 to-emerald-900/40 border-[var(--hair)] text-[var(--ink)] shadow-lg ring-1 ring-[#1ed760]/40'
+ ?'bg-gradient-to-br from-[var(--ok)]/30 to-emerald-900/40 border-[var(--hair)] text-[var(--ink)] shadow-lg ring-1 ring-[var(--ok)]/40'
  :'bg-emerald-500/10 border-emerald-500/30 text-[var(--ink-2)] hover:bg-emerald-500/20'
  }`}
  >
- <Archive className={`w-5 h-5 ${format ==='zip' ?'text-[#1ed760]' :'text-emerald-400'}`} />
+ <Archive className={`w-5 h-5 ${format ==='zip' ?'text-[var(--ok)]' :'text-emerald-400'}`} />
  <div>
  <div className="text-xs font-extrabold flex items-center gap-1">
  <span>ZIP MP3s</span>
@@ -507,7 +507,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10 hover:text-[var(--ink)]'
  }`}
  >
- <FileSpreadsheet className={`w-5 h-5 ${format ==='csv' ?'text-[#1ed760]' :'text-emerald-400'}`} />
+ <FileSpreadsheet className={`w-5 h-5 ${format ==='csv' ?'text-[var(--ok)]' :'text-emerald-400'}`} />
  <div>
  <div className="text-xs font-bold">Excel / CSV</div>
  <div className="text-[10px] opacity-70">Tabla de datos</div>
@@ -523,7 +523,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10 hover:text-[var(--ink)]'
  }`}
  >
- <Music className={`w-5 h-5 ${format ==='m3u' ?'text-[#1ed760]' :'text-sky-400'}`} />
+ <Music className={`w-5 h-5 ${format ==='m3u' ?'text-[var(--ok)]' :'text-sky-400'}`} />
  <div>
  <div className="text-xs font-bold">Playlist M3U</div>
  <div className="text-[10px] opacity-70">VLC / Reprod.</div>
@@ -539,7 +539,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10 hover:text-[var(--ink)]'
  }`}
  >
- <FileText className={`w-5 h-5 ${format ==='txt' ?'text-[#1ed760]' :'text-[var(--acc)]'}`} />
+ <FileText className={`w-5 h-5 ${format ==='txt' ?'text-[var(--ok)]' :'text-[var(--acc)]'}`} />
  <div>
  <div className="text-xs font-bold">Texto TXT</div>
  <div className="text-[10px] opacity-70">Lista limpia</div>
@@ -555,7 +555,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  :'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10 hover:text-[var(--ink)]'
  }`}
  >
- <Code className={`w-5 h-5 ${format ==='json' ?'text-[#1ed760]' :'text-purple-400'}`} />
+ <Code className={`w-5 h-5 ${format ==='json' ?'text-[var(--ok)]' :'text-purple-400'}`} />
  <div>
  <div className="text-xs font-bold">JSON Data</div>
  <div className="text-[10px] opacity-70">Backup</div>
@@ -568,7 +568,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  {format ==='zip' && (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 border-[var(--hair)]/30 flex items-center justify-between gap-3 text-xs">
  <div className="flex items-center gap-2 text-[var(--ink-2)]">
- <Music className="w-4 h-4 text-[#1ed760] shrink-0" />
+ <Music className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span>
  Audios listos para comprimir:{''}
  <strong className="text-[var(--ink)] font-mono">{songsWithAudio.length}</strong> de{''}
@@ -592,7 +592,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  type="checkbox"
  checked={includeAudioUrls}
  onChange={(e) => setIncludeAudioUrls(e.target.checked)}
- className="w-4 h-4 rounded accent-[#1db954] cursor-pointer"
+ className="w-4 h-4 rounded accent-[var(--ok)] cursor-pointer"
  />
  <span>Enlaces directos de audios demo</span>
  </label>
@@ -602,7 +602,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  type="checkbox"
  checked={includeChords}
  onChange={(e) => setIncludeChords(e.target.checked)}
- className="w-4 h-4 rounded accent-[#1db954] cursor-pointer"
+ className="w-4 h-4 rounded accent-[var(--ok)] cursor-pointer"
  />
  <span>Documento de letras y cifrados de guitarra/bajo</span>
  </label>
@@ -614,7 +614,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--ok-soft)] space-y-2 animate-in fade-in">
  <div className="flex items-center justify-between text-xs font-medium text-[var(--ink-2)]">
  <span className="flex items-center gap-2">
- <Loader2 className="w-4 h-4 text-[#1ed760] animate-spin" />
+ <Loader2 className="w-4 h-4 text-[var(--ok)] animate-spin" />
  <span>{zipProgress.status ||'Procesando paquete ZIP...'}</span>
  </span>
  {zipProgress.total > 0 && (
@@ -626,7 +626,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  {zipProgress.total > 0 && (
  <div className="w-full h-2 bg-[var(--surface)] rounded-full overflow-hidden">
  <div
- className="h-full bg-gradient-to-r from-[#1db954] to-[#1ed760] transition-all duration-300 rounded-full"
+ className="h-full bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] transition-all duration-300 rounded-full"
  style={{ width: `${Math.round((zipProgress.current / zipProgress.total) * 100)}%` }}
  />
  </div>
@@ -703,7 +703,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  type="button"
  disabled={zipLoading}
  onClick={handleDownloadZip}
- className="px-5 py-2.5 rounded-[var(--r-l)] bg-gradient-to-r from-[#1db954] to-[#1ed760] hover:from-[#1ed760] hover:to-[#1db954] text-black font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] hover:from-[var(--ok)] hover:to-[var(--ok)] text-black font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-50"
  >
  {zipLoading ? (
  <>

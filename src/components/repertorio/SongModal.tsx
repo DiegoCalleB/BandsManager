@@ -116,7 +116,7 @@ export function SongModal({
  <div className={`w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden ${colors.card}`}>
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
- <Music className="w-5 h-5 text-[#1db954]" />
+ <Music className="w-5 h-5 text-[var(--ok)]" />
  <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
  {editingSong ?'Editar Canción' :'Añadir Nueva Canción al Catálogo'}
  </h3>
@@ -137,7 +137,7 @@ export function SongModal({
  }`}>
  <div className="flex items-center justify-between gap-2">
  <div className="flex items-center gap-2">
- <Upload className="w-4 h-4 text-[#1db954]" />
+ <Upload className="w-4 h-4 text-[var(--ok)]" />
  <span className="font-bold text-xs text-[var(--ink)]">Subir Fichero de Audio (mp3, wav, m4a)</span>
  </div>
  <button
@@ -158,12 +158,12 @@ export function SongModal({
  />
  {audioFileName && (
  <div className="mt-2 text-xs text-zinc-300 flex items-center gap-1.5 font-sans">
- <CheckCircle2 className="w-3.5 h-3.5 text-[#1db954]" />
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span className="truncate">Archivo: {audioFileName}</span>
  </div>
  )}
  {detectedDurationMsg && (
- <div className="mt-1 text-[11px] font-bold text-[#1db954]">
+ <div className="mt-1 text-[11px] font-bold text-[var(--ok)]">
  {detectedDurationMsg}
  </div>
  )}
@@ -241,7 +241,7 @@ export function SongModal({
  min="0"
  value={minutos}
  onChange={(e) => setMinutos(parseInt(e.target.value) || 0)}
- className={`w-1/2 p-2 rounded-[var(--r-s)] focus:outline-none text-center font-bold text-[#1db954] ${
+ className={`w-1/2 p-2 rounded-[var(--r-s)] focus:outline-none text-center font-bold text-[var(--ok)] ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="Min"
@@ -254,7 +254,7 @@ export function SongModal({
  max="59"
  value={segundos}
  onChange={(e) => setSegundos(parseInt(e.target.value) || 0)}
- className={`w-1/2 p-2 rounded-[var(--r-s)] focus:outline-none text-center font-bold text-[#1db954] ${
+ className={`w-1/2 p-2 rounded-[var(--r-s)] focus:outline-none text-center font-bold text-[var(--ok)] ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="Seg"
@@ -266,14 +266,14 @@ export function SongModal({
  <div className="grid grid-cols-2 gap-3">
  <div>
  <label className="block text-[var(--ink-2)] mb-1 flex items-center gap-1">
- <Disc3 className="w-3 h-3 text-[#1db954]" />
+ <Disc3 className="w-3 h-3 text-[var(--ok)]" />
  <span>Álbum / Disco</span>
  </label>
  <select
  value={selectedAlbum}
  onChange={(e) => setSelectedAlbum(e.target.value)}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[#1db954]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ok)]'
  }`}
  >
  <option value="">Sin Disco (Single)</option>
@@ -427,7 +427,7 @@ export function SongModal({
  type="button"
  onClick={() => setShowMemberNotesSection(p => !p)}
  className={`w-full p-3 flex items-center justify-between font-mono text-xs font-bold uppercase transition-colors cursor-pointer ${
- isStitchLight ?'hover:bg-[var(--sunken)] text-[var(--ink)]' :'hover:bg-[var(--surface)]/80 text-[#1db954]'
+ isStitchLight ?'hover:bg-[var(--sunken)] text-[var(--ink)]' :'hover:bg-[var(--surface)]/80 text-[var(--ok)]'
  }`}
  >
  <div className="flex items-center gap-2">
