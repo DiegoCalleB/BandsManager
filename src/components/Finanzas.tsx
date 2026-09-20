@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from'react';
 import { ThemeColors, Payment, Concert, ConcertExpenseBreakdown } from'../types';
-import { 
+import {
  TrendingUp, TrendingDown, DollarSign, Plus, Filter, Search, X,
  CheckCircle2, AlertCircle, RefreshCw, Trash2, Calendar, FileText, Check, ArrowRight,
  Calculator, Edit3, AlertTriangle, ShieldCheck
 } from'lucide-react';
+import { PublicoSilhouette } from'./ui/PublicoSilhouette';
 import { FinanceSummaryCards } from'./finanzas/FinanceSummaryCards';
 import { AddTransactionModal } from'./finanzas/AddTransactionModal';
 import { calculateFinancialSummary } from'../utils/financeUtils';
@@ -358,6 +359,15 @@ export default function Finanzas({
  <span className="text-xs text-[var(--ink-3)]">Haz clic en"Gastos" para desglosar peajes, gasolina, hotel y dietas.</span>
  </div>
 
+ {concerts.length === 0 ? (
+ <div className="text-center py-12 space-y-3">
+ <PublicoSilhouette opacity={0.12} size="medium" className="mx-auto" />
+ <div className="space-y-1">
+ <p className="text-xs font-semibold text-[var(--ink)]">Sin conciertos registrados</p>
+ <p className="text-[10px] text-[var(--ink-2)]">Agenda tus primeros bolos para empezar a calcular rentabilidad y gastos.</p>
+ </div>
+ </div>
+ ) : (
  <div className="overflow-x-auto">
  <table className="w-full text-left text-xs">
  <thead className="bg-[var(--surface)]/80 text-[var(--acc)] uppercase font-bold font-mono text-[10px] border-b">
@@ -373,8 +383,7 @@ export default function Finanzas({
  </tr>
  </thead>
  <tbody className="divide-y divide-slate-800/60">
- {concerts.length > 0 ? (
- concerts.map(c => {
+ {concerts.map(c => {
  const g = c.gastosDetalle || {};
  const gasolina = g.gasolina || 0;
  const dietas = g.dietas || 0;
@@ -485,17 +494,11 @@ export default function Finanzas({
  </td>
  </tr>
  );
- })
- ) : (
- <tr>
- <td colSpan={8} className="text-center p-8 text-[var(--ink-2)]">
- No hay conciertos registrados todavía.
- </td>
- </tr>
- )}
+ })}
  </tbody>
  </table>
  </div>
+ )}
  </div>
 
  {/* EDIT CONCERT EXPENSES MODAL */}
@@ -700,8 +703,12 @@ export default function Finanzas({
  {/* Ledger Transactions Grid */}
  <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
  {filteredPayments.length === 0 ? (
- <div className="text-center py-16 rounded-[var(--r-m)] font-mono text-xs text-neutral-500">
- No hay transacciones que coincidan con los filtros actuales.
+ <div className="text-center py-12 rounded-[var(--r-m)] space-y-3">
+ <PublicoSilhouette opacity={0.12} size="medium" className="mx-auto" />
+ <div className="space-y-1">
+ <p className="text-xs font-semibold text-[var(--ink)]">Ninguna transacción coincide</p>
+ <p className="text-[10px] text-[var(--ink-2)]">Ajusta los filtros o añade nuevos pagos para ver el registro aquí.</p>
+ </div>
  </div>
  ) : (
  filteredPayments.map(p => (
