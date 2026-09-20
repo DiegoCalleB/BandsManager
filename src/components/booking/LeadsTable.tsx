@@ -183,7 +183,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  >
  <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
  isChecked 
- ?'bg-[var(--acc)] border-[var(--acc)] text-black shadow-xs' 
+ ?'bg-[var(--acc)] border-[var(--acc)] text-[var(--ink)] shadow-xs' 
  :'border-[var(--hair)]600 group-hover:border-[var(--hair)]400 bg-[var(--bg)]/80 hover:'
  }`}>
  {isChecked && <CheckSquare className="w-3.5 h-3.5" />}

@@ -556,7 +556,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center gap-3">
- <div className="p-2.5 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-[var(--acc)]">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-gradient-to-br from-amber-0/20 to-orange-500/20 text-[var(--acc)]">
  <Bot className="w-5 h-5" />
  </div>
  <div>
@@ -777,7 +777,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchLevel ==='draft_only'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-500/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -809,7 +809,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchLevel ==='scheduled_window'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-500/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -841,7 +841,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchLevel ==='autonomous_first_contact'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-500/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -884,7 +884,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.negotiationDepth ==='outreach_only'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-500/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -905,7 +905,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.negotiationDepth ==='filter_conditions'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-500/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -926,7 +926,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.negotiationDepth ==='advanced_negotiation'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-500/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -1145,7 +1145,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchMode !=='direct_send'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-500/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -1171,7 +1171,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'opacity-80 cursor-default' :'cursor-pointer'
  } ${
  config.dispatchMode ==='direct_send'
- ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-500/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink)] shadow-md ring-1 ring-amber-0/50'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -1209,7 +1209,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={applyPresetRecommendedBooking}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] text-[11px] font-mono font-black transition-all cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm shadow-amber-500/20"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] text-[11px] font-mono font-black transition-all cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm shadow-amber-0/20"
  >
  <Sparkles className="w-3.5 h-3.5" />
  <span>🌟 Sugerir Mejores Días (M-X-J)</span>
@@ -1354,7 +1354,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'cursor-default' :'cursor-pointer active:scale-95'
  } ${
  isSelected
- ?'bg-[var(--acc)]/15 text-[var(--ink)] shadow-sm shadow-amber-500/10 ring-1 ring-amber-500/30'
+ ?'bg-[var(--acc)]/15 text-[var(--ink)] shadow-sm shadow-amber-0/10 ring-1 ring-amber-0/30'
  :'bg-[var(--surface)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
@@ -1554,7 +1554,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* Enlace a ADN de Tono */}
- <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500/10 to-orange-500/10 flex items-center justify-between gap-3">
+ <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-0/10 to-orange-500/10 flex items-center justify-between gap-3">
  <div>
  <h4 className="text-xs font-mono font-bold text-[var(--acc)]/70 uppercase tracking-wider">
  ¿Quieres entrenar el tono de voz de la banda?
@@ -1582,7 +1582,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* Enlace rápido a plantillas en Booking */}
- <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500/10 to-orange-500/10 flex items-center justify-between">
+ <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-0/10 to-orange-500/10 flex items-center justify-between">
  <div>
  <h4 className="text-xs font-mono font-bold text-[var(--acc)]/70 uppercase tracking-wider">
  ¿Quieres afinar las plantillas de correo?

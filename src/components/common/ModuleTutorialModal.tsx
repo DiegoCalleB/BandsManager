@@ -244,7 +244,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  },
  amber: {
  badgeBg:'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30',
- iconBox:'bg-[var(--acc)]/20 text-[var(--acc)] /30 shadow-amber-500/10',
+ iconBox:'bg-[var(--acc)]/20 text-[var(--acc)] /30 shadow-amber-0/10',
  activeDot:'bg-[var(--acc)]/60 w-7',
  primaryBtn:'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-black shadow-amber-900/30',
  hookBorder:'/25 bg-[var(--acc)]/10 text-[var(--acc)]',

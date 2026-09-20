@@ -168,7 +168,7 @@ export default function Finanzas({
  </button>
  
  <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
- isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[#b8d6b8]/10 -[#b8d6b8]/20 text-[#b8d6b8]'
+ isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping shrink-0" /> Auto-sync
  </span>
@@ -761,7 +761,7 @@ export default function Finanzas({
  :'bg-emerald-500/10 -emerald-500/20 text-emerald-400'
  : isStitchLight
  ?'bg-amber-50 text-amber-700 hover:bg-amber-100/50'
- :'bg-[var(--acc)]/10 -amber-500/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
+ :'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
  }`}
  title="Hacer clic para cambiar el estado de pago"
  >

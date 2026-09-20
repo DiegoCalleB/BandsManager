@@ -768,7 +768,7 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => togglePlayAudio(idx)}
  className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-all cursor-pointer ${
  isPlaying
- ?'bg-[var(--surface)] text-black shadow-md'
+ ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
  :'bg-white/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]'
  }`}
  title={isPlaying ?'Pausar audio' :'Escuchar previo'}

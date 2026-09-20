@@ -155,7 +155,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  };
 
  return (
- <div className="min-h-screen bg-[var(--sunken)] text-[var(--ink-2)] font-sans selection:bg-[var(--acc)] selection:text-black">
+ <div className="min-h-screen bg-[var(--sunken)] text-[var(--ink-2)] font-sans selection:bg-[var(--acc)] selection:text-[var(--ink)]">
  {/* Background Ambient Glows */}
  <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
  <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[var(--acc)]/10 rounded-full blur-[120px]" />
@@ -233,7 +233,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  {/* Official BandManager Brand Logo */}
  <div className="flex flex-col items-center justify-center gap-3">
  <div className="relative group">
- <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-yellow-400/20 to-amber-600/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
+ <div className="absolute -inset-1 bg-gradient-to-r from-amber-0/30 via-yellow-400/20 to-amber-600/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-black p-1 shadow-2xl flex items-center justify-center">
  <img
  src="/bandmanageriodefinitiva.jpeg"
@@ -303,7 +303,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  {/* ROADMAP TEASER: hype de que la plataforma sigue creciendo, sin detallar features
  concretas todavía por confirmar */}
- <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent">
+ <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-0/10 via-amber-0/5 to-transparent">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/15 flex items-center justify-center text-[var(--acc)] shrink-0">
  <Rocket className="w-5 h-5" />
  </div>
@@ -315,7 +315,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
  {/* REGISTRATION FORM CARD OR SUCCESS CARD */}
  <section className="relative">
- <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-amber-500/0 to-transparent rounded-3xl -z-10" />
+ <div className="absolute inset-0 bg-gradient-to-b from-amber-0/5 via-amber-0/0 to-transparent rounded-3xl -z-10" />
 
  {submitted ? (
  /* SUCCESS CONFIRMATION */
@@ -347,7 +347,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  )}
  <a
  href="/"
- className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[#e0a820] text-black font-mono text-xs font-black uppercase tracking-wider transition hover:brightness-110 flex items-center justify-center gap-2"
+ className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[#e0a820] text-[var(--ink)] font-mono text-xs font-black uppercase tracking-wider transition hover:brightness-110 flex items-center justify-center gap-2"
  >
  <ExternalLink className="w-4 h-4" />
  {t.successExploreApp}
@@ -588,7 +588,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-amber-400 to-[#e0a820] text-black font-mono font-black text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20 hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+ className="w-full py-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-amber-400 to-[#e0a820] text-[var(--ink)] font-mono font-black text-sm uppercase tracking-wider shadow-lg shadow-amber-0/20 hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
  >
  {loading ? (
  <>
@@ -597,7 +597,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </>
  ) : (
  <>
- <Sparkles className="w-4 h-4 text-black" />
+ <Sparkles className="w-4 h-4 text-[var(--ink)]" />
  <span>{t.submitButton}</span>
  </>
  )}

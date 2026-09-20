@@ -137,7 +137,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
  ?'bg-amber-100 hover:bg-amber-200 text-amber-900'
- :'bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 /50 text-[var(--ink)]'
+ :'bg-gradient-to-r from-amber-0/20 to-amber-600/20 hover:from-amber-0/30 hover:to-amber-600/30 /50 text-[var(--ink)]'
  }`}
  title="Cambiar el estado de todos los seleccionados"
  >

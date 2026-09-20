@@ -475,7 +475,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div>
  <p className="text-sm sm:text-base font-bold text-[var(--acc)] flex items-center gap-2">
  <span>Cambio de plan programado:</span>
- <span className="uppercase text-[var(--acc)] font-mono underline decoration-amber-500/60">
+ <span className="uppercase text-[var(--acc)] font-mono underline decoration-amber-0/60">
  {currentUser.plan_pendiente.replace('_','')}
  </span>
  </p>
@@ -551,7 +551,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
  {/* 1. Banner superior */}
  {showBanner && currentPlan ==='ensayo' && (
- <div className="relative overflow-hidden rounded-[var(--r-l)] bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-emerald-500/20 p-4 sm:p-5 text-[var(--ink)] shadow-lg shadow-black/40">
+ <div className="relative overflow-hidden rounded-[var(--r-l)] bg-gradient-to-r from-amber-0/20 via-amber-400/10 to-emerald-500/20 p-4 sm:p-5 text-[var(--ink)] shadow-lg shadow-black/40">
  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
  <div className="flex items-center gap-3.5 text-center sm:text-left">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60/20 flex items-center justify-center text-[var(--acc)]/70 shrink-0 shadow-inner">
@@ -574,7 +574,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  const deGiraBtn = document.getElementById('btn-plan-de_gira');
  if (deGiraBtn) deGiraBtn.scrollIntoView({ behavior:'smooth' });
  }}
- className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
  >
  <span>Probar Ahora</span>
  </button>
@@ -669,9 +669,9 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  case'silver':
  return'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]';
  case'gold':
- return'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:brightness-110 text-black font-black shadow-lg shadow-amber-500/20';
+ return'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:brightness-110 text-[var(--ink)] font-black shadow-lg shadow-amber-0/20';
  case'emerald':
- return'bg-emerald-500 hover:bg-emerald-400 text-black font-black shadow-lg shadow-emerald-500/20';
+ return'bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-black shadow-lg shadow-emerald-500/20';
  }
  };
 
@@ -680,14 +680,14 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  key={plan.id}
  className={`relative flex flex-col justify-between rounded-3xl p-6 transition-all duration-300 ${
  plan.isPopular
- ?'bg-gradient-to-b from-[var(--surface)] via-[var(--surface)] to-[var(--sunken)] border-2 /80 shadow-2xl shadow-amber-500/10 lg:-translate-y-2.5 z-10'
+ ?'bg-gradient-to-b from-[var(--surface)] via-[var(--surface)] to-[var(--sunken)] border-2 /80 shadow-2xl shadow-amber-0/10 lg:-translate-y-2.5 z-10'
  :'bg-[var(--surface)] border-[var(--hair)] hover: shadow-xl'
  }`}
  >
  {/* Popular Floating Badge */}
  {plan.isPopular && (
  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
- <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-black text-[10px] font-black uppercase font-mono tracking-widest shadow-md">
+ <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--ink)] text-[10px] font-black uppercase font-mono tracking-widest shadow-md">
  <Star className="w-3 h-3 fill-black" />
  <span>MÁS POPULAR</span>
  </span>
@@ -753,7 +753,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  {plan.stickerGift ? (
  <div className={`p-3 rounded-[var(--r-l)] transition-all relative overflow-hidden ${
  plan.isPopular
- ?'bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-amber-500/15 /50 shadow-md shadow-amber-500/10'
+ ?'bg-gradient-to-r from-amber-0/20 via-amber-400/10 to-amber-0/15 /50 shadow-md shadow-amber-0/10'
  : plan.id ==='cabeza_de_cartel'
  ?'bg-gradient-to-r from-emerald-500/20 via-emerald-400/10 to-emerald-500/15 border-emerald-400/50 shadow-md shadow-emerald-500/10'
  :'bg-gradient-to-r from-slate-500/20 via-neutral-800 to-slate-500/10 /30'
@@ -763,8 +763,8 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  plan.isPopular
  ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-sm'
  : plan.id ==='cabeza_de_cartel'
- ?'bg-emerald-400 text-black shadow-sm'
- :'bg-[var(--surface)] text-black'
+ ?'bg-emerald-400 text-[var(--ink)] shadow-sm'
+ :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <Gift className="w-4 h-4 stroke-[2.5]" />
  </div>

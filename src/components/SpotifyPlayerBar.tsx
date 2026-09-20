@@ -273,7 +273,7 @@ export default function SpotifyPlayerBar({
  useEffect(() => {
  const el = getActiveAudioEl();
  if (el) el.playbackRate = playbackRate;
- // eslint-disable-next-line react-hooks/exhaustive-deps
+  
  }, [playbackRate]);
 
 
@@ -282,14 +282,14 @@ export default function SpotifyPlayerBar({
  if (isCrossfadingRef.current) return; // el fundido lleva el volumen de las dos pistas mientras dura
  const el = getActiveAudioEl();
  if (el) el.volume = isMuted ? 0 : volume;
- // eslint-disable-next-line react-hooks/exhaustive-deps
+  
  }, [volume, isMuted]);
 
  // Loop effect
  useEffect(() => {
  const el = getActiveAudioEl();
  if (el) el.loop = isLooping;
- // eslint-disable-next-line react-hooks/exhaustive-deps
+  
  }, [isLooping]);
 
  // Synthetic practice beat generator when no audio URL exists
@@ -824,7 +824,7 @@ export default function SpotifyPlayerBar({
  step={0.5}
  value={currentTime}
  onChange={(e) => handleSeek(parseFloat(e.target.value))}
- className="w-full h-1 bg-[#4d4d4d] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--ok)] hover:accent-[var(--ok)] focus:outline-none"
+ className="w-full h-1 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--ok)] hover:accent-[var(--ok)] focus:outline-none"
  />
  </div>
 
@@ -862,7 +862,7 @@ export default function SpotifyPlayerBar({
  {/* Iris Stem Separator Button */}
  <button
  onClick={() => onOpenIris ? onOpenIris(song) : onOpenStudio(song)}
- className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-[var(--acc)]/70 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
+ className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500/30 text-[var(--acc)]/70 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
  title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
@@ -887,7 +887,7 @@ export default function SpotifyPlayerBar({
  setVolume(parseFloat(e.target.value));
  setIsMuted(false);
  }}
- className="w-16 h-1 bg-[#4d4d4d] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--ok)]"
+ className="w-16 h-1 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--ok)]"
  />
  </div>
 

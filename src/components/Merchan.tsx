@@ -318,7 +318,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* 🎁 Banner de Regalo Pendiente de Canjear */}
  {hasGiftPending && (
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-500/20 via-amber-400/15 to-amber-500/10 border-2 /60 shadow-xl shadow-amber-500/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-0/20 via-amber-400/15 to-amber-0/10 border-2 /60 shadow-xl shadow-amber-0/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
  <div className="flex items-start sm:items-center gap-3.5">
  <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--acc-ink)] flex items-center justify-center shrink-0 shadow-lg shadow-amber-400/20">
  <Gift className="w-6 h-6 stroke-[2.5]" />
@@ -346,7 +346,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  setClaimStep('form');
  setShowClaimModal(true);
  }}
- className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black text-xs font-black uppercase font-mono tracking-wider transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+ className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] text-xs font-black uppercase font-mono tracking-wider transition-all shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
  >
  <PackageCheck className="w-4 h-4" />
  <span>Canjear Pegatinas Gratis</span>
@@ -938,7 +938,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <button
  type="button"
  onClick={() => setClaimStep('success')}
- className="px-6 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black text-xs font-black uppercase font-mono tracking-wider shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+ className="px-6 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] text-xs font-black uppercase font-mono tracking-wider shadow-lg shadow-amber-0/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
  >
  <PackageCheck className="w-4 h-4" />
  <span>Pedir mis pegatinas</span>

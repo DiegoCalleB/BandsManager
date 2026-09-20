@@ -501,21 +501,21 @@ export function ExcelImportModal({
  {/* STEP PROGRESS INDICATOR */}
  <div className="flex items-center justify-between px-6 py-2.5 bg-zinc-950/60 border-b border-[var(--hair)] text-xs">
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ?'bg-emerald-500 text-black' : step > 1 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ?'bg-emerald-500 text-[var(--ink)]' : step > 1 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  {step > 1 ? <Check className="w-3 h-3" /> :'1'}
  </div>
  <span className={step === 1 ?'font-bold text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>1. Subir archivo</span>
  </div>
  <div className="w-8 h-px bg-[var(--sunken)]" />
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ?'bg-emerald-500 text-black' : step > 2 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ?'bg-emerald-500 text-[var(--ink)]' : step > 2 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  {step > 2 ? <Check className="w-3 h-3" /> :'2'}
  </div>
  <span className={step === 2 ?'font-bold text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>2. Mapear columnas</span>
  </div>
  <div className="w-8 h-px bg-[var(--sunken)]" />
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ?'bg-emerald-500 text-black' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ?'bg-emerald-500 text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  3
  </div>
  <span className={step === 3 ?'font-bold text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>3. Validar y Guardar</span>
@@ -1046,7 +1046,7 @@ export function ExcelImportModal({
  <button
  type="button"
  onClick={buildParsedRows}
- className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg active:scale-95 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] shadow-lg active:scale-95 transition-all cursor-pointer"
  >
  <span>Continuar a Vista Previa ({rawRows.length} filas)</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -1058,7 +1058,7 @@ export function ExcelImportModal({
  type="button"
  disabled={isImporting || selectedCount === 0}
  onClick={handleExecuteImport}
- className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black shadow-xl active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] shadow-xl active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isImporting ? (
  <>

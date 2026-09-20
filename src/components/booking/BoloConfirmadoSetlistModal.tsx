@@ -281,7 +281,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  <button
  type="button"
  onClick={() => setGenerateNewSetlist(true)}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-black font-bold text-[11px] cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] font-bold text-[11px] cursor-pointer"
  >
  ⚡ Autogenerar Setlist ({targetDurationMin} min)
  </button>
@@ -345,7 +345,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  type="button"
  disabled={isSubmitting || (!selectedSetlistId && !generateNewSetlist)}
  onClick={handleSaveAndLink}
- className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-[var(--ok)] text-black font-mono font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-[var(--ok)] text-[var(--ink)] font-mono font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
  >
  <Check className="w-4 h-4 stroke-[3]" />
  <span>{isSubmitting ?'Guardando...' :'Confirmar Bolo y Asignar Setlist'}</span>

@@ -552,7 +552,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  isTunedIn 
  ?'bg-emerald-400 shadow-emerald-500/80 scale-110' 
  : currentCents < -5 
- ?'bg-[var(--acc)]/60 shadow-amber-500/50' 
+ ?'bg-[var(--acc)]/60 shadow-amber-0/50' 
  :'bg-rose-400 shadow-rose-500/50'
  }`}
  style={{ left: `calc(${needlePercent}% - 7px)` }}

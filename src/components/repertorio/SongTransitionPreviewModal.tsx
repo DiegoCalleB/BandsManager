@@ -766,7 +766,7 @@ export function SongTransitionPreviewModal({
  <div
  className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
  currentGains.isCrossfading
- ?'bg-[var(--acc)] text-[var(--acc-ink)] scale-110 shadow-lg shadow-amber-500/30 animate-pulse'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] scale-110 shadow-lg shadow-amber-0/30 animate-pulse'
  :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
@@ -920,7 +920,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  playbackMode ==='real'
- ?'bg-emerald-500 text-black shadow-sm'
+ ?'bg-emerald-500 text-[var(--ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1071,7 +1071,7 @@ export function SongTransitionPreviewModal({
  {/* Crossfade overlap highlight */}
  {config.style ==='crossfade' && (
  <div
- className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-500/30 to-emerald-500/30 border-x /80 pointer-events-none flex items-center justify-center text-[8px] font-mono font-bold text-[var(--ink)]/90"
+ className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-0/30 to-emerald-500/30 border-x /80 pointer-events-none flex items-center justify-center text-[8px] font-mono font-bold text-[var(--ink)]/90"
  style={{
  left: `${(timeline.crossfadeStartSec / timeline.totalDurationSec) * 100}%`,
  width: `${((timeline.crossfadeEndSec - timeline.crossfadeStartSec) / timeline.totalDurationSec) * 100}%`
@@ -1098,7 +1098,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={togglePlay}
- className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[#ffe07a] text-black font-bold flex items-center justify-center shadow transition active:scale-95 cursor-pointer"
+ className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[#ffe07a] text-[var(--ink)] font-bold flex items-center justify-center shadow transition active:scale-95 cursor-pointer"
  title={isPlaying ?'Pausar comprobación' :'Reproducir unión'}
  >
  {isPlaying ? <Pause className="w-3.5 h-3.5 fill-black" /> : <Play className="w-3.5 h-3.5 fill-black ml-0.5" />}

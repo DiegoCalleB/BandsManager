@@ -424,7 +424,7 @@ export function DashboardWidgetGrid({
  } ${
  isDragOver ?'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#121214] rounded-[var(--r-l)] bg-[var(--acc)]/10' :''
  } ${
- isEditMode ?'ring-2 ring-amber-500/40 rounded-[var(--r-l)] p-1 bg-[var(--acc)]/5 hover:ring-amber-400' :''
+ isEditMode ?'ring-2 ring-amber-0/40 rounded-[var(--r-l)] p-1 bg-[var(--acc)]/5 hover:ring-amber-400' :''
  }`}
  >
  {/* Edit Controls Bar overlayed on widget when in Edit Mode */}

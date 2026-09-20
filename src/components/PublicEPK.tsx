@@ -347,9 +347,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </div>
  </section>
 
- <section className={`${styles.bookingCard} rounded-[var(--r-l)] p-6 space-y-5 flex flex-col justify-between print: print:bg-white print:text-black`}>
+ <section className={`${styles.bookingCard} rounded-[var(--r-l)] p-6 space-y-5 flex flex-col justify-between print: print:bg-white print:text-[var(--ink)]`}>
  <div className="space-y-3">
- <h3 className={`text-lg font-bold ${styles.bookingTitle} print:text-black flex items-center gap-2`}>
+ <h3 className={`text-lg font-bold ${styles.bookingTitle} print:text-[var(--ink)] flex items-center gap-2`}>
  <Mail className="w-5 h-5" /> {t('contactoTitulo')}
  </h3>
  <p className="text-xs opacity-75 print:text-[var(--ink-2)]">
@@ -626,7 +626,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  };
 
  return (
- <div className={`min-h-screen ${styles.pageBg} font-sans print:bg-white print:text-black`}>
+ <div className={`min-h-screen ${styles.pageBg} font-sans print:bg-white print:text-[var(--ink)]`}>
  {/* Top Floating Action Bar (Hidden on Print) */}
  <div className={`fixed top-0 left-0 right-0 ${styles.topBar} backdrop-blur-md border-b z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden`}>
  <div className="flex items-center gap-3">
@@ -742,7 +742,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  })}
 
  {/* FOOTER */}
- <footer className={`text-center text-xs ${styles.footer} space-y-4 pt-6 border-t print:text-black`}>
+ <footer className={`text-center text-xs ${styles.footer} space-y-4 pt-6 border-t print:text-[var(--ink)]`}>
  {safeUrl(config.dossierPdfUrl) && (
  <a
  href={safeUrl(config.dossierPdfUrl)}

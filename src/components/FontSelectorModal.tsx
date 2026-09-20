@@ -32,7 +32,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  }`}>
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shadow-inner shrink-0 ${
- isStitchLight ?'bg-sky-500/15 text-sky-400' :'bg-[#d1b375]/15 text-[#d1b375] -amber-500/20'
+ isStitchLight ?'bg-sky-500/15 text-sky-400' :'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/20'
  }`}>
  <Type className="w-5 h-5" />
  </div>
@@ -80,7 +80,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  isSelected
  ? isStitchLight
  ?'bg-indigo-50/80 ring-2 ring-indigo-500/20 shadow-md'
- :'bg-[var(--acc)]/10 ring-2 ring-amber-500/20 shadow-lg'
+ :'bg-[var(--acc)]/10 ring-2 ring-amber-0/20 shadow-lg'
  : isStitchLight
  ?'bg-[var(--bg)] hover:-slate-300 hover:bg-[var(--sunken)]/80'
  :'bg-[var(--surface)]/60 hover:-neutral-700 hover:bg-[var(--surface)]'
@@ -97,7 +97,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  ?'bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/30'
  : preset.isSoft
  ?'bg-sky-500/15 text-sky-400 -indigo-500/25'
- :'bg-[#d1b375]/15 text-[#d1b375] -amber-500/25'
+ :'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/25'
  }`}>
  {preset.badge}
  </span>

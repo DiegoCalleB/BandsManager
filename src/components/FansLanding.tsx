@@ -630,7 +630,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen"
  aria-hidden="true"
  />
- <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-white text-black flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}>
+ <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-white text-[var(--ink)] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}>
  <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
  <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
  </svg>
@@ -1120,7 +1120,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <h1 className="text-3xl font-black text-[var(--ink)] font-display uppercase tracking-widest drop-shadow-md">
  {t('joinTitle', { bandName })}
  </h1>
- <p className="text-amber-500/80 text-[10px] font-mono uppercase tracking-widest font-bold">{t('officialChannel')}</p>
+ <p className="text-amber-0/80 text-[10px] font-mono uppercase tracking-widest font-bold">{t('officialChannel')}</p>
  </div>
  <div className="pt-2 space-y-2">
  {isConcertLink ? (
@@ -1190,7 +1190,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  onClick={() => setActiveTab('redes')}
  className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
  activeTab ==='redes' 
- ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-500/20 font-black' 
+ ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-0/20 font-black' 
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1201,7 +1201,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  onClick={() => setActiveTab('form')}
  className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
  activeTab ==='form'
- ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-500/20 font-black'
+ ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-0/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1235,7 +1235,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => trackClick('epk', epkUrl,'redes')}
- className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--surface)] hover:/80 transition-all duration-300 shadow-xl hover:shadow-amber-500/10 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
+ className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--surface)] hover:/80 transition-all duration-300 shadow-xl hover:shadow-amber-0/10 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
  >
  {logoUrl && !imgError && (
  <img
@@ -1253,7 +1253,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-full bg-[var(--acc)]/10 blur-2xl group-hover:bg-[var(--acc)]/20 transition-colors duration-500"
  aria-hidden="true"
  />
- <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500/25 to-rose-500/15 text-[var(--acc)] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+ <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-amber-0/25 to-rose-500/15 text-[var(--acc)] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
  {logoUrl && !imgError ? (
  <img
  src={logoUrl}
@@ -1322,7 +1322,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="min-w-0 pr-2">
  <p className="font-bold text-[var(--ink)] truncate">{c.sala}</p>
  <p className="text-[11px] text-[var(--ink-2)] truncate flex items-center gap-1">
- <MapPin className="w-3 h-3 text-amber-500/80 shrink-0" /> {c.ciudad}
+ <MapPin className="w-3 h-3 text-amber-0/80 shrink-0" /> {c.ciudad}
  </p>
  </div>
  <span className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[10px] font-bold shrink-0 font-mono">

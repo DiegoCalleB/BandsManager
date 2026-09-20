@@ -492,7 +492,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <div>
  <div className="text-xs font-extrabold flex items-center gap-1">
  <span>ZIP MP3s</span>
- <span className="px-1 bg-[var(--surface)] text-black text-[9px] font-black rounded uppercase">Pack</span>
+ <span className="px-1 bg-[var(--surface)] text-[var(--ink)] text-[9px] font-black rounded uppercase">Pack</span>
  </div>
  <div className="text-[10px] opacity-80">Audios + letras</div>
  </div>
@@ -703,11 +703,11 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  type="button"
  disabled={zipLoading}
  onClick={handleDownloadZip}
- className="px-5 py-2.5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] hover:from-[var(--ok)] hover:to-[var(--ok)] text-black font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--ok)] to-[var(--ok)] hover:from-[var(--ok)] hover:to-[var(--ok)] text-[var(--ink)] font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-50"
  >
  {zipLoading ? (
  <>
- <Loader2 className="w-4 h-4 animate-spin text-black" />
+ <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
  <span>Empaquetando ZIP...</span>
  </>
  ) : (

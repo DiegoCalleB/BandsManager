@@ -476,7 +476,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md ${
  copiadoFirma ==='rich'
  ?'bg-emerald-500 text-[var(--ink)] ring-2 ring-emerald-400'
- :'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-[var(--ink)] shadow-amber-500/10'
+ :'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-[var(--ink)] shadow-amber-0/10'
  }`}
  title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"
  >

@@ -1239,7 +1239,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  }`}
  >
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-[var(--ink)] shadow-lg shadow-amber-500/30">
+ <div className="w-12 h-12 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-[var(--ink)] shadow-lg shadow-amber-0/30">
  <Disc3 className="w-7 h-7 animate-spin-slow" />
  </div>
  <div>
@@ -1367,7 +1367,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleAnalyzeConcert}
  disabled={isAnalyzing || (!youtubeUrl && !uploadedFile)}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 font-bold text-sm text-[var(--ink)] shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shrink-0"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 font-bold text-sm text-[var(--ink)] shadow-lg shadow-amber-0/20 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shrink-0"
  >
  {isAnalyzing ? (
  <>
@@ -1739,7 +1739,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  key={track.index}
  className={`p-3.5 rounded-[var(--r-m)] transition-all space-y-2 ${
  isSelected
- ?'bg-[var(--acc)]/15 ring-1 ring-amber-500/50'
+ ?'bg-[var(--acc)]/15 ring-1 ring-amber-0/50'
  : track.type ==='musica'
  ? isStitchLight
  ?'bg-[var(--acc)]/5 hover:'
@@ -2138,7 +2138,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Interactive Audio Fragment Scrubber Player - Positioned directly underneath the active track */}
  {activeSnippet && activeSnippet.trackIndex === track.index && (
- <div className="mt-3 p-3.5 bg-[var(--surface)] border-2 /60 rounded-[var(--r-m)] space-y-3 shadow-xl animate-fade-in ring-2 ring-amber-500/20">
+ <div className="mt-3 p-3.5 bg-[var(--surface)] border-2 /60 rounded-[var(--r-m)] space-y-3 shadow-xl animate-fade-in ring-2 ring-amber-0/20">
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-2">
  <div className="flex items-center gap-2">
  <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] shrink-0">
@@ -2289,7 +2289,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  else snippetAudioRef.current.play();
  }
  }}
- className="px-4 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20"
+ className="px-4 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-0/20"
  >
  {snippetIsPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
  {snippetIsPlaying ?'Pausar' :'Reproducir'}
@@ -2403,7 +2403,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  <button
  onClick={handleSaveToCatalog}
- className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-amber-600 font-extrabold text-[var(--ink)] text-xs shadow-lg shadow-amber-500/20 flex items-center gap-2"
+ className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-amber-600 font-extrabold text-[var(--ink)] text-xs shadow-lg shadow-amber-0/20 flex items-center gap-2"
  >
  <Disc3 className="w-4 h-4" /> 💾 Guardar como Álbum en la Discografía
  </button>
@@ -2510,7 +2510,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleSaveCookies}
  disabled={isSavingCookies || !cookiesInputText.trim()}
- className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-extrabold shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-extrabold shadow-lg shadow-amber-0/20 disabled:opacity-50 flex items-center gap-1.5"
  >
  {isSavingCookies ? (
  <RefreshCw className="w-3.5 h-3.5 animate-spin" />

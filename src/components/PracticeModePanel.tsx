@@ -581,7 +581,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {/* Transporte + velocidad + loop */}
  <div className={`rounded-[var(--r-m)] p-3 space-y-3 ${cardBg}`}>
  <div className="flex items-center gap-3">
- <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-emerald-500 text-black flex items-center justify-center shrink-0 hover:bg-emerald-400">
+ <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-emerald-500 text-[var(--ink)] flex items-center justify-center shrink-0 hover:bg-emerald-400">
  {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
  </button>
  <span className="text-[11px] font-mono text-[var(--ink-2)] w-10 text-right">{formatTime(currentTime)}</span>

@@ -115,7 +115,7 @@ export function NegotiationSimulationModal({
  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='sala'
  ? isStitchLight
- ?'bg-[#d1b375]/15 hover:bg-[var(--acc)]/50/15 text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/50/15 text-[var(--ink)] shadow-sm'
  :'bg-[var(--acc)] hover:bg-[#ffe28d] text-[var(--acc-ink)]'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'

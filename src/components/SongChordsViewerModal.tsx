@@ -425,7 +425,7 @@ export function SongChordsViewerModal({
  type="button"
  onClick={() => setScrollSpeed(v)}
  className={`w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center transition cursor-pointer ${
- scrollSpeed === v ?'bg-emerald-500 text-black' :'bg-white/10 text-[var(--ink-2)]'
+ scrollSpeed === v ?'bg-emerald-500 text-[var(--ink)]' :'bg-white/10 text-[var(--ink-2)]'
  }`}
  >
  {v}x

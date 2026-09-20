@@ -419,7 +419,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
  isStitchLight
  ?'bg-sky-500 text-white hover:bg-sky-600 border-sky-600'
- :'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black'
+ :'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)]'
  }`}
  title="Abrir el panel completo de métricas y sincronización"
  >

@@ -1369,7 +1369,7 @@ export function PdfExportModal({
  <h3 className="font-display font-black text-sm sm:text-lg uppercase tracking-wider text-[var(--ink)] truncate">
  Generador de Repertorios
  </h3>
- <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase font-mono bg-[var(--surface)] text-black shrink-0">
+ <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase font-mono bg-[var(--surface)] text-[var(--ink)] shrink-0">
  Rock Stage Edition
  </span>
  </div>
@@ -1439,7 +1439,7 @@ export function PdfExportModal({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='all_members'
- ?'bg-[var(--surface)] text-black shadow-md'
+ ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1452,7 +1452,7 @@ export function PdfExportModal({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='single_member'
- ?'bg-[var(--surface)] text-black shadow-md'
+ ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1465,7 +1465,7 @@ export function PdfExportModal({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  printMode ==='master'
- ?'bg-[var(--surface)] text-black shadow-md'
+ ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1500,7 +1500,7 @@ export function PdfExportModal({
  <button
  onClick={() => setViewDensity('sentado')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- viewDensity ==='sentado' ?'bg-[var(--surface)] text-black shadow-md' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ viewDensity ==='sentado' ?'bg-[var(--surface)] text-[var(--ink)] shadow-md' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
  >
@@ -1509,7 +1509,7 @@ export function PdfExportModal({
  <button
  onClick={() => setViewDensity('de_pie')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- viewDensity ==='de_pie' ?'bg-[var(--surface)] text-black shadow-md' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ viewDensity ==='de_pie' ?'bg-[var(--surface)] text-[var(--ink)] shadow-md' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
  >
@@ -1702,7 +1702,7 @@ export function PdfExportModal({
  {/* Authentic Real Stage Paper Sheet */}
  <div
  ref={sheetRef}
- className="relative overflow-hidden bg-white text-black p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
+ className="relative overflow-hidden bg-white text-[var(--ink)] p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
  style={{
  width:'210mm',
  minHeight:'297mm',
@@ -1753,7 +1753,7 @@ export function PdfExportModal({
  />
  )}
  <div>
- <h1 className="text-[14pt] font-black uppercase tracking-tighter m-0 leading-none text-black font-['Anton',sans-serif]">
+ <h1 className="text-[14pt] font-black uppercase tracking-tighter m-0 leading-none text-[var(--ink)] font-['Anton',sans-serif]">
  {bandName.toUpperCase()}
  </h1>
  <div className="text-[9pt] font-bold text-[var(--ink-2)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-full font-['Oswald',sans-serif]">
@@ -1766,7 +1766,7 @@ export function PdfExportModal({
  <div className="text-[6pt] font-mono font-bold text-[var(--ink-2)] uppercase tracking-widest">
  {!isCurrentMaster ?'REPERTORIO PERSONALIZADO' :'COPIA DE CONTROL'}
  </div>
- <div className="text-[10pt] font-black uppercase text-black leading-tight font-['Anton',sans-serif]">
+ <div className="text-[10pt] font-black uppercase text-[var(--ink)] leading-tight font-['Anton',sans-serif]">
  👤 {currentPreviewMember.name}
  </div>
  <div className="text-[7pt] font-mono font-bold text-[var(--ink)]">
@@ -1911,7 +1911,7 @@ export function PdfExportModal({
  por sitio en esta fila (noteLayout.mode ==='inline'); si no,
  el título vuelve a poder ocupar toda su anchura natural. */}
  <span
- className={`font-black uppercase tracking-wide text-black leading-none ${
+ className={`font-black uppercase tracking-wide text-[var(--ink)] leading-none ${
  noteLayout && noteLayout.mode ==='inline' ?'truncate min-w-0' :''
  }`}
  style={{ fontFamily:"'Anton','Oswald', sans-serif", fontSize: `${titleFontPt}pt` }}
@@ -1920,7 +1920,7 @@ export function PdfExportModal({
  </span>
 
  {showTonality && s.tonalidad && (
- <span className="font-mono text-[11pt] font-black border-2 border-black px-1.5 py-0.5 rounded bg-white text-black leading-none ml-1 shrink-0">
+ <span className="font-mono text-[11pt] font-black border-2 border-black px-1.5 py-0.5 rounded bg-white text-[var(--ink)] leading-none ml-1 shrink-0">
  {s.tonalidad}
  </span>
  )}
@@ -1997,7 +1997,7 @@ export function PdfExportModal({
  return (
  <div key={item.id} className="flex items-center gap-2 my-0.5">
  <div className="flex-1 h-px bg-black" />
- <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-black whitespace-nowrap">
+ <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-[var(--ink)] whitespace-nowrap">
  {item.tituloCustom ||'BLOQUE'}
  </span>
  <div className="flex-1 h-px bg-black" />
@@ -2007,7 +2007,7 @@ export function PdfExportModal({
  return (
  <div key={item.id} className="flex items-center gap-2 my-0.5">
  <div className="flex-1 h-px bg-black" />
- <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-black whitespace-nowrap">
+ <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-[var(--ink)] whitespace-nowrap">
  {item.tituloCustom ||'BIS / ENCORE'}
  </span>
  <div className="flex-1 h-px bg-black" />
@@ -2034,9 +2034,9 @@ export function PdfExportModal({
  {showAppBranding && (
  <div className="flex justify-between items-center border-t border-black pt-1 mt-2 font-mono text-[7.5pt] text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
- <span className="font-black text-black">⚡ BandManager</span>
+ <span className="font-black text-[var(--ink)]">⚡ BandManager</span>
  <span>•</span>
- <a href="https://www.bandmanager.app" target="_blank" rel="noreferrer" className="text-black font-bold underline">
+ <a href="https://www.bandmanager.app" target="_blank" rel="noreferrer" className="text-[var(--ink)] font-bold underline">
  www.bandmanager.app
  </a>
  </div>

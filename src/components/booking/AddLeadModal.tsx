@@ -106,7 +106,7 @@ export function AddLeadModal({
  ) : sectionTab ==='grupos' ? (
  <Briefcase className="w-5 h-5 text-[var(--acc)]" />
  ) : (
- <Building2 className="w-5 h-5 text-[#d1b375]/80" />
+ <Building2 className="w-5 h-5 text-[var(--acc)]/80" />
  )}
  <h3
  className={`text-sm font-bold font-display uppercase tracking-widest ${
@@ -144,7 +144,7 @@ export function AddLeadModal({
  disabled={isModalScraping || !newLeadData.nombre_sala}
  className={`px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
- ?'bg-[#d1b375]/15 hover:bg-[var(--acc)]/50/15 text-[#d1b375] disabled:opacity-50'
+ ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/50/15 text-[var(--acc)] disabled:opacity-50'
  :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'
  }`}
  title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
@@ -263,10 +263,10 @@ export function AddLeadModal({
  {isModalScraping && (
  <div
  className={`p-2.5 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 animate-pulse ${
- isStitchLight ?'bg-[#d1b375]/15 text-[#d1b375]' :'bg-[var(--surface)]/30 text-[#d1b375]'
+ isStitchLight ?'bg-[var(--acc)]/15 text-[var(--acc)]' :'bg-[var(--surface)]/30 text-[var(--acc)]'
  }`}
  >
- <Loader2 className="w-4 h-4 animate-spin text-[#d1b375]/80 shrink-0" />
+ <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]/80 shrink-0" />
  <span className="text-[10px] font-bold">{modalScrapeStatus}</span>
  </div>
  )}

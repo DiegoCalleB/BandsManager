@@ -192,7 +192,7 @@ export function MetronomeModal({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className="bg-gradient-to-b from-zinc-900 to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-md overflow-hidden shadow-2xl shadow-amber-500/10 my-auto max-h-[90vh] overflow-y-auto">
+ <div className="bg-gradient-to-b from-zinc-900 to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-md overflow-hidden shadow-2xl shadow-amber-0/10 my-auto max-h-[90vh] overflow-y-auto">
  
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-white/5">
@@ -323,7 +323,7 @@ export function MetronomeModal({
  className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-mono font-bold text-sm transition-all duration-75 ${
  isActive
  ? isAccent
- ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-lg shadow-amber-500/50 scale-105'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-lg shadow-amber-0/50 scale-105'
  :'bg-emerald-400 text-[var(--ink)] border-emerald-300 shadow-lg shadow-emerald-500/50 scale-105'
  :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
@@ -362,7 +362,7 @@ export function MetronomeModal({
  {/* Tap Tempo Button */}
  <button
  onClick={handleTapTempo}
- className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
+ className="bg-gradient-to-br from-amber-0/20 to-orange-500/20 hover:from-amber-0/30 hover:to-orange-500/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
  >
  <span className="text-xs font-black text-[var(--acc)]/70 uppercase tracking-wider group-hover:scale-105 transition-transform">
  👆 TAP TEMPO
@@ -406,7 +406,7 @@ export function MetronomeModal({
  className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 shadow-xl transition-all cursor-pointer active:scale-98 ${
  isPlaying
  ?'bg-rose-500 hover:bg-rose-600 text-[var(--ink)] shadow-rose-500/25'
- :'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] shadow-amber-500/25'
+ :'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] shadow-amber-0/25'
  }`}
  >
  {isPlaying ? (

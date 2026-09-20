@@ -110,7 +110,7 @@ export function AIBandScoutModal({
  <div className={`w-full max-w-4xl ${bgColor} rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}>
  
  {/* Header */}
- <div className="p-4 border-b border-black/10 flex justify-between items-center bg-gradient-to-r from-amber-500/10 to-orange-500/10">
+ <div className="p-4 border-b border-black/10 flex justify-between items-center bg-gradient-to-r from-amber-0/10 to-orange-500/10">
  <div className="flex items-center gap-3">
  <div className="p-2 bg-[var(--acc)]/20 rounded-[var(--r-s)] text-amber-500">
  <Sparkles className="w-5 h-5" />
@@ -187,7 +187,7 @@ export function AIBandScoutModal({
  <button
  onClick={handleSearch}
  disabled={isSearching}
- className="px-6 py-2.5 bg-[var(--acc)] hover:bg-amber-600 text-[var(--ink)] font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+ className="px-6 py-2.5 bg-[var(--acc)] hover:bg-amber-600 text-[var(--ink)] font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-0/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
  >
  {isSearching ? (
  <>

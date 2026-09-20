@@ -1805,7 +1805,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {/* Mode Switcher Banner (Python Agents vs Direct Gemini) */}
  <div className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono transition-colors ${
  agentsEnabled 
- ? (isStitchLight ?'bg-amber-50/80 -amber-200/80 text-amber-900' :'bg-[var(--acc)]/10 -amber-500/20 text-[var(--acc)]/70')
+ ? (isStitchLight ?'bg-amber-50/80 -amber-200/80 text-amber-900' :'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)]/70')
  : (isStitchLight ?'bg-emerald-50/80 -emerald-200/80 text-emerald-900' :'bg-emerald-500/10 -emerald-500/20 text-[var(--ink-2)]')
  }`}>
  <div className="flex items-center gap-2 min-w-0">
@@ -1847,7 +1847,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  }}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
  agentsEnabled
- ? (isStitchLight ?'bg-amber-200 hover:bg-[var(--acc)]/50/15 text-[#d1b375]' :'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/50/15 text-[#d1b375] -amber-500/40')
+ ? (isStitchLight ?'bg-amber-200 hover:bg-[var(--acc)]/50/15 text-[var(--acc)]' :'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/50/15 text-[var(--acc)] -amber-0/40')
  : (isStitchLight ?'bg-emerald-200 hover:bg-[var(--surface)]/15 text-[var(--ok)]' :'bg-emerald-500/20 hover:bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/40')
  }`}
  title={agentsEnabled ?"Desactivar motor de agentes de Supabase y usar solo Gemini" :"Activar motor de agentes en Supabase"}
@@ -2152,7 +2152,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase text-[var(--ink-2)]">Estado</span>
  {activeRun.status ==='queued' && (
- <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[#d1b375]/15 text-[#d1b375] -amber-500/20 animate-pulse">🕒 En Cola</span>
+ <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/20 animate-pulse">🕒 En Cola</span>
  )}
  {activeRun.status ==='fetching' && (
  <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-sky-500/15 text-sky-400 -indigo-500/20 animate-pulse">🔄 Despachando</span>

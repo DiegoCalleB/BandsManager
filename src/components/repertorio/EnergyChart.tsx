@@ -153,7 +153,7 @@ export function EnergyChart({
  setAnimMode(isFirstEverPaint ?'entrance' :'switch');
  const t = setTimeout(() => setAnimMode('fast'), (isFirstEverPaint ? GRAND_ENTRANCE_MS : SETLIST_SWITCH_MS) + 100);
  return () => clearTimeout(t);
- // eslint-disable-next-line react-hooks/exhaustive-deps
+  
  }, [setlistKey]);
  const curveAnimationDuration = animMode ==='entrance' ? GRAND_ENTRANCE_MS : animMode ==='switch' ? SETLIST_SWITCH_MS : FAST_EDIT_MS;
  const curveAnimationEasing = animMode ==='entrance' ?'ease-in-out' :'ease-out';
@@ -554,7 +554,7 @@ export function EnergyChart({
  const d = payload[0].payload;
  return (
  <div className="bg-black text-[var(--ink)] text-[9px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] shadow-xl max-w-[200px]">
- <p className="font-bold text-[#d1b375] text-[10px]">#{d.idx + 1} {d.name}</p>
+ <p className="font-bold text-[var(--acc)] text-[10px]">#{d.idx + 1} {d.name}</p>
  {d.isSpeechEvent ? (
  <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
  <span>{d.icon}</span> Interludio / Pausa — meseta de energía

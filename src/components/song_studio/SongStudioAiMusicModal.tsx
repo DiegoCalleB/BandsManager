@@ -163,7 +163,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  onAddGeneratedAudio(generatedAudioUrl, `AI Soundtrack: ${prompt.slice(0, 30)}...`);
  onClose();
  }}
- className="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-black font-bold text-xs uppercase tracking-wider rounded-[var(--r-m)] transition shadow-md"
+ className="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-[var(--ink)] font-bold text-xs uppercase tracking-wider rounded-[var(--r-m)] transition shadow-md"
  >
  + Añadir Soundtrack a la Canción / Estudio
  </button>
@@ -184,7 +184,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  type="button"
  onClick={handleGenerate}
  disabled={isGenerating || !prompt.trim()}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 disabled:opacity-50 text-black font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
  >
  {isGenerating ? (
  <>

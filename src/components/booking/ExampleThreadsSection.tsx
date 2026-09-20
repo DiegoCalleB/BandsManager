@@ -272,7 +272,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  type="button"
  onClick={handleSave}
  disabled={isSaving}
- className="w-full py-1.5 px-3 bg-sky-500 hover:bg-sky-400 text-black font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="w-full py-1.5 px-3 bg-sky-500 hover:bg-sky-400 text-[var(--ink)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
  {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
  <span>{isSaving ?'Guardando...' : editingId ?'Guardar cambios' :'Guardar hilo de ejemplo'}</span>

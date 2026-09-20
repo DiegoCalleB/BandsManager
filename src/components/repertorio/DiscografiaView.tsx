@@ -489,12 +489,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  type="text"
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- placeholder="Buscar canción, tono, letra..."
- className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 ${
- isStitchLight
- ?'bg-[var(--sunken)] text-[var(--ink)] placeholder-slate-400 focus:bg-white'
- :'bg-[var(--surface)]/80 text-[var(--ink)] placeholder-zinc-500 focus:/60'
- }`}
+	placeholder="Buscar canción, tono, letra..."
+	className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-all focus:outline-none focus:ring-2 focus:ring-amber-0/40 ${
+	isStitchLight
+	?'bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:bg-white'
+	:'bg-[var(--surface)]/80 text-[var(--ink)] placeholder-[var(--ink-2)] focus:/60'
+	}`}
  />
  {searchQuery && (
  <button

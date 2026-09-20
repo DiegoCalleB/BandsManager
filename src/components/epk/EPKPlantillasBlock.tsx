@@ -146,7 +146,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  onClick={() => handleSelectTemplate(tpl.id)}
  className={`text-left rounded-[var(--r-m)] sm:rounded-[var(--r-l)] transition relative overflow-hidden flex flex-col justify-between p-2.5 sm:p-4 cursor-pointer ${
  isSelected
- ?'bg-[var(--surface)] ring-2 ring-amber-500/20 shadow-lg'
+ ?'bg-[var(--surface)] ring-2 ring-amber-0/20 shadow-lg'
  :'bg-[var(--surface)]/80 border-[var(--hair)] hover:border-stone-700 hover:bg-[var(--surface)]/80'
  }`}
  >

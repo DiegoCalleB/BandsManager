@@ -364,7 +364,7 @@ export function OrdenDelDiaTab({
 
  <button
  onClick={onGoToLiveMode}
- className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--ink)] font-mono font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg shadow-amber-500/20 transition-all cursor-pointer active:scale-95"
+ className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--ink)] font-mono font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg shadow-amber-0/20 transition-all cursor-pointer active:scale-95"
  >
  <Play className="w-4 h-4 fill-current" />
  <span>Iniciar Modo Local en Vivo</span>

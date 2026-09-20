@@ -101,7 +101,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
 
  {/* Generated Pitch Preview Box */}
  <div className="space-y-1.5">
- <label className="block text-[10px] font-mono uppercase tracking-wider text-[#d1b375] flex items-center justify-between">
+ <label className="block text-[10px] font-mono uppercase tracking-wider text-[var(--acc)] flex items-center justify-between">
  <span>Mensaje de Propuesta Generado (Músico a Músico)</span>
  <span className="text-[10px] text-[var(--ink-2)] lowercase">editable & listo para enviar</span>
  </label>

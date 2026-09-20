@@ -45,7 +45,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  return (
  <div className="space-y-6 text-center animate-in zoom-in-95 duration-300 py-4">
  {/* Celebration Icon */}
- <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-amber-300 text-black flex items-center justify-center mx-auto shadow-xl shadow-amber-500/20">
+ <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-amber-300 text-[var(--ink)] flex items-center justify-center mx-auto shadow-xl shadow-amber-0/20">
  <Sparkles className="w-8 h-8" />
  </div>
 
@@ -156,7 +156,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <button
  type="button"
  onClick={onFinish}
- className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.02] transition-all"
+ className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold text-sm shadow-xl shadow-amber-0/20 hover:scale-[1.02] transition-all"
  >
  Entrar a BandManager.ai <ArrowRight className="w-4 h-4" />
  </button>

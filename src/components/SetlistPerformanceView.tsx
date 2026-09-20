@@ -420,7 +420,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  return (
  <div
  ref={containerRef}
- className={`fixed inset-0 z-[9999] flex flex-col overflow-hidden select-none ${glareMode ?'bg-white text-black' :'bg-black text-[var(--ink)]'}`}
+ className={`fixed inset-0 z-[9999] flex flex-col overflow-hidden select-none ${glareMode ?'bg-white text-[var(--ink)]' :'bg-black text-[var(--ink)]'}`}
  onTouchStart={handleTouchStart}
  onTouchEnd={handleTouchEnd}
  >
@@ -433,7 +433,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <div className="flex items-center justify-between gap-2">
  <div className="min-w-0 flex items-center gap-2 flex-1">
  <span className="text-lg shrink-0">{isBlock ? blockMeta!.icon :'🎤'}</span>
- <h1 className={`text-base sm:text-lg font-bold truncate ${glareMode ?'text-black' :'text-[var(--acc)]/70'}`}>
+ <h1 className={`text-base sm:text-lg font-bold truncate ${glareMode ?'text-[var(--ink)]' :'text-[var(--acc)]/70'}`}>
  {isBlock ? (currentItem.tituloCustom || blockMeta!.label) : currentSong?.titulo}
  </h1>
  </div>
@@ -449,7 +449,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
  modeArchetype ==='directo'
  ? glareMode ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
- : glareMode ?'text-[var(--ink-2)] hover:text-black' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ : glareMode ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Directo
@@ -459,7 +459,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => setModeArchetype('ensayo')}
  className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 cursor-pointer ${
  modeArchetype ==='ensayo'
- ?'bg-emerald-500 text-black shadow-sm'
+ ?'bg-emerald-500 text-[var(--ink)] shadow-sm'
  : glareMode ?'text-[var(--ink-2)] hover:text-emerald-700' :'text-[var(--ink-2)] hover:text-emerald-400'
  }`}
  >
@@ -556,7 +556,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  <button
  onClick={onClose}
- className={`p-1.5 rounded-[var(--r-s)] transition ${glareMode ?'hover:bg-black/10 text-black' :'hover:bg-white/10 text-[var(--ink)]'}`}
+ className={`p-1.5 rounded-[var(--r-s)] transition ${glareMode ?'hover:bg-black/10 text-[var(--ink)]' :'hover:bg-white/10 text-[var(--ink)]'}`}
  title="Cerrar (ESC)"
  >
  <X className="w-5 h-5" />
@@ -566,7 +566,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowMoreMenu(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-0.5 text-sm ${
- glareMode ?'bg-white border-text-[var(--ink-2)] text-black' :'bg-[var(--surface)] text-[var(--ink)]'
+ glareMode ?'bg-white border-text-[var(--ink-2)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {/* Studio & Ensayo shortcuts inside menu */}
  {!isBlock && currentSong && (
@@ -747,7 +747,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => handleLaunchPractice()}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
  >
  <Headphones className="w-3.5 h-3.5" />
  <span>Abrir Sala de Ensayo</span>
@@ -912,7 +912,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={handlePrev}
  disabled={isFirst}
  className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 ${
- glareMode ?'bg-black/5 hover:bg-black/10 text-black' :'bg-white/5 hover:bg-white/10 text-[var(--ink)]'
+ glareMode ?'bg-black/5 hover:bg-black/10 text-[var(--ink)]' :'bg-white/5 hover:bg-white/10 text-[var(--ink)]'
  }`}
  >
  <ChevronLeft className="w-4 h-4" />
@@ -943,7 +943,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={handleNext}
  disabled={isLast}
  className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 ${
- glareMode ?'bg-black/5 hover:bg-black/10 text-black' :'bg-white/5 hover:bg-white/10 text-[var(--ink)]'
+ glareMode ?'bg-black/5 hover:bg-black/10 text-[var(--ink)]' :'bg-white/5 hover:bg-white/10 text-[var(--ink)]'
  }`}
  >
  <span className="hidden sm:inline text-xs">Siguiente</span>
@@ -1175,11 +1175,11 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
  glareMode ?'bg-white' :'bg-gradient-to-b from-indigo-950/40 via-[var(--surface)] to-[var(--sunken)]'
  }`}>
  <span className="text-5xl sm:text-7xl mb-6">{meta.icon}</span>
- <h2 className={`text-2xl sm:text-4xl font-bold mb-6 uppercase tracking-wide ${glareMode ?'text-black' :'text-[var(--acc)]/70'}`}>
+ <h2 className={`text-2xl sm:text-4xl font-bold mb-6 uppercase tracking-wide ${glareMode ?'text-[var(--ink)]' :'text-[var(--acc)]/70'}`}>
  {item.tituloCustom || meta.label}
  </h2>
  {script ? (
- <p className={`text-xl sm:text-3xl md:text-4xl leading-relaxed max-w-4xl whitespace-pre-wrap font-medium ${glareMode ?'text-black font-bold' :'text-[var(--ink)]'}`}>
+ <p className={`text-xl sm:text-3xl md:text-4xl leading-relaxed max-w-4xl whitespace-pre-wrap font-medium ${glareMode ?'text-[var(--ink)] font-bold' :'text-[var(--ink)]'}`}>
  {script}
  </p>
  ) : (
@@ -1287,7 +1287,7 @@ const ChordSheetPage: React.FC<{
 }) => {
  const hasMultipleSections = sections.length >= 2;
  const currentSection = hasMultipleSections ? sections[currentSectionIndex] : null;
- const chordTextClass = glareMode ?'text-black font-bold' :'text-[var(--acc)]';
+ const chordTextClass = glareMode ?'text-[var(--ink)] font-bold' :'text-[var(--acc)]';
  const borderClass = glareMode ?'border-black/10' :'border-[var(--hair)]';
 
  return (
@@ -1340,7 +1340,7 @@ const ChordSheetPage: React.FC<{
  <button
  onClick={onToggleDetails}
  className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition ${
- showDetails ? (glareMode ?'bg-black/15 text-black' :'bg-white/15 text-[var(--ink)]') : (glareMode ?'text-[var(--ink-2)] hover:text-black' :'text-[var(--ink-2)] hover:text-[var(--ink)]')
+ showDetails ? (glareMode ?'bg-black/15 text-[var(--ink)]' :'bg-white/15 text-[var(--ink)]') : (glareMode ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]')
  }`}
  title="Estructura y progresión de acordes"
  >
@@ -1461,7 +1461,7 @@ const ChordSheetPage: React.FC<{
  onClick={onRetreatSection}
  disabled={currentSectionIndex === 0}
  className={`px-4 py-2.5 disabled:opacity-30 rounded-[var(--r-s)] text-sm font-mono font-bold transition ${
- glareMode ?'bg-black/10 hover:bg-black/15 text-black' :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'
+ glareMode ?'bg-black/10 hover:bg-black/15 text-[var(--ink)]' :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}
  >
  ◀ Parte anterior

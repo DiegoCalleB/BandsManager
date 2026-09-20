@@ -1335,7 +1335,7 @@ export default function ReelsCenter({
  </button>
  
  <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
- isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[#b8d6b8]/10 -[#b8d6b8]/20 text-[#b8d6b8]'
+ isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping shrink-0" /> Auto-sync
  </span>
@@ -1826,7 +1826,7 @@ export default function ReelsCenter({
  )}
 
  {!isFetchingMeta && metaError && (
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -amber-500/20 text-[10px] text-[var(--acc)]/70 font-mono text-left flex items-start gap-2">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -amber-0/20 text-[10px] text-[var(--acc)]/70 font-mono text-left flex items-start gap-2">
  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
  <span>{metaError} Puedes analizarlo igualmente, pero los rangos serán aproximados.</span>
  </div>
@@ -2002,7 +2002,7 @@ export default function ReelsCenter({
  {/* Cuando la IA no ha intervenido lo decimos: antes los cortes de respaldo se
  presentaban como si los hubiera elegido el modelo. */}
  {!analysisError && analysisNotice && (
- <div className="p-3 bg-[var(--acc)]/10 -amber-500/20 rounded-[var(--r-s)] text-[var(--acc)]/70 text-xs flex gap-2 items-start">
+ <div className="p-3 bg-[var(--acc)]/10 -amber-0/20 rounded-[var(--r-s)] text-[var(--acc)]/70 text-xs flex gap-2 items-start">
  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
  <span>{analysisNotice}</span>
  </div>
@@ -2485,7 +2485,7 @@ export default function ReelsCenter({
  </div>
  )}
  {scheduleWarnings.length > 0 && (
- <div className="p-2.5 bg-[var(--acc)]/10 -amber-500/30 rounded-[var(--r-s)] text-[var(--acc)] text-[11px] font-mono mt-2 space-y-1">
+ <div className="p-2.5 bg-[var(--acc)]/10 -amber-0/30 rounded-[var(--r-s)] text-[var(--acc)] text-[11px] font-mono mt-2 space-y-1">
  {scheduleWarnings.map((aviso) => (
  <div key={aviso} className="flex items-center gap-1.5">
  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
@@ -3653,7 +3653,7 @@ export default function ReelsCenter({
  <div className={`p-2 rounded-[var(--r-s)] text-[10px] font-mono flex items-center gap-2 ${
  renderedStoredPermanently
  ?'bg-emerald-500/10 -emerald-500/20 text-[var(--ink-2)]'
- :'bg-[var(--acc)]/10 -amber-500/20 text-[var(--acc)]/70'
+ :'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)]/70'
  }`}>
  <span>
  {renderedStoredPermanently
@@ -3663,7 +3663,7 @@ export default function ReelsCenter({
  </div>
 
  {sinTranscripcionReal && (
- <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -amber-500/20 text-[10px] text-[var(--acc)]/70 font-mono flex items-center gap-2">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -amber-0/20 text-[10px] text-[var(--acc)]/70 font-mono flex items-center gap-2">
  <span>ℹ️ Este vídeo no tiene transcripción en YouTube, así que el clip va sin subtítulos.</span>
  </div>
  )}

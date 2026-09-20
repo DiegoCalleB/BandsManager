@@ -83,7 +83,7 @@ export function ShareModal({
  case'concert': return <Calendar className="w-5 h-5 text-emerald-400" />;
  case'pitch':
  case'epk': return <FileText className="w-5 h-5 text-sky-400" />;
- default: return <Share2 className="w-5 h-5 text-[#d1b375]" />;
+ default: return <Share2 className="w-5 h-5 text-[var(--acc)]" />;
  }
  };
 
@@ -188,7 +188,7 @@ export function ShareModal({
  </span>
  <button
  onClick={() => setIsEditing(!isEditing)}
- className="text-xs text-[#d1b375] hover:underline flex items-center gap-1"
+ className="text-xs text-[var(--acc)] hover:underline flex items-center gap-1"
  >
  <Edit3 className="w-3 h-3" />
  {isEditing ?'Ver formato final' :'Editar texto antes de enviar'}
@@ -214,7 +214,7 @@ export function ShareModal({
  {/* Footer */}
  <div className="p-4 border-t border-[var(--hair)] bg-white/[0.02] flex items-center justify-between">
  <span className="text-[11px] text-[var(--ink-2)] flex items-center gap-1">
- <Sparkles className="w-3 h-3 text-[#d1b375]" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  Listos para WhatsApp, Telegram, Signal o Email
  </span>
  <div className="flex items-center gap-2">

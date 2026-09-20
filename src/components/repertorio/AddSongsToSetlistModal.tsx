@@ -124,7 +124,7 @@ export function AddSongsToSetlistModal({
  value={albumFilter}
  onChange={(e) => setAlbumFilter(e.target.value)}
  className={`text-[10px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[#d1b375]'
+ isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--acc)]'
  }`}
  >
  {albumsList.map(alb => (
@@ -193,7 +193,7 @@ export function AddSongsToSetlistModal({
  }`}
  >
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-mono text-xs font-black transition-all ${
- isSelected ?'bg-[var(--surface)] border-[var(--hair)] text-black shadow-sm scale-105' :' text-[var(--ink-2)]'
+ isSelected ?'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)] shadow-sm scale-105' :' text-[var(--ink-2)]'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>
@@ -240,7 +240,7 @@ export function AddSongsToSetlistModal({
  type="button"
  disabled={selectedIds.length === 0}
  onClick={handleSubmit}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
  >
  <ListPlus className="w-4 h-4 stroke-[3]" />
  <span>Añadir {selectedIds.length > 0 ? `${selectedIds.length} Canciones en Orden` :'Canciones'}</span>

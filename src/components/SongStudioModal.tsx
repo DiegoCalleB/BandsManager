@@ -743,7 +743,7 @@ export default function SongStudioModal({
  ?'Iris Básico (modo degradado)'
  : engineToUse ==='mvsep-mdx23' ?'Iris Studio' : engineToUse ==='demucs' ?'Iris Cloud' :'Iris Básico';
  const existingIndex = (song.audioIdeas || []).findIndex(i => i.id === targetIdea.id);
- let updatedIdeas = song.audioIdeas ? [...song.audioIdeas] : [];
+ const updatedIdeas = song.audioIdeas ? [...song.audioIdeas] : [];
  const updatedIdeaContent: SongAudioIdea = {
  ...targetIdea,
  pistas: newTracks,
@@ -3023,7 +3023,7 @@ export default function SongStudioModal({
  isFullScreen ?'p-0' :'p-2 sm:p-4'
  }`}>
  {countInCountdown !== null && (
- <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-black font-mono font-black px-6 py-3 rounded-[var(--r-l)] shadow-2xl flex items-center gap-3 border-2 animate-pulse">
+ <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-[var(--ink)] font-mono font-black px-6 py-3 rounded-[var(--r-l)] shadow-2xl flex items-center gap-3 border-2 animate-pulse">
  <span className="text-2xl">🥁</span>
  <div className="text-sm">
  <div>PREPARANDO GRABACIÓN MULTIPISTA...</div>
@@ -3359,7 +3359,7 @@ export default function SongStudioModal({
  }}
  className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-all text-left ${
  useSongBaseTrack 
- ?' bg-[var(--acc-soft)] text-[var(--ink)] shadow-lg ring-1 ring-amber-500/60' 
+ ?' bg-[var(--acc-soft)] text-[var(--ink)] shadow-lg ring-1 ring-amber-0/60' 
  :'/30 hover: bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:bg-[var(--acc-soft)]'
  }`}
  >
@@ -5322,7 +5322,7 @@ export default function SongStudioModal({
  onClick={() => setSelectedStemEngine('mvsep-mdx23')}
  className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
  selectedStemEngine ==='mvsep-mdx23'
- ?'bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-amber-500/50 shadow-lg shadow-amber-950/50'
+ ?'bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-amber-0/50 shadow-lg shadow-amber-950/50'
  :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >

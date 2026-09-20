@@ -145,7 +145,7 @@ export function EnsayoCronometro({
  onClick={toggleTimer}
  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shadow-sm active:scale-95 ${
  isActive
- ?'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60 shadow-amber-500/20'
+ ?'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60 shadow-amber-0/20'
  :'bg-emerald-500 text-[var(--ink)] hover:bg-emerald-400 shadow-emerald-500/20'
  }`}
  >

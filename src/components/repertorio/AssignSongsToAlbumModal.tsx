@@ -222,7 +222,7 @@ export function AssignSongsToAlbumModal({
  >
  <div className="flex items-center gap-3 truncate pr-2">
  <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 ${
- isSelected ?'bg-[var(--surface)] text-black' :'bg-[var(--surface)]/70 text-[var(--ink-2)]'
+ isSelected ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)]/70 text-[var(--ink-2)]'
  }`}>
  {isSelected ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Plus className="w-3.5 h-3.5" />}
  </div>

@@ -177,10 +177,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onPlay}
  className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full flex items-center justify-center transition-all cursor-pointer ${
  isPlaying
- ?'bg-emerald-500 text-black shadow-md scale-105'
+ ?'bg-emerald-500 text-[var(--ink)] shadow-md scale-105'
  : isStitchLight
- ?'bg-[var(--sunken)] hover:bg-emerald-500 text-[var(--ink-2)] hover:text-black'
- :'bg-[var(--surface)]/80 hover:bg-emerald-500 text-[var(--ink-2)] hover:text-black group-hover:scale-105 shadow-xs'
+ ?'bg-[var(--sunken)] hover:bg-emerald-500 text-[var(--ink-2)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)]/80 hover:bg-emerald-500 text-[var(--ink-2)] hover:text-[var(--ink)] group-hover:scale-105 shadow-xs'
  }`}
  title={isPlaying ?'Pausar canción' : `Reproducir ${displayTitle}`}
  >
@@ -368,7 +368,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  hasIrisStems(song)
- ?'bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-[var(--acc)]/70 /40 shadow-xs'
+ ?'bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500/30 text-[var(--acc)]/70 /40 shadow-xs'
  : isStitchLight
  ?'bg-amber-50 hover:bg-amber-100 text-amber-900'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'

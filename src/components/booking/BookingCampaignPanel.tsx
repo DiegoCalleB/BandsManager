@@ -84,7 +84,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  <button
  onClick={() => setIsEditing(true)}
- className="flex items-center gap-1 text-xs font-semibold text-black hover:text-[var(--ink)] bg-[var(--acc)] px-3 py-2 rounded-[var(--r-s)]"
+ className="flex items-center gap-1 text-xs font-semibold text-[var(--ink)] hover:text-[var(--ink)] bg-[var(--acc)] px-3 py-2 rounded-[var(--r-s)]"
  >
  <Plus className="w-3.5 h-3.5" /> Configurar Campaña
  </button>

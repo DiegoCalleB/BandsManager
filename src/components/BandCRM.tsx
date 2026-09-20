@@ -797,8 +797,8 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  );
  case'concierto_agendado':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[#d1b375]/15 text-[#d1b375] whitespace-nowrap shrink-0">
- <Zap className="w-3 h-3 text-[#d1b375] shrink-0 animate-pulse" />
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--acc)]/15 text-[var(--acc)] whitespace-nowrap shrink-0">
+ <Zap className="w-3 h-3 text-[var(--acc)] shrink-0 animate-pulse" />
  <span>Concierto Agendado</span>
  </span>
  );
@@ -1240,7 +1240,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div
  key={band.id}
  className={`p-5 rounded-[var(--r-l)] transition-all flex flex-col justify-between space-y-4 ${colors.card} shadow-md group relative overflow-hidden ${
- isSelected ?'ring-2 ring-[var(--acc)] border-[var(--acc)]/70 bg-[var(--surface)]' :'hover:-amber-500/40'
+ isSelected ?'ring-2 ring-[var(--acc)] border-[var(--acc)]/70 bg-[var(--surface)]' :'hover:-amber-0/40'
  }`}
  >
  <div className="space-y-3">
@@ -1273,8 +1273,8 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  
  <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono text-[var(--ink-2)]">
- <span className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-md text-[#d1b375] flex items-center gap-1 shrink-0 max-w-[160px]" title={band.estilo_musical}>
- <Music className="w-3 h-3 text-[#d1b375] shrink-0" />
+ <span className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-md text-[var(--acc)] flex items-center gap-1 shrink-0 max-w-[160px]" title={band.estilo_musical}>
+ <Music className="w-3 h-3 text-[var(--acc)] shrink-0" />
  <span className="truncate">{band.estilo_musical}</span>
  </span>
 
@@ -1303,7 +1303,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/80 text-[10px] font-mono space-y-2">
  <div className="flex items-center justify-between text-[var(--ink-2)]">
  <span className="text-[10px] text-[var(--ink-2)] uppercase">Contacto:</span>
- <span className="font-bold text-[#d1b375]">{band.contacto_nombre ||'Sin especificar'}</span>
+ <span className="font-bold text-[var(--acc)]">{band.contacto_nombre ||'Sin especificar'}</span>
  </div>
 
  {band.email && (
@@ -1348,7 +1348,7 @@ Bakandeya Agent Manager IA & Músicos`;
  href={`https://instagram.com/${band.instagram.replace('@','')}`}
  target="_blank" 
  rel="noreferrer"
- className="text-[#d1b375] hover:text-[#d1b375] flex items-center gap-1"
+ className="text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1"
  title="Ver Instagram"
  >
  <Globe className="w-3 h-3" />
@@ -1473,7 +1473,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <span className="truncate max-w-[150px] sm:max-w-[200px]" title={band.nombre_banda}>{band.nombre_banda}</span>
  </div>
  </td>
- <td className="py-2 px-3 text-[#d1b375] align-middle whitespace-nowrap">
+ <td className="py-2 px-3 text-[var(--acc)] align-middle whitespace-nowrap">
  <span className="truncate max-w-[150px] sm:max-w-[200px] block" title={band.estilo_musical}>
  {band.estilo_musical}
  </span>
@@ -1487,7 +1487,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <td className="py-2 px-3 align-middle whitespace-nowrap">{renderStatusBadge(band.estado_relacion)}</td>
  <td className="py-2 px-3 align-middle whitespace-nowrap">
  <div className="space-y-0.5 max-w-[160px]">
- <div className="text-[#d1b375] font-bold truncate" title={band.contacto_nombre}>{band.contacto_nombre ||'-'}</div>
+ <div className="text-[var(--acc)] font-bold truncate" title={band.contacto_nombre}>{band.contacto_nombre ||'-'}</div>
  <div className="text-[10px] text-[var(--ink-2)] truncate" title={band.email || band.telefono}>{band.email || band.telefono ||'-'}</div>
  </div>
  </td>

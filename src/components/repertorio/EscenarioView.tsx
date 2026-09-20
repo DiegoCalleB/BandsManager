@@ -194,7 +194,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <select
  value={activeSetlistId}
  onChange={(e) => setActiveSetlistId(e.target.value)}
- className="bg-[var(--surface)] text-[#d1b375] text-[10px] font-mono py-2 px-3 rounded-[var(--r-m)] focus:outline-none"
+ className="bg-[var(--surface)] text-[var(--acc)] text-[10px] font-mono py-2 px-3 rounded-[var(--r-m)] focus:outline-none"
  >
  {setlists.map(s => (
  <option key={s.id} value={s.id}>{s.nombre}</option>
@@ -555,28 +555,28 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <button
  type="button"
  onClick={() => setChordsFontSize('sm')}
- className={`px-2 py-0.5 rounded ${chordsFontSize ==='sm' ?'bg-[var(--surface)] text-black font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='sm' ?'bg-[var(--surface)] text-[var(--ink)] font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  A-
  </button>
  <button
  type="button"
  onClick={() => setChordsFontSize('base')}
- className={`px-2 py-0.5 rounded ${chordsFontSize ==='base' ?'bg-[var(--surface)] text-black font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='base' ?'bg-[var(--surface)] text-[var(--ink)] font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  A
  </button>
  <button
  type="button"
  onClick={() => setChordsFontSize('lg')}
- className={`px-2 py-0.5 rounded ${chordsFontSize ==='lg' ?'bg-[var(--surface)] text-black font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='lg' ?'bg-[var(--surface)] text-[var(--ink)] font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  A+
  </button>
  <button
  type="button"
  onClick={() => setChordsFontSize('xl')}
- className={`px-2 py-0.5 rounded ${chordsFontSize ==='xl' ?'bg-[var(--surface)] text-black font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
+ className={`px-2 py-0.5 rounded ${chordsFontSize ==='xl' ?'bg-[var(--surface)] text-[var(--ink)] font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  A++
  </button>
@@ -657,7 +657,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  }}
  className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  isPlayingThis
- ?'bg-[var(--surface)] text-black font-bold scale-105 shadow-md' 
+ ?'bg-[var(--surface)] text-[var(--ink)] font-bold scale-105 shadow-md' 
  :'bg-[var(--surface)] text-[var(--ok)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
  }`}
  title={isPlayingThis ?'Pausar' :'Reproducir este tema'}
@@ -743,8 +743,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  }}
  className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  isPlayingThis 
- ?'bg-sky-400 text-black font-bold scale-105 shadow-md' 
- :'bg-[var(--surface)] text-sky-400 hover:bg-sky-400 hover:text-black'
+ ?'bg-sky-400 text-[var(--ink)] font-bold scale-105 shadow-md' 
+ :'bg-[var(--surface)] text-sky-400 hover:bg-sky-400 hover:text-[var(--ink)]'
  }`}
  title={isPlayingThis ?'Pausar' :'Reproducir discurso / audio'}
  >

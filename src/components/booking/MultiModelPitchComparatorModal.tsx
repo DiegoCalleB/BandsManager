@@ -305,7 +305,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <button
  onClick={handleRunComparison}
  disabled={isLoading || selectedProviders.length === 0}
- className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-black font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans shrink-0"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans shrink-0"
  >
  {isLoading ? (
  <>
@@ -541,7 +541,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  disabled={!prop.text && !prop.fallbackText}
  className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  isSelected
- ?'bg-emerald-500 text-black shadow-md shadow-emerald-500/20'
+ ?'bg-emerald-500 text-[var(--ink)] shadow-md shadow-emerald-500/20'
  :'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 hover:/60'
  }`}
  >

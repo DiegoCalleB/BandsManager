@@ -549,7 +549,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  isDragged ?'opacity-30 scale-95 border-dashed' :''
  } ${
  isActive
- ?'bg-gradient-to-b from-amber-500/20 via-[var(--surface)] to-[var(--bg)] /80 shadow-[0_0_20px_rgba(245,158,11,0.2)] ring-1 ring-amber-500/40'
+ ?'bg-gradient-to-b from-amber-0/20 via-[var(--surface)] to-[var(--bg)] /80 shadow-[0_0_20px_rgba(245,158,11,0.2)] ring-1 ring-amber-0/40'
  :'bg-[var(--surface)] border-[var(--hair)] hover:/70 hover:bg-[var(--surface)] hover:shadow-lg'
  } ${switchingBandId && !isSwitching ?'opacity-40 grayscale pointer-events-none' :''}`}
  >
@@ -647,7 +647,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  referrerPolicy="no-referrer"
  />
  ) : (
- <div className="w-full h-full rounded-[var(--r-m)] bg-gradient-to-br from-amber-500/15 to-orange-600/15 flex flex-col items-center justify-center text-[var(--acc)] gap-1">
+ <div className="w-full h-full rounded-[var(--r-m)] bg-gradient-to-br from-amber-0/15 to-orange-600/15 flex flex-col items-center justify-center text-[var(--acc)] gap-1">
  <Guitar className="w-8 h-8 opacity-80" />
  <span className="text-xs font-black font-mono text-[var(--ink-2)]">
  {band.bandName.slice(0, 2).toUpperCase()}
@@ -1266,7 +1266,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  key={plan.id}
  className={`p-4 rounded-[var(--r-m)] transition-all ${
  isCurrent
- ?'bg-[var(--acc)]/10 /50 ring-1 ring-amber-500/30'
+ ?'bg-[var(--acc)]/10 /50 ring-1 ring-amber-0/30'
  :'bg-[var(--surface)]/60 hover:'
  }`}
  >
@@ -1340,7 +1340,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  alert(e?.message ||'No se pudo actualizar el plan. Reintenta en unos instantes.');
  }
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
  >
  <Sparkles className="w-3 h-3 fill-stone-950" />
  <span>Seleccionar {plan.name}</span>

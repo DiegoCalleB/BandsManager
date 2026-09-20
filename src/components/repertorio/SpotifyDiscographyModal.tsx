@@ -291,7 +291,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  {/* Header Modal Bar */}
  <div className="p-5 sm:p-6 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-[var(--ok)]/20 via-[var(--ok)]/5 to-transparent">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-l)] bg-[var(--surface)] text-black flex items-center justify-center shadow-lg shadow-[var(--ok)]/20">
+ <div className="w-10 h-10 rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink)] flex items-center justify-center shadow-lg shadow-[var(--ok)]/20">
  <Disc className="w-6 h-6 animate-spin-slow" />
  </div>
  <div>
@@ -449,7 +449,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  type="button"
  onClick={() => setFilterType('todos')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType ==='todos' ?'bg-[var(--surface)] text-black shadow' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ filterType ==='todos' ?'bg-[var(--surface)] text-[var(--ink)] shadow' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Todos ({albums.length})
@@ -458,7 +458,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  type="button"
  onClick={() => setFilterType('album')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType ==='album' ?'bg-[var(--surface)] text-black shadow' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ filterType ==='album' ?'bg-[var(--surface)] text-[var(--ink)] shadow' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Álbumes ({albums.filter((a) => a.albumType ==='album').length})
@@ -467,7 +467,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  type="button"
  onClick={() => setFilterType('single')}
  className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
- filterType ==='single' ?'bg-[var(--surface)] text-black shadow' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ filterType ==='single' ?'bg-[var(--surface)] text-[var(--ink)] shadow' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Singles y EPs ({albums.filter((a) => a.albumType ==='single').length})
@@ -620,7 +620,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  onClick={() => togglePlayTrackPreview(track, album.name)}
  className={`p-1.5 rounded-full transition-all cursor-pointer ${
  isPlaying
- ?'bg-[var(--surface)] text-black shadow-md'
+ ?'bg-[var(--surface)] text-[var(--ink)] shadow-md'
  :'bg-white/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]'
  }`}
  title={isPlaying ?'Pausar preview' :'Reproducir preview 30s de Spotify/Deezer'}

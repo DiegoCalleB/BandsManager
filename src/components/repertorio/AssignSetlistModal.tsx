@@ -44,11 +44,11 @@ export function AssignSetlistModal({
 
  <p className="text-[10px] text-[var(--ink-2)] font-sans">
  Selecciona el concierto o ensayo al que deseas vincular el repertorio{''}
- <strong className="text-[#d1b375] font-mono">"{assigningSetlist.nombre}"</strong>:
+ <strong className="text-[var(--acc)] font-mono">"{assigningSetlist.nombre}"</strong>:
  </p>
 
  <div className="space-y-2 max-h-60 overflow-y-auto pr-1 text-[10px] font-mono">
- <div className="text-[10px] text-[#d1b375] uppercase font-bold pt-1">Próximos Conciertos:</div>
+ <div className="text-[10px] text-[var(--acc)] uppercase font-bold pt-1">Próximos Conciertos:</div>
  {concerts.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-6">
  <PublicoSilhouette opacity={12} size="small" />
@@ -61,7 +61,7 @@ export function AssignSetlistModal({
  key={c.id}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
  selectedConcertToAssign === c.id
- ?' bg-[#d1b375]/15'
+ ?' bg-[var(--acc)]/15'
  :' bg-[var(--surface)]/60'
  }`}
  >

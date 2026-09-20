@@ -2660,7 +2660,7 @@ export default function RepertorioSetlists({
  setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? { ...s, nombre: val } : s));
  }}
  title={activeSetlist.descripcion ||'Nombre del repertorio'}
- className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-500/50 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}
+ className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}
  />
 
  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap sm:flex-nowrap">

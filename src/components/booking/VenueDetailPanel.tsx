@@ -857,7 +857,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setIsCreatingDraft(false);
  }
  }}
- className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+ className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
  title="Forzar el despacho inmediato de este correo por el Agente Enviador"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
@@ -1394,7 +1394,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={() => setShowMultiModelModal(true)}
- className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 via-sky-500/20 to-emerald-500/20 hover:from-amber-500/30 hover:to-emerald-500/30 rounded text-[11px] text-[var(--acc)]/70 font-bold flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
+ className="px-2.5 py-1 bg-gradient-to-r from-amber-0/20 via-sky-500/20 to-emerald-500/20 hover:from-amber-0/30 hover:to-emerald-500/30 rounded text-[11px] text-[var(--acc)]/70 font-bold flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
  title="Compara en paralelo propuestas generadas por DeepSeek V3 y Gemini Flash"
  >
  <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1710,7 +1710,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={() => handleRegeneratePitchWithFeedback()}
  disabled={isRegeneratingPitch || isRevertingPitch}
- className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-black font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans"
  >
  {isRegeneratingPitch ? (
  <>
@@ -1928,7 +1928,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  <button
  type="submit"
- className="w-full py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-black font-bold text-xs rounded-[var(--r-s)] transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
+ className="w-full py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
  >
  <Save className="w-3.5 h-3.5" />
  <span>Anotar en Bitácora</span>

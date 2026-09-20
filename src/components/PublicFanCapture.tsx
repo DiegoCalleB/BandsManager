@@ -104,7 +104,7 @@ export const PublicFanCapture: React.FC = () => {
  return (
  <div className="min-h-screen bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center p-4 selection:bg-[var(--acc)] selection:text-[var(--ink)]">
  {/* Background Glow */}
- <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-500/10 via-slate-950 to-slate-950 pointer-events-none" />
+ <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-0/10 via-slate-950 to-slate-950 pointer-events-none" />
 
  <div className="w-full max-w-md relative z-10 space-y-6">
  {/* LOGO & BRAND HEADER */}
@@ -114,7 +114,7 @@ export const PublicFanCapture: React.FC = () => {
  <img
  src={bandInfo.logoUrl}
  alt={bandInfo.name ||"Logo"}
- className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover border-2 shadow-xl shadow-amber-500/20"
+ className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover border-2 shadow-xl shadow-amber-0/20"
  />
  ) : (
  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)] border-2 /80 flex items-center justify-center text-[var(--acc)] shadow-xl">
@@ -225,7 +225,7 @@ export const PublicFanCapture: React.FC = () => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-extrabold text-sm rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
+ className="w-full py-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-extrabold text-sm rounded-[var(--r-m)] shadow-lg shadow-amber-0/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
  >
  {loading ? (
  <span>Guardando...</span>

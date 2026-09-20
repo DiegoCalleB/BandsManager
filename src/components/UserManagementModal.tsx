@@ -369,7 +369,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <strong className="font-bold text-sm font-sans">{u.name}</strong>
  <span className="text-xs text-[var(--ink-2)] font-mono">@{u.username}</span>
  {isLeader ? (
- <span className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded bg-[#d1b375]/15 text-[#d1b375] -amber-500/30 flex items-center gap-1">
+ <span className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/30 flex items-center gap-1">
  <Shield className="w-2.5 h-2.5" />
  <span>Admin</span>
  </span>
@@ -403,7 +403,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  title={isSelf ?"No puedes cambiar tu propio rol desde aquí" :"Cambiar rol del usuario"}
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold outline-none cursor-pointer transition-all ${
  u.role ==='leader'
- ?'bg-[#d1b375]/15 text-[#d1b375] -amber-500/40 hover:bg-[var(--acc)]/25'
+ ?'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/40 hover:bg-[var(--acc)]/25'
  :'bg-[var(--surface)] text-blue-300 -blue-500/30 hover:bg-[var(--surface)]/80'
  } ${isSelf ?'opacity-70 cursor-not-allowed' :''}`}
  >
@@ -595,7 +595,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <button
  type="submit"
  disabled={loading}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-amber-500/10 active:scale-98"
+ className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-amber-0/10 active:scale-98"
  >
  {loading ? (
  <span>Creando miembro...</span>

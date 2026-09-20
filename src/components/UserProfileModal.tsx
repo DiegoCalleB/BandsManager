@@ -415,7 +415,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={() => setShowUpgradeModal(true)}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] text-xs font-bold font-mono transition-all duration-200 shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] text-xs font-bold font-mono transition-all duration-200 shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
  >
  <Sparkles className="w-3.5 h-3.5 fill-stone-950" />
  <span>Upgrade</span>
@@ -711,7 +711,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={handleCreateBandInProfile}
  disabled={isCreatingBand || !createBandName.trim()}
- className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-black flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+ className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
  >
  {isCreatingBand ? (
  <>
@@ -1062,7 +1062,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setNewPassword(e.target.value)}
  placeholder="Dejar en blanco para mantener la actual..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-amber-500/50'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-amber-0/50'
  }`}
  />
  </div>
@@ -1078,7 +1078,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setConfirmPassword(e.target.value)}
  placeholder="Repite la nueva contraseña..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-amber-500/50'
+ isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-amber-0/50'
  }`}
  />
  </div>
@@ -1126,7 +1126,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-lg active:scale-98 ${
  isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-indigo-600/20'
- :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-amber-500/20'
+ :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-amber-0/20'
  }`}
  >
  {loading ? (
@@ -1270,7 +1270,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  key={plan.id}
  className={`p-4 rounded-[var(--r-m)] transition-all ${
  isCurrent
- ?'bg-[var(--acc)]/10 /50 ring-1 ring-amber-500/30'
+ ?'bg-[var(--acc)]/10 /50 ring-1 ring-amber-0/30'
  :'bg-[var(--surface)]/60 hover:'
  }`}
  >
@@ -1351,7 +1351,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  alert(e?.message ||'No se pudo cambiar el plan. Reintenta en unos instantes.');
  }
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-0/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
  >
  <Sparkles className="w-3 h-3 fill-stone-950" />
  <span>Seleccionar {plan.name}</span>
