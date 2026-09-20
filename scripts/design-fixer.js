@@ -17,9 +17,25 @@ const FIXES = [
   { find: /bg-\[#4d4d4d\]/g, replace: 'bg-[var(--sunken)]', desc: 'slider bg → --sunken' },
   { find: /border-\[#333\]/g, replace: 'border-[var(--hair)]', desc: 'border gray → --hair' },
 
-  // Legacy gold (#d1b375) → --acc
-  { find: /text-\[#d1b375\]/g, replace: 'text-[var(--acc)]', desc: 'gold text → --acc' },
-  { find: /bg-\[#d1b375\]\/(\d+)/g, replace: 'bg-[var(--acc)]/$1', desc: 'gold bg → --acc' },
+  // Legacy gold variants → --acc (brand migration)
+  { find: /text-\[#d1b375\]/g, replace: 'text-[var(--acc)]', desc: 'gold #d1b375 → --acc' },
+  { find: /bg-\[#d1b375\]\/(\d+)/g, replace: 'bg-[var(--acc)]/$1', desc: 'gold #d1b375 bg → --acc' },
+  { find: /bg-\[#d1b375\]/g, replace: 'bg-[var(--acc)]', desc: 'gold #d1b375 bg (solid) → --acc' },
+  { find: /border-\[#d1b375\]/g, replace: 'border-[var(--acc)]', desc: 'gold #d1b375 border → --acc' },
+
+  // Gold variants (#e0a820, #e2ba40, #e0b83e, #e2c486, #ffc634, etc.) → --acc-soft (Espectro migration)
+  { find: /bg-\[#e0a820\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #e0a820 → --acc-soft' },
+  { find: /bg-\[#e2ba40\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #e2ba40 → --acc-soft' },
+  { find: /bg-\[#e0b83e\]\/(\d+)/g, replace: 'bg-[var(--acc-soft)]/$1', desc: 'gold #e0b83e → --acc-soft' },
+  { find: /bg-\[#e0b83e\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #e0b83e (solid) → --acc-soft' },
+  { find: /bg-\[#e0b83f\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #e0b83f → --acc-soft' },
+  { find: /bg-\[#e0b840\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #e0b840 → --acc-soft' },
+  { find: /bg-\[#d8b03e\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #d8b03e → --acc-soft' },
+  { find: /bg-\[#e2c486\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #e2c486 → --acc-soft' },
+  { find: /bg-\[#ffc634\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #ffc634 → --acc-soft' },
+  { find: /bg-\[#ffe28d\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #ffe28d → --acc-soft' },
+  { find: /bg-\[#ffe07a\]/g, replace: 'bg-[var(--acc-soft)]', desc: 'gold #ffe07a → --acc-soft' },
+  { find: /text-\[#facc15\]/g, replace: 'text-[var(--acc)]', desc: 'gold #facc15 text → --acc' },
 
   // Hardcoded green (#b8d6b8) → --ok
   { find: /bg-\[#b8d6b8\]/g, replace: 'bg-[var(--ok)]', desc: 'rehearsal green → --ok' },

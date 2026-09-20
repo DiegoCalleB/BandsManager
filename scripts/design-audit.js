@@ -16,18 +16,21 @@ const INTENTIONAL_COLORS = new Set([
   'ff6b9d', // Spotify pink (transpose indicator)
   '003087', // PayPal blue
   '121111', // Merchandise color
-  'e0a820', // Gradient accent
-  'e2ba40', // Gold variant
-  'e0b83e', // Gold variant
-  'e2c486', // Gold variant
-  'ffc634', // Gold variant
+  'e0a820', // Gradient accent (solo en classic theme)
+  '0079c1', // LinkedIn-ish blue (third-party brand badge)
 ]);
+
+// Gold variants removed — now converted to var(--acc-soft) during migration
 
 const CHECKS = {
   hardcodedColors: {
     description: 'Hardcoded hex colors (should use tokens)',
     pattern: /(bg|text|border|placeholder)-\[#[0-9a-f]{6}\]/gi,
-    filter: (match) => !INTENTIONAL_COLORS.has(match.replace(/.*#/, '').toLowerCase()),
+    filter: (match) => {
+      const hexMatch = match.match(/#([0-9a-f]{6})/i);
+      const hex = hexMatch ? hexMatch[1].toLowerCase() : '';
+      return !INTENTIONAL_COLORS.has(hex);
+    },
     severity: 'error',
   },
   textBlack: {
