@@ -2596,8 +2596,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  placeholder={tr.type ==='musica' ?'Nombre del tema...' :'Nombre de la presentación o speech...'}
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
  tr.type ==='musica'
- ?'bg-[var(--surface)] /30 text-[var(--acc)] focus:'
- :'bg-[var(--surface)]/30 text-[var(--ink)] }`}
+ ?'bg-[var(--surface)]/30 text-[var(--acc)]'
+ :'bg-[var(--surface)]/30 text-[var(--ink)]'
+ }`}
  />
  {tr.title && (
  <button

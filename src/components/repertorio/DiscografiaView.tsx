@@ -476,7 +476,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </div>
 
  {/* Quick Filter Tabs */}
- <div className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 ${'bg-[var(--sunken)]'}`}>
+ <div className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 bg-[var(--sunken)]`}>
  <button
  type="button"
  onClick={() => setActiveFilterTab('todos')}
@@ -752,7 +752,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
  {/* Collapsible Tracklist Section */}
  {isExpanded && (
- <div className={`p-3 sm:p-4 space-y-1.5 ${'bg-[var(--bg)]/70'}`}>
+ <div className={`p-3 sm:p-4 space-y-1.5 bg-[var(--bg)]/70`}>
  {sortedAlbumSongs.map((s, idx) => {
  const isCurrentTrack = activePlayerSong?.id === s.id;
  const isDraggingThis = draggedItem?.album === album && draggedItem?.index === idx;
@@ -873,9 +873,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <SpotifyDiscographyModal
  isOpen={isSpotifyModalOpen}
  onClose={() => setIsSpotifyModalOpen(false)}
- bandName={bandName ||"Tu Banda"}
+ bandName={bandName || "Tu Banda"}
  existingSongs={songs}
- colors={colors
+ colors={colors}
  onSongsImported={(updatedSongs) => {
  setSongs(updatedSongs);
  }}
