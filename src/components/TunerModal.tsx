@@ -566,7 +566,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <div className="flex flex-col items-center animate-in zoom-in-95 duration-100">
  <div className="flex items-baseline gap-1">
  <span className={`text-6xl font-black font-display tracking-tight ${
- isTunedIn ?'text-[var(--ok)]'
+ isTunedIn ? 'text-[var(--ok)]' : 'text-[var(--ink)]'
  }`}>
  {pitch.noteName}
  </span>

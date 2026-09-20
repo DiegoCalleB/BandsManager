@@ -4417,7 +4417,7 @@ export default function RepertorioSetlists({
  setDraggedCatalogSongId(null);
  setDragOverCatalogSongId(null);
  }}
- colors={colors
+ colors={colors}
  />
  </React.Fragment>
  );
@@ -4444,7 +4444,7 @@ export default function RepertorioSetlists({
  editingSong={editingSong}
  defaultAlbumForNewSong={defaultAlbumForNewSong}
  albumsList={albumsList}
- colors={colors
+ colors={colors}
  onClose={() => setShowSongModal(false)}
  onSave={handleSaveSong}
  />
@@ -4452,7 +4452,7 @@ export default function RepertorioSetlists({
  {/* MODAL: ASSIGN SETLIST TO CONCERT OR REHEARSAL */}
  <AssignSetlistModal
  assigningSetlist={assigningSetlist}
- colors={colors
+ colors={colors}
  concerts={concerts}
  rehearsals={rehearsals}
  selectedConcertToAssign={selectedConcertToAssign}
@@ -4704,7 +4704,7 @@ export default function RepertorioSetlists({
  {activeStudioSong && (
  <SongStudioModal
  song={activeStudioSong}
- colors={colors
+ colors={colors}
  onClose={() => {
  setActiveStudioSong(null);
  setActiveStudioOpenIris(false);
@@ -4747,7 +4747,7 @@ export default function RepertorioSetlists({
  isOpen={assignSongsModalData.isOpen}
  albumName={assignSongsModalData.albumName}
  songs={songs}
- colors={colors
+ colors={colors}
  onClose={() => setAssignSongsModalData(null)}
  onSaveAlbumSongs={handleSaveAlbumSongs}
  />
@@ -4757,7 +4757,7 @@ export default function RepertorioSetlists({
  <SetlistModal
  isOpen={setlistModalData.isOpen}
  setlistToEdit={setlistModalData.setlistToEdit}
- colors={colors
+ colors={colors}
  onClose={() => setSetlistModalData(null)}
  onSave={handleSaveSetlistModal}
  />
@@ -4768,7 +4768,7 @@ export default function RepertorioSetlists({
  isOpen={isAddSongsModalOpen}
  songs={songs}
  existingSongIds={activeSetlist.items.map(it => it.songId).filter((id): id is string => Boolean(id))}
- colors={colors
+ colors={colors}
  onClose={() => setIsAddSongsModalOpen(false)}
  onAddSongs={handleAddMultipleSongsToSetlist}
  />
@@ -4780,7 +4780,7 @@ export default function RepertorioSetlists({
  <MemberNotesModal
  isOpen={Boolean(activeMemberNotesSong)}
  song={activeMemberNotesSong}
- colors={colors
+ colors={colors}
  bandMembers={bandRosterMembers}
  onClose={() => setActiveMemberNotesSong(null)}
  onSaveSongNotes={handleUpdateSongFromStudio}
@@ -4824,7 +4824,7 @@ export default function RepertorioSetlists({
  onClose={() => setIsSpotifyModalOpen(false)}
  bandName={bName}
  existingSongs={songs}
- colors={colors
+ colors={colors}
  onSongsImported={(updatedSongs) => {
  setSongs(updatedSongs);
  }}

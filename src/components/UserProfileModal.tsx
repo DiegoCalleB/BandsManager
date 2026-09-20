@@ -46,7 +46,7 @@ interface UserProfileModalProps {
 export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  currentUser,
  onClose,
- onUpdateUser
+ onUpdateUser,
  isAdmin,
  onOpenBandManagement,
  currentTheme,

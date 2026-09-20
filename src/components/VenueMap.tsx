@@ -607,7 +607,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  prevFilterKeyRef.current = currentFilterKey;
  }
  }
- }, [geoPositions, leads mapStyle, activeCityFilter, activeRegionFilter]);
+ }, [geoPositions, leads, mapStyle, activeCityFilter, activeRegionFilter]);
 
  
  // Invalidate size on container resize (without resetting zoom/bounds on cluster expand)

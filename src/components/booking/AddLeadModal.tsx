@@ -27,7 +27,7 @@ export interface NewLeadDataState {
 
 interface AddLeadModalProps {
  isOpen: boolean;
- sectionTab:'salas' |'medios' |'grupos';: boolean;
+ sectionTab: 'salas' | 'medios' | 'grupos';
  textSub: string;
  newLeadData: NewLeadDataState;
  setNewLeadData: React.Dispatch<React.SetStateAction<NewLeadDataState>>;
@@ -44,7 +44,7 @@ interface AddLeadModalProps {
 
 export function AddLeadModal({
  isOpen,
- sectionTab
+ sectionTab,
  textSub,
  newLeadData,
  setNewLeadData,
