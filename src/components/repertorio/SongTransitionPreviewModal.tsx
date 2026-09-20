@@ -27,6 +27,7 @@ import {
  applyDetectedCuesToSong,
  AudioCueAnalysis
 } from'../../utils/audioCueDetector';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 
 interface SongTransitionPreviewModalProps {
  isOpen: boolean;

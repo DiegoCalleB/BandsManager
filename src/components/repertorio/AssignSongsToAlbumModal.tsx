@@ -3,6 +3,7 @@ import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon } from'lucide
 import { Song, ThemeColors } from'../../types';
 import { formatSongTitle } from'../../utils/formatSongTitle';
 import { ModalPortal } from'../common/ModalPortal';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 
 interface AssignSongsToAlbumModalProps {
  isOpen: boolean;
@@ -242,8 +243,12 @@ export function AssignSongsToAlbumModal({
  })}
 
  {filteredSongs.length === 0 && (
- <div className="text-center py-6 text-neutral-500 text-xs">
- No se encontraron canciones que coincidan.
+ <div className="flex flex-col items-center justify-center py-8">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin canciones disponibles</p>
+ <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs text-center">
+ Ajusta el filtro o crea nuevas canciones en tu repertorio.
+ </p>
  </div>
  )}
  </div>

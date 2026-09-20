@@ -745,7 +745,7 @@ export function EnergyChart({
  fontFamily="monospace"
  fontWeight={600}
  fill="var(--acc-soft)"
- stroke="#000000"
+ stroke="var(--ink)"
  strokeWidth={1.8}
  paintOrder="stroke"
  pointerEvents="none"
