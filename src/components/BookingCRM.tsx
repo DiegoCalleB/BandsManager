@@ -454,8 +454,6 @@ export default function BookingCRM({
  return norm ==='medio' || norm ==='productora';
  };
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
-
  // Filter leads by active section tab
  const sectionLeads = useMemo(() => {
  const seen = new Set<string>();
@@ -1037,8 +1035,9 @@ export default function BookingCRM({
  </button>
  </div>
 
- {/* UNIFIED ACTION BUTTONS */}
+ {/* UNIFIED ACTION BUTTONS — PC: Todos, Móvil: Solo esenciales */}
  <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+ {/* Botón Añadir (SIEMPRE visible) */}
  <button
  id="add-new-lead-btn"
  type="button"
@@ -1067,26 +1066,28 @@ export default function BookingCRM({
  title="Añadir contacto"
  >
  <PlusCircle className="w-3.5 h-3.5" />
- <span>Añadir {sectionTab ==='medios' ?'medio' : sectionTab ==='grupos' ?'contacto' :'escenario'}</span>
+ <span className="sm:inline">Añadir {sectionTab ==='medios' ?'medio' : sectionTab ==='grupos' ?'contacto' :'escenario'}</span>
  </button>
 
+ {/* Tutorial (pequeño en móvil) */}
  <ModuleTutorialTrigger
  moduleId="booking"
  onClick={bookingTutorial.openTutorial}
  />
 
+ {/* Botón Exportar — Solo en PC */}
  <button
  id="export-leads-btn"
  type="button"
  onClick={() => setIsExportLeadsOpen(true)}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] active:scale-95 cursor-pointer"
+ className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] active:scale-95 cursor-pointer"
  title="Exportar base de datos a Excel / CSV o JSON"
  >
  <Download className="w-3.5 h-3.5 text-[var(--ink-2)]" />
- <span className="hidden sm:inline">Exportar Leads</span>
- <span className="sm:hidden">Exportar</span>
+ <span>Exportar Leads</span>
  </button>
 
+ {/* Botón Herramientas & IA */}
  <button
  id="open-tools-btn"
  type="button"
@@ -1100,7 +1101,7 @@ export default function BookingCRM({
  >
  <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
  <span className="hidden sm:inline">Herramientas e IA</span>
- <span className="sm:hidden">Herramientas</span>
+ <span className="sm:hidden">IA</span>
  {leads.filter(l => !l.email_contacto || l.email_contacto.trim() ==='').length > 0 && (
  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-semibold tabular-nums">
  {leads.filter(l => !l.email_contacto || l.email_contacto.trim() ==='').length}
@@ -1258,9 +1259,10 @@ export default function BookingCRM({
  </div>
  )}
 
- {/* Search & View Mode Switcher Row */}
- <div className="flex flex-col sm:flex-row gap-2.5 sm:items-center justify-between">
- <div className="flex-1 flex gap-2">
+ {/* Search & View Mode Switcher Row — Responsive (Mobile simple, PC full) */}
+ <div className="flex flex-col gap-2.5">
+ {/* BÚSQUEDA — Siempre visible */}
+ <div className="flex-1 flex gap-2 items-center">
  {/* Search Input */}
  <div className="relative flex-1">
  <Search className="absolute left-3 top-2.5 h-4 w-4 pointer-events-none transition-colors text-[var(--acc-ink)]" />
@@ -1285,8 +1287,8 @@ export default function BookingCRM({
  )}
  </div>
 
- {/* Tipo Dropdown Selector */}
- <div className="relative shrink-0">
+ {/* Tipo Dropdown Selector — Solo en PC */}
+ <div className="hidden sm:block relative shrink-0">
  <select
  id="crm-type-filter-select"
  value={typeFilter}
@@ -1329,7 +1331,8 @@ export default function BookingCRM({
  <ChevronDown className="w-3.5 h-3.5 absolute right-2 top-2.5 pointer-events-none opacity-60" />
  </div>
 
- {/* Advanced Filters Button */}
+ {/* Filters & Campaign — PC only, Mobile in Herramientas */}
+ <div className="hidden sm:flex items-center gap-1.5 shrink-0">
  <button
  id="toggle-filters-btn"
  type="button"
@@ -1342,7 +1345,7 @@ export default function BookingCRM({
  title="Filtros avanzados y búsquedas guardadas"
  >
  <Filter className="w-3.5 h-3.5" />
- <span className="hidden sm:inline">Filtros</span>
+ <span>Filtros</span>
  {activeFiltersCount > 0 && (
  <span className="w-4 h-4 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-[10px] font-bold flex items-center justify-center">
  {activeFiltersCount}
@@ -1350,7 +1353,6 @@ export default function BookingCRM({
  )}
  </button>
 
- {/* Filter by Campaign Toggle */}
  {activeCampaign && (
  <button
  id="crm-campaign-filter-btn"
@@ -1361,10 +1363,10 @@ export default function BookingCRM({
  ?'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
  :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
- title={filterByCampaign ?"Quitar filtro de campaña (ver todas las salas)" :"Filtrar únicamente salas objetivo de la campaña"}
+ title={filterByCampaign ?"Quitar filtro de campaña" :"Filtrar por campaña"}
  >
  <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
- <span className="hidden sm:inline">{filterByCampaign ?'Filtro Campaña' :'Filtrar Campaña'}</span>
+ <span>{filterByCampaign ?' Campaña' :'Campaña'}</span>
  {filterByCampaign && (
  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] text-[10px] font-semibold tabular-nums">
  {filteredLeads.length}
@@ -1373,14 +1375,16 @@ export default function BookingCRM({
  </button>
  )}
  </div>
+ </div>
 
- {/* View Mode Toggle Switcher */}
- <div className="p-1 rounded-[var(--r-m)] flex items-center justify-between sm:justify-start gap-1 shrink-0 bg-[var(--sunken)]">
+ {/* View Mode Toggle Switcher — PC: Completo, Móvil: Compacto */}
+ <div className="flex items-center justify-between sm:justify-start gap-1 shrink-0">
+ <div className="p-1 rounded-[var(--r-m)] flex items-center gap-1 bg-[var(--sunken)]">
  <button
  id="crm-view-grid"
  type="button"
  onClick={() => setViewMode('grid')}
- className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
  viewMode ==='grid'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1388,13 +1392,13 @@ export default function BookingCRM({
  title="Vista en Tarjetas"
  >
  <LayoutGrid className="w-3.5 h-3.5" />
- <span>Tarjetas</span>
+ <span className="hidden sm:inline">Tarjetas</span>
  </button>
  <button
  id="crm-view-table"
  type="button"
  onClick={() => setViewMode('table')}
- className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
  viewMode ==='table'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1402,13 +1406,13 @@ export default function BookingCRM({
  title="Vista en Detalles / Tabla"
  >
  <List className="w-3.5 h-3.5" />
- <span>Detalles</span>
+ <span className="hidden sm:inline">Detalles</span>
  </button>
  <button
  id="crm-view-map"
  type="button"
  onClick={() => setViewMode('map')}
- className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
  viewMode ==='map'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1416,8 +1420,9 @@ export default function BookingCRM({
  title="Vista en Mapa GPS Interactivo"
  >
  <MapIcon className={`w-3.5 h-3.5 ${viewMode ==='map' ?'text-[var(--on-acc)]' :'text-[var(--ink-2)]'}`} />
- <span>Mapa</span>
+ <span className="hidden sm:inline">Mapa</span>
  </button>
+ </div>
  </div>
  </div>
 
