@@ -806,20 +806,20 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  >
  <defs>
  <linearGradient id="dashboardColorInstagram" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#ec4899" stopOpacity={0.25}/>
- <stop offset="95%" stopColor="#ec4899" stopOpacity={0}/>
+ <stop offset="5%" stopColor="var(--alert)" stopOpacity={0.25}/>
+ <stop offset="95%" stopColor="var(--alert)" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="dashboardColorTikTok" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.25}/>
- <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+ <stop offset="5%" stopColor="var(--ok)" stopOpacity={0.25}/>
+ <stop offset="95%" stopColor="var(--ok)" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="dashboardColorSpotify" x1="0" y1="0" x2="0" y2="1">
  <stop offset="5%" stopColor="var(--ok)" stopOpacity={0.25}/>
  <stop offset="95%" stopColor="var(--ok)" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="dashboardColorYouTube" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#ef4444" stopOpacity={0.25}/>
- <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+ <stop offset="5%" stopColor="var(--alert)" stopOpacity={0.25}/>
+ <stop offset="95%" stopColor="var(--alert)" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="dashboardColorFans" x1="0" y1="0" x2="0" y2="1">
  <stop offset="5%" stopColor="var(--acc)" stopOpacity={0.35}/>
@@ -827,11 +827,11 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </linearGradient>
  </defs>
 
- <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isStitchLight ?'#e2e8f0' :'#222222'} />
+ <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isStitchLight ?'var(--hair)' :'var(--ink-2)'} />
 
  <XAxis 
  dataKey="fecha" 
- stroke="#888888" 
+ stroke="var(--ink-2)" 
  fontSize={9} 
  tickLine={false} 
  axisLine={false}
@@ -844,7 +844,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
  <YAxis 
  domain={yAxisDomain}
- stroke="#888888" 
+ stroke="var(--ink-2)" 
  fontSize={9} 
  tickLine={false} 
  axisLine={false} 
@@ -854,13 +854,13 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <Tooltip 
  contentStyle={{ 
  backgroundColor: isStitchLight ?'#ffffff' :'var(--surface)', 
- borderColor: isStitchLight ?'#cbd5e1' :'#333333',
+ borderColor: isStitchLight ?'var(--hair)' :'var(--ink-2)',
  borderRadius:'10px',
  fontSize:'11px',
  fontFamily:'monospace',
  boxShadow:'0 10px 25px -5px rgba(0,0,0,0.4)'
  }}
- labelStyle={{ fontWeight:'bold', color: isStitchLight ?'#1e293b' :'#ffffff', marginBottom:'4px' }}
+ labelStyle={{ fontWeight:'bold', color: isStitchLight ?'var(--ink)' :'#ffffff', marginBottom:'4px' }}
  formatter={(value: any, name: any) => {
  const num = Number(value || 0);
  const formatted = num >= 1000 ? `${num.toLocaleString()} (${(num / 1000).toFixed(1)}k)` : `${num}`;
@@ -876,7 +876,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  type="monotone" 
  dataKey="instagram" 
  name="Instagram" 
- stroke="#ec4899" 
+ stroke="var(--alert)" 
  strokeWidth={2} 
  fillOpacity={1} 
  fill="url(#dashboardColorInstagram)" 
@@ -888,7 +888,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  type="monotone" 
  dataKey="tiktok" 
  name="TikTok" 
- stroke="#06b6d4" 
+ stroke="var(--ok)" 
  strokeWidth={2} 
  fillOpacity={1} 
  fill="url(#dashboardColorTikTok)" 
@@ -900,7 +900,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  type="monotone" 
  dataKey="youtube" 
  name="YouTube" 
- stroke="#ef4444" 
+ stroke="var(--alert)" 
  strokeWidth={2} 
  fillOpacity={1} 
  fill="url(#dashboardColorYouTube)" 

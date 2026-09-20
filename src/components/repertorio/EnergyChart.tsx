@@ -705,12 +705,9 @@ export function EnergyChart({
  cursor: canDragThis
  ? (onReorder && canEditThisEnergy ?'move' : canEditThisEnergy ?'ns-resize' :'ew-resize')
  : (onSelectItem ?'pointer' :'default'),
- opacity: isDraggingThis ? 0.5 : 1,
- // Glow sutil: antes el highlighted tenía un doble drop-shadow bastante más
- // intenso que el resto, chillón al pasar por varias sugerencias seguidas.
- filter: isHighlighted
- ? `drop-shadow(0 0 6px ${payload.color}cc)`
- : `drop-shadow(0 0 4px ${payload.color}99)`,
+ opacity: isDraggingThis ? 0.5 : isHighlighted ? 1 : 0.6,
+ // Espectro: zero glow/drop-shadow. Highlight via opacity change instead.
+ filter: 'none',
  transition: isDraggingThis ?'none' :'all 0.2s ease',
  pointerEvents: canDragThis ?'none' :'auto'
  }}
