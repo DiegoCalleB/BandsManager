@@ -76,16 +76,17 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
  if (!activeCampaign && !isEditing) {
  return (
- <div className="mb-6 p-4 border-dashed rounded-[var(--r-m)] bg-gray-50 flex items-center justify-between text-gray-500">
- <div className="flex items-center gap-2">
- <Target className="w-5 h-5 text-gray-400" />
- <span>No hay ninguna campaña de booking activa.</span>
+ <div className="mb-6 p-6 border-dashed rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col items-center justify-center gap-3 text-[var(--ink-2)]">
+ <Target className="w-5 h-5 text-[var(--ink-3)]" />
+ <div className="text-center">
+ <p className="font-medium text-[var(--ink)]">Sin campaña de booking activa</p>
+ <p className="text-xs text-[var(--ink-2)] mt-1">Define objetivos de aforo y fechas para activar el Scout IA.</p>
  </div>
- <button 
+ <button
  onClick={() => setIsEditing(true)}
- className="flex items-center gap-1 text-sm font-medium text-black hover:text-gray-700 bg-white px-3 py-1.5 rounded-[var(--r-s)] shadow-sm"
+ className="flex items-center gap-1 text-xs font-semibold text-black hover:text-[var(--ink)] bg-[var(--acc)] px-3 py-2 rounded-[var(--r-s)]"
  >
- <Plus className="w-4 h-4" /> Configurar Campaña Objetivo
+ <Plus className="w-3.5 h-3.5" /> Configurar Campaña
  </button>
  </div>
  );
@@ -98,14 +99,14 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <h3 className="font-semibold text-lg flex items-center gap-2">
  <Target className="w-5 h-5" /> Configurar Campaña
  </h3>
- <button onClick={() => setIsEditing(false)} className="text-gray-400 hover:text-gray-600">
+ <button onClick={() => setIsEditing(false)} className="text-[var(--ink-2)] hover:text-[var(--ink-2)]">
  <X className="w-5 h-5" />
  </button>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
  <div>
- <label className="block text-xs text-gray-500 font-medium mb-1 uppercase tracking-wider">Nombre</label>
+ <label className="block text-xs text-[var(--ink-3)] font-medium mb-1 uppercase tracking-wider">Nombre</label>
  <input 
  type="text" 
  value={campaignForm.name} 
@@ -114,7 +115,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  />
  </div>
  <div>
- <label className="block text-xs text-gray-500 font-medium mb-1 uppercase tracking-wider">Ciudad/Región</label>
+ <label className="block text-xs text-[var(--ink-3)] font-medium mb-1 uppercase tracking-wider">Ciudad/Región</label>
  <input 
  type="text" 
  value={campaignForm.targetCities?.join(',')} 
@@ -124,7 +125,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  />
  </div>
  <div>
- <label className="block text-xs text-gray-500 font-medium mb-1 uppercase tracking-wider">Aforo Objetivo</label>
+ <label className="block text-xs text-[var(--ink-3)] font-medium mb-1 uppercase tracking-wider">Aforo Objetivo</label>
  <div className="flex items-center gap-2">
  <input 
  type="number" 
@@ -132,7 +133,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  onChange={e => setCampaignForm({...campaignForm, minCapacity: parseInt(e.target.value) || 0})}
  className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-black"
  />
- <span className="text-gray-400">-</span>
+ <span className="text-[var(--ink-2)]">-</span>
  <input 
  type="number" 
  value={campaignForm.maxCapacity} 
@@ -143,11 +144,11 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  
  <div className="md:col-span-2 lg:col-span-3">
- <label className="block text-xs text-gray-500 font-medium mb-2 uppercase tracking-wider">Fechas Clave del Concierto</label>
+ <label className="block text-xs text-[var(--ink-3)] font-medium mb-2 uppercase tracking-wider">Fechas Clave del Concierto</label>
  <div className="flex gap-2 flex-wrap items-center">
  {campaignForm.targetDates?.map((date, idx) => (
- <div key={idx} className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200/80 px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors">
- <Calendar className="w-3.5 h-3.5 text-gray-500 shrink-0" />
+ <div key={idx} className="flex items-center gap-1.5 hover:bg-[var(--surface)] hover:bg-gray-200/80 px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors">
+ <Calendar className="w-3.5 h-3.5 text-[var(--ink-3)] shrink-0" />
  <input
  type="date"
  value={date}
@@ -158,7 +159,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  newDates.sort();
  setCampaignForm({ ...campaignForm, targetDates: newDates });
  }}
- className="text-xs font-semibold text-gray-800 bg-transparent border-0 p-0 focus:ring-0 cursor-pointer"
+ className="text-xs font-semibold text-[var(--ink)] bg-transparent border-0 p-0 focus:ring-0 cursor-pointer"
  title="Haz clic para modificar esta fecha"
  />
  <button 
@@ -168,7 +169,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  newDates.splice(idx, 1);
  setCampaignForm({...campaignForm, targetDates: newDates});
  }} 
- className="text-gray-400 hover:text-red-500 p-0.5 rounded transition-colors ml-0.5"
+ className="text-[var(--ink-2)] hover:text-red-500 p-0.5 rounded transition-colors ml-0.5"
  title="Eliminar esta fecha"
  >
  <X className="w-3.5 h-3.5" />
@@ -193,17 +194,17 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  />
  </div>
  </div>
- <p className="text-xs text-gray-400 mt-2">
+ <p className="text-xs text-[var(--ink-2)] mt-2">
  Puedes hacer clic en cualquier fecha para editarla en el calendario o añadir nuevas fechas. Los agentes mencionarán automáticamente estas fechas ({formatDateText(campaignForm.targetDates || [])}) en las propuestas.
  </p>
  </div>
 
  <div className="md:col-span-2 lg:col-span-3">
- <label className="block text-xs text-gray-500 font-medium mb-2 uppercase tracking-wider">🎪 Rango de Fechas para Filtrar Festivales/Eventos</label>
- <p className="text-xs text-gray-400 mb-2">Define el rango de fechas para mostrar solo los festivales y fiestas que coincidan con esta campaña.</p>
+ <label className="block text-xs text-[var(--ink-3)] font-medium mb-2 uppercase tracking-wider">🎪 Rango de Fechas para Filtrar Festivales/Eventos</label>
+ <p className="text-xs text-[var(--ink-2)] mb-2">Define el rango de fechas para mostrar solo los festivales y fiestas que coincidan con esta campaña.</p>
  <div className="grid grid-cols-2 gap-2">
  <div>
- <label className="block text-xs text-gray-500 mb-1">Desde</label>
+ <label className="block text-xs text-[var(--ink-3)] mb-1">Desde</label>
  <input
  type="date"
  value={campaignForm.campaignStartDate ||''}
@@ -212,7 +213,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  />
  </div>
  <div>
- <label className="block text-xs text-gray-500 mb-1">Hasta</label>
+ <label className="block text-xs text-[var(--ink-3)] mb-1">Hasta</label>
  <input
  type="date"
  value={campaignForm.campaignEndDate ||''}
@@ -227,7 +228,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <div className="flex justify-end gap-2 mt-4 pt-4 border-t">
  <button 
  onClick={() => setIsEditing(false)}
- className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-[var(--r-s)] font-medium"
+ className="px-4 py-2 text-sm text-[var(--ink-2)] hover:hover:bg-[var(--surface)] rounded-[var(--r-s)] font-medium"
  >
  Cancelar
  </button>
@@ -247,7 +248,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <div className="absolute top-0 right-0 p-4">
  <button 
  onClick={handleClear}
- className="text-gray-400 hover:text-[var(--ink)] bg-white/10 rounded-full p-1"
+ className="text-[var(--ink-2)] hover:text-[var(--ink)] bg-white/10 rounded-full p-1"
  title="Desactivar campaña"
  >
  <X className="w-4 h-4" />
@@ -258,7 +259,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <Target className="w-5 h-5 text-green-400" />
  <h3 className="font-bold text-lg">Campaña Activa: {activeCampaign?.name}</h3>
  </div>
- <p className="text-gray-400 text-sm mb-4">El Scout IA y el generador de propuestas están configurados para estos objetivos.</p>
+ <p className="text-[var(--ink-2)] text-sm mb-4">El Scout IA y el generador de propuestas están configurados para estos objetivos.</p>
  
  <div className="flex flex-wrap gap-4">
  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
@@ -276,7 +277,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  </div>
  <div className="bg-white/5 px-5 py-3 border-t border-[var(--hair)] flex justify-between items-center">
- <div className="text-xs text-gray-400">
+ <div className="text-xs text-[var(--ink-2)]">
  * Los pitches generados por la IA mencionarán automáticamente estas fechas y el formato de Co-booking.
  </div>
  <button 
@@ -296,7 +297,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  }
  setIsEditing(true);
  }}
- className="text-xs font-medium text-[var(--ink)] hover:text-gray-300 underline cursor-pointer"
+ className="text-xs font-medium text-[var(--ink)] hover:text-[var(--ink-2)] underline cursor-pointer"
  >
  Editar parámetros
  </button>

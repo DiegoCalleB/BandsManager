@@ -3094,8 +3094,8 @@ export default function ReelsCenter({
  </div>
  ) : (
  <div className="absolute inset-0 z-0 bg-[var(--surface)] flex flex-col items-center justify-center p-4">
- <AlertCircle className="w-8 h-8 text-neutral-600 mb-2" />
- <span className="text-xs font-mono text-neutral-500">No hay vídeo cargado</span>
+ <AlertCircle className="w-8 h-8 text-[var(--ink-3)] mb-2" />
+ <span className="text-xs font-mono text-[var(--ink-2)]">No hay vídeo cargado</span>
  </div>
  )}
 
