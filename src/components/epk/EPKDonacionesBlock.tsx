@@ -83,7 +83,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
  {/* Campos de configuración */}
  <div className="space-y-3">
- <div className="flex items-center justify-between p-3 bg-slate-950 rounded-[var(--r-m)]">
+ <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
  <span className="text-xs font-bold text-white">Mostrar tarjeta de donación</span>
  <p className="text-[10px] text-[var(--ink-3)]">Activa o desactiva la opción de colaboración</p>
@@ -104,7 +104,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  {/* Métodos de Pago: Revolut y PayPal */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  {/* Revolut */}
- <div className="p-3 bg-slate-950/80 rounded-[var(--r-m)] space-y-1.5">
+ <div className="p-3 bg-[var(--surface)]/80 rounded-[var(--r-m)] space-y-1.5">
  <div className="flex items-center gap-1.5">
  <div className="w-5 h-5 rounded-md bg-white text-black flex items-center justify-center p-0.5 shadow-sm">
  <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
@@ -146,7 +146,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
 
  {/* PayPal */}
- <div className="p-3 bg-slate-950/80 rounded-[var(--r-m)] space-y-1.5">
+ <div className="p-3 bg-[var(--surface)]/80 rounded-[var(--r-m)] space-y-1.5">
  <div className="flex items-center gap-1.5">
  <div className="w-5 h-5 rounded-md bg-[var(--bg)] text-[#0079C1] flex items-center justify-center p-0.5 shadow-sm">
  <PayPalLogo className="w-full h-full fill-white" />
@@ -228,7 +228,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  (config.donacionRevolut?.metodoPorDefecto ||'revolut') ==='revolut'
  ?'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
- :'bg-slate-950 text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-sky-400" />
@@ -245,7 +245,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='paypal'
  ?'bg-blue-500/20 border-blue-500 text-blue-300 shadow-sm'
- :'bg-slate-950 text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-blue-400" />
@@ -262,7 +262,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='bizum'
  ?'bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-sm'
- :'bg-slate-950 text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
  }`}
  >
  <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -283,7 +283,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  })
  }
  placeholder="Colabora con la banda"
- className="w-full bg-slate-950 focus:border-sky-500 rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none"
+ className="w-full bg-[var(--surface)] focus:border-sky-500 rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
  />
  </div>
 
@@ -299,7 +299,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  })
  }
  placeholder="Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
- className="w-full bg-slate-950 focus:border-sky-500 rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none resize-none"
+ className="w-full bg-[var(--surface)] focus:border-sky-500 rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none resize-none"
  />
  </div>
  </div>
@@ -386,7 +386,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  const estaTraduciendo = traduciendo === idioma.code;
 
  return (
- <div key={idioma.code} className=" rounded-[var(--r-m)] p-4 bg-slate-950 space-y-4">
+ <div key={idioma.code} className=" rounded-[var(--r-m)] p-4 bg-[var(--surface)] space-y-4">
  <div className="flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-2">
  <span className="text-lg" aria-hidden="true">

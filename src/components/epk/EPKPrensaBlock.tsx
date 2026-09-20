@@ -52,7 +52,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  Bloque de 4 cifras destacadas (oyentes, directos, comunidad, ciudades) al principio del dossier público. Si dejas alguna vacía, no se muestra.
  </p>
 
- <div className="flex items-center justify-between p-3 bg-slate-950 rounded-[var(--r-m)]">
+ <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
  <span className="text-xs font-bold text-white">Mostrar cifras clave en el dossier público</span>
  <p className="text-[10px] text-[var(--ink-3)]">
@@ -95,7 +95,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  })
  }
  placeholder={campo.placeholder}
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-mono"
  />
  </div>
  ))}
@@ -116,7 +116,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  Citas de medios, radios o blogs musicales. Añade citas reales; el bloque no se muestra hasta que lo actives y tenga al menos una cita.
  </p>
 
- <div className="flex items-center justify-between p-3 bg-slate-950 rounded-[var(--r-m)]">
+ <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-[var(--r-m)]">
  <div className="space-y-0.5 pr-3">
  <span className="text-xs font-bold text-white">Mostrar reseñas de prensa en el dossier público</span>
  <p className="text-[10px] text-[var(--ink-3)]">
@@ -138,7 +138,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
 
  <div className="space-y-2.5">
  {(config.resenasPrensa?.citas || []).map((cita, idx) => (
- <div key={cita.id} className="rounded-[var(--r-m)] bg-slate-950 p-3.5 space-y-2">
+ <div key={cita.id} className="rounded-[var(--r-m)] bg-[var(--surface)] p-3.5 space-y-2">
  <div className="flex items-start gap-2">
  <textarea
  rows={2}
@@ -149,7 +149,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
  }}
  placeholder="Texto exacto de la reseña o cita..."
- className="flex-1 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-slate-200 focus: outline-none leading-relaxed resize-none"
+ className="flex-1 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus: outline-none leading-relaxed resize-none"
  />
  <button
  type="button"

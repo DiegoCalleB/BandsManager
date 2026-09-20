@@ -280,7 +280,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  id="epk-header-copy-btn"
  type="button"
  onClick={onCopyUrl}
- className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-slate-200 text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer"
+ className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer"
  title="Copiar enlace web público del EPK"
  >
  {copiedPublicUrl ? (

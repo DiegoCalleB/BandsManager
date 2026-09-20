@@ -1,7 +1,7 @@
 import React, { useState } from'react';
 import { Lead, ThemeColors } from'../../types';
 import { apiFetch } from'../../utils/api';
-import { Bot, Sparkles, X, Play, CheckCircle2 } from'lucide-react';
+import { Bot, Sparkles, X, CheckCircle2 } from'lucide-react';
 import { ModalPortal } from'../common/ModalPortal';
 
 interface BookingSimulationModalProps {
@@ -27,11 +27,9 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  const [simulationSenderName, setSimulationSenderName] = useState(
  `Programador de ${lead.nombre_sala}`
  );
- const [simulationSubject, setSimulationSubject] = useState(
- lead.hilo_emails && lead.hilo_emails.length > 0
+ const simulationSubject = lead.hilo_emails && lead.hilo_emails.length > 0
  ? `RE: ${lead.hilo_emails[lead.hilo_emails.length - 1].asunto}`
- :'Re: Propuesta de concierto - Bakandeya'
- );
+ :'Re: Propuesta de concierto - Bakandeya';
  const [simulationCustomInstruction, setSimulationCustomInstruction] = useState('La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.'
  );
  const [simulationMessage, setSimulationMessage] = useState('');
@@ -126,7 +124,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  :'Booking Bakandeya'
  );
  }}
- className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-slate-200 outline-none"
+ className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-[var(--ink)] outline-none"
  style={{ borderColor: colors.border }}
  >
  <option value="sala">Sala / Promotor (Respuesta Entrante)</option>
@@ -139,7 +137,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <select
  value={simulationScenario}
  onChange={(e) => setSimulationScenario(e.target.value)}
- className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-slate-200 outline-none"
+ className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-[var(--ink)] outline-none"
  style={{ borderColor: colors.border }}
  >
  <option value="taquilla">Propuesta de Taquilla (70/30)</option>
@@ -156,7 +154,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  type="text"
  value={simulationSenderName}
  onChange={(e) => setSimulationSenderName(e.target.value)}
- className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-slate-200 outline-none"
+ className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-[var(--ink)] outline-none"
  style={{ borderColor: colors.border }}
  />
  </div>
@@ -168,7 +166,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  value={simulationCustomInstruction}
  onChange={(e) => setSimulationCustomInstruction(e.target.value)}
  placeholder="Ej: La sala acepta la fecha del 15 de noviembre y pide cartel..."
- className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-slate-200 outline-none"
+ className="w-full p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 text-[var(--ink)] outline-none"
  style={{ borderColor: colors.border }}
  />
  </div>
@@ -200,7 +198,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  rows={5}
  value={simulationMessage}
  onChange={(e) => setSimulationMessage(e.target.value)}
- className="w-full p-2 rounded-[var(--r-s)] bg-slate-950 text-slate-200 font-mono text-[11px] outline-none"
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] font-mono text-[11px] outline-none"
  style={{ borderColor: colors.border }}
  />
  </div>

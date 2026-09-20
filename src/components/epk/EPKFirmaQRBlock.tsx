@@ -131,7 +131,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="Ej: Booking & Management"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none"
  />
  </div>
 
@@ -147,7 +147,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="Ej: Booking & Management Team"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none"
  />
  </div>
 
@@ -163,7 +163,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="+34 600 00 00 00"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none font-mono"
  />
  </div>
 
@@ -179,7 +179,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="booking@tubanda.com"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none font-mono"
  />
  </div>
  </div>
@@ -199,13 +199,13 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  })
  }
  placeholder="Música en directo, energía y directo arrollador"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-white outline-none"
  />
  </div>
 
  {/* OPCIONES DE INCLUSIÓN */}
  <div className="pt-2 border-t space-y-3">
- <label className="flex items-center gap-3 cursor-pointer p-2.5 bg-slate-950 rounded-[var(--r-m)] hover:/50 transition">
+ <label className="flex items-center gap-3 cursor-pointer p-2.5 bg-[var(--surface)] rounded-[var(--r-m)] hover:/50 transition">
  <input
  type="checkbox"
  checked={config.firmaEmail?.incluirIconosRedes ?? true}
@@ -225,7 +225,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </div>
  </label>
 
- <label className="flex items-center gap-3 cursor-pointer p-2.5 bg-slate-950 rounded-[var(--r-m)] hover:/50 transition">
+ <label className="flex items-center gap-3 cursor-pointer p-2.5 bg-[var(--surface)] rounded-[var(--r-m)] hover:/50 transition">
  <input
  type="checkbox"
  checked={config.firmaEmail?.adjuntarDossierPorDefecto ?? true}
@@ -273,7 +273,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  return (
  <span
  key={key}
- className="px-2 py-0.5 rounded bg-slate-950 text-[10px] font-mono text-[var(--ink-3)] flex items-center gap-1"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] text-[10px] font-mono text-[var(--ink-3)] flex items-center gap-1"
  >
  <span>{platform?.icon ||'🔗'}</span>
  <span className="font-semibold">{platform?.label || key}</span>
@@ -501,7 +501,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='html'
  ?'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
- :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
  }`}
  title="Copiar el código fuente HTML puro de la firma"
  >
@@ -516,7 +516,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='text'
  ?'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
- :'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white'
  }`}
  title="Copiar versión en texto plano"
  >
@@ -549,7 +549,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <button
  type="button"
  onClick={() => setShowInstructions(!showInstructions)}
- className="w-full text-left py-2 px-3 rounded-[var(--r-m)] bg-slate-950/60 hover:bg-slate-950 text-xs text-[var(--ink-3)] hover:text-amber-300 flex items-center justify-between transition cursor-pointer"
+ className="w-full text-left py-2 px-3 rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-[var(--surface)] text-xs text-[var(--ink-3)] hover:text-amber-300 flex items-center justify-between transition cursor-pointer"
  >
  <span className="flex items-center gap-1.5 font-medium">
  <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
@@ -559,7 +559,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </button>
 
  {showInstructions && (
- <div className="mt-2 p-3.5 rounded-[var(--r-m)] bg-slate-950 space-y-3 text-xs text-[var(--ink-3)] animate-fadeIn">
+ <div className="mt-2 p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3 text-xs text-[var(--ink-3)] animate-fadeIn">
  {/* Tabs de clientes */}
  <div className="flex items-center gap-1.5 border-b pb-2">
  <button
@@ -649,7 +649,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </div>
 
  <div className="space-y-2 text-left">
- <p className="text-xs font-mono text-amber-300 bg-slate-950 py-2 px-3 rounded-[var(--r-m)] truncate">
+ <p className="text-xs font-mono text-amber-300 bg-[var(--surface)] py-2 px-3 rounded-[var(--r-m)] truncate">
  {publicEpkUrl}
  </p>
  <div className="flex flex-wrap gap-2 pt-1">

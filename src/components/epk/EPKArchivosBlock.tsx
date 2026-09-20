@@ -73,16 +73,16 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <img
  src={config.logoUrl}
  alt="Logo de la banda"
- className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 shadow-lg bg-slate-950"
+ className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 shadow-lg bg-[var(--surface)]"
  />
  ) : isBakandeya ? (
  <img
  src="/logo_bakandeya_bueno_sin_fondo.png"
  alt="Bakandeya Logo"
- className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 shadow-lg bg-slate-950"
+ className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 shadow-lg bg-[var(--surface)]"
  />
  ) : (
- <div className="w-28 h-28 rounded-[var(--r-l)] border-2 border-dashed bg-slate-950 flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
+ <div className="w-28 h-28 rounded-[var(--r-l)] border-2 border-dashed bg-[var(--surface)] flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
  <ImageIcon className="w-8 h-8 text-[var(--ink-2)] mb-1" />
  <span className="text-[10px] font-medium text-[var(--ink-3)]">Sin Logo</span>
  </div>
@@ -122,7 +122,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  value={config.logoUrl ||''}
  onChange={e => setConfig({ ...config, logoUrl: e.target.value })}
  placeholder="https://ejemplo.com/logo.jpg"
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-mono text-slate-200 outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-mono text-[var(--ink)] outline-none"
  />
  </div>
  </div>
@@ -136,7 +136,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </h3>
 
  {config.dossierPdfUrl ? (
- <div className="p-4 bg-slate-950 rounded-[var(--r-m)] space-y-3">
+ <div className="p-4 bg-[var(--surface)] rounded-[var(--r-m)] space-y-3">
  <div className="flex items-center justify-between gap-3">
  <div className="flex items-center gap-3 overflow-hidden">
  <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
@@ -183,7 +183,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </div>
  </div>
  ) : (
- <div className="p-5 bg-slate-950 border-dashed rounded-[var(--r-m)] text-center space-y-3">
+ <div className="p-5 bg-[var(--surface)] border-dashed rounded-[var(--r-m)] text-center space-y-3">
  <div className="w-12 h-12 rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-3)] mx-auto">
  <FileDown className="w-6 h-6 text-amber-400" />
  </div>
@@ -221,7 +221,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  })
  }
  placeholder="https://drive.google.com/file/d/..."
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-mono text-slate-200 outline-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-mono text-[var(--ink)] outline-none"
  />
  </div>
  </div>
@@ -243,7 +243,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <div className="space-y-3">
  <label className="text-xs font-bold text-white block">Archivo de Rider Técnico (PDF)</label>
  {config.riderPdfUrl ? (
- <div className="p-3 bg-slate-950 rounded-[var(--r-m)] space-y-3">
+ <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-3">
  <div className="flex items-start justify-between gap-4">
  <div className="flex items-center gap-3 overflow-hidden">
  <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
@@ -286,7 +286,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  </div>
  </div>
  ) : (
- <div className="p-5 bg-slate-950 border-dashed rounded-[var(--r-m)] text-center space-y-3">
+ <div className="p-5 bg-[var(--surface)] border-dashed rounded-[var(--r-m)] text-center space-y-3">
  <div className="w-12 h-12 rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-3)] mx-auto">
  <FileDown className="w-6 h-6 text-amber-400" />
  </div>
@@ -315,7 +315,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  onChange={e => setConfig({ ...config, riderTecnico: e.target.value })}
  placeholder="Canales, microfonía, DIs, etc..."
  rows={4}
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-4 py-3 text-sm text-slate-200 outline-none transition-colors font-mono leading-relaxed resize-none"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-mono leading-relaxed resize-none"
  />
  </div>
  </div>
@@ -350,7 +350,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  />
  </label>
  {(config.bandPhotos || []).length === 0 ? (
- <div className="rounded-[var(--r-m)] bg-slate-950 p-4 text-xs text-[var(--ink-3)]">
+ <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-3)]">
  Todavía no hay fotos de directo o prensa.
  </div>
  ) : (
@@ -358,13 +358,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  {(config.bandPhotos || []).filter(url => Boolean(url && url.trim() !=='')).map((url, idx) => (
  <div
  key={url + idx}
- className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden bg-slate-950"
+ className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)]"
  >
  <img src={url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
  <button
  type="button"
  onClick={() => quitarFotoGaleria(url)}
- className="absolute top-1.5 right-1.5 p-1.5 bg-slate-950/80 text-[var(--ink-3)] hover:text-red-400 rounded-[var(--r-s)] opacity-0 group-hover:opacity-100 transition cursor-pointer"
+ className="absolute top-1.5 right-1.5 p-1.5 bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-red-400 rounded-[var(--r-s)] opacity-0 group-hover:opacity-100 transition cursor-pointer"
  title="Quitar foto"
  >
  <Trash2 className="w-3.5 h-3.5" />

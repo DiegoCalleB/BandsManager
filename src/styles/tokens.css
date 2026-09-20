@@ -181,6 +181,18 @@
   --color-slate-200: var(--hair);
   --color-slate-100: var(--sunken);
 
+  /* Remap zinc (31 files using it) */
+  --color-zinc-950: var(--sunken);
+  --color-zinc-900: var(--bg);
+  --color-zinc-800: var(--surface);
+  --color-zinc-700: var(--ink-3);
+  --color-zinc-600: var(--ink-2);
+  --color-zinc-500: var(--ink);
+  --color-zinc-400: var(--ink-2);
+  --color-zinc-300: var(--hair);
+  --color-zinc-200: var(--hair);
+  --color-zinc-100: var(--hair);
+
   /* Remap accents */
   --color-amber-600: var(--acc-ink);
   --color-amber-500: var(--acc);
@@ -188,8 +200,10 @@
 
   /* State colors */
   --color-emerald-500: var(--ok);
+  --color-emerald-400: var(--ok-soft);
   --color-rose-500: var(--alert);
   --color-red-500: var(--alert);
+  --color-red-950: var(--alert);
 
   /* Typography */
   --font-sans: var(--font-ui);

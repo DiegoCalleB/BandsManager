@@ -85,7 +85,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  </div>
  <div className="space-y-1.5">
  <label className="text-xs font-semibold text-[var(--ink-3)]">Biografía de Presentación</label>
- <div className="bg-slate-950/60 rounded-[var(--r-m)] p-3 text-[11px] text-[var(--ink-3)] space-y-1.5">
+ <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[11px] text-[var(--ink-3)] space-y-1.5">
  <p className="text-[var(--ink-3)] font-semibold">
  Escribid UN texto de banda, no la trayectoria de cada uno por separado (eso va en &quot;Formación de la Banda&quot;, con su foto).
  </p>
@@ -103,7 +103,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  onChange={e => setConfig({ ...config, biografia: e.target.value })}
  placeholder={'Ejemplo de estructura (sustituid por lo vuestro):\n\n[Nombre de la banda] es [una frase que os define + vuestro género/sonido propio].\n\nEn directo, [qué ocurre encima del escenario: instrumentación, energía, qué se lleva el público].\n\nCon [X años/conciertos] a la espalda, hemos tocado en [salas/festivales relevantes] y compartido escenario con [referencias, si aplica].'
  }
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] p-3 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed placeholder:text-[var(--ink-2)]"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed placeholder:text-[var(--ink-2)]"
  />
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
  <span>Mínimo 80 caracteres para completar el perfil</span>
@@ -157,7 +157,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  value={config.dossierTextoExtra ||''}
  onChange={e => setConfig({ ...config, dossierTextoExtra: e.target.value })}
  placeholder="Ejemplo: La banda cuenta con 4 integrantes (voz, guitarra, bajo y batería). Formato versátil para salas y festivales según aforo y requisitos técnicos. Ofrecemos un show potente y enérgico de 90 minutos concebido para hacer vibrar al público..."
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed font-sans"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed font-sans"
  />
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
  <span>Mínimo 80 caracteres para marcar como completado (si no hay PDF)</span>
@@ -189,13 +189,13 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <p>Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre, instrumento y breve descripción de cada integrante.</p>
  </div>
  {miembros.length === 0 && (
- <div className="rounded-[var(--r-m)] bg-slate-950 p-4 text-xs text-[var(--ink-3)]">
+ <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-3)]">
  Todavía no has añadido a nadie. Añade a los integrantes con su foto y descripción para que el dossier tenga cercanía.
  </div>
  )}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  {miembros.map(m => (
- <div key={m.id} className="rounded-[var(--r-m)] bg-slate-950 p-3.5 space-y-2.5">
+ <div key={m.id} className="rounded-[var(--r-m)] bg-[var(--surface)] p-3.5 space-y-2.5">
  <div className="flex items-start gap-3">
  <label className="shrink-0 cursor-pointer group" title="Subir foto del músico">
  <div className="w-16 h-16 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center relative">
@@ -255,7 +255,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  value={m.bio ||''}
  onChange={e => editarMiembro(m.id, { bio: e.target.value })}
  placeholder="Trayectoria o rol en directo..."
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-slate-200 focus: outline-none placeholder:text-[var(--ink-2)] leading-relaxed"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus: outline-none placeholder:text-[var(--ink-2)] leading-relaxed"
  />
  </div>
  <div className="space-y-1">
@@ -269,7 +269,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  value={m.instagram ||''}
  onChange={e => editarMiembro(m.id, { instagram: e.target.value })}
  placeholder="@usuario o https://instagram.com/usuario"
- className="w-full bg-[var(--surface)] rounded-[var(--r-s)] pl-8 pr-3 py-1.5 text-xs text-slate-200 focus: outline-none"
+ className="w-full bg-[var(--surface)] rounded-[var(--r-s)] pl-8 pr-3 py-1.5 text-xs text-[var(--ink)] focus: outline-none"
  />
  </div>
  </div>
@@ -297,7 +297,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  contactoBooking: { ...config.contactoBooking, nombre: e.target.value }
  })
  }
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none mt-1"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
  />
  </div>
 
@@ -312,7 +312,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  contactoBooking: { ...config.contactoBooking, email: e.target.value }
  })
  }
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none mt-1"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
  />
  </div>
 
@@ -327,13 +327,13 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  contactoBooking: { ...config.contactoBooking, telefono: e.target.value }
  })
  }
- className="w-full bg-slate-950 focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none mt-1"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
  />
  </div>
  </div>
 
  {/* SITIO WEB OFICIAL PROPIO DE LA BANDA */}
- <div className="p-3.5 rounded-[var(--r-m)] bg-slate-950 space-y-2">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
  <div className="flex items-center justify-between flex-wrap gap-2">
  <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
  <Globe className="w-4 h-4 text-amber-400" /> Sitio Web Oficial Propio de la Banda (Opcional)
@@ -366,7 +366,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  };
  });
  }}
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none font-mono"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-mono"
  />
  </div>
 
@@ -413,7 +413,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  };
  });
  }}
- className="w-full bg-slate-950 focus: rounded-[var(--r-s)] px-2.5 py-1.5 text-slate-200 outline-none font-mono text-[11px]"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-s)] px-2.5 py-1.5 text-[var(--ink)] outline-none font-mono text-[11px]"
  />
  </div>
  ))}
