@@ -1,10 +1,11 @@
 import React, { useState } from'react';
-import { 
- ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell 
+import {
+ ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell
 } from'recharts';
 import { Disc3, Building2, DollarSign, Users, ArrowRight, Zap, TrendingUp, Sparkles, Filter } from'lucide-react';
 import { Lead, Concert, Fan, ThemeColors } from'../../../types';
 import { getEnergyInfo } from'../../../utils/energyPacingUtils';
+import { Onda } from'../../ui/Onda';
 
 export interface ChartWidgetProps {
  leads?: Lead[];
@@ -184,58 +185,25 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  </div>
  </div>
 
- {/* Chart Area */}
- <div className={`w-full ${minHeightClass} pt-2`}>
- <ResponsiveContainer width="100%" height="100%">
- <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
- <defs>
- <linearGradient id="energyGradient" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
- <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.1}/>
- </linearGradient>
- </defs>
- <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
- <XAxis 
- dataKey="num" 
- stroke="#71717a" 
- fontSize={10} 
- fontFamily="monospace"
- tickFormatter={(val, idx) => {
- const title = chartData[idx]?.title;
- return title && title.length > 8 ? `${val}. ${title.substring(0, 6)}..` : `${val}. ${title ||''}`;
+ {/* Chart Area — Onda Visualization */}
+ <div className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}>
+ <Onda
+ data={chartData.map((d) => ({
+ label: `${d.num}. ${d.title.substring(0, 12)}`,
+ value: d.energy,
+ color: d.hexColor
+ }))}
+ height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
+ barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
+ gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
+ showLabels={true}
+ animated={true}
+ tooltipFormatter={(val) => {
+ const song = chartData.find(d => d.energy === val);
+ return song ? `${val}/20 (${song.label}) - ${song.bpm} BPM` : `${val}/20`;
  }}
+ className="w-full"
  />
- <YAxis stroke="#71717a" fontSize={10} domain={[0, 20]} ticks={[5, 10, 15, 20]} />
- <Tooltip
- content={({ active, payload }) => {
- if (active && payload && payload.length) {
- const data = payload[0].payload;
- return (
- <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50 max-w-[200px]">
- <div className="font-bold text-[var(--acc)] text-sm truncate">#{data.num} {data.title}</div>
- <div className="text-[11px] text-zinc-300 mt-1 space-y-0.5">
- <div>Energía: <span className="font-bold" style={{ color: data.hexColor }}>{data.energy}/20 ({data.label})</span></div>
- <div>Tempo: <span className="text-zinc-100">{data.bpm} BPM</span> | Tono: <span className="text-zinc-100">{data.keyStr}</span></div>
- <div>Duración: <span className="text-zinc-100">{data.durationMin} min</span></div>
- </div>
- </div>
- );
- }
- return null;
- }}
- />
- <Area 
- type="monotone" 
- dataKey="energy" 
- stroke="#f59e0b" 
- strokeWidth={3} 
- fillOpacity={1} 
- fill="url(#energyGradient)" 
- dot={{ r: 4, fill:'#f59e0b', strokeWidth: 2, stroke:'#18181b' }}
- activeDot={{ r: 6, fill:'#8b5cf6', stroke:'#ffffff', strokeWidth: 2 }}
- />
- </AreaChart>
- </ResponsiveContainer>
  </div>
  </div>
  );
@@ -298,39 +266,24 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  </span>
  </div>
 
- <div className={`w-full ${minHeightClass} pt-2`}>
- <ResponsiveContainer width="100%" height="100%">
- <BarChart data={funnelData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
- <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
- <XAxis dataKey="name" stroke="#71717a" fontSize={10} fontFamily="monospace" />
- <YAxis stroke="#71717a" fontSize={10} allowDecimals={false} />
- <Tooltip
- content={({ active, payload }) => {
- if (active && payload && payload.length) {
- const data = payload[0].payload;
- const pct = ((data.count / total) * 100).toFixed(1);
- return (
- <div className="bg-[var(--surface)]/80 border-stone-700 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
- <div className="font-bold text-[var(--acc)]">{data.name}</div>
- <div className="text-zinc-300 mt-1">
- Cantidad: <span className="font-bold text-[var(--ink)]">{data.count} salas</span>
- </div>
- <div className="text-[var(--ink-2)] text-[10px]">
- Representa el {pct}% del total
- </div>
- </div>
- );
- }
- return null;
+ <div className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}>
+ <Onda
+ data={funnelData.map((d) => ({
+ label: d.name,
+ value: d.count,
+ color: d.color
+ }))}
+ height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
+ barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
+ gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
+ showLabels={true}
+ animated={true}
+ tooltipFormatter={(val) => {
+ const pct = ((val / total) * 100).toFixed(1);
+ return `${val} salas (${pct}%)`;
  }}
+ className="w-full"
  />
- <Bar dataKey="count" radius={[6, 6, 0, 0]}>
- {funnelData.map((entry, index) => (
- <Cell key={`cell-${index}`} fill={entry.color} />
- ))}
- </Bar>
- </BarChart>
- </ResponsiveContainer>
  </div>
  </div>
  );
@@ -470,38 +423,21 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  <span className="font-bold text-purple-400 text-sm">{fansCount > 0 ? fansCount : 85} seguidores</span>
  </div>
 
- <div className={`w-full ${minHeightClass} pt-2`}>
- <ResponsiveContainer width="100%" height="100%">
- <AreaChart data={growthData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
- <defs>
- <linearGradient id="fansGradient" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#c084fc" stopOpacity={0.8}/>
- <stop offset="95%" stopColor="#818cf8" stopOpacity={0.1}/>
- </linearGradient>
- </defs>
- <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
- <XAxis dataKey="mes" stroke="#71717a" fontSize={10} fontFamily="monospace" />
- <YAxis stroke="#71717a" fontSize={10} />
- <Tooltip
- content={({ active, payload }) => {
- if (active && payload && payload.length) {
- const data = payload[0].payload;
- return (
- <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
- <div className="font-bold text-purple-400">{data.mes}</div>
- <div className="text-zinc-300 mt-1 space-y-0.5">
- <div>Fans acumulados: <span className="font-bold text-purple-300">{data.fans}</span></div>
- <div>Escaneos QR: <span className="font-bold text-[var(--acc)]">{data.qrScans}</span></div>
- </div>
- </div>
- );
- }
- return null;
- }}
+ <div className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}>
+ <Onda
+ data={growthData.map((d) => ({
+ label: d.mes,
+ value: d.fans,
+ color: 'var(--acc)'
+ }))}
+ height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
+ barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
+ gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
+ showLabels={true}
+ animated={true}
+ tooltipFormatter={(val) => `${val} fans acumulados`}
+ className="w-full"
  />
- <Area type="monotone" dataKey="fans" stroke="#c084fc" strokeWidth={3} fillOpacity={1} fill="url(#fansGradient)" />
- </AreaChart>
- </ResponsiveContainer>
  </div>
  </div>
  );
