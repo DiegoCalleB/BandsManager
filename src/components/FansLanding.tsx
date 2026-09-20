@@ -30,7 +30,7 @@ export interface FansLandingProps {
 const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ code, className = "w-4 h-3" }) => {
  if (code === 'es') {
  return (
- <svg className={`${className} rounded-xs shadow-xs object-cover border-white/20 shrink-0`} viewBox="0 0 640 480">
+ <svg className={`${className} rounded-xs shadow-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
  <path fill="#c60b1e" d="M0 0h640v480H0z"/>
  <path fill="#ffc400" d="M0 120h640v240H0z"/>
  </svg>
@@ -38,7 +38,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
  }
  if (code === 'en') {
  return (
- <svg className={`${className} rounded-xs shadow-xs object-cover border-white/20 shrink-0`} viewBox="0 0 640 480">
+ <svg className={`${className} rounded-xs shadow-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
  <path fill="#012169" d="M0 0h640v480H0z"/>
  <path fill="#fff" d="m75 0 245 180L565 0h75v55L415 240l225 185v55h-75L320 300 75 480H0v-55l225-185L0 55V0z"/>
  <path fill="#c8102e" d="m425 240 215 175v25h-35L390 265zm-210 0L0 415v25h35l215-175zm210 0L640 65V40h-35L390 215zm-210 0L0 65V40h35l215 175z"/>
@@ -49,7 +49,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
  }
  if (code === 'it') {
  return (
- <svg className={`${className} rounded-xs shadow-xs object-cover border-white/20 shrink-0`} viewBox="0 0 640 480">
+ <svg className={`${className} rounded-xs shadow-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
  <path fill="#009246" d="M0 0h213.3v480H0z"/>
  <path fill="#fff" d="M213.3 0h213.4v480H213.3z"/>
  <path fill="#ce2b37" d="M426.7 0H640v480H426.7z"/>
@@ -58,7 +58,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
  }
  if (code === 'cs') {
  return (
- <svg className={`${className} rounded-xs shadow-xs object-cover border-white/20 shrink-0`} viewBox="0 0 640 480">
+ <svg className={`${className} rounded-xs shadow-xs object-cover border border-[var(--hair)] shrink-0`} viewBox="0 0 640 480">
  <path fill="#d7141a" d="M0 0h640v480H0z"/>
  <path fill="#fff" d="M0 0h640v240H0z"/>
  <path fill="#11457e" d="M0 0l320 240L0 480z"/>
