@@ -265,11 +265,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  const badgeInfo = getStatusBadge();
 
  return (
- <div className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all shadow-sm ${
- isStitchLight 
- ?'bg-white text-[var(--ink)]' 
- :'bg-[var(--surface)] border-[var(--hair)] text-zinc-100'
- }`}>
+ <div className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all shadow-sm bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]`}>
  {/* Header Row */}
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-[var(--hair)]/60">
  <div className="flex items-center gap-3">
@@ -278,7 +274,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-zinc-100 flex items-center gap-1.5">
+ <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-[var(--ink)] flex items-center gap-1.5">
  <Bot className="w-3.5 h-3.5 text-[var(--acc)]" />
  Entrenamiento & Preparación de Agentes IA
  </h3>
@@ -325,8 +321,8 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {/* Progress Bar */}
  <div className="pt-3 space-y-1.5">
  <div className="w-full h-2 rounded-full bg-[var(--surface)]/80 overflow-hidden relative">
- <div 
- className="h-full rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-emerald-400 transition-all duration-500"
+ <div
+ className="h-full rounded-full bg-gradient-to-r from-[var(--ok)] to-[var(--acc)] transition-all duration-500"
  style={{ width: `${percentage}%` }}
  />
  </div>
@@ -337,15 +333,15 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-1">
  <div className="flex items-center gap-1.5 flex-wrap">
  {pillars.map(p => (
- <span 
+ <span
  key={`badge-${p.id}`}
  className={`inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md ${
- p.completed 
- ?'bg-[var(--ok-soft)] border-emerald-500/20 text-emerald-400' 
- :'bg-[var(--surface)]/80 border-[var(--hair)] text-stone-400'
+ p.completed
+ ?'bg-[var(--ok-soft)] border-[var(--ok)]/20 text-[var(--ok)]'
+ :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
- {p.completed ? <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400 shrink-0" /> : <AlertCircle className="w-2.5 h-2.5 text-amber-500/80 shrink-0" />}
+ {p.completed ? <CheckCircle2 className="w-2.5 h-2.5 text-[var(--ok)] shrink-0" /> : <AlertCircle className="w-2.5 h-2.5 text-[var(--acc)]/80 shrink-0" />}
  <span>{p.title.split('')[0]}</span>
  </span>
  ))}
@@ -371,21 +367,21 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  onClick={() => handlePillarClick(pillar.view)}
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-1 cursor-pointer group active:scale-95 ${
  pillar.completed
- ?'bg-[var(--ok-soft)] border-emerald-500/20 text-[var(--ink-2)] hover:bg-[var(--ok-soft)]'
- :'bg-[var(--acc-soft)] /20 text-[var(--ink)] hover:bg-[var(--acc-soft)]'
+ ?'bg-[var(--ok-soft)] border-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok-soft)]'
+ :'bg-[var(--acc-soft)] text-[var(--ink)] hover:bg-[var(--acc-soft)]'
  }`}
  >
  <div className="flex items-center justify-between gap-1">
  <span className="text-[11px] font-mono font-bold truncate">{pillar.title}</span>
  {pillar.completed ? (
- <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
  ) : (
  <AlertCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  )}
  </div>
 
  <span className={`text-[9px] font-mono font-medium truncate ${
- pillar.completed ?'text-emerald-400/80' :'text-[var(--acc)] group-hover:underline'
+ pillar.completed ?'text-[var(--ok)]/80' :'text-[var(--acc)] group-hover:underline'
  }`}>
  {pillar.completed ?'Completado' : pillar.missingLabel}
  </span>
@@ -403,20 +399,20 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-sans">
  {pillars.map(pillar => (
- <div 
+ <div
  key={`exp-${pillar.id}`}
  className={`p-2.5 rounded-[var(--r-m)] flex items-start justify-between gap-3 ${
- pillar.completed ?'bg-[var(--surface)]/40 /80' :'bg-[var(--acc)]/5 /20'
+ pillar.completed ?'bg-[var(--surface)]/40' :'bg-[var(--acc)]/5'
  }`}
  >
  <div className="space-y-0.5">
  <div className="flex items-center gap-1.5">
  {pillar.completed ? (
- <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
  ) : (
  <AlertCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  )}
- <span className="font-bold text-zinc-100 text-xs">{pillar.title}</span>
+ <span className="font-bold text-[var(--ink)] text-xs">{pillar.title}</span>
  </div>
  <p className="text-[10px] text-[var(--ink-2)] leading-snug">
  {pillar.agentImpact}
@@ -448,7 +444,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <Bot className="w-6 h-6" />
  </div>
  <div>
- <h3 className="text-lg font-bold font-display uppercase tracking-wider text-zinc-100">
+ <h3 className="text-lg font-bold font-display uppercase tracking-wider text-[var(--ink)]">
  Entrenamiento de Agentes IA para {bandName}
  </h3>
  <p className="text-xs text-[var(--ink-2)] font-mono">
@@ -465,7 +461,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  </button>
  </div>
 
- <div className="space-y-3 text-xs text-zinc-300 font-sans leading-relaxed">
+ <div className="space-y-3 text-xs text-[var(--ink-2)] font-sans leading-relaxed">
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
  <h4 className="font-bold text-[var(--acc)] flex items-center gap-2 text-sm font-display">
  <Bot className="w-4 h-4" /> 1. Agente Scout (Prospección de Salas & Recintos)
