@@ -1372,7 +1372,7 @@ const ChordSheetPage: React.FC<{
  <p className={glareMode ?'text-indigo-900' :'text-indigo-200'}><span className={glareMode ?'text-indigo-700 font-bold' :'text-indigo-400 font-bold'}>🎵 Estructura: </span>{structure}</p>
  )}
  {progression && (
- <p className={glareMode ?'text-teal-900' :'text-teal-200'}><span className={glareMode ?'text-teal-700 font-bold' :'text-teal-400 font-bold'}>🎸 Progresión: </span>{progression}</p>
+ <p className={glareMode ?'text-teal-900' :'text-teal-200'}><span className={glareMode ?'text-teal-700 font-bold' :'text-[var(--ok)] font-bold'}>🎸 Progresión: </span>{progression}</p>
  )}
  </div>
  )}

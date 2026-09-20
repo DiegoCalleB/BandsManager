@@ -451,13 +451,13 @@ export function diagnoseTransition(songA: Song, songB: Song): TransitionDiagnosi
   } else if (clampedScore >= 70) {
     verdictStatus = 'buena';
     badgeLabel = '🟡 Recomendada con Matices';
-    badgeClass = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+    badgeClass = 'bg-[var(--acc)]/20 text-amber-300 border-amber-500/40';
     summary = 'Transición sólida. Requiere cuidar la entrada o el remate de platos según las recomendaciones.';
     artisticIntent = 'Aporta dinamismo y variación al show con un mínimo control de directo.';
   } else if (clampedScore >= 50) {
     verdictStatus = 'precaucion';
     badgeLabel = '🟠 Riesgosa / Requiere Ajuste';
-    badgeClass = 'bg-orange-500/20 text-orange-300 border-orange-500/40';
+    badgeClass = 'bg-orange-500/20 text-[var(--acc)]/80 border-orange-500/40';
     summary = 'Existe un salto notable de tempo o tensión armónica. Conviene prepararla en el local de ensayo.';
     artisticIntent = 'Efecto de contraste fuerte; debe ejecutarse con determinación.';
   } else {

@@ -241,7 +241,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
  }`}
  >
- <Video className="w-3.5 h-3.5 text-cyan-400" />
+ <Video className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>TikTok ({tkCount.toLocaleString()})</span>
  </button>
 
@@ -304,7 +304,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {growthPlan.channels.map(channel => {
  const channelCompleted = channel.actionItems.filter(a => completedActions[a.id]).length;
  const channelColor = channel.platform ==='instagram' ?'text-pink-400 border-[var(--alert)]/20 bg-pink-500/5' :
- channel.platform ==='tiktok' ?'text-cyan-400 border-[var(--acc)]/20 bg-cyan-500/5' :
+ channel.platform ==='tiktok' ?'text-[var(--acc)] border-[var(--acc)]/20 bg-[var(--acc)]/5' :
  channel.platform ==='youtube' ?'text-red-400 border-[var(--alert)]/20 bg-red-500/5' :'text-emerald-400 border-[var(--ok)]/20 bg-emerald-500/5';
  
  return (
@@ -314,7 +314,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="flex items-center justify-between mb-3">
  <div className="flex items-center gap-2">
  {channel.platform ==='instagram' && <Instagram className="w-4 h-4 text-pink-500" />}
- {channel.platform ==='tiktok' && <Video className="w-4 h-4 text-cyan-400" />}
+ {channel.platform ==='tiktok' && <Video className="w-4 h-4 text-[var(--acc)]" />}
  {channel.platform ==='youtube' && <Youtube className="w-4 h-4 text-red-500" />}
  {channel.platform ==='spotify' && <Music2 className="w-4 h-4 text-emerald-500" />}
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
@@ -402,7 +402,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase mb-2">
  {dayPlan.recommendedPlatform ==='instagram' && <span className="text-pink-400 flex items-center gap-1"><Instagram className="w-3 h-3" /> Instagram</span>}
- {dayPlan.recommendedPlatform ==='tiktok' && <span className="text-cyan-400 flex items-center gap-1"><Video className="w-3 h-3" /> TikTok</span>}
+ {dayPlan.recommendedPlatform ==='tiktok' && <span className="text-[var(--acc)] flex items-center gap-1"><Video className="w-3 h-3" /> TikTok</span>}
  {dayPlan.recommendedPlatform ==='youtube' && <span className="text-red-400 flex items-center gap-1"><Youtube className="w-3 h-3" /> YouTube</span>}
  {dayPlan.recommendedPlatform ==='todas' && <span className="text-[var(--acc)] flex items-center gap-1"><Flame className="w-3 h-3" /> Todas las Redes</span>}
  </div>
@@ -429,7 +429,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div>
  <div className="flex items-center gap-2">
  {currentChannel.platform ==='instagram' && <Instagram className="w-5 h-5 text-pink-500" />}
- {currentChannel.platform ==='tiktok' && <Video className="w-5 h-5 text-cyan-400" />}
+ {currentChannel.platform ==='tiktok' && <Video className="w-5 h-5 text-[var(--acc)]" />}
  {currentChannel.platform ==='youtube' && <Youtube className="w-5 h-5 text-red-500" />}
  {currentChannel.platform ==='spotify' && <Music2 className="w-5 h-5 text-emerald-500" />}
  <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--ink)]">
@@ -468,7 +468,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {currentChannel.actionItems.map(action => {
  const isDone = completedActions[action.id];
  const impactColor = action.impact ==='critico' ?'bg-red-500/10 text-red-400 border-[var(--alert)]/20' :
- action.impact ==='alto' ?'bg-[var(--acc)]/10 text-[var(--acc)] /20' :'bg-blue-500/10 text-blue-400 border-[var(--acc)]/20';
+ action.impact ==='alto' ?'bg-[var(--acc)]/10 text-[var(--acc)] /20' :'bg-blue-500/10 text-[var(--acc)] border-[var(--acc)]/20';
 
  return (
  <div

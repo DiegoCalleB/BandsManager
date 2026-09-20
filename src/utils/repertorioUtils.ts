@@ -223,8 +223,8 @@ export function getSongMemberNote(song?: any, memberKey?: string, memberName?: s
 export type ReadinessLevel = 'aprendiendo' | 'casi_lista' | 'lista';
 
 export const READINESS_LEVELS: { value: ReadinessLevel; label: string; icon: string; colorClass: string }[] = [
-  { value: 'aprendiendo', label: 'Aprendiendo', icon: '🌱', colorClass: 'text-amber-400 bg-amber-500/10 border-amber-500/30' },
-  { value: 'casi_lista', label: 'Casi lista', icon: '🔶', colorClass: 'text-orange-400 bg-orange-500/10 border-orange-500/30' },
+  { value: 'aprendiendo', label: 'Aprendiendo', icon: '🌱', colorClass: 'text-[var(--acc)]/80 bg-[var(--acc)]/10 border-amber-500/30' },
+  { value: 'casi_lista', label: 'Casi lista', icon: '🔶', colorClass: 'text-[var(--acc)]/80 bg-orange-500/10 border-orange-500/30' },
   { value: 'lista', label: 'Lista para directo', icon: '✅', colorClass: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' }
 ];
 

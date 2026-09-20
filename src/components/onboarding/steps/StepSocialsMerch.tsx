@@ -88,7 +88,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  {/* TikTok */}
  <div>
  <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
- <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
+ <Smartphone className="w-3.5 h-3.5 text-[var(--acc)]" />
  TikTok
  </label>
  <input
@@ -103,7 +103,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  {/* Web Oficial */}
  <div>
  <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
- <Globe className="w-3.5 h-3.5 text-blue-400" />
+ <Globe className="w-3.5 h-3.5 text-[var(--acc)]" />
  Sitio Web Oficial / Linktree
  </label>
  <input

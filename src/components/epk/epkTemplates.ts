@@ -45,10 +45,10 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
     preview: {
       bg: 'bg-slate-950',
       cardBg: 'bg-slate-900',
-      accent: 'bg-amber-500',
+      accent: 'bg-[var(--acc)]',
       border: 'border-amber-500/40',
-      text: 'text-amber-400',
-      pill: 'bg-amber-500/20 text-amber-400'
+      text: 'text-[var(--acc)]/80',
+      pill: 'bg-[var(--acc)]/20 text-[var(--acc)]/80'
     }
   },
   {
@@ -77,10 +77,10 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
     preview: {
       bg: 'bg-[#0a0814]',
       cardBg: 'bg-[#140f28]',
-      accent: 'bg-fuchsia-500',
-      border: 'border-fuchsia-500/40',
-      text: 'text-fuchsia-400',
-      pill: 'bg-fuchsia-500/20 text-fuchsia-300'
+      accent: 'bg-[var(--tentative)]',
+      border: 'border-[var(--tentative)]/40',
+      text: 'text-[var(--tentative)]/80',
+      pill: 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80'
     }
   },
   {
@@ -95,8 +95,8 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
       cardBg: 'bg-[#241c17]',
       accent: 'bg-orange-600',
       border: 'border-orange-700/40',
-      text: 'text-orange-400',
-      pill: 'bg-orange-950/60 text-orange-300'
+      text: 'text-[var(--acc)]/80',
+      pill: 'bg-orange-950/60 text-[var(--acc)]/80'
     }
   }
 ];
@@ -306,31 +306,31 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
 
     case 'neon':
       return {
-        pageBg: 'bg-[#090713] text-purple-100 selection:bg-fuchsia-500 selection:text-white',
-        topBar: 'bg-[#110d24]/90 border-fuchsia-900/50 text-purple-100 shadow-lg',
-        topBarBtn: 'bg-[#181335] hover:bg-[#231b4d] text-purple-200 border-purple-800/60',
+        pageBg: 'bg-[#090713] text-[var(--tentative)]/20 selection:bg-[var(--tentative)]/80 selection:text-white',
+        topBar: 'bg-[#110d24]/90 border-[var(--tentative)]/20 text-[var(--tentative)]/20 shadow-lg',
+        topBarBtn: 'bg-[#181335] hover:bg-[#231b4d] text-[var(--tentative)]/40 border-[var(--tentative)]/40',
         heroNoPhoto: 'bg-gradient-to-br from-[#1b0e3d] via-[#090713] to-[#041d33]/50',
         heroOverlay: 'bg-gradient-to-t from-[#090713] via-[#090713]/85 to-[#090713]/50',
         heroTitleClass: 'text-white uppercase leading-[0.88] tracking-widest text-[14vw] sm:text-[6.5rem] lg:text-[8rem] font-black drop-shadow-[0_0_25px_rgba(217,70,239,0.35)]',
         heroTitleStyle: { fontFamily: "'Space Grotesk', system-ui, sans-serif" },
-        heroSubtitle: 'text-cyan-300 font-mono tracking-wider',
+        heroSubtitle: 'text-[var(--acc)]/80 font-mono tracking-wider',
         sectionHeadingClass: 'text-white uppercase tracking-wider border-b border-fuchsia-900/60 pb-4',
         sectionHeadingStyle: { fontFamily: "'Space Grotesk', system-ui, sans-serif" },
-        card: 'bg-[#120e24] border-purple-900/50 text-purple-100',
-        cardHighlight: 'bg-[#161030] border-fuchsia-500/30 shadow-[0_0_20px_rgba(217,70,239,0.1)] hover:border-fuchsia-400/50',
-        statNumber: 'text-cyan-400 font-mono drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]',
-        badge: 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/40',
-        accentBtn: 'bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold shadow-[0_0_20px_rgba(217,70,239,0.4)]',
-        accentBtnSubtle: 'bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/40 hover:bg-fuchsia-500/25',
-        accentText: 'text-fuchsia-400',
-        bookingCard: 'bg-[#171133] border-fuchsia-500/40 text-purple-100 shadow-[0_0_25px_rgba(217,70,239,0.12)]',
-        bookingTitle: 'text-fuchsia-300 font-bold',
-        memberRole: 'text-cyan-400 font-mono',
+        card: 'bg-[#120e24] border-[var(--tentative)]/20 text-[var(--tentative)]/20',
+        cardHighlight: 'bg-[#161030] border-[var(--tentative)]/30 shadow-[0_0_20px_rgba(217,70,239,0.1)] hover:border-[var(--tentative)]/80/50',
+        statNumber: 'text-[var(--acc)]/80 font-mono drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]',
+        badge: 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--tentative)]/40',
+        accentBtn: 'bg-fuchsia-600 hover:bg-[var(--tentative)] text-white font-bold shadow-[0_0_20px_rgba(217,70,239,0.4)]',
+        accentBtnSubtle: 'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border-[var(--tentative)]/40 hover:bg-[var(--tentative)]/25',
+        accentText: 'text-[var(--tentative)]/80',
+        bookingCard: 'bg-[#171133] border-[var(--tentative)]/40 text-[var(--tentative)]/20 shadow-[0_0_25px_rgba(var(--tentative-rgb),0.12)]',
+        bookingTitle: 'text-[var(--tentative)]/80 font-bold',
+        memberRole: 'text-[var(--acc)]/80 font-mono',
         memberCard: 'bg-[#120e24] border-purple-900/50',
-        quoteIcon: 'text-fuchsia-500/40',
-        quoteMedium: 'text-cyan-400',
-        footer: 'text-purple-400/60 border-purple-900/60',
-        stickyPlayer: 'bg-[#110d24]/95 border-fuchsia-500/40 text-purple-100 shadow-2xl'
+        quoteIcon: 'text-[var(--tentative)]/40',
+        quoteMedium: 'text-[var(--acc)]/80',
+        footer: 'text-[var(--tentative)]/60 border-purple-900/60',
+        stickyPlayer: 'bg-[#110d24]/95 border-[var(--tentative)]/40 text-[var(--tentative)]/20 shadow-2xl'
       };
 
     case 'vintage':
@@ -342,22 +342,22 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         heroOverlay: 'bg-gradient-to-t from-[#171310] via-[#171310]/85 to-[#171310]/50',
         heroTitleClass: 'text-amber-100 uppercase leading-[0.9] tracking-wider text-[14vw] sm:text-[6.5rem] lg:text-[8rem] font-black',
         heroTitleStyle: { fontFamily: "'Courier New', Georgia, serif" },
-        heroSubtitle: 'text-orange-300 font-mono',
+        heroSubtitle: 'text-[var(--acc)]/80 font-mono',
         sectionHeadingClass: 'text-amber-100 uppercase tracking-wider border-b border-amber-900/50 pb-4',
         sectionHeadingStyle: { fontFamily: "'Courier New', Georgia, serif" },
         card: 'bg-[#201a16] border-amber-900/40 text-amber-100 shadow-md',
         cardHighlight: 'bg-[#261e19] border-orange-700/35 text-amber-100 hover:border-orange-600/50',
-        statNumber: 'text-orange-400 font-mono',
-        badge: 'bg-orange-950/60 text-orange-300 border-orange-800/60',
-        accentBtn: 'bg-orange-600 hover:bg-orange-500 text-stone-950 font-bold shadow-md',
-        accentBtnSubtle: 'bg-orange-600/15 text-orange-300 border-orange-600/40 hover:bg-orange-600/25',
-        accentText: 'text-orange-400',
+        statNumber: 'text-[var(--acc)]/80 font-mono',
+        badge: 'bg-orange-950/60 text-[var(--acc)]/80 border-orange-800/60',
+        accentBtn: 'bg-orange-600 hover:bg-[var(--acc)] text-stone-950 font-bold shadow-md',
+        accentBtnSubtle: 'bg-orange-600/15 text-[var(--acc)]/80 border-orange-600/40 hover:bg-orange-600/25',
+        accentText: 'text-[var(--acc)]/80',
         bookingCard: 'bg-[#261f1a] border-orange-800/40 text-amber-100 shadow-md',
-        bookingTitle: 'text-orange-400 font-bold',
-        memberRole: 'text-amber-400/90 font-mono',
+        bookingTitle: 'text-[var(--acc)]/80 font-bold',
+        memberRole: 'text-[var(--acc)]/80/90 font-mono',
         memberCard: 'bg-[#201a16] border-amber-900/40',
         quoteIcon: 'text-orange-500/40',
-        quoteMedium: 'text-orange-400 font-mono',
+        quoteMedium: 'text-[var(--acc)]/80 font-mono',
         footer: 'text-amber-600/70 border-amber-900/40',
         stickyPlayer: 'bg-[#201a16]/95 border-orange-700/40 text-amber-100 shadow-2xl'
       };
@@ -365,7 +365,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
     case 'stage':
     default:
       return {
-        pageBg: 'bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950',
+        pageBg: 'bg-slate-950 text-slate-100 selection:bg-[var(--acc)] selection:text-slate-950',
         topBar: 'bg-slate-900/90 border-slate-800/80 text-slate-100',
         topBarBtn: 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700',
         heroNoPhoto: 'bg-gradient-to-br from-slate-900 via-slate-950 to-amber-950/30',
@@ -377,17 +377,17 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         sectionHeadingStyle: { fontFamily: "'Anton', 'Oswald', sans-serif" },
         card: 'bg-slate-950 border-slate-800',
         cardHighlight: 'bg-slate-900/90 border-amber-500/20 shadow-lg hover:border-amber-500/40',
-        statNumber: 'text-amber-400 font-mono',
-        badge: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-        accentBtn: 'bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-lg',
-        accentBtnSubtle: 'bg-amber-500/15 text-amber-300 border-amber-500/30 hover:bg-amber-500/25',
-        accentText: 'text-amber-400',
-        bookingCard: 'bg-amber-500/10 border-amber-500/30',
-        bookingTitle: 'text-amber-400',
-        memberRole: 'text-amber-400/90',
+        statNumber: 'text-[var(--acc)]/80 font-mono',
+        badge: 'bg-[var(--acc)]/20 text-[var(--acc)]/80 border-amber-500/30',
+        accentBtn: 'bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-slate-950 font-bold shadow-lg',
+        accentBtnSubtle: 'bg-[var(--acc)]/15 text-amber-300 border-amber-500/30 hover:bg-[var(--acc)]/25',
+        accentText: 'text-[var(--acc)]/80',
+        bookingCard: 'bg-[var(--acc)]/10 border-amber-500/30',
+        bookingTitle: 'text-[var(--acc)]/80',
+        memberRole: 'text-[var(--acc)]/80/90',
         memberCard: 'bg-slate-950 border-slate-800',
-        quoteIcon: 'text-amber-500/40',
-        quoteMedium: 'text-amber-400',
+        quoteIcon: 'text-[var(--acc)]/40',
+        quoteMedium: 'text-[var(--acc)]/80',
         footer: 'text-slate-500 border-slate-800',
         stickyPlayer: 'bg-slate-900/95 border-amber-500/40 text-white'
       };

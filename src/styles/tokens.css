@@ -41,17 +41,19 @@
   --on-alert: #FFFFFF;
 
   /* Acento por defecto (módulo Panel/Booking). Lo tiñe [data-modulo].
-     Terracota suave, inspirado en instrumentos musicales: madera, latón.
-     Menos saturado que el naranja quemado anterior (#D86E31), más universal.
-     Músicos de todo el mundo lo reconocen (no grita "broker cripto"). */
-  --acc:      #A0763D;
-  --acc-soft: #E8D5C8;
-  --acc-ink:  #6B4D2D;
+     Azul eléctrico vivo — pedido explícito de Diego el 2026-09-20 tras
+     rechazar marrón, cobre Y verde esmeralda. Deliberadamente más
+     saturado y azul puro (hue~225°) que el azul apagado de Finanzas
+     (--acc #3C7EA8, hue~200°, mucho menos saturado) para que no se
+     confundan al cambiar de módulo. */
+  --acc:      #2563EB;
+  --acc-soft: #DBEAFE;
+  --acc-ink:  #1D4ED8;
   --on-acc:   #FFFFFF;
 
   /* Efectos — glows y sombras semi-transparentes para visualizaciones */
   --ok-glow:    rgba(23, 153, 140, 0.1);   /* --ok con 10% opacidad */
-  --acc-glow:   rgba(160, 118, 61, 0.1);   /* --acc con 10% opacidad */
+  --acc-glow:   rgba(37, 99, 235, 0.1);    /* --acc con 10% opacidad */
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Sombra / divisor en patrones */
   --shadow-soft: rgba(0, 0, 0, 0.15);      /* Sombra muy suave (playhead, etc.) */
   --scrim:      #000000;                   /* Velo tras un modal — siempre oscuro, no cambia con el tema */
@@ -61,6 +63,17 @@
      hex de un tema legacy pre-Espectro que ya no existe, ver AGENTS.md). */
   --tentative:      #7E22CE;
   --tentative-soft: #F3E8FF;
+
+  /* Paleta de colores para bandas (8 colores distintos). Se aplica en Calendar
+     y cualquier vista que muestre múltiples bandas/equipos con identidad visual. */
+  --band-0:       #2563EB; --band-0-soft: #DBEAFE; --band-0-ink: #1D4ED8;
+  --band-1:       #0284C7; --band-1-soft: #CFF0FF; --band-1-ink: #0369A1;
+  --band-2:       #7C3AED; --band-2-soft: #EDE9FE; --band-2-ink: #6D28D9;
+  --band-3:       #17998C; --band-3-soft: #DDF1EE; --band-3-ink: #0E6B62;
+  --band-4:       #E0615C; --band-4-soft: #FDE9E7; --band-4-ink: #A83C37;
+  --band-5:       #9B5FB5; --band-5-soft: #F0E7F5; --band-5-ink: #6F3D87;
+  --band-6:       #F97316; --band-6-soft: #FFEDD5; --band-6-ink: #C2410C;
+  --band-7:       #D97706; --band-7-soft: #FEF3C7; --band-7-ink: #92400E;
 
   /* Elevación — Espectro es plano. Separa el relleno, no la sombra. */
   --sh-s: none;
@@ -103,19 +116,28 @@
   --alert-rgb: 226, 122, 112;
   --on-alert: #2E100C;
 
-  --acc:      #C8945E;
-  --acc-soft: #3E3028;
-  --acc-ink:  #C8945E;
-  --on-acc:   #2A1F14;
+  --acc:      #60A5FA;
+  --acc-soft: #1E3A5F;
+  --acc-ink:  #60A5FA;
+  --on-acc:   #0A1F3D;
 
   /* Efectos — glows con colores de dark theme */
   --ok-glow:    rgba(79, 199, 184, 0.1);   /* --ok (dark) con 10% */
-  --acc-glow:   rgba(200, 148, 94, 0.1);   /* --acc (dark) con 10% */
+  --acc-glow:   rgba(96, 165, 250, 0.1);   /* --acc (dark) con 10% */
   --shadow-dark: rgba(0, 0, 0, 0.5);       /* Mismo negro/sombra */
   --scrim:      #000000;
 
   --tentative:      #C084FC;
   --tentative-soft: rgba(192, 132, 252, 0.2);
+
+  --band-0:       #60A5FA; --band-0-soft: #1E3A5F; --band-0-ink: #60A5FA;
+  --band-1:       #38BDF8; --band-1-soft: #164E63; --band-1-ink: #38BDF8;
+  --band-2:       #A78BFA; --band-2-soft: #3F2F56; --band-2-ink: #A78BFA;
+  --band-3:       #4FC7B8; --band-3-soft: #122D29; --band-3-ink: #4FC7B8;
+  --band-4:       #F08B84; --band-4-soft: #2D1A17; --band-4-ink: #F08B84;
+  --band-5:       #C08FD6; --band-5-soft: #241A2B; --band-5-ink: #C08FD6;
+  --band-6:       #FB923C; --band-6-soft: #3B2415; --band-6-ink: #FB923C;
+  --band-7:       #FBBF24; --band-7-soft: #402D13; --band-7-ink: #FBBF24;
 
   color-scheme: dark;
 }
@@ -158,6 +180,15 @@
   --tentative:      #C084FC;
   --tentative-soft: rgba(192, 132, 252, 0.2);
 
+  --band-0:       #3B82F6; --band-0-soft: #1F2937; --band-0-ink: #3B82F6;
+  --band-1:       #0EA5E9; --band-1-soft: #1F2937; --band-1-ink: #0EA5E9;
+  --band-2:       #A855F7; --band-2-soft: #2D1B4E; --band-2-ink: #A855F7;
+  --band-3:       #14B8A6; --band-3-soft: #1F3A35; --band-3-ink: #14B8A6;
+  --band-4:       #F43F5E; --band-4-soft: #3D1520; --band-4-ink: #F43F5E;
+  --band-5:       #D946EF; --band-5-soft: #3B1B47; --band-5-ink: #D946EF;
+  --band-6:       #F97316; --band-6-soft: #3E2415; --band-6-ink: #F97316;
+  --band-7:       #EAB308; --band-7-soft: #3D3415; --band-7-ink: #EAB308;
+
   --r-pill: 999px;
   --r-s:    8px;
   --r-m:    12px;
@@ -176,7 +207,7 @@
    No son intercambiables: #D9A62B sobre blanco no llega a 4,5:1.       */
 
 [data-modulo="booking"],
-[data-modulo="panel"]      { --acc:#D86E31; --acc-soft:#F9EAE1; --acc-ink:#813F18; --on-acc:#FFFFFF; }
+[data-modulo="panel"]      { --acc:#2563EB; --acc-soft:#DBEAFE; --acc-ink:#1D4ED8; --on-acc:#FFFFFF; }
 [data-modulo="repertorio"] { --acc:#E0615C; --acc-soft:#FDE9E7; --acc-ink:#A83C37; --on-acc:#FFFFFF; }
 [data-modulo="gira"],
 [data-modulo="sala"]       { --acc:#17998C; --acc-soft:#DDF1EE; --acc-ink:#0E6B62; --on-acc:#FFFFFF; }
@@ -186,7 +217,7 @@
 [data-modulo="epk"]        { --acc:#6B4CE0; --acc-soft:#F0E7F9; --acc-ink:#4A2F8D; --on-acc:#FFFFFF; }
 
 [data-theme="dark"] [data-modulo="booking"],
-[data-theme="dark"] [data-modulo="panel"]      { --acc:#E99463; --acc-soft:#3D2817; --acc-ink:#E99463; --on-acc:#1F130A; }
+[data-theme="dark"] [data-modulo="panel"]      { --acc:#60A5FA; --acc-soft:#1E3A5F; --acc-ink:#60A5FA; --on-acc:#0A1F3D; }
 [data-theme="dark"] [data-modulo="repertorio"] { --acc:#F08B84; --acc-soft:#2D1A17; --acc-ink:#F08B84; --on-acc:#1F1413; }
 [data-theme="dark"] [data-modulo="gira"],
 [data-theme="dark"] [data-modulo="sala"]       { --acc:#4FC7B8; --acc-soft:#122D29; --acc-ink:#4FC7B8; --on-acc:#08201C; }

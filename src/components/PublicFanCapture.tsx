@@ -211,7 +211,7 @@ export const PublicFanCapture: React.FC = () => {
  required
  checked={consentimientoRGPD}
  onChange={e => setConsentimientoRGPD(e.target.checked)}
- className="mt-0.5 w-4 h-4 rounded bg-[var(--surface)] text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900"
+ className="mt-0.5 w-4 h-4 rounded bg-[var(--surface)] text-[var(--acc)] focus:ring-amber-500 focus:ring-offset-slate-900"
  />
  <span>
  Acepto recibir novedades, lanzamientos y fechas de conciertos de <strong>Bakandeya</strong>. 

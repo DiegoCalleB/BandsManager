@@ -387,7 +387,7 @@ export function DashboardWidgetGrid({
  </div>
  <div className="flex items-center gap-1.5">
  <Maximize2 className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
- <span><strong>Ancho & Alto:</strong> Ajusta el tamaño (25%, 50%, 100%).</span>
+ <span><strong>Ancho & Alto:</strong> Elige tamaño con los iconos de barra.</span>
  </div>
  <div className="flex items-center gap-1.5">
  <Monitor className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
@@ -422,14 +422,14 @@ export function DashboardWidgetGrid({
  className={`${colSpanClass} relative transition-all duration-200 ${
  isDragging ?'opacity-40 scale-[0.98]' :''
  } ${
- isDragOver ?'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#121214] rounded-[var(--r-l)] bg-[var(--acc)]/10' :''
+ isDragOver ?'ring-2 ring-[var(--acc)] ring-offset-2 ring-offset-[var(--bg)] rounded-[var(--r-l)] bg-[var(--acc)]/10' :''
  } ${
- isEditMode ?'ring-2 ring-amber-0/40 rounded-[var(--r-l)] p-1 bg-[var(--acc)]/5 hover:ring-amber-400' :''
+ isEditMode ?'ring-2 ring-[var(--acc)]/40 rounded-[var(--r-l)] p-1 bg-[var(--acc)]/5 hover:ring-[var(--acc)]' :''
  }`}
  >
  {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
  {isEditMode && (
- <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-stone-950 p-2 rounded-t-xl mb-1 text-xs font-mono text-[var(--ink-2)] shadow-md gap-2">
+ <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--sunken)] p-2 rounded-t-xl mb-1 text-xs font-mono text-[var(--ink-2)] shadow-md gap-2">
  <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
  <GripVertical className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">
@@ -438,40 +438,52 @@ export function DashboardWidgetGrid({
  </div>
 
  <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
- {/* Width options */}
- <div className="flex items-center gap-0.5 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)] text-[10px]">
- <span className="text-[var(--ink-2)] px-1 font-bold">Ancho:</span>
- {([3, 4, 6, 8, 12] as const).map(spanVal => (
+ {/* Ancho — 3 tamaños con icono de proporción, no 5 porcentajes en texto */}
+ <div className="flex items-center gap-1 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)]">
+ {([
+ { span: 4 as const, w: 6, label:'Estrecho' },
+ { span: 6 as const, w: 10, label:'Mitad' },
+ { span: 12 as const, w: 14, label:'Completo' },
+ ]).map(({ span, w, label }) => (
  <button
- key={spanVal}
+ key={span}
  type="button"
- onClick={() => handleChangeWSpan(widget.id, spanVal)}
- className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
- widget.wSpan === spanVal
- ?'bg-[var(--acc)] text-[var(--on-acc)]'
- :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ onClick={() => handleChangeWSpan(widget.id, span)}
+ title={label}
+ aria-label={`Ancho: ${label}`}
+ className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center ${
+ widget.wSpan === span ?'bg-[var(--acc)]' :'hover:bg-[var(--sunken)]'
  }`}
  >
- {spanVal === 3 ?'25%' : spanVal === 4 ?'33%' : spanVal === 6 ?'50%' : spanVal === 8 ?'66%' :'100%'}
+ <span
+ className={`block h-2.5 rounded-[2px] ${widget.wSpan === span ?'bg-[var(--on-acc)]' :'bg-[var(--ink-2)]'}`}
+ style={{ width: w }}
+ />
  </button>
  ))}
  </div>
 
- {/* Height options */}
- <div className="flex items-center gap-0.5 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)] text-[10px]">
- <span className="text-[var(--ink-2)] px-1 font-bold">Alto:</span>
- {(['compact','normal','tall'] as const).map(hVal => (
+ {/* Alto — mismo patrón visual, icono de proporción vertical */}
+ <div className="flex items-center gap-1 bg-[var(--surface)]/80 border-[var(--hair)] p-0.5 rounded-[var(--r-s)]">
+ {([
+ { val:'compact' as const, h: 6, label:'Bajo' },
+ { val:'normal' as const, h: 10, label:'Medio' },
+ { val:'tall' as const, h: 14, label:'Alto' },
+ ]).map(({ val, h, label }) => (
  <button
- key={hVal}
+ key={val}
  type="button"
- onClick={() => handleChangeHSpan(widget.id, hVal)}
- className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
- (widget.hSpan ||'normal') === hVal
- ?'bg-[var(--acc)] text-[var(--ink)]'
- :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ onClick={() => handleChangeHSpan(widget.id, val)}
+ title={label}
+ aria-label={`Alto: ${label}`}
+ className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center ${
+ (widget.hSpan ||'normal') === val ?'bg-[var(--acc)]' :'hover:bg-[var(--sunken)]'
  }`}
  >
- {hVal ==='compact' ?'Bajo' : hVal ==='normal' ?'Med' :'Alto'}
+ <span
+ className={`block w-2.5 rounded-[2px] ${(widget.hSpan ||'normal') === val ?'bg-[var(--on-acc)]' :'bg-[var(--ink-2)]'}`}
+ style={{ height: h }}
+ />
  </button>
  ))}
  </div>

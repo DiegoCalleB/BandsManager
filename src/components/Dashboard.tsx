@@ -3,7 +3,6 @@ import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehears
 import { useLanguage } from'../context/LanguageContext';
 import { isSameBandId } from'../utils/bandUtils';
 import DirectionsCard from'./DirectionsCard';
-import { ThemeToggle } from'./common/ThemeToggle';
 import { PublicoSilhouette } from'./ui/PublicoSilhouette';
 import { AddLeadModal } from'./dashboard/AddLeadModal';
 import { ProfileCompletenessCard } from'./dashboard/ProfileCompletenessCard';
@@ -737,7 +736,6 @@ export default function Dashboard({
  </div>
 
  <div className="flex items-center gap-2">
- <ThemeToggle />
  <button
  type="button"
  onClick={() => onNavigate && onNavigate('calendario')}

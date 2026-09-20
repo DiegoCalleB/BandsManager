@@ -221,7 +221,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  {/* Custom Band Shortcuts */}
  <div className="pt-1 border-t border-[var(--hair)]">
  <div className="flex items-center justify-between px-2 py-1">
- <span className="text-[10px] uppercase tracking-wider text-teal-400 font-semibold">
+ <span className="text-[10px] uppercase tracking-wider text-[var(--ok)] font-semibold">
  Accesos Rápidos de la Banda
  </span>
  {!isAddingShortcut && (
@@ -298,7 +298,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  {customShortcuts.map(sc => (
  <div
  key={sc.id}
- className="group/sc relative inline-flex items-center rounded-[var(--r-s)] bg-teal-500/10 text-teal-300 text-xs"
+ className="group/sc relative inline-flex items-center rounded-[var(--r-s)] bg-[var(--ok)]/10 text-teal-300 text-xs"
  >
  <button
  type="button"
@@ -306,7 +306,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  setShowEventMenu(false);
  handleUseCustomShortcut(sc);
  }}
- className="px-2 py-1 hover:bg-teal-500/20 transition cursor-pointer flex items-center gap-1.5"
+ className="px-2 py-1 hover:bg-[var(--ok)]/20 transition cursor-pointer flex items-center gap-1.5"
  title={sc.tituloCustom}
  >
  <span>{sc.icono}</span>

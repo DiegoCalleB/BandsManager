@@ -180,7 +180,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }));
  }}
  placeholder="tubanda"
- className="w-full bg-transparent py-1.5 text-xs text-blue-300 font-bold outline-none font-mono"
+ className="w-full bg-transparent py-1.5 text-xs text-[var(--acc)]/80 font-bold outline-none font-mono"
  />
  </div>
  </div>
@@ -244,11 +244,11 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='paypal'
- ?'bg-blue-500/20 border-[var(--acc)] text-blue-300 shadow-sm'
+ ?'bg-blue-500/20 border-[var(--acc)] text-[var(--acc)]/80 shadow-sm'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
- <span className="w-2 h-2 rounded-full bg-blue-400" />
+ <span className="w-2 h-2 rounded-full bg-[var(--acc)]/80" />
  PayPal
  </button>
  <button

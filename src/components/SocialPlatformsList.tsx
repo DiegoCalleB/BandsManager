@@ -124,10 +124,10 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  },
  tiktok: {
  label:'TikTok',
- colorClass:'text-cyan-400',
- bgClass:'bg-cyan-500/10',
+ colorClass:'text-[var(--acc)]',
+ bgClass:'bg-[var(--acc)]/10',
  borderClass:'border-[var(--acc)]/30',
- hoverClass:'hover:bg-cyan-500/20 hover:border-[var(--acc)]/50 hover:text-cyan-300'
+ hoverClass:'hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80'
  },
  appleMusic: {
  label:'Apple Music',
@@ -139,16 +139,16 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  bandcamp: {
  label:'Bandcamp',
  colorClass:'text-teal-300',
- bgClass:'bg-teal-500/10',
+ bgClass:'bg-[var(--ok)]/10',
  borderClass:'border-[var(--ok)]/30',
- hoverClass:'hover:bg-teal-500/20 hover:border-[var(--ok)]/50 hover:text-teal-200'
+ hoverClass:'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-teal-200'
  },
  facebook: {
  label:'Facebook',
- colorClass:'text-blue-400',
+ colorClass:'text-[var(--acc)]',
  bgClass:'bg-blue-500/10',
  borderClass:'border-[var(--acc)]/30',
- hoverClass:'hover:bg-blue-500/20 hover:border-[var(--acc)]/50 hover:text-blue-300'
+ hoverClass:'hover:bg-blue-500/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80'
  },
  twitter: {
  label:'X / Twitter',

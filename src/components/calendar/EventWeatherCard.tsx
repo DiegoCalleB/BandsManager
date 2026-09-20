@@ -195,7 +195,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {hasAlerts && (
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
  dangerAlertsCount > 0
- ?'bg-rose-500 text-[var(--acc-ink)] shadow-xs'
+ ?'bg-rose-500 text-white shadow-xs'
  :'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
  }`}>
  {dangerAlertsCount > 0 ?'Alerta Activa' :'Aviso Meteo'}
@@ -410,7 +410,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
  isDanger
- ?'bg-rose-500 text-[var(--acc-ink)] shadow-xs'
+ ?'bg-rose-500 text-white shadow-xs'
  :'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
  }`}>
  {isDanger ?'Peligro Extremo' :'Precaución'}

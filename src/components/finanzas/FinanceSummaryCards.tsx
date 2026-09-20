@@ -34,7 +34,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  {summary.totalIngresos.toLocaleString('es-ES')} €
  </div>
  {summary.pagosPendientesIngreso > 0 && (
- <p className="text-xs text-amber-500 mt-1 font-medium">
+ <p className="text-xs text-[var(--acc)] mt-1 font-medium">
  +{summary.pagosPendientesIngreso.toLocaleString('es-ES')} € {t('finances.pending','pendientes')}
  </p>
  )}

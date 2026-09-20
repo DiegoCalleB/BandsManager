@@ -67,7 +67,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <Globe className="w-3.5 h-3.5 text-red-400" /> {totalVideos} Vídeos
  </span>
  <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
- <Calendar className="w-3.5 h-3.5 text-blue-400" /> {totalEvents} Fechas
+ <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalEvents} Fechas
  </span>
  {hasRider && (
  <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">

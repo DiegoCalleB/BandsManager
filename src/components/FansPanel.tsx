@@ -499,7 +499,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  className="text-lg sm:text-2xl font-black text-[var(--ink)] font-display flex items-center gap-2 sm:gap-3"
  title="Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento."
  >
- <QrCode className="w-6 h-6 sm:w-8 sm:h-8 text-amber-500 shrink-0" />
+ <QrCode className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--acc)] shrink-0" />
  <span className="truncate">Captura QR & Fans</span>
  </h2>
  <p className="hidden sm:block text-[var(--ink-2)] font-mono text-sm mt-1">
@@ -577,7 +577,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setActiveTab('metrics')}
  className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='metrics' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
- <TrendingUp className="w-4 h-4 text-amber-500" /> 1. Seguimiento & Métricas de Redes
+ <TrendingUp className="w-4 h-4 text-[var(--acc)]" /> 1. Seguimiento & Métricas de Redes
  </button>
  )}
  <button
@@ -585,21 +585,21 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={() => setActiveTab('qr')}
  className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='qr' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
- <QrCode className="w-4 h-4 text-amber-500" /> {isPromo ?'1' :'2'}. Captura en Vivo & QR
+ <QrCode className="w-4 h-4 text-[var(--acc)]" /> {isPromo ?'1' :'2'}. Captura en Vivo & QR
  </button>
  <button
  id="tab-btn-fans-dashboard"
  onClick={() => setActiveTab('dashboard')}
  className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='dashboard' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
- <Heart className="w-4 h-4 text-amber-500" /> {isPromo ?'2' :'3'}. Dashboard & Analítica
+ <Heart className="w-4 h-4 text-[var(--acc)]" /> {isPromo ?'2' :'3'}. Dashboard & Analítica
  </button>
  <button
  id="tab-btn-fans-directory"
  onClick={() => setActiveTab('fans')}
  className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab ==='fans' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
- <Users className="w-4 h-4 text-amber-500" /> {isPromo ?'3' :'4'}. Comunidad & Red Social ({fans.length})
+ <Users className="w-4 h-4 text-[var(--acc)]" /> {isPromo ?'3' :'4'}. Comunidad & Red Social ({fans.length})
  </button>
  </div>
 
@@ -658,7 +658,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="flex items-center justify-between mb-4">
  <div>
  <p className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-widest font-mono flex items-center gap-2">
- <TrendingUp className="w-4 h-4 text-amber-500" />
+ <TrendingUp className="w-4 h-4 text-[var(--acc)]" />
  Crecimiento Evolutivo de Fans
  </p>
  <p className="text-[11px] text-[var(--ink-2)] font-mono">Curva acumulativa de la comunidad {effectiveBandName}</p>
@@ -762,7 +762,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="space-y-2 border-b pb-4">
  <div className="flex items-center justify-between">
  <span className="text-xs font-bold text-[var(--ink-2)] font-mono uppercase tracking-wider flex items-center gap-1.5">
- <MapPin className="w-3.5 h-3.5 text-amber-500" />
+ <MapPin className="w-3.5 h-3.5 text-[var(--acc)]" />
  Filtrar por Ciudad (Pestañas Configurables Guardadas en BBDD)
  </span>
  {selectedCityFilter && (
@@ -985,7 +985,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div key={fan.id} className="bg-[var(--surface)] hover:/50 rounded-[var(--r-l)] p-4 transition-all space-y-3 relative group">
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-amber-500 font-bold uppercase text-sm">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold uppercase text-sm">
  {fan.nombre.charAt(0)}
  </div>
  <div>
@@ -1011,7 +1011,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
  <span className="text-[var(--ink-2)] text-[9px] block uppercase">Ciudad</span>
  <span className="text-[var(--ink-2)] flex items-center gap-1 font-semibold">
- <MapPin className="w-3 h-3 text-amber-500 shrink-0" />
+ <MapPin className="w-3 h-3 text-[var(--acc)] shrink-0" />
  <span className="truncate">{fan.ciudad ||'No especificada'}</span>
  </span>
  </div>
@@ -1054,7 +1054,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  .map(([city, count]) => (
  <div key={city} className="bg-[var(--surface)] p-3 rounded-[var(--r-m)] flex items-center justify-between">
  <div className="flex items-center gap-2 truncate">
- <MapPin className="w-4 h-4 text-amber-500 shrink-0" />
+ <MapPin className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span className="font-bold text-[var(--ink)] truncate">{city}</span>
  </div>
  <span className="bg-[var(--acc)]/20 text-[var(--acc)]/70 text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -1099,7 +1099,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <tr key={fan.id} className="hover:bg-[var(--surface)]/20 transition group">
  <td className="p-3 font-semibold text-[var(--ink)]">
  <div className="flex items-center gap-2">
- <div className="w-6 h-6 rounded-full bg-[var(--acc)]/10 flex items-center justify-center text-amber-500 font-bold uppercase text-[10px]">
+ <div className="w-6 h-6 rounded-full bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold uppercase text-[10px]">
  {fan.nombre.charAt(0)}
  </div>
  {fan.nombre}
@@ -1339,7 +1339,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="space-y-3 pt-1">
  <div>
  <label className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
- <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Mensaje de Bienvenida / Agradecimiento:
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Mensaje de Bienvenida / Agradecimiento:
  </label>
  <input
  type="text"
@@ -1353,7 +1353,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div>
  <label className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
- <Music className="w-3.5 h-3.5 text-amber-500" /> Enlace de Descarga (Tema inédito/directo):
+ <Music className="w-3.5 h-3.5 text-[var(--acc)]" /> Enlace de Descarga (Tema inédito/directo):
  </label>
  <input
  type="url"
@@ -1365,7 +1365,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  <div>
  <label className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
- <Tag className="w-3.5 h-3.5 text-amber-500" /> Código Cupón Merchandising:
+ <Tag className="w-3.5 h-3.5 text-[var(--acc)]" /> Código Cupón Merchandising:
  </label>
  <input
  type="text"
@@ -1578,7 +1578,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b pb-3">
  <h3 className="text-lg font-black text-[var(--ink)] font-display uppercase tracking-widest flex items-center gap-2">
- <Users className="w-5 h-5 text-amber-500" />
+ <Users className="w-5 h-5 text-[var(--acc)]" />
  Registrar Fan / Seguidor Manual
  </h3>
  <button 
@@ -1592,7 +1592,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <form onSubmit={handleManualAddSubmit} className="space-y-4">
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Nombre *</label>
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">Nombre *</label>
  <input
  type="text"
  required
@@ -1603,7 +1603,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  </div>
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Email *</label>
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">Email *</label>
  <input
  type="email"
  required
@@ -1617,7 +1617,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Ciudad</label>
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">Ciudad</label>
  <input
  type="text"
  placeholder="Ej: Madrid, Sevilla..."
@@ -1627,7 +1627,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  </div>
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Origen / Canal</label>
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">Origen / Canal</label>
  <select
  value={newOrigen}
  onChange={e => setNewOrigen(e.target.value)}
@@ -1646,7 +1646,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Nivel Fan</label>
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">Nivel Fan</label>
  <select
  value={newNivel}
  onChange={e => setNewNivel(e.target.value as any)}
@@ -1659,7 +1659,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </select>
  </div>
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Instagram (Opcional)</label>
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">Instagram (Opcional)</label>
  <input
  type="text"
  placeholder="@usuario"
@@ -1671,7 +1671,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
 
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Canción Favorita (Opcional)</label>
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">Canción Favorita (Opcional)</label>
  <input
  type="text"
  placeholder="Ej: La Noche Entera, Balada..."
@@ -1682,7 +1682,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
 
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Mensaje / Dedicatoria para el Muro (Opcional)</label>
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">Mensaje / Dedicatoria para el Muro (Opcional)</label>
  <textarea
  rows={2}
  placeholder="Dedicatoria o saludo que aparecerá en el muro de la comunidad..."

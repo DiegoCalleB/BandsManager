@@ -892,7 +892,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  )}
 
  <div className="w-20 h-20 bg-[var(--acc)]/10 rounded-full flex items-center justify-center mx-auto mb-2 shadow-inner">
- <Heart className="w-10 h-10 text-amber-500" />
+ <Heart className="w-10 h-10 text-[var(--acc)]" />
  </div>
 
  <FanFormLanguageSwitcher language={language} onChange={setLanguage} languages={availableLanguages} />
@@ -913,7 +913,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {tieneBeneficios && (
  <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-6 mt-6 space-y-4">
- <h3 className="text-amber-500 font-black uppercase tracking-widest text-xs font-mono">{t('benefitsTitle')}</h3>
+ <h3 className="text-[var(--acc)] font-black uppercase tracking-widest text-xs font-mono">{t('benefitsTitle')}</h3>
 
  {enlaceDescargaFan && (
  <div className="pt-2">
@@ -1086,7 +1086,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Enlace a Inicio */}
  <div className="pt-2">
- <a href="/" className="text-xs font-mono text-[var(--ink-2)] hover:text-amber-500 underline transition-colors">
+ <a href="/" className="text-xs font-mono text-[var(--ink-2)] hover:text-[var(--acc)] underline transition-colors">
  {t('backHome')}
  </a>
  </div>
@@ -1336,7 +1336,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  href={c.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-emerald-500 text-[var(--acc-ink)] text-[10px] font-bold hover:bg-emerald-400 transition-colors"
+ className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-emerald-500 text-white text-[10px] font-bold hover:bg-emerald-400 transition-colors"
  >
  <Ticket className="w-3 h-3" /> Comprar Entradas
  </a>
@@ -1636,7 +1636,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-4">
  <div className="max-w-lg w-full bg-[var(--surface)] rounded-[var(--r-l)] p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b pb-4">
- <div className="flex items-center gap-2 text-amber-500 font-mono font-bold text-sm uppercase tracking-wider">
+ <div className="flex items-center gap-2 text-[var(--acc)] font-mono font-bold text-sm uppercase tracking-wider">
  <Shield className="w-5 h-5" /> {t('privacyModalTitle')}
  </div>
  <button onClick={() => setShowPrivacyModal(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1">

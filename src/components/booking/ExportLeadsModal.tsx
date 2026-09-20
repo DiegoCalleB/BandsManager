@@ -266,7 +266,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="checkbox"
  checked={includePitch}
  onChange={(e) => setIncludePitch(e.target.checked)}
- className="rounded border-[var(--hair)]700 text-amber-500 focus:ring-amber-0/20 bg-zinc-950"
+ className="rounded border-[var(--hair)]700 text-[var(--acc)] focus:ring-amber-0/20 bg-zinc-950"
  />
  <span>Incluir Pitch / Propuesta IA</span>
  </label>
@@ -276,7 +276,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="checkbox"
  checked={includeNotes}
  onChange={(e) => setIncludeNotes(e.target.checked)}
- className="rounded border-[var(--hair)]700 text-amber-500 focus:ring-amber-0/20 bg-zinc-950"
+ className="rounded border-[var(--hair)]700 text-[var(--acc)] focus:ring-amber-0/20 bg-zinc-950"
  />
  <span>Incluir Historial y Notas</span>
  </label>

@@ -358,7 +358,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
  <div className="space-y-2.5 pt-2 text-sm">
  <div className="flex items-center gap-2.5 font-medium">
- <span className={`w-2 h-2 rounded-full ${styles.accentBtn.includes('fuchsia') ?'bg-fuchsia-400' : styles.accentBtn.includes('orange') ?'bg-orange-400' :'bg-[var(--acc)]/60'} shrink-0`}></span>
+ <span className={`w-2 h-2 rounded-full ${styles.accentBtn.includes('fuchsia') ?'bg-[var(--tentative)]/80' : styles.accentBtn.includes('orange') ?'bg-[var(--acc)]/80' :'bg-[var(--acc)]/60'} shrink-0`}></span>
  <span>{config.contactoBooking?.nombre || t('managerPorDefecto')}</span>
  </div>
  <div className="flex items-center gap-2.5 font-mono">
@@ -606,7 +606,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  href={c.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 text-[var(--acc-ink)] text-xs font-bold hover:bg-emerald-400 transition-colors"
+ className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-400 transition-colors"
  >
  <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
  </a>

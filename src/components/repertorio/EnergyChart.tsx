@@ -736,22 +736,34 @@ export function EnergyChart({
  const espacioArriba = cy - dotRadius - 6 - labelFontSize;
  const margenSuperior = compact ? 8 : 14; // mismo valor que el margin.top del ComposedChart
  const pintarAbajo = espacioArriba < margenSuperior;
+ const textoY = pintarAbajo ? cy + dotRadius + labelFontSize + 4 : cy - dotRadius - 6;
+ // Monoespaciada: el ancho de cada carácter es constante, así que el pill de
+ // fondo se calcula sin medir texto (evita el efecto "manchado" de un
+ // stroke SVG desproporcionado al tamaño de fuente, ver AGENTS.md).
+ const anchoTexto = payload.tonalidad.length * labelFontSize * 0.62 + 6;
  return (
+ <g pointerEvents="none">
+ <rect
+ x={cx - anchoTexto / 2}
+ y={textoY - labelFontSize}
+ width={anchoTexto}
+ height={labelFontSize + 4}
+ rx={labelFontSize / 2}
+ fill="var(--surface)"
+ opacity={0.92}
+ />
  <text
  x={cx}
- y={pintarAbajo ? cy + dotRadius + labelFontSize + 4 : cy - dotRadius - 6}
+ y={textoY}
  textAnchor="middle"
  fontSize={labelFontSize}
  fontFamily="monospace"
  fontWeight={600}
- fill="var(--acc-soft)"
- stroke="var(--ink)"
- strokeWidth={1.8}
- paintOrder="stroke"
- pointerEvents="none"
+ fill="var(--ink)"
  >
  {payload.tonalidad}
  </text>
+ </g>
  );
  })()}
  </React.Fragment>

@@ -475,7 +475,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`px-2 py-1 rounded-md font-bold transition-all cursor-pointer ${
  isCatSelected
- ?'bg-emerald-500 text-[var(--acc-ink)] shadow-xs'
+ ?'bg-emerald-500 text-white shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
  }`}
  >
@@ -507,7 +507,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  p.category ==='ukulele'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  : p.category ==='bass'
- ?'bg-blue-500/20 text-blue-300'
+ ?'bg-blue-500/20 text-[var(--acc)]/80'
  :'bg-emerald-500/20 text-[var(--ink-2)]'
  }`}>
  {p.category ==='ukulele' ?'Uke' : p.category ==='bass' ?'Bajo' :'Guitar'}
@@ -609,7 +609,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 ${
  isListening
  ?'bg-rose-500/20 hover:bg-rose-500/30 text-[var(--ink-2)] shadow-sm'
- :'bg-emerald-500 hover:bg-emerald-400 text-[var(--acc-ink)] font-black shadow-lg shadow-emerald-500/20'
+ :'bg-emerald-500 hover:bg-emerald-400 text-white font-black shadow-lg shadow-emerald-500/20'
  }`}
  >
  {isListening ? (

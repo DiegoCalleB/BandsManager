@@ -106,8 +106,8 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       label: 'Alta / Cañera',
       icon: '🔥',
       hexColor: '#a16207',
-      bgClass: 'bg-amber-500/15',
-      textClass: 'text-amber-400',
+      bgClass: 'bg-[var(--acc)]/15',
+      textClass: 'text-[var(--acc)]/80',
       borderClass: 'border-amber-500/30'
     };
   }
@@ -118,9 +118,9 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
     label: 'Explosiva / Clímax',
     icon: '💣',
     hexColor: '#a21caf',
-    bgClass: 'bg-fuchsia-500/15',
-    textClass: 'text-fuchsia-400',
-    borderClass: 'border-fuchsia-500/30'
+    bgClass: 'bg-[var(--tentative)]/15',
+    textClass: 'text-[var(--tentative)]/80',
+    borderClass: 'border-[var(--tentative)]/30'
   };
 }
 
@@ -201,9 +201,9 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
           label: item.tituloCustom || 'Evento Show',
           icon: ICONOS_BLOQUE[subtipo] || '📌',
           hexColor: isBis ? '#a21caf' : '#64748b',
-          bgClass: isBis ? 'bg-fuchsia-500/15' : 'bg-slate-700/30',
-          textClass: isBis ? 'text-fuchsia-400' : 'text-slate-400',
-          borderClass: isBis ? 'border-fuchsia-500/30' : 'border-slate-700/40'
+          bgClass: isBis ? 'bg-[var(--tentative)]/15' : 'bg-slate-700/30',
+          textClass: isBis ? 'text-[var(--tentative)]/80' : 'text-slate-400',
+          borderClass: isBis ? 'border-[var(--tentative)]/30' : 'border-slate-700/40'
         }
       });
     }

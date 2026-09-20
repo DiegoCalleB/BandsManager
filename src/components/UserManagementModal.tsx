@@ -404,7 +404,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold outline-none cursor-pointer transition-all ${
  u.role ==='leader'
  ?'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/40 hover:bg-[var(--acc)]/25'
- :'bg-[var(--surface)] text-blue-300 -blue-500/30 hover:bg-[var(--surface)]/80'
+ :'bg-[var(--surface)] text-[var(--acc)]/80 -blue-500/30 hover:bg-[var(--surface)]/80'
  } ${isSelf ?'opacity-70 cursor-not-allowed' :''}`}
  >
  <option value="member" className="bg-[var(--surface)] text-[var(--ink-2)]">Rol: Miembro</option>

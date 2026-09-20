@@ -460,10 +460,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  'bg-[var(--surface)]/60 border-[var(--acc)]/40'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-cyan-400 flex items-center gap-1">
- <Video className="w-3.5 h-3.5 text-cyan-400" /> TikTok
+ <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
+ <Video className="w-3.5 h-3.5 text-[var(--acc)]" /> TikTok
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 font-mono">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/80 font-mono">
  Comunidad
  </span>
  </div>
@@ -561,7 +561,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Time Period Selector */}
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
- <Calendar className="w-3.5 h-3.5 text-amber-500" />
+ <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span className="font-bold">Periodo:</span>
  </span>
  <div className={`flex items-center gap-1 p-0.5 rounded-[var(--r-m)] ${
@@ -661,7 +661,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasTikTok && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.tiktok
- ? 'bg-cyan-950/30 border-[var(--acc)]/40 text-cyan-300'
+ ? 'bg-cyan-950/30 border-[var(--acc)]/40 text-[var(--acc)]/80'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
@@ -669,18 +669,18 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => toggleChannel('tiktok')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ?'bg-cyan-400 animate-pulse' :'bg-neutral-600'}`}></span>
- <Video className="w-3 h-3 text-cyan-400" />
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ?'bg-[var(--acc)]/80 animate-pulse' :'bg-neutral-600'}`}></span>
+ <Video className="w-3 h-3 text-[var(--acc)]" />
  <span>TikTok</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-500/15 font-mono font-bold">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--acc)]/15 font-mono font-bold">
  {countTikTok.toLocaleString()}
  </span>
- {selectedChannels.tiktok ? <Eye className="w-3 h-3 text-cyan-400" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
+ {selectedChannels.tiktok ? <Eye className="w-3 h-3 text-[var(--acc)]" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
  </button>
  <button
  type="button"
  onClick={() => selectOnlyChannel('tiktok')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--acc)]/20 hover:bg-cyan-500/20 text-cyan-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--acc)]/20 hover:bg-[var(--acc)]/20 text-[var(--acc)] cursor-pointer"
  title="Aislar sólo TikTok"
  >
  Solo

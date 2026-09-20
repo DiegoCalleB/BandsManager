@@ -198,7 +198,7 @@ export function MemberNotesModal({
  <div className="flex items-center gap-2 flex-wrap pt-3 text-[11px] font-mono">
  <span className="text-[var(--ink-2)] uppercase font-bold">Preparación de la banda:</span>
  <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">✅ {summary.lista} listos</span>
- <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400">🔶 {summary.casiLista} casi</span>
+ <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-[var(--acc)]/80">🔶 {summary.casiLista} casi</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]">🌱 {summary.aprendiendo} aprendiendo</span>
  {summary.sinOpinar > 0 && (
  <span className="px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-[var(--ink-2)]">{summary.sinOpinar} sin marcar</span>

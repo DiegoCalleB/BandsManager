@@ -574,10 +574,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClose();
  onOpenProfileWizard();
  }}
- className="text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1 cursor-pointer font-bold"
+ className="text-[11px] font-mono text-[var(--acc)] hover:text-[var(--acc)]/80 transition-colors flex items-center gap-1 cursor-pointer font-bold"
  title="Abrir asistente paso a paso de configuración de banda"
  >
- <Sparkles className="w-3 h-3 text-cyan-400" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>Asistente Perfil</span>
  </button>
  )}

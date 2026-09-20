@@ -571,7 +571,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={applyPresetLearnMyPart}
  disabled={!myTrack}
- className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-violet-500/10 text-violet-300 hover:bg-violet-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+ className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-violet-300 hover:bg-[var(--tentative)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
  >
  <GraduationCap className="w-4 h-4" />
  <span className="text-[11px] font-mono font-semibold text-center">Aprender mi parte<br />(aísla mi pista)</span>
@@ -837,7 +837,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => handleExport('solo-mi-pista')}
  disabled={!myTrack || isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-violet-500/10 text-violet-300 hover:bg-violet-500/20 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-violet-300 hover:bg-[var(--tentative)]/20 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting ==='solo-mi-pista' ?'Generando…' :'Solo mi pista'}
  </button>

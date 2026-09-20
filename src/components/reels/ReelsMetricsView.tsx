@@ -653,7 +653,7 @@ export function ReelsMetricsView({
  activeMainSection ==='metrics'
  ? isStitchLight
  ?'bg-[var(--surface)] text-indigo-600 shadow-sm'
- :'bg-emerald-500 text-[var(--ink)] shadow-md shadow-emerald-500/20 font-black'
+ :'bg-[var(--ok)] text-[var(--ink)] shadow-md shadow-emerald-500/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -666,7 +666,7 @@ export function ReelsMetricsView({
  onClick={() => setActiveMainSection('growth_plan')}
  className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-mono font-bold tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer ${
  activeMainSection ==='growth_plan'
- ? 'bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)] shadow-md shadow-amber-0/20 font-black'
+ ? 'bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)] shadow-md shadow-[var(--acc)]/10/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -746,10 +746,10 @@ export function ReelsMetricsView({
  }`}
  title="Configurar conexión oficial con Meta Graph API / Instagram OAuth"
  >
- <Instagram className="w-3.5 h-3.5 text-pink-400" />
+ <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />
  {igStatus?.connected ? (
  <span className="flex items-center gap-1.5">
- <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+ <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80 animate-pulse" />
  Meta API (@{igStatus.account?.username ||'...'})
  </span>
  ) : (
@@ -767,7 +767,7 @@ export function ReelsMetricsView({
  className={`flex-1 md:flex-initial px-4 py-2.5 rounded-[var(--r-m)] font-mono text-[10px] font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isScanningMetrics
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- :'bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] shadow-lg shadow-emerald-900/30'
+ :'bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] shadow-lg shadow-emerald-900/30'
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isScanningMetrics ?'animate-spin' :''}`} />
@@ -795,7 +795,7 @@ export function ReelsMetricsView({
  </div>
 
  {metricSuccess && (
- <div className="p-3 bg-emerald-500/10 rounded-[var(--r-m)] text-emerald-400 font-mono text-xs flex items-center gap-2">
+ <div className="p-3 bg-[var(--ok)]/10 rounded-[var(--r-m)] text-[var(--ok)] font-mono text-xs flex items-center gap-2">
  <CheckCircle2 className="w-3.5 h-3.5" />
  <span>{metricSuccess}</span>
  </div>
@@ -820,7 +820,7 @@ export function ReelsMetricsView({
  setScanResult(null);
  setShowScanModal(true);
  }}
- className="text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-indigo-500/10 text-indigo-300 border-[var(--acc)]/20 hover:bg-indigo-500/20"
+ className="text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-[var(--tentative)]/10 text-[var(--tentative)]/80 border-[var(--acc)]/20 hover:bg-[var(--tentative)]/20"
  title="Escanear captura de pantalla de Instagram con Visión IA"
  >
  <Camera className="w-2.5 h-2.5" />
@@ -833,8 +833,8 @@ export function ReelsMetricsView({
  }}
  className={`text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer ${
  igStatus?.connected
- ?'bg-emerald-500/10 text-emerald-400 border-[var(--ok)]/20 hover:bg-emerald-500/20'
- :'bg-pink-500/10 text-pink-400 border-[var(--alert)]/20 hover:bg-pink-500/20'
+ ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/20 hover:bg-[var(--ok)]/20'
+ :'bg-[var(--alert)]/10 text-[var(--alert)] border-[var(--alert)]/20 hover:bg-[var(--alert)]/20'
  }`}
  title="Verificar o conectar token oficial de Meta Graph API"
  >
@@ -844,7 +844,7 @@ export function ReelsMetricsView({
  </div>
  </div>
  <div>
- <div className="text-2xl font-black font-display tracking-tight text-pink-400">
+ <div className="text-2xl font-black font-display tracking-tight text-[var(--alert)]">
  {(latestMetric?.instagram_followers || latestMetric?.instagram || 0).toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5 flex items-center justify-between">
@@ -856,7 +856,7 @@ export function ReelsMetricsView({
  </div>
  <div className="pt-2 border-t border-[var(--alert)]/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
  <span>Siguiendo: <b className="text-[var(--ink)]">{(latestMetric?.instagram_following || 0).toLocaleString()}</b></span>
- <span>Engagement: <b className="text-pink-400">{latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}%` :'Activo'}</b></span>
+ <span>Engagement: <b className="text-[var(--alert)]">{latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}%` :'Activo'}</b></span>
  </div>
  </div>
  )}
@@ -867,7 +867,7 @@ export function ReelsMetricsView({
  'bg-[var(--surface)]/40 border-[var(--acc)]/30'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1.5">
+ <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--acc)] font-bold flex items-center gap-1.5">
  <Video className="w-3.5 h-3.5" /> TikTok
  </span>
  <div className="flex items-center gap-1.5">
@@ -878,26 +878,26 @@ export function ReelsMetricsView({
  setScanResult(null);
  setShowScanModal(true);
  }}
- className="text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-indigo-500/10 text-indigo-300 border-[var(--acc)]/20 hover:bg-indigo-500/20"
+ className="text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-[var(--tentative)]/10 text-[var(--tentative)]/80 border-[var(--acc)]/20 hover:bg-[var(--tentative)]/20"
  title="Escanear captura de pantalla de TikTok con Visión IA"
  >
  <Camera className="w-2.5 h-2.5" />
  <span>Escanear</span>
  </button>
- <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400">
+ <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]">
  {latestMetric?.tiktok_video_count ? `${latestMetric.tiktok_video_count} vídeos` :'Reels / TikTok'}
  </span>
  </div>
  </div>
  <div>
- <div className="text-2xl font-black font-display tracking-tight text-cyan-400">
+ <div className="text-2xl font-black font-display tracking-tight text-[var(--acc)]">
  {(latestMetric?.tiktok_followers || latestMetric?.tiktok || 0).toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">Seguidores</div>
  </div>
  <div className="pt-2 border-t border-[var(--acc)]/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
  <span>Total Likes: <b className="text-[var(--ink)]">{(latestMetric?.tiktok_total_likes || 0).toLocaleString()}</b></span>
- <span>Alcance: <b className="text-cyan-400">Orgánico</b></span>
+ <span>Alcance: <b className="text-[var(--acc)]">Orgánico</b></span>
  </div>
  </div>
  )}
@@ -908,15 +908,15 @@ export function ReelsMetricsView({
  'bg-[var(--surface)]/40 border-[var(--alert)]/30'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider text-red-500 font-bold flex items-center gap-1.5">
+ <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--alert)] font-bold flex items-center gap-1.5">
  <Youtube className="w-3.5 h-3.5" /> YouTube
  </span>
- <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400">
+ <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-[var(--alert)]/10 text-[var(--alert)]">
  {latestMetric?.youtube_video_count || contentItems.length || 0} vídeos
  </span>
  </div>
  <div>
- <div className="text-2xl font-black font-display tracking-tight text-red-400">
+ <div className="text-2xl font-black font-display tracking-tight text-[var(--alert)]">
  {(latestMetric?.youtube_subscribers || latestMetric?.youtube || 0).toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">Suscriptores Oficiales</div>
@@ -935,22 +935,22 @@ export function ReelsMetricsView({
  'bg-[var(--surface)]/40 border-[var(--ok)]/30'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-500 font-bold flex items-center gap-1.5">
+ <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--ok)] font-bold flex items-center gap-1.5">
  <Music2 className="w-3.5 h-3.5" /> Spotify
  </span>
- <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400">
+ <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ok)]">
  Popularidad: {latestMetric?.spotify_popularity ||'--'}/100
  </span>
  </div>
  <div>
- <div className="text-2xl font-black font-display tracking-tight text-emerald-400">
+ <div className="text-2xl font-black font-display tracking-tight text-[var(--ok)]">
  {(latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || 0).toLocaleString()}
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">Oyentes Mensuales</div>
  </div>
  <div className="pt-2 border-t border-[var(--ok)]/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
  <span>Seguidores: <b className="text-[var(--ink)]">{(latestMetric?.spotify_followers || 0).toLocaleString()}</b></span>
- <span>Ratio oyente/seg: <b className="text-emerald-400">
+ <span>Ratio oyente/seg: <b className="text-[var(--ok)]">
  {latestMetric?.spotify_followers && latestMetric.spotify_followers > 0 
  ? `${(((latestMetric.spotify_monthly_listeners || latestMetric.spotify || 0) / latestMetric.spotify_followers)).toFixed(1)}x`
  :'--'}
@@ -993,9 +993,9 @@ export function ReelsMetricsView({
  <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-4">
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <BarChart3 className="w-4 h-4 text-indigo-400" />
+ <BarChart3 className="w-4 h-4 text-[var(--tentative)]" />
  <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">Curva de Crecimiento Multiplataforma</span>
- <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400">
+ <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[var(--tentative)]/10 text-[var(--tentative)]">
  Escala Adaptativa: 0 - {yAxisDomain[1] >= 1000 ? `${(yAxisDomain[1] / 1000).toFixed(1)}k` : yAxisDomain[1]}
  </span>
  </div>
@@ -1009,7 +1009,7 @@ export function ReelsMetricsView({
  {/* Period Selector Tabs */}
  <div className="flex items-center gap-1">
  <span className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1 mr-0.5">
- <Calendar className="w-3 h-3 text-indigo-400" /> Periodo:
+ <Calendar className="w-3 h-3 text-[var(--tentative)]" /> Periodo:
  </span>
  <div className={`flex items-center gap-0.5 p-0.5 rounded-[var(--r-s)] ${
  isStitchLight ?'bg-[var(--sunken)]/70' :'bg-[var(--surface)]'
@@ -1057,22 +1057,22 @@ export function ReelsMetricsView({
  {/* Period Summary Stats Badge if available */}
  {periodSummaryStats && (
  <div className={`mb-3 px-3 py-1.5 rounded-[var(--r-s)] text-[9px] font-mono flex items-center justify-between flex-wrap gap-2 ${
- 'bg-indigo-950/20 text-indigo-300 border-[var(--acc)]/20'
+ 'bg-indigo-950/20 text-[var(--tentative)]/80 border-[var(--acc)]/20'
  }`}>
  <div className="flex items-center gap-1.5">
- <TrendingUp className="w-3 h-3 text-indigo-400" />
+ <TrendingUp className="w-3 h-3 text-[var(--tentative)]" />
  <span className="font-bold">Balance {currentPeriodOption.label}:</span>
  {hasInstagram && (
- <span className="ml-1">IG: <b className={periodSummaryStats.diffIg >= 0 ?'text-pink-400' :'text-[var(--ink-2)]'}>{periodSummaryStats.diffIg >= 0 ? `+${periodSummaryStats.diffIg}` : periodSummaryStats.diffIg}</b></span>
+ <span className="ml-1">IG: <b className={periodSummaryStats.diffIg >= 0 ?'text-[var(--alert)]' :'text-[var(--ink-2)]'}>{periodSummaryStats.diffIg >= 0 ? `+${periodSummaryStats.diffIg}` : periodSummaryStats.diffIg}</b></span>
  )}
  {hasTikTok && (
- <span className="ml-2">TikTok: <b className={periodSummaryStats.diffTk >= 0 ?'text-cyan-400' :'text-[var(--ink-2)]'}>{periodSummaryStats.diffTk >= 0 ? `+${periodSummaryStats.diffTk}` : periodSummaryStats.diffTk}</b></span>
+ <span className="ml-2">TikTok: <b className={periodSummaryStats.diffTk >= 0 ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}>{periodSummaryStats.diffTk >= 0 ? `+${periodSummaryStats.diffTk}` : periodSummaryStats.diffTk}</b></span>
  )}
  {hasYouTube && (
- <span className="ml-2">YT: <b className={periodSummaryStats.diffYt >= 0 ?'text-red-400' :'text-[var(--ink-2)]'}>{periodSummaryStats.diffYt >= 0 ? `+${periodSummaryStats.diffYt}` : periodSummaryStats.diffYt}</b></span>
+ <span className="ml-2">YT: <b className={periodSummaryStats.diffYt >= 0 ?'text-[var(--alert)]' :'text-[var(--ink-2)]'}>{periodSummaryStats.diffYt >= 0 ? `+${periodSummaryStats.diffYt}` : periodSummaryStats.diffYt}</b></span>
  )}
  {hasSpotify && (
- <span className="ml-2">Spotify: <b className={periodSummaryStats.diffSp >= 0 ?'text-emerald-400' :'text-[var(--ink-2)]'}>{periodSummaryStats.diffSp >= 0 ? `+${periodSummaryStats.diffSp}` : periodSummaryStats.diffSp}</b></span>
+ <span className="ml-2">Spotify: <b className={periodSummaryStats.diffSp >= 0 ?'text-[var(--ok)]' :'text-[var(--ink-2)]'}>{periodSummaryStats.diffSp >= 0 ? `+${periodSummaryStats.diffSp}` : periodSummaryStats.diffSp}</b></span>
  )}
  </div>
  <div className="text-[var(--ink-2)]">
@@ -1087,7 +1087,7 @@ export function ReelsMetricsView({
  {hasInstagram && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.instagram
- ? 'bg-pink-950/30 border-[var(--alert)]/40 text-pink-300 shadow-sm shadow-pink-950/20'
+ ? 'bg-pink-950/30 border-[var(--alert)]/40 text-[var(--alert)]/80 shadow-sm shadow-pink-950/20'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1095,21 +1095,21 @@ export function ReelsMetricsView({
  className="px-2.5 py-1.5 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  title={selectedChannels.instagram ?"Ocultar Instagram del gráfico" :"Mostrar Instagram en el gráfico"}
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ?'bg-pink-500 animate-pulse' :'bg-neutral-600'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ?'bg-[var(--alert)] animate-pulse' :'bg-[var(--ink-2)]/40'}`}></span>
  <Instagram className="w-3 h-3 text-pink-500" />
  <span className="font-bold">Instagram</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-pink-500/15 font-mono">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-mono">
  {(latestMetric?.instagram_followers || latestMetric?.instagram || 0).toLocaleString()}
  </span>
  {selectedChannels.instagram ? (
- <Eye className="w-3 h-3 text-pink-400 ml-0.5" />
+ <Eye className="w-3 h-3 text-[var(--alert)] ml-0.5" />
  ) : (
  <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
  )}
  </button>
  <button
  onClick={() => selectOnlyChannel('instagram')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-pink-500/20 text-pink-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-[var(--alert)]/20 text-[var(--alert)] cursor-pointer"
  title="Aislar y ver sólo Instagram dimensionado"
  >
  Solo
@@ -1121,7 +1121,7 @@ export function ReelsMetricsView({
  {hasTikTok && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.tiktok
- ? 'bg-cyan-950/30 border-[var(--acc)]/40 text-cyan-300 shadow-sm shadow-cyan-950/20'
+ ? 'bg-cyan-950/30 border-[var(--acc)]/40 text-[var(--acc)]/80 shadow-sm shadow-cyan-950/20'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1129,21 +1129,21 @@ export function ReelsMetricsView({
  className="px-2.5 py-1.5 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  title={selectedChannels.tiktok ?"Ocultar TikTok del gráfico" :"Mostrar TikTok en el gráfico"}
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ?'bg-cyan-400 animate-pulse' :'bg-neutral-600'}`}></span>
- <Video className="w-3 h-3 text-cyan-400" />
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ?'bg-[var(--acc)]/80 animate-pulse' :'bg-[var(--ink-2)]/40'}`}></span>
+ <Video className="w-3 h-3 text-[var(--acc)]" />
  <span className="font-bold">TikTok</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-500/15 font-mono">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--acc)]/15 font-mono">
  {(latestMetric?.tiktok_followers || latestMetric?.tiktok || 0).toLocaleString()}
  </span>
  {selectedChannels.tiktok ? (
- <Eye className="w-3 h-3 text-cyan-400 ml-0.5" />
+ <Eye className="w-3 h-3 text-[var(--acc)] ml-0.5" />
  ) : (
  <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
  )}
  </button>
  <button
  onClick={() => selectOnlyChannel('tiktok')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--acc)]/20 hover:bg-cyan-500/20 text-cyan-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--acc)]/20 hover:bg-[var(--acc)]/20 text-[var(--acc)] cursor-pointer"
  title="Aislar y ver sólo TikTok dimensionado"
  >
  Solo
@@ -1163,21 +1163,21 @@ export function ReelsMetricsView({
  className="px-2.5 py-1.5 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  title={selectedChannels.youtube ?"Ocultar YouTube del gráfico" :"Mostrar YouTube en el gráfico"}
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ?'bg-red-500 animate-pulse' :'bg-neutral-600'}`}></span>
- <Youtube className="w-3 h-3 text-red-500" />
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ?'bg-[var(--alert)] animate-pulse' :'bg-[var(--ink-2)]/40'}`}></span>
+ <Youtube className="w-3 h-3 text-[var(--alert)]" />
  <span className="font-bold">YouTube</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-red-500/15 font-mono">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-mono">
  {(latestMetric?.youtube_subscribers || latestMetric?.youtube || 0).toLocaleString()}
  </span>
  {selectedChannels.youtube ? (
- <Eye className="w-3 h-3 text-red-400 ml-0.5" />
+ <Eye className="w-3 h-3 text-[var(--alert)] ml-0.5" />
  ) : (
  <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
  )}
  </button>
  <button
  onClick={() => selectOnlyChannel('youtube')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-red-500/20 text-red-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-[var(--alert)]/20 text-[var(--alert)] cursor-pointer"
  title="Aislar y ver sólo YouTube dimensionado"
  >
  Solo
@@ -1197,21 +1197,21 @@ export function ReelsMetricsView({
  className="px-2.5 py-1.5 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  title={selectedChannels.spotify ?"Ocultar Spotify del gráfico" :"Mostrar Spotify en el gráfico"}
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ?'bg-emerald-500 animate-pulse' :'bg-neutral-600'}`}></span>
- <Music2 className="w-3 h-3 text-emerald-500" />
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ?'bg-[var(--ok)] animate-pulse' :'bg-[var(--ink-2)]/40'}`}></span>
+ <Music2 className="w-3 h-3 text-[var(--ok)]" />
  <span className="font-bold">Spotify</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/15 font-mono">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--ok)]/15 font-mono">
  {(latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || 0).toLocaleString()}
  </span>
  {selectedChannels.spotify ? (
- <Eye className="w-3 h-3 text-emerald-400 ml-0.5" />
+ <Eye className="w-3 h-3 text-[var(--ok)] ml-0.5" />
  ) : (
  <EyeOff className="w-3 h-3 text-[var(--ink-2)] ml-0.5" />
  )}
  </button>
  <button
  onClick={() => selectOnlyChannel('spotify')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--ok)]/20 hover:bg-emerald-500/20 text-emerald-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--ok)]/20 hover:bg-[var(--ok)]/20 text-[var(--ok)] cursor-pointer"
  title="Aislar y ver sólo Spotify dimensionado"
  >
  Solo
@@ -1231,7 +1231,7 @@ export function ReelsMetricsView({
  </p>
  <button
  onClick={selectAllChannels}
- className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-indigo-600 hover:bg-indigo-500 text-[var(--ink)] font-mono text-[10px] font-medium transition-all"
+ className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-indigo-600 hover:bg-[var(--tentative)] text-[var(--ink)] font-mono text-[10px] font-medium transition-all"
  >
  Activar todos los canales
  </button>
@@ -1346,7 +1346,7 @@ export function ReelsMetricsView({
  <div className={`border-b pb-2 flex items-center justify-between ${isStitchLight ?'' :'border-[var(--hair)]'}`}>
  <div>
  <h3 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
- <Video className="w-3.5 h-3.5 text-emerald-500" /> Monitoreo de Views y Contenidos Indexados
+ <Video className="w-3.5 h-3.5 text-[var(--ok)]" /> Monitoreo de Views y Contenidos Indexados
  </h3>
  <p className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">
  Vídeos y lanzamientos extraídos en vivo desde los canales oficiales de la banda.
@@ -1376,13 +1376,13 @@ export function ReelsMetricsView({
  referrerPolicy="no-referrer"
  />
  <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[8px] font-mono text-[var(--ink)] flex items-center gap-1">
- <Eye className="w-2.5 h-2.5 text-emerald-400" /> {item.views ? item.views.toLocaleString() :'0'}
+ <Eye className="w-2.5 h-2.5 text-[var(--ok)]" /> {item.views ? item.views.toLocaleString() :'0'}
  </span>
  </div>
  )}
  <div className="space-y-1">
  <div className="flex items-center justify-between">
- <span className="text-[8px] font-mono font-bold text-red-500 flex items-center gap-1 uppercase">
+ <span className="text-[8px] font-mono font-bold text-[var(--alert)] flex items-center gap-1 uppercase">
  <Youtube className="w-2.5 h-2.5" /> {item.platform}
  </span>
  {item.published_at && (
@@ -1395,7 +1395,7 @@ export function ReelsMetricsView({
  </div>
 
  <div className="flex items-center justify-between pt-2 border-t /10">
- <span className="text-sm font-black font-mono text-emerald-500">
+ <span className="text-sm font-black font-mono text-[var(--ok)]">
  {(item.views || 0).toLocaleString()} <span className="text-[9px] text-[var(--ink-2)] font-normal">views</span>
  </span>
  {item.url && (
@@ -1462,7 +1462,7 @@ export function ReelsMetricsView({
 
  <div className="space-y-1">
  <label className="text-[9px] font-mono uppercase tracking-widest text-[var(--ink-2)] flex items-center gap-1">
- <Video className="w-3 h-3 text-cyan-400" /> TikTok Segs.
+ <Video className="w-3 h-3 text-[var(--acc)]" /> TikTok Segs.
  </label>
  <input
  type="number"
@@ -1477,7 +1477,7 @@ export function ReelsMetricsView({
 
  <div className="space-y-1">
  <label className="text-[9px] font-mono uppercase tracking-widest text-[var(--ink-2)] flex items-center gap-1">
- <Youtube className="w-3 h-3 text-red-500" /> YouTube Subs.
+ <Youtube className="w-3 h-3 text-[var(--alert)]" /> YouTube Subs.
  </label>
  <input
  type="number"
@@ -1492,7 +1492,7 @@ export function ReelsMetricsView({
 
  <div className="space-y-1">
  <label className="text-[9px] font-mono uppercase tracking-widest text-[var(--ink-2)] flex items-center gap-1">
- <Music2 className="w-3 h-3 text-emerald-400" /> Spotify Oyentes
+ <Music2 className="w-3 h-3 text-[var(--ok)]" /> Spotify Oyentes
  </label>
  <input
  type="number"
@@ -1510,7 +1510,7 @@ export function ReelsMetricsView({
  <button
  type="button"
  onClick={() => setShowAdvancedFields(!showAdvancedFields)}
- className="text-[9px] font-mono text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
+ className="text-[9px] font-mono text-[var(--tentative)] hover:text-[var(--tentative)]/80 underline cursor-pointer"
  >
  {showAdvancedFields ?'▲ Ocultar métricas avanzadas' :'▼ Mostrar métricas avanzadas (Views, Likes, Posts)'}
  </button>
@@ -1654,7 +1654,7 @@ export function ReelsMetricsView({
  const spotifyDelta = prevLog ? (m.spotify_monthly_listeners || m.spotify || 0) - (prevLog.spotify_monthly_listeners || prevLog.spotify || 0) : 0;
 
  const formatDelta = (delta: number) => {
- if (delta > 0) return <span className="text-emerald-500 font-bold">+{delta}</span>;
+ if (delta > 0) return <span className="text-[var(--ok)] font-bold">+{delta}</span>;
  if (delta < 0) return <span className="text-rose-500 font-bold">{delta}</span>;
  return <span className="text-[var(--ink-2)]">0</span>;
  };
@@ -1701,7 +1701,7 @@ export function ReelsMetricsView({
  <button
  type="button"
  onClick={() => handleEditMetricClick(m)}
- className="p-1 hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-none text-[var(--ink-2)]"
+ className="p-1 hover:text-[var(--tentative)] transition-colors cursor-pointer bg-transparent border-none text-[var(--ink-2)]"
  title="Editar snapshot"
  >
  <Edit className="w-3.5 h-3.5" />
@@ -1752,7 +1752,7 @@ export function ReelsMetricsView({
  <div>
  <h3 className="text-sm font-bold font-display uppercase tracking-wider flex items-center gap-2">
  Instagram Platform Insights API
- <span className="text-[9px] px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-400 font-mono font-normal">
+ <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--alert)]/20 text-[var(--alert)] font-mono font-normal">
  Meta Official
  </span>
  </h3>
@@ -1774,7 +1774,7 @@ export function ReelsMetricsView({
  {/* Official Documentation Reference */}
  <div className="p-3.5 rounded-[var(--r-m)] bg-pink-950/20 flex items-center justify-between gap-3">
  <div className="flex items-center gap-2.5 text-xs text-pink-200">
- <ExternalLink className="w-4 h-4 text-pink-400 shrink-0" />
+ <ExternalLink className="w-4 h-4 text-[var(--alert)] shrink-0" />
  <span>
  Documentación Oficial Meta: <strong className="text-[var(--ink)]">Instagram Platform Insights API</strong>
  </span>
@@ -1783,7 +1783,7 @@ export function ReelsMetricsView({
  href="https://developers.facebook.com/documentation/instagram-platform/insights"
  target="_blank"
  rel="noreferrer"
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 text-[10px] font-mono font-bold flex items-center gap-1 transition-all"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--alert)]/80 text-[10px] font-mono font-bold flex items-center gap-1 transition-all"
  >
  Abrir Docs <ExternalLink className="w-2.5 h-2.5" />
  </a>
@@ -1792,7 +1792,7 @@ export function ReelsMetricsView({
  {/* Connection Status Card */}
  <div className={`p-4 rounded-[var(--r-m)] ${
  igStatus?.connected 
- ?'bg-emerald-500/10 border-[var(--ok)]/30 text-emerald-400'
+ ?'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ok)]'
  : isStitchLight
  ?'bg-amber-50 text-amber-800'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -1800,7 +1800,7 @@ export function ReelsMetricsView({
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-2.5">
  <div className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center ${
- igStatus?.connected ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--surface)]/70 text-[var(--ink-2)]'
+ igStatus?.connected ?'bg-[var(--ok)]/20 text-[var(--ok)]' :'bg-[var(--surface)]/70 text-[var(--ink-2)]'
  }`}>
  {igStatus?.connected ? <ShieldCheck className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
  </div>
@@ -1808,7 +1808,7 @@ export function ReelsMetricsView({
  <div className="text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-2">
  {igStatus?.connected ?'Instagram Insights Conectado' :'Modo Scraping Autónomo Activo'}
  {igStatus?.connected && (
- <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+ <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80 animate-pulse" />
  )}
  </div>
  <div className="text-[11px] text-[var(--ink-2)] font-mono mt-0.5">
@@ -1824,7 +1824,7 @@ export function ReelsMetricsView({
  <button
  onClick={handleDisconnectIg}
  disabled={isConnectingIg}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)] text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer"
  >
  <Unlink className="w-3 h-3" /> Desconectar
  </button>
@@ -1866,8 +1866,8 @@ export function ReelsMetricsView({
  {igModalMsg && (
  <div className={`p-3.5 rounded-[var(--r-m)] text-xs font-mono flex items-center gap-2.5 ${
  igModalMsg.type ==='success' 
- ?'bg-emerald-500/10 border-[var(--ok)]/30 text-emerald-400'
- :'bg-rose-500/10 border-[var(--alert)]/30 text-rose-400'
+ ?'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ok)]'
+ :'bg-[var(--alert)]/10 border-[var(--alert)]/30 text-[var(--alert)]'
  }`}>
  {igModalMsg.type ==='success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
  <span>{igModalMsg.text}</span>
@@ -1880,7 +1880,7 @@ export function ReelsMetricsView({
  <label className="block text-xs font-mono uppercase tracking-wider font-bold text-[var(--ink-2)]">
  Vincular Token de Instagram Insights API
  </label>
- <span className="text-[10px] text-pink-400 font-mono">
+ <span className="text-[10px] text-[var(--alert)] font-mono">
  Permisos: instagram_manage_insights
  </span>
  </div>
@@ -1905,7 +1905,7 @@ export function ReelsMetricsView({
  href="https://developers.facebook.com/tools/explorer/"
  target="_blank"
  rel="noreferrer"
- className="text-[11px] text-pink-400 hover:text-pink-300 flex items-center gap-1 font-mono hover:underline"
+ className="text-[11px] text-[var(--alert)] hover:text-[var(--alert)]/80 flex items-center gap-1 font-mono hover:underline"
  >
  <ExternalLink className="w-3 h-3" /> Meta Graph API Explorer
  </a>
@@ -1943,13 +1943,13 @@ export function ReelsMetricsView({
  </div>
  <ol className="list-decimal list-inside space-y-1.5 text-[11px] leading-relaxed">
  <li>Tu cuenta de Instagram debe ser de tipo <strong className="text-[var(--ink)]">Creador o Empresa</strong> vinculada a una Página de Facebook.</li>
- <li>Entra en el <a href="https://developers.facebook.com/tools/explorer/" target="_blank" rel="noreferrer" className="text-pink-400 underline">Meta Graph API Explorer</a>.</li>
+ <li>Entra en el <a href="https://developers.facebook.com/tools/explorer/" target="_blank" rel="noreferrer" className="text-[var(--alert)] underline">Meta Graph API Explorer</a>.</li>
  <li>En <em>Permisos (Permissions)</em>, activa exactamente estos 4 scopes oficiales:
  <div className="mt-1 flex flex-wrap gap-1">
- <code className="px-1.5 py-0.5 rounded bg-pink-500/15 text-pink-300 font-mono text-[10px]">instagram_manage_insights</code>
- <code className="px-1.5 py-0.5 rounded bg-pink-500/15 text-pink-300 font-mono text-[10px]">instagram_basic</code>
- <code className="px-1.5 py-0.5 rounded bg-pink-500/15 text-pink-300 font-mono text-[10px]">pages_show_list</code>
- <code className="px-1.5 py-0.5 rounded bg-pink-500/15 text-pink-300 font-mono text-[10px]">pages_read_engagement</code>
+ <code className="px-1.5 py-0.5 rounded bg-[var(--alert)]/15 text-[var(--alert)]/80 font-mono text-[10px]">instagram_manage_insights</code>
+ <code className="px-1.5 py-0.5 rounded bg-[var(--alert)]/15 text-[var(--alert)]/80 font-mono text-[10px]">instagram_basic</code>
+ <code className="px-1.5 py-0.5 rounded bg-[var(--alert)]/15 text-[var(--alert)]/80 font-mono text-[10px]">pages_show_list</code>
+ <code className="px-1.5 py-0.5 rounded bg-[var(--alert)]/15 text-[var(--alert)]/80 font-mono text-[10px]">pages_read_engagement</code>
  </div>
  </li>
  <li>Haz clic en <strong>Generate Access Token</strong> y pega el token arriba para sincronizar alcances, impresiones y reproducciones de Reels.</li>
@@ -1991,13 +1991,13 @@ export function ReelsMetricsView({
  {/* Modal Header */}
  <div className="p-5 border-b flex items-center justify-between bg-[var(--surface)]/40">
  <div className="flex items-center gap-3">
- <div className="w-9 h-9 rounded-[var(--r-m)] bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+ <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/20 flex items-center justify-center text-[var(--tentative)]">
  <Camera className="w-5 h-5" />
  </div>
  <div>
  <h3 className="text-sm font-bold font-display uppercase tracking-wider flex items-center gap-2">
  Escanear Métricas con Visión IA
- <span className="text-[9px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 font-mono font-normal flex items-center gap-1">
+ <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--tentative)]/20 text-[var(--tentative)] font-mono font-normal flex items-center gap-1">
  <Sparkles className="w-2.5 h-2.5" /> Gemini Multimodal
  </span>
  </h3>
@@ -2019,13 +2019,13 @@ export function ReelsMetricsView({
  {/* Feedback messages */}
  {scanError && (
  <div className="p-3.5 rounded-[var(--r-m)] bg-red-950/20 text-red-300 text-xs flex items-center gap-2">
- <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
+ <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)]" />
  <span>{scanError}</span>
  </div>
  )}
  {scanSuccess && (
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok-soft)] text-[var(--ink-2)] text-xs flex items-center gap-2">
- <Check className="w-4 h-4 shrink-0 text-emerald-400" />
+ <Check className="w-4 h-4 shrink-0 text-[var(--ok)]" />
  <span>{scanSuccess}</span>
  </div>
  )}
@@ -2040,7 +2040,7 @@ export function ReelsMetricsView({
  <label className={`border-2 border-dashed rounded-[var(--r-l)] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
  ' bg-[var(--sunken)] hover:bg-[var(--surface)]/80 hover:border-[var(--acc)]/50'
  }`}>
- <div className="w-12 h-12 rounded-[var(--r-l)] bg-indigo-500/15 text-indigo-400 flex items-center justify-center mb-3">
+ <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--tentative)]/15 text-[var(--tentative)] flex items-center justify-center mb-3">
  <UploadCloud className="w-6 h-6" />
  </div>
  <div className="text-sm font-bold text-[var(--ink-2)]">
@@ -2066,12 +2066,12 @@ export function ReelsMetricsView({
  <div className="flex-1 min-w-0">
  <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-2">
  <span>Captura lista para analizar</span>
- <span className="w-2 h-2 rounded-full bg-emerald-400" />
+ <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80" />
  </div>
  <div className="text-[11px] text-[var(--ink-2)] font-mono mt-0.5">
  Imagen cargada en memoria. Pulsa el botón para que Gemini extraiga los datos.
  </div>
- <label className="inline-block mt-2 text-[10px] text-indigo-400 hover:text-indigo-300 font-mono underline cursor-pointer">
+ <label className="inline-block mt-2 text-[10px] text-[var(--tentative)] hover:text-[var(--tentative)]/80 font-mono underline cursor-pointer">
  Cambiar imagen
  <input
  type="file"
@@ -2098,12 +2098,12 @@ export function ReelsMetricsView({
  >
  {isAnalyzingScreenshot ? (
  <>
- <RefreshCw className="w-4 h-4 animate-spin text-indigo-300" />
+ <RefreshCw className="w-4 h-4 animate-spin text-[var(--tentative)]/80" />
  <span>Gemini Visión analizando píxeles y métricas...</span>
  </>
  ) : (
  <>
- <ScanLine className="w-4 h-4 text-indigo-300" />
+ <ScanLine className="w-4 h-4 text-[var(--tentative)]/80" />
  <span>Escanear y Guardar en Supabase</span>
  </>
  )}
@@ -2116,11 +2116,11 @@ export function ReelsMetricsView({
  'bg-indigo-950/20 border-[var(--acc)]/30'
  }`}>
  <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-2">
- <div className="text-xs font-bold font-mono uppercase tracking-wider text-indigo-300 flex items-center gap-2">
- <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+ <div className="text-xs font-bold font-mono uppercase tracking-wider text-[var(--tentative)]/80 flex items-center gap-2">
+ <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
  Datos Extraídos con Éxito
  </div>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-bold uppercase">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)] font-bold uppercase">
  {scanResult.platform ||'Red Social'}
  </span>
  </div>
@@ -2141,7 +2141,7 @@ export function ReelsMetricsView({
  {scanResult.account_handle && (
  <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Usuario</div>
- <div className="text-xs font-bold font-mono text-indigo-300 mt-1 truncate">
+ <div className="text-xs font-bold font-mono text-[var(--tentative)]/80 mt-1 truncate">
  {scanResult.account_handle}
  </div>
  </div>
@@ -2157,7 +2157,7 @@ export function ReelsMetricsView({
  {scanResult.reach !== null && scanResult.reach !== undefined && (
  <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Alcance (Reach)</div>
- <div className="text-base font-bold font-display text-emerald-400 mt-0.5">
+ <div className="text-base font-bold font-display text-[var(--ok)] mt-0.5">
  {Number(scanResult.reach).toLocaleString()}
  </div>
  </div>
@@ -2165,7 +2165,7 @@ export function ReelsMetricsView({
  {scanResult.impressions !== null && scanResult.impressions !== undefined && (
  <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Impresiones</div>
- <div className="text-base font-bold font-display text-purple-400 mt-0.5">
+ <div className="text-base font-bold font-display text-[var(--tentative)] mt-0.5">
  {Number(scanResult.impressions).toLocaleString()}
  </div>
  </div>
@@ -2173,7 +2173,7 @@ export function ReelsMetricsView({
  {scanResult.confidence && (
  <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)]">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Confianza IA</div>
- <div className="text-xs font-bold font-mono text-emerald-400 mt-1 uppercase">
+ <div className="text-xs font-bold font-mono text-[var(--ok)] mt-1 uppercase">
  Alta (99%)
  </div>
  </div>
@@ -2186,7 +2186,7 @@ export function ReelsMetricsView({
  {/* Modal Footer */}
  <div className="p-4 border-t flex justify-between items-center bg-[var(--surface)]/50">
  <span className="text-[11px] text-[var(--ink-2)] font-mono flex items-center gap-1">
- <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
  OCR & Visión Asistida por Gemini 2.5
  </span>
  <button

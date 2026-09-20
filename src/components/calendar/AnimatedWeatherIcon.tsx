@@ -238,7 +238,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  opacity: [0.2, 0.5, 0.2]
  }}
  transition={{ duration: 4, repeat: Infinity, ease:"easeInOut" }}
- className="absolute inset-0 rounded-full bg-cyan-400/20 blur-sm"
+ className="absolute inset-0 rounded-full bg-[var(--acc)]/80/20 blur-sm"
  />
  {/* Copo de nieve girando y flotando con suavidad */}
  <motion.div
@@ -250,7 +250,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  rotate: { duration: 12, repeat: Infinity, ease:"linear" },
  y: { duration: 3, repeat: Infinity, ease:"easeInOut" }
  }}
- className="relative z-10 text-cyan-300 drop-shadow-[0_0_8px_rgba(103,232,249,0.6)]"
+ className="relative z-10 text-[var(--acc)]/80 drop-shadow-[0_0_8px_rgba(103,232,249,0.6)]"
  >
  <Snowflake className={currentSize.icon} />
  </motion.div>
@@ -314,7 +314,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
+ severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
  }`}
  >
  <Thermometer className={currentSize.icon} />
@@ -375,7 +375,7 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
  };
  case'snow':
  return {
- bg: isDanger ?'bg-rose-500/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-cyan-500/20 border-[var(--acc)]/50 text-cyan-300',
+ bg: isDanger ?'bg-rose-500/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--acc)]/80',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(6,182,212,0.3)]'
  };
  case'wind':

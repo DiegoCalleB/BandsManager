@@ -2313,7 +2313,7 @@ export default function BookingCRM({
  <div className="space-y-2 pt-3 pb-2">
  <div className="flex flex-wrap gap-2 items-center">
  <span className="text-[9px] font-mono text-[var(--ink-2)]">📊 Resultados:</span>
- <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ?'bg-blue-100 text-blue-700' :'bg-blue-950 text-blue-300'}`}>
+ <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ?'bg-blue-100 text-blue-700' :'bg-blue-950 text-[var(--acc)]/80'}`}>
  {templateStats[templateTab].totalUses} usos
  </span>
  <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ?'bg-green-100 text-green-700' :'bg-green-950 text-green-300') : (isStitchLight ?'bg-yellow-100 text-yellow-700' :'bg-yellow-950 text-yellow-300')}`}>
@@ -2329,7 +2329,7 @@ export default function BookingCRM({
  </div>
  )}
  {templateStats[templateTab].bouncedEmails > 0 && (
- <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-orange-100 text-orange-700' :'bg-orange-950 text-orange-300'}`}>
+ <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-orange-100 text-orange-700' :'bg-orange-950 text-[var(--acc)]/80'}`}>
  <span>📬</span>
  <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
  </div>

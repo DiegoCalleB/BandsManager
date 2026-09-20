@@ -124,7 +124,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <span className="font-bold text-[var(--ink-2)]">{r.name}</span>
  <div className="flex flex-wrap gap-3 text-[11px] text-[var(--ink-2)]">
  {r.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-emerald-400" /> {r.email}</span>}
- {r.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-blue-400" /> {r.phone}</span>}
+ {r.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-[var(--acc)]" /> {r.phone}</span>}
  {r.instagram && <span className="flex items-center gap-1"><Instagram className="w-3 h-3 text-pink-400" /> {r.instagram}</span>}
  </div>
  </div>

@@ -23,7 +23,7 @@ interface OrdenDelDiaTabProps {
 
 const BLOCK_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
  cancion: { label:'Canción de Repertorio', icon:'🎵', bg:'bg-[var(--acc)]/10', text:'text-[var(--acc)]', border:'/20' },
- calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-orange-500/10', text:'text-orange-400', border:'border-[var(--acc)]/20' },
+ calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-orange-500/10', text:'text-[var(--acc)]/80', border:'border-[var(--acc)]/20' },
  pausa: { label:'Pausa / Descanso / Birra', icon:'☕', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]', border:'' },
  seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-purple-500/10', text:'text-purple-400', border:'border-[var(--acc)]/20' },
  improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-emerald-500/10', text:'text-emerald-400', border:'border-[var(--ok)]/20' },

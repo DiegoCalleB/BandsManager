@@ -76,7 +76,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <MessageSquare className="w-5 h-5" />
  </div>
  </div>
- <div className="text-2xl font-bold text-blue-400">
+ <div className="text-2xl font-bold text-[var(--acc)]">
  {metrics.tasaRespuesta}%
  </div>
  <p className="text-xs text-[var(--ink-2)] mt-1">Feedback de programadores</p>

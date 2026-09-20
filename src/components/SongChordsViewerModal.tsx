@@ -238,7 +238,7 @@ export function SongChordsViewerModal({
  <div className="flex items-center gap-2">
  <h2 className="text-xl font-bold tracking-tight text-[var(--ink)]">{formatSongTitle(song.titulo)}</h2>
  {song.esVersionCovers && (
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900/60 text-blue-300">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900/60 text-[var(--acc)]/80">
  Cover
  </span>
  )}
@@ -578,7 +578,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div className="sm:col-span-2 bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
- <span className="text-cyan-400 font-bold block text-[11px] uppercase tracking-wider">
+ <span className="text-[var(--acc)] font-bold block text-[11px] uppercase tracking-wider">
  5. Protagonismo de Instrumentos / Arreglos
  </span>
  <p className="text-[var(--ink-2)] leading-relaxed">

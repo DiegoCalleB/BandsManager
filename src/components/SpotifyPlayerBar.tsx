@@ -555,7 +555,7 @@ export default function SpotifyPlayerBar({
  <div className="flex items-center gap-2">
  <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] truncate group-hover:text-[var(--ok)] transition">{song.titulo}</h4>
  {isDrive && (
- <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 shrink-0">
+ <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-[var(--acc)]/80 shrink-0">
  Drive
  </span>
  )}
@@ -668,7 +668,7 @@ export default function SpotifyPlayerBar({
  </button>
  )}
  {isDrive && (
- <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 shrink-0">
+ <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-[var(--acc)]/80 shrink-0">
  Drive
  </span>
  )}

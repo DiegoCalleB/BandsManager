@@ -185,25 +185,49 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  </div>
  </div>
 
- {/* Chart Area — Onda Visualization */}
- <div className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}>
- <Onda
- data={chartData.map((d) => ({
- label: `${d.num}. ${d.title.substring(0, 12)}`,
- value: d.energy,
- color: d.hexColor
- }))}
- height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
- barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
- gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
- showLabels={true}
- animated={true}
- tooltipFormatter={(val) => {
- const song = chartData.find(d => d.energy === val);
- return song ? `${val}/20 (${song.label}) - ${song.bpm} BPM` : `${val}/20`;
- }}
- className="w-full"
+ {/* Chart Area — misma curva de energía que el Mapa de Energía de Repertorio
+ (versión de solo lectura, sin drag/zonas/eventos de habla: aquí es solo
+ una vista previa), no el Onda de barras — para que el Dashboard reconozca
+ de un vistazo la misma forma que ya conoce de Repertorio. */}
+ <div className={`w-full ${minHeightClass} pt-2`}>
+ <ResponsiveContainer width="100%" height="100%">
+ <AreaChart data={chartData} margin={{ top: 14, right: 10, left: 10, bottom: 0 }}>
+ <defs>
+ <linearGradient id="dashEnergyStroke" x1="0" y1="0" x2="1" y2="0">
+ {chartData.map((d, i) => (
+ <stop key={d.num} offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`} stopColor={d.hexColor} />
+ ))}
+ </linearGradient>
+ <linearGradient id="dashEnergyFill" x1="0" y1="0" x2="1" y2="0">
+ {chartData.map((d, i) => (
+ <stop key={d.num} offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`} stopColor={d.hexColor} stopOpacity={0.22} />
+ ))}
+ </linearGradient>
+ </defs>
+ <YAxis domain={[0, 20]} hide />
+ <XAxis dataKey="num" hide />
+ <Tooltip
+ contentStyle={{ background:'var(--surface)', border:'none', borderRadius: 'var(--r-m)', fontSize: 11 }}
+ labelFormatter={(num) => chartData.find(d => d.num === num)?.title || `Tema ${num}`}
+ formatter={(val: number, _name, item) => [`${val}/20 · ${(item?.payload as any)?.bpm ?? ''} BPM`, 'Energía']}
  />
+ <Area
+ type="monotone"
+ dataKey="energy"
+ stroke="url(#dashEnergyStroke)"
+ strokeWidth={2.5}
+ fill="url(#dashEnergyFill)"
+ fillOpacity={1}
+ isAnimationActive={true}
+ dot={(dotProps: any) => {
+ const { cx, cy, payload } = dotProps;
+ if (cx == null || cy == null) return <React.Fragment key={`d-${payload?.num}`} />;
+ return <circle key={`d-${payload?.num}`} cx={cx} cy={cy} r={4} strokeWidth={1.5} stroke="var(--surface)" fill={payload?.hexColor || 'var(--acc)'} />;
+ }}
+ activeDot={{ r: 6, strokeWidth: 2, stroke: 'var(--surface)' }}
+ />
+ </AreaChart>
+ </ResponsiveContainer>
  </div>
  </div>
  );

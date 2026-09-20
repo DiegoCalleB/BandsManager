@@ -325,7 +325,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <div className="space-y-4">
  <div className="flex items-center justify-between pt-2">
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-2">
- <MessageCircle className="w-3.5 h-3.5 text-amber-500" />
+ <MessageCircle className="w-3.5 h-3.5 text-[var(--acc)]" />
  Muro de Fans & Mensajes de la Comunidad ({fans.length})
  </h4>
  <span className="text-[11px] text-[var(--ink-2)] font-mono">
@@ -392,7 +392,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--ink-2)] font-mono mt-0.5">
  {fan.ciudad && (
  <span className="flex items-center gap-1 text-[var(--ink-2)]">
- <MapPin className="w-3 h-3 text-amber-500" />
+ <MapPin className="w-3 h-3 text-[var(--acc)]" />
  {fan.ciudad}
  </span>
  )}
@@ -555,7 +555,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4 shadow-2xl">
  <div className="flex items-center justify-between border-b pb-3">
  <h3 className="text-base font-bold text-[var(--ink)] font-display flex items-center gap-2">
- <Megaphone className="w-5 h-5 text-amber-500" />
+ <Megaphone className="w-5 h-5 text-[var(--acc)]" />
  Publicar Comunicado en el Muro Social
  </h3>
  <button 
@@ -568,7 +568,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
  <form onSubmit={handleCreateAnnouncement} className="space-y-3.5">
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">
  Título o Titular *
  </label>
  <input
@@ -582,7 +582,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  </div>
 
  <div>
- <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">
+ <label className="text-[10px] font-bold text-[var(--acc)] uppercase font-mono tracking-widest mb-1.5 block">
  Mensaje para la Comunidad de Fans *
  </label>
  <textarea

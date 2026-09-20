@@ -395,7 +395,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-semibold transition flex items-center justify-center gap-1.5 disabled:opacity-50 ${
  song.estructuraVerificada
  ?'bg-emerald-600/20 text-[var(--ink-2)] hover:bg-emerald-600/30'
- :'bg-amber-600/20 text-[var(--acc)]/70 hover:bg-amber-600/30'
+ :'bg-amber-600/20 text-[var(--acc)]/80 hover:bg-amber-600/30'
  }`}
  >
  <ShieldCheck className="w-3.5 h-3.5" />

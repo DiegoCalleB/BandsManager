@@ -811,8 +811,8 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  );
  case'pendiente_respuesta':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-fuchsia-500/15 text-fuchsia-300 whitespace-nowrap shrink-0">
- <Clock className="w-3 h-3 text-fuchsia-300 shrink-0" />
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--tentative)]/15 text-[var(--tentative)]/80 whitespace-nowrap shrink-0">
+ <Clock className="w-3 h-3 text-[var(--tentative)]/80 shrink-0" />
  <span>Pendiente Respuesta</span>
  </span>
  );
@@ -1023,7 +1023,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <th className="p-3">Fecha Registro</th>
  <th className="p-3">Estado Cuenta</th>
  <th className="p-3">Notas</th>
- <th className="p-3 font-bold text-cyan-300 bg-cyan-500/10 border-l border-[var(--acc)]/20">user_id</th>
+ <th className="p-3 font-bold text-[var(--acc)]/80 bg-[var(--acc)]/10 border-l border-[var(--acc)]/20">user_id</th>
  <th className="p-3 text-right text-[var(--acc)]/70 bg-[var(--acc)]/10 border-l /20 font-bold">band_id</th>
  </tr>
  </thead>
@@ -1057,7 +1057,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </span>
  </td>
  <td className="p-3 text-[var(--ink-2)] max-w-xs truncate">{band.notas ||'—'}</td>
- <td className="p-3 text-left font-bold text-cyan-300 bg-cyan-500/5 border-l border-[var(--acc)]/20 font-mono">
+ <td className="p-3 text-left font-bold text-[var(--acc)]/80 bg-[var(--acc)]/5 border-l border-[var(--acc)]/20 font-mono">
  {band.user_id ||'—'}
  </td>
  <td className="p-3 text-right font-bold text-[var(--acc)]/70 bg-[var(--acc)]/5 border-l /20 font-mono">

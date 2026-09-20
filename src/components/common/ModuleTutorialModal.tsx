@@ -257,7 +257,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  badgeBg:'bg-sky-500/15 text-sky-300 border-[var(--acc)]/30',
  iconBox:'bg-sky-500/20 text-sky-400 border-[var(--acc)]/30 shadow-sky-500/10',
  activeDot:'bg-sky-400 w-7',
- primaryBtn:'bg-sky-500 hover:bg-sky-400 text-[var(--acc-ink)] font-bold shadow-sky-900/30',
+ primaryBtn:'bg-sky-500 hover:bg-sky-400 text-white font-bold shadow-sky-900/30',
  hookBorder:'border-[var(--acc)]/25 bg-sky-500/10 text-sky-100',
  highlightText:'text-sky-400',
  targetCard:'border-[var(--acc)]/40 bg-sky-500/5',
@@ -268,7 +268,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  badgeBg:'bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30',
  iconBox:'bg-emerald-500/20 text-emerald-400 border-[var(--ok)]/30 shadow-emerald-500/10',
  activeDot:'bg-emerald-400 w-7',
- primaryBtn:'bg-emerald-500 hover:bg-emerald-400 text-[var(--acc-ink)] font-black shadow-emerald-900/30',
+ primaryBtn:'bg-emerald-500 hover:bg-emerald-400 text-white font-black shadow-emerald-900/30',
  hookBorder:'border-[var(--ok)]/25 bg-emerald-500/10 text-emerald-100',
  highlightText:'text-emerald-400',
  targetCard:'border-[var(--ok)]/40 bg-emerald-500/5',
@@ -551,7 +551,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  type="checkbox"
  checked={dontShowAgain}
  onChange={(e) => setDontShowAgain(e.target.checked)}
- className="rounded border-[var(--hair)] bg-[var(--surface)]/80 text-amber-500 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
+ className="rounded border-[var(--hair)] bg-[var(--surface)]/80 text-[var(--acc)] focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
  />
  <span className="truncate">No volver a abrir automáticamente</span>
  </label>

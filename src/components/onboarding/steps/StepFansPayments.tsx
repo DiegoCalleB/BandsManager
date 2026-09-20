@@ -200,7 +200,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
  <div>
  <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
- <Smartphone className="w-3 h-3 text-cyan-400" /> Bizum (Teléfono)
+ <Smartphone className="w-3 h-3 text-[var(--acc)]" /> Bizum (Teléfono)
  </label>
  <input
  type="text"
@@ -213,7 +213,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
 
  <div>
  <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
- <CreditCard className="w-3 h-3 text-blue-400" /> Revolut (@Tag)
+ <CreditCard className="w-3 h-3 text-[var(--acc)]" /> Revolut (@Tag)
  </label>
  <input
  type="text"

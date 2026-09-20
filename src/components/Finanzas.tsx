@@ -826,7 +826,7 @@ export default function Finanzas({
  { cat:'alojamiento', color:'bg-[var(--acc)]' },
  { cat:'comida', color:'bg-emerald-500' },
  { cat:'promo', color:'bg-rose-500' },
- { cat:'merchandising', color:'bg-cyan-500' },
+ { cat:'merchandising', color:'bg-[var(--acc)]' },
  { cat:'otros', color:'bg-[var(--bg)]0' }
  ].map(item => {
  const totalInCat = payments

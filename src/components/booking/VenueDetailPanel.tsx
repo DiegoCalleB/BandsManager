@@ -801,10 +801,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  if (isDraftCreated) {
  return (
- <div className="p-2.5 bg-cyan-500/10 rounded-[var(--r-m)] flex items-center gap-2.5">
- <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shrink-0 ml-1" />
+ <div className="p-2.5 bg-[var(--acc)]/10 rounded-[var(--r-m)] flex items-center gap-2.5">
+ <div className="w-2.5 h-2.5 rounded-full bg-[var(--acc)]/80 animate-pulse shrink-0 ml-1" />
  <div className="min-w-0">
- <p className="text-xs font-bold text-cyan-300">
+ <p className="text-xs font-bold text-[var(--acc)]/80">
  📝 Borrador creado en tu Gmail
  </p>
  <p className="text-[10px] text-[var(--ink-2)]">

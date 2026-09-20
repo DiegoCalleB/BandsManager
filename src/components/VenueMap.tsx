@@ -697,7 +697,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] backdrop-blur-md shadow-md flex items-center gap-2 font-mono text-xs ${
  isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}>
- <MapPin className="w-4 h-4 text-amber-500 animate-bounce" />
+ <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
  <div>
  <span className="font-bold">
  {activeCityFilter ? `Salas en ${activeCityFilter}` : activeRegionFilter ? `Salas en ${activeRegionFilter}` :'Mapa Global de Salas'}
@@ -714,7 +714,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className={`px-3 py-1.5 rounded-[var(--r-m)] backdrop-blur-md text-[10px] font-mono flex items-center gap-1.5 ${
  'bg-[var(--acc-soft)] -amber-700/50 text-[var(--ink)]'
  }`}>
- <Loader2 className="w-3 h-3 animate-spin text-amber-500" />
+ <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
  <span>Geolocalizando salas...</span>
  </div>
  )}
@@ -729,7 +729,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  :'bg-[var(--bg)]/95 hover:bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
- <Layers className="w-3.5 h-3.5 text-amber-500" />
+ <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Estilo Mapa</span>
  </button>
 

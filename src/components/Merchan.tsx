@@ -455,7 +455,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <button
  onClick={() => fileInputRef.current?.click()}
  disabled={isUploading}
- className="text-xs font-mono font-bold text-amber-500 hover:underline flex items-center gap-1"
+ className="text-xs font-mono font-bold text-[var(--acc)] hover:underline flex items-center gap-1"
  >
  <Plus className="w-3 h-3" /> {customImageUrl ?'Cambiar' :'Subir'}
  </button>
@@ -601,7 +601,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  }`}>
  <div className="flex items-center justify-between">
  <h2 className={`font-mono text-xs uppercase font-bold tracking-widest flex items-center gap-2 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
- <Layers className="w-4 h-4 text-amber-500" /> Galería de Diseños Producidos ({generatedDesigns.length})
+ <Layers className="w-4 h-4 text-[var(--acc)]" /> Galería de Diseños Producidos ({generatedDesigns.length})
  </h2>
  </div>
 

@@ -24,11 +24,11 @@ interface BulkLeadsActionBarProps {
 }
 
 const STATUS_OPTIONS: { status: LeadStatus; label: string; color: string; icon: any }[] = [
- { status:'nuevo', label:'Nuevo Lead', color:'bg-blue-500/20 text-blue-300 border-[var(--acc)]/40', icon: Sparkles },
+ { status:'nuevo', label:'Nuevo Lead', color:'bg-blue-500/20 text-[var(--acc)]/80 border-[var(--acc)]/40', icon: Sparkles },
  { status:'pendiente_aprobacion', label:'Pendiente Aprobación', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
  { status:'aprobado', label:'Aprobado (Listo para envío)', color:'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/40', icon: CheckCircle2 },
  { status:'esperando_respuesta', label:'Esperando Respuesta', color:'bg-sky-500/20 text-sky-300 border-[var(--acc)]/40', icon: Send },
- { status:'contactado', label:'Contactado', color:'bg-cyan-500/20 text-cyan-300 border-[var(--acc)]/40', icon: MessageSquare },
+ { status:'contactado', label:'Contactado', color:'bg-[var(--acc)]/20 text-[var(--acc)]/80 border-[var(--acc)]/40', icon: MessageSquare },
  { status:'respondido', label:'Respondido / Conversación', color:'bg-indigo-500/20 text-indigo-300 border-[var(--acc)]/40', icon: MessageSquare },
  { status:'negociando', label:'Negociando Caché / Fecha', color:'bg-purple-500/20 text-purple-300 border-[var(--acc)]/40', icon: ArrowRight },
  { status:'confirmado', label:'Confirmado (Cerrado)', color:'bg-emerald-500/30 text-[var(--ink)] border-[var(--ok)]', icon: CheckCircle2 },

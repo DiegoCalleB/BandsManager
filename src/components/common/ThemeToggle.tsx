@@ -7,7 +7,16 @@ import {
 } from '../../utils/temaEspectro';
 import type { PreferenciaTema } from '../../utils/temaEspectro';
 
-export const ThemeToggle: React.FC = () => {
+interface ThemeToggleProps {
+  /** Icono solo, sin la etiqueta de texto del tema activo — para sitios estrechos
+   * como el pie de la barra lateral, junto a otros botones icon-only. */
+  compact?: boolean;
+  /** Abre el menú hacia arriba en vez de hacia abajo — para cuando el botón vive
+   * pegado al borde inferior de la pantalla (pie de sidebar) y no hay sitio debajo. */
+  openUpward?: boolean;
+}
+
+export const ThemeToggle: React.FC<ThemeToggleProps> = ({ compact = false, openUpward = false }) => {
   const [prefEspectro, setPrefEspectro] = useState<PreferenciaTema>(() =>
     leerPreferenciaEspectro()
   );
@@ -23,13 +32,15 @@ export const ThemeToggle: React.FC = () => {
     <div className="relative hidden md:block">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors flex items-center gap-1.5"
+        className={`rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors flex items-center gap-1.5 ${compact ? 'p-1.5' : 'p-2'}`}
         title="Cambiar tema"
       >
         <Palette className="w-4 h-4" />
-        <span className="text-[11px] font-mono font-bold uppercase tracking-wider">
-          {prefEspectro === 'system' ? 'Auto' : prefEspectro === 'light' ? 'Claro' : prefEspectro === 'dark' ? 'Oscuro' : 'Clásico'}
-        </span>
+        {!compact && (
+          <span className="text-[11px] font-mono font-bold uppercase tracking-wider">
+            {prefEspectro === 'system' ? 'Auto' : prefEspectro === 'light' ? 'Claro' : prefEspectro === 'dark' ? 'Oscuro' : 'Clásico'}
+          </span>
+        )}
       </button>
 
       {isOpen && (
@@ -38,7 +49,7 @@ export const ThemeToggle: React.FC = () => {
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-full right-0 mt-1 bg-[var(--surface)] rounded-[var(--r-m)] shadow-lg border border-[var(--hair)] z-50 min-w-[180px] overflow-hidden">
+          <div className={`absolute ${openUpward ? 'bottom-full right-0 mb-1' : 'top-full right-0 mt-1'} bg-[var(--surface)] rounded-[var(--r-m)] shadow-lg border border-[var(--hair)] z-50 min-w-[180px] overflow-hidden`}>
             {PREFERENCIAS_ESPECTRO.map((p) => {
               const isSelected = prefEspectro === p.id;
               return (

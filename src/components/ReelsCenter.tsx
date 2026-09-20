@@ -3218,7 +3218,7 @@ export default function ReelsCenter({
  r="20"
  stroke="currentColor"
  strokeWidth="3.5"
- className="text-amber-500"
+ className="text-[var(--acc)]"
  fill="transparent"
  strokeDasharray={`${2 * Math.PI * 20}`}
  strokeDashoffset={`${2 * Math.PI * 20 * (1 - (highlights[selectedHighlightIndex]?.virality || 90) / 100)}`}
@@ -3230,7 +3230,7 @@ export default function ReelsCenter({
  </div>
  <div className="text-left">
  <div className="flex items-center gap-1">
- <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+ <Flame className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-500" />
  <span className="text-xs font-bold text-[var(--ink)]">Viralidad</span>
  </div>
  <span className="text-[9px] font-mono text-[var(--acc)] uppercase tracking-widest block font-bold">POTENCIAL MÁXIMO</span>
@@ -3430,7 +3430,7 @@ export default function ReelsCenter({
  title="Mover inicio 1 segundo adelante (recortar por la izquierda)"
  >
  <span>+1s (Recortar)</span>
- <ChevronRight className="w-4 h-4 text-amber-500 shrink-0" />
+ <ChevronRight className="w-4 h-4 text-[var(--acc)] shrink-0" />
  </button>
  </div>
  </div>
@@ -3454,7 +3454,7 @@ export default function ReelsCenter({
  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-neutral-850 active:scale-95 transition-all text-xs font-mono font-bold text-[var(--ink)] flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
  title="Mover fin 1 segundo atrás (recortar por la derecha)"
  >
- <ChevronLeft className="w-4 h-4 text-amber-500 shrink-0" />
+ <ChevronLeft className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span>-1s (Recortar)</span>
  </button>
  <button

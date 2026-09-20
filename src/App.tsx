@@ -65,6 +65,7 @@ import { UserManagementModal } from './components/UserManagementModal';
 import { UserProfileModal } from './components/UserProfileModal';
 import { AiSupportWidget } from './components/dashboard/AiUsageSupportWidget';
 import { FontSelectorModal } from './components/FontSelectorModal';
+import { ThemeToggle } from './components/common/ThemeToggle';
 import { MetronomeModal } from './components/MetronomeModal';
 import { TunerModal } from './components/TunerModal';
 import { BandSwitcherModal } from './components/BandSwitcherModal';
@@ -1318,6 +1319,7 @@ export default function App() {
  </div>
  </div>
  <div className="flex items-center gap-1.5">
+  <ThemeToggle compact openUpward />
   <button
   onClick={handleLogout}
   className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
@@ -1749,11 +1751,11 @@ export default function App() {
  <>
  <div className="relative">
  {isChatLoading ? (
- <RefreshCw className="w-5 h-5 animate-spin text-cyan-300" />
+ <RefreshCw className="w-5 h-5 animate-spin text-[var(--acc)]/80" />
  ) : (
  <Guitar className="w-5 h-5" />
  )}
- <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-cyan-400 animate-ping' : 'bg-emerald-300 animate-ping'}`} />
+ <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--acc)]/80 animate-ping' : 'bg-emerald-300 animate-ping'}`} />
  <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-cyan-300' : 'bg-emerald-400'}`} />
  </div>
  <span className="text-xs font-mono font-bold uppercase tracking-wider hidden sm:inline-block pr-1">

@@ -294,7 +294,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <Check className="w-3 h-3" /> Guardado: la IA usará este tono en tus próximos Reels, Shorts y TikToks
  </p>
  ) : (
- <p className="text-[10px] text-amber-500 font-mono mt-0.5">
+ <p className="text-[10px] text-[var(--acc)] font-mono mt-0.5">
  ⚠️ No se pudo guardar de forma permanente. Vuelve a analizarlo antes de usarlo en tus próximos posts.
  </p>
  )
@@ -655,13 +655,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {editable && (
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-violet-950/20 border-[var(--acc)]/40'}`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
+ <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--tentative)] flex items-center gap-1.5">
  <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus Correcciones (Self-Refining Tone DNA)
  </span>
  <button
  onClick={handleTrainToneDna}
  disabled={isTraining}
- className="px-2 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 font-mono text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+ className="px-2 py-1 rounded bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-violet-300 font-mono text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
  title="Fuerza el análisis de tus correcciones acumuladas ahora mismo, en vez de esperar al refinamiento automático"
  >
  {isTraining ? <RefreshCw className="w-3 h-3 animate-spin" /> : <GraduationCap className="w-3 h-3" />}
@@ -742,7 +742,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <button
  onClick={() => handleAddLearnedRule('pitch', cat)}
  disabled={savingManual || !(newRuleText[manualKey] ||'').trim()}
- className="px-2 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
+ className="px-2 py-1 rounded bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-violet-300 text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
  >
  {savingManual ?'...' :'Añadir'}
  </button>

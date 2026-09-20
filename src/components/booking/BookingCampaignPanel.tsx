@@ -256,18 +256,18 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  <div className="p-5">
  <div className="flex items-center gap-2 mb-1">
- <Target className="w-5 h-5 text-green-400" />
+ <Target className="w-5 h-5 text-[var(--ok)]" />
  <h3 className="font-bold text-lg">Campaña Activa: {activeCampaign?.name}</h3>
  </div>
  <p className="text-[var(--ink-2)] text-sm mb-4">El Scout IA y el generador de propuestas están configurados para estos objetivos.</p>
  
  <div className="flex flex-wrap gap-4">
  <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
- <MapPin className="w-4 h-4 text-blue-300" />
+ <MapPin className="w-4 h-4 text-[var(--acc)]/80" />
  <span>{activeCampaign?.targetCities.join(',')}</span>
  </div>
  <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
- <Users className="w-4 h-4 text-orange-300" />
+ <Users className="w-4 h-4 text-[var(--acc)]/80" />
  <span>{activeCampaign?.minCapacity} - {activeCampaign?.maxCapacity} pax</span>
  </div>
  <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
