@@ -1734,8 +1734,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  onClick={() => setIsAutonomyModalOpen(true)}
  className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
  isStitchLight 
- ?'bg-purple-100 hover:bg-purple-200 text-purple-800 border-purple-300 shadow-sm' 
- :'bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border-purple-500/40 shadow-sm'
+ ?'bg-purple-100 hover:bg-purple-200 text-purple-800 border-[var(--acc)] shadow-sm' 
+ :'bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border-[var(--acc)]/40 shadow-sm'
  }`}
  title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
  >
@@ -1751,8 +1751,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div 
  className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold opacity-80 ${
  isStitchLight 
- ?'bg-purple-50 text-purple-700 border-purple-200' 
- :'bg-purple-500/15 text-purple-300 border-purple-500/30'
+ ?'bg-purple-50 text-purple-700 border-[var(--acc)]' 
+ :'bg-purple-500/15 text-purple-300 border-[var(--acc)]/30'
  }`}
  title="Límites de autonomía configurados (Configuración restringida a Administradores)"
  >
@@ -1826,7 +1826,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  onClick={() => setIsAutonomyModalOpen(true)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
  isStitchLight
- ?'bg-purple-100 hover:bg-purple-200 text-purple-800 border-purple-300'
+ ?'bg-purple-100 hover:bg-purple-200 text-purple-800 border-[var(--acc)]'
  :'bg-purple-500/25 hover:bg-purple-500/40 text-purple-200'
  }`}
  title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"

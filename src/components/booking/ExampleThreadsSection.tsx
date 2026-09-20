@@ -174,7 +174,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  <div
  key={t.id}
  onClick={() => handleEdit(t)}
- className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[10px] cursor-pointer hover:border-sky-500/40 transition-colors"
+ className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[10px] cursor-pointer hover:border-[var(--acc)]/40 transition-colors"
  title="Abrir para ver o editar este hilo"
  >
  <div className="min-w-0">
@@ -207,7 +207,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  )}
 
  {showForm && (
- <div className="space-y-2.5 pt-2 border-t border-sky-500/20">
+ <div className="space-y-2.5 pt-2 border-t border-[var(--acc)]/20">
  {editingId && (
  <div className="text-[9px] text-sky-400 font-sans font-bold">Editando hilo guardado</div>
  )}

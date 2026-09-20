@@ -554,8 +554,8 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  w.type ==='warning'
  ?'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
  : w.type ==='success'
- ?'bg-emerald-500/10 text-[var(--ink-2)] border-emerald-500/30'
- :'bg-sky-500/10 text-sky-300 border-sky-500/30'
+ ?'bg-emerald-500/10 text-[var(--ink-2)] border-[var(--ok)]/30'
+ :'bg-sky-500/10 text-sky-300 border-[var(--acc)]/30'
  } ${isHighlighted ?'ring-2 ring-white/60' :''}`}
  style={{ cursor: hasSongs ?'pointer' :'default' }}
  onMouseEnter={() => { if (hasSongs) onHighlightSongs?.(w.songTitles!); }}
@@ -610,7 +610,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  )}
 
  {error && (
- <div className="bg-red-900/20 border-red-700 rounded-[var(--r-s)] p-4 flex gap-3">
+ <div className="bg-red-900/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
  <div>
  <p className="font-medium text-red-200">Error</p>
@@ -655,7 +655,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  {/* Strengths */}
  {analysis.strengths.length > 0 && (
- <div className="bg-green-900/20 rounded-[var(--r-s)] p-3 border-green-700">
+ <div className="bg-green-900/20 rounded-[var(--r-s)] p-3 border-[var(--ok)]">
  <p className="text-xs font-medium text-green-300 mb-1.5">✓ Fortalezas</p>
  <ul className="space-y-1">
  {analysis.strengths.map((strength, idx) => (
@@ -684,7 +684,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  isInvalid
  ?'bg-[var(--surface)] opacity-50'
  : isHighlighted
- ?'bg-purple-900/30 border-purple-500/50 ring-2 ring-purple-400/30'
+ ?'bg-purple-900/30 border-[var(--acc)]/50 ring-2 ring-purple-400/30'
  :'bg-[var(--surface)]/80 hover:'
  }`}
  onMouseEnter={() => {

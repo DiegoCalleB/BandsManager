@@ -365,7 +365,7 @@ export function ModoLocalEnVivoTab({
  <div className={`fixed top-16 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-[var(--r-l)] font-mono text-xs font-bold shadow-2xl flex items-center gap-2 animate-in fade-in zoom-in-95 duration-150 ${
  swipeToast.dir ==='left' 
  ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-amber-400/20' 
- :'bg-emerald-400 text-[var(--ink)] border-emerald-300 shadow-emerald-400/20'
+ :'bg-emerald-400 text-[var(--ink)] border-[var(--ok)] shadow-emerald-400/20'
  }`}>
  <span>{swipeToast.dir ==='left' ?'⏩' :'⏪'}</span>
  <span>{swipeToast.text}</span>

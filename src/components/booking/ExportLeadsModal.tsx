@@ -227,7 +227,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportFormat('csv')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
  exportFormat ==='csv'
- ?'bg-emerald-500/20 border-emerald-500/60 text-[var(--ink)] font-bold'
+ ?'bg-emerald-500/20 border-[var(--ok)]/60 text-[var(--ink)] font-bold'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
@@ -243,7 +243,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportFormat('json')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
  exportFormat ==='json'
- ?'bg-sky-500/20 border-sky-500/60 text-sky-200 font-bold'
+ ?'bg-sky-500/20 border-[var(--acc)]/60 text-sky-200 font-bold'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >

@@ -169,8 +169,8 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  {statusMsg && (
  <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${
  statusMsg.type ==='success' 
- ?'bg-[var(--ok-soft)] border-emerald-800 text-[var(--ink-2)]' 
- :'bg-[var(--alert-soft)] border-rose-800 text-[var(--ink-2)]'
+ ?'bg-[var(--ok-soft)] border-[var(--ok)] text-[var(--ink-2)]' 
+ :'bg-[var(--alert-soft)] border-[var(--alert)] text-[var(--ink-2)]'
  }`}>
  {statusMsg.type ==='success' && <Check className="w-4 h-4" />}
  <span>{statusMsg.text}</span>
@@ -265,7 +265,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  <button
  type="button"
  onClick={handleRemoveImage}
- className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] hover:border-rose-800 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-all cursor-pointer mt-1"
+ className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] hover:border-[var(--alert)] rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-all cursor-pointer mt-1"
  >
  <Trash2 className="w-4 h-4 text-rose-400" />
  <span>Eliminar imagen actual y restablecer icono</span>

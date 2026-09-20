@@ -405,13 +405,13 @@ export default function Finanzas({
 
  let alertBadge = {
  label:'🟢 Rentable',
- bgColor:'bg-[var(--ok-soft)] border-emerald-500/40 text-emerald-400'
+ bgColor:'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-emerald-400'
  };
 
  if (beneficioNeto < 0) {
  alertBadge = {
  label:'🔴 En Pérdidas',
- bgColor:'bg-[var(--alert-soft)] border-rose-500/50 text-rose-400'
+ bgColor:'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-rose-400'
  };
  } else if (beneficioNeto < 150) {
  alertBadge = {

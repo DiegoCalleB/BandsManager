@@ -1023,7 +1023,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <th className="p-3">Fecha Registro</th>
  <th className="p-3">Estado Cuenta</th>
  <th className="p-3">Notas</th>
- <th className="p-3 font-bold text-cyan-300 bg-cyan-500/10 border-l border-cyan-500/20">user_id</th>
+ <th className="p-3 font-bold text-cyan-300 bg-cyan-500/10 border-l border-[var(--acc)]/20">user_id</th>
  <th className="p-3 text-right text-[var(--acc)]/70 bg-[var(--acc)]/10 border-l /20 font-bold">band_id</th>
  </tr>
  </thead>
@@ -1057,7 +1057,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </span>
  </td>
  <td className="p-3 text-[var(--ink-2)] max-w-xs truncate">{band.notas ||'—'}</td>
- <td className="p-3 text-left font-bold text-cyan-300 bg-cyan-500/5 border-l border-cyan-500/20 font-mono">
+ <td className="p-3 text-left font-bold text-cyan-300 bg-cyan-500/5 border-l border-[var(--acc)]/20 font-mono">
  {band.user_id ||'—'}
  </td>
  <td className="p-3 text-right font-bold text-[var(--acc)]/70 bg-[var(--acc)]/5 border-l /20 font-mono">

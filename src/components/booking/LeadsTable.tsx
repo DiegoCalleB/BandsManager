@@ -164,7 +164,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  isChecked
  ?'bg-[var(--surface)] border-2 border-[var(--acc)] shadow-xl ring-2 ring-[var(--acc)]/25'
  : isDetailOpen
- ?'bg-[var(--sunken)] border-2 border-purple-400 shadow-xl ring-1 ring-purple-400/30'
+ ?'bg-[var(--sunken)] border-2 border-[var(--acc)] shadow-xl ring-1 ring-purple-400/30'
  :'bg-[var(--bg)] hover:bg-[var(--sunken)] hover:border-[var(--hair)]700 shadow-md'
  }`}
  >

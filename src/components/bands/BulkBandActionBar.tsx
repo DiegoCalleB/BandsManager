@@ -23,11 +23,11 @@ interface BulkBandActionBarProps {
 
 const BAND_STATUS_OPTIONS: { status: BandRelationshipStatus; label: string; color: string; icon: any }[] = [
  { status:'sin_contactar', label:'Sin Contactar', color:'bg-zinc-700/40 text-[var(--ink-2)] border-[var(--hair)]600', icon: Clock },
- { status:'intercambio_propuesto', label:'Intercambio Propuesto', color:'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Repeat },
+ { status:'intercambio_propuesto', label:'Intercambio Propuesto', color:'bg-sky-500/20 text-sky-300 border-[var(--acc)]/40', icon: Repeat },
  { status:'pendiente_respuesta', label:'Pendiente Respuesta', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
- { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-emerald-500/30 text-[var(--ink)] border-emerald-400', icon: CheckCircle2 },
- { status:'colegas_aliados', label:'Colegas / Aliados de Gira', color:'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: Users },
- { status:'no_disponible', label:'No Disponible / Descartado', color:'bg-rose-500/20 text-[var(--ink-2)] border-rose-500/40', icon: ShieldAlert },
+ { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-emerald-500/30 text-[var(--ink)] border-[var(--ok)]', icon: CheckCircle2 },
+ { status:'colegas_aliados', label:'Colegas / Aliados de Gira', color:'bg-purple-500/20 text-purple-300 border-[var(--acc)]/40', icon: Users },
+ { status:'no_disponible', label:'No Disponible / Descartado', color:'bg-rose-500/20 text-[var(--ink-2)] border-[var(--alert)]/40', icon: ShieldAlert },
 ];
 
 export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
@@ -183,8 +183,8 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  onClick={onBulkGeneratePitch}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ?'bg-purple-100 hover:bg-purple-200 border-purple-300 text-purple-900'
- :'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-purple-500/50 text-purple-200'
+ ?'bg-purple-100 hover:bg-purple-200 border-[var(--acc)] text-purple-900'
+ :'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-[var(--acc)]/50 text-purple-200'
  }`}
  title="Redactar propuestas de intercambio (Date Swaps) con IA"
  >

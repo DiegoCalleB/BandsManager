@@ -608,7 +608,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {/* Creation Form Accordion */}
  {showCreateBandSection && (
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 ${
- isStitchLight ?'bg-emerald-50/50 border-emerald-200' :'bg-[var(--ok-soft)] border-emerald-800/50'
+ isStitchLight ?'bg-emerald-50/50 border-[var(--ok)]' :'bg-[var(--ok-soft)] border-[var(--ok)]/50'
  }`}>
  <div className="flex items-center justify-between">
  <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
@@ -953,7 +953,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClick={() => onFontChange(p.id)}
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-0.5 ${
  isSelected
- ?'bg-emerald-500/15 border-emerald-500/50 text-[var(--ink-2)] font-bold'
+ ?'bg-emerald-500/15 border-[var(--ok)]/50 text-[var(--ink-2)] font-bold'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >

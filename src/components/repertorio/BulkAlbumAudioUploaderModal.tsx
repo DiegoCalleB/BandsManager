@@ -616,7 +616,7 @@ export function BulkAlbumAudioUploaderModal({
  placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut..."
  className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-emerald-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--ok)]'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--hair)]'
  }`}
  />
@@ -638,7 +638,7 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => coverInputRef.current?.click()}
  className={`w-full py-2.5 px-3 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs font-mono font-bold cursor-pointer transition ${
  coverPreviewUrl
- ?'border-emerald-400 text-emerald-400 bg-emerald-500/10'
+ ?'border-[var(--ok)] text-emerald-400 bg-emerald-500/10'
  : isStitchLight
  ?' bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
  :' bg-[var(--surface)] hover:bg-white/5 text-[var(--ink-2)]'
@@ -659,10 +659,10 @@ export function BulkAlbumAudioUploaderModal({
  className={`p-8 border-2 border-dashed rounded-3xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
  items.length > 0
  ? isStitchLight
- ?'border-emerald-300 bg-emerald-50/30'
+ ?'border-[var(--ok)] bg-emerald-50/30'
  :'border-[var(--hair)]/30 bg-[var(--surface)]/5'
  : isStitchLight
- ?' hover:border-emerald-500 hover:bg-[var(--bg)]'
+ ?' hover:border-[var(--ok)] hover:bg-[var(--bg)]'
  :' hover:border-[var(--hair)] hover:bg-white/5'
  }`}
  >
@@ -700,8 +700,8 @@ export function BulkAlbumAudioUploaderModal({
  <div
  className={`p-4 rounded-[var(--r-l)] flex items-center gap-3 text-xs font-mono ${
  feedbackMsg.type ==='success'
- ?'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
- :'bg-rose-500/10 border-rose-500/30 text-rose-400'
+ ?'bg-emerald-500/10 border-[var(--ok)]/30 text-emerald-400'
+ :'bg-rose-500/10 border-[var(--alert)]/30 text-rose-400'
  }`}
  >
  {feedbackMsg.type ==='success' ? (
@@ -753,9 +753,9 @@ export function BulkAlbumAudioUploaderModal({
  key={item.id || idx}
  className={`p-3.5 rounded-[var(--r-l)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 ${
  item.status ==='success'
- ?'border-emerald-500/40 bg-emerald-500/10'
+ ?'border-[var(--ok)]/40 bg-emerald-500/10'
  : item.status ==='error'
- ?'border-rose-500/40 bg-rose-500/10'
+ ?'border-[var(--alert)]/40 bg-rose-500/10'
  : isStitchLight
  ?'bg-[var(--bg)]'
  :'bg-[var(--surface)]/90'
@@ -820,7 +820,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-full text-xs font-mono rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
  item.matchedSongId
  ? isStitchLight
- ?'bg-white border-emerald-400 text-[var(--ink)] font-bold'
+ ?'bg-white border-[var(--ok)] text-[var(--ink)] font-bold'
  :'bg-black border-[var(--hair)]/50 text-[var(--ink)] font-bold'
  : isStitchLight
  ?'bg-white text-[var(--ink-2)]'

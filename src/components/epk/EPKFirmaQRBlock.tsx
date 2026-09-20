@@ -500,7 +500,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  onClick={handleCopyHtmlCode}
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='html'
- ?'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/40'
+ ?'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/40'
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Copiar el código fuente HTML puro de la firma"
@@ -515,7 +515,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  onClick={handleCopyPlainText}
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='text'
- ?'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/40'
+ ?'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/40'
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Copiar versión en texto plano"

@@ -439,7 +439,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className="w-full max-w-7xl mx-auto space-y-8 pb-16 font-sans">
  {/* Pending Payment Alert */}
  {currentUser?.estado_suscripcion ==='pago_pendiente' && (
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-rose-500/15 border-2 border-rose-500/50 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-rose-500/15 border-2 border-[var(--alert)]/50 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
  <div className="flex items-start sm:items-center gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-rose-500/20 text-rose-400 shrink-0">
  <AlertTriangle className="w-6 h-6 animate-pulse" />
@@ -652,13 +652,13 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  const getBadgeStyle = (type: PlanCardData['badgeType']) => {
  switch (type) {
  case'blue':
- return'bg-sky-500/15 text-sky-300 border-sky-500/30';
+ return'bg-sky-500/15 text-sky-300 border-[var(--acc)]/30';
  case'silver':
  return'bg-slate-400/15 text-[var(--ink-2)] /30';
  case'gold':
  return'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50';
  case'emerald':
- return'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/40';
+ return'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/40';
  }
  };
 
@@ -755,7 +755,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  plan.isPopular
  ?'bg-gradient-to-r from-amber-0/20 via-amber-400/10 to-amber-0/15 /50 shadow-md shadow-amber-0/10'
  : plan.id ==='cabeza_de_cartel'
- ?'bg-gradient-to-r from-[var(--ok)]/20 via-emerald-400/10 to-emerald-500/15 border-emerald-400/50 shadow-md shadow-emerald-500/10'
+ ?'bg-gradient-to-r from-[var(--ok)]/20 via-emerald-400/10 to-emerald-500/15 border-[var(--ok)]/50 shadow-md shadow-emerald-500/10'
  :'bg-gradient-to-r from-slate-500/20 viabg-[var(--surface)] to-slate-500/10 /30'
  }`}>
  <div className="flex items-start gap-2.5">

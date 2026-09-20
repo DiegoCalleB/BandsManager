@@ -71,7 +71,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  config.biografia.trim().length >= 80 &&
  !config.biografia.toLowerCase().includes('por definir') &&
  !config.biografia.includes('Propuesta musical en directo')
- ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+ ?'bg-emerald-500/10 text-emerald-400 border-[var(--ok)]/30'
  :'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
  }`}
  >
@@ -127,7 +127,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  (config.dossierTextoExtra &&
  config.dossierTextoExtra.trim().length >= 80 &&
  !config.dossierTextoExtra.toLowerCase().includes('por definir'))
- ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+ ?'bg-emerald-500/10 text-emerald-400 border-[var(--ok)]/30'
  :'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
  }`}
  >

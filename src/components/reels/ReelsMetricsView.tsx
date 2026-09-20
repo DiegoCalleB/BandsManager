@@ -702,7 +702,7 @@ export function ReelsMetricsView({
  <>
  {/* 0. Direct Platforms Radar Header Bar */}
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col md:flex-row items-center justify-between gap-4 ${
- isStitchLight ?'bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border-emerald-200' :'bg-gradient-to-r from-emerald-950/30 via-[var(--surface)] to-indigo-950/30 border-emerald-900/40'
+ isStitchLight ?'bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border-[var(--ok)]' :'bg-gradient-to-r from-emerald-950/30 via-[var(--surface)] to-indigo-950/30 border-[var(--ok)]/40'
  }`}>
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-emerald-500/20 flex items-center justify-center text-emerald-400">
@@ -734,8 +734,8 @@ export function ReelsMetricsView({
  }}
  className={`px-3.5 py-2.5 rounded-[var(--r-m)] font-mono text-[10px] font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isStitchLight
- ?'bg-indigo-50 border-indigo-300 text-indigo-700 hover:bg-indigo-100 shadow-sm'
- :'bg-gradient-to-r from-indigo-950/40 via-purple-950/40 to-blue-950/40 border-indigo-500/40 text-indigo-300 hover:border-indigo-400 hover:text-[var(--ink)] shadow-lg shadow-indigo-950/30'
+ ?'bg-indigo-50 border-[var(--acc)] text-indigo-700 hover:bg-indigo-100 shadow-sm'
+ :'bg-gradient-to-r from-indigo-950/40 via-purple-950/40 to-blue-950/40 border-[var(--acc)]/40 text-indigo-300 hover:border-[var(--acc)] hover:text-[var(--ink)] shadow-lg shadow-indigo-950/30'
  }`}
  title="Sube una captura de pantalla de tu Instagram, TikTok o Spotify y Gemini extraerá todas las métricas al instante"
  >
@@ -751,10 +751,10 @@ export function ReelsMetricsView({
  }}
  className={`px-3.5 py-2.5 rounded-[var(--r-m)] font-mono text-[10px] font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
  igStatus?.connected
- ?'bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-rose-500/15 border-pink-500/40 text-pink-400 hover:border-pink-400'
+ ?'bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-rose-500/15 border-[var(--alert)]/40 text-pink-400 hover:border-[var(--alert)]'
  : isStitchLight
- ?'bg-white border-pink-300 text-pink-700 hover:bg-pink-50'
- :'bg-[var(--surface)] border-pink-900/40 text-pink-400 hover:bg-pink-950/30'
+ ?'bg-white border-[var(--alert)] text-pink-700 hover:bg-pink-50'
+ :'bg-[var(--surface)] border-[var(--alert)]/40 text-pink-400 hover:bg-pink-950/30'
  }`}
  title="Configurar conexión oficial con Meta Graph API / Instagram OAuth"
  >
@@ -818,7 +818,7 @@ export function ReelsMetricsView({
  {/* Instagram Card */}
  {hasInstagram && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
- isStitchLight ?'bg-pink-50/40 border-pink-200' :'bg-[var(--surface)]/40 border-pink-900/30'
+ isStitchLight ?'bg-pink-50/40 border-[var(--alert)]' :'bg-[var(--surface)]/40 border-[var(--alert)]/30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider text-pink-500 font-bold flex items-center gap-1.5">
@@ -832,7 +832,7 @@ export function ReelsMetricsView({
  setScanResult(null);
  setShowScanModal(true);
  }}
- className="text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-indigo-500/10 text-indigo-300 border-indigo-500/20 hover:bg-indigo-500/20"
+ className="text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-indigo-500/10 text-indigo-300 border-[var(--acc)]/20 hover:bg-indigo-500/20"
  title="Escanear captura de pantalla de Instagram con Visión IA"
  >
  <Camera className="w-2.5 h-2.5" />
@@ -845,8 +845,8 @@ export function ReelsMetricsView({
  }}
  className={`text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer ${
  igStatus?.connected
- ?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
- :'bg-pink-500/10 text-pink-400 border-pink-500/20 hover:bg-pink-500/20'
+ ?'bg-emerald-500/10 text-emerald-400 border-[var(--ok)]/20 hover:bg-emerald-500/20'
+ :'bg-pink-500/10 text-pink-400 border-[var(--alert)]/20 hover:bg-pink-500/20'
  }`}
  title="Verificar o conectar token oficial de Meta Graph API"
  >
@@ -866,7 +866,7 @@ export function ReelsMetricsView({
  ) : null}
  </div>
  </div>
- <div className="pt-2 border-t border-pink-500/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
+ <div className="pt-2 border-t border-[var(--alert)]/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
  <span>Siguiendo: <b className="text-[var(--ink)]">{(latestMetric?.instagram_following || 0).toLocaleString()}</b></span>
  <span>Engagement: <b className="text-pink-400">{latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}%` :'Activo'}</b></span>
  </div>
@@ -876,7 +876,7 @@ export function ReelsMetricsView({
  {/* TikTok Card */}
  {hasTikTok && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
- isStitchLight ?'bg-cyan-50/40 border-cyan-200' :'bg-[var(--surface)]/40 border-cyan-900/30'
+ isStitchLight ?'bg-cyan-50/40 border-[var(--acc)]' :'bg-[var(--surface)]/40 border-[var(--acc)]/30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1.5">
@@ -890,7 +890,7 @@ export function ReelsMetricsView({
  setScanResult(null);
  setShowScanModal(true);
  }}
- className="text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-indigo-500/10 text-indigo-300 border-indigo-500/20 hover:bg-indigo-500/20"
+ className="text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-indigo-500/10 text-indigo-300 border-[var(--acc)]/20 hover:bg-indigo-500/20"
  title="Escanear captura de pantalla de TikTok con Visión IA"
  >
  <Camera className="w-2.5 h-2.5" />
@@ -907,7 +907,7 @@ export function ReelsMetricsView({
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">Seguidores</div>
  </div>
- <div className="pt-2 border-t border-cyan-500/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
+ <div className="pt-2 border-t border-[var(--acc)]/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
  <span>Total Likes: <b className="text-[var(--ink)]">{(latestMetric?.tiktok_total_likes || 0).toLocaleString()}</b></span>
  <span>Alcance: <b className="text-cyan-400">Orgánico</b></span>
  </div>
@@ -917,7 +917,7 @@ export function ReelsMetricsView({
  {/* YouTube Card */}
  {hasYouTube && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
- isStitchLight ?'bg-red-50/40 border-red-200' :'bg-[var(--surface)]/40 border-red-900/30'
+ isStitchLight ?'bg-red-50/40 border-[var(--alert)]' :'bg-[var(--surface)]/40 border-[var(--alert)]/30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider text-red-500 font-bold flex items-center gap-1.5">
@@ -933,7 +933,7 @@ export function ReelsMetricsView({
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">Suscriptores Oficiales</div>
  </div>
- <div className="pt-2 border-t border-red-500/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
+ <div className="pt-2 border-t border-[var(--alert)]/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
  <span>Views acumuladas: <b className="text-[var(--ink)]">
  {(latestMetric?.youtube_total_views || contentItems.reduce((sum, v) => sum + (v.views || 0), 0)).toLocaleString()}
  </b></span>
@@ -944,7 +944,7 @@ export function ReelsMetricsView({
  {/* Spotify Card */}
  {hasSpotify && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
- isStitchLight ?'bg-emerald-50/40 border-emerald-200' :'bg-[var(--surface)]/40 border-emerald-900/30'
+ isStitchLight ?'bg-emerald-50/40 border-[var(--ok)]' :'bg-[var(--surface)]/40 border-[var(--ok)]/30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-500 font-bold flex items-center gap-1.5">
@@ -960,7 +960,7 @@ export function ReelsMetricsView({
  </div>
  <div className="text-[9px] font-mono text-[var(--ink-2)] mt-0.5">Oyentes Mensuales</div>
  </div>
- <div className="pt-2 border-t border-emerald-500/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
+ <div className="pt-2 border-t border-[var(--ok)]/10 flex justify-between text-[9px] font-mono text-[var(--ink-2)]">
  <span>Seguidores: <b className="text-[var(--ink)]">{(latestMetric?.spotify_followers || 0).toLocaleString()}</b></span>
  <span>Ratio oyente/seg: <b className="text-emerald-400">
  {latestMetric?.spotify_followers && latestMetric.spotify_followers > 0 
@@ -1069,7 +1069,7 @@ export function ReelsMetricsView({
  {/* Period Summary Stats Badge if available */}
  {periodSummaryStats && (
  <div className={`mb-3 px-3 py-1.5 rounded-[var(--r-s)] text-[9px] font-mono flex items-center justify-between flex-wrap gap-2 ${
- isStitchLight ?'bg-indigo-50/70 text-indigo-900 border-indigo-200' :'bg-indigo-950/20 text-indigo-300 border-indigo-500/20'
+ isStitchLight ?'bg-indigo-50/70 text-indigo-900 border-[var(--acc)]' :'bg-indigo-950/20 text-indigo-300 border-[var(--acc)]/20'
  }`}>
  <div className="flex items-center gap-1.5">
  <TrendingUp className="w-3 h-3 text-indigo-400" />
@@ -1100,8 +1100,8 @@ export function ReelsMetricsView({
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.instagram
  ? isStitchLight
- ?'bg-pink-50 border-pink-300 text-pink-700 shadow-sm'
- :'bg-pink-950/30 border-pink-500/40 text-pink-300 shadow-sm shadow-pink-950/20'
+ ?'bg-pink-50 border-[var(--alert)] text-pink-700 shadow-sm'
+ :'bg-pink-950/30 border-[var(--alert)]/40 text-pink-300 shadow-sm shadow-pink-950/20'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1123,7 +1123,7 @@ export function ReelsMetricsView({
  </button>
  <button
  onClick={() => selectOnlyChannel('instagram')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-pink-500/20 hover:bg-pink-500/20 text-pink-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-pink-500/20 text-pink-400 cursor-pointer"
  title="Aislar y ver sólo Instagram dimensionado"
  >
  Solo
@@ -1136,8 +1136,8 @@ export function ReelsMetricsView({
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.tiktok
  ? isStitchLight
- ?'bg-cyan-50 border-cyan-300 text-cyan-700 shadow-sm'
- :'bg-cyan-950/30 border-cyan-500/40 text-cyan-300 shadow-sm shadow-cyan-950/20'
+ ?'bg-cyan-50 border-[var(--acc)] text-cyan-700 shadow-sm'
+ :'bg-cyan-950/30 border-[var(--acc)]/40 text-cyan-300 shadow-sm shadow-cyan-950/20'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1159,7 +1159,7 @@ export function ReelsMetricsView({
  </button>
  <button
  onClick={() => selectOnlyChannel('tiktok')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-cyan-500/20 hover:bg-cyan-500/20 text-cyan-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--acc)]/20 hover:bg-cyan-500/20 text-cyan-400 cursor-pointer"
  title="Aislar y ver sólo TikTok dimensionado"
  >
  Solo
@@ -1172,8 +1172,8 @@ export function ReelsMetricsView({
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.youtube
  ? isStitchLight
- ?'bg-red-50 border-red-300 text-red-700 shadow-sm'
- :'bg-red-950/30 border-red-500/40 text-red-300 shadow-sm shadow-red-950/20'
+ ?'bg-red-50 border-[var(--alert)] text-red-700 shadow-sm'
+ :'bg-red-950/30 border-[var(--alert)]/40 text-red-300 shadow-sm shadow-red-950/20'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1195,7 +1195,7 @@ export function ReelsMetricsView({
  </button>
  <button
  onClick={() => selectOnlyChannel('youtube')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-red-500/20 hover:bg-red-500/20 text-red-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-red-500/20 text-red-400 cursor-pointer"
  title="Aislar y ver sólo YouTube dimensionado"
  >
  Solo
@@ -1208,8 +1208,8 @@ export function ReelsMetricsView({
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.spotify
  ? isStitchLight
- ?'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-sm'
- :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink-2)] shadow-sm shadow-emerald-950/20'
+ ?'bg-emerald-50 border-[var(--ok)] text-emerald-700 shadow-sm'
+ :'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)] shadow-sm shadow-emerald-950/20'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1231,7 +1231,7 @@ export function ReelsMetricsView({
  </button>
  <button
  onClick={() => selectOnlyChannel('spotify')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-emerald-500/20 hover:bg-emerald-500/20 text-emerald-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--ok)]/20 hover:bg-emerald-500/20 text-emerald-400 cursor-pointer"
  title="Aislar y ver sólo Spotify dimensionado"
  >
  Solo
@@ -1460,7 +1460,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricDate(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1478,7 +1478,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricInsta(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1495,7 +1495,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricTiktok(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1512,7 +1512,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricYoutube(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1529,7 +1529,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricSpotify(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1601,7 +1601,7 @@ export function ReelsMetricsView({
  onChange={(e) => setMetricNotes(e.target.value)}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] focus:border-[var(--acc)]/30'
  }`}
  />
@@ -1826,7 +1826,7 @@ export function ReelsMetricsView({
  {/* Connection Status Card */}
  <div className={`p-4 rounded-[var(--r-m)] ${
  igStatus?.connected 
- ?'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+ ?'bg-emerald-500/10 border-[var(--ok)]/30 text-emerald-400'
  : isStitchLight
  ?'bg-amber-50 text-amber-800'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -1867,7 +1867,7 @@ export function ReelsMetricsView({
 
  {/* If connected with Insights, show mini-dashboard */}
  {igStatus?.connected && (igStatus as any).insights && (
- <div className="mt-4 pt-3 border-t border-emerald-500/20 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+ <div className="mt-4 pt-3 border-t border-[var(--ok)]/20 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
  <div className="p-2 rounded-[var(--r-s)] bg-black/30">
  <div className="text-[9px] font-mono text-[var(--ink-2)] uppercase">Alcance (Reach)</div>
  <div className="text-sm font-bold font-display text-[var(--ink)] mt-0.5">
@@ -1900,8 +1900,8 @@ export function ReelsMetricsView({
  {igModalMsg && (
  <div className={`p-3.5 rounded-[var(--r-m)] text-xs font-mono flex items-center gap-2.5 ${
  igModalMsg.type ==='success' 
- ?'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
- :'bg-rose-500/10 border-rose-500/30 text-rose-400'
+ ?'bg-emerald-500/10 border-[var(--ok)]/30 text-emerald-400'
+ :'bg-rose-500/10 border-[var(--alert)]/30 text-rose-400'
  }`}>
  {igModalMsg.type ==='success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
  <span>{igModalMsg.text}</span>
@@ -1928,7 +1928,7 @@ export function ReelsMetricsView({
  className={`w-full px-4 py-3 rounded-[var(--r-m)] font-mono text-xs focus:outline-none focus:ring-2 ${
  isStitchLight 
  ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-pink-500' 
- :'bg-black/50 text-[var(--ink)] focus:ring-pink-500 focus:border-pink-500'
+ :'bg-black/50 text-[var(--ink)] focus:ring-pink-500 focus:border-[var(--alert)]'
  }`}
  />
  <div className="absolute right-3 top-3 text-[var(--ink-2)]">
@@ -2075,8 +2075,8 @@ export function ReelsMetricsView({
  {!scanImageBase64 ? (
  <label className={`border-2 border-dashed rounded-[var(--r-l)] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
  isStitchLight
- ?'border-indigo-200 bg-indigo-50/50 hover:bg-indigo-50 hover:border-indigo-400'
- :' bg-black/30 hover:bg-[var(--surface)]/80 hover:border-indigo-500/50'
+ ?'border-[var(--acc)] bg-indigo-50/50 hover:bg-indigo-50 hover:border-[var(--acc)]'
+ :' bg-black/30 hover:bg-[var(--surface)]/80 hover:border-[var(--acc)]/50'
  }`}>
  <div className="w-12 h-12 rounded-[var(--r-l)] bg-indigo-500/15 text-indigo-400 flex items-center justify-center mb-3">
  <UploadCloud className="w-6 h-6" />
@@ -2151,9 +2151,9 @@ export function ReelsMetricsView({
  {/* Result Preview Card */}
  {scanResult && (
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 animate-in fade-in duration-300 ${
- isStitchLight ?'bg-indigo-50/60 border-indigo-200' :'bg-indigo-950/20 border-indigo-500/30'
+ isStitchLight ?'bg-indigo-50/60 border-[var(--acc)]' :'bg-indigo-950/20 border-[var(--acc)]/30'
  }`}>
- <div className="flex items-center justify-between border-b border-indigo-500/20 pb-2">
+ <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-2">
  <div className="text-xs font-bold font-mono uppercase tracking-wider text-indigo-300 flex items-center gap-2">
  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
  Datos Extraídos con Éxito

@@ -1740,7 +1740,7 @@ export function PdfExportModal({
  {/* Top Sheet Header — compacta a propósito: cada mm que se ahorra aquí es un mm
  menos de riesgo de que el repertorio se desborde a una hoja extra. */}
  <div>
- <div className="flex items-center justify-between border-b-2 border-black pb-0.5 mb-1">
+ <div className="flex items-center justify-between border-b-2 border-[var(--hair)] pb-0.5 mb-1">
  <div className="flex items-center gap-2">
  {showBandLogo && customLogoUrl && (
  <img
@@ -1762,7 +1762,7 @@ export function PdfExportModal({
  </div>
  </div>
 
- <div className="border-2 border-black bg-white p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap shadow-sm">
+ <div className="border-2 border-[var(--hair)] bg-white p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap shadow-sm">
  <div className="text-[6pt] font-mono font-bold text-[var(--ink-2)] uppercase tracking-widest">
  {!isCurrentMaster ?'REPERTORIO PERSONALIZADO' :'COPIA DE CONTROL'}
  </div>
@@ -1920,7 +1920,7 @@ export function PdfExportModal({
  </span>
 
  {showTonality && s.tonalidad && (
- <span className="font-mono text-[11pt] font-black border-2 border-black px-1.5 py-0.5 rounded bg-white text-[var(--ink)] leading-none ml-1 shrink-0">
+ <span className="font-mono text-[11pt] font-black border-2 border-[var(--hair)] px-1.5 py-0.5 rounded bg-white text-[var(--ink)] leading-none ml-1 shrink-0">
  {s.tonalidad}
  </span>
  )}
@@ -2032,7 +2032,7 @@ export function PdfExportModal({
 
  {/* Bottom Footer with BandManager & link */}
  {showAppBranding && (
- <div className="flex justify-between items-center border-t border-black pt-1 mt-2 font-mono text-[7.5pt] text-[var(--ink-2)]">
+ <div className="flex justify-between items-center border-t border-[var(--hair)] pt-1 mt-2 font-mono text-[7.5pt] text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  <span className="font-black text-[var(--ink)]">⚡ BandManager</span>
  <span>•</span>
@@ -2087,7 +2087,7 @@ export function PdfExportModal({
  setSizeChoiceDialog(null);
  handlePrint('multi');
  }}
- className="p-4 rounded-[var(--r-m)] border-2 border-sky-500/40 bg-sky-500/10 hover:bg-sky-500/20 text-left transition-colors cursor-pointer"
+ className="p-4 rounded-[var(--r-m)] border-2 border-[var(--acc)]/40 bg-sky-500/10 hover:bg-sky-500/20 text-left transition-colors cursor-pointer"
  >
  <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  📄📄 Varias hojas (letra más grande)

@@ -23,11 +23,11 @@ interface OrdenDelDiaTabProps {
 
 const BLOCK_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
  cancion: { label:'Canción de Repertorio', icon:'🎵', bg:'bg-[var(--acc)]/10', text:'text-[var(--acc)]', border:'/20' },
- calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-orange-500/10', text:'text-orange-400', border:'border-orange-500/20' },
+ calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-orange-500/10', text:'text-orange-400', border:'border-[var(--acc)]/20' },
  pausa: { label:'Pausa / Descanso / Birra', icon:'☕', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]', border:'' },
- seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-purple-500/10', text:'text-purple-400', border:'border-purple-500/20' },
- improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-emerald-500/10', text:'text-emerald-400', border:'border-emerald-500/20' },
- outro: { label:'Repaso Final / Feedback', icon:'🏁', bg:'bg-sky-500/10', text:'text-sky-400', border:'border-sky-500/20' },
+ seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-purple-500/10', text:'text-purple-400', border:'border-[var(--acc)]/20' },
+ improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-emerald-500/10', text:'text-emerald-400', border:'border-[var(--ok)]/20' },
+ outro: { label:'Repaso Final / Feedback', icon:'🏁', bg:'bg-sky-500/10', text:'text-sky-400', border:'border-[var(--acc)]/20' },
 };
 
 // 1x1 transparent drag ghost image
@@ -400,7 +400,7 @@ export function OrdenDelDiaTab({
  key={obj.id}
  className={`flex items-start justify-between gap-2 p-2.5 rounded-[var(--r-m)] transition-all ${
  obj.completado
- ?'bg-emerald-500/10 border-emerald-500/30 text-[var(--ink-2)]'
+ ?'bg-emerald-500/10 border-[var(--ok)]/30 text-[var(--ink-2)]'
  :'bg-[var(--surface)] border-[var(--surface)] text-[var(--ink)] hover:'
  }`}
  >
@@ -571,9 +571,9 @@ export function OrdenDelDiaTab({
  : isDragOver
  ?' border-2 scale-[1.01] bg-[var(--acc)]/10 shadow-lg'
  : item.evaluacion ==='bordada'
- ?'bg-[var(--surface)] border-emerald-500/30 hover:border-emerald-500/50'
+ ?'bg-[var(--surface)] border-[var(--ok)]/30 hover:border-[var(--ok)]/50'
  : item.evaluacion ==='repetir'
- ?'bg-[var(--surface)] border-rose-500/30 hover:border-rose-500/50'
+ ?'bg-[var(--surface)] border-[var(--alert)]/30 hover:border-[var(--alert)]/50'
  :'bg-[var(--surface)] border-[var(--hair)] hover:'
  }`}
  >

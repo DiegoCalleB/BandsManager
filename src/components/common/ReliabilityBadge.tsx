@@ -20,7 +20,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  const { score, details } = calculateLeadReliability(item);
 
  // Color coding
- let badgeColor ='bg-emerald-500/15 text-[var(--ink-2)] border-emerald-500/30';
+ let badgeColor ='bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30';
  let barColor ='bg-emerald-400';
  let levelText ='Fiabilidad Alta';
 
@@ -30,7 +30,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  levelText ='Fiabilidad Media';
  }
  if (score < 30) {
- badgeColor ='bg-red-500/15 text-red-300 border-red-500/30';
+ badgeColor ='bg-red-500/15 text-red-300 border-[var(--alert)]/30';
  barColor ='bg-red-400';
  levelText ='Fiabilidad Baja';
  }

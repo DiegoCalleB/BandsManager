@@ -110,6 +110,43 @@ const FIXES = [
   { find: /drop-shadow-\[0_0_20px_rgba\(242,\s*202,\s*80,\s*0\.25\)\]/g, replace: "drop-shadow-[0_0_20px_var(--acc-glow)]", desc: 'drop-shadow gold → --acc-glow' },
 ];
 
+// Borde con color Tailwind hardcodeado → token, por familia semántica.
+// ok = positivo/completado, alert = negativo/error, acc = resto (acento genérico),
+// hair = escalas de gris y blanco/negro puro (border es solo separador, no estado).
+const BORDER_COLOR_MAP = {
+  emerald: '--ok', green: '--ok', teal: '--ok', lime: '--ok',
+  red: '--alert', rose: '--alert', pink: '--alert',
+  purple: '--acc', indigo: '--acc', violet: '--acc', fuchsia: '--acc',
+  sky: '--acc', blue: '--acc', cyan: '--acc',
+  amber: '--acc', yellow: '--acc', orange: '--acc',
+  slate: '--hair', zinc: '--hair', gray: '--hair', stone: '--hair', neutral: '--hair',
+};
+
+function fixBorderColors(content) {
+  let changed = false;
+  const sides = '(-[trblxy])?';
+
+  for (const [color, token] of Object.entries(BORDER_COLOR_MAP)) {
+    const re = new RegExp(`\\bborder${sides}-${color}-\\d+(\\/\\d+)?\\b`, 'g');
+    const before = content;
+    content = content.replace(re, (_m, side, opacity) => `border${side || ''}-[var(${token})]${opacity || ''}`);
+    if (content !== before) {
+      console.log(`  ✓ border-${color}-* → var(${token})`);
+      changed = true;
+    }
+  }
+
+  const bwRe = /\bborder(-[trblxy])?-(black|white)(\/\d+)?\b/g;
+  const before = content;
+  content = content.replace(bwRe, (_m, side, _color, opacity) => `border${side || ''}-[var(--hair)]${opacity || ''}`);
+  if (content !== before) {
+    console.log(`  ✓ border-black/white → var(--hair)`);
+    changed = true;
+  }
+
+  return { content, changed };
+}
+
 function fixFile(filePath) {
   let content = fs.readFileSync(filePath, 'utf-8');
   let changed = false;
@@ -122,6 +159,10 @@ function fixFile(filePath) {
       changed = true;
     }
   }
+
+  const borderResult = fixBorderColors(content);
+  content = borderResult.content;
+  if (borderResult.changed) changed = true;
 
   if (changed) {
     fs.writeFileSync(filePath, content);

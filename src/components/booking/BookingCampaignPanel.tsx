@@ -94,7 +94,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
  if (isEditing) {
  return (
- <div className="mb-6 p-5 border-black rounded-[var(--r-m)] bg-white shadow-sm">
+ <div className="mb-6 p-5 border-[var(--hair)] rounded-[var(--r-m)] bg-white shadow-sm">
  <div className="flex justify-between items-center mb-4">
  <h3 className="font-semibold text-lg flex items-center gap-2">
  <Target className="w-5 h-5" /> Configurar Campaña
@@ -111,7 +111,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  type="text" 
  value={campaignForm.name} 
  onChange={e => setCampaignForm({...campaignForm, name: e.target.value})}
- className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-black"
+ className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-[var(--hair)]"
  />
  </div>
  <div>
@@ -120,7 +120,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  type="text" 
  value={campaignForm.targetCities?.join(',')} 
  onChange={e => setCampaignForm({...campaignForm, targetCities: e.target.value.split(',').map(s => s.trim())})}
- className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-black"
+ className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-[var(--hair)]"
  placeholder="Ej: Madrid, Barcelona"
  />
  </div>
@@ -131,14 +131,14 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  type="number" 
  value={campaignForm.minCapacity} 
  onChange={e => setCampaignForm({...campaignForm, minCapacity: parseInt(e.target.value) || 0})}
- className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-black"
+ className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-[var(--hair)]"
  />
  <span className="text-[var(--ink-2)]">-</span>
  <input 
  type="number" 
  value={campaignForm.maxCapacity} 
  onChange={e => setCampaignForm({...campaignForm, maxCapacity: parseInt(e.target.value) || 0})}
- className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-black"
+ className="w-full text-sm rounded-[var(--r-s)] focus:ring-black focus:border-[var(--hair)]"
  />
  </div>
  </div>
@@ -176,7 +176,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </button>
  </div>
  ))}
- <div className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100/80 text-blue-700 px-3 py-1.5 rounded-[var(--r-s)] border-blue-200 border-dashed transition-colors">
+ <div className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100/80 text-blue-700 px-3 py-1.5 rounded-[var(--r-s)] border-[var(--acc)] border-dashed transition-colors">
  <Plus className="w-3.5 h-3.5 shrink-0" />
  <span className="text-xs font-semibold shrink-0">Añadir Fecha:</span>
  <input 

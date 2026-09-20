@@ -418,7 +418,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => onNavigate('reels')}
  className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 ${
  isStitchLight
- ?'bg-sky-500 text-white hover:bg-sky-600 border-sky-600'
+ ?'bg-sky-500 text-white hover:bg-sky-600 border-[var(--acc)]'
  :'bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)]'
  }`}
  title="Abrir el panel completo de métricas y sincronización"
@@ -438,8 +438,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasInstagram && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ?'bg-white border-pink-200 shadow-xs' 
- :'bg-[var(--surface)]/60 border-pink-950/40'
+ ?'bg-white border-[var(--alert)] shadow-xs' 
+ :'bg-[var(--surface)]/60 border-[var(--alert)]/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-pink-400 flex items-center gap-1">
@@ -464,8 +464,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasTikTok && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ?'bg-white border-cyan-200 shadow-xs' 
- :'bg-[var(--surface)]/60 border-cyan-950/40'
+ ?'bg-white border-[var(--acc)] shadow-xs' 
+ :'bg-[var(--surface)]/60 border-[var(--acc)]/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-cyan-400 flex items-center gap-1">
@@ -490,8 +490,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasYouTube && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ?'bg-white border-red-200 shadow-xs' 
- :'bg-[var(--surface)]/60 border-red-950/40'
+ ?'bg-white border-[var(--alert)] shadow-xs' 
+ :'bg-[var(--surface)]/60 border-[var(--alert)]/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-red-400 flex items-center gap-1">
@@ -516,8 +516,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasSpotify && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
  isStitchLight 
- ?'bg-white border-emerald-200 shadow-xs' 
- :'bg-[var(--surface)]/60 border-emerald-950/40'
+ ?'bg-white border-[var(--ok)] shadow-xs' 
+ :'bg-[var(--surface)]/60 border-[var(--ok)]/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-emerald-400 flex items-center gap-1">
@@ -606,7 +606,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Period Summary Indicator */}
  {periodGrowthSummary && (
  <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-[9px] font-mono ${
- isStitchLight ?'bg-emerald-50 text-emerald-800 border-emerald-200' :'bg-[var(--ok-soft)] text-[var(--ink-2)] border-emerald-500/20'
+ isStitchLight ?'bg-emerald-50 text-emerald-800 border-[var(--ok)]' :'bg-[var(--ok-soft)] text-[var(--ink-2)] border-[var(--ok)]/20'
  }`}>
  <TrendingUp className="w-3 h-3 text-emerald-400" />
  <span>
@@ -645,8 +645,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.instagram
  ? isStitchLight
- ?'bg-pink-50 border-pink-300 text-pink-700'
- :'bg-pink-950/30 border-pink-500/40 text-pink-300'
+ ?'bg-pink-50 border-[var(--alert)] text-pink-700'
+ :'bg-pink-950/30 border-[var(--alert)]/40 text-pink-300'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
@@ -665,7 +665,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => selectOnlyChannel('instagram')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-pink-500/20 hover:bg-pink-500/20 text-pink-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-pink-500/20 text-pink-400 cursor-pointer"
  title="Aislar sólo Instagram"
  >
  Solo
@@ -678,8 +678,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.tiktok
  ? isStitchLight
- ?'bg-cyan-50 border-cyan-300 text-cyan-700'
- :'bg-cyan-950/30 border-cyan-500/40 text-cyan-300'
+ ?'bg-cyan-50 border-[var(--acc)] text-cyan-700'
+ :'bg-cyan-950/30 border-[var(--acc)]/40 text-cyan-300'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
@@ -698,7 +698,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => selectOnlyChannel('tiktok')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-cyan-500/20 hover:bg-cyan-500/20 text-cyan-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--acc)]/20 hover:bg-cyan-500/20 text-cyan-400 cursor-pointer"
  title="Aislar sólo TikTok"
  >
  Solo
@@ -711,8 +711,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.youtube
  ? isStitchLight
- ?'bg-red-50 border-red-300 text-red-700'
- :'bg-red-950/30 border-red-500/40 text-red-300'
+ ?'bg-red-50 border-[var(--alert)] text-red-700'
+ :'bg-red-950/30 border-[var(--alert)]/40 text-red-300'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
@@ -731,7 +731,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => selectOnlyChannel('youtube')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-red-500/20 hover:bg-red-500/20 text-red-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-red-500/20 text-red-400 cursor-pointer"
  title="Aislar sólo YouTube"
  >
  Solo
@@ -744,8 +744,8 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.spotify
  ? isStitchLight
- ?'bg-emerald-50 border-emerald-300 text-emerald-700'
- :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink-2)]'
+ ?'bg-emerald-50 border-[var(--ok)] text-emerald-700'
+ :'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
@@ -764,7 +764,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={() => selectOnlyChannel('spotify')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-emerald-500/20 hover:bg-emerald-500/20 text-emerald-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--ok)]/20 hover:bg-emerald-500/20 text-emerald-400 cursor-pointer"
  title="Aislar sólo Spotify"
  >
  Solo

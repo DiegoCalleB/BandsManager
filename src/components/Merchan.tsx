@@ -401,7 +401,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setAssetType('logo')}
  className={`py-2 px-2 rounded-[var(--r-s)] font-mono text-[10px] font-bold uppercase flex flex-col items-center justify-center gap-1 transition-all ${
  assetType ==='logo'
- ? (isStitchLight ?'bg-indigo-100 text-indigo-700 border-indigo-200' :'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30')
+ ? (isStitchLight ?'bg-indigo-100 text-indigo-700 border-[var(--acc)]' :'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30')
  : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80')
  }`}
  >
@@ -412,7 +412,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setAssetType('portada')}
  className={`py-2 px-2 rounded-[var(--r-s)] font-mono text-[10px] font-bold uppercase flex flex-col items-center justify-center gap-1 transition-all ${
  assetType ==='portada'
- ? (isStitchLight ?'bg-indigo-100 text-indigo-700 border-indigo-200' :'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30')
+ ? (isStitchLight ?'bg-indigo-100 text-indigo-700 border-[var(--acc)]' :'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30')
  : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80')
  }`}
  >
@@ -426,7 +426,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  }}
  className={`py-2 px-2 rounded-[var(--r-s)] font-mono text-[10px] font-bold uppercase flex flex-col items-center justify-center gap-1 transition-all ${
  assetType ==='custom'
- ? (isStitchLight ?'bg-indigo-100 text-indigo-700 border-indigo-200' :'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30')
+ ? (isStitchLight ?'bg-indigo-100 text-indigo-700 border-[var(--acc)]' :'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30')
  : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80')
  }`}
  >
@@ -494,7 +494,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setSelectedAlbumIndex(idx)}
  className={`shrink-0 w-20 h-20 rounded-[var(--r-s)] bg-cover bg-center border-2 transition-all snap-start cursor-pointer ${
  selectedAlbumIndex === idx
- ? (isStitchLight ?'border-indigo-600 shadow-md' :'border-[var(--acc)] shadow-md shadow-[var(--acc)]/20')
+ ? (isStitchLight ?'border-[var(--acc)] shadow-md' :'border-[var(--acc)] shadow-md shadow-[var(--acc)]/20')
  :'border-transparent opacity-50 hover:opacity-100'
  }`}
  url={album.url}
@@ -505,7 +505,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  )}
 
  {/* Opción de recorte de fondo / rembg */}
- <div className={`p-4 rounded-[var(--r-m)] space-y-2 ${isStitchLight ?'bg-indigo-50/60 border-indigo-100' :'bg-indigo-950/20 border-indigo-800/30'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] space-y-2 ${isStitchLight ?'bg-indigo-50/60 border-[var(--acc)]' :'bg-indigo-950/20 border-[var(--acc)]/30'}`}>
  <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-700' :'text-indigo-400'}`}>
  <Scissors className="w-3.5 h-3.5 text-[var(--acc)]" /> Recorte de Fondo (Canvas Layering)
  </label>
@@ -543,7 +543,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <button
  key={c.id}
  onClick={() => setShirtColor(c.id)}
- className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${shirtColor === c.id ? (isStitchLight ?'border-indigo-500 scale-110' :'border-[var(--acc)] scale-110') :'border-transparent shadow-sm'}`}
+ className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${shirtColor === c.id ? (isStitchLight ?'border-[var(--acc)] scale-110' :'border-[var(--acc)] scale-110') :'border-transparent shadow-sm'}`}
  style={{ backgroundColor: c.id }}
  title={c.name}
  />
@@ -553,7 +553,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  )}
 
  {productType ==='pegatina' && (
- <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${isStitchLight ?'bg-indigo-50 border-indigo-100' :'bg-indigo-900/10 border-indigo-500/20'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${isStitchLight ?'bg-indigo-50 border-[var(--acc)]' :'bg-indigo-900/10 border-[var(--acc)]/20'}`}>
  <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-indigo-400'}`}>
  <QrCode className="w-3.5 h-3.5" /> Link de redirección del QR
  </label>
@@ -564,8 +564,8 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  placeholder="https://instagram.com/tu_banda"
  className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs font-mono focus:outline-none ${
  isStitchLight 
- ?'bg-white border-indigo-200 text-[var(--ink)] focus:border-indigo-500' 
- :'bg-[var(--surface)] border-indigo-500/30 text-[var(--ink-2)] focus:border-indigo-500'
+ ?'bg-white border-[var(--acc)] text-[var(--ink)] focus:border-[var(--acc)]' 
+ :'bg-[var(--surface)] border-[var(--acc)]/30 text-[var(--ink-2)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -885,7 +885,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  ) : (
  /* Pantalla de Confirmación Posterior */
  <div className="py-8 flex flex-col items-center text-center space-y-4">
- <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-emerald-400 animate-bounce">
+ <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-[var(--ok)] flex items-center justify-center text-emerald-400 animate-bounce">
  <CheckCircle2 className="w-10 h-10" />
  </div>
 

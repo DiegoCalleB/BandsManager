@@ -78,8 +78,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {/* 1. Header Banner & Band Stage Archetype */}
  <div className={`p-5 rounded-[var(--r-l)] transition-all ${
  isStitchLight 
- ?'bg-gradient-to-br from-indigo-50/80 via-purple-50/40 to-slate-50 border-indigo-100 shadow-sm' 
- :'bg-gradient-to-br from-indigo-950/30 via-[var(--surface)]/60 to-[var(--surface)] border-indigo-500/20 shadow-lg'
+ ?'bg-gradient-to-br from-indigo-50/80 via-purple-50/40 to-slate-50 border-[var(--acc)] shadow-sm' 
+ :'bg-gradient-to-br from-indigo-950/30 via-[var(--surface)]/60 to-[var(--surface)] border-[var(--acc)]/20 shadow-lg'
  }`}>
  <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
  <div>
@@ -305,9 +305,9 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {growthPlan.channels.map(channel => {
  const channelCompleted = channel.actionItems.filter(a => completedActions[a.id]).length;
- const channelColor = channel.platform ==='instagram' ?'text-pink-400 border-pink-500/20 bg-pink-500/5' :
- channel.platform ==='tiktok' ?'text-cyan-400 border-cyan-500/20 bg-cyan-500/5' :
- channel.platform ==='youtube' ?'text-red-400 border-red-500/20 bg-red-500/5' :'text-emerald-400 border-emerald-500/20 bg-emerald-500/5';
+ const channelColor = channel.platform ==='instagram' ?'text-pink-400 border-[var(--alert)]/20 bg-pink-500/5' :
+ channel.platform ==='tiktok' ?'text-cyan-400 border-[var(--acc)]/20 bg-cyan-500/5' :
+ channel.platform ==='youtube' ?'text-red-400 border-[var(--alert)]/20 bg-red-500/5' :'text-emerald-400 border-[var(--ok)]/20 bg-emerald-500/5';
  
  return (
  <div key={channel.platform} className={`p-4 rounded-[var(--r-m)] transition-all ${
@@ -340,7 +340,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => toggleActionCompleted(action.id)}
  className={`p-2.5 rounded-[var(--r-s)] flex items-start gap-2.5 cursor-pointer transition-all ${
  completedActions[action.id] 
- ?'bg-[var(--ok-soft)] border-emerald-500/30 line-through opacity-70' 
+ ?'bg-[var(--ok-soft)] border-[var(--ok)]/30 line-through opacity-70' 
  : isStitchLight ?'bg-[var(--bg)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)]/50 hover:bg-[var(--surface)]'
  }`}
  >
@@ -423,9 +423,9 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="space-y-6">
  {/* Channel Hero Summary */}
  <div className={`p-5 rounded-[var(--r-l)] ${
- currentChannel.platform ==='instagram' ?'bg-gradient-to-r from-pink-950/20 to-[var(--surface)] border-pink-500/30' :
- currentChannel.platform ==='tiktok' ?'bg-gradient-to-r from-cyan-950/20 to-[var(--surface)] border-cyan-500/30' :
- currentChannel.platform ==='youtube' ?'bg-gradient-to-r from-red-950/20 to-[var(--surface)] border-red-500/30' :'bg-gradient-to-r from-emerald-950/20 to-[var(--surface)] border-emerald-500/30'
+ currentChannel.platform ==='instagram' ?'bg-gradient-to-r from-pink-950/20 to-[var(--surface)] border-[var(--alert)]/30' :
+ currentChannel.platform ==='tiktok' ?'bg-gradient-to-r from-cyan-950/20 to-[var(--surface)] border-[var(--acc)]/30' :
+ currentChannel.platform ==='youtube' ?'bg-gradient-to-r from-red-950/20 to-[var(--surface)] border-[var(--alert)]/30' :'bg-gradient-to-r from-emerald-950/20 to-[var(--surface)] border-[var(--ok)]/30'
  }`}>
  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
  <div>
@@ -469,8 +469,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="space-y-3">
  {currentChannel.actionItems.map(action => {
  const isDone = completedActions[action.id];
- const impactColor = action.impact ==='critico' ?'bg-red-500/10 text-red-400 border-red-500/20' :
- action.impact ==='alto' ?'bg-[var(--acc)]/10 text-[var(--acc)] /20' :'bg-blue-500/10 text-blue-400 border-blue-500/20';
+ const impactColor = action.impact ==='critico' ?'bg-red-500/10 text-red-400 border-[var(--alert)]/20' :
+ action.impact ==='alto' ?'bg-[var(--acc)]/10 text-[var(--acc)] /20' :'bg-blue-500/10 text-blue-400 border-[var(--acc)]/20';
 
  return (
  <div
@@ -478,7 +478,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  onClick={() => toggleActionCompleted(action.id)}
  className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isDone 
- ?'bg-[var(--ok-soft)] border-emerald-500/30 opacity-75' 
+ ?'bg-[var(--ok-soft)] border-[var(--ok)]/30 opacity-75' 
  : isStitchLight ?'bg-white hover:bg-[var(--bg)] shadow-sm' :'bg-[var(--surface)] hover:bg-[var(--surface)] shadow'
  }`}
  >

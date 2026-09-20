@@ -147,7 +147,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  className={`text-left rounded-[var(--r-m)] sm:rounded-[var(--r-l)] transition relative overflow-hidden flex flex-col justify-between p-2.5 sm:p-4 cursor-pointer ${
  isSelected
  ?'bg-[var(--surface)] ring-2 ring-amber-0/20 shadow-lg'
- :'bg-[var(--surface)]/80 border-[var(--hair)] hover:border-stone-700 hover:bg-[var(--surface)]/80'
+ :'bg-[var(--surface)]/80 border-[var(--hair)] hover:border-[var(--hair)] hover:bg-[var(--surface)]/80'
  }`}
  >
  {/* PREVIEW MINIATURA GRÁFICA */}
@@ -316,7 +316,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
  item.isVisible
  ?'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-stone-300 border-[var(--hair)]'
- :'bg-[var(--alert-soft)] text-rose-400 border-rose-900/60 hover:bg-[var(--alert-soft)]'
+ :'bg-[var(--alert-soft)] text-rose-400 border-[var(--alert)]/60 hover:bg-[var(--alert-soft)]'
  }`}
  title={item.isVisible ?'Ocultar esta sección en el EPK' :'Mostrar esta sección en el EPK'}
  >

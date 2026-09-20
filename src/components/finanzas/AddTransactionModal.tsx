@@ -89,7 +89,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setTipo('ingreso')}
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
  tipo ==='ingreso'
- ?'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+ ?'bg-emerald-500/20 text-emerald-400 border-[var(--ok)]'
  :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent hover:bg-[var(--surface)]'
  }`}
  >
@@ -100,7 +100,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setTipo('gasto')}
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
  tipo ==='gasto'
- ?'bg-rose-500/20 text-rose-400 border-rose-500'
+ ?'bg-rose-500/20 text-rose-400 border-[var(--alert)]'
  :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent hover:bg-[var(--surface)]'
  }`}
  >
@@ -116,7 +116,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  <select
  value={categoria}
  onChange={(e) => setCategoria(e.target.value as Payment['categoria'])}
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-indigo-500"
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-[var(--acc)]"
  >
  <option value="concierto">Concierto / Caché</option>
  <option value="merchandising">Merchandising</option>
@@ -139,7 +139,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  value={concepto}
  onChange={(e) => setConcepto(e.target.value)}
  placeholder="Ej. Caché Concierto Wurlitzer"
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-indigo-500"
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-[var(--acc)]"
  />
  </div>
 
@@ -155,7 +155,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  value={importe}
  onChange={(e) => setImporte(e.target.value)}
  placeholder="0.00"
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-indigo-500"
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-[var(--acc)]"
  />
  </div>
  <div>
@@ -167,7 +167,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  required
  value={fecha}
  onChange={(e) => setFecha(e.target.value)}
- className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-indigo-500"
+ className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-sm focus:outline-none focus:border-[var(--acc)]"
  />
  </div>
  </div>
@@ -182,7 +182,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setEstado('pagado')}
  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
  estado ==='pagado'
- ?'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+ ?'bg-emerald-500/20 text-emerald-400 border-[var(--ok)]'
  :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent'
  }`}
  >

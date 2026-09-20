@@ -199,7 +199,7 @@ export function EnsayosManager({
  <span
  className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
  currentRehearsal?.estado ==='completado'
- ?'bg-emerald-500/15 text-[var(--ink-2)] border-emerald-500/30'
+ ?'bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30'
  : currentRehearsal?.estado ==='en_curso'
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40 animate-pulse'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'

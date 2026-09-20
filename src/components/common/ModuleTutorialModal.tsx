@@ -232,15 +232,15 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  // Color accents based on module
  const accentStyles = {
  purple: {
- badgeBg:'bg-purple-500/15 text-purple-300 border-purple-500/30',
- iconBox:'bg-purple-500/20 text-purple-400 border-purple-500/30 shadow-purple-500/10',
+ badgeBg:'bg-purple-500/15 text-purple-300 border-[var(--acc)]/30',
+ iconBox:'bg-purple-500/20 text-purple-400 border-[var(--acc)]/30 shadow-purple-500/10',
  activeDot:'bg-purple-400 w-7',
  primaryBtn:'bg-purple-600 hover:bg-purple-500 text-[var(--ink)] shadow-purple-900/30',
- hookBorder:'border-purple-500/25 bg-purple-500/10 text-[var(--ink)]',
+ hookBorder:'border-[var(--acc)]/25 bg-purple-500/10 text-[var(--ink)]',
  highlightText:'text-purple-400',
- targetCard:'border-purple-500/40 bg-purple-500/5',
- targetBadge:'bg-purple-500/20 text-purple-300 border-purple-500/30',
- targetBtn:'bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/40'
+ targetCard:'border-[var(--acc)]/40 bg-purple-500/5',
+ targetBadge:'bg-purple-500/20 text-purple-300 border-[var(--acc)]/30',
+ targetBtn:'bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-[var(--acc)]/40'
  },
  amber: {
  badgeBg:'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30',
@@ -254,37 +254,37 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  targetBtn:'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 /40'
  },
  blue: {
- badgeBg:'bg-sky-500/15 text-sky-300 border-sky-500/30',
- iconBox:'bg-sky-500/20 text-sky-400 border-sky-500/30 shadow-sky-500/10',
+ badgeBg:'bg-sky-500/15 text-sky-300 border-[var(--acc)]/30',
+ iconBox:'bg-sky-500/20 text-sky-400 border-[var(--acc)]/30 shadow-sky-500/10',
  activeDot:'bg-sky-400 w-7',
  primaryBtn:'bg-sky-500 hover:bg-sky-400 text-[var(--acc-ink)] font-bold shadow-sky-900/30',
- hookBorder:'border-sky-500/25 bg-sky-500/10 text-sky-100',
+ hookBorder:'border-[var(--acc)]/25 bg-sky-500/10 text-sky-100',
  highlightText:'text-sky-400',
- targetCard:'border-sky-500/40 bg-sky-500/5',
- targetBadge:'bg-sky-500/20 text-sky-300 border-sky-500/30',
- targetBtn:'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-sky-500/40'
+ targetCard:'border-[var(--acc)]/40 bg-sky-500/5',
+ targetBadge:'bg-sky-500/20 text-sky-300 border-[var(--acc)]/30',
+ targetBtn:'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-[var(--acc)]/40'
  },
  emerald: {
- badgeBg:'bg-emerald-500/15 text-[var(--ink-2)] border-emerald-500/30',
- iconBox:'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 shadow-emerald-500/10',
+ badgeBg:'bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30',
+ iconBox:'bg-emerald-500/20 text-emerald-400 border-[var(--ok)]/30 shadow-emerald-500/10',
  activeDot:'bg-emerald-400 w-7',
  primaryBtn:'bg-emerald-500 hover:bg-emerald-400 text-[var(--acc-ink)] font-black shadow-emerald-900/30',
- hookBorder:'border-emerald-500/25 bg-emerald-500/10 text-emerald-100',
+ hookBorder:'border-[var(--ok)]/25 bg-emerald-500/10 text-emerald-100',
  highlightText:'text-emerald-400',
- targetCard:'border-emerald-500/40 bg-emerald-500/5',
- targetBadge:'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/30',
- targetBtn:'bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] border-emerald-500/40'
+ targetCard:'border-[var(--ok)]/40 bg-emerald-500/5',
+ targetBadge:'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/30',
+ targetBtn:'bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] border-[var(--ok)]/40'
  },
  rose: {
- badgeBg:'bg-rose-500/15 text-[var(--ink-2)] border-rose-500/30',
- iconBox:'bg-rose-500/20 text-rose-400 border-rose-500/30 shadow-rose-500/10',
+ badgeBg:'bg-rose-500/15 text-[var(--ink-2)] border-[var(--alert)]/30',
+ iconBox:'bg-rose-500/20 text-rose-400 border-[var(--alert)]/30 shadow-rose-500/10',
  activeDot:'bg-rose-400 w-7',
  primaryBtn:'bg-rose-500 hover:bg-rose-400 text-[var(--ink)] font-bold shadow-rose-900/30',
- hookBorder:'border-rose-500/25 bg-rose-500/10 text-rose-100',
+ hookBorder:'border-[var(--alert)]/25 bg-rose-500/10 text-rose-100',
  highlightText:'text-rose-400',
- targetCard:'border-rose-500/40 bg-rose-500/5',
- targetBadge:'bg-rose-500/20 text-[var(--ink-2)] border-rose-500/30',
- targetBtn:'bg-rose-500/20 hover:bg-rose-500/30 text-[var(--ink-2)] border-rose-500/40'
+ targetCard:'border-[var(--alert)]/40 bg-rose-500/5',
+ targetBadge:'bg-rose-500/20 text-[var(--ink-2)] border-[var(--alert)]/30',
+ targetBtn:'bg-rose-500/20 hover:bg-rose-500/30 text-[var(--ink-2)] border-[var(--alert)]/40'
  }
  }[tutorialConfig.accent];
 
@@ -524,7 +524,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  {currentStep.keyPoints.map((point, i) => (
  <div 
  key={i}
- className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex flex-col justify-between space-y-0.5 hover:border-stone-700/80 transition-colors"
+ className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex flex-col justify-between space-y-0.5 hover:border-[var(--hair)]/80 transition-colors"
  >
  <div className="flex items-center gap-1.5">
  <Check className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`} />
@@ -551,7 +551,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  type="checkbox"
  checked={dontShowAgain}
  onChange={(e) => setDontShowAgain(e.target.checked)}
- className="rounded border-stone-700 bg-[var(--surface)]/80 text-amber-500 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
+ className="rounded border-[var(--hair)] bg-[var(--surface)]/80 text-amber-500 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
  />
  <span className="truncate">No volver a abrir automáticamente</span>
  </label>

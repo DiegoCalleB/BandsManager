@@ -24,16 +24,16 @@ interface BulkLeadsActionBarProps {
 }
 
 const STATUS_OPTIONS: { status: LeadStatus; label: string; color: string; icon: any }[] = [
- { status:'nuevo', label:'Nuevo Lead', color:'bg-blue-500/20 text-blue-300 border-blue-500/40', icon: Sparkles },
+ { status:'nuevo', label:'Nuevo Lead', color:'bg-blue-500/20 text-blue-300 border-[var(--acc)]/40', icon: Sparkles },
  { status:'pendiente_aprobacion', label:'Pendiente Aprobación', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
- { status:'aprobado', label:'Aprobado (Listo para envío)', color:'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/40', icon: CheckCircle2 },
- { status:'esperando_respuesta', label:'Esperando Respuesta', color:'bg-sky-500/20 text-sky-300 border-sky-500/40', icon: Send },
- { status:'contactado', label:'Contactado', color:'bg-cyan-500/20 text-cyan-300 border-cyan-500/40', icon: MessageSquare },
- { status:'respondido', label:'Respondido / Conversación', color:'bg-indigo-500/20 text-indigo-300 border-indigo-500/40', icon: MessageSquare },
- { status:'negociando', label:'Negociando Caché / Fecha', color:'bg-purple-500/20 text-purple-300 border-purple-500/40', icon: ArrowRight },
- { status:'confirmado', label:'Confirmado (Cerrado)', color:'bg-emerald-500/30 text-[var(--ink)] border-emerald-400', icon: CheckCircle2 },
+ { status:'aprobado', label:'Aprobado (Listo para envío)', color:'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/40', icon: CheckCircle2 },
+ { status:'esperando_respuesta', label:'Esperando Respuesta', color:'bg-sky-500/20 text-sky-300 border-[var(--acc)]/40', icon: Send },
+ { status:'contactado', label:'Contactado', color:'bg-cyan-500/20 text-cyan-300 border-[var(--acc)]/40', icon: MessageSquare },
+ { status:'respondido', label:'Respondido / Conversación', color:'bg-indigo-500/20 text-indigo-300 border-[var(--acc)]/40', icon: MessageSquare },
+ { status:'negociando', label:'Negociando Caché / Fecha', color:'bg-purple-500/20 text-purple-300 border-[var(--acc)]/40', icon: ArrowRight },
+ { status:'confirmado', label:'Confirmado (Cerrado)', color:'bg-emerald-500/30 text-[var(--ink)] border-[var(--ok)]', icon: CheckCircle2 },
  { status:'aplazado', label:'Aplazado (Próxima temp.)', color:'bg-zinc-700/50 text-[var(--ink-2)] border-[var(--hair)]600', icon: Clock },
- { status:'no_interesado', label:'No Interesado / Descartado', color:'bg-rose-500/20 text-[var(--ink-2)] border-rose-500/40', icon: ShieldAlert },
+ { status:'no_interesado', label:'No Interesado / Descartado', color:'bg-rose-500/20 text-[var(--ink-2)] border-[var(--alert)]/40', icon: ShieldAlert },
 ];
 
 export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
@@ -193,8 +193,8 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onClick={onBulkGeneratePitches}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ?'bg-purple-100 hover:bg-purple-200 border-purple-300 text-purple-900'
- :'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-purple-500/50 text-purple-200'
+ ?'bg-purple-100 hover:bg-purple-200 border-[var(--acc)] text-purple-900'
+ :'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-[var(--acc)]/50 text-purple-200'
  }`}
  title="Generar propuestas de pitch con IA para todos los seleccionados"
  >
@@ -209,8 +209,8 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onClick={onBulkEnrich}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ?'bg-sky-100 hover:bg-sky-200 border-sky-300 text-sky-900'
- :'bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800 border-sky-500/50 text-sky-200'
+ ?'bg-sky-100 hover:bg-sky-200 border-[var(--acc)] text-sky-900'
+ :'bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800 border-[var(--acc)]/50 text-sky-200'
  }`}
  title="Buscar y enriquecer teléfonos, emails y redes con Scout IA"
  >

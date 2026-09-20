@@ -110,7 +110,7 @@ export function AIBandScoutModal({
  <div className={`w-full max-w-4xl ${bgColor} rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}>
  
  {/* Header */}
- <div className="p-4 border-b border-black/10 flex justify-between items-center bg-gradient-to-r from-amber-0/10 to-orange-500/10">
+ <div className="p-4 border-b border-[var(--hair)]/10 flex justify-between items-center bg-gradient-to-r from-amber-0/10 to-orange-500/10">
  <div className="flex items-center gap-3">
  <div className="p-2 bg-[var(--acc)]/20 rounded-[var(--r-s)] text-amber-500">
  <Sparkles className="w-5 h-5" />
@@ -191,7 +191,7 @@ export function AIBandScoutModal({
  >
  {isSearching ? (
  <>
- <div className="w-5 h-5 border-2 border-[var(--hair)] border-t-white rounded-full animate-spin" />
+ <div className="w-5 h-5 border-2 border-[var(--hair)] border-t-[var(--hair)] rounded-full animate-spin" />
  Buscando bandas compatibles...
  </>
  ) : (

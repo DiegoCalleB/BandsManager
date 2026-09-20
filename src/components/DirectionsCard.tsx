@@ -26,8 +26,8 @@ export default function DirectionsCard({
  onClick={(e) => e.stopPropagation()}
  className={`inline-flex relative max-w-full w-full sm:w-auto mx-auto justify-center items-center overflow-hidden rounded-[var(--r-m)] transition-all duration-200 group cursor-pointer ${
  isStitchLight
- ?'bg-[var(--surface)] /70 shadow-sm hover:border-indigo-500/60 hover:shadow-indigo-500/10'
- :'bg-[var(--surface)] border-[var(--hair)] shadow-md hover:border-purple-500/50 hover:shadow-purple-500/10'
+ ?'bg-[var(--surface)] /70 shadow-sm hover:border-[var(--acc)]/60 hover:shadow-indigo-500/10'
+ :'bg-[var(--surface)] border-[var(--hair)] shadow-md hover:border-[var(--acc)]/50 hover:shadow-purple-500/10'
  } ${className}`}
  >
  {/* Tactile Simulated Map Grid */}
@@ -54,8 +54,8 @@ export default function DirectionsCard({
  {/* Action: Cómo llegar Button */}
  <div className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all shrink-0 ${
  isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)] group-hover:bg-indigo-600 group-hover:text-[var(--ink)] group-hover:border-indigo-500'
- :'bg-[var(--sunken)]/90 border-[var(--hair)]700/80 text-[var(--ink)] group-hover:bg-purple-600 group-hover:text-[var(--ink)] group-hover:border-purple-500'
+ ?'bg-[var(--surface)] text-[var(--ink-2)] group-hover:bg-indigo-600 group-hover:text-[var(--ink)] group-hover:border-[var(--acc)]'
+ :'bg-[var(--sunken)]/90 border-[var(--hair)]700/80 text-[var(--ink)] group-hover:bg-purple-600 group-hover:text-[var(--ink)] group-hover:border-[var(--acc)]'
  }`}>
  <Navigation className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
  <span className="inline">Cómo llegar</span>

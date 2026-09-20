@@ -496,7 +496,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-left text-xs font-medium transition-all cursor-pointer flex items-start justify-between gap-2 ${
  selectedPresetId === p.id
- ?'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/60 font-bold shadow-sm'
+ ?'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold shadow-sm'
  :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-white/10'
  }`}
  >
@@ -682,7 +682,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  isTonePlaying
  ?'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md scale-105'
  : isSelected
- ?'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/60 font-bold'
+ ?'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold'
  :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-white/10 hover:border-[var(--hair)]20'
  }`}
  >

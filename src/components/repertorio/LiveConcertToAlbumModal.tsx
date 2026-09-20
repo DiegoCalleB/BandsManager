@@ -1382,7 +1382,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {useAi && (
- <div className="pl-7 pt-1.5 border-l-2 border-emerald-500/40 ml-2">
+ <div className="pl-7 pt-1.5 border-l-2 border-[var(--ok)]/40 ml-2">
  <label className="flex items-start gap-2.5 cursor-pointer">
  <input
  type="checkbox"
@@ -1745,8 +1745,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  ?'bg-[var(--acc)]/5 hover:'
  :'bg-[var(--acc-soft)] /20 hover:/40'
  : isStitchLight
- ?'bg-purple-500/5 border-purple-200 hover:border-purple-300'
- :'bg-purple-950/20 border-purple-500/20 hover:border-purple-500/40'
+ ?'bg-purple-500/5 border-[var(--acc)] hover:border-[var(--acc)]'
+ :'bg-purple-950/20 border-[var(--acc)]/20 hover:border-[var(--acc)]/40'
  }`}
  >
  {/* Top Row: Track Controls, Type, Timestamps, and Actions */}
@@ -1784,7 +1784,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`text-xs font-black px-2.5 py-1 rounded-[var(--r-s)] transition-all cursor-pointer ${
  track.type ==='musica'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50 hover:bg-[var(--acc)]/30'
- :'bg-purple-500/20 text-purple-300 border-purple-500/50 hover:bg-purple-500/30'
+ :'bg-purple-500/20 text-purple-300 border-[var(--acc)]/50 hover:bg-purple-500/30'
  }`}
  title="Haz clic para alternar entre Canción y Speech/Presentación"
  >
@@ -1947,7 +1947,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  ?'bg-white text-[var(--ink)] focus:'
  : track.type ==='musica'
  ?'bg-[var(--surface)]/90 /40 text-[var(--acc)] placeholder-[var(--ink-2)] focus: focus:ring-1 focus:ring-amber-400'
- :'bg-[var(--surface)]/90 border-purple-500/40 text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-purple-400 focus:ring-1 focus:ring-purple-400'
+ :'bg-[var(--surface)]/90 border-[var(--acc)]/40 text-[var(--ink)] placeholder-[var(--ink-2)] focus:border-[var(--acc)] focus:ring-1 focus:ring-purple-400'
  }`}
  placeholder={
  track.type ==='musica'
@@ -2112,7 +2112,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Speech Transcription row */}
  {track.type ==='dialogo' && (
- <div className="pl-9 pt-2 space-y-1.5 border-t border-purple-500/20 mt-2">
+ <div className="pl-9 pt-2 space-y-1.5 border-t border-[var(--acc)]/20 mt-2">
  <div className="flex items-center justify-between text-xs">
  <span className="text-[11px] font-bold text-purple-300 flex items-center gap-1.5">
  🗣️ Transcripción del Speech / Intro:
@@ -2131,7 +2131,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => handleUpdateTrack(track.index,'speechTranscription', e.target.value)}
  placeholder="[Intro musical / Palabras del artista al público]..."
  rows={2}
- className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] placeholder-purple-400/50 focus:outline-none focus:border-purple-500 leading-relaxed font-sans"
+ className="w-full text-xs p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] placeholder-purple-400/50 focus:outline-none focus:border-[var(--acc)] leading-relaxed font-sans"
  />
  </div>
  )}
@@ -2603,7 +2603,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`p-2.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center gap-2.5 ${
  tr.type ==='musica'
  ?'bg-[var(--acc-soft)] /20 hover:/40'
- :'bg-purple-950/20 border-purple-500/20 hover:border-purple-500/40'
+ :'bg-purple-950/20 border-[var(--acc)]/20 hover:border-[var(--acc)]/40'
  }`}
  >
  {/* Index + Type Toggle Button */}
@@ -2626,7 +2626,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
  tr.type ==='musica'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40 hover:bg-[var(--acc)]/30'
- :'bg-purple-500/20 text-purple-300 border-purple-500/40 hover:bg-purple-500/30'
+ :'bg-purple-500/20 text-purple-300 border-[var(--acc)]/40 hover:bg-purple-500/30'
  }`}
  title="Haz clic para alternar entre Canción y Speech"
  >
@@ -2648,7 +2648,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
  tr.type ==='musica'
  ?'bg-[var(--surface)] /30 text-[var(--acc)] focus:'
- :'bg-[var(--surface)] border-purple-500/30 text-[var(--ink)] focus:border-purple-500'
+ :'bg-[var(--surface)] border-[var(--acc)]/30 text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  {tr.title && (
@@ -2750,7 +2750,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  onChange={(e) => setBatchPastedText(e.target.value)}
  rows={10}
  placeholder={`1. Intro y Saludo al Público\n2. Noches de Garaje\n3. Charla sobre el nuevo disco\n4. Ska del Norte\n5. Canto a la Sombra\n6. Presentación de los músicos\n7. Gira Sin Fin`}
- className="w-full p-3 font-mono text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] placeholder-[var(--ink-2)] focus:outline-none focus:border-sky-500 leading-relaxed"
+ className="w-full p-3 font-mono text-xs rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)] leading-relaxed"
  />
 
  <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">

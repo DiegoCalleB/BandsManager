@@ -254,7 +254,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  )}
 
  {error && (
- <div className="bg-red-900/20 border-red-700 rounded-[var(--r-s)] p-4 flex gap-3">
+ <div className="bg-red-900/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
  <p className="text-sm text-red-300">{error}</p>
  </div>
@@ -268,7 +268,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  type="text"
  value={setlistName}
  onChange={(e) => setSetlistName(e.target.value)}
- className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-sm text-[var(--ink-2)] focus:outline-none focus:border-sky-400"
+ className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-sm text-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
  />
  </div>
 

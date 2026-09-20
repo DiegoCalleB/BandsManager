@@ -289,7 +289,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
 
  return (
  <div 
- className="relative w-full h-12 bg-black/60 rounded-[var(--r-s)] overflow-hidden border border-[var(--hair)] cursor-pointer select-none group transition-colors hover:border-indigo-500/40"
+ className="relative w-full h-12 bg-black/60 rounded-[var(--r-s)] overflow-hidden border border-[var(--hair)] cursor-pointer select-none group transition-colors hover:border-[var(--acc)]/40"
  onClick={handleContainerClick}
  title="Haz clic para mover el cabezal de reproducción (Seek Master)"
  >

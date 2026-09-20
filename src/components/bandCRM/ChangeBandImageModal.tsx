@@ -139,7 +139,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  </div>
 
  {statusMsg && (
- <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${statusMsg.type ==='success' ?'bg-[var(--ok-soft)] border-emerald-800 text-[var(--ink-2)]' :'bg-[var(--alert-soft)] border-rose-800 text-[var(--ink-2)]'}`}>
+ <div className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${statusMsg.type ==='success' ?'bg-[var(--ok-soft)] border-[var(--ok)] text-[var(--ink-2)]' :'bg-[var(--alert-soft)] border-[var(--alert)] text-[var(--ink-2)]'}`}>
  {statusMsg.type ==='success' && <Check className="w-4 h-4" />}
  <span>{statusMsg.text}</span>
  </div>

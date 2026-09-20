@@ -81,11 +81,11 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  case'cloud':
  return'from-slate-600/35 via-slate-800/25 to-transparent /40 shadow-[0_0_14px_rgba(148,163,184,0.2)]';
  case'rain':
- return'from-sky-500/30 via-blue-600/20 to-transparent border-sky-400/50 shadow-[0_0_18px_rgba(56,189,248,0.3)]';
+ return'from-sky-500/30 via-blue-600/20 to-transparent border-[var(--acc)]/50 shadow-[0_0_18px_rgba(56,189,248,0.3)]';
  case'lightning':
  return'from-yellow-500/35 via-purple-900/35 to-transparent /60 shadow-[0_0_22px_rgba(250,204,21,0.4)]';
  case'snow':
- return'from-cyan-500/30 via-blue-900/25 to-transparent border-cyan-400/50 shadow-[0_0_18px_rgba(103,232,249,0.3)]';
+ return'from-cyan-500/30 via-blue-900/25 to-transparent border-[var(--acc)]/50 shadow-[0_0_18px_rgba(103,232,249,0.3)]';
  case'fog':
  return'from-slate-500/25 via-zinc-700/25 to-transparent /35 shadow-[0_0_12px_rgba(148,163,184,0.2)]';
  default:
@@ -170,12 +170,12 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  isStitchLight 
  ? hasAlerts
  ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-50 to-amber-50 border-rose-300 text-[var(--ink)] shadow-sm'
+ ?'bg-gradient-to-br from-rose-50 to-amber-50 border-[var(--alert)] text-[var(--ink)] shadow-sm'
  :'bg-gradient-to-br from-amber-50 to-sky-50 text-[var(--ink)] shadow-sm'
  :'bg-gradient-to-br from-amber-50/70 to-sky-50/70 text-[var(--ink)]' 
  : hasAlerts
  ? dangerAlertsCount > 0
- ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90 border-rose-500/40 text-[var(--ink-2)] shadow-rose-950/20 shadow-lg'
+ ?'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90 border-[var(--alert)]/40 text-[var(--ink-2)] shadow-rose-950/20 shadow-lg'
  :'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-stone-900/90 /40 text-[var(--ink-2)] shadow-amber-950/20 shadow-lg'
  :'bg-gradient-to-br from-stone-900/80 to-[var(--surface)]/80 /25 text-[var(--ink-2)]'
  }`}>
@@ -317,7 +317,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  whileHover={{ scale: 1.05 }}
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.rainProbability || 0) >= 40 
- ?'bg-sky-500/20 border-sky-500/50 text-sky-300 shadow-[0_0_12px_rgba(14,165,233,0.25)]' 
+ ?'bg-sky-500/20 border-[var(--acc)]/50 text-sky-300 shadow-[0_0_12px_rgba(14,165,233,0.25)]' 
  :'bg-black/20 border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
@@ -391,8 +391,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  className={`rounded-[var(--r-m)] p-3 transition-all duration-200 ${
  isDanger
  ? isStitchLight
- ?'bg-rose-100/70 border-rose-300 text-[var(--alert)] shadow-xs'
- :'bg-[var(--alert-soft)] border-rose-500/50 text-rose-100 shadow-rose-950/30 shadow-md'
+ ?'bg-rose-100/70 border-[var(--alert)] text-[var(--alert)] shadow-xs'
+ :'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-rose-100 shadow-rose-950/30 shadow-md'
  : isStitchLight
  ?'bg-amber-100/70 text-[var(--acc)] shadow-xs'
  :'bg-[var(--acc-soft)] /40 text-[var(--acc)] shadow-amber-950/20 shadow-md'
@@ -402,7 +402,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <div className="flex items-start gap-2.5">
  <div className={`p-1.5 rounded-[var(--r-s)] shrink-0 mt-0.5 ${
  isDanger 
- ?'bg-rose-500/20 border-rose-500/40' 
+ ?'bg-rose-500/20 border-[var(--alert)]/40' 
  :'bg-[var(--acc)]/20 /40'
  }`}>
  <AnimatedWeatherIcon
@@ -451,7 +451,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  exit={{ opacity: 0, height: 0 }}
  transition={{ duration: 0.2 }}
  className={`mt-2.5 pt-2.5 border-t space-y-1.5 text-[10px] font-sans overflow-hidden ${
- isDanger ?'border-rose-500/20 text-[var(--ink)]/90' :'/20 text-[var(--ink)]/90'
+ isDanger ?'border-[var(--alert)]/20 text-[var(--ink)]/90' :'/20 text-[var(--ink)]/90'
  }`}
  >
  <div className="font-mono uppercase tracking-wider text-[9px] font-bold text-[var(--acc)]/90 mb-1 flex items-center gap-1">

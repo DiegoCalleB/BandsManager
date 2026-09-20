@@ -239,9 +239,9 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  const completedPillarsCount = pillars.filter(p => p.completed).length;
 
  const getStatusBadge = () => {
- if (percentage >= 85) return { label:'Entrenamiento Completo (100% Agéntico)', color:'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' };
+ if (percentage >= 85) return { label:'Entrenamiento Completo (100% Agéntico)', color:'bg-emerald-500/15 text-emerald-400 border-[var(--ok)]/30' };
  if (percentage >= 50) return { label:'Entrenamiento Intermedio', color:'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30' };
- return { label:'Entrenamiento Inicial', color:'bg-rose-500/15 text-[var(--ink-2)] border-rose-500/30' };
+ return { label:'Entrenamiento Inicial', color:'bg-rose-500/15 text-[var(--ink-2)] border-[var(--alert)]/30' };
  };
 
  const handlePillarClick = (view: string) => {

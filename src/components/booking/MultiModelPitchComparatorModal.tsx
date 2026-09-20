@@ -179,7 +179,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  const getProviderBadge = (id: string) => {
  if (id ==='gemini') return'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30';
- if (id ==='deepseek') return'bg-sky-500/15 text-sky-300 border-sky-500/30';
+ if (id ==='deepseek') return'bg-sky-500/15 text-sky-300 border-[var(--acc)]/30';
  return'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]700';
  };
 
@@ -434,7 +434,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  key={prop.provider + idx}
  className={`flex flex-col rounded-[var(--r-m)] transition-all duration-200 ${
  isSelected
- ?'bg-[var(--surface)] border-emerald-500/80 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/40'
+ ?'bg-[var(--surface)] border-[var(--ok)]/80 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/40'
  :'bg-[var(--surface)] border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  >
@@ -488,7 +488,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="text-right">
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
  isDeepSeek
- ?'bg-emerald-500/15 text-[var(--ink-2)] border-emerald-500/30'
+ ?'bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30'
  :'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30'
  }`}>
  {isDeepSeek ?'10x más barato' :'Ultra rápido'}

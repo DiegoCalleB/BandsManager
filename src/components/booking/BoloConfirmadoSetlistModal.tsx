@@ -305,7 +305,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  isSelected
  ?'bg-[var(--acc)]/15 /80 shadow-md'
  : isOptimal
- ?'bg-emerald-500/10 border-emerald-500/40 hover:bg-emerald-500/15'
+ ?'bg-emerald-500/10 border-[var(--ok)]/40 hover:bg-emerald-500/15'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  >

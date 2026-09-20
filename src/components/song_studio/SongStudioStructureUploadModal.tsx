@@ -270,7 +270,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="space-y-3">
  <div
  onClick={() => fileInputRef.current?.click()}
- className="border-2 border-dashed border-purple-500/30 rounded-[var(--r-s)] p-8 text-center cursor-pointer hover:border-purple-500/60 transition"
+ className="border-2 border-dashed border-[var(--acc)]/30 rounded-[var(--r-s)] p-8 text-center cursor-pointer hover:border-[var(--acc)]/60 transition"
  >
  <Upload className="w-8 h-8 mx-auto mb-2 text-purple-400" />
  <p className="text-sm font-semibold text-[var(--ink)]">Arrastra un archivo aquí</p>
@@ -407,7 +407,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  {/* SIDE-BY-SIDE COMPARISON: original scanned document vs. what the AI extracted,
  so the user can eyeball whether the extraction actually matches the paper. */}
  {showComparison && (
- <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-emerald-500/20">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-[var(--ok)]/20">
  <div className="space-y-1.5">
  <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Documento original</p>
  <div className="bg-black/40 border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden max-h-96">

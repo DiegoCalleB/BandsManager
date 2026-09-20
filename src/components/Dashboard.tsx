@@ -670,7 +670,7 @@ export default function Dashboard({
  </div>
 
  {/* Card 2: Dossier EPK Digital */}
- <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 shadow-sm flex flex-col justify-between space-y-4 hover:border-purple-500/40 transition-all">
+ <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 shadow-sm flex flex-col justify-between space-y-4 hover:border-[var(--acc)]/40 transition-all">
  <div>
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">

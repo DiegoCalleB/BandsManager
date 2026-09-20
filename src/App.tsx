@@ -1346,7 +1346,7 @@ export default function App() {
 
  {/* Sync warning if backend fails */}
  {syncStatus === 'error' && (
- <div className="mb-4 p-3 bg-rose-500/10 border-rose-500/20 rounded-lg text-rose-300 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+ <div className="mb-4 p-3 bg-rose-500/10 border-[var(--alert)]/20 rounded-lg text-rose-300 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
  <div className="flex gap-2 items-center">
  <ShieldAlert className="w-5 h-5 text-rose-300 shrink-0" />
  <span>
@@ -1355,7 +1355,7 @@ export default function App() {
  </div>
  <button
  onClick={() => fetchState()}
- className="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/20 text-rose-300 font-mono text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
+ className="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 border-[var(--alert)]/20 text-rose-300 font-mono text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
  >
  Reintentar Conexión
  </button>

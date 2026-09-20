@@ -485,7 +485,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
  format ==='zip'
  ?'bg-gradient-to-br from-[var(--ok)]/30 to-emerald-900/40 border-[var(--hair)] text-[var(--ink)] shadow-lg ring-1 ring-[var(--ok)]/40'
- :'bg-emerald-500/10 border-emerald-500/30 text-[var(--ink-2)] hover:bg-emerald-500/20'
+ :'bg-emerald-500/10 border-[var(--ok)]/30 text-[var(--ink-2)] hover:bg-emerald-500/20'
  }`}
  >
  <Archive className={`w-5 h-5 ${format ==='zip' ?'text-[var(--ok)]' :'text-emerald-400'}`} />

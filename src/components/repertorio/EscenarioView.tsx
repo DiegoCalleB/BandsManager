@@ -722,7 +722,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  key={it.id}
  className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isSelectedThis 
- ?'bg-sky-500/15 border-l-4 border-sky-400 text-[var(--ink)]' 
+ ?'bg-sky-500/15 border-l-4 border-[var(--acc)] text-[var(--ink)]' 
  :'hover:bg-[var(--surface)]/60 text-[var(--ink-2)]'
  }`}
  onClick={() => {

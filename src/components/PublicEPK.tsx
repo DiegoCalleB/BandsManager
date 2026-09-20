@@ -310,7 +310,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  href={url}
  target="_blank"
  rel="noopener noreferrer"
- className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-pink-500/40 shadow-sm transition-all duration-200 active:scale-95 text-[var(--ink-2)] hover:text-[var(--ink)]"
+ className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)] hover:border-[var(--alert)]/40 shadow-sm transition-all duration-200 active:scale-95 text-[var(--ink-2)] hover:text-[var(--ink)]"
  title={interpolate(t('seguirMiembro'), { name: m.nombre })}
  aria-label={interpolate(t('seguirMiembro'), { name: m.nombre })}
  >

@@ -176,7 +176,7 @@ export function ShareModal({
  value={phone}
  onChange={(e) => setPhone(e.target.value)}
  placeholder="Ej: +34612345678 o 612345678"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-emerald-500 transition-colors"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--ok)] transition-colors"
  />
  </div>
 

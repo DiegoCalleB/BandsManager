@@ -690,7 +690,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  title="Marcar beat de compás — ponte en el primer golpe fuerte del compás (en cualquier punto de la canción) y pulsa aquí: la claqueta recalcula toda su rejilla a partir de ese instante"
  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
  beatAnchorSec > 0
- ?'bg-emerald-500/20 border-emerald-500/40 text-[var(--ink-2)]'
+ ?'bg-emerald-500/20 border-[var(--ok)]/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/80 border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -754,7 +754,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  const isLoadingThis = loadingChordsTrackId === tr.id;
  const isExpanded = expandedChordsTrackId === tr.id;
  return (
- <div key={tr.id} className={`rounded-[var(--r-m)] ${cardBg} ${isMine ?'border-emerald-500/40' :''}`}>
+ <div key={tr.id} className={`rounded-[var(--r-m)] ${cardBg} ${isMine ?'border-[var(--ok)]/40' :''}`}>
  <div className="flex items-center gap-2 px-3 py-2">
  <span className="text-xs font-semibold truncate flex-1 min-w-0">
  {tr.nombre}

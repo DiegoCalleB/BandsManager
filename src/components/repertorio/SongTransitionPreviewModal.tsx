@@ -1259,7 +1259,7 @@ export function SongTransitionPreviewModal({
  key={con.id}
  className={`p-1.5 rounded-[var(--r-s)] text-[10px] space-y-0.5 ${
  con.severity ==='critico'
- ?'bg-[var(--alert-soft)] border-rose-500/40'
+ ?'bg-[var(--alert-soft)] border-[var(--alert)]/40'
  : con.severity ==='aviso'
  ?'bg-[var(--acc-soft)] /30'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800'

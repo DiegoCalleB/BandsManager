@@ -135,7 +135,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  {/* Misión 2: Dossier / EPK */}
  <div
  onClick={() => handleChooseMission('epk')}
- className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-sky-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-sky-500/5"
+ className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--acc)]/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-sky-500/5"
  >
  <div className="flex items-start gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-sky-500/20 text-sky-400 shrink-0 group-hover:scale-105 transition-transform">
@@ -168,7 +168,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  {/* Misión 3: Repertorio / Setlist */}
  <div
  onClick={() => handleChooseMission('repertorio')}
- className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-emerald-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-emerald-500/5"
+ className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--ok)]/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-emerald-500/5"
  >
  <div className="flex items-start gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">

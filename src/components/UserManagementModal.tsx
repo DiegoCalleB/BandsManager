@@ -313,7 +313,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onClick={() => { setActiveTab('associate'); setError(null); setSuccessMsg(null); }}
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='associate'
- ?'text-indigo-400 border-b border-indigo-400'
+ ?'text-indigo-400 border-b border-[var(--acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >

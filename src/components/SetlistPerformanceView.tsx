@@ -498,8 +498,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => handleLaunchPractice()}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
  glareMode
- ?'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-emerald-300'
- :'bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] hover:border-emerald-400'
+ ?'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-[var(--ok)]'
+ :'bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] hover:border-[var(--ok)]'
  }`}
  title="Modo Ensayo: practica este tema con pistas separadas por Iris (silenciar/aislar pistas, tempo, bucle A/B)"
  >
@@ -535,8 +535,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => handleLaunchStudio()}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
  glareMode
- ?'bg-indigo-100 hover:bg-indigo-200 text-indigo-900 border-indigo-300'
- :'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 hover:border-indigo-400'
+ ?'bg-indigo-100 hover:bg-indigo-200 text-indigo-900 border-[var(--acc)]'
+ :'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 hover:border-[var(--acc)]'
  }`}
  title="Modo Studio: grabaciones multipista, ideas de audio, acordes y arreglos de este tema"
  >
@@ -699,8 +699,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => handleLaunchPractice()}
  className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
  glareMode
- ?'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100'
- :'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+ ?'bg-emerald-50 text-emerald-800 border-[var(--ok)] hover:bg-emerald-100'
+ :'bg-emerald-500/10 text-emerald-400 border-[var(--ok)]/30 hover:bg-emerald-500/20'
  }`}
  title="Pistas separadas por Iris disponibles. Clic para abrir el Modo Ensayo"
  >
@@ -724,8 +724,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {modeArchetype ==='ensayo' && !isBlock && currentSong && (
  <div className={`shrink-0 px-3 sm:px-4 py-2 border-b flex items-center justify-between gap-3 text-xs z-20 ${
  glareMode
- ?'bg-emerald-50 border-emerald-300 text-emerald-900'
- :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink)]'
+ ?'bg-emerald-50 border-[var(--ok)] text-emerald-900'
+ :'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <div className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
@@ -786,7 +786,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  sistema puede tocar la radio del móvil, por seguridad. Esto es honesto sobre esa
  limitación en vez de fingir un botón que no haría nada. */}
  {showFlightModeInfo && (
- <div className="shrink-0 bg-sky-950/90 border-y border-sky-500/40 px-4 py-2.5 text-sm text-sky-100 z-20 flex items-start gap-2">
+ <div className="shrink-0 bg-sky-950/90 border-y border-[var(--acc)]/40 px-4 py-2.5 text-sm text-sky-100 z-20 flex items-start gap-2">
  <Plane className="w-4 h-4 shrink-0 mt-0.5" />
  <p>
  No hay forma de activar el modo avión desde aquí — ninguna web (ni casi ninguna app) puede tocar la
@@ -1033,7 +1033,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  }}
  className={`p-3 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition ${
  isCurrent
- ?'bg-purple-950/40 border-purple-500/50 text-purple-200'
+ ?'bg-purple-950/40 border-[var(--acc)]/50 text-purple-200'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 hover:border-[var(--hair)]700 text-[var(--ink-2)]'
  }`}
  >
@@ -1288,7 +1288,7 @@ const ChordSheetPage: React.FC<{
  const hasMultipleSections = sections.length >= 2;
  const currentSection = hasMultipleSections ? sections[currentSectionIndex] : null;
  const chordTextClass = glareMode ?'text-[var(--ink)] font-bold' :'text-[var(--acc)]';
- const borderClass = glareMode ?'border-black/10' :'border-[var(--hair)]';
+ const borderClass = glareMode ?'border-[var(--hair)]/10' :'border-[var(--hair)]';
 
  return (
  <div className="w-full h-full flex flex-col overflow-hidden">

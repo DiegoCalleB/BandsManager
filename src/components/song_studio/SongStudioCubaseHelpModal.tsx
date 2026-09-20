@@ -19,7 +19,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  <X className="w-5 h-5" />
  </button>
 
- <div className="flex items-center gap-3 border-b border-purple-500/20 pb-4">
+ <div className="flex items-center gap-3 border-b border-[var(--acc)]/20 pb-4">
  <div className="p-3 rounded-[var(--r-m)] bg-purple-500/20 text-purple-300">
  <Keyboard className="w-6 h-6" />
  </div>

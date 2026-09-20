@@ -130,13 +130,13 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onDragEnd={onDragEnd}
  className={`group relative rounded-[var(--r-m)] transition-all duration-150 ${
  isDragging
- ?'opacity-30 scale-[0.98] border-dashed border-emerald-500'
+ ?'opacity-30 scale-[0.98] border-dashed border-[var(--ok)]'
  : isDragOver
- ?'border-emerald-500 ring-2 ring-emerald-500/50 bg-emerald-500/10'
+ ?'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-emerald-500/10'
  : isPlayingCurrent
  ? isStitchLight
- ?'bg-emerald-50/90 border-emerald-300 text-[var(--ok)] shadow-sm ring-1 ring-emerald-400/30'
- :'bg-emerald-500/10 border-emerald-500/30 text-[var(--ink)] shadow-sm ring-1 ring-emerald-500/20'
+ ?'bg-emerald-50/90 border-[var(--ok)] text-[var(--ok)] shadow-sm ring-1 ring-emerald-400/30'
+ :'bg-emerald-500/10 border-[var(--ok)]/30 text-[var(--ink)] shadow-sm ring-1 ring-emerald-500/20'
  : isSelected
  ? isStitchLight
  ?'bg-amber-50/80 text-[var(--ink)]'
@@ -323,8 +323,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenChords}
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
- ?'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
- :'bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/25'
+ ?'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-[var(--ok)]'
+ :'bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/25'
  }`}
  title="Ver cifrado de acordes, armonía y letra (LaCuerda.net)"
  >

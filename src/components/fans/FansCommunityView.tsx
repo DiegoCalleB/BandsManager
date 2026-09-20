@@ -168,21 +168,21 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  return {
  label:'Superfan Directos',
  icon: Flame,
- bg:'bg-rose-500/15 text-[var(--ink-2)] border-rose-500/30',
+ bg:'bg-rose-500/15 text-[var(--ink-2)] border-[var(--alert)]/30',
  dot:'bg-rose-400'
  };
  case'backstage':
  return {
  label:'Backstage VIP',
  icon: Award,
- bg:'bg-purple-500/15 text-purple-300 border-purple-500/30',
+ bg:'bg-purple-500/15 text-purple-300 border-[var(--acc)]/30',
  dot:'bg-purple-400'
  };
  default:
  return {
  label:'Oyente Fiel',
  icon: Music,
- bg:'bg-emerald-500/15 text-[var(--ink-2)] border-emerald-500/30',
+ bg:'bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30',
  dot:'bg-emerald-400'
  };
  }
@@ -431,7 +431,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onDeleteFan(fan.id);
  }
  }}
- className="p-1.5 text-[var(--ink-2)] hover:text-rose-400 bg-[var(--surface)] hover:bg-rose-500/10 rounded-[var(--r-s)] hover:border-rose-500/30 transition opacity-60 group-hover:opacity-100"
+ className="p-1.5 text-[var(--ink-2)] hover:text-rose-400 bg-[var(--surface)] hover:bg-rose-500/10 rounded-[var(--r-s)] hover:border-[var(--alert)]/30 transition opacity-60 group-hover:opacity-100"
  title="Eliminar Fan"
  >
  <Trash2 className="w-3.5 h-3.5" />

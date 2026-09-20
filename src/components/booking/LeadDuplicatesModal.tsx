@@ -256,7 +256,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  {/* Success Banner */}
  {successMessage && (
- <div className="bg-emerald-500/15 border-b border-emerald-500/30 px-4 py-2.5 flex items-center gap-2 text-xs font-medium text-[var(--ink-2)] animate-in fade-in">
+ <div className="bg-emerald-500/15 border-b border-[var(--ok)]/30 px-4 py-2.5 flex items-center gap-2 text-xs font-medium text-[var(--ink-2)] animate-in fade-in">
  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
  <span>{successMessage}</span>
  </div>

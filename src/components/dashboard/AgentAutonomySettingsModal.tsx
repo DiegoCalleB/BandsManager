@@ -668,7 +668,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('audit_logs')}
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='audit_logs'
- ?'border-emerald-400 text-emerald-400'
+ ?'border-[var(--ok)] text-emerald-400'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1013,7 +1013,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }
  });
  }}
- className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-mono focus:border-sky-500 focus:outline-none disabled:opacity-60 ${isBelowMin ?'border-red-600' :''}`}
+ className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-mono focus:border-[var(--acc)] focus:outline-none disabled:opacity-60 ${isBelowMin ?'border-[var(--alert)]' :''}`}
  placeholder="—"
  />
  <span className="absolute right-3 top-2.5 text-xs text-[var(--ink-2)] font-mono">€</span>
@@ -1738,7 +1738,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  ?'Pregunta si hay otras fechas disponibles más adelante en la temporada.'
  :'Responde de forma breve y concreta a lo que pregunten, sin extenderte.'
  }`}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:border-purple-500 focus:outline-none disabled:opacity-60 resize-none"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:border-[var(--acc)] focus:outline-none disabled:opacity-60 resize-none"
  />
  <p className="text-[10px] text-[var(--ink-2)]">
  Si lo dejas vacío, el agente usa una guía automática genérica para este tipo de respuesta.
@@ -1759,7 +1759,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'cursor-default' :'cursor-pointer'
  } ${
  strategy.tone === toneOption
- ?'bg-purple-500/20 border-purple-500 text-purple-200'
+ ?'bg-purple-500/20 border-[var(--acc)] text-purple-200'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1854,7 +1854,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setAuditAgentFilter(f.id)}
  className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-bold ${
  auditAgentFilter === f.id
- ?'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/50 shadow-xs'
+ ?'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/50 shadow-xs'
  :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >

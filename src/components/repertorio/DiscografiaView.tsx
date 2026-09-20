@@ -758,7 +758,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs })}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
- ?'bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-emerald-100'
+ ?'bg-emerald-50 border-[var(--ok)] text-emerald-800 hover:bg-emerald-100'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"

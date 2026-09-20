@@ -1453,7 +1453,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* Chequeo de festivos en fechas de campaña para la ciudad de este lead */}
  {Array.isArray(activeCampaign.targetDates) && activeCampaign.targetDates.length > 0 && selectedLead.ciudad && (
- <div className="flex flex-wrap gap-1 pt-1 border-t border-purple-500/20">
+ <div className="flex flex-wrap gap-1 pt-1 border-t border-[var(--acc)]/20">
  {activeCampaign.targetDates.map((tDate) => (
  <HolidayDateWarning key={tDate} date={tDate} city={selectedLead.ciudad} compact />
  ))}

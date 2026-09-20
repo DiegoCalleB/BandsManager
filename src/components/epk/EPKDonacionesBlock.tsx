@@ -113,7 +113,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
  <label className="text-xs font-semibold text-sky-200">Revolut (Revtag)</label>
  </div>
- <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:border-sky-500 rounded-[var(--r-s)] px-2.5">
+ <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:border-[var(--acc)] rounded-[var(--r-s)] px-2.5">
  <span className="text-[10px] text-[var(--ink-2)] font-mono">revolut.me/</span>
  <input
  type="text"
@@ -153,7 +153,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
  <label className="text-xs font-semibold text-blue-200">PayPal (paypal.me)</label>
  </div>
- <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:border-blue-500 rounded-[var(--r-s)] px-2.5">
+ <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:border-[var(--acc)] rounded-[var(--r-s)] px-2.5">
  <span className="text-[10px] text-[var(--ink-2)] font-mono">paypal.me/</span>
  <input
  type="text"
@@ -194,7 +194,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
  <label className="text-xs font-semibold text-[var(--ink)]">Bizum (Teléfono)</label>
  </div>
- <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:border-emerald-500 rounded-[var(--r-s)] px-2.5">
+ <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:border-[var(--ok)] rounded-[var(--r-s)] px-2.5">
  <span className="text-[10px] text-[var(--ink-2)] font-mono">TLF:</span>
  <input
  type="text"
@@ -227,7 +227,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  (config.donacionRevolut?.metodoPorDefecto ||'revolut') ==='revolut'
- ?'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
+ ?'bg-sky-500/20 border-[var(--acc)] text-sky-300 shadow-sm'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -244,7 +244,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='paypal'
- ?'bg-blue-500/20 border-blue-500 text-blue-300 shadow-sm'
+ ?'bg-blue-500/20 border-[var(--acc)] text-blue-300 shadow-sm'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -261,7 +261,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='bizum'
- ?'bg-emerald-500/20 border-emerald-500 text-[var(--ink-2)] shadow-sm'
+ ?'bg-emerald-500/20 border-[var(--ok)] text-[var(--ink-2)] shadow-sm'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -283,7 +283,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  })
  }
  placeholder="Colabora con la banda"
- className="w-full bg-[var(--surface)] focus:border-sky-500 rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+ className="w-full bg-[var(--surface)] focus:border-[var(--acc)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
  />
  </div>
 
@@ -299,7 +299,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  })
  }
  placeholder="Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
- className="w-full bg-[var(--surface)] focus:border-sky-500 rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none resize-none"
+ className="w-full bg-[var(--surface)] focus:border-[var(--acc)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none resize-none"
  />
  </div>
  </div>

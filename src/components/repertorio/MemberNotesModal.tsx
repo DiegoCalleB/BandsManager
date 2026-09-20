@@ -209,7 +209,7 @@ export function MemberNotesModal({
 
  {/* Informational Tip */}
  <div className={`p-3 rounded-[var(--r-m)] my-3 text-xs flex items-start gap-2.5 ${
- isStitchLight ?'bg-indigo-50 border-indigo-200 text-indigo-900' :'bg-[var(--ok-soft)] text-[var(--ink-2)]'
+ isStitchLight ?'bg-indigo-50 border-[var(--acc)] text-indigo-900' :'bg-[var(--ok-soft)] text-[var(--ink-2)]'
  }`}>
  <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
  <div>
@@ -237,7 +237,7 @@ export function MemberNotesModal({
  onChange={(e) => setGeneralRepertorioNote(e.target.value)}
  placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco..."
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)] focus:border-indigo-500' :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
+ isStitchLight ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]' :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
  }`}
  />
  </div>
@@ -261,7 +261,7 @@ export function MemberNotesModal({
  {/* Add Custom Member Form */}
  {showAddCustomMember && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-wrap items-center gap-2 animate-in fade-in duration-150 ${
- isStitchLight ?'bg-indigo-50/70 border-indigo-200' :'bg-[var(--surface)] border-[var(--hair)]/40'
+ isStitchLight ?'bg-indigo-50/70 border-[var(--acc)]' :'bg-[var(--surface)] border-[var(--hair)]/40'
  }`}>
  <input
  type="text"
@@ -312,8 +312,8 @@ export function MemberNotesModal({
  className={`p-3.5 rounded-[var(--r-m)] transition-all ${
  hasNote
  ? isStitchLight
- ?'bg-emerald-50/40 border-emerald-200'
- :'bg-[var(--surface)]/90 border-emerald-500/30'
+ ?'bg-emerald-50/40 border-[var(--ok)]'
+ :'bg-[var(--surface)]/90 border-[var(--ok)]/30'
  : isStitchLight
  ?'bg-[var(--bg)]/70'
  :'bg-[var(--surface)]/50'
@@ -370,7 +370,7 @@ export function MemberNotesModal({
  placeholder={`Notas específicas para ${member.name} (${member.instrument})... ej. Entrada en compás 8, solo con sordina, cambio de afinación...`}
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
  }`}
  />

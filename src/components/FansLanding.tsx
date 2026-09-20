@@ -655,7 +655,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => trackClick('paypal', paypalUrl, contextType)}
- className={`group relative w-full flex items-center justify-center ${isFull ?'gap-3.5 p-4 min-h-[64px]' :'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--bg)] hover:border-sky-300 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ?'animate-donate-cta-glow-delayed' :''}`}
+ className={`group relative w-full flex items-center justify-center ${isFull ?'gap-3.5 p-4 min-h-[64px]' :'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--bg)] hover:border-[var(--acc)] transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ?'animate-donate-cta-glow-delayed' :''}`}
  >
  <span
  className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"
@@ -682,7 +682,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  key={`bizum-${variant}`}
  type="button"
  onClick={() => handleCopyBizum(contextType)}
- className={`group relative w-full flex items-center justify-center ${isFull ?'gap-3.5 p-4 min-h-[64px]' :'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] hover:border-emerald-400 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ?'animate-donate-cta-glow' :''}`}
+ className={`group relative w-full flex items-center justify-center ${isFull ?'gap-3.5 p-4 min-h-[64px]' :'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] hover:border-[var(--ok)] transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ?'animate-donate-cta-glow' :''}`}
  >
  <span
  className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-emerald-300/15 to-transparent animate-donate-sheen"
@@ -1580,7 +1580,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  )}
 
  {contactoBooking.telefono && (
- <div className="flex items-center justify-between p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:border-emerald-500/40 transition-colors">
+ <div className="flex items-center justify-between p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:border-[var(--ok)]/40 transition-colors">
  <a
  href={`tel:${contactoBooking.telefono.replace(/\s+/g,'')}`}
  className="flex items-center gap-2.5 text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors truncate flex-1 font-bold"

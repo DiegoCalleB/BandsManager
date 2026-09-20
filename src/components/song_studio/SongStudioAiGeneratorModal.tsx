@@ -86,7 +86,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  max={220}
  value={genBpm}
  onChange={(e) => setGenBpm(parseInt(e.target.value) || 120)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-purple-500 font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-mono"
  />
  </div>
  <div>
@@ -94,7 +94,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <select
  value={genKey}
  onChange={(e) => setGenKey(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-purple-500 font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-black text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)] font-mono"
  >
  <option value="Do">Do (C)</option>
  <option value="Re">Re (D)</option>
@@ -112,7 +112,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <label className="text-xs font-mono text-[var(--ink-2)] block">Instrumentos a incluir:</label>
  <div className="grid grid-cols-2 gap-3">
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeDrums ?'bg-purple-900/30 border-purple-500 text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
+ includeDrums ?'bg-purple-900/30 border-[var(--acc)] text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"
@@ -124,7 +124,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  </label>
 
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeBass ?'bg-purple-900/30 border-purple-500 text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
+ includeBass ?'bg-purple-900/30 border-[var(--acc)] text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"

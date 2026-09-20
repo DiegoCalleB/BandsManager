@@ -441,7 +441,7 @@ export function SongChordsViewerModal({
  onClick={() => setShowChordDiagrams(!showChordDiagrams)}
  className={`px-2.5 py-1 rounded-[var(--r-m)] font-bold transition cursor-pointer ${
  showChordDiagrams
- ?'bg-purple-950/40 border-purple-500/50 text-purple-300'
+ ?'bg-purple-950/40 border-[var(--acc)]/50 text-purple-300'
  :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -467,7 +467,7 @@ export function SongChordsViewerModal({
  className={`border-b px-4 py-2 text-xs font-mono flex items-center justify-between animate-in fade-in ${
  aiSuccessMsg.startsWith('⚠️')
  ?'bg-[var(--acc-soft)] /40 text-[var(--acc)]/70'
- :'bg-[var(--ok-soft)] border-emerald-500/40 text-[var(--ink-2)]'
+ :'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)]'
  }`}
  >
  <span className="flex items-center gap-2">
@@ -527,7 +527,7 @@ export function SongChordsViewerModal({
  {activeTab ==='substitute' && (
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
  <div className="bg-gradient-to-br from-purple-950/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] shadow-xl space-y-5">
- <div className="flex items-center gap-3 border-b border-purple-500/30 pb-4">
+ <div className="flex items-center gap-3 border-b border-[var(--acc)]/30 pb-4">
  <div className="p-3 rounded-[var(--r-m)] bg-purple-600 text-[var(--ink)] shadow-lg">
  <UserCheck className="w-6 h-6" />
  </div>

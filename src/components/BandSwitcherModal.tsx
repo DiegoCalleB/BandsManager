@@ -628,7 +628,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  handleRequestLeaveBand(band.band_id, band.bandName);
  }}
  disabled={!!leavingBandId}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-rose-400 bg-black/60 hover:bg-[var(--alert-soft)] hover:border-rose-500/50 transition-all cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-rose-400 bg-black/60 hover:bg-[var(--alert-soft)] hover:border-[var(--alert)]/50 transition-all cursor-pointer"
  title="Eliminar esta banda de mi usuario"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1130,7 +1130,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  </div>
 
  {/* PLAN 4: CABEZA DE CARTEL */}
- <div className="bg-[var(--surface)] rounded-3xl p-5 flex flex-col hover:border-emerald-600 transition-colors">
+ <div className="bg-[var(--surface)] rounded-3xl p-5 flex flex-col hover:border-[var(--ok)] transition-colors">
  <div className="mb-3">
  <div className="flex items-center justify-between gap-1 mb-1">
  <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[var(--ok-soft)] text-[var(--ink-2)]">Élite 360</span>

@@ -1490,7 +1490,7 @@ export default function BookingCRM({
  onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyVerifiedFilter
- ?'bg-sky-500/20 text-sky-300 border-sky-500/50'
+ ?'bg-sky-500/20 text-sky-300 border-[var(--acc)]/50'
  :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

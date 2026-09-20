@@ -183,7 +183,7 @@ export function TemplateConfigSection({
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  />
@@ -204,7 +204,7 @@ export function TemplateConfigSection({
  onChange={(e) => activeTemplate.setBody(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
@@ -226,7 +226,7 @@ export function TemplateConfigSection({
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ?'bg-white text-[var(--ink)] focus:border-indigo-500'
+ ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
