@@ -33,13 +33,13 @@
       (function () {
         try {
           var p = localStorage.getItem('bm-tema');
-          if (p !== 'light' && p !== 'dark' && p !== 'classic' && p !== 'system') p = 'classic';
+          if (p !== 'light' && p !== 'dark' && p !== 'classic' && p !== 'system') p = 'light';
           var r = p === 'system'
             ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
             : p;
           document.documentElement.setAttribute('data-theme', r);
         } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'classic');
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       })();
     </script>
@@ -47,7 +47,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-[#121110] text-zinc-100 overflow-x-hidden">
+  <body class="bg-[var(--bg)] text-[var(--ink)] overflow-x-hidden">
     <div id="root" class="overflow-x-hidden max-w-full"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

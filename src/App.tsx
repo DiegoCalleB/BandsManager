@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import { Lead, LeadStatus, Rehearsal, Concert, SocialPost, Payment, Message, ThemeName, ThemeColors, SocialMetric, User, Fan, BookingCampaign } from './types';
-import { THEMES } from './utils/theme';
+import { Lead, LeadStatus, ThemeName, ThemeColors } from './types';
+import { THEMES, getEspectroColors } from './utils/theme';
 import { useAuth } from './hooks/useAuth';
 import { useAppData } from './hooks/useAppData';
 import { api } from './services/api';
@@ -65,8 +65,8 @@ import { PlanLimitModal } from './components/PlanLimitModal';
 import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
 import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
-import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, getRequiredPlanForModule } from './utils/planPermissions';
-import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, NAV_BOTTOM_BAR_SLOTS, MIN_MODULES_FOR_GROUPED_NAV, shouldGroupNavForPlan, findNavGroupIdForItem, NavItemId } from './config/navGroups';
+import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan } from './utils/planPermissions';
+import { NAV_ITEMS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, NAV_BOTTOM_BAR_SLOTS, shouldGroupNavForPlan, findNavGroupIdForItem, NavItemId } from './config/navGroups';
 import { NavGroupSection } from './components/common/NavGroupSection';
 import { NavItemButton } from './components/common/NavItemButton';
 import { MusicianOnboardingModal } from './components/onboarding/MusicianOnboardingModal';
@@ -74,9 +74,8 @@ import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardM
 import { isOnboardingCompleted } from './utils/userPreferences';
 import { useLanguage } from './context/LanguageContext';
 import {
-  Menu, Music, Sparkles, LogOut, ShieldAlert, Shield, UserCheck,
-  FileCheck, CheckSquare, MessageSquareCode, RefreshCw,
-  Settings, X, Bot, Guitar, Flame, Type, Heart, ChevronDown, Lock, Zap, Target
+  Menu, Sparkles, LogOut, ShieldAlert, UserCheck,
+  RefreshCw, X, ChevronDown, Lock
 } from 'lucide-react';
 
 export default function App() {
@@ -500,7 +499,31 @@ export default function App() {
     }
   }, []);
 
-  const colors: ThemeColors = THEMES[currentTheme] || THEMES.indie_velvet;
+  // Detecta cambios en data-theme para sincronizar colores Espectro
+  const [dataTheme, setDataTheme] = React.useState<string>(() => {
+    if (typeof document === 'undefined') return 'classic';
+    return document.documentElement.getAttribute('data-theme') || 'classic';
+  });
+
+  useEffect(() => {
+    // Observa cambios en el atributo data-theme
+    const observer = new MutationObserver(() => {
+      const newTheme = document.documentElement.getAttribute('data-theme') || 'classic';
+      setDataTheme(newTheme);
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const isEspectroActive = dataTheme === 'light' || dataTheme === 'dark';
+
+  // Proporciona colores del sistema Espectro o fallback al sistema antiguo
+  const colors: ThemeColors = isEspectroActive ? getEspectroColors() : (THEMES[currentTheme] || THEMES.indie_velvet);
 
   // Persist Theme Selection
   const handleThemeChange = (theme: ThemeName) => {

@@ -34,13 +34,11 @@ export const PREFERENCIAS: ReadonlyArray<{ id: PreferenciaTema; etiqueta: string
 export const CLAVE_TEMA = 'bm-tema';
 
 /**
- * Por defecto, `classic`: el aspecto actual de la app.
- *
- * Introducir la capa de tokens NO debe cambiar lo que ve nadie. Espectro se
- * activa cuando la UI esté migrada y con la red de regresión visual puesta,
- * no en el commit que crea los tokens.
+ * Por defecto, `light`: activa Espectro ahora que la migración está completa.
+ * Los usuarios que prefieran el diseño clásico pueden elegir 'Clásico' en
+ * configuración y seguirá disponible (no se elimina nunca).
  */
-export const TEMA_POR_DEFECTO: PreferenciaTema = 'classic';
+export const TEMA_POR_DEFECTO: PreferenciaTema = 'light';
 
 const VALIDAS: ReadonlySet<string> = new Set(['light', 'dark', 'classic', 'system']);
 

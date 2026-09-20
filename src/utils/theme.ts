@@ -1,5 +1,62 @@
 import { ThemeName, ThemeColors } from '../types';
 
+/**
+ * Lee los valores actuales de los tokens Espectro CSS y retorna
+ * un objeto ThemeColors compatible con el sistema antiguo.
+ * Los valores se leen desde el documento en tiempo real.
+ */
+export function getEspectroColors(): ThemeColors {
+  // Lee los valores de las variables CSS si estamos en el navegador
+  let acc = '#D86E31'; // fallback naranja de Booking
+  let accSoft = '#F9EAE1';
+  let ok = '#17998C';
+  let okSoft = '#DDF1EE';
+  let alert = '#B3453C';
+  let alertSoft = '#FAE7E5';
+  let ink = '#2A2E35';
+  let ink2 = '#646C78';
+  let bg = '#F6F7F9';
+  let surface = '#FFFFFF';
+
+  if (typeof document !== 'undefined' && typeof getComputedStyle === 'function') {
+    const root = document.documentElement;
+    const style = getComputedStyle(root);
+
+    const getValue = (varName: string) => style.getPropertyValue(varName).trim();
+
+    acc = getValue('--acc') || acc;
+    accSoft = getValue('--acc-soft') || accSoft;
+    ok = getValue('--ok') || ok;
+    okSoft = getValue('--ok-soft') || okSoft;
+    alert = getValue('--alert') || alert;
+    alertSoft = getValue('--alert-soft') || alertSoft;
+    ink = getValue('--ink') || ink;
+    ink2 = getValue('--ink-2') || ink2;
+    bg = getValue('--bg') || bg;
+    surface = getValue('--surface') || surface;
+  }
+
+  return {
+    name: 'Espectro',
+    bg: `bg-[${bg}]`,
+    card: `bg-[${surface}]`,
+    border: `border-[${bg}]`,
+    primary: acc,
+    primaryHover: `hover:brightness-110`,
+    text: `text-[${ink}]`,
+    textMuted: `text-[${ink2}]`,
+    accent: `text-[${acc}]`,
+    accentBg: `bg-[${accSoft}]`,
+    badgeGreen: `bg-[${okSoft}] text-[${ok}]`,
+    badgeYellow: `bg-[${accSoft}] text-[${acc}]`,
+    badgeRed: `bg-[${alertSoft}] text-[${alert}]`,
+    badgeBlue: `bg-[${accSoft}] text-[${acc}]`,
+    neonShadow: 'shadow-none',
+    fontDisplay: 'font-sans',
+    fontSans: 'font-sans'
+  };
+}
+
 export const THEMES: Record<ThemeName, ThemeColors> = {
   indie_velvet: {
     name: 'Modern Obsidian & Gold (Por Defecto)',
