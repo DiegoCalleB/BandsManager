@@ -10,7 +10,6 @@ import QRCode from'react-qr-code';
 import * as XLSX from'xlsx';
 import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from'../types';
 import { THEMES } from'../utils/theme';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from'recharts';
 import { Onda } from'./ui/Onda';
 import { ReelsMetricsView } from'./reels/ReelsMetricsView';
 import { FansCommunityView } from'./fans/FansCommunityView';
@@ -72,7 +71,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onSyncMetrics,
  isScanningMetrics,
  isSyncingMetrics,
- colors
+ colors,
  onNavigate,
  isPromo = false,
  onUpdateConcert,
@@ -700,36 +699,32 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <p className="text-[11px] text-[var(--ink-2)] font-sans">De dónde provienen los registros</p>
  </div>
 
- <div className="flex-1 min-h-0 flex flex-col sm:flex-row items-center gap-4">
+ <div className="flex-1 min-h-0 flex flex-col gap-4">
  {originData.length > 0 ? (
  <>
- <div className="w-full sm:w-1/2 h-48 sm:h-full">
- <ResponsiveContainer width="100%" height="100%">
- <PieChart>
- <Pie
- data={originData}
- cx="50%"
- cy="50%"
- innerRadius={50}
- outerRadius={75}
- paddingAngle={4}
- dataKey="value"
- nameKey="name"
- >
- {originData.map((entry, index) => (
- <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
- ))}
- </Pie>
- <Tooltip 
- contentStyle={{backgroundColor:'var(--bg)', borderColor:'var(--ink-2)', fontSize:'12px', borderRadius:'12px', color:'var(--surface)'}}
- formatter={(val: any, name: any) => [`${val} fans (${Math.round((val / (fans.length || 1)) * 100)}%)`, name]}
+ <div className="w-full h-48">
+ <Onda
+ data={originData.map((item, idx) => ({
+ label: item.name,
+ value: item.value,
+ color: COLORS[idx % COLORS.length]
+ }))}
+ height={180}
+ barWidth={20}
+ gap={8}
+ showLabels={true}
+ animated={true}
+ tooltipFormatter={(val) => {
+ const total = fans.length || 1;
+ const pct = Math.round((val / total) * 100);
+ return `${val} fans (${pct}%)`;
+ }}
+ className="w-full"
  />
- </PieChart>
- </ResponsiveContainer>
  </div>
 
  {/* Channel Legend List */}
- <div className="w-full sm:w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar pr-1">
+ <div className="w-full space-y-2 overflow-y-auto max-h-48 hide-scrollbar pr-1">
  {originData.map((item, idx) => (
  <div key={item.name} className="flex items-center justify-between bg-[var(--surface)] p-2 rounded-[var(--r-m)] text-xs font-sans">
  <div className="flex items-center gap-2 min-w-0">
@@ -964,7 +959,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  concerts={concerts}
  effectiveBandName={effectiveBandName}
  effectiveBandLogo={effectiveBandLogo}
- colors={colors}={}
+ colors={colors}
  onUpdateFan={onUpdateFan}
  onDeleteFan={onDeleteFan}
  onOpenAddModal={() => setShowAddModal(true)}
@@ -1558,7 +1553,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {activeTab ==='metrics' && (
  <div className="space-y-6">
  <ReelsMetricsView
- colors={colors || THEMES.indie_velvet}={}
+ colors={colors || THEMES.indie_velvet}
  metrics={metrics || []}
  epkConfig={epkConfig}
  currentBandName={effectiveBandName}

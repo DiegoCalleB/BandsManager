@@ -8,7 +8,6 @@ import {
  Plus, TrendingUp, LineChart, Instagram, Youtube, Edit, Table,
  Volume2, VolumeX, Maximize2, X, Star, Bookmark, ThumbsUp
 } from'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from'recharts';
 import { PublicoSilhouette } from'./ui/PublicoSilhouette';
 
 interface ReelsCenterProps {
@@ -1292,7 +1291,6 @@ export default function ReelsCenter({
  ? (highlights[selectedHighlightIndex]?.range ||'0:30')
  :'0:30');
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
  const textTitle = 'text-[var(--ink)]';
  const textSub = 'text-[var(--ink-2)]';
  const textMuted = 'text-[var(--ink-2)]';
@@ -2888,7 +2886,7 @@ export default function ReelsCenter({
  e.stopPropagation();
  setIsExpandedPreview(false);
  }}
- className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)]/80 text-[var(--ink)] hover:text-[var(--ink)] transition-all hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center
+ className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)]/80 text-[var(--ink)] hover:text-[var(--ink)] transition-all hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center"
  title="Cerrar modo cine (ESC o Click fuera)"
  >
  <X className="w-6 h-6" />
