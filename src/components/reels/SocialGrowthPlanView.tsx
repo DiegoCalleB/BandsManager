@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 interface SocialGrowthPlanViewProps {
- colors: ThemeColors;: boolean;
+ colors: ThemeColors;
  bandName: string;
  latestMetric: SocialMetric | null;
  epkConfig?: Partial<EPKConfig> | null;
@@ -20,7 +20,7 @@ interface SocialGrowthPlanViewProps {
 }
 
 export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
- colors
+ colors,
  bandName,
  latestMetric,
  epkConfig,

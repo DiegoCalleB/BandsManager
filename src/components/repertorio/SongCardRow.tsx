@@ -362,9 +362,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenMemberNotes}
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
  hasMemberNotes
- ? 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 /30'
- :? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- : 'bg-[var(--surface)]hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
+ ? 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70'
+ : 'bg-[var(--surface)] hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Ver y editar notas específicas por miembro de la banda"
  >
@@ -420,8 +419,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`p-1.5 rounded-[var(--r-s)] transition-all cursor-pointer ${
  showMenu
  ? 'bg-[var(--surface)] text-[var(--ink)]'
- :? 'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover: '
- : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
+ : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  }`}
  title="Más opciones del tema"
  aria-label="Más opciones"
@@ -432,9 +430,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  {/* Menu Popover */}
  {showMenu && (
  <div
- className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs ${? 'bg-[var(--surface)] text-[var(--ink)] divide-y divide-neutral-100'
- : 'bg-[var(--surface)]/95 text-[var(--ink-2)] divide-y divide-neutral-800/60'
- }`}
+ className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs bg-[var(--surface)] text-[var(--ink)] divide-y divide-[var(--sunken)]`}
  >
  <div className="py-1 space-y-0.5">
  {/* Acordes / Notas / Editar: solo en móvil, en escritorio ya son botones directos */}

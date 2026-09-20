@@ -9,7 +9,7 @@ interface AssignSongsToAlbumModalProps {
  isOpen: boolean;
  albumName: string;
  songs: Song[];
- colors: ThemeColors
+ colors: ThemeColors;
  onClose: () => void;
  onSaveAlbumSongs: (albumName: string, selectedSongIds: string[], albumExtraInfo?: {
  año?: string;
@@ -23,7 +23,7 @@ export function AssignSongsToAlbumModal({
  isOpen,
  albumName,
  songs,
- colors
+ colors,
  onClose,
  onSaveAlbumSongs}: AssignSongsToAlbumModalProps) {
  const currentAlbumSongs = songs.filter(s => (s.albumDisco ||'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
@@ -210,8 +210,7 @@ export function AssignSongsToAlbumModal({
  onClick={() => toggleSong(song.id)}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition-all ${
  isSelected
- ?'bg-[var(--surface)]/20/50 text-[var(--ink)]'
- :?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
+ ?'bg-[var(--surface)]/50 text-[var(--ink)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >

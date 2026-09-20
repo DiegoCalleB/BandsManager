@@ -10,7 +10,7 @@ interface AddSongsToSetlistModalProps {
  isOpen: boolean;
  songs: Song[];
  existingSongIds: string[];
- colors: ThemeColors
+ colors: ThemeColors;
  onClose: () => void;
  onAddSongs: (songIds: string[]) => void;
 }
@@ -19,7 +19,7 @@ export function AddSongsToSetlistModal({
  isOpen,
  songs,
  existingSongIds,
- colors
+ colors,
  onClose,
  onAddSongs}: AddSongsToSetlistModalProps) {
  const [search, setSearch] = useState('');
@@ -183,8 +183,7 @@ export function AddSongsToSetlistModal({
  onClick={() => toggleSong(s.id)}
  className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
  isSelected
- ?'bg-[var(--surface)]/15/50'
- :?'bg-[var(--bg)] hover:bg-[var(--sunken)]'
+ ?'bg-[var(--surface)]/50'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80'
  }`}
  >

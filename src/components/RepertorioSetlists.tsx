@@ -4264,7 +4264,7 @@ export default function RepertorioSetlists({
  {/* BULK ACTIONS BAR */}
  {selectedCatalogIds.size > 0 && (
  <div className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 ${
-' bg-[var(--ok)]/20/60 text-[var(--ok)]/40'
+' bg-[var(--ok)]/20 text-[var(--ok)]/40'
  }`}>
  <span className="text-xs font-medium">
  {selectedCatalogIds.size} canciones seleccionadas

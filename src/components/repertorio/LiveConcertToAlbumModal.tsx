@@ -27,7 +27,7 @@ interface LiveConcertToAlbumModalProps {
  isOpen: boolean;
  onClose: () => void;
  bandName?: string;
- colors: ThemeColors
+ colors: ThemeColors;
  onSaveAlbumToCatalog: (albumTitle: string, tracks: TrackCutItem[]) => void;
  onSaveSetlist?: (newSetlist: any) => void;
 }
@@ -1894,10 +1894,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  value={track.title}
  onChange={(e) => handleUpdateTrack(track.index,'title', e.target.value)}
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
- 'bg-[var(--surface)] text-[var(--ink)] focus:'
- : track.type ==='musica'
- ?'bg-[var(--surface)]/90 /40 text-[var(--acc)] placeholder-[var(--ink-2)] focus: focus:ring-1 focus:ring-amber-400'
- :'bg-[var(--surface)]/90/40 text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-purple-400'
+ track.type ==='musica'
+ ?'bg-[var(--surface)]/90 text-[var(--acc)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-amber-400'
+ :'bg-[var(--surface)]/90 text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-purple-400'
  }`}
  placeholder={
  track.type ==='musica'

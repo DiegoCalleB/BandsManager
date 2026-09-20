@@ -26,7 +26,7 @@ interface BulkAlbumAudioUploaderModalProps {
  onClose: () => void;
  albumName?: string;
  albumSongs?: Song[];
- colors: ThemeColors
+ colors: ThemeColors;
  bandId?: string;
  isNewAlbumMode?: boolean;
  onSaveUpdatedSongs: (updatedSongs: Song[], newAlbumName?: string) => void;
@@ -739,10 +739,9 @@ export function BulkAlbumAudioUploaderModal({
  key={item.id || idx}
  className={`p-3.5 rounded-[var(--r-l)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 ${
  item.status ==='success'
- ?'border-[var(--ok)]/40 bg-[var(--ok)]/10'
+ ?'bg-[var(--ok)]/10'
  : item.status ==='error'
- ?'border-[var(--alert)]/40 bg-[var(--alert)]/10'
- :?'bg-[var(--bg)]'
+ ?'bg-[var(--alert)]/10'
  :'bg-[var(--surface)]/90'
  }`}
  >
@@ -802,9 +801,7 @@ export function BulkAlbumAudioUploaderModal({
  onChange={(e) => handleAssignChange(idx, e.target.value)}
  className={`w-full text-xs font-sans rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
  item.matchedSongId
- ??'bg-[var(--surface)] text-[var(--ink)] font-bold'
- :'bg-[var(--sunken)]/50 text-[var(--ink)] font-bold'
- :?'bg-[var(--surface)] text-[var(--ink-2)]'
+ ?'bg-[var(--surface)] text-[var(--ink)] font-bold'
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
