@@ -199,8 +199,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {hasAlerts && (
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
  dangerAlertsCount > 0
- ?'bg-rose-500 text-stone-950 shadow-xs'
- :'bg-[var(--acc)] text-stone-950 shadow-xs'
+ ?'bg-rose-500 text-[var(--acc-ink)] shadow-xs'
+ :'bg-[var(--acc)] text-[var(--acc-ink)] shadow-xs'
  }`}>
  {dangerAlertsCount > 0 ?'Alerta Activa' :'Aviso Meteo'}
  </span>
@@ -219,7 +219,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  onClick={() => setSelectedSlot('show')}
  className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors cursor-pointer flex items-center gap-1 ${
  selectedSlot ==='show'
- ?'bg-[var(--acc)] text-stone-950 shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--acc)]/70'
  }`}
  >
@@ -230,7 +230,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  onClick={() => setSelectedSlot('soundcheck')}
  className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors cursor-pointer flex items-center gap-1 ${
  selectedSlot ==='soundcheck'
- ?'bg-[var(--acc)] text-stone-950 shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--acc)]/70'
  }`}
  >
@@ -418,8 +418,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
  isDanger
- ?'bg-rose-500 text-stone-950 shadow-xs'
- :'bg-[var(--acc)] text-stone-950 shadow-xs'
+ ?'bg-rose-500 text-[var(--acc-ink)] shadow-xs'
+ :'bg-[var(--acc)] text-[var(--acc-ink)] shadow-xs'
  }`}>
  {isDanger ?'Peligro Extremo' :'Precaución'}
  </span>

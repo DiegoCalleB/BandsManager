@@ -2851,7 +2851,7 @@ export default function ReelsCenter({
  const pct = (simulatedTime / duration) * 100;
  return (
  <div className={`p-1.5 rounded-[var(--r-m)] space-y-1 ${
- isStitchLight ?'bg-white/90 -indigo-200/40 text-neutral-800' :'bg-black/75 -white/10 text-[var(--sunken)]'
+ isStitchLight ?'bg-white/90 -indigo-200/40 text-[var(--ink)]' :'bg-black/75 -white/10 text-[var(--sunken)]'
  }`}>
  <div className="flex justify-between items-center text-[7.5px] font-mono font-bold">
  <span className={isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}>⏱️ REC CORTE</span>
@@ -3251,7 +3251,7 @@ export default function ReelsCenter({
  r="20"
  stroke="currentColor"
  strokeWidth="3.5"
- className="text-neutral-800"
+ className="text-[var(--ink)]"
  fill="transparent"
  />
  <circle

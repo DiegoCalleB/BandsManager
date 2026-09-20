@@ -606,7 +606,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  href={c.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 text-stone-950 text-xs font-bold hover:bg-emerald-400 transition-colors"
+ className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 text-[var(--acc-ink)] text-xs font-bold hover:bg-emerald-400 transition-colors"
  >
  <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
  </a>

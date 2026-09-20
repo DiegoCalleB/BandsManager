@@ -219,7 +219,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  id="btn-create-setlist"
  type="button"
  onClick={onCreateSetlist}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
  title="Crear un nuevo setlist de concierto"
  >
  <Plus className="w-3.5 h-3.5" />
@@ -289,7 +289,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  id="btn-add-song"
  type="button"
  onClick={onOpenNewSongModal}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 active:scale-95"
  >
  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
  <span>Nueva Canción</span>

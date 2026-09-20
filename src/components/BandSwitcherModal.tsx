@@ -1340,7 +1340,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  alert(e?.message ||'No se pudo actualizar el plan. Reintenta en unos instantes.');
  }
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold font-mono text-xs transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
  >
  <Sparkles className="w-3 h-3 fill-stone-950" />
  <span>Seleccionar {plan.name}</span>

@@ -1336,7 +1336,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  href={c.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-emerald-500 text-stone-950 text-[10px] font-bold hover:bg-emerald-400 transition-colors"
+ className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-emerald-500 text-[var(--acc-ink)] text-[10px] font-bold hover:bg-emerald-400 transition-colors"
  >
  <Ticket className="w-3 h-3" /> Comprar Entradas
  </a>

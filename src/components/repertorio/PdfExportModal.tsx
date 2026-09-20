@@ -1769,7 +1769,7 @@ export function PdfExportModal({
  <div className="text-[10pt] font-black uppercase text-black leading-tight font-['Anton',sans-serif]">
  👤 {currentPreviewMember.name}
  </div>
- <div className="text-[7pt] font-mono font-bold text-neutral-800">
+ <div className="text-[7pt] font-mono font-bold text-[var(--ink)]">
  🎵 {currentPreviewMember.instrument}
  </div>
  </div>
@@ -1970,7 +1970,7 @@ export function PdfExportModal({
  <button
  onClick={() => setEditingSongForNotes(s)}
  title="Editar notas manuscritas de esta canción"
- className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--sunken)] border-text-[var(--ink-3)] rounded font-mono text-neutral-800 flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
+ className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--sunken)] border-text-[var(--ink-3)] rounded font-mono text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
  >
  <Edit3 className="w-3 h-3 text-emerald-600" />
  <span>Editar Nota</span>
@@ -2015,7 +2015,7 @@ export function PdfExportModal({
  );
  } else {
  return (
- <div key={item.id} className="pl-9 py-0.5 text-neutral-800 font-mono text-[11pt] font-bold">
+ <div key={item.id} className="pl-9 py-0.5 text-[var(--ink)] font-mono text-[11pt] font-bold">
  <span className="text-[var(--ink-2)]">****</span> {(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem ||'INTERLUDIO').toUpperCase()} <span className="text-[var(--ink-2)]">****</span>
  {(item.notas || (item as any).notaTema) && item.tituloCustom && (
  <span className="text-[10pt] text-[var(--ink-2)] font-normal italic ml-2">

@@ -595,7 +595,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <button
  type="submit"
  disabled={loading}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-amber-500/10 active:scale-98"
+ className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-amber-500/10 active:scale-98"
  >
  {loading ? (
  <span>Creando miembro...</span>

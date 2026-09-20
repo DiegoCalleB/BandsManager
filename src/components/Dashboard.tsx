@@ -480,7 +480,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("calendario")}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
  >
  <Calendar className="w-4 h-4" />
  <span>Calendario</span>
@@ -517,7 +517,7 @@ export default function Dashboard({
  onClick={() => setAgendaFilterMode('all')}
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode ==='all'
- ?'bg-[var(--acc)] text-stone-950 font-black shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  title="Ver eventos de todas las bandas"
@@ -532,7 +532,7 @@ export default function Dashboard({
  onClick={() => setAgendaFilterMode('active')}
  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
  agendaFilterMode ==='active'
- ?'bg-[var(--acc)] text-stone-950 font-black shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  title={`Ver solo eventos de ${activeBandName}`}
@@ -661,7 +661,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("fans")}
- className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+ className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
  >
  <QrCode className="w-4 h-4" />
  <span>Gestionar QRs y Fans</span>

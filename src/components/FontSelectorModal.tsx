@@ -110,7 +110,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <div className="flex items-center gap-2">
  {isSelected && (
  <span className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
- isStitchLight ?'bg-indigo-600 text-[var(--ink)]' :'bg-[var(--acc)] text-stone-950'
+ isStitchLight ?'bg-indigo-600 text-[var(--ink)]' :'bg-[var(--acc)] text-[var(--acc-ink)]'
  }`}>
  <Check className="w-3.5 h-3.5 stroke-[3]" />
  </span>
@@ -153,7 +153,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer shadow-sm ${
  isStitchLight 
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)]' 
- :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950'
+ :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)]'
  }`}
  >
  Aceptar & Cerrar

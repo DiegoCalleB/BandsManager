@@ -415,7 +415,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={() => setShowUpgradeModal(true)}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 text-xs font-bold font-mono transition-all duration-200 shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] text-xs font-bold font-mono transition-all duration-200 shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
  >
  <Sparkles className="w-3.5 h-3.5 fill-stone-950" />
  <span>Upgrade</span>
@@ -1126,7 +1126,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-lg active:scale-98 ${
  isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-indigo-600/20'
- :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-stone-950 shadow-amber-500/20'
+ :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-amber-500/20'
  }`}
  >
  {loading ? (
@@ -1351,7 +1351,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  alert(e?.message ||'No se pudo cambiar el plan. Reintenta en unos instantes.');
  }
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold font-mono text-xs transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-mono text-xs transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
  >
  <Sparkles className="w-3 h-3 fill-stone-950" />
  <span>Seleccionar {plan.name}</span>

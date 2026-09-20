@@ -192,7 +192,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
  <button
  onClick={() => handleCopy(currentTpl.id, `Asunto: ${currentTpl.subject}\n\n${currentTpl.body}`)}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] text-stone-950 font-mono font-bold text-xs hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--acc-ink)] font-mono font-bold text-xs hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
  >
  {copiedId === currentTpl.id ? (
  <>

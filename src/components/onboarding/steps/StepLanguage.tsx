@@ -127,7 +127,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  {lang.label}
  </h4>
  {isSelected && (
- <span className="px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-stone-950 text-[9px] font-mono font-extrabold uppercase">
+ <span className="px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc-ink)] text-[9px] font-mono font-extrabold uppercase">
  Activo
  </span>
  )}
@@ -140,7 +140,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
 
  <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
  isSelected 
- ?'bg-[var(--acc)]/60 text-stone-950' 
+ ?'bg-[var(--acc)]/60 text-[var(--acc-ink)]' 
  :'border-[var(--hair)] bg-[var(--surface)]/80 text-transparent'
  }`}>
  <Check className="w-3.5 h-3.5 stroke-[3]" />

@@ -412,7 +412,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  >
  <span className="text-5xl mb-4">😴</span>
  <p className="text-[var(--ink-2)] text-sm font-mono mb-1">Modo descanso — ahorrando batería</p>
- <p className="text-neutral-800 text-xs font-mono">Toca la pantalla para volver a"{itemLabel(currentItem, songs)}"</p>
+ <p className="text-[var(--ink)] text-xs font-mono">Toca la pantalla para volver a"{itemLabel(currentItem, songs)}"</p>
  </div>
  );
  }
@@ -953,7 +953,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  {nextItem && (
  <p className={`text-center text-[11px] font-mono truncate ${glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
- Siguiente: <span className={glareMode ?'text-neutral-800' :'text-[var(--ink-3)]'}>{itemLabel(nextItem, songs)}</span>
+ Siguiente: <span className={glareMode ?'text-[var(--ink)]' :'text-[var(--ink-3)]'}>{itemLabel(nextItem, songs)}</span>
  {nextItem.tipoItem ==='cancion' && songs.find(s => s.id === nextItem.songId)?.tonalidad && (
  <span> · {songs.find(s => s.id === nextItem.songId)?.tonalidad}</span>
  )}
