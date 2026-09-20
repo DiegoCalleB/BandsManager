@@ -151,7 +151,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  }`}
  >
  {/* PREVIEW MINIATURA GRÁFICA */}
- <div className={`w-full h-16 sm:h-24 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] mb-2 sm:mb-3 p-2 sm:p-2.5 flex flex-col justify-between ${tpl.preview.bg} ${tpl.preview.border}`}>
+ <div className={`w-full h-16 sm:h-24 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] mb-2 sm:mb-3 p-2 sm:p-2.5 flex flex-col justify-between ${tpl.preview.bg}`}>
  <div className="flex items-center justify-between">
  <span className={`text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-md ${tpl.preview.pill}`}>
  {tpl.badge}

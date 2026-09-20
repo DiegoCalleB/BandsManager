@@ -28,7 +28,6 @@ export interface EPKTemplateMeta {
     bg: string;
     cardBg: string;
     accent: string;
-    border: string;
     text: string;
     pill: string;
   };
@@ -46,7 +45,6 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
       bg: 'bg-[var(--bg)]',
       cardBg: 'bg-[var(--bg)]',
       accent: 'bg-[var(--acc)]',
-      border: 'border-[var(--hair)]',
       text: 'text-[var(--acc)]/80',
       pill: 'bg-[var(--acc)]/20 text-[var(--acc)]/80'
     }
@@ -62,7 +60,6 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
       bg: 'bg-[#f8f8f6]',
       cardBg: 'bg-[var(--surface)]',
       accent: 'bg-[var(--bg)]',
-      border: 'border-[var(--hair)]',
       text: 'text-[var(--ink)]',
       pill: 'bg-[var(--sunken)]/80 text-[var(--ink)]'
     }
@@ -78,7 +75,6 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
       bg: 'bg-[#0a0814]',
       cardBg: 'bg-[#140f28]',
       accent: 'bg-[var(--tentative)]',
-      border: 'border-[var(--tentative)]/40',
       text: 'text-[var(--tentative)]/80',
       pill: 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80'
     }
@@ -94,7 +90,6 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
       bg: 'bg-[#181411]',
       cardBg: 'bg-[#241c17]',
       accent: 'bg-[var(--acc)]',
-      border: 'border-[var(--hair)]',
       text: 'text-[var(--acc)]/80',
       pill: 'bg-[var(--accent-alt)]/10/60 text-[var(--acc)]/80'
     }
