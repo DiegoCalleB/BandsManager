@@ -75,7 +75,7 @@ import { isOnboardingCompleted } from './utils/userPreferences';
 import { useLanguage } from './context/LanguageContext';
 import {
   Menu, Sparkles, LogOut, ShieldAlert, UserCheck,
-  RefreshCw, X, ChevronDown, Lock
+  RefreshCw, X, ChevronDown, Lock, Zap, Target, Guitar
 } from 'lucide-react';
 
 export default function App() {
