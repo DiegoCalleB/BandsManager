@@ -498,10 +498,10 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  📍 ${escapeHtml(lead.ciudad)} ${lead.region ? `(${escapeHtml(lead.region)})` :''}
  </div>
  <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; font-size: 10px; font-family: monospace;">
- <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; border: 1px solid #e2e8f0;">
+ <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">
  👥 ${lead.aforo > 0 ? `${lead.aforo} personas` :'Sin aforo'}
  </span>
- <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; border: 1px solid #e2e8f0;">
+ <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">
  ${escapeHtml(lead.genero ||'Música')}
  </span>
  </div>
