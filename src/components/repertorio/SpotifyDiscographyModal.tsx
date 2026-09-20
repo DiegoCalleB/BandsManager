@@ -621,7 +621,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  className={`p-1.5 rounded-full transition-all cursor-pointer ${
  isPlaying
  ?'bg-[var(--surface)] text-black shadow-md'
- :'bg-white/10 hover:bg-[var(--surface)] hover:text-black text-[var(--ink-3)]'
+ :'bg-white/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-3)]'
  }`}
  title={isPlaying ?'Pausar preview' :'Reproducir preview 30s de Spotify/Deezer'}
  disabled={loadingPreviewTrackId === track.id}

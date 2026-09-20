@@ -658,7 +658,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all ${
  isPlayingThis
  ?'bg-[var(--surface)] text-black font-bold scale-105 shadow-md' 
- :'bg-[var(--surface)] text-[var(--ok)] hover:bg-[var(--surface)] hover:text-black'
+ :'bg-[var(--surface)] text-[var(--ok)] hover:bg-[var(--surface)] hover:text-[var(--ink)]'
  }`}
  title={isPlayingThis ?'Pausar' :'Reproducir este tema'}
  >
