@@ -364,7 +364,7 @@ export function OrdenDelDiaTab({
 
  <button
  onClick={onGoToLiveMode}
- className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--surface)] font-mono font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg shadow-amber-500/20 transition-all cursor-pointer active:scale-95"
+ className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--ink)] font-mono font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg shadow-amber-500/20 transition-all cursor-pointer active:scale-95"
  >
  <Play className="w-4 h-4 fill-current" />
  <span>Iniciar Modo Local en Vivo</span>
@@ -492,7 +492,7 @@ export function OrdenDelDiaTab({
  setSelectedSongIds([]);
  setShowAddSongModal(true);
  }}
- className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--surface)] hover:bg-amber-300 text-xs font-mono font-bold shadow-sm shadow-amber-400/20 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 text-xs font-mono font-bold shadow-sm shadow-amber-400/20 transition-all cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>+ Añadir Canciones</span>
@@ -517,7 +517,7 @@ export function OrdenDelDiaTab({
  setSelectedSongIds([]);
  setShowAddSongModal(true);
  }}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--surface)] text-xs font-mono font-bold hover:bg-amber-300 cursor-pointer shadow-md"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-mono font-bold hover:bg-amber-300 cursor-pointer shadow-md"
  >
  + Añadir Canciones del Repertorio
  </button>
@@ -816,7 +816,7 @@ export function OrdenDelDiaTab({
  {/* Number in selection order */}
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-mono text-xs font-black transition-all ${
  isSelected
- ?'bg-[var(--acc)]/60 text-[var(--surface)] shadow-sm scale-105'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-sm scale-105'
  :' text-[var(--ink-2)]'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
@@ -866,7 +866,7 @@ export function OrdenDelDiaTab({
  type="button"
  disabled={selectedSongIds.length === 0}
  onClick={handleConfirmAddSongs}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/60 hover:bg-amber-300 disabled:opacity-40 disabled:cursor-not-allowed text-[var(--surface)] transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/60 hover:bg-amber-300 disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
  >
  <Plus className="w-4 h-4 stroke-[3]" />
  <span>Añadir {selectedSongIds.length > 0 ? `${selectedSongIds.length} Canciones en Orden` :'Canciones'}</span>
@@ -1051,7 +1051,7 @@ export function OrdenDelDiaTab({
  </button>
  <button
  type="submit"
- className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)]/60 text-[var(--surface)] hover:bg-amber-300 cursor-pointer shadow-md"
+ className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 cursor-pointer shadow-md"
  >
  Añadir Bloque
  </button>

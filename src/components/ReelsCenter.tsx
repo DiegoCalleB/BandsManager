@@ -2235,7 +2235,7 @@ export default function ReelsCenter({
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed animate-pulse'
  : isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)]'
- :'bg-[var(--acc)] hover:bg-[#e0b83f] text-[var(--surface)]'
+ :'bg-[var(--acc)] hover:bg-[#e0b83f] text-[var(--ink)]'
  }`}
  >
  <Sparkles className={`w-3.5 h-3.5 ${isReanalyzingClip ?'animate-spin' :''}`} />
@@ -3716,9 +3716,9 @@ export default function ReelsCenter({
  <button
  type="button"
  onClick={handleCutPhysicalVideo}
- className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 via-[var(--acc)] to-yellow-400 hover:brightness-105 active:scale-[0.99] font-sans font-black uppercase text-xs text-[var(--surface)] tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-yellow-500/10 transition-all duration-200"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 via-[var(--acc)] to-yellow-400 hover:brightness-105 active:scale-[0.99] font-sans font-black uppercase text-xs text-[var(--ink)] tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-yellow-500/10 transition-all duration-200"
  >
- <Sparkles className="w-4 h-4 text-[var(--surface)] fill-bg-[var(--surface)]" />
+ <Sparkles className="w-4 h-4 text-[var(--ink)] fill-bg-[var(--surface)]" />
  <span>✂️ Renderizar Reel Físico + Auto-Subtítulos (9:16)</span>
  </button>
  </div>

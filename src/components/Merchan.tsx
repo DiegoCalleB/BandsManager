@@ -643,7 +643,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
  )}
  <div className="h-16 w-full bg-white flex items-center justify-between px-3 border-t border-[var(--hair)]">
- <div className="font-mono text-[10px] text-[var(--surface)] uppercase font-black leading-tight">
+ <div className="font-mono text-[10px] text-[var(--ink)] uppercase font-black leading-tight">
  {displayBandName.toUpperCase()}<br/><span className="text-amber-600">SCAN QR</span>
  </div>
  <div className="relative w-12 h-12 flex items-center justify-center">

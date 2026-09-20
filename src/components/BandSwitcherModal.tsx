@@ -861,7 +861,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  <button
  type="submit"
  disabled={!newBandName.trim() || (SIMPLE_PROMO_ONLY_BAND_CREATION && isCreatingBand)}
- className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--surface)] text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
  isCreatingBand ? (
@@ -925,7 +925,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  onClick={() => setNewBandFeatureCategory('all')}
  className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
  newBandFeatureCategory ==='all'
- ?'bg-[var(--acc)] text-[var(--surface)] shadow-md shadow-[var(--acc)]/20'
+ ?'bg-[var(--acc)] text-[var(--ink)] shadow-md shadow-[var(--acc)]/20'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -936,7 +936,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  onClick={() => setNewBandFeatureCategory('booking')}
  className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
  newBandFeatureCategory ==='booking'
- ?'bg-[var(--acc)] text-[var(--surface)] shadow-md shadow-[var(--acc)]/20'
+ ?'bg-[var(--acc)] text-[var(--ink)] shadow-md shadow-[var(--acc)]/20'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -947,7 +947,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  onClick={() => setNewBandFeatureCategory('media')}
  className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
  newBandFeatureCategory ==='media'
- ?'bg-[var(--acc)] text-[var(--surface)] shadow-md shadow-[var(--acc)]/20'
+ ?'bg-[var(--acc)] text-[var(--ink)] shadow-md shadow-[var(--acc)]/20'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -958,7 +958,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  onClick={() => setNewBandFeatureCategory('finance')}
  className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
  newBandFeatureCategory ==='finance'
- ?'bg-[var(--acc)] text-[var(--surface)] shadow-md shadow-[var(--acc)]/20'
+ ?'bg-[var(--acc)] text-[var(--ink)] shadow-md shadow-[var(--acc)]/20'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1073,7 +1073,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
  {/* PLAN 3: DE GIRA (Destacado) */}
  <div className="bg-[var(--surface)] border-2 border-[var(--acc)] rounded-3xl p-5 flex flex-col relative shadow-[0_0_35px_rgba(242,202,80,0.18)]">
- <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--acc)] text-[var(--surface)] text-[9px] font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full flex items-center gap-1 shadow-md whitespace-nowrap">
+ <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--acc)] text-[var(--ink)] text-[9px] font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full flex items-center gap-1 shadow-md whitespace-nowrap">
  <Star className="w-2.5 h-2.5 fill-current" />
  Más Popular
  </div>
@@ -1113,11 +1113,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  type="button"
  onClick={() => handleSelectPlanForCreation('de_gira')}
  disabled={isCreatingBand}
- className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--surface)] font-bold text-xs transition-colors cursor-pointer shadow-md shadow-[var(--acc)]/20 flex items-center justify-center gap-1.5 disabled:opacity-50"
+ className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer shadow-md shadow-[var(--acc)]/20 flex items-center justify-center gap-1.5 disabled:opacity-50"
  >
  {isCreatingBand && creatingPlanKey ==='de_gira' ? (
  <>
- <Loader2 className="w-4 h-4 animate-spin text-[var(--surface)]" />
+ <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
  <span>Configurando...</span>
  </>
  ) : (

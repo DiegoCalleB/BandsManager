@@ -6538,7 +6538,7 @@ export default function CalendarView({
  className={`px-3 py-2 rounded-[var(--r-s)] font-mono font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
  copiedFeed
  ?"bg-emerald-600 text-[var(--ink)]"
- :"bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--surface)]"
+ :"bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)]"
  }`}
  >
  {copiedFeed ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}

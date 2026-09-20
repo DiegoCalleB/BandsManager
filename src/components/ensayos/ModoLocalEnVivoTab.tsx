@@ -364,8 +364,8 @@ export function ModoLocalEnVivoTab({
  {swipeToast && (
  <div className={`fixed top-16 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-[var(--r-l)] font-mono text-xs font-bold shadow-2xl flex items-center gap-2 animate-in fade-in zoom-in-95 duration-150 ${
  swipeToast.dir ==='left' 
- ?'bg-[var(--acc)]/60 text-[var(--surface)] shadow-amber-400/20' 
- :'bg-emerald-400 text-[var(--surface)] border-emerald-300 shadow-emerald-400/20'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-amber-400/20' 
+ :'bg-emerald-400 text-[var(--ink)] border-emerald-300 shadow-emerald-400/20'
  }`}>
  <span>{swipeToast.dir ==='left' ?'⏩' :'⏪'}</span>
  <span>{swipeToast.text}</span>
@@ -383,7 +383,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => setActiveIndex(idx)}
  className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-[var(--r-m)] font-mono text-xs whitespace-nowrap transition-all cursor-pointer ${
  isCurrent
- ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black shadow-md shadow-amber-400/20 scale-102'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black shadow-md shadow-amber-400/20 scale-102'
  : item.evaluacion ==='bordada'
  ?'bg-emerald-500/20 text-[var(--ink-2)]'
  : item.evaluacion ==='repetir'
@@ -409,7 +409,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => setViewMode('escenario')}
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  viewMode ==='escenario'
- ?'bg-[var(--acc)]/60 text-[var(--surface)] shadow-sm'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista Escenario & Estructura"
@@ -422,7 +422,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => setViewMode('atril')}
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  viewMode ==='atril'
- ?'bg-[var(--acc)]/60 text-[var(--surface)] shadow-sm'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Modo Atril / Acordes & Letra (Teleprompter)"
@@ -506,7 +506,7 @@ export function ModoLocalEnVivoTab({
  </div>
  <button
  onClick={() => setViewMode('atril')}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--surface)] hover:bg-amber-300 text-xs font-mono font-black cursor-pointer shadow-md transition-all active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 text-xs font-mono font-black cursor-pointer shadow-md transition-all active:scale-95"
  >
  Abrir Atril 📜
  </button>
@@ -581,7 +581,7 @@ export function ModoLocalEnVivoTab({
  className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-m)] font-mono font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md ${
  isMetronomeActive
  ?'bg-rose-500 text-[var(--ink)] hover:bg-rose-400 shadow-rose-500/20'
- :'bg-emerald-500 text-[var(--surface)] hover:bg-emerald-400 shadow-emerald-500/20'
+ :'bg-emerald-500 text-[var(--ink)] hover:bg-emerald-400 shadow-emerald-500/20'
  }`}
  >
  {isMetronomeActive ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -658,7 +658,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('bordada')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='bordada'
- ?'bg-emerald-500 text-[var(--surface)] shadow-md shadow-emerald-500/20'
+ ?'bg-emerald-500 text-[var(--ink)] shadow-md shadow-emerald-500/20'
  :'bg-emerald-500/15 text-[var(--ink-2)] hover:bg-emerald-500/25'
  }`}
  >
@@ -670,7 +670,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('regular')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='regular'
- ?'bg-[var(--acc)]/60 text-[var(--surface)] shadow-md shadow-amber-400/20'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-md shadow-amber-400/20'
  :'bg-[var(--acc)]/60/15 text-[var(--acc)]/70 hover:bg-[var(--acc)]/60/25'
  }`}
  >
@@ -705,7 +705,7 @@ export function ModoLocalEnVivoTab({
  <button
  disabled={activeIndex === agenda.length - 1}
  onClick={() => setActiveIndex(prev => prev + 1)}
- className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--surface)] hover:bg-amber-300 disabled:opacity-30 font-mono font-black text-xs cursor-pointer transition-all shadow-md shadow-amber-400/20"
+ className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 disabled:opacity-30 font-mono font-black text-xs cursor-pointer transition-all shadow-md shadow-amber-400/20"
  >
  <span>Siguiente</span>
  <ChevronRight className="w-4 h-4" />
@@ -727,7 +727,7 @@ export function ModoLocalEnVivoTab({
  className={`p-2 rounded-[var(--r-m)] font-mono text-xs font-bold cursor-pointer transition-all ${
  isMetronomeActive
  ?'bg-rose-500 text-[var(--ink)]'
- :'bg-emerald-500 text-[var(--surface)]'
+ :'bg-emerald-500 text-[var(--ink)]'
  }`}
  title="Metrónomo Clic"
  >
@@ -755,7 +755,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold cursor-pointer transition-all ${
  isAutoScrolling
- ?'bg-[var(--acc)]/60 text-[var(--surface)] animate-pulse'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] animate-pulse'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -924,7 +924,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('bordada')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='bordada'
- ?'bg-emerald-500 text-[var(--surface)] font-black'
+ ?'bg-emerald-500 text-[var(--ink)] font-black'
  :'bg-emerald-500/15 text-[var(--ink-2)]'
  }`}
  >
@@ -935,7 +935,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('regular')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='regular'
- ?'bg-[var(--acc)]/60 text-[var(--surface)] font-black'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black'
  :'bg-[var(--acc)]/60/15 text-[var(--acc)]/70'
  }`}
  >
@@ -971,7 +971,7 @@ export function ModoLocalEnVivoTab({
  <button
  disabled={activeIndex === agenda.length - 1}
  onClick={() => setActiveIndex(prev => prev + 1)}
- className="flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--surface)] hover:bg-amber-300 text-xs font-mono font-black shadow-md disabled:opacity-30 cursor-pointer transition-all"
+ className="flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 text-xs font-mono font-black shadow-md disabled:opacity-30 cursor-pointer transition-all"
  >
  Siguiente →
  </button>

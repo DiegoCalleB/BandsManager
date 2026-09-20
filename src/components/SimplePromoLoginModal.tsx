@@ -463,7 +463,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
  </div>
- <button type="submit" disabled={loading} className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-sm active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
+ <button type="submit" disabled={loading} className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--ink)] font-bold text-sm tracking-wide transition-all shadow-sm active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
  {loading ?'Creando cuenta...' : (<><span>Crear mi Dossier y QR</span><ArrowRight className="w-4 h-4" /></>)}
  </button>
  </form>
@@ -508,7 +508,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  <Mail className="w-4 h-4 text-[var(--ink-2)] absolute left-4 pointer-events-none" />
  <input type="text" value={resetEmailOrUsername} onChange={(e) => setResetEmailOrUsername(e.target.value)} placeholder="Tu correo o usuario" className={inputClass} required />
  </div>
- <button type="submit" disabled={loading} className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--surface)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer">
+ <button type="submit" disabled={loading} className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--ink)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer">
  {loading ?'Enviando...' :'Enviar código de recuperación'}
  </button>
  </form>
@@ -518,7 +518,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  <input type="text" value={resetCode} onChange={(e) => setResetCode(e.target.value)} placeholder="Código de 6 dígitos" className={`${inputClass} pl-4`} required />
  <input type="password" value={resetNewPassword} onChange={(e) => setResetNewPassword(e.target.value)} placeholder="Nueva contraseña" className={`${inputClass} pl-4`} required />
  <input type="password" value={resetConfirmPassword} onChange={(e) => setResetConfirmPassword(e.target.value)} placeholder="Confirma la nueva contraseña" className={`${inputClass} pl-4`} required />
- <button type="submit" disabled={loading} className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--surface)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer">
+ <button type="submit" disabled={loading} className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:brightness-110 text-[var(--ink)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer">
  {loading ?'Guardando...' :'Guardar nueva contraseña'}
  </button>
  </form>

@@ -688,7 +688,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-emerald-300/15 to-transparent animate-donate-sheen"
  aria-hidden="true"
  />
- <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-emerald-500 text-[var(--surface)] flex items-center justify-center shrink-0 shadow font-bold group-hover:scale-105 transition-transform`}>
+ <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-emerald-500 text-[var(--ink)] flex items-center justify-center shrink-0 shadow font-bold group-hover:scale-105 transition-transform`}>
  <BizumLogo className="w-full h-full" />
  </div>
  <div className="text-center min-w-0">
@@ -1150,7 +1150,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  type="button"
  onClick={toggleAudioPreview}
  aria-label={isPlayingAudioPreview ? (t('audioPreviewPause') ||'Pausar audio') : (t('audioPreviewPlay') ||'Reproducir audio')}
- className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[var(--surface)] flex items-center justify-center shrink-0 shadow-md transition-all active:scale-95"
+ className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[var(--ink)] flex items-center justify-center shrink-0 shadow-md transition-all active:scale-95"
  >
  {isPlayingAudioPreview ? (
  <Pause className="w-5 h-5 fill-bg-[var(--surface)]" />
@@ -1190,7 +1190,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  onClick={() => setActiveTab('redes')}
  className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
  activeTab ==='redes' 
- ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--surface)] shadow-lg shadow-amber-500/20 font-black' 
+ ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-500/20 font-black' 
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1201,7 +1201,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  onClick={() => setActiveTab('form')}
  className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
  activeTab ==='form'
- ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--surface)] shadow-lg shadow-amber-500/20 font-black'
+ ?'bg-gradient-to-r from-amber-500 to-amber-400 text-[var(--ink)] shadow-lg shadow-amber-500/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1498,7 +1498,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  onChange={e => setFormData({...formData, consentimiento: e.target.checked})}
  className="peer appearance-none w-5 h-5 border-2 rounded bg-[var(--surface)] checked:bg-[var(--acc)] checked: transition-colors shrink-0 cursor-pointer"
  />
- <Check className="w-3.5 h-3.5 text-[var(--surface)] absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" strokeWidth={4} />
+ <Check className="w-3.5 h-3.5 text-[var(--ink)] absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" strokeWidth={4} />
  </div>
  <span className="text-[10px] text-[var(--ink-2)] font-mono leading-relaxed group-hover:text-[var(--ink-2)] transition-colors pt-0.5">
  {t('consentPrefix')}<button type="button" onClick={() => setShowPrivacyModal(true)} className="text-[var(--acc)] underline hover:text-[var(--acc)]/70 font-bold inline">{t('consentPrivacyLink')}</button>{t('consentMiddle')}<strong className="text-[var(--ink-2)]">{t('consentExplicit')}</strong>{t('consentSuffix')}
@@ -1654,7 +1654,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="pt-4 border-t text-right">
  <button
  onClick={() => setShowPrivacyModal(false)}
- className="px-5 py-2.5 bg-[var(--acc)] hover:bg-amber-600 text-[var(--surface)] font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] transition-colors"
+ className="px-5 py-2.5 bg-[var(--acc)] hover:bg-amber-600 text-[var(--ink)] font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] transition-colors"
  >
  {t('understood')}
  </button>

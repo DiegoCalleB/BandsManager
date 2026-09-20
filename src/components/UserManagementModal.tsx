@@ -456,7 +456,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  type="button"
  onClick={() => handleChangePassword(u.id)}
  disabled={loading}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 hover:bg-emerald-400 text-[var(--surface)] font-bold text-xs transition-colors flex items-center gap-1"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs transition-colors flex items-center gap-1"
  >
  <Check className="w-3.5 h-3.5" />
  <span>Guardar</span>

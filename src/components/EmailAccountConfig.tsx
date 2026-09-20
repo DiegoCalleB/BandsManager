@@ -293,7 +293,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  type="button"
  onClick={handleConnectGmailOAuth}
  disabled={gmailOAuthConnecting}
- className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-sky-500 hover:bg-sky-400 text-[var(--surface)] font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+ className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-sky-500 hover:bg-sky-400 text-[var(--ink)] font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
  >
  {gmailOAuthConnecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
  <span>{gmailOAuthConnecting ?'Redirigiendo a Google...' :'Conectar con Google'}</span>
@@ -468,7 +468,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  type="button"
  onClick={handleSave}
  disabled={saving}
- className="w-full sm:w-auto px-6 py-2.5 rounded-[var(--r-m)] bg-sky-500 hover:bg-sky-400 text-[var(--surface)] font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+ className="w-full sm:w-auto px-6 py-2.5 rounded-[var(--r-m)] bg-sky-500 hover:bg-sky-400 text-[var(--ink)] font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
  >
  {saving ? (
  <>

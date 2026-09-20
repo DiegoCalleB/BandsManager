@@ -259,7 +259,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={startRecording}
- className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-amber-300 text-[var(--surface)] font-mono font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 active:scale-95 transition-all"
+ className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-amber-300 text-[var(--ink)] font-mono font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 active:scale-95 transition-all"
  >
  <Mic className="w-4 h-4" />
  <span>Iniciar Grabación con Micrófono</span>
@@ -303,7 +303,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={handleSaveRecording}
- className="px-4 py-1.5 rounded-[var(--r-m)] bg-emerald-500 hover:bg-emerald-400 text-[var(--surface)] text-xs font-mono font-bold cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-m)] bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
  >
  Guardar Grabación
  </button>
@@ -408,7 +408,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  onClick={handleGenerateAIActa}
  disabled={isGeneratingActa}
- className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--surface)] hover:bg-amber-300 disabled:opacity-50 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 disabled:opacity-50 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer"
  >
  {isGeneratingActa ? (
  <>

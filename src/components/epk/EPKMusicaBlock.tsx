@@ -207,7 +207,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  :' opacity-50'
  } flex items-center justify-between gap-3 text-left`}
  >
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 text-[var(--surface)] flex items-center justify-center shrink-0 shadow-md">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 text-[var(--ink)] flex items-center justify-center shrink-0 shadow-md">
  <Music className="w-5 h-5 fill-bg-[var(--surface)]" />
  </div>
  <div className="min-w-0 flex-1">
