@@ -11,6 +11,7 @@ import * as XLSX from'xlsx';
 import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from'../types';
 import { THEMES } from'../utils/theme';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from'recharts';
+import { Onda } from'./ui/Onda';
 import { ReelsMetricsView } from'./reels/ReelsMetricsView';
 import { FansCommunityView } from'./fans/FansCommunityView';
 import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from'../i18n/fansTranslations';
@@ -667,36 +668,22 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </span>
  </div>
  
- <div className="flex-1 min-h-0">
+ <div className="flex-1 min-h-0 flex flex-col items-center justify-center">
  {evolutionaryGrowthData.length > 0 ? (
- <ResponsiveContainer width="100%" height="100%">
- <AreaChart data={evolutionaryGrowthData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
- <defs>
- <linearGradient id="fanGrowthGrad" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4}/>
- <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
- </linearGradient>
- </defs>
- <XAxis dataKey="date" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
- <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} domain={[0,'auto']} />
- <Tooltip 
- contentStyle={{backgroundColor:'#0f172a', borderColor:'#334155', fontSize:'12px', borderRadius:'12px', color:'#fff'}}
- formatter={(val: any, name: any) => [
- name ==='total' ? `${val} fans acumulados` : `${val} nuevos capturados`,
- name ==='total' ?'Comunidad Total' :'Capturados en el mes'
- ]}
+ <Onda
+ data={evolutionaryGrowthData.map((d) => ({
+ label: d.date || 'Sin fecha',
+ value: d.total || 0,
+ color: 'var(--acc)'
+ }))}
+ height={240}
+ barWidth={16}
+ gap={10}
+ showLabels={true}
+ animated={true}
+ tooltipFormatter={(val) => `${val} fans acumulados`}
+ className="w-full"
  />
- <Area 
- type="monotone" 
- dataKey="total" 
- stroke="#f59e0b" 
- strokeWidth={3} 
- fillOpacity={1} 
- fill="url(#fanGrowthGrad)" 
- name="total" 
- />
- </AreaChart>
- </ResponsiveContainer>
  ) : (
  <div className="flex flex-col items-center justify-center h-full gap-4">
  <PublicoSilhouette opacity={0.12} size="medium" />
