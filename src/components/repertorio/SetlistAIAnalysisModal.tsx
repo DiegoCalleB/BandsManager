@@ -493,7 +493,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  onMouseDown={handleDragStart}
  >
  <div className="flex items-center gap-2.5">
- <Move className="w-3.5 h-3.5 text-neutral-600 shrink-0" />
+ <Move className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
  <Brain className="w-5 h-5 text-purple-400" />
  <div>
  <h2 className="text-base font-bold">Análisis Avanzado con IA</h2>
@@ -700,7 +700,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="flex items-start justify-between gap-2">
  <div>
  <p className="text-sm font-semibold text-[var(--sunken)]">{sugg.title}</p>
- <p className="text-[11px] text-neutral-500 mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  {getCategoryIcon(sugg.category)} {sugg.category}
  </p>
  </div>
@@ -708,7 +708,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  const sourceKey = `ai-suggestion-${idx}`;
  if (isInvalid) {
  return (
- <span className="text-[10px] text-neutral-500 font-mono font-medium whitespace-nowrap" title="Un cambio anterior afectó a la canción que esta sugerencia necesitaba">
+ <span className="text-[10px] text-[var(--ink-2)] font-mono font-medium whitespace-nowrap" title="Un cambio anterior afectó a la canción que esta sugerencia necesitaba">
  ⚠️ Ya no aplica
  </span>
  );

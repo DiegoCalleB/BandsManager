@@ -246,7 +246,7 @@ export function SongModal({
  }`}
  placeholder="Min"
  />
- <span className="text-neutral-500 font-bold">:</span>
+ <span className="text-[var(--ink-2)] font-bold">:</span>
  <input
  name="duracionSeg"
  type="number"
