@@ -169,7 +169,6 @@ export const BandMap: React.FC<BandMapProps> = ({
  height: ${size}px;
  background-color: ${bgColor};
  color: ${textColor};
- border: 2px solid white;
  border-radius: 50%;
  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
  font-weight: 800;
@@ -305,7 +304,6 @@ export const BandMap: React.FC<BandMapProps> = ({
  height: 22px;
  border-radius: 50%;
  object-fit: cover;
- border: 1px solid white;
  margin-right: 4px;" />
  ` : `
  <div style="
@@ -337,7 +335,6 @@ export const BandMap: React.FC<BandMapProps> = ({
  display: inline-flex;
  align-items: center;
  background: ${surfaceColor};
- border: 1.5px solid ${badgeCfg.color};
  border-radius: 20px;
  padding: 3px 8px 3px 4px;
  box-shadow: 0 4px 14px var(--shadow-dark);
