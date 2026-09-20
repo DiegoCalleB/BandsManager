@@ -132,7 +132,9 @@
    --acc-ink → texto (versión oscurecida que pasa AA sobre claro)
    No son intercambiables: #D9A62B sobre blanco no llega a 4,5:1.       */
 
-[data-modulo="repertorio"] { --acc:#B85450; --acc-soft:#E8D2D0; --acc-ink:#7A3438; --on-acc:#FFFFFF; }
+[data-modulo="booking"],
+[data-modulo="panel"]      { --acc:#D86E31; --acc-soft:#F9EAE1; --acc-ink:#813F18; --on-acc:#FFFFFF; }
+[data-modulo="repertorio"] { --acc:#E0615C; --acc-soft:#FDE9E7; --acc-ink:#A83C37; --on-acc:#FFFFFF; }
 [data-modulo="gira"],
 [data-modulo="sala"]       { --acc:#17998C; --acc-soft:#DDF1EE; --acc-ink:#0E6B62; --on-acc:#FFFFFF; }
 [data-modulo="finanzas"]   { --acc:#3C7EA8; --acc-soft:#E2EDF4; --acc-ink:#24587A; --on-acc:#FFFFFF; }
@@ -140,7 +142,9 @@
 [data-modulo="reels"]      { --acc:#9B5FB5; --acc-soft:#F0E7F5; --acc-ink:#6F3D87; --on-acc:#FFFFFF; }
 [data-modulo="epk"]        { --acc:#6B4CE0; --acc-soft:#F0E7F9; --acc-ink:#4A2F8D; --on-acc:#FFFFFF; }
 
-[data-theme="dark"] [data-modulo="repertorio"] { --acc:#D9897F; --acc-soft:#3A2A27; --acc-ink:#D9897F; --on-acc:#2B1A17; }
+[data-theme="dark"] [data-modulo="booking"],
+[data-theme="dark"] [data-modulo="panel"]      { --acc:#E99463; --acc-soft:#3D2817; --acc-ink:#E99463; --on-acc:#1F130A; }
+[data-theme="dark"] [data-modulo="repertorio"] { --acc:#F08B84; --acc-soft:#2D1A17; --acc-ink:#F08B84; --on-acc:#1F1413; }
 [data-theme="dark"] [data-modulo="gira"],
 [data-theme="dark"] [data-modulo="sala"]       { --acc:#4FC7B8; --acc-soft:#122D29; --acc-ink:#4FC7B8; --on-acc:#08201C; }
 [data-theme="dark"] [data-modulo="finanzas"]   { --acc:#6FB0D9; --acc-soft:#14232E; --acc-ink:#6FB0D9; --on-acc:#0B1A24; }
