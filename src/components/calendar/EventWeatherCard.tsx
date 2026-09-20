@@ -395,7 +395,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  :'bg-[var(--alert-soft)] border-rose-500/50 text-rose-100 shadow-rose-950/30 shadow-md'
  : isStitchLight
  ?'bg-amber-100/70 text-[var(--acc)] shadow-xs'
- :'bg-[var(--acc-soft)] /40 text-amber-100 shadow-amber-950/20 shadow-md'
+ :'bg-[var(--acc-soft)] /40 text-[var(--acc)] shadow-amber-950/20 shadow-md'
  }`}
  >
  <div className="flex items-start justify-between gap-2">

@@ -91,7 +91,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
  <AlertTriangle className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span>{audit.title}</span>
  </div>
- <p className="text-[11px] text-amber-100/90 leading-relaxed">
+ <p className="text-[11px] text-[var(--acc)]/90 leading-relaxed">
  {audit.advice}
  </p>
  </div>

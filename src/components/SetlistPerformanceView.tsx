@@ -777,7 +777,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {/* NOTES BANNER — cosas como"cambio de afinación","entra el segundo cantante", que un
  músico necesita ver ANTES de tocar el tema, no descubrirlas a mitad. */}
  {!isBlock && showNotes && notes && (
- <div className="shrink-0 bg-[var(--acc-soft)] border-y /40 px-4 py-2.5 text-sm text-amber-100 whitespace-pre-wrap z-20">
+ <div className="shrink-0 bg-[var(--acc-soft)] border-y /40 px-4 py-2.5 text-sm text-[var(--acc)] whitespace-pre-wrap z-20">
  {notes}
  </div>
  )}
@@ -1287,7 +1287,7 @@ const ChordSheetPage: React.FC<{
 }) => {
  const hasMultipleSections = sections.length >= 2;
  const currentSection = hasMultipleSections ? sections[currentSectionIndex] : null;
- const chordTextClass = glareMode ?'text-black font-bold' :'text-amber-100';
+ const chordTextClass = glareMode ?'text-black font-bold' :'text-[var(--acc)]';
  const borderClass = glareMode ?'border-black/10' :'border-[var(--hair)]';
 
  return (

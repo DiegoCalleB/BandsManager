@@ -433,7 +433,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="space-y-1.5">
  <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
  <div className="bg-black/40 border-[var(--hair)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
- <pre className="text-[11px] font-mono text-amber-100 whitespace-pre-wrap leading-relaxed">
+ <pre className="text-[11px] font-mono text-[var(--acc)] whitespace-pre-wrap leading-relaxed">
  {song.cifradoTexto ||'Sin acordes guardados todavía.'}
  </pre>
  </div>

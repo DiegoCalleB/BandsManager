@@ -247,7 +247,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  {canUndo && (
  <button
  onClick={onUndo}
- className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-[11px] font-mono font-medium flex items-center gap-1"
  title="Deshacer el último cambio del setlist"
  >
  ↩️ Deshacer
@@ -354,7 +354,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <button
  type="button"
  onClick={() => handleUndo(idx)}
- className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-[10px] font-mono transition whitespace-nowrap"
  title="Deshacer este cambio"
  >
  ↩️ Deshacer
@@ -419,7 +419,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  value={comentarioFeedback}
  onChange={(e) => setComentarioFeedback(e.target.value)}
  placeholder="Ej:'Evita más de una balada seguida','el bis siempre un tema conocido'..."
- className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-[11px] text-[var(--sunken)] placeholder-[var(--ink-3)]500 font-sans focus:outline-none focus:"
+ className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-[11px] text-[var(--sunken)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
  />
  <div className="flex items-center gap-1.5 text-[10px] font-mono">
  <span className="text-[var(--ink-2)] uppercase tracking-wider">Alcance:</span>

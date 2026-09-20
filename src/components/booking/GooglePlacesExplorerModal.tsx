@@ -680,16 +680,16 @@ export function GooglePlacesExplorerModal({
  type="button"
  onClick={handleMassCampaignSearch}
  disabled={isMassCampaignSearching || isSearching}
- className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-zinc-950 font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-amber-500/20 cursor-pointer disabled:opacity-50 shrink-0"
+ className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-[var(--acc-ink)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-amber-500/20 cursor-pointer disabled:opacity-50 shrink-0"
  >
  {isMassCampaignSearching ? (
  <>
- <Loader2 className="w-4 h-4 animate-spin text-zinc-950" />
+ <Loader2 className="w-4 h-4 animate-spin text-[var(--acc-ink)]" />
  <span>Rastreando Ciudades...</span>
  </>
  ) : (
  <>
- <Sparkles className="w-4 h-4 text-zinc-950" />
+ <Sparkles className="w-4 h-4 text-[var(--acc-ink)]" />
  <span>Lanzar Búsqueda Masiva</span>
  </>
  )}

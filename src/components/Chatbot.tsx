@@ -1743,7 +1743,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <span>
  Autonomía: {autonomyConfig.dispatchLevel ==='draft_only' ?'Borrador' : autonomyConfig.dispatchLevel ==='scheduled_window' ?'Ventana 3h' :'Auto 1er Contacto'} • Min {autonomyConfig.minCacheThreshold || 300}€
  </span>
- <span className="px-1 py-0.2 text-[8px] rounded font-black bg-purple-500/40 text-purple-100 ml-0.5">
+ <span className="px-1 py-0.2 text-[8px] rounded font-black bg-purple-500/40 text-[var(--ink)] ml-0.5">
  ADMIN
  </span>
  </button>
@@ -2495,7 +2495,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] text-[var(--ink-2)] -neutral-800/40')
  }`}
  >
- <Send className={`w-4 h-4 ${isStitchLight && inputText.trim() ?'text-[var(--ink)]' :'text-zinc-950'}`} />
+ <Send className={`w-4 h-4 ${isStitchLight && inputText.trim() ?'text-[var(--ink)]' :'text-[var(--acc-ink)]'}`} />
  </button>
  </form>
 

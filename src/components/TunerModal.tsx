@@ -475,7 +475,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`px-2 py-1 rounded-md font-bold transition-all cursor-pointer ${
  isCatSelected
- ?'bg-emerald-500 text-zinc-950 shadow-xs'
+ ?'bg-emerald-500 text-[var(--acc-ink)] shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-white/5'
  }`}
  >
@@ -609,7 +609,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 ${
  isListening
  ?'bg-rose-500/20 hover:bg-rose-500/30 text-[var(--ink-2)] shadow-sm'
- :'bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black shadow-lg shadow-emerald-500/20'
+ :'bg-emerald-500 hover:bg-emerald-400 text-[var(--acc-ink)] font-black shadow-lg shadow-emerald-500/20'
  }`}
  >
  {isListening ? (
@@ -639,7 +639,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  togglePlayReferenceTone(currentPreset.strings[0].freq);
  }
  }}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-zinc-950 font-bold text-[10px] font-mono hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--acc-ink)] font-bold text-[10px] font-mono hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
  >
  <Volume2 className="w-3 h-3" />
  Afinar con Sintetizador ({currentPreset.strings[0]?.note})
@@ -680,7 +680,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-xs font-mono flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
  isTonePlaying
- ?'bg-[var(--acc)] text-zinc-950 font-black shadow-md scale-105'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md scale-105'
  : isSelected
  ?'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/60 font-bold'
  :'bg-white/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-white/10 hover:border-[var(--hair)]20'

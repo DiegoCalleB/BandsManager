@@ -2948,7 +2948,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={undoLastReorder}
- className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-amber-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
  title="Deshacer el último reordenamiento del setlist"
  >
  ↩️ Deshacer
@@ -4927,7 +4927,7 @@ export default function RepertorioSetlists({
  : statusBanner.type ==='error'
  ?'bg-[var(--alert-soft)] border-rose-700/60 text-rose-100'
  : statusBanner.type ==='warning'
- ?'bg-[var(--acc-soft)] /60 text-amber-100'
+ ?'bg-[var(--acc-soft)] /60 text-[var(--acc)]'
  :'bg-[var(--surface)] text-[var(--sunken)]'
  }`}
  >

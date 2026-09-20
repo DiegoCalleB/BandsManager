@@ -473,7 +473,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <Calendar className="w-6 h-6" />
  </div>
  <div>
- <p className="text-sm sm:text-base font-bold text-amber-100 flex items-center gap-2">
+ <p className="text-sm sm:text-base font-bold text-[var(--acc)] flex items-center gap-2">
  <span>Cambio de plan programado:</span>
  <span className="uppercase text-[var(--acc)] font-mono underline decoration-amber-500/60">
  {currentUser.plan_pendiente.replace('_','')}

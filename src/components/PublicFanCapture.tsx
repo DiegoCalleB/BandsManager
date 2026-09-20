@@ -157,7 +157,7 @@ export const PublicFanCapture: React.FC = () => {
  value={nombre}
  onChange={e => setNombre(e.target.value)}
  placeholder="Ej: Laura García"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-slate-500 outline-none transition"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
  />
  </div>
 
@@ -171,7 +171,7 @@ export const PublicFanCapture: React.FC = () => {
  value={email}
  onChange={e => setEmail(e.target.value)}
  placeholder="tuemail@ejemplo.com"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-slate-500 outline-none transition"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
  />
  </div>
 
@@ -185,7 +185,7 @@ export const PublicFanCapture: React.FC = () => {
  value={ciudad}
  onChange={e => setCiudad(e.target.value)}
  placeholder="Ej: Madrid"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-slate-500 outline-none transition"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
  />
  </div>
 
@@ -198,7 +198,7 @@ export const PublicFanCapture: React.FC = () => {
  value={comoConocio}
  onChange={e => setComoConocio(e.target.value)}
  placeholder="Ej: Directo / Instagram"
- className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-slate-500 outline-none transition"
+ className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
  />
  </div>
  </div>

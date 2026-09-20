@@ -1810,7 +1810,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  key={msg.id}
  className={`p-3.5 rounded-[var(--r-m)] space-y-1.5 text-xs font-sans ${
  msg.remitente ==='sala'
- ?'bg-[var(--acc-soft)] /40 text-amber-100'
+ ?'bg-[var(--acc-soft)] /40 text-[var(--acc)]'
  :'bg-[var(--bg)] border-[var(--hair)]800 text-[var(--ink)]'
  }`}
  >

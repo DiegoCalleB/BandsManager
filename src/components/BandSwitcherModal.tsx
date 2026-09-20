@@ -505,7 +505,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
  placeholder="Buscar proyecto..."
- className="w-full pl-9 pr-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:outline-none focus:/60"
+ className="w-full pl-9 pr-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:/60"
  />
  </div>
  )}
@@ -802,7 +802,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  placeholder="Ej: Los Nocturnos, KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑, Bakandeya..."
  required
  autoFocus
- className="w-full px-4 py-3 rounded-[var(--r-l)] text-sm bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:/70 focus:outline-none transition-colors shadow-inner font-bold"
+ className="w-full px-4 py-3 rounded-[var(--r-l)] text-sm bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:/70 focus:outline-none transition-colors shadow-inner font-bold"
  />
  </div>
 
@@ -816,7 +816,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={newBandLeaderName}
  onChange={(e) => setNewBandLeaderName(e.target.value)}
  placeholder="Ej: Kurt Cobain (Guitarra & Mánager)"
- className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:/70 focus:outline-none transition-colors"
+ className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:/70 focus:outline-none transition-colors"
  />
  </div>
 
@@ -831,7 +831,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={newBandStyle}
  onChange={(e) => setNewBandStyle(e.target.value)}
  placeholder="Ej: Rock, Indie, Mestizaje, Ska..."
- className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:/70 focus:outline-none transition-colors"
+ className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:/70 focus:outline-none transition-colors"
  />
  </div>
 
@@ -845,7 +845,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  value={newBandLocation}
  onChange={(e) => setNewBandLocation(e.target.value)}
  placeholder="Ej: Madrid, Barcelona, Valencia..."
- className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-3)]500 focus:/70 focus:outline-none transition-colors"
+ className="w-full px-4 py-2.5 rounded-[var(--r-l)] text-xs bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:/70 focus:outline-none transition-colors"
  />
  </div>
  </div>

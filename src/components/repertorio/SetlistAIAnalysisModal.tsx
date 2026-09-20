@@ -505,7 +505,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <button
  onClick={onUndo}
  onMouseDown={(e) => e.stopPropagation()}
- className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-[11px] font-mono font-medium flex items-center gap-1"
  title="Deshacer el último reordenamiento del setlist"
  >
  ↩️ Deshacer
@@ -724,7 +724,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  e.stopPropagation();
  handleUndoSuggestion(idx);
  }}
- className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-[10px] font-mono transition whitespace-nowrap"
  title="Deshacer este cambio de orden"
  >
  ↩️ Deshacer
@@ -743,7 +743,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  e.stopPropagation();
  handleApplySuggestion(idx);
  }}
- className="shrink-0 px-2 py-0.5 rounded bg-purple-700/50 hover:bg-purple-600 text-purple-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-purple-700/50 hover:bg-purple-600 text-[var(--ink)] font-bold text-[10px] font-mono transition whitespace-nowrap"
  title="Mover la canción a la posición sugerida"
  >
  ✓ Aplicar
