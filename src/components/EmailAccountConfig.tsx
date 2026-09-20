@@ -237,7 +237,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
 
  {status.connected && !editing && (
- <div className="flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-mono">
+ <div className="flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-full bg-[var(--ok)]/10 text-[var(--ok)] text-[11px] font-mono">
  <CheckCircle2 className="w-3.5 h-3.5" />
  <span>Conectado</span>
  </div>
@@ -268,10 +268,10 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
  ) : gmailOAuthStatus.connected ? (
  <div className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 ${
- 'bg-emerald-500/10 border-[var(--ok)]/20 text-[var(--ink)]'
+ 'bg-[var(--ok)]/10 border-[var(--ok)]/20 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
- <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+ <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
  <span className="truncate">
  Conectado como <strong>{gmailOAuthStatus.gmail_email}</strong>
  </span>
@@ -301,13 +301,13 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  {gmailOAuthFeedback && (
  <div className={`p-2.5 rounded-[var(--r-s)] text-[11px] flex items-center gap-2 animate-fadeIn ${
  gmailOAuthFeedback.type ==='success'
- ?'bg-emerald-500/10 text-[var(--ink-2)]'
- :'bg-rose-500/10 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/10 text-[var(--ink-2)]'
+ :'bg-[var(--alert)]/10 text-[var(--ink-2)]'
  }`}>
  {gmailOAuthFeedback.type ==='success' ? (
- <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+ <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-[var(--ok)]" />
  ) : (
- <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-400" />
+ <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[var(--alert)]" />
  )}
  <span>{gmailOAuthFeedback.message}</span>
  </div>
@@ -323,10 +323,10 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  {status.connected && !editing ? (
  <div className="space-y-3">
  <div className={`p-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 ${
- 'bg-emerald-500/10 border-[var(--ok)]/20 text-[var(--ink)]'
+ 'bg-[var(--ok)]/10 border-[var(--ok)]/20 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
- <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+ <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
  <span className="truncate">
  <strong>{status.email}</strong> ({PROVIDER_PRESETS[status.provider as'gmail' |'outlook']?.label ||'Otro proveedor'})
  </span>
@@ -439,13 +439,13 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  {feedback && (
  <div className={`p-3 rounded-[var(--r-m)] text-xs flex items-center gap-2 animate-fadeIn ${
  feedback.type ==='success'
- ?'bg-emerald-500/10 text-[var(--ink-2)]'
- :'bg-rose-500/10 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/10 text-[var(--ink-2)]'
+ :'bg-[var(--alert)]/10 text-[var(--ink-2)]'
  }`}>
  {feedback.type ==='success' ? (
- <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+ <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
  ) : (
- <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+ <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)]" />
  )}
  <span>{feedback.message}</span>
  </div>

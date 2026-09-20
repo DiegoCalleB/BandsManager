@@ -218,7 +218,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <Layers className="w-4 h-4 text-[var(--acc)]" />
  Pegatina / Stand de Merchan
  </span>
- <span className="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-md">
+ <span className="text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] px-2 py-0.5 rounded-md">
  Cuadrado 2400px
  </span>
  </div>
@@ -269,7 +269,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
  {/* Mensaje de Éxito */}
  {exportSuccess && (
- <div className="p-3 bg-emerald-500/10 rounded-[var(--r-m)] text-emerald-400 text-xs font-mono flex items-center gap-2">
+ <div className="p-3 bg-[var(--ok)]/10 rounded-[var(--r-m)] text-[var(--ok)] text-xs font-mono flex items-center gap-2">
  <Check className="w-4 h-4 shrink-0" />
  <span>{exportSuccess}</span>
  </div>

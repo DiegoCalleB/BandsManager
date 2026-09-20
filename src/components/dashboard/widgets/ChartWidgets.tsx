@@ -285,7 +285,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
 
  <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] text-xs font-mono">
  <span className="text-[var(--ink-2)]">Tasa de Conversión a Conciertos:</span>
- <span className="font-bold text-emerald-400 flex items-center gap-1">
+ <span className="font-bold text-[var(--ok)] flex items-center gap-1">
  <TrendingUp className="w-3.5 h-3.5" /> {conversionRate}% ({counts.confirmado} cierres)
  </span>
  </div>
@@ -335,7 +335,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
  <div className="flex items-center justify-between pb-2.5 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/15 text-emerald-400 shrink-0">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/15 text-[var(--ok)] shrink-0">
  <DollarSign className="w-5 h-5" />
  </div>
  <div>
@@ -361,7 +361,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  <div className="grid grid-cols-2 gap-2 font-mono text-xs text-center">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
  <span className="text-[10px] text-[var(--ink-2)] block uppercase">Ingresos Totales</span>
- <span className="font-bold text-emerald-400 text-sm">+{totalIngresos}€</span>
+ <span className="font-bold text-[var(--ok)] text-sm">+{totalIngresos}€</span>
  </div>
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
  <span className="text-[10px] text-[var(--ink-2)] block uppercase">Neto / Beneficio</span>
@@ -381,10 +381,10 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  const data = payload[0].payload;
  return (
  <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-[var(--ink)] z-50">
- <div className="font-bold text-emerald-400">{data.month}</div>
+ <div className="font-bold text-[var(--ok)]">{data.month}</div>
  <div className="text-[var(--ink-2)] mt-1 space-y-0.5">
- <div>Ingresos: <span className="font-bold text-emerald-400">+{data.ingresos}€</span></div>
- <div>Gastos: <span className="font-bold text-rose-400">-{data.gastos}€</span></div>
+ <div>Ingresos: <span className="font-bold text-[var(--ok)]">+{data.ingresos}€</span></div>
+ <div>Gastos: <span className="font-bold text-[var(--alert)]">-{data.gastos}€</span></div>
  <div>Caché Medio: <span className="font-bold text-[var(--acc)]">{data.cacheMedio}€</span></div>
  </div>
  </div>

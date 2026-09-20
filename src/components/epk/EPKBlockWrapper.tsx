@@ -64,7 +64,7 @@ export const EPKBlockWrapper: React.FC<EPKBlockWrapperProps> = ({
  onNavigate(prevBlock.id);
  window.scrollTo({ top: 0, behavior:'smooth' });
  }}
- className="px-2.5 sm:px-3.5 py-2 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-stone-300 hover:text-[var(--ink)] rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition border-[var(--hair)] cursor-pointer shrink-0"
+ className="px-2.5 sm:px-3.5 py-2 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition border-[var(--hair)] cursor-pointer shrink-0"
  title={`Ir al bloque anterior: ${prevBlock.label}`}
  >
  <ChevronLeft className="w-3.5 h-3.5" />

@@ -386,7 +386,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'
  }`}>
  Evolución de Redes Sociales & Base de Fans en BBDD
- <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-mono font-normal flex items-center gap-1">
+ <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)] font-mono font-normal flex items-center gap-1">
  <CheckCircle2 className="w-2.5 h-2.5" /> Supabase Conectada
  </span>
  </h3>
@@ -484,10 +484,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  'bg-[var(--surface)]/60 border-[var(--alert)]/40'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-red-400 flex items-center gap-1">
- <Youtube className="w-3.5 h-3.5 text-red-500" /> YouTube
+ <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
+ <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" /> YouTube
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-red-500/10 text-red-300 font-mono">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--alert)]/10 text-red-300 font-mono">
  Suscriptores
  </span>
  </div>
@@ -508,10 +508,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  'bg-[var(--surface)]/60 border-[var(--ok)]/40'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-emerald-400 flex items-center gap-1">
- <Music2 className="w-3.5 h-3.5 text-emerald-500" /> Spotify
+ <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[var(--ok)] flex items-center gap-1">
+ <Music2 className="w-3.5 h-3.5 text-[var(--ok)]" /> Spotify
  </span>
- <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-[var(--ink-2)] font-mono">
+ <span className="text-[8px] px-1.5 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ink-2)] font-mono">
  Oyentes/mes
  </span>
  </div>
@@ -550,7 +550,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="text-[9px] font-mono text-[var(--ink-2)] flex items-center justify-between gap-1 mt-1 border-t /20 pt-1">
  <span className="text-[var(--acc)]/70 font-bold">✨ {uneteFans} vía Únete</span>
  {directoFans > 0 && <span className="text-[var(--ink-2)]">🎤 {directoFans} directo</span>}
- <span className="text-emerald-400 font-bold">✓ RGPD</span>
+ <span className="text-[var(--ok)] font-bold">✓ RGPD</span>
  </div>
  </div>
  </div>
@@ -594,7 +594,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-[9px] font-mono ${
  'bg-[var(--ok-soft)] text-[var(--ink-2)] border-[var(--ok)]/20'
  }`}>
- <TrendingUp className="w-3 h-3 text-emerald-400" />
+ <TrendingUp className="w-3 h-3 text-[var(--ok)]" />
  <span>
  <b>{currentPeriodConfig.label}:</b> {periodGrowthSummary.diffFans >= 0 ? `+${periodGrowthSummary.diffFans}` : periodGrowthSummary.diffFans} fans
  {hasInstagram && ` • ${periodGrowthSummary.diffIg >= 0 ? `+${periodGrowthSummary.diffIg}` : periodGrowthSummary.diffIg} IG`}
@@ -700,18 +700,18 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => toggleChannel('youtube')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ?'bg-red-500 animate-pulse' :'bg-neutral-600'}`}></span>
- <Youtube className="w-3 h-3 text-red-500" />
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ?'bg-[var(--alert)] animate-pulse' :'bg-neutral-600'}`}></span>
+ <Youtube className="w-3 h-3 text-[var(--alert)]" />
  <span>YouTube</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-red-500/15 font-mono font-bold">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-mono font-bold">
  {countYouTube.toLocaleString()}
  </span>
- {selectedChannels.youtube ? <Eye className="w-3 h-3 text-red-400" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
+ {selectedChannels.youtube ? <Eye className="w-3 h-3 text-[var(--alert)]" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
  </button>
  <button
  type="button"
  onClick={() => selectOnlyChannel('youtube')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-red-500/20 text-red-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--alert)]/20 hover:bg-[var(--alert)]/20 text-[var(--alert)] cursor-pointer"
  title="Aislar sólo YouTube"
  >
  Solo
@@ -731,18 +731,18 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => toggleChannel('spotify')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ?'bg-emerald-500 animate-pulse' :'bg-neutral-600'}`}></span>
- <Music2 className="w-3 h-3 text-emerald-500" />
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ?'bg-[var(--ok)] animate-pulse' :'bg-neutral-600'}`}></span>
+ <Music2 className="w-3 h-3 text-[var(--ok)]" />
  <span>Spotify</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/15 font-mono font-bold">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--ok)]/15 font-mono font-bold">
  {countSpotify.toLocaleString()}
  </span>
- {selectedChannels.spotify ? <Eye className="w-3 h-3 text-emerald-400" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
+ {selectedChannels.spotify ? <Eye className="w-3 h-3 text-[var(--ok)]" /> : <EyeOff className="w-3 h-3 text-[var(--ink-2)]" />}
  </button>
  <button
  type="button"
  onClick={() => selectOnlyChannel('spotify')}
- className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--ok)]/20 hover:bg-emerald-500/20 text-emerald-400 cursor-pointer"
+ className="px-1.5 py-1 text-[8px] font-mono border-l border-[var(--ok)]/20 hover:bg-[var(--ok)]/20 text-[var(--ok)] cursor-pointer"
  title="Aislar sólo Spotify"
  >
  Solo
@@ -938,7 +938,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Footer Info & Direct Links */}
  <div className="mt-4 pt-3 border-t /60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-mono text-[var(--ink-2)]">
  <div className="flex items-center gap-3 flex-wrap">
- <span className="flex items-center gap-1 text-emerald-400">
+ <span className="flex items-center gap-1 text-[var(--ok)]">
  <ShieldCheck className="w-3.5 h-3.5" /> 100% Consentimiento RGPD ({verifiedRgpd} registros)
  </span>
  <span>•</span>

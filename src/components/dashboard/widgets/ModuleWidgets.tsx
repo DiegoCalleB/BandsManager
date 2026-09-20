@@ -136,7 +136,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/15 text-emerald-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/15 text-[var(--ok)]">
  <DollarSign className="w-5 h-5" />
  </div>
  <div>
@@ -160,7 +160,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
  <div>
- <span className="text-2xl font-mono font-black text-emerald-400">{totalCache.toLocaleString('es-ES')} €</span>
+ <span className="text-2xl font-mono font-black text-[var(--ok)]">{totalCache.toLocaleString('es-ES')} €</span>
  <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Suma de cachés de bolos</p>
  </div>
  <div className="text-right">
@@ -299,7 +299,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
  <span className="text-lg font-mono font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
  <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Pendientes de Aprobación Humana</p>
  </div>
- <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-[var(--ink-2)] text-[10px] font-mono font-bold">
+ <span className="px-2.5 py-1 rounded-full bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-mono font-bold">
  ● Activo
  </span>
  </div>

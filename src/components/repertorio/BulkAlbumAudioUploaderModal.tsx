@@ -638,7 +638,7 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => coverInputRef.current?.click()}
  className={`w-full py-2.5 px-3 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs font-mono font-bold cursor-pointer transition ${
  coverPreviewUrl
- ?'border-[var(--ok)] text-emerald-400 bg-emerald-500/10'
+ ?'border-[var(--ok)] text-[var(--ok)] bg-[var(--ok)]/10'
  : isStitchLight
  ?' bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
  :' bg-[var(--surface)] hover:bg-[var(--ink)]/5 text-[var(--ink-2)]'
@@ -700,8 +700,8 @@ export function BulkAlbumAudioUploaderModal({
  <div
  className={`p-4 rounded-[var(--r-l)] flex items-center gap-3 text-xs font-mono ${
  feedbackMsg.type ==='success'
- ?'bg-emerald-500/10 border-[var(--ok)]/30 text-emerald-400'
- :'bg-rose-500/10 border-[var(--alert)]/30 text-rose-400'
+ ?'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ok)]'
+ :'bg-[var(--alert)]/10 border-[var(--alert)]/30 text-[var(--alert)]'
  }`}
  >
  {feedbackMsg.type ==='success' ? (
@@ -717,7 +717,7 @@ export function BulkAlbumAudioUploaderModal({
  {isUploading && (
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 border-[var(--hair)] space-y-2">
  <div className="flex items-center justify-between text-xs font-mono">
- <span className="flex items-center gap-2 text-emerald-400 font-bold">
+ <span className="flex items-center gap-2 text-[var(--ok)] font-bold">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
  Subiendo pista {uploadProgress.current} de {uploadProgress.total}...
  </span>
@@ -753,9 +753,9 @@ export function BulkAlbumAudioUploaderModal({
  key={item.id || idx}
  className={`p-3.5 rounded-[var(--r-l)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 ${
  item.status ==='success'
- ?'border-[var(--ok)]/40 bg-emerald-500/10'
+ ?'border-[var(--ok)]/40 bg-[var(--ok)]/10'
  : item.status ==='error'
- ?'border-[var(--alert)]/40 bg-rose-500/10'
+ ?'border-[var(--alert)]/40 bg-[var(--alert)]/10'
  : isStitchLight
  ?'bg-[var(--bg)]'
  :'bg-[var(--surface)]/90'
@@ -841,7 +841,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`p-1 ${
  item.chordsSource ==='plantilla_generica'
  ?'text-[var(--acc)]'
- :'text-emerald-400'
+ :'text-[var(--ok)]'
  }`}
  title={
  item.chordsSource ==='plantilla_generica'
@@ -857,7 +857,7 @@ export function BulkAlbumAudioUploaderModal({
  </span>
  )}
  {item.status ==='uploading' && (
- <span className="p-1 text-emerald-400" title="Subiendo...">
+ <span className="p-1 text-[var(--ok)]" title="Subiendo...">
  <RefreshCw className="w-4 h-4 animate-spin" />
  </span>
  )}
@@ -877,7 +877,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`px-2 py-1 rounded text-[11px] font-mono flex items-center gap-1 ${
  item.chordsSource ==='plantilla_generica'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]'
- :'bg-emerald-500/20 text-emerald-400'
+ :'bg-[var(--ok)]/20 text-[var(--ok)]'
  }`}
  title={
  item.chordsSource ==='plantilla_generica'
@@ -896,7 +896,7 @@ export function BulkAlbumAudioUploaderModal({
  </span>
  )}
  {item.status ==='uploading' && (
- <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-[11px] font-mono flex items-center gap-1">
+ <span className="px-2 py-1 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[11px] font-mono flex items-center gap-1">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Subiendo
  </span>
  )}

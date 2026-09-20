@@ -230,7 +230,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <button
  type="button"
  onClick={handleResetDefaultOrder}
- className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-stone-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border-[var(--hair)] flex items-center gap-1 transition"
+ className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border-[var(--hair)] flex items-center gap-1 transition"
  title="Restablecer el orden estándar de fábrica"
  >
  <RotateCcw className="w-3 h-3 text-[var(--ink-2)]" />
@@ -282,7 +282,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
  item.isVisible
  ?'bg-[var(--acc)]/10 /20 text-[var(--acc)]'
- :'bg-[var(--surface)]/80 border-[var(--hair)] text-stone-600'
+ :'bg-[var(--surface)]/80 border-[var(--hair)] text-[var(--ink-3)]'
  }`}
  >
  <Icon className="w-4 h-4" />
@@ -315,7 +315,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  onClick={() => handleToggleVisibility(item.id)}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
  item.isVisible
- ?'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-stone-300 border-[var(--hair)]'
+ ?'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 border-[var(--hair)]'
  :'bg-[var(--alert-soft)] text-[var(--alert)] border-[var(--alert)]/60 hover:bg-[var(--alert-soft)]'
  }`}
  title={item.isVisible ?'Ocultar esta sección en el EPK' :'Mostrar esta sección en el EPK'}
@@ -330,8 +330,8 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  disabled={isFirst}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
  isFirst
- ?'opacity-30 cursor-not-allowed bg-stone-950 border-[var(--hair)] text-stone-600'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-stone-300 hover:text-[var(--ink)] border-[var(--hair)] cursor-pointer'
+ ?'opacity-30 cursor-not-allowed bg-stone-950 border-[var(--hair)] text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] border-[var(--hair)] cursor-pointer'
  }`}
  title="Subir posición"
  >
@@ -345,8 +345,8 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  disabled={isLast}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
  isLast
- ?'opacity-30 cursor-not-allowed bg-stone-950 border-[var(--hair)] text-stone-600'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-stone-300 hover:text-[var(--ink)] border-[var(--hair)] cursor-pointer'
+ ?'opacity-30 cursor-not-allowed bg-stone-950 border-[var(--hair)] text-[var(--ink-3)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] border-[var(--hair)] cursor-pointer'
  }`}
  title="Bajar posición"
  >

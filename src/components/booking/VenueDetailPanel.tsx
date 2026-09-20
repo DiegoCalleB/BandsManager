@@ -586,14 +586,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="w-full space-y-5 relative">
  {/* Feedback Alert for Bolo Confirmado */}
  {feedbackBoloMsg && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-emerald-500/20 text-[var(--ink-2)] font-mono text-xs font-bold flex items-center justify-between gap-2 shadow-lg animate-fadeIn">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--ok)]/20 text-[var(--ink-2)] font-mono text-xs font-bold flex items-center justify-between gap-2 shadow-lg animate-fadeIn">
  <div className="flex items-center gap-2">
- <Sparkles className="w-4 h-4 text-emerald-400" />
+ <Sparkles className="w-4 h-4 text-[var(--ok)]" />
  <span>{feedbackBoloMsg}</span>
  </div>
  <button
  onClick={() => setFeedbackBoloMsg(null)}
- className="text-emerald-400 hover:text-[var(--ink)] cursor-pointer"
+ className="text-[var(--ok)] hover:text-[var(--ink)] cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -657,7 +657,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="p-2 rounded-[var(--r-m)] bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
  title="Eliminar y guardar en lista negra"
  >
- <Trash2 className="w-4 h-4 text-rose-400" />
+ <Trash2 className="w-4 h-4 text-[var(--alert)]" />
  </button>
  )}
  <button
@@ -746,7 +746,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  rel="noreferrer"
  className="py-2.5 px-3 bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
  >
- <MessageCircle className="w-4 h-4 text-emerald-400" />
+ <MessageCircle className="w-4 h-4 text-[var(--ok)]" />
  <span>WhatsApp Directo</span>
  </a>
  ) : null}
@@ -817,7 +817,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  if (isApproved) {
  return (
- <div className="p-2.5 bg-emerald-500/10 rounded-[var(--r-m)] flex items-center justify-between gap-2.5">
+ <div className="p-2.5 bg-[var(--ok)]/10 rounded-[var(--r-m)] flex items-center justify-between gap-2.5">
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0 ml-1" />
  <div className="min-w-0">
@@ -857,7 +857,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  setIsCreatingDraft(false);
  }
  }}
- className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+ className="px-3 py-1.5 bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
  title="Forzar el despacho inmediato de este correo por el Agente Enviador"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
@@ -1135,7 +1135,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={() => setEditedLeadInfo(prev => ({ ...prev, imagen_url:'' }))}
- className="text-[10px] text-rose-400 hover:underline px-2 py-1 cursor-pointer"
+ className="text-[10px] text-[var(--alert)] hover:underline px-2 py-1 cursor-pointer"
  >
  Quitar
  </button>
@@ -1647,8 +1647,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
  {/* Success Banner */}
  {feedbackSuccessMsg && (
- <div className="p-2 bg-emerald-500/20 rounded-[var(--r-s)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-2">
- <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+ <div className="p-2 bg-[var(--ok)]/20 rounded-[var(--r-s)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-2">
+ <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
  <span>{feedbackSuccessMsg}</span>
  </div>
  )}
@@ -1678,7 +1678,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  >
  <span>{m.icon}</span>
  <span>{m.name}</span>
- <span className="font-mono text-[9px] text-emerald-400 bg-[var(--sunken)] px-1 py-0.2 rounded">
+ <span className="font-mono text-[9px] text-[var(--ok)] bg-[var(--sunken)] px-1 py-0.2 rounded">
  {m.cost}
  </span>
  </button>
@@ -1903,9 +1903,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all cursor-pointer ${
  interactionResultado === res
  ? res ==='Interesado' || res ==='Acuerdo cerrado'
- ?'bg-emerald-500/30 text-[var(--ink-2)] font-bold'
+ ?'bg-[var(--ok)]/30 text-[var(--ink-2)] font-bold'
  : res ==='Rechazado'
- ?'bg-rose-500/30 text-[var(--ink-2)] font-bold'
+ ?'bg-[var(--alert)]/30 text-[var(--ink-2)] font-bold'
  :'bg-sky-500/30 text-sky-300 font-bold'
  :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
  }`}
@@ -1971,7 +1971,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <button
  type="button"
  onClick={() => handleDeleteInteractionLog(log.id)}
- className="text-[var(--ink-2)] hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--alert)] opacity-0 group-hover:opacity-100 transition-opacity p-0.5 cursor-pointer"
  title="Borrar entrada"
  >
  <Trash2 className="w-3 h-3" />
@@ -1984,9 +1984,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <span
  className={`inline-block text-[9px] px-1.5 py-0.2 rounded font-bold ${
  log.resultado ==='Interesado' || log.resultado ==='Acuerdo cerrado'
- ?'bg-emerald-500/20 text-emerald-400'
+ ?'bg-[var(--ok)]/20 text-[var(--ok)]'
  : log.resultado ==='Rechazado'
- ?'bg-rose-500/20 text-rose-400'
+ ?'bg-[var(--alert)]/20 text-[var(--alert)]'
  :'bg-sky-500/20 text-sky-400'
  }`}
  >

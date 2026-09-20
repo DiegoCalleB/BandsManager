@@ -74,7 +74,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  </button>
 
  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
- <Plus className="w-5 h-5 text-indigo-500" />
+ <Plus className="w-5 h-5 text-[var(--tentative)]" />
  Nueva Transacción
  </h3>
 
@@ -89,7 +89,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setTipo('ingreso')}
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
  tipo ==='ingreso'
- ?'bg-emerald-500/20 text-emerald-400 border-[var(--ok)]'
+ ?'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]'
  :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent hover:bg-[var(--surface)]'
  }`}
  >
@@ -100,7 +100,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setTipo('gasto')}
  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
  tipo ==='gasto'
- ?'bg-rose-500/20 text-rose-400 border-[var(--alert)]'
+ ?'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--alert)]'
  :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent hover:bg-[var(--surface)]'
  }`}
  >
@@ -182,7 +182,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  onClick={() => setEstado('pagado')}
  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
  estado ==='pagado'
- ?'bg-emerald-500/20 text-emerald-400 border-[var(--ok)]'
+ ?'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]'
  :'bg-[var(--surface)]/40 text-[var(--ink-2)] border-transparent'
  }`}
  >
@@ -206,7 +206,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  <button
  type="submit"
  disabled={isSubmitting}
- className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-indigo-600 hover:bg-indigo-500 text-[var(--ink)] transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+ className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50"
  >
  {isSubmitting ?'Guardando...' :'Guardar Transacción'}
  </button>

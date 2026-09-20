@@ -168,7 +168,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  return {
  label:'Superfan Directos',
  icon: Flame,
- bg:'bg-rose-500/15 text-[var(--ink-2)] border-[var(--alert)]/30',
+ bg:'bg-[var(--alert)]/15 text-[var(--ink-2)] border-[var(--alert)]/30',
  dot:'bg-rose-400'
  };
  case'backstage':
@@ -182,7 +182,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  return {
  label:'Oyente Fiel',
  icon: Music,
- bg:'bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30',
+ bg:'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30',
  dot:'bg-emerald-400'
  };
  }
@@ -383,8 +383,8 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  <span>{badge.label}</span>
  </span>
  {fan.consentimientoRGPD && (
- <span className="text-[10px] text-emerald-400/80 font-mono flex items-center gap-0.5" title="Consentimiento RGPD Verificado">
- <ShieldCheck className="w-3 h-3 text-emerald-400" />
+ <span className="text-[10px] text-[var(--ok)]/80 font-mono flex items-center gap-0.5" title="Consentimiento RGPD Verificado">
+ <ShieldCheck className="w-3 h-3 text-[var(--ok)]" />
  </span>
  )}
  </div>
@@ -431,7 +431,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onDeleteFan(fan.id);
  }
  }}
- className="p-1.5 text-[var(--ink-2)] hover:text-rose-400 bg-[var(--surface)] hover:bg-rose-500/10 rounded-[var(--r-s)] hover:border-[var(--alert)]/30 transition opacity-60 group-hover:opacity-100"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] bg-[var(--surface)] hover:bg-[var(--alert)]/10 rounded-[var(--r-s)] hover:border-[var(--alert)]/30 transition opacity-60 group-hover:opacity-100"
  title="Eliminar Fan"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -472,7 +472,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onClick={() => handleReactFan(fan.id,'likes')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.likes 
- ?'bg-rose-500/20 text-[var(--ink-2)] shadow-xs font-bold' 
+ ?'bg-[var(--alert)]/20 text-[var(--ink-2)] shadow-xs font-bold' 
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  title="Me gusta"
@@ -514,7 +514,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onClick={() => handleReactFan(fan.id,'applause')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.applause 
- ?'bg-emerald-500/20 text-[var(--ink-2)] shadow-xs font-bold' 
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] shadow-xs font-bold' 
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  title="Aplausos"

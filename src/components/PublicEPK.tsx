@@ -606,7 +606,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  href={c.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-400 transition-colors"
+ className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] text-white text-xs font-bold hover:bg-emerald-400 transition-colors"
  >
  <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
  </a>
@@ -664,7 +664,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  onClick={handleShare}
  className={`flex items-center gap-1.5 px-3 py-1.5 ${styles.topBarBtn} text-xs sm:text-sm font-medium rounded-[var(--r-s)] transition`}
  >
- {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
+ {copiedLink ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Share2 className="w-4 h-4" />}
  <span>{copiedLink ? t('enlaceCopiado') : t('compartir')}</span>
  </button>
  </div>

@@ -438,14 +438,14 @@ export function diagnoseTransition(songA: Song, songB: Song): TransitionDiagnosi
   // Determine Verdict & Artistic Intent
   let verdictStatus: TransitionVerdict['status'] = 'buena';
   let badgeLabel = 'Transición Favorable';
-  let badgeClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
+  let badgeClass = 'bg-[var(--ok)]/15 text-[var(--ok)] border-emerald-500/30';
   let summary = 'Enlace recomendado con buen flujo musical y dinámico.';
   let artisticIntent = 'Mantiene la atención y enriquece la narrativa del concierto.';
 
   if (clampedScore >= 90) {
     verdictStatus = 'excelente';
     badgeLabel = '🟢 Enlace Impecable';
-    badgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm';
+    badgeClass = 'bg-[var(--ok)]/20 text-emerald-300 border-emerald-500/50 shadow-sm';
     summary = 'Transición perfecta en armonía y tempo. Flujo ideal para sonar como una banda de primer nivel.';
     artisticIntent = 'Conexión orgánica sin fisuras que maximiza el impacto en directo.';
   } else if (clampedScore >= 70) {
@@ -463,7 +463,7 @@ export function diagnoseTransition(songA: Song, songB: Song): TransitionDiagnosi
   } else {
     verdictStatus = 'desaconsejada';
     badgeLabel = '🔴 Choque / Desaconsejada Directa';
-    badgeClass = 'bg-rose-500/20 text-rose-300 border-rose-500/50';
+    badgeClass = 'bg-[var(--alert)]/20 text-rose-300 border-rose-500/50';
     summary = 'Choque armónico o corte dinámico severo. Se aconseja meter un bloque hablado o cambiar el orden.';
     artisticIntent = 'Riesgo alto de desafinación o desconexión del público.';
   }

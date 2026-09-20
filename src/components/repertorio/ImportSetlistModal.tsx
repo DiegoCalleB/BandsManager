@@ -255,7 +255,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
 
  {error && (
  <div className="bg-red-900/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
- <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+ <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
  <p className="text-sm text-red-300">{error}</p>
  </div>
  )}
@@ -302,7 +302,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <Music className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />"{it.detectedTitle}"
  </span>
  {it.action ==='link_matched' && (
- <span className="text-[10px] text-emerald-400 font-mono whitespace-nowrap">✓ {it.matchedSongTitle}</span>
+ <span className="text-[10px] text-[var(--ok)] font-mono whitespace-nowrap">✓ {it.matchedSongTitle}</span>
  )}
  </div>
  <div className="flex flex-wrap items-center gap-1.5">

@@ -361,8 +361,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  </form>
 
  {errorMsg && (
- <div className="p-3.5 rounded-[var(--r-l)] bg-rose-500/15 text-[var(--ink-2)] text-xs font-mono flex items-center gap-2.5">
- <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+ <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--alert)]/15 text-[var(--ink-2)] text-xs font-mono flex items-center gap-2.5">
+ <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)]" />
  <span>{errorMsg}</span>
  </div>
  )}
@@ -551,8 +551,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <span
  className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
  album.albumType ==='album'
- ?'bg-indigo-500/20 text-indigo-400'
- :'bg-emerald-500/20 text-emerald-400'
+ ?'bg-[var(--tentative)]/20 text-[var(--tentative)]'
+ :'bg-[var(--ok)]/20 text-[var(--ok)]'
  }`}
  >
  {album.albumType ==='album' ?'Álbum' :'Single / EP'}

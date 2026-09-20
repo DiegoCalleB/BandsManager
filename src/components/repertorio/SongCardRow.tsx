@@ -132,9 +132,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  isDragging
  ?'opacity-30 scale-[0.98] border-dashed border-[var(--ok)]'
  : isDragOver
- ?'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-emerald-500/10'
+ ?'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-[var(--ok)]/10'
  : isPlayingCurrent
- ? 'bg-emerald-500/10 border-[var(--ok)]/30 text-[var(--ink)] shadow-sm ring-1 ring-emerald-500/20'
+ ? 'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ink)] shadow-sm ring-1 ring-emerald-500/20'
  : isSelected
  ? 'bg-[var(--acc)]/10 /30 text-[var(--ink)]'
  : isStitchLight
@@ -173,10 +173,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onPlay}
  className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full flex items-center justify-center transition-all cursor-pointer ${
  isPlaying
- ?'bg-emerald-500 text-[var(--ink)] shadow-md scale-105'
+ ?'bg-[var(--ok)] text-[var(--ink)] shadow-md scale-105'
  : isStitchLight
- ?'bg-[var(--sunken)] hover:bg-emerald-500 text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-emerald-500 text-[var(--ink-2)] hover:text-[var(--ink)] group-hover:scale-105 shadow-xs'
+ ?'bg-[var(--sunken)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ :'bg-[var(--surface)]/80 hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)] group-hover:scale-105 shadow-xs'
  }`}
  title={isPlaying ?'Pausar canción' : `Reproducir ${displayTitle}`}
  >
@@ -218,7 +218,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  isPlayingCurrent
  ? isStitchLight
  ?'text-emerald-900 font-bold'
- :'text-emerald-400 font-bold'
+ :'text-[var(--ok)] font-bold'
  : isStitchLight
  ?'text-[var(--ink)] hover:text-indigo-600'
  :'text-[var(--ink-2)] group-hover:text-[var(--ink)]'
@@ -270,7 +270,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <span
  className={`px-2 py-0.5 rounded-full text-[10px] font-medium tracking-wide ${
  song.estadoTema ==='listo'
- ?'bg-emerald-500/15 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/15 text-[var(--ink-2)]'
  : song.estadoTema ==='ensayando'
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -290,12 +290,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
  {/* Audio Indicator */}
  {song.audioPrincipalUrl ? (
- <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-[var(--ink-2)]">
+ <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ink-2)]">
  <Volume2 className="w-2.5 h-2.5" />
  <span>{isDriveAudio ?'Drive' :'Audio'}</span>
  </span>
  ) : ideasCount > 0 ? (
- <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300">
+ <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--tentative)]/15 text-indigo-300">
  <Headphones className="w-2.5 h-2.5" />
  <span>{ideasCount} ideas</span>
  </span>
@@ -318,7 +318,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  type="button"
  onClick={onOpenChords}
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
- 'bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/25'
+ 'bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/25'
  }`}
  title="Ver cifrado de acordes, armonía y letra (LaCuerda.net)"
  >
@@ -465,7 +465,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <button
  type="button"
  onClick={() => { setShowMenu(false); onOpenChords(); }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-emerald-500/20 text-emerald-400 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ok)]/20 text-[var(--ok)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
  >
  <FileText className="w-3.5 h-3.5" />
  <span>Ver Acordes</span>
@@ -500,9 +500,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  setShowMenu(false);
  onOpenStudio();
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-indigo-500/20 text-indigo-300 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--tentative)]/20 text-indigo-300 transition-colors flex items-center gap-2 cursor-pointer font-bold"
  >
- <Headphones className="w-3.5 h-3.5 text-indigo-400" />
+ <Headphones className="w-3.5 h-3.5 text-[var(--tentative)]" />
  <span>Abrir Studio / Grabadora</span>
  </button>
  )}
@@ -531,7 +531,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  setShowMenu(false);
  onShareSong();
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-emerald-500/20 text-emerald-400 transition-colors flex items-center gap-2 cursor-pointer"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ok)]/20 text-[var(--ok)] transition-colors flex items-center gap-2 cursor-pointer"
  >
  <Share2 className="w-3.5 h-3.5" />
  <span>Compartir por WhatsApp</span>
@@ -594,7 +594,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  setShowMenu(false);
  onDeleteSong();
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-rose-500/20 text-rose-400 transition-colors flex items-center gap-2 cursor-pointer"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--alert)]/20 text-[var(--alert)] transition-colors flex items-center gap-2 cursor-pointer"
  >
  <Trash2 className="w-3.5 h-3.5" />
  <span>Eliminar Canción</span>

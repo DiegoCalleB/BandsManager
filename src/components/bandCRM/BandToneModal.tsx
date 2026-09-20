@@ -290,7 +290,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </p>
  {!isLoading && toneData && !isEditing && isSaved !== undefined && (
  isSaved ? (
- <p className="text-[10px] text-emerald-400 font-mono flex items-center gap-1 mt-0.5">
+ <p className="text-[10px] text-[var(--ok)] font-mono flex items-center gap-1 mt-0.5">
  <Check className="w-3 h-3" /> Guardado: la IA usará este tono en tus próximos Reels, Shorts y TikToks
  </p>
  ) : (
@@ -458,14 +458,14 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
 
  {saveError && (
- <p className="text-[10px] font-mono text-red-400">{saveError}</p>
+ <p className="text-[10px] font-mono text-[var(--alert)]">{saveError}</p>
  )}
 
  <div className="flex items-center gap-2 pt-1">
  <button
  onClick={handleSaveEdit}
  disabled={isSaving}
- className="flex-1 py-2.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-[var(--ink)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+ className="flex-1 py-2.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-[var(--ok)] disabled:opacity-50 text-[var(--ink)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
  >
  <Save className="w-3.5 h-3.5" /> {isSaving ?'Guardando...' :'Guardar cambios'}
  </button>
@@ -498,7 +498,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
  <span className="text-[var(--ink-2)] uppercase tracking-wider block text-[9px]">Nivel de Energía</span>
- <span className="font-bold text-emerald-400 block text-xs mt-0.5">
+ <span className="font-bold text-[var(--ok)] block text-xs mt-0.5">
  {toneData.nivel_energia ||'Alta / Explosiva'}
  </span>
  </div>
@@ -553,7 +553,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {/* Frases reales de directo: se acumulan solas desde transcripciones de conciertos, no se editan aquí. */}
  {toneData.frases_directo_extraidas && toneData.frases_directo_extraidas.length > 0 && (
  <div className="pt-1.5 border-t space-y-1">
- <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-emerald-400/90 block">
+ <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ok)]/90 block">
  🎤 Frases reales dichas en directo (de vuestros propios conciertos):
  </span>
  <div className="space-y-1">
@@ -614,14 +614,14 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {toneData.pitch_personalizado_ejemplo && (
  <div className="space-y-1.5 pt-1">
  <div className="flex items-center justify-between">
- <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+ <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--ok)] flex items-center gap-1.5">
  <MessageCircle className="w-3.5 h-3.5" /> Pitch Adaptado a su Forma de Expresarse
  </label>
  <button
  onClick={() => handleCopy(toneData.pitch_personalizado_ejemplo ||'')}
  className="px-2 py-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
  >
- {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+ {copied ? <Check className="w-3 h-3 text-[var(--ok)]" /> : <Copy className="w-3 h-3" />}
  {copied ?'¡Copiado!' :'Copiar Texto'}
  </button>
  </div>
@@ -643,7 +643,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onUseTailoredPitch(toneData.pitch_personalizado_ejemplo ||'');
  onClose();
  }}
- className="w-full py-2.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-900/20 transition-all"
+ className="w-full py-2.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-900/20 transition-all"
  >
  <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch Personalizado en Co-Booking
  </button>
@@ -694,7 +694,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onClick={() => handleDeleteLearnedRule('pitch', cat,'manual', idx)}
  disabled={savingManual}
  title="Quitar esta regla manual"
- className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+ className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity cursor-pointer disabled:opacity-50"
  >
  ✕
  </button>
@@ -711,7 +711,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onClick={() => handleDeleteLearnedRule('pitch', cat,'auto', idx)}
  disabled={savingAuto}
  title="Quitar esta regla (p. ej. si contradice tu configuración manual)"
- className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+ className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity cursor-pointer disabled:opacity-50"
  >
  ✕
  </button>
@@ -720,12 +720,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </ul>
  )}
  {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
- <p className="text-[9px] font-mono text-emerald-400/80">
+ <p className="text-[9px] font-mono text-[var(--ok)]/80">
  Vocabulario favorito: {reglas.vocabulario_aprendido.join(',')}
  </p>
  )}
  {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
- <p className="text-[9px] font-mono text-red-400/80">
+ <p className="text-[9px] font-mono text-[var(--alert)]/80">
  Términos prohibidos: {reglas.terminos_a_evitar.join(',')}
  </p>
  )}
@@ -804,7 +804,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onClick={() => handleDeleteLearnedRule('reply', cat,'manual', idx)}
  disabled={savingManual}
  title="Quitar esta regla manual"
- className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+ className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity cursor-pointer disabled:opacity-50"
  >
  ✕
  </button>
@@ -821,7 +821,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onClick={() => handleDeleteLearnedRule('reply', cat,'auto', idx)}
  disabled={savingAuto}
  title="Quitar esta regla (p. ej. si contradice tu configuración manual de Estrategias de Respuesta)"
- className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+ className="shrink-0 opacity-0 group-hover:opacity-100 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity cursor-pointer disabled:opacity-50"
  >
  ✕
  </button>
@@ -830,12 +830,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </ul>
  )}
  {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
- <p className="text-[9px] font-mono text-emerald-400/80">
+ <p className="text-[9px] font-mono text-[var(--ok)]/80">
  Vocabulario favorito: {reglas.vocabulario_aprendido.join(',')}
  </p>
  )}
  {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
- <p className="text-[9px] font-mono text-red-400/80">
+ <p className="text-[9px] font-mono text-[var(--alert)]/80">
  Términos prohibidos: {reglas.terminos_a_evitar.join(',')}
  </p>
  )}

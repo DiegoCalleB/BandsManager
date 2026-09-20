@@ -400,7 +400,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  }`}
  title="Exportar canciones de la discografía a Excel, M3U playlist, TXT o PDF"
  >
- <Download className="w-3.5 h-3.5 text-emerald-400" />
+ <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Exportar</span>
  </button>
 
@@ -442,9 +442,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
  }`}
  >
- <FolderUp className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+ <FolderUp className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
  <span>
- <span className="text-xs font-semibold text-emerald-400 block">Subir Disco (MP3/WAV)</span>
+ <span className="text-xs font-semibold text-[var(--ok)] block">Subir Disco (MP3/WAV)</span>
  <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">Arrastra archivos de audio desde tu ordenador.</span>
  </span>
  </button>
@@ -455,9 +455,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
  }`}
  >
- <Disc className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+ <Disc className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
  <span>
- <span className="text-xs font-semibold text-emerald-400 block">🟢 Traer de Spotify</span>
+ <span className="text-xs font-semibold text-[var(--ok)] block">🟢 Traer de Spotify</span>
  <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">Importa la discografía completa de la banda.</span>
  </span>
  </button>
@@ -698,7 +698,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={handlePlayAlbum}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
  title={isPlayingAlbum ?'Pausar disco' :'Reproducir disco'}
  >
  {isPlayingAlbum ? (
@@ -770,7 +770,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={() => onRequestDeleteAlbum(album, sortedAlbumSongs.length)}
- className="p-1.5 rounded-[var(--r-m)] bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors cursor-pointer shrink-0"
+ className="p-1.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)] transition-colors cursor-pointer shrink-0"
  title="Eliminar álbum"
  >
  <Trash2 className="w-3.5 h-3.5" />

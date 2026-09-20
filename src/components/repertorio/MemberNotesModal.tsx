@@ -197,7 +197,7 @@ export function MemberNotesModal({
  return (
  <div className="flex items-center gap-2 flex-wrap pt-3 text-[11px] font-mono">
  <span className="text-[var(--ink-2)] uppercase font-bold">Preparación de la banda:</span>
- <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">✅ {summary.lista} listos</span>
+ <span className="px-2 py-0.5 rounded-full bg-[var(--ok)]/10 text-[var(--ok)]">✅ {summary.lista} listos</span>
  <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-[var(--acc)]/80">🔶 {summary.casiLista} casi</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]">🌱 {summary.aprendiendo} aprendiendo</span>
  {summary.sinOpinar > 0 && (
@@ -336,7 +336,7 @@ export function MemberNotesModal({
  </div>
 
  {hasNote && (
- <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+ <span className="text-[10px] font-mono font-bold text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded-full flex items-center gap-1">
  <Check className="w-3 h-3" /> Con notas
  </span>
  )}
@@ -392,7 +392,7 @@ export function MemberNotesModal({
  onClick={handleSave}
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer shadow-lg ${
  savedSuccess 
- ?'bg-emerald-500 text-[var(--ink)]' 
+ ?'bg-[var(--ok)] text-[var(--ink)]' 
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >

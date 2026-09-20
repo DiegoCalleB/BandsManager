@@ -554,7 +554,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  w.type ==='warning'
  ?'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
  : w.type ==='success'
- ?'bg-emerald-500/10 text-[var(--ink-2)] border-[var(--ok)]/30'
+ ?'bg-[var(--ok)]/10 text-[var(--ink-2)] border-[var(--ok)]/30'
  :'bg-sky-500/10 text-sky-300 border-[var(--acc)]/30'
  } ${isHighlighted ?'ring-2 ring-white/60' :''}`}
  style={{ cursor: hasSongs ?'pointer' :'default' }}
@@ -611,7 +611,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  {error && (
  <div className="bg-red-900/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
- <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+ <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
  <div>
  <p className="font-medium text-red-200">Error</p>
  <p className="text-sm text-red-300">{error}</p>
@@ -734,7 +734,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  if (appliedSuggestionIndices.has(idx)) {
  // Se aplicó, pero luego se aplicó/arrastró otra cosa encima — el
  // snapshot de un solo nivel ya no puede revertir justo esto.
- return <span className="text-[10px] text-emerald-400 font-mono font-medium whitespace-nowrap">✓ Aplicado</span>;
+ return <span className="text-[10px] text-[var(--ok)] font-mono font-medium whitespace-nowrap">✓ Aplicado</span>;
  }
  return (
  <button

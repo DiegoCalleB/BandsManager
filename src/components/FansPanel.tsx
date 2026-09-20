@@ -612,7 +612,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
  <p className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-widest mb-2 font-mono">Consentimiento RGPD</p>
- <h3 className="text-4xl font-black text-emerald-400 font-display flex items-center gap-2">
+ <h3 className="text-4xl font-black text-[var(--ok)] font-display flex items-center gap-2">
  <ShieldCheck className="w-8 h-8" />
  100%
  </h3>
@@ -810,7 +810,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  type="button"
  onClick={(e) => handleRemoveCityTab(city, e)}
- className={`p-0.5 rounded-full hover:bg-rose-500/30 transition opacity-60 group-hover/city:opacity-100 ${
+ className={`p-0.5 rounded-full hover:bg-[var(--alert)]/30 transition opacity-60 group-hover/city:opacity-100 ${
  isSelected ?'hover:text-[var(--alert)] text-[var(--ink)]' :'hover:text-[var(--ink-2)] text-[var(--ink-2)]'
  }`}
  title={`Eliminar pestaña ${city}`}
@@ -1000,7 +1000,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onDeleteFan(fan.id);
  }
  }}
- className="p-1.5 text-[var(--ink-2)] hover:bg-rose-500/20 hover:text-rose-400 rounded-[var(--r-s)] transition cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:bg-[var(--alert)]/20 hover:text-[var(--alert)] rounded-[var(--r-s)] transition cursor-pointer"
  title="Eliminar Fan"
  >
  <Trash2 className="w-4 h-4" />
@@ -1024,7 +1024,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="flex items-center justify-between text-[10px] font-mono text-[var(--ink-2)] pt-1">
  <span>Registrado: {fan.fechaCaptura ||'Reciente'}</span>
  {fan.consentimientoRGPD && (
- <span className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+ <span className="text-[var(--ok)] font-bold flex items-center gap-1 bg-[var(--ok)]/10 px-2 py-0.5 rounded-full">
  <Check className="w-3 h-3" /> RGPD Ok
  </span>
  )}
@@ -1116,12 +1116,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <td className="p-3 font-mono text-[10px] text-[var(--ink-2)] uppercase tracking-wider">
  {fan.comoConocio ||'-'}
  </td>
- <td className="p-3 text-[11px] text-emerald-400 font-mono">
+ <td className="p-3 text-[11px] text-[var(--ok)] font-mono">
  {fan.conciertoOrigenNombre ||'-'}
  </td>
  <td className="p-3 text-center">
  {fan.consentimientoRGPD ? (
- <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-emerald-500/10 text-emerald-400">
+ <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-[var(--ok)]/10 text-[var(--ok)]">
  <Check className="w-3.5 h-3.5" />
  </span>
  ) :'-'}
@@ -1133,7 +1133,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onDeleteFan(fan.id);
  }
  }}
- className="p-1.5 text-[var(--ink-2)] hover:bg-rose-500 hover:text-[var(--ink)] rounded transition opacity-0 group-hover:opacity-100 cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:bg-[var(--alert)] hover:text-[var(--ink)] rounded transition opacity-0 group-hover:opacity-100 cursor-pointer"
  >
  <Trash2 className="w-4 h-4" />
  </button>
@@ -1327,7 +1327,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  Recompensa / Incentivo para el Fan
  </label>
  {savedIncentive && (
- <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
+ <span className="text-[11px] font-mono text-[var(--ok)] flex items-center gap-1">
  <CheckCircle2 className="w-3.5 h-3.5" /> ¡Guardado!
  </span>
  )}
@@ -1521,7 +1521,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  }}
  className={`w-full py-2.5 px-3 font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer shadow-md ${
  savedToConcertFeedback
- ?'bg-emerald-500 text-[var(--ink)]'
+ ?'bg-[var(--ok)] text-[var(--ink)]'
  :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)]'
  }`}
  >

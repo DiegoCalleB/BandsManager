@@ -111,10 +111,10 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => setIsAddSongsModalOpen(true)}
- className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-emerald-500/15 text-[var(--ink-2)] hover:bg-emerald-500/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs shrink-0"
+ className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs shrink-0"
  title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
  >
- <ListPlus className="w-3.5 h-3.5 text-emerald-400" />
+ <ListPlus className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>+ Añadir Temas</span>
  </button>
 
@@ -151,7 +151,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => handleAddItemToSetlist(undefined,'bloque_header','⚡ Bloque Nuevo')}
- className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
+ className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-indigo-300 hover:bg-[var(--tentative)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
  title="Añadir un encabezado de bloque para estructurar el concierto"
  >
  <span>⚡</span>
@@ -276,7 +276,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  type="button"
  onClick={handleCreateShortcut}
  disabled={!newShortcutLabel.trim()}
- className="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-medium text-xs disabled:opacity-40 cursor-pointer"
+ className="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs disabled:opacity-40 cursor-pointer"
  >
  Guardar
  </button>
@@ -318,7 +318,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  e.stopPropagation();
  handleDeleteShortcut(sc.id);
  }}
- className="px-1.5 py-1 text-[var(--ink-2)] hover:text-rose-400 transition cursor-pointer"
+ className="px-1.5 py-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition cursor-pointer"
  title="Eliminar este acceso rápido"
  >
  ×

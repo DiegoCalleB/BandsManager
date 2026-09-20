@@ -189,7 +189,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  {/* Bizum */}
  <div className="space-y-1.5">
  <div className="flex items-center gap-2">
- <div className="w-5 h-5 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center p-0.5 shadow-sm">
+ <div className="w-5 h-5 rounded-md bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center p-0.5 shadow-sm">
  <BizumLogo className="w-4 h-4" />
  </div>
  <label className="text-xs font-semibold text-[var(--ink)]">Bizum (Teléfono)</label>
@@ -261,7 +261,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='bizum'
- ?'bg-emerald-500/20 border-[var(--ok)] text-[var(--ink-2)] shadow-sm'
+ ?'bg-[var(--ok)]/20 border-[var(--ok)] text-[var(--ink-2)] shadow-sm'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -369,7 +369,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
 
  {errorTraduccion && (
- <div className="rounded-[var(--r-m)] bg-red-500/10 text-red-300 p-3 text-xs flex items-start gap-2">
+ <div className="rounded-[var(--r-m)] bg-[var(--alert)]/10 text-red-300 p-3 text-xs flex items-start gap-2">
  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" /> <span>{errorTraduccion}</span>
  </div>
  )}
@@ -394,7 +394,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </span>
  <span className="font-bold text-[var(--ink)] text-sm">{idioma.label}</span>
  {hayTraduccion && !desactualizada && (
- <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400">
+ <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)]">
  Al día
  </span>
  )}

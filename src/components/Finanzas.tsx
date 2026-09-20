@@ -168,7 +168,7 @@ export default function Finanzas({
  <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
  'bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
  }`}>
- <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping shrink-0" /> Auto-sync
+ <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping shrink-0" /> Auto-sync
  </span>
  </div>
  </div>
@@ -178,9 +178,9 @@ export default function Finanzas({
  <div className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
  isStitchLight 
  ?'bg-emerald-50 text-emerald-800' 
- :'bg-emerald-500/10 -emerald-500/20 text-emerald-400'
+ :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ok)]'
  }`}>
- <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+ <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className="flex-1 font-mono text-[10px]">{syncSuccess}</span>
  <button onClick={() => setSyncSuccess('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-mono">×</button>
  </div>
@@ -189,9 +189,9 @@ export default function Finanzas({
  <div className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
  isStitchLight 
  ?'bg-rose-50 text-rose-800' 
- :'bg-rose-500/10 -rose-500/20 text-rose-400'
+ :'bg-[var(--alert)]/10 -rose-500/20 text-[var(--alert)]'
  }`}>
- <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+ <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
  <span className="flex-1 font-mono text-[10px]">{syncError}</span>
  <button onClick={() => setSyncError('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-mono">×</button>
  </div>
@@ -201,7 +201,7 @@ export default function Finanzas({
  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
  {/* Total revenue */}
  <div className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden`}>
- <div className="flex justify-between items-center text-xs font-mono font-bold text-emerald-500 uppercase tracking-wider">
+ <div className="flex justify-between items-center text-xs font-mono font-bold text-[var(--ok)] uppercase tracking-wider">
  <span>Ingresos Cobrados</span>
  <TrendingUp className="w-4 h-4" />
  </div>
@@ -211,14 +211,14 @@ export default function Finanzas({
  <p className={`text-[10px] font-mono ${textSub}`}>
  {totalPendienteIngresos > 0 ? `+${totalPendienteIngresos.toLocaleString('es-ES')}€ pendientes de cobro` :'Al día'}
  </p>
- <div className="absolute right-[-10px] bottom-[-15px] opacity-5 pointer-events-none text-emerald-500">
+ <div className="absolute right-[-10px] bottom-[-15px] opacity-5 pointer-events-none text-[var(--ok)]">
  <DollarSign className="w-24 h-24" />
  </div>
  </div>
 
  {/* Total expenses */}
  <div className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden`}>
- <div className="flex justify-between items-center text-xs font-mono font-bold text-rose-500 uppercase tracking-wider">
+ <div className="flex justify-between items-center text-xs font-mono font-bold text-[var(--alert)] uppercase tracking-wider">
  <span>Gastos Liquidados</span>
  <TrendingDown className="w-4 h-4" />
  </div>
@@ -228,7 +228,7 @@ export default function Finanzas({
  <p className={`text-[10px] font-mono ${textSub}`}>
  {totalPendienteGastos > 0 ? `-${totalPendienteGastos.toLocaleString('es-ES')}€ pendientes de pago` :'Al día'}
  </p>
- <div className="absolute right-[-10px] bottom-[-15px] pointer-events-none opacity-5 text-rose-500">
+ <div className="absolute right-[-10px] bottom-[-15px] pointer-events-none opacity-5 text-[var(--alert)]">
  <DollarSign className="w-24 h-24" />
  </div>
  </div>
@@ -238,7 +238,7 @@ export default function Finanzas({
  balanceNeto >= 0 ?'-emerald-500/20' :'-rose-500/20'
  }`}>
  <div className={`flex justify-between items-center text-xs font-mono font-bold uppercase tracking-wider ${
- balanceNeto >= 0 ?'text-emerald-500' :'text-rose-500'
+ balanceNeto >= 0 ?'text-[var(--ok)]' :'text-[var(--alert)]'
  }`}>
  <span>Balance de Caja Neto</span>
  <DollarSign className="w-4 h-4" />
@@ -291,7 +291,7 @@ export default function Finanzas({
  onClick={() => setIsAddOpen(true)}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isStitchLight 
- ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-sm' 
+ ?'bg-[var(--tentative)]/80 hover:bg-indigo-700 text-[var(--ink)] shadow-sm' 
  :'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-md'
  }`}
  >
@@ -324,13 +324,13 @@ export default function Finanzas({
 
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
  <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Total Gastos Gira</span>
- <h4 className="text-xl font-black text-rose-400">-{totalConcertGastos.toLocaleString('es-ES')}€</h4>
+ <h4 className="text-xl font-black text-[var(--alert)]">-{totalConcertGastos.toLocaleString('es-ES')}€</h4>
  <p className="text-[10px] text-[var(--ink-2)]">Gasolina, dietas, furgoneta, hoteles</p>
  </div>
 
  <div className={`${colors.card} p-4 rounded-[var(--r-m)] space-y-1`}>
  <span className="text-[10px] font-mono text-[var(--ink-2)] uppercase font-bold">Beneficio Neto Acumulado</span>
- <h4 className={`text-xl font-black ${totalBeneficioNeto >= 0 ?'text-emerald-400' :'text-rose-400'}`}>
+ <h4 className={`text-xl font-black ${totalBeneficioNeto >= 0 ?'text-[var(--ok)]' :'text-[var(--alert)]'}`}>
  {totalBeneficioNeto >= 0 ? `+${totalBeneficioNeto.toLocaleString('es-ES')}€` : `${totalBeneficioNeto.toLocaleString('es-ES')}€`}
  </h4>
  <p className="text-[10px] text-[var(--ink-2)]">Beneficio tras cubrir gastos de gira</p>
@@ -403,13 +403,13 @@ export default function Finanzas({
 
  let alertBadge = {
  label:'🟢 Rentable',
- bgColor:'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-emerald-400'
+ bgColor:'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ok)]'
  };
 
  if (beneficioNeto < 0) {
  alertBadge = {
  label:'🔴 En Pérdidas',
- bgColor:'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-rose-400'
+ bgColor:'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-[var(--alert)]'
  };
  } else if (beneficioNeto < 150) {
  alertBadge = {
@@ -437,7 +437,7 @@ export default function Finanzas({
  👤 Parcial ({numConvocados} miembros)
  </span>
  ) : (
- <span className="inline-block mt-0.5 text-[9px] text-emerald-400/80 font-mono">
+ <span className="inline-block mt-0.5 text-[9px] text-[var(--ok)]/80 font-mono">
  👥 Banda completa
  </span>
  )}
@@ -455,11 +455,11 @@ export default function Finanzas({
  <span className="text-[var(--ink-2)] italic">Estimación típica (~150€)</span>
  )}
  </td>
- <td className="p-3 font-mono text-rose-400 font-semibold">
+ <td className="p-3 font-mono text-[var(--alert)] font-semibold">
  -{totalGastosBolo}€
  </td>
  <td className="p-3 font-mono font-black text-sm">
- <span className={beneficioNeto >= 0 ?'text-emerald-400' :'text-rose-400'}>
+ <span className={beneficioNeto >= 0 ?'text-[var(--ok)]' :'text-[var(--alert)]'}>
  {beneficioNeto >= 0 ? `+${beneficioNeto}€` : `${beneficioNeto}€`}
  </span>
  <span className="block text-[10px] text-[var(--ink-2)] font-normal">
@@ -582,7 +582,7 @@ export default function Finanzas({
  {/* Total calculation preview */}
  <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between font-mono">
  <span className="text-[var(--ink-2)] font-bold">TOTAL GASTOS CALCULADOS:</span>
- <span className="text-rose-400 font-black text-sm">
+ <span className="text-[var(--alert)] font-black text-sm">
  -{(Number(editingGasolina) || 0) + (Number(editingDietas) || 0) + (Number(editingAlquiler) || 0) + (Number(editingAlojamiento) || 0) + (Number(editingOtros) || 0)}€
  </span>
  </div>
@@ -720,7 +720,7 @@ export default function Finanzas({
  <div className={`p-2 rounded-[var(--r-s)] shrink-0 ${
  p.tipo ==='ingreso'
  ?'bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20'
- :'bg-rose-500/15 text-rose-400 -rose-500/20'
+ :'bg-[var(--alert)]/15 text-[var(--alert)] -rose-500/20'
  }`}>
  <DollarSign className="w-4 h-4" />
  </div>
@@ -742,7 +742,7 @@ export default function Finanzas({
  <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 sm: pt-2 sm:pt-0">
  {/* Amount */}
  <span className={`text-sm font-black font-mono tracking-tight ${
- p.tipo ==='ingreso' ?'text-emerald-500' :'text-rose-500'
+ p.tipo ==='ingreso' ?'text-[var(--ok)]' :'text-[var(--alert)]'
  }`}>
  {p.tipo ==='ingreso' ?'+' :'-'}{p.importe.toLocaleString('es-ES')}€
  </span>
@@ -754,7 +754,7 @@ export default function Finanzas({
  p.estado ==='pagado'
  ? isStitchLight
  ?'bg-emerald-50 text-emerald-700'
- :'bg-emerald-500/10 -emerald-500/20 text-emerald-400'
+ :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ok)]'
  : 'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
  }`}
  title="Hacer clic para cambiar el estado de pago"
@@ -780,15 +780,15 @@ export default function Finanzas({
  </div>
  <div className="flex justify-between pb-2 -dashed">
  <span className={textSub}>Pendiente de Cobro</span>
- <span className="text-emerald-500 font-bold">+{totalPendienteIngresos.toLocaleString('es-ES')}€</span>
+ <span className="text-[var(--ok)] font-bold">+{totalPendienteIngresos.toLocaleString('es-ES')}€</span>
  </div>
  <div className="flex justify-between pb-2 -dashed">
  <span className={textSub}>Pendiente de Pago</span>
- <span className="text-rose-500 font-bold">-{totalPendienteGastos.toLocaleString('es-ES')}€</span>
+ <span className="text-[var(--alert)] font-bold">-{totalPendienteGastos.toLocaleString('es-ES')}€</span>
  </div>
  <div className="flex justify-between font-bold text-xs pt-1">
  <span className={textTitle}>Faltas Pendientes Neto</span>
- <span className={totalPendienteIngresos - totalPendienteGastos >= 0 ?'text-emerald-500' :'text-rose-500'}>
+ <span className={totalPendienteIngresos - totalPendienteGastos >= 0 ?'text-[var(--ok)]' :'text-[var(--alert)]'}>
  {(totalPendienteIngresos - totalPendienteGastos).toLocaleString('es-ES')}€
  </span>
  </div>
@@ -821,11 +821,11 @@ export default function Finanzas({
  {/* Custom SVG/HTML Bar Proportions Chart */}
  <div className="space-y-3.5">
  {[
- { cat:'concierto', color:'bg-indigo-500' },
+ { cat:'concierto', color:'bg-[var(--tentative)]' },
  { cat:'transporte', color:'bg-[var(--acc)]' },
  { cat:'alojamiento', color:'bg-[var(--acc)]' },
- { cat:'comida', color:'bg-emerald-500' },
- { cat:'promo', color:'bg-rose-500' },
+ { cat:'comida', color:'bg-[var(--ok)]' },
+ { cat:'promo', color:'bg-[var(--alert)]' },
  { cat:'merchandising', color:'bg-[var(--acc)]' },
  { cat:'otros', color:'bg-[var(--bg)]0' }
  ].map(item => {
@@ -869,7 +869,7 @@ export default function Finanzas({
  </div>
  <div className="flex justify-between">
  <span>Ingresos de Conciertos:</span>
- <span className="text-emerald-500 font-bold">
+ <span className="text-[var(--ok)] font-bold">
  {(payments.filter(p => p.categoria ==='concierto' && p.tipo ==='ingreso' && p.estado ==='pagado').reduce((sum, p) => sum + p.importe, 0)).toLocaleString('es-ES')}€
  </span>
  </div>

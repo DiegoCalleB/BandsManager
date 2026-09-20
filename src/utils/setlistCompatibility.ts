@@ -136,7 +136,7 @@ export function evaluarCalidadUnion(songA: Song, songB: Song): EvaluacionUnion {
     ? `✓ OK (${scorePercent}%)`
     : `✕ Revisar (${scorePercent}%)`;
 
-  const badgeBg = isOk ? 'bg-emerald-500/15' : 'bg-rose-500/15';
+  const badgeBg = isOk ? 'bg-[var(--ok)]/15' : 'bg-[var(--alert)]/15';
   const badgeText = isOk ? 'text-emerald-300' : 'text-rose-300';
   const badgeBorder = isOk ? 'border-emerald-500/35' : 'border-rose-500/40';
 

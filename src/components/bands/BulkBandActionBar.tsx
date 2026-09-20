@@ -25,9 +25,9 @@ const BAND_STATUS_OPTIONS: { status: BandRelationshipStatus; label: string; colo
  { status:'sin_contactar', label:'Sin Contactar', color:'bg-zinc-700/40 text-[var(--ink-2)] border-[var(--hair)]600', icon: Clock },
  { status:'intercambio_propuesto', label:'Intercambio Propuesto', color:'bg-sky-500/20 text-sky-300 border-[var(--acc)]/40', icon: Repeat },
  { status:'pendiente_respuesta', label:'Pendiente Respuesta', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
- { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-emerald-500/30 text-[var(--ink)] border-[var(--ok)]', icon: CheckCircle2 },
+ { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-[var(--ok)]/30 text-[var(--ink)] border-[var(--ok)]', icon: CheckCircle2 },
  { status:'colegas_aliados', label:'Colegas / Aliados de Gira', color:'bg-purple-500/20 text-purple-300 border-[var(--acc)]/40', icon: Users },
- { status:'no_disponible', label:'No Disponible / Descartado', color:'bg-rose-500/20 text-[var(--ink-2)] border-[var(--alert)]/40', icon: ShieldAlert },
+ { status:'no_disponible', label:'No Disponible / Descartado', color:'bg-[var(--alert)]/20 text-[var(--ink-2)] border-[var(--alert)]/40', icon: ShieldAlert },
 ];
 
 export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
@@ -223,7 +223,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className="p-1.5 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] transition-all cursor-pointer"
  title={`Eliminar ${selectedCount} bandas`}
  >
- <Trash2 className="w-4 h-4 text-rose-400" />
+ <Trash2 className="w-4 h-4 text-[var(--alert)]" />
  </button>
 
  {/* Deselect Close Button (Desktop) */}
@@ -247,7 +247,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
  <div className="w-full max-w-md bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl p-5 space-y-4 my-auto">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--alert)]/20 flex items-center justify-center text-[var(--alert)] shrink-0">
  <Trash2 className="w-5 h-5" />
  </div>
  <div>
@@ -278,7 +278,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  setIsConfirmDeleteOpen(false);
  onBulkDelete();
  }}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-rose-600 hover:bg-rose-500 text-[var(--ink)] shadow-md transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] shadow-md transition-colors cursor-pointer"
  >
  Sí, eliminar {selectedCount}
  </button>

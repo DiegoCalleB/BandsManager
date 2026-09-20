@@ -413,13 +413,13 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)]10 flex items-center justify-between bg-[var(--ink)]/5 shrink-0">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ok)]">
  <Guitar className="w-5 h-5 animate-pulse" />
  </div>
  <div>
  <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-2">
  Afinador Pro Guitarra, Bajo & Ukelele
- <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-[var(--ink-2)]">
+ <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
  Precision Autocorrelation
  </span>
  </h3>
@@ -445,7 +445,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <div className="space-y-2.5">
  <div className="flex items-center justify-between">
  <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
- <Radio className="w-3.5 h-3.5 text-emerald-400" />
+ <Radio className="w-3.5 h-3.5 text-[var(--ok)]" />
  Instrumento y Afinación:
  </label>
 
@@ -475,7 +475,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`px-2 py-1 rounded-md font-bold transition-all cursor-pointer ${
  isCatSelected
- ?'bg-emerald-500 text-white shadow-xs'
+ ?'bg-[var(--ok)] text-white shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
  }`}
  >
@@ -496,7 +496,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`p-2.5 rounded-[var(--r-m)] text-left text-xs font-medium transition-all cursor-pointer flex items-start justify-between gap-2 ${
  selectedPresetId === p.id
- ?'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold shadow-sm'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold shadow-sm'
  :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-[var(--ink)]/10'
  }`}
  >
@@ -508,7 +508,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  : p.category ==='bass'
  ?'bg-blue-500/20 text-[var(--acc)]/80'
- :'bg-emerald-500/20 text-[var(--ink-2)]'
+ :'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  }`}>
  {p.category ==='ukulele' ?'Uke' : p.category ==='bass' ?'Bajo' :'Guitar'}
  </span>
@@ -520,7 +520,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  )}
  </div>
  {selectedPresetId === p.id && (
- <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+ <Check className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
  )}
  </button>
  ))}
@@ -534,16 +534,16 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <div className="w-full space-y-2">
  <div className="flex items-center justify-between text-[11px] font-mono text-[var(--ink-2)]">
  <span className="text-[var(--acc)] font-bold">-50 Cents (Grave)</span>
- <span className={`font-bold ${isTunedIn ?'text-emerald-400 text-xs font-black animate-bounce' :'text-[var(--ink-2)]'}`}>
+ <span className={`font-bold ${isTunedIn ?'text-[var(--ok)] text-xs font-black animate-bounce' :'text-[var(--ink-2)]'}`}>
  {isTunedIn ?'¡AFINADO PERFECTO!' :'0 Cents'}
  </span>
- <span className="text-rose-400 font-bold">+50 Cents (Agudo)</span>
+ <span className="text-[var(--alert)] font-bold">+50 Cents (Agudo)</span>
  </div>
 
  {/* Meter track */}
  <div className="w-full bg-[var(--surface)] h-6 rounded-full relative overflow-hidden flex items-center px-1">
  {/* Center target indicator */}
- <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-2 bg-emerald-500/40 z-0" />
+ <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-2 bg-[var(--ok)]/40 z-0" />
  <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-emerald-400 z-10" />
 
  {/* Needle pointer */}
@@ -566,7 +566,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <div className="flex flex-col items-center animate-in zoom-in-95 duration-100">
  <div className="flex items-baseline gap-1">
  <span className={`text-6xl font-black font-display tracking-tight ${
- isTunedIn ?'text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.6)]' :'text-[var(--ink)]'
+ isTunedIn ?'text-[var(--ok)] drop-shadow-[0_0_15px_rgba(52,211,153,0.6)]' :'text-[var(--ink)]'
  }`}>
  {pitch.noteName}
  </span>
@@ -581,10 +581,10 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </span>
  <span className={`px-2 py-0.5 rounded-md font-bold ${
  isTunedIn 
- ?'bg-emerald-500/20 text-[var(--ink-2)]' 
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]' 
  : pitch.cents < 0 
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70' 
- :'bg-rose-500/20 text-[var(--ink-2)]'
+ :'bg-[var(--alert)]/20 text-[var(--ink-2)]'
  }`}>
  {pitch.cents > 0 ? `+${pitch.cents}` : pitch.cents} Cents
  </span>
@@ -592,7 +592,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </div>
  ) : isListening ? (
  <div className="flex flex-col items-center gap-2 text-[var(--ink-2)] py-2">
- <RefreshCw className="w-6 h-6 animate-spin text-emerald-400" />
+ <RefreshCw className="w-6 h-6 animate-spin text-[var(--ok)]" />
  <span className="text-xs font-mono">Escuchando instrumento... Toca una cuerda</span>
  </div>
  ) : (
@@ -608,8 +608,8 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  onClick={isListening ? stopTuner : startTuner}
  className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 ${
  isListening
- ?'bg-rose-500/20 hover:bg-rose-500/30 text-[var(--ink-2)] shadow-sm'
- :'bg-emerald-500 hover:bg-emerald-400 text-white font-black shadow-lg shadow-emerald-500/20'
+ ?'bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] shadow-sm'
+ :'bg-[var(--ok)] hover:bg-emerald-400 text-white font-black shadow-lg shadow-emerald-500/20'
  }`}
  >
  {isListening ? (
@@ -682,7 +682,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  isTonePlaying
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-md scale-105'
  : isSelected
- ?'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/60 font-bold'
  :'bg-[var(--ink)]/5 text-[var(--ink-2)] border-[var(--hair)]5 hover:bg-[var(--ink)]/10 hover:border-[var(--hair)]20'
  }`}
  >

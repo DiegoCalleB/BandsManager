@@ -26,7 +26,7 @@ const BLOCK_TYPES: Record<string, { label: string; icon: string; bg: string; tex
  calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-orange-500/10', text:'text-[var(--acc)]/80', border:'border-[var(--acc)]/20' },
  pausa: { label:'Pausa / Descanso / Birra', icon:'☕', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]', border:'' },
  seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-purple-500/10', text:'text-purple-400', border:'border-[var(--acc)]/20' },
- improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-emerald-500/10', text:'text-emerald-400', border:'border-[var(--ok)]/20' },
+ improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-[var(--ok)]/10', text:'text-[var(--ok)]', border:'border-[var(--ok)]/20' },
  outro: { label:'Repaso Final / Feedback', icon:'🏁', bg:'bg-sky-500/10', text:'text-sky-400', border:'border-[var(--acc)]/20' },
 };
 
@@ -400,7 +400,7 @@ export function OrdenDelDiaTab({
  key={obj.id}
  className={`flex items-start justify-between gap-2 p-2.5 rounded-[var(--r-m)] transition-all ${
  obj.completado
- ?'bg-emerald-500/10 border-[var(--ok)]/30 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ink-2)]'
  :'bg-[var(--surface)] border-[var(--surface)] text-[var(--ink)] hover:'
  }`}
  >
@@ -410,7 +410,7 @@ export function OrdenDelDiaTab({
  className="flex items-start gap-2 text-left flex-1 cursor-pointer"
  >
  {obj.completado ? (
- <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+ <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
  ) : (
  <Square className="w-4 h-4 text-[var(--ink-2)] shrink-0 mt-0.5" />
  )}
@@ -421,7 +421,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={() => handleDeleteObjetivo(obj.id)}
- className="text-[var(--ink-2)] hover:text-rose-400 p-0.5 cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 cursor-pointer"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -616,7 +616,7 @@ export function OrdenDelDiaTab({
 
  {/* Evaluation badge if set */}
  {item.evaluacion ==='bordada' && (
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
  🟢 Bordada
  </span>
  )}
@@ -626,7 +626,7 @@ export function OrdenDelDiaTab({
  </span>
  )}
  {item.evaluacion ==='repetir' && (
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--alert)]/20 text-[var(--ink-2)]">
  🔴 Repetir
  </span>
  )}
@@ -690,7 +690,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={() => handleDeleteAgendaItem(item.id)}
- className="p-1.5 text-[var(--ink-2)] hover:text-rose-400 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Eliminar de la agenda"
  >
  <Trash2 className="w-3.5 h-3.5" />

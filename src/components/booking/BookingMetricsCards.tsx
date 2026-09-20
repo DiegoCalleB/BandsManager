@@ -26,7 +26,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
  {t('booking.total_leads','Total Leads / Salas')}
  </span>
- <div className="p-2 rounded-[var(--r-m)] bg-indigo-500/10 text-indigo-500">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]">
  <Building2 className="w-5 h-5" />
  </div>
  </div>
@@ -48,15 +48,15 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
  {t('booking.approved_dates','Fechas Aprobadas')}
  </span>
- <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-500">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)]">
  <CheckCircle2 className="w-5 h-5" />
  </div>
  </div>
- <div className="text-2xl font-bold text-emerald-500">
+ <div className="text-2xl font-bold text-[var(--ok)]">
  {metrics.leadsPorEstado['aprobado'] || 0}
  </div>
  <p className="text-xs text-[var(--ink-2)] mt-1">
- {t('booking.conversion_rate','Tasa conversión')}: <span className="text-emerald-400 font-semibold">{metrics.tasaConversion}%</span>
+ {t('booking.conversion_rate','Tasa conversión')}: <span className="text-[var(--ok)] font-semibold">{metrics.tasaConversion}%</span>
  </p>
  </div>
 

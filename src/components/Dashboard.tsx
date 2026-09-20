@@ -576,7 +576,7 @@ export default function Dashboard({
  <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
  item.type ==='concierto'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
- :'bg-emerald-500/20 text-[var(--ink-2)]'
+ :'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  }`}>
  {item.type}
  </span>
@@ -596,7 +596,7 @@ export default function Dashboard({
  </h4>
 
  <p className="text-xs font-semibold mt-1 flex items-center gap-1 text-[var(--ink-2)] truncate">
- <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+ <MapPin className="w-3.5 h-3.5 text-[var(--alert)] shrink-0" />
  <span>{item.location}</span>
  </p>
  </div>

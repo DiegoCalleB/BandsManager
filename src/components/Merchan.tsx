@@ -309,7 +309,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {generatedDesigns.length > 0 && (
  <button
  onClick={handleClearAll}
- className="self-start sm:self-center px-3 py-1.5 rounded-[var(--r-m)] text-rose-400 hover:bg-rose-500/10 text-xs font-mono font-bold flex items-center gap-2 transition"
+ className="self-start sm:self-center px-3 py-1.5 rounded-[var(--r-m)] text-[var(--alert)] hover:bg-[var(--alert)]/10 text-xs font-mono font-bold flex items-center gap-2 transition"
  >
  <Trash2 className="w-3.5 h-3.5" /> Vaciar Galería ({generatedDesigns.length})
  </button>
@@ -506,7 +506,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* Opción de recorte de fondo / rembg */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-indigo-950/20 border-[var(--acc)]/30'}`}>
- <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-700' :'text-indigo-400'}`}>
+ <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-700' :'text-[var(--tentative)]'}`}>
  <Scissors className="w-3.5 h-3.5 text-[var(--acc)]" /> Recorte de Fondo (Canvas Layering)
  </label>
  <p className="text-[10px] font-mono text-[var(--ink-2)]">
@@ -554,7 +554,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {productType ==='pegatina' && (
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-indigo-900/10 border-[var(--acc)]/20'}`}>
- <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-indigo-400'}`}>
+ <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--tentative)]'}`}>
  <QrCode className="w-3.5 h-3.5" /> Link de redirección del QR
  </label>
  <input
@@ -780,7 +780,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="flex-1 text-center sm:text-left space-y-1">
  <div className="flex items-center justify-center sm:justify-start gap-2">
  <span className="text-xs font-bold text-[var(--ink)]">Logo {displayBandName} (Oficial)</span>
- <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
+ <span className="text-[10px] font-mono text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded">
  Alta resolución 300 DPI
  </span>
  </div>
@@ -881,7 +881,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  ) : (
  /* Pantalla de Confirmación Posterior */
  <div className="py-8 flex flex-col items-center text-center space-y-4">
- <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-[var(--ok)] flex items-center justify-center text-emerald-400 animate-bounce">
+ <div className="w-16 h-16 rounded-full bg-[var(--ok)]/20 border-2 border-[var(--ok)] flex items-center justify-center text-[var(--ok)] animate-bounce">
  <CheckCircle2 className="w-10 h-10" />
  </div>
 
@@ -912,7 +912,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
  <div className="flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Coste total:</span>
- <span className="text-emerald-400 font-bold">0,00 € (Gratis por suscripción)</span>
+ <span className="text-[var(--ok)] font-bold">0,00 € (Gratis por suscripción)</span>
  </div>
  </div>
  </div>

@@ -439,9 +439,9 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className="w-full max-w-7xl mx-auto space-y-8 pb-16 font-sans">
  {/* Pending Payment Alert */}
  {currentUser?.estado_suscripcion ==='pago_pendiente' && (
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-rose-500/15 border-2 border-[var(--alert)]/50 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--alert)]/15 border-2 border-[var(--alert)]/50 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
  <div className="flex items-start sm:items-center gap-3.5">
- <div className="p-2.5 rounded-[var(--r-m)] bg-rose-500/20 text-rose-400 shrink-0">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--alert)]/20 text-[var(--alert)] shrink-0">
  <AlertTriangle className="w-6 h-6 animate-pulse" />
  </div>
  <div>
@@ -457,7 +457,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  type="button"
  onClick={handleOpenCustomerPortal}
  disabled={isOpeningPortal}
- className="px-4 py-2.5 rounded-[var(--r-m)] bg-rose-600 hover:bg-rose-500 text-[var(--ink)] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30 shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+ className="px-4 py-2.5 rounded-[var(--r-m)] bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30 shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
  >
  {isOpeningPortal ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
  <span>Actualizar tarjeta en Stripe</span>
@@ -544,7 +544,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  {portalError && (
- <p className="text-xs text-rose-400 font-mono bg-rose-500/10 p-3 rounded-[var(--r-m)]">
+ <p className="text-xs text-[var(--alert)] font-mono bg-[var(--alert)]/10 p-3 rounded-[var(--r-m)]">
  {portalError}
  </p>
  )}
@@ -633,7 +633,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <span className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded-full font-extrabold ${
  billingPeriod ==='annual'
  ?'bg-[var(--sunken)] text-[var(--acc)]/70'
- :'bg-emerald-500/20 text-emerald-400'
+ :'bg-[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  -20% · 2 meses gratis
  </span>
@@ -654,11 +654,11 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  case'blue':
  return'bg-sky-500/15 text-sky-300 border-[var(--acc)]/30';
  case'silver':
- return'bg-slate-400/15 text-[var(--ink-2)] /30';
+ return'bg-[var(--sunken)]/15 text-[var(--ink-2)] /30';
  case'gold':
  return'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50';
  case'emerald':
- return'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/40';
+ return'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/40';
  }
  };
 
@@ -671,7 +671,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  case'gold':
  return'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:brightness-110 text-[var(--ink)] font-black shadow-lg shadow-amber-0/20';
  case'emerald':
- return'bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-black shadow-lg shadow-emerald-500/20';
+ return'bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] font-black shadow-lg shadow-emerald-500/20';
  }
  };
 
@@ -721,7 +721,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  {isAnnual && plan.annualPrice > 0 && (
- <p className="text-[11px] font-mono text-emerald-400 mt-1">
+ <p className="text-[11px] font-mono text-[var(--ok)] mt-1">
  Equivalente a {plan.annualEquivalentMonthly.toFixed(2).replace('.',',')}€/mes
  </p>
  )}
@@ -775,7 +775,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70'
  : plan.id ==='cabeza_de_cartel'
  ?'bg-emerald-400/20 text-[var(--ink-2)]'
- :'bg-slate-400/20 text-[var(--ink-2)]'
+ :'bg-[var(--sunken)]/20 text-[var(--ink-2)]'
  }`}>
  {plan.stickerGift.tag}
  </span>
@@ -810,7 +810,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <li key={idx} className="flex items-start gap-2.5 text-xs">
  {feat.included ? (
  <div className={`p-0.5 rounded-full mt-0.5 shrink-0 ${
- plan.isPopular ?'bg-[var(--acc)]/60 text-[var(--on-acc)]' :'bg-emerald-500/20 text-emerald-400'
+ plan.isPopular ?'bg-[var(--acc)]/60 text-[var(--on-acc)]' :'bg-[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  <Check className="w-3 h-3 stroke-[3]" />
  </div>
@@ -928,7 +928,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className="col-span-2 text-center text-sky-400">Ensayo (0€)</div>
  <div className="col-span-2 text-center text-[var(--ink-2)]">Local (12€/m)</div>
  <div className="col-span-2 text-center text-[var(--acc)]/70 font-black">De Gira (29€/m) ⭐</div>
- <div className="col-span-2 text-center text-emerald-400 font-black">Cabeza de Cartel (79€/m)</div>
+ <div className="col-span-2 text-center text-[var(--ok)] font-black">Cabeza de Cartel (79€/m)</div>
  </div>
 
  {/* Sections Accordion */}
@@ -979,7 +979,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <span className="lg:hidden text-[10px] font-mono text-[var(--ink-2)]">Ensayo:</span>
  {typeof row.ensayo ==='boolean' ? (
  row.ensayo ? (
- <Check className="w-4 h-4 text-emerald-400" />
+ <Check className="w-4 h-4 text-[var(--ok)]" />
  ) : (
  <X className="w-4 h-4 text-[var(--ink-2)]" />
  )
@@ -992,7 +992,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <span className="lg:hidden text-[10px] font-mono text-[var(--ink-2)]">Local:</span>
  {typeof row.local ==='boolean' ? (
  row.local ? (
- <Check className="w-4 h-4 text-emerald-400" />
+ <Check className="w-4 h-4 text-[var(--ok)]" />
  ) : (
  <X className="w-4 h-4 text-[var(--ink-2)]" />
  )
@@ -1017,10 +1017,10 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs">
- <span className="lg:hidden text-[10px] font-mono text-emerald-400 font-bold">Cabeza de Cartel:</span>
+ <span className="lg:hidden text-[10px] font-mono text-[var(--ok)] font-bold">Cabeza de Cartel:</span>
  {typeof row.cabeza_de_cartel ==='boolean' ? (
  row.cabeza_de_cartel ? (
- <div className="p-1 rounded-full bg-emerald-500/20 text-emerald-400">
+ <div className="p-1 rounded-full bg-[var(--ok)]/20 text-[var(--ok)]">
  <Check className="w-4 h-4 stroke-[3]" />
  </div>
  ) : (
@@ -1080,7 +1080,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/60 space-y-2">
  <div className="flex items-center gap-2 text-[var(--ink-2)] font-mono font-bold text-xs">
- <Gift className="w-4 h-4 text-emerald-400" />
+ <Gift className="w-4 h-4 text-[var(--ok)]" />
  <span>Pegatinas y Regalos Tuyos</span>
  </div>
  <p className="text-xs text-[var(--ink-2)] leading-relaxed">

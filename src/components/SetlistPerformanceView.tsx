@@ -459,8 +459,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => setModeArchetype('ensayo')}
  className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 cursor-pointer ${
  modeArchetype ==='ensayo'
- ?'bg-emerald-500 text-[var(--ink)] shadow-sm'
- : glareMode ?'text-[var(--ink-2)] hover:text-emerald-700' :'text-[var(--ink-2)] hover:text-emerald-400'
+ ?'bg-[var(--ok)] text-[var(--ink)] shadow-sm'
+ : glareMode ?'text-[var(--ink-2)] hover:text-emerald-700' :'text-[var(--ink-2)] hover:text-[var(--ok)]'
  }`}
  >
  <Headphones className="w-3 h-3" />
@@ -484,7 +484,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <span className="hidden sm:inline">Pistas & Repertorio</span>
  <span className="sm:hidden">Temas</span>
  {songsWithIrisCount > 0 && (
- <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-emerald-500/30 text-[var(--ink-2)]">
+ <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-[var(--ok)]/30 text-[var(--ink-2)]">
  {songsWithIrisCount}
  </span>
  )}
@@ -499,11 +499,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
  glareMode
  ?'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-[var(--ok)]'
- :'bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] hover:border-[var(--ok)]'
+ :'bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] hover:border-[var(--ok)]'
  }`}
  title="Modo Ensayo: practica este tema con pistas separadas por Iris (silenciar/aislar pistas, tempo, bucle A/B)"
  >
- <Headphones className="w-3.5 h-3.5 text-emerald-400" />
+ <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span className="hidden sm:inline">Ensayo Iris</span>
  <span className="sm:hidden">Ensayo</span>
  </button>
@@ -521,7 +521,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  }`}
  title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
  >
- <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
  <span className="hidden sm:inline">Separar con Iris</span>
  <span className="sm:hidden">Iris</span>
  </button>
@@ -536,11 +536,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
  glareMode
  ?'bg-indigo-100 hover:bg-indigo-200 text-indigo-900 border-[var(--acc)]'
- :'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 hover:border-[var(--acc)]'
+ :'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-indigo-300 hover:border-[var(--acc)]'
  }`}
  title="Modo Studio: grabaciones multipista, ideas de audio, acordes y arreglos de este tema"
  >
- <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+ <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" />
  <span className="hidden sm:inline">Modo Studio</span>
  <span className="sm:hidden">Studio</span>
  </button>
@@ -575,10 +575,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  onClick={() => { setShowMoreMenu(false); handleLaunchPractice(); }}
  className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition font-semibold ${
- glareMode ?'hover:bg-[var(--sunken)] text-emerald-800' :'hover:bg-[var(--ink)]/10 text-emerald-400'
+ glareMode ?'hover:bg-[var(--sunken)] text-emerald-800' :'hover:bg-[var(--ink)]/10 text-[var(--ok)]'
  }`}
  >
- <Headphones className="w-4 h-4 shrink-0 text-emerald-400" />
+ <Headphones className="w-4 h-4 shrink-0 text-[var(--ok)]" />
  <span>Sala de Ensayo (Pistas Iris)</span>
  </button>
  ) : (
@@ -592,7 +592,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <Headphones className="w-4 h-4 shrink-0 text-[var(--ink-2)]" />
  <span className="flex items-center justify-between flex-1">
  <span>Separar pistas con Iris</span>
- <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono">Studio</span>
+ <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-indigo-300 font-mono">Studio</span>
  </span>
  </button>
  )}
@@ -601,10 +601,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  onClick={() => { setShowMoreMenu(false); handleLaunchStudio(); }}
  className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${
- glareMode ?'hover:bg-[var(--sunken)] text-indigo-700' :'hover:bg-[var(--ink)]/10 text-indigo-400'
+ glareMode ?'hover:bg-[var(--sunken)] text-indigo-700' :'hover:bg-[var(--ink)]/10 text-[var(--tentative)]'
  }`}
  >
- <Sliders className="w-4 h-4 shrink-0 text-indigo-400" />
+ <Sliders className="w-4 h-4 shrink-0 text-[var(--tentative)]" />
  <span>Abrir Modo Studio</span>
  </button>
  )}
@@ -684,7 +684,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {batteryLevel !== null && (
  <span
  className={`flex items-center gap-1 ${
- batteryCharging ?'text-emerald-400' : batteryLevel < 0.2 ?'text-rose-400 font-bold' : glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
+ batteryCharging ?'text-[var(--ok)]' : batteryLevel < 0.2 ?'text-[var(--alert)] font-bold' : glareMode ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
  }`}
  title={batteryCharging ?'Cargando' : batteryLevel < 0.2 ?'Batería baja — busca un cargador' :'Batería'}
  >
@@ -700,11 +700,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
  glareMode
  ?'bg-emerald-50 text-emerald-800 border-[var(--ok)] hover:bg-emerald-100'
- :'bg-emerald-500/10 text-emerald-400 border-[var(--ok)]/30 hover:bg-emerald-500/20'
+ :'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/30 hover:bg-[var(--ok)]/20'
  }`}
  title="Pistas separadas por Iris disponibles. Clic para abrir el Modo Ensayo"
  >
- <Headphones className="w-2.5 h-2.5 text-emerald-400" />
+ <Headphones className="w-2.5 h-2.5 text-[var(--ok)]" />
  <span>Pistas Iris ({getIdeaTracks(irisStemIdea).length})</span>
  </button>
  )}
@@ -729,12 +729,12 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <div className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
- glareMode ?'bg-emerald-200 text-emerald-900' :'bg-emerald-500/20 text-emerald-400'
+ glareMode ?'bg-emerald-200 text-emerald-900' :'bg-[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  <Headphones className="w-4 h-4" />
  </div>
  <div className="truncate">
- <span className="font-bold text-emerald-400">Modo Ensayo Activo</span>
+ <span className="font-bold text-[var(--ok)]">Modo Ensayo Activo</span>
  <span className="opacity-80 ml-2 font-mono text-[11px]">
  {currentSong.tonalidad ? `Tono: ${currentSong.tonalidad}` :''}
  {currentSong.bpm ? ` · ${currentSong.bpm} BPM` :''}
@@ -747,7 +747,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => handleLaunchPractice()}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
  >
  <Headphones className="w-3.5 h-3.5" />
  <span>Abrir Sala de Ensayo</span>
@@ -756,7 +756,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <button
  type="button"
  onClick={() => handleLaunchStudio()}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-indigo-600 hover:bg-indigo-500 text-[var(--ink)] font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
  >
  <Sparkles className="w-3.5 h-3.5" />
  <span>Separar en Studio</span>
@@ -1082,7 +1082,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  </div>
 
  {songIrisIdea ? (
- <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-[var(--ink-2)] flex items-center gap-1">
+ <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
  <Headphones className="w-2.5 h-2.5" />
  {stemCount > 0 ? `${stemCount} pistas` :'Iris'}
  </span>
@@ -1101,10 +1101,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  setShowSongListDrawer(false);
  handleLaunchPractice(song, songIrisIdea);
  }}
- className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+ className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
  title="Modo Ensayo individual con las pistas aisladas de este tema"
  >
- <Headphones className="w-3.5 h-3.5 text-emerald-400" />
+ <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Modo Ensayo</span>
  </button>
  ) : (
@@ -1114,10 +1114,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  setShowSongListDrawer(false);
  handleLaunchStudio(song);
  }}
- className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+ className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-indigo-300 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
  title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
  >
- <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
  <span>Separar con Iris</span>
  </button>
  )}
@@ -1369,7 +1369,7 @@ const ChordSheetPage: React.FC<{
  {showDetails && (structure || progression) && (
  <div className={`shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-2 px-4 py-2 text-xs sm:text-sm border-b ${borderClass} ${glareMode ?'bg-[var(--sunken)]' :'bg-[var(--sunken)]'}`}>
  {structure && (
- <p className={glareMode ?'text-indigo-900' :'text-indigo-200'}><span className={glareMode ?'text-indigo-700 font-bold' :'text-indigo-400 font-bold'}>🎵 Estructura: </span>{structure}</p>
+ <p className={glareMode ?'text-indigo-900' :'text-indigo-200'}><span className={glareMode ?'text-indigo-700 font-bold' :'text-[var(--tentative)] font-bold'}>🎵 Estructura: </span>{structure}</p>
  )}
  {progression && (
  <p className={glareMode ?'text-teal-900' :'text-teal-200'}><span className={glareMode ?'text-teal-700 font-bold' :'text-[var(--ok)] font-bold'}>🎸 Progresión: </span>{progression}</p>
@@ -1389,7 +1389,7 @@ const ChordSheetPage: React.FC<{
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer ${
  isTeleprompterPlaying
  ?'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
- :'bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)]'
+ :'bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)]'
  }`}
  title="Pausar o reanudar teleprompter (o pulsar Espacio)"
  >

@@ -58,7 +58,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  {/* Spotify */}
  <div>
  <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
- <Music className="w-3.5 h-3.5 text-emerald-400" />
+ <Music className="w-3.5 h-3.5 text-[var(--ok)]" />
  Spotify (Perfil de Artista)
  </label>
  <input
@@ -73,7 +73,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  {/* YouTube */}
  <div>
  <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
- <Youtube className="w-3.5 h-3.5 text-red-400" />
+ <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" />
  Canal de YouTube
  </label>
  <input
@@ -118,7 +118,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  {/* WhatsApp Contacto */}
  <div>
  <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
- <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
+ <ExternalLink className="w-3.5 h-3.5 text-[var(--ok)]" />
  WhatsApp de Contacto Directo
  </label>
  <input

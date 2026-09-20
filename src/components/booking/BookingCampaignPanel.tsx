@@ -169,7 +169,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  newDates.splice(idx, 1);
  setCampaignForm({...campaignForm, targetDates: newDates});
  }} 
- className="text-[var(--ink-2)] hover:text-red-500 p-0.5 rounded transition-colors ml-0.5"
+ className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 rounded transition-colors ml-0.5"
  title="Eliminar esta fecha"
  >
  <X className="w-3.5 h-3.5" />

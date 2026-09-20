@@ -265,26 +265,26 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  targetBtn:'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-[var(--acc)]/40'
  },
  emerald: {
- badgeBg:'bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30',
- iconBox:'bg-emerald-500/20 text-emerald-400 border-[var(--ok)]/30 shadow-emerald-500/10',
+ badgeBg:'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30',
+ iconBox:'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/30 shadow-emerald-500/10',
  activeDot:'bg-emerald-400 w-7',
- primaryBtn:'bg-emerald-500 hover:bg-emerald-400 text-white font-black shadow-emerald-900/30',
- hookBorder:'border-[var(--ok)]/25 bg-emerald-500/10 text-emerald-100',
- highlightText:'text-emerald-400',
- targetCard:'border-[var(--ok)]/40 bg-emerald-500/5',
- targetBadge:'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/30',
- targetBtn:'bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] border-[var(--ok)]/40'
+ primaryBtn:'bg-[var(--ok)] hover:bg-emerald-400 text-white font-black shadow-emerald-900/30',
+ hookBorder:'border-[var(--ok)]/25 bg-[var(--ok)]/10 text-emerald-100',
+ highlightText:'text-[var(--ok)]',
+ targetCard:'border-[var(--ok)]/40 bg-[var(--ok)]/5',
+ targetBadge:'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/30',
+ targetBtn:'bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] border-[var(--ok)]/40'
  },
  rose: {
- badgeBg:'bg-rose-500/15 text-[var(--ink-2)] border-[var(--alert)]/30',
- iconBox:'bg-rose-500/20 text-rose-400 border-[var(--alert)]/30 shadow-rose-500/10',
+ badgeBg:'bg-[var(--alert)]/15 text-[var(--ink-2)] border-[var(--alert)]/30',
+ iconBox:'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--alert)]/30 shadow-rose-500/10',
  activeDot:'bg-rose-400 w-7',
- primaryBtn:'bg-rose-500 hover:bg-rose-400 text-[var(--ink)] font-bold shadow-rose-900/30',
- hookBorder:'border-[var(--alert)]/25 bg-rose-500/10 text-rose-100',
- highlightText:'text-rose-400',
- targetCard:'border-[var(--alert)]/40 bg-rose-500/5',
- targetBadge:'bg-rose-500/20 text-[var(--ink-2)] border-[var(--alert)]/30',
- targetBtn:'bg-rose-500/20 hover:bg-rose-500/30 text-[var(--ink-2)] border-[var(--alert)]/40'
+ primaryBtn:'bg-[var(--alert)] hover:bg-rose-400 text-[var(--ink)] font-bold shadow-rose-900/30',
+ hookBorder:'border-[var(--alert)]/25 bg-[var(--alert)]/10 text-rose-100',
+ highlightText:'text-[var(--alert)]',
+ targetCard:'border-[var(--alert)]/40 bg-[var(--alert)]/5',
+ targetBadge:'bg-[var(--alert)]/20 text-[var(--ink-2)] border-[var(--alert)]/30',
+ targetBtn:'bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] border-[var(--alert)]/40'
  }
  }[tutorialConfig.accent];
 
@@ -501,21 +501,21 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  </div>
 
  {/* Ubicación y Para qué sirve */}
- <div className="grid grid-cols-1 gap-1.5 text-[11px] font-mono text-stone-300">
+ <div className="grid grid-cols-1 gap-1.5 text-[11px] font-mono text-[var(--ink-2)]/80">
  <div className="flex items-start gap-1.5 text-[var(--ink-2)]">
  <MapPin className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
- <span className="leading-tight"><strong className="text-stone-300 font-semibold">Dónde está:</strong> {currentStep.uiTarget.location}</span>
+ <span className="leading-tight"><strong className="text-[var(--ink-2)]/80 font-semibold">Dónde está:</strong> {currentStep.uiTarget.location}</span>
  </div>
  <div className="flex items-start gap-1.5 text-[var(--ink-2)]">
  <MousePointer className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
- <span className="leading-tight"><strong className="text-stone-300 font-semibold">Para qué sirve:</strong> {currentStep.uiTarget.actionHint}</span>
+ <span className="leading-tight"><strong className="text-[var(--ink-2)]/80 font-semibold">Para qué sirve:</strong> {currentStep.uiTarget.actionHint}</span>
  </div>
  </div>
  </div>
  )}
 
  {/* Step Description */}
- <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
+ <p className="text-xs sm:text-sm text-[var(--ink-2)]/80 leading-relaxed">
  {currentStep.description}
  </p>
 
@@ -545,7 +545,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  {/* BOTTOM ACTIONS BAR */}
  <div className="p-3.5 sm:p-4 border-t border-[var(--hair)]/80 bg-stone-950/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
  {/* Don't show again toggle */}
- <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-mono text-[var(--ink-2)] hover:text-stone-300">
+ <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-2)]/80">
  <input
  id={`tutorial-dont-show-again-checkbox-${moduleId}`}
  type="checkbox"

@@ -103,10 +103,10 @@ export const SocialIcons: Record<string, React.FC<{ className?: string }>> = {
 export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string; bgClass: string; borderClass: string; hoverClass: string }> = {
  spotify: {
  label:'Spotify',
- colorClass:'text-emerald-400',
- bgClass:'bg-emerald-500/10',
+ colorClass:'text-[var(--ok)]',
+ bgClass:'bg-[var(--ok)]/10',
  borderClass:'border-[var(--ok)]/30',
- hoverClass:'hover:bg-emerald-500/20 hover:border-[var(--ok)]/50 hover:text-[var(--ink-2)]'
+ hoverClass:'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-[var(--ink-2)]'
  },
  instagram: {
  label:'Instagram',
@@ -117,10 +117,10 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  },
  youtube: {
  label:'YouTube',
- colorClass:'text-red-400',
- bgClass:'bg-red-500/10',
+ colorClass:'text-[var(--alert)]',
+ bgClass:'bg-[var(--alert)]/10',
  borderClass:'border-[var(--alert)]/30',
- hoverClass:'hover:bg-red-500/20 hover:border-[var(--alert)]/50 hover:text-red-300'
+ hoverClass:'hover:bg-[var(--alert)]/20 hover:border-[var(--alert)]/50 hover:text-red-300'
  },
  tiktok: {
  label:'TikTok',
@@ -131,10 +131,10 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  },
  appleMusic: {
  label:'Apple Music',
- colorClass:'text-rose-400',
- bgClass:'bg-rose-500/10',
+ colorClass:'text-[var(--alert)]',
+ bgClass:'bg-[var(--alert)]/10',
  borderClass:'border-[var(--alert)]/30',
- hoverClass:'hover:bg-rose-500/20 hover:border-[var(--alert)]/50 hover:text-[var(--ink-2)]'
+ hoverClass:'hover:bg-[var(--alert)]/20 hover:border-[var(--alert)]/50 hover:text-[var(--ink-2)]'
  },
  bandcamp: {
  label:'Bandcamp',
@@ -180,7 +180,7 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  },
  whatsapp: {
  label:'WhatsApp',
- colorClass:'text-emerald-400',
+ colorClass:'text-[var(--ok)]',
  bgClass:'bg-emerald-600/10',
  borderClass:'border-[var(--ok)]/30',
  hoverClass:'hover:bg-emerald-600/20 hover:border-[var(--ok)]/50 hover:text-[var(--ink-2)]'

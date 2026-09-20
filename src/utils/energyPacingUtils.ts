@@ -93,8 +93,8 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       label: 'Media / Groove',
       icon: '🎵',
       hexColor: '#059669',
-      bgClass: 'bg-emerald-500/15',
-      textClass: 'text-emerald-400',
+      bgClass: 'bg-[var(--ok)]/15',
+      textClass: 'text-[var(--ok)]',
       borderClass: 'border-emerald-500/30'
     };
   }
@@ -201,8 +201,8 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
           label: item.tituloCustom || 'Evento Show',
           icon: ICONOS_BLOQUE[subtipo] || '📌',
           hexColor: isBis ? '#a21caf' : '#64748b',
-          bgClass: isBis ? 'bg-[var(--tentative)]/15' : 'bg-slate-700/30',
-          textClass: isBis ? 'text-[var(--tentative)]/80' : 'text-slate-400',
+          bgClass: isBis ? 'bg-[var(--tentative)]/15' : 'bg-[var(--ink-2)]/40/30',
+          textClass: isBis ? 'text-[var(--tentative)]/80' : 'text-[var(--ink-2)]',
           borderClass: isBis ? 'border-[var(--tentative)]/30' : 'border-slate-700/40'
         }
       });

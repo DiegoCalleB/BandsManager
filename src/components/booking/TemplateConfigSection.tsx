@@ -137,7 +137,7 @@ export function TemplateConfigSection({
  <div
  className={`p-3 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between ${
  templateTab ==='medios'
- ?'bg-rose-500/15 text-rose-400'
+ ?'bg-[var(--alert)]/15 text-[var(--alert)]'
  : templateTab ==='grupos'
  ? 'bg-[var(--surface)]/15 text-[var(--ok)]'
  : templateTab ==='discotecas'

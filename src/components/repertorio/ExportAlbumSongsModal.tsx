@@ -485,10 +485,10 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
  format ==='zip'
  ?'bg-gradient-to-br from-[var(--ok)]/30 to-emerald-900/40 border-[var(--hair)] text-[var(--ink)] shadow-lg ring-1 ring-[var(--ok)]/40'
- :'bg-emerald-500/10 border-[var(--ok)]/30 text-[var(--ink-2)] hover:bg-emerald-500/20'
+ :'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ink-2)] hover:bg-[var(--ok)]/20'
  }`}
  >
- <Archive className={`w-5 h-5 ${format ==='zip' ?'text-[var(--ok)]' :'text-emerald-400'}`} />
+ <Archive className={`w-5 h-5 ${format ==='zip' ?'text-[var(--ok)]' :'text-[var(--ok)]'}`} />
  <div>
  <div className="text-xs font-extrabold flex items-center gap-1">
  <span>ZIP MP3s</span>
@@ -507,7 +507,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
- <FileSpreadsheet className={`w-5 h-5 ${format ==='csv' ?'text-[var(--ok)]' :'text-emerald-400'}`} />
+ <FileSpreadsheet className={`w-5 h-5 ${format ==='csv' ?'text-[var(--ok)]' :'text-[var(--ok)]'}`} />
  <div>
  <div className="text-xs font-bold">Excel / CSV</div>
  <div className="text-[10px] opacity-70">Tabla de datos</div>
@@ -618,7 +618,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <span>{zipProgress.status ||'Procesando paquete ZIP...'}</span>
  </span>
  {zipProgress.total > 0 && (
- <span className="font-mono text-emerald-400 font-bold">
+ <span className="font-mono text-[var(--ok)] font-bold">
  {Math.round((zipProgress.current / zipProgress.total) * 100)}%
  </span>
  )}
@@ -636,8 +636,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
  {/* ZIP Error Alert */}
  {zipError && (
- <div className="p-3 bg-rose-500/10 rounded-[var(--r-l)] text-xs text-[var(--ink-2)] flex items-center gap-2">
- <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+ <div className="p-3 bg-[var(--alert)]/10 rounded-[var(--r-l)] text-xs text-[var(--ink-2)] flex items-center gap-2">
+ <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
  <span>{zipError}</span>
  </div>
  )}
@@ -654,7 +654,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] font-mono text-xs max-h-44 overflow-y-auto custom-scrollbar select-all ${
  isStitchLight
  ?'bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-emerald-400/90'
+ :'bg-[var(--surface)] text-[var(--ok)]/90'
  }`}
  >
  <pre className="whitespace-pre-wrap break-all leading-relaxed">
@@ -687,8 +687,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  >
  {copied ? (
  <>
- <Check className="w-4 h-4 text-emerald-400" />
- <span className="text-emerald-400 font-bold">¡Copiado!</span>
+ <Check className="w-4 h-4 text-[var(--ok)]" />
+ <span className="text-[var(--ok)] font-bold">¡Copiado!</span>
  </>
  ) : (
  <>

@@ -12,8 +12,8 @@ interface LeadStatusStyle {
 }
 
 const DEFAULT_STYLE: LeadStatusStyle = {
-  dot: 'bg-stone-400',
-  badgeLight: 'bg-slate-50 text-slate-500',
+  dot: 'bg-[var(--ink-2)]/40',
+  badgeLight: 'bg-slate-50 text-[var(--ink-2)]',
   badgeDark: 'bg-neutral-800/60 text-neutral-400',
   label: '',
 };
@@ -56,14 +56,14 @@ export const LEAD_STATUS_STYLES: Record<string, LeadStatusStyle> = {
     label: 'Confirmado 🎉',
   },
   aplazado: {
-    dot: 'bg-yellow-500',
+    dot: 'bg-[var(--acc)]',
     badgeLight: 'bg-yellow-50 text-yellow-800 border border-yellow-200',
-    badgeDark: 'bg-yellow-500/15 text-yellow-300 border border-yellow-500/30',
+    badgeDark: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 border border-[var(--acc)]/30',
     label: 'Aplazado ⏳',
   },
   no_interesado: {
     dot: 'bg-neutral-500',
-    badgeLight: 'bg-slate-100 text-slate-500 border border-slate-200',
+    badgeLight: 'bg-[var(--surface)] text-[var(--ink-2)] border border-slate-200',
     badgeDark: 'bg-neutral-800/80 text-neutral-400 border border-neutral-700/50',
     label: 'Descartado',
   },

@@ -44,7 +44,7 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
     icon: Flame,
     preview: {
       bg: 'bg-slate-950',
-      cardBg: 'bg-slate-900',
+      cardBg: 'bg-[var(--bg)]',
       accent: 'bg-[var(--acc)]',
       border: 'border-amber-500/40',
       text: 'text-[var(--acc)]/80',
@@ -61,10 +61,10 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
     preview: {
       bg: 'bg-[#f8f8f6]',
       cardBg: 'bg-white',
-      accent: 'bg-stone-900',
+      accent: 'bg-[var(--bg)]',
       border: 'border-stone-300',
-      text: 'text-stone-900',
-      pill: 'bg-stone-200 text-stone-800'
+      text: 'text-[var(--ink)]',
+      pill: 'bg-[var(--sunken)]/80 text-stone-800'
     }
   },
   {
@@ -277,31 +277,31 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
   switch (templateId) {
     case 'minimal':
       return {
-        pageBg: 'bg-[#f8f8f6] text-stone-900 selection:bg-stone-900 selection:text-white',
-        topBar: 'bg-white/95 border-stone-200 text-stone-900 shadow-xs',
-        topBarBtn: 'bg-stone-100 hover:bg-stone-200 text-stone-800 border-stone-300',
+        pageBg: 'bg-[#f8f8f6] text-[var(--ink)] selection:bg-[var(--bg)] selection:text-white',
+        topBar: 'bg-white/95 border-stone-200 text-[var(--ink)] shadow-xs',
+        topBarBtn: 'bg-stone-100 hover:bg-[var(--sunken)]/80 text-stone-800 border-stone-300',
         heroNoPhoto: 'bg-gradient-to-b from-stone-200 via-stone-100 to-[#f8f8f6]',
         heroOverlay: 'bg-gradient-to-t from-[#f8f8f6] via-[#f8f8f6]/85 to-[#f8f8f6]/40',
         heroTitleClass: 'text-stone-950 leading-[0.92] tracking-normal font-serif text-[13vw] sm:text-[6rem] lg:text-[7.5rem] font-bold',
         heroTitleStyle: { fontFamily: "'Playfair Display', Georgia, serif" },
-        heroSubtitle: 'text-stone-600 font-serif italic',
+        heroSubtitle: 'text-[var(--ink-3)] font-serif italic',
         sectionHeadingClass: 'text-stone-950 border-b border-stone-300 pb-4 font-serif font-bold tracking-normal',
         sectionHeadingStyle: { fontFamily: "'Playfair Display', Georgia, serif" },
         card: 'bg-white border-stone-200/90 shadow-xs text-stone-800',
-        cardHighlight: 'bg-white border-stone-300 shadow-xs hover:border-stone-400 text-stone-900',
-        statNumber: 'text-stone-900 font-serif font-bold',
+        cardHighlight: 'bg-white border-stone-300 shadow-xs hover:border-stone-400 text-[var(--ink)]',
+        statNumber: 'text-[var(--ink)] font-serif font-bold',
         badge: 'bg-stone-100 text-stone-800 border-stone-300 font-serif',
-        accentBtn: 'bg-stone-900 hover:bg-stone-800 text-white font-semibold shadow-xs',
-        accentBtnSubtle: 'bg-stone-100 text-stone-900 border-stone-300 hover:bg-stone-200',
-        accentText: 'text-stone-900',
+        accentBtn: 'bg-[var(--bg)] hover:bg-stone-800 text-white font-semibold shadow-xs',
+        accentBtnSubtle: 'bg-stone-100 text-[var(--ink)] border-stone-300 hover:bg-[var(--sunken)]/80',
+        accentText: 'text-[var(--ink)]',
         bookingCard: 'bg-stone-100 border-stone-300 shadow-xs',
         bookingTitle: 'text-stone-950 font-serif font-bold',
-        memberRole: 'text-stone-600 font-serif italic',
+        memberRole: 'text-[var(--ink-3)] font-serif italic',
         memberCard: 'bg-white border-stone-200 shadow-xs',
-        quoteIcon: 'text-stone-400',
-        quoteMedium: 'text-stone-900 font-serif font-bold',
+        quoteIcon: 'text-[var(--ink-2)]',
+        quoteMedium: 'text-[var(--ink)] font-serif font-bold',
         footer: 'text-stone-500 border-stone-300',
-        stickyPlayer: 'bg-white/95 border-stone-300 text-stone-900 shadow-xl'
+        stickyPlayer: 'bg-white/95 border-stone-300 text-[var(--ink)] shadow-xl'
       };
 
     case 'neon':
@@ -366,8 +366,8 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
     default:
       return {
         pageBg: 'bg-slate-950 text-slate-100 selection:bg-[var(--acc)] selection:text-slate-950',
-        topBar: 'bg-slate-900/90 border-slate-800/80 text-slate-100',
-        topBarBtn: 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700',
+        topBar: 'bg-[var(--bg)]/90 border-slate-800/80 text-slate-100',
+        topBarBtn: 'bg-[var(--ink)]/40 hover:bg-[var(--ink-2)]/40 text-[var(--ink)]/80 border-slate-700',
         heroNoPhoto: 'bg-gradient-to-br from-slate-900 via-slate-950 to-amber-950/30',
         heroOverlay: 'bg-gradient-to-t from-slate-950 via-slate-950/85 to-slate-950/50',
         heroTitleClass: 'text-white uppercase leading-[0.88] tracking-tight text-[15vw] sm:text-[7rem] lg:text-[9rem]',
@@ -376,7 +376,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         sectionHeadingClass: 'text-white uppercase tracking-wide border-b border-slate-800/80 pb-4',
         sectionHeadingStyle: { fontFamily: "'Anton', 'Oswald', sans-serif" },
         card: 'bg-slate-950 border-slate-800',
-        cardHighlight: 'bg-slate-900/90 border-amber-500/20 shadow-lg hover:border-amber-500/40',
+        cardHighlight: 'bg-[var(--bg)]/90 border-amber-500/20 shadow-lg hover:border-amber-500/40',
         statNumber: 'text-[var(--acc)]/80 font-mono',
         badge: 'bg-[var(--acc)]/20 text-[var(--acc)]/80 border-amber-500/30',
         accentBtn: 'bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-slate-950 font-bold shadow-lg',
@@ -388,8 +388,8 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         memberCard: 'bg-slate-950 border-slate-800',
         quoteIcon: 'text-[var(--acc)]/40',
         quoteMedium: 'text-[var(--acc)]/80',
-        footer: 'text-slate-500 border-slate-800',
-        stickyPlayer: 'bg-slate-900/95 border-amber-500/40 text-white'
+        footer: 'text-[var(--ink-2)] border-slate-800',
+        stickyPlayer: 'bg-[var(--bg)]/95 border-amber-500/40 text-white'
       };
   }
 }

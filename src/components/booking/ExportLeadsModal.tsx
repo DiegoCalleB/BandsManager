@@ -227,11 +227,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportFormat('csv')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
  exportFormat ==='csv'
- ?'bg-emerald-500/20 border-[var(--ok)]/60 text-[var(--ink)] font-bold'
+ ?'bg-[var(--ok)]/20 border-[var(--ok)]/60 text-[var(--ink)] font-bold'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
- <FileSpreadsheet className="w-4 h-4 text-emerald-400 shrink-0" />
+ <FileSpreadsheet className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <div>
  <span className="text-xs block">Excel / CSV (.csv)</span>
  <span className="text-[10px] text-[var(--ink-2)] font-normal">Compatible UTF-8 Windows</span>

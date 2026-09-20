@@ -1150,7 +1150,7 @@ export default function BookingCRM({
  className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-[var(--ink)] transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
  >
  <span className="flex items-center gap-2">
- {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" /> : <Send className="w-4 h-4 text-emerald-400" />}
+ {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-[var(--ok)] animate-spin" /> : <Send className="w-4 h-4 text-[var(--ok)]" />}
  <span>{isDispatchingEmails ?'Despachando correos...' : `Agente Enviador (${leads.filter(l => ['aprobado','aprobado_propuesta','aprobado_respuesta'].includes(l.estado)).length} en cola de envío)`}</span>
  </span>
  <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1176,10 +1176,10 @@ export default function BookingCRM({
  setIsExcelImportOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-[var(--ink)] transition-all cursor-pointer shadow-sm active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] transition-all cursor-pointer shadow-sm active:scale-98"
  >
  <span className="flex items-center gap-2">
- <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+ <FileSpreadsheet className="w-4 h-4 text-[var(--ok)]" />
  Importar Excel / CSV (Bandas y Salas)
  </span>
  <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1215,7 +1215,7 @@ export default function BookingCRM({
  className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-indigo-900/60 to-purple-900/60 hover:from-indigo-900/80 hover:to-purple-900/80 text-indigo-200 transition-all cursor-pointer shadow-sm active:scale-98"
  >
  <span className="flex items-center gap-2">
- <Sparkles className="w-4 h-4 text-indigo-400" />
+ <Sparkles className="w-4 h-4 text-[var(--tentative)]" />
  Agente Enriquecedor de Contactos ({leads.filter(l => !l.email_contacto || l.email_contacto.trim() ==='').length} sin email)
  </span>
  <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
@@ -1244,7 +1244,7 @@ export default function BookingCRM({
  }}
  className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] transition-all cursor-pointer active:scale-98"
  >
- <Download className="w-3.5 h-3.5 text-emerald-400" />
+ <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Exportar Leads (A la vista / Todos / Excel)</span>
  </button>
 
@@ -1541,7 +1541,7 @@ export default function BookingCRM({
  />
  <button
  type="submit"
- className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
+ className="px-2.5 py-1.5 bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
  >
  Guardar
  </button>
@@ -1588,7 +1588,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={(e) => handleDeleteSavedFilter(sf.id, e)}
- className="pr-2 text-[var(--ink-2)] hover:text-rose-400 transition-colors p-0.5 rounded-full cursor-pointer"
+ className="pr-2 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors p-0.5 rounded-full cursor-pointer"
  title="Eliminar filtro guardado"
  >
  <X className="w-3 h-3" />
@@ -1699,7 +1699,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={handleClearAllFilters}
- className="text-xs text-[var(--ink-2)] hover:text-rose-400 flex items-center gap-1 px-2 py-1 cursor-pointer"
+ className="text-xs text-[var(--ink-2)] hover:text-[var(--alert)] flex items-center gap-1 px-2 py-1 cursor-pointer"
  >
  <RefreshCw className="w-3 h-3" />
  <span>Limpiar filtros</span>
@@ -1759,7 +1759,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={handleClearAllFilters}
- className="text-xs text-[var(--ink-2)] hover:text-rose-400 shrink-0 underline ml-1 cursor-pointer"
+ className="text-xs text-[var(--ink-2)] hover:text-[var(--alert)] shrink-0 underline ml-1 cursor-pointer"
  >
  Limpiar todo
  </button>
@@ -2145,7 +2145,7 @@ export default function BookingCRM({
  <>
  <div className={`p-3 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between ${
  templateTab ==='medios'
- ? isStitchLight ?'bg-rose-500/15 text-rose-400' :'bg-rose-500/15 text-rose-400'
+ ? isStitchLight ?'bg-[var(--alert)]/15 text-[var(--alert)]' :'bg-[var(--alert)]/15 text-[var(--alert)]'
  : templateTab ==='grupos'
  ? isStitchLight ? ('bg-[var(--surface)]/15 text-[var(--ok)]') :'bg-[var(--surface)]/15/30 text-[var(--ok)]'
  : templateTab ==='discotecas'
@@ -2316,7 +2316,7 @@ export default function BookingCRM({
  <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ?'bg-blue-100 text-blue-700' :'bg-blue-950 text-[var(--acc)]/80'}`}>
  {templateStats[templateTab].totalUses} usos
  </span>
- <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ?'bg-green-100 text-green-700' :'bg-green-950 text-green-300') : (isStitchLight ?'bg-yellow-100 text-yellow-700' :'bg-yellow-950 text-yellow-300')}`}>
+ <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ?'bg-green-100 text-green-700' :'bg-green-950 text-green-300') : (isStitchLight ?'bg-yellow-100 text-yellow-700' :'bg-yellow-950 text-[var(--acc)]/80')}`}>
  {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
  </span>
  </div>

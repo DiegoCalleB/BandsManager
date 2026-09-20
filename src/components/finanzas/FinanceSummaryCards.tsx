@@ -26,7 +26,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
  {t('finances.total_income','Ingresos Totales')}
  </span>
- <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-500">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)]">
  <TrendingUp className="w-5 h-5" />
  </div>
  </div>
@@ -52,7 +52,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
  {t('finances.total_expenses','Gastos Totales')}
  </span>
- <div className="p-2 rounded-[var(--r-m)] bg-rose-500/10 text-rose-500">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--alert)]/10 text-[var(--alert)]">
  <TrendingDown className="w-5 h-5" />
  </div>
  </div>
@@ -60,7 +60,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  {summary.totalGastos.toLocaleString('es-ES')} €
  </div>
  {summary.pagosPendientesGasto > 0 && (
- <p className="text-xs text-rose-400 mt-1 font-medium">
+ <p className="text-xs text-[var(--alert)] mt-1 font-medium">
  +{summary.pagosPendientesGasto.toLocaleString('es-ES')} € por pagar
  </p>
  )}
@@ -78,12 +78,12 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
  Beneficio Neto
  </span>
- <div className="p-2 rounded-[var(--r-m)] bg-indigo-500/10 text-indigo-500">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]">
  <DollarSign className="w-5 h-5" />
  </div>
  </div>
  <div
- className={`text-2xl font-bold ${summary.beneficioNeto >= 0 ?'text-emerald-500' :'text-rose-500'}`}
+ className={`text-2xl font-bold ${summary.beneficioNeto >= 0 ?'text-[var(--ok)]' :'text-[var(--alert)]'}`}
  >
  {summary.beneficioNeto.toLocaleString('es-ES')} €
  </div>

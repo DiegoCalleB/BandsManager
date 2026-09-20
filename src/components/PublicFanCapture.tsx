@@ -252,7 +252,7 @@ export const PublicFanCapture: React.FC = () => {
  </div>
 
  <div className="pt-2 text-xs text-[var(--ink-2)] flex items-center justify-center gap-1">
- <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Tus datos están seguros y protegidos.
+ <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" /> Tus datos están seguros y protegidos.
  </div>
  </div>
  )}

@@ -385,9 +385,9 @@ export function ModoLocalEnVivoTab({
  isCurrent
  ?'bg-[var(--acc)]/60 text-[var(--ink)] font-black shadow-md shadow-amber-400/20 scale-102'
  : item.evaluacion ==='bordada'
- ?'bg-emerald-500/20 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  : item.evaluacion ==='repetir'
- ?'bg-rose-500/20 text-[var(--ink-2)]'
+ ?'bg-[var(--alert)]/20 text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]'
  }`}
  >
@@ -580,8 +580,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsMetronomeActive(!isMetronomeActive)}
  className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-m)] font-mono font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md ${
  isMetronomeActive
- ?'bg-rose-500 text-[var(--ink)] hover:bg-rose-400 shadow-rose-500/20'
- :'bg-emerald-500 text-[var(--ink)] hover:bg-emerald-400 shadow-emerald-500/20'
+ ?'bg-[var(--alert)] text-[var(--ink)] hover:bg-rose-400 shadow-rose-500/20'
+ :'bg-[var(--ok)] text-[var(--ink)] hover:bg-emerald-400 shadow-emerald-500/20'
  }`}
  >
  {isMetronomeActive ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -596,7 +596,7 @@ export function ModoLocalEnVivoTab({
  className={`w-3 h-3 rounded-full transition-all duration-75 ${
  isMetronomeActive && currentBeat === bIdx
  ? bIdx === 0
- ?'bg-rose-500 scale-125 shadow-lg shadow-rose-500/50'
+ ?'bg-[var(--alert)] scale-125 shadow-lg shadow-rose-500/50'
  :'bg-[var(--acc)]/60 scale-125 shadow-lg shadow-amber-400/50'
  :'bg-[var(--surface)]/70'
  }`}
@@ -658,8 +658,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('bordada')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='bordada'
- ?'bg-emerald-500 text-[var(--ink)] shadow-md shadow-emerald-500/20'
- :'bg-emerald-500/15 text-[var(--ink-2)] hover:bg-emerald-500/25'
+ ?'bg-[var(--ok)] text-[var(--ink)] shadow-md shadow-emerald-500/20'
+ :'bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25'
  }`}
  >
  <span>🟢</span>
@@ -682,8 +682,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('repetir')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='repetir'
- ?'bg-rose-500 text-[var(--ink)] shadow-md shadow-rose-500/20'
- :'bg-rose-500/15 text-[var(--ink-2)] hover:bg-rose-500/25'
+ ?'bg-[var(--alert)] text-[var(--ink)] shadow-md shadow-rose-500/20'
+ :'bg-[var(--alert)]/15 text-[var(--ink-2)] hover:bg-[var(--alert)]/25'
  }`}
  >
  <span>🔴</span>
@@ -726,8 +726,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsMetronomeActive(!isMetronomeActive)}
  className={`p-2 rounded-[var(--r-m)] font-mono text-xs font-bold cursor-pointer transition-all ${
  isMetronomeActive
- ?'bg-rose-500 text-[var(--ink)]'
- :'bg-emerald-500 text-[var(--ink)]'
+ ?'bg-[var(--alert)] text-[var(--ink)]'
+ :'bg-[var(--ok)] text-[var(--ink)]'
  }`}
  title="Metrónomo Clic"
  >
@@ -740,7 +740,7 @@ export function ModoLocalEnVivoTab({
  <div
  className={`w-2.5 h-2.5 rounded-full transition-all ${
  isMetronomeActive && currentBeat === 0
- ?'bg-rose-500 scale-125'
+ ?'bg-[var(--alert)] scale-125'
  : isMetronomeActive
  ?'bg-[var(--acc)]/60'
  :'bg-[var(--surface)]/70'
@@ -924,8 +924,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('bordada')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='bordada'
- ?'bg-emerald-500 text-[var(--ink)] font-black'
- :'bg-emerald-500/15 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)] text-[var(--ink)] font-black'
+ :'bg-[var(--ok)]/15 text-[var(--ink-2)]'
  }`}
  >
  <span>🟢 Bordada</span>
@@ -946,8 +946,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => handleSetEvaluation('repetir')}
  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer ${
  currentItem?.evaluacion ==='repetir'
- ?'bg-rose-500 text-[var(--ink)] font-black'
- :'bg-rose-500/15 text-[var(--ink-2)]'
+ ?'bg-[var(--alert)] text-[var(--ink)] font-black'
+ :'bg-[var(--alert)]/15 text-[var(--ink-2)]'
  }`}
  >
  <span>🔴 Repetir</span>
@@ -1064,7 +1064,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  {shape.frets.map((fret, stringIdx) => (
  <div key={stringIdx} className="flex flex-col items-center">
  <span className={`font-bold ${
- fret === -1 ?'text-rose-400' : fret === 0 ?'text-emerald-400' :'text-[var(--acc)]/70'
+ fret === -1 ?'text-[var(--alert)]' : fret === 0 ?'text-[var(--ok)]' :'text-[var(--acc)]/70'
  }`}>
  {fret === -1 ?'x' : fret === 0 ?'o' : fret}
  </span>

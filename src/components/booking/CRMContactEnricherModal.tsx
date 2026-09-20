@@ -110,8 +110,8 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  </div>
 
  {statusMessage && (
- <div className="p-3 rounded-[var(--r-s)] bg-indigo-500/10 text-indigo-300 flex items-center gap-2">
- {isProcessing ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />}
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-indigo-300 flex items-center gap-2">
+ {isProcessing ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />}
  <span>{statusMessage}</span>
  </div>
  )}
@@ -123,7 +123,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <div key={i} className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 flex flex-col gap-1">
  <span className="font-bold text-[var(--ink-2)]">{r.name}</span>
  <div className="flex flex-wrap gap-3 text-[11px] text-[var(--ink-2)]">
- {r.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-emerald-400" /> {r.email}</span>}
+ {r.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-[var(--ok)]" /> {r.email}</span>}
  {r.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-[var(--acc)]" /> {r.phone}</span>}
  {r.instagram && <span className="flex items-center gap-1"><Instagram className="w-3 h-3 text-pink-400" /> {r.instagram}</span>}
  </div>

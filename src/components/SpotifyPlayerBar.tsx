@@ -875,7 +875,7 @@ export default function SpotifyPlayerBar({
  onClick={() => setIsMuted(!isMuted)}
  className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"
  >
- {isMuted || volume === 0 ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4" />}
+ {isMuted || volume === 0 ? <VolumeX className="w-4 h-4 text-[var(--alert)]" /> : <Volume2 className="w-4 h-4" />}
  </button>
  <input
  type="range"

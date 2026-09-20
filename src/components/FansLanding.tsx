@@ -688,19 +688,19 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-emerald-300/15 to-transparent animate-donate-sheen"
  aria-hidden="true"
  />
- <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-emerald-500 text-[var(--ink)] flex items-center justify-center shrink-0 shadow font-bold group-hover:scale-105 transition-transform`}>
+ <div className={`${isFull ?'w-8 h-8 sm:w-9 sm:h-9 p-1.5' :'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow font-bold group-hover:scale-105 transition-transform`}>
  <BizumLogo className="w-full h-full" />
  </div>
  <div className="text-center min-w-0">
  <span className={`${isFull ?'text-sm sm:text-base' :'text-xs'} font-extrabold text-[var(--ink)] group-hover:text-[var(--ink)] transition-colors block truncate leading-tight`}>
  Bizum
  </span>
- <span className={`${isFull ?'text-xs' :'text-[10px]'} text-emerald-400 font-mono block truncate group-hover:text-[var(--ink-2)] leading-tight`}>
+ <span className={`${isFull ?'text-xs' :'text-[10px]'} text-[var(--ok)] font-mono block truncate group-hover:text-[var(--ink-2)] leading-tight`}>
  {bizumPhone}
  </span>
  </div>
  {isFull && (
- <span className="p-1.5 rounded-[var(--r-s)] bg-emerald-500/20 text-[var(--ink-2)] shrink-0">
+ <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] shrink-0">
  <Copy className="w-3.5 h-3.5" />
  </span>
  )}
@@ -746,8 +746,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Notificación de Bizum Copiado */}
  {copiedBizum && (
- <div className="mt-2.5 p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 text-[var(--ink-2)] text-xs font-mono flex items-center gap-2 animate-fade-in shadow-lg">
- <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+ <div className="mt-2.5 p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-xs font-mono flex items-center gap-2 animate-fade-in shadow-lg">
+ <Check className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className="font-bold">
  {t('bizumCopiedNotification', { phone: bizumPhone }) || `¡Teléfono de Bizum (${bizumPhone}) copiado! Abre tu banco para enviarlo.`}
  </span>
@@ -933,8 +933,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="pt-2">
  <p className="text-[10px] text-[var(--ink-2)] uppercase tracking-wider font-bold mb-1">{t('merchCode')}</p>
  <div className="flex items-center justify-center gap-2 p-3 bg-[var(--surface)] border-dashed rounded-[var(--r-s)]">
- <Tag className="w-4 h-4 text-emerald-400" />
- <span className="font-mono text-emerald-400 font-bold tracking-widest">{codigoDescuentoFan}</span>
+ <Tag className="w-4 h-4 text-[var(--ok)]" />
+ <span className="font-mono text-[var(--ok)] font-bold tracking-widest">{codigoDescuentoFan}</span>
  </div>
  </div>
  )}
@@ -972,7 +972,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => trackClick('whatsapp_share','','success')}
- className="py-2.5 px-3 rounded-[var(--r-s)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95 text-center"
+ className="py-2.5 px-3 rounded-[var(--r-s)] bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95 text-center"
  >
  <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
  </a>
@@ -1043,14 +1043,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  href={`tel:${contactoBooking.telefono.replace(/\s+/g,'')}`}
  className="flex items-center gap-2 text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)] truncate flex-1"
  >
- <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+ <Phone className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
  <span className="truncate">{contactoBooking.telefono}</span>
  </a>
  <a
  href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
  target="_blank"
  rel="noopener noreferrer"
- className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-[var(--ok-soft)] rounded flex items-center gap-1 shrink-0 ml-2"
+ className="px-2 py-0.5 text-[9px] font-mono text-[var(--ok)] bg-[var(--ok-soft)] rounded flex items-center gap-1 shrink-0 ml-2"
  >
  <MessageCircle className="w-3 h-3" /> WhatsApp
  </a>
@@ -1125,7 +1125,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="pt-2 space-y-2">
  {isConcertLink ? (
  <div>
- <span className="text-emerald-400 font-bold px-3.5 py-1.5 bg-emerald-400/10 rounded-full inline-flex items-center gap-1.5 text-xs">
+ <span className="text-[var(--ok)] font-bold px-3.5 py-1.5 bg-emerald-400/10 rounded-full inline-flex items-center gap-1.5 text-xs">
  <span>{concertName ? t('thanksConcertWithName', { concertName: sanitizeConcertDisplayName(concertName) }) : t('thanksConcertGeneric')}</span>
  </span>
  </div>
@@ -1336,7 +1336,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  href={c.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-emerald-500 text-white text-[10px] font-bold hover:bg-emerald-400 transition-colors"
+ className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-[var(--ok)] text-white text-[10px] font-bold hover:bg-emerald-400 transition-colors"
  >
  <Ticket className="w-3 h-3" /> Comprar Entradas
  </a>
@@ -1383,7 +1383,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  {activeTab ==='form' && (
  <form onSubmit={handleSubmit} className="space-y-4 pt-1 animate-fade-in text-left">
  {error && (
- <div className="p-3 bg-rose-500/10 text-rose-400 text-xs font-mono rounded-[var(--r-m)] text-center">
+ <div className="p-3 bg-[var(--alert)]/10 text-[var(--alert)] text-xs font-mono rounded-[var(--r-m)] text-center">
  {error}
  </div>
  )}
@@ -1585,7 +1585,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  href={`tel:${contactoBooking.telefono.replace(/\s+/g,'')}`}
  className="flex items-center gap-2.5 text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors truncate flex-1 font-bold"
  >
- <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+ <Phone className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className="truncate">{contactoBooking.telefono}</span>
  </a>
  <div className="flex items-center shrink-0 ml-2">
@@ -1593,9 +1593,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
  target="_blank"
  rel="noopener noreferrer"
- className="px-2.5 py-1 text-[10px] font-mono text-emerald-400 bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] rounded transition-colors flex items-center gap-1.5 font-bold"
+ className="px-2.5 py-1 text-[10px] font-mono text-[var(--ok)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] rounded transition-colors flex items-center gap-1.5 font-bold"
  >
- <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+ <MessageCircle className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>WhatsApp</span>
  </a>
  </div>

@@ -348,7 +348,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <p className="font-semibold">Estructura actual guardada</p>
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 ${
  song.estructuraVerificada
- ?'bg-emerald-500/20 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  :'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  }`}>
  <ShieldCheck className="w-3 h-3" />

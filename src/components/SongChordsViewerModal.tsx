@@ -222,7 +222,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={onClose}
- className="absolute top-3 right-3 z-20 p-1.5 rounded-full bg-[var(--sunken)] hover:bg-rose-500/30 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
+ className="absolute top-3 right-3 z-20 p-1.5 rounded-full bg-[var(--sunken)] hover:bg-[var(--alert)]/30 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
  title="Cerrar"
  >
  <X className="w-5 h-5" />
@@ -246,7 +246,7 @@ export function SongChordsViewerModal({
  <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] font-mono mt-0.5">
  <span>Tonalidad: <strong className="text-[var(--acc)]">{song.tonalidad ||'Mim'}</strong></span>
  <span>•</span>
- <span>Tempo: <strong className="text-emerald-400">{song.bpm || 120} BPM</strong></span>
+ <span>Tempo: <strong className="text-[var(--ok)]">{song.bpm || 120} BPM</strong></span>
  {song.afinacion && (
  <>
  <span>•</span>
@@ -289,7 +289,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setShowShareModal(true)}
- className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-emerald-500/20 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition cursor-pointer"
  title="Compartir canción y acordes por WhatsApp o App"
  >
  <MessageSquare className="w-4 h-4" />
@@ -425,7 +425,7 @@ export function SongChordsViewerModal({
  type="button"
  onClick={() => setScrollSpeed(v)}
  className={`w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center transition cursor-pointer ${
- scrollSpeed === v ?'bg-emerald-500 text-[var(--ink)]' :'bg-[var(--ink)]/10 text-[var(--ink-2)]'
+ scrollSpeed === v ?'bg-[var(--ok)] text-[var(--ink)]' :'bg-[var(--ink)]/10 text-[var(--ink-2)]'
  }`}
  >
  {v}x
@@ -455,7 +455,7 @@ export function SongChordsViewerModal({
  className="p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
  title="Copiar texto de acordes"
  >
- {copiedText ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+ {copiedText ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
  </button>
  </div>
  )}
@@ -471,12 +471,12 @@ export function SongChordsViewerModal({
  }`}
  >
  <span className="flex items-center gap-2">
- <Sparkles className={`w-4 h-4 shrink-0 ${aiSuccessMsg.startsWith('⚠️') ?'text-[var(--acc)]' :'text-emerald-400'}`} />
+ <Sparkles className={`w-4 h-4 shrink-0 ${aiSuccessMsg.startsWith('⚠️') ?'text-[var(--acc)]' :'text-[var(--ok)]'}`} />
  {aiSuccessMsg}
  </span>
  <button
  onClick={() => setAiSuccessMsg(null)}
- className={aiSuccessMsg.startsWith('⚠️') ?'text-[var(--acc)] hover:text-[var(--ink)]' :'text-emerald-400 hover:text-[var(--ink)]'}
+ className={aiSuccessMsg.startsWith('⚠️') ?'text-[var(--acc)] hover:text-[var(--ink)]' :'text-[var(--ok)] hover:text-[var(--ink)]'}
  >
  ✕
  </button>
@@ -551,7 +551,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
- <span className="text-emerald-400 font-bold block text-[11px] uppercase tracking-wider">
+ <span className="text-[var(--ok)] font-bold block text-[11px] uppercase tracking-wider">
  2. Progresión Armónica Clave
  </span>
  <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
@@ -560,7 +560,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
- <span className="text-rose-400 font-bold block text-[11px] uppercase tracking-wider">
+ <span className="text-[var(--alert)] font-bold block text-[11px] uppercase tracking-wider">
  3. Cortes, Entradas y Claves
  </span>
  <p className="text-[var(--ink-2)] leading-relaxed">
@@ -613,7 +613,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={handleSaveEdits}
- className="px-4 py-2 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-mono font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg"
  >
  <Save className="w-4 h-4" />
  <span>Guardar Cambios</span>
@@ -839,7 +839,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  {shape.frets.map((fret, stringIdx) => (
  <div key={stringIdx} className="flex flex-col items-center">
  <span className={`font-bold ${
- fret === -1 ?'text-rose-400' : fret === 0 ?'text-emerald-400' :'text-[var(--acc)]/70'
+ fret === -1 ?'text-[var(--alert)]' : fret === 0 ?'text-[var(--ok)]' :'text-[var(--acc)]/70'
  }`}>
  {fret === -1 ?'x' : fret === 0 ?'o' : fret}
  </span>

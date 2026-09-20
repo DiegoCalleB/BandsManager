@@ -1669,7 +1669,7 @@ export function PdfExportModal({
  <div className="flex items-center gap-2 min-w-0">
  <span className="hidden sm:inline font-bold text-[var(--ink-2)] shrink-0">Previsualizando hoja {previewPageIndex + 1} de {membersToExport.length}:</span>
  <span className="sm:hidden font-bold text-[var(--ink-2)] shrink-0">{previewPageIndex + 1}/{membersToExport.length}</span>
- <span className="px-2.5 sm:px-3 py-0.5 rounded-full bg-emerald-500/20 text-[var(--ink-2)] font-bold flex items-center gap-1.5 min-w-0 truncate">
+ <span className="px-2.5 sm:px-3 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold flex items-center gap-1.5 min-w-0 truncate">
  <span className="truncate">👤 {currentPreviewMember.name}</span>
  <span className="hidden sm:inline text-[var(--ink-2)] text-[10px] shrink-0">({currentPreviewMember.instrument})</span>
  </span>

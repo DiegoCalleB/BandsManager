@@ -693,7 +693,7 @@ export function SongTransitionPreviewModal({
  className="text-[8px] font-bold px-1.5 py-0.2 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--ink)] transition cursor-pointer flex items-center gap-0.5 shrink-0"
  title="Guardar punto CUE de recorte permanentemente en el repertorio"
  >
- {savedCueSuccessA ? <Check className="w-2.5 h-2.5 text-emerald-400" /> : null}
+ {savedCueSuccessA ? <Check className="w-2.5 h-2.5 text-[var(--ok)]" /> : null}
  <span>{savedCueSuccessA ?'Guardado' :'Guardar CUE'}</span>
  </button>
  )}
@@ -706,7 +706,7 @@ export function SongTransitionPreviewModal({
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1">
  {audioSourceTypeA ==='maqueta' && (
- <span className="text-emerald-400 font-semibold flex items-center gap-1">
+ <span className="text-[var(--ok)] font-semibold flex items-center gap-1">
  <Radio className="w-3 h-3 animate-pulse" />
  Maqueta
  </span>
@@ -820,9 +820,9 @@ export function SongTransitionPreviewModal({
 
  {/* Auto-CUE In info for Song B */}
  {autoCueEnabled && cueAnalysisB && (cueAnalysisB.introSilenceSec > 0.3 || cueAnalysisB.hasApplauseIntro || songB.cueIn) && (
- <div className="flex items-center justify-between gap-1 mb-1 px-1.5 py-0.5 rounded bg-emerald-500/10 text-[9px]">
+ <div className="flex items-center justify-between gap-1 mb-1 px-1.5 py-0.5 rounded bg-[var(--ok)]/10 text-[9px]">
  <span className="text-[var(--ink-2)] font-mono flex items-center gap-1 truncate">
- <Scissors className="w-2.5 h-2.5 text-emerald-400 shrink-0" />
+ <Scissors className="w-2.5 h-2.5 text-[var(--ok)] shrink-0" />
  CUE In: {formatSec(cueAnalysisB.cueIn)}
  {cueAnalysisB.hasApplauseIntro && <span className="text-[var(--ink)]">👏 Aplausos inicio</span>}
  {cueAnalysisB.introSilenceSec > 0.3 && (
@@ -833,10 +833,10 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={() => handleSaveCuesForSong('B')}
- className="text-[8px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 hover:bg-emerald-500/40 text-[var(--ink)] transition cursor-pointer flex items-center gap-0.5 shrink-0"
+ className="text-[8px] font-bold px-1.5 py-0.2 rounded bg-[var(--ok)]/20 hover:bg-[var(--ok)]/40 text-[var(--ink)] transition cursor-pointer flex items-center gap-0.5 shrink-0"
  title="Guardar punto CUE de recorte permanentemente en el repertorio"
  >
- {savedCueSuccessB ? <Check className="w-2.5 h-2.5 text-emerald-400" /> : null}
+ {savedCueSuccessB ? <Check className="w-2.5 h-2.5 text-[var(--ok)]" /> : null}
  <span>{savedCueSuccessB ?'Guardado' :'Guardar CUE'}</span>
  </button>
  )}
@@ -849,7 +849,7 @@ export function SongTransitionPreviewModal({
  <div className="flex items-center justify-between text-[10px]">
  <div className="flex items-center gap-1">
  {audioSourceTypeB ==='maqueta' && (
- <span className="text-emerald-400 font-semibold flex items-center gap-1">
+ <span className="text-[var(--ok)] font-semibold flex items-center gap-1">
  <Radio className="w-3 h-3 animate-pulse" />
  Maqueta
  </span>
@@ -920,7 +920,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  playbackMode ==='real'
- ?'bg-emerald-500 text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--ok)] text-[var(--ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1057,13 +1057,13 @@ export function SongTransitionPreviewModal({
 
  {/* Track B segment */}
  <div
- className="absolute top-0.5 bottom-0.5 right-0.5 rounded bg-emerald-500/20 flex items-center justify-end px-1.5"
+ className="absolute top-0.5 bottom-0.5 right-0.5 rounded bg-[var(--ok)]/20 flex items-center justify-end px-1.5"
  style={{
  left: `${(timeline.songBStartSec / timeline.totalDurationSec) * 100}%`
  }}
  >
  <span className="text-[8px] font-mono font-bold text-[var(--ink-2)] truncate flex items-center gap-0.5">
- {autoCueEnabled && cueAnalysisB?.introSilenceSec ? <Scissors className="w-2 h-2 text-emerald-400 shrink-0" /> : null}
+ {autoCueEnabled && cueAnalysisB?.introSilenceSec ? <Scissors className="w-2 h-2 text-[var(--ok)] shrink-0" /> : null}
  Inicio #{indexB + 1}
  </span>
  </div>
@@ -1147,7 +1147,7 @@ export function SongTransitionPreviewModal({
  ⏱️ {currentTime.toFixed(1)}s / {timeline.totalDurationSec.toFixed(1)}s
  </span>
  {isPlaying && (
- <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-[var(--ink-2)] flex items-center gap-1 animate-pulse">
+ <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1 animate-pulse">
  <span className="w-1 h-1 rounded-full bg-emerald-400" />
  Sonando
  </span>
@@ -1215,7 +1215,7 @@ export function SongTransitionPreviewModal({
  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
  {/* POR QUÉ SÍ */}
  <div className="space-y-1">
- <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 uppercase tracking-wide">
+ <div className="flex items-center gap-1 text-[10px] font-bold text-[var(--ok)] uppercase tracking-wide">
  <ThumbsUp className="w-2.5 h-2.5" />
  <span>Por qué SÍ funciona ({diagnosis.porQueSi.length})</span>
  </div>
@@ -1227,10 +1227,10 @@ export function SongTransitionPreviewModal({
  >
  <div className="flex items-center justify-between gap-1">
  <span className="font-bold text-[var(--ink-2)] flex items-center gap-1 truncate">
- <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400 shrink-0" />
+ <CheckCircle2 className="w-2.5 h-2.5 text-[var(--ok)] shrink-0" />
  {pro.title}
  </span>
- <span className="text-[8px] uppercase px-1 rounded font-mono bg-emerald-500/20 text-[var(--ink-2)] shrink-0">
+ <span className="text-[8px] uppercase px-1 rounded font-mono bg-[var(--ok)]/20 text-[var(--ink-2)] shrink-0">
  {pro.category}
  </span>
  </div>
@@ -1249,7 +1249,7 @@ export function SongTransitionPreviewModal({
 
  {/* POR QUÉ NO / CRÍTICA */}
  <div className="space-y-1">
- <div className="flex items-center gap-1 text-[10px] font-bold text-rose-400 uppercase tracking-wide">
+ <div className="flex items-center gap-1 text-[10px] font-bold text-[var(--alert)] uppercase tracking-wide">
  <ThumbsDown className="w-2.5 h-2.5" />
  <span>Puntos a vigilar ({diagnosis.porQueNo.length})</span>
  </div>
@@ -1282,8 +1282,8 @@ export function SongTransitionPreviewModal({
  </div>
  ))}
  {diagnosis.porQueNo.length === 0 && (
- <div className="p-1.5 rounded-[var(--r-s)] bg-emerald-500/5 text-center text-[10px] text-[var(--ink-2)] flex items-center justify-center gap-1">
- <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+ <div className="p-1.5 rounded-[var(--r-s)] bg-[var(--ok)]/5 text-center text-[10px] text-[var(--ink-2)] flex items-center justify-center gap-1">
+ <CheckCircle2 className="w-3 h-3 text-[var(--ok)]" />
  <span>Enlace limpio sin objeciones.</span>
  </div>
  )}

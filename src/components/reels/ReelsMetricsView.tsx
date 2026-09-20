@@ -1024,8 +1024,8 @@ export function ReelsMetricsView({
  className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold transition-all cursor-pointer ${
  isSelected
  ? isStitchLight
- ?'bg-indigo-600 text-[var(--ink)] shadow-xs'
- :'bg-indigo-600 text-[var(--ink)] shadow-sm shadow-indigo-950/40'
+ ?'bg-[var(--tentative)]/80 text-[var(--ink)] shadow-xs'
+ :'bg-[var(--tentative)]/80 text-[var(--ink)] shadow-sm shadow-indigo-950/40'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
@@ -1231,7 +1231,7 @@ export function ReelsMetricsView({
  </p>
  <button
  onClick={selectAllChannels}
- className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-indigo-600 hover:bg-[var(--tentative)] text-[var(--ink)] font-mono text-[10px] font-medium transition-all"
+ className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-mono text-[10px] font-medium transition-all"
  >
  Activar todos los canales
  </button>
@@ -1655,7 +1655,7 @@ export function ReelsMetricsView({
 
  const formatDelta = (delta: number) => {
  if (delta > 0) return <span className="text-[var(--ok)] font-bold">+{delta}</span>;
- if (delta < 0) return <span className="text-rose-500 font-bold">{delta}</span>;
+ if (delta < 0) return <span className="text-[var(--alert)] font-bold">{delta}</span>;
  return <span className="text-[var(--ink-2)]">0</span>;
  };
 
@@ -1714,7 +1714,7 @@ export function ReelsMetricsView({
  await onDeleteMetric(m.id);
  }
  }}
- className="p-1 hover:text-rose-500 transition-colors cursor-pointer bg-transparent border-none text-[var(--ink-2)]"
+ className="p-1 hover:text-[var(--alert)] transition-colors cursor-pointer bg-transparent border-none text-[var(--ink-2)]"
  title="Eliminar snapshot"
  >
  <Trash2 className="w-3.5 h-3.5" />

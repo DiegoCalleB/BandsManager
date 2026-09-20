@@ -143,9 +143,9 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  />
 
  {fanRewardLink ? (
- <div className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] bg-emerald-500/10">
+ <div className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/10">
  <div className="flex items-center gap-2.5">
- <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+ <CheckCircle2 className="w-4 h-4 text-[var(--ok)] flex-shrink-0" />
  <span className="text-xs font-medium text-[var(--ink-2)] truncate max-w-sm">
  {leadMagnetFileName ||'Archivo_de_Regalo.mp3'}
  </span>
@@ -161,7 +161,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  <button
  type="button"
  onClick={() => { setFanRewardLink(''); setLeadMagnetFileName(''); }}
- className="p-1 text-[var(--ink-2)] hover:text-red-400"
+ className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)]"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -226,7 +226,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
 
  <div>
  <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
- <DollarSign className="w-3 h-3 text-indigo-400" /> PayPal (Email / Me)
+ <DollarSign className="w-3 h-3 text-[var(--tentative)]" /> PayPal (Email / Me)
  </label>
  <input
  type="text"
@@ -239,7 +239,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
 
  <div>
  <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
- <CreditCard className="w-3 h-3 text-emerald-400" /> IBAN / Transferencia
+ <CreditCard className="w-3 h-3 text-[var(--ok)]" /> IBAN / Transferencia
  </label>
  <input
  type="text"

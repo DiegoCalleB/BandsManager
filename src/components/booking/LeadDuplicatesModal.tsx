@@ -256,8 +256,8 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  {/* Success Banner */}
  {successMessage && (
- <div className="bg-emerald-500/15 border-b border-[var(--ok)]/30 px-4 py-2.5 flex items-center gap-2 text-xs font-medium text-[var(--ink-2)] animate-in fade-in">
- <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+ <div className="bg-[var(--ok)]/15 border-b border-[var(--ok)]/30 px-4 py-2.5 flex items-center gap-2 text-xs font-medium text-[var(--ink-2)] animate-in fade-in">
+ <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span>{successMessage}</span>
  </div>
  )}
@@ -363,7 +363,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
  {duplicateGroups.length === 0 ? (
  <div className="py-16 text-center space-y-3">
- <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto">
+ <div className="w-12 h-12 rounded-full bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center mx-auto">
  <ShieldCheck className="w-6 h-6" />
  </div>
  <h3 className="text-base font-bold text-[var(--ink)]">
@@ -508,7 +508,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  disabled={isProcessing}
  onClick={() => handleDeleteSingleLead(lead.id, lead.nombre_sala)}
- className="p-1.5 rounded-[var(--r-s)] text-rose-400 hover:bg-rose-500/20 hover:text-[var(--ink-2)] transition cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--alert)] hover:bg-[var(--alert)]/20 hover:text-[var(--ink-2)] transition cursor-pointer"
  title="Eliminar solo este registro individual"
  >
  <Trash2 className="w-3.5 h-3.5" />

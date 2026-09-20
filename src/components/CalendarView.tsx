@@ -6594,7 +6594,7 @@ export default function CalendarView({
  )}
 
  {reminderErrorMsg && (
- <div className="p-3 bg-red-500/10 text-[var(--alert)] rounded-[var(--r-m)] font-mono text-[11px]">
+ <div className="p-3 bg-[var(--alert)]/10 text-[var(--alert)] rounded-[var(--r-m)] font-mono text-[11px]">
  {reminderErrorMsg}
  </div>
  )}

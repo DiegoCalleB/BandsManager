@@ -206,7 +206,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  times: [0, 0.08, 0.15, 0.22, 1],
  ease:"easeInOut" 
  }}
- className="absolute inset-0 rounded-full bg-yellow-400/30 blur-md"
+ className="absolute inset-0 rounded-full bg-[var(--acc)]/80/30 blur-md"
  />
  {/* Nube con rayo principal */}
  <motion.div
@@ -221,7 +221,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  times: [0, 0.1, 1],
  ease:"easeInOut" 
  }}
- className="relative z-10 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]"
+ className="relative z-10 text-[var(--acc)]/80 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]"
  >
  <CloudLightning className={currentSize.icon} />
  </motion.div>
@@ -293,7 +293,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.5)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]'
+ severity ==='danger' ?'text-[var(--alert)] drop-shadow-[0_0_8px_rgba(251,113,133,0.5)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]'
  }`}
  >
  <Wind className={currentSize.icon} />
@@ -314,7 +314,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
+ severity ==='danger' ?'text-[var(--alert)] drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
  }`}
  >
  <Thermometer className={currentSize.icon} />
@@ -336,7 +336,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity ==='danger' ?'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]'
+ severity ==='danger' ?'text-[var(--alert)] drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]'
  }`}
  >
  <AlertTriangle className={currentSize.icon} />
@@ -365,27 +365,27 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
  switch (alert.icon) {
  case'lightning':
  return {
- bg: isDanger ?'bg-rose-500/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-yellow-500/20 /50 text-yellow-300',
+ bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/80',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(234,179,8,0.3)]'
  };
  case'rain':
  return {
- bg: isDanger ?'bg-rose-500/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-sky-500/20 border-[var(--acc)]/50 text-sky-300',
+ bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-sky-500/20 border-[var(--acc)]/50 text-sky-300',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(14,165,233,0.3)]'
  };
  case'snow':
  return {
- bg: isDanger ?'bg-rose-500/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--acc)]/80',
+ bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--acc)]/80',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(6,182,212,0.3)]'
  };
  case'wind':
  return {
- bg: isDanger ?'bg-rose-500/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
+ bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  default:
  return {
- bg: isDanger ?'bg-rose-500/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
+ bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
  };
  }

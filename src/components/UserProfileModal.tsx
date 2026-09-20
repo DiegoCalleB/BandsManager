@@ -377,14 +377,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {/* Form Body */}
  <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto max-h-[75vh]">
  {error && (
- <div className="p-3 bg-rose-500/10 -rose-500/20 rounded-[var(--r-m)] text-xs text-rose-400 flex items-center gap-2">
+ <div className="p-3 bg-[var(--alert)]/10 -rose-500/20 rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
  <AlertCircle className="w-4 h-4 shrink-0" />
  <span>{error}</span>
  </div>
  )}
 
  {successMsg && (
- <div className="p-3 bg-emerald-500/10 -emerald-500/20 rounded-[var(--r-m)] text-xs text-emerald-400 flex items-center gap-2">
+ <div className="p-3 bg-[var(--ok)]/10 -emerald-500/20 rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
  <Check className="w-4 h-4 shrink-0" />
  <span>{successMsg}</span>
  </div>
@@ -439,7 +439,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <div className="space-y-1">
  <label className="text-xs font-mono font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
- <UserIcon className="w-3.5 h-3.5 text-emerald-400" />
+ <UserIcon className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Nombre Completo / Apodo</span>
  </label>
  <input
@@ -456,7 +456,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <div className="space-y-1">
  <label className="text-xs font-mono font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
- <Music className="w-3.5 h-3.5 text-emerald-400" />
+ <Music className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Instrumento / Puesto</span>
  </label>
  <input
@@ -472,7 +472,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <div className="space-y-1.5">
  <label className="text-xs font-mono font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
- <Palette className="w-3.5 h-3.5 text-emerald-400" />
+ <Palette className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Color de Avatar</span>
  </label>
  <div className="flex items-center gap-2 pt-0.5">
@@ -584,7 +584,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={() => setShowCreateBandSection(!showCreateBandSection)}
- className="text-[11px] font-mono text-emerald-400 hover:text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer font-bold"
+ className="text-[11px] font-mono text-[var(--ok)] hover:text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer font-bold"
  >
  <Plus className="w-3 h-3" />
  <span>{showCreateBandSection ?'Cerrar' :'+ Crear Proyecto'}</span>
@@ -611,8 +611,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  'bg-[var(--ok-soft)] border-[var(--ok)]/50'
  }`}>
  <div className="flex items-center justify-between">
- <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
- <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+ <p className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
+ <Sparkles className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Crear Nuevo Proyecto o Banda</span>
  </p>
  <button
@@ -711,7 +711,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={handleCreateBandInProfile}
  disabled={isCreatingBand || !createBandName.trim()}
- className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+ className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
  >
  {isCreatingBand ? (
  <>
@@ -732,9 +732,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  {/* Delete Confirmation Box */}
  {bandToDeleteInProfile && (
- <div className="p-3 rounded-[var(--r-m)] bg-rose-500/10 space-y-2 animate-in fade-in duration-200">
- <p className="text-xs font-bold text-rose-400 flex items-center gap-1.5">
- <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/10 space-y-2 animate-in fade-in duration-200">
+ <p className="text-xs font-bold text-[var(--alert)] flex items-center gap-1.5">
+ <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)]" />
  <span>¿Eliminar proyecto"{bandToDeleteInProfile.name}"?</span>
  </p>
  <p className="text-[11px] text-[var(--ink-2)]">
@@ -752,7 +752,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={handleConfirmDeleteBandInProfile}
  disabled={!!deletingBandId}
- className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-600 hover:bg-rose-500 text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm"
+ className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm"
  >
  {deletingBandId ? (
  <>
@@ -829,7 +829,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  disabled={isDeleting}
  onClick={() => setBandToDeleteInProfile({ id: b.band_id, name: b.bandName })}
  title="Eliminar proyecto"
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors cursor-pointer"
  >
  {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
  </button>
@@ -940,7 +940,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {onFontChange && (
  <div className="space-y-2 pt-2 border-t /60">
  <label className="text-[11px] font-mono font-semibold text-[var(--ink-2)] flex items-center gap-1.5">
- <Type className="w-3.5 h-3.5 text-emerald-400" />
+ <Type className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Estilo de Fuente & Tipografía</span>
  </label>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -953,7 +953,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClick={() => onFontChange(p.id)}
  className={`p-2 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-0.5 ${
  isSelected
- ?'bg-emerald-500/15 border-[var(--ok)]/50 text-[var(--ink-2)] font-bold'
+ ?'bg-[var(--ok)]/15 border-[var(--ok)]/50 text-[var(--ink-2)] font-bold'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
  }`}
  >
@@ -961,7 +961,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <span className="text-[11px] font-bold truncate" style={{ fontFamily: p.displayFont }}>
  {p.name}
  </span>
- {isSelected && <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />}
+ {isSelected && <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />}
  </div>
  </button>
  );
@@ -1090,10 +1090,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className="pt-2 bg-[var(--surface)]/80 space-y-2">
  <label className="text-xs font-mono font-semibold text-[var(--ink-2)] flex items-center justify-between">
  <span className="flex items-center gap-1.5">
- <Shield className="w-3.5 h-3.5 text-indigo-400" />
+ <Shield className="w-3.5 h-3.5 text-[var(--tentative)]" />
  <span>Administración de la Banda</span>
  </span>
- <span className="text-[10px] text-indigo-400 font-mono font-bold">Solo Admins</span>
+ <span className="text-[10px] text-[var(--tentative)] font-mono font-bold">Solo Admins</span>
  </label>
 
  <button
@@ -1109,7 +1109,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }`}
  >
  <div className="flex items-center gap-2.5">
- <Users className="w-4 h-4 text-indigo-400 shrink-0" />
+ <Users className="w-4 h-4 text-[var(--tentative)] shrink-0" />
  <div>
  <div className="text-xs font-bold font-mono">Gestión de la Banda</div>
  <div className="text-[10px] opacity-75 font-sans">Crear nuevos músicos, cambiar sus contraseñas y permisos</div>
@@ -1148,7 +1148,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClose();
  onOpenBandManagement();
  }}
- className="text-[11px] font-mono text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
+ className="text-[11px] font-mono text-[var(--ok)] hover:underline flex items-center gap-1 cursor-pointer"
  >
  <Shield className="w-3 h-3" />
  <span>Gestión de la Banda</span>
@@ -1193,9 +1193,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
  {currentUser?.estado_suscripcion ==='pago_pendiente' && (
- <div className="p-3.5 rounded-[var(--r-m)] bg-rose-500/20 text-[var(--ink)] text-xs flex items-center justify-between gap-3">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/20 text-[var(--ink)] text-xs flex items-center justify-between gap-3">
  <div className="flex items-center gap-2">
- <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+ <AlertCircle className="w-5 h-5 text-[var(--alert)] shrink-0" />
  <span>Pago pendiente. Actualiza tu método de pago para mantener tus funciones.</span>
  </div>
  <button
@@ -1211,7 +1211,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  if (res.success && res.url) window.location.href = res.url;
  } catch (e) {}
  }}
- className="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-[var(--ink)] font-mono font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer whitespace-nowrap"
+ className="px-3 py-1 bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] font-mono font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer whitespace-nowrap"
  >
  Actualizar Tarjeta
  </button>
@@ -1305,7 +1305,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <ul className="mt-2.5 space-y-1 font-sans">
  {plan.features.map((feat, idx) => (
  <li key={idx} className="text-[10.5px] text-[var(--ink-2)] flex items-center gap-1.5">
- <Check className="w-3 h-3 text-emerald-400 shrink-0" />
+ <Check className="w-3 h-3 text-[var(--ok)] shrink-0" />
  <span>{feat}</span>
  </li>
  ))}

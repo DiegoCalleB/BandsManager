@@ -1348,7 +1348,7 @@ export default function App() {
 
  {/* Sync warning if backend fails */}
  {syncStatus === 'error' && (
- <div className="mb-4 p-3 bg-rose-500/10 border-[var(--alert)]/20 rounded-lg text-rose-300 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+ <div className="mb-4 p-3 bg-[var(--alert)]/10 border-[var(--alert)]/20 rounded-lg text-rose-300 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
  <div className="flex gap-2 items-center">
  <ShieldAlert className="w-5 h-5 text-rose-300 shrink-0" />
  <span>
@@ -1357,7 +1357,7 @@ export default function App() {
  </div>
  <button
  onClick={() => fetchState()}
- className="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 border-[var(--alert)]/20 text-rose-300 font-mono text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
+ className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 border-[var(--alert)]/20 text-rose-300 font-mono text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
  >
  Reintentar Conexión
  </button>
@@ -1602,7 +1602,7 @@ export default function App() {
   />
  ) : (
  <div className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}>
- <ShieldAlert className="w-10 h-10 text-rose-500 mx-auto" />
+ <ShieldAlert className="w-10 h-10 text-[var(--alert)] mx-auto" />
  <h3 className="text-sm font-mono font-bold text-rose-300 uppercase tracking-wider">Acceso Restringido</h3>
  <p className="text-xs text-neutral-400 max-w-md mx-auto">
  El apartado de Finanzas es confidencial y solo está accesible para los administradores de la banda.
@@ -1740,8 +1740,8 @@ export default function App() {
  isFloatingChatOpen
  ? 'bg-rose-600 text-white hover:bg-rose-700'
  : isChatLoading
- ? 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-indigo-500/30 ring-2 ring-cyan-400/50'
- : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950 hover:scale-105 shadow-emerald-500/20'
+ ? 'bg-[var(--tentative)]/80 text-white hover:bg-[var(--tentative)] shadow-indigo-500/30 ring-2 ring-cyan-400/50'
+ : 'bg-[var(--ok)] hover:bg-emerald-400 text-zinc-950 hover:scale-105 shadow-emerald-500/20'
  }`}
  title={isChatLoading ? "Agente AI ejecutando en segundo plano..." : "Abrir Agente Mánager AI"}
  >

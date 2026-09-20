@@ -76,11 +76,11 @@ export function ShareModal({
 
  const getItemIcon = () => {
  switch (itemType) {
- case'song': return <Music className="w-5 h-5 text-indigo-400" />;
+ case'song': return <Music className="w-5 h-5 text-[var(--tentative)]" />;
  case'idea': return <Sparkles className="w-5 h-5 text-[var(--acc)]" />;
  case'setlist': return <Disc className="w-5 h-5 text-purple-400" />;
  case'rehearsal':
- case'concert': return <Calendar className="w-5 h-5 text-emerald-400" />;
+ case'concert': return <Calendar className="w-5 h-5 text-[var(--ok)]" />;
  case'pitch':
  case'epk': return <FileText className="w-5 h-5 text-sky-400" />;
  default: return <Share2 className="w-5 h-5 text-[var(--acc)]" />;
@@ -125,7 +125,7 @@ export function ShareModal({
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
  <button
  onClick={handleWhatsApp}
- className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-emerald-900/30 active:scale-95"
+ className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-emerald-900/30 active:scale-95"
  >
  <MessageSquare className="w-4 h-4 fill-[var(--surface)]/20" />
  <span>WhatsApp</span>
@@ -153,7 +153,7 @@ export function ShareModal({
 
  <button
  onClick={handleEmail}
- className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-indigo-900/30 active:scale-95"
+ className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-semibold text-xs transition-all shadow-lg shadow-indigo-900/30 active:scale-95"
  >
  <Mail className="w-4 h-4" />
  <span>Email</span>
@@ -164,7 +164,7 @@ export function ShareModal({
  <div className="p-3 rounded-[var(--r-m)] bg-white/[0.03] border-[var(--hair)] space-y-1.5">
  <label className="text-xs font-medium text-[var(--ink-2)] flex items-center justify-between">
  <span className="flex items-center gap-1.5">
- <Phone className="w-3.5 h-3.5 text-emerald-400" />
+ <Phone className="w-3.5 h-3.5 text-[var(--ok)]" />
  Número de WhatsApp (Opcional)
  </span>
  <span className="text-[10px] text-[var(--ink-2)]">
@@ -226,7 +226,7 @@ export function ShareModal({
  </button>
  <button
  onClick={handleWhatsApp}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)] transition-colors flex items-center gap-1.5 shadow-md"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] transition-colors flex items-center gap-1.5 shadow-md"
  >
  <Send className="w-3.5 h-3.5" />
  Enviar a WhatsApp

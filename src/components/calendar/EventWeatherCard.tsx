@@ -135,7 +135,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  )}
  {hasAlerts && (
  <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
- dangerAlertsCount > 0 ?'bg-rose-500 text-[var(--ink)] animate-pulse' :'bg-[var(--acc)] text-[var(--on-acc)]'
+ dangerAlertsCount > 0 ?'bg-[var(--alert)] text-[var(--ink)] animate-pulse' :'bg-[var(--acc)] text-[var(--on-acc)]'
  }`}>
  {dangerAlertsCount > 0 ?'⚠️ Alerta Clima' :'Aviso Meteo'}
  </span>
@@ -181,7 +181,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <span className={`p-1 rounded-md ${
  hasAlerts 
  ? dangerAlertsCount > 0 
- ?'bg-rose-500/20 text-rose-400' 
+ ?'bg-[var(--alert)]/20 text-[var(--alert)]' 
  :'bg-[var(--acc)]/20 text-[var(--acc)]'
  :'bg-[var(--acc)]/15 text-[var(--acc)]'
  }`}>
@@ -195,7 +195,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {hasAlerts && (
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
  dangerAlertsCount > 0
- ?'bg-rose-500 text-white shadow-xs'
+ ?'bg-[var(--alert)] text-white shadow-xs'
  :'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
  }`}>
  {dangerAlertsCount > 0 ?'Alerta Activa' :'Aviso Meteo'}
@@ -365,8 +365,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {hasAlerts && (
  <div className="space-y-2 pt-1">
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1">
- <AlertTriangle className="w-3 h-3 text-rose-400 animate-pulse" />
+ <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--alert)] flex items-center gap-1">
+ <AlertTriangle className="w-3 h-3 text-[var(--alert)] animate-pulse" />
  Alertas de Escenario y Directo ({weatherData.alerts.length})
  </span>
  <span className="text-[9px] font-mono text-[var(--ink-2)]">
@@ -394,7 +394,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <div className="flex items-start gap-2.5">
  <div className={`p-1.5 rounded-[var(--r-s)] shrink-0 mt-0.5 ${
  isDanger 
- ?'bg-rose-500/20 border-[var(--alert)]/40' 
+ ?'bg-[var(--alert)]/20 border-[var(--alert)]/40' 
  :'bg-[var(--acc)]/20 /40'
  }`}>
  <AnimatedWeatherIcon
@@ -410,7 +410,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
  isDanger
- ?'bg-rose-500 text-white shadow-xs'
+ ?'bg-[var(--alert)] text-white shadow-xs'
  :'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
  }`}>
  {isDanger ?'Peligro Extremo' :'Precaución'}

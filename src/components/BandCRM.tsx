@@ -818,8 +818,8 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  );
  case'no_disponible':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-rose-500/15 text-rose-400 whitespace-nowrap shrink-0">
- <X className="w-3 h-3 text-rose-400 shrink-0" />
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--alert)]/15 text-[var(--alert)] whitespace-nowrap shrink-0">
+ <X className="w-3 h-3 text-[var(--alert)] shrink-0" />
  <span>No Disponible</span>
  </span>
  );
@@ -915,12 +915,12 @@ Bakandeya Agent Manager IA & Músicos`;
  onClick={() => { setSubTab('registered_bands'); fetchRegisteredBands(); }}
  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
  subTab ==='registered_bands'
- ?'bg-emerald-500/20 text-[var(--ink-2)] shadow-sm'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <span>Registro</span>
- <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/30 text-[var(--ink)] font-bold">
+ <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[var(--ok)]/30 text-[var(--ink)] font-bold">
  {registeredBands.length}
  </span>
  </button>
@@ -974,7 +974,7 @@ Bakandeya Agent Manager IA & Músicos`;
  className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
  title="Exportar Excel Completo (.xlsx)"
  >
- <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+ <FileSpreadsheet className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span className="hidden sm:inline">Excel</span>
  </a>
  </div>
@@ -986,11 +986,11 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
  <h3 className="text-xl font-bold font-display text-[var(--ink)] flex items-center gap-2">
- <Building2 className="w-5 h-5 text-emerald-400" />
+ <Building2 className="w-5 h-5 text-[var(--ok)]" />
  <span>Registro de Nuevas Bandas Clientes (registro_bandas)</span>
  </h3>
  <p className="text-xs text-[var(--ink-2)] font-mono mt-0.5">
- Tabla oficial de Supabase <span className="text-emerald-400 font-bold">registro_bandas</span> con la columna <span className="text-[var(--acc)]/70 font-bold">band_id</span> situándose en la extrema derecha.
+ Tabla oficial de Supabase <span className="text-[var(--ok)] font-bold">registro_bandas</span> con la columna <span className="text-[var(--acc)]/70 font-bold">band_id</span> situándose en la extrema derecha.
  </p>
  </div>
  <div className="flex items-center gap-2 shrink-0">
@@ -1004,7 +1004,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
+ className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
  >
  <FileSpreadsheet className="w-3.5 h-3.5" />
  <span>Excel (.xlsx)</span>
@@ -1044,7 +1044,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </td>
  <td className="p-3 text-[var(--ink-2)]">{band.email ||'—'}</td>
  <td className="p-3">
- <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-indigo-500/15 text-indigo-300">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[var(--tentative)]/15 text-indigo-300">
  {band.plan ||'emergente'}
  </span>
  </td>
@@ -1052,7 +1052,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {band.fecha_registro ? new Date(band.fecha_registro).toLocaleDateString() :'—'}
  </td>
  <td className="p-3">
- <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--ok)]/15 text-[var(--ok)]">
  {band.estado_cuenta ||'activo'}
  </span>
  </td>
@@ -1279,7 +1279,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </span>
 
  <span className="bg-[var(--surface)]/80 px-2 py-0.5 rounded-md text-[var(--ink-2)] flex items-center gap-1 shrink-0 max-w-[140px]" title={band.localizacion}>
- <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
+ <MapPin className="w-3 h-3 text-[var(--alert)] shrink-0" />
  <span className="truncate">{band.localizacion}</span>
  </span>
 
@@ -1401,7 +1401,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Delete */}
  <button
  onClick={() => handleDeleteBand(band.id, band.nombre_banda)}
- className="p-1.5 bg-rose-500/15 hover:bg-rose-500/15 text-rose-400 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 bg-[var(--alert)]/15 hover:bg-[var(--alert)]/15 text-[var(--alert)] rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Eliminar Banda"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1480,7 +1480,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </td>
  <td className="py-2 px-3 align-middle whitespace-nowrap">
  <span className="inline-flex items-center gap-1 text-[var(--ink-2)] max-w-[140px] sm:max-w-[190px]" title={band.localizacion}>
- <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
+ <MapPin className="w-3 h-3 text-[var(--alert)] shrink-0" />
  <span className="truncate">{band.localizacion}</span>
  </span>
  </td>
@@ -1526,7 +1526,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <button
  onClick={() => handleDeleteBand(band.id, band.nombre_banda)}
- className="p-1.5 bg-rose-500/15 hover:bg-rose-500/15 text-rose-400 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 bg-[var(--alert)]/15 hover:bg-[var(--alert)]/15 text-[var(--alert)] rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Eliminar"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1768,7 +1768,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={() => setFormImageUrl('')}
- className="text-[9px] text-rose-400 hover:underline block text-center"
+ className="text-[9px] text-[var(--alert)] hover:underline block text-center"
  >
  Quitar imagen
  </button>

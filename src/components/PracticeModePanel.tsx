@@ -500,7 +500,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  };
 
  const chordsSourceLabel = (source: TrackChordsResult['chordsSource']) => {
- if (source ==='audio_real') return { text:'🎧 Transcrito escuchando esta pista real', tone:'text-emerald-400' };
+ if (source ==='audio_real') return { text:'🎧 Transcrito escuchando esta pista real', tone:'text-[var(--ok)]' };
  if (source ==='ia_sin_audio') return { text:'🤖 Propuesta de IA sin poder escuchar el audio', tone:'text-[var(--acc)]' };
  return { text:'📐 Plantilla genérica (sin IA disponible)', tone:'text-[var(--ink-2)]' };
  };
@@ -520,7 +520,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {/* Header */}
  <div className={`px-5 py-4 flex items-center justify-between border-b ${isStitchLight ?' bg-[var(--bg)]' :' bg-[var(--surface)]/60'}`}>
  <div className="flex items-center gap-2.5 min-w-0">
- <div className="w-9 h-9 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+ <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center shrink-0">
  <Headphones className="w-5 h-5" />
  </div>
  <div className="min-w-0">
@@ -549,7 +549,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <div className="overflow-y-auto p-5 space-y-4">
  {/* Aviso: qué instrumento detectó / instrucción si no hay ninguno */}
  {myTrack ? (
- <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-emerald-500/10 text-[var(--ink-2)]">
+ <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ink-2)]">
  Tu instrumento (<strong>{currentUser?.instrument}</strong>) coincide con la pista <strong>{myTrack.nombre}</strong>.
  </div>
  ) : (
@@ -581,7 +581,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {/* Transporte + velocidad + loop */}
  <div className={`rounded-[var(--r-m)] p-3 space-y-3 ${cardBg}`}>
  <div className="flex items-center gap-3">
- <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-emerald-500 text-[var(--ink)] flex items-center justify-center shrink-0 hover:bg-emerald-400">
+ <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 hover:bg-emerald-400">
  {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
  </button>
  <span className="text-[11px] font-mono text-[var(--ink-2)] w-10 text-right">{formatTime(currentTime)}</span>
@@ -690,7 +690,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  title="Marcar beat de compás — ponte en el primer golpe fuerte del compás (en cualquier punto de la canción) y pulsa aquí: la claqueta recalcula toda su rejilla a partir de ese instante"
  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] ${
  beatAnchorSec > 0
- ?'bg-emerald-500/20 border-[var(--ok)]/40 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/20 border-[var(--ok)]/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/80 border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -758,12 +758,12 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <div className="flex items-center gap-2 px-3 py-2">
  <span className="text-xs font-semibold truncate flex-1 min-w-0">
  {tr.nombre}
- {isMine && <span className="ml-1.5 text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400">TÚ</span>}
+ {isMine && <span className="ml-1.5 text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)]">TÚ</span>}
  </span>
  <button
  onClick={() => toggleMute(tr.id)}
  title="Silenciar (solo en mi mezcla)"
- className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.muted ?'bg-red-500/80 text-[var(--ink)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+ className={`w-6 h-6 rounded text-[10px] font-mono font-bold ${eff.muted ?'bg-[var(--alert)]/80 text-[var(--ink)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
  >
  M
  </button>
@@ -796,7 +796,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
 
  {isExpanded && (chords || chordsErr) && (
  <div className="px-3 pb-3 space-y-2 border-t border-[var(--hair)] pt-2">
- {chordsErr && <p className="text-[11px] text-red-400">{chordsErr}</p>}
+ {chordsErr && <p className="text-[11px] text-[var(--alert)]">{chordsErr}</p>}
  {chords && (
  <>
  <p className={`text-[10px] font-mono ${chordsSourceLabel(chords.chordsSource).tone}`}>
@@ -809,7 +809,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {onApplyAsMainChords && (
  <button
  onClick={() => onApplyAsMainChords(chords.cifradoTexto, chords.guiaSustituto)}
- className="flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1.5 rounded-[var(--r-s)] bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25"
+ className="flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/15 text-indigo-300 hover:bg-[var(--tentative)]/25"
  >
  <CheckCircle2 className="w-3 h-3" /> Usar como cifrado principal de la canción
  </button>
@@ -849,7 +849,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <Download className="w-3.5 h-3.5" /> {isExporting ==='mezcla-actual' ?'Generando…' :'Mi mezcla actual'}
  </button>
  </div>
- {exportError && <p className="text-[11px] text-red-400">{exportError}</p>}
+ {exportError && <p className="text-[11px] text-[var(--alert)]">{exportError}</p>}
  </div>
  </div>
  </div>

@@ -538,15 +538,15 @@ export default function TourManager({
 
  {/* Sync Toast Feedback */}
  {syncFeedback && (
- <div className="p-3.5 px-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 bg-emerald-500/10 text-[var(--ink-2)] animate-in fade-in slide-in-from-top-2 duration-200">
+ <div className="p-3.5 px-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 bg-[var(--ok)]/10 text-[var(--ink-2)] animate-in fade-in slide-in-from-top-2 duration-200">
  <div className="flex items-center gap-2.5">
- <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+ <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className="font-mono">{syncFeedback.message}</span>
  </div>
  {onNavigate && (
  <button
  onClick={() => onNavigate('finanzas')}
- className="px-2.5 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink)] font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1 rounded bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)] font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
  >
  <span>Ver en Finanzas</span>
  <ArrowRight className="w-3 h-3" />
@@ -604,7 +604,7 @@ export default function TourManager({
  <div className="flex items-center gap-2">
  <h3 className="font-bold text-lg font-display">{tour.nombre}</h3>
  {isCurrentUserConvocado ? (
- <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500/20 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
  ✓ Convocado
  </span>
  ) : (
@@ -628,7 +628,7 @@ export default function TourManager({
  <span className={`text-[10px] px-2 py-0.5 rounded font-mono flex items-center gap-1 ${
  isFormacionParcial 
  ?'bg-purple-500/10 text-purple-300 border-[var(--acc)]/30' 
- :'bg-emerald-500/10 text-[var(--ink-2)] border-[var(--ok)]/20'
+ :'bg-[var(--ok)]/10 text-[var(--ink-2)] border-[var(--ok)]/20'
  }`} title={tour.convocados_nombres?.join(",") ||'Toda la banda'}>
  <Users className="w-3 h-3" />
  {isFormacionParcial ? `Banda Parcial (${convocadosCount} músicos)` : `Banda Completa (${availableMembers.length})`}
@@ -655,7 +655,7 @@ export default function TourManager({
  <button onClick={() => handleOpenEditModal(tour)} className="p-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer" title="Editar">
  <Edit3 className="w-4 h-4" />
  </button>
- <button onClick={() => handleDelete(tour.id, tour.nombre)} className="p-1.5 rounded-[var(--r-s)] hover:bg-rose-500/15 text-[var(--ink-2)] hover:text-rose-400 transition-colors cursor-pointer" title="Eliminar">
+ <button onClick={() => handleDelete(tour.id, tour.nombre)} className="p-1.5 rounded-[var(--r-s)] hover:bg-[var(--alert)]/15 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors cursor-pointer" title="Eliminar">
  <Trash2 className="w-4 h-4" />
  </button>
  </div>
@@ -665,17 +665,17 @@ export default function TourManager({
  <div className="grid grid-cols-3 gap-2 mb-4">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)]">
  <span className="text-[9px] text-[var(--ink-2)] uppercase tracking-wider block font-mono">Logística</span>
- <div className="text-xs font-bold text-rose-400 mt-0.5">
+ <div className="text-xs font-bold text-[var(--alert)] mt-0.5">
  -{totalGastos} €
  </div>
  </div>
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)]">
  <span className="text-[9px] text-[var(--ink-2)] uppercase tracking-wider block font-mono">Caché Est.</span>
- <div className="text-xs font-bold text-emerald-400 mt-0.5">
+ <div className="text-xs font-bold text-[var(--ok)] mt-0.5">
  +{totalIngresos} €
  </div>
  </div>
- <div className={`p-2.5 rounded-[var(--r-m)] ${beneficioNeto >= 0 ?'bg-emerald-500/10 border-[var(--ok)]/20 text-emerald-400' :'bg-rose-500/10 border-[var(--alert)]/20 text-rose-400'}`}>
+ <div className={`p-2.5 rounded-[var(--r-m)] ${beneficioNeto >= 0 ?'bg-[var(--ok)]/10 border-[var(--ok)]/20 text-[var(--ok)]' :'bg-[var(--alert)]/10 border-[var(--alert)]/20 text-[var(--alert)]'}`}>
  <span className="text-[9px] opacity-80 uppercase tracking-wider block font-mono">Margen Neto</span>
  <div className="text-xs font-extrabold mt-0.5 flex items-center gap-1">
  <TrendingUp className="w-3 h-3" />
@@ -708,7 +708,7 @@ export default function TourManager({
  </div>
  <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
  {stop.ingresoCacheEstimated ? (
- <span className="text-emerald-400 font-bold">+{stop.ingresoCacheEstimated}€</span>
+ <span className="text-[var(--ok)] font-bold">+{stop.ingresoCacheEstimated}€</span>
  ) : null}
  <span className="text-[var(--acc)]/70 font-mono text-xs font-bold">{stop.fecha}</span>
  </div>
@@ -730,7 +730,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => handleVolcarEnFinanzas(tour)}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold uppercase tracking-wider bg-emerald-500/15 hover:bg-emerald-500/25 text-[var(--ink-2)] transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold uppercase tracking-wider bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
  title="Registra los cachés y gastos logísticos calculados en el libro diario de Finanzas"
  >
  <DollarSign className="w-3.5 h-3.5" />
@@ -987,7 +987,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => handleRemoveVehicle(vIdx)}
- className="p-1 rounded-[var(--r-s)] text-rose-400 hover:bg-rose-500/20 transition-colors text-xs flex items-center gap-1 cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] text-[var(--alert)] hover:bg-[var(--alert)]/20 transition-colors text-xs flex items-center gap-1 cursor-pointer"
  title="Eliminar este vehículo"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1121,7 +1121,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => removeStop(idx)}
- className="absolute top-3 right-3 p-1.5 rounded-[var(--r-s)] bg-rose-500/20 text-[var(--ink-2)] hover:bg-rose-500/40 transition-colors cursor-pointer"
+ className="absolute top-3 right-3 p-1.5 rounded-[var(--r-s)] bg-[var(--alert)]/20 text-[var(--ink-2)] hover:bg-[var(--alert)]/40 transition-colors cursor-pointer"
  title="Eliminar parada"
  >
  <Trash2 className="w-4 h-4" />
@@ -1203,7 +1203,7 @@ export default function TourManager({
 
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[var(--hair)]">
  <div>
- <label className="text-[10px] text-emerald-400 block font-mono">Caché / Taquilla (€)</label>
+ <label className="text-[10px] text-[var(--ok)] block font-mono">Caché / Taquilla (€)</label>
  <input
  type="number"
  min="0"
@@ -1286,21 +1286,21 @@ export default function TourManager({
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
  <div>
  <span className="text-[10px] text-[var(--ink-2)] uppercase font-mono block">Caché Total Est.</span>
- <span className="text-base sm:text-lg font-bold text-emerald-400">+{totalIngresos} €</span>
+ <span className="text-base sm:text-lg font-bold text-[var(--ok)]">+{totalIngresos} €</span>
  </div>
  <div>
  <span className="text-[10px] text-[var(--ink-2)] uppercase font-mono block">Gastos Logística</span>
- <span className="text-base sm:text-lg font-bold text-rose-400">-{totalGastos} €</span>
+ <span className="text-base sm:text-lg font-bold text-[var(--alert)]">-{totalGastos} €</span>
  </div>
  <div>
  <span className="text-[10px] text-[var(--ink-2)] uppercase font-mono block">Margen Neto Total</span>
- <span className={`text-base sm:text-lg font-extrabold ${neto >= 0 ?'text-emerald-400' :'text-rose-400'}`}>
+ <span className={`text-base sm:text-lg font-extrabold ${neto >= 0 ?'text-[var(--ok)]' :'text-[var(--alert)]'}`}>
  {neto >= 0 ? `+${neto}` : neto} €
  </span>
  </div>
  <div>
  <span className="text-[10px] text-purple-300 uppercase font-mono block">Neto / Músico ({numPers}pax)</span>
- <span className={`text-base sm:text-lg font-extrabold ${netoPorPersona >= 0 ?'text-purple-300' :'text-rose-400'}`}>
+ <span className={`text-base sm:text-lg font-extrabold ${netoPorPersona >= 0 ?'text-purple-300' :'text-[var(--alert)]'}`}>
  {netoPorPersona >= 0 ? `+${netoPorPersona}` : netoPorPersona} €
  </span>
  </div>
@@ -1339,8 +1339,8 @@ export default function TourManager({
  <ModalPortal isOpen={!!tourToDelete} onClose={() => setTourToDelete(null)}>
  <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-md rounded-[var(--r-l)] ${colors.card} p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150 my-auto`}>
- <div className="flex items-center gap-3 text-rose-400">
- <div className="p-3 rounded-full bg-rose-500/10 shrink-0">
+ <div className="flex items-center gap-3 text-[var(--alert)]">
+ <div className="p-3 rounded-full bg-[var(--alert)]/10 shrink-0">
  <Trash2 className="w-6 h-6" />
  </div>
  <div>
@@ -1364,7 +1364,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={confirmDelete}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase tracking-wider bg-rose-600 hover:bg-rose-500 text-[var(--ink)] shadow-md active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase tracking-wider bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] shadow-md active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
  >
  <Trash2 className="w-4 h-4" />
  Sí, Eliminar Gira

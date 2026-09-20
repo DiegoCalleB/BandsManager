@@ -264,7 +264,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => handleRemoveCity(city)}
- className="hover:text-red-400 ml-1"
+ className="hover:text-[var(--alert)] ml-1"
  >
  <X className="w-3 h-3" />
  </button>
@@ -345,7 +345,7 @@ export function CampaignManagerModal({
  <button
  type="button"
  onClick={() => handleRemoveDate(idx)}
- className="text-[var(--ink-2)] hover:text-red-400 ml-1"
+ className="text-[var(--ink-2)] hover:text-[var(--alert)] ml-1"
  title="Eliminar fecha"
  >
  <X className="w-3.5 h-3.5" />
@@ -633,7 +633,7 @@ export function CampaignManagerModal({
  onDeleteCampaign(camp.id);
  }
  }}
- className="p-1.5 text-[var(--ink-2)] hover:text-red-400 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 transition-colors"
  title="Eliminar campaña"
  >
  <Trash2 className="w-4 h-4" />
@@ -651,7 +651,7 @@ export function CampaignManagerModal({
  {/* Footer */}
  <div className="p-4 border-t border-[var(--hair)] bg-[var(--surface)] flex justify-between items-center text-xs text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
- <ShieldCheck className="w-4 h-4 text-emerald-400" />
+ <ShieldCheck className="w-4 h-4 text-[var(--ok)]" />
  <span>Persistencia en Supabase PostgreSQL</span>
  </div>
  <button

@@ -222,8 +222,8 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {isRecording && (
- <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-rose-500/20 text-[var(--ink-2)] animate-pulse">
- <span className="w-2 h-2 rounded-full bg-rose-500" /> REC {formatTime(recordDuration)}
+ <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-[var(--alert)]/20 text-[var(--ink-2)] animate-pulse">
+ <span className="w-2 h-2 rounded-full bg-[var(--alert)]" /> REC {formatTime(recordDuration)}
  </span>
  )}
  </div>
@@ -249,7 +249,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={stopRecording}
- className="px-6 py-2.5 rounded-[var(--r-m)] bg-rose-500 hover:bg-rose-400 text-[var(--ink)] font-mono font-bold text-xs uppercase flex items-center gap-2 mx-auto cursor-pointer shadow-lg shadow-rose-500/30 active:scale-95 transition-all"
+ className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-rose-400 text-[var(--ink)] font-mono font-bold text-xs uppercase flex items-center gap-2 mx-auto cursor-pointer shadow-lg shadow-rose-500/30 active:scale-95 transition-all"
  >
  <Square className="w-4 h-4 fill-current" />
  <span>Detener Grabación ({formatTime(recordDuration)})</span>
@@ -303,7 +303,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={handleSaveRecording}
- className="px-4 py-1.5 rounded-[var(--r-m)] bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] text-xs font-mono font-bold cursor-pointer"
  >
  Guardar Grabación
  </button>
@@ -372,7 +372,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </span>
  <button
  onClick={() => handleDeleteRecording(rec.id)}
- className="text-[var(--ink-2)] hover:text-rose-400 p-0.5 cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5 cursor-pointer"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -426,7 +426,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {acta && (
  <button
  onClick={handleCopyToWhatsApp}
- className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-emerald-500/20 text-[var(--ink-2)] hover:bg-emerald-500/30 text-xs font-mono font-bold transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 text-xs font-mono font-bold transition-all cursor-pointer"
  title="Copiar formato listo para WhatsApp"
  >
  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -456,7 +456,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {/* Temas Bordados vs A Pulir */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] space-y-3">
  <div>
- <h4 className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider mb-1.5">
+ <h4 className="text-xs font-mono font-bold text-[var(--ok)] uppercase tracking-wider mb-1.5">
  🟢 Temas Bordados
  </h4>
  <ul className="text-xs text-[var(--ink-2)] space-y-1 pl-4 list-disc">
@@ -467,7 +467,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  <div>
- <h4 className="text-xs font-mono font-bold text-rose-400 uppercase tracking-wider mb-1.5">
+ <h4 className="text-xs font-mono font-bold text-[var(--alert)] uppercase tracking-wider mb-1.5">
  🔴 A Repasar Próximo Día
  </h4>
  <ul className="text-xs text-[var(--ink-2)] space-y-1 pl-4 list-disc">

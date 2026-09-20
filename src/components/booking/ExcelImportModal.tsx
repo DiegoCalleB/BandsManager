@@ -460,7 +460,7 @@ export function ExcelImportModal({
  {/* MODAL HEADER */}
  <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--hair)] bg-gradient-to-r from-emerald-950/30 via-zinc-900/50 to-amber-950/20">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-sm">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ok)]/20 flex items-center justify-center text-[var(--ok)] shadow-sm">
  <FileSpreadsheet className="w-5 h-5" />
  </div>
  <div>
@@ -468,7 +468,7 @@ export function ExcelImportModal({
  <h3 className="text-base sm:text-lg font-bold font-display">
  Importar Listado de Salas, Ayuntamientos o Bandas
  </h3>
- <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-emerald-500/20 text-[var(--ink-2)]">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-[var(--ok)]/20 text-[var(--ink-2)]">
  Excel / CSV
  </span>
  </div>
@@ -485,7 +485,7 @@ export function ExcelImportModal({
  className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]700 transition-all cursor-pointer"
  title="Descargar archivo Excel de ejemplo con las columnas recomendadas"
  >
- <Download className="w-3.5 h-3.5 text-emerald-400" />
+ <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Plantilla Ejemplo</span>
  </button>
  <button
@@ -501,21 +501,21 @@ export function ExcelImportModal({
  {/* STEP PROGRESS INDICATOR */}
  <div className="flex items-center justify-between px-6 py-2.5 bg-zinc-950/60 border-b border-[var(--hair)] text-xs">
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ?'bg-emerald-500 text-[var(--ink)]' : step > 1 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ?'bg-[var(--ok)] text-[var(--ink)]' : step > 1 ?'bg-[var(--ok)]/20 text-[var(--ok)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  {step > 1 ? <Check className="w-3 h-3" /> :'1'}
  </div>
  <span className={step === 1 ?'font-bold text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>1. Subir archivo</span>
  </div>
  <div className="w-8 h-px bg-[var(--sunken)]" />
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ?'bg-emerald-500 text-[var(--ink)]' : step > 2 ?'bg-emerald-500/20 text-emerald-400' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 2 ?'bg-[var(--ok)] text-[var(--ink)]' : step > 2 ?'bg-[var(--ok)]/20 text-[var(--ok)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  {step > 2 ? <Check className="w-3 h-3" /> :'2'}
  </div>
  <span className={step === 2 ?'font-bold text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>2. Mapear columnas</span>
  </div>
  <div className="w-8 h-px bg-[var(--sunken)]" />
  <div className="flex items-center gap-2">
- <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ?'bg-emerald-500 text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
+ <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 3 ?'bg-[var(--ok)] text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
  3
  </div>
  <span className={step === 3 ?'font-bold text-[var(--ink-2)]' :'text-[var(--ink-2)]'}>3. Validar y Guardar</span>
@@ -540,7 +540,7 @@ export function ExcelImportModal({
  onChange={handleFileChange}
  className="hidden"
  />
- <div className="w-16 h-16 rounded-[var(--r-l)] bg-emerald-500/10 group-hover:bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4 transition-all group-hover:scale-110 shadow-sm">
+ <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--ok)]/10 group-hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mb-4 transition-all group-hover:scale-110 shadow-sm">
  <Upload className="w-8 h-8" />
  </div>
  <h4 className="text-base font-bold text-[var(--ink)] group-hover:text-[var(--ink-2)] transition-colors">
@@ -550,7 +550,7 @@ export function ExcelImportModal({
  Soporta formatos <strong className="text-[var(--ink)]">.xlsx, .xls y .csv</strong> de cualquier hoja de cálculo que use tu banda.
  </p>
  <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full bg-[var(--sunken)]/80 text-[11px] text-[var(--ink-2)] border-[var(--hair)]700">
- <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Detección automática de salas, ciudades, teléfonos, emails y aforos</span>
  </div>
  </div>
@@ -567,7 +567,7 @@ export function ExcelImportModal({
  <button
  type="button"
  onClick={handleDownloadTemplate}
- className="px-3 py-2 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-[var(--ink-2)] flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
+ className="px-3 py-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
  >
  <Download className="w-3.5 h-3.5" />
  <span>Descargar Plantilla</span>
@@ -582,8 +582,8 @@ export function ExcelImportModal({
  <div className="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-[var(--hair)]">
  <div>
  <h4 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
- <CheckCircle2 className="w-4 h-4 text-emerald-400" />
- Archivo cargado: <span className="text-emerald-400 font-mono">{fileName}</span>
+ <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
+ Archivo cargado: <span className="text-[var(--ok)] font-mono">{fileName}</span>
  </h4>
  <p className="text-xs text-[var(--ink-2)]">
  Se han detectado {rawRows.length} filas. Revisa la correspondencia de columnas antes de importar.
@@ -637,7 +637,7 @@ export function ExcelImportModal({
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80 space-y-1.5">
  <label className="text-xs font-bold text-[var(--ink-2)] flex items-center justify-between">
  <span>Nombre Sala / Contacto / Banda *</span>
- <span className="text-[10px] text-emerald-400 font-mono">Requerido</span>
+ <span className="text-[10px] text-[var(--ok)] font-mono">Requerido</span>
  </label>
  <select
  value={mapping.nombre_sala}
@@ -885,7 +885,7 @@ export function ExcelImportModal({
  type="checkbox"
  checked={updateDuplicates}
  onChange={e => setUpdateDuplicates(e.target.checked)}
- className="mt-0.5 rounded text-emerald-500 focus:ring-0"
+ className="mt-0.5 rounded text-[var(--ok)] focus:ring-0"
  />
  <div className="text-xs">
  <p className="font-bold text-[var(--ink)]">Fusionar y actualizar contactos duplicados</p>
@@ -898,11 +898,11 @@ export function ExcelImportModal({
  type="checkbox"
  checked={enrichMissingWithAi}
  onChange={e => setEnrichMissingWithAi(e.target.checked)}
- className="mt-0.5 rounded text-indigo-500 focus:ring-0"
+ className="mt-0.5 rounded text-[var(--tentative)] focus:ring-0"
  />
  <div className="text-xs">
  <p className="font-bold text-indigo-300 flex items-center gap-1.5">
- <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
  Enriquecer contactos sin email con IA
  </p>
  <p className="text-[var(--ink-2)]">Activa el Agente Scout tras guardar para investigar webs oficiales y rellenar emails verificados.</p>
@@ -920,7 +920,7 @@ export function ExcelImportModal({
  type="checkbox"
  checked={parsedRows.length > 0 && parsedRows.every(r => r.selected)}
  onChange={e => handleToggleSelectAll(e.target.checked)}
- className="rounded text-emerald-500"
+ className="rounded text-[var(--ok)]"
  />
  </th>
  <th className="p-2.5">Nombre</th>
@@ -949,7 +949,7 @@ export function ExcelImportModal({
  prev.map(r => r.id === row.id ? { ...r, selected: !r.selected } : r)
  );
  }}
- className="rounded text-emerald-500 cursor-pointer"
+ className="rounded text-[var(--ok)] cursor-pointer"
  />
  </td>
  <td className="p-2.5 font-bold text-[var(--ink)]">
@@ -993,7 +993,7 @@ export function ExcelImportModal({
  <button
  type="button"
  onClick={() => handleRowDelete(row.id)}
- className="p-1 rounded text-[var(--ink-2)] hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+ className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors cursor-pointer"
  title="Eliminar de la importación"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1046,7 +1046,7 @@ export function ExcelImportModal({
  <button
  type="button"
  onClick={buildParsedRows}
- className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] shadow-lg active:scale-95 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] shadow-lg active:scale-95 transition-all cursor-pointer"
  >
  <span>Continuar a Vista Previa ({rawRows.length} filas)</span>
  <ArrowRight className="w-3.5 h-3.5" />
@@ -1058,7 +1058,7 @@ export function ExcelImportModal({
  type="button"
  disabled={isImporting || selectedCount === 0}
  onClick={handleExecuteImport}
- className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] shadow-xl active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] shadow-xl active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isImporting ? (
  <>

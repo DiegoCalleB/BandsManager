@@ -64,14 +64,14 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalSongs} Temas
  </span>
  <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
- <Globe className="w-3.5 h-3.5 text-red-400" /> {totalVideos} Vídeos
+ <Globe className="w-3.5 h-3.5 text-[var(--alert)]" /> {totalVideos} Vídeos
  </span>
  <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
  <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" /> {totalEvents} Fechas
  </span>
  {hasRider && (
  <span className="text-xs px-3 py-1 rounded-full bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-2)] flex items-center gap-1.5">
- <Layers className="w-3.5 h-3.5 text-emerald-400" /> Rider Técnico
+ <Layers className="w-3.5 h-3.5 text-[var(--ok)]" /> Rider Técnico
  </span>
  )}
  </div>
@@ -109,7 +109,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace EPK"
  >
- {copiedEpk ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+ {copiedEpk ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
  </button>
  </div>
  </div>
@@ -145,7 +145,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace Fans"
  >
- {copiedFans ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+ {copiedFans ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
  </button>
  </div>
  </div>

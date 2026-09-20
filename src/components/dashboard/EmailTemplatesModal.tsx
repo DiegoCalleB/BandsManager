@@ -63,7 +63,7 @@ Si os motiva la idea, decidnos y os pasamos un par de fechas que tenemos pre-res
  title:'3. Nota de Prensa & Estreno a Medios y Radios (Radio 3 / Prensa)',
  type:'Prensa & Radios',
  icon: Radio,
- badgeColor:'bg-rose-500/20 text-[var(--ink-2)] border-[var(--alert)]/30',
+ badgeColor:'bg-[var(--alert)]/20 text-[var(--ink-2)] border-[var(--alert)]/30',
  subject:'NOTA DE PRENSA: {bandName} estrena nuevo sencillo y anuncia fechas de gira',
  body: `A la atención del equipo de {nombre_medio},
 

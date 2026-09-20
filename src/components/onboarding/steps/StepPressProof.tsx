@@ -52,7 +52,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
- <TrendingUp className="w-3.5 h-3.5 text-emerald-400" /> Oyentes Mensuales Spotify
+ <TrendingUp className="w-3.5 h-3.5 text-[var(--ok)]" /> Oyentes Mensuales Spotify
  </label>
  <input
  type="text"
@@ -124,7 +124,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
  <button
  type="button"
  onClick={() => onRemoveQuote(q.id)}
- className="p-1 rounded text-[var(--ink-2)] hover:text-red-400"
+ className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--alert)]"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>

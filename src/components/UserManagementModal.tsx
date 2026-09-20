@@ -260,7 +260,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-2.5">
- <div className="w-9 h-9 rounded-[var(--r-m)] bg-indigo-500/10 -indigo-500/20 text-indigo-400 flex items-center justify-center">
+ <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10 -indigo-500/20 text-[var(--tentative)] flex items-center justify-center">
  <Users className="w-5 h-5" />
  </div>
  <div>
@@ -291,7 +291,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onClick={() => { setActiveTab('list'); setError(null); setSuccessMsg(null); }}
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='list'
- ?'-indigo-400 text-indigo-400'
+ ?'-indigo-400 text-[var(--tentative)]'
  :'-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -302,7 +302,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onClick={() => { setActiveTab('create'); setError(null); setSuccessMsg(null); }}
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='create'
- ?'-indigo-400 text-indigo-400'
+ ?'-indigo-400 text-[var(--tentative)]'
  :'-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -313,7 +313,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onClick={() => { setActiveTab('associate'); setError(null); setSuccessMsg(null); }}
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab ==='associate'
- ?'text-indigo-400 border-b border-[var(--acc)]'
+ ?'text-[var(--tentative)] border-b border-[var(--acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -325,13 +325,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  {/* Messages */}
  <div className="px-6 pt-3">
  {error && (
- <div className="p-3 bg-rose-500/10 -rose-500/20 rounded-[var(--r-m)] text-xs text-rose-400 flex items-center gap-2">
+ <div className="p-3 bg-[var(--alert)]/10 -rose-500/20 rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
  <AlertCircle className="w-4 h-4 shrink-0" />
  <span>{error}</span>
  </div>
  )}
  {successMsg && (
- <div className="p-3 bg-emerald-500/10 -emerald-500/20 rounded-[var(--r-m)] text-xs text-emerald-400 flex items-center gap-2">
+ <div className="p-3 bg-[var(--ok)]/10 -emerald-500/20 rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
  <Check className="w-4 h-4 shrink-0" />
  <span>{successMsg}</span>
  </div>
@@ -386,7 +386,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
  <div className="text-xs text-[var(--ink-2)] flex items-center gap-2 mt-0.5">
  <span className="flex items-center gap-1">
- <Music className="w-3 h-3 text-emerald-400" />
+ <Music className="w-3 h-3 text-[var(--ok)]" />
  <span>{u.instrument ||'Músico'}</span>
  </span>
  </div>
@@ -431,7 +431,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <button
  type="button"
  onClick={() => handleDeleteUser(u.id, u.username)}
- className="p-1.5 rounded-[var(--r-s)] -rose-500/30 text-rose-400 hover:bg-rose-500/10 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] -rose-500/30 text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
  title="Eliminar usuario"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -456,7 +456,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  type="button"
  onClick={() => handleChangePassword(u.id)}
  disabled={loading}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs transition-colors flex items-center gap-1"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs transition-colors flex items-center gap-1"
  >
  <Check className="w-3.5 h-3.5" />
  <span>Guardar</span>
@@ -610,8 +610,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  ) : (
  /* Associate Existing User Form */
  <form onSubmit={handleAssociateUser} className="space-y-4">
- <div className="p-4 bg-indigo-500/5 rounded-[var(--r-l)] text-xs text-[var(--ink-2)]">
- <p className="font-semibold text-indigo-400 mb-1 flex items-center gap-1.5">
+ <div className="p-4 bg-[var(--tentative)]/5 rounded-[var(--r-l)] text-xs text-[var(--ink-2)]">
+ <p className="font-semibold text-[var(--tentative)] mb-1 flex items-center gap-1.5">
  <Sparkles className="w-3.5 h-3.5" />
  <span>¿Músico ya registrado en la plataforma?</span>
  </p>
@@ -669,7 +669,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <button
  type="submit"
  disabled={loading || !assocEmail.trim()}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-indigo-600/20 active:scale-98"
+ className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-md shadow-indigo-600/20 active:scale-98"
  >
  {loading ? (
  <span>Asociando músico...</span>

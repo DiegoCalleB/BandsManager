@@ -750,7 +750,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
  mapStyle === key
- ?'bg-indigo-600 text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--tentative)]/80 text-[var(--ink)] shadow-sm'
  : isStitchLight
  ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'hover:bg-[var(--surface)] text-[var(--ink-2)]'
@@ -784,7 +784,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  }`}>
  <div className="font-bold text-[9px] uppercase tracking-wider mb-1 text-[var(--ink-2)]">Leyenda</div>
  <div className="flex items-center gap-2">
- <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+ <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)] inline-block" />
  <span>Aprobado / Confirmado</span>
  </div>
  <div className="flex items-center gap-2">
@@ -796,7 +796,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <span>Interesado / Negociando</span>
  </div>
  <div className="flex items-center gap-2">
- <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block" />
+ <span className="w-2.5 h-2.5 rounded-full bg-[var(--tentative)] inline-block" />
  <span>Nuevo / Contactado</span>
  </div>
  </div>
