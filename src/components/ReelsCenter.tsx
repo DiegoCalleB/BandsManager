@@ -2519,8 +2519,12 @@ export default function ReelsCenter({
  </div>
 
  {posts.length === 0 ? (
- <div className="py-8 text-center text-xs text-neutral-500 font-mono">
- No hay publicaciones programadas todavía. ¡Sube un vídeo arriba y genera un clip para empezar!
+ <div className="flex flex-col items-center justify-center py-12">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin publicaciones programadas</p>
+ <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">
+ Sube un vídeo y genera un clip viral para comenzar tu campaña.
+ </p>
  </div>
  ) : (
  <div className="space-y-3 max-h-72 overflow-y-auto pr-1">

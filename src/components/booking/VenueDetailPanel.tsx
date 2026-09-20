@@ -13,6 +13,7 @@ import { MultiModelPitchComparatorModal } from'./MultiModelPitchComparatorModal'
 import { BoloConfirmadoSetlistModal } from'./BoloConfirmadoSetlistModal';
 import { formatFestivalDateRange, toIsoDateString } from'../../utils/festivalDateFormat';
 import { HolidayDateWarning } from'../common/HolidayDateWarning';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 import {
  Edit3,
  X,
@@ -1796,8 +1797,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {activeTab ==='emails' && (
  <div className="space-y-3">
  {hiloCompleto.length === 0 ? (
- <div className="p-6 text-center rounded-[var(--r-m)] bg-[#1A1918] border-zinc-800 text-zinc-400 text-xs italic">
- No hay correos registrados en el historial de esta sala aún.
+ <div className="flex flex-col items-center justify-center py-10 px-6">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin correspondencia</p>
+ <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
+ Los correos y conversaciones con esta sala aparecerán aquí.
+ </p>
  </div>
  ) : (
  hiloCompleto.map((msg) => (
@@ -1933,9 +1938,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  {/* Timeline Feed */}
  <div className="space-y-2 max-h-60 overflow-y-auto pr-1 scrollbar-thin">
  {(selectedLead.historial_contacto || []).length === 0 ? (
- <p className="text-[11px] text-zinc-500 italic text-center py-3">
- No hay llamadas ni mensajes registrados aún para esta sala.
+ <div className="flex flex-col items-center justify-center py-6">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-3 font-medium text-[var(--ink)] text-[11px]">Sin interacciones</p>
+ <p className="mt-1.5 text-[var(--ink-2)] text-[10px] max-w-xs text-center">
+ Registra llamadas y mensajes desde la entrada de contacto.
  </p>
+ </div>
  ) : (
  (selectedLead.historial_contacto || []).map((log) => (
  <div

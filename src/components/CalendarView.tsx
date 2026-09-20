@@ -3515,12 +3515,13 @@ export default function CalendarView({
 
  {/* Contenido de eventos del día */}
  {dayEventsList.length === 0 ? (
- <div className="py-4 text-center">
- <p className={`text-xs font-mono ${textSub}`}>
- No hay conciertos ni ensayos programados para este día.
+ <div className="flex flex-col items-center justify-center py-8">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className={`text-xs font-medium ${textSub} mt-4`}>
+ Ningún evento programado
  </p>
- <p className={`text-[10px] font-mono mt-1 ${textMuted}`}>
- Pulsa en <span className="text-[var(--acc)] font-bold">+ Concierto</span> o <span className="text-emerald-400 font-bold">+ Ensayo</span> para agendar en esta fecha.
+ <p className={`text-[10px] ${textMuted} mt-2 max-w-xs`}>
+ Pulsa <span className="text-[var(--acc)] font-bold">+ Concierto</span> o <span className="text-[var(--ok)] font-bold">+ Ensayo</span> para agendar.
  </p>
  </div>
  ) : (
