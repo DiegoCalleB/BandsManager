@@ -2084,7 +2084,7 @@ export default function CalendarView({
  locationQuery: undefined
  };
 
- const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
@@ -2242,7 +2242,7 @@ export default function CalendarView({
  <div key={`month-grid-${year}-${month}`} data-modulo="sala" className="flex-1 min-w-[280px]">
  {showMonthHeader && (
  <div className={`text-center font-bold font-display uppercase tracking-wider text-[10px] mb-3 pb-1 ${
- isStitchLight ?'text-sky-400' :'text-[var(--acc)]'
+ 'text-[var(--acc)]'
  }`}>
  {monthNames[month]} {year}
  </div>
@@ -2282,9 +2282,7 @@ export default function CalendarView({
  // Stylish logic for non-selected vs event vs selected days
  let borderAndBgClass ="";
  if (isSelected) {
- borderAndBgClass = isStitchLight
- ?'bg-sky-500 text-[var(--ink)] font-extrabold border-2 border-[var(--acc)] shadow-xl shadow-sky-500/20 scale-[1.05] z-20'
- :'bg-[var(--acc)] text-[var(--ink)] font-black border-2 shadow-xl shadow-amber-0/25 scale-[1.05] z-20';
+ borderAndBgClass = 'bg-[var(--acc)] text-[var(--on-acc)] font-black border-2 shadow-xl shadow-amber-0/25 scale-[1.05] z-20';
  } else if (isToday) {
  borderAndBgClass ='bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold border-2 /80 shadow-md shadow-amber-0/10 hover: z-10';
  } else if (hasConcert && hasRehearsal) {
@@ -2423,9 +2421,7 @@ export default function CalendarView({
  onClick={() => setSelectedDate(d)}
  className={`flex flex-col items-center justify-center p-2 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isSelected
- ? isStitchLight
- ?'bg-sky-500 text-[var(--ink)] border-[var(--acc)] shadow-md font-bold'
- :'bg-[var(--acc)] text-[var(--on-acc)] shadow-lg font-black'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-lg font-black'
  : isToday
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 /60 font-bold'
  : isStitchLight
@@ -2873,7 +2869,7 @@ export default function CalendarView({
  {/* Top title & Action buttons */}
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div className="min-w-0">
- <h4 className={`text-[10px] font-mono uppercase tracking-widest ${isStitchLight ?"text-sky-500 font-bold" :"text-[var(--acc)]"}`}>
+ <h4 className={`text-[10px] font-mono uppercase tracking-widest ${"text-[var(--acc)]"}`}>
  Calendario de Directos, Ensayos y Reuniones
  </h4>
  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold mt-1 overflow-x-auto no-scrollbar pb-0.5 max-w-full">
@@ -2908,9 +2904,7 @@ export default function CalendarView({
  id="create-event-unified-btn"
  onClick={() => setShowAddEventDropdown(!showAddEventDropdown)}
  className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
- isStitchLight
- ?"bg-amber-600 hover:bg-[var(--acc)] text-[var(--ink)]"
- :"bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold"
+ "bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold"
  }`}
  title="Añadir Concierto, Ensayo o Reunión"
  >
@@ -2970,9 +2964,7 @@ export default function CalendarView({
  id="export-ics-btn"
  onClick={() => setShowSyncModal(true)}
  className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
- isStitchLight
- ?"bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)]"
- :"bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70"
+ "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70"
  }`}
  title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
  >
@@ -3060,7 +3052,7 @@ export default function CalendarView({
  title={devicePrefs[currentDeviceType] ==='1' ?"Ver 1 mes (predeterminado al iniciar en este dispositivo)" :"Ver 1 mes"}
  className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
  calendarViewMode ==='1m'
- ? isStitchLight ?"bg-sky-500 text-[var(--ink)]" :"bg-[var(--acc)] text-[var(--on-acc)] font-black"
+ ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  }`}
  >
@@ -3075,7 +3067,7 @@ export default function CalendarView({
  title={devicePrefs[currentDeviceType] ==='2' ?"Ver 2 meses (predeterminado al iniciar en este dispositivo)" :"Ver 2 meses"}
  className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
  calendarViewMode ==='2m'
- ? isStitchLight ?"bg-sky-500 text-[var(--ink)]" :"bg-[var(--acc)] text-[var(--on-acc)] font-black"
+ ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  }`}
  >
@@ -3087,7 +3079,7 @@ export default function CalendarView({
  title="Vista Semana estilo Google Calendar (7 días detallados)"
  className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
  calendarViewMode ==='week'
- ? isStitchLight ?"bg-sky-500 text-[var(--ink)]" :"bg-[var(--acc)] text-[var(--on-acc)] font-black"
+ ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  }`}
  >
@@ -3100,7 +3092,7 @@ export default function CalendarView({
  title="Vista Agenda / Lista estilo Google Calendar"
  className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
  calendarViewMode ==='agenda'
- ? isStitchLight ?"bg-sky-500 text-[var(--ink)]" :"bg-[var(--acc)] text-[var(--on-acc)] font-black"
+ ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  }`}
  >
@@ -3113,7 +3105,7 @@ export default function CalendarView({
  title="Configurar vista por defecto (1M o 2M) diferenciada por tipo de dispositivo y sincronizada en Supabase"
  className={`px-1.5 py-0.5 text-[10px] rounded transition-all cursor-pointer flex items-center justify-center relative ${
  showViewConfigPopover
- ? isStitchLight ?"bg-[var(--surface)] text-[var(--ink)]" :"bg-[var(--surface)]/80 text-[var(--acc)]"
+ ? "bg-[var(--surface)]/80 text-[var(--acc)]"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  }`}
  >
@@ -3132,9 +3124,7 @@ export default function CalendarView({
  className={`px-2 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
  isCalendarFullscreen
  ?"bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-lg shadow-amber-0/20"
- : isStitchLight
- ?"bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)]"
- :"bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30"
+ : "bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30"
  }`}
  >
  {isCalendarFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
@@ -3179,7 +3169,7 @@ export default function CalendarView({
  onClick={() => setSelectedConfigDevice('mobile')}
  className={`flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  selectedConfigDevice ==='mobile'
- ? isStitchLight ?"bg-white text-sky-600 shadow-xs" :"bg-[var(--surface)]/80 text-[var(--acc)]/70 shadow-xs"
+ ? "bg-[var(--surface)]/80 text-[var(--acc)]/70 shadow-xs"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  }`}
  >
@@ -3196,7 +3186,7 @@ export default function CalendarView({
  onClick={() => setSelectedConfigDevice('desktop')}
  className={`flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  selectedConfigDevice ==='desktop'
- ? isStitchLight ?"bg-white text-sky-600 shadow-xs" :"bg-[var(--surface)]/80 text-[var(--acc)]/70 shadow-xs"
+ ? "bg-[var(--surface)]/80 text-[var(--acc)]/70 shadow-xs"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  }`}
  >
@@ -3224,9 +3214,7 @@ export default function CalendarView({
  onClick={() => handleSetDefaultMonthsForDevice('1', selectedConfigDevice)}
  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start justify-between gap-3 ${
  devicePrefs[selectedConfigDevice] ==='1'
- ? isStitchLight
- ?"bg-sky-50 border-[var(--acc)]/80 text-sky-950 shadow-xs"
- :"bg-[var(--acc)]/10 border-[var(--acc)] text-[var(--ink)] shadow-xs"
+ ? "bg-[var(--acc)]/10 border-[var(--acc)] text-[var(--ink)] shadow-xs"
  : isStitchLight
  ?"bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"
  :"bg-[var(--surface)] hover:bg-[var(--surface)]/80 border-[var(--hair)]800 text-[var(--ink)]"
@@ -3237,7 +3225,7 @@ export default function CalendarView({
  <span className="font-bold text-xs font-mono">1 Mes</span>
  <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-semibold ${
  devicePrefs[selectedConfigDevice] ==='1'
- ? isStitchLight ?"bg-sky-500 text-[var(--ink)]" :"bg-[var(--acc)] text-[var(--on-acc)] font-black"
+ ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  : isStitchLight ?"bg-[var(--sunken)] text-[var(--ink-2)]" :"bg-[var(--surface)]/80 text-[var(--ink-2)]"
  }`}>
  {devicePrefs[selectedConfigDevice] ==='1' ?'Predeterminado' :'Recomendado móvil'}
@@ -3258,9 +3246,7 @@ export default function CalendarView({
  onClick={() => handleSetDefaultMonthsForDevice('2', selectedConfigDevice)}
  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start justify-between gap-3 ${
  devicePrefs[selectedConfigDevice] ==='2'
- ? isStitchLight
- ?"bg-sky-50 border-[var(--acc)]/80 text-sky-950 shadow-xs"
- :"bg-[var(--acc)]/10 border-[var(--acc)] text-[var(--ink)] shadow-xs"
+ ? "bg-[var(--acc)]/10 border-[var(--acc)] text-[var(--ink)] shadow-xs"
  : isStitchLight
  ?"bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"
  :"bg-[var(--surface)] hover:bg-[var(--surface)]/80 border-[var(--hair)]800 text-[var(--ink)]"
@@ -3271,7 +3257,7 @@ export default function CalendarView({
  <span className="font-bold text-xs font-mono">2 Meses</span>
  <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-semibold ${
  devicePrefs[selectedConfigDevice] ==='2'
- ? isStitchLight ?"bg-sky-500 text-[var(--ink)]" :"bg-[var(--acc)] text-[var(--on-acc)] font-black"
+ ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
  : isStitchLight ?"bg-[var(--sunken)] text-[var(--ink-2)]" :"bg-[var(--surface)]/80 text-[var(--ink-2)]"
  }`}>
  {devicePrefs[selectedConfigDevice] ==='2' ?'Predeterminado' :'Recomendado ordenador'}
@@ -3321,7 +3307,7 @@ export default function CalendarView({
  onClick={() => setFilterBandMode("all")}
  className={`flex-1 md:flex-initial px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 ${
  filterBandMode ==="all"
- ? isStitchLight ?"bg-sky-500 text-[var(--ink)] shadow-xs" :"bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-xs"
+ ? "bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-xs"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  }`}
  title="Ver eventos de todos los grupos"
@@ -3348,7 +3334,7 @@ export default function CalendarView({
  onClick={() => setFilterBandMode("active")}
  className={`flex-1 md:flex-initial px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 ${
  filterBandMode ==="active"
- ? isStitchLight ?"bg-sky-500 text-[var(--ink)] shadow-xs" :"bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-xs"
+ ? "bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-xs"
  :"text-[var(--ink-2)] hover:text-[var(--ink-2)]"
  }`}
  title={`Filtrar solo ${activeBandName}`}
@@ -3378,8 +3364,8 @@ export default function CalendarView({
  {syncSuccessMessage && (
  <div className={`mb-4 p-2 px-3 rounded-[var(--r-s)] text-[10px] flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
  isStitchLight 
- ? (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[var(--ok)]') 
- : (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[var(--ok)]')
+ ? ('bg-[var(--surface)]/15 text-[var(--ok)]') 
+ : ('bg-[var(--surface)]/15 text-[var(--ok)]')
  }`}>
  <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className="flex-1 font-mono text-[10px]">{syncSuccessMessage}</span>
@@ -3462,9 +3448,7 @@ export default function CalendarView({
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--hair)]10">
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-mono font-black shrink-0 ${
- isStitchLight
- ?'bg-sky-50 border-[var(--acc)] text-sky-700'
- :'bg-[var(--acc)]/15 /40 text-[var(--acc)]/70'
+ 'bg-[var(--acc)]/15 /40 text-[var(--acc)]/70'
  }`}>
  <span className="text-sm leading-none">{selectedDate.getDate()}</span>
  <span className="text-[8px] uppercase tracking-wider mt-0.5 opacity-80">
@@ -3828,11 +3812,11 @@ export default function CalendarView({
  {/* Legend */}
  <div className={`flex flex-wrap gap-4 text-[10px] font-mono pt-4 mt-6 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
  <div className="flex items-center gap-1.5">
- <span className={`w-2 h-2 rounded-full ${isStitchLight ?'bg-sky-500' :'bg-[var(--acc)] shadow-[0_0_8px_var(--acc)]'}`} />
+ <span className={`w-2 h-2 rounded-full ${'bg-[var(--acc)] shadow-[0_0_8px_var(--acc)]'}`} />
  <span>Concierto</span>
  </div>
  <div className="flex items-center gap-1.5">
- <span className={`w-2 h-2 rounded-full ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--ok)] shadow-[0_0_8px_var(--ok)]'}`} />
+ <span className={`w-2 h-2 rounded-full ${'bg-[var(--ok)] shadow-[0_0_8px_var(--ok)]'}`} />
  <span>Ensayo</span>
  </div>
  <div className="flex items-center gap-1.5">
@@ -3949,9 +3933,7 @@ export default function CalendarView({
  type="button"
  onClick={() => setShowCreateModal('rehearsal')}
  className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
- isStitchLight 
- ?'bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500/25' 
- :'bg-[var(--surface)]/20 text-[var(--ok)] hover:bg-[var(--surface)]/30'
+ 'bg-[var(--surface)]/20 text-[var(--ok)] hover:bg-[var(--surface)]/30'
  }`}
  >
  <Plus className="w-3.5 h-3.5" />
@@ -3962,9 +3944,7 @@ export default function CalendarView({
  type="button"
  onClick={() => setShowCreateModal('concert')}
  className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
- isStitchLight 
- ?'bg-[var(--acc)]/15 text-amber-600 hover:bg-[var(--acc)]/25' 
- :'bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/50/30'
+ 'bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/50/30'
  }`}
  >
  <Plus className="w-3.5 h-3.5" />
@@ -3977,7 +3957,7 @@ export default function CalendarView({
  {/* Quick GPS & Upcoming Events List */}
  <div className={`w-full text-left mt-4 pt-3 space-y-2.5 ${isStitchLight ?'border-t' :'border-t'}`}>
  <div className="flex items-center justify-between gap-1 flex-wrap">
- <div className={`flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>
+ <div className={`flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider ${'text-[var(--acc)]'}`}>
  <MapPin className="w-3.5 h-3.5" />
  <span>Próximas Fechas ({upcomingCalendarEvents.length})</span>
  </div>
@@ -4045,12 +4025,12 @@ export default function CalendarView({
  : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
  }`}>
  <span className={`text-base font-mono font-black leading-none ${
- evt.type ==='campaña' ?'text-purple-300' : isStitchLight ?'text-sky-500' :'text-[var(--acc)]'
+ evt.type ==='campaña' ?'text-purple-300' : 'text-[var(--acc)]'
  }`}>
  {evt.day}
  </span>
  <span className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${
- evt.type ==='campaña' ?'text-purple-200' : isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--acc)]/70'
+ evt.type ==='campaña' ?'text-purple-200' : 'text-[var(--acc)]/70'
  }`}>
  {evt.month}
  </span>
@@ -4060,7 +4040,7 @@ export default function CalendarView({
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
  evt.type ==='concierto'
- ? isStitchLight ?'bg-sky-500/15 text-sky-400' :'bg-[var(--acc)]/20 text-[var(--acc)]/70'
+ ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  : evt.type ==='campaña'
  ?'bg-[var(--tentative-soft)] text-[var(--tentative)]'
  : isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-emerald-500/20 text-[var(--ink-2)]'
@@ -4107,16 +4087,16 @@ export default function CalendarView({
  <div className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 shadow-sm ${
  isStitchLight ?'bg-[var(--sunken)] text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
  }`}>
- <span className={`text-base font-mono font-black leading-none ${isStitchLight ?'text-sky-500' :'text-[var(--acc)]'}`}>
+ <span className={`text-base font-mono font-black leading-none ${'text-[var(--acc)]'}`}>
  {selectedDate.getDate()}
  </span>
- <span className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--acc)]/70'}`}>
+ <span className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${'text-[var(--acc)]/70'}`}>
  {monthNames[selectedDate.getMonth()]?.slice(0, 3).toUpperCase()}
  </span>
  </div>
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
- <div className={`text-[10px] font-mono uppercase tracking-widest font-bold ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>Logística de Ensayos y Conciertos</div>
+ <div className={`text-[10px] font-mono uppercase tracking-widest font-bold ${'text-[var(--acc)]'}`}>Logística de Ensayos y Conciertos</div>
  {(selectedConcert || selectedRehearsal) && (
  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shadow-xs flex items-center gap-1">
  🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
@@ -4134,9 +4114,7 @@ export default function CalendarView({
  type="button"
  onClick={() => setShowEventFichaModal(true)}
  className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer items-center gap-1 ${
- isStitchLight
- ?'bg-amber-50 text-amber-800 hover:bg-amber-100'
- :'bg-gradient-to-r from-amber-0/20 to-yellow-600/20 /60 text-[var(--acc)]/70 hover:from-amber-0/30 hover:to-yellow-600/30'
+ 'bg-gradient-to-r from-amber-0/20 to-yellow-600/20 /60 text-[var(--acc)]/70 hover:from-amber-0/30 hover:to-yellow-600/30'
  }`}
  title="Ampliar esta ficha en un modal centrado"
  >
@@ -4154,9 +4132,7 @@ export default function CalendarView({
  setShowReminderModal(true);
  }}
  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
- isStitchLight
- ?'bg-sky-50 border-[var(--acc)] text-sky-800 hover:bg-sky-100'
- :'bg-[var(--surface)] border-[var(--acc)]/40 text-sky-300 hover:bg-[var(--surface)]/80'
+ 'bg-[var(--surface)] border-[var(--acc)]/40 text-sky-300 hover:bg-[var(--surface)]/80'
  }`}
  title="Enviar un recordatorio por correo/notificación a los convocados"
  >
@@ -4168,9 +4144,7 @@ export default function CalendarView({
  type="button"
  onClick={() => setViewingConcert(selectedConcert)}
  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
- isStitchLight
- ?'bg-amber-50 text-amber-800 hover:bg-amber-100'
- :'bg-[var(--surface)] /40 text-[var(--acc)]/70 hover:bg-[var(--surface)]/80'
+ 'bg-[var(--surface)] /40 text-[var(--acc)]/70 hover:bg-[var(--surface)]/80'
  }`}
  title="Editar ficha completa del concierto"
  >
@@ -4182,9 +4156,7 @@ export default function CalendarView({
  type="button"
  onClick={() => setViewingRehearsal(selectedRehearsal)}
  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
- isStitchLight
- ?'bg-emerald-50 border-[var(--ok)] text-emerald-800 hover:bg-emerald-100'
- :'bg-[var(--surface)] border-[var(--ok)]/40 text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
+ 'bg-[var(--surface)] border-[var(--ok)]/40 text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  title="Editar ficha completa del ensayo"
  >
@@ -4267,12 +4239,12 @@ export default function CalendarView({
  isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-2 text-[10px]">
- <Clock className={`w-4 h-4 shrink-0 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`} />
+ <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
  <span className={`font-mono ${textSub}`}>Hora:</span>
- <span className={`font-bold font-mono ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
+ <span className={`font-bold font-mono ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
  </div>
  <div className="flex items-start gap-2 text-[10px]">
- <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`} />
+ <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
  <div className="flex-1">
  <span className={`font-mono ${textSub}`}>Lugar:</span>
  <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
@@ -4464,7 +4436,7 @@ export default function CalendarView({
  </div>
 
  <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 ${
- isStitchLight ?'bg-white shadow-sm' :'bg-[var(--surface)]/80 border-[var(--acc)]/20'
+ 'bg-[var(--surface)]/80 border-[var(--acc)]/20'
  }`}>
  {selectedRehearsal.asunto && (
  <div className="text-[11px] font-semibold text-indigo-300">
@@ -4519,7 +4491,7 @@ export default function CalendarView({
  }
  }}
  className={`w-full text-[10px] font-mono p-1.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--acc)] font-bold'
+ 'bg-[var(--surface)] text-[var(--acc)] font-bold'
  }`}
  >
  <option value="">-- Sin repertorio asignado --</option>
@@ -4558,9 +4530,7 @@ export default function CalendarView({
  onClick={() => setActiveTab('runofshow')}
  className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
  activeTab ==='runofshow'
- ? isStitchLight
- ?'bg-amber-100 text-amber-900 font-bold'
- :'bg-[var(--acc)]/60/20 text-[var(--acc)] font-bold'
+ ? 'bg-[var(--acc)]/60/20 text-[var(--acc)] font-bold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -4605,9 +4575,7 @@ export default function CalendarView({
  onClick={() => setActiveTab('merchan')}
  className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
  activeTab ==='merchan'
- ? isStitchLight
- ?'bg-amber-100 text-amber-900 font-bold'
- :'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
+ ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -4637,9 +4605,7 @@ export default function CalendarView({
  onClick={() => setActiveTab('roadbook')}
  className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
  activeTab ==='roadbook'
- ? isStitchLight
- ?'bg-teal-100 text-teal-900 font-bold'
- :'bg-teal-500/20 text-[var(--ok)] font-bold'
+ ? 'bg-teal-500/20 text-[var(--ok)] font-bold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -4652,9 +4618,7 @@ export default function CalendarView({
  onClick={() => setActiveTab('gear')}
  className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
  activeTab ==='gear'
- ? isStitchLight
- ?'bg-orange-100 text-orange-900 font-bold'
- :'bg-orange-500/20 text-[var(--acc)] font-bold'
+ ? 'bg-orange-500/20 text-[var(--acc)] font-bold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -4682,7 +4646,7 @@ export default function CalendarView({
  <div className="space-y-3">
  <div className={`p-3 rounded-[var(--r-s)] space-y-2 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/70'}`}>
  <div className="flex items-center justify-between">
- <span className={`text-[10px] font-mono uppercase font-bold ${isStitchLight ?'text-sky-400' :'text-[var(--ok)]'}`}>📞 Contacto Producción & Hotel</span>
+ <span className={`text-[10px] font-mono uppercase font-bold ${'text-[var(--ok)]'}`}>📞 Contacto Producción & Hotel</span>
  </div>
  <div className="grid grid-cols-2 gap-2 text-[10px]">
  <div>
@@ -4727,7 +4691,7 @@ export default function CalendarView({
  </div>
 
  <div className={`p-3 rounded-[var(--r-s)] space-y-1.5 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/70'}`}>
- <span className={`text-[10px] font-mono uppercase font-bold ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>🎸 Input List / Rider de Canales</span>
+ <span className={`text-[10px] font-mono uppercase font-bold ${'text-[var(--acc)]'}`}>🎸 Input List / Rider de Canales</span>
  <textarea
  rows={4}
  value={currentRb.inputList}
@@ -4827,9 +4791,7 @@ export default function CalendarView({
  printWindow.document.close();
  }}
  className={`w-full py-2 px-3 rounded-[var(--r-m)] font-mono text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm ${
- isStitchLight
- ?'bg-gradient-to-r from-indigo-600 to-blue-600 text-[var(--ink)]'
- :'bg-gradient-to-r from-[var(--ok)] to-teal-500 text-[var(--acc-ink)] font-extrabold'
+ 'bg-gradient-to-r from-[var(--ok)] to-teal-500 text-[var(--acc-ink)] font-extrabold'
  }`}
  >
  <Download className="w-3.5 h-3.5" />
@@ -4845,7 +4807,7 @@ export default function CalendarView({
  const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
  return (
  <div className="space-y-2.5">
- <div className={`p-2.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-sky-50/70 border-[var(--acc)]' :'bg-sky-950/20 border-[var(--acc)]/40'}`}>
+ <div className={`p-2.5 rounded-[var(--r-s)] ${'bg-sky-950/20 border-[var(--acc)]/40'}`}>
  <div className="flex items-center justify-between mb-2">
  <span className="font-bold flex items-center gap-1 text-sky-400 font-mono uppercase text-[10px]">
  <Wrench className="w-3 h-3" /> 1. Logística Técnica
@@ -5170,7 +5132,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`p-1.5 rounded transition-colors cursor-pointer ${
- isStitchLight ?'bg-sky-500/15 text-white hover:bg-sky-500/15' :'bg-[var(--acc)]/15 text-[var(--on-acc)] hover:bg-[var(--acc)]/50/15 font-bold'
+ 'bg-[var(--acc)]/15 text-[var(--on-acc)] hover:bg-[var(--acc)]/50/15 font-bold'
  }`}
  title="Añadir horario"
  >
@@ -5191,7 +5153,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`p-1.5 rounded transition-colors cursor-pointer ${
- isStitchLight ?'bg-sky-500/15 text-white hover:bg-sky-500/15' :'bg-[var(--acc)]/15 text-[var(--on-acc)] hover:bg-[var(--acc)]/50/15 font-bold'
+ 'bg-[var(--acc)]/15 text-[var(--on-acc)] hover:bg-[var(--acc)]/50/15 font-bold'
  }`}
  title="Añadir material"
  >
@@ -5226,7 +5188,7 @@ export default function CalendarView({
  <span className={`font-mono text-[10px] font-bold shrink-0 ${
  isItemDone 
  ? isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]' 
- : isStitchLight ?'text-sky-400' :'text-[var(--acc)]'
+ : 'text-[var(--acc)]'
  }`}>
  {item.time}
  </span>
@@ -5268,9 +5230,7 @@ export default function CalendarView({
  checked={isChecked}
  onChange={() => {}} // handled by div click
  className={`rounded focus:ring-0 cursor-pointer h-3.5 w-3.5 ${
- isStitchLight
- ?'-slate-300 text-sky-400 bg-[var(--surface)]'
- :'-[#99907c]/40 text-[var(--acc)] bg-[var(--surface)]'
+ '-[#99907c]/40 text-[var(--acc)] bg-[var(--surface)]'
  }`}
  />
  <p className="text-[10px] font-sans leading-normal flex-1">{item.label}</p>
@@ -5737,7 +5697,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
- isStitchLight ?'bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)]' :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc-ink)] font-bold shadow-emerald-500/20'
+ 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc-ink)] font-bold shadow-emerald-500/20'
  }`}
  >
  Guardar Ensayo
@@ -5904,7 +5864,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
- isStitchLight ?'bg-amber-600 hover:bg-[var(--acc)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold shadow-amber-0/20'
+ 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold shadow-amber-0/20'
  }`}
  >
  Guardar Concierto
@@ -6188,7 +6148,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
- isStitchLight ?'bg-amber-600 hover:bg-[var(--acc)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold shadow-amber-0/20'
+ 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold shadow-amber-0/20'
  }`}
  >
  Guardar Cambios
@@ -6412,7 +6372,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
- isStitchLight ?'bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)]' :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc-ink)] font-bold shadow-emerald-500/20'
+ 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc-ink)] font-bold shadow-emerald-500/20'
  }`}
  >
  Guardar Cambios
@@ -6455,7 +6415,7 @@ export default function CalendarView({
 
  <div className="space-y-4 text-xs">
  <div className={`p-3.5 rounded-[var(--r-m)] ${
- isStitchLight ?"bg-amber-50 text-[var(--ink)]" :"bg-[var(--acc-soft)] /30 text-[var(--ink)]"
+ "bg-[var(--acc-soft)] /30 text-[var(--ink)]"
  }`}>
  <p className="font-semibold mb-1 flex items-center gap-1.5">
  <Sparkles className="w-4 h-4 text-[var(--acc)] shrink-0" />
@@ -6525,7 +6485,7 @@ export default function CalendarView({
  readOnly
  value={errorFeed || urlFeedAbsoluta ||'Generando enlace...'}
  className={`flex-1 px-3 py-2 text-xs font-mono rounded-[var(--r-s)] outline-none select-all ${
- isStitchLight ?"bg-[var(--sunken)] text-[var(--ink)]" :"bg-[var(--surface)] text-[var(--acc)]/70"
+ "bg-[var(--surface)] text-[var(--acc)]/70"
  }`}
  />
  <button
@@ -7047,12 +7007,12 @@ export default function CalendarView({
  <div className="space-y-4">
  <div className={`space-y-3 rounded-[var(--r-m)] p-4 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/80'}`}>
  <div className="flex items-center gap-2 text-[11px]">
- <Clock className={`w-4 h-4 shrink-0 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`} />
+ <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
  <span className={`font-mono ${textSub}`}>Hora:</span>
- <span className={`font-bold font-mono ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
+ <span className={`font-bold font-mono ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
  </div>
  <div className="flex items-start gap-2 text-[11px]">
- <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`} />
+ <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
  <div className="flex-1 min-w-0">
  <span className={`font-mono ${textSub}`}>Lugar:</span>
  <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
@@ -7136,7 +7096,7 @@ export default function CalendarView({
  <div 
  onClick={() => setModalActiveTab('tecnica')}
  className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:border-[var(--acc)]/60 ${
- isStitchLight ?'bg-sky-50/70 border-[var(--acc)]' :'bg-sky-950/20 border-[var(--acc)]/30'
+ 'bg-sky-950/20 border-[var(--acc)]/30'
  }`}
  >
  <div className="flex items-center gap-1.5 text-sky-400 font-mono font-bold text-xs mb-1">
@@ -7154,7 +7114,7 @@ export default function CalendarView({
  <div 
  onClick={() => setModalActiveTab('contactos')}
  className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:border-[var(--ok)]/60 ${
- isStitchLight ?'bg-emerald-50/70 border-[var(--ok)]' :'bg-[var(--ok-soft)] border-[var(--ok)]/30'
+ 'bg-[var(--ok-soft)] border-[var(--ok)]/30'
  }`}
  >
  <div className="flex items-center gap-1.5 text-emerald-400 font-mono font-bold text-xs mb-1">
@@ -7174,7 +7134,7 @@ export default function CalendarView({
  <div 
  onClick={() => setModalActiveTab('merchan')}
  className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:/60 ${
- isStitchLight ?'bg-amber-50/70' :'bg-[var(--acc-soft)] /30'
+ 'bg-[var(--acc-soft)] /30'
  }`}
  >
  <div className="flex items-center gap-1.5 text-[var(--acc)] font-mono font-bold text-xs mb-1">
@@ -7194,7 +7154,7 @@ export default function CalendarView({
  <div 
  onClick={() => setModalActiveTab('cierre')}
  className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:border-[var(--acc)]/60 ${
- isStitchLight ?'bg-purple-50/70 border-[var(--acc)]' :'bg-purple-950/20 border-[var(--acc)]/30'
+ 'bg-purple-950/20 border-[var(--acc)]/30'
  }`}
  >
  <div className="flex items-center gap-1.5 text-purple-400 font-mono font-bold text-xs mb-1">
@@ -7282,7 +7242,7 @@ export default function CalendarView({
  onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaShow: e.target.value })}
  placeholder="21:30"
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold ${
- isStitchLight ?'bg-amber-50 text-[var(--ink)]' :'bg-[var(--acc-soft)] text-[var(--ink)]'
+ 'bg-[var(--acc-soft)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -7457,7 +7417,7 @@ export default function CalendarView({
  <form 
  onSubmit={(e) => handleAddKeyContact(modalRoadbookKey, e)}
  className={`p-4 rounded-[var(--r-m)] space-y-3 animate-in fade-in ${
- isStitchLight ?'bg-emerald-50 border-[var(--ok)]' :'bg-[var(--ok-soft)] border-[var(--ok)]/40'
+ 'bg-[var(--ok-soft)] border-[var(--ok)]/40'
  }`}
  >
  <h4 className="text-xs font-mono font-bold text-emerald-400">Nuevo Contacto Clave</h4>
@@ -7562,7 +7522,7 @@ export default function CalendarView({
  <div
  key={contact.id}
  className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
- isStitchLight ?'bg-white hover:border-[var(--ok)]' :'bg-[var(--surface)] hover:border-[var(--ok)]/40'
+ 'bg-[var(--surface)] hover:border-[var(--ok)]/40'
  }`}
  >
  <div className="min-w-0 flex-1">
@@ -7749,10 +7709,10 @@ export default function CalendarView({
 
  <div className={`p-2.5 rounded-[var(--r-m)] ${
  diferenciaCuadre === 0
- ? isStitchLight ?'bg-emerald-50 border-[var(--ok)]' :'bg-[var(--ok-soft)] border-[var(--ok)]/40'
+ ? 'bg-[var(--ok-soft)] border-[var(--ok)]/40'
  : diferenciaCuadre > 0
- ? isStitchLight ?'bg-sky-50 border-[var(--acc)]' :'bg-sky-950/30 border-[var(--acc)]/40'
- : isStitchLight ?'bg-rose-50 border-[var(--alert)]' :'bg-[var(--alert-soft)] border-[var(--alert)]/40'
+ ? 'bg-sky-950/30 border-[var(--acc)]/40'
+ : 'bg-[var(--alert-soft)] border-[var(--alert)]/40'
  }`}>
  <span className="text-[10px] font-mono uppercase text-[var(--ink-2)] flex items-center gap-1">
  <ShieldCheck className="w-3 h-3" /> Cuadre Caja
@@ -7782,7 +7742,7 @@ export default function CalendarView({
  exit={{ opacity: 0, height: 0 }}
  onSubmit={(e) => handleAddMerchItem(modalRoadbookKey, e)}
  className={`p-3.5 rounded-[var(--r-m)] space-y-3 ${
- isStitchLight ?'bg-amber-50/70' :'bg-[var(--acc-soft)] /30'
+ 'bg-[var(--acc-soft)] /30'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -8091,7 +8051,7 @@ export default function CalendarView({
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  {/* Efectivo Recaudado */}
  <div className={`p-3 rounded-[var(--r-m)] ${
- isStitchLight ?'bg-white border-[var(--ok)]' :'bg-[var(--surface)] border-[var(--ok)]/30'
+ 'bg-[var(--surface)] border-[var(--ok)]/30'
  }`}>
  <div className="flex items-center gap-1.5 text-emerald-400 font-mono font-bold text-xs mb-1">
  <Banknote className="w-4 h-4" />
@@ -8119,7 +8079,7 @@ export default function CalendarView({
 
  {/* Bizum / TPV Recaudado */}
  <div className={`p-3 rounded-[var(--r-m)] ${
- isStitchLight ?'bg-white border-[var(--acc)]' :'bg-[var(--surface)] border-[var(--acc)]/30'
+ 'bg-[var(--surface)] border-[var(--acc)]/30'
  }`}>
  <div className="flex items-center gap-1.5 text-sky-400 font-mono font-bold text-xs mb-1">
  <Smartphone className="w-4 h-4" />
@@ -8336,9 +8296,7 @@ export default function CalendarView({
  className={`p-2.5 rounded-[var(--r-s)] transition-all flex items-center justify-between gap-2.5 cursor-pointer select-none ${
  item.checked
  ?'bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink-2)] line-through'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] hover:border-[var(--acc)]'
- :'bg-[var(--sunken)] /80 text-[var(--ink-2)] hover:border-[var(--acc)]/40'
+ : 'bg-[var(--sunken)] /80 text-[var(--ink-2)] hover:border-[var(--acc)]/40'
  }`}
  >
  <div className="flex items-center gap-2.5 min-w-0 flex-1">

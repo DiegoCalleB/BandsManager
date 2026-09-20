@@ -430,7 +430,7 @@ export default function RepertorioSetlists({
  onNavigate
 }: RepertorioSetlistsProps) {
  const { t } = useLanguage();
- const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const bName = bandName ||'Tu Banda';
 
  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('repertorio');
@@ -2712,9 +2712,7 @@ export default function RepertorioSetlists({
  setShowPerfectSetlistModal(true);
  }}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
- isStitchLight 
- ?'bg-amber-100 hover:bg-amber-200 text-[var(--acc)]'
- :'bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--ink)] hover:text-[var(--ink)] shadow-[0_0_12px_var(--acc-glow)]'
+ 'bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--ink)] hover:text-[var(--ink)] shadow-[0_0_12px_var(--acc-glow)]'
  }`}
  title="Optimizar IA: Generar el setlist perfecto con orden dinámico ideal y clímax de concierto"
  >
@@ -2831,7 +2829,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDeleteSetlist(activeSetlist.id); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-rose-400 transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'hover:bg-rose-50' :'hover:bg-[var(--alert-soft)]'
+ 'hover:bg-[var(--alert-soft)]'
  }`}
  >
  <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar setlist
@@ -2968,7 +2966,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={suggestChapaSpot}
- className="px-2 py-0.5 rounded-[var(--r-s)] bg-sky-900/40 hover:bg-sky-800/60 text-sky-300 hover:text-sky-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+ className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
  title="Busca la transición entre canciones que más chirría (tonalidad, tempo, energía) — ahí es donde una chapa/interludio hablado se nota menos"
  >
  💬 ¿Dónde chapa?
@@ -4244,9 +4242,7 @@ export default function RepertorioSetlists({
  value={catalogSearch}
  onChange={(e) => setCatalogSearch(e.target.value)}
  className={`w-full rounded-[var(--r-m)] pl-9.5 ${catalogSearch ?'pr-8' :'pr-3'} py-2 text-xs focus:outline-none transition-all ${
- isStitchLight 
- ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500/20 placeholder:text-[var(--ink-2)]' 
- :'bg-[var(--surface)]/60 text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
+ 'bg-[var(--surface)]/60 text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
  }`}
  />
  {catalogSearch && (
@@ -4298,9 +4294,7 @@ export default function RepertorioSetlists({
  onClick={() => setGroupByAlbum(!groupByAlbum)}
  className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all ${
  groupByAlbum
- ? isStitchLight
- ?'bg-indigo-50 text-indigo-700 border-[var(--acc)]'
- :'bg-indigo-500/15 text-indigo-300 border-[var(--acc)]/30'
+ ? 'bg-indigo-500/15 text-indigo-300 border-[var(--acc)]/30'
  : isStitchLight
  ?'bg-[var(--bg)] text-[var(--ink-2)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:bg-[var(--surface)]'
@@ -4315,9 +4309,7 @@ export default function RepertorioSetlists({
  onClick={handleNormalizeCatalogTitles}
  title="Formatea todos los títulos del catálogo con Mayúsculas de Nombres Propios (evita títulos todos en mayúsculas o minúsculas)"
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-95 whitespace-nowrap cursor-pointer ${
- isStitchLight
- ?'bg-amber-50 hover:bg-amber-100 text-amber-900'
- :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
+ 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -4338,7 +4330,7 @@ export default function RepertorioSetlists({
  {/* BULK ACTIONS BAR */}
  {selectedCatalogIds.size > 0 && (
  <div className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 ${
- isStitchLight ?'bg-indigo-50 border-[var(--acc)] text-indigo-900' :'bg-indigo-950/40 border-[var(--acc)]/60 text-indigo-200'
+ 'bg-indigo-950/40 border-[var(--acc)]/60 text-indigo-200'
  }`}>
  <span className="text-xs font-medium">
  {selectedCatalogIds.size} canciones seleccionadas

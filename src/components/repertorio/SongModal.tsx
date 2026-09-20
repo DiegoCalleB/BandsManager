@@ -273,7 +273,7 @@ export function SongModal({
  value={selectedAlbum}
  onChange={(e) => setSelectedAlbum(e.target.value)}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ok)]'
+ 'bg-[var(--surface)] text-[var(--ok)]'
  }`}
  >
  <option value="">Sin Disco (Single)</option>
@@ -427,7 +427,7 @@ export function SongModal({
  type="button"
  onClick={() => setShowMemberNotesSection(p => !p)}
  className={`w-full p-3 flex items-center justify-between font-mono text-xs font-bold uppercase transition-colors cursor-pointer ${
- isStitchLight ?'hover:bg-[var(--sunken)] text-[var(--ink)]' :'hover:bg-[var(--surface)]/80 text-[var(--ok)]'
+ 'hover:bg-[var(--surface)]/80 text-[var(--ok)]'
  }`}
  >
  <div className="flex items-center gap-2">

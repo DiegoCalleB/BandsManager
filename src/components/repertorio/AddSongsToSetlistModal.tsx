@@ -124,7 +124,7 @@ export function AddSongsToSetlistModal({
  value={albumFilter}
  onChange={(e) => setAlbumFilter(e.target.value)}
  className={`text-[10px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--acc)]'
  }`}
  >
  {albumsList.map(alb => (

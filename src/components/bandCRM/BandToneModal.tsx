@@ -591,7 +591,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  {/* 3. Pitch Recommendation & Connection Points */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px]">
- <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${isStitchLight ?'bg-amber-50/50 text-amber-900' :'bg-[var(--acc-soft)] /40 text-[var(--ink)]'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${'bg-[var(--acc-soft)] /40 text-[var(--ink)]'}`}>
  <span className="font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1 text-[9px]">
  <Flame className="w-3 h-3" /> Punto de Conexión con Bakandeya
  </span>
@@ -600,7 +600,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </p>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${isStitchLight ?'bg-sky-50/50 border-[var(--acc)] text-sky-900' :'bg-sky-950/20 border-[var(--acc)]/40 text-sky-200'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] space-y-1 ${'bg-sky-950/20 border-[var(--acc)]/40 text-sky-200'}`}>
  <span className="font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1 text-[9px]">
  <HeartHandshake className="w-3 h-3" /> Recomendación de Contacto
  </span>
@@ -653,7 +653,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  {/* 5. Self-Refining Tone DNA: reglas aprendidas automáticamente de correcciones del mánager */}
  {editable && (
- <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${isStitchLight ?'bg-violet-50/50 border-[var(--acc)]' :'bg-violet-950/20 border-[var(--acc)]/40'}`}>
+ <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-violet-950/20 border-[var(--acc)]/40'}`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
  <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus Correcciones (Self-Refining Tone DNA)
@@ -767,7 +767,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  redactar mal el primer contacto, y viceversa. Mismo botón de entrenar sirve para
  ambos (refineAllToneDnaCategoriesForBand refina las dos bolsas de una vez). */}
  {editable && (
- <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${isStitchLight ?'bg-sky-50/50 border-[var(--acc)]' :'bg-sky-950/20 border-[var(--acc)]/40'}`}>
+ <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-sky-950/20 border-[var(--acc)]/40'}`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
  <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus RESPUESTAS a salas (Self-Refining Tone DNA)

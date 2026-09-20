@@ -134,7 +134,7 @@ export default function Finanzas({
 
  const categories = Array.from(new Set(payments.map(p => p.categoria)));
 
- const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
@@ -146,7 +146,7 @@ export default function Finanzas({
  {/* Header con Sincronización en Excel */}
  <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <div>
- <h4 className={`text-xs font-mono uppercase tracking-widest ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>Finanzas & Libro Contable</h4>
+ <h4 className={`text-xs font-mono uppercase tracking-widest ${'text-[var(--acc)]'}`}>Finanzas & Libro Contable</h4>
  <h2 className={`text-xl font-bold font-display uppercase tracking-wider mt-1 ${textTitle}`}>CONTABILIDAD DE BANDA</h2>
  </div>
  <div className="flex gap-2.5 items-center flex-wrap">
@@ -157,9 +157,7 @@ export default function Finanzas({
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncing
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] animate-pulse'
- : isStitchLight
- ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-sm shadow-indigo-100'
- :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
+ : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
  }`}
  title="Sincronizar todas las transacciones financieras"
  >
@@ -168,7 +166,7 @@ export default function Finanzas({
  </button>
  
  <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
- isStitchLight ?'bg-indigo-50 text-indigo-600' :'bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
+ 'bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping shrink-0" /> Auto-sync
  </span>
@@ -639,9 +637,7 @@ export default function Finanzas({
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
  className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-1.5 text-xs focus:outline-none font-mono transition-all ${
- isStitchLight 
- ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500 placeholder:text-slate-450' 
- :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-[var(--ink-2)]'
+ 'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-[var(--ink-2)]'
  }`}
  />
  {searchTerm && (
@@ -759,9 +755,7 @@ export default function Finanzas({
  ? isStitchLight
  ?'bg-emerald-50 text-emerald-700'
  :'bg-emerald-500/10 -emerald-500/20 text-emerald-400'
- : isStitchLight
- ?'bg-amber-50 text-amber-700 hover:bg-amber-100/50'
- :'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
+ : 'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
  }`}
  title="Hacer clic para cambiar el estado de pago"
  >
@@ -802,7 +796,7 @@ export default function Finanzas({
  </div>
 
  <div className={`p-4 rounded-[var(--r-m)] ${colors.card} ${cardBorder} text-xs leading-relaxed space-y-2`}>
- <div className={`flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>
+ <div className={`flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <FileText className="w-4 h-4" />
  <strong className="font-mono uppercase tracking-wider">Libro en Excel</strong>
  </div>
@@ -819,7 +813,7 @@ export default function Finanzas({
  /* Analytics of Expenses by Categories */
  <div className={`p-5 rounded-[var(--r-m)] ${colors.card} ${cardBorder} space-y-6`}>
  <div>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest ${isStitchLight ?'text-indigo-600' :'text-[var(--acc)]'}`}>Análisis de Gastos por Categoría</h3>
+ <h3 className={`text-sm font-bold font-display uppercase tracking-widest ${'text-[var(--acc)]'}`}>Análisis de Gastos por Categoría</h3>
  <p className={`text-[10px] font-mono mt-0.5 ${textSub}`}>Proporciones totales liquidadas para cada categoría de costes operativos del proyecto</p>
  </div>
 

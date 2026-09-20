@@ -128,7 +128,7 @@ export function AssignSetlistModal({
  onClick={onSave}
  disabled={!selectedConcertToAssign}
  className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold disabled:opacity-40 ${
- isStitchLight ?'bg-[var(--acc)]/15 text-[var(--ink)]' :'bg-[var(--acc)] text-[var(--on-acc)]'
+ 'bg-[var(--acc)] text-[var(--on-acc)]'
  }`}
  >
  Guardar Asignación

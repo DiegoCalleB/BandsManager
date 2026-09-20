@@ -168,7 +168,7 @@ export function MemberNotesModal({
  {/* Header */}
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)] shrink-0">
  <div className="flex items-center gap-2.5">
- <div className={`p-2 rounded-[var(--r-m)] ${isStitchLight ?'bg-emerald-50 text-emerald-600' :'bg-[var(--surface)]/10 text-[var(--ok)]'}`}>
+ <div className={`p-2 rounded-[var(--r-m)] ${'bg-[var(--surface)]/10 text-[var(--ok)]'}`}>
  <Users className="w-5 h-5" />
  </div>
  <div>
@@ -209,7 +209,7 @@ export function MemberNotesModal({
 
  {/* Informational Tip */}
  <div className={`p-3 rounded-[var(--r-m)] my-3 text-xs flex items-start gap-2.5 ${
- isStitchLight ?'bg-indigo-50 border-[var(--acc)] text-indigo-900' :'bg-[var(--ok-soft)] text-[var(--ink-2)]'
+ 'bg-[var(--ok-soft)] text-[var(--ink-2)]'
  }`}>
  <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
  <div>
@@ -311,9 +311,7 @@ export function MemberNotesModal({
  key={member.id || member.name}
  className={`p-3.5 rounded-[var(--r-m)] transition-all ${
  hasNote
- ? isStitchLight
- ?'bg-emerald-50/40 border-[var(--ok)]'
- :'bg-[var(--surface)]/90 border-[var(--ok)]/30'
+ ? 'bg-[var(--surface)]/90 border-[var(--ok)]/30'
  : isStitchLight
  ?'bg-[var(--bg)]/70'
  :'bg-[var(--surface)]/50'

@@ -740,9 +740,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  setExportModalData({ isOpen: true, albumName: album });
  }}
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
- isStitchLight
- ?'bg-amber-50 text-amber-800 hover:bg-amber-100'
- :'bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
+ 'bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
  >

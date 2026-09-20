@@ -874,7 +874,7 @@ https://youtube.com/bakandeya_live
 Bakandeya Agent Manager IA & Músicos`;
  };
 
- const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
 
  return (
  <div className="w-full space-y-6">

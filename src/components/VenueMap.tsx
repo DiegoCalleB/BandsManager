@@ -215,18 +215,18 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  iconCreateFunction: (cluster: any) => {
  const count = cluster.getChildCount();
  let size = 38;
- let bgColor = isStitchLight ?'#4f46e5' :'var(--acc)';
+ let bgColor = 'var(--acc)';
  let textColor = isStitchLight ?'#ffffff' :'#1c1917';
  let ringColor = isStitchLight ?'rgba(79, 70, 229, 0.25)' :'rgba(242, 202, 80, 0.35)';
 
  if (count >= 20) {
  size = 48;
- bgColor = isStitchLight ?'#4338ca' :'var(--acc)';
+ bgColor = 'var(--acc)';
  textColor ='#ffffff';
  ringColor ='rgba(67, 56, 202, 0.35)';
  } else if (count >= 8) {
  size = 42;
- bgColor = isStitchLight ?'#3b82f6' :'var(--acc)';
+ bgColor = 'var(--acc)';
  textColor ='#ffffff';
  ringColor ='rgba(59, 130, 246, 0.3)';
  }
@@ -712,7 +712,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className="pointer-events-auto flex items-center gap-2 relative">
  {isGeocoding && (
  <div className={`px-3 py-1.5 rounded-[var(--r-m)] backdrop-blur-md text-[10px] font-mono flex items-center gap-1.5 ${
- isStitchLight ?'bg-amber-50/90 text-amber-900' :'bg-[var(--acc-soft)] -amber-700/50 text-[var(--ink)]'
+ 'bg-[var(--acc-soft)] -amber-700/50 text-[var(--ink)]'
  }`}>
  <Loader2 className="w-3 h-3 animate-spin text-amber-500" />
  <span>Geolocalizando salas...</span>

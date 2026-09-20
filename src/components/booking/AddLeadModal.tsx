@@ -110,7 +110,7 @@ export function AddLeadModal({
  )}
  <h3
  className={`text-sm font-bold font-display uppercase tracking-widest ${
- isStitchLight ?'text-[var(--acc)]' :'text-[var(--acc)]'
+ 'text-[var(--acc)]'
  }`}
  >
  {sectionTab ==='medios'
@@ -143,9 +143,7 @@ export function AddLeadModal({
  onClick={onModalScrape}
  disabled={isModalScraping || !newLeadData.nombre_sala}
  className={`px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- isStitchLight
- ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/50/15 text-[var(--acc)] disabled:opacity-50'
- :'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'
+ 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'
  }`}
  title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
  >
@@ -168,9 +166,7 @@ export function AddLeadModal({
  value={newLeadData.nombre_sala}
  onChange={e => setNewLeadData(prev => ({ ...prev, nombre_sala: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -263,7 +259,7 @@ export function AddLeadModal({
  {isModalScraping && (
  <div
  className={`p-2.5 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 animate-pulse ${
- isStitchLight ?'bg-[var(--acc)]/15 text-[var(--acc)]' :'bg-[var(--surface)]/30 text-[var(--acc)]'
+ 'bg-[var(--surface)]/30 text-[var(--acc)]'
  }`}
  >
  <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]/80 shrink-0" />
@@ -293,9 +289,7 @@ export function AddLeadModal({
  value={newLeadData.direccion ||''}
  onChange={e => setNewLeadData(prev => ({ ...prev, direccion: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -311,9 +305,7 @@ export function AddLeadModal({
  value={newLeadData.ciudad}
  onChange={e => setNewLeadData(prev => ({ ...prev, ciudad: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -327,9 +319,7 @@ export function AddLeadModal({
  value={newLeadData.region}
  onChange={e => setNewLeadData(prev => ({ ...prev, region: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -346,9 +336,7 @@ export function AddLeadModal({
  value={newLeadData.email_contacto}
  onChange={e => setNewLeadData(prev => ({ ...prev, email_contacto: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -363,9 +351,7 @@ export function AddLeadModal({
  value={newLeadData.email_secundario ||''}
  onChange={e => setNewLeadData(prev => ({ ...prev, email_secundario: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -380,9 +366,7 @@ export function AddLeadModal({
  value={newLeadData.genero}
  onChange={e => setNewLeadData(prev => ({ ...prev, genero: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  >
  <option value="Radio">Radio / Programa</option>
@@ -398,9 +382,7 @@ export function AddLeadModal({
  setNewLeadData(prev => ({ ...prev, tipo: e.target.value as LeadType }))
  }
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  >
  <option value="sala">Sala de Conciertos</option>
@@ -426,9 +408,7 @@ export function AddLeadModal({
  value={newLeadData.roster ||''}
  onChange={e => setNewLeadData(prev => ({ ...prev, roster: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -450,9 +430,7 @@ export function AddLeadModal({
  value={newLeadData.pitch_generado}
  onChange={e => setNewLeadData(prev => ({ ...prev, pitch_generado: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] p-3 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -467,9 +445,7 @@ export function AddLeadModal({
  value={newLeadData.notas}
  onChange={e => setNewLeadData(prev => ({ ...prev, notas: e.target.value }))}
  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
  }`}
  />
  </div>
@@ -489,9 +465,7 @@ export function AddLeadModal({
  <button
  type="submit"
  className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg ${
- isStitchLight
- ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)]'
- :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
+ 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
  }`}
  >
  {sectionTab ==='medios' ?'Guardar Medio' : sectionTab ==='grupos' ?'Guardar Contacto' :'Guardar Sala'}

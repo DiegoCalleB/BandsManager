@@ -134,13 +134,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  : isDragOver
  ?'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-emerald-500/10'
  : isPlayingCurrent
- ? isStitchLight
- ?'bg-emerald-50/90 border-[var(--ok)] text-[var(--ok)] shadow-sm ring-1 ring-emerald-400/30'
- :'bg-emerald-500/10 border-[var(--ok)]/30 text-[var(--ink)] shadow-sm ring-1 ring-emerald-500/20'
+ ? 'bg-emerald-500/10 border-[var(--ok)]/30 text-[var(--ink)] shadow-sm ring-1 ring-emerald-500/20'
  : isSelected
- ? isStitchLight
- ?'bg-amber-50/80 text-[var(--ink)]'
- :'bg-[var(--acc)]/10 /30 text-[var(--ink)]'
+ ? 'bg-[var(--acc)]/10 /30 text-[var(--ink)]'
  : isStitchLight
  ?'bg-[var(--surface)] hover:bg-[var(--bg)] /80 text-[var(--ink)] shadow-xs'
  :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-[var(--ink)] shadow-xs'
@@ -322,9 +318,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  type="button"
  onClick={onOpenChords}
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
- isStitchLight
- ?'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-[var(--ok)]'
- :'bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/25'
+ 'bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/25'
  }`}
  title="Ver cifrado de acordes, armonía y letra (LaCuerda.net)"
  >
@@ -369,9 +363,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  hasIrisStems(song)
  ?'bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500/30 text-[var(--acc)]/70 /40 shadow-xs'
- : isStitchLight
- ?'bg-amber-50 hover:bg-amber-100 text-amber-900'
- :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
+ : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
  }`}
  title={hasIrisStems(song) ?'Ver pistas e instrumentos separados con Iris' :'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
  >

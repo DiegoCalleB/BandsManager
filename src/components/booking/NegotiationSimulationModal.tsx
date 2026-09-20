@@ -114,9 +114,7 @@ export function NegotiationSimulationModal({
  onClick={() => onRoleChange('sala')}
  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='sala'
- ? isStitchLight
- ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/50/15 text-[var(--ink)] shadow-sm'
- :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
+ ? 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -129,9 +127,7 @@ export function NegotiationSimulationModal({
  onClick={() => onRoleChange('banda')}
  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='banda'
- ? isStitchLight
- ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)] shadow-sm'
- :'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
+ ? 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -151,9 +147,7 @@ export function NegotiationSimulationModal({
  value={simulationScenario}
  onChange={(e) => onScenarioChange(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
- :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  >
  {(simulationRole ==='sala'
@@ -179,9 +173,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onSenderNameChange(e.target.value)}
  placeholder="Ej. Kike (Sala Hebe) o Bakandeya Agent Manager IA"
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
- :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -195,9 +187,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onSubjectChange(e.target.value)}
  placeholder="Ej. Re: Propuesta..."
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
- :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -219,9 +209,7 @@ export function NegotiationSimulationModal({
  onChange={(e) => onCustomInstructionChange(e.target.value)}
  placeholder="Define pautas específicas (ej. propone taquilla 60/40, exige rider técnico especial, etc.)..."
  className={`w-full rounded-[var(--r-s)] p-2.5 text-[10px] focus:outline-none font-sans leading-relaxed ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
- :'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]'
  }`}
  />
  </div>
@@ -256,7 +244,7 @@ export function NegotiationSimulationModal({
  <div className="flex justify-between items-center">
  <label
  className={`block text-[10px] uppercase font-sans tracking-wider ${
- isStitchLight ?'text-[var(--acc)]' :'text-[var(--acc)]'
+ 'text-[var(--acc)]'
  }`}
  >
  ✨ Vista Previa del Correo Generado (Editable)

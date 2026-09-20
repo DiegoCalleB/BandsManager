@@ -77,9 +77,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="space-y-6">
  {/* 1. Header Banner & Band Stage Archetype */}
  <div className={`p-5 rounded-[var(--r-l)] transition-all ${
- isStitchLight 
- ?'bg-gradient-to-br from-indigo-50/80 via-purple-50/40 to-slate-50 border-[var(--acc)] shadow-sm' 
- :'bg-gradient-to-br from-indigo-950/30 via-[var(--surface)]/60 to-[var(--surface)] border-[var(--acc)]/20 shadow-lg'
+ 'bg-gradient-to-br from-indigo-950/30 via-[var(--surface)]/60 to-[var(--surface)] border-[var(--acc)]/20 shadow-lg'
  }`}>
  <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
  <div>

@@ -460,7 +460,7 @@ export default function BookingCRM({
  return norm ==='medio' || norm ==='productora';
  };
 
- const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
 
  // Filter leads by active section tab
  const sectionLeads = useMemo(() => {
@@ -2096,7 +2096,7 @@ export default function BookingCRM({
  <div className="mt-5 pt-4 border-t border-[var(--hair)]800/80 space-y-6">
  <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
  <div>
- <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>
+ <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
  Pautas diferenciadas por categoría
  </h4>
  </div>
@@ -2124,9 +2124,7 @@ export default function BookingCRM({
  onClick={() => setTemplateTab(tab.id as TemplateCategory)}
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
- ? isStitchLight
- ?'bg-[var(--surface)] text-sky-400 shadow-sm'
- :'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold shadow-md'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold shadow-md'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -2149,11 +2147,11 @@ export default function BookingCRM({
  templateTab ==='medios'
  ? isStitchLight ?'bg-rose-500/15 text-rose-400' :'bg-rose-500/15 text-rose-400'
  : templateTab ==='grupos'
- ? isStitchLight ? (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[var(--ok)]') :'bg-[var(--surface)]/15/30 text-[var(--ok)]'
+ ? isStitchLight ? ('bg-[var(--surface)]/15 text-[var(--ok)]') :'bg-[var(--surface)]/15/30 text-[var(--ok)]'
  : templateTab ==='discotecas'
  ? isStitchLight ?'bg-purple-50 text-purple-900' :'bg-purple-500/10 text-purple-300'
  : templateTab ==='ayuntamientos'
- ? isStitchLight ?'bg-amber-50 text-amber-900' :'bg-[var(--acc)]/10 text-[var(--acc)]/70'
+ ? 'bg-[var(--acc)]/10 text-[var(--acc)]/70'
  : isStitchLight ?'bg-sky-500/15 text-sky-400' :'bg-sky-500/15 text-sky-400'
  }`}>
  <div>
@@ -2182,9 +2180,7 @@ export default function BookingCRM({
  value={activeTemplate.subject}
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2197,16 +2193,14 @@ export default function BookingCRM({
  value={activeTemplate.body}
  onChange={(e) => activeTemplate.setBody(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
  />
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-sky-400' :'text-[var(--acc)]'}`}>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
  </label>
  <textarea
@@ -2215,9 +2209,7 @@ export default function BookingCRM({
  value={activeTemplate.guidelines}
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500'
- :'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
  />
@@ -2389,9 +2381,7 @@ export default function BookingCRM({
  id="template-btn-save"
  onClick={handleSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
- isStitchLight
- ?'bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] shadow-md shadow-indigo-100'
- :'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
+ 'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -2407,7 +2397,7 @@ export default function BookingCRM({
  }`}>
  <div className="space-y-3">
  <div className={`flex items-center gap-2 pb-2 ${isStitchLight ?'-slate-200' :'-bg-[var(--surface)]'}`}>
- <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isStitchLight ?'bg-sky-500/15' :'bg-[var(--acc)]'}`} />
+ <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${'bg-[var(--acc)]'}`} />
  <h4 className={`text-[10px] font-sans uppercase tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
  </div>
  

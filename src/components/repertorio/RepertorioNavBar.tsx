@@ -53,9 +53,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  {/* Module Title */}
  <div className="flex items-center gap-2.5 min-w-0">
  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 shadow-xs ${
- isStitchLight 
- ?'bg-[var(--acc)] text-[var(--acc)]' 
- :'bg-[var(--acc)]/15 text-[var(--acc)]'
+ 'bg-[var(--acc)]/15 text-[var(--acc)]'
  }`}>
  <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
  </div>
@@ -90,9 +88,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setActiveTab('setlists')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='setlists'
- ? isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] shadow-sm font-bold'
- :'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >
@@ -111,9 +107,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setActiveTab('catalogo')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='catalogo'
- ? isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] shadow-sm font-bold'
- :'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >

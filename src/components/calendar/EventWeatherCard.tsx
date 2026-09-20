@@ -105,11 +105,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  if (collapsible && !isExpanded) {
  return (
  <div className={`rounded-[var(--r-m)] px-3.5 py-2.5 transition-all duration-200 flex items-center justify-between gap-3 ${
- isStitchLight 
- ? hasAlerts
- ?'bg-amber-50 text-[var(--ink)] shadow-xs'
- :'bg-[var(--bg)] text-[var(--ink)]'
- : hasAlerts
+ hasAlerts
  ?'bg-[var(--acc-soft)] /40 text-[var(--ink-2)] shadow-xs'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
@@ -390,12 +386,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  animate={{ opacity: 1, y: 0 }}
  className={`rounded-[var(--r-m)] p-3 transition-all duration-200 ${
  isDanger
- ? isStitchLight
- ?'bg-rose-100/70 border-[var(--alert)] text-[var(--alert)] shadow-xs'
- :'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-rose-100 shadow-rose-950/30 shadow-md'
- : isStitchLight
- ?'bg-amber-100/70 text-[var(--acc)] shadow-xs'
- :'bg-[var(--acc-soft)] /40 text-[var(--acc)] shadow-amber-950/20 shadow-md'
+ ? 'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-rose-100 shadow-rose-950/30 shadow-md'
+ : 'bg-[var(--acc-soft)] /40 text-[var(--acc)] shadow-amber-950/20 shadow-md'
  }`}
  >
  <div className="flex items-start justify-between gap-2">

@@ -1235,7 +1235,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Modal Header */}
  <div
  className={`p-6 border-b flex items-start justify-between ${
- isStitchLight ?'bg-[var(--acc)]/10' :'bg-[var(--acc)]/10'
+ 'bg-[var(--acc)]/10'
  }`}
  >
  <div className="flex items-center gap-3">
@@ -1741,12 +1741,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  isSelected
  ?'bg-[var(--acc)]/15 ring-1 ring-amber-0/50'
  : track.type ==='musica'
- ? isStitchLight
- ?'bg-[var(--acc)]/5 hover:'
- :'bg-[var(--acc-soft)] /20 hover:/40'
- : isStitchLight
- ?'bg-purple-500/5 border-[var(--acc)] hover:border-[var(--acc)]'
- :'bg-purple-950/20 border-[var(--acc)]/20 hover:border-[var(--acc)]/40'
+ ? 'bg-[var(--acc-soft)] /20 hover:/40'
+ : 'bg-purple-950/20 border-[var(--acc)]/20 hover:border-[var(--acc)]/40'
  }`}
  >
  {/* Top Row: Track Controls, Type, Timestamps, and Actions */}

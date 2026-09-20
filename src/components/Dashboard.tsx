@@ -288,7 +288,7 @@ export default function Dashboard({
  return matchesSearch && matchesCity && matchesGenre;
  });
 
- const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink)]';
  const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
  const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';

@@ -687,7 +687,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  return () => clearInterval(intervalId);
  }, [activeRun?.id, activeRun?.status, activeRun?.isDemo]);
 
- const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const isStitchLight = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
 
  // Auto-scroll chat to bottom on mount and on message/loading updates
  useEffect(() => {
@@ -1733,9 +1733,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => setIsAutonomyModalOpen(true)}
  className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
- isStitchLight 
- ?'bg-purple-100 hover:bg-purple-200 text-purple-800 border-[var(--acc)] shadow-sm' 
- :'bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border-[var(--acc)]/40 shadow-sm'
+ 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border-[var(--acc)]/40 shadow-sm'
  }`}
  title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
  >
@@ -1750,9 +1748,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  ) : (
  <div 
  className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold opacity-80 ${
- isStitchLight 
- ?'bg-purple-50 text-purple-700 border-[var(--acc)]' 
- :'bg-purple-500/15 text-purple-300 border-[var(--acc)]/30'
+ 'bg-purple-500/15 text-purple-300 border-[var(--acc)]/30'
  }`}
  title="Límites de autonomía configurados (Configuración restringida a Administradores)"
  >
@@ -1805,7 +1801,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {/* Mode Switcher Banner (Python Agents vs Direct Gemini) */}
  <div className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono transition-colors ${
  agentsEnabled 
- ? (isStitchLight ?'bg-amber-50/80 -amber-200/80 text-amber-900' :'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)]/70')
+ ? ('bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)]/70')
  : (isStitchLight ?'bg-emerald-50/80 -emerald-200/80 text-emerald-900' :'bg-emerald-500/10 -emerald-500/20 text-[var(--ink-2)]')
  }`}>
  <div className="flex items-center gap-2 min-w-0">
@@ -1847,8 +1843,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  }}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
  agentsEnabled
- ? (isStitchLight ?'bg-amber-200 hover:bg-[var(--acc)]/50/15 text-[var(--acc)]' :'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/50/15 text-[var(--acc)] -amber-0/40')
- : (isStitchLight ?'bg-emerald-200 hover:bg-[var(--surface)]/15 text-[var(--ok)]' :'bg-emerald-500/20 hover:bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/40')
+ ? ('bg-[var(--acc)]/20 hover:bg-[var(--acc)]/50/15 text-[var(--acc)] -amber-0/40')
+ : ('bg-emerald-500/20 hover:bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/40')
  }`}
  title={agentsEnabled ?"Desactivar motor de agentes de Supabase y usar solo Gemini" :"Activar motor de agentes en Supabase"}
  >

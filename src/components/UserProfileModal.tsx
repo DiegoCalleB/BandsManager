@@ -608,7 +608,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {/* Creation Form Accordion */}
  {showCreateBandSection && (
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 ${
- isStitchLight ?'bg-emerald-50/50 border-[var(--ok)]' :'bg-[var(--ok-soft)] border-[var(--ok)]/50'
+ 'bg-[var(--ok-soft)] border-[var(--ok)]/50'
  }`}>
  <div className="flex items-center justify-between">
  <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
@@ -1124,9 +1124,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="submit"
  disabled={loading}
  className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-lg active:scale-98 ${
- isStitchLight
- ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-indigo-600/20'
- :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-amber-0/20'
+ 'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-amber-0/20'
  }`}
  >
  {loading ? (
