@@ -79,11 +79,11 @@ interface RepertorioSetlistsProps {
 // app: solo debe mostrarse cuando la banda activa es literalmente Bakandeya, nunca como
 // fallback para otras bandas (ver bandRosterMembers más abajo).
 const BAKANDEYA_DEMO_MEMBERS: BandMemberOption[] = [
- { id:'usr-1', name:'Voz / Guitarra', instrument:'Voz / Guitarra', avatarColor:'#6366f1' },
- { id:'usr-2', name:'Bajo / Coros', instrument:'Bajo / Coros', avatarColor:'#f59e0b' },
- { id:'usr-3', name:'Batería / Percusión', instrument:'Batería / Percusión', avatarColor:'#ec4899' },
- { id:'usr-4', name:'Teclados / Sintes', instrument:'Teclados / Sintes', avatarColor:'#10b981' },
- { id:'usr-5', name:'Vientos / Metales', instrument:'Vientos / Metales', avatarColor:'#3b82f6' }
+ { id:'usr-1', name:'Voz / Guitarra', instrument:'Voz / Guitarra', avatarColor:'var(--acc)' },
+ { id:'usr-2', name:'Bajo / Coros', instrument:'Bajo / Coros', avatarColor:'var(--ok)' },
+ { id:'usr-3', name:'Batería / Percusión', instrument:'Batería / Percusión', avatarColor:'var(--accent-2)' },
+ { id:'usr-4', name:'Teclados / Sintes', instrument:'Teclados / Sintes', avatarColor:'var(--ok)' },
+ { id:'usr-5', name:'Vientos / Metales', instrument:'Vientos / Metales', avatarColor:'var(--acc)' }
 ];
 
 export function formatSecondsToMmSs(secs: number): string {
@@ -93,17 +93,82 @@ export function formatSecondsToMmSs(secs: number): string {
  return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
 
+function getTokenValueForPrint(tokenName: string): string {
+ const style = typeof document !=='undefined' ? getComputedStyle(document.documentElement) : null;
+ return style ? style.getPropertyValue(tokenName).trim() ||'#666666' :'#666666';
+}
+
+function generatePdfStylesheet(): string {
+ const bgColor = getTokenValueForPrint('--bg');
+ const inkColor = getTokenValueForPrint('--ink');
+ const ink2Color = getTokenValueForPrint('--ink-2');
+ const ink3Color = getTokenValueForPrint('--ink-3');
+ const accColor = getTokenValueForPrint('--acc');
+ const okColor = getTokenValueForPrint('--ok');
+ const alertColor = getTokenValueForPrint('--alert');
+ const hairColor = getTokenValueForPrint('--hair');
+
+ return `
+ body {
+   font-family: system-ui, -apple-system, sans-serif;
+   margin: 20px;
+   background: ${bgColor};
+   color: ${inkColor};
+ }
+ .header {
+   border-bottom: 4px solid ${accColor};
+   padding-bottom: 15px;
+   margin-bottom: 25px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+ }
+ h1 { font-size: 32px; text-transform: uppercase; margin: 0; color: ${accColor}; letter-spacing: 2px; }
+ .meta { font-size: 16px; font-family: monospace; color: ${ink2Color}; }
+ .set-table { width: 100%; border-collapse: collapse; }
+ .set-table th {
+   text-align: left;
+   padding: 10px;
+   border-bottom: 2px solid ${ink3Color};
+   font-size: 14px;
+   text-transform: uppercase;
+   color: ${ink2Color};
+ }
+ .set-table td {
+   padding: 14px 10px;
+   border-bottom: 1px solid ${hairColor};
+   font-size: 22px;
+   font-weight: bold;
+ }
+ .num { color: ${accColor}; width: 40px; font-family: monospace; }
+ .key-badge {
+   display: inline-block;
+   background: ${bgColor};
+   color: ${okColor};
+   padding: 4px 10px;
+   border-radius: 6px;
+   font-size: 18px;
+   font-family: monospace;
+ }
+ .bpm { color: ${ink2Color}; font-size: 16px; font-family: monospace; }
+ .chapa { color: ${accColor}; font-style: italic; font-size: 18px; }
+ .bis { color: ${alertColor}; text-transform: uppercase; font-size: 20px; text-align: center; }
+ .note { display: block; font-size: 13px; color: ${ink3Color}; font-weight: normal; margin-top: 4px; font-style: italic; }
+ .footer { margin-top: 30px; font-size: 12px; font-family: monospace; color: ${ink3Color}; text-align: center; }
+ `;
+}
+
 export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
- header: { label:'Encabezado de Bloque / Sección', icon:'⚡', bg:'bg-[#d1b375]/20', text:'text-[#d1b375]', border:'border-[var(--acc)]/50' },
- presentacion: { label:'Presentación Banda / Saludo', icon:'🎤', bg:'bg-sky-500/15', text:'text-sky-400', border:'border-sky-500/30' },
- intro_tema: { label:'Intro / Historia del Tema', icon:'🗣️', bg:'bg-indigo-500/15', text:'text-indigo-400', border:'border-indigo-500/30' },
- beatbox: { label:'Performance Beatbox / Ritmo', icon:'🥁', bg:'bg-[var(--acc)]/15', text:'text-[var(--acc)]', border:'/30' },
- solo_performance: { label:'Solo de Instrumento / Jam', icon:'🎸', bg:'bg-purple-500/15', text:'text-purple-400', border:'border-purple-500/30' },
- cambio_instrumento: { label:'Cambio Instrumento / Afinación', icon:'🔧', bg:'bg-emerald-500/15', text:'text-emerald-400', border:'border-emerald-500/30' },
- chapa: { label:'Chapa / Discurso con el Público', icon:'💬', bg:'bg-orange-500/15', text:'text-orange-400', border:'border-orange-500/30' },
- descanso: { label:'Pausa / Intermedio / Agua', icon:'⏸️', bg:'bg-zinc-800', text:'text-zinc-300', border:'border-zinc-700' },
- bis: { label:'BIS / Parón Pre-Bis', icon:'💣', bg:'bg-rose-500/15', text:'text-rose-400', border:'border-rose-500/30' },
- otro: { label:'Otro Evento del Show', icon:'📌', bg:'bg-[var(--surface)]/80', text:'text-neutral-300', border:'' }
+ header: { label:'Encabezado de Bloque / Sección', icon:'⚡', bg:'bg-[var(--acc)]/20', text:'text-[var(--acc)]', border:'border-[var(--acc)]/50' },
+ presentacion: { label:'Presentación Banda / Saludo', icon:'🎤', bg:'bg-[var(--ok)]/15', text:'text-[var(--ok)]', border:'border-[var(--ok)]/30' },
+ intro_tema: { label:'Intro / Historia del Tema', icon:'🗣️', bg:'bg-[var(--acc-soft)]/80', text:'text-[var(--acc)]', border:'border-[var(--acc)]/30' },
+ beatbox: { label:'Performance Beatbox / Ritmo', icon:'🥁', bg:'bg-[var(--acc)]/15', text:'text-[var(--acc)]', border:'border-[var(--acc)]/30' },
+ solo_performance: { label:'Solo de Instrumento / Jam', icon:'🎸', bg:'bg-[var(--acc-soft)]/60', text:'text-[var(--acc)]', border:'border-[var(--acc)]/30' },
+ cambio_instrumento: { label:'Cambio Instrumento / Afinación', icon:'🔧', bg:'bg-[var(--ok)]/15', text:'text-[var(--ok)]', border:'border-[var(--ok)]/30' },
+ chapa: { label:'Chapa / Discurso con el Público', icon:'💬', bg:'bg-[var(--acc)]/15', text:'text-[var(--acc)]', border:'border-[var(--acc)]/30' },
+ descanso: { label:'Pausa / Intermedio / Agua', icon:'⏸️', bg:'bg-[var(--sunken)]', text:'text-[var(--ink-2)]', border:'border-[var(--hair)]' },
+ bis: { label:'BIS / Parón Pre-Bis', icon:'💣', bg:'bg-[var(--alert)]/15', text:'text-[var(--alert)]', border:'border-[var(--alert)]/30' },
+ otro: { label:'Otro Evento del Show', icon:'📌', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]', border:'' }
 };
 
 // GIF 1x1 transparente para anular la"foto" fantasma que el navegador dibuja por defecto al
@@ -2462,58 +2527,15 @@ export default function RepertorioSetlists({
  const printWindow = window.open('','_blank');
  if (!printWindow) return;
 
+ const pdfStylesheet = generatePdfStylesheet();
+ const okColorForPrint = getTokenValueForPrint('--ok');
  printWindow.document.write(`
  <!DOCTYPE html>
  <html>
  <head>
  <title>SETLIST BAKANDEYA - ${activeSetlist.nombre}</title>
  <style>
- body { 
- font-family: system-ui, -apple-system, sans-serif; 
- margin: 20px; 
- background: #000; 
- color: #fff; 
- }
- .header { 
- -bottom: 4px solid var(--acc); 
- padding-bottom: 15px; 
- margin-bottom: 25px; 
- display: flex; 
- justify-content: space-between; 
- align-items: center; 
- }
- h1 { font-size: 32px; text-transform: uppercase; margin: 0; color: var(--acc); letter-spacing: 2px; }
- .meta { font-size: 16px; font-family: monospace; color: #aaa; }
- .set-table { width: 100%; -collapse: collapse; }
- .set-table th { 
- text-align: left; 
- padding: 10px; 
- -bottom: 2px solid #444; 
- font-size: 14px; 
- text-transform: uppercase; 
- color: #888; 
- }
- .set-table td { 
- padding: 14px 10px; 
- border-bottom: 1px solid #222; 
- font-size: 22px; 
- font-weight: bold; 
- }
- .num { color: var(--acc); width: 40px; font-family: monospace; }
- .key-badge { 
- display: inline-block; 
- background: #222; 
- color: #10b981; 
- padding: 4px 10px; 
- border-radius: 6px; 
- font-size: 18px; 
- font-family: monospace; 
- }
- .bpm { color: #888; font-size: 16px; font-family: monospace; }
- .chapa { color: #f59e0b; font-style: italic; font-size: 18px; }
- .bis { color: #ec4899; text-transform: uppercase; font-size: 20px; text-align: center; }
- .note { display: block; font-size: 13px; color: #aaa; font-weight: normal; margin-top: 4px; font-style: italic; }
- .footer { margin-top: 30px; font-size: 12px; font-family: monospace; color: #666; text-align: center; }
+ ${pdfStylesheet}
  </style>
  </head>
  <body>
@@ -2522,7 +2544,7 @@ export default function RepertorioSetlists({
  <h1>BAKANDEYA — SETLIST</h1>
  <div class="meta">${activeSetlist.nombre} (${activeSetlistMetrics.formattedTime} • ${activeSetlistMetrics.songCount} Temas)</div>
  </div>
- <div style="font-size:20px; font-weight:bold; color:#10b981; font-family:monospace;">
+ <div style="font-size:20px; font-weight:bold; color:${okColorForPrint}; font-family:monospace;">
  AVG BPM: ${activeSetlistMetrics.avgBpm}
  </div>
  </div>
@@ -3656,7 +3678,7 @@ export default function RepertorioSetlists({
  {song.bpm ? `${song.bpm}` :'—'}
  </span>
 
- <span className="text-[9px] font-mono text-[#d1b375] font-bold shrink-0">
+ <span className="text-[9px] font-mono text-[var(--acc)] font-bold shrink-0">
  {song.duracion ||'0:00'}
  </span>
 
@@ -3932,7 +3954,7 @@ export default function RepertorioSetlists({
  } ${
  isSelected
  ?'border-[var(--acc)] ring-2 ring-[var(--acc)]/30 bg-[var(--acc)]/10 shadow-md'
- :'border-[var(--acc)]/50 bg-[#d1b375]/5 hover:border-[var(--acc)]/70'
+ :'border-[var(--acc)]/50 bg-[var(--acc)]/5 hover:border-[var(--acc)]/70'
  }`}
  >
  <div className="flex items-center gap-2 px-2.5 py-1.5">
