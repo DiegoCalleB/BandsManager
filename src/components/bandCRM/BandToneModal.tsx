@@ -257,9 +257,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  }
  };
 
- const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--sunken)] text-[var(--ink-2)]'
- }`;
+ const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-500/50 bg-[var(--surface)] text-[var(--ink)]`;
  const labelClass ='text-[9px] font-sans font-bold tracking-wider text-[var(--ink-2)] block mb-1';
 
  return (

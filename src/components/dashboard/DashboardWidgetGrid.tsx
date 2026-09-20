@@ -252,7 +252,7 @@ export function DashboardWidgetGrid({
  concerts={concerts}
  rehearsals={rehearsals}
  activeBandName={activeBandName}
- colors={colors
+ colors={colors}
  agendaFilterMode={agendaFilterMode}
  onSetAgendaFilterMode={onSetAgendaFilterMode}
  onNavigate={onNavigate}
@@ -266,7 +266,7 @@ export function DashboardWidgetGrid({
  case'repertorio_energy':
  return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} />;
  case'crm_pipeline':
- return <CrmPipelineWidget leads={leads} onNavigate={onNavigate />;
+ return <CrmPipelineWidget leads={leads} onNavigate={onNavigate} />;
  case'booking_funnel_chart':
  return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} />;
  case'finances_chart':
@@ -536,7 +536,7 @@ export function DashboardWidgetGrid({
  </div>
  )}
  <AiSupportWidget variant="card" />
- <AiUsageCard={} />
+ <AiUsageCard />
  </div>
 
  {/* MODAL / CATALOGO: AÑADIR NUEVO WIDGET */}
