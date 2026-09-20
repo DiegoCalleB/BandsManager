@@ -72,7 +72,6 @@ export const Onda: React.FC<OndaProps> = ({
       transition: animated ? 'height 0.3s ease-out, opacity 0.3s ease-out' : 'none',
       opacity: 0.9,
       position: 'relative',
-      title: `${bar.label}: ${tooltipFormatter(bar.value)}`,
     };
   };
 
@@ -95,7 +94,7 @@ export const Onda: React.FC<OndaProps> = ({
             key={`${bar.label}-${index}`}
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           >
-            <div style={barStyle(bar, index)} />
+            <div style={barStyle(bar)} title={`${bar.label}: ${tooltipFormatter(bar.value)}`} />
             {showLabels && <div style={labelStyle}>{bar.label}</div>}
           </div>
         ))}
