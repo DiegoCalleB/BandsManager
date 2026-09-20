@@ -518,7 +518,7 @@ export function SongTransitionPreviewModal({
 
  return (
  <AnimatePresence>
- <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-3 bg-[var(--scrim)]/80 backdrop-blur-md overflow-hidden">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-3 bg-[var(--scrim)]/80 overflow-hidden">
  <motion.div
  initial={{ opacity: 0, scale: 0.96, y: 8 }}
  animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -707,7 +707,7 @@ export function SongTransitionPreviewModal({
  <div className="flex items-center gap-1">
  {audioSourceTypeA ==='maqueta' && (
  <span className="text-[var(--ok)] font-semibold flex items-center gap-1">
- <Radio className="w-3 h-3 animate-pulse" />
+ <Radio className="w-3 h-3" />
  Maqueta
  </span>
  )}
@@ -737,7 +737,7 @@ export function SongTransitionPreviewModal({
  </select>
  )}
  {isDetectingCuesA && (
- <span className="text-[8px] text-[var(--ink-2)] animate-pulse">Analizando...</span>
+ <span className="text-[8px] text-[var(--ink-2)]">Analizando...</span>
  )}
  </div>
 
@@ -766,7 +766,7 @@ export function SongTransitionPreviewModal({
  <div
  className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
  currentGains.isCrossfading
- ?'bg-[var(--acc)] text-[var(--on-acc)] scale-110 shadow-lg shadow-amber-0/30 animate-pulse'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] scale-110 shadow-lg shadow-amber-0/30'
  :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
@@ -850,7 +850,7 @@ export function SongTransitionPreviewModal({
  <div className="flex items-center gap-1">
  {audioSourceTypeB ==='maqueta' && (
  <span className="text-[var(--ok)] font-semibold flex items-center gap-1">
- <Radio className="w-3 h-3 animate-pulse" />
+ <Radio className="w-3 h-3" />
  Maqueta
  </span>
  )}
@@ -880,7 +880,7 @@ export function SongTransitionPreviewModal({
  </select>
  )}
  {isDetectingCuesB && (
- <span className="text-[8px] text-[var(--ink-2)] animate-pulse">Analizando...</span>
+ <span className="text-[8px] text-[var(--ink-2)]">Analizando...</span>
  )}
  </div>
 
@@ -1147,7 +1147,7 @@ export function SongTransitionPreviewModal({
  ⏱️ {currentTime.toFixed(1)}s / {timeline.totalDurationSec.toFixed(1)}s
  </span>
  {isPlaying && (
- <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1 animate-pulse">
+ <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
  <span className="w-1 h-1 rounded-full bg-[var(--ok)]" />
  Sonando
  </span>

@@ -175,7 +175,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  {showEventMenu && (
  <>
  <div className="fixed inset-0 z-40" onClick={() => setShowEventMenu(false)} />
- <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 backdrop-blur-md shadow-2xl p-2 space-y-2 text-xs">
+ <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 shadow-2xl p-2 space-y-2 text-xs">
  {/* Standard Preset Events */}
  <div>
  <div className="text-[10px] tracking-wider text-[var(--ink-2)] px-2 py-1 font-semibold">

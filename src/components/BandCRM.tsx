@@ -798,7 +798,7 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  case'concierto_agendado':
  return (
  <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider bg-[var(--acc)]/15 text-[var(--acc)] whitespace-nowrap shrink-0">
- <Zap className="w-3 h-3 text-[var(--acc)] shrink-0 animate-pulse" />
+ <Zap className="w-3 h-3 text-[var(--acc)] shrink-0" />
  <span>Concierto Agendado</span>
  </span>
  );
@@ -1545,7 +1545,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* 4. MODAL: CREATE / EDIT BAND CONTACT */}
  {isAddEditModalOpen && (
- <div className="fixed inset-0 bg-[var(--scrim)]/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+ <div className="fixed inset-0 bg-[var(--scrim)]/85 flex items-center justify-center p-4 z-50">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
@@ -1602,7 +1602,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* AI Proposal Overlay / Card */}
  {isAiSearching && (
- <div className="md:col-span-2 p-3 bg-[var(--surface)]/90 border-[var(--acc)]/30 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-sans animate-pulse">
+ <div className="md:col-span-2 p-3 bg-[var(--surface)]/90 border-[var(--acc)]/30 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-sans">
  <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
  <span>Buscando datos de"{formName}" con IA en la web...</span>
  </div>

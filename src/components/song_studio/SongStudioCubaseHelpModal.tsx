@@ -9,7 +9,7 @@ interface SongStudioCubaseHelpModalProps {
 export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps> = ({ onClose }) => {
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-[var(--ink)] relative my-auto max-h-[90vh] overflow-y-auto">
  <button
  type="button"

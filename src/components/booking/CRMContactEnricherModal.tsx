@@ -75,7 +75,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 backdrop-blur-sm overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`relative w-full max-w-lg my-auto rounded-[var(--r-l)] shadow-2xl p-6 overflow-hidden ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>

@@ -182,9 +182,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  >
  {isPlaying ? (
  <div className="flex items-center gap-0.5">
- <span className="w-0.5 h-3 bg-[var(--sunken)] rounded-full animate-pulse" />
- <span className="w-0.5 h-4 bg-[var(--sunken)] rounded-full animate-pulse delay-75" />
- <span className="w-0.5 h-2.5 bg-[var(--sunken)] rounded-full animate-pulse delay-150" />
+ <span className="w-0.5 h-3 bg-[var(--sunken)] rounded-full" />
+ <span className="w-0.5 h-4 bg-[var(--sunken)] rounded-full delay-75" />
+ <span className="w-0.5 h-2.5 bg-[var(--sunken)] rounded-full delay-150" />
  </div>
  ) : (
  <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
@@ -367,7 +367,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }`}
  title={hasIrisStems(song) ?'Ver pistas e instrumentos separados con Iris' :'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
  >
- <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span className="hidden sm:inline text-xs font-sans">Iris</span>
  </button>
  )}
@@ -453,7 +453,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  {/* Menu Popover */}
  {showMenu && (
  <div
- className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 shadow-2xl text-xs backdrop-blur-md ${
+ className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 shadow-2xl text-xs ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)] divide-y divide-slate-100'
  :'bg-[var(--surface)]/95 /80 text-[var(--ink-2)] divide-y divide-slate-800/60'
@@ -518,7 +518,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer font-bold"
  >
- <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>{hasIrisStems(song) ?'🎛️ Ver Pistas Iris Separadas' :'✨ Procesar con Iris (IA Stems)'}</span>
  </button>
  )}

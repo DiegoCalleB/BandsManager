@@ -1313,7 +1313,7 @@ export default function ReelsCenter({
  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-all cursor-pointer shadow-md"
  title={`Ver el tono de voz guardado de ${instagramHandle || nombreBanda}, o analizarlo si todavía no existe`}
  >
- <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Tono de voz en redes</span>
  </button>
 
@@ -1323,7 +1323,7 @@ export default function ReelsCenter({
  disabled={isSyncingReels}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncingReels
- ?'bg-[var(--surface)]/80 text-[var(--ink-2)] animate-pulse'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
  }`}
  title="Sincronizar todas las publicaciones de redes sociales"
@@ -1628,7 +1628,7 @@ export default function ReelsCenter({
  </button>
 
  {isGenerating && (
- <div className="text-[10px] font-sans text-[var(--ink-2)] text-center animate-pulse flex items-center justify-center gap-1.5 mt-2">
+ <div className="text-[10px] font-sans text-[var(--ink-2)] text-center flex items-center justify-center gap-1.5 mt-2">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
  <span>Consultando a Gemini...</span>
  </div>
@@ -1953,7 +1953,7 @@ export default function ReelsCenter({
 
  {/* Loading indicator with detailed analytical logs */}
  {isAnalyzing && (
- <div className={`p-4 rounded-[var(--r-m)] space-y-3 animate-pulse ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80'}`}>
  <div className="flex justify-between items-center text-[10px] font-sans">
  <span className={`font-bold ${'text-[var(--acc)]'}`}>Estado del análisis:</span>
  <span className="text-[var(--ink-2)]">Paso {loadingStep + 1} de {getLoadingSteps().length}</span>
@@ -2206,7 +2206,7 @@ export default function ReelsCenter({
  disabled={isReanalyzingClip}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
  isReanalyzingClip
- ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed animate-pulse'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
  : 'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)]'
  }`}
  >
@@ -2608,7 +2608,7 @@ export default function ReelsCenter({
 
  {/* Kinetic Reels Subtitles Overlay */}
  {currentSubtitleText && !renderedBurnedSubs && (
- <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center backdrop-blur-sm shadow-xl">
+ <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center shadow-xl">
  <span className="text-[10px] font-sans font-black tracking-wide text-[var(--acc)] leading-tight">
  ✨ {currentSubtitleText} ✨
  </span>
@@ -2678,7 +2678,7 @@ export default function ReelsCenter({
  '-[var(--accent)]/50 text-[var(--acc)]/70'
  }`}>SKA</div>
  </div>
- <span className={`text-[9px] font-sans tracking-widest text-center animate-pulse ${
+ <span className={`text-[9px] font-sans tracking-widest text-center ${
  isStitchLight ?'text-[var(--tentative)]' :'text-[var(--ink-2)]'
  }`}>
  {activeTab ==='analyzer' && highlights.length > 0 ?'[ HIGHLIGHT CLIP ACTIVE ]' :'[ Balkan Analog Synth ]'}
@@ -2719,7 +2719,7 @@ export default function ReelsCenter({
  >
  {isPreviewMuted ? (
  <>
- <VolumeX className="w-3 h-3 text-[var(--alert)] animate-pulse" />
+ <VolumeX className="w-3 h-3 text-[var(--alert)]" />
  <span className="text-[7.5px] font-sans font-extrabold tracking-wider text-[var(--alert)]/40">SIN SONIDO</span>
  </>
  ) : (
@@ -2749,7 +2749,7 @@ export default function ReelsCenter({
  (inputType ==='file' && localVideoUrl)
  )) && (
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
- <div className={`w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center text-[var(--acc)] shadow-lg animate-pulse ${
+ <div className={`w-12 h-12 rounded-full flex items-center justify-center text-[var(--acc)] shadow-lg ${
  isStitchLight ?'bg-[var(--surface)]/40' :'bg-[var(--surface)]/10 -white/20'
  }`}>
  <Play className={`w-6 h-6 ml-0.5 ${'fill-[var(--acc)] text-[var(--acc)]'}`} />
@@ -2894,7 +2894,7 @@ export default function ReelsCenter({
  <div 
  id="theater-mode-modal"
  onClick={() => setIsExpandedPreview(false)}
- className="fixed inset-0 z-[200] bg-[var(--surface)]/98 backdrop-blur-md flex flex-col items-center justify-start lg:justify-center p-2 sm:p-4 md:p-6 overflow-y-auto animate-fade-in"
+ className="fixed inset-0 z-[200] bg-[var(--surface)]/98 flex flex-col items-center justify-start lg:justify-center p-2 sm:p-4 md:p-6 overflow-y-auto animate-fade-in"
  >
  <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent)]/5 via-transparent to-[var(--acc)]/5 pointer-events-none" />
  
@@ -2905,7 +2905,7 @@ export default function ReelsCenter({
  e.stopPropagation();
  setIsExpandedPreview(false);
  }}
- className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)]/80 text-[var(--ink)] hover:text-[var(--ink)] transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center backdrop-blur-sm"
+ className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)]/80 text-[var(--ink)] hover:text-[var(--ink)] transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center
  title="Cerrar modo cine (ESC o Click fuera)"
  >
  <X className="w-6 h-6" />
@@ -2917,7 +2917,7 @@ export default function ReelsCenter({
  className="w-full max-w-6xl mb-2 flex items-center justify-between p-3 rounded-[var(--r-l)] bg-[var(--surface)] lg:hidden shrink-0 shadow-lg"
  >
  <div className="flex items-center gap-2">
- <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)] animate-pulse" />
+ <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]" />
  <span className="text-xs font-sans font-bold text-[var(--ink)] tracking-wider">Modo Cine · Reels</span>
  </div>
  <button
@@ -2936,7 +2936,7 @@ export default function ReelsCenter({
  {/* Left Column: Huge 9:16 vertical smartphone screen mockup */}
  <div className="w-full lg:w-[460px] bg-[var(--surface)]/80 p-6 flex flex-col items-center justify-center lg: lg: relative select-none shrink-0">
  <div className="absolute top-4 left-6 flex items-center gap-2">
- <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)] animate-pulse" />
+ <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]" />
  <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold tracking-wider">MODO CINE ACTIVO</span>
  </div>
 
@@ -2996,7 +2996,7 @@ export default function ReelsCenter({
 
  {/* Subtitles Overlay inside Cinema Phone */}
  {currentSubtitleText && !renderedBurnedSubs && (
- <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center backdrop-blur-sm shadow-xl">
+ <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center shadow-xl">
  <span className="text-[10px] font-sans font-black tracking-wide text-[var(--acc)] leading-tight">
  ✨ {currentSubtitleText} ✨
  </span>
@@ -3065,7 +3065,7 @@ export default function ReelsCenter({
  que un hookText o subtítulo pegado ahí puede quedar oculto en una red y no en otra. */}
  <div className="absolute right-2 bottom-24 z-20 flex flex-col gap-3 items-center pointer-events-none">
  {PLATFORM_UI_ICONS[selectedPlatform].map((Icon, idx) => (
- <div key={idx} className="w-7 h-7 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center text-[var(--ink)]/85">
+ <div key={idx} className="w-7 h-7 rounded-full bg-black/35 flex items-center justify-center text-[var(--ink)]/85">
  <Icon className="w-3.5 h-3.5" />
  </div>
  ))}
@@ -3146,7 +3146,7 @@ export default function ReelsCenter({
  >
  {isPreviewMuted ? (
  <>
- <VolumeX className="w-4 h-4 text-[var(--alert)] animate-pulse" />
+ <VolumeX className="w-4 h-4 text-[var(--alert)]" />
  <span>Activar Audio</span>
  </>
  ) : (
@@ -3305,7 +3305,7 @@ export default function ReelsCenter({
  Línea de Tiempo Interactiva
  </span>
  </div>
- <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] -[var(--acc)]/20 animate-pulse">
+ <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] -[var(--acc)]/20">
  REPRODUCIENDO CROP
  </span>
  </div>
@@ -3567,7 +3567,7 @@ export default function ReelsCenter({
 
  {/* Rendering State indicators */}
  {isCuttingVideo ? (
- <div className="bg-[var(--surface)]/80 p-4 rounded-[var(--r-m)] space-y-3 animate-pulse">
+ <div className="bg-[var(--surface)]/80 p-4 rounded-[var(--r-m)] space-y-3">
  <div className="flex items-center gap-3">
  <RefreshCw className="w-5 h-5 text-[var(--acc)] animate-spin" />
  <span className="text-xs font-sans font-extrabold text-[var(--ink-2)]">
@@ -3578,7 +3578,7 @@ export default function ReelsCenter({
  ⚡ {cuttingProgressText}
  </p>
  <div className="w-full h-1 bg-[var(--surface)]/80 rounded-full overflow-hidden">
- <div className="h-full bg-gradient-to-r from-[var(--acc)] to-emerald-500 animate-pulse" style={{ width:'75%' }}></div>
+ <div className="h-full bg-gradient-to-r from-[var(--acc)] to-emerald-500" style={{ width:'75%' }}></div>
  </div>
  </div>
  ) : renderedClipUrl ? (
@@ -3925,7 +3925,7 @@ export default function ReelsCenter({
  <div className="text-left">
  {schedulingSuccess ? (
  <div className="flex items-center gap-1.5 text-[var(--ok)] text-xs font-bold font-sans">
- <CheckCircle2 className="w-4 h-4 text-[var(--ok)] animate-pulse" />
+ <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
  <span>¡Clip guardado e insertado en tu agenda de redes!</span>
  </div>
  ) : scheduleErrors.length > 0 ? (

@@ -707,7 +707,7 @@ export default function App() {
      {currentActiveBandName}
     </h1>
     <ChevronDown className="w-3.5 h-3.5 text-[var(--acc-ink)] group-hover:translate-y-0.5 transition-transform" />
-    <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)] animate-pulse'}`} />
+    <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)]'}`} />
    </div>
    <button
     type="button"
@@ -858,7 +858,7 @@ export default function App() {
  <div className="md:hidden fixed inset-0 z-50 flex">
  {/* Backdrop */}
  <div 
- className="fixed inset-0 bg-[var(--scrim)]/75 backdrop-blur-xs transition-opacity"
+ className="fixed inset-0 bg-[var(--scrim)]/75 transition-opacity"
  onClick={() => setIsMobileMenuOpen(false)}
  />
  {/* Drawer panel */}
@@ -883,7 +883,7 @@ export default function App() {
  {currentActiveBandName}
  </h1>
  <div className="flex items-center gap-1.5 mt-1">
- <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)] animate-pulse'}`} />
+ <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)]'}`} />
  <span className="text-[10px] font-sans text-[var(--ink-2)]">Banda activa</span>
  </div>
  </div>

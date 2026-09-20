@@ -108,7 +108,7 @@ export function ConvocarEnsayoModal({
 
  return (
  <ModalPortal>
- <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fade-in overflow-y-auto">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 animate-fade-in overflow-y-auto">
  <div className="bg-[var(--surface)] border-[var(--hair)] w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh]">
  {/* Header */}
  <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[var(--surface)]">

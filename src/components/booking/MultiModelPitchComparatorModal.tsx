@@ -213,7 +213,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/85 backdrop-blur-md overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain">
  <div className="relative w-full max-w-6xl bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
  
  {/* HEADER */}

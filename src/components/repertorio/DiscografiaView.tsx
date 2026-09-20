@@ -367,7 +367,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  return (
  <div
  className={`p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl shadow-xl transition-all ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95 backdrop-blur-sm'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95
  }`}
  >
  {/* Top Controls Bar (Search + Quick Filters + Actions) */}
@@ -415,7 +415,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  {showCreateAlbumMenu && (
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowCreateAlbumMenu(false)} />
- <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+ <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs ${
  isStitchLight
  ?' bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'

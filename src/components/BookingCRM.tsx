@@ -2397,7 +2397,7 @@ export default function BookingCRM({
  }`}>
  <div className="space-y-3">
  <div className={`flex items-center gap-2 pb-2 ${isStitchLight ?'-slate-200' :'-bg-[var(--surface)]'}`}>
- <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${'bg-[var(--acc)]'}`} />
+ <span className={`w-1.5 h-1.5 rounded-full ${'bg-[var(--acc)]'}`} />
  <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
  </div>
  

@@ -1712,7 +1712,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  };
 
  return (
- <div className={`flex flex-col ${isFloating ?'h-[550px]' :'h-full min-h-[500px]'} ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]/95'} rounded-[var(--r-l)] overflow-hidden font-sans backdrop-blur-xl shadow-2xl w-full max-w-full overflow-x-hidden`}>
+ <div className={`flex flex-col ${isFloating ?'h-[550px]' :'h-full min-h-[500px]'} ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]/95'} rounded-[var(--r-l)] overflow-hidden font-sans shadow-2xl w-full max-w-full overflow-x-hidden`}>
  {/* Bot Header */}
  <div className={`px-5 py-4 flex items-center justify-between ${isStitchLight ?'bg-[var(--bg)] -slate-200/80' :'bg-[var(--bg)]/90 -bg-[var(--surface)]/60'}`}>
  <div className="flex items-center gap-3">
@@ -1721,7 +1721,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </div>
  <div>
  <h4 className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}`}>
- Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block animate-pulse ${isStitchLight ?'bg-[var(--tentative)]/80 shadow-[0_0_8px_rgba(79, 70, 229, 0.8)]' :'bg-[var(--acc)] shadow-[0_0_8px_rgba(6, 182, 212, 0.8)]'}`} />
+ Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block ${isStitchLight ?'bg-[var(--tentative)]/80 shadow-[0_0_8px_rgba(79, 70, 229, 0.8)]' :'bg-[var(--acc)] shadow-[0_0_8px_rgba(6, 182, 212, 0.8)]'}`} />
  </h4>
  <span className="text-[9px] font-sans text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
  </div>
@@ -1805,7 +1805,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  : (isStitchLight ?'bg-[var(--ok)]/10/80 -emerald-200/80 text-[var(--ok)]' :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ink-2)]')
  }`}>
  <div className="flex items-center gap-2 min-w-0">
- <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ?'bg-[var(--acc)]/60 animate-pulse' :'bg-[var(--ok)]'}`} />
+ <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ?'bg-[var(--acc)]/60' :'bg-[var(--ok)]'}`} />
  <span className="font-bold truncate text-[11px] tracking-wider">
  {agentsEnabled ?'⚡ Agentes Supabase Activos (Backend & Database)' :'🤖 Modo Gemini Directo (100% Autónomo)'}
  </span>
@@ -1891,10 +1891,10 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const pendingActions = nonTriggerActions.filter(a => a.type !=='propose_accompaniment' && a.type !=='propose_melodic_idea' && (a.status ||'pending') ==='pending');
 
  return (
- <div className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 backdrop-blur-md ${isStitchLight ?'-indigo-100 bg-[var(--tentative)]/5/20' :'-cyan-500/20 bg-[var(--acc)]/5'}`}>
+ <div className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 ${isStitchLight ?'-indigo-100 bg-[var(--tentative)]/5/20' :'-cyan-500/20 bg-[var(--acc)]/5'}`}>
  <div className="flex items-center justify-between gap-1.5">
  <div className={`flex items-center gap-1.5 ${isStitchLight ?'text-[var(--tentative)]' :'text-[var(--acc)]'}`}>
- <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5" />
  <h5 className="font-sans font-bold text-[9px] tracking-widest">Propuestas del Manager ({nonTriggerActions.length})</h5>
  </div>
  {pendingActions.length > 1 && (
@@ -2118,7 +2118,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  {isLoading && (
  <div className="flex gap-3 max-w-[80%] self-start">
- <div className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center animate-pulse ${isStitchLight ?'bg-[var(--tentative)]/5 text-[var(--tentative)]' :'bg-[var(--acc)]/10 -cyan-500/20 text-[var(--acc)]'}`}>
+ <div className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center ${isStitchLight ?'bg-[var(--tentative)]/5 text-[var(--tentative)]' :'bg-[var(--acc)]/10 -cyan-500/20 text-[var(--acc)]'}`}>
  <Guitar className="w-3.5 h-3.5" />
  </div>
  <div className={`p-3.5 rounded-[var(--r-m)] rounded-tl-none text-[11px] font-sans flex items-center gap-2 ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink-2)] shadow-sm' :'bg-[var(--surface)]/50 text-[var(--ink-2)]'}`}>
@@ -2131,7 +2131,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 animate-in slide-in-from-bottom-2 fade-in duration-300 ${isStitchLight ?'-indigo-100 bg-[var(--surface)] shadow-md text-[var(--ink)]' :'-cyan-500/10 bg-[var(--bg)]/80 shadow-[0_4px_24px_rgba(0,0,0,0.6)] text-[var(--ink-2)]'}`}>
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold tracking-widest">
- <Activity className={`w-3.5 h-3.5 ${isStitchLight ?'text-[var(--tentative)]' :'text-[var(--acc)]'} animate-pulse`} />
+ <Activity className={`w-3.5 h-3.5 ${isStitchLight ?'text-[var(--tentative)]' :'text-[var(--acc)]'}`} />
  <span>Monitoreando {activeRun.agentName}</span>
  </div>
  <button 
@@ -2148,13 +2148,13 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans text-[var(--ink-2)]">Estado</span>
  {activeRun.status ==='queued' && (
- <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/20 animate-pulse">🕒 En Cola</span>
+ <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/20">🕒 En Cola</span>
  )}
  {activeRun.status ==='fetching' && (
- <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/20 animate-pulse">🔄 Despachando</span>
+ <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/20">🔄 Despachando</span>
  )}
  {activeRun.status ==='in_progress' && (
- <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] -cyan-500/20 animate-pulse">⚙️ Ejecutando...</span>
+ <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] -cyan-500/20">⚙️ Ejecutando...</span>
  )}
  {activeRun.status ==='completed' && activeRun.conclusion ==='success' && (
  <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20">✅ Éxito</span>
@@ -2185,7 +2185,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  dotColor ='bg-[var(--ok)] shadow-[0_0_4px_var(--ok)]';
  textColor = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
  } else if (isStepFailure) {
- dotColor ='bg-[var(--alert)] shadow-[0_0_4px_#f43f5e] animate-pulse';
+ dotColor ='bg-[var(--alert)] shadow-[0_0_4px_#f43f5e]';
  textColor ='text-[var(--alert)] font-bold';
  } else if (isStepRunning) {
  dotColor ='bg-[var(--acc)]/80 animate-ping';
@@ -2475,7 +2475,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  title={speechSupported ? (isListening ?'Detener dictado por voz' :'Dar instrucciones por voz') :'Tu navegador no soporta dictado por voz'}
  className={`p-2.5 rounded-[var(--r-m)] font-bold transition-all flex items-center justify-center shrink-0 cursor-pointer active:scale-95 active:opacity-90 mb-0.5 disabled:opacity-30 disabled:cursor-not-allowed ${
  isListening
- ?'bg-[var(--alert)] text-[var(--ink)] animate-pulse'
+ ?'bg-[var(--alert)] text-[var(--ink)]'
  : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] text-[var(--ink-2)] bg-[var(--surface)]/40')
  }`}
  >

@@ -407,14 +407,14 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className="bg-gradient-to-b from-zinc-900 via-[var(--surface)] to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col my-auto max-h-[92vh]">
  
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)]10 flex items-center justify-between bg-[var(--ink)]/5 shrink-0">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ok)]">
- <Guitar className="w-5 h-5 animate-pulse" />
+ <Guitar className="w-5 h-5" />
  </div>
  <div>
  <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-2">
@@ -688,7 +688,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  >
  <div className="flex items-center gap-1">
  <span className="font-black text-sm">{str.note}{str.octave}</span>
- {isTonePlaying && <Volume2 className="w-3.5 h-3.5 animate-pulse" />}
+ {isTonePlaying && <Volume2 className="w-3.5 h-3.5" />}
  </div>
  <span className="text-[10px] text-[var(--ink-2)] opacity-90 truncate max-w-full">
  {str.freq} Hz

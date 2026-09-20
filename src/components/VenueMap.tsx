@@ -689,7 +689,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  {/* Floating Control Overlay */}
  <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
  {/* City Info Card */}
- <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] backdrop-blur-md shadow-md flex items-center gap-2 font-sans text-xs ${
+ <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] shadow-md flex items-center gap-2 font-sans text-xs ${
  isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}>
  <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
@@ -706,7 +706,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  {/* Action Controls */}
  <div className="pointer-events-auto flex items-center gap-2 relative">
  {isGeocoding && (
- <div className={`px-3 py-1.5 rounded-[var(--r-m)] backdrop-blur-md text-[10px] font-sans flex items-center gap-1.5 ${
+ <div className={`px-3 py-1.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center gap-1.5 ${
  'bg-[var(--acc-soft)] -amber-700/50 text-[var(--ink)]'
  }`}>
  <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
@@ -718,7 +718,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className="relative">
  <button
  onClick={() => setShowStyleMenu(!showStyleMenu)}
- className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-sans text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
+ className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--bg)]/95 hover:bg-[var(--surface)] text-[var(--ink)]'
@@ -729,7 +729,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  </button>
 
  {showStyleMenu && (
- <div className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] shadow-2xl backdrop-blur-md space-y-1 font-sans text-xs z-[1100] ${
+ <div className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] shadow-2xl space-y-1 font-sans text-xs z-[1100] ${
  isStitchLight ?'bg-[var(--surface)]/95 text-[var(--ink)] shadow-slate-300/50' :'bg-[var(--bg)]/95 text-[var(--ink)] shadow-black/80'
  }`}>
  <div className="text-[10px] font-bold text-[var(--ink-2)] px-2 py-1 flex items-center justify-between">
@@ -761,7 +761,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  <button
  onClick={handleRecenter}
- className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-sans text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
+ className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
  isStitchLight
  ?'bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--bg)]/90 hover:bg-[var(--surface)] text-[var(--ink)]'
@@ -774,7 +774,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  </div>
 
  {/* Floating Legend */}
- <div className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] backdrop-blur-md font-sans text-[10px] space-y-1 shadow-md hidden sm:block ${
+ <div className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] font-sans text-[10px] space-y-1 shadow-md hidden sm:block ${
  isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink-2)]' :'bg-[var(--bg)]/90 text-[var(--ink-2)]'
  }`}>
  <div className="font-bold text-[9px] tracking-wider mb-1 text-[var(--ink-2)]">Leyenda</div>

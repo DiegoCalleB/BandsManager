@@ -63,7 +63,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  {/* Gmail-Style Sticky Top Actions Toolbar */}
  <div 
  id="bulk-leads-action-bar"
- className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] shadow-xl backdrop-blur-md p-2.5 sm:p-3 transition-all animate-slide-up ${
+ className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] shadow-xl p-2.5 sm:p-3 transition-all animate-slide-up ${
  'bg-[var(--surface)]/95 border-[var(--acc)]/50 text-[var(--ink)] shadow-black/80'
  }`}
  >
@@ -194,7 +194,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  }`}
  title="Generar propuestas de pitch con IA para todos los seleccionados"
  >
- <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span className="hidden sm:inline">Pitches IA</span>
  <span className="sm:hidden">Pitch</span>
  </button>
@@ -268,7 +268,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
 
  {/* Confirmation Modal for Bulk Deletion */}
  <ModalPortal isOpen={isConfirmDeleteOpen} onClose={() => setIsConfirmDeleteOpen(false)}>
- <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
+ <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
  <div className="w-full max-w-md bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl p-5 space-y-4 my-auto">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--alert)]/20 flex items-center justify-center text-[var(--alert)] shrink-0">

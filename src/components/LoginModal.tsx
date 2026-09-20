@@ -501,7 +501,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  {/* Top Language Switcher */}
  <div className="w-full flex justify-end items-center gap-1.5 mb-1 px-2 z-20">
- <div className="inline-flex items-center gap-1 p-1 rounded-[var(--r-m)] bg-[var(--surface)]/80 backdrop-blur-sm">
+ <div className="inline-flex items-center gap-1 p-1 rounded-[var(--r-m)] bg-[var(--surface)]/80
  {SUPPORTED_LANGUAGES.map((l) => {
  const isSelected = currentAppLang === l.code;
  return (
@@ -554,14 +554,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  LOGIN VIEW
  ========================================= */}
  {view ==='login' && (
- <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/95 border-[var(--acc)]/30 rounded-3xl backdrop-blur-xl shadow-[0_24px_70px_rgba(0,0,0,0.7)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+ <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/95 border-[var(--acc)]/30 rounded-3xl shadow-[0_24px_70px_rgba(0,0,0,0.7)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  
  {/* INTEGRATED LOGO INSIDE CARD */}
  <div className="relative flex flex-col items-center justify-center pt-1 pb-1 text-center w-full">
- <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[var(--acc)]/12 rounded-full blur-3xl pointer-events-none animate-pulse" />
+ <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[var(--acc)]/12 rounded-full blur-3xl pointer-events-none" />
  
  <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
- <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[var(--acc)]/45 viabg-[var(--surface)]/60 to-[var(--surface)]/90 border-2 border-[var(--acc)]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[var(--acc)] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
+ <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[var(--acc)]/45 viabg-[var(--surface)]/60 to-[var(--surface)]/90 border-2 border-[var(--acc)]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[var(--acc)] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
  {(videoLoadFailed || skipVideo) ? (
  <img
  src={LOGIN_POSTER}
@@ -723,7 +723,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  RESET PASSWORD VIEW
  ========================================= */}
  {view ==='reset-password' && (
- <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+ <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  <div className="flex items-center gap-2.5 mb-2">
  <button
  type="button"
@@ -897,7 +897,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  REGISTER VIEW
  ========================================= */}
  {view ==='register' && (
- <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+ <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  <form onSubmit={handleRegisterSubmit} className="w-full space-y-3.5">
  <div className="relative flex items-center">
  <User className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
@@ -1008,7 +1008,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  ACTIVATE ACCOUNT VIEW (NEW!)
  ========================================= */}
  {view ==='activate' && (
- <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+ <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90 border-[var(--acc)]/25 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
  {activateStep === 1 ? (
  <div className="space-y-4">
  <div className="text-center space-y-2 mb-4">

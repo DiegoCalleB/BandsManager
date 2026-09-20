@@ -1112,7 +1112,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </div>
  ) : (
  <div className="w-24 h-24 mx-auto rounded-[var(--r-l)] border-2 /50 bg-gradient-to-br from-[var(--surface)] to-[var(--surface)] flex flex-col items-center justify-center p-2 shadow-2xl drop-shadow-[0_0_20px_var(--acc-glow)]">
- <Flame className="w-10 h-10 text-[var(--acc)] mb-0.5 animate-pulse" />
+ <Flame className="w-10 h-10 text-[var(--acc)] mb-0.5" />
  <span className="text-[10px] font-black text-[var(--acc)]/70 font-display tracking-wider line-clamp-1">{bandName}</span>
  </div>
  )}
@@ -1175,9 +1175,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Animación de ondas de audio */}
  <div className="flex items-center gap-1 h-5 shrink-0 px-2">
- <span className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-5 animate-pulse' :'h-1.5'}`} />
+ <span className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-5' :'h-1.5'}`} />
  <span className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-3 animate-bounce' :'h-2'}`} />
- <span className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-4 animate-pulse' :'h-1'}`} />
+ <span className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-4' :'h-1'}`} />
  <span className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ?'h-2 animate-bounce' :'h-2.5'}`} />
  </div>
  </div>
@@ -1633,7 +1633,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Privacy Policy Modal */}
  {showPrivacyModal && (
- <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-4">
+ <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 flex items-center justify-center p-4">
  <div className="max-w-lg w-full bg-[var(--surface)] rounded-[var(--r-l)] p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b pb-4">
  <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-sm tracking-wider">

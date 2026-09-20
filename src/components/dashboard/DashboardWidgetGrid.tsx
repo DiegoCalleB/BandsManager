@@ -544,7 +544,7 @@ export function DashboardWidgetGrid({
 
  {/* MODAL / CATALOGO: AÑADIR NUEVO WIDGET */}
  {isAddModalOpen && (
- <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-4">
+ <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
  {/* Header */}
  <div className="p-5 border-b flex items-center justify-between">

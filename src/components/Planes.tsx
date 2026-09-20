@@ -442,7 +442,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--alert)]/15 border-2 border-[var(--alert)]/50 text-[var(--ink)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
  <div className="flex items-start sm:items-center gap-3.5">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--alert)]/20 text-[var(--alert)] shrink-0">
- <AlertTriangle className="w-6 h-6 animate-pulse" />
+ <AlertTriangle className="w-6 h-6" />
  </div>
  <div>
  <p className="text-sm sm:text-base font-bold text-[var(--alert)]/40">
@@ -555,7 +555,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
  <div className="flex items-center gap-3.5 text-center sm:text-left">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60/20 flex items-center justify-center text-[var(--acc)]/70 shrink-0 shadow-inner">
- <Crown className="w-5 h-5 animate-pulse" />
+ <Crown className="w-5 h-5" />
  </div>
  <div>
  <p className="text-sm sm:text-base font-bold text-[var(--ink)] flex items-center justify-center sm:justify-start gap-2">

@@ -271,7 +271,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
@@ -279,7 +279,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <div className="flex items-center justify-between pb-3 border-b /10">
  <div className="flex items-center gap-2.5">
  <div className="w-8 h-8 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]">
- <Sparkles className="w-4 h-4 animate-pulse" />
+ <Sparkles className="w-4 h-4" />
  </div>
  <div>
  <h3 className="text-sm font-bold font-display tracking-wider text-[var(--acc)]">

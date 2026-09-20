@@ -222,9 +222,9 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  </p>
  </div>
  <div className="flex items-center gap-1 h-5 shrink-0 px-2">
- <span className="w-1 h-3 bg-[var(--acc)]/60 rounded-full animate-pulse" />
+ <span className="w-1 h-3 bg-[var(--acc)]/60 rounded-full" />
  <span className="w-1 h-5 bg-[var(--acc)]/60 rounded-full animate-bounce" />
- <span className="w-1 h-2 bg-[var(--acc)]/60 rounded-full animate-pulse" />
+ <span className="w-1 h-2 bg-[var(--acc)]/60 rounded-full" />
  </div>
  </div>
  {config.audioPreview?.habilitado === false && (

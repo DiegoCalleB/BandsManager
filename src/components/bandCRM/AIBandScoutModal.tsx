@@ -106,7 +106,7 @@ export function AIBandScoutModal({
 
  return (
  <ModalPortal>
- <div className="fixed inset-0 bg-[var(--scrim)]/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-[var(--scrim)]/60 z-[100] flex items-center justify-center p-4">
  <div className={`w-full max-w-4xl ${bgColor} rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}>
  
  {/* Header */}

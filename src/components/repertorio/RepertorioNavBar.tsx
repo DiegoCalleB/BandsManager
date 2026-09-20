@@ -156,7 +156,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  {showSetlistDropdown && (
  <>
  <div className="fixed inset-0 z-40" onClick={() => setShowSetlistDropdown(false)} />
- <div className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+ <div className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-[var(--r-m)] shadow-2xl p-1.5 space-y-1 text-xs ${
  isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'

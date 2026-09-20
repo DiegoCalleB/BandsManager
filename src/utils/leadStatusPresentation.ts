@@ -68,7 +68,7 @@ export const LEAD_STATUS_STYLES: Record<string, LeadStatusStyle> = {
     label: 'Descartado',
   },
   pendiente_aprobacion: {
-    dot: 'bg-[var(--acc)]/80 animate-pulse',
+    dot: 'bg-[var(--acc)]/80',
     badgeLight: 'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)] border border-[var(--hair)]',
     badgeDark: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 border border-[var(--acc)]/40',
     label: 'Borrador por aprobar',

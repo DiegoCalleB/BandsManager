@@ -598,7 +598,7 @@ export function GooglePlacesExplorerModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-6 bg-[var(--scrim)]/90 backdrop-blur-md overflow-y-auto overscroll-contain pt-2 pb-24 sm:py-6 animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-6 bg-[var(--scrim)]/90 overflow-y-auto overscroll-contain pt-2 pb-24 sm:py-6 animate-fadeIn">
  <div
  className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight
@@ -947,7 +947,7 @@ export function GooglePlacesExplorerModal({
 
  {extractStatus && (
  <div className="p-3 bg-[var(--tentative)]/10 text-[var(--tentative)]/50 text-xs rounded-[var(--r-m)] flex items-center gap-2 animate-fadeIn">
- <Sparkles className="w-4 h-4 shrink-0 text-[var(--tentative)] animate-pulse" />
+ <Sparkles className="w-4 h-4 shrink-0 text-[var(--tentative)]" />
  <span>{extractStatus}</span>
  </div>
  )}
@@ -1195,7 +1195,7 @@ export function GooglePlacesExplorerModal({
 
  {/* Discarded Suggestions Sub-Modal */}
  {showDiscardedModal && (
- <div className="fixed inset-0 z-[110] flex items-center justify-center p-3 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fadeIn">
+ <div className="fixed inset-0 z-[110] flex items-center justify-center p-3 bg-[var(--scrim)]/80 animate-fadeIn">
  <div className="w-full max-w-lg bg-[var(--bg)] border-[var(--hair)]800 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
  <div className="p-4 border-b border-[var(--hair)]800 flex items-center justify-between bg-[var(--bg)]/60">
  <div className="flex items-center gap-2">

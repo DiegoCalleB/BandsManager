@@ -53,7 +53,7 @@ export function GlobalCampaignBar({
  color: campaign.color ||'#a78bfa'
  }}
  >
- <Flame className="w-3.5 h-3.5 animate-pulse" />
+ <Flame className="w-3.5 h-3.5" />
  </div>
 
  <div className="min-w-0 flex-1">

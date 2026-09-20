@@ -451,7 +451,7 @@ export function ExcelImportModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div
  className={`relative w-full max-w-5xl max-h-[92vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] border-[var(--hair)]800 text-[var(--ink)]'
@@ -913,7 +913,7 @@ export function ExcelImportModal({
  {/* PREVIEW TABLE */}
  <div className="border-[var(--hair)] rounded-[var(--r-m)] overflow-hidden bg-[var(--bg)]/80 shadow-inner max-h-[380px] overflow-y-auto">
  <table className="w-full text-left text-xs border-collapse">
- <thead className="sticky top-0 bg-[var(--bg)]/95 backdrop-blur-md text-[var(--ink-2)] border-b border-[var(--hair)] z-10 font-bold">
+ <thead className="sticky top-0 bg-[var(--bg)]/95 text-[var(--ink-2)] border-b border-[var(--hair)] z-10 font-bold">
  <tr>
  <th className="p-2.5 w-8">
  <input
@@ -1037,7 +1037,7 @@ export function ExcelImportModal({
 
  <div className="flex items-center gap-3">
  {importStatusMsg && (
- <span className="text-xs text-[var(--acc)]/70 animate-pulse font-medium">
+ <span className="text-xs text-[var(--acc)]/70 font-medium">
  {importStatusMsg}
  </span>
  )}

@@ -299,7 +299,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  {targetRect && effectiveFloatingMode && (
  <div className="fixed inset-0 z-[9999] pointer-events-none">
  <div
- className="absolute border-2 sm:border-3 rounded-[var(--r-m)] transition-all duration-300 shadow-[0_0_35px_rgba(var(--ink-rgb), 0.75)] animate-pulse pointer-events-none"
+ className="absolute border-2 sm:border-3 rounded-[var(--r-m)] transition-all duration-300 shadow-[0_0_35px_rgba(var(--ink-rgb), 0.75)] pointer-events-none"
  style={{
  top: Math.max(0, targetRect.top - 4),
  left: Math.max(0, targetRect.left - 4),
@@ -328,7 +328,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  className={
  effectiveFloatingMode
  ? `fixed inset-0 z-[10000] pointer-events-none p-3 sm:p-5 flex ${dockClass} transition-all duration-300`
- :"fixed inset-0 z-[10000] bg-[var(--scrim)]/85 backdrop-blur-md flex items-center justify-center p-0 md:p-4 overflow-y-auto"
+ :"fixed inset-0 z-[10000] bg-[var(--scrim)]/85 flex items-center justify-center p-0 md:p-4 overflow-y-auto"
  }
  onClick={(e) => {
  if (!effectiveFloatingMode && e.target === e.currentTarget) {
@@ -345,7 +345,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  transition={{ type:'spring', stiffness: 350, damping: 30 }}
  className={
  effectiveFloatingMode
- ?"pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95 backdrop-blur-md border-2 /50 rounded-[var(--r-l)] shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
+ ?"pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95 border-2 /50 rounded-[var(--r-l)] shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
  :"relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] border-0 md:border md:border-[var(--hair)]/90 rounded-none md:rounded-3xl shadow-2xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
  }
  >

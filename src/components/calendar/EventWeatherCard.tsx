@@ -135,7 +135,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  )}
  {hasAlerts && (
  <span className={`px-1.5 py-0.5 rounded text-[10px] font-sans font-bold ${
- dangerAlertsCount > 0 ?'bg-[var(--alert)] text-[var(--ink)] animate-pulse' :'bg-[var(--acc)] text-[var(--on-acc)]'
+ dangerAlertsCount > 0 ?'bg-[var(--alert)] text-[var(--ink)]' :'bg-[var(--acc)] text-[var(--on-acc)]'
  }`}>
  {dangerAlertsCount > 0 ?'⚠️ Alerta Clima' :'Aviso Meteo'}
  </span>
@@ -185,7 +185,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  :'bg-[var(--acc)]/20 text-[var(--acc)]'
  :'bg-[var(--acc)]/15 text-[var(--acc)]'
  }`}>
- {hasAlerts ? <AlertTriangle className="w-3.5 h-3.5 animate-pulse" /> : <Thermometer className="w-3.5 h-3.5" />}
+ {hasAlerts ? <AlertTriangle className="w-3.5 h-3.5" /> : <Thermometer className="w-3.5 h-3.5" />}
  </span>
  <div>
  <div className="flex items-center gap-1.5">
@@ -286,7 +286,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <motion.div 
  whileHover={{ scale: 1.08 }}
  transition={{ type:"spring", stiffness: 400, damping: 17 }}
- className={`p-2 rounded-[var(--r-l)] bg-gradient-to-br relative backdrop-blur-md ${getWeatherIconBackdrop(weatherData.iconType)}`}
+ className={`p-2 rounded-[var(--r-l)] bg-gradient-to-br relative ${getWeatherIconBackdrop(weatherData.iconType)}`}
  >
  <AnimatedWeatherIcon iconType={weatherData.iconType} size="lg" />
  </motion.div>
@@ -366,7 +366,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <div className="space-y-2 pt-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--alert)] flex items-center gap-1">
- <AlertTriangle className="w-3 h-3 text-[var(--alert)] animate-pulse" />
+ <AlertTriangle className="w-3 h-3 text-[var(--alert)]" />
  Alertas de Escenario y Directo ({weatherData.alerts.length})
  </span>
  <span className="text-[9px] font-sans text-[var(--ink-2)]">

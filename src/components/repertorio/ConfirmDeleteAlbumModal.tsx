@@ -24,7 +24,7 @@ export function ConfirmDeleteAlbumModal({
 
  return (
  <ModalPortal isOpen={!!data} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-3">

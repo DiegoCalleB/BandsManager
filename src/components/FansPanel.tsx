@@ -1574,7 +1574,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  )}
 
  {showAddModal && (
- <div className="fixed inset-0 bg-[var(--surface)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b pb-3">
  <h3 className="text-lg font-black text-[var(--ink)] font-display tracking-widest flex items-center gap-2">

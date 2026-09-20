@@ -54,7 +54,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className="bg-[var(--surface)] rounded-[var(--r-m)] w-full max-w-lg overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-200 my-auto max-h-[90vh] overflow-y-auto">
  <div className="p-4 flex justify-between items-center bg-[var(--sunken)]">
  <h3 className="text-sm font-bold font-display tracking-widest text-[var(--ink)] flex items-center gap-1.5">

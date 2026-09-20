@@ -191,14 +191,14 @@ export function MetronomeModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className="bg-gradient-to-b from-zinc-900 to-[var(--sunken)] rounded-[var(--r-l)] w-full max-w-md overflow-hidden shadow-2xl shadow-amber-0/10 my-auto max-h-[90vh] overflow-y-auto">
  
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-[var(--ink)]/5">
  <div className="flex items-center gap-2">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]">
- <Clock className="w-5 h-5 animate-pulse" />
+ <Clock className="w-5 h-5" />
  </div>
  <div>
  <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-1.5">

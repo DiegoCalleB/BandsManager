@@ -1343,7 +1343,7 @@ export function PdfExportModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 bg-[var(--scrim)]/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 z-[9999] overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 bg-[var(--scrim)]/90 flex items-center justify-center p-2 sm:p-4 z-[9999] overflow-y-auto overscroll-contain">
  <div
  className={`w-full max-w-7xl max-h-[96vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'
@@ -2053,7 +2053,7 @@ export function PdfExportModal({
  sizeChoiceDialog / EMERGENCY_TITLE_FONT_PT en handlePrint). Solo aparece cuando el
  auto-ajuste detecta ese caso límite real — nunca decide en nombre del usuario. */}
  {sizeChoiceDialog && (
- <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center z-[10000] p-4">
+ <div className="fixed inset-0 bg-[var(--scrim)]/80 flex items-center justify-center z-[10000] p-4">
  <div className={`rounded-[var(--r-l)] shadow-2xl max-w-lg w-full p-6 ${
  isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  }`}>

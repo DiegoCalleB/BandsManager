@@ -685,7 +685,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  )}
  
  {/* Hover Overlay */}
- <div className="absolute inset-0 bg-[var(--surface)]/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center backdrop-blur-xs gap-3 z-30">
+ <div className="absolute inset-0 bg-[var(--surface)]/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 z-30">
  <button 
  onClick={() => {
  const link = document.createElement('a');
@@ -725,7 +725,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* 🎁 Modal de Canje de Pegatinas de Bienvenida */}
  {showClaimModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fadeIn">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn">
  <div className="relative w-full max-w-2xl rounded-3xl bg-[var(--surface)] border-2 /50 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
  {/* Modal Header */}
  <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[#141210] border-b border-[var(--hair)] flex items-center justify-between">

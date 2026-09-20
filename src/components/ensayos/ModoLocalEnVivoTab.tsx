@@ -755,7 +755,7 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold cursor-pointer transition-all ${
  isAutoScrolling
- ?'bg-[var(--acc)]/60 text-[var(--ink)] animate-pulse'
+ ?'bg-[var(--acc)]/60 text-[var(--ink)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

@@ -638,7 +638,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => toggleChannel('instagram')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ?'bg-[var(--alert)] animate-pulse' :'bg-[var(--sunken)]'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ?'bg-[var(--alert)]' :'bg-[var(--sunken)]'}`}></span>
  <Instagram className="w-3 h-3 text-[var(--alert)]" />
  <span>Instagram</span>
  <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-sans font-bold">
@@ -669,7 +669,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => toggleChannel('tiktok')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ?'bg-[var(--acc)]/80 animate-pulse' :'bg-[var(--sunken)]'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ?'bg-[var(--acc)]/80' :'bg-[var(--sunken)]'}`}></span>
  <Video className="w-3 h-3 text-[var(--acc)]" />
  <span>TikTok</span>
  <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--acc)]/15 font-sans font-bold">
@@ -700,7 +700,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => toggleChannel('youtube')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ?'bg-[var(--alert)] animate-pulse' :'bg-[var(--sunken)]'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ?'bg-[var(--alert)]' :'bg-[var(--sunken)]'}`}></span>
  <Youtube className="w-3 h-3 text-[var(--alert)]" />
  <span>YouTube</span>
  <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-sans font-bold">
@@ -731,7 +731,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => toggleChannel('spotify')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans font-medium cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ?'bg-[var(--ok)] animate-pulse' :'bg-[var(--sunken)]'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ?'bg-[var(--ok)]' :'bg-[var(--sunken)]'}`}></span>
  <Music2 className="w-3 h-3 text-[var(--ok)]" />
  <span>Spotify</span>
  <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--ok)]/15 font-sans font-bold">
@@ -761,7 +761,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => toggleChannel('fans')}
  className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-sans cursor-pointer"
  >
- <span className={`w-2 h-2 rounded-full ${selectedChannels.fans ?'bg-[var(--acc)]/60 animate-pulse' :'bg-[var(--sunken)]'}`}></span>
+ <span className={`w-2 h-2 rounded-full ${selectedChannels.fans ?'bg-[var(--acc)]/60' :'bg-[var(--sunken)]'}`}></span>
  <Heart className="w-3 h-3 text-[var(--acc)] fill-amber-400/30" />
  <span>Fans BD (Únete)</span>
  <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-sans font-black">

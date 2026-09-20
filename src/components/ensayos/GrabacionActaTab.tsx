@@ -222,7 +222,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {isRecording && (
- <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)] animate-pulse">
+ <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)]">
  <span className="w-2 h-2 rounded-full bg-[var(--alert)]" /> REC {formatTime(recordDuration)}
  </span>
  )}

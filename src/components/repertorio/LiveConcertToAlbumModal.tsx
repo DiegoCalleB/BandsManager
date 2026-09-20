@@ -1224,7 +1224,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
  <div
  className={`relative w-full max-w-5xl my-auto rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
  isStitchLight
@@ -1404,7 +1404,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
 
  {isAnalyzing && (
- <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-xs text-[var(--acc)]/70 animate-pulse flex items-center gap-2">
+ <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-s)] text-xs text-[var(--acc)]/70 flex items-center gap-2">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
  <span>{analysisStatus}</span>
  </div>
@@ -1583,7 +1583,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {tracks.some((t) => t.type ==='musica' && typeof t.cueIn ==='number' && t.cueIn > 0.2) && (
  <button
  onClick={handleSnapAllTracksToCues}
- className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--tentative)] shadow-md flex items-center gap-1.5 font-bold animate-pulse"
+ className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--tentative)] shadow-md flex items-center gap-1.5 font-bold"
  title="Ajusta automáticamente los tiempos de inicio de todos los temas musicales al punto CUE exacto de entrada musical"
  >
  <Target className="w-3.5 h-3.5" />
@@ -1703,7 +1703,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Bulk Transcription Active Progress Banner */}
  {isTranscribingAll && transcribeAllProgress && (
- <div className="bg-[var(--ok-soft)] p-3.5 rounded-[var(--r-m)] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--ink)] animate-pulse shadow-lg">
+ <div className="bg-[var(--ok-soft)] p-3.5 rounded-[var(--r-m)] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--ink)] shadow-lg">
  <div className="flex items-center gap-2.5">
  <Sparkles className="w-5 h-5 text-[var(--ok)] animate-spin shrink-0" />
  <div>
@@ -1850,7 +1850,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  disabled={isLoadingPreview}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all ${
  isPlayingThis
- ?'bg-[var(--acc)] text-[var(--ink)] animate-pulse'
+ ?'bg-[var(--acc)] text-[var(--ink)]'
  :'bg-[var(--surface)] hover:bg-[var(--acc)] hover:text-[var(--ink)] text-[var(--ink-2)]'
  }`}
  title="Reproducir este trozo para escucharlo y clasificarlo"
@@ -2138,7 +2138,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-2">
  <div className="flex items-center gap-2">
  <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] shrink-0">
- <Volume2 className="w-4 h-4 animate-pulse" />
+ <Volume2 className="w-4 h-4" />
  </div>
  <div>
  <span className="text-xs font-black text-[var(--acc)] block">
@@ -2416,7 +2416,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Modal de Vinculación de Sesión / Cookies de YouTube */}
  {cookieModalOpen && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fade-in">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-4 shadow-2xl text-[var(--ink-2)]">
  <div className="flex items-center justify-between border-b pb-3">
  <div className="flex items-center gap-2">
@@ -2524,7 +2524,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  )}
  {/* Modal: Asistente para Nombrar Temas y Speeches */}
  {showQuickNamingModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-sm animate-fade-in">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-fade-in">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-3xl w-full p-6 space-y-4 shadow-2xl text-[var(--ink-2)] max-h-[90vh] flex flex-col">
  {/* Header */}
  <div className="flex items-center justify-between border-b pb-3 shrink-0">

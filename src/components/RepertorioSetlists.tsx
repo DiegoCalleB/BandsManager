@@ -2647,7 +2647,7 @@ export default function RepertorioSetlists({
  {activeTab ==='setlists' && (
  <div className="w-full">
  {/* MAIN EDITOR FOR ACTIVE SETLIST */}
- <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95 /80 backdrop-blur-sm'} shadow-sm`}>
+ <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95 /80 shadow-sm`}>
  {activeSetlist ? (
  <>
  {/* CABECERA COMPACTA: nombre del setlist + un único menú"⋯" con las acciones secundarias. */}
@@ -2775,7 +2775,7 @@ export default function RepertorioSetlists({
  {showSetlistActionsMenu && (
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowSetlistActionsMenu(false)} />
- <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+ <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs ${
  isStitchLight
  ?' bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'
@@ -2874,7 +2874,7 @@ export default function RepertorioSetlists({
  {showAssistantChooser && (
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
- <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+ <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] shadow-2xl p-1.5 space-y-1 text-xs ${
  isStitchLight
  ?' bg-[var(--surface)] text-[var(--ink)]'
  :' bg-[var(--surface)] text-[var(--ink)]'
@@ -3563,9 +3563,9 @@ export default function RepertorioSetlists({
  >
  {isPlayingThisRow ? (
  <div className="flex items-center gap-0.5">
- <span className="w-0.5 h-2 bg-[var(--ok)] rounded-full animate-pulse" />
- <span className="w-0.5 h-2.5 bg-[var(--ok)]/60 rounded-full animate-pulse delay-75" />
- <span className="w-0.5 h-1.5 bg-[var(--ok)] rounded-full animate-pulse delay-150" />
+ <span className="w-0.5 h-2 bg-[var(--ok)] rounded-full" />
+ <span className="w-0.5 h-2.5 bg-[var(--ok)]/60 rounded-full delay-75" />
+ <span className="w-0.5 h-1.5 bg-[var(--ok)] rounded-full delay-150" />
  </div>
  ) : (
  <>
@@ -4168,7 +4168,7 @@ export default function RepertorioSetlists({
  isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
  />
  <div className="absolute inset-0 bg-[var(--scrim)]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
- <Sparkles className="w-5 h-5 text-[var(--tentative)] animate-pulse" />
+ <Sparkles className="w-5 h-5 text-[var(--tentative)]" />
  </div>
  </div>
 
@@ -4229,7 +4229,7 @@ export default function RepertorioSetlists({
 
  {/* CATALOG FILTERS BAR */}
  <div className={`p-3.5 sm:p-4 rounded-[var(--r-l)] sm:rounded-3xl flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center shadow-sm ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/60 /80 backdrop-blur-sm'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/60 /80
  }`}>
  <div className="relative flex-1">
  <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--ink-2)] pointer-events-none" />
@@ -4362,7 +4362,7 @@ export default function RepertorioSetlists({
  )}
 
  {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
- <div className={`rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden shadow-sm ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/60 /80 backdrop-blur-sm'}`}>
+ <div className={`rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden shadow-sm ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/60 /80`}>
  {/* Grid Aligned Header with Bulk Select & Column Identifiers */}
  <div className={`flex items-center justify-between px-4 py-3 border-b text-xs tracking-wider ${
  isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)]' :'bg-[var(--surface)]/40 /80 text-[var(--ink-2)]'
@@ -4534,7 +4534,7 @@ export default function RepertorioSetlists({
 
  {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
  {showShowItemModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80
  <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 shadow-2xl ${colors.card}`}>
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
@@ -4685,7 +4685,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={handleStopRecordingShowItem}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 animate-pulse cursor-pointer shadow-lg"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-lg"
  >
  <Square className="w-3.5 h-3.5 fill-current" />
  <span>Detener Grabación ({recordingShowItemSecs}s)</span>

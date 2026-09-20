@@ -36,7 +36,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
  if (audit.riskLevel ==='high_risk') {
  return (
  <span 
- className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)] animate-pulse ${className}`}
+ className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)] ${className}`}
  title={`${audit.title}: ${audit.advice}`}
  >
  <AlertTriangle className="w-3 h-3 text-[var(--alert)] shrink-0" />

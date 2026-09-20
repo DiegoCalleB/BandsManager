@@ -197,7 +197,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  ))}
 
  {selectedSpotifyTracks.size > 0 && (
- <div className="sticky bottom-0 bg-[var(--surface)]/95 backdrop-blur-md p-3 rounded-[var(--r-m)] flex items-center justify-between">
+ <div className="sticky bottom-0 bg-[var(--surface)]/95 p-3 rounded-[var(--r-m)] flex items-center justify-between">
  <span className="text-xs text-[var(--acc)]/70 font-medium">
  {selectedSpotifyTracks.size} canciones seleccionadas
  </span>

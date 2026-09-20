@@ -764,7 +764,7 @@ export default function TourManager({
  {/* Modal Formulario de Gira */}
  {isModalOpen && (
  <ModalPortal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-4xl rounded-[var(--r-l)] ${colors.bg} border-[var(--hair)] shadow-2xl flex flex-col my-auto max-h-[90vh]`}>
  {/* Modal Header */}
  <div className="p-4 sm:p-6 border-b border-[var(--hair)] flex justify-between items-center bg-[var(--sunken)] shrink-0">
@@ -1337,7 +1337,7 @@ export default function TourManager({
  {/* Modal Confirm Deletion */}
  {tourToDelete && (
  <ModalPortal isOpen={!!tourToDelete} onClose={() => setTourToDelete(null)}>
- <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-md rounded-[var(--r-l)] ${colors.card} p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150 my-auto`}>
  <div className="flex items-center gap-3 text-[var(--alert)]">
  <div className="p-3 rounded-full bg-[var(--alert)]/10 shrink-0">

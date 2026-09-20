@@ -46,7 +46,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 transition-all cursor-pointer shadow-xs active:scale-95"
  title="Estilizar nombre de la banda con fuentes Rock, estilo KoЯn y símbolos"
  >
- <Sparkles className="w-3 h-3 text-[var(--acc)] animate-pulse" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>Estilos Rock & KoЯn</span>
  </button>
 
@@ -55,7 +55,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <>
  {/* Backdrop on mobile */}
  <div
- className="fixed inset-0 z-40 bg-[var(--scrim)]/40 backdrop-blur-xs sm:hidden"
+ className="fixed inset-0 z-40 bg-[var(--scrim)]/40 sm:hidden"
  onClick={() => setIsOpen(false)}
  />
 

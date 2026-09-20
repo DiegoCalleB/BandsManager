@@ -164,7 +164,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  </div>
 
  {/* Sticky Navigation / Header */}
- <header className="relative z-20 border-b /80 bg-[var(--bg)]/90 backdrop-blur-md sticky top-0">
+ <header className="relative z-20 border-b /80 bg-[var(--bg)]/90 sticky top-0">
  <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black p-0.5 shadow-md flex items-center justify-center shrink-0">
@@ -213,7 +213,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  {originInfo.fromBand && (
  <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-xs font-sans text-[var(--acc)]/70 animate-in fade-in">
  <div className="flex items-center gap-2">
- <Radio className="w-4 h-4 text-[var(--acc)] animate-pulse" />
+ <Radio className="w-4 h-4 text-[var(--acc)]" />
  <span>
  {t.badgeFromBand.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/,'').toUpperCase())}
  </span>

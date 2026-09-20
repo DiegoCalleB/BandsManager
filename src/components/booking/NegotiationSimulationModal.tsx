@@ -70,7 +70,7 @@ export function NegotiationSimulationModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
@@ -79,7 +79,7 @@ export function NegotiationSimulationModal({
  <div className="flex justify-between items-start border-b border-[var(--sunken)] pb-3">
  <div>
  <div className="flex items-center gap-2">
- <Sparkles className="w-5 h-5 text-[var(--acc)] animate-pulse" />
+ <Sparkles className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-sm font-bold font-display tracking-widest">
  Simulador de Negociación Personalizado
  </h3>

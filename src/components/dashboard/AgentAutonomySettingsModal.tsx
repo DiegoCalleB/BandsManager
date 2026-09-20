@@ -544,7 +544,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-md z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
  <div className={`border rounded-[var(--r-l)] w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden shadow-2xl flex flex-col my-auto animate-in zoom-in-95 duration-200 ${
  isStitchLight 
  ?'bg-[var(--surface)] text-[var(--ink)]' 
@@ -1473,7 +1473,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
  <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
- <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]/80 animate-pulse" />
+ <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]/80" />
  <div>
  <div className="text-xs font-sans font-bold text-[var(--ink)]">Agente Scout (Búsqueda)</div>
  <div className="text-[10px] text-[var(--ink-2)] font-sans">Rastreo de salas y contactos</div>
@@ -1486,7 +1486,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
- <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]/80 animate-pulse" />
+ <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]/80" />
  <div>
  <div className="text-xs font-sans font-bold text-[var(--ink)]">Agente Redactor (Gemini)</div>
  <div className="text-[10px] text-[var(--ink-2)] font-sans">Generador de propuestas y pitches</div>
@@ -1514,7 +1514,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
- <span className="w-2.5 h-2.5 rounded-full bg-[var(--tentative)] animate-pulse" />
+ <span className="w-2.5 h-2.5 rounded-full bg-[var(--tentative)]" />
  <div>
  <div className="text-xs font-sans font-bold text-[var(--ink)]">Agente Lector (Clasificador)</div>
  <div className="text-[10px] text-[var(--ink-2)] font-sans">

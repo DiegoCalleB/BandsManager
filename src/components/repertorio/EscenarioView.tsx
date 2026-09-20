@@ -247,7 +247,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  currentStageItem?.tipoItem ==='cancion' ? (
  <Music className="w-6 h-6 text-[var(--ok)] animate-bounce" />
  ) : (
- <Mic className="w-6 h-6 text-[var(--acc)] animate-pulse" />
+ <Mic className="w-6 h-6 text-[var(--acc)]" />
  )
  ) : (
  <Radio className="w-6 h-6 text-[var(--ink-2)]" />
@@ -271,7 +271,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </span>
  ) : null}
  {isCrossfading && nextStageSong && (
- <span className="px-2 py-0.5 rounded-full text-[9px] bg-[var(--acc)]/20 text-[var(--acc)] font-bold flex items-center gap-1 animate-pulse">
+ <span className="px-2 py-0.5 rounded-full text-[9px] bg-[var(--acc)]/20 text-[var(--acc)] font-bold flex items-center gap-1">
  🔀 Fundiendo → {formatSongTitle(nextStageSong.titulo)}
  </span>
  )}
@@ -672,9 +672,9 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <span>{formatSongTitle(s.titulo)}</span>
  {isPlayingThis && (
  <div className="flex items-end gap-0.5 h-3">
- <span className="w-0.5 h-full bg-[var(--surface)] animate-pulse" />
- <span className="w-0.5 h-2/3 bg-[var(--surface)] animate-pulse delay-75" />
- <span className="w-0.5 h-4/5 bg-[var(--surface)] animate-pulse delay-150" />
+ <span className="w-0.5 h-full bg-[var(--surface)]" />
+ <span className="w-0.5 h-2/3 bg-[var(--surface)] delay-75" />
+ <span className="w-0.5 h-4/5 bg-[var(--surface)] delay-150" />
  </div>
  )}
  </div>

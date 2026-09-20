@@ -156,7 +156,7 @@ export default function Finanzas({
  disabled={isSyncing}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncing
- ?'bg-[var(--surface)]/80 text-[var(--ink-2)] animate-pulse'
+ ?'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30 shadow-md'
  }`}
  title="Sincronizar todas las transacciones financieras"
@@ -501,7 +501,7 @@ export default function Finanzas({
 
  {/* EDIT CONCERT EXPENSES MODAL */}
  {editingConcertId && (
- <div className="fixed inset-0 bg-[var(--surface)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4 shadow-2xl">
  <div className="flex items-center justify-between border-b pb-3">
  <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
@@ -759,7 +759,7 @@ export default function Finanzas({
  }`}
  title="Hacer clic para cambiar el estado de pago"
  >
- {p.estado ==='pagado' ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3 animate-pulse" />}
+ {p.estado ==='pagado' ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
  {p.estado.toUpperCase()}
  </button>
  </div>

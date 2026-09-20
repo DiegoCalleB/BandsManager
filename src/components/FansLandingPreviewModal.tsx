@@ -53,7 +53,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  return (
  <div 
  id="fans-landing-preview-modal"
- className="fixed inset-0 z-50 bg-[var(--scrim)]/95 backdrop-blur-md flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
+ className="fixed inset-0 z-50 bg-[var(--scrim)]/95 flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
  >
  {/* BARRA SUPERIOR PRINCIPAL (DESKTOP & MOBILE) */}
  <header className="w-full bg-[var(--surface)] border-b border-[var(--hair)] px-3 sm:px-5 py-2.5 shrink-0 z-30 shadow-2xl flex items-center justify-between gap-2">
@@ -348,7 +348,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  {/* PIE DE PÁGINA INFORMATIVO Y ACCESIBLE */}
  <footer className="w-full bg-[var(--surface)] border-t border-[var(--hair)] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-sans text-[var(--ink-2)] shrink-0 flex items-center justify-between">
  <div className="flex items-center gap-2 truncate">
- <span className="w-2 h-2 rounded-full bg-[var(--ok)] animate-pulse shrink-0 inline-block" />
+ <span className="w-2 h-2 rounded-full bg-[var(--ok)] shrink-0 inline-block" />
  <span className="truncate">{t('previewDisclaimer')}</span>
  </div>
  <button

@@ -89,7 +89,7 @@ export function ShareModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--scrim)]/75 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--scrim)]/75 p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
  <div 
  className="w-full max-w-xl rounded-[var(--r-l)] bg-[var(--surface)] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-[var(--ink)]"
  onClick={(e) => e.stopPropagation()}

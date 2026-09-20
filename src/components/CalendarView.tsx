@@ -110,7 +110,7 @@ export const getDetailedDateInfo = (dateInput: string | Date | undefined | null)
  let relativeBadgeClass ='';
  if (diffDays === 0) {
  relativeLabel ='¡HOY!';
- relativeBadgeClass ='bg-[var(--ok)] text-[var(--on-ok)] font-black shadow-xs animate-pulse';
+ relativeBadgeClass ='bg-[var(--ok)] text-[var(--on-ok)] font-black shadow-xs';
  } else if (diffDays === 1) {
  relativeLabel ='Mañana';
  relativeBadgeClass ='bg-[var(--acc)]/60 text-[var(--on-acc)] font-black shadow-xs';
@@ -2916,7 +2916,7 @@ export default function CalendarView({
  {showAddEventDropdown && (
  <>
  <div className="fixed inset-0 z-40" onClick={() => setShowAddEventDropdown(false)} />
- <div className={`absolute right-0 mt-1.5 w-48 rounded-[var(--r-m)] shadow-2xl z-50 py-1.5 overflow-hidden animate-in fade-in duration-150 backdrop-blur-md ${
+ <div className={`absolute right-0 mt-1.5 w-48 rounded-[var(--r-m)] shadow-2xl z-50 py-1.5 overflow-hidden animate-in fade-in duration-150 ${
  isStitchLight ?"bg-[var(--surface)]/95 text-[var(--ink)]" :"bg-[var(--surface)]/95 border-[var(--hair)]800 text-[var(--ink-2)]"
  }`}>
  <div className="px-3 py-1 text-[9px] font-sans tracking-widest text-[var(--ink-2)] border-b /40 mb-1">
@@ -2968,7 +2968,7 @@ export default function CalendarView({
  }`}
  title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
  >
- <Radio className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
+ <Radio className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Sincronizar</span>
  </button>
  )}
@@ -4514,7 +4514,7 @@ export default function CalendarView({
  className="flex-1 py-2 px-3 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-0/20 transition-all cursor-pointer"
  title="Lanzar Modo Escenario / Vista de Directo para este evento"
  >
- <Radio className="w-3.5 h-3.5 animate-pulse text-[var(--ink)]" />
+ <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />
  <span>{selectedConcert ?'Lanzar Modo Escenario' :'Lanzar Modo Ensayo'}</span>
  </button>
  </div>
@@ -5265,7 +5265,7 @@ export default function CalendarView({
  {/* UNIFIED CREATE EVENT MODAL (Concierto | Ensayo | Reunión) */}
  {showCreateModal && (
  <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
- <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
@@ -5880,7 +5880,7 @@ export default function CalendarView({
  {/* EDIT CONCERT MODAL (Ficha del Concierto) */}
  {viewingConcert && editDraft && (
  <ModalPortal isOpen={true} onClose={() => setViewingConcert(null)}>
- <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
@@ -6163,7 +6163,7 @@ export default function CalendarView({
  {/* EDIT REHEARSAL MODAL (Ficha del Ensayo) */}
  {viewingRehearsal && editRehearsalDraft && (
  <ModalPortal isOpen={true} onClose={() => setViewingRehearsal(null)}>
- <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`w-full max-w-md rounded-[var(--r-l)] p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
@@ -6387,14 +6387,14 @@ export default function CalendarView({
  {/* Modal de Sincronización Automática con Google Calendar / Apple iCal */}
  {showSyncModal && (
  <ModalPortal>
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-xs animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div className={`relative w-full max-w-xl rounded-[var(--r-l)] p-6 shadow-2xl ${
  isStitchLight ?"bg-[var(--surface)] text-[var(--ink)]" :"bg-[var(--surface)] /30 text-[var(--ink)] shadow-amber-0/10"
  }`}>
  <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-[var(--hair)]10">
  <div className="flex items-center gap-3">
  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
- <Radio className="w-5 h-5 animate-pulse" />
+ <Radio className="w-5 h-5" />
  </div>
  <div>
  <h3 className="text-base font-bold font-display tracking-wider text-[var(--acc)]">
@@ -6562,7 +6562,7 @@ export default function CalendarView({
  {/* Modal de Enviar Recordatorio / Notificación de Calendario */}
  {showReminderModal && (
  <ModalPortal>
- <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+ <div className="fixed inset-0 bg-[var(--scrim)]/80 z-50 flex items-center justify-center p-4 animate-fade-in">
  <div className={`max-w-md w-full rounded-[var(--r-l)] p-5 shadow-2xl relative ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
@@ -6714,7 +6714,7 @@ export default function CalendarView({
  const modalRoadbook = getCurrentRoadbook(modalRoadbookKey, selectedConcert);
  return (
  <ModalPortal isOpen={showEventFichaModal} onClose={() => setShowEventFichaModal(false)}>
- <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-[var(--scrim)]/70 backdrop-blur-md animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-[var(--scrim)]/70 animate-in fade-in duration-200">
  <div 
  onTouchStart={handleModalTouchStart}
  onTouchMove={handleModalTouchMove}
@@ -6723,7 +6723,7 @@ export default function CalendarView({
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] /50 text-[var(--ink-2)] shadow-amber-0/10'
  }`}>
  {/* Barra superior del modal: navegación cronológica entre eventos */}
- <div className={`sticky top-0 z-10 flex items-center justify-between gap-2 px-4 sm:px-6 py-3 border-b backdrop-blur-md ${
+ <div className={`sticky top-0 z-10 flex items-center justify-between gap-2 px-4 sm:px-6 py-3 border-b ${
  isStitchLight ?'bg-[var(--surface)]/95' :'bg-[var(--surface)]/95 /30'
  }`}>
  <button

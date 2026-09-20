@@ -93,7 +93,7 @@ export function AddLeadModal({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  className={`w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
  isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
@@ -258,7 +258,7 @@ export function AddLeadModal({
  {/* Progress / Status Banner */}
  {isModalScraping && (
  <div
- className={`p-2.5 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 animate-pulse ${
+ className={`p-2.5 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 ${
  'bg-[var(--surface)]/30 text-[var(--acc)]'
  }`}
  >

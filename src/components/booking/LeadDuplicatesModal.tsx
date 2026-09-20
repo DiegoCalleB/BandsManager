@@ -206,7 +206,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
  return (
  <ModalPortal>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5 bg-[var(--scrim)]/80 backdrop-blur-sm animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden transition-all ${
  isStitchLight

@@ -201,7 +201,7 @@ export function EnsayosManager({
  currentRehearsal?.estado ==='completado'
  ?'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30'
  : currentRehearsal?.estado ==='en_curso'
- ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40 animate-pulse'
+ ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >

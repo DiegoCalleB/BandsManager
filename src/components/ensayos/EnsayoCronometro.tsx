@@ -78,7 +78,7 @@ export function EnsayoCronometro({
  if (isCompact) {
  return (
  <div className="flex items-center gap-2 bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-m)] px-3 py-1.5 shadow-sm">
- <Clock className={`w-3.5 h-3.5 ${isActive ?'text-[var(--acc)] animate-pulse' :'text-[var(--ink-2)]'}`} />
+ <Clock className={`w-3.5 h-3.5 ${isActive ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
  <span className={`font-sans font-bold text-sm tracking-wider ${isOvertime ?'text-[var(--alert)]' :'text-[var(--ink)]'}`}>
  {formatTime(seconds)}
  </span>
@@ -120,7 +120,7 @@ export function EnsayoCronometro({
  </div>
 
  {isOvertime && (
- <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink-2)] animate-pulse">
+ <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink-2)]">
  <AlertCircle className="w-3 h-3" /> Tiempo excedido
  </span>
  )}

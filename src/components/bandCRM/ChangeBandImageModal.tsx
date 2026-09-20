@@ -106,7 +106,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div 
- className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm animate-fadeIn overflow-y-auto overscroll-contain"
+ className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn overflow-y-auto overscroll-contain"
  onClick={onClose}
  >
  <div 

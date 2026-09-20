@@ -215,7 +215,7 @@ export function SongChordsViewerModal({
 
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
  <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-[var(--ink)] my-auto">
 
  {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
@@ -407,7 +407,7 @@ export function SongChordsViewerModal({
  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
  className={`px-2.5 py-0.5 rounded-[var(--r-s)] font-bold flex items-center gap-1 transition cursor-pointer ${
  isAutoScrolling
- ?'bg-[var(--ok)] text-[var(--ink)] animate-pulse'
+ ?'bg-[var(--ok)] text-[var(--ink)]'
  :'bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Iniciar/Pausar Desfile Automático"

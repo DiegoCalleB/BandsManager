@@ -628,7 +628,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  return (
  <div className={`min-h-screen ${styles.pageBg} font-sans print:bg-[var(--surface)] print:text-[var(--ink)]`}>
  {/* Top Floating Action Bar (Hidden on Print) */}
- <div className={`fixed top-0 left-0 right-0 ${styles.topBar} backdrop-blur-md border-b z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden`}>
+ <div className={`fixed top-0 left-0 right-0 ${styles.topBar} border-b z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden`}>
  <div className="flex items-center gap-3">
  {displayLogo ? (
  <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover" />
@@ -764,7 +764,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  const isCurrentlyPlaying = playingSongId === activeSong.id;
 
  return (
- <div className={`fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 ${styles.stickyPlayer} backdrop-blur-md rounded-[var(--r-l)] p-3.5 shadow-2xl z-40 flex items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 print:hidden`}>
+ <div className={`fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 ${styles.stickyPlayer} rounded-[var(--r-l)] p-3.5 shadow-2xl z-40 flex items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 print:hidden`}>
  <div className="flex items-center gap-3 overflow-hidden">
  <button
  onClick={() => setPlayingSongId(isCurrentlyPlaying ? null : activeSong.id)}
@@ -775,7 +775,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </button>
  <div className="min-w-0 pr-1">
  <p className={`text-[10px] ${styles.accentText} font-bold tracking-wider flex items-center gap-1`}>
- <Music className="w-3 h-3 animate-pulse" /> {isCurrentlyPlaying ? t('playerPista') :'Audio Demo'}
+ <Music className="w-3 h-3" /> {isCurrentlyPlaying ? t('playerPista') :'Audio Demo'}
  </p>
  <p className="text-xs font-bold truncate">{activeSong.titulo}</p>
  <p className="text-[11px] opacity-75 truncate">{activeSong.albumDisco || bandName}</p>

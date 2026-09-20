@@ -140,7 +140,7 @@ export const PublicFanCapture: React.FC = () => {
 
  {!submitted ? (
  /* FORM CARD */
- <form onSubmit={handleSubmit} className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 shadow-2xl space-y-4 backdrop-blur-md">
+ <form onSubmit={handleSubmit} className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 shadow-2xl space-y-4
  {errorMsg && (
  <div className="p-3 bg-[var(--alert)]/90/80 text-[var(--alert)]/40 text-xs rounded-[var(--r-m)] font-medium">
  ⚠️ {errorMsg}
@@ -239,7 +239,7 @@ export const PublicFanCapture: React.FC = () => {
  </form>
  ) : (
  /* THANK YOU CARD */
- <div className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 sm:p-8 shadow-2xl space-y-6 text-center backdrop-blur-md animate-fade-in">
+ <div className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 sm:p-8 shadow-2xl space-y-6 text-center animate-fade-in">
  <div className="w-16 h-16 bg-[var(--acc)]/20 text-[var(--acc)] rounded-full mx-auto flex items-center justify-center">
  <CheckCircle2 className="w-8 h-8" />
  </div>

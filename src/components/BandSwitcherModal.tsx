@@ -467,7 +467,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/90 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/90 overflow-y-auto overscroll-contain animate-fadeIn">
  {/* Background ambient glow */}
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--acc)]/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -657,7 +657,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
  {/* Loading Spinner Overlay */}
  {(isSwitching || isSettingMain || isLeavingThis) && (
- <div className="absolute inset-0 bg-[var(--scrim)]/85 backdrop-blur-xs flex flex-col items-center justify-center text-[var(--acc)] gap-1 z-30">
+ <div className="absolute inset-0 bg-[var(--scrim)]/85 flex flex-col items-center justify-center text-[var(--acc)] gap-1 z-30">
  <Loader2 className="w-6 h-6 animate-spin text-[var(--acc)]" />
  <span className="text-[9px] font-sans text-[var(--acc)]/70 font-bold">
  {isSettingMain ?'Guardando' : isLeavingThis ?'Eliminando' :'Cambiando'}
@@ -758,7 +758,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
  {/* In-App Create / Add Band Modal with Full 2-Step Flow & Plans */}
  {showCreateBandModal && (
- <div className="fixed inset-0 z-[85] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/85 backdrop-blur-md animate-in fade-in duration-150 overflow-y-auto">
+ <div className="fixed inset-0 z-[85] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/85 animate-in fade-in duration-150 overflow-y-auto">
  <div className={`w-full ${createBandStep === 1 ?'max-w-lg' :'max-w-5xl'} rounded-3xl bg-[var(--bg)] text-[var(--ink-2)] p-6 sm:p-8 shadow-2xl space-y-6 transition-all duration-300 my-auto`}>
  
  {/* Step 1: Band Details */}
@@ -1192,7 +1192,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
  {/* In-App Delete Band Confirmation Modal */}
  {bandToDelete && (
- <div className="fixed inset-0 z-[85] flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-sm animate-in fade-in duration-150">
+ <div className="fixed inset-0 z-[85] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-150">
  <div className="w-full max-w-sm rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink-2)] p-5 shadow-2xl space-y-4">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--alert)]/15 flex items-center justify-center text-[var(--alert)] shrink-0">
@@ -1237,7 +1237,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  const currentPlanDef = getPlanDefinition(targetBandPlan);
 
  return (
- <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-md animate-in fade-in duration-200 text-left">
+ <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-200 text-left">
  <div className="w-full max-w-lg rounded-[var(--r-l)] shadow-2xl bg-[var(--surface)] /30 text-[var(--ink-2)] overflow-hidden flex flex-col">
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] border-b /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">

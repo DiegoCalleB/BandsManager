@@ -524,7 +524,7 @@ export default function SpotifyPlayerBar({
  onEnded={() => { if (activeSlotRef.current ==='B') handleEnded(); }}
  />
 
- <div className="bg-[var(--surface)]/98 backdrop-blur-2xl border-t border-[var(--hair)] text-[var(--ink)] px-3.5 py-2.5 sm:px-4 sm:py-3 max-w-full shadow-2xl">
+ <div className="bg-[var(--surface)]/98 border-t border-[var(--hair)] text-[var(--ink)] px-3.5 py-2.5 sm:px-4 sm:py-3 max-w-full shadow-2xl">
  {isMinimized ? (
  /* Minimized Compact Strip: single-row bar sitting strictly above mobile bottom navbar */
  <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
@@ -544,9 +544,9 @@ export default function SpotifyPlayerBar({
  )}
  {isPlaying && (
  <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
- <span className="w-0.5 h-3 bg-[var(--surface)] rounded-full animate-pulse" />
- <span className="w-0.5 h-4 bg-[var(--surface)] rounded-full animate-pulse delay-75" />
- <span className="w-0.5 h-2 bg-[var(--surface)] rounded-full animate-pulse delay-150" />
+ <span className="w-0.5 h-3 bg-[var(--surface)] rounded-full" />
+ <span className="w-0.5 h-4 bg-[var(--surface)] rounded-full delay-75" />
+ <span className="w-0.5 h-2 bg-[var(--surface)] rounded-full delay-150" />
  </div>
  )}
  </div>
@@ -574,7 +574,7 @@ export default function SpotifyPlayerBar({
  <span>•</span>
  <span>{song.bpm} BPM</span>
  {isCrossfading && nextQueueSong && (
- <span className="text-[var(--ink-2)] font-semibold animate-pulse hidden xs:inline">
+ <span className="text-[var(--ink-2)] font-semibold hidden xs:inline">
  • 🔀 → {nextQueueSong.titulo}
  </span>
  )}
@@ -647,9 +647,9 @@ export default function SpotifyPlayerBar({
  )}
  {isPlaying && (
  <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
- <span className="w-1 h-4 bg-[var(--surface)] rounded-full animate-pulse" />
- <span className="w-1 h-6 bg-[var(--surface)] rounded-full animate-pulse delay-75" />
- <span className="w-1 h-3 bg-[var(--surface)] rounded-full animate-pulse delay-150" />
+ <span className="w-1 h-4 bg-[var(--surface)] rounded-full" />
+ <span className="w-1 h-6 bg-[var(--surface)] rounded-full delay-75" />
+ <span className="w-1 h-3 bg-[var(--surface)] rounded-full delay-150" />
  </div>
  )}
  </div>
@@ -684,7 +684,7 @@ export default function SpotifyPlayerBar({
  </span>
  )}
  {isTransposingAudio && (
- <span className="ml-1 text-[var(--ink-2)] font-bold animate-pulse text-[10px]" title="Procesando trasposición DSP con Pedalboard de Spotify">
+ <span className="ml-1 text-[var(--ink-2)] font-bold text-[10px]" title="Procesando trasposición DSP con Pedalboard de Spotify">
  🎛️ Pedalboard...
  </span>
  )}
@@ -694,7 +694,7 @@ export default function SpotifyPlayerBar({
  {isCrossfading && nextQueueSong && (
  <>
  <span>•</span>
- <span className="text-[var(--ink-2)] font-semibold animate-pulse">🔀 → {nextQueueSong.titulo}</span>
+ <span className="text-[var(--ink-2)] font-semibold">🔀 → {nextQueueSong.titulo}</span>
  </>
  )}
  </div>
@@ -865,7 +865,7 @@ export default function SpotifyPlayerBar({
  className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500/30 text-[var(--acc)]/70 font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
  title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
  >
- <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span className="hidden sm:inline text-[11px]">Iris</span>
  </button>
 

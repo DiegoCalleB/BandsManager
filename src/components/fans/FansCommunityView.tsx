@@ -551,7 +551,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
  {/* New Announcement Modal */}
  {showNewPostModal && (
- <div className="fixed inset-0 bg-[var(--surface)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-4 shadow-2xl">
  <div className="flex items-center justify-between border-b pb-3">
  <h3 className="text-base font-bold text-[var(--ink)] font-display flex items-center gap-2">
