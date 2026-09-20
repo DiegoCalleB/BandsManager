@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from'react';
-import { Mail, Save, Loader2, CheckCircle2, AlertCircle, Info, KeyRound, RefreshCw, Sparkles, Unlink } from'lucide-react';
-import { api } from'../services/api';
-import { BandEmailAccountStatus } from'../types';
+import React, { useState, useEffect } from 'react';
+import { Mail, Save, Loader2, CheckCircle2, AlertCircle, Info, KeyRound, RefreshCw, Sparkles, Unlink } from 'lucide-react';
+import { api } from '../services/api';
+import { BandEmailAccountStatus } from '../types';
 
 interface EmailAccountConfigProps {
  bandId: string;

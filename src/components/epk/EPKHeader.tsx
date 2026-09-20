@@ -1,4 +1,4 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import {
  Copy,
  Check,
@@ -11,8 +11,8 @@ import {
  MoreVertical,
  ChevronLeft,
  ChevronRight
-} from'lucide-react';
-import { EPKBlockId, EPK_BLOCKS, EPKHealthStats } from'./epkBlocks';
+} from 'lucide-react';
+import { EPKBlockId, EPK_BLOCKS, EPKHealthStats } from './epkBlocks';
 
 interface EPKHeaderProps {
  activeBlock: EPKBlockId;

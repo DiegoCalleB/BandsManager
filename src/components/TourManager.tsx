@@ -1,14 +1,14 @@
-import React, { useState } from'react';
-import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead, BookingCampaign } from'../types';
-import { calculateVehiclesFuelCost } from'../utils/tourUtils';
-import { ModalPortal } from'./common/ModalPortal';
-import { HolidayDateWarning } from'./common/HolidayDateWarning';
-import { PublicoSilhouette } from'./ui/PublicoSilhouette';
+import React, { useState } from 'react';
+import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead, BookingCampaign } from '../types';
+import { calculateVehiclesFuelCost } from '../utils/tourUtils';
+import { ModalPortal } from './common/ModalPortal';
+import { HolidayDateWarning } from './common/HolidayDateWarning';
+import { PublicoSilhouette } from './ui/PublicoSilhouette';
 import {
  Plus, Edit3, Trash2, MapPin, Truck, Calendar, DollarSign,
  Activity, TrendingUp, Calculator, Users, CheckSquare, Square,
  CheckCircle2, AlertCircle, RefreshCw, ArrowRight, Sparkles, Target
-} from'lucide-react';
+} from 'lucide-react';
 
 interface TourManagerProps {
  colors: ThemeColors;

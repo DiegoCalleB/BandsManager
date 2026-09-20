@@ -1,24 +1,24 @@
-import React, { useState, useEffect, useRef } from'react';
-import { BandContact, BandRelationshipStatus, ThemeColors, Lead } from'../types';
-import { api, getAuthHeaders } from'../services/api';
-import BandMap from'./BandMap';
-import { BandPitchModal } from'./bandCRM/BandPitchModal';
-import { BandToneModal, ToneAnalysisData } from'./bandCRM/BandToneModal';
-import { ChangeBandImageModal } from'./bandCRM/ChangeBandImageModal';
-import { AIBandScoutModal } from'./bandCRM/AIBandScoutModal';
-import { uploadFileToServer } from'../utils/audioStorage';
-import { FavoriteButton } from'./common/FavoriteButton';
-import { VerifiedBadge } from'./common/VerifiedBadge';
-import { ReliabilityBadge } from'./common/ReliabilityBadge';
-import { isLeadVerificado } from'../utils/leadReliability';
+import React, { useState, useEffect, useRef } from 'react';
+import { BandContact, BandRelationshipStatus, ThemeColors, Lead } from '../types';
+import { api, getAuthHeaders } from '../services/api';
+import BandMap from './BandMap';
+import { BandPitchModal } from './bandCRM/BandPitchModal';
+import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
+import { ChangeBandImageModal } from './bandCRM/ChangeBandImageModal';
+import { AIBandScoutModal } from './bandCRM/AIBandScoutModal';
+import { uploadFileToServer } from '../utils/audioStorage';
+import { FavoriteButton } from './common/FavoriteButton';
+import { VerifiedBadge } from './common/VerifiedBadge';
+import { ReliabilityBadge } from './common/ReliabilityBadge';
+import { isLeadVerificado } from '../utils/leadReliability';
 import { 
  Users, Music, MapPin, Clock, Sparkles, Plus, Search, Filter, Edit3, Trash2, 
  Copy, Check, ExternalLink, Send, MessageCircle, RefreshCw, LayoutGrid, List, 
  Handshake, Repeat, Zap, Share2, X, Star, Radio, Phone, Mail, Globe, AlertCircle, Building2, Map, FileSpreadsheet,
  Loader2, Bot, Upload, Image as ImageIcon, CheckSquare, Square, MinusSquare, Briefcase
-} from'lucide-react';
-import { BulkBandActionBar } from'./bands/BulkBandActionBar';
-import { BulkProgressModal, BulkProgressItem } from'./booking/BulkProgressModal';
+} from 'lucide-react';
+import { BulkBandActionBar } from './bands/BulkBandActionBar';
+import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
 
 
 interface BandCRMProps {

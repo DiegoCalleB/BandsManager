@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from'react';
-import { BookingCampaign } from'../../types';
-import { Target, MapPin, Users, Calendar, Plus, X, Check, Search } from'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { BookingCampaign } from '../../types';
+import { Target, MapPin, Users, Calendar, Plus, X, Check, Search } from 'lucide-react';
 
 interface BookingCampaignPanelProps {
  onCampaignChange: (campaign: BookingCampaign | null) => void;

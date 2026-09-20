@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from'react';
-import { Guitar, Check, Plus, Sparkles, X, Shield, ArrowRight, Loader2, Camera, Upload, Trash2, Crown, Mail, ArrowUpRight, Star, Search, ArrowLeft, ArrowRight as ArrowRightIcon, GripVertical, Music, MapPin, Zap, User as UserIcon, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Settings, Users } from'lucide-react';
-import { User } from'../types';
-import { cleanBandId, isSameBandId } from'../utils/bandUtils';
-import { uploadFileToServer } from'../utils/audioStorage';
-import { api, getAuthHeaders } from'../services/api';
-import { getPlanDefinition, getPlanChangeType, PLANS } from'../utils/planPermissions';
-import { BandNameStylerHelper } from'./common/BandNameStylerHelper';
-import { ModalPortal } from'./common/ModalPortal';
+import React, { useState, useEffect } from 'react';
+import { Guitar, Check, Plus, Sparkles, X, Shield, ArrowRight, Loader2, Camera, Upload, Trash2, Crown, Mail, ArrowUpRight, Star, Search, ArrowLeft, ArrowRight as ArrowRightIcon, GripVertical, Music, MapPin, Zap, User as UserIcon, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Settings, Users } from 'lucide-react';
+import { User } from '../types';
+import { cleanBandId, isSameBandId } from '../utils/bandUtils';
+import { uploadFileToServer } from '../utils/audioStorage';
+import { api, getAuthHeaders } from '../services/api';
+import { getPlanDefinition, getPlanChangeType, PLANS } from '../utils/planPermissions';
+import { BandNameStylerHelper } from './common/BandNameStylerHelper';
+import { ModalPortal } from './common/ModalPortal';
 
 // Fase beta: crear una banda nueva desde aquí va directa al plan Promo, sin pasar por la
 // parrilla de planes de pago (mismo criterio que SimplePromoLoginModal.tsx). El selector de

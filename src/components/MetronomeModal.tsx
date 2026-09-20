@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from'react';
-import { X, Play, Pause, Disc, Zap, Volume2, VolumeX, Music, Clock } from'lucide-react';
-import { Song, ThemeColors } from'../types';
-import { ModalPortal } from'./common/ModalPortal';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Play, Pause, Disc, Zap, Volume2, VolumeX, Music, Clock } from 'lucide-react';
+import { Song, ThemeColors } from '../types';
+import { ModalPortal } from './common/ModalPortal';
 
 interface MetronomeModalProps {
  isOpen: boolean;

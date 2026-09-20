@@ -1,20 +1,20 @@
-import React, { useState } from'react';
-import { Song, ThemeColors } from'../../types';
-import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText, Headphones, Loader2, Search, X, Download } from'lucide-react';
-import { AlbumCover } from'../AlbumCover';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
-import { uploadFileToServer, saveSongsToLocalStorageSafely } from'../../utils/audioStorage';
-import { apiFetch } from'../../utils/api';
-import { LiveConcertToAlbumModal, TrackCutItem } from'./LiveConcertToAlbumModal';
-import { SpotifyDiscographyModal } from'./SpotifyDiscographyModal';
-import { BulkAlbumAudioUploaderModal } from'./BulkAlbumAudioUploaderModal';
-import { ExportAlbumSongsModal } from'./ExportAlbumSongsModal';
-import { SongCardRow } from'./SongCardRow';
+import React, { useState } from 'react';
+import { Song, ThemeColors } from '../../types';
+import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText, Headphones, Loader2, Search, X, Download } from 'lucide-react';
+import { AlbumCover } from '../AlbumCover';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
+import { uploadFileToServer, saveSongsToLocalStorageSafely } from '../../utils/audioStorage';
+import { apiFetch } from '../../utils/api';
+import { LiveConcertToAlbumModal, TrackCutItem } from './LiveConcertToAlbumModal';
+import { SpotifyDiscographyModal } from './SpotifyDiscographyModal';
+import { BulkAlbumAudioUploaderModal } from './BulkAlbumAudioUploaderModal';
+import { ExportAlbumSongsModal } from './ExportAlbumSongsModal';
+import { SongCardRow } from './SongCardRow';
 
 interface DiscografiaViewProps {
  songs: Song[];
  albumsList: string[];
- colors: ThemeColors;: boolean;
+ colors: ThemeColors
  bandName?: string;
  setSongs: React.Dispatch<React.SetStateAction<Song[]>>;
  setSetlists?: React.Dispatch<React.SetStateAction<any[]>>;

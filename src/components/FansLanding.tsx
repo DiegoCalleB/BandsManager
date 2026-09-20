@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from'react';
+import React, { useState, useEffect } from 'react';
 import {
  Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame,
  Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle,
  Lock as LockIcon, ExternalLink, BookOpen, ChevronRight, ChevronDown, ChevronUp,
  Copy, Users, Headphones, MapPin, Share2, Play, Pause, Volume2, Ticket
-} from'lucide-react';
-import { SocialPlatformsList, SocialLinks, PayPalLogo, BizumLogo } from'./SocialPlatformsList';
-import { useFanFormLanguage } from'../hooks/useFanFormLanguage';
-import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate, idiomasDisponiblesParaConcierto } from'../i18n/fansTranslations';
-import { renderBold } from'../utils/richText';
-import { safeUrl } from'../utils/safeUrl';
-import { sanitizeConcertDisplayName } from'../utils/fanUtils';
+} from 'lucide-react';
+import { SocialPlatformsList, SocialLinks, PayPalLogo, BizumLogo } from './SocialPlatformsList';
+import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
+import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate, idiomasDisponiblesParaConcierto } from '../i18n/fansTranslations';
+import { renderBold } from '../utils/richText';
+import { safeUrl } from '../utils/safeUrl';
+import { sanitizeConcertDisplayName } from '../utils/fanUtils';
 
-import { Concert, EPKConfig, BandMember } from'../types';
+import { Concert, EPKConfig, BandMember } from '../types';
 
 export interface FansLandingProps {
  currentBandId?: string;

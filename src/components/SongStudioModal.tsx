@@ -4,28 +4,28 @@ import { SongStudioAiGeneratorModal } from"./song_studio/SongStudioAiGeneratorMo
 import { SongStudioAiMusicModal } from"./song_studio/SongStudioAiMusicModal";
 import { SongStudioAiComposerModal } from"./song_studio/SongStudioAiComposerModal";
 import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset, exportMasterMixAudioBlob, computeAutoBalanceVolumes } from"../utils/audioLatency";
-import React, { useState, useRef, useEffect } from'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const SILENT_AUDIO_URI ='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-import { motion, AnimatePresence } from'motion/react';
-import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle, User } from'../types';
-import { uploadFileToServer, resolveAudioUrl, getAudioBlobFromUrl, saveAudioToStorage } from'../utils/audioStorage';
-import { apiFetch } from'../utils/api';
-import { separateAudioIntoStems, IsolatedStemResult } from'../utils/stemSeparator';
-import { generateAccompanimentAudioBlob } from'../utils/accompanimentSynth';
-import WaveformTrack from'./WaveformTrack';
-import { SongChordsViewerModal } from'./SongChordsViewerModal';
-import PracticeModePanel from'./PracticeModePanel';
-import { ShareModal } from'./ShareModal';
-import { ModalPortal } from'./common/ModalPortal';
-import { useStudioShareModal } from'../hooks/useStudioShareModal';
-import { useAccompanimentGenerator } from'../hooks/useAccompanimentGenerator';
-import { useIdeaComments } from'../hooks/useIdeaComments';
-import { useModuleTutorial } from'../hooks/useModuleTutorial';
-import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from'../utils/repertorioUtils';
-import { getSongIrisStemIdea } from'../utils/irisTracks';
-import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
-import { formatSongTitle } from'../utils/formatSongTitle';
+import { motion, AnimatePresence } from 'motion/react';
+import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle, User } from '../types';
+import { uploadFileToServer, resolveAudioUrl, getAudioBlobFromUrl, saveAudioToStorage } from '../utils/audioStorage';
+import { apiFetch } from '../utils/api';
+import { separateAudioIntoStems, IsolatedStemResult } from '../utils/stemSeparator';
+import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
+import WaveformTrack from './WaveformTrack';
+import { SongChordsViewerModal } from './SongChordsViewerModal';
+import PracticeModePanel from './PracticeModePanel';
+import { ShareModal } from './ShareModal';
+import { ModalPortal } from './common/ModalPortal';
+import { useStudioShareModal } from '../hooks/useStudioShareModal';
+import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
+import { useIdeaComments } from '../hooks/useIdeaComments';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
+import { getSongIrisStemIdea } from '../utils/irisTracks';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+import { formatSongTitle } from '../utils/formatSongTitle';
 import { 
  X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
  ThumbsUp, Plus, Music, User as UserIcon, Sparkles, Trash2, Send, Disc,
@@ -34,7 +34,7 @@ import {
  Maximize2, Minimize2, Cpu, Activity, Info, CheckCircle2, AlertCircle,
  FileAudio, HardDrive, Clock, Timer, CreditCard, Key, ExternalLink,
  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database, MoreVertical, GripVertical
-} from'lucide-react';
+} from 'lucide-react';
 
 
 

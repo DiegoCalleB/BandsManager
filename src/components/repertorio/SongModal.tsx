@@ -1,14 +1,14 @@
-import React, { useState, useRef } from'react';
-import { X, Upload, Disc3, CheckCircle2, Music, Users, Plus, ChevronDown, ChevronUp } from'lucide-react';
-import { ThemeColors, Song } from'../../types';
-import { BandMemberOption, resolveBandMembers, getSongMemberNote } from'../../utils/repertorioUtils';
-import { formatSongTitle } from'../../utils/formatSongTitle';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState, useRef } from 'react';
+import { X, Upload, Disc3, CheckCircle2, Music, Users, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { ThemeColors, Song } from '../../types';
+import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
+import { formatSongTitle } from '../../utils/formatSongTitle';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface SongModalProps {
  isOpen: boolean;
  editingSong: Song | null;
- colors: ThemeColors;: boolean;
+ colors: ThemeColors
  onClose: () => void;
  onSave: (e: React.FormEvent<HTMLFormElement>) => void;
  albumsList?: string[];

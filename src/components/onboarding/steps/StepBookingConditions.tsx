@@ -1,5 +1,5 @@
-import React from'react';
-import { DollarSign, MapPin, Mail, Phone, User, Check, Car, Hotel } from'lucide-react';
+import React from 'react';
+import { DollarSign, MapPin, Mail, Phone, User, Check, Car, Hotel } from 'lucide-react';
 
 interface StepBookingConditionsProps {
  cacheAcustico: number;

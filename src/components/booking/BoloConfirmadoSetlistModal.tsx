@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useMemo } from'react';
-import { Lead, Setlist, Song, ThemeColors } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Lead, Setlist, Song, ThemeColors } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 import { 
  findBestSetlistMatch, 
  generateAutoSetlistForConcert, 
  calculateSetlistDurationSec 
-} from'../../utils/setlistOptimization';
-import { apiFetch } from'../../utils/api';
+} from '../../utils/setlistOptimization';
+import { apiFetch } from '../../utils/api';
 import { 
  X, Calendar, Clock, Music, Sparkles, Check, ChevronRight, Zap, CheckCircle2 
-} from'lucide-react';
+} from 'lucide-react';
 
 interface BoloConfirmadoSetlistModalProps {
  isOpen: boolean;

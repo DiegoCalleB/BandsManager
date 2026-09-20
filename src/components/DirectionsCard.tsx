@@ -1,5 +1,5 @@
-import React from'react';
-import { Navigation, ExternalLink } from'lucide-react';
+import React from 'react';
+import { Navigation, ExternalLink } from 'lucide-react';
 
 interface DirectionsCardProps {
  query: string;

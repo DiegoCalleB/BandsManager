@@ -1,11 +1,11 @@
-import React, { useState } from'react';
-import { BookingCampaign, PitchTemplateCategory } from'../../types';
-import { HolidayDateWarning } from'../common/HolidayDateWarning';
+import React, { useState } from 'react';
+import { BookingCampaign, PitchTemplateCategory } from '../../types';
+import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import {
  Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Sparkles,
  ChevronRight, Compass, ArrowRight, ShieldCheck, Flame,
  Building2, Tent, Disc3, Radio, Briefcase, Landmark
-} from'lucide-react';
+} from 'lucide-react';
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué

@@ -1,13 +1,13 @@
-import React from'react';
+import React from 'react';
 import {
  BarChart3,
  Quote,
  Plus,
  Trash2
-} from'lucide-react';
-import { EPKConfig } from'../../types';
-import { EPKBlockWrapper } from'./EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
+} from 'lucide-react';
+import { EPKConfig } from '../../types';
+import { EPKBlockWrapper } from './EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
 
 interface EPKPrensaBlockProps {
  config: EPKConfig;

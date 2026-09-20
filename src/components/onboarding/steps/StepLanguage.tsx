@@ -1,6 +1,6 @@
-import React from'react';
-import { Globe, Check, Sparkles, Languages, MessageSquareText, FileText, CheckCircle2, ArrowRight } from'lucide-react';
-import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from'../../../context/LanguageContext';
+import React from 'react';
+import { Globe, Check, Sparkles, Languages, MessageSquareText, FileText, CheckCircle2, ArrowRight } from 'lucide-react';
+import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from '../../../context/LanguageContext';
 
 interface StepLanguageProps {
  language: string;

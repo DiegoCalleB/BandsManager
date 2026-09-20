@@ -1,43 +1,43 @@
-import React, { useState, useEffect, useMemo } from'react';
-import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig } from'../types';
-import DirectionsCard from'./DirectionsCard';
-import { apiFetch } from'../utils/api';
-import { uploadFileToServer } from'../utils/audioStorage';
-import { useSavedFilters } from'../hooks/useSavedFilters';
-import { useCityChips } from'../hooks/useCityChips';
-import { useInteractionLog } from'../hooks/useInteractionLog';
-import { useEmailTemplates, TemplateCategory } from'../hooks/useEmailTemplates';
-import { useGmailIntegration } from'../hooks/useGmailIntegration';
-import { useNegotiationSimulation } from'../hooks/useNegotiationSimulation';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig } from '../types';
+import DirectionsCard from './DirectionsCard';
+import { apiFetch } from '../utils/api';
+import { uploadFileToServer } from '../utils/audioStorage';
+import { useSavedFilters } from '../hooks/useSavedFilters';
+import { useCityChips } from '../hooks/useCityChips';
+import { useInteractionLog } from '../hooks/useInteractionLog';
+import { useEmailTemplates, TemplateCategory } from '../hooks/useEmailTemplates';
+import { useGmailIntegration } from '../hooks/useGmailIntegration';
+import { useNegotiationSimulation } from '../hooks/useNegotiationSimulation';
 import {
  Target, Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, RotateCcw,
  MapPin, Users, Bot, MessageSquare, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
  PlusCircle, Newspaper, Tv, Headphones, Globe, FileText, Plus, SlidersHorizontal, Map as MapIcon, List, LayoutGrid,
  Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet, Copy
-} from'lucide-react';
-import { VenueMap } from'./VenueMap';
-import { AddLeadModal } from'./booking/AddLeadModal';
-import { GooglePlacesExplorerModal } from'./booking/GooglePlacesExplorerModal';
-import { CRMContactEnricherModal } from'./booking/CRMContactEnricherModal';
-import { ExcelImportModal } from'./booking/ExcelImportModal';
-import { ExportLeadsModal } from'./booking/ExportLeadsModal';
-import { LeadDuplicatesModal } from'./booking/LeadDuplicatesModal';
-import { findDuplicateLeads } from'../utils/duplicateLeads';
-import { TemplateConfigSection } from'./booking/TemplateConfigSection';
-import { ExampleThreadsSection } from'./booking/ExampleThreadsSection';
-import { NegotiationSimulationModal } from'./booking/NegotiationSimulationModal';
-import { LeadsTable } from'./booking/LeadsTable';
-import { VenueDetailPanel } from'./booking/VenueDetailPanel';
-import { MobileBottomSheet } from'./booking/MobileBottomSheet';
-import { isLeadVerificado } from'../utils/leadReliability';
-import { leadMatchesCampaignCity, leadMatchesCampaignCapacity, leadMatchesCampaignDates } from'../utils/campaignMatch';
-import { AgentAutonomySettingsModal } from'./dashboard/AgentAutonomySettingsModal';
-import { BookingCampaign } from'../types';
-import { BulkLeadsActionBar } from'./booking/BulkLeadsActionBar';
-import { BulkProgressModal, BulkProgressItem } from'./booking/BulkProgressModal';
-import { useModuleTutorial } from'../hooks/useModuleTutorial';
-import { ModuleTutorialTrigger } from'./common/ModuleTutorialTrigger';
-import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
+} from 'lucide-react';
+import { VenueMap } from './VenueMap';
+import { AddLeadModal } from './booking/AddLeadModal';
+import { GooglePlacesExplorerModal } from './booking/GooglePlacesExplorerModal';
+import { CRMContactEnricherModal } from './booking/CRMContactEnricherModal';
+import { ExcelImportModal } from './booking/ExcelImportModal';
+import { ExportLeadsModal } from './booking/ExportLeadsModal';
+import { LeadDuplicatesModal } from './booking/LeadDuplicatesModal';
+import { findDuplicateLeads } from '../utils/duplicateLeads';
+import { TemplateConfigSection } from './booking/TemplateConfigSection';
+import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
+import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
+import { LeadsTable } from './booking/LeadsTable';
+import { VenueDetailPanel } from './booking/VenueDetailPanel';
+import { MobileBottomSheet } from './booking/MobileBottomSheet';
+import { isLeadVerificado } from '../utils/leadReliability';
+import { leadMatchesCampaignCity, leadMatchesCampaignCapacity, leadMatchesCampaignDates } from '../utils/campaignMatch';
+import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
+import { BookingCampaign } from '../types';
+import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
+import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 const matchesMedioType = (l: Lead, filter: string): boolean => {
  if (!filter || filter ==='todos') return true;
  const txt = `${l.genero ||''} ${l.nombre_sala ||''} ${l.tipo ||''} ${l.icono ||''} ${l.notas ||''} ${l.contexto_extra ||''}`.toLowerCase();
@@ -89,8 +89,8 @@ import {
  normalizeType,
  autoDetectVenueAddress,
  VENUE_ADDRESS_DATABASE
-} from'../utils/bookingUtils';
-import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from'../utils/leadStatusPresentation';
+} from '../utils/bookingUtils';
+import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
 
 export { 
  normalizeStatus, 

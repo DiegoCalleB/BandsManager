@@ -1,6 +1,6 @@
-import React, { ReactNode } from'react';
-import { AlertTriangle, RefreshCw } from'lucide-react';
-import { captureFrontendError } from'../utils/errorTracking';
+import React, { ReactNode } from 'react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { captureFrontendError } from '../utils/errorTracking';
 
 interface Props {
  children: ReactNode;

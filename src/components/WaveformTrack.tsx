@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from'react';
-import WaveSurfer from'wavesurfer.js';
-import { resolveAudioUrl, parseGoogleDriveAudioUrl } from'../utils/audioStorage';
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
+import WaveSurfer from 'wavesurfer.js';
+import { resolveAudioUrl, parseGoogleDriveAudioUrl } from '../utils/audioStorage';
 
 const SILENT_AUDIO_URI ='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 

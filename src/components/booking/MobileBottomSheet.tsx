@@ -1,8 +1,8 @@
-import React, { useEffect } from'react';
-import { createPortal } from'react-dom';
-import { Lead, LeadStatus } from'../../types';
-import { VenueDetailPanel } from'./VenueDetailPanel';
-import { X, Building2 } from'lucide-react';
+import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { Lead, LeadStatus } from '../../types';
+import { VenueDetailPanel } from './VenueDetailPanel';
+import { X, Building2 } from 'lucide-react';
 
 interface MobileBottomSheetProps {
  selectedLead: Lead | null;

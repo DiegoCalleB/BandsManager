@@ -1,6 +1,6 @@
-import React from' react';
-import { Onda } from' ../ui/Onda';
-import { Sparkles } from' lucide-react';
+import React from ' react';
+import { Onda } from ' ../ui/Onda';
+import { Sparkles } from ' lucide-react';
 
 /**
  * OndaShowcase — demonstrates the visual personality transformation

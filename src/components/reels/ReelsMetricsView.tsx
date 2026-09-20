@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useMemo } from'react';
-import { ThemeColors, SocialMetric, SocialContentItem, EPKConfig, Fan } from'../../types';
+import React, { useState, useEffect, useMemo } from 'react';
+import { ThemeColors, SocialMetric, SocialContentItem, EPKConfig, Fan } from '../../types';
 import { 
  TrendingUp, Instagram, Youtube, Video, Plus, Table, Edit, Trash2, ChevronRight, RefreshCw, Radio, Music2, Eye, EyeOff, ThumbsUp, Layers, CheckCircle2, Globe, BarChart3, ArrowUpRight,
  ShieldCheck, Key, ExternalLink, AlertCircle, X, Unlink, Sparkles, Check, Camera, UploadCloud, ScanLine, FileText, SlidersHorizontal, Compass, Target, Calendar, Heart
-} from'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from'recharts';
-import { api } from'../../services/api';
-import { getDeterministicGrowthPlan, GrowthPlan } from'../../utils/growthPlanEngine';
-import { SocialGrowthPlanView } from'./SocialGrowthPlanView';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
+} from 'lucide-react';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { api } from '../../services/api';
+import { getDeterministicGrowthPlan, GrowthPlan } from '../../utils/growthPlanEngine';
+import { SocialGrowthPlanView } from './SocialGrowthPlanView';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 
 interface ReelsMetricsViewProps {
  colors: ThemeColors;

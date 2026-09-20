@@ -1,4 +1,4 @@
-import React from'react';
+import React from 'react';
 import {
  ArrowUp,
  ArrowDown,
@@ -12,16 +12,16 @@ import {
  Briefcase,
  Layers,
  Palette
-} from'lucide-react';
-import { EPKConfig, EPKSectionId, EPKTemplateId } from'../../types';
-import { EPKBlockWrapper } from'./EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
+} from 'lucide-react';
+import { EPKConfig, EPKSectionId, EPKTemplateId } from '../../types';
+import { EPKBlockWrapper } from './EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
 import {
  EPK_TEMPLATES,
  EPK_SECTIONS_META,
  DEFAULT_EPK_SECTIONS_ORDER,
  getAllSectionsWithVisibility
-} from'./epkTemplates';
+} from './epkTemplates';
 
 interface EPKPlantillasBlockProps {
  config: Partial<EPKConfig>;

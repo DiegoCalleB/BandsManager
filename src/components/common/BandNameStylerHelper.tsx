@@ -1,6 +1,6 @@
-import React, { useState } from'react';
-import { Sparkles, X, RotateCcw, Check, Zap } from'lucide-react';
-import { BAND_STYLE_PRESETS, ROCK_SYMBOLS, cleanToNormalText } from'../../utils/bandNameStyler';
+import React, { useState } from 'react';
+import { Sparkles, X, RotateCcw, Check, Zap } from 'lucide-react';
+import { BAND_STYLE_PRESETS, ROCK_SYMBOLS, cleanToNormalText } from '../../utils/bandNameStyler';
 
 interface BandNameStylerHelperProps {
  value: string;

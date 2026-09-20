@@ -1,11 +1,11 @@
-import React, { useState } from' react';
-import { Palette, Check } from' lucide-react';
+import React, { useState } from ' react';
+import { Palette, Check } from ' lucide-react';
 import {
  PREFERENCIAS as PREFERENCIAS_ESPECTRO,
  guardarPreferencia as guardarPreferenciaEspectro,
  leerPreferencia as leerPreferenciaEspectro,
-} from' ../../utils/temaEspectro';
-import type { PreferenciaTema } from' ../../utils/temaEspectro';
+} from ' ../../utils/temaEspectro';
+import type { PreferenciaTema } from ' ../../utils/temaEspectro';
 
 interface ThemeToggleProps {
  /** Icono solo, sin la etiqueta de texto del tema activo — para sitios estrechos

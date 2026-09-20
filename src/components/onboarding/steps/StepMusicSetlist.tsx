@@ -1,10 +1,10 @@
-import React, { useState, useRef } from'react';
+import React, { useState, useRef } from 'react';
 import { 
  Disc3, Search, Music, Upload, Plus, Trash2, CheckCircle2, 
  Loader2, Play, Pause, Sparkles, Check, Layers, Clock, Award
-} from'lucide-react';
-import { SpotifyAlbum, SpotifyTrack, ManualSongItem } from'../types';
-import { Song } from'../../../types';
+} from 'lucide-react';
+import { SpotifyAlbum, SpotifyTrack, ManualSongItem } from '../types';
+import { Song } from '../../../types';
 
 interface StepMusicSetlistProps {
  musicSubTab:'spotify' |'upload' |'manual';

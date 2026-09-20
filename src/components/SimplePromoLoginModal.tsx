@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from'react';
-import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle2, Guitar, User as UserIcon, ArrowLeft, ArrowRight, Music } from'lucide-react';
-import { User as UserType } from'../types';
-import { signInWithGoogleIdentity } from'../utils/googleAuth';
-import { guardarCookieDeSesion } from'../utils/sessionCookie';
-import { ModalPortal } from'./common/ModalPortal';
+import React, { useState, useRef, useEffect } from 'react';
+import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle2, Guitar, User as UserIcon, ArrowLeft, ArrowRight, Music } from 'lucide-react';
+import { User as UserType } from '../types';
+import { signInWithGoogleIdentity } from '../utils/googleAuth';
+import { guardarCookieDeSesion } from '../utils/sessionCookie';
+import { ModalPortal } from './common/ModalPortal';
 
 // Ventana de acceso simplificada para la fase beta (bandas del festival Buskers y primeros
 // usuarios): a diferencia de LoginModal.tsx, el registro NO ofrece selector de planes — crea

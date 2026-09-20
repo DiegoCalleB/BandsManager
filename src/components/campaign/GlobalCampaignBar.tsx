@@ -1,10 +1,10 @@
-import React, { useState } from'react';
-import { BookingCampaign, Lead } from'../../types';
-import { leadMatchesCampaign } from'../../utils/campaignMatch';
+import React, { useState } from 'react';
+import { BookingCampaign, Lead } from '../../types';
+import { leadMatchesCampaign } from '../../utils/campaignMatch';
 import {
  Target, Calendar, MapPin, Users, X, Settings2, Building2,
  ChevronRight, ChevronDown, ChevronUp, Sparkles, Flame, CheckCircle2
-} from'lucide-react';
+} from 'lucide-react';
 
 interface GlobalCampaignBarProps {
  campaign: BookingCampaign;

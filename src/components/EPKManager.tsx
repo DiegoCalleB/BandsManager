@@ -1,25 +1,25 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import {
  AlertCircle, CheckCircle2
-} from'lucide-react';
-import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from'../types';
-import { uploadFileToServer } from'../utils/audioStorage';
-import { EPK_LANGUAGES } from'../i18n/epkTranslations';
-import { IDIOMA_ORIGEN, traduccionDesactualizada, tieneTraduccion } from'../utils/epkTraducciones';
-import { api } from'../services/api';
-import { FansLandingPreviewModal } from'./FansLandingPreviewModal';
-import { EPKBlockId, EPK_BLOCKS, computeEPKHealth, getBlockNavigation } from'./epk/epkBlocks';
-import { EPKHeader } from'./epk/EPKHeader';
-import { EPKPerfilBlock } from'./epk/EPKPerfilBlock';
-import { EPKArchivosBlock } from'./epk/EPKArchivosBlock';
-import { EPKMusicaBlock } from'./epk/EPKMusicaBlock';
-import { EPKPrensaBlock } from'./epk/EPKPrensaBlock';
-import { EPKDonacionesBlock } from'./epk/EPKDonacionesBlock';
-import { EPKFirmaQRBlock } from'./epk/EPKFirmaQRBlock';
-import { EPKPlantillasBlock } from'./epk/EPKPlantillasBlock';
-import { normalizePlan } from'../utils/planPermissions';
-import { useModuleTutorial } from'../hooks/useModuleTutorial';
-import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
+} from 'lucide-react';
+import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
+import { uploadFileToServer } from '../utils/audioStorage';
+import { EPK_LANGUAGES } from '../i18n/epkTranslations';
+import { IDIOMA_ORIGEN, traduccionDesactualizada, tieneTraduccion } from '../utils/epkTraducciones';
+import { api } from '../services/api';
+import { FansLandingPreviewModal } from './FansLandingPreviewModal';
+import { EPKBlockId, EPK_BLOCKS, computeEPKHealth, getBlockNavigation } from './epk/epkBlocks';
+import { EPKHeader } from './epk/EPKHeader';
+import { EPKPerfilBlock } from './epk/EPKPerfilBlock';
+import { EPKArchivosBlock } from './epk/EPKArchivosBlock';
+import { EPKMusicaBlock } from './epk/EPKMusicaBlock';
+import { EPKPrensaBlock } from './epk/EPKPrensaBlock';
+import { EPKDonacionesBlock } from './epk/EPKDonacionesBlock';
+import { EPKFirmaQRBlock } from './epk/EPKFirmaQRBlock';
+import { EPKPlantillasBlock } from './epk/EPKPlantillasBlock';
+import { normalizePlan } from '../utils/planPermissions';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 
 interface EPKManagerProps {
  epkConfig?: Partial<EPKConfig>;

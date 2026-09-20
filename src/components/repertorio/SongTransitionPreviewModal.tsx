@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef, useMemo } from'react';
-import { motion, AnimatePresence } from'motion/react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
  Play, Pause, RotateCcw, Volume2, VolumeX, Sparkles, AlertTriangle, CheckCircle2,
  ChevronLeft, ChevronRight, Sliders, ArrowRight, ArrowLeftRight, MessageSquarePlus,
  Headphones, Music, Zap, Flame, Radio, Clock, ShieldCheck, X, ThumbsUp, ThumbsDown,
  Lightbulb, Compass, ShieldAlert, Info, HelpCircle, Upload, Disc3, Layers, Scissors, Check
-} from'lucide-react';
-import { Song, SetlistItem } from'../../types';
+} from 'lucide-react';
+import { Song, SetlistItem } from '../../types';
 import {
  TransitionConfig,
  TransitionStyle,
@@ -18,16 +18,16 @@ import {
  STUDIO_SAMPLE_TRACKS,
  getSampleTrackForSong,
  StudioSampleTrack
-} from'../../utils/transitionAudioEngine';
-import { resolveAudioUrl } from'../../utils/audioStorage';
-import { playSyntheticTransition, SyntheticPlayerController } from'../../utils/transitionSynthesizer';
-import { getEnergyInfo } from'../../utils/energyPacingUtils';
+} from '../../utils/transitionAudioEngine';
+import { resolveAudioUrl } from '../../utils/audioStorage';
+import { playSyntheticTransition, SyntheticPlayerController } from '../../utils/transitionSynthesizer';
+import { getEnergyInfo } from '../../utils/energyPacingUtils';
 import {
  detectAudioCuesFromUrl,
  applyDetectedCuesToSong,
  AudioCueAnalysis
-} from'../../utils/audioCueDetector';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
+} from '../../utils/audioCueDetector';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 
 interface SongTransitionPreviewModalProps {
  isOpen: boolean;

@@ -1,7 +1,7 @@
-import React, { useState } from'react';
-import { Settings, Sparkles, RefreshCw, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Star, Landmark } from'lucide-react';
-import { ThemeColors } from'../../types';
-import { ExampleThreadsSection } from'./ExampleThreadsSection';
+import React, { useState } from 'react';
+import { Settings, Sparkles, RefreshCw, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Star, Landmark } from 'lucide-react';
+import { ThemeColors } from '../../types';
+import { ExampleThreadsSection } from './ExampleThreadsSection';
 
 export type TemplateCategory ='salas' |'festivales' |'discotecas' |'medios' |'grupos' |'managements' |'ayuntamientos';
 

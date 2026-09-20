@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from'react';
-import { Sparkles, Heart, CheckCircle2, Download, Copy, Check, ShieldCheck, Mail, User, MapPin, Music } from'lucide-react';
-import { sanitizeConcertDisplayName } from'../utils/fanUtils';
+import React, { useState, useEffect } from 'react';
+import { Sparkles, Heart, CheckCircle2, Download, Copy, Check, ShieldCheck, Mail, User, MapPin, Music } from 'lucide-react';
+import { sanitizeConcertDisplayName } from '../utils/fanUtils';
 
 export const PublicFanCapture: React.FC = () => {
  const [nombre, setNombre] = useState('');
@@ -140,7 +140,7 @@ export const PublicFanCapture: React.FC = () => {
 
  {!submitted ? (
  /* FORM CARD */
- <form onSubmit={handleSubmit} className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 space-y-4
+ <form onSubmit={handleSubmit} className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 space-y-4">
  {errorMsg && (
  <div className="p-3 bg-[var(--alert)]/90/80 text-[var(--alert)]/40 text-xs rounded-[var(--r-m)] font-medium">
  ⚠️ {errorMsg}

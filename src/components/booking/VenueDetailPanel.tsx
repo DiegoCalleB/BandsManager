@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from'react';
-import { Lead, LeadStatus, LeadType, InteractionLog, Setlist } from'../../types';
-import { LeadHealthBadge } from'./LeadHealthBadge';
-import { VerifiedBadge } from'../common/VerifiedBadge';
-import { LeadAvatar } from'./LeadAvatar';
-import { ReliabilityBadge } from'../common/ReliabilityBadge';
-import { FavoriteButton } from'../common/FavoriteButton';
-import { isLeadVerificado } from'../../utils/leadReliability';
-import DirectionsCard from'../DirectionsCard';
-import { apiFetch } from'../../utils/api';
-import { api } from'../../services/api';
-import { MultiModelPitchComparatorModal } from'./MultiModelPitchComparatorModal';
-import { BoloConfirmadoSetlistModal } from'./BoloConfirmadoSetlistModal';
-import { formatFestivalDateRange, toIsoDateString } from'../../utils/festivalDateFormat';
-import { HolidayDateWarning } from'../common/HolidayDateWarning';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
+import React, { useState, useEffect } from 'react';
+import { Lead, LeadStatus, LeadType, InteractionLog, Setlist } from '../../types';
+import { LeadHealthBadge } from './LeadHealthBadge';
+import { VerifiedBadge } from '../common/VerifiedBadge';
+import { LeadAvatar } from './LeadAvatar';
+import { ReliabilityBadge } from '../common/ReliabilityBadge';
+import { FavoriteButton } from '../common/FavoriteButton';
+import { isLeadVerificado } from '../../utils/leadReliability';
+import DirectionsCard from '../DirectionsCard';
+import { apiFetch } from '../../utils/api';
+import { api } from '../../services/api';
+import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
+import { BoloConfirmadoSetlistModal } from './BoloConfirmadoSetlistModal';
+import { formatFestivalDateRange, toIsoDateString } from '../../utils/festivalDateFormat';
+import { HolidayDateWarning } from '../common/HolidayDateWarning';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 import {
  Edit3,
  X,
@@ -38,7 +38,7 @@ import {
  Undo2,
  RotateCcw,
  Layers
-} from'lucide-react';
+} from 'lucide-react';
 
 interface VenueDetailPanelProps {
  selectedLead: Lead | null;

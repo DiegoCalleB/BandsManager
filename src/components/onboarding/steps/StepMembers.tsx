@@ -1,6 +1,6 @@
-import React from'react';
-import { Users, Plus, Trash2, Mail, Instagram, ShieldCheck, UserCheck } from'lucide-react';
-import { WizardMemberItem } from'../types';
+import React from 'react';
+import { Users, Plus, Trash2, Mail, Instagram, ShieldCheck, UserCheck } from 'lucide-react';
+import { WizardMemberItem } from '../types';
 
 interface StepMembersProps {
  members: WizardMemberItem[];

@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useCallback } from'react';
-import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from'lucide-react';
-import { apiFetch } from'../../utils/api';
-import type { TemplateCategory } from'./TemplateConfigSection';
+import React, { useEffect, useState, useCallback } from 'react';
+import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from 'lucide-react';
+import { apiFetch } from '../../utils/api';
+import type { TemplateCategory } from './TemplateConfigSection';
 
 interface ThreadMessage {
  rol:'banda' |'sala';

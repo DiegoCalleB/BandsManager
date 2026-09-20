@@ -1,4 +1,4 @@
-import React from'react';
+import React from 'react';
 import {
  FileText,
  Info,
@@ -11,10 +11,10 @@ import {
  User as UserIcon,
  Users,
  Globe
-} from'lucide-react';
-import { EPKConfig, BandMember } from'../../types';
-import { EPKBlockWrapper } from'./EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
+} from 'lucide-react';
+import { EPKConfig, BandMember } from '../../types';
+import { EPKBlockWrapper } from './EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
 
 interface EPKPerfilBlockProps {
  config: EPKConfig;

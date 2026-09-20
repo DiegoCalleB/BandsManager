@@ -1,11 +1,11 @@
-import React, { useState } from'react';
-import { BandRelationshipStatus } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState } from 'react';
+import { BandRelationshipStatus } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 import { 
  CheckSquare, MinusSquare, Square, X, ChevronDown, Sparkles, Download, 
  Trash2, Star, CheckCircle2, Repeat, Clock, ArrowRight, 
  Users, ShieldAlert
-} from'lucide-react';
+} from 'lucide-react';
 
 interface BulkBandActionBarProps {
  selectedCount: number;

@@ -1,7 +1,7 @@
-import React from'react';
-import { Wand2, X, Sparkles, RefreshCw } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
-import { SongAudioIdea, DrumPatternStyle } from'../../types';
+import React from 'react';
+import { Wand2, X, Sparkles, RefreshCw } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
+import { SongAudioIdea, DrumPatternStyle } from '../../types';
 
 interface SongStudioAiGeneratorModalProps {
  // Solo se usa como"hay idea seleccionada o no", pero el estado real es la idea completa.

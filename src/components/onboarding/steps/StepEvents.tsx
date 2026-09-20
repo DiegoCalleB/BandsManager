@@ -1,6 +1,6 @@
-import React from'react';
-import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from'lucide-react';
-import { QuickEventItem } from'../types';
+import React from 'react';
+import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from 'lucide-react';
+import { QuickEventItem } from '../types';
 
 interface StepEventsProps {
  events: QuickEventItem[];

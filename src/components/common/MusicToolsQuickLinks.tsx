@@ -1,5 +1,5 @@
-import React from'react';
-import { Clock, Guitar } from'lucide-react';
+import React from 'react';
+import { Clock, Guitar } from 'lucide-react';
 
 interface MusicToolsQuickLinksProps {
  variant:'desktop' |'mobile';

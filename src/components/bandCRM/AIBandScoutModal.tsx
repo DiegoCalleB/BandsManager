@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from'react';
-import { X, Search, Sparkles, MapPin, Music, UserPlus, CheckCircle2, AlertCircle } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
-import { BandContact, BookingCampaign } from'../../types';
-import { apiFetch } from'../../utils/api';
+import React, { useState, useEffect } from 'react';
+import { X, Search, Sparkles, MapPin, Music, UserPlus, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
+import { BandContact, BookingCampaign } from '../../types';
+import { apiFetch } from '../../utils/api';
 
 interface AIBandScoutModalProps {
  isOpen: boolean;

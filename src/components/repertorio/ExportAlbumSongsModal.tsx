@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useEffect } from'react';
-import JSZip from'jszip';
-import { ModalPortal } from'../common/ModalPortal';
-import { Song, ThemeColors } from'../../types';
+import React, { useState, useMemo, useEffect } from 'react';
+import JSZip from 'jszip';
+import { ModalPortal } from '../common/ModalPortal';
+import { Song, ThemeColors } from '../../types';
 import {
  Download, Copy, Check, X, FileSpreadsheet, Music, FileText, Code, Printer,
  Sparkles, Disc3, Clock, Layers, Share2, Info, Archive, Loader2, AlertCircle, FileCheck
-} from'lucide-react';
+} from 'lucide-react';
 
 interface ExportAlbumSongsModalProps {
  isOpen: boolean;

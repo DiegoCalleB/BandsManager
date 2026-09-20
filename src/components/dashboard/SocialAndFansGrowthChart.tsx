@@ -1,11 +1,11 @@
-import React, { useState, useMemo } from'react';
-import { ThemeColors, SocialMetric, Fan, EPKConfig } from'../../types';
+import React, { useState, useMemo } from 'react';
+import { ThemeColors, SocialMetric, Fan, EPKConfig } from '../../types';
 import { 
  Instagram, Youtube, Video, Music2, Heart, TrendingUp, Users, Radio,
  Eye, EyeOff, RefreshCw, SlidersHorizontal, ArrowUpRight, CheckCircle2,
  ShieldCheck, Sparkles, ExternalLink, Activity, QrCode, Calendar, Clock
-} from'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from'recharts';
+} from 'lucide-react';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 export type TimePeriod ='7d' |'30d' |'90d' |'1y' |'all';
 

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from'react';
-import { X, Layers, Check } from'lucide-react';
-import { Setlist, ThemeColors } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState, useEffect } from 'react';
+import { X, Layers, Check } from 'lucide-react';
+import { Setlist, ThemeColors } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface SetlistModalProps {
  isOpen: boolean;
  setlistToEdit: Setlist | null;
- colors: ThemeColors;: boolean;
+ colors: ThemeColors
  onClose: () => void;
  onSave: (setlistData: { id?: string; nombre: string; descripcion: string; tipoFormato: Setlist['tipoFormato'] }) => void;
 }

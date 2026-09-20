@@ -1,6 +1,6 @@
-import React from'react';
-import { Video, Youtube, Plus, Trash2, Award } from'lucide-react';
-import { EPKVideo } from'../../../types';
+import React from 'react';
+import { Video, Youtube, Plus, Trash2, Award } from 'lucide-react';
+import { EPKVideo } from '../../../types';
 
 interface StepVideosProps {
  videos: EPKVideo[];

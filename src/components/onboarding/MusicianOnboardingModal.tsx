@@ -1,8 +1,8 @@
-import React from'react';
-import { Calendar, BookOpen, Disc3, ArrowRight, Sparkles, X, CheckCircle2, Music2, ShieldCheck, Globe, Check } from'lucide-react';
-import { NavItemId } from'../../config/navGroups';
-import { markOnboardingCompleted } from'../../utils/userPreferences';
-import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from'../../context/LanguageContext';
+import React from 'react';
+import { Calendar, BookOpen, Disc3, ArrowRight, Sparkles, X, CheckCircle2, Music2, ShieldCheck, Globe, Check } from 'lucide-react';
+import { NavItemId } from '../../config/navGroups';
+import { markOnboardingCompleted } from '../../utils/userPreferences';
+import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from '../../context/LanguageContext';
 
 interface MusicianOnboardingModalProps {
  isOpen: boolean;

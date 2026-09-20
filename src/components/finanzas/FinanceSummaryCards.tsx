@@ -1,8 +1,8 @@
-import React from'react';
-import { ThemeColors } from'../../types';
-import { TrendingUp, TrendingDown, DollarSign, Calculator } from'lucide-react';
-import { FinancialSummary } from'../../utils/financeUtils';
-import { useLanguage } from'../../context/LanguageContext';
+import React from 'react';
+import { ThemeColors } from '../../types';
+import { TrendingUp, TrendingDown, DollarSign, Calculator } from 'lucide-react';
+import { FinancialSummary } from '../../utils/financeUtils';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface FinanceSummaryCardsProps {
  colors: ThemeColors;

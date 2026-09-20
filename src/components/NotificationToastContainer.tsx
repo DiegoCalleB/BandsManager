@@ -1,6 +1,6 @@
-import React from'react';
-import { ToastNotification } from'../hooks/useNotificationSystem';
-import { CheckCircle2, AlertCircle, Info, AlertTriangle, X } from'lucide-react';
+import React from 'react';
+import { ToastNotification } from '../hooks/useNotificationSystem';
+import { CheckCircle2, AlertCircle, Info, AlertTriangle, X } from 'lucide-react';
 
 interface NotificationToastContainerProps {
  notifications: ToastNotification[];

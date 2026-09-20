@@ -1,11 +1,11 @@
-import React from'react';
-import { motion } from'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { 
  Sun, CloudSun, Cloud, CloudRain, CloudLightning, 
  Snowflake, CloudFog, Wind, Droplets, Thermometer,
  AlertTriangle, CloudDrizzle, Zap
-} from'lucide-react';
-import { EventWeatherData, WeatherAlert } from'../../services/weatherService';
+} from 'lucide-react';
+import { EventWeatherData, WeatherAlert } from '../../services/weatherService';
 
 export type WeatherIconType = EventWeatherData['iconType'] |'wind' |'alert' |'thermometer';
 

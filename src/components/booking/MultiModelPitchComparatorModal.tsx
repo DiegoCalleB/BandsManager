@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from'react';
-import { Lead } from'../../types';
-import { api } from'../../services/api';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState, useEffect } from 'react';
+import { Lead } from '../../types';
+import { api } from '../../services/api';
+import { ModalPortal } from '../common/ModalPortal';
 import {
  X,
  Sparkles,
@@ -19,7 +19,7 @@ import {
  TrendingDown,
  Calculator,
  HelpCircle
-} from'lucide-react';
+} from 'lucide-react';
 
 interface MultiModelPitchComparatorModalProps {
  isOpen: boolean;

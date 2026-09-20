@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
  Sparkles, 
  Image as ImageIcon, 
@@ -26,10 +26,10 @@ import {
  Phone, 
  User, 
  Building 
-} from'lucide-react';
-import { ThemeColors, ThemeName } from'../types';
-import QRCode from'react-qr-code';
-import { resolveAudioUrl, uploadFileToServer } from'../utils/audioStorage';
+} from 'lucide-react';
+import { ThemeColors, ThemeName } from '../types';
+import QRCode from 'react-qr-code';
+import { resolveAudioUrl, uploadFileToServer } from '../utils/audioStorage';
 
 const ResolvedBgImage: React.FC<{ url: string, className?: string, style?: React.CSSProperties, onClick?: () => void }> = ({ url, className, style, onClick }) => {
  const [resolved, setResolved] = useState<string | null>(null);

@@ -1,27 +1,27 @@
-import React, { useState, useRef } from'react';
-import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost } from'../types';
-import { useLanguage } from'../context/LanguageContext';
-import { isSameBandId } from'../utils/bandUtils';
-import DirectionsCard from'./DirectionsCard';
-import { PublicoSilhouette } from'./ui/PublicoSilhouette';
-import { AddLeadModal } from'./dashboard/AddLeadModal';
-import { ProfileCompletenessCard } from'./dashboard/ProfileCompletenessCard';
-import { AiSupportWidget, AiUsageCard } from'./dashboard/AiUsageSupportWidget';
-import { EmailTemplatesModal } from'./dashboard/EmailTemplatesModal';
-import { AgentAutonomySettingsModal } from'./dashboard/AgentAutonomySettingsModal';
-import { SocialAndFansGrowthChart } from'./dashboard/SocialAndFansGrowthChart';
-import { DashboardWidgetGrid } from'./dashboard/DashboardWidgetGrid';
-import { MobileBottomSheet } from'./booking/MobileBottomSheet';
-import { autoDetectVenueAddress, normalizeStatus, normalizeType } from'../utils/bookingUtils';
-import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from'../utils/leadStatusPresentation';
-import { normalizePlan, hasModuleAccess } from'../utils/planPermissions';
+import React, { useState, useRef } from 'react';
+import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost } from '../types';
+import { useLanguage } from '../context/LanguageContext';
+import { isSameBandId } from '../utils/bandUtils';
+import DirectionsCard from './DirectionsCard';
+import { PublicoSilhouette } from './ui/PublicoSilhouette';
+import { AddLeadModal } from './dashboard/AddLeadModal';
+import { ProfileCompletenessCard } from './dashboard/ProfileCompletenessCard';
+import { AiSupportWidget, AiUsageCard } from './dashboard/AiUsageSupportWidget';
+import { EmailTemplatesModal } from './dashboard/EmailTemplatesModal';
+import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
+import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
+import { DashboardWidgetGrid } from './dashboard/DashboardWidgetGrid';
+import { MobileBottomSheet } from './booking/MobileBottomSheet';
+import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
+import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
+import { normalizePlan, hasModuleAccess } from '../utils/planPermissions';
 import { 
  Search, MapPin, Music, Mic, DoorClosed, Globe, Phone, Instagram, 
  Plus, X, Calendar, AlertCircle, Sparkles, Loader2, Check, RefreshCw, 
  Database, Bot, Activity, ArrowRight, CheckCircle2, Radio, Building2,
  Clock, CheckCircle, Hourglass, Send, Users, ShieldCheck, Play, Navigation,
  FileText, BookOpen, Disc3, Truck, Heart, Info, Copy, Sliders, Gift, Crown, QrCode
-} from'lucide-react';
+} from 'lucide-react';
 
 export type NavigationOptions = {
  sectionTab?:'salas' |'medios' |'grupos';
@@ -824,7 +824,7 @@ export default function Dashboard({
  normalizeStatus={normalizeStatus}
  normalizeType={normalizeType}
  autoDetectVenueAddress={autoDetectVenueAddress}
- sectionTab="salas"={}
+ sectionTab="salas"
  />
  )}
 
@@ -833,7 +833,7 @@ export default function Dashboard({
  onClose={() => setIsAutonomyModalOpen(false)}
  bandName={activeBandName}
  bandId={currentBandId || currentUser?.band_id ||''}
- currentUser={currentUser
+ currentUser={currentUser}
  onOpenTemplatesSection={() => {
  if (onNavigate) onNavigate('booking');
  }}

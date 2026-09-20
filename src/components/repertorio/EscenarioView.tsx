@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from'react';
+import React, { useEffect, useState } from 'react';
 
 const SILENT_AUDIO_URI ='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-import { Song, Setlist, SetlistItem } from'../../types';
+import { Song, Setlist, SetlistItem } from '../../types';
 import {
  Printer, Music, Mic, Radio, SkipBack, SkipForward, Play, Pause, Repeat, Heart,
  Activity, Footprints, Zap, FileText, WifiOff, Check, ChevronDown, ChevronUp
-} from'lucide-react';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
-import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from'../RepertorioSetlists';
-import { cacheActiveStageSetlist } from'../../utils/stageOfflineCache';
-import { formatSongTitle } from'../../utils/formatSongTitle';
+} from 'lucide-react';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
+import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from '../RepertorioSetlists';
+import { cacheActiveStageSetlist } from '../../utils/stageOfflineCache';
+import { formatSongTitle } from '../../utils/formatSongTitle';
 
 interface EscenarioViewProps {
  activeSetlist: Setlist | null;

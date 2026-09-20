@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
  Mic, Square, Play, Pause, Trash2, Sparkles, Share2, Copy, Check,
  Upload, FileAudio, Music, ListChecks, MessageSquare, AlertCircle, RefreshCw, Send
-} from'lucide-react';
-import { Rehearsal, RehearsalRecording, RehearsalActa, Song, ThemeColors } from'../../types';
-import { formatTime } from'./EnsayoCronometro';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
+} from 'lucide-react';
+import { Rehearsal, RehearsalRecording, RehearsalActa, Song, ThemeColors } from '../../types';
+import { formatTime } from './EnsayoCronometro';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 
 interface GrabacionActaTabProps {
  rehearsal: Rehearsal;

@@ -1,4 +1,4 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import {
  Sparkles,
  Check,
@@ -30,11 +30,11 @@ import {
  Lock,
  Loader2,
  RefreshCw
-} from'lucide-react';
-import { ThemeColors, User } from'../types';
-import { CheckoutButton } from'./CheckoutButton';
-import { api } from'../services/api';
-import { normalizePlan, getPlanTierLevel, getPlanDefinition } from'../utils/planPermissions';
+} from 'lucide-react';
+import { ThemeColors, User } from '../types';
+import { CheckoutButton } from './CheckoutButton';
+import { api } from '../services/api';
+import { normalizePlan, getPlanTierLevel, getPlanDefinition } from '../utils/planPermissions';
 
 interface PlanesProps {
  colors?: ThemeColors;

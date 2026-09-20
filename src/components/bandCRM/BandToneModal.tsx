@@ -1,10 +1,10 @@
-import React, { useState } from'react';
-import { BandContact } from'../../types';
-import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw, Brain, GraduationCap } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
-import { apiFetch } from'../../utils/api';
-import { api } from'../../services/api';
+import React, { useState } from 'react';
+import { BandContact } from '../../types';
+import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw, Brain, GraduationCap } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
+import { apiFetch } from '../../utils/api';
+import { api } from '../../services/api';
 
 const CATEGORY_LABELS: Record<string, string> = {
  salas:'🏛️ Salas',

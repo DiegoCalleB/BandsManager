@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from'react';
-import { resolveAudioUrl } from'../utils/audioStorage';
-import { Disc3, Play, Pause } from'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { resolveAudioUrl } from '../utils/audioStorage';
+import { Disc3, Play, Pause } from 'lucide-react';
 
 interface AlbumCoverProps {
  url?: string;

@@ -1,8 +1,8 @@
-import React from'react';
-import { ChevronDown, ChevronUp } from'lucide-react';
-import { NavGroupDef, NavItemId, NAV_ITEMS } from'../../config/navGroups';
-import { hasModuleAccess } from'../../utils/planPermissions';
-import { NavItemButton } from'./NavItemButton';
+import React from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { NavGroupDef, NavItemId, NAV_ITEMS } from '../../config/navGroups';
+import { hasModuleAccess } from '../../utils/planPermissions';
+import { NavItemButton } from './NavItemButton';
 
 interface NavGroupSectionProps {
  group: NavGroupDef;

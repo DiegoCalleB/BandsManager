@@ -1,15 +1,15 @@
-import React, { useState, useMemo } from'react';
+import React, { useState, useMemo } from 'react';
 import { 
  Plus, Disc3, Clock, CheckSquare, Square, Trash2, ArrowUp, ArrowDown, 
  Sparkles, Coffee, Play, Music, Flame, Edit3, CheckCircle2, AlertCircle, X,
  Layers, Volume2, ListOrdered, GripVertical, Search, Star, Undo2, FolderInput,
  FlameKindling
-} from'lucide-react';
-import { Rehearsal, RehearsalAgendaItem, RehearsalObjective, Song, Setlist, Concert, ThemeColors } from'../../types';
-import { formatSongTitle } from'../../utils/formatSongTitle';
-import { formatSecondsToMmSs } from'../../utils/repertorioUtils';
-import { ModalPortal } from'../common/ModalPortal';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
+} from 'lucide-react';
+import { Rehearsal, RehearsalAgendaItem, RehearsalObjective, Song, Setlist, Concert, ThemeColors } from '../../types';
+import { formatSongTitle } from '../../utils/formatSongTitle';
+import { formatSecondsToMmSs } from '../../utils/repertorioUtils';
+import { ModalPortal } from '../common/ModalPortal';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 
 interface OrdenDelDiaTabProps {
  rehearsal: Rehearsal;

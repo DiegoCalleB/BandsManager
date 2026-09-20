@@ -1,6 +1,6 @@
-import React, { useState } from'react';
-import { X, Users, Save, Plus, Music, Sparkles, Check } from'lucide-react';
-import { Song, ThemeColors } from'../../types';
+import React, { useState } from 'react';
+import { X, Users, Save, Plus, Music, Sparkles, Check } from 'lucide-react';
+import { Song, ThemeColors } from '../../types';
 import {
  BandMemberOption,
  resolveBandMembers,
@@ -9,14 +9,14 @@ import {
  getReadinessSummary,
  READINESS_LEVELS,
  ReadinessLevel
-} from'../../utils/repertorioUtils';
-import { formatSongTitle } from'../../utils/formatSongTitle';
-import { ModalPortal } from'../common/ModalPortal';
+} from '../../utils/repertorioUtils';
+import { formatSongTitle } from '../../utils/formatSongTitle';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface MemberNotesModalProps {
  isOpen: boolean;
  song: Song | null;
- colors: ThemeColors;: boolean;
+ colors: ThemeColors;
  bandMembers?: BandMemberOption[];
  onClose: () => void;
  onSaveSongNotes: (updatedSong: Song) => void;
@@ -25,7 +25,7 @@ interface MemberNotesModalProps {
 export function MemberNotesModal({
  isOpen,
  song,
- colors
+ colors,
  bandMembers = [],
  onClose,
  onSaveSongNotes
@@ -234,8 +234,7 @@ export function MemberNotesModal({
  value={generalRepertorioNote}
  onChange={(e) => setGeneralRepertorioNote(e.target.value)}
  placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco..."
- className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none ${
- 'bg-[var(--surface)] text-[var(--ink)] :'bg-[var(--surface)] text-[var(--ink-2)] }`}
+ className="w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none bg-[var(--surface)] text-[var(--ink)]"
  />
  </div>
 
@@ -361,8 +360,7 @@ export function MemberNotesModal({
  value={currentNote}
  onChange={(e) => handleNoteChange(member.name, e.target.value)}
  placeholder={`Notas específicas para ${member.name} (${member.instrument})... ej. Entrada en compás 8, solo con sordina, cambio de afinación...`}
- className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors ${
- 'bg-[var(--surface)] text-[var(--ink)] :'bg-[var(--surface)] text-[var(--ink-2)] }`}
+ className="w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none transition-colors bg-[var(--surface)] text-[var(--ink)]"
  />
  </div>
  );

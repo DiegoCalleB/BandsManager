@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from'react';
-import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Sun, Battery, BatteryCharging, BatteryWarning, Moon, Plane, MoreVertical, Headphones, Sliders, ListMusic, Sparkles, Play, Pause, RotateCcw, ArrowUpDown, SlidersHorizontal } from'lucide-react';
-import { Setlist, SetlistItem, Song, SongAudioIdea, User } from'../types';
-import { isImageDocument, isPdfDocument } from'../utils/documentType';
-import { getSemitoneDifference, transposeChordToken, processChordText, splitIntoChordSections, ChordSection } from'../utils/chordUtils';
-import { getSongIrisStemIdea, getIdeaTracks } from'../utils/irisTracks';
-import PracticeModePanel from'./PracticeModePanel';
-import { PublicoSilhouette } from'./ui/PublicoSilhouette';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Sun, Battery, BatteryCharging, BatteryWarning, Moon, Plane, MoreVertical, Headphones, Sliders, ListMusic, Sparkles, Play, Pause, RotateCcw, ArrowUpDown, SlidersHorizontal } from 'lucide-react';
+import { Setlist, SetlistItem, Song, SongAudioIdea, User } from '../types';
+import { isImageDocument, isPdfDocument } from '../utils/documentType';
+import { getSemitoneDifference, transposeChordToken, processChordText, splitIntoChordSections, ChordSection } from '../utils/chordUtils';
+import { getSongIrisStemIdea, getIdeaTracks } from '../utils/irisTracks';
+import PracticeModePanel from './PracticeModePanel';
+import { PublicoSilhouette } from './ui/PublicoSilhouette';
 
 interface SetlistPerformanceViewProps {
  setlist: Setlist;

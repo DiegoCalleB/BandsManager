@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from'react';
-import { Song, ThemeColors } from'../../types';
-import { formatSongTitle } from'../../utils/formatSongTitle';
+import React, { useState, useRef, useEffect } from 'react';
+import { Song, ThemeColors } from '../../types';
+import { formatSongTitle } from '../../utils/formatSongTitle';
 import {
  Play,
  Pause,
@@ -21,8 +21,8 @@ import {
  GripVertical,
  Sparkles,
  Cpu
-} from'lucide-react';
-import { hasIrisStems } from'../../utils/irisTracks';
+} from 'lucide-react';
+import { hasIrisStems } from '../../utils/irisTracks';
 
 export interface SongCardRowProps {
  song: Song;
@@ -112,7 +112,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  const isPlaying = isPlayingCurrent && isPlayerPlaying;
  const displayTitle = formatSongTitle(song.titulo) || song.titulo;
  const albumLabel = song.albumDisco || song.album ||'Sin Disco';
- const durationText = song.duracion || (song.duracionSegundos ? `${Math.floor(song.duracionSegundos / 60)}:${String(Math.floor(song.duracionSegundos % 60)).padStart(2,'0')}` :'—');
+ const durationText = song.duracion || (song.duracionSegundos ? `${Math.floor(song.duracionSegundos / 60)}:${String(Math.floor(song.duracionSegundos % 60)).padStart(2,'0')}` : '—');
  const hasMemberNotes = song.notasMiembros && Object.values(song.notasMiembros).some((v) => typeof v ==='string' && v.trim().length > 0);
  const ideasCount = (song.audioIdeas || []).length;
  const isDriveAudio = (song.audioPrincipalUrl ||'').includes('drive.google.com');
@@ -127,16 +127,16 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onDragEnd={onDragEnd}
  className={`group relative rounded-[var(--r-m)] transition-all duration-150 ${
  isDragging
- ?'opacity-30 scale-[0.98]'
+ ? 'opacity-30 scale-[0.98]'
  : isDragOver
- ?'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-[var(--ok)]/10'
+ ? 'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-[var(--ok)]/10'
  : isPlayingCurrent
- ?' bg-[var(--ok)]/10/30 text-[var(--ink)] ring-1 ring-emerald-500/20'
+ ? ' bg-[var(--ok)]/10text-[var(--ink)] ring-1 ring-emerald-500/20'
  : isSelected
- ?' bg-[var(--acc)]/10 /30 text-[var(--ink)]'
- :?'bg-[var(--surface)] hover:bg-[var(--bg)] /80 text-[var(--ink)]'
- :'bg-[var(--surface)]/90 hover:bg-[var(--surface)] /80 hover: text-[var(--ink)]'
- } ${draggable ?'cursor-grab active:cursor-grabbing' :''}`}
+ ? ' bg-[var(--acc)]/10 text-[var(--ink)]'
+ :? 'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink)]'
+ : 'bg-[var(--surface)]/90 hover:bg-[var(--surface)] text-[var(--ink)]'
+ } ${draggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
  >
  <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto">
  {/* Drag Handle (when draggable) */}
@@ -169,11 +169,11 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onPlay}
  className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full flex items-center justify-center transition-all cursor-pointer ${
  isPlaying
- ?'bg-[var(--ok)] text-[var(--ink)] scale-105'
- :?'bg-[var(--sunken)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)] group-hover:scale-105'
+ ? 'bg-[var(--ok)] text-[var(--ink)] scale-105'
+ :? 'bg-[var(--sunken)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ : 'bg-[var(--surface)]hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)] group-hover:scale-105'
  }`}
- title={isPlaying ?'Pausar canción' : `Reproducir ${displayTitle}`}
+ title={isPlaying ? 'Pausar canción' : `Reproducir ${displayTitle}`}
  >
  {isPlaying ? (
  <div className="flex items-center gap-0.5">
@@ -211,10 +211,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <span
  className={`truncate text-xs sm:text-sm font-semibold tracking-tight ${
  isPlayingCurrent
- ??'text-[var(--ok)] font-bold'
- :'text-[var(--ok)] font-bold'
- :?'text-[var(--ink)] hover:text-[var(--tentative)]'
- :'text-[var(--ink-2)] group-hover:text-[var(--ink)]'
+ ?? 'text-[var(--ok)] font-bold'
+ : 'text-[var(--ok)] font-bold'
+ :? 'text-[var(--ink)] hover:text-[var(--tentative)]'
+ : 'text-[var(--ink-2)] group-hover:text-[var(--ink)]'
  }`}
  title={displayTitle}
  >
@@ -230,12 +230,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className={`p-1 rounded-full transition-all cursor-pointer shrink-0 ${
  song.favoritoGeneral
- ?'text-[var(--acc)] hover:text-[var(--acc)]/70'
- :'text-[var(--ink-2)] hover:text-[var(--acc)] opacity-60 hover:opacity-100'
+ ? 'text-[var(--acc)] hover:text-[var(--acc)]/70'
+ : 'text-[var(--ink-2)] hover:text-[var(--acc)] opacity-60 hover:opacity-100'
  }`}
- title={song.favoritoGeneral ?'Quitar de favoritas' :'Marcar como favorita'}
+ title={song.favoritoGeneral ? 'Quitar de favoritas' : 'Marcar como favorita'}
  >
- <Star className={`w-3.5 h-3.5 ${song.favoritoGeneral ?'fill-amber-400' :''}`} />
+ <Star className={`w-3.5 h-3.5 ${song.favoritoGeneral ? 'fill-amber-400' : ''}`} />
  </button>
  </div>
 
@@ -243,12 +243,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <div className="flex items-center gap-1.5 sm:gap-2 mt-1 text-xs flex-wrap">
  {/* Tone & BPM pill */}
  <span
- title={(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ?'Detectado automáticamente por Iris desde el audio' : undefined}
- className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${?'bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ title={(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? 'Detectado automáticamente por Iris desde el audio' : undefined}
+ className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${? 'bg-[var(--sunken)] text-[var(--ink-2)]'
+ : 'bg-[var(--surface)]text-[var(--ink-2)]'
  }`}
  >
- {song.tonalidad ||'—'}{song.bpm ? ` • ${song.bpm} BPM` :''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ?' 🤖' :''}
+ {song.tonalidad ||'—'}{song.bpm ? ` • ${song.bpm} BPM` : ''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? ' 🤖' : ''}
  </span>
 
  {/* Duration */}
@@ -261,13 +261,13 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <span
  className={`px-2 py-0.5 rounded-full text-[10px] font-medium tracking-wide ${
  song.estadoTema ==='listo'
- ?'bg-[var(--ok)]/15 text-[var(--ink-2)]'
+ ? 'bg-[var(--ok)]/15 text-[var(--ink-2)]'
  : song.estadoTema ==='ensayando'
- ?'bg-[var(--acc)]/15 text-[var(--acc)]/70'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ ? 'bg-[var(--acc)]/15 text-[var(--acc)]/70'
+ : 'bg-[var(--surface)]text-[var(--ink-2)]'
  }`}
  >
- {song.estadoTema ==='listo' ?'Listo' : song.estadoTema ==='ensayando' ?'Ensayando' : song.estadoTema}
+ {song.estadoTema ==='listo' ? 'Listo' : song.estadoTema ==='ensayando' ? 'Ensayando' : song.estadoTema}
  </span>
  )}
 
@@ -283,7 +283,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  {song.audioPrincipalUrl ? (
  <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ink-2)]">
  <Volume2 className="w-2.5 h-2.5" />
- <span>{isDriveAudio ?'Drive' :'Audio'}</span>
+ <span>{isDriveAudio ? 'Drive' : 'Audio'}</span>
  </span>
  ) : ideasCount > 0 ? (
  <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--tentative)]/15 text-[var(--tentative)]/50">
@@ -325,9 +325,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenStudio}
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  ideasCount > 0
- ?'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] /40'
- :?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] /80'
+ ? 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]text-[var(--ink)] /40'
+ :? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
+ : 'bg-[var(--surface)]hover:bg-[var(--surface)]/70 text-[var(--ink)] /80'
  }`}
  title="Abrir Studio de Grabación Multipista & Pistas"
  >
@@ -352,10 +352,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  hasIrisStems(song)
- ?'bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500/30 text-[var(--acc)]/70 /40'
- :' bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
+ ? 'bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500text-[var(--acc)]/70 /40'
+ : ' bg-[var(--surface)] hover:bg-[var(--surface)]text-[var(--acc)]/70 /30'
  }`}
- title={hasIrisStems(song) ?'Ver pistas e instrumentos separados con Iris' :'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
+ title={hasIrisStems(song) ? 'Ver pistas e instrumentos separados con Iris' : 'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span className="hidden sm:inline text-xs font-sans">Iris</span>
@@ -369,13 +369,13 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenMemberNotes}
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
  hasMemberNotes
- ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 /30'
- :?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
+ ? 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 /30'
+ :? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ : 'bg-[var(--surface)]hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
  }`}
  title="Ver y editar notas específicas por miembro de la banda"
  >
- <Users className={`w-3.5 h-3.5 ${hasMemberNotes ?'text-[var(--acc)]' :'text-[var(--ink-2)]'}`} />
+ <Users className={`w-3.5 h-3.5 ${hasMemberNotes ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`} />
  <span className="hidden md:inline text-xs">Notas</span>
  </button>
  )}
@@ -385,8 +385,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <button
  type="button"
  onClick={onEditSong}
- className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
+ className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ : 'bg-[var(--surface)]hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
  }`}
  title="Editar canción (título, tonalidad, BPM, afinación, disco...)"
  >
@@ -426,9 +426,9 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={() => setShowMenu((prev) => !prev)}
  className={`p-1.5 rounded-[var(--r-s)] transition-all cursor-pointer ${
  showMenu
- ?'bg-[var(--surface)] text-[var(--ink)]'
- :?'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:'
- :'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
+ ? 'bg-[var(--surface)] text-[var(--ink)]'
+ :? 'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover: '
+ : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
  }`}
  title="Más opciones del tema"
  aria-label="Más opciones"
@@ -439,8 +439,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  {/* Menu Popover */}
  {showMenu && (
  <div
- className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs ${?'bg-[var(--surface)] text-[var(--ink)] divide-y divide-neutral-100'
- :'bg-[var(--surface)]/95 /80 text-[var(--ink-2)] divide-y divide-neutral-800/60'
+ className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs ${? 'bg-[var(--surface)] text-[var(--ink)] divide-y divide-neutral-100'
+ : 'bg-[var(--surface)]/95 text-[var(--ink-2)] divide-y divide-neutral-800/60'
  }`}
  >
  <div className="py-1 space-y-0.5">
@@ -503,7 +503,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer font-bold"
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
- <span>{hasIrisStems(song) ?'🎛️ Ver Pistas Iris Separadas' :'✨ Procesar con Iris (IA Stems)'}</span>
+ <span>{hasIrisStems(song) ? '🎛️ Ver Pistas Iris Separadas' : '✨ Procesar con Iris (IA Stems)'}</span>
  </button>
  )}
 

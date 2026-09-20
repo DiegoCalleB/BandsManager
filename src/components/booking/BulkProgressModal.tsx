@@ -1,6 +1,6 @@
-import React from'react';
-import { Sparkles, CheckCircle2, AlertTriangle, X, Loader2 } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
+import React from 'react';
+import { Sparkles, CheckCircle2, AlertTriangle, X, Loader2 } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 export interface BulkProgressItem {
  id: string;

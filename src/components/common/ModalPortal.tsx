@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from'react';
-import { createPortal } from'react-dom';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalPortalProps {
  children: React.ReactNode;

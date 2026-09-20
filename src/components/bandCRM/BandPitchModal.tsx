@@ -1,7 +1,7 @@
-import React, { useState } from'react';
-import { BandContact } from'../../types';
-import { Repeat, X, Check, Copy, MessageCircle, Send } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState } from 'react';
+import { BandContact } from '../../types';
+import { Repeat, X, Check, Copy, MessageCircle, Send } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface BandPitchModalProps {
  isOpen: boolean;

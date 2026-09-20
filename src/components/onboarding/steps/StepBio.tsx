@@ -1,5 +1,5 @@
-import React from'react';
-import { FileText, Sparkles, Clock, Users } from'lucide-react';
+import React from 'react';
+import { FileText, Sparkles, Clock, Users } from 'lucide-react';
 
 interface StepBioProps {
  slogan: string;

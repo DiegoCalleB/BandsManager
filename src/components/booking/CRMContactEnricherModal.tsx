@@ -1,8 +1,8 @@
-import React, { useState } from'react';
-import { Lead } from'../../types';
-import { X, Sparkles, CheckCircle2, AlertCircle, Loader2, Globe, Mail, Phone, Instagram } from'lucide-react';
-import { apiFetch } from'../../utils/api';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState } from 'react';
+import { Lead } from '../../types';
+import { X, Sparkles, CheckCircle2, AlertCircle, Loader2, Globe, Mail, Phone, Instagram } from 'lucide-react';
+import { apiFetch } from '../../utils/api';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface CRMContactEnricherModalProps {
  isOpen: boolean;

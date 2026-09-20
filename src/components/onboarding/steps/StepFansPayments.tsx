@@ -1,5 +1,5 @@
-import React, { useRef } from'react';
-import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard, Sparkles } from'lucide-react';
+import React, { useRef } from 'react';
+import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard, Sparkles } from 'lucide-react';
 
 interface StepFansPaymentsProps {
  fanCallToAction: string;

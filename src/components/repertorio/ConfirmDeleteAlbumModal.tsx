@@ -1,6 +1,6 @@
-import React from'react';
-import { Trash2, FolderMinus, X } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
+import React from 'react';
+import { Trash2, FolderMinus, X } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 export interface ConfirmDeleteAlbumData {
  albumName: string;

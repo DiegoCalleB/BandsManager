@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
  X,
  Play,
@@ -23,13 +23,13 @@ import {
  Share2,
  MessageSquare,
  Upload
-} from'lucide-react';
-import { Song, SongSubstituteGuide } from'../types';
-import { formatSongTitle } from'../utils/formatSongTitle';
-import { ShareModal } from'./ShareModal';
-import { ModalPortal } from'./common/ModalPortal';
-import { formatSongShareText } from'../utils/shareUtils';
-import { SongStudioStructureUploadModal } from'./song_studio/SongStudioStructureUploadModal';
+} from 'lucide-react';
+import { Song, SongSubstituteGuide } from '../types';
+import { formatSongTitle } from '../utils/formatSongTitle';
+import { ShareModal } from './ShareModal';
+import { ModalPortal } from './common/ModalPortal';
+import { formatSongShareText } from '../utils/shareUtils';
+import { SongStudioStructureUploadModal } from './song_studio/SongStudioStructureUploadModal';
 import {
  processChordText,
  extractUniqueChords,
@@ -37,7 +37,7 @@ import {
  GuitarChordShape,
  transposeChordToken,
  parseRootNote
-} from'../utils/chordUtils';
+} from '../utils/chordUtils';
 
 interface SongChordsViewerModalProps {
  song: Song;

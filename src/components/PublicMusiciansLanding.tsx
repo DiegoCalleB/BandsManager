@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from'react';
+import React, { useState, useMemo } from 'react';
 import {
  Music,
  Sparkles,
@@ -17,18 +17,18 @@ import {
  ChevronDown,
  ChevronUp,
  Sliders
-} from'lucide-react';
+} from 'lucide-react';
 import { 
  FanFormLanguage, 
  DEFAULT_FAN_FORM_LANGUAGE, 
  FAN_FORM_LANGUAGES, 
  isFanFormLanguage,
  idiomasDisponiblesParaConcierto
-} from'../i18n/fansTranslations';
+} from '../i18n/fansTranslations';
 import { 
  getMusiciansTranslations, 
  MusiciansLandingDict 
-} from'../i18n/musiciansTranslations';
+} from '../i18n/musiciansTranslations';
 
 export const PublicMusiciansLanding: React.FC = () => {
  // 1. Detect language from query params or browser

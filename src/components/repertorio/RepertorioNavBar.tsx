@@ -1,13 +1,13 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import { 
  Music, Layers, Disc3, Plus, ImagePlus, ChevronDown, 
  Check, HelpCircle
-} from'lucide-react';
-import { ThemeColors, Setlist } from'../../types';
-import { ModuleTutorialTrigger } from'../common/ModuleTutorialTrigger';
+} from 'lucide-react';
+import { ThemeColors, Setlist } from '../../types';
+import { ModuleTutorialTrigger } from '../common/ModuleTutorialTrigger';
 
 interface RepertorioNavBarProps {
- colors: ThemeColors;: boolean;
+ colors: ThemeColors
  activeTab:'catalogo' |'setlists';
  setActiveTab: (tab:'catalogo' |'setlists') => void;
  catalogoViewMode:'albumes' |'canciones';

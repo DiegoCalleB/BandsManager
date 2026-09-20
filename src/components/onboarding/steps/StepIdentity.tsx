@@ -1,7 +1,7 @@
-import React, { useRef } from'react';
-import { Guitar, Upload, Camera, Loader2, Sparkles, Globe, Type, Check } from'lucide-react';
-import { BAND_FONT_OPTIONS, getFontFamilyById } from'../../../config/bandFonts';
-import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from'../../../context/LanguageContext';
+import React, { useRef } from 'react';
+import { Guitar, Upload, Camera, Loader2, Sparkles, Globe, Type, Check } from 'lucide-react';
+import { BAND_FONT_OPTIONS, getFontFamilyById } from '../../../config/bandFonts';
+import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from '../../../context/LanguageContext';
 
 interface StepIdentityProps {
  localBandName: string;

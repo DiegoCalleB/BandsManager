@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useRef } from'react';
-import { motion, AnimatePresence } from'motion/react';
-import { Rehearsal, Concert, ThemeColors, BookingCampaign, KeyContactItem, TechnicalLogistics, CierreMaterialItem, MerchBoloItem, MerchControlBolo } from'../types';
-import DirectionsCard from'./DirectionsCard';
-import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud, ChevronDown, Video, Handshake, Bell, Send, Loader2, List, CalendarDays, Maximize2, Minimize2, MessageCircle, MessageSquare, Share2, AlertTriangle, Thermometer, Edit, Phone, Wrench, ShieldCheck, Truck, Volume2, Zap, CheckCircle2, RotateCcw, UserCheck, Layers, ArrowUpRight, Shirt, Coins, CreditCard, Banknote, Calculator, ShoppingBag, Tag } from'lucide-react';
-import { EventWeatherCard } from'./calendar/EventWeatherCard';
-import { CalendarWeatherBadge, AnimatedWeatherIcon } from'./calendar/AnimatedWeatherIcon';
-import { getCachedEventWeatherAlerts, WeatherAlert } from'../services/weatherService';
-import QRCode from'react-qr-code';
-import { ModalPortal } from'./common/ModalPortal';
-import { api } from'../services/api';
-import { apiFetch } from'../utils/api';
-import { triggerNativeMobileNotification } from'../utils/webPush';
-import { FAN_FORM_LANGUAGES } from'../i18n/fansTranslations';
-import { normalizePlan, hasModuleAccess } from'../utils/planPermissions';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Rehearsal, Concert, ThemeColors, BookingCampaign, KeyContactItem, TechnicalLogistics, CierreMaterialItem, MerchBoloItem, MerchControlBolo } from '../types';
+import DirectionsCard from './DirectionsCard';
+import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud, ChevronDown, Video, Handshake, Bell, Send, Loader2, List, CalendarDays, Maximize2, Minimize2, MessageCircle, MessageSquare, Share2, AlertTriangle, Thermometer, Edit, Phone, Wrench, ShieldCheck, Truck, Volume2, Zap, CheckCircle2, RotateCcw, UserCheck, Layers, ArrowUpRight, Shirt, Coins, CreditCard, Banknote, Calculator, ShoppingBag, Tag } from 'lucide-react';
+import { EventWeatherCard } from './calendar/EventWeatherCard';
+import { CalendarWeatherBadge, AnimatedWeatherIcon } from './calendar/AnimatedWeatherIcon';
+import { getCachedEventWeatherAlerts, WeatherAlert } from '../services/weatherService';
+import QRCode from 'react-qr-code';
+import { ModalPortal } from './common/ModalPortal';
+import { api } from '../services/api';
+import { apiFetch } from '../utils/api';
+import { triggerNativeMobileNotification } from '../utils/webPush';
+import { FAN_FORM_LANGUAGES } from '../i18n/fansTranslations';
+import { normalizePlan, hasModuleAccess } from '../utils/planPermissions';
 import { 
  getCalendarDefaultMonths, 
  setCalendarDefaultMonths, 
@@ -22,13 +22,13 @@ import {
  detectDeviceType, 
  CalendarMonthsView, 
  DeviceType 
-} from'../utils/calendarViewPreferences';
-import { useModuleTutorial } from'../hooks/useModuleTutorial';
-import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
-import { ModuleTutorialTrigger } from'./common/ModuleTutorialTrigger';
-import { SetlistPerformanceView } from'./SetlistPerformanceView';
-import { HolidayDateWarning } from'./common/HolidayDateWarning';
-import { PublicoSilhouette } from'./ui/PublicoSilhouette';
+} from '../utils/calendarViewPreferences';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+import { SetlistPerformanceView } from './SetlistPerformanceView';
+import { HolidayDateWarning } from './common/HolidayDateWarning';
+import { PublicoSilhouette } from './ui/PublicoSilhouette';
 
 interface CalendarViewProps {
  colors: ThemeColors;

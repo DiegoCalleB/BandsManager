@@ -1,9 +1,9 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import { 
  Plus, Zap, ListPlus, Check, X, ChevronDown, Sparkles 
-} from'lucide-react';
-import { Song, Setlist, SetlistShortcut } from'../../types';
-import { formatSongTitle } from'../../utils/formatSongTitle';
+} from 'lucide-react';
+import { Song, Setlist, SetlistShortcut } from '../../types';
+import { formatSongTitle } from '../../utils/formatSongTitle';
 
 interface SetlistAddBarProps {
  activeSetlist: Setlist;
@@ -33,7 +33,7 @@ interface SetlistAddBarProps {
  setNewShortcutLabel: (val: string) => void;
  newShortcutMinutes: number;
  setNewShortcutMinutes: (val: number) => void;
- handleCreateShortcut: () => void;: boolean;
+ handleCreateShortcut: () => void
 }
 
 export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({

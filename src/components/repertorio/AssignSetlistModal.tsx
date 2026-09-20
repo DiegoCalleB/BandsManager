@@ -1,12 +1,12 @@
-import React from'react';
-import { X } from'lucide-react';
-import { ThemeColors, Setlist, Concert, Rehearsal } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
+import React from 'react';
+import { X } from 'lucide-react';
+import { ThemeColors, Setlist, Concert, Rehearsal } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 
 interface AssignSetlistModalProps {
  assigningSetlist: Setlist | null;
- colors: ThemeColors;: boolean;
+ colors: ThemeColors
  concerts: Concert[];
  rehearsals: Rehearsal[];
  selectedConcertToAssign: string;

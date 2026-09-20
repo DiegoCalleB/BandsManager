@@ -1,7 +1,7 @@
-import React, { useState } from'react';
-import { Target, CheckCircle2, AlertCircle } from'lucide-react';
-import { calculateLeadReliability } from'../../utils/leadReliability';
-import { Lead, BandContact } from'../../types';
+import React, { useState } from 'react';
+import { Target, CheckCircle2, AlertCircle } from 'lucide-react';
+import { calculateLeadReliability } from '../../utils/leadReliability';
+import { Lead, BandContact } from '../../types';
 
 interface ReliabilityBadgeProps {
  item: Lead | BandContact;

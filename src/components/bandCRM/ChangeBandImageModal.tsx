@@ -1,9 +1,9 @@
-import React, { useState } from'react';
-import { X, Upload, Sparkles, Link as LinkIcon, Trash2, Camera, Loader2, Check } from'lucide-react';
-import { BandContact } from'../../types';
-import { apiFetch } from'../../utils/api';
-import { uploadFileToServer } from'../../utils/audioStorage';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState } from 'react';
+import { X, Upload, Sparkles, Link as LinkIcon, Trash2, Camera, Loader2, Check } from 'lucide-react';
+import { BandContact } from '../../types';
+import { apiFetch } from '../../utils/api';
+import { uploadFileToServer } from '../../utils/audioStorage';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface ChangeBandImageModalProps {
  band: BandContact | null;

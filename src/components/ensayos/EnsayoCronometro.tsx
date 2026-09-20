@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from'react';
-import { Play, Pause, RotateCcw, Clock, Zap, AlertCircle } from'lucide-react';
-import { ThemeColors } from'../../types';
+import React, { useState, useEffect, useRef } from 'react';
+import { Play, Pause, RotateCcw, Clock, Zap, AlertCircle } from 'lucide-react';
+import { ThemeColors } from '../../types';
 
 interface EnsayoCronometroProps {
  totalEstimatedMin?: number;

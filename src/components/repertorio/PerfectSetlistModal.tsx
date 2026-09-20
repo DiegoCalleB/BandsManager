@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from'react';
-import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from'lucide-react';
-import { IndexChange, adjustPosition1 } from'../../utils/setlistActionPositionAdjust';
-import { EnergyChart, EnergyChartPoint, EnergyChartZone } from'./EnergyChart';
+import React, { useState, useEffect } from 'react';
+import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
+import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
+import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 
 /** Feedback opcional que el usuario deja al pedir un plan (nuevo o"Regenerar"): valorar con
  * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los

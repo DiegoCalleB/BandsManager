@@ -1,7 +1,7 @@
-import React, { useState } from'react';
-import { X, Loader, AlertCircle, ImagePlus, Music, ListChecks } from'lucide-react';
-import { Song, Setlist, SetlistItem } from'../../types';
-import { getAuthHeaders } from'../../services/api';
+import React, { useState } from 'react';
+import { X, Loader, AlertCircle, ImagePlus, Music, ListChecks } from 'lucide-react';
+import { Song, Setlist, SetlistItem } from '../../types';
+import { getAuthHeaders } from '../../services/api';
 
 type SongAction ='link_matched' |'link_other' |'create_new' |'discard';
 

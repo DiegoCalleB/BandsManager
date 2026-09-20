@@ -1,9 +1,9 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import { 
  X, Download, Printer, Sparkles, Check, Image as ImageIcon,
  FileCode, FileText, Layers, ShieldCheck, Palette
-} from'lucide-react';
-import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from'../utils/qrExport';
+} from 'lucide-react';
+import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
 
 interface QrExportModalProps {
  isOpen: boolean;

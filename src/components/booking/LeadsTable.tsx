@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from'react';
-import { Lead, LeadStatus, LeadType } from'../../types';
-import { LeadHealthBadge } from'./LeadHealthBadge';
-import { VerifiedBadge } from'../common/VerifiedBadge';
-import { ReliabilityBadge } from'../common/ReliabilityBadge';
-import { FavoriteButton } from'../common/FavoriteButton';
-import { isLeadVerificado } from'../../utils/leadReliability';
-import { MessageCircle, PhoneCall, CheckCircle2, Eye, Sparkles, Trash2, Camera, CheckSquare, Square, MinusSquare, AlertCircle } from'lucide-react';
-import { ChangeLeadImageModal } from'./ChangeLeadImageModal';
-import { LeadAvatar } from'./LeadAvatar';
-import { useEmailValidation, getEmailStatus, isBouncedLead } from'../../hooks/useEmailValidation';
+import React, { useState, useRef, useEffect } from 'react';
+import { Lead, LeadStatus, LeadType } from '../../types';
+import { LeadHealthBadge } from './LeadHealthBadge';
+import { VerifiedBadge } from '../common/VerifiedBadge';
+import { ReliabilityBadge } from '../common/ReliabilityBadge';
+import { FavoriteButton } from '../common/FavoriteButton';
+import { isLeadVerificado } from '../../utils/leadReliability';
+import { MessageCircle, PhoneCall, CheckCircle2, Eye, Sparkles, Trash2, Camera, CheckSquare, Square, MinusSquare, AlertCircle } from 'lucide-react';
+import { ChangeLeadImageModal } from './ChangeLeadImageModal';
+import { LeadAvatar } from './LeadAvatar';
+import { useEmailValidation, getEmailStatus, isBouncedLead } from '../../hooks/useEmailValidation';
 
 interface LeadsTableProps {
  leads: Lead[];

@@ -1,11 +1,11 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import { 
  X, Smartphone, Monitor, Globe2, Sparkles, RefreshCw, 
  Eye, CheckCircle2, Calendar, FileText
-} from'lucide-react';
-import { FansLanding } from'./FansLanding';
-import { Concert, EPKConfig } from'../types';
-import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, FAN_FORM_TRANSLATIONS, interpolate } from'../i18n/fansTranslations';
+} from 'lucide-react';
+import { FansLanding } from './FansLanding';
+import { Concert, EPKConfig } from '../types';
+import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, FAN_FORM_TRANSLATIONS, interpolate } from '../i18n/fansTranslations';
 
 interface FansLandingPreviewModalProps {
  isOpen: boolean;

@@ -1,13 +1,13 @@
-import React, { useState } from'react';
-import { ThemeColors, SocialMetric, EPKConfig } from'../../types';
-import { GrowthPlan, ChannelRecommendation, ActionItem } from'../../utils/growthPlanEngine';
-import { BandProfileArchetype } from'../../utils/bandGrowthTiers';
+import React, { useState } from 'react';
+import { ThemeColors, SocialMetric, EPKConfig } from '../../types';
+import { GrowthPlan, ChannelRecommendation, ActionItem } from '../../utils/growthPlanEngine';
+import { BandProfileArchetype } from '../../utils/bandGrowthTiers';
 import {
  TrendingUp, Sparkles, Target, Calendar, CheckCircle2, Circle, 
  Instagram, Youtube, Video, Music2, AlertCircle, ArrowUpRight,
  Flame, Zap, Compass, Check, Copy, Share2, Award, Clock, Lightbulb,
  ChevronRight, RefreshCw, Layers, Sliders, ShieldCheck, Users, Eye, HelpCircle
-} from'lucide-react';
+} from 'lucide-react';
 
 interface SocialGrowthPlanViewProps {
  colors: ThemeColors;: boolean;

@@ -1,7 +1,7 @@
-import React, { useState } from'react';
-import { ThemeColors, Payment } from'../../types';
-import { X, Plus } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState } from 'react';
+import { ThemeColors, Payment } from '../../types';
+import { X, Plus } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface AddTransactionModalProps {
  isOpen: boolean;

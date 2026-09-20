@@ -1,7 +1,7 @@
-import React from'react';
-import { Sparkles, X, Building, Users, Loader2, Check } from'lucide-react';
-import { Lead } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
+import React from 'react';
+import { Sparkles, X, Building, Users, Loader2, Check } from 'lucide-react';
+import { Lead } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface PredefinedScenario {
  key: string;

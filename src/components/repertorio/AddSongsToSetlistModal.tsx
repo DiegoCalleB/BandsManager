@@ -1,16 +1,16 @@
-import React, { useMemo, useState } from'react';
-import { X, Search, Check, ListPlus, Star } from'lucide-react';
-import { Song, ThemeColors } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
-import { formatSecondsToMmSs } from'../../utils/repertorioUtils';
-import { formatSongTitle } from'../../utils/formatSongTitle';
+import React, { useMemo, useState } from 'react';
+import { X, Search, Check, ListPlus, Star } from 'lucide-react';
+import { Song, ThemeColors } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
+import { formatSecondsToMmSs } from '../../utils/repertorioUtils';
+import { formatSongTitle } from '../../utils/formatSongTitle';
 
 interface AddSongsToSetlistModalProps {
  isOpen: boolean;
  songs: Song[];
  existingSongIds: string[];
- colors: ThemeColors;: boolean;
+ colors: ThemeColors
  onClose: () => void;
  onAddSongs: (songIds: string[]) => void;
 }

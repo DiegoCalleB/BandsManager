@@ -1,5 +1,5 @@
-import React, { useState, useRef } from'react';
-import * as XLSX from'xlsx';
+import React, { useState, useRef } from 'react';
+import * as XLSX from 'xlsx';
 import {
  FileSpreadsheet,
  Upload,
@@ -18,10 +18,10 @@ import {
  Check,
  Search,
  Filter
-} from'lucide-react';
-import { Lead, LeadType } from'../../types';
-import { apiFetch } from'../../utils/api';
-import { ModalPortal } from'../common/ModalPortal';
+} from 'lucide-react';
+import { Lead, LeadType } from '../../types';
+import { apiFetch } from '../../utils/api';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface ExcelImportModalProps {
  isOpen: boolean;

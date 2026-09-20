@@ -1,16 +1,16 @@
-import React, { useState, useMemo, useEffect } from'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
  Calendar, Clock, MapPin, Users, Plus, Disc3, Mic, ListOrdered, 
  Radio, CheckCircle2, ChevronDown, History, Sparkles, Filter, Edit3, Trash2
-} from'lucide-react';
-import { Rehearsal, Song, Setlist, Concert, ThemeColors } from'../../types';
-import { EnsayoCronometro } from'./EnsayoCronometro';
-import { OrdenDelDiaTab } from'./OrdenDelDiaTab';
-import { ModoLocalEnVivoTab } from'./ModoLocalEnVivoTab';
-import { GrabacionActaTab } from'./GrabacionActaTab';
-import { ConvocarEnsayoModal } from'./ConvocarEnsayoModal';
-import { api } from'../../services/api';
-import { SAMPLER_SONGS, SAMPLER_SETLISTS } from'../../config/sampleRepertoire';
+} from 'lucide-react';
+import { Rehearsal, Song, Setlist, Concert, ThemeColors } from '../../types';
+import { EnsayoCronometro } from './EnsayoCronometro';
+import { OrdenDelDiaTab } from './OrdenDelDiaTab';
+import { ModoLocalEnVivoTab } from './ModoLocalEnVivoTab';
+import { GrabacionActaTab } from './GrabacionActaTab';
+import { ConvocarEnsayoModal } from './ConvocarEnsayoModal';
+import { api } from '../../services/api';
+import { SAMPLER_SONGS, SAMPLER_SETLISTS } from '../../config/sampleRepertoire';
 
 interface EnsayosManagerProps {
  rehearsals: Rehearsal[];

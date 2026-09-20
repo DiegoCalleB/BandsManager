@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from'react';
-import { EPKConfig, Lead, Concert, Rehearsal, SocialMetric, Fan, Tour, User } from'../../types';
+import React, { useState, useEffect } from 'react';
+import { EPKConfig, Lead, Concert, Rehearsal, SocialMetric, Fan, Tour, User } from '../../types';
 import { 
  Sparkles, CheckCircle2, AlertCircle, ArrowRight, ShieldCheck, 
  HelpCircle, ChevronDown, ChevronUp, Bot, FileText, Disc3, Calendar,
  Activity, Heart, Truck, X, BookOpen, Layers, Sliders, Clock, Mail, Key
-} from'lucide-react';
-import { api } from'../../services/api';
+} from 'lucide-react';
+import { api } from '../../services/api';
 
 interface ProfileCompletenessCardProps {
  epkConfig?: Partial<EPKConfig>;

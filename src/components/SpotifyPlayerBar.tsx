@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const SILENT_AUDIO_URI ='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-import { Song, ThemeColors } from'../types';
+import { Song, ThemeColors } from '../types';
 import {
  Play, Pause, SkipBack, SkipForward, Repeat, Volume2, VolumeX,
  ExternalLink, Disc, Sliders, X, Flame, Music, Sparkles, FileText, ChevronUp, ChevronDown
-} from'lucide-react';
-import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl, fileToBase64 } from'../utils/audioStorage';
-import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from'../utils/crossfade';
-import { transposeChordToken, getSemitoneDifference } from'../utils/chordUtils';
-import { api } from'../services/api';
-import { useTonePitchShift } from'../hooks/useTonePitchShift';
+} from 'lucide-react';
+import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl, fileToBase64 } from '../utils/audioStorage';
+import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
+import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils';
+import { api } from '../services/api';
+import { useTonePitchShift } from '../hooks/useTonePitchShift';
 
 interface SpotifyPlayerBarProps {
  song: Song | null;

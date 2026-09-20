@@ -1,9 +1,9 @@
-import React, { useState } from'react';
-import { ShieldCheck, Sparkles, X, Lock, Check, ExternalLink, ArrowRight } from'lucide-react';
-import { PlanDefinition, getPlanDefinition, normalizePlan, getPlanLimits } from'../utils/planPermissions';
-import { CheckoutButton } from'./CheckoutButton';
-import { User } from'../types';
-import { ModalPortal } from'./common/ModalPortal';
+import React, { useState } from 'react';
+import { ShieldCheck, Sparkles, X, Lock, Check, ExternalLink, ArrowRight } from 'lucide-react';
+import { PlanDefinition, getPlanDefinition, normalizePlan, getPlanLimits } from '../utils/planPermissions';
+import { CheckoutButton } from './CheckoutButton';
+import { User } from '../types';
+import { ModalPortal } from './common/ModalPortal';
 
 interface PlanLimitModalProps {
  isOpen: boolean;

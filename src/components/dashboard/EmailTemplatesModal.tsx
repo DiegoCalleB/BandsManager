@@ -1,9 +1,9 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import { 
  FileText, Copy, Check, X, Sparkles, Send, Radio, Building2, 
  RefreshCw, MessageSquareCode, HelpCircle 
-} from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
+} from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface EmailTemplatesModalProps {
  isOpen: boolean;

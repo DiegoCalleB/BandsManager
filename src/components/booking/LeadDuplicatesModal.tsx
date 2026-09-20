@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from'react';
+import React, { useState, useMemo } from 'react';
 import {
  X,
  Copy,
@@ -15,17 +15,17 @@ import {
  ExternalLink,
  ShieldCheck,
  Check
-} from'lucide-react';
-import { Lead } from'../../types';
+} from 'lucide-react';
+import { Lead } from '../../types';
 import {
  findDuplicateLeads,
  DuplicateGroup,
  DuplicateMatchReason,
  mergeTwoLeads,
  calculateLeadCompletenessScore
-} from'../../utils/duplicateLeads';
-import { ModalPortal } from'../common/ModalPortal';
-import { apiFetch } from'../../utils/api';
+} from '../../utils/duplicateLeads';
+import { ModalPortal } from '../common/ModalPortal';
+import { apiFetch } from '../../utils/api';
 
 interface LeadDuplicatesModalProps {
  isOpen: boolean;

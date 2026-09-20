@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from'react';
-import { X, Mic, MicOff, Volume2, VolumeX, Guitar, Zap, Radio, Check, RefreshCw, AlertCircle } from'lucide-react';
-import { ThemeColors } from'../types';
-import { ModalPortal } from'./common/ModalPortal';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Mic, MicOff, Volume2, VolumeX, Guitar, Zap, Radio, Check, RefreshCw, AlertCircle } from 'lucide-react';
+import { ThemeColors } from '../types';
+import { ModalPortal } from './common/ModalPortal';
 
 interface TunerModalProps {
  isOpen: boolean;

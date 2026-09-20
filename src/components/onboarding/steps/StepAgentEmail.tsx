@@ -1,5 +1,5 @@
-import React from'react';
-import { Sparkles, Mail, ShieldCheck, Check, Send, Bot, Lock } from'lucide-react';
+import React from 'react';
+import { Sparkles, Mail, ShieldCheck, Check, Send, Bot, Lock } from 'lucide-react';
 
 interface StepAgentEmailProps {
  signatureName: string;

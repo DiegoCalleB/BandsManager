@@ -1,5 +1,5 @@
-import React from'react';
-import { Globe, Phone } from'lucide-react';
+import React from 'react';
+import { Globe, Phone } from 'lucide-react';
 
 export interface SocialLinks {
  spotify?: string;

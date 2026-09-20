@@ -1,14 +1,14 @@
-import React, { useState, useMemo } from'react';
-import { ThemeColors, Payment, Concert, ConcertExpenseBreakdown } from'../types';
+import React, { useState, useMemo } from 'react';
+import { ThemeColors, Payment, Concert, ConcertExpenseBreakdown } from '../types';
 import {
  TrendingUp, TrendingDown, DollarSign, Plus, Filter, Search, X,
  CheckCircle2, AlertCircle, RefreshCw, Trash2, Calendar, FileText, Check, ArrowRight,
  Calculator, Edit3, AlertTriangle, ShieldCheck
-} from'lucide-react';
-import { PublicoSilhouette } from'./ui/PublicoSilhouette';
-import { FinanceSummaryCards } from'./finanzas/FinanceSummaryCards';
-import { AddTransactionModal } from'./finanzas/AddTransactionModal';
-import { calculateFinancialSummary } from'../utils/financeUtils';
+} from 'lucide-react';
+import { PublicoSilhouette } from './ui/PublicoSilhouette';
+import { FinanceSummaryCards } from './finanzas/FinanceSummaryCards';
+import { AddTransactionModal } from './finanzas/AddTransactionModal';
+import { calculateFinancialSummary } from '../utils/financeUtils';
 
 interface FinanzasProps {
  colors: ThemeColors;

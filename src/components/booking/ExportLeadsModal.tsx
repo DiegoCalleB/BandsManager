@@ -1,6 +1,6 @@
-import React, { useState } from'react';
-import { X, Download, FileSpreadsheet, FileCode, Filter, Layers, CheckSquare } from'lucide-react';
-import { Lead } from'../../types';
+import React, { useState } from 'react';
+import { X, Download, FileSpreadsheet, FileCode, Filter, Layers, CheckSquare } from 'lucide-react';
+import { Lead } from '../../types';
 
 interface ExportLeadsModalProps {
  isOpen: boolean;

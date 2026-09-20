@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from'react';
-import { ThemeColors, SocialPost, SocialMetric } from'../types';
-import { apiFetch } from'../utils/api';
+import React, { useState, useEffect } from 'react';
+import { ThemeColors, SocialPost, SocialMetric } from '../types';
+import { apiFetch } from '../utils/api';
 import { 
  Sparkles, Play, Flame, Heart, MessageCircle, Share2, Music, 
  Upload, Layers, CheckCircle2, RotateCcw, AlertCircle, RefreshCw,
  Video, Calendar, Clock, Trash2, Film, Check, ExternalLink, Gauge, ChevronRight, ChevronLeft,
  Plus, TrendingUp, LineChart, Instagram, Youtube, Edit, Table,
  Volume2, VolumeX, Maximize2, X, Star, Bookmark, ThumbsUp
-} from'lucide-react';
-import { PublicoSilhouette } from'./ui/PublicoSilhouette';
+} from 'lucide-react';
+import { PublicoSilhouette } from './ui/PublicoSilhouette';
 
 interface ReelsCenterProps {
  colors: ThemeColors;
@@ -34,8 +34,8 @@ import {
  defaultScheduleDate,
  validateScheduleReadiness,
  getCadenceWarnings
-} from'../utils/reelsUtils';
-import { BandToneModal, ToneAnalysisData } from'./bandCRM/BandToneModal';
+} from '../utils/reelsUtils';
+import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
 
 export type { ReelCard, HighlightClip, OptimalTime };
 

@@ -1,7 +1,7 @@
-import React, { useState } from'react';
-import { X, Calendar, Clock, MapPin, Users, Disc3, FileText, CheckSquare, Plus, Sparkles } from'lucide-react';
-import { Rehearsal, ThemeColors, Setlist } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState } from 'react';
+import { X, Calendar, Clock, MapPin, Users, Disc3, FileText, CheckSquare, Plus, Sparkles } from 'lucide-react';
+import { Rehearsal, ThemeColors, Setlist } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface ConvocarEnsayoModalProps {
  isOpen: boolean;

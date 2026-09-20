@@ -1,25 +1,25 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import { 
  Settings, Plus, RotateCcw, Save, Trash2, ArrowUp, ArrowDown, Maximize2, Minimize2, 
  Eye, Check, Calendar, Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, LayoutGrid, X,
  GripVertical, Zap, TrendingUp, Info, Smartphone, Monitor
-} from'lucide-react';
+} from 'lucide-react';
 import { 
  DashboardWidgetConfig, DEFAULT_DASHBOARD_WIDGETS, AVAILABLE_MODULE_WIDGETS, 
  WidgetType 
-} from'../../types/dashboardWidgets';
-import { CalendarWidget } from'./widgets/CalendarWidget';
+} from '../../types/dashboardWidgets';
+import { CalendarWidget } from './widgets/CalendarWidget';
 import { 
  CrmPipelineWidget, RepertorioWidget, FinancesWidget, SocialFansWidget, 
  EpkStatusWidget, AiAgentWidget, TourStatusWidget 
-} from'./widgets/ModuleWidgets';
+} from './widgets/ModuleWidgets';
 import { 
  RepertorioEnergyChartWidget, BookingFunnelChartWidget, FinancesChartWidget, SocialFansGrowthWidget 
-} from'./widgets/ChartWidgets';
-import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from'../../types';
-import { api } from'../../services/api';
-import { hasModuleAccess } from'../../utils/planPermissions';
-import { AiSupportWidget, AiUsageCard } from'./AiUsageSupportWidget';
+} from './widgets/ChartWidgets';
+import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../types';
+import { api } from '../../services/api';
+import { hasModuleAccess } from '../../utils/planPermissions';
+import { AiSupportWidget, AiUsageCard } from './AiUsageSupportWidget';
 
 export interface DashboardWidgetGridProps {
  currentUser?: any;

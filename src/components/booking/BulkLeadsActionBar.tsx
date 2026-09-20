@@ -1,11 +1,11 @@
-import React, { useState } from'react';
-import { Lead, LeadStatus } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState } from 'react';
+import { Lead, LeadStatus } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 import { 
  CheckSquare, MinusSquare, Square, X, ChevronDown, Sparkles, Search, Download, 
  Trash2, Star, CheckCircle2, Send, Clock, ArrowRight, 
  MessageSquare, ShieldAlert
-} from'lucide-react';
+} from 'lucide-react';
 
 interface BulkLeadsActionBarProps {
  selectedCount: number;

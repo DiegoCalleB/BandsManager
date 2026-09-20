@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from'react';
-import { Lead } from'../../types';
-import { Camera } from'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Lead } from '../../types';
+import { Camera } from 'lucide-react';
 
 interface LeadAvatarProps {
  lead: Partial<Lead>;

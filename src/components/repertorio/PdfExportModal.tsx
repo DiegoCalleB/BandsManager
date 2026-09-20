@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo, useRef, useState } from'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
  Printer, X, Users, User, FileText, Settings, Eye, Check,
  ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Edit3, Music, Sparkles, Image as ImageIcon,
  Sliders, Type, Palette, ShieldCheck, Zap
-} from'lucide-react';
-import { Setlist, Song, ThemeColors } from'../../types';
-import { BandMemberOption, resolveBandMembers, getSongMemberNote } from'../../utils/repertorioUtils';
-import { MemberNotesModal } from'./MemberNotesModal';
-import { ModalPortal } from'../common/ModalPortal';
-import { fitStackedNoteSegments, makeCanvasMeasurer, mmToPx, deterministicRotationDeg, deterministicOffsetPx, NoteSegment, NoteLine, StackedFitResult } from'../../utils/textFit';
-import { computeAutoFitPlan, computeExpandedPlan, tryFitInPageCount, MeasureRangeFn } from'../../utils/setlistAutoFit';
+} from 'lucide-react';
+import { Setlist, Song, ThemeColors } from '../../types';
+import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
+import { MemberNotesModal } from './MemberNotesModal';
+import { ModalPortal } from '../common/ModalPortal';
+import { fitStackedNoteSegments, makeCanvasMeasurer, mmToPx, deterministicRotationDeg, deterministicOffsetPx, NoteSegment, NoteLine, StackedFitResult } from '../../utils/textFit';
+import { computeAutoFitPlan, computeExpandedPlan, tryFitInPageCount, MeasureRangeFn } from '../../utils/setlistAutoFit';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -242,7 +242,7 @@ interface PdfExportModalProps {
  isOpen: boolean;
  activeSetlist: Setlist | null;
  activeSetlistMetrics: { formattedTime: string; songCount: number; avgBpm?: number; totalSeconds?: number };
- songs: Song[];: boolean;
+ songs: Song[]
  bandMembers?: BandMemberOption[];
  bandName?: string;
  bandLogoUrl?: string;

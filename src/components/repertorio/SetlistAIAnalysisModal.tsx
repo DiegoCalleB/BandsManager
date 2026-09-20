@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from'react';
-import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move, Printer, Share2, Download } from'lucide-react';
-import html2canvas from'html2canvas';
-import { api } from'../../services/api';
-import { titlesMatch } from'../../utils/songTitleMatch';
-import { EnergyChart, EnergyChartPoint, EnergyChartZone } from'./EnergyChart';
-import { PacingWarning } from'../../utils/energyPacingUtils';
-import { IndexChange, adjustPosition1 } from'../../utils/setlistActionPositionAdjust';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move, Printer, Share2, Download } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import { api } from '../../services/api';
+import { titlesMatch } from '../../utils/songTitleMatch';
+import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
+import { PacingWarning } from '../../utils/energyPacingUtils';
+import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
 
 interface SetlistAIAnalysisModalProps {
  isOpen: boolean;

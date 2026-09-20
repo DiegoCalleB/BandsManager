@@ -1,5 +1,5 @@
-import React, { useRef } from'react';
-import { Layers, Upload, FileText, CheckCircle2, Loader2, Trash2, Check } from'lucide-react';
+import React, { useRef } from 'react';
+import { Layers, Upload, FileText, CheckCircle2, Loader2, Trash2, Check } from 'lucide-react';
 
 interface StepRiderProps {
  riderTecnicoText: string;

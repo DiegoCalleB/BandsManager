@@ -1,11 +1,11 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import { 
  Heart, Flame, Sparkles, MessageCircle, Send, Plus, Trash2, 
  MapPin, Calendar, Music, Instagram, Award, ExternalLink, 
  Check, Share2, Mail, Filter, Search, ShieldCheck, UserCheck,
  Megaphone, Pin, Star
-} from'lucide-react';
-import { Fan, Concert, ThemeColors } from'../../types';
+} from 'lucide-react';
+import { Fan, Concert, ThemeColors } from '../../types';
 
 interface BandAnnouncement {
  id: string;

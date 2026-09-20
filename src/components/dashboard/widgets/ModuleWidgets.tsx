@@ -1,9 +1,9 @@
-import React from'react';
+import React from 'react';
 import { 
  Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, ArrowRight, 
  CheckCircle2, Clock, AlertCircle, Sparkles, QrCode, Disc3, ShieldCheck
-} from'lucide-react';
-import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from'../../../types';
+} from 'lucide-react';
+import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../../types';
 
 export interface ModuleWidgetProps {
  leads?: Lead[];

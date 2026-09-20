@@ -1,7 +1,7 @@
-import React, { useState } from'react';
-import { Calendar, ChevronLeft, ChevronRight, List, Grid, CalendarDays, ArrowRight, Music, Users, MapPin, Clock, Sparkles } from'lucide-react';
-import { Concert, Rehearsal, ThemeColors } from'../../../types';
-import { CalendarWidgetViewMode } from'../../../types/dashboardWidgets';
+import React, { useState } from 'react';
+import { Calendar, ChevronLeft, ChevronRight, List, Grid, CalendarDays, ArrowRight, Music, Users, MapPin, Clock, Sparkles } from 'lucide-react';
+import { Concert, Rehearsal, ThemeColors } from '../../../types';
+import { CalendarWidgetViewMode } from '../../../types/dashboardWidgets';
 
 export interface CalendarWidgetProps {
  concerts: Concert[];

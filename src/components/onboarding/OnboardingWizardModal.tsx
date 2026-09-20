@@ -1,38 +1,38 @@
-import React, { useState, useEffect } from'react';
+import React, { useState, useEffect } from 'react';
 import { 
  Sparkles, Guitar, FileText, Users, Globe, Video, 
  Disc3, Layers, Award, DollarSign, Calendar, Camera, 
  Heart, ArrowRight, ArrowLeft, X, Check, SkipForward 
-} from'lucide-react';
-import { EPKConfig, EPKVideo, Song, Concert, Rehearsal, User } from'../../types';
-import { api } from'../../services/api';
-import { apiFetch } from'../../utils/api';
-import { uploadFileToServer } from'../../utils/audioStorage';
-import { ModalPortal } from'../common/ModalPortal';
-import { normalizePlan } from'../../utils/planPermissions';
-import { markOnboardingCompleted } from'../../utils/userPreferences';
+} from 'lucide-react';
+import { EPKConfig, EPKVideo, Song, Concert, Rehearsal, User } from '../../types';
+import { api } from '../../services/api';
+import { apiFetch } from '../../utils/api';
+import { uploadFileToServer } from '../../utils/audioStorage';
+import { ModalPortal } from '../common/ModalPortal';
+import { normalizePlan } from '../../utils/planPermissions';
+import { markOnboardingCompleted } from '../../utils/userPreferences';
 
 import { 
  SpotifyAlbum, QuickEventItem, 
  ManualSongItem, PressQuoteItem, WizardMemberItem, 
  WizardStepDef 
-} from'./types';
+} from './types';
 
-import { StepLanguage } from'./steps/StepLanguage';
-import { StepIdentity } from'./steps/StepIdentity';
-import { StepBio } from'./steps/StepBio';
-import { StepMembers } from'./steps/StepMembers';
-import { StepSocialsMerch } from'./steps/StepSocialsMerch';
-import { StepVideos } from'./steps/StepVideos';
-import { StepMusicSetlist } from'./steps/StepMusicSetlist';
-import { StepRider } from'./steps/StepRider';
-import { StepPressProof } from'./steps/StepPressProof';
-import { StepBookingConditions } from'./steps/StepBookingConditions';
-import { StepAgentEmail } from'./steps/StepAgentEmail';
-import { StepEvents } from'./steps/StepEvents';
-import { StepPhotos } from'./steps/StepPhotos';
-import { StepFansPayments } from'./steps/StepFansPayments';
-import { StepCompletedCelebration } from'./steps/StepCompletedCelebration';
+import { StepLanguage } from './steps/StepLanguage';
+import { StepIdentity } from './steps/StepIdentity';
+import { StepBio } from './steps/StepBio';
+import { StepMembers } from './steps/StepMembers';
+import { StepSocialsMerch } from './steps/StepSocialsMerch';
+import { StepVideos } from './steps/StepVideos';
+import { StepMusicSetlist } from './steps/StepMusicSetlist';
+import { StepRider } from './steps/StepRider';
+import { StepPressProof } from './steps/StepPressProof';
+import { StepBookingConditions } from './steps/StepBookingConditions';
+import { StepAgentEmail } from './steps/StepAgentEmail';
+import { StepEvents } from './steps/StepEvents';
+import { StepPhotos } from './steps/StepPhotos';
+import { StepFansPayments } from './steps/StepFansPayments';
+import { StepCompletedCelebration } from './steps/StepCompletedCelebration';
 
 export interface OnboardingWizardModalProps {
  isOpen: boolean;

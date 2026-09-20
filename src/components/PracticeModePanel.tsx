@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from'react';
-import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale, ArrowUpDown, Timer, Target, Sliders } from'lucide-react';
-import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from'../types';
-import { resolveAudioUrl } from'../utils/audioStorage';
-import { exportMasterMixAudioBlob, MasterMixTrackInput, computeAutoBalanceVolumes } from'../utils/audioLatency';
-import { matchInstrumentToStemCategory } from'../config/stemInstruments';
-import { apiFetch } from'../utils/api';
-import { useTonePitchShift } from'../hooks/useTonePitchShift';
-import { transposeChordToken } from'../utils/chordUtils';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale, ArrowUpDown, Timer, Target, Sliders } from 'lucide-react';
+import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from '../types';
+import { resolveAudioUrl } from '../utils/audioStorage';
+import { exportMasterMixAudioBlob, MasterMixTrackInput, computeAutoBalanceVolumes } from '../utils/audioLatency';
+import { matchInstrumentToStemCategory } from '../config/stemInstruments';
+import { apiFetch } from '../utils/api';
+import { useTonePitchShift } from '../hooks/useTonePitchShift';
+import { transposeChordToken } from '../utils/chordUtils';
 
 const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
 
@@ -76,7 +76,7 @@ function formatTime(totalSeconds: number): string {
  return `${m}:${String(s).padStart(2,'0')}`;
 }
 
-export default function PracticeModePanel({ song, idea, tracks, currentUser onClose, onOpenStudio, onApplyAsMainChords }: PracticeModePanelProps) {
+export default function PracticeModePanel({ song, idea, tracks, currentUser, onClose, onOpenStudio, onApplyAsMainChords }: PracticeModePanelProps) {
  const storageKey = useMemo(() => buildStorageKey(song, idea, currentUser), [song, idea, currentUser]);
 
  const [overrides, setOverrides] = useState<Record<string, TrackOverride>>({});
@@ -514,7 +514,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser onCl
  {tracks.map(tr => (
  <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={effectiveSemitones} />
  ))}
- <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80
+ <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
  {/* Header */}
  <div className={`px-5 py-4 flex items-center justify-between ${' bg-[var(--bg)]'}`}>

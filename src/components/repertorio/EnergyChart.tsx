@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo } from'react';
-import { ResponsiveContainer, ComposedChart, Area, Line, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea, ReferenceLine } from'recharts';
-import { titlesMatch } from'../../utils/songTitleMatch';
-import { getEnergyInfo } from'../../utils/energyPacingUtils';
-import { EvaluacionUnion } from'../../utils/setlistCompatibility';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { ResponsiveContainer, ComposedChart, Area, Line, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
+import { titlesMatch } from '../../utils/songTitleMatch';
+import { getEnergyInfo } from '../../utils/energyPacingUtils';
+import { EvaluacionUnion } from '../../utils/setlistCompatibility';
 
 export interface EnergyChartPoint {
  idx: number;

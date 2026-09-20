@@ -1,8 +1,8 @@
-import React from'react';
-import { ThemeColors } from'../../types';
-import { BookingMetrics } from'../../utils/bookingUtils';
-import { Building2, CheckCircle2, MessageSquare, TrendingUp } from'lucide-react';
-import { useLanguage } from'../../context/LanguageContext';
+import React from 'react';
+import { ThemeColors } from '../../types';
+import { BookingMetrics } from '../../utils/bookingUtils';
+import { Building2, CheckCircle2, MessageSquare, TrendingUp } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface BookingMetricsCardsProps {
  colors: ThemeColors;

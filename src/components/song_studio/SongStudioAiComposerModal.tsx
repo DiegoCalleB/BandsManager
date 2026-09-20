@@ -1,7 +1,7 @@
-import React, { useState } from'react';
-import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
-import { Song, SongAudioIdea } from'../../types';
+import React, { useState } from 'react';
+import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
+import { Song, SongAudioIdea } from '../../types';
 
 interface SongStudioAiComposerModalProps {
  isOpen: boolean;

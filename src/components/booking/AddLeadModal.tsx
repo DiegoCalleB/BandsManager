@@ -1,8 +1,8 @@
-import React, { useState } from'react';
-import { X, Building2, Radio, Sparkles, Loader2, Upload, Search, Briefcase } from'lucide-react';
-import { LeadType } from'../../types';
-import { apiFetch } from'../../utils/api';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState } from 'react';
+import { X, Building2, Radio, Sparkles, Loader2, Upload, Search, Briefcase } from 'lucide-react';
+import { LeadType } from '../../types';
+import { apiFetch } from '../../utils/api';
+import { ModalPortal } from '../common/ModalPortal';
 
 export interface NewLeadDataState {
  nombre_sala: string;

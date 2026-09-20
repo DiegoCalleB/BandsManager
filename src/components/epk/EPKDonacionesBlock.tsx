@@ -1,4 +1,4 @@
-import React from'react';
+import React from 'react';
 import {
  Heart,
  Eye,
@@ -10,12 +10,12 @@ import {
  ExternalLink,
  Sparkles,
  Loader2
-} from'lucide-react';
-import { EPKConfig, BandMember } from'../../types';
-import { EPKBlockWrapper } from'./EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
-import { PayPalLogo, BizumLogo } from'../SocialPlatformsList';
-import { tieneTraduccion, traduccionDesactualizada } from'../../utils/epkTraducciones';
+} from 'lucide-react';
+import { EPKConfig, BandMember } from '../../types';
+import { EPKBlockWrapper } from './EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+import { PayPalLogo, BizumLogo } from '../SocialPlatformsList';
+import { tieneTraduccion, traduccionDesactualizada } from '../../utils/epkTraducciones';
 
 interface EPKDonacionesBlockProps {
  config: EPKConfig;

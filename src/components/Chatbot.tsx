@@ -1,13 +1,13 @@
-import React, { useState, useRef, useEffect } from'react';
-import { api } from'../services/api';
-import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea, MelodicInstrument, MelodicNoteEvent } from'../types';
-import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save, Mic, Download } from'lucide-react';
-import { AgentAutonomySettingsModal } from'./dashboard/AgentAutonomySettingsModal';
-import { apiFetch } from'../utils/api';
-import { generateAccompanimentAudioBlob } from'../utils/accompanimentSynth';
-import { renderMelodicIdeaAudioBlob } from'../utils/instrumentSynth';
-import { eventosAMidiBlob } from'../utils/midiExport';
-import { uploadFileToServer } from'../utils/audioStorage';
+import React, { useState, useRef, useEffect } from 'react';
+import { api } from '../services/api';
+import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea, MelodicInstrument, MelodicNoteEvent } from '../types';
+import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save, Mic, Download } from 'lucide-react';
+import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
+import { apiFetch } from '../utils/api';
+import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
+import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
+import { eventosAMidiBlob } from '../utils/midiExport';
+import { uploadFileToServer } from '../utils/audioStorage';
 
 interface ProposedAction {
  status?:'pending' |'applied' |'dismissed';

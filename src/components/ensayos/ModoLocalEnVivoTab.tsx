@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useRef } from'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
  Play, Pause, ChevronLeft, ChevronRight, Disc3, Clock, Sparkles, 
  Volume2, VolumeX, CheckCircle2, AlertCircle, RotateCcw, ThumbsUp,
  Flame, Music, Maximize2, Minimize2, FileText, CheckSquare, List,
  BookOpen, Sliders, Type, ArrowDown, Edit3, X, Eye
-} from'lucide-react';
-import { Rehearsal, RehearsalAgendaItem, Song, ThemeColors, SongSubstituteGuide } from'../../types';
-import { formatTime } from'./EnsayoCronometro';
+} from 'lucide-react';
+import { Rehearsal, RehearsalAgendaItem, Song, ThemeColors, SongSubstituteGuide } from '../../types';
+import { formatTime } from './EnsayoCronometro';
 import { 
  processChordText, 
  extractUniqueChords, 
  GUITAR_CHORD_DATABASE, 
  GuitarChordShape, 
  transposeChordToken 
-} from'../../utils/chordUtils';
-import { SongChordsViewerModal } from'../SongChordsViewerModal';
+} from '../../utils/chordUtils';
+import { SongChordsViewerModal } from '../SongChordsViewerModal';
 
 interface ModoLocalEnVivoTabProps {
  rehearsal: Rehearsal;

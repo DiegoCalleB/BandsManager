@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from'react';
-import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot, Heart } from'lucide-react';
-import { User, ThemeName } from'../types';
-import { THEMES } from'../utils/theme';
-import { FONT_PRESETS, FontPresetKey } from'../utils/typography';
+import React, { useState, useEffect } from 'react';
+import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot, Heart } from 'lucide-react';
+import { User, ThemeName } from '../types';
+import { THEMES } from '../utils/theme';
+import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
 import {
  PREFERENCIAS as PREFERENCIAS_ESPECTRO,
  PreferenciaTema,
  guardarPreferencia as guardarPreferenciaEspectro,
  leerPreferencia as leerPreferenciaEspectro,
- resolverTema as resolverTemaEspectro} from'../utils/temaEspectro';
-import { uploadFileToServer } from'../utils/audioStorage';
-import { api, getAuthHeaders } from'../services/api';
-import { getPlanDefinition, getPlanChangeType, normalizePlan, PLANS } from'../utils/planPermissions';
-import { useLanguage, SUPPORTED_LANGUAGES } from'../context/LanguageContext';
-import { ModalPortal } from'./common/ModalPortal';
-import { AgentAutonomySettingsModal } from'./dashboard/AgentAutonomySettingsModal';
+ resolverTema as resolverTemaEspectro} from '../utils/temaEspectro';
+import { uploadFileToServer } from '../utils/audioStorage';
+import { api, getAuthHeaders } from '../services/api';
+import { getPlanDefinition, getPlanChangeType, normalizePlan, PLANS } from '../utils/planPermissions';
+import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
+import { ModalPortal } from './common/ModalPortal';
+import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 
 // Fase beta: crear un proyecto adicional desde aquí va directo al plan Promo, sin pasar por
 // este selector legacy de 3 planes de pago (mismo criterio que BandSwitcherModal.tsx y

@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from'react';
-import L from'leaflet';
+import React, { useEffect, useRef, useState } from 'react';
+import L from 'leaflet';
 import'leaflet.markercluster';
-import { Lead } from'../types';
-import { MapPin, Navigation, Eye, Check, Loader2, RefreshCw, Layers } from'lucide-react';
-import { escapeHtml } from'../utils/escapeHtml';
+import { Lead } from '../types';
+import { MapPin, Navigation, Eye, Check, Loader2, RefreshCw, Layers } from 'lucide-react';
+import { escapeHtml } from '../utils/escapeHtml';
 
 interface VenueMapProps {
  leads: Lead[];

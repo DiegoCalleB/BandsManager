@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from'react';
-import { Users, UserPlus, Key, Trash2, Shield, Music, X, Check, AlertCircle, Edit2, Sparkles, RefreshCw, Link2 } from'lucide-react';
-import { User, UserRole } from'../types';
-import { ModalPortal } from'./common/ModalPortal';
-import { STEM_INSTRUMENT_CATEGORIES, NON_STEM_ROLES } from'../config/stemInstruments';
+import React, { useState, useEffect } from 'react';
+import { Users, UserPlus, Key, Trash2, Shield, Music, X, Check, AlertCircle, Edit2, Sparkles, RefreshCw, Link2 } from 'lucide-react';
+import { User, UserRole } from '../types';
+import { ModalPortal } from './common/ModalPortal';
+import { STEM_INSTRUMENT_CATEGORIES, NON_STEM_ROLES } from '../config/stemInstruments';
 
 interface UserManagementModalProps {
  currentUser: User;

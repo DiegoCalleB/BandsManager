@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from'react';
-import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from'../context/LanguageContext';
-import { Globe, ChevronDown, Check } from'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from '../context/LanguageContext';
+import { Globe, ChevronDown, Check } from 'lucide-react';
 
 interface LanguageSelectorProps {
  compact?: boolean;

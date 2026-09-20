@@ -1,5 +1,5 @@
-import React from'react';
-import { Lead } from'../../types';
+import React from 'react';
+import { Lead } from '../../types';
 
 export type LeadTemperature ='caliente' |'seguimiento' |'frio' |'neutral';
 

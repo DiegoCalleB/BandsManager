@@ -1,8 +1,8 @@
-import React, { useState } from'react';
-import { Lead, ThemeColors } from'../../types';
-import { apiFetch } from'../../utils/api';
-import { Bot, Sparkles, X, CheckCircle2 } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
+import React, { useState } from 'react';
+import { Lead, ThemeColors } from '../../types';
+import { apiFetch } from '../../utils/api';
+import { Bot, Sparkles, X, CheckCircle2 } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface BookingSimulationModalProps {
  colors: ThemeColors;

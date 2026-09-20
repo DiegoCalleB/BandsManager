@@ -1,6 +1,6 @@
-import React from'react';
-import { Lock } from'lucide-react';
-import { NavItemDef } from'../../config/navGroups';
+import React from 'react';
+import { Lock } from 'lucide-react';
+import { NavItemDef } from '../../config/navGroups';
 
 interface NavItemButtonProps {
  item: NavItemDef;

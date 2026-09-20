@@ -1,11 +1,11 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import {
  ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell
-} from'recharts';
-import { Disc3, Building2, DollarSign, Users, ArrowRight, Zap, TrendingUp, Sparkles, Filter } from'lucide-react';
-import { Lead, Concert, Fan, ThemeColors } from'../../../types';
-import { getEnergyInfo } from'../../../utils/energyPacingUtils';
-import { Onda } from'../../ui/Onda';
+} from 'recharts';
+import { Disc3, Building2, DollarSign, Users, ArrowRight, Zap, TrendingUp, Sparkles, Filter } from 'lucide-react';
+import { Lead, Concert, Fan, ThemeColors } from '../../../types';
+import { getEnergyInfo } from '../../../utils/energyPacingUtils';
+import { Onda } from '../../ui/Onda';
 
 export interface ChartWidgetProps {
  leads?: Lead[];

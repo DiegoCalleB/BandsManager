@@ -1,4 +1,4 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import {
  AtSign,
  Mail,
@@ -16,16 +16,16 @@ import {
  ChevronDown,
  ChevronUp,
  Info
-} from'lucide-react';
-import QRCode from'react-qr-code';
-import { EPKConfig } from'../../types';
-import { EPKBlockWrapper } from'./EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta, UNIFIED_PLATFORMS } from'./epkBlocks';
+} from 'lucide-react';
+import QRCode from 'react-qr-code';
+import { EPKConfig } from '../../types';
+import { EPKBlockWrapper } from './EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta, UNIFIED_PLATFORMS } from './epkBlocks';
 import {
  buildEmailSignatureHtml,
  buildEmailSignaturePlainText,
  copyRichSignatureToClipboard
-} from'../../utils/emailFormatter';
+} from '../../utils/emailFormatter';
 
 interface EPKFirmaQRBlockProps {
  config: EPKConfig;

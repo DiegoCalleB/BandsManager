@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from'react';
+import React, { useState, useEffect } from 'react';
 import {
  Search, MapPin, Phone, Globe, Star, Sparkles, Check, Loader2, X,
  PlusCircle, Building2, CheckCircle2, AlertCircle, Sliders, Users, Music2, Radio, Briefcase, Disc3, ShieldCheck,
  Ban, Trash2, RotateCcw, Target
-} from'lucide-react';
-import { Lead, LeadType, BookingCampaign } from'../../types';
-import { apiFetch } from'../../utils/api';
-import { api } from'../../services/api';
-import { ModalPortal } from'../common/ModalPortal';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
+} from 'lucide-react';
+import { Lead, LeadType, BookingCampaign } from '../../types';
+import { apiFetch } from '../../utils/api';
+import { api } from '../../services/api';
+import { ModalPortal } from '../common/ModalPortal';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 
 export interface PlaceResult {
  place_id: string;

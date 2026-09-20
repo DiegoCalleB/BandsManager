@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
  X,
  Upload,
@@ -15,18 +15,18 @@ import {
  Check,
  Image as ImageIcon,
  Plus
-} from'lucide-react';
-import { Song, ThemeColors } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
-import { uploadFileToServer } from'../../utils/audioStorage';
-import { formatSecondsToMmSs } from'../../utils/repertorioUtils';
+} from 'lucide-react';
+import { Song, ThemeColors } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
+import { uploadFileToServer } from '../../utils/audioStorage';
+import { formatSecondsToMmSs } from '../../utils/repertorioUtils';
 
 interface BulkAlbumAudioUploaderModalProps {
  isOpen: boolean;
  onClose: () => void;
  albumName?: string;
  albumSongs?: Song[];
- colors: ThemeColors;: boolean;
+ colors: ThemeColors
  bandId?: string;
  isNewAlbumMode?: boolean;
  onSaveUpdatedSongs: (updatedSongs: Song[], newAlbumName?: string) => void;

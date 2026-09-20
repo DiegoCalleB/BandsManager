@@ -1,7 +1,7 @@
-import React from'react';
-import { LeadType } from'../../types';
-import { Plus, X } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
+import React from 'react';
+import { LeadType } from '../../types';
+import { Plus, X } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface AddLeadModalProps {
  isOpen: boolean;

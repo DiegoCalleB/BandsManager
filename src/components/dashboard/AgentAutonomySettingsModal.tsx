@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from'react';
+import React, { useState, useEffect } from 'react';
 import {
  Bot, ShieldCheck, Sliders, CheckCircle2, AlertTriangle, X, Sparkles,
  Send, FileEdit, Clock, Euro, Calendar, Lock, ShieldAlert, ArrowRight, Save, Loader2,
  Radio, Mail, FileText, Check, Globe, RefreshCw, Activity, Terminal, ExternalLink,
  ChevronRight, Volume2, Music, CheckSquare, Square, AtSign, UserCheck, Download,
  MessageSquare, ThumbsUp, ThumbsDown, HelpCircle, Brain
-} from'lucide-react';
-import { api } from'../../services/api';
-import { apiFetch } from'../../utils/api';
-import { BandSchedule } from'../../types';
-import { ModalPortal } from'../common/ModalPortal';
-import { EmailAccountConfig } from'../EmailAccountConfig';
+} from 'lucide-react';
+import { api } from '../../services/api';
+import { apiFetch } from '../../utils/api';
+import { BandSchedule } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
+import { EmailAccountConfig } from '../EmailAccountConfig';
 
 const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
  salas:'🏛️ Salas',

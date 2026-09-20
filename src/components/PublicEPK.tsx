@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from'react';
+import React, { useState, useEffect } from 'react';
 import {
  Download, Share2, ExternalLink,
  Check, Mail, Phone, MapPin, Play, Pause,
  Volume2, X, Music, Radio, Sparkles, Quote, Instagram, Globe, Ticket
-} from'lucide-react';
-import { EPKConfig, Song, Concert, EPKSectionId } from'../types';
-import { SocialPlatformsList } from'./SocialPlatformsList';
-import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict, idiomasDisponiblesParaEpk } from'../i18n/epkTranslations';
-import { interpolate } from'../i18n/fansTranslations';
-import { useEpkLanguage } from'../hooks/useEpkLanguage';
-import { resolverContenidoEpk } from'../utils/epkTraducciones';
-import { safeUrl } from'../utils/safeUrl';
-import { getEffectiveSectionsOrder, getTemplateStyles } from'./epk/epkTemplates';
-import { getFontFamilyById } from'../config/bandFonts';
+} from 'lucide-react';
+import { EPKConfig, Song, Concert, EPKSectionId } from '../types';
+import { SocialPlatformsList } from './SocialPlatformsList';
+import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict, idiomasDisponiblesParaEpk } from '../i18n/epkTranslations';
+import { interpolate } from '../i18n/fansTranslations';
+import { useEpkLanguage } from '../hooks/useEpkLanguage';
+import { resolverContenidoEpk } from '../utils/epkTraducciones';
+import { safeUrl } from '../utils/safeUrl';
+import { getEffectiveSectionsOrder, getTemplateStyles } from './epk/epkTemplates';
+import { getFontFamilyById } from '../config/bandFonts';
 
 interface PublicEPKProps {
  initialData?: {

@@ -1,8 +1,8 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import { 
  Sparkles, CheckCircle2, Globe, Heart, ExternalLink, 
  Copy, Check, ArrowRight, Disc3, Layers, Calendar, Users 
-} from'lucide-react';
+} from 'lucide-react';
 
 interface StepCompletedCelebrationProps {
  bandName: string;

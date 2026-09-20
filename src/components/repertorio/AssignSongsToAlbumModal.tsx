@@ -1,15 +1,15 @@
-import React, { useState } from'react';
-import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon } from'lucide-react';
-import { Song, ThemeColors } from'../../types';
-import { formatSongTitle } from'../../utils/formatSongTitle';
-import { ModalPortal } from'../common/ModalPortal';
-import { PublicoSilhouette } from'../ui/PublicoSilhouette';
+import React, { useState } from 'react';
+import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon } from 'lucide-react';
+import { Song, ThemeColors } from '../../types';
+import { formatSongTitle } from '../../utils/formatSongTitle';
+import { ModalPortal } from '../common/ModalPortal';
+import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 
 interface AssignSongsToAlbumModalProps {
  isOpen: boolean;
  albumName: string;
  songs: Song[];
- colors: ThemeColors;: boolean;
+ colors: ThemeColors
  onClose: () => void;
  onSaveAlbumSongs: (albumName: string, selectedSongIds: string[], albumExtraInfo?: {
  año?: string;

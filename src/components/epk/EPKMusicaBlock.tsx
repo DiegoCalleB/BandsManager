@@ -1,14 +1,14 @@
-import React from'react';
+import React from 'react';
 import {
  Music,
  Share2,
  Trash2,
  Info,
  Star
-} from'lucide-react';
-import { EPKConfig, Song, EPKVideo, DatosContratacion, User } from'../../types';
-import { EPKBlockWrapper } from'./EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from'./epkBlocks';
+} from 'lucide-react';
+import { EPKConfig, Song, EPKVideo, DatosContratacion, User } from '../../types';
+import { EPKBlockWrapper } from './EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
 
 interface EPKMusicaBlockProps {
  config: EPKConfig;

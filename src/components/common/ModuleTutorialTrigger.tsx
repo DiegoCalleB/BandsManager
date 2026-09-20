@@ -1,6 +1,6 @@
-import React from'react';
-import { HelpCircle } from'lucide-react';
-import { ModuleTutorialId } from'../../types/tutorial';
+import React from 'react';
+import { HelpCircle } from 'lucide-react';
+import { ModuleTutorialId } from '../../types/tutorial';
 
 interface ModuleTutorialTriggerProps {
  moduleId?: ModuleTutorialId;

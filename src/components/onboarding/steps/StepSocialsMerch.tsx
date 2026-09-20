@@ -1,5 +1,5 @@
-import React from'react';
-import { Globe, Instagram, Youtube, Music, Smartphone, ExternalLink, ShoppingBag } from'lucide-react';
+import React from 'react';
+import { Globe, Instagram, Youtube, Music, Smartphone, ExternalLink, ShoppingBag } from 'lucide-react';
 
 interface StepSocialsMerchProps {
  socialLinks: {

@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from'react';
-import L from'leaflet';
+import React, { useEffect, useRef, useState } from 'react';
+import L from 'leaflet';
 import'leaflet.markercluster';
-import { BandContact, BandRelationshipStatus } from'../types';
-import { MapPin, Navigation, Check, Loader2, Layers, Music, Handshake, Repeat, Zap, Clock, Radio, X } from'lucide-react';
-import { escapeHtml } from'../utils/escapeHtml';
+import { BandContact, BandRelationshipStatus } from '../types';
+import { MapPin, Navigation, Check, Loader2, Layers, Music, Handshake, Repeat, Zap, Clock, Radio, X } from 'lucide-react';
+import { escapeHtml } from '../utils/escapeHtml';
 
 interface BandMapProps {
  bands: BandContact[];

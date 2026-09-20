@@ -1,8 +1,8 @@
-import React, { useState, useRef } from'react';
-import { X, Upload, Camera, FileText, Loader, CheckCircle, AlertCircle, Download, ShieldCheck } from'lucide-react';
-import { ModalPortal } from'../common/ModalPortal';
-import { Song } from'../../types';
-import { isImageDocument, isPdfDocument } from'../../utils/documentType';
+import React, { useState, useRef } from 'react';
+import { X, Upload, Camera, FileText, Loader, CheckCircle, AlertCircle, Download, ShieldCheck } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
+import { Song } from '../../types';
+import { isImageDocument, isPdfDocument } from '../../utils/documentType';
 
 interface SongStudioStructureUploadModalProps {
  song: Song;

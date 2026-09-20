@@ -1,6 +1,6 @@
-import React from'react';
-import { ThemeColors } from'../../types';
-import { Music, Layers, Search, Plus, Sparkles, Printer } from'lucide-react';
+import React from 'react';
+import { ThemeColors } from '../../types';
+import { Music, Layers, Search, Plus, Sparkles, Printer } from 'lucide-react';
 
 interface RepertorioHeaderProps {
  colors: ThemeColors;

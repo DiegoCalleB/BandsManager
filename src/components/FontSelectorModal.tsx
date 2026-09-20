@@ -1,7 +1,7 @@
-import React from'react';
-import { Type, Check, X, Sparkles, SlidersHorizontal, Info } from'lucide-react';
-import { FONT_PRESETS, FontPresetKey, applyFontPreset, getStoredFontPreset } from'../utils/typography';
-import { ModalPortal } from'./common/ModalPortal';
+import React from 'react';
+import { Type, Check, X, Sparkles, SlidersHorizontal, Info } from 'lucide-react';
+import { FONT_PRESETS, FontPresetKey, applyFontPreset, getStoredFontPreset } from '../utils/typography';
+import { ModalPortal } from './common/ModalPortal';
 
 interface FontSelectorModalProps {
  onClose: () => void;
@@ -10,7 +10,7 @@ interface FontSelectorModalProps {
 }
 
 export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
- onClose
+ onClose,
  currentFont,
  onSelectFont}) => {
  return (

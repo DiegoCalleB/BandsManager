@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from'react';
-import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from'lucide-react';
-import { User as UserType } from'../types';
-import { signInWithGoogleIdentity } from'../utils/googleAuth';
-import { guardarCookieDeSesion } from'../utils/sessionCookie';
-import { BandNameStylerHelper } from'./common/BandNameStylerHelper';
-import { ModalPortal } from'./common/ModalPortal';
-import { useLanguage, SUPPORTED_LANGUAGES } from'../context/LanguageContext';
+import React, { useState, useEffect, useRef } from 'react';
+import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
+import { User as UserType } from '../types';
+import { signInWithGoogleIdentity } from '../utils/googleAuth';
+import { guardarCookieDeSesion } from '../utils/sessionCookie';
+import { BandNameStylerHelper } from './common/BandNameStylerHelper';
+import { ModalPortal } from './common/ModalPortal';
+import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
 
 interface LoginModalProps {
  onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;

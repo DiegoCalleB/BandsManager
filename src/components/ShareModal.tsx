@@ -1,17 +1,17 @@
-import React, { useState } from'react';
+import React, { useState } from 'react';
 import { 
  X, MessageSquare, Share2, Copy, Check, Mail, Phone, Edit3, 
  Sparkles, Music, Calendar, Disc, FileText, Send
-} from'lucide-react';
-import { ThemeColors } from'../types';
+} from 'lucide-react';
+import { ThemeColors } from '../types';
 import { 
  shareViaWhatsApp, 
  shareViaWebShare, 
  copyToClipboard, 
  shareViaEmail, 
  SharePayload 
-} from'../utils/shareUtils';
-import { ModalPortal } from'./common/ModalPortal';
+} from '../utils/shareUtils';
+import { ModalPortal } from './common/ModalPortal';
 
 interface ShareModalProps {
  isOpen: boolean;

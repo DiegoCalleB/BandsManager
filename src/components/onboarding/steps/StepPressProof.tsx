@@ -1,6 +1,6 @@
-import React from'react';
-import { Award, Plus, Trash2, Radio, Users, CheckCircle2, TrendingUp } from'lucide-react';
-import { PressQuoteItem } from'../types';
+import React from 'react';
+import { Award, Plus, Trash2, Radio, Users, CheckCircle2, TrendingUp } from 'lucide-react';
+import { PressQuoteItem } from '../types';
 
 interface StepPressProofProps {
  pressQuotes: PressQuoteItem[];

@@ -1,9 +1,9 @@
 import { getLowLatencyAudioStream } from"../utils/audioLatency";
-import React, { useState, useEffect, useMemo, useRef, useCallback } from'react';
-import { createPortal } from'react-dom';
-import { api } from'../services/api';
-import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from'../types';
-import { useLanguage } from'../context/LanguageContext';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
+import { api } from '../services/api';
+import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 import { 
  Disc3, Music, Plus, Search, X, Edit3, Trash2, Copy,
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
@@ -12,54 +12,54 @@ import {
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
  ChevronUp, ChevronDown, ListPlus, Users,
  GripVertical, ImagePlus, MoreHorizontal, TrendingUp
-} from'lucide-react';
-import { PublicoSilhouette } from'./ui/PublicoSilhouette';
-import { RepertorioNavBar } from'./repertorio/RepertorioNavBar';
-import { SetlistAddBar } from'./repertorio/SetlistAddBar';
-import SongStudioModal from'./SongStudioModal';
-import { SongChordsViewerModal } from'./SongChordsViewerModal';
-import { ShareModal } from'./ShareModal';
-import { useShareModal } from'../hooks/useShareModal';
-import { useCatalogFilters } from'../hooks/useCatalogFilters';
-import { useAudioPlayer } from'../hooks/useAudioPlayer';
-import { useStagePlayer } from'../hooks/useStagePlayer';
-import { ConfirmDeleteModal } from'./repertorio/ConfirmDeleteModal';
-import { ConfirmDeleteAlbumModal, ConfirmDeleteAlbumData } from'./repertorio/ConfirmDeleteAlbumModal';
-import { AssignSongsToAlbumModal } from'./repertorio/AssignSongsToAlbumModal';
-import { AssignSetlistModal } from'./repertorio/AssignSetlistModal';
-import { SongModal } from'./repertorio/SongModal';
-import { SetlistModal } from'./repertorio/SetlistModal';
-import { AddSongsToSetlistModal } from'./repertorio/AddSongsToSetlistModal';
-import { PdfExportModal } from'./repertorio/PdfExportModal';
-import { MemberNotesModal } from'./repertorio/MemberNotesModal';
-import { SetlistAIAnalysisModal } from'./repertorio/SetlistAIAnalysisModal';
-import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from'./repertorio/PerfectSetlistModal';
-import { useModuleTutorial } from'../hooks/useModuleTutorial';
-import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
-import { ImportSetlistModal } from'./repertorio/ImportSetlistModal';
-import { DiscografiaView } from'./repertorio/DiscografiaView';
-import { SongCardRow } from'./repertorio/SongCardRow';
-import { SpotifyDiscographyModal } from'./repertorio/SpotifyDiscographyModal';
-import { EscenarioView } from'./repertorio/EscenarioView';
-import { SetlistPerformanceView } from'./SetlistPerformanceView';
-import { cacheActiveStageSetlist } from'../utils/stageOfflineCache';
-import { formatSongTitle, normalizeSongTitlesInList } from'../utils/formatSongTitle';
+} from 'lucide-react';
+import { PublicoSilhouette } from './ui/PublicoSilhouette';
+import { RepertorioNavBar } from './repertorio/RepertorioNavBar';
+import { SetlistAddBar } from './repertorio/SetlistAddBar';
+import SongStudioModal from './SongStudioModal';
+import { SongChordsViewerModal } from './SongChordsViewerModal';
+import { ShareModal } from './ShareModal';
+import { useShareModal } from '../hooks/useShareModal';
+import { useCatalogFilters } from '../hooks/useCatalogFilters';
+import { useAudioPlayer } from '../hooks/useAudioPlayer';
+import { useStagePlayer } from '../hooks/useStagePlayer';
+import { ConfirmDeleteModal } from './repertorio/ConfirmDeleteModal';
+import { ConfirmDeleteAlbumModal, ConfirmDeleteAlbumData } from './repertorio/ConfirmDeleteAlbumModal';
+import { AssignSongsToAlbumModal } from './repertorio/AssignSongsToAlbumModal';
+import { AssignSetlistModal } from './repertorio/AssignSetlistModal';
+import { SongModal } from './repertorio/SongModal';
+import { SetlistModal } from './repertorio/SetlistModal';
+import { AddSongsToSetlistModal } from './repertorio/AddSongsToSetlistModal';
+import { PdfExportModal } from './repertorio/PdfExportModal';
+import { MemberNotesModal } from './repertorio/MemberNotesModal';
+import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
+import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from './repertorio/PerfectSetlistModal';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+import { ImportSetlistModal } from './repertorio/ImportSetlistModal';
+import { DiscografiaView } from './repertorio/DiscografiaView';
+import { SongCardRow } from './repertorio/SongCardRow';
+import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
+import { EscenarioView } from './repertorio/EscenarioView';
+import { SetlistPerformanceView } from './SetlistPerformanceView';
+import { cacheActiveStageSetlist } from '../utils/stageOfflineCache';
+import { formatSongTitle, normalizeSongTitlesInList } from '../utils/formatSongTitle';
 import { AlbumCover } from"./AlbumCover";
-import SpotifyPlayerBar from'./SpotifyPlayerBar';
+import SpotifyPlayerBar from './SpotifyPlayerBar';
 import { 
  uploadFileToServer, parseGoogleDriveAudioUrl, isGoogleDriveUrl, 
  saveSongsToLocalStorageSafely, saveSetlistsToLocalStorageSafely, resolveAudioUrl 
-} from'../utils/audioStorage';
-import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from'../utils/repertorioUtils';
-import { queuePendingSetlistSync, clearPendingSetlistSync, getPendingSetlistSyncs } from'../utils/offlineSync';
-import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from'../utils/energyPacingUtils';
-import { parseTonalidad, evaluarTransicionArmonica } from'../utils/harmonicAnalysis';
-import { optimizarOrdenPorTransiciones, costeTotalTransiciones, sugerirMejorPuntoParaChapa, SugerenciaChapa, HuecoCancion, evaluarCalidadUnion, EvaluacionUnion } from'../utils/setlistCompatibility';
-import { getSemitoneDifference } from'../utils/chordUtils';
-import { EnergyChart, EnergyChartPoint } from'./repertorio/EnergyChart';
-import { SongTransitionPreviewModal } from'./repertorio/SongTransitionPreviewModal';
-import { titlesMatch } from'../utils/songTitleMatch';
-import { SAMPLER_SONGS, SAMPLER_SETLISTS } from'../config/sampleRepertoire';
+} from '../utils/audioStorage';
+import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
+import { queuePendingSetlistSync, clearPendingSetlistSync, getPendingSetlistSyncs } from '../utils/offlineSync';
+import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
+import { parseTonalidad, evaluarTransicionArmonica } from '../utils/harmonicAnalysis';
+import { optimizarOrdenPorTransiciones, costeTotalTransiciones, sugerirMejorPuntoParaChapa, SugerenciaChapa, HuecoCancion, evaluarCalidadUnion, EvaluacionUnion } from '../utils/setlistCompatibility';
+import { getSemitoneDifference } from '../utils/chordUtils';
+import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
+import { SongTransitionPreviewModal } from './repertorio/SongTransitionPreviewModal';
+import { titlesMatch } from '../utils/songTitleMatch';
+import { SAMPLER_SONGS, SAMPLER_SETLISTS } from '../config/sampleRepertoire';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -2613,7 +2613,7 @@ export default function RepertorioSetlists({
  <div data-modulo="repertorio" className="space-y-3">
  {/* REPERTORIO UNIFIED NAV BAR: Título, tabs segmentadas (Setlists & Directo / Catálogo & Discografía) y acciones rápidas */}
  <RepertorioNavBar
- colors={colors
+ colors={colors}
  activeTab={activeTab}
  setActiveTab={handleTabChange}
  catalogoViewMode={catalogoViewMode}
@@ -2636,8 +2636,12 @@ export default function RepertorioSetlists({
  {activeTab ==='setlists' && (
  <div className="w-full">
  {/* MAIN EDITOR FOR ACTIVE SETLIST */}
- <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 ${'bg-[var(--surface)]'Nombre del repertorio'}
- className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${'text-[var(--ink)]'}`}
+ <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 bg-[var(--surface)]`}>
+ <input
+ className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-0/50 text-[var(--ink)]`}
+ placeholder="Nombre del repertorio"
+ value={activeSetlistTitle || ''}
+ onChange={(e) => setActiveSetlistTitle(e.target.value)}
  />
 
  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap sm:flex-nowrap">
@@ -3426,7 +3430,7 @@ export default function RepertorioSetlists({
  setNewShortcutLabel={setNewShortcutLabel}
  newShortcutMinutes={newShortcutMinutes}
  setNewShortcutMinutes={setNewShortcutMinutes}
- handleCreateShortcut={handleCreateShortcut
+ handleCreateShortcut={handleCreateShortcut}
  />
 
  {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
@@ -4066,16 +4070,6 @@ export default function RepertorioSetlists({
  })
  )}
  </div>
- </>
- ) : (
- <div className="flex flex-col items-center justify-center py-20">
- <PublicoSilhouette opacity={0.12} size="large" />
- <p className="mt-8 font-medium text-[var(--ink)] text-sm">Sin repertorio seleccionado</p>
- <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
- Selecciona o crea un repertorio desde la barra superior.
- </p>
- </div>
- )}
  </div>
  </div>
  )}
@@ -4087,7 +4081,7 @@ export default function RepertorioSetlists({
  <DiscografiaView
  songs={songs}
  albumsList={albumsList}
- colors={colors
+ colors={colors}
  bandName={bName}
  setSongs={setSongs}
  setSetlists={setSetlists}
@@ -4187,11 +4181,6 @@ export default function RepertorioSetlists({
  </div>
 
  {/* CATALOG FILTERS BAR */}
- <div className={`p-3.5 sm:p-4 rounded-[var(--r-l)] sm:rounded-3xl flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center ${
- 'bg-[var(--surface)]'pr-8' :'pr-3'} py-2 text-xs focus:outline-none transition-all ${
-' bg-[var(--surface)]/60 text-[var(--ink)] focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
- }`}
- />
  {catalogSearch && (
  <button
  id="search-songs-clear"

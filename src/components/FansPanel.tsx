@@ -1,26 +1,26 @@
-import React, { useState, useMemo, useEffect } from'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
  Users, Heart, QrCode, Download, Search, Plus, Trash2, Sparkles,
  Copy, Check, FileSpreadsheet, ShieldCheck, Mail, MapPin, Calendar, ExternalLink,
  Filter, LayoutGrid, List, Map as MapIcon, X, TrendingUp, Printer, Share2, MessageCircle,
  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram, FileCode, Layers, Eye,
  MoreHorizontal, Settings2
-} from'lucide-react';
-import QRCode from'react-qr-code';
-import * as XLSX from'xlsx';
-import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from'../types';
-import { THEMES } from'../utils/theme';
-import { Onda } from'./ui/Onda';
-import { ReelsMetricsView } from'./reels/ReelsMetricsView';
-import { FansCommunityView } from'./fans/FansCommunityView';
-import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from'../i18n/fansTranslations';
-import { QrExportModal } from'./QrExportModal';
-import { FansLandingPreviewModal } from'./FansLandingPreviewModal';
-import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from'../utils/qrExport';
-import { useModuleTutorial } from'../hooks/useModuleTutorial';
-import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
-import { ModuleTutorialTrigger } from'./common/ModuleTutorialTrigger';
-import { PublicoSilhouette } from'./ui/PublicoSilhouette';
+} from 'lucide-react';
+import QRCode from 'react-qr-code';
+import * as XLSX from 'xlsx';
+import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from '../types';
+import { THEMES } from '../utils/theme';
+import { Onda } from './ui/Onda';
+import { ReelsMetricsView } from './reels/ReelsMetricsView';
+import { FansCommunityView } from './fans/FansCommunityView';
+import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '../i18n/fansTranslations';
+import { QrExportModal } from './QrExportModal';
+import { FansLandingPreviewModal } from './FansLandingPreviewModal';
+import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+import { PublicoSilhouette } from './ui/PublicoSilhouette';
 
 interface FansPanelProps {
  fans: Fan[];

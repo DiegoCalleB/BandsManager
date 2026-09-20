@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from'react';
-import { motion, AnimatePresence } from'motion/react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
  Droplets, Thermometer, AlertTriangle, RefreshCw, 
  Calendar, ShieldAlert, ChevronDown, ChevronUp, Wind
-} from'lucide-react';
-import { fetchEventWeather, EventWeatherData, WeatherAlert } from'../../services/weatherService';
-import { AnimatedWeatherIcon } from'./AnimatedWeatherIcon';
+} from 'lucide-react';
+import { fetchEventWeather, EventWeatherData, WeatherAlert } from '../../services/weatherService';
+import { AnimatedWeatherIcon } from './AnimatedWeatherIcon';
 
 interface EventWeatherCardProps {
  city: string;
