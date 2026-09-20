@@ -696,7 +696,7 @@ export default function TourManager({
  </h4>
  <div className="space-y-1.5">
  {tour.stops.length === 0 ? (
- <span className="text-[10px] text-neutral-500 italic">Sin paradas configuradas</span>
+ <span className="text-[10px] text-[var(--ink-3)] italic">Sin paradas configuradas</span>
  ) : (
  tour.stops.slice(0, 4).map((stop, idx) => (
  <div key={`tour-${tour.id || index}-stop-${stop.id || idx}-${idx}`} className="py-1 px-2 rounded-[var(--r-s)] bg-black/20 border-[var(--hair)] space-y-1">

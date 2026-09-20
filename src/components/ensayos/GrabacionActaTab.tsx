@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from'react';
-import { 
- Mic, Square, Play, Pause, Trash2, Sparkles, Share2, Copy, Check, 
+import {
+ Mic, Square, Play, Pause, Trash2, Sparkles, Share2, Copy, Check,
  Upload, FileAudio, Music, ListChecks, MessageSquare, AlertCircle, RefreshCw, Send
 } from'lucide-react';
 import { Rehearsal, RehearsalRecording, RehearsalActa, Song, ThemeColors } from'../../types';
 import { formatTime } from'./EnsayoCronometro';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 
 interface GrabacionActaTabProps {
  rehearsal: Rehearsal;
@@ -341,8 +342,12 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  </div>
 
  {recordings.length === 0 ? (
- <div className="p-8 text-center text-neutral-500 italic text-xs border-dashed border-[var(--hair)] rounded-[var(--r-m)]">
- No hay grabaciones guardadas en esta sesión.
+ <div className="p-8 flex flex-col items-center justify-center text-center border-dashed border-[var(--hair)] rounded-[var(--r-m)]">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin grabaciones</p>
+ <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs">
+ Graba esta sesión con el botón de arriba.
+ </p>
  </div>
  ) : (
  <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from'react';
-import { 
- Search, MapPin, Phone, Globe, Star, Sparkles, Check, Loader2, X, 
+import {
+ Search, MapPin, Phone, Globe, Star, Sparkles, Check, Loader2, X,
  PlusCircle, Building2, CheckCircle2, AlertCircle, Sliders, Users, Music2, Radio, Briefcase, Disc3, ShieldCheck,
  Ban, Trash2, RotateCcw, Target
 } from'lucide-react';
@@ -8,6 +8,7 @@ import { Lead, LeadType, BookingCampaign } from'../../types';
 import { apiFetch } from'../../utils/api';
 import { api } from'../../services/api';
 import { ModalPortal } from'../common/ModalPortal';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 
 export interface PlaceResult {
  place_id: string;
@@ -1211,7 +1212,13 @@ export function GooglePlacesExplorerModal({
 
  <div className="flex-1 overflow-y-auto p-4 space-y-2">
  {discardedList.length === 0 ? (
- <p className="text-xs text-zinc-500 text-center py-6">No hay sugerencias marcadas como no deseadas.</p>
+ <div className="flex flex-col items-center justify-center py-8">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin sugerencias descartadas</p>
+ <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs text-center">
+ Las salas que descartes aparecerán aquí.
+ </p>
+ </div>
  ) : (
  discardedList.map(item => (
  <div
