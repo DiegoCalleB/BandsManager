@@ -157,7 +157,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
  const nuevas = (config.resenasPrensa?.citas || []).filter(c => c.id !== cita.id);
  setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
  }}
- className="shrink-0 p-1.5 text-[var(--ink-2)] hover:text-red-400 transition cursor-pointer"
+ className="shrink-0 p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] transition cursor-pointer"
  title="Quitar reseña"
  >
  <Trash2 className="w-4 h-4" />

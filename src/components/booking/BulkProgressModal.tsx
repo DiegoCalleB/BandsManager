@@ -49,7 +49,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)]/70">
  {isCompleted ? (
- <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+ <CheckCircle2 className="w-5 h-5 text-[var(--ok)]" />
  ) : (
  <Sparkles className="w-5 h-5 text-[var(--acc)]/70 animate-spin" />
  )}
@@ -95,12 +95,12 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
 
  {/* Stats summary */}
  <div className="flex items-center gap-3 text-xs font-mono pt-1">
- <span className="inline-flex items-center gap-1 text-emerald-400 bg-[var(--ok-soft)] px-2 py-0.5 rounded">
+ <span className="inline-flex items-center gap-1 text-[var(--ok)] bg-[var(--ok-soft)] px-2 py-0.5 rounded">
  <CheckCircle2 className="w-3 h-3" />
  {successCount} completados
  </span>
  {errorCount > 0 && (
- <span className="inline-flex items-center gap-1 text-rose-400 bg-[var(--alert-soft)] px-2 py-0.5 rounded">
+ <span className="inline-flex items-center gap-1 text-[var(--alert)] bg-[var(--alert-soft)] px-2 py-0.5 rounded">
  <AlertTriangle className="w-3 h-3" />
  {errorCount} con incidencias
  </span>
@@ -117,10 +117,10 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
  <Loader2 className="w-3.5 h-3.5 text-[var(--acc)] animate-spin shrink-0" />
  )}
  {item.status ==='success' && (
- <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
  )}
  {item.status ==='error' && (
- <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+ <AlertTriangle className="w-3.5 h-3.5 text-[var(--alert)] shrink-0" />
  )}
  {item.status ==='pending' && (
  <div className="w-3.5 h-3.5 rounded-full border-[var(--hair)]600 shrink-0" />
@@ -132,8 +132,8 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
 
  <span className={`text-[11px] shrink-0 truncate max-w-[180px] ${
  item.status ==='processing' ?'text-[var(--acc)]' :
- item.status ==='success' ?'text-emerald-400' :
- item.status ==='error' ?'text-rose-400' :'text-[var(--ink-2)]'
+ item.status ==='success' ?'text-[var(--ok)]' :
+ item.status ==='error' ?'text-[var(--alert)]' :'text-[var(--ink-2)]'
  }`}>
  {item.message || (
  item.status ==='processing' ?'Procesando...' :

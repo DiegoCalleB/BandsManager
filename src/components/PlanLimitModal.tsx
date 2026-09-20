@@ -71,8 +71,8 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
 
  {/* Non-destructive guarantee notice */}
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/90 space-y-2">
- <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold">
- <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+ <div className="flex items-center gap-2 text-[var(--ok)] font-mono text-xs font-bold">
+ <ShieldCheck className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span>Tus datos actuales están 100% seguros y protegidos</span>
  </div>
  <p className="text-xs text-[var(--ink-2)] leading-relaxed">

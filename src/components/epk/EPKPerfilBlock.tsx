@@ -71,7 +71,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  config.biografia.trim().length >= 80 &&
  !config.biografia.toLowerCase().includes('por definir') &&
  !config.biografia.includes('Propuesta musical en directo')
- ?'bg-emerald-500/10 text-emerald-400 border-[var(--ok)]/30'
+ ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/30'
  :'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
  }`}
  >
@@ -107,7 +107,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  />
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-2)]">
  <span>Mínimo 80 caracteres para completar el perfil</span>
- <span className={(config.biografia ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-[var(--acc)] font-bold'}>
+ <span className={(config.biografia ||'').trim().length >= 80 ?'text-[var(--ok)] font-bold' :'text-[var(--acc)] font-bold'}>
  {(config.biografia ||'').trim().length} / 80 min.
  </span>
  </div>
@@ -127,7 +127,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  (config.dossierTextoExtra &&
  config.dossierTextoExtra.trim().length >= 80 &&
  !config.dossierTextoExtra.toLowerCase().includes('por definir'))
- ?'bg-emerald-500/10 text-emerald-400 border-[var(--ok)]/30'
+ ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/30'
  :'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
  }`}
  >
@@ -161,7 +161,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  />
  <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-2)]">
  <span>Mínimo 80 caracteres para marcar como completado (si no hay PDF)</span>
- <span className={(config.dossierTextoExtra ||'').trim().length >= 80 ?'text-emerald-400 font-bold' :'text-[var(--acc)] font-bold'}>
+ <span className={(config.dossierTextoExtra ||'').trim().length >= 80 ?'text-[var(--ok)] font-bold' :'text-[var(--acc)] font-bold'}>
  {(config.dossierTextoExtra ||'').trim().length} / 80 min.
  </span>
  </div>
@@ -240,7 +240,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  <button
  type="button"
  onClick={() => quitarMiembro(m.id)}
- className="shrink-0 p-1.5 text-[var(--ink-2)] hover:text-red-400 transition cursor-pointer"
+ className="shrink-0 p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] transition cursor-pointer"
  title="Quitar músico"
  >
  <Trash2 className="w-4 h-4" />
@@ -380,7 +380,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
  Fuente única: se sincronizan automáticamente en tu Dossier EPK, firma de email, landing de fans y plataformas oficiales.
  </p>
  </div>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ok)]">
  Fuente Centralizada
  </span>
  </div>

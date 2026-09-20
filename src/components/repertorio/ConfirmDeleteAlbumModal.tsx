@@ -28,7 +28,7 @@ export function ConfirmDeleteAlbumModal({
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-3">
- <div className="p-3 rounded-[var(--r-m)] bg-rose-500/20 text-rose-400 shrink-0">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/20 text-[var(--alert)] shrink-0">
  <Trash2 className="w-6 h-6" />
  </div>
  <div>
@@ -75,9 +75,9 @@ export function ConfirmDeleteAlbumModal({
  onDeleteAlbumAndSongs(data.albumName);
  onClose();
  }}
- className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-rose-500/10 hover:bg-rose-500/20 transition-all cursor-pointer group flex items-center gap-3"
+ className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 transition-all cursor-pointer group flex items-center gap-3"
  >
- <div className="p-2 rounded-[var(--r-s)] bg-rose-500/20 text-rose-400 group-hover:scale-105 transition-transform shrink-0">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--alert)]/20 text-[var(--alert)] group-hover:scale-105 transition-transform shrink-0">
  <Trash2 className="w-5 h-5" />
  </div>
  <div>

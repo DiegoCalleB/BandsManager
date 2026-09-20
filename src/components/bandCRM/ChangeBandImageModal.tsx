@@ -188,7 +188,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({
 
  {band.imagen_url && (
  <button type="button" onClick={handleRemoveImage} className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-all cursor-pointer">
- <Trash2 className="w-4 h-4 text-rose-400" />
+ <Trash2 className="w-4 h-4 text-[var(--alert)]" />
  <span>Eliminar imagen actual</span>
  </button>
  )}

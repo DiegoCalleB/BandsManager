@@ -88,7 +88,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
  return {
  type:'frio',
  label:'🧊 Lead Frío',
- badgeClass:'bg-sky-500/20 text-sky-300 font-medium',
+ badgeClass:'bg-[var(--acc)]/20 text-[var(--acc)] font-medium',
  icon:'🧊',
  description: `Sin interacción desde hace ${days}d`
  };

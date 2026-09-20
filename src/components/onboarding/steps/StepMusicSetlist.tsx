@@ -362,7 +362,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  <button
  type="button"
  onClick={() => onRemoveManualSong(s.id)}
- className="text-[var(--ink-2)] hover:text-red-400"
+ className="text-[var(--ink-2)] hover:text-[var(--alert)]"
  >
  <Trash2 className="w-3.5 h-3.5" />
  </button>
@@ -384,7 +384,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  </h4>
  </div>
  {createdSetlistName && (
- <span className="text-[11px] px-2 py-0.5 rounded-md bg-emerald-500/20 text-[var(--ink-2)] flex items-center gap-1">
+ <span className="text-[11px] px-2 py-0.5 rounded-md bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
  <CheckCircle2 className="w-3 h-3" /> {createdSetlistName} Creado
  </span>
  )}

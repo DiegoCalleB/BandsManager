@@ -148,26 +148,26 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  };
 
  return (
- <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-sky-500/5">
+ <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/5">
  <div className="flex items-center justify-between">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-sky-300 flex items-center gap-1.5">
- <MessageSquareText className="w-3.5 h-3.5 text-sky-400" /> Hilos de Email Reales de Ejemplo
+ <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
+ <MessageSquareText className="w-3.5 h-3.5 text-[var(--acc)]" /> Hilos de Email Reales de Ejemplo
  </label>
  <button
  type="button"
  onClick={handleToggleForm}
- className="text-[9px] font-bold text-sky-400 hover:underline cursor-pointer flex items-center gap-1"
+ className="text-[9px] font-bold text-[var(--acc)] hover:underline cursor-pointer flex items-center gap-1"
  >
  <Plus className="w-3 h-3" /> {showForm ?'Cancelar' :'Pegar un hilo'}
  </button>
  </div>
 
- <p className="text-[9px] text-sky-300/70 font-sans leading-tight">
+ <p className="text-[9px] text-[var(--acc)]/70 font-sans leading-tight">
  Pega conversaciones reales (nuestro mensaje + la respuesta de la sala/medio, y si la hubo, nuestra respuesta a esa respuesta) para esta categoría. Se usan como ejemplo real tanto al redactar el primer contacto como al generar respuestas a negociaciones.
  </p>
 
  {isLoading ? (
- <div className="text-[10px] text-sky-300/70 flex items-center gap-1.5"><Loader2 className="w-3 h-3 animate-spin" /> Cargando hilos...</div>
+ <div className="text-[10px] text-[var(--acc)]/70 flex items-center gap-1.5"><Loader2 className="w-3 h-3 animate-spin" /> Cargando hilos...</div>
  ) : threads.length > 0 ? (
  <div className="space-y-1.5">
  {threads.map((t) => (
@@ -185,7 +185,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  <button
  type="button"
  onClick={(e) => { e.stopPropagation(); handleEdit(t); }}
- className="p-1 text-[var(--ink-2)] hover:text-sky-400 cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-[var(--acc)] cursor-pointer"
  title="Ver / editar este hilo"
  >
  <Pencil className="w-3.5 h-3.5" />
@@ -193,7 +193,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  <button
  type="button"
  onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
- className="p-1 text-[var(--ink-2)] hover:text-red-400 cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] cursor-pointer"
  title="Borrar este hilo de ejemplo"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -203,13 +203,13 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  ))}
  </div>
  ) : (
- <div className="text-[10px] text-sky-300/50 italic">Todavía no hay hilos de ejemplo guardados para esta categoría.</div>
+ <div className="text-[10px] text-[var(--acc)]/50 italic">Todavía no hay hilos de ejemplo guardados para esta categoría.</div>
  )}
 
  {showForm && (
  <div className="space-y-2.5 pt-2 border-t border-[var(--acc)]/20">
  {editingId && (
- <div className="text-[9px] text-sky-400 font-sans font-bold">Editando hilo guardado</div>
+ <div className="text-[9px] text-[var(--acc)] font-sans font-bold">Editando hilo guardado</div>
  )}
  <input
  type="text"
@@ -237,7 +237,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'}`}
  />
  {mensajes.length > 1 && (
- <button type="button" onClick={() => handleRemoveMessageRow(idx)} className="p-1 text-[var(--ink-2)] hover:text-red-400 cursor-pointer shrink-0">
+ <button type="button" onClick={() => handleRemoveMessageRow(idx)} className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] cursor-pointer shrink-0">
  <Trash2 className="w-3.5 h-3.5" />
  </button>
  )}
@@ -247,7 +247,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  <button
  type="button"
  onClick={handleAddMessageRow}
- className="text-[9px] font-bold text-sky-400 hover:underline cursor-pointer flex items-center gap-1"
+ className="text-[9px] font-bold text-[var(--acc)] hover:underline cursor-pointer flex items-center gap-1"
  >
  <Plus className="w-3 h-3" /> Añadir mensaje al hilo
  </button>
@@ -259,20 +259,20 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  key={r}
  type="button"
  onClick={() => setResultado(r)}
- className={`text-[9px] px-2 py-1 rounded-[var(--r-s)] font-sans cursor-pointer ${resultado === r ?'bg-sky-500/30 text-sky-200 font-bold' :'bg-[var(--surface)] text-[var(--ink-2)]'}`}
+ className={`text-[9px] px-2 py-1 rounded-[var(--r-s)] font-sans cursor-pointer ${resultado === r ?'bg-[var(--acc)]/30 text-[var(--acc)] font-bold' :'bg-[var(--surface)] text-[var(--ink-2)]'}`}
  >
  {RESULTADO_LABEL[r]}
  </button>
  ))}
  </div>
 
- {error && <div className="text-[9px] text-red-400 font-sans">{error}</div>}
+ {error && <div className="text-[9px] text-[var(--alert)] font-sans">{error}</div>}
 
  <button
  type="button"
  onClick={handleSave}
  disabled={isSaving}
- className="w-full py-1.5 px-3 bg-sky-500 hover:bg-sky-400 text-[var(--ink)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
  {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
  <span>{isSaving ?'Guardando...' : editingId ?'Guardar cambios' :'Guardar hilo de ejemplo'}</span>

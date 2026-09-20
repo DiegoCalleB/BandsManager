@@ -48,8 +48,8 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  }`}>
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
- <Repeat className="w-5 h-5 text-sky-400" />
- <h3 className="text-base font-bold font-display uppercase tracking-wider text-sky-400">
+ <Repeat className="w-5 h-5 text-[var(--acc)]" />
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-[var(--acc)]">
  Generador de Pitch Date Swap: Bakandeya x {band.nombre_banda}
  </h3>
  </div>
@@ -148,7 +148,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  {band.email && (
  <a
  href={`mailto:${band.email}?subject=${encodeURIComponent(`Propuesta Date Swap: Bakandeya x ${band.nombre_banda}`)}&body=${encodeURIComponent(pitchText)}`}
- className="px-2 py-1 bg-sky-500/15 hover:bg-sky-500/15 text-[var(--ink)] font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
+ className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)] font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
  >
  <Send className="w-4 h-4" />
  <span>Enviar Email</span>

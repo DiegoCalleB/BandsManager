@@ -458,8 +458,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  if (/[0-9]/.test(pass) && /[^A-Za-z0-9]/.test(pass)) score += 1;
 
  const labels = ['Contraseña básica','Seguridad media','Muy segura'];
- const colors = ['bg-rose-500','bg-[var(--acc)]/60','bg-emerald-400'];
- const textColors = ['text-rose-400','text-[var(--acc)]','text-emerald-400'];
+ const colors = ['bg-[var(--alert)]','bg-[var(--acc)]/60','bg-[var(--ok)]'];
+ const textColors = ['text-[var(--alert)]','text-[var(--acc)]','text-[var(--ok)]'];
 
  return (
  <div className="space-y-1.5 pt-1 px-0.5">
@@ -526,9 +526,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  {/* --- ERROR ALERT --- */}
  {error && view !=='plans' && (
- <div className="w-full p-3.5 bg-rose-500/10 rounded-[var(--r-l)] text-xs text-[var(--ink-2)] flex flex-col gap-2 animate-in fade-in duration-200">
+ <div className="w-full p-3.5 bg-[var(--alert)]/10 rounded-[var(--r-l)] text-xs text-[var(--ink-2)] flex flex-col gap-2 animate-in fade-in duration-200">
  <div className="flex items-start gap-2">
- <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
+ <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)] mt-0.5" />
  <span className="leading-relaxed">{error}</span>
  </div>
  {(error.includes('Google') || error.includes('OAuth') || error.includes('bloqueado')) && (
@@ -590,8 +590,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  </div>
 
  {resetSuccessMsg && (
- <div className="p-3 bg-emerald-500/10 rounded-[var(--r-l)] text-xs text-emerald-400 flex items-center gap-2 animate-in fade-in">
- <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+ <div className="p-3 bg-[var(--ok)]/10 rounded-[var(--r-l)] text-xs text-[var(--ok)] flex items-center gap-2 animate-in fade-in">
+ <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
  <span>{resetSuccessMsg}</span>
  </div>
  )}
@@ -747,8 +747,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  </div>
 
  {resetSuccessMsg && (
- <div className="p-3 bg-emerald-500/10 rounded-[var(--r-l)] text-xs text-emerald-400 flex items-start gap-2.5 animate-in fade-in">
- <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-400" />
+ <div className="p-3 bg-[var(--ok)]/10 rounded-[var(--r-l)] text-xs text-[var(--ok)] flex items-start gap-2.5 animate-in fade-in">
+ <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-[var(--ok)]" />
  <div className="space-y-1">
  <p>{resetSuccessMsg}</p>
  </div>
@@ -842,11 +842,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  {resetConfirmPassword.length > 0 && (
  <div className="text-[11px] px-1 flex items-center gap-1.5 pt-0.5">
  {resetNewPassword === resetConfirmPassword ? (
- <span className="text-emerald-400 font-medium flex items-center gap-1">
+ <span className="text-[var(--ok)] font-medium flex items-center gap-1">
  <Check className="w-3.5 h-3.5" /> Las contraseñas coinciden perfectamente
  </span>
  ) : (
- <span className="text-rose-400 font-medium">
+ <span className="text-[var(--alert)] font-medium">
  Las contraseñas no coinciden aún
  </span>
  )}

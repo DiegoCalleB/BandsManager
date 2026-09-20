@@ -467,7 +467,7 @@ export function DashboardWidgetGrid({
  onClick={() => handleChangeHSpan(widget.id, hVal)}
  className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
  (widget.hSpan ||'normal') === hVal
- ?'bg-purple-500 text-[var(--ink)]'
+ ?'bg-[var(--acc)] text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -502,7 +502,7 @@ export function DashboardWidgetGrid({
  <button
  type="button"
  onClick={() => handleRemoveWidget(widget.id)}
- className="p-1 rounded bg-red-500/15 text-red-400 hover:bg-red-500/30 cursor-pointer"
+ className="p-1 rounded bg-[var(--alert)]/15 text-[var(--alert)] hover:bg-[var(--alert)]/30 cursor-pointer"
  title="Quitar Widget"
  >
  <Trash2 className="w-3.5 h-3.5" />

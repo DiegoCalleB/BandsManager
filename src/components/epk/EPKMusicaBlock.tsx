@@ -292,7 +292,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <button
  type="button"
  onClick={() => quitarVideo(v.id)}
- className="shrink-0 p-2 text-[var(--ink-2)] hover:text-red-400 transition cursor-pointer"
+ className="shrink-0 p-2 text-[var(--ink-2)] hover:text-[var(--alert)] transition cursor-pointer"
  title="Quitar vídeo"
  >
  <Trash2 className="w-4 h-4" />

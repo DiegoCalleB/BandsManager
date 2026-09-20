@@ -47,7 +47,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] hover:border-[var(--hair)] transition-colors"
  >
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-s)] bg-red-500/10 text-red-400 flex items-center justify-center flex-shrink-0">
+ <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--alert)]/10 text-[var(--alert)] flex items-center justify-center flex-shrink-0">
  <Youtube className="w-5 h-5" />
  </div>
  <div>
@@ -89,7 +89,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  <button
  type="button"
  onClick={() => onRemoveVideo(vid.id)}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
  title="Eliminar vídeo"
  >
  <Trash2 className="w-4 h-4" />

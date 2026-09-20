@@ -147,7 +147,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-mono font-black text-sm uppercase tracking-wider hover:bg-amber-300 shadow-xl shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-mono font-black text-sm uppercase tracking-wider hover:bg-[var(--acc)] shadow-xl shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-4 h-4" />
  <span>Convocar Primer Ensayo</span>
@@ -199,7 +199,7 @@ export function EnsayosManager({
  <span
  className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
  currentRehearsal?.estado ==='completado'
- ?'bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30'
+ ?'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30'
  : currentRehearsal?.estado ==='en_curso'
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40 animate-pulse'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -266,7 +266,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>+ Convocar Ensayo</span>

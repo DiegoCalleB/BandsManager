@@ -62,7 +62,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  >
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-bold text-xs ${
- ev.tipo ==='ensayo' ?'bg-blue-500/10 text-blue-400' :'bg-[var(--acc)]/10 text-[var(--acc)]'
+ ev.tipo ==='ensayo' ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--acc)]/10 text-[var(--acc)]'
  }`}>
  <span className="text-[9px] uppercase font-semibold">
  {ev.fecha ? new Date(ev.fecha).toLocaleDateString('es-ES', { month:'short' }) :'DÍA'}
@@ -89,7 +89,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  <button
  type="button"
  onClick={() => onRemoveEvent(ev.id)}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
  >
  <Trash2 className="w-4 h-4" />
  </button>

@@ -33,15 +33,15 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
 
  <button
  onClick={onOpenTuner}
- className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] transition-all cursor-pointer text-left active:scale-95 group"
+ className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] transition-all cursor-pointer text-left active:scale-95 group"
  title="Abrir Afinador de Guitarra, Bajo y Ukelele"
  >
- <div className="p-1 rounded-[var(--r-s)] bg-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
+ <div className="p-1 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ok)] group-hover:scale-105 transition-transform shrink-0">
  <Guitar className="w-3.5 h-3.5" />
  </div>
  <div className="flex flex-col min-w-0">
  <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
- <span className="text-[9px] text-emerald-400/80 font-mono truncate">Guitar, Bass & Uke</span>
+ <span className="text-[9px] text-[var(--ok)]/80 font-mono truncate">Guitar, Bass & Uke</span>
  </div>
  </button>
  </div>
@@ -64,13 +64,13 @@ export const MusicToolsQuickLinks: React.FC<MusicToolsQuickLinksProps> = ({ vari
 
  <button
  onClick={onOpenTuner}
- className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-emerald-500/10 hover:bg-emerald-500/20 text-[var(--ink-2)] transition-all cursor-pointer text-left active:scale-95"
+ className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)] transition-all cursor-pointer text-left active:scale-95"
  title="Abrir Afinador de Guitarra, Bajo y Ukelele"
  >
- <Guitar className="w-4 h-4 text-emerald-400 shrink-0" />
+ <Guitar className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <div className="flex flex-col min-w-0">
  <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
- <span className="text-[9px] text-emerald-400/70 font-mono truncate">Guitar, Bass & Uke</span>
+ <span className="text-[9px] text-[var(--ok)]/70 font-mono truncate">Guitar, Bass & Uke</span>
  </div>
  </button>
  </div>

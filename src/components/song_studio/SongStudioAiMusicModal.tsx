@@ -125,7 +125,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  </div>
 
  {error && (
- <div className="p-3 rounded-[var(--r-m)] bg-red-950/40 text-xs text-red-300 font-mono">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/40 text-xs text-[var(--alert)] font-mono">
  ⚠️ {error}
  </div>
  )}

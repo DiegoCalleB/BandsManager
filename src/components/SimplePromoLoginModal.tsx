@@ -347,8 +347,8 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
 
  {error && (
- <div className="w-full p-3.5 bg-rose-500/10 rounded-[var(--r-l)] text-xs text-[var(--ink-2)] flex items-start gap-2 animate-in fade-in duration-200">
- <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
+ <div className="w-full p-3.5 bg-[var(--alert)]/10 rounded-[var(--r-l)] text-xs text-[var(--ink-2)] flex items-start gap-2 animate-in fade-in duration-200">
+ <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)] mt-0.5" />
  <span className="leading-relaxed">{error}</span>
  </div>
  )}
@@ -367,7 +367,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
  </div>
 
  {resetSuccessMsg && (
- <div className="p-3 bg-emerald-500/10 rounded-[var(--r-l)] text-xs text-emerald-400 flex items-center gap-2">
+ <div className="p-3 bg-[var(--ok)]/10 rounded-[var(--r-l)] text-xs text-[var(--ok)] flex items-center gap-2">
  <CheckCircle2 className="w-4 h-4 shrink-0" />
  <span>{resetSuccessMsg}</span>
  </div>

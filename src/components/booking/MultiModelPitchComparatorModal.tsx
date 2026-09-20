@@ -179,7 +179,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  const getProviderBadge = (id: string) => {
  if (id ==='gemini') return'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30';
- if (id ==='deepseek') return'bg-sky-500/15 text-sky-300 border-[var(--acc)]/30';
+ if (id ==='deepseek') return'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30';
  return'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]700';
  };
 
@@ -325,13 +325,13 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  {/* COMPARATIVA DE COSTES ECONÓMICOS / PROYECCIÓN DE GASTO */}
  <div className="px-4 py-3 bg-gradient-to-r from-[var(--surface)] via-[var(--bg)] to-[var(--surface)] border-b border-[var(--hair)]800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div className="flex items-center gap-2">
- <Coins className="w-4 h-4 text-emerald-400 shrink-0" />
+ <Coins className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <div>
  <div className="flex items-center gap-2">
  <span className="text-xs font-bold text-[var(--ink)]">
  Calculadora de Inversión y Coste por Envío:
  </span>
- <span className="text-[10px] px-1.5 py-0.2 bg-emerald-500/10 text-[var(--ink-2)] rounded font-mono">
+ <span className="text-[10px] px-1.5 py-0.2 bg-[var(--ok)]/10 text-[var(--ink-2)] rounded font-mono">
  Tarifas Oficiales 2025/2026
  </span>
  </div>
@@ -381,8 +381,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
  {/* NOTIFICATION */}
  {appliedSuccess && (
- <div className="mx-4 mt-3 p-3 bg-emerald-500/20 rounded-[var(--r-m)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-2 animate-fadeIn">
- <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+ <div className="mx-4 mt-3 p-3 bg-[var(--ok)]/20 rounded-[var(--r-m)] text-[var(--ink-2)] text-xs font-medium flex items-center gap-2 animate-fadeIn">
+ <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
  <span>{appliedSuccess}</span>
  </div>
  )}
@@ -464,7 +464,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
  title="Copiar propuesta"
  >
- {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+ {isCopied ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Copy className="w-3.5 h-3.5" />}
  </button>
  </div>
 
@@ -472,7 +472,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="px-3.5 py-2.5 bg-black/40 border-b border-[var(--hair)]800/70 flex items-center justify-between text-xs">
  <div>
  <div className="flex items-center gap-1.5">
- <Coins className="w-3.5 h-3.5 text-emerald-400" />
+ <Coins className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span className="font-bold text-[var(--ink-2)] font-mono text-sm">
  {displayCost}
  </span>
@@ -488,7 +488,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="text-right">
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
  isDeepSeek
- ?'bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30'
+ ?'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30'
  :'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30'
  }`}>
  {isDeepSeek ?'10x más barato' :'Ultra rápido'}
@@ -529,7 +529,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-mono">
  <span>{wordCount} palabras ({charCount} car.)</span>
  {isDeepSeek ? (
- <span className="text-sky-300">Tono: Directo y comercial</span>
+ <span className="text-[var(--acc)]">Tono: Directo y comercial</span>
  ) : (
  <span className="text-[var(--acc)]/70">Tono: Ágil y contextual</span>
  )}
@@ -541,7 +541,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  disabled={!prop.text && !prop.fallbackText}
  className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  isSelected
- ?'bg-emerald-500 text-[var(--ink)] shadow-md shadow-emerald-500/20'
+ ?'bg-[var(--ok)] text-[var(--ink)] shadow-md shadow-emerald-500/20'
  :'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 hover:/60'
  }`}
  >
@@ -586,19 +586,19 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <th className="py-1.5 px-2">Salida (1M tok)</th>
  <th className="py-1.5 px-2">Coste 1 Pitch</th>
  <th className="py-1.5 px-2 font-bold text-[var(--acc)]/70">Coste 100 Salas</th>
- <th className="py-1.5 px-2 font-bold text-emerald-400">Coste 1.000 Salas</th>
+ <th className="py-1.5 px-2 font-bold text-[var(--ok)]">Coste 1.000 Salas</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-zinc-800/50 font-sans text-[var(--ink-2)]">
  <tr className="hover:bg-[var(--surface)]/40">
- <td className="py-1.5 px-2 font-bold text-sky-400 flex items-center gap-1">
+ <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
  <span>🚀</span> DeepSeek V3
  </td>
  <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,14 $ (0,13 €)</td>
  <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,28 $ (0,26 €)</td>
- <td className="py-1.5 px-2 font-mono font-bold text-emerald-400">~0,00014 €</td>
+ <td className="py-1.5 px-2 font-mono font-bold text-[var(--ok)]">~0,00014 €</td>
  <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,014 €</td>
- <td className="py-1.5 px-2 font-mono font-bold text-emerald-400">~0,14 € (Máximo ROI)</td>
+ <td className="py-1.5 px-2 font-mono font-bold text-[var(--ok)]">~0,14 € (Máximo ROI)</td>
  </tr>
  <tr className="hover:bg-[var(--surface)]/40">
  <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
@@ -606,7 +606,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  </td>
  <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,10 $ (0,09 €)</td>
  <td className="py-1.5 px-2 font-mono text-[var(--ink-2)]">0,40 $ (0,37 €)</td>
- <td className="py-1.5 px-2 font-mono font-bold text-emerald-400">~0,00018 €</td>
+ <td className="py-1.5 px-2 font-mono font-bold text-[var(--ok)]">~0,00018 €</td>
  <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,018 €</td>
  <td className="py-1.5 px-2 font-mono font-bold text-[var(--acc)]/70">~0,18 € (o 0 € con Free Tier)</td>
  </tr>

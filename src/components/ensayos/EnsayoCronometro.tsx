@@ -79,7 +79,7 @@ export function EnsayoCronometro({
  return (
  <div className="flex items-center gap-2 bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-m)] px-3 py-1.5 shadow-sm">
  <Clock className={`w-3.5 h-3.5 ${isActive ?'text-[var(--acc)] animate-pulse' :'text-[var(--ink-2)]'}`} />
- <span className={`font-mono font-bold text-sm tracking-wider ${isOvertime ?'text-rose-400' :'text-[var(--ink)]'}`}>
+ <span className={`font-mono font-bold text-sm tracking-wider ${isOvertime ?'text-[var(--alert)]' :'text-[var(--ink)]'}`}>
  {formatTime(seconds)}
  </span>
  <button
@@ -87,7 +87,7 @@ export function EnsayoCronometro({
  className={`p-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  isActive
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30'
- :'bg-emerald-500/20 text-[var(--ink-2)] hover:bg-emerald-500/30'
+ :'bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30'
  }`}
  title={isActive ?'Pausar Cronómetro' :'Iniciar Cronómetro'}
  >
@@ -120,7 +120,7 @@ export function EnsayoCronometro({
  </div>
 
  {isOvertime && (
- <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/15 text-[var(--ink-2)] animate-pulse">
+ <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--alert)]/15 text-[var(--ink-2)] animate-pulse">
  <AlertCircle className="w-3 h-3" /> Tiempo excedido
  </span>
  )}
@@ -130,7 +130,7 @@ export function EnsayoCronometro({
  <div className="flex items-baseline justify-between gap-4 my-2">
  <div className="flex items-baseline gap-2">
  <span className={`text-3xl sm:text-4xl font-mono font-black tracking-tight ${
- isOvertime ?'text-rose-400' : isActive ?'text-[var(--acc)]' :'text-[var(--ink)]'
+ isOvertime ?'text-[var(--alert)]' : isActive ?'text-[var(--acc)]' :'text-[var(--ink)]'
  }`}>
  {formatTime(seconds)}
  </span>
@@ -146,7 +146,7 @@ export function EnsayoCronometro({
  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shadow-sm active:scale-95 ${
  isActive
  ?'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60 shadow-amber-0/20'
- :'bg-emerald-500 text-[var(--ink)] hover:bg-emerald-400 shadow-emerald-500/20'
+ :'bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] shadow-emerald-500/20'
  }`}
  >
  {isActive ? (

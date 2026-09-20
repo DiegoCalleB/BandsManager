@@ -102,7 +102,7 @@ export function AddLeadModal({
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
  {sectionTab ==='medios' ? (
- <Radio className="w-5 h-5 text-rose-400" />
+ <Radio className="w-5 h-5 text-[var(--alert)]" />
  ) : sectionTab ==='grupos' ? (
  <Briefcase className="w-5 h-5 text-[var(--acc)]" />
  ) : (
@@ -110,7 +110,7 @@ export function AddLeadModal({
  )}
  <h3
  className={`text-sm font-bold font-display uppercase tracking-widest ${
- isStitchLight ?'text-sky-400' :'text-[var(--acc)]'
+ isStitchLight ?'text-[var(--acc)]' :'text-[var(--acc)]'
  }`}
  >
  {sectionTab ==='medios'
@@ -229,7 +229,7 @@ export function AddLeadModal({
  <button
  type="button"
  onClick={() => setNewLeadData(prev => ({ ...prev, imagen_url:'' }))}
- className="text-[10px] text-rose-400 hover:underline px-2 py-1 cursor-pointer"
+ className="text-[10px] text-[var(--alert)] hover:underline px-2 py-1 cursor-pointer"
  >
  Quitar
  </button>
@@ -272,7 +272,7 @@ export function AddLeadModal({
  )}
 
  {modalScrapeError && (
- <div className="p-2.5 rounded-[var(--r-s)] text-[10px] font-sans text-rose-400 bg-rose-500/15">
+ <div className="p-2.5 rounded-[var(--r-s)] text-[10px] font-sans text-[var(--alert)] bg-[var(--alert)]/15">
  ⚠️ {modalScrapeError}
  </div>
  )}
@@ -490,7 +490,7 @@ export function AddLeadModal({
  type="submit"
  className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg ${
  isStitchLight
- ?'bg-sky-500 hover:bg-sky-400 text-[var(--ink)]'
+ ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)]'
  :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)]'
  }`}
  >

@@ -85,8 +85,8 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
  {/* Notification Badge */}
  {copiedNotification && (
- <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-emerald-500/20 text-[var(--ink-2)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
- <Check className="w-3 h-3 text-emerald-400" />
+ <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
+ <Check className="w-3 h-3 text-[var(--ok)]" />
  <span>¡Estilo aplicado al nombre!</span>
  </div>
  )}

@@ -286,7 +286,7 @@ export function ConvocarEnsayoModal({
  <button
  type="button"
  onClick={() => handleRemoveObjetivo(obj.id)}
- className="text-[var(--ink-2)] hover:text-rose-400 p-0.5"
+ className="text-[var(--ink-2)] hover:text-[var(--alert)] p-0.5"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -343,7 +343,7 @@ export function ConvocarEnsayoModal({
  </button>
  <button
  type="submit"
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 transition-all cursor-pointer shadow-md shadow-amber-400/20 active:scale-95"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] transition-all cursor-pointer shadow-md shadow-amber-400/20 active:scale-95"
  >
  {isEditing ?'Guardar Cambios' :'Convocar Ensayo'}
  </button>

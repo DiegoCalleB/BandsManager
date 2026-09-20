@@ -339,7 +339,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  <span className="text-[var(--ink-2)]">•</span>
  )}
  {config.firmaEmail?.email && (
- <span className="text-sky-600 font-medium">{config.firmaEmail.email}</span>
+ <span className="text-[var(--acc)] font-medium">{config.firmaEmail.email}</span>
  )}
  </div>
  </div>
@@ -475,7 +475,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  onClick={handleCopyRichSignature}
  className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md ${
  copiadoFirma ==='rich'
- ?'bg-emerald-500 text-[var(--ink)] ring-2 ring-emerald-400'
+ ?'bg-[var(--ok)] text-[var(--ink)] ring-2 ring-emerald-400'
  :'bg-gradient-to-r from-[var(--acc)] to-amber-400 hover:from-amber-400 hover:to-[var(--acc-soft)] text-[var(--ink)] shadow-amber-0/10'
  }`}
  title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"
@@ -500,12 +500,12 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  onClick={handleCopyHtmlCode}
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='html'
- ?'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/40'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/40'
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Copiar el código fuente HTML puro de la firma"
  >
- {copiadoFirma ==='html' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Code className="w-3.5 h-3.5 text-[var(--acc)]" />}
+ {copiadoFirma ==='html' ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Code className="w-3.5 h-3.5 text-[var(--acc)]" />}
  <span>{copiadoFirma ==='html' ?'¡HTML Copiado!' :'HTML'}</span>
  </button>
 
@@ -515,12 +515,12 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  onClick={handleCopyPlainText}
  className={`px-3 py-2.5 rounded-[var(--r-m)] text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
  copiadoFirma ==='text'
- ?'bg-emerald-500/20 text-[var(--ink-2)] border-[var(--ok)]/40'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/40'
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Copiar versión en texto plano"
  >
- {copiadoFirma ==='text' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <FileText className="w-3.5 h-3.5 text-[var(--ink-2)]" />}
+ {copiadoFirma ==='text' ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <FileText className="w-3.5 h-3.5 text-[var(--ink-2)]" />}
  <span>{copiadoFirma ==='text' ?'¡Texto Copiado!' :'Texto'}</span>
  </button>
  </div>
@@ -528,8 +528,8 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
  {/* AVISO / TOAST DE ÉXITO */}
  {copiadoFirma && (
- <div className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/10 text-[var(--ink-2)] text-xs flex items-start gap-2 animate-fadeIn">
- <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ink-2)] text-xs flex items-start gap-2 animate-fadeIn">
+ <Check className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
  <div className="leading-snug">
  {copiadoFirma ==='rich' && (
  <span><strong>¡Firma visual copiada!</strong> Ahora ve a los ajustes de firma de tu correo (Gmail, Outlook, Apple Mail...) y pulsa <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-mono text-[10px]">Ctrl + V</kbd> (o <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-mono text-[10px]">Cmd + V</kbd>) para pegarla con todos sus enlaces y logos.</span>

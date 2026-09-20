@@ -112,7 +112,7 @@ export function AIBandScoutModal({
  {/* Header */}
  <div className="p-4 border-b border-[var(--hair)]/10 flex justify-between items-center bg-gradient-to-r from-amber-0/10 to-orange-500/10">
  <div className="flex items-center gap-3">
- <div className="p-2 bg-[var(--acc)]/20 rounded-[var(--r-s)] text-amber-500">
+ <div className="p-2 bg-[var(--acc)]/20 rounded-[var(--r-s)] text-[var(--acc)]">
  <Sparkles className="w-5 h-5" />
  </div>
  <div>
@@ -128,7 +128,7 @@ export function AIBandScoutModal({
  <div className="p-5 flex-1 overflow-y-auto">
  {activeCampaign && (
  <div className="mb-6 p-4 bg-[var(--acc)]/10 rounded-[var(--r-m)] flex items-start gap-3">
- <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+ <Sparkles className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
  <div>
  <p className={`text-sm font-medium ${textColor}`}>Contexto de tu Campaña Activa</p>
  <p className={`text-xs ${subtextColor} mt-1`}>
@@ -187,7 +187,7 @@ export function AIBandScoutModal({
  <button
  onClick={handleSearch}
  disabled={isSearching}
- className="px-6 py-2.5 bg-[var(--acc)] hover:bg-amber-600 text-[var(--ink)] font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-0/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+ className="px-6 py-2.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-0/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
  >
  {isSearching ? (
  <>
@@ -204,7 +204,7 @@ export function AIBandScoutModal({
  </div>
 
  {error && (
- <div className="mb-6 p-4 bg-red-500/10 text-red-500 rounded-[var(--r-m)] flex items-center gap-2 text-sm">
+ <div className="mb-6 p-4 bg-[var(--alert)]/10 text-[var(--alert)] rounded-[var(--r-m)] flex items-center gap-2 text-sm">
  <AlertCircle className="w-5 h-5 shrink-0" />
  <p>{error}</p>
  </div>

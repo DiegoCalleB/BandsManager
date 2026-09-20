@@ -239,10 +239,10 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <button
  type="button"
  onClick={handlePresetMusicFirst}
- className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-sky-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border-[var(--hair)] flex items-center gap-1 transition"
+ className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--acc)] rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border-[var(--hair)] flex items-center gap-1 transition"
  title="Poner la música, vídeos y reproductor al principio"
  >
- <Music className="w-3 h-3 text-sky-400" />
+ <Music className="w-3 h-3 text-[var(--acc)]" />
  <span>Música</span>
  </button>
  <button
@@ -296,7 +296,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  {item.meta.defaultBadge}
  </span>
  {!item.isVisible && (
- <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-rose-500/10 text-rose-400 shrink-0">
+ <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[var(--alert)]/10 text-[var(--alert)] shrink-0">
  Oculta
  </span>
  )}
@@ -316,7 +316,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
  item.isVisible
  ?'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-stone-300 border-[var(--hair)]'
- :'bg-[var(--alert-soft)] text-rose-400 border-[var(--alert)]/60 hover:bg-[var(--alert-soft)]'
+ :'bg-[var(--alert-soft)] text-[var(--alert)] border-[var(--alert)]/60 hover:bg-[var(--alert-soft)]'
  }`}
  title={item.isVisible ?'Ocultar esta sección en el EPK' :'Mostrar esta sección en el EPK'}
  >

@@ -107,7 +107,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <button
  type="button"
  onClick={() => setConfig({ ...config, logoUrl:'' })}
- className="p-2.5 bg-[var(--surface)] hover:bg-red-500/20 text-[var(--ink-2)] hover:text-red-400 rounded-[var(--r-m)] transition cursor-pointer"
+ className="p-2.5 bg-[var(--surface)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-m)] transition cursor-pointer"
  title="Eliminar logo"
  >
  <Trash2 className="w-4 h-4" />
@@ -153,7 +153,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <button
  type="button"
  onClick={() => setConfig({ ...config, dossierPdfUrl:'', dossierPdfName:'' })}
- className="p-2 bg-[var(--surface)] hover:bg-red-500/20 text-[var(--ink-2)] hover:text-red-400 rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
+ className="p-2 bg-[var(--surface)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
  title="Eliminar dossier"
  >
  <Trash2 className="w-4 h-4" />
@@ -246,7 +246,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-3">
  <div className="flex items-start justify-between gap-4">
  <div className="flex items-center gap-3 overflow-hidden">
- <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-amber-500 flex items-center justify-center shrink-0">
+ <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] flex items-center justify-center shrink-0">
  <FileDown className="w-5 h-5" />
  </div>
  <div className="min-w-0">
@@ -257,7 +257,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <button
  type="button"
  onClick={() => setConfig({ ...config, riderPdfUrl:'', riderPdfName:'' })}
- className="p-1.5 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-red-400 rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
+ className="p-1.5 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
  title="Eliminar PDF"
  >
  <Trash2 className="w-4 h-4" />
@@ -364,7 +364,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
  <button
  type="button"
  onClick={() => quitarFotoGaleria(url)}
- className="absolute top-1.5 right-1.5 p-1.5 bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-red-400 rounded-[var(--r-s)] opacity-0 group-hover:opacity-100 transition cursor-pointer"
+ className="absolute top-1.5 right-1.5 p-1.5 bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] opacity-0 group-hover:opacity-100 transition cursor-pointer"
  title="Quitar foto"
  >
  <Trash2 className="w-3.5 h-3.5" />

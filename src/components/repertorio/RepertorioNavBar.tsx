@@ -54,7 +54,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  <div className="flex items-center gap-2.5 min-w-0">
  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 shadow-xs ${
  isStitchLight 
- ?'bg-amber-100 text-amber-700' 
+ ?'bg-[var(--acc)] text-[var(--acc)]' 
  :'bg-[var(--acc)]/15 text-[var(--acc)]'
  }`}>
  <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
@@ -267,7 +267,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setCatalogoViewMode('canciones')}
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
  catalogoViewMode ==='canciones'
- ?'bg-emerald-500/20 text-[var(--ink-2)] shadow-xs font-bold'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] shadow-xs font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

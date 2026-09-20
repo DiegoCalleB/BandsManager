@@ -17,7 +17,7 @@ export const NotificationToastContainer: React.FC<NotificationToastContainerProp
  <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
  {notifications.map((toast) => {
  let bg ='bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]';
- let icon = <Info className="w-5 h-5 text-sky-400 shrink-0" />;
+ let icon = <Info className="w-5 h-5 text-[var(--acc)] shrink-0" />;
 
  if (toast.type ==='success') {
  bg ='bg-[var(--ok-soft)] border-[var(--ok)]/40 text-[var(--ink)]';

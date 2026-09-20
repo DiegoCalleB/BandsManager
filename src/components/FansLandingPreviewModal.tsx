@@ -99,7 +99,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setPreviewScreen('success')}
  className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
  previewScreen ==='success'
- ?'bg-emerald-500 text-[var(--ink)] shadow-md font-extrabold'
+ ?'bg-[var(--ok)] text-[var(--ink)] shadow-md font-extrabold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -225,7 +225,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  onClick={() => setPreviewScreen('success')}
  className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all ${
  previewScreen ==='success'
- ?'bg-emerald-500 text-[var(--ink)]'
+ ?'bg-[var(--ok)] text-[var(--ink)]'
  :'text-[var(--ink-2)]'
  }`}
  >
@@ -313,14 +313,14 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  {/* Barra simulada de navegador */}
  <div className="bg-[var(--surface)] border-b px-4 py-2 flex items-center justify-between gap-3 text-xs font-mono shrink-0">
  <div className="flex items-center gap-1.5">
- <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+ <div className="w-2.5 h-2.5 rounded-full bg-[var(--alert)]/80" />
  <div className="w-2.5 h-2.5 rounded-full bg-[var(--acc)]/80" />
- <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+ <div className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]/80" />
  </div>
  <div className="bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1 text-[var(--ink-2)] text-[11px] flex-1 max-w-md text-center truncate font-mono">
  https://bandmanager.io/unete{selectedConcert ? `/${selectedConcert.ciudad.toLowerCase()}-${selectedConcert.sala.toLowerCase().replace(/\s+/g,'-')}` :''}?lang={selectedLanguage}
  </div>
- <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
+ <span className="text-[10px] text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded font-bold">
  HTTPS
  </span>
  </div>
@@ -348,7 +348,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  {/* PIE DE PÁGINA INFORMATIVO Y ACCESIBLE */}
  <footer className="w-full bg-[var(--surface)] border-t border-[var(--hair)] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-mono text-[var(--ink-2)] shrink-0 flex items-center justify-between">
  <div className="flex items-center gap-2 truncate">
- <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0 inline-block" />
+ <span className="w-2 h-2 rounded-full bg-[var(--ok)] animate-pulse shrink-0 inline-block" />
  <span className="truncate">{t('previewDisclaimer')}</span>
  </div>
  <button

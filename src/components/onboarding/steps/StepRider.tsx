@@ -129,14 +129,14 @@ export const StepRider: React.FC<StepRiderProps> = ({
  />
 
  {riderPdfUrl ? (
- <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-emerald-500/10">
+ <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10">
  <div className="flex items-center gap-3">
- <FileText className="w-6 h-6 text-emerald-400" />
+ <FileText className="w-6 h-6 text-[var(--ok)]" />
  <div>
  <span className="text-xs font-semibold text-[var(--ink-2)] block">
  {riderPdfName ||'Rider_Tecnico_Oficial.pdf'}
  </span>
- <span className="text-[10px] text-emerald-400/80">Documento listo en el EPK interactivo</span>
+ <span className="text-[10px] text-[var(--ok)]/80">Documento listo en el EPK interactivo</span>
  </div>
  </div>
  <div className="flex items-center gap-2">
@@ -150,7 +150,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  <button
  type="button"
  onClick={() => { setRiderPdfUrl(''); setRiderPdfName(''); }}
- className="p-1 rounded text-[var(--ink-2)] hover:text-red-400"
+ className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--alert)]"
  >
  <Trash2 className="w-4 h-4" />
  </button>

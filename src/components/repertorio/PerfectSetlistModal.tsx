@@ -237,7 +237,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <div className="sticky top-0 z-10 bg-[var(--surface)]">
  <div className="border-b p-3 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
- <Wand2 className="w-5 h-5 text-emerald-400" />
+ <Wand2 className="w-5 h-5 text-[var(--ok)]" />
  <div>
  <h2 className="text-base font-bold">Setlist Perfecto</h2>
  {setlistName && <p className="text-xs text-[var(--ink-2)]">{setlistName}</p>}
@@ -280,7 +280,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <div className="p-4 space-y-4">
  {!plan && !loading && !error && (
  <div className="text-center py-8">
- <Wand2 className="w-12 h-12 text-emerald-400/50 mx-auto mb-4" />
+ <Wand2 className="w-12 h-12 text-[var(--ok)]/50 mx-auto mb-4" />
  <p className="text-[var(--ink-2)] mb-3">
  Deja que la IA revise este setlist Y el resto de tu catálogo, y te proponga un plan
  de cambios: reordenar canciones, quitar las que no encajen, añadir otras del
@@ -291,7 +291,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  </p>
  <button
  onClick={() => onGenerate()}
- className="bg-emerald-600 hover:bg-emerald-700 text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
+ className="bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
  >
  Generar Plan
  </button>
@@ -300,18 +300,18 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
  {loading && (
  <div className="text-center py-12">
- <Loader className="w-8 h-8 animate-spin text-emerald-400 mx-auto mb-4" />
+ <Loader className="w-8 h-8 animate-spin text-[var(--ok)] mx-auto mb-4" />
  <p className="text-[var(--ink-2)]">Analizando setlist y catálogo...</p>
  </div>
  )}
 
  {error && (
- <div className="bg-red-900/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
- <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+ <div className="bg-[var(--alert)]/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
+ <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
  <div>
- <p className="font-medium text-red-200">Error</p>
- <p className="text-sm text-red-300">{error}</p>
- <button onClick={() => onGenerate()} className="mt-3 text-sm text-red-300 hover:text-red-200 underline">
+ <p className="font-medium text-[var(--alert)]">Error</p>
+ <p className="text-sm text-[var(--alert)]">{error}</p>
+ <button onClick={() => onGenerate()} className="mt-3 text-sm text-[var(--alert)] hover:text-[var(--alert)] underline">
  Reintentar
  </button>
  </div>
@@ -360,12 +360,12 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  ↩️ Deshacer
  </button>
  ) : isApplied ? (
- <span className="shrink-0 text-[10px] text-emerald-400 font-mono font-medium whitespace-nowrap">✓ Aplicado</span>
+ <span className="shrink-0 text-[10px] text-[var(--ok)] font-mono font-medium whitespace-nowrap">✓ Aplicado</span>
  ) : (
  <button
  type="button"
  onClick={() => handleApply(idx)}
- className="shrink-0 px-2 py-0.5 rounded bg-emerald-700/50 hover:bg-emerald-600 text-emerald-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-[var(--ok)]/50 hover:bg-[var(--ok)] text-[var(--ok)] font-bold text-[10px] font-mono transition whitespace-nowrap"
  title="Aplicar este cambio al setlist"
  >
  ✓ Aplicar
@@ -449,7 +449,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <button
  onClick={() => handleGenerateWithFeedback()}
  title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
- className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  🔄 Regenerar
  </button>

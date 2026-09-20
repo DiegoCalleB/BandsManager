@@ -70,7 +70,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
  <button
  type="button"
  onClick={() => onRemoveMember(m.id)}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
  title="Quitar miembro"
  >
  <Trash2 className="w-4 h-4" />

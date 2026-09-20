@@ -168,8 +168,8 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  {/* Header */}
  <div className="flex justify-between items-start border-b border-[var(--hair)]800/80 pb-3">
  <div>
- <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-black uppercase tracking-wider mb-1">
- <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+ <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] font-mono text-[10px] font-black uppercase tracking-wider mb-1">
+ <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
  Concierto Confirmado
  </div>
  <h3 className="text-lg sm:text-xl font-black font-mono text-[var(--ink)]">
@@ -305,7 +305,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  isSelected
  ?'bg-[var(--acc)]/15 /80 shadow-md'
  : isOptimal
- ?'bg-emerald-500/10 border-[var(--ok)]/40 hover:bg-emerald-500/15'
+ ?'bg-[var(--ok)]/10 border-[var(--ok)]/40 hover:bg-[var(--ok)]/15'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 hover:border-[var(--hair)]700'
  }`}
  >
@@ -316,7 +316,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  {st.nombre}
  </span>
  {isOptimal && (
- <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[9px] font-black uppercase">
+ <span className="px-2 py-0.5 rounded-full bg-[var(--ok)]/20 text-[var(--ok)] font-mono text-[9px] font-black uppercase">
  ✨ Sugerido
  </span>
  )}

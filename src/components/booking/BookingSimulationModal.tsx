@@ -89,7 +89,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  style={{ borderColor: colors.border }}
  >
  <div className="flex items-center gap-3">
- <div className="p-2.5 rounded-[var(--r-m)] bg-purple-500/10 text-purple-400">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]">
  <Bot className="w-6 h-6" />
  </div>
  <div>
@@ -174,7 +174,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <button
  onClick={handleGenerate}
  disabled={isGenerating}
- className="w-full py-2.5 rounded-[var(--r-m)] font-semibold text-white bg-purple-600 hover:bg-purple-500 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-600/20"
+ className="w-full py-2.5 rounded-[var(--r-m)] font-semibold text-white bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-600/20"
  >
  {isGenerating ? (
  <span className="animate-pulse">Generando respuesta con Gemini IA...</span>
@@ -190,7 +190,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 space-y-3" style={{ borderColor: colors.border }}>
  <div className="flex items-center justify-between border-b pb-2" style={{ borderColor: colors.border }}>
  <span className="font-semibold text-[var(--ink-2)]">Vista Previa del Mensaje</span>
- <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">
+ <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
  Listo para registrar
  </span>
  </div>
@@ -215,7 +215,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
  <button
  onClick={handleCommit}
  disabled={!simulationMessage}
- className="px-5 py-2 rounded-[var(--r-m)] font-semibold text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 transition-all flex items-center gap-2 shadow-lg shadow-emerald-600/20"
+ className="px-5 py-2 rounded-[var(--r-m)] font-semibold text-white bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 transition-all flex items-center gap-2 shadow-lg shadow-emerald-600/20"
  >
  <CheckCircle2 className="w-4 h-4" />
  Registrar en Hilo de Emails

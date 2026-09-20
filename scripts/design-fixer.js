@@ -147,6 +147,56 @@ function fixBorderColors(content) {
   return { content, changed };
 }
 
+// Archivos donde bg-{color}/text-{color} son color de ESTADO suelto (1-2 familias,
+// cada una mapea a un token semántico distinto: ok/alert/acc sin colisión) — no
+// paletas de categoría como CalendarView (6 colores para distinguir campañas) o
+// ReelsMetricsView (series de gráfico). Verificado a mano el 2026-09-20: tokenizar
+// fuera de esta lista arriesga fundir categorías visualmente distintas en un mismo
+// color. Lista blanca deliberada, no crece sola con futuros --fix.
+const BG_TEXT_SAFE_FILES = new Set([
+  'components/BandSwitcherModal.tsx', 'components/ErrorBoundary.tsx', 'components/FansLandingPreviewModal.tsx',
+  'components/LoginModal.tsx', 'components/MetronomeModal.tsx', 'components/NotificationToastContainer.tsx',
+  'components/PlanLimitModal.tsx', 'components/SimplePromoLoginModal.tsx', 'components/bandCRM/AIBandScoutModal.tsx',
+  'components/bandCRM/BandPitchModal.tsx', 'components/bandCRM/ChangeBandImageModal.tsx', 'components/booking/AddLeadModal.tsx',
+  'components/booking/BoloConfirmadoSetlistModal.tsx', 'components/booking/BookingSimulationModal.tsx',
+  'components/booking/BulkProgressModal.tsx', 'components/booking/ChangeLeadImageModal.tsx',
+  'components/booking/ExampleThreadsSection.tsx', 'components/booking/LeadHealthBadge.tsx',
+  'components/booking/MultiModelPitchComparatorModal.tsx', 'components/booking/NegotiationSimulationModal.tsx',
+  'components/common/BandNameStylerHelper.tsx', 'components/common/HolidayDateWarning.tsx',
+  'components/common/MusicToolsQuickLinks.tsx', 'components/common/ReliabilityBadge.tsx',
+  'components/dashboard/DashboardWidgetGrid.tsx', 'components/dashboard/widgets/CalendarWidget.tsx',
+  'components/ensayos/ConvocarEnsayoModal.tsx', 'components/ensayos/EnsayoCronometro.tsx',
+  'components/ensayos/EnsayosManager.tsx', 'components/epk/EPKArchivosBlock.tsx', 'components/epk/EPKFirmaQRBlock.tsx',
+  'components/epk/EPKMusicaBlock.tsx', 'components/epk/EPKPerfilBlock.tsx', 'components/epk/EPKPlantillasBlock.tsx',
+  'components/epk/EPKPrensaBlock.tsx', 'components/onboarding/MusicianOnboardingModal.tsx',
+  'components/onboarding/steps/StepEvents.tsx', 'components/onboarding/steps/StepLanguage.tsx',
+  'components/onboarding/steps/StepMembers.tsx', 'components/onboarding/steps/StepMusicSetlist.tsx',
+  'components/onboarding/steps/StepPhotos.tsx', 'components/onboarding/steps/StepRider.tsx',
+  'components/onboarding/steps/StepVideos.tsx', 'components/repertorio/AssignSetlistModal.tsx',
+  'components/repertorio/ConfirmDeleteAlbumModal.tsx', 'components/repertorio/ConfirmDeleteModal.tsx',
+  'components/repertorio/EscenarioView.tsx', 'components/repertorio/PerfectSetlistModal.tsx',
+  'components/repertorio/RepertorioNavBar.tsx', 'components/repertorio/SongModal.tsx',
+  'components/song_studio/SongStudioAiComposerModal.tsx', 'components/song_studio/SongStudioAiGeneratorModal.tsx',
+  'components/song_studio/SongStudioAiMusicModal.tsx', 'components/song_studio/SongStudioDeleteConfirmModal.tsx',
+]);
+
+function fixBgTextColors(content) {
+  let changed = false;
+  for (const [color, token] of Object.entries(BORDER_COLOR_MAP)) {
+    if (token === '--hair') continue; // gray scale bg/text handled separately, más riesgo
+    for (const prop of ['bg', 'text']) {
+      const re = new RegExp(`\\b${prop}-${color}-\\d+(\\/\\d+)?\\b`, 'g');
+      const before = content;
+      content = content.replace(re, (_m, opacity) => `${prop}-[var(${token})]${opacity || ''}`);
+      if (content !== before) {
+        console.log(`  ✓ ${prop}-${color}-* → var(${token})`);
+        changed = true;
+      }
+    }
+  }
+  return { content, changed };
+}
+
 function fixFile(filePath) {
   let content = fs.readFileSync(filePath, 'utf-8');
   let changed = false;
@@ -163,6 +213,14 @@ function fixFile(filePath) {
   const borderResult = fixBorderColors(content);
   content = borderResult.content;
   if (borderResult.changed) changed = true;
+
+  const srcDir = path.join(process.cwd(), 'src') + path.sep;
+  const relPath = filePath.startsWith(srcDir) ? filePath.slice(srcDir.length) : filePath;
+  if (BG_TEXT_SAFE_FILES.has(relPath.split(path.sep).join('/'))) {
+    const bgTextResult = fixBgTextColors(content);
+    content = bgTextResult.content;
+    if (bgTextResult.changed) changed = true;
+  }
 
   if (changed) {
     fs.writeFileSync(filePath, content);

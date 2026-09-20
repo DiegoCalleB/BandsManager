@@ -177,7 +177,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  </div>
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] flex items-start gap-2.5">
- <div className="p-2 rounded-[var(--r-s)] bg-sky-500/10 text-sky-400 shrink-0">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] shrink-0">
  <MessageSquareText className="w-4 h-4" />
  </div>
  <div>
@@ -189,7 +189,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  </div>
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--hair)] flex items-start gap-2.5">
- <div className="p-2 rounded-[var(--r-s)] bg-emerald-500/10 text-emerald-400 shrink-0">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ok)] shrink-0">
  <FileText className="w-4 h-4" />
  </div>
  <div>

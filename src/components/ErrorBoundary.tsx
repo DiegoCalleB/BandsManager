@@ -47,7 +47,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
  return (
  <div className="p-8 rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink-2)] space-y-4 max-w-2xl mx-auto my-8">
  <div className="flex items-center gap-3 text-[var(--acc)]">
- <AlertTriangle className="w-8 h-8 shrink-0 text-amber-500" />
+ <AlertTriangle className="w-8 h-8 shrink-0 text-[var(--acc)]" />
  <h3 className="text-lg font-bold">
  {this.props.fallbackTitle ||'Ha ocurrido un error al cargar este módulo'}
  </h3>

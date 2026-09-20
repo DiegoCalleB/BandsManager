@@ -49,12 +49,12 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <div className="w-full max-w-lg rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
- <div className="w-9 h-9 rounded-[var(--r-m)] bg-purple-600/30 text-purple-400 flex items-center justify-center">
+ <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
  <Wand2 className="w-5 h-5" />
  </div>
  <div>
  <h3 className="text-base font-bold">Generar Base de Batería y Bajo</h3>
- <p className="text-xs text-purple-300 font-mono">Sintetizador Web Audio de Referencia</p>
+ <p className="text-xs text-[var(--acc)] font-mono">Sintetizador Web Audio de Referencia</p>
  </div>
  </div>
  <button
@@ -66,9 +66,9 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  </button>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-purple-950/30 text-xs text-purple-200 space-y-1">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-xs text-[var(--acc)] space-y-1">
  <p className="font-semibold flex items-center gap-1.5">
- <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Pista de Referencia Orientativa
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Pista de Referencia Orientativa
  </p>
  <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
  Genera una secuencia rítmica sintetizada de bajo y batería para escuchar cómo sonaría tu guitarra o voz con acompañamiento. Podrás añadirla como una pista más en el mezclador multipista.
@@ -112,7 +112,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  <label className="text-xs font-mono text-[var(--ink-2)] block">Instrumentos a incluir:</label>
  <div className="grid grid-cols-2 gap-3">
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeDrums ?'bg-purple-900/30 border-[var(--acc)] text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
+ includeDrums ?'bg-[var(--acc)]/30 border-[var(--acc)] text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"
@@ -124,7 +124,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  </label>
 
  <label className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
- includeBass ?'bg-purple-900/30 border-[var(--acc)] text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
+ includeBass ?'bg-[var(--acc)]/30 border-[var(--acc)] text-[var(--ink)]' :'bg-black/40 text-[var(--ink-2)]'
  }`}>
  <input
  type="checkbox"
@@ -149,7 +149,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
  onClick={() => setDrumStyle(style)}
  className={`py-2 px-1 rounded-[var(--r-m)] text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
  drumStyle === style
- ?'bg-purple-600 text-[var(--ink)] shadow-lg'
+ ?'bg-[var(--acc)] text-[var(--ink)] shadow-lg'
  :'bg-black/40 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

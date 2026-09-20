@@ -20,8 +20,8 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  const { score, details } = calculateLeadReliability(item);
 
  // Color coding
- let badgeColor ='bg-emerald-500/15 text-[var(--ink-2)] border-[var(--ok)]/30';
- let barColor ='bg-emerald-400';
+ let badgeColor ='bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30';
+ let barColor ='bg-[var(--ok)]';
  let levelText ='Fiabilidad Alta';
 
  if (score < 50) {
@@ -30,8 +30,8 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  levelText ='Fiabilidad Media';
  }
  if (score < 30) {
- badgeColor ='bg-red-500/15 text-red-300 border-[var(--alert)]/30';
- barColor ='bg-red-400';
+ badgeColor ='bg-[var(--alert)]/15 text-[var(--alert)] border-[var(--alert)]/30';
+ barColor ='bg-[var(--alert)]';
  levelText ='Fiabilidad Baja';
  }
 
@@ -60,7 +60,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  <Target className="w-3.5 h-3.5 text-[var(--acc)]" />
  Autodetector de Fiabilidad
  </span>
- <span className={`font-mono font-bold text-xs ${score >= 50 ?'text-emerald-400' :'text-[var(--acc)]'}`}>
+ <span className={`font-mono font-bold text-xs ${score >= 50 ?'text-[var(--ok)]' :'text-[var(--acc)]'}`}>
  {score}%
  </span>
  </div>
@@ -76,7 +76,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
  <ul className="space-y-1">
  {details.map((detail, idx) => (
  <li key={idx} className="flex items-center gap-1.5 text-[11px] text-[var(--ink-2)]">
- <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+ <CheckCircle2 className="w-3 h-3 text-[var(--ok)] shrink-0" />
  <span>{detail}</span>
  </li>
  ))}
