@@ -3467,7 +3467,7 @@ export default function RepertorioSetlists({
  <div className="space-y-2 max-h-[calc(88vh-200px)] min-h-[480px] overflow-y-auto pr-1">
  {activeSetlist.items.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-16 text-center">
- <PublicoSilhouette opacity={12} size="medium" />
+ <PublicoSilhouette opacity={0.12} size="medium" />
  <p className="mt-6 font-medium text-[var(--ink)] text-sm">No hay canciones en este repertorio</p>
  <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">
  Usa la barra superior para añadir temas o eventos.
@@ -4107,7 +4107,7 @@ export default function RepertorioSetlists({
  </>
  ) : (
  <div className="flex flex-col items-center justify-center py-20">
- <PublicoSilhouette opacity={12} size="large" />
+ <PublicoSilhouette opacity={0.12} size="large" />
  <p className="mt-8 font-medium text-[var(--ink)] text-sm">Sin repertorio seleccionado</p>
  <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
  Selecciona o crea un repertorio desde la barra superior.
@@ -4402,7 +4402,7 @@ export default function RepertorioSetlists({
  <div className="p-2.5 space-y-1.5">
  {filteredSongs.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-12">
- <PublicoSilhouette opacity={12} size="small" />
+ <PublicoSilhouette opacity={0.12} size="small" />
  <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin canciones con esos filtros</p>
  <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs text-center">
  Ajusta los filtros o añade nuevas canciones a tu catálogo.

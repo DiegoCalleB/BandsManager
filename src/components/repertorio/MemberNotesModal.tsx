@@ -96,7 +96,7 @@ export function MemberNotesModal({
  id: `custom-${Date.now()}`,
  name,
  instrument: inst,
- avatarColor:'#14b8a6'
+ avatarColor:'var(--ok)'
  };
 
  setCustomMembers(prev => [...prev, newMember]);
@@ -320,7 +320,7 @@ export function MemberNotesModal({
  <div className="flex items-center gap-2.5">
  <div
  className="w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center font-bold text-xs text-[var(--ink)]"
- style={{ backgroundColor: member.avatarColor ||'#6366f1' }}
+ style={{ backgroundColor: member.avatarColor ||'var(--acc)' }}
  >
  {member.name.charAt(0)}
  </div>

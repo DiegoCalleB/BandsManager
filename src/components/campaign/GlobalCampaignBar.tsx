@@ -33,11 +33,11 @@ export function GlobalCampaignBar({
  const firstTargetDate = campaign.targetDates?.[0];
 
  return (
- <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-gradient-to-r from-[#1b122e] via-[#141022] to-[var(--bg)] p-1.5 sm:p-2.5 animate-fade-in relative overflow-hidden">
+ <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--sunken)] via-[var(--bg)] to-[var(--bg)] p-1.5 sm:p-2.5 animate-fade-in relative overflow-hidden">
  {/* Background ambient glow */}
  <div 
  className="absolute -right-10 -top-10 w-28 h-28 rounded-full blur-3xl opacity-15 pointer-events-none"
- style={{ backgroundColor: campaign.color ||'#8b5cf6' }}
+ style={{ backgroundColor: campaign.color ||'var(--acc)' }}
  />
 
  {/* Main Bar Content */}
@@ -48,9 +48,9 @@ export function GlobalCampaignBar({
  <div 
  className="w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center shrink-0"
  style={{ 
- backgroundColor: `${campaign.color ||'#8b5cf6'}25`,
- borderColor: `${campaign.color ||'#8b5cf6'}50`,
- color: campaign.color ||'#a78bfa'
+ backgroundColor: `${campaign.color ||'var(--acc)'}25`,
+ borderColor: `${campaign.color ||'var(--acc)'}50`,
+ color: campaign.color ||'var(--acc)'
  }}
  >
  <Flame className="w-3.5 h-3.5" />

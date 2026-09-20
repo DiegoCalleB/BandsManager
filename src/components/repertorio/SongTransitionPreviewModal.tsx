@@ -639,7 +639,7 @@ export function SongTransitionPreviewModal({
  className="md:col-span-5 p-2 rounded-[var(--r-m)] transition relative overflow-hidden flex flex-col justify-between"
  style={{
  backgroundColor: currentGains.isPlayingA ?'var(--bg)' :'var(--bg)',
- borderColor: currentGains.isPlayingA ?'var(--acc)' :'#2a2a30',
+ borderColor: currentGains.isPlayingA ?'var(--acc)' :'var(--sunken)',
  boxShadow: currentGains.isPlayingA ?'0 0 10px var(--acc-glow)' :'none'
  }}
  >
@@ -782,7 +782,7 @@ export function SongTransitionPreviewModal({
  className="md:col-span-5 p-2 rounded-[var(--r-m)] transition relative overflow-hidden flex flex-col justify-between"
  style={{
  backgroundColor: currentGains.isPlayingB ?'var(--bg)' :'var(--bg)',
- borderColor: currentGains.isPlayingB ?'var(--acc)' :'#2a2a30',
+ borderColor: currentGains.isPlayingB ?'var(--acc)' :'var(--sunken)',
  boxShadow: currentGains.isPlayingB ?'0 0 10px var(--acc-glow)' :'none'
  }}
  >

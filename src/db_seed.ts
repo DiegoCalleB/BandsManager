@@ -1217,7 +1217,7 @@ export const INITIAL_USERS = [
  name:' Elyar',
  role:' member' as const,
  instrument:' Handpan y Percusión',
- avatarColor:' #8b5cf6',
+ avatarColor:' var(--acc)',
  initialPassword:' banda123',
  createdAt:' 2026-01-01T10:00:00.000Z'
  },

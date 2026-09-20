@@ -51,7 +51,7 @@ export function CampaignManagerModal({
  targetDates: ['2026-12-04','2026-12-05'],
  notes:'',
  customPitchTemplates: {},
- color:'#8b5cf6',
+ color:'var(--acc)',
  isActive: true
  });
  const [newCityInput, setNewCityInput] = useState('');
@@ -69,7 +69,7 @@ export function CampaignManagerModal({
  targetDates: ['2026-12-04','2026-12-05'],
  notes:'Búsqueda de salas y fechas para la gira.',
  customPitchTemplates: {},
- color:'#8b5cf6',
+ color:'var(--acc)',
  isActive: true
  });
  setActivePitchCategory('salas');
@@ -87,7 +87,7 @@ export function CampaignManagerModal({
  targetDatesText: camp.targetDatesText ||'',
  notes: camp.notes ||'',
  customPitchTemplates: { ...(camp.customPitchTemplates || {}) },
- color: camp.color ||'#8b5cf6',
+ color: camp.color ||'var(--acc)',
  isActive: camp.isActive
  });
  setActivePitchCategory('salas');
@@ -116,7 +116,7 @@ export function CampaignManagerModal({
  targetDatesText: formattedDatesText,
  notes: formData.notes ||'',
  customPitchTemplates: formData.customPitchTemplates || {},
- color: formData.color ||'#8b5cf6',
+ color: formData.color ||'var(--acc)',
  isActive: formData.isActive ?? true
  };
 
@@ -233,7 +233,7 @@ export function CampaignManagerModal({
  Color en Calendario
  </label>
  <div className="flex items-center gap-2 mt-1">
- {['#8b5cf6','var(--acc)','#06b6d4','var(--ok)','#ec4899','#3b82f6'].map(col => (
+ {['var(--acc)','var(--acc)','var(--ok)','var(--ok)','var(--alert)','var(--acc)'].map(col => (
  <button
  key={col}
  type="button"
@@ -510,7 +510,7 @@ export function CampaignManagerModal({
  <div className="space-y-3">
  {campaigns.map(camp => {
  const isActive = activeCampaign?.id === camp.id;
- const themeColor = camp.color ||'#8b5cf6';
+ const themeColor = camp.color ||'var(--acc)';
  return (
  <div
  key={camp.id}

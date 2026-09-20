@@ -566,7 +566,7 @@ export default function SpotifyPlayerBar({
  <span className="text-[var(--ok)] font-semibold">
  {song.tonalidad ||'Am'}
  {transposeSemitones !== 0 && (
- <span className="text-[#ff6b9d] ml-1 font-bold">
+ <span className="text-[var(--alert)] ml-1 font-bold">
  ➔ {transposeChordToken(song.tonalidad ||'Am', transposeSemitones, /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad ||'Am').trim()) ?'ES' :'EN')} ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
  </span>
  )}
@@ -679,7 +679,7 @@ export default function SpotifyPlayerBar({
  <span className="text-[var(--ok)] font-semibold">
  {song.tonalidad ||'Am'}
  {transposeSemitones !== 0 && (
- <span className="text-[#ff6b9d] ml-1 font-bold">
+ <span className="text-[var(--alert)] ml-1 font-bold">
  ➔ {transposeChordToken(song.tonalidad ||'Am', transposeSemitones, /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad ||'Am').trim()) ?'ES' :'EN')} ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
  </span>
  )}
@@ -792,7 +792,7 @@ export default function SpotifyPlayerBar({
  value={transposeSemitones}
  onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
  className={`bg-[var(--surface)] text-[10px] font-sans rounded px-1.5 py-1 cursor-pointer hover:bg-[var(--ink-3)]/60 focus:outline-none ${
- transposeSemitones !== 0 ?'text-[#ff6b9d] font-bold/30' :'text-[var(--ink-2)]'
+ transposeSemitones !== 0 ?'text-[var(--alert)] font-bold/30' :'text-[var(--ink-2)]'
  }`}
  title="Trasposición de Tono (Nativa en tiempo real Web Audio)"
  >

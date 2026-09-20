@@ -343,7 +343,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
  {recordings.length === 0 ? (
  <div className="p-8 flex flex-col items-center justify-center text-center rounded-[var(--r-m)]">
- <PublicoSilhouette opacity={12} size="small" />
+ <PublicoSilhouette opacity={0.12} size="small" />
  <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin grabaciones</p>
  <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs">
  Graba esta sesión con el botón de arriba.

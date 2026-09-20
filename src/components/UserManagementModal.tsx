@@ -52,7 +52,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  const [error, setError] = useState<string | null>(null);
  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
- const colors = ['var(--ok)', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'var(--acc)', // Amber'#8b5cf6', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
+ const colors = ['var(--ok)', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'var(--acc)', // Amber'var(--acc)', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
  ];
 
  const handleCreateUser = async (e: React.FormEvent) => {

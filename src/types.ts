@@ -38,7 +38,7 @@ export interface BookingCampaign {
  // sin entrada aquí siguen usando solo la plantilla general de su tipo.
  customPitchTemplates?: Partial<Record<PitchTemplateCategory, string>>;
  isActive: boolean;
- color?: string; // Hex color for badge styling (e.g.' #8b5cf6',' var(--acc)',' #06b6d4')
+ color?: string; // Hex color for badge styling (e.g.' var(--acc)',' var(--acc)',' #06b6d4')
  created_at?: string;
 }
 

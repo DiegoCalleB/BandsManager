@@ -347,7 +347,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  )}
  <a
  href="/"
- className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[#e0a820] text-[var(--ink)] font-sans text-xs font-black tracking-wider transition hover:brightness-110 flex items-center justify-center gap-2"
+ className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)]/60 text-[var(--ink)] font-sans text-xs font-black tracking-wider transition hover:brightness-110 flex items-center justify-center gap-2"
  >
  <ExternalLink className="w-4 h-4" />
  {t.successExploreApp}
@@ -588,7 +588,7 @@ export const PublicMusiciansLanding: React.FC = () => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-amber-400 to-[#e0a820] text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+ className="w-full py-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-[var(--acc)]/40 to-[var(--acc)]/60 text-[var(--ink)] font-sans font-black text-sm tracking-wider hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
  >
  {loading ? (
  <>

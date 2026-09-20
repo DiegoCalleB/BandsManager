@@ -61,7 +61,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  }`}
  style={{
  backgroundColor: activeTab ==='canciones' ? colors.primary :'transparent',
- color: activeTab ==='canciones' ?'#ffffff' : colors.text,
+ color: activeTab ==='canciones' ?'var(--surface)' : colors.text,
  }}
  >
  <Music className="w-4 h-4" />
@@ -75,7 +75,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  }`}
  style={{
  backgroundColor: activeTab ==='setlists' ? colors.primary :'transparent',
- color: activeTab ==='setlists' ?'#ffffff' : colors.text,
+ color: activeTab ==='setlists' ?'var(--surface)' : colors.text,
  }}
  >
  <Layers className="w-4 h-4" />

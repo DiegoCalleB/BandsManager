@@ -1244,26 +1244,26 @@ export function ReelsMetricsView({
  >
  <defs>
  <linearGradient id="colorInstagram" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#ec4899" stopOpacity={0.25}/>
- <stop offset="95%" stopColor="#ec4899" stopOpacity={0}/>
+ <stop offset="5%" stopColor="var(--alert)" stopOpacity={0.25}/>
+ <stop offset="95%" stopColor="var(--alert)" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="colorTikTok" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.25}/>
- <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+ <stop offset="5%" stopColor="var(--ok)" stopOpacity={0.25}/>
+ <stop offset="95%" stopColor="var(--ok)" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="colorSpotify" x1="0" y1="0" x2="0" y2="1">
  <stop offset="5%" stopColor="var(--ok)" stopOpacity={0.25}/>
  <stop offset="95%" stopColor="var(--ok)" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="colorYouTube" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#ef4444" stopOpacity={0.25}/>
- <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+ <stop offset="5%" stopColor="var(--alert)" stopOpacity={0.25}/>
+ <stop offset="95%" stopColor="var(--alert)" stopOpacity={0}/>
  </linearGradient>
  </defs>
  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isStitchLight ?'#e2e8f0' :'#222222'} />
  <XAxis 
  dataKey="fecha" 
- stroke="#888888" 
+ stroke="var(--ink-2)" 
  fontSize={9} 
  tickLine={false} 
  axisLine={false}
@@ -1274,7 +1274,7 @@ export function ReelsMetricsView({
  />
  <YAxis 
  domain={yAxisDomain}
- stroke="#888888" 
+ stroke="var(--ink-2)" 
  fontSize={9} 
  tickLine={false} 
  axisLine={false} 
@@ -1282,13 +1282,13 @@ export function ReelsMetricsView({
  />
  <Tooltip 
  contentStyle={{ 
- backgroundColor: isStitchLight ?'#ffffff' :'var(--surface)', 
- borderColor: isStitchLight ?'#cbd5e1' :'#333333',
+ backgroundColor: isStitchLight ?'var(--surface)' :'var(--surface)', 
+ borderColor: isStitchLight ?'var(--hair)' :'var(--ink-2)',
  borderRadius:'8px',
  fontSize:'10px',
  fontFamily:'monospace'
  }}
- labelStyle={{ fontWeight:'bold', color: isStitchLight ?'#1e293b' :'#ffffff' }}
+ labelStyle={{ fontWeight:'bold', color: isStitchLight ?'var(--ink)' :'var(--surface)' }}
  />
  {hasInstagram && selectedChannels.instagram && (
  <Area 
@@ -1628,7 +1628,7 @@ export function ReelsMetricsView({
  <tr>
  <td colSpan={3 + activeCount} className="py-12 px-4">
  <div className="flex flex-col items-center justify-center">
- <PublicoSilhouette opacity={12} size="medium" />
+ <PublicoSilhouette opacity={0.12} size="medium" />
  <p className="mt-6 font-medium text-[var(--ink)] text-sm">Sin registros históricos</p>
  <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
  Añade un checkpoint o ejecuta el radar para comenzar a rastrear métricas.

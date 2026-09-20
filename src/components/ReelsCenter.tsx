@@ -2478,7 +2478,7 @@ export default function ReelsCenter({
 
  {posts.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-12">
- <PublicoSilhouette opacity={12} size="small" />
+ <PublicoSilhouette opacity={0.12} size="small" />
  <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin publicaciones programadas</p>
  <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">
  Sube un vídeo y genera un clip viral para comenzar tu campaña.

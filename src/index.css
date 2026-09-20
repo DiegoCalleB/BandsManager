@@ -295,7 +295,8 @@ iframe.goog-te-banner-frame {
   .animate-donate-cta-glow,
   .animate-donate-cta-glow-delayed,
   .animate-donate-sheen,
-  .animate-donate-sheen-delayed {
+  .animate-donate-sheen-delayed,
+  .animate-pulse {
     animation: none;
   }
 }

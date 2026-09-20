@@ -33,8 +33,8 @@ export default function DirectionsCard({
  <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
  <defs>
  <pattern id={`map-grid-${locationName.replace(/\s+/g,'-')}`} width="20" height="20" patternUnits="userSpaceOnUse">
- <path d="M 20 0 L 0 0 0 20" fill="none" stroke={isStitchLight ?'#475569' :'#3f3f46'} strokeWidth="0.5" strokeDasharray="2 2" />
- <circle cx="10" cy="10" r="1" fill={isStitchLight ?'#94a3b8' :'#71717a'} opacity="0.4" />
+ <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--ink-3)" strokeWidth="0.5" strokeDasharray="2 2" />
+ <circle cx="10" cy="10" r="1" fill="var(--ink-3)" opacity="0.4" />
  </pattern>
  </defs>
  <rect width="100%" height="100%" fill={`url(#map-grid-${locationName.replace(/\s+/g,'-')})`} />

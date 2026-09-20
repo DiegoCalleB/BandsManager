@@ -13,7 +13,7 @@ const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
  targetDatesText:' 4 y 5 de diciembre, 11 y 12 de diciembre',
  notes:' Presentación del nuevo single y co-booking en salas de aforo medio.',
  isActive: true,
- color:' #8b5cf6'
+ color:' var(--acc)'
  },
  {
  id:' camp-primavera-2027',
@@ -494,7 +494,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
  notes: campaignData.notes ||' ',
  customPitchTemplates: campaignData.customPitchTemplates || {},
  isActive: Boolean(campaignData.isActive),
- color: campaignData.color ||' #8b5cf6',
+ color: campaignData.color ||' var(--acc)',
  created_at: campaignData.created_at || new Date().toISOString()
  };
 

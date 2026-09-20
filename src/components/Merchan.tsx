@@ -136,7 +136,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  const [selectedAlbumIndex, setSelectedAlbumIndex] = useState(0);
  const [qrUrl, setQrUrl] = useState('');
- const [shirtColor, setShirtColor] = useState('#121111');
+ const [shirtColor, setShirtColor] = useState('var(--ink)');
 
  const [isGenerating, setIsGenerating] = useState(false);
  const [generatedDesigns, setGeneratedDesigns] = useState<{
@@ -371,7 +371,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setProductType('camiseta')}
  className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-all ${
  productType ==='camiseta'
- ? ('bg-[var(--acc)] text-[#121111]/10')
+ ? ('bg-[var(--acc)] text-[var(--ink)]/10')
  : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]')
  }`}
  >
@@ -382,7 +382,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  onClick={() => setProductType('pegatina')}
  className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-all ${
  productType ==='pegatina'
- ? ('bg-[var(--acc)] text-[#121111]/10')
+ ? ('bg-[var(--acc)] text-[var(--ink)]/10')
  : (isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]')
  }`}
  >
@@ -562,8 +562,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  value={qrUrl}
  onChange={(e) => setQrUrl(e.target.value)}
  placeholder="https://instagram.com/tu_banda"
- className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)]/30 text-[var(--ink-2)] }`}
+ className="w-full rounded-[var(--r-s)] px-3 py-2 text-xs font-sans focus:outline-none bg-[var(--surface)]/30 text-[var(--ink-2)]"
  />
  </div>
  )}
@@ -576,7 +575,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  ?'opacity-70 cursor-not-allowed'
  :'hover:scale-[1.01]'
  } ${
-' bg-gradient-to-br from-[var(--acc)] to-[#e0a820] text-[#121111]/10'
+' bg-gradient-to-br from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)]/10'
  }`}
  >
  {isGenerating ? (
@@ -657,14 +656,14 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="w-full h-full relative flex flex-col items-center justify-center z-10 pt-2">
  <div className="relative w-44 h-56 transform group-hover:scale-105 transition-transform duration-500">
  {/* Left Sleeve */}
- <div className="absolute top-1 -left-6 w-12 h-14 rounded-[var(--r-m)] rotate-[20deg]" style={{ backgroundColor: design.shirtColor ||'#121111', zIndex: 1 }} />
+ <div className="absolute top-1 -left-6 w-12 h-14 rounded-[var(--r-m)] rotate-[20deg]" style={{ backgroundColor: design.shirtColor || 'var(--ink)', zIndex: 1 }} />
  {/* Right Sleeve */}
- <div className="absolute top-1 -right-6 w-12 h-14 rounded-[var(--r-m)] -rotate-[20deg]" style={{ backgroundColor: design.shirtColor ||'#121111', zIndex: 1 }} />
- 
+ <div className="absolute top-1 -right-6 w-12 h-14 rounded-[var(--r-m)] -rotate-[20deg]" style={{ backgroundColor: design.shirtColor || 'var(--ink)', zIndex: 1 }} />
+
  {/* Main Body */}
- <div className="absolute inset-0 rounded-[var(--r-l)] flex flex-col items-center justify-start pt-9 overflow-hidden" style={{ backgroundColor: design.shirtColor ||'#121111', zIndex: 2 }}>
+ <div className="absolute inset-0 rounded-[var(--r-l)] flex flex-col items-center justify-start pt-9 overflow-hidden" style={{ backgroundColor: design.shirtColor || 'var(--ink)', zIndex: 2 }}>
  {/* Neck cut-out */}
- <div className="absolute -top-4 w-16 h-8 rounded-[50%]" style={{ backgroundColor: isStitchLight ?'#f1f5f9' :'#090d16', boxShadow:'inset 0 -2px 4px rgba(0,0,0,0.3)' }} />
+ <div className="absolute -top-4 w-16 h-8 rounded-[50%]" style={{ backgroundColor: 'var(--bg)', boxShadow:'inset 0 -2px 4px rgba(0,0,0,0.3)' }} />
  
  {/* Graphic on Layer */}
  {design.assetType ==='portada' ? (
@@ -674,7 +673,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  className="w-28 h-28 bg-contain bg-center bg-no-repeat transition-all"
  style={{
  backgroundImage: `url(${displayGraphic})`,
- filter: (design.assetType ==='logo' && !isLightColor(design.shirtColor ||'#121111')) ?'invert(1)' :''
+ filter: (design.assetType ==='logo' && !isLightColor(design.shirtColor || 'var(--ink)')) ?'invert(1)' :''
  }}
  />
  )}
@@ -693,7 +692,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  link.click();
  }}
  className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 transition ${
-' bg-[var(--acc)] text-[#121111] hover:bg-[var(--surface)]'
+' bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
  <Download className="w-4 h-4" />
@@ -727,7 +726,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn">
  <div className="relative w-full max-w-2xl rounded-3xl bg-[var(--surface)] /50 overflow-hidden flex flex-col max-h-[90vh]">
  {/* Modal Header */}
- <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[#141210] flex items-center justify-between">
+ <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[var(--sunken)] flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center font-bold">
  <Gift className="w-5 h-5 stroke-[2.5]" />

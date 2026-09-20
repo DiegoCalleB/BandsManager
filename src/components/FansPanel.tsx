@@ -51,7 +51,7 @@ interface FansPanelProps {
  initialConcertId?: string;
 }
 
-const COLORS = ['var(--acc)','var(--ok)','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#64748b'];
+const COLORS = ['var(--acc)','var(--ok)','var(--acc)','var(--acc)','var(--alert)','var(--ok)','var(--ink-2)'];
 
 export const FansPanel: React.FC<FansPanelProps> = ({
  fans = [],
@@ -724,7 +724,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  ))}
  </Pie>
  <Tooltip 
- contentStyle={{backgroundColor:'#0f172a', borderColor:'#334155', fontSize:'12px', borderRadius:'12px', color:'#fff'}}
+ contentStyle={{backgroundColor:'var(--bg)', borderColor:'var(--ink-2)', fontSize:'12px', borderRadius:'12px', color:'var(--surface)'}}
  formatter={(val: any, name: any) => [`${val} fans (${Math.round((val / (fans.length || 1)) * 100)}%)`, name]}
  />
  </PieChart>
@@ -980,7 +980,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
  {filteredFans.length === 0 ? (
  <div className="col-span-full flex flex-col items-center justify-center py-12">
- <PublicoSilhouette opacity={12} size="medium" />
+ <PublicoSilhouette opacity={0.12} size="medium" />
  <p className="mt-6 font-medium text-[var(--ink)] text-sm">Sin fans que coincidan</p>
  <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
  Ajusta los filtros o espera a que tus primeros fans se unan.
@@ -1092,7 +1092,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <tr>
  <td colSpan={7} className="p-12">
  <div className="flex flex-col items-center justify-center">
- <PublicoSilhouette opacity={12} size="medium" />
+ <PublicoSilhouette opacity={0.12} size="medium" />
  <p className="mt-6 font-medium text-[var(--ink)] text-sm">Sin fans que coincidan</p>
  <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
  Ajusta los filtros o espera a que tus primeros fans se unan.

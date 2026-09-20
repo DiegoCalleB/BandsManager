@@ -430,7 +430,7 @@ export function EnergyChart({
  <ReferenceArea key={z.min} y1={z.y1} y2={z.y2} fill={z.color} fillOpacity={0.07} stroke="none" ifOverflow="hidden" />
  ))}
 
- <CartesianGrid horizontal vertical={false} stroke="#2c2c2a" strokeDasharray="0" />
+ <CartesianGrid horizontal vertical={false} stroke="var(--ink-3)" strokeDasharray="0" />
 
  {/* Mientras se arrastra un punto en horizontal, esta línea marca dónde caería la canción
  al soltar. En vertical, marca la altura (energía) a la que quedaría en su lugar. */}
@@ -449,11 +449,11 @@ export function EnergyChart({
  <ReferenceLine
  key={`speech-${d.id}`}
  x={d.idx}
- stroke="#94a3b8"
+ stroke="var(--ink-2)"
  strokeWidth={1.5}
  strokeDasharray="2 3"
  ifOverflow="extendDomain"
- label={{ value: d.icon, position:'insideTop', fontSize: compact ? 13 : 20, fill:'#e5e7eb' }}
+ label={{ value: d.icon, position:'insideTop', fontSize: compact ? 13 : 20, fill:'var(--surface)' }}
  />
  ))}
 
@@ -463,7 +463,7 @@ export function EnergyChart({
  <ReferenceLine
  key={`clash-${d.id}`}
  x={d.idx + 0.5}
- stroke="#f43f5e"
+ stroke="var(--alert)"
  strokeDasharray="3 3"
  strokeOpacity={0.8}
  ifOverflow="extendDomain"
@@ -479,7 +479,7 @@ export function EnergyChart({
  <ReferenceLine
  key={`trans-${d.id}`}
  x={d.idx + 0.5}
- stroke={isOk ?'var(--ok)' :'#f43f5e'}
+ stroke={isOk ?'var(--ok)' :'var(--alert)'}
  strokeWidth={isOk ? 1 : 1.5}
  strokeDasharray={isOk ?'2 3' :'3 2'}
  strokeOpacity={isOk ? 0.45 : 0.85}
@@ -487,7 +487,7 @@ export function EnergyChart({
  label={{
  value: isOk ?'✓' : tr.coste.harmonyRelation ==='choque' ?'✕ ⚡' :'✕',
  position:'insideTop',
- fill: isOk ?'#34d399' :'#f87171',
+ fill: isOk ?'var(--ok)' :'var(--alert)',
  fontSize: compact ? (isOk ? 9 : 10) : (isOk ? 11 : 12),
  fontWeight: 900
  }}
@@ -498,7 +498,7 @@ export function EnergyChart({
  <XAxis
  dataKey="idx"
  tickFormatter={(v: number) => `#${v + 1}`}
- stroke="#666666"
+ stroke="var(--ink-2)"
  fontSize={fontSize}
  tickLine={false}
  axisLine={false}
@@ -513,7 +513,7 @@ export function EnergyChart({
  yAxisId="energy"
  domain={yDomain}
  tickFormatter={(v: number) => `${Math.round(v / 2)}`}
- stroke="#666666"
+ stroke="var(--ink-2)"
  fontSize={fontSize}
  tickLine={false}
  axisLine={false}
@@ -528,7 +528,7 @@ export function EnergyChart({
  yAxisId="bpm"
  orientation="right"
  domain={['dataMin - 15','dataMax + 15']}
- stroke="#38bdf8"
+ stroke="var(--acc)"
  fontSize={fontSize}
  tickLine={false}
  axisLine={false}
@@ -611,7 +611,7 @@ export function EnergyChart({
  yAxisId="energy"
  type="monotone"
  dataKey="idealScore"
- stroke="#9ca3af"
+ stroke="var(--ink-2)"
  strokeWidth={compact ? 1.5 : 2}
  strokeDasharray="5 4"
  strokeOpacity={0.6}
@@ -651,7 +651,7 @@ export function EnergyChart({
  cy={activeDotProps.cy}
  r={dotSelected}
  strokeWidth={2}
- stroke="#ffffff"
+ stroke="var(--surface)"
  fill={activeDotProps.payload?.color ||'var(--acc-soft)'}
  />
  );
@@ -697,7 +697,7 @@ export function EnergyChart({
  cy={cy}
  r={dotRadius}
  fill={payload.color}
- stroke={isHighlighted ? payload.color : isSelected ?'#ffffff' :'#0a0a0a'}
+ stroke={isHighlighted ? payload.color : isSelected ?'var(--surface)' :'var(--bg)'}
  strokeWidth={isHighlighted ? 2 : isSelected ? 2 : 1.5}
  style={{
  // move (cuatro flechas) cuando el punto admite ambos gestos (reordenar +
@@ -769,11 +769,11 @@ export function EnergyChart({
  yAxisId="bpm"
  type="monotone"
  dataKey="bpm"
- stroke="#38bdf8"
+ stroke="var(--acc)"
  strokeWidth={compact ? 1.5 : 2}
  strokeOpacity={0.85}
- dot={{ r: compact ? 2 : 3, fill:'#38bdf8', strokeWidth: 0 }}
- activeDot={{ r: compact ? 3 : 4.5, fill:'#38bdf8' }}
+ dot={{ r: compact ? 2 : 3, fill:'var(--acc)', strokeWidth: 0 }}
+ activeDot={{ r: compact ? 3 : 4.5, fill:'var(--acc)' }}
  isAnimationActive={!compact}
  animationDuration={curveAnimationDuration}
  animationEasing={curveAnimationEasing}

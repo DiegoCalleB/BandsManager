@@ -3500,7 +3500,7 @@ export default function CalendarView({
  {/* Contenido de eventos del día */}
  {dayEventsList.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-8">
- <PublicoSilhouette opacity={12} size="small" />
+ <PublicoSilhouette opacity={0.12} size="small" />
  <p className={`text-xs font-medium ${textSub} mt-4`}>
  Ningún evento programado
  </p>
@@ -3856,7 +3856,7 @@ export default function CalendarView({
  <div key={camp.id} className="pt-3 space-y-2">
  <div className="flex items-center justify-between">
  <h4 className="text-sm font-bold font-display text-[var(--ink)] flex items-center gap-1.5">
- <span className="w-2 h-2 rounded-full" style={{ backgroundColor: camp.color ||'#8b5cf6' }} />
+ <span className="w-2 h-2 rounded-full" style={{ backgroundColor: camp.color ||'var(--acc)' }} />
  {camp.name}
  </h4>
  {camp.isActive && (

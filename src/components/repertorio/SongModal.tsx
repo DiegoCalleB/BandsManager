@@ -467,7 +467,7 @@ export function SongModal({
  <span className="font-bold text-[var(--ink)] flex items-center gap-1.5">
  <span
  className="w-2 h-2 rounded-full inline-block"
- style={{ backgroundColor: member.avatarColor ||'#6366f1' }}
+ style={{ backgroundColor: member.avatarColor || 'var(--acc)' }}
  />
  {member.name}
  <span className="text-[var(--ink-2)] font-normal">({member.instrument})</span>

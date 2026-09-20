@@ -379,7 +379,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  return (
  <div className="fixed inset-0 z-[9999] bg-[var(--bg)] text-[var(--ink)] flex items-center justify-center">
  <div className="text-center flex flex-col items-center gap-6">
- <PublicoSilhouette opacity={12} size="large" />
+ <PublicoSilhouette opacity={0.12} size="large" />
  <div>
  <p className="font-medium text-lg">Repertorio vacío</p>
  <p className="text-xs text-[var(--ink-2)] mt-2 max-w-xs">Añade canciones a tu repertorio para comenzar a ensayar.</p>

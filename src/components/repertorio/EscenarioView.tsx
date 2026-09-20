@@ -435,12 +435,12 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <div 
  className="absolute inset-0 opacity-20 pointer-events-none"
  style={{
- backgroundImage:'repeating-linear-gradient(90deg, #ffffff 0px, #ffffff 1.5px, transparent 1.5px, transparent 7px)'
+ backgroundImage:'repeating-linear-gradient(90deg, var(--surface) 0px, var(--surface) 1.5px, transparent 1.5px, transparent 7px)'
  }}
  />
 
  <div 
- className="h-full bg-gradient-to-r from-[var(--ok)] via-[var(--ok)] to-[#20df64] transition-all duration-150 relative"
+ className="h-full bg-gradient-to-r from-[var(--ok)] via-[var(--ok)] to-[var(--ok)] transition-all duration-150 relative"
  style={{ width: `${stageProgressPct}%` }}
  >
  <div 
@@ -598,7 +598,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </div>
  ) : (
  <div className="flex flex-col items-center justify-center py-12">
- <PublicoSilhouette opacity={12} size="small" />
+ <PublicoSilhouette opacity={0.12} size="small" />
  <p className="mt-4 font-medium text-[var(--ink)] text-sm">Sin cifrado disponible</p>
  <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">
  Añade acordes y letra desde Repertorio para verlos aquí en directo.

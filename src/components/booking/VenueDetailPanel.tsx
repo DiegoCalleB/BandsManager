@@ -1798,7 +1798,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="space-y-3">
  {hiloCompleto.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-10 px-6">
- <PublicoSilhouette opacity={12} size="small" />
+ <PublicoSilhouette opacity={0.12} size="small" />
  <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin correspondencia</p>
  <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
  Los correos y conversaciones con esta sala aparecerán aquí.
@@ -1939,7 +1939,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <div className="space-y-2 max-h-60 overflow-y-auto pr-1 scrollbar-thin">
  {(selectedLead.historial_contacto || []).length === 0 ? (
  <div className="flex flex-col items-center justify-center py-6">
- <PublicoSilhouette opacity={12} size="small" />
+ <PublicoSilhouette opacity={0.12} size="small" />
  <p className="mt-3 font-medium text-[var(--ink)] text-[11px]">Sin interacciones</p>
  <p className="mt-1.5 text-[var(--ink-2)] text-[10px] max-w-xs text-center">
  Registra llamadas y mensajes desde la entrada de contacto.

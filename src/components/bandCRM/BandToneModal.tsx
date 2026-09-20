@@ -874,7 +874,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
  ) : (
  <div className="py-8 text-center space-y-4 flex flex-col items-center">
- <PublicoSilhouette opacity={12} size="medium" />
+ <PublicoSilhouette opacity={0.12} size="medium" />
  <div className="space-y-1">
  <p className="text-sm font-medium text-[var(--ink)]">Sin análisis de tono</p>
  <p className="text-xs text-[var(--ink-2)]">Analiza el perfil de tu banda para entender mejor a tu audiencia.</p>

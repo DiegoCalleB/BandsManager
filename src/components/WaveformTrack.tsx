@@ -87,7 +87,7 @@ const FallbackWaveformCanvas: React.FC<{ color: string; seedStr: string; progres
 
 const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
  audioUrl,
- color ='#818cf8',
+ color ='var(--acc)',
  masterDuration = 30,
  trackDuration,
  currentTime = 0,
