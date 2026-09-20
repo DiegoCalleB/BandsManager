@@ -1375,7 +1375,7 @@ export default function ReelsCenter({
  activeTab ==='pipeline'
  ? isStitchLight
  ?'bg-indigo-600 text-[var(--ink)] font-black shadow-md'
- :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
+ :'bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/50'
@@ -1390,7 +1390,7 @@ export default function ReelsCenter({
  activeTab ==='analyzer'
  ? isStitchLight
  ?'bg-indigo-600 text-[var(--ink)] font-black shadow-md'
- :'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md shadow-[var(--acc)]/10'
+ :'bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-md shadow-[var(--acc)]/10'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--bg)] bg-[var(--surface)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/50'
@@ -1685,7 +1685,7 @@ export default function ReelsCenter({
  onClick={() => { setInputType('file'); setAnalysisError(null); }}
  className={`px-3.5 py-1.5 text-[10px] font-mono rounded-[var(--r-s)] transition-all cursor-pointer ${
  inputType ==='file'
- ? isStitchLight ?'bg-indigo-600 text-[var(--ink)] font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ ? isStitchLight ?'bg-indigo-600 text-[var(--ink)] font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
  : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1696,7 +1696,7 @@ export default function ReelsCenter({
  onClick={() => { setInputType('youtube'); setAnalysisError(null); }}
  className={`px-3.5 py-1.5 text-[10px] font-mono rounded-[var(--r-s)] transition-all cursor-pointer ${
  inputType ==='youtube'
- ? isStitchLight ?'bg-indigo-600 text-[var(--ink)] font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ ? isStitchLight ?'bg-indigo-600 text-[var(--ink)] font-bold shadow-sm' :'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
  : isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -2122,7 +2122,7 @@ export default function ReelsCenter({
  ))}
  </div>
  <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded self-start z-10 ${
- isStitchLight ?'bg-indigo-600 text-[var(--ink)]' :'bg-[var(--acc)] text-[var(--acc-ink)]'
+ isStitchLight ?'bg-indigo-600 text-[var(--ink)]' :'bg-[var(--acc)] text-[var(--on-acc)]'
  }`}>
  {clip.range}
  </span>
@@ -2399,7 +2399,7 @@ export default function ReelsCenter({
  selectedPlatform === plat.id
  ? isStitchLight
  ?'bg-indigo-600 text-[var(--ink)] font-black'
- :'bg-[var(--acc)] -[var(--acc)] text-[var(--acc-ink)] font-black'
+ :'bg-[var(--acc)] -[var(--acc)] text-[var(--on-acc)] font-black'
  : isStitchLight
  ?'-slate-200 hover:-indigo-200 bg-[var(--surface)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:-neutral-700 bg-[var(--surface)]/60 text-[var(--ink-2)]'
@@ -3557,7 +3557,7 @@ export default function ReelsCenter({
  disabled={isCuttingVideo}
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-[9.5px] font-mono font-bold cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
  cropMode === opcion.valor
- ?'bg-[var(--acc)] text-[var(--acc-ink)]'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -3833,7 +3833,7 @@ export default function ReelsCenter({
  title={v.texto}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[9.5px] font-mono font-bold cursor-pointer transition-all ${
  editedCopy === v.texto
- ?'bg-[var(--acc)] text-[var(--acc-ink)]'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -4010,7 +4010,7 @@ export default function ReelsCenter({
  handleSchedulePost(e);
  }}
  disabled={isScheduling || !editedCopy.trim()}
- className="flex-1 sm:flex-none px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--acc-ink)] hover:bg-[var(--acc-soft)] active:scale-95 transition-all cursor-pointer text-xs font-mono font-bold disabled:opacity-40"
+ className="flex-1 sm:flex-none px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc-soft)] active:scale-95 transition-all cursor-pointer text-xs font-mono font-bold disabled:opacity-40"
  >
  {isScheduling ?'Guardando...' :'Aprobar y Programar Post'}
  </button>

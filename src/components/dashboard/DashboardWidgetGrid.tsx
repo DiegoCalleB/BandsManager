@@ -448,7 +448,7 @@ export function DashboardWidgetGrid({
  onClick={() => handleChangeWSpan(widget.id, spanVal)}
  className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
  widget.wSpan === spanVal
- ?'bg-[var(--acc)] text-[var(--acc-ink)]'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -568,7 +568,7 @@ export function DashboardWidgetGrid({
  onClick={() => setSelectedCategory(cat)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold whitespace-nowrap cursor-pointer transition-all ${
  selectedCategory === cat
- ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
@@ -602,7 +602,7 @@ export function DashboardWidgetGrid({
  <button
  type="button"
  onClick={() => handleAddWidget(item.type)}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-mono text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95 shadow-sm"
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-mono text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95 shadow-sm"
  >
  <Plus className="w-4 h-4" />
  <span>{isAlreadyAdded ?'Añadir Otro' :'Añadir'}</span>

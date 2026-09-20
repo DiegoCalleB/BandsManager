@@ -121,7 +121,7 @@ export function TemplateConfigSection({
  isActive
  ? isStitchLight
  ?'bg-[var(--surface)] text-sky-400 shadow-sm'
- :'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
+ :'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold shadow-md'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -479,7 +479,7 @@ export function TemplateConfigSection({
  type="button"
  onClick={onOptimizeTemplate}
  disabled={isOptimizingTemplate}
- className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
  <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ?'animate-spin' :''}`} />
  <span>Re-generar plantilla usando estas valoraciones ✨</span>

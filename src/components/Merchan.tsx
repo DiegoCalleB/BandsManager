@@ -320,12 +320,12 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {hasGiftPending && (
  <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-0/20 via-amber-400/15 to-amber-0/10 border-2 /60 shadow-xl shadow-amber-0/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
  <div className="flex items-start sm:items-center gap-3.5">
- <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--acc-ink)] flex items-center justify-center shrink-0 shadow-lg shadow-amber-400/20">
+ <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center shrink-0 shadow-lg shadow-amber-400/20">
  <Gift className="w-6 h-6 stroke-[2.5]" />
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap">
- <span className="text-xs font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc-ink)]">
+ <span className="text-xs font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)]">
  Regalo de Bienvenida · Plan De Gira
  </span>
  <span className="text-[10px] font-mono text-[var(--acc)]/70 font-bold">500 uds Vinilo Mate</span>
@@ -734,7 +734,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {/* Modal Header */}
  <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[#141210] border-b border-[var(--hair)] flex items-center justify-between">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--acc-ink)] flex items-center justify-center font-bold">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center font-bold">
  <Gift className="w-5 h-5 stroke-[2.5]" />
  </div>
  <div>
@@ -774,7 +774,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--bg)] border-[var(--hair)] flex flex-col sm:flex-row items-center gap-5">
  {/* Sticker Preview visual */}
  <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] border-4 border-[var(--hair)] shadow-xl p-2 flex flex-col items-center justify-center transform -rotate-3">
- <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--acc-ink)] font-black flex items-center justify-center text-lg font-display mb-1">
+ <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--on-acc)] font-black flex items-center justify-center text-lg font-display mb-1">
  {bandInitials}
  </div>
  <span className="text-[9px] font-black font-display text-[var(--ink)] uppercase tracking-wider">{displayBandName.toUpperCase()}</span>

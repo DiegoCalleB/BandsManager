@@ -297,7 +297,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="button"
  onClick={handleExport}
  disabled={targetCount === 0}
- className="px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] flex items-center gap-2 shadow-lg shadow-amber-0/10 transition cursor-pointer disabled:opacity-50"
+ className="px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center gap-2 shadow-lg shadow-amber-0/10 transition cursor-pointer disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
  <span>Descargar {targetCount} {targetCount === 1 ?'contacto' :'contactos'}</span>

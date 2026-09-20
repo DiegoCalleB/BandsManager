@@ -881,7 +881,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
  <button
  onClick={onReAnalyze}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-mono font-bold text-xs uppercase tracking-wider cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-mono font-bold text-xs uppercase tracking-wider cursor-pointer"
  >
  Iniciar Análisis de Tono
  </button>

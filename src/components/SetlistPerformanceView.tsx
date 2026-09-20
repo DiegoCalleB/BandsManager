@@ -448,7 +448,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => setModeArchetype('directo')}
  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
  modeArchetype ==='directo'
- ? glareMode ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
+ ? glareMode ?'bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-sm' :'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
  : glareMode ?'text-[var(--ink-2)] hover:text-[var(--ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1065,7 +1065,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <div className="flex items-start justify-between gap-2">
  <div className="flex items-center gap-2 min-w-0">
  <span className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-mono font-bold shrink-0 ${
- isCurrent ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
+ isCurrent ?'bg-[var(--acc)] text-[var(--on-acc)]' :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {idx + 1}
  </span>
@@ -1388,7 +1388,7 @@ const ChordSheetPage: React.FC<{
  onClick={onToggleTeleprompterPlay}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer ${
  isTeleprompterPlaying
- ?'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)]'
+ ?'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
  :'bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)]'
  }`}
  title="Pausar o reanudar teleprompter (o pulsar Espacio)"

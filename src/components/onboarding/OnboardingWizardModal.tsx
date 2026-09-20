@@ -1044,7 +1044,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  onClick={() => setCurrentStepIndex(idx)}
  className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs whitespace-nowrap transition-all ${
  isCurrent
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
  : isPassed
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 hover:bg-[var(--acc)]/25'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -1387,7 +1387,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  <button
  type="button"
  onClick={handleNextStep}
- className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-semibold text-xs transition-all shadow-lg shadow-amber-0/20"
+ className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-all shadow-lg shadow-amber-0/20"
  >
  {currentStepIndex === activeSteps.length - 1 ? (
  <>

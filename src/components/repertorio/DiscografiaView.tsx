@@ -407,7 +407,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={() => setShowCreateAlbumMenu((v) => !v)}
- className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-95"
+ className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-95"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Nuevo Disco</span>
@@ -515,7 +515,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => setActiveFilterTab('todos')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
  activeFilterTab ==='todos'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -526,7 +526,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => setActiveFilterTab('albumes')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
  activeFilterTab ==='albumes'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -537,7 +537,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => setActiveFilterTab('singles')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
  activeFilterTab ==='singles'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

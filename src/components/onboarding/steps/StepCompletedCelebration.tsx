@@ -99,7 +99,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  href="/epk"
  target="_blank"
  rel="noreferrer"
- className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+ className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
  >
  <ExternalLink className="w-3.5 h-3.5" /> Ver Dossier EPK
  </a>
@@ -156,7 +156,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <button
  type="button"
  onClick={onFinish}
- className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold text-sm shadow-xl shadow-amber-0/20 hover:scale-[1.02] transition-all"
+ className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-sm shadow-xl shadow-amber-0/20 hover:scale-[1.02] transition-all"
  >
  Entrar a BandManager.ai <ArrowRight className="w-4 h-4" />
  </button>

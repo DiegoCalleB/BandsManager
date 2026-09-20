@@ -96,7 +96,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  onClick={() => setMusicSubTab('spotify')}
  className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
  musicSubTab ==='spotify'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-md font-semibold'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-md font-semibold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -108,7 +108,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  onClick={() => setMusicSubTab('upload')}
  className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
  musicSubTab ==='upload'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-md font-semibold'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-md font-semibold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -120,7 +120,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  onClick={() => setMusicSubTab('manual')}
  className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
  musicSubTab ==='manual'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-md font-semibold'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-md font-semibold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -146,7 +146,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  <button
  type="submit"
  disabled={isSearchingSpotify || !spotifyQuery.trim()}
- className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
+ className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
  >
  {isSearchingSpotify ? <Loader2 className="w-4 h-4 animate-spin" /> :'Buscar'}
  </button>
@@ -205,7 +205,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  type="button"
  onClick={onImportSpotifyTracks}
  disabled={isImportingSpotify}
- className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-semibold text-xs transition-colors"
+ className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-colors"
  >
  {isImportingSpotify ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
  Importar al Repertorio
@@ -305,7 +305,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  type="button"
  onClick={onAddManualSong}
  disabled={!newManualTitle.trim()}
- className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-semibold text-xs transition-colors disabled:opacity-50"
+ className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
  >
  <Plus className="w-3.5 h-3.5" />
  Añadir Canción
@@ -342,7 +342,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  setShowBulkInput(false);
  }}
  disabled={!bulkText.trim()}
- className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-semibold text-xs transition-colors disabled:opacity-50"
+ className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
  >
  <Plus className="w-3.5 h-3.5" />
  Procesar e Importar Lista

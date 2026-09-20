@@ -1161,7 +1161,7 @@ export default function BookingCRM({
  setIsPlacesExplorerOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--acc-ink)] hover:bg-[var(--acc)] transition-all cursor-pointer shadow-sm active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-all cursor-pointer shadow-sm active:scale-98"
  >
  <span className="flex items-center gap-2">
  <Search className="w-4 h-4" />
@@ -1198,7 +1198,7 @@ export default function BookingCRM({
  Detector y Limpiador de Duplicados
  </span>
  {duplicateGroupsCount > 0 ? (
- <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)] text-[var(--acc-ink)]">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)] text-[var(--on-acc)]">
  {duplicateGroupsCount} {duplicateGroupsCount === 1 ?'grupo' :'grupos'}
  </span>
  ) : (
@@ -1372,7 +1372,7 @@ export default function BookingCRM({
  <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
  <span className="hidden sm:inline">{filterByCampaign ?'Filtro Campaña' :'Filtrar Campaña'}</span>
  {filterByCampaign && (
- <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] text-[10px] font-semibold tabular-nums">
+ <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] text-[10px] font-semibold tabular-nums">
  {filteredLeads.length}
  </span>
  )}
@@ -1636,7 +1636,7 @@ export default function BookingCRM({
  onClick={() => setTypeFilter(t.key)}
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
  typeFilter === t.key
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
  :'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-zinc-700'
  }`}
  >
@@ -1708,7 +1708,7 @@ export default function BookingCRM({
  <button
  type="button"
  onClick={() => setIsMobileFiltersOpen(false)}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--acc)] text-[var(--acc-ink)] cursor-pointer shadow-sm"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] cursor-pointer shadow-sm"
  >
  Ver {filteredLeads.length} resultados
  </button>
@@ -1801,7 +1801,7 @@ export default function BookingCRM({
  <span>{tab.label}</span>
  <span className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
  isSelected 
- ?'bg-[var(--acc)]/25 text-[var(--acc-ink)]' 
+ ?'bg-[var(--acc)]/25 text-[var(--on-acc)]' 
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {count}
@@ -2126,7 +2126,7 @@ export default function BookingCRM({
  isActive
  ? isStitchLight
  ?'bg-[var(--surface)] text-sky-400 shadow-sm'
- :'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
+ :'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold shadow-md'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -2494,7 +2494,7 @@ export default function BookingCRM({
  type="button"
  onClick={handleOptimizeTemplate}
  disabled={isOptimizingTemplate}
- className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
  <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ?'animate-spin' :''}`} />
  <span>Re-generar plantilla usando estas valoraciones ✨</span>

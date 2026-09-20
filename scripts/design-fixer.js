@@ -246,6 +246,29 @@ const SOLID_BW_EXCLUDED_FILES = new Set([
   'components/PublicMusiciansLanding.tsx',  // marco del logo — identidad de marca, no superficie temática
 ]);
 
+// Bug de contraste real, descubierto mirando capturas de Playwright en tema
+// oscuro: --acc-ink es para texto de color sobre fondo NEUTRO (chip, label),
+// nunca para texto encima de un relleno --acc sólido — en oscuro --acc-ink
+// vale literalmente lo mismo que --acc (#C8945E), texto invisible sobre su
+// propio fondo. El token correcto para texto sobre relleno --acc es --on-acc
+// (ya existe, pensado exactamente para esto: blanco en claro, marrón oscuro
+// en oscuro). Se corrige solo cuando ambas clases están en la misma línea
+// (mismo elemento), nunca donde --acc-ink va sobre un fondo distinto.
+function fixAccInkOnAccFill(content) {
+  let changed = false;
+  const lines = content.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (/bg-\[var\(--acc\)\](\/\d+)?/.test(line) && /text-\[var\(--acc-ink\)\]/.test(line)) {
+      const before = line;
+      line = line.replace(/text-\[var\(--acc-ink\)\]/g, 'text-[var(--on-acc)]');
+      if (line !== before) changed = true;
+    }
+    lines[i] = line;
+  }
+  return { content: lines.join('\n'), changed };
+}
+
 function fixSolidBlackWhite(content, relPath) {
   if (SOLID_BW_EXCLUDED_FILES.has(relPath)) return { content, changed: false };
 
@@ -306,6 +329,10 @@ function fixFile(filePath) {
   const solidResult = fixSolidBlackWhite(content, relPath.split(path.sep).join('/'));
   content = solidResult.content;
   if (solidResult.changed) changed = true;
+
+  const accInkResult = fixAccInkOnAccFill(content);
+  content = accInkResult.content;
+  if (accInkResult.changed) changed = true;
 
   if (changed) {
     fs.writeFileSync(filePath, content);

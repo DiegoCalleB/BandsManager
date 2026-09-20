@@ -157,7 +157,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  <span
  className={`text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded-full ${
  isSelected
- ?'bg-[var(--acc)] text-[var(--acc-ink)]'
+ ?'bg-[var(--acc)] text-[var(--on-acc)]'
  :'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >

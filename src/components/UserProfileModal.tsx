@@ -809,7 +809,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <div className="flex items-center gap-1.5 shrink-0">
  {isSelected ? (
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--acc)]/60 text-[var(--acc-ink)] text-[9px] font-black uppercase font-mono">
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--acc)]/60 text-[var(--on-acc)] text-[9px] font-black uppercase font-mono">
  <Star className="w-2.5 h-2.5 fill-[var(--ink)]" />
  <span>Principal</span>
  </span>
@@ -1126,7 +1126,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 mt-4 shadow-lg active:scale-98 ${
  isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)] shadow-indigo-600/20'
- :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-amber-0/20'
+ :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-amber-0/20'
  }`}
  >
  {loading ? (

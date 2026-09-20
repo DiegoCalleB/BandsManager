@@ -1209,7 +1209,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={applyPresetRecommendedBooking}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] text-[11px] font-mono font-black transition-all cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm shadow-amber-0/20"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-[11px] font-mono font-black transition-all cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm shadow-amber-0/20"
  >
  <Sparkles className="w-3.5 h-3.5" />
  <span>🌟 Sugerir Mejores Días (M-X-J)</span>
@@ -1426,7 +1426,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  !isAdmin ?'cursor-default' :'cursor-pointer active:scale-95'
  } ${
  isSelected
- ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm font-black'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm font-black'
  : isPrimeTime
  ?'bg-[var(--surface)] text-[var(--acc)]/70/90 hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
@@ -1570,7 +1570,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClose();
  onOpenBandProfile();
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
  >
  Ir a Gestión de Banda ➔
  </button>
@@ -1598,7 +1598,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClose();
  onOpenTemplatesSection();
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
  >
  Ver Plantillas ➔
  </button>
@@ -1992,7 +1992,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  onClick={handleSave}
  disabled={isSaving || isLoading}
- className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--acc-ink)] text-xs font-mono font-bold hover:bg-[var(--acc)]/60 disabled:opacity-50 transition-all flex items-center gap-1.5 cursor-pointer shadow-lg active:scale-95"
+ className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-mono font-bold hover:bg-[var(--acc)]/60 disabled:opacity-50 transition-all flex items-center gap-1.5 cursor-pointer shadow-lg active:scale-95"
  >
  {isSaving ? (
  <>

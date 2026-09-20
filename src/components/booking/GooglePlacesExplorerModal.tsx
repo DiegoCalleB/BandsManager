@@ -788,7 +788,7 @@ export function GooglePlacesExplorerModal({
  onClick={() => handleCategoryChange(cat.id)}
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
  isSelected
- ?'bg-[var(--acc)] text-[var(--acc-ink)] border-[var(--acc)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] border-[var(--acc)] shadow-sm'
  :'bg-zinc-950/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:bg-[var(--surface)]'
  }`}
  title={cat.desc}
@@ -871,7 +871,7 @@ export function GooglePlacesExplorerModal({
  type="button"
  onClick={() => handleSearch()}
  disabled={isSearching}
- className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50 ml-auto"
+ className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50 ml-auto"
  >
  {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
  <span>{isSearching ?'Buscando...' : `Buscar ${searchLimit} Resultados`}</span>
@@ -916,7 +916,7 @@ export function GooglePlacesExplorerModal({
  onClick={() => handleQuickCityClick(city)}
  className={`px-2.5 py-0.5 text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer font-medium ${
  selectedCity === city
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)]'
  }`}
  >

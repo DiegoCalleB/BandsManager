@@ -116,7 +116,7 @@ export function NegotiationSimulationModal({
  simulationRole ==='sala'
  ? isStitchLight
  ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/50/15 text-[var(--ink)] shadow-sm'
- :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
  : isStitchLight
  ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'

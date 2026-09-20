@@ -275,7 +275,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('all')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='all'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -289,7 +289,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('same_email')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='same_email'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -304,7 +304,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('same_name_and_city')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='same_name_and_city'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -319,7 +319,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('similar_name_same_city')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='similar_name_same_city'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -334,7 +334,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => setSelectedFilter('same_website')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='same_website'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs'
  : isStitchLight
  ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
@@ -351,7 +351,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  disabled={isProcessing}
  onClick={handleMergeAllAuto}
- className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)] transition flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50 shrink-0 ml-auto"
+ className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] transition flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50 shrink-0 ml-auto"
  >
  <Sparkles className="w-3.5 h-3.5" />
  <span>Fusionar Todos Automáticamente</span>
@@ -431,7 +431,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  {lead.nombre_sala}
  </h4>
  {isSuggested && (
- <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--acc)] text-[var(--acc-ink)]">
+ <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--acc)] text-[var(--on-acc)]">
  ⭐ Recomendado
  </span>
  )}
@@ -495,7 +495,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClick={() => handleMergeGroup(group, lead.id)}
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
  isSuggested
- ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)]'
+ ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'
  }`}
  title="Conserva este lead y añade todos los teléfonos, notas y datos de los demás"

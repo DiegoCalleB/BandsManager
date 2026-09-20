@@ -76,7 +76,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  onClick={() => setAppLang(l.code)}
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
- ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold shadow-sm scale-105'
+ ?'bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold shadow-sm scale-105'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  title={l.label}
@@ -125,7 +125,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  <button
  type="button"
- className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)]/70 group-hover:text-[var(--acc-ink)] text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)]/70 group-hover:text-[var(--on-acc)] text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
  >
  <span>Ir al Calendario</span>
  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -158,7 +158,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
  <button
  type="button"
- className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)] group-hover:text-[var(--acc-ink)] text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 group-hover:bg-[var(--acc)] text-[var(--acc)] group-hover:text-[var(--on-acc)] text-xs font-mono font-bold transition-all shrink-0 cursor-pointer"
  >
  <span>Configurar Dossier</span>
  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

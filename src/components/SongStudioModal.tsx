@@ -3221,7 +3221,7 @@ export default function SongStudioModal({
  onClick={toggleIsFullScreen}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  isFullScreen
- ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-lg font-black hover:bg-[var(--acc)]/60'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-lg font-black hover:bg-[var(--acc)]/60'
  :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] border-[var(--hair)]'
  }`}
  title={isFullScreen ?"Salir de Pantalla Completa" :"Poner Modo Studio en Pantalla Completa"}
@@ -3752,7 +3752,7 @@ export default function SongStudioModal({
  type="button"
  onClick={() => togglePlayIdea(idea)}
  className={`p-2 rounded-[var(--r-m)] flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer ${
- isPlaying ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'bg-emerald-500 hover:bg-emerald-400 text-[var(--acc-ink)]'
+ isPlaying ?'bg-[var(--acc)] text-[var(--on-acc)]' :'bg-emerald-500 hover:bg-emerald-400 text-[var(--on-acc)]'
  }`}
  title="Play / Pausa"
  >
@@ -3849,7 +3849,7 @@ export default function SongStudioModal({
  type="button"
  onClick={() => handlePerformAiStemSeparation(idea)}
  disabled={isSeparatingStemsAi}
- className="px-3 py-1.5 hover:bg-[var(--acc)]/60/20 text-[var(--acc-ink)] font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer disabled:opacity-50"
+ className="px-3 py-1.5 hover:bg-[var(--acc)]/60/20 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer disabled:opacity-50"
  title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
  >
  <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ?'animate-spin text-[var(--acc-ink)]' :'text-[var(--acc-ink)]'}`} />
@@ -3858,7 +3858,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setShowMoisesStemsModal(idea)}
- className="px-2 py-1.5 border-l /60 hover:bg-[var(--acc)]/60/30 text-[var(--acc-ink)] transition-all cursor-pointer flex items-center"
+ className="px-2 py-1.5 border-l /60 hover:bg-[var(--acc)]/60/30 text-[var(--on-acc)] transition-all cursor-pointer flex items-center"
  title="Elegir motor de separación (Iris Studio, Iris Cloud o Iris Básico) o comparar calidad"
  >
  <Sliders className="w-3.5 h-3.5" />
@@ -3897,7 +3897,7 @@ export default function SongStudioModal({
  onClick={() => togglePlayIdea(idea)}
  className={`px-4 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-bold text-xs shadow-lg transition-all active:scale-95 cursor-pointer ${
  isPlaying
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-black'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-black'
  :'bg-emerald-500 hover:bg-emerald-400 text-[var(--acc-ink)]'
  }`}
  title="Play / Pausa (Espacio)"
@@ -4063,7 +4063,7 @@ export default function SongStudioModal({
  <span className="hidden sm:inline">Comparar Motor</span>
  </button>
  {hasSoloInIdea && (
- <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-[var(--acc)]/60 text-[var(--acc-ink)] flex items-center gap-1 shadow-md shadow-amber-400/40 animate-pulse">
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center gap-1 shadow-md shadow-amber-400/40 animate-pulse">
  <Volume2 className="w-3 h-3" /> SOLO (S) ACTIVO
  </span>
  )}
@@ -4191,7 +4191,7 @@ export default function SongStudioModal({
  onClick={() => handleToggleSoloTrack(idea, tr.id)}
  className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-black cursor-pointer transition-all shrink-0 ${
  isSolo
- ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-[0_0_12px_var(--acc-glow)] ring-1 ring-amber-300/60'
+ ?'bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-[0_0_12px_var(--acc-glow)] ring-1 ring-amber-300/60'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:text-[var(--ink)] hover:bg-[var(--surface)]/70'
  }`}
  title="Solo (S) - Aísla esta pista en exclusiva (Cubase style)"
@@ -4595,7 +4595,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(120)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 120 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 120 ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold' :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
  title="Recorte estándar para altavoces o auriculares de cable en PC (120ms)"
  >
  PC (120ms)
@@ -4603,7 +4603,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(240)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 240 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 240 ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold' :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
  title="Recorte para teléfonos móviles y tablets (240ms)"
  >
  Móvil (240ms)
@@ -4611,7 +4611,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(300)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 300 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 300 ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold' :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'}`}
  title="Recorte para auriculares Bluetooth tipo AirPods o Sony (300ms)"
  >
  Bluetooth (300ms)
@@ -4894,7 +4894,7 @@ export default function SongStudioModal({
  type="button"
  onClick={() => togglePlayIdea(activeIdea)}
  className={`p-2.5 rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer shrink-0 ${
- isPlaying ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'bg-emerald-500 hover:bg-emerald-400 text-[var(--acc-ink)]'
+ isPlaying ?'bg-[var(--acc)] text-[var(--on-acc)]' :'bg-emerald-500 hover:bg-emerald-400 text-[var(--on-acc)]'
  }`}
  title="Play / Pausa"
  >
@@ -5206,7 +5206,7 @@ export default function SongStudioModal({
  onClick={() => setMoisesTab('stems')}
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
  moisesTab ==='stems'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-md'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-black shadow-md'
  :'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
  }`}
  >
@@ -6126,7 +6126,7 @@ export default function SongStudioModal({
  <div className="flex items-center justify-between">
  <span className="font-bold text-xs text-[var(--ink)]">✨ Iris Studio</span>
  {stemProgressModal.engineChoice ==='mvsep-mdx23' && (
- <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--acc)]/60 text-[var(--acc-ink)] font-black">ACTIVO</span>
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--acc)]/60 text-[var(--on-acc)] font-black">ACTIVO</span>
  )}
  </div>
  <span className="text-[10px] text-[var(--ink-2)]">Máxima calidad (ensamble)</span>

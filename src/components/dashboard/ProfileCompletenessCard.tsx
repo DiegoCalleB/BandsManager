@@ -422,7 +422,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {!pillar.completed && (
  <button
  onClick={() => handlePillarClick(pillar.view)}
- className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--acc-ink)] font-mono font-bold text-[10px] shrink-0 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
+ className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-mono font-bold text-[10px] shrink-0 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
  >
  Configurar
  </button>
@@ -502,7 +502,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <div className="flex justify-end pt-2">
  <button
  onClick={() => setShowAuditModal(false)}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--acc-ink)] font-bold font-mono text-xs hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] font-bold font-mono text-xs hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
  >
  Entendido
  </button>

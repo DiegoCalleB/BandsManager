@@ -962,7 +962,7 @@ Bakandeya Agent Manager IA & Músicos`;
  id="band-btn-add-new"
  type="button"
  onClick={handleOpenCreateModal}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
  >
  <Plus className="w-3.5 h-3.5 shrink-0" />
  <span>Nueva Banda</span>
@@ -1159,7 +1159,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="button"
  onClick={() => setViewMode('grid')}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- viewMode ==='grid' ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ viewMode ==='grid' ?'bg-[var(--acc)] text-[var(--on-acc)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Tarjetas"
  >
@@ -1170,7 +1170,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="button"
  onClick={() => setViewMode('table')}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- viewMode ==='table' ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ viewMode ==='table' ?'bg-[var(--acc)] text-[var(--on-acc)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Lista / Tabla"
  >
@@ -1181,7 +1181,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="button"
  onClick={() => setViewMode('map')}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
- viewMode ==='map' ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
+ viewMode ==='map' ?'bg-[var(--acc)] text-[var(--on-acc)]' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Vista en Mapa Interactivo"
  >
@@ -1628,7 +1628,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={handleApplyAllAiData}
- className="px-3 py-1 bg-[var(--acc)] text-[var(--acc-ink)] font-bold rounded-[var(--r-s)] text-[10px] hover:bg-[var(--acc-soft)] transition-all cursor-pointer flex items-center gap-1 shadow"
+ className="px-3 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-bold rounded-[var(--r-s)] text-[10px] hover:bg-[var(--acc-soft)] transition-all cursor-pointer flex items-center gap-1 shadow"
  >
  <Check className="w-3.5 h-3.5" />
  <span>Aplicar Todo</span>

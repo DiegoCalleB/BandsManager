@@ -620,7 +620,7 @@ export function ExcelImportModal({
  onClick={() => setDefaultCategory(cat.id)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
  defaultCategory === cat.id
- ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold shadow-xs'
+ ?'bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold shadow-xs'
  :'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)] border-[var(--hair)]800'
  }`}
  >
@@ -853,7 +853,7 @@ export function ExcelImportModal({
  type="button"
  onClick={() => setFilterDuplicatesOnly(!filterDuplicatesOnly)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
- filterDuplicatesOnly ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-zinc-700'
+ filterDuplicatesOnly ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold' :'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-zinc-700'
  }`}
  >
  <Filter className="w-3 h-3" />

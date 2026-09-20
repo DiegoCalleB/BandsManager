@@ -145,7 +145,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  type="button"
  onClick={onAddVideo}
  disabled={!newVideoUrl.trim()}
- className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-semibold text-xs transition-colors disabled:opacity-50"
+ className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-colors disabled:opacity-50"
  >
  <Plus className="w-3.5 h-3.5" />
  Añadir Vídeo

@@ -1217,7 +1217,7 @@ export default function App() {
        title="Configurar y activar campañas de booking con fechas objetivo"
      >
        <div className="flex items-center gap-2 min-w-0">
-         <div className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' : 'bg-[var(--surface)] text-[var(--ink-2)]'}`}>
+         <div className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]' : 'bg-[var(--surface)] text-[var(--ink-2)]'}`}>
            <Target className="w-3.5 h-3.5" />
          </div>
          <div className="flex flex-col min-w-0">
@@ -1229,7 +1229,7 @@ export default function App() {
            </span>
          </div>
        </div>
-       <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
+       <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] shrink-0">
          {activeCampaign ? 'Activa' : 'Elegir'}
        </span>
      </button>

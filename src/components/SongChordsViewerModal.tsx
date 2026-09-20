@@ -316,7 +316,7 @@ export function SongChordsViewerModal({
  onClick={() => setActiveTab('chords')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
  activeTab ==='chords'
- ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] shadow'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

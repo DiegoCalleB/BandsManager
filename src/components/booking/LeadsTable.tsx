@@ -302,7 +302,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  }}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center gap-1 min-h-[38px] ${
  isDetailOpen
- ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
  :'bg-[var(--sunken)] text-[var(--ink)] hover:bg-zinc-700'
  }`}
  >

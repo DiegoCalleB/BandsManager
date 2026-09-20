@@ -246,7 +246,7 @@ export function AddLeadModal({
  onClick={() => setNewLeadData(prev => ({ ...prev, icono: emoji }))}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  newLeadData.icono === emoji
- ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold scale-110 shadow-md border-[var(--acc)]'
+ ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110 shadow-md border-[var(--acc)]'
  :'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-zinc-700'
  }`}
  >
@@ -491,7 +491,7 @@ export function AddLeadModal({
  className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg ${
  isStitchLight
  ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)]'
- :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
  }`}
  >
  {sectionTab ==='medios' ?'Guardar Medio' : sectionTab ==='grupos' ?'Guardar Contacto' :'Guardar Sala'}

@@ -503,7 +503,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  setShowStyleMenu(false);
  }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
- mapStyle === key ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'hover:bg-[var(--surface)] text-[var(--ink-2)]'
+ mapStyle === key ?'bg-[var(--acc)] text-[var(--on-acc)]' :'hover:bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <span>{MAP_STYLES[key].name}</span>

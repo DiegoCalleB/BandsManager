@@ -82,7 +82,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  </button>
 
  <div className="flex items-center gap-2">
- <span className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--acc-ink)] font-bold flex items-center justify-center text-xs shadow-xs font-mono shrink-0">
+ <span className="w-6 h-6 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-bold flex items-center justify-center text-xs shadow-xs font-mono shrink-0">
  {selectedCount}
  </span>
  <div className="leading-tight">
