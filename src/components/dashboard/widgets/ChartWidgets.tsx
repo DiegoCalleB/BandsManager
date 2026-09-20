@@ -223,8 +223,8 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  { name:'Nuevos', count: counts.nuevo, color:'#38bdf8' },
  { name:'Contactados', count: counts.contactado, color:'#818cf8' },
  { name:'Por Aprobar', count: counts.aprobacion, color:'#c084fc' },
- { name:'Negociando', count: counts.negociando, color:'#f59e0b' },
- { name:'Confirmados', count: counts.confirmado, color:'#10b981' }
+ { name:'Negociando', count: counts.negociando, color:'var(--acc)' },
+ { name:'Confirmados', count: counts.confirmado, color:'var(--ok)' }
  ];
 
  const total = leads.length || 1;
@@ -369,7 +369,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
  return null;
  }}
  />
- <Bar dataKey="ingresos" fill="#10b981" radius={[4, 4, 0, 0]} name="Ingresos" />
+ <Bar dataKey="ingresos" fill="var(--ok)" radius={[4, 4, 0, 0]} name="Ingresos" />
  <Bar dataKey="gastos" fill="#f43f5e" radius={[4, 4, 0, 0]} name="Gastos" />
  </BarChart>
  </ResponsiveContainer>

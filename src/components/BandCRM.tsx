@@ -790,8 +790,8 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  switch (status) {
  case'colegas_aliados':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--surface)]/15 text-[#10b981] whitespace-nowrap shrink-0">
- <Handshake className="w-3 h-3 text-[#10b981] shrink-0" />
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--surface)]/15 text-[var(--ok)] whitespace-nowrap shrink-0">
+ <Handshake className="w-3 h-3 text-[var(--ok)] shrink-0" />
  <span>Colegas / Aliados</span>
  </span>
  );
@@ -1318,7 +1318,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {band.telefono && (
  <div className="flex items-center justify-between text-[var(--ink-2)]">
  <span className="text-[10px] text-neutral-500 uppercase">Teléfono:</span>
- <a href={`tel:${band.telefono}`} className="text-[#10b981] hover:underline">
+ <a href={`tel:${band.telefono}`} className="text-[var(--ok)] hover:underline">
  {band.telefono}
  </a>
  </div>

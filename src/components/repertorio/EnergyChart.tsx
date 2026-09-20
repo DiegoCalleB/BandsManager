@@ -445,10 +445,10 @@ export function EnergyChart({
  {/* Mientras se arrastra un punto en horizontal, esta línea marca dónde caería la canción
  al soltar. En vertical, marca la altura (energía) a la que quedaría en su lugar. */}
  {draggingFromIndex !== null && dragAxis !=='y' && hoverIndex !== null && (
- <ReferenceLine x={hoverIndex} stroke="#fbbf24" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
+ <ReferenceLine x={hoverIndex} stroke="var(--acc-soft)" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
  )}
  {draggingFromIndex !== null && dragAxis ==='y' && liveEnergyScore !== null && (
- <ReferenceLine y={liveEnergyScore} stroke="#fbbf24" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
+ <ReferenceLine y={liveEnergyScore} stroke="var(--acc-soft)" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
  )}
 
  {/* Eventos de"speech" (chapa, presentación, interludio...): no cuentan como un bajón de
@@ -489,7 +489,7 @@ export function EnergyChart({
  <ReferenceLine
  key={`trans-${d.id}`}
  x={d.idx + 0.5}
- stroke={isOk ?'#10b981' :'#f43f5e'}
+ stroke={isOk ?'var(--ok)' :'#f43f5e'}
  strokeWidth={isOk ? 1 : 1.5}
  strokeDasharray={isOk ?'2 3' :'3 2'}
  strokeOpacity={isOk ? 0.45 : 0.85}
@@ -662,7 +662,7 @@ export function EnergyChart({
  r={dotSelected}
  strokeWidth={2}
  stroke="#ffffff"
- fill={activeDotProps.payload?.color ||'#fbbf24'}
+ fill={activeDotProps.payload?.color ||'var(--acc-soft)'}
  />
  );
  }}
@@ -744,7 +744,7 @@ export function EnergyChart({
  fontSize={labelFontSize}
  fontFamily="monospace"
  fontWeight={600}
- fill="#fbbf24"
+ fill="var(--acc-soft)"
  stroke="#000000"
  strokeWidth={1.8}
  paintOrder="stroke"

@@ -25,7 +25,7 @@ const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
     targetDatesText: '9 y 10 de abril, 23 y 24 de abril',
     notes: 'Gira de salas con intercambio de público con bandas aliadas de la zona.',
     isActive: false,
-    color: '#f59e0b'
+    color: 'var(--acc)'
   }
 ];
 

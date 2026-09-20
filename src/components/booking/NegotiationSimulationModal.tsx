@@ -261,7 +261,7 @@ export function NegotiationSimulationModal({
  >
  ✨ Vista Previa del Correo Generado (Editable)
  </label>
- <span className="text-[10px] font-sans uppercase bg-[var(--surface)]/15 text-[#10b981]/80 px-2 py-1 rounded">
+ <span className="text-[10px] font-sans uppercase bg-[var(--surface)]/15 text-[var(--ok)]/80 px-2 py-1 rounded">
  Listo para Ajustar
  </span>
  </div>

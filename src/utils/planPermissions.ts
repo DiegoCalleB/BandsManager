@@ -107,7 +107,7 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     id: 'de_gira',
     name: 'De Gira',
     badge: 'Más Popular',
-    color: '#f59e0b', // Amber / Gold
+    color: 'var(--acc)', // Amber / Gold
     price: '29€ / mes',
     credits: '800 créditos / mes',
     creditsSub: 'Flujos agénticos completos y auto-booking',
@@ -131,7 +131,7 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     id: 'cabeza_de_cartel',
     name: 'Cabeza de Cartel',
     badge: 'Pro & Multi-Banda',
-    color: '#10b981', // Emerald
+    color: 'var(--ok)', // Emerald
     price: '79€ / mes',
     credits: '2.500 créditos / mes',
     creditsSub: 'Capacidad multi-banda y agentes en paralelo',

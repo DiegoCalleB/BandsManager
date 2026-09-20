@@ -723,7 +723,7 @@ export default function Finanzas({
  <div className="flex gap-3 items-center min-w-0">
  <div className={`p-2 rounded-[var(--r-s)] shrink-0 ${
  p.tipo ==='ingreso'
- ?'bg-[var(--surface)]/15 text-[#10b981] -emerald-500/20'
+ ?'bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20'
  :'bg-rose-500/15 text-rose-400 -rose-500/20'
  }`}>
  <DollarSign className="w-4 h-4" />

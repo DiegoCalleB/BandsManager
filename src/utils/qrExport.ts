@@ -67,7 +67,7 @@ export function getCleanSvgString(svgEl: SVGElement, includeLogo?: { dataUrl: st
     bgRect.setAttribute('height', String(logoSize + 8));
     bgRect.setAttribute('rx', String(radius + 2));
     bgRect.setAttribute('fill', '#ffffff');
-    bgRect.setAttribute('stroke', '#f59e0b');
+    bgRect.setAttribute('stroke', 'var(--acc)');
     bgRect.setAttribute('stroke-width', '2');
     cloned.appendChild(bgRect);
 
@@ -166,7 +166,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Borde exterior ámbar / dorado
-    ctx.strokeStyle = '#f59e0b';
+    ctx.strokeStyle = 'var(--acc)';
     ctx.lineWidth = 24;
     ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
 
@@ -191,7 +191,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
 
     // Concierto / Sala / Ciudad
     if (options.concertTitle) {
-      ctx.fillStyle = '#f59e0b';
+      ctx.fillStyle = 'var(--acc)';
       ctx.font = '800 52px system-ui, -apple-system, sans-serif';
       ctx.fillText(options.concertTitle.toUpperCase(), canvas.width / 2, curY);
       curY += 60;
@@ -230,7 +230,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
     ctx.shadowColor = 'transparent';
 
-    ctx.strokeStyle = '#f59e0b';
+    ctx.strokeStyle = 'var(--acc)';
     ctx.lineWidth = 16;
     ctx.strokeRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
 
@@ -243,7 +243,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       const cy = qrY + (qrSize - centerLogoSize) / 2;
       
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeStyle = 'var(--acc)';
       ctx.lineWidth = 10;
       ctx.beginPath();
       ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
@@ -275,7 +275,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.strokeStyle = '#f59e0b';
+    ctx.strokeStyle = 'var(--acc)';
     ctx.lineWidth = 20;
     ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
 
@@ -287,7 +287,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     curY += 70;
 
     if (options.concertTitle) {
-      ctx.fillStyle = '#f59e0b';
+      ctx.fillStyle = 'var(--acc)';
       ctx.font = '700 44px system-ui, -apple-system, sans-serif';
       ctx.fillText(options.concertTitle, canvas.width / 2, curY);
       curY += 70;
@@ -305,7 +305,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       const cy = qrY + (qrSize - centerLogoSize) / 2;
       
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeStyle = 'var(--acc)';
       ctx.lineWidth = 10;
       ctx.beginPath();
       ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
@@ -342,7 +342,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       const cy = pad + (qrSize - centerLogoSize) / 2;
 
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeStyle = 'var(--acc)';
       ctx.lineWidth = 16;
       ctx.beginPath();
       ctx.roundRect(cx - 20, cy - 20, centerLogoSize + 40, centerLogoSize + 40, 32);
@@ -437,7 +437,7 @@ export function printHighQualityFlyer(options: {
             width: 100%;
             max-width: 680px;
             margin: 0 auto;
-            border: 6px solid #f59e0b;
+            border: 6px solid var(--acc);
             border-radius: 28px;
             padding: 40px 32px;
             text-align: center;
@@ -501,7 +501,7 @@ export function printHighQualityFlyer(options: {
             display: inline-block;
             padding: 20px;
             background: #ffffff;
-            border: 4px solid #f59e0b;
+            border: 4px solid var(--acc);
             border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
           }
@@ -519,7 +519,7 @@ export function printHighQualityFlyer(options: {
             height: 64px;
             background: #ffffff;
             border-radius: 16px;
-            border: 3px solid #f59e0b;
+            border: 3px solid var(--acc);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;

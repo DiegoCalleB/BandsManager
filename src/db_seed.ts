@@ -1195,7 +1195,7 @@ export const INITIAL_USERS = [
     name: 'Jose',
     role: 'leader' as const,
     instrument: 'Percusión, Showman y Admin',
-    avatarColor: '#10b981',
+    avatarColor: 'var(--ok)',
     initialPassword: 'bakandeya2026',
     createdAt: '2026-01-01T10:00:00.000Z'
   },
@@ -1228,7 +1228,7 @@ export const INITIAL_USERS = [
     name: 'Raúl',
     role: 'member' as const,
     instrument: 'Violín',
-    avatarColor: '#f59e0b',
+    avatarColor: 'var(--acc)',
     initialPassword: 'banda123',
     createdAt: '2026-01-01T10:00:00.000Z'
   }

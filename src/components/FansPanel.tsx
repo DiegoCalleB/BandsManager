@@ -51,7 +51,7 @@ interface FansPanelProps {
  initialConcertId?: string;
 }
 
-const COLORS = ['#f59e0b','#10b981','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#64748b'];
+const COLORS = ['var(--acc)','var(--ok)','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#64748b'];
 
 export const FansPanel: React.FC<FansPanelProps> = ({
  fans = [],

@@ -148,9 +148,9 @@ export interface BandMemberOption {
 // formación de Bakandeya (banda de demo de la propia app) al resto de bandas (ver el mismo
 // bug ya corregido para "accesos rápidos" en RepertorioSetlists.tsx).
 export const DEFAULT_BAND_MEMBERS: BandMemberOption[] = [
-  { id: 'miembro-1', name: 'Voz', instrument: 'Voz Principal', avatarColor: '#10b981' },
+  { id: 'miembro-1', name: 'Voz', instrument: 'Voz Principal', avatarColor: 'var(--ok)' },
   { id: 'miembro-2', name: 'Guitarra', instrument: 'Guitarra', avatarColor: '#3b82f6' },
-  { id: 'miembro-3', name: 'Bajo', instrument: 'Bajo', avatarColor: '#f59e0b' },
+  { id: 'miembro-3', name: 'Bajo', instrument: 'Bajo', avatarColor: 'var(--acc)' },
   { id: 'miembro-4', name: 'Batería', instrument: 'Batería', avatarColor: '#8b5cf6' },
   { id: 'miembro-5', name: 'Teclados', instrument: 'Teclados / Sintes', avatarColor: '#ec4899' }
 ];

@@ -278,7 +278,7 @@ export function AddLeadModal({
  )}
 
  {modalScrapeSuccessMsg && (
- <div className="p-2.5 rounded-[var(--r-s)] text-[10px] font-sans text-[#10b981] bg-[var(--surface)]/15">
+ <div className="p-2.5 rounded-[var(--r-s)] text-[10px] font-sans text-[var(--ok)] bg-[var(--surface)]/15">
  {modalScrapeSuccessMsg}
  </div>
  )}

@@ -127,7 +127,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  }}
  className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--sunken)] rounded-[var(--r-m)] font-mono text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
  >
- {copiedPitch ? <Check className="w-4 h-4 text-[#10b981]" /> : <Copy className="w-4 h-4" />}
+ {copiedPitch ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
  <span>{copiedPitch ?'¡Copiado!' :'Copiar Texto'}</span>
  </button>
 

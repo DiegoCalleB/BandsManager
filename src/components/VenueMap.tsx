@@ -226,7 +226,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  ringColor ='rgba(67, 56, 202, 0.35)';
  } else if (count >= 8) {
  size = 42;
- bgColor = isStitchLight ?'#3b82f6' :'#f59e0b';
+ bgColor = isStitchLight ?'#3b82f6' :'var(--acc)';
  textColor ='#ffffff';
  ringColor ='rgba(59, 130, 246, 0.3)';
  }
@@ -383,8 +383,8 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  // Badge color based on status (Google Maps style vibrant pins)
  let pinColor ='#e11d48'; // Rose/Red default
- if (lead.estado ==='aprobado' || lead.estado ==='confirmado' as any) pinColor ='#10b981'; // Green
- else if (lead.estado ==='pendiente_aprobacion') pinColor ='#f59e0b'; // Amber
+ if (lead.estado ==='aprobado' || lead.estado ==='confirmado' as any) pinColor ='var(--ok)'; // Green
+ else if (lead.estado ==='pendiente_aprobacion') pinColor ='var(--acc)'; // Amber
  else if (lead.estado ==='interesado' || lead.estado ==='negociando') pinColor ='#2563eb'; // Blue
  else if (lead.estado ==='no_interesado') pinColor ='#64748b'; // Slate
 
@@ -526,7 +526,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  </button>
  ${lead.estado ==='pendiente_aprobacion' ? `
  <button id="pop-approve-${lead.id}" style="
- background: #10b981;
+ background: var(--ok);
  color: white;
  border: none;
  padding: 6px 8px;

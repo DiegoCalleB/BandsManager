@@ -1848,7 +1848,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
  agentsEnabled
  ? (isStitchLight ?'bg-amber-200 hover:bg-[var(--acc)]/50/15 text-[#d1b375]' :'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/50/15 text-[#d1b375] -amber-500/40')
- : (isStitchLight ?'bg-emerald-200 hover:bg-[var(--surface)]/15 text-[#10b981]' :'bg-emerald-500/20 hover:bg-[var(--surface)]/15 text-[#10b981] -emerald-500/40')
+ : (isStitchLight ?'bg-emerald-200 hover:bg-[var(--surface)]/15 text-[var(--ok)]' :'bg-emerald-500/20 hover:bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/40')
  }`}
  title={agentsEnabled ?"Desactivar motor de agentes de Supabase y usar solo Gemini" :"Activar motor de agentes en Supabase"}
  >
@@ -2161,7 +2161,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-cyan-500/10 text-cyan-400 -cyan-500/20 animate-pulse">⚙️ Ejecutando...</span>
  )}
  {activeRun.status ==='completed' && activeRun.conclusion ==='success' && (
- <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[var(--surface)]/15 text-[#10b981] -emerald-500/20">✅ Éxito</span>
+ <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20">✅ Éxito</span>
  )}
  {activeRun.status ==='completed' && activeRun.conclusion ==='failure' && (
  <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-rose-500/15 text-rose-400 -rose-500/20">❌ Fallido</span>
@@ -2186,7 +2186,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  let dotColor ='bg-[var(--surface)]/80';
  let textColor ='text-neutral-500';
  if (isStepSuccess) {
- dotColor ='bg-emerald-500 shadow-[0_0_4px_#10b981]';
+ dotColor ='bg-emerald-500 shadow-[0_0_4px_var(--ok)]';
  textColor = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-3)]';
  } else if (isStepFailure) {
  dotColor ='bg-rose-500 shadow-[0_0_4px_#f43f5e] animate-pulse';
@@ -2388,7 +2388,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className=" -emerald-500/20 pt-2.5 mt-2 space-y-2">
  <div className="flex justify-between items-center text-[10px] font-mono">
  <span className="text-emerald-400/80 text-[10px]">Nuevos contactos añadidos:</span>
- <span className="px-2 py-0.5 rounded bg-[var(--surface)]/15 text-[#10b981] font-bold font-sans -emerald-500/30">
+ <span className="px-2 py-0.5 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold font-sans -emerald-500/30">
  {detectedLeads.length} contactos
  </span>
  </div>

@@ -121,7 +121,7 @@ const LiveMicWaveformCanvas: React.FC<{
  const y = centerY - barH / 2;
 
  const isCurrentPoint = i === historyBars.length - 1;
- ctx.fillStyle = isCurrentPoint ?'#ffffff' : (val > 0.6 ?'#f59e0b' : color);
+ ctx.fillStyle = isCurrentPoint ?'#ffffff' : (val > 0.6 ?'var(--acc)' : color);
  ctx.fillRect(x, y, Math.max(1.5, barWidth - 1), barH);
  }
 

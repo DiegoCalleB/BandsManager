@@ -348,7 +348,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  ${analysis.strengths.length > 0 ? `
  <div class="strengths">
- <p class="label" style="color:#10b981;">✓ Fortalezas</p>
+ <p class="label" style="color:var(--ok);">✓ Fortalezas</p>
  <ul>${analysis.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
  </div>` :''}
 
@@ -357,7 +357,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  ${analysis.areasForImprovement.length > 0 ? `
  <div class="improvements">
- <p class="label" style="color:#f59e0b;">🎯 Áreas de Mejora</p>
+ <p class="label" style="color:var(--acc);">🎯 Áreas de Mejora</p>
  <ul>${analysis.areasForImprovement.map(a => `<li>${escapeHtml(a)}</li>`).join('')}</ul>
  </div>` :''}
 

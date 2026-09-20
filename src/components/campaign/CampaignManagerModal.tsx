@@ -233,7 +233,7 @@ export function CampaignManagerModal({
  Color en Calendario
  </label>
  <div className="flex items-center gap-2 mt-1">
- {['#8b5cf6','#f59e0b','#06b6d4','#10b981','#ec4899','#3b82f6'].map(col => (
+ {['#8b5cf6','var(--acc)','#06b6d4','var(--ok)','#ec4899','#3b82f6'].map(col => (
  <button
  key={col}
  type="button"

@@ -69,7 +69,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const { language, setLanguage } = useLanguage();
  const [name, setName] = useState(currentUser.name ||'');
  const [instrument, setInstrument] = useState(currentUser.instrument ||'');
- const [avatarColor, setAvatarColor] = useState(currentUser.avatarColor ||'#10b981');
+ const [avatarColor, setAvatarColor] = useState(currentUser.avatarColor ||'var(--ok)');
  const [selectedMainBandId, setSelectedMainBandId] = useState(currentUser.main_band_id || currentUser.band_id ||'');
  const [bandLogoUrl, setBandLogoUrl] = useState<string>(epkConfig?.logoUrl ||'');
 
@@ -77,7 +77,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  if (currentUser) {
  setName(currentUser.name ||'');
  setInstrument(currentUser.instrument ||'');
- setAvatarColor(currentUser.avatarColor ||'#10b981');
+ setAvatarColor(currentUser.avatarColor ||'var(--ok)');
  setSelectedMainBandId(currentUser.main_band_id || currentUser.band_id ||'');
  }
  }, [currentUser]);
@@ -273,7 +273,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }
  };
 
- const colors = ['#10b981', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'#f59e0b', // Amber'#8b5cf6', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
+ const colors = ['var(--ok)', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'var(--acc)', // Amber'#8b5cf6', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
  ];
 
  const handleSubmit = async (e: React.FormEvent) => {

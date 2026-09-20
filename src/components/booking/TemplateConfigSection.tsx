@@ -143,7 +143,7 @@ export function TemplateConfigSection({
  : templateTab ==='grupos'
  ? isStitchLight
  ?'bg-emerald-100 text-emerald-700'
- :'bg-[var(--surface)]/15 text-[#10b981]'
+ :'bg-[var(--surface)]/15 text-[var(--ok)]'
  : templateTab ==='discotecas'
  ? isStitchLight
  ?'bg-purple-50 text-purple-900'

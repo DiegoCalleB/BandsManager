@@ -2091,10 +2091,10 @@ export default function CalendarView({
 
  // Paleta de colores e identificador visual de bandas (estilo Google Calendar)
  const BAND_COLOR_PALETTES = [
- { bg:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', badge:'bg-[var(--acc)] text-stone-950', dot:'bg-[var(--acc)]/60', accent:'#f59e0b' },
+ { bg:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', badge:'bg-[var(--acc)] text-stone-950', dot:'bg-[var(--acc)]/60', accent:'var(--acc)' },
  { bg:'bg-sky-500/20 text-sky-300 border-sky-500/40', badge:'bg-sky-500 text-white', dot:'bg-sky-400', accent:'#0284c7' },
  { bg:'bg-purple-500/20 text-purple-300 border-purple-500/40', badge:'bg-purple-500 text-white', dot:'bg-purple-400', accent:'#a855f7' },
- { bg:'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/40', badge:'bg-emerald-500 text-stone-950', dot:'bg-emerald-400', accent:'#10b981' },
+ { bg:'bg-emerald-500/20 text-[var(--ink-2)] border-emerald-500/40', badge:'bg-emerald-500 text-stone-950', dot:'bg-emerald-400', accent:'var(--ok)' },
  { bg:'bg-rose-500/20 text-[var(--ink-2)] border-rose-500/40', badge:'bg-rose-500 text-[var(--ink)]', dot:'bg-rose-400', accent:'#f43f5e' },
  { bg:'bg-indigo-500/20 text-indigo-300 border-indigo-500/40', badge:'bg-indigo-500 text-white', dot:'bg-indigo-400', accent:'#6366f1' },
  { bg:'bg-teal-500/20 text-teal-300 border-teal-500/40', badge:'bg-teal-500 text-stone-950', dot:'bg-teal-400', accent:'#14b8a6' },
@@ -3378,10 +3378,10 @@ export default function CalendarView({
  {syncSuccessMessage && (
  <div className={`mb-4 p-2 px-3 rounded-[var(--r-s)] text-[10px] flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
  isStitchLight 
- ? (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[#10b981]') 
- : (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[#10b981]')
+ ? (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[var(--ok)]') 
+ : (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[var(--ok)]')
  }`}>
- <CheckSquare className="w-4 h-4 text-[#10b981] shrink-0" />
+ <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className="flex-1 font-mono text-[10px]">{syncSuccessMessage}</span>
  <button onClick={() => setSyncSuccessMessage('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-mono">×</button>
  </div>
@@ -3950,7 +3950,7 @@ export default function CalendarView({
  className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight 
  ?'bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500/25' 
- :'bg-[var(--surface)]/20 text-[#10b981] hover:bg-[var(--surface)]/30'
+ :'bg-[var(--surface)]/20 text-[var(--ok)] hover:bg-[var(--surface)]/30'
  }`}
  >
  <Plus className="w-3.5 h-3.5" />
@@ -4501,7 +4501,7 @@ export default function CalendarView({
  <span>Repertorio Asignado:</span>
  </div>
  {assignedSetlist && (
- <span className="text-[10px] font-mono px-2 py-1 rounded bg-[var(--surface)]/15 text-[#10b981] font-bold">
+ <span className="text-[10px] font-mono px-2 py-1 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold">
  {assignedSetlist.items?.length || 0} canciones/ítems
  </span>
  )}
@@ -4638,7 +4638,7 @@ export default function CalendarView({
  activeTab ==='roadbook'
  ? isStitchLight
  ?'bg-teal-100 text-teal-900 font-bold'
- :'bg-teal-500/20 text-[#10b981] font-bold'
+ :'bg-teal-500/20 text-[var(--ok)] font-bold'
  : isStitchLight
  ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
  :'text-[var(--ink-2)] hover:text-[var(--sunken)]'
@@ -4681,7 +4681,7 @@ export default function CalendarView({
  <div className="space-y-3">
  <div className={`p-3 rounded-[var(--r-s)] space-y-2 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/70'}`}>
  <div className="flex items-center justify-between">
- <span className={`text-[10px] font-mono uppercase font-bold ${isStitchLight ?'text-sky-400' :'text-[#10b981]'}`}>📞 Contacto Producción & Hotel</span>
+ <span className={`text-[10px] font-mono uppercase font-bold ${isStitchLight ?'text-sky-400' :'text-[var(--ok)]'}`}>📞 Contacto Producción & Hotel</span>
  </div>
  <div className="grid grid-cols-2 gap-2 text-[10px]">
  <div>
@@ -4761,7 +4761,7 @@ export default function CalendarView({
  </style>
  </head>
  <body>
- <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f59e0b; padding-bottom:12px; margin-bottom:20px;">
+ <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--acc); padding-bottom:12px; margin-bottom:20px;">
  <div>
  <h1>Bakandeya — Hoja de Ruta de Gira</h1>
  <h2>${selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : selectedEventTitle}</h2>
@@ -5376,7 +5376,7 @@ export default function CalendarView({
  :'bg-[#d1b375]/15 text-[#d1b375]'
  : showCreateModal ==='reunion'
  ?'bg-indigo-500/15 text-indigo-400'
- :'bg-[var(--surface)]/15 text-[#10b981]'
+ :'bg-[var(--surface)]/15 text-[var(--ok)]'
  }`}>
  {showCreateModal ==='concert' ? (
  <Sparkles className="w-5 h-5" />
@@ -5686,12 +5686,12 @@ export default function CalendarView({
 
  <div>
  <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
- <span className="flex items-center gap-1 text-[#10b981]">
+ <span className="flex items-center gap-1 text-[var(--ok)]">
  <Music className="w-3 h-3" />
  <span>Repertorio / Setlist a Ensayar</span>
  </span>
  {rehSetlistId && (
- <span className="text-[9px] font-mono text-[#10b981]">
+ <span className="text-[9px] font-mono text-[var(--ok)]">
  {availableSetlists.find((s: any) => s.id === rehSetlistId)?.items?.length || 0} temas
  </span>
  )}
@@ -5846,7 +5846,7 @@ export default function CalendarView({
  <span>Repertorio / Setlist del Concierto</span>
  </span>
  {concSetlistId && (
- <span className="text-[9px] font-mono text-[#10b981]">
+ <span className="text-[9px] font-mono text-[var(--ok)]">
  {availableSetlists.find((s: any) => s.id === concSetlistId)?.items?.length || 0} temas
  </span>
  )}
@@ -6143,7 +6143,7 @@ export default function CalendarView({
  <span>Repertorio / Setlist Asignado</span>
  </span>
  {editDraft.setlistId && (
- <span className="text-[9px] font-mono text-[#10b981]">
+ <span className="text-[9px] font-mono text-[var(--ok)]">
  {availableSetlists.find((s: any) => s.id === editDraft.setlistId)?.items?.length || 0} temas
  </span>
  )}
@@ -6214,7 +6214,7 @@ export default function CalendarView({
  </button>
  <div className="flex items-center gap-2 mb-4">
  <span className={`p-2 rounded-[var(--r-s)] ${
- editRehearsalDraft.tipo_evento ==='reunion' ?'bg-indigo-500/15 text-indigo-400' :'bg-[var(--surface)]/15 text-[#10b981]'
+ editRehearsalDraft.tipo_evento ==='reunion' ?'bg-indigo-500/15 text-indigo-400' :'bg-[var(--surface)]/15 text-[var(--ok)]'
  }`}>
  {editRehearsalDraft.tipo_evento ==='reunion' ? <Handshake className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
  </span>
@@ -6361,12 +6361,12 @@ export default function CalendarView({
 
  <div>
  <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
- <span className="flex items-center gap-1 text-[#10b981]">
+ <span className="flex items-center gap-1 text-[var(--ok)]">
  <Music className="w-3 h-3" />
  <span>Repertorio / Setlist a Ensayar</span>
  </span>
  {editRehearsalDraft.setlistId && (
- <span className="text-[9px] font-mono text-[#10b981]">
+ <span className="text-[9px] font-mono text-[var(--ok)]">
  {availableSetlists.find((s: any) => s.id === editRehearsalDraft.setlistId)?.items?.length || 0} temas
  </span>
  )}

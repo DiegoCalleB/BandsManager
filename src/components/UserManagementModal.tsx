@@ -52,7 +52,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  const [error, setError] = useState<string | null>(null);
  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
- const colors = ['#10b981', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'#f59e0b', // Amber'#8b5cf6', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
+ const colors = ['var(--ok)', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'var(--acc)', // Amber'#8b5cf6', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
  ];
 
  const handleCreateUser = async (e: React.FormEvent) => {
@@ -360,7 +360,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div className="flex items-center gap-3">
  <div
  className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] shadow-inner uppercase font-mono text-sm shrink-0"
- style={{ backgroundColor: u.avatarColor ||'#10b981' }}
+ style={{ backgroundColor: u.avatarColor ||'var(--ok)' }}
  >
  {u.name.slice(0, 2)}
  </div>
@@ -379,7 +379,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </span>
  )}
  {isSelf && (
- <span className="px-1.5 py-0.5 text-[9px] font-mono rounded bg-[var(--surface)]/15 text-[#10b981]">
+ <span className="px-1.5 py-0.5 text-[9px] font-mono rounded bg-[var(--surface)]/15 text-[var(--ok)]">
  Tú
  </span>
  )}

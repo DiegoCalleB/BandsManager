@@ -77,7 +77,7 @@ export function AssignSetlistModal({
  ))
  )}
 
- <div className="text-[10px] text-[#10b981] uppercase font-bold pt-3">Próximos Ensayos:</div>
+ <div className="text-[10px] text-[var(--ok)] uppercase font-bold pt-3">Próximos Ensayos:</div>
  {rehearsals.length === 0 ? (
  <div className="text-neutral-500 italic text-[10px]">No hay ensayos programados</div>
  ) : (

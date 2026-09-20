@@ -99,7 +99,7 @@ const SHIRT_COLORS = [
  { id:'#7f1d1d', name:'Rojo Vino' },
  { id:'#1e3a8a', name:'Azul Marino' },
  { id:'#14532d', name:'Verde Bosque' },
- { id:'#f59e0b', name:'Ámbar Dorado' }
+ { id:'var(--acc)', name:'Ámbar Dorado' }
 ];
 
 interface MerchanProps {

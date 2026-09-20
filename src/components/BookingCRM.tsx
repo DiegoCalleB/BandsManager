@@ -2149,7 +2149,7 @@ export default function BookingCRM({
  templateTab ==='medios'
  ? isStitchLight ?'bg-rose-500/15 text-rose-400' :'bg-rose-500/15 text-rose-400'
  : templateTab ==='grupos'
- ? isStitchLight ? (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[#10b981]') :'bg-[var(--surface)]/15/30 text-[#10b981]'
+ ? isStitchLight ? (isStitchLight ?'bg-emerald-100 text-emerald-700' :'bg-[var(--surface)]/15 text-[var(--ok)]') :'bg-[var(--surface)]/15/30 text-[var(--ok)]'
  : templateTab ==='discotecas'
  ? isStitchLight ?'bg-purple-50 text-purple-900' :'bg-purple-500/10 text-purple-300'
  : templateTab ==='ayuntamientos'

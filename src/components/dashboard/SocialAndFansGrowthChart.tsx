@@ -838,16 +838,16 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="dashboardColorSpotify" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#10b981" stopOpacity={0.25}/>
- <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+ <stop offset="5%" stopColor="var(--ok)" stopOpacity={0.25}/>
+ <stop offset="95%" stopColor="var(--ok)" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="dashboardColorYouTube" x1="0" y1="0" x2="0" y2="1">
  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.25}/>
  <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="dashboardColorFans" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.35}/>
- <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+ <stop offset="5%" stopColor="var(--acc)" stopOpacity={0.35}/>
+ <stop offset="95%" stopColor="var(--acc)" stopOpacity={0}/>
  </linearGradient>
  </defs>
 
@@ -936,7 +936,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  type="monotone" 
  dataKey="spotify" 
  name="Spotify" 
- stroke="#10b981" 
+ stroke="var(--ok)" 
  strokeWidth={2} 
  fillOpacity={1} 
  fill="url(#dashboardColorSpotify)" 
@@ -948,7 +948,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  type="monotone" 
  dataKey="fans" 
  name="Fans Registrados (BD / Únete)" 
- stroke="#f59e0b" 
+ stroke="var(--acc)" 
  strokeWidth={3} 
  fillOpacity={1} 
  fill="url(#dashboardColorFans)" 
