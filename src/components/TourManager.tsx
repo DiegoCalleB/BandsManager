@@ -1017,7 +1017,7 @@ export default function TourManager({
  value={veh.nombre}
  onChange={e => handleUpdateVehicle(vIdx,'nombre', e.target.value)}
  placeholder="Ej. Furgoneta Principal (Banda)"
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)]" />
  </div>
 
  <div>
@@ -1045,7 +1045,7 @@ export default function TourManager({
  min="0.01"
  value={veh.precioCarburanteEUR ?? 1.55}
  onChange={e => handleUpdateVehicle(vIdx,'precioCarburanteEUR', Number(e.target.value))}
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-bold text-[var(--ink-2)] />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-bold text-[var(--ink-2)]" />
  <select
  value={veh.tipoCombustible ||'diesel'}
  onChange={e => handleUpdateVehicle(vIdx,'tipoCombustible', e.target.value)}
@@ -1191,7 +1191,7 @@ export default function TourManager({
  value={stop.distanciaAnteriorKm ||''}
  onChange={e => updateStop(idx,'distanciaAnteriorKm', Number(e.target.value))}
  placeholder="Km desde anterior"
- className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm />
+ className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm" />
  </div>
  </div>
 

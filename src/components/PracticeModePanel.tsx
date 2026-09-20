@@ -570,7 +570,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, onC
  <button
  onClick={applyPresetLearnMyPart}
  disabled={!myTrack}
- className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]/50 hover:bg-[var(--tentative)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+ className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--hair)]/10 text-[var(--acc)]/50 hover:bg-[var(--hair)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
  >
  <GraduationCap className="w-4 h-4" />
  <span className="text-[11px] font-sans font-semibold text-center">Aprender mi parte<br />(aísla mi pista)</span>
@@ -787,7 +787,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, onC
  onClick={() => (chords ? setExpandedChordsTrackId(isExpanded ? null : tr.id) : handleAnalyzeTrackChords(tr))}
  title="Detectar acordes escuchando solo esta pista aislada"
  disabled={isLoadingThis}
- className="w-6 h-6 rounded flex items-center justify-center bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--tentative)]/50 disabled:opacity-50"
+ className="w-6 h-6 rounded flex items-center justify-center bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--hair)]/50 disabled:opacity-50"
  >
  {isLoadingThis ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Music2 className="w-3.5 h-3.5" />}
  </button>
@@ -808,7 +808,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, onC
  {onApplyAsMainChords && (
  <button
  onClick={() => onApplyAsMainChords(chords.cifradoTexto, chords.guiaSustituto)}
- className="flex items-center gap-1.5 text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/15 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/25"
+ className="flex items-center gap-1.5 text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--hair)]/15 text-[var(--hair)]/50 hover:bg-[var(--hair)]/25"
  >
  <CheckCircle2 className="w-3 h-3" /> Usar como cifrado principal de la canción
  </button>
@@ -836,7 +836,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, onC
  <button
  onClick={() => handleExport('solo-mi-pista')}
  disabled={!myTrack || isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--acc)]/50 hover:bg-[var(--tentative)]/20 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--hair)]/10 text-[var(--acc)]/50 hover:bg-[var(--hair)]/20 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting ==='solo-mi-pista' ?'Generando…' :'Solo mi pista'}
  </button>

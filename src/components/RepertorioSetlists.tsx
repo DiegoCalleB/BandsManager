@@ -4463,7 +4463,7 @@ export default function RepertorioSetlists({
 
  {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
  {showShowItemModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80">
  <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card}`}>
  <div className="flex justify-between items-center pb-3">
  <div className="flex items-center gap-2">

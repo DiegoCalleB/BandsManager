@@ -246,7 +246,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  placeholder="https://ejemplo.com/logo.png"
  value={customUrl}
  onChange={(e) => setCustomUrl(e.target.value)}
- className="flex-1 bg-[var(--sunken)]700 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none />
+ className="flex-1 bg-[var(--sunken)]/70 rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:outline-none" />
  <button
  type="button"
  onClick={handleSaveCustomUrl}

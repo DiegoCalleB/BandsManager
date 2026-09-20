@@ -3291,7 +3291,7 @@ export default function SongStudioModal({
  value={ideaTitle}
  onChange={(e) => setIdeaTitle(e.target.value)}
  placeholder="Ej: Riff Estribillo / Arreglo Vientos / Base Acústica"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none />
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none" />
  </div>
 
  <div>
@@ -3299,7 +3299,7 @@ export default function SongStudioModal({
  <select
  value={ideaSection}
  onChange={(e) => setIdeaSection(e.target.value as any)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none >
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none" >
  {SECCIONES_TEMA.map(sec => (
  <option key={sec.key} value={sec.key} className="bg-[var(--bg)] text-[var(--ink)]">
  {sec.icon} {sec.label}
@@ -3316,7 +3316,7 @@ export default function SongStudioModal({
  type="text"
  value={ideaUploader}
  onChange={(e) => setIdeaUploader(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none />
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none" />
  </div>
 
  <div>
@@ -3326,7 +3326,7 @@ export default function SongStudioModal({
  value={ideaInstrument}
  onChange={(e) => setIdeaInstrument(e.target.value)}
  placeholder="Ej: Guitarra, Trompeta, Batería, Voz"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none />
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none" />
  </div>
  </div>
 
@@ -4636,7 +4636,7 @@ export default function SongStudioModal({
  value={newTrackName}
  onChange={(e) => setNewTrackName(e.target.value)}
  placeholder="Ej: Voz Segunda / Solo Guitarra / Batería"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none />
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none" />
  </div>
 
  <div>
@@ -4646,7 +4646,7 @@ export default function SongStudioModal({
  value={newTrackInstrument}
  onChange={(e) => setNewTrackInstrument(e.target.value)}
  placeholder="Ej: Voz, Guitarra, Bajo, Teclado"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none />
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] focus:outline-none" />
  </div>
  </div>
 
@@ -4840,12 +4840,12 @@ export default function SongStudioModal({
  onChange={(e) => setCommentTextMap(prev => ({ ...prev, [idea.id]: e.target.value }))}
  onKeyDown={(e) => e.key ==='Enter' && handleAddComment(idea)}
  placeholder="Escribe tu crítica o sugerencia..."
- className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none />
+ className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none" />
 
  <button
  type="button"
  onClick={() => handleAddComment(idea)}
- className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] cursor-pointer"
  >
  <Send className="w-3.5 h-3.5" />
  </button>
@@ -5492,7 +5492,7 @@ export default function SongStudioModal({
  <select
  value={uploadingStemInstrument}
  onChange={(e) => setUploadingStemInstrument(e.target.value)}
- className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] focus:outline-none >
+ className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] focus:outline-none" >
  <option value="Voz">🎤 Pista: Voz Aislada</option>
  <option value="Batería">🥁 Pista: Batería Aislada</option>
  <option value="Bajo">🎸 Pista: Bajo Aislado</option>
@@ -5581,7 +5581,7 @@ export default function SongStudioModal({
  <select
  value={aiTrackGenInstrument}
  onChange={(e) => setAiTrackGenInstrument(e.target.value)}
- className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans text-xs focus:outline-none >
+ className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans text-xs focus:outline-none" >
  <option value="Guitarra Solista">🎸 Guitarra Solista (Solo / Lead Riff)</option>
  <option value="Sintetizador Lead">🎹 Sintetizador Lead / Teclado Moderno</option>
  <option value="Bajo Bailable">🎸 Bajo Bailable & Groovy</option>

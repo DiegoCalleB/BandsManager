@@ -111,15 +111,16 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  type="text" 
  value={campaignForm.name} 
  onChange={e => setCampaignForm({...campaignForm, name: e.target.value})}
- className="w-full text-sm rounded-[var(--r-s)] focus:ring-black />
+ className="w-full text-sm rounded-[var(--r-s)] focus:ring-black" />
  </div>
  <div>
  <label className="block text-xs text-[var(--ink-2)] font-medium mb-1 tracking-wider">Ciudad/Región</label>
- <input 
- type="text" 
- value={campaignForm.targetCities?.join(',')} 
+ <input
+ type="text"
+ value={campaignForm.targetCities?.join(',')}
  onChange={e => setCampaignForm({...campaignForm, targetCities: e.target.value.split(',').map(s => s.trim())})}
- className="w-full text-sm rounded-[var(--r-s)] focus:ring-black placeholder="Ej: Madrid, Barcelona"
+ className="w-full text-sm rounded-[var(--r-s)] focus:ring-black"
+ placeholder="Ej: Madrid, Barcelona"
  />
  </div>
  <div>
@@ -127,15 +128,15 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <div className="flex items-center gap-2">
  <input 
  type="number" 
- value={campaignForm.minCapacity} 
+ value={campaignForm.minCapacity}
  onChange={e => setCampaignForm({...campaignForm, minCapacity: parseInt(e.target.value) || 0})}
- className="w-full text-sm rounded-[var(--r-s)] focus:ring-black />
+ className="w-full text-sm rounded-[var(--r-s)] focus:ring-black" />
  <span className="text-[var(--ink-2)]">-</span>
- <input 
- type="number" 
- value={campaignForm.maxCapacity} 
+ <input
+ type="number"
+ value={campaignForm.maxCapacity}
  onChange={e => setCampaignForm({...campaignForm, maxCapacity: parseInt(e.target.value) || 0})}
- className="w-full text-sm rounded-[var(--r-s)] focus:ring-black />
+ className="w-full text-sm rounded-[var(--r-s)] focus:ring-black" />
  </div>
  </div>
  

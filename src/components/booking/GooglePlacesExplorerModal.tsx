@@ -65,7 +65,7 @@ function saveStoredDiscarded(list: DiscardedPlace[]) {
 }
 
 interface GooglePlacesExplorerModalProps {
- isOpen: boolean;: boolean;
+ isOpen: boolean;
  onClose: () => void;
  onImportLeads: (leads: Lead[]) => void;
  activeCampaign?: BookingCampaign | null;
@@ -145,13 +145,13 @@ const CATEGORIES: { id: LeadType; label: string; icon: string; desc: string; pla
 ];
 
 export function GooglePlacesExplorerModal({
- isOpen
+ isOpen,
  onClose,
  onImportLeads,
  activeCampaign,
  existingLeads = [],
- bandGenre ='',
- bandName =''
+ bandGenre = '',
+ bandName = ''
 }: GooglePlacesExplorerModalProps) {
  const [searchQuery, setSearchQuery] = useState('');
  const [selectedCity, setSelectedCity] = useState(activeCampaign?.targetCities[0] ||'');
@@ -809,7 +809,7 @@ export function GooglePlacesExplorerModal({
  onChange={e => setSelectedCity(e.target.value)}
  onKeyDown={e => e.key ==='Enter' && handleSearch()}
  placeholder="Ciudad (ej. Granada, Madrid...)"
- className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none />
+ className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none" />
  {selectedCity && (
  <button
  onClick={() => setSelectedCity('')}
@@ -830,7 +830,7 @@ export function GooglePlacesExplorerModal({
  onChange={e => setSearchQuery(e.target.value)}
  onKeyDown={e => e.key ==='Enter' && handleSearch()}
  placeholder={CATEGORIES.find(c => c.id === selectedType)?.placeholder ||"Búsqueda opcional..."}
- className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none />
+ className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none" />
  </div>
 
  {/* Number of Venues limit (1 a 10) */}

@@ -52,9 +52,9 @@ interface UploadMatchItem {
 export function BulkAlbumAudioUploaderModal({
  isOpen,
  onClose,
- albumName: initialAlbumName ='',
+ albumName: initialAlbumName = '',
  albumSongs = [],
- colors
+ colors,
  bandId,
  isNewAlbumMode = false,
  onSaveUpdatedSongs
@@ -610,7 +610,7 @@ export function BulkAlbumAudioUploaderModal({
  value={currentAlbumName}
  onChange={(e) => setCurrentAlbumName(e.target.value)}
  placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut..."
- className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${?'bg-[var(--surface)] text-[var(--ink)] :'bg-[var(--surface)] text-[var(--ink)] }`}
+ className="w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition bg-[var(--surface)] text-[var(--ink)]"
  />
  </div>
 
@@ -630,9 +630,8 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => coverInputRef.current?.click()}
  className={`w-full py-2.5 px-3 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs font-sans font-bold cursor-pointer transition ${
  coverPreviewUrl
- ?'border-[var(--ok)] text-[var(--ok)] bg-[var(--ok)]/10'
- :?' bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
- :' bg-[var(--surface)] hover:bg-[var(--ink)]/5 text-[var(--ink-2)]'
+ ? 'border-[var(--ok)] text-[var(--ok)] bg-[var(--ok)]/10'
+ : 'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
  }`}
  >
  <ImageIcon className="w-4 h-4" />
@@ -649,10 +648,8 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => fileInputRef.current?.click()}
  className={`p-8 rounded-3xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
  items.length > 0
- ??'border-[var(--ok)] bg-[var(--ok)]/10/30'
- :'border-[var(--hair)]/30 bg-[var(--surface)]/5'
- :?' hover:border-[var(--ok)] hover:bg-[var(--bg)]'
- :' hover:border-[var(--hair)] hover:bg-[var(--ink)]/5'
+ ? 'border-[var(--ok)] bg-[var(--ok)]/10'
+ : 'border-[var(--hair)]/30 bg-[var(--surface)]/5 hover:border-[var(--ok)] hover:bg-[var(--bg)]'
  }`}
  >
  <input

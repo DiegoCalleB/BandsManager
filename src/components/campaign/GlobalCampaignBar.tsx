@@ -58,7 +58,7 @@ export function GlobalCampaignBar({
 
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className="text-[8px] font-sans font-extrabold tracking-wider px-1 py-0.2 rounded bg-[var(--tentative)]/25 text-[var(--acc)]/40 shrink-0">
+ <span className="text-[8px] font-sans font-extrabold tracking-wider px-1 py-0.2 rounded bg-[var(--hair)]/25 text-[var(--acc)]/40 shrink-0">
  🎯 CAMPAÑA
  </span>
  <h2 className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] truncate" title={campaign.name}>
@@ -89,7 +89,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={() => setIsMobileExpanded(prev => !prev)}
- className="sm:hidden p-1 text-[var(--ink-2)] hover:text-[var(--tentative)]/80 transition-colors shrink-0"
+ className="sm:hidden p-1 text-[var(--ink-2)] hover:text-[var(--hair)]/80 transition-colors shrink-0"
  title={isMobileExpanded ?"Ocultar detalles" :"Ver ciudades y fechas"}
  >
  {isMobileExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -105,12 +105,12 @@ export function GlobalCampaignBar({
  onClick={() => onNavigate('booking', { campaignFilter: campaign.id })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
  currentView ==='booking'
- ?'bg-[var(--tentative)] text-[var(--ink)]'
+ ?'bg-[var(--hair)] text-[var(--ink)]'
  :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
  }`}
  title="Ver salas objetivo de esta campaña en Booking CRM"
  >
- <Building2 className="w-3 h-3 text-[var(--tentative)]/80 shrink-0" />
+ <Building2 className="w-3 h-3 text-[var(--hair)]/80 shrink-0" />
  <span>Salas ({matchingLeads.length})</span>
  </button>
 
@@ -120,7 +120,7 @@ export function GlobalCampaignBar({
  onClick={() => onNavigate('calendario', { selectedDate: firstTargetDate })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
  currentView ==='calendario'
- ?'bg-[var(--tentative)] text-[var(--ink)]'
+ ?'bg-[var(--hair)] text-[var(--ink)]'
  :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
  }`}
  title="Ver fechas de la campaña en el Calendario"
@@ -135,7 +135,7 @@ export function GlobalCampaignBar({
  onClick={() => onNavigate('bandas', { campaignCities: campaign.targetCities })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
  currentView ==='bandas'
- ?'bg-[var(--tentative)] text-[var(--ink)]'
+ ?'bg-[var(--hair)] text-[var(--ink)]'
  :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
  }`}
  title="Ver grupos en las ciudades objetivo para Co-booking"

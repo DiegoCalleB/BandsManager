@@ -131,11 +131,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  : isDragOver
  ? 'border-[var(--ok)] ring-2 ring-emerald-500/50 bg-[var(--ok)]/10'
  : isPlayingCurrent
- ? ' bg-[var(--ok)]/10text-[var(--ink)] ring-1 ring-emerald-500/20'
+ ? 'bg-[var(--ok)]/10 text-[var(--ink)] ring-1 ring-emerald-500/20'
  : isSelected
- ? ' bg-[var(--acc)]/10 text-[var(--ink)]'
- :? 'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink)]'
- : 'bg-[var(--surface)]/90 hover:bg-[var(--surface)] text-[var(--ink)]'
+ ? 'bg-[var(--acc)]/10 text-[var(--ink)]'
+ : 'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink)]'
  } ${draggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
  >
  <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:px-3.5 sm:py-2.5 overflow-x-auto">
@@ -170,8 +169,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full flex items-center justify-center transition-all cursor-pointer ${
  isPlaying
  ? 'bg-[var(--ok)] text-[var(--ink)] scale-105'
- :? 'bg-[var(--sunken)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
- : 'bg-[var(--surface)]hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)] group-hover:scale-105'
+ : 'bg-[var(--sunken)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={isPlaying ? 'Pausar canción' : `Reproducir ${displayTitle}`}
  >
@@ -211,9 +209,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <span
  className={`truncate text-xs sm:text-sm font-semibold tracking-tight ${
  isPlayingCurrent
- ?? 'text-[var(--ok)] font-bold'
- : 'text-[var(--ok)] font-bold'
- :? 'text-[var(--ink)] hover:text-[var(--tentative)]'
+ ? 'text-[var(--ok)] font-bold'
  : 'text-[var(--ink-2)] group-hover:text-[var(--ink)]'
  }`}
  title={displayTitle}
@@ -244,9 +240,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  {/* Tone & BPM pill */}
  <span
  title={(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? 'Detectado automáticamente por Iris desde el audio' : undefined}
- className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${? 'bg-[var(--sunken)] text-[var(--ink-2)]'
- : 'bg-[var(--surface)]text-[var(--ink-2)]'
- }`}
+ className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--surface)] text-[var(--ink-2)]"
  >
  {song.tonalidad ||'—'}{song.bpm ? ` • ${song.bpm} BPM` : ''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? ' 🤖' : ''}
  </span>
@@ -325,9 +319,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={onOpenStudio}
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  ideasCount > 0
- ? 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]text-[var(--ink)] /40'
- :? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- : 'bg-[var(--surface)]hover:bg-[var(--surface)]/70 text-[var(--ink)] /80'
+ ? 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--ink)]'
+ : 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
  }`}
  title="Abrir Studio de Grabación Multipista & Pistas"
  >
