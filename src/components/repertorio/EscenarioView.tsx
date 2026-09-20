@@ -2,10 +2,11 @@ import React, { useEffect, useState } from'react';
 
 const SILENT_AUDIO_URI ='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 import { Song, Setlist, SetlistItem } from'../../types';
-import { 
+import {
  Printer, Music, Mic, Radio, SkipBack, SkipForward, Play, Pause, Repeat, Heart,
  Activity, Footprints, Zap, FileText, WifiOff, Check, ChevronDown, ChevronUp
 } from'lucide-react';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from'../RepertorioSetlists';
 import { cacheActiveStageSetlist } from'../../utils/stageOfflineCache';
 import { formatSongTitle } from'../../utils/formatSongTitle';
@@ -293,7 +294,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <span className="flex items-center gap-1.5 font-bold text-[var(--acc)]/70">
  <span className={`w-2 h-2 rounded-full transition-all duration-75 ${
  stageIsPlaying 
- ? (metronomeTick ?'bg-[var(--acc)]/60 scale-125 shadow-[0_0_8px_#f59e0b]' :'bg-[var(--acc-soft)] scale-90')
+ ? (metronomeTick ?'bg-[var(--acc)]/60 scale-125 shadow-[0_0_8px_var(--acc)]' :'bg-[var(--acc-soft)] scale-90')
  :'bg-zinc-600'
  }`} />
  {currentStageSong.bpm || 120} BPM
@@ -596,9 +597,12 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </pre>
  </div>
  ) : (
- <div className="p-6 text-center text-zinc-500 font-mono text-xs space-y-1">
- <p>No hay letra o acordes cifrados guardados para este tema todavía.</p>
- <p className="text-[11px] text-zinc-600">Puedes autogenerarlos o pegarlos desde el catálogo de canciones en Repertorio.</p>
+ <div className="flex flex-col items-center justify-center py-12">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-4 font-medium text-[var(--ink)] text-sm">Sin cifrado disponible</p>
+ <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">
+ Añade acordes y letra desde Repertorio para verlos aquí en directo.
+ </p>
  </div>
  )}
 

@@ -13,6 +13,7 @@ import {
  ChevronUp, ChevronDown, ListPlus, Users,
  GripVertical, ImagePlus, MoreHorizontal, TrendingUp
 } from'lucide-react';
+import { PublicoSilhouette } from'./ui/PublicoSilhouette';
 import { RepertorioNavBar } from'./repertorio/RepertorioNavBar';
 import { SetlistAddBar } from'./repertorio/SetlistAddBar';
 import SongStudioModal from'./SongStudioModal';
@@ -3469,8 +3470,12 @@ export default function RepertorioSetlists({
  {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
  <div className="space-y-2 max-h-[calc(88vh-200px)] min-h-[480px] overflow-y-auto pr-1">
  {activeSetlist.items.length === 0 ? (
- <div className="text-center py-12 border-dashed /80 rounded-[var(--r-l)] text-[var(--ink-3)] text-xs">
- No hay canciones en este repertorio. Usa la barra superior para añadir temas o eventos.
+ <div className="flex flex-col items-center justify-center py-16 text-center">
+ <PublicoSilhouette opacity={12} size="medium" />
+ <p className="mt-6 font-medium text-[var(--ink)] text-sm">No hay canciones en este repertorio</p>
+ <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">
+ Usa la barra superior para añadir temas o eventos.
+ </p>
  </div>
  ) : (
  activeSetlist.items.map((it, index) => {
@@ -3614,7 +3619,7 @@ export default function RepertorioSetlists({
  setEditingKeyItemId(it.id);
  }}
  className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${
- desiredKey ?'bg-[var(--acc)]/20 text-[var(--acc)]' :'bg-[var(--surface)]/15 text-[#10b981]'
+ desiredKey ?'bg-[var(--acc)]/20 text-[var(--acc)]' :'bg-[var(--surface)]/15 text-[var(--ok)]'
  }`}
  title={desiredKey
  ? `Original: ${song.tonalidad ||'—'} · Tocar en este repertorio: ${desiredKey}. Clic para cambiar.`

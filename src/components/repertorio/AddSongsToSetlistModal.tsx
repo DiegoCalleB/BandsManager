@@ -2,6 +2,7 @@ import React, { useMemo, useState } from'react';
 import { X, Search, Check, ListPlus, Star } from'lucide-react';
 import { Song, ThemeColors } from'../../types';
 import { ModalPortal } from'../common/ModalPortal';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 import { formatSecondsToMmSs } from'../../utils/repertorioUtils';
 import { formatSongTitle } from'../../utils/formatSongTitle';
 
@@ -166,8 +167,12 @@ export function AddSongsToSetlistModal({
 
  <div className="flex-1 overflow-y-auto mt-3 space-y-1.5 pr-1">
  {filteredSongs.length === 0 ? (
- <div className="text-center py-8 text-xs text-neutral-500 font-mono">
- No hay canciones que coincidan con el filtro.
+ <div className="flex flex-col items-center justify-center py-12">
+ <PublicoSilhouette opacity={12} size="small" />
+ <p className="mt-4 font-medium text-[var(--ink)] text-xs">No hay canciones disponibles</p>
+ <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs">
+ Ajusta los filtros o crea nuevas canciones en tu repertorio.
+ </p>
  </div>
  ) : (
  filteredSongs.map(s => {
