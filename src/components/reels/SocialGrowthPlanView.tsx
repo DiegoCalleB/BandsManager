@@ -357,7 +357,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  ))}
  </div>
 
- <div className="flex items-center justify-between pt-2 border-t">
+ <div className="flex items-center justify-between pt-2 border-t border-[var(--hair)]">
  <span className="text-[10px] font-mono text-[var(--ink-2)]">
  {channelCompleted} / {channel.actionItems.length} completadas
  </span>

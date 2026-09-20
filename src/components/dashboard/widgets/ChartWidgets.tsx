@@ -234,7 +234,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- <div className="flex items-center justify-between pb-2.5 border-b">
+ <div className="flex items-center justify-between pb-2.5 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-sky-500/15 text-sky-400 shrink-0">
  <Building2 className="w-5 h-5" />
@@ -309,7 +309,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='no
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- <div className="flex items-center justify-between pb-2.5 border-b">
+ <div className="flex items-center justify-between pb-2.5 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/15 text-emerald-400 shrink-0">
  <DollarSign className="w-5 h-5" />
@@ -393,7 +393,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- <div className="flex items-center justify-between pb-2.5 border-b">
+ <div className="flex items-center justify-between pb-2.5 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400 shrink-0">
  <Users className="w-5 h-5" />

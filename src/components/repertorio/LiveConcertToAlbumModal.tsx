@@ -2396,7 +2396,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  </div>
  </div>
 
- <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t">
+ <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[var(--hair)]">
  <p className="text-xs text-[var(--ink-3)]">
  ¿Deseas agregar formalmente este nuevo Álbum con todos sus temas a la Discografía de la Banda?
  </p>

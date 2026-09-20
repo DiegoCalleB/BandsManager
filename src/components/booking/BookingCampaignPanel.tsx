@@ -225,7 +225,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  </div>
 
- <div className="flex justify-end gap-2 mt-4 pt-4 border-t">
+ <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-[var(--hair)]">
  <button 
  onClick={() => setIsEditing(false)}
  className="px-4 py-2 text-sm text-[var(--ink-2)] hover:hover:bg-[var(--surface)] rounded-[var(--r-s)] font-medium"

@@ -1015,7 +1015,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="overflow-x-auto rounded-[var(--r-m)]">
  <table className="w-full text-left border-collapse text-xs font-mono">
  <thead>
- <tr className="bg-[var(--surface)] text-[var(--ink-2)] uppercase tracking-wider text-[10px] border-b">
+ <tr className="bg-[var(--surface)] text-[var(--ink-2)] uppercase tracking-wider text-[10px] border-b border-[var(--hair)]">
  <th className="p-3">ID Reg.</th>
  <th className="p-3">Nombre Banda</th>
  <th className="p-3">Email Contacto</th>
@@ -1416,7 +1416,7 @@ Bakandeya Agent Manager IA & Músicos`;
  /* TABLE LIST VIEW */
  <div className={`rounded-[var(--r-l)] overflow-hidden ${colors.card} shadow-md overflow-x-auto`}>
  <table className="w-full text-left text-[10px] font-mono min-w-[850px] border-collapse">
- <thead className="bg-[var(--surface)]/90 text-[var(--ink-2)] uppercase tracking-wider text-[10px] border-b">
+ <thead className="bg-[var(--surface)]/90 text-[var(--ink-2)] uppercase tracking-wider text-[10px] border-b border-[var(--hair)]">
  <tr>
  <th className="py-2.5 px-3 w-10 text-center whitespace-nowrap">
  <button

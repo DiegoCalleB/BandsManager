@@ -3043,7 +3043,7 @@ export default function RepertorioSetlists({
  <span>✓ / ✕ Calidad de uniones</span>
  <span>{showTransitionBadges ?'ON' :'OFF'}</span>
  </button>
- <div className="flex flex-col gap-1 text-[9px] text-[var(--ink)] pt-1 border-t">
+ <div className="flex flex-col gap-1 text-[9px] text-[var(--ink)] pt-1 border-t border-[var(--hair)]">
  <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background:'#0284c7' }} />🌙 Balada</span>
  <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background:'#059669' }} />🎵 Media</span>
  <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background:'#a16207' }} />🔥 Alta</span>
@@ -4546,7 +4546,7 @@ export default function RepertorioSetlists({
  {showShowItemModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
  <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 shadow-2xl ${colors.card}`}>
- <div className="flex justify-between items-center pb-3 border-b">
+ <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <span className="p-2 bg-sky-500/20 text-sky-400 rounded-[var(--r-m)]">⚡</span>
  <div>

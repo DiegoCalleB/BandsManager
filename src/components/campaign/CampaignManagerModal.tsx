@@ -202,7 +202,7 @@ export function CampaignManagerModal({
  {isEditing ? (
  /* Editing / Creation Form */
  <div className="space-y-4">
- <div className="flex items-center justify-between pb-3 border-b">
+ <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <span className="text-xs font-mono font-bold uppercase tracking-wider text-purple-400">
  {editingCampaignId ?'✎ Editar Campaña' :'➕ Crear Nueva Campaña'}
  </span>
@@ -434,7 +434,7 @@ export function CampaignManagerModal({
  </div>
 
  {/* Action buttons */}
- <div className="flex justify-end gap-2 pt-3 border-t">
+ <div className="flex justify-end gap-2 pt-3 border-t border-[var(--hair)]">
  <button
  type="button"
  onClick={() => setIsEditing(false)}

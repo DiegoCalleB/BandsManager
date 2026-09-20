@@ -642,7 +642,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="w-full h-full bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url(${displayGraphic})`, filter:'invert(1)' }} />
  </div>
  )}
- <div className="h-16 w-full bg-white flex items-center justify-between px-3 border-t">
+ <div className="h-16 w-full bg-white flex items-center justify-between px-3 border-t border-[var(--hair)]">
  <div className="font-mono text-[10px] text-[var(--surface)] uppercase font-black leading-tight">
  {displayBandName.toUpperCase()}<br/><span className="text-amber-600">SCAN QR</span>
  </div>

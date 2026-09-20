@@ -203,7 +203,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  </div>
 
  {/* Custom Event Trigger */}
- <div className="pt-1 border-t">
+ <div className="pt-1 border-t border-[var(--hair)]">
  <button
  type="button"
  onClick={() => {
@@ -219,7 +219,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  </div>
 
  {/* Custom Band Shortcuts */}
- <div className="pt-1 border-t">
+ <div className="pt-1 border-t border-[var(--hair)]">
  <div className="flex items-center justify-between px-2 py-1">
  <span className="text-[10px] uppercase tracking-wider text-teal-400 font-semibold">
  Accesos Rápidos de la Banda

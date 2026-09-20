@@ -180,7 +180,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
  {/* Selected Template Display Box */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
- <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3 border-b">
+ <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3 border-b border-[var(--hair)]">
  <div>
  <span className="text-[10px] font-mono text-[var(--acc)] uppercase tracking-widest font-bold">
  {currentTpl.type}

@@ -370,7 +370,7 @@ export default function Finanzas({
  ) : (
  <div className="overflow-x-auto">
  <table className="w-full text-left text-xs">
- <thead className="bg-[var(--surface)]/80 text-[var(--acc)] uppercase font-bold font-mono text-[10px] border-b">
+ <thead className="bg-[var(--surface)]/80 text-[var(--acc)] uppercase font-bold font-mono text-[10px] border-b border-[var(--hair)]">
  <tr>
  <th className="p-3">Fecha & Bolo</th>
  <th className="p-3">Ciudad / Sala</th>

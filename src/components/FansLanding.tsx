@@ -981,7 +981,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Official Social Links in Success View */}
  {socialLinks && Object.values(socialLinks).some(Boolean) && (
- <div className="pt-2 border-t">
+ <div className="pt-2 border-t border-[var(--hair)]">
  <SocialPlatformsList
  links={socialLinks}
  variant="grid"
@@ -1330,7 +1330,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  </span>
  </div>
  {(c.entradasUrl || c.entradasLugarFisico) && (
- <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t">
+ <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[var(--hair)]">
  {c.entradasUrl && (
  <a
  href={c.entradasUrl}

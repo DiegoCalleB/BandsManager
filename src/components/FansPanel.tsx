@@ -1692,7 +1692,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  />
  </div>
 
- <div className="pt-2 flex justify-end gap-3 border-t">
+ <div className="pt-2 flex justify-end gap-3 border-t border-[var(--hair)]">
  <button
  type="button"
  onClick={() => setShowAddModal(false)}

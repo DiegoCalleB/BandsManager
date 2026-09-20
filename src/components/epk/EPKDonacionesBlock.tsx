@@ -481,7 +481,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  ))}
 
  {miembros.filter(m => (m.rol ||'').trim() || (m.bio ||'').trim()).length > 0 && (
- <div className="space-y-3 pt-2 border-t">
+ <div className="space-y-3 pt-2 border-t border-[var(--hair)]">
  <p className="text-[10px] uppercase tracking-wider text-[var(--ink-2)] font-semibold">
  Formación
  </p>

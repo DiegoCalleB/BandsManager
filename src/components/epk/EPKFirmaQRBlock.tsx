@@ -296,7 +296,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  </div>
 
  <div className="bg-white text-[var(--ink)] p-4 sm:p-5 rounded-[var(--r-l)] shadow-md space-y-3 font-sans text-xs">
- <p className="text-[var(--ink-3)] italic text-[11px] pb-2 border-b">
+ <p className="text-[var(--ink-3)] italic text-[11px] pb-2 border-b border-[var(--hair)]">
  ... [Cuerpo del correo redactado para la sala o festival] ...
  </p>
 

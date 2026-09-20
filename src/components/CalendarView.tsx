@@ -6606,7 +6606,7 @@ export default function CalendarView({
  <div className={`max-w-md w-full rounded-[var(--r-l)] p-5 shadow-2xl relative ${
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
- <div className="flex items-center justify-between pb-3 border-b">
+ <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <div className="p-2 rounded-[var(--r-m)] bg-sky-500/10 text-sky-400">
  <Bell className="w-5 h-5" />

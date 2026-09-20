@@ -984,7 +984,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="relative mt-6 mb-2">
  <div className="absolute inset-0 flex items-center">
- <div className="w-full border-t"></div>
+ <div className="w-full border-t border-[var(--hair)]"></div>
  </div>
  <div className="relative flex justify-center text-xs">
  <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">O regístrate con</span>
@@ -1069,7 +1069,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="relative mt-5 mb-2">
  <div className="absolute inset-0 flex items-center">
- <div className="w-full border-t"></div>
+ <div className="w-full border-t border-[var(--hair)]"></div>
  </div>
  <div className="relative flex justify-center text-xs">
  <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">O comprobar con</span>
@@ -1159,7 +1159,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <div className="relative mt-5 mb-2">
  <div className="absolute inset-0 flex items-center">
- <div className="w-full border-t"></div>
+ <div className="w-full border-t border-[var(--hair)]"></div>
  </div>
  <div className="relative flex justify-center text-xs">
  <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">O activar con tu cuenta de Google</span>

@@ -88,7 +88,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b">
+ <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400">
  <Music className="w-5 h-5" />
@@ -134,7 +134,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b">
+ <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/15 text-emerald-400">
  <DollarSign className="w-5 h-5" />
@@ -176,7 +176,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
 export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b">
+ <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Users className="w-5 h-5" />
@@ -222,7 +222,7 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
 export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b">
+ <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400">
  <BookOpen className="w-5 h-5" />
@@ -270,7 +270,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b">
+ <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
  <Bot className="w-5 h-5" />
@@ -311,7 +311,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
 export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) {
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
- <div className="flex items-center justify-between pb-3 border-b">
+ <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
  <div className="p-2 rounded-[var(--r-m)] bg-sky-500/15 text-sky-400">
  <Truck className="w-5 h-5" />
