@@ -1431,7 +1431,7 @@ export function PdfExportModal({
  <option value="master">📄 Master Escenario / Sonido</option>
  </select>
 
- <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-black/40 border-white/10">
+ <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)]">
  <button
  onClick={() => {
  setPrintMode('all_members');
@@ -1496,7 +1496,7 @@ export function PdfExportModal({
  {/* Densidad de vista: "sentado" busca el mínimo nº de hojas posible (para leer de
  cerca — atril, mesa de sonido); "de pie" fuerza la letra más grande de todas,
  aceptando más hojas a cambio — para leerlo desde lejos, de pie en el escenario. */}
- <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-black/40 border-white/10">
+ <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)]">
  <button
  onClick={() => setViewDensity('sentado')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
@@ -1525,7 +1525,7 @@ export function PdfExportModal({
  <button
  onClick={() => setShowAdvancedSettings(v => !v)}
  className={`sm:hidden w-full flex items-center justify-between px-3 py-2 rounded-[var(--r-s)] font-bold cursor-pointer transition-colors ${
- isStitchLight ? 'bg-white text-[var(--ink-2)]' : 'bg-black/40 border-white/10 text-[var(--ink-3)]'
+ isStitchLight ? 'bg-white text-[var(--ink-2)]' : 'bg-black/40 border-[var(--hair)] text-[var(--ink-3)]'
  }`}
  >
  <span className="flex items-center gap-1.5">
@@ -1537,7 +1537,7 @@ export function PdfExportModal({
  {/* Row 2: Typography, Handwritten Sharpie Ink & Toggles — en móvil apilado en columna
  (3 grupos en una sola fila se apretaban demasiado en pantallas pequeñas), en
  desktop en fila con espacio de sobra. */}
- <div className={`${showAdvancedSettings ? 'flex' : 'hidden'} flex-col sm:flex-row sm:flex-wrap items-start sm:items-center sm:justify-between gap-3 sm:gap-4 pt-2 border-t border-white/5 w-full sm:flex`}>
+ <div className={`${showAdvancedSettings ? 'flex' : 'hidden'} flex-col sm:flex-row sm:flex-wrap items-start sm:items-center sm:justify-between gap-3 sm:gap-4 pt-2 border-t border-[var(--hair)] w-full sm:flex`}>
  {/* Tamaño de título: ya no se elige a mano — se auto-ajusta por hoja (ver
  computeAutoFitPlan) para llenar la página lo mejor posible, priorizando el
  mínimo ideal de 17pt (legible a ~2m en escenario) para repartir en varias hojas.
@@ -1573,7 +1573,7 @@ export function PdfExportModal({
  </select>
 
  {/* Ink color selector */}
- <div className="flex items-center gap-1 bg-black/40 p-1 rounded-[var(--r-s)] border-white/10">
+ <div className="flex items-center gap-1 bg-black/40 p-1 rounded-[var(--r-s)] border-[var(--hair)]">
  <button
  onClick={() => setHandwritingColor('blue')}
  className={`w-5 h-5 rounded-full bg-blue-600 transition-transform cursor-pointer ${

@@ -634,7 +634,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div key={design.id} className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square hover:/50 transition-all shadow-xl flex flex-col items-center justify-center p-6 ${design.type === 'camiseta' ? (isStitchLight ? 'bg-[var(--sunken)]' : 'bg-slate-950') : (isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)]')}`}>
  
  {design.type === 'pegatina' ? (
- <div className="w-52 h-52 bg-white shadow-2xl flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 border-4 border-white rounded-[var(--r-s)] overflow-hidden">
+ <div className="w-52 h-52 bg-white shadow-2xl flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 border-4 border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden">
  {design.assetType === 'portada' || design.assetType === 'custom' ? (
  <ResolvedBgImage className="h-36 w-full bg-cover bg-center" url={displayGraphic} />
  ) : (
@@ -650,7 +650,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <QRCode value={design.qrUrl || qrUrl} size={44} level="H" />
  {bandLogoUrl && (
  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
- <div className="w-3.5 h-3.5 bg-white rounded-sm flex items-center justify-center overflow-hidden border-white p-0.5">
+ <div className="w-3.5 h-3.5 bg-white rounded-sm flex items-center justify-center overflow-hidden border-[var(--hair)] p-0.5">
  <img src={bandLogoUrl} alt="Logo" className="w-full h-full object-cover rounded-sm" />
  </div>
  </div>
@@ -773,7 +773,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  <div className="p-4 rounded-[var(--r-l)] bg-[#0f0e0d] border-[#262422] flex flex-col sm:flex-row items-center gap-5">
  {/* Sticker Preview visual */}
- <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] border-4 border-white shadow-xl p-2 flex flex-col items-center justify-center transform -rotate-3">
+ <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] border-4 border-[var(--hair)] shadow-xl p-2 flex flex-col items-center justify-center transform -rotate-3">
  <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-400 text-black font-black flex items-center justify-center text-lg font-display mb-1">
  {bandInitials}
  </div>

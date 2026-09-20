@@ -437,7 +437,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <div className="flex items-center gap-1.5 shrink-0 relative">
  {/* Toggle Directo / Ensayo */}
  <div className={`flex items-center rounded-[var(--r-s)] p-0.5 text-xs font-bold shrink-0 ${
- glareMode ? 'bg-zinc-100 border-zinc-300' : 'bg-black/50 border-white/10'
+ glareMode ? 'bg-zinc-100 border-zinc-300' : 'bg-black/50 border-[var(--hair)]'
  }`}>
  <button
  type="button"
@@ -866,7 +866,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <div className={`shrink-0 px-3 sm:px-4 py-2 space-y-2 z-20 ${glareMode ? 'bg-gradient-to-t from-white to-white/0' : 'bg-gradient-to-t from-black to-[var(--sunken)]/0'}`}>
  {!isBlock && !showScannedSheet && currentSong?.tonalidad && (
  <div className="flex items-center justify-center gap-2 text-xs">
- <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded border-white/10">
+ <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded border-[var(--hair)]">
  <button
  type="button"
  onClick={() => setLiveTransposeOffset(v => v - 1)}
@@ -987,9 +987,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  {/* Drawer: Repertorio completo, pistas Iris y accesos directos a Studio */}
  {showSongListDrawer && (
  <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
- <div className="w-full max-w-md h-full bg-[#16161a] border-l border-white/10 flex flex-col shadow-2xl text-zinc-200">
+ <div className="w-full max-w-md h-full bg-[#16161a] border-l border-[var(--hair)] flex flex-col shadow-2xl text-zinc-200">
  {/* Drawer Header */}
- <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#111114]">
+ <div className="p-4 border-b border-[var(--hair)] flex items-center justify-between bg-[#111114]">
  <div className="flex items-center gap-2.5">
  <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 flex items-center justify-center">
  <ListMusic className="w-4 h-4" />
@@ -1089,7 +1089,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  )}
  </div>
 
- <div className="flex items-center gap-1.5 pt-1 border-t border-white/5">
+ <div className="flex items-center gap-1.5 pt-1 border-t border-[var(--hair)]">
  {songIrisIdea ? (
  <button
  type="button"
@@ -1137,7 +1137,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  setCurrentIndex(idx);
  setShowSongListDrawer(false);
  }}
- className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-black/40 hover:bg-black/60 text-zinc-300 border-white/10 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+ className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-black/40 hover:bg-black/60 text-zinc-300 border-[var(--hair)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
  title="Mostrar en el atril"
  >
  <Play className="w-3 h-3 text-[var(--acc)]" />
@@ -1284,7 +1284,7 @@ const ChordSheetPage: React.FC<{
  const hasMultipleSections = sections.length >= 2;
  const currentSection = hasMultipleSections ? sections[currentSectionIndex] : null;
  const chordTextClass = glareMode ? 'text-black font-bold' : 'text-amber-100';
- const borderClass = glareMode ? 'border-black/10' : 'border-white/5';
+ const borderClass = glareMode ? 'border-black/10' : 'border-[var(--hair)]';
 
  return (
  <div className="w-full h-full flex flex-col overflow-hidden">
@@ -1292,7 +1292,7 @@ const ChordSheetPage: React.FC<{
  <div className={`shrink-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 px-4 py-2 text-xs sm:text-sm font-mono border-b ${borderClass} ${glareMode ? 'bg-black/5' : 'bg-black/40'}`}>
  <div className="flex items-center gap-2 flex-wrap">
  {/* Selector de tono con transposición en tiempo real */}
- <div className="flex items-center gap-1 bg-black/30 px-2 py-0.5 rounded border-white/10">
+ <div className="flex items-center gap-1 bg-black/30 px-2 py-0.5 rounded border-[var(--hair)]">
  <button
  type="button"
  onClick={() => onLiveTransposeChange(liveTransposeOffset - 1)}
@@ -1353,7 +1353,7 @@ const ChordSheetPage: React.FC<{
  className={`px-2.5 py-1 text-xs font-mono font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 cursor-pointer ${
  teleprompterMode === 'scroll'
  ? 'bg-amber-500/20 /50 text-amber-300 shadow-sm'
- : 'bg-neutral-800/80 border-white/10 text-[var(--ink-3)] hover:text-white'
+ : 'bg-neutral-800/80 border-[var(--hair)] text-[var(--ink-3)] hover:text-white'
  }`}
  title={teleprompterMode === 'scroll' ? 'Cambiar a modo pedal por secciones' : 'Cambiar a modo teleprompter scroll continuo'}
  >

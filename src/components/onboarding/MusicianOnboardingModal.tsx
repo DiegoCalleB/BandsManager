@@ -77,7 +77,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
  ? 'bg-amber-400 text-stone-950 font-bold shadow-sm scale-105'
- : 'bg-neutral-800/70 hover:bg-neutral-800 text-[var(--ink-3)] border-white/5'
+ : 'bg-neutral-800/70 hover:bg-neutral-800 text-[var(--ink-3)] border-[var(--hair)]'
  }`}
  title={l.label}
  >

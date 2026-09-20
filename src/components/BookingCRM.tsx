@@ -1132,7 +1132,7 @@ export default function BookingCRM({
  {/* EXPANDED IA TOOLS PANEL (Responsive on all screen sizes) */}
  {isMobileToolsOpen && (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-2.5 animate-in slide-in-from-top-2 duration-150 shadow-2xl">
- <div className="flex items-center justify-between text-xs font-bold text-amber-300 pb-1.5 border-b border-white/10">
+ <div className="flex items-center justify-between text-xs font-bold text-amber-300 pb-1.5 border-b border-[var(--hair)]">
  <span className="flex items-center gap-1.5">
  <Wrench className="w-3.5 h-3.5" />
  Herramientas e Inteligencia Artificial
@@ -1461,7 +1461,7 @@ export default function BookingCRM({
  {/* ⚡ UNIFIED COMPACT FILTERS PANEL (Desktop, Tablet & Mobile) */}
  {isMobileFiltersOpen && (
  <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-3.5 shadow-2xl animate-in slide-in-from-top-2 duration-150">
- <div className="flex items-center justify-between pb-2 border-b border-white/10">
+ <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]">
  <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
  <Filter className="w-3.5 h-3.5" />
  Filtros y Búsquedas Avanzadas
@@ -1702,7 +1702,7 @@ export default function BookingCRM({
  </div>
 
  {/* 4. Action Buttons Footer */}
- <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
+ <div className="flex items-center justify-between gap-2 pt-2 border-t border-[var(--hair)]">
  <button
  type="button"
  onClick={handleClearAllFilters}

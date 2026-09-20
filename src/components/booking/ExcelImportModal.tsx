@@ -510,7 +510,7 @@ export function ExcelImportModal({
  }`}
  >
  {/* MODAL HEADER */}
- <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-gradient-to-r from-emerald-950/30 via-zinc-900/50 to-amber-950/20">
+ <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--hair)] bg-gradient-to-r from-emerald-950/30 via-zinc-900/50 to-amber-950/20">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-sm">
  <FileSpreadsheet className="w-5 h-5" />
@@ -551,7 +551,7 @@ export function ExcelImportModal({
  </div>
 
  {/* STEP PROGRESS INDICATOR */}
- <div className="flex items-center justify-between px-6 py-2.5 bg-zinc-950/60 border-b border-white/5 text-xs">
+ <div className="flex items-center justify-between px-6 py-2.5 bg-zinc-950/60 border-b border-[var(--hair)] text-xs">
  <div className="flex items-center gap-2">
  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${step === 1 ? 'bg-emerald-500 text-black' : step > 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-zinc-800 text-zinc-500'}`}>
  {step > 1 ? <Check className="w-3 h-3" /> : '1'}
@@ -608,7 +608,7 @@ export function ExcelImportModal({
  </div>
 
  {/* DOWNLOAD TEMPLATE CARD */}
- <div className="w-full max-w-2xl p-4 rounded-[var(--r-m)] bg-zinc-900/60 border-white/5 flex items-center justify-between gap-4">
+ <div className="w-full max-w-2xl p-4 rounded-[var(--r-m)] bg-zinc-900/60 border-[var(--hair)] flex items-center justify-between gap-4">
  <div className="flex items-center gap-3">
  <Info className="w-5 h-5 text-amber-400 shrink-0" />
  <div className="text-xs text-zinc-300">
@@ -631,7 +631,7 @@ export function ExcelImportModal({
  {/* STEP 2: COLUMN MAPPING */}
  {step === 2 && (
  <div className="space-y-5">
- <div className="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-white/5">
+ <div className="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-[var(--hair)]">
  <div>
  <h4 className="text-sm font-bold text-zinc-100 flex items-center gap-2">
  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -875,7 +875,7 @@ export function ExcelImportModal({
  {step === 3 && (
  <div className="space-y-4">
  {/* TOP BAR / FILTERS */}
- <div className="flex items-center justify-between flex-wrap gap-2 p-3 rounded-[var(--r-m)] bg-zinc-900/70 border-white/5 text-xs">
+ <div className="flex items-center justify-between flex-wrap gap-2 p-3 rounded-[var(--r-m)] bg-zinc-900/70 border-[var(--hair)] text-xs">
  <div className="flex items-center gap-3 flex-wrap">
  <span className="font-bold text-zinc-100">
  {selectedCount} de {parsedRows.length} seleccionados
@@ -932,7 +932,7 @@ export function ExcelImportModal({
 
  {/* IMPORT OPTIONS CARDS */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-zinc-900/60 border-white/5 hover:border-emerald-500/40 transition-all cursor-pointer">
+ <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-zinc-900/60 border-[var(--hair)] hover:border-emerald-500/40 transition-all cursor-pointer">
  <input
  type="checkbox"
  checked={updateDuplicates}
@@ -963,9 +963,9 @@ export function ExcelImportModal({
  </div>
 
  {/* PREVIEW TABLE */}
- <div className="border-white/10 rounded-[var(--r-m)] overflow-hidden bg-zinc-950/80 shadow-inner max-h-[380px] overflow-y-auto">
+ <div className="border-[var(--hair)] rounded-[var(--r-m)] overflow-hidden bg-zinc-950/80 shadow-inner max-h-[380px] overflow-y-auto">
  <table className="w-full text-left text-xs border-collapse">
- <thead className="sticky top-0 bg-zinc-900/95 backdrop-blur-md text-zinc-400 border-b border-white/10 z-10 font-bold">
+ <thead className="sticky top-0 bg-zinc-900/95 backdrop-blur-md text-zinc-400 border-b border-[var(--hair)] z-10 font-bold">
  <tr>
  <th className="p-2.5 w-8">
  <input
@@ -1061,7 +1061,7 @@ export function ExcelImportModal({
  </div>
 
  {/* MODAL FOOTER */}
- <div className="flex items-center justify-between px-6 py-4 border-t border-white/10 bg-zinc-950">
+ <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--hair)] bg-zinc-950">
  <div>
  {step === 2 && (
  <button

@@ -508,7 +508,7 @@ export default function TourManager({
  <div data-modulo="sala" className={`space-y-6 ${colors.text}`}>
 
  {/* Header */}
- <div className={`p-5 sm:p-6 rounded-[var(--r-l)] ${colors.card} shadow-sm border-white/5`}>
+ <div className={`p-5 sm:p-6 rounded-[var(--r-l)] ${colors.card} shadow-sm border-[var(--hair)]`}>
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
  <div>
  <div className="flex items-center gap-2">
@@ -557,7 +557,7 @@ export default function TourManager({
  {/* Tour List */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
  {tours.length === 0 ? (
- <div className="col-span-full p-8 text-center rounded-[var(--r-l)] bg-black/20 border-white/5">
+ <div className="col-span-full p-8 text-center rounded-[var(--r-l)] bg-black/20 border-[var(--hair)]">
  <MapPin className={`w-12 h-12 mx-auto mb-4 ${colors.textMuted} opacity-50`} />
  <h3 className={`text-lg font-bold ${colors.text} mb-2`}>No hay giras organizadas</h3>
  <p className={`text-sm ${colors.textMuted} max-w-md mx-auto mb-4`}>
@@ -596,7 +596,7 @@ export default function TourManager({
  const isCurrentUserConvocado = !currentUser?.id || !isFormacionParcial || (tour.convocados_ids && tour.convocados_ids.includes(currentUser.id));
 
  return (
- <div key={tour.id || `tour-${index}`} className={`p-5 rounded-[var(--r-l)] ${colors.card} border-white/5 shadow-sm group hover:border-white/10 transition-colors flex flex-col justify-between`}>
+ <div key={tour.id || `tour-${index}`} className={`p-5 rounded-[var(--r-l)] ${colors.card} border-[var(--hair)] shadow-sm group hover:border-[var(--hair)] transition-colors flex flex-col justify-between`}>
  <div>
  <div className="flex justify-between items-start mb-4">
  <div>
@@ -662,13 +662,13 @@ export default function TourManager({
  
  {/* Metrics */}
  <div className="grid grid-cols-3 gap-2 mb-4">
- <div className="p-2.5 rounded-[var(--r-m)] bg-black/40 border-white/5">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)]">
  <span className="text-[9px] text-[var(--ink-2)] uppercase tracking-wider block font-mono">Logística</span>
  <div className="text-xs font-bold text-rose-400 mt-0.5">
  -{totalGastos} €
  </div>
  </div>
- <div className="p-2.5 rounded-[var(--r-m)] bg-black/40 border-white/5">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)]">
  <span className="text-[9px] text-[var(--ink-2)] uppercase tracking-wider block font-mono">Caché Est.</span>
  <div className="text-xs font-bold text-emerald-400 mt-0.5">
  +{totalIngresos} €
@@ -698,7 +698,7 @@ export default function TourManager({
  <span className="text-[10px] text-neutral-500 italic">Sin paradas configuradas</span>
  ) : (
  tour.stops.slice(0, 4).map((stop, idx) => (
- <div key={`tour-${tour.id || index}-stop-${stop.id || idx}-${idx}`} className="py-1 px-2 rounded-[var(--r-s)] bg-black/20 border-white/5 space-y-1">
+ <div key={`tour-${tour.id || index}-stop-${stop.id || idx}-${idx}`} className="py-1 px-2 rounded-[var(--r-s)] bg-black/20 border-[var(--hair)] space-y-1">
  <div className="flex items-center justify-between text-xs">
  <div className="flex items-center gap-2 min-w-0">
  <span className="text-sky-400 font-mono text-xs font-bold">{idx + 1}.</span>
@@ -724,7 +724,7 @@ export default function TourManager({
  </div>
 
  {/* Acciones de Sincronización */}
- <div className="pt-4 mt-4 border-t border-white/5 flex flex-wrap items-center justify-between gap-2">
+ <div className="pt-4 mt-4 border-t border-[var(--hair)] flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-2">
  <button
  type="button"
@@ -764,9 +764,9 @@ export default function TourManager({
  {isModalOpen && (
  <ModalPortal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-4xl rounded-[var(--r-l)] ${colors.bg} border-white/10 shadow-2xl flex flex-col my-auto max-h-[90vh]`}>
+ <div className={`w-full max-w-4xl rounded-[var(--r-l)] ${colors.bg} border-[var(--hair)] shadow-2xl flex flex-col my-auto max-h-[90vh]`}>
  {/* Modal Header */}
- <div className="p-4 sm:p-6 border-b border-white/10 flex justify-between items-center bg-black/40 shrink-0">
+ <div className="p-4 sm:p-6 border-b border-[var(--hair)] flex justify-between items-center bg-black/40 shrink-0">
  <div>
  <h3 className="text-lg font-bold font-display flex items-center gap-2">
  <Truck className="w-5 h-5 text-sky-400" />
@@ -795,7 +795,7 @@ export default function TourManager({
  value={formNombre}
  onChange={e => setFormNombre(e.target.value)}
  placeholder="Ej. Tour Peninsular Primavera 2026"
- className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-black/40 border-white/10 ${colors.text} focus:outline-none focus:border-sky-500 transition-colors text-sm`}
+ className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)] ${colors.text} focus:outline-none focus:border-sky-500 transition-colors text-sm`}
  />
  </div>
  
@@ -804,7 +804,7 @@ export default function TourManager({
  <select
  value={formEstado}
  onChange={e => setFormEstado(e.target.value as any)}
- className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-black/40 border-white/10 ${colors.text} focus:outline-none focus:border-sky-500 transition-colors text-sm cursor-pointer`}
+ className={`w-full p-2.5 sm:p-3 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)] ${colors.text} focus:outline-none focus:border-sky-500 transition-colors text-sm cursor-pointer`}
  >
  <option value="planificacion">En Planificación</option>
  <option value="confirmada">Confirmada</option>
@@ -890,7 +890,7 @@ export default function TourManager({
  className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-3 transition-all cursor-pointer ${
  isSelected
  ? 'bg-purple-500/20 border-purple-500/50 text-white shadow-sm'
- : 'bg-black/40 border-white/10 text-[var(--ink-2)] hover:border-white/20'
+ : 'bg-black/40 border-[var(--hair)] text-[var(--ink-2)] hover:border-[var(--hair)]'
  }`}
  >
  <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 ${
@@ -924,7 +924,7 @@ export default function TourManager({
  min="0"
  value={dietaPerPersona}
  onChange={(e) => setDietaPerPersona(Number(e.target.value))}
- className="w-16 p-1 rounded bg-black/60 border-white/20 text-xs font-mono text-center font-bold text-amber-300"
+ className="w-16 p-1 rounded bg-black/60 border-[var(--hair)] text-xs font-mono text-center font-bold text-amber-300"
  />
  <span className="text-[var(--ink-2)] text-xs font-mono">€</span>
  <button
@@ -961,7 +961,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => recalculateAllFuelStops()}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] border-white/10 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] border-[var(--hair)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
  title="Aplica la suma de consumos a las distancias de todas las paradas"
  >
  <Calculator className="w-3.5 h-3.5 text-amber-400" /> Recalcular Paradas
@@ -1001,7 +1001,7 @@ export default function TourManager({
  <select
  onChange={(e) => handleApplyPresetToVehicle(vIdx, e.target.value)}
  defaultValue=""
- className="w-full p-2 rounded-[var(--r-s)] bg-black/60 border-white/10 text-xs text-white focus:border-sky-500 cursor-pointer"
+ className="w-full p-2 rounded-[var(--r-s)] bg-black/60 border-[var(--hair)] text-xs text-white focus:border-sky-500 cursor-pointer"
  >
  <option value="" disabled>-- Seleccionar Modelo --</option>
  {VEHICLE_PRESETS.map((p, idx) => (
@@ -1016,7 +1016,7 @@ export default function TourManager({
  value={veh.nombre}
  onChange={e => handleUpdateVehicle(vIdx, 'nombre', e.target.value)}
  placeholder="Ej. Furgoneta Principal (Banda)"
- className="w-full p-2 rounded-[var(--r-s)] bg-black/60 border-white/10 text-xs text-white focus:border-sky-500"
+ className="w-full p-2 rounded-[var(--r-s)] bg-black/60 border-[var(--hair)] text-xs text-white focus:border-sky-500"
  />
  </div>
 
@@ -1050,7 +1050,7 @@ export default function TourManager({
  <select
  value={veh.tipoCombustible || 'diesel'}
  onChange={e => handleUpdateVehicle(vIdx, 'tipoCombustible', e.target.value)}
- className="p-2 rounded-[var(--r-s)] bg-black/60 border-white/10 text-[10px] text-neutral-300 cursor-pointer"
+ className="p-2 rounded-[var(--r-s)] bg-black/60 border-[var(--hair)] text-[10px] text-neutral-300 cursor-pointer"
  >
  <option value="diesel">Diésel</option>
  <option value="gasolina95">G95</option>
@@ -1111,12 +1111,12 @@ export default function TourManager({
 
  <div className="space-y-4">
  {formStops.length === 0 ? (
- <div className="p-6 text-center rounded-[var(--r-m)] bg-black/20 border-white/5 text-[var(--ink-2)] text-sm italic">
+ <div className="p-6 text-center rounded-[var(--r-m)] bg-black/20 border-[var(--hair)] text-[var(--ink-2)] text-sm italic">
  Añade paradas para calcular automáticamente kilometraje, estimación de combustible de todos tus vehículos, dietas y margen financiero.
  </div>
  ) : (
  formStops.map((stop, idx) => (
- <div key={stop.id || `form-stop-${idx}`} className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/60 border-white/10 relative group">
+ <div key={stop.id || `form-stop-${idx}`} className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/60 border-[var(--hair)] relative group">
  <button
  type="button"
  onClick={() => removeStop(idx)}
@@ -1151,7 +1151,7 @@ export default function TourManager({
  value={stop.ciudad}
  onChange={e => updateStop(idx, 'ciudad', e.target.value)}
  placeholder="Ciudad"
- className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-white/10 text-sm focus:border-sky-500"
+ className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-[var(--hair)] text-sm focus:border-sky-500"
  />
  </div>
  <div className="space-y-1">
@@ -1160,7 +1160,7 @@ export default function TourManager({
  value={stop.sala}
  onChange={e => updateStop(idx, 'sala', e.target.value)}
  placeholder="Nombre de la sala"
- className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-white/10 text-sm focus:border-sky-500"
+ className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-[var(--hair)] text-sm focus:border-sky-500"
  />
  </div>
  <div className="space-y-1">
@@ -1169,7 +1169,7 @@ export default function TourManager({
  type="date"
  value={stop.fecha}
  onChange={e => updateStop(idx, 'fecha', e.target.value)}
- className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-white/10 text-sm focus:border-sky-500"
+ className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-[var(--hair)] text-sm focus:border-sky-500"
  />
  </div>
  <div className="space-y-1">
@@ -1192,7 +1192,7 @@ export default function TourManager({
  value={stop.distanciaAnteriorKm || ''}
  onChange={e => updateStop(idx, 'distanciaAnteriorKm', Number(e.target.value))}
  placeholder="Km desde anterior"
- className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-white/10 text-sm focus:border-sky-500"
+ className="w-full p-2 rounded-[var(--r-s)] bg-black/40 border-[var(--hair)] text-sm focus:border-sky-500"
  />
  </div>
  </div>
@@ -1200,7 +1200,7 @@ export default function TourManager({
  {/* Auditor de Festivos y Puentes para la Parada de Gira */}
  <HolidayDateWarning date={stop.fecha} city={stop.ciudad} className="mb-3" />
 
- <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-white/5">
+ <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[var(--hair)]">
  <div>
  <label className="text-[10px] text-emerald-400 block font-mono">Caché / Taquilla (€)</label>
  <input
@@ -1233,7 +1233,7 @@ export default function TourManager({
  value={stop.gastosAlojamiento || ''}
  onChange={e => updateStop(idx, 'gastosAlojamiento', Number(e.target.value))}
  placeholder="0 €"
- className="w-full p-1.5 rounded bg-black/40 border-white/10 text-xs"
+ className="w-full p-1.5 rounded bg-black/40 border-[var(--hair)] text-xs"
  />
  </div>
  <div>
@@ -1244,7 +1244,7 @@ export default function TourManager({
  value={stop.gastosDietas || ''}
  onChange={e => updateStop(idx, 'gastosDietas', Number(e.target.value))}
  placeholder="0 €"
- className="w-full p-1.5 rounded bg-black/40 border-white/10 text-xs"
+ className="w-full p-1.5 rounded bg-black/40 border-[var(--hair)] text-xs"
  />
  </div>
  </div>
@@ -1265,7 +1265,7 @@ export default function TourManager({
  type="checkbox"
  checked={formSincronizarCalendario}
  onChange={(e) => setFormSincronizarCalendario(e.target.checked)}
- className="rounded border-white/20 text-sky-500 focus:ring-0 w-4 h-4 cursor-pointer"
+ className="rounded border-[var(--hair)] text-sky-500 focus:ring-0 w-4 h-4 cursor-pointer"
  />
  <span>
  <strong className="text-white">📅 Sincronizar paradas en el Calendario oficial de la Banda:</strong> Crea/actualiza automáticamente los conciertos correspondientes con los miembros convocados y badge de gira.
@@ -1282,7 +1282,7 @@ export default function TourManager({
  const netoPorPersona = numPers > 0 ? Math.round(neto / numPers) : 0;
 
  return (
- <div className="p-4 rounded-[var(--r-m)] bg-black/40 border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+ <div className="p-4 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
  <div>
  <span className="text-[10px] text-[var(--ink-2)] uppercase font-mono block">Caché Total Est.</span>
  <span className="text-base sm:text-lg font-bold text-emerald-400">+{totalIngresos} €</span>
@@ -1311,7 +1311,7 @@ export default function TourManager({
  </div>
 
  {/* Modal Footer */}
- <div className="p-4 sm:p-6 border-t border-white/10 flex justify-end gap-3 bg-black/40 shrink-0">
+ <div className="p-4 sm:p-6 border-t border-[var(--hair)] flex justify-end gap-3 bg-black/40 shrink-0">
  <button
  type="button"
  onClick={() => setIsModalOpen(false)}
@@ -1348,7 +1348,7 @@ export default function TourManager({
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-white/5 text-sm text-[var(--sunken)]">
+ <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-[var(--hair)] text-sm text-[var(--sunken)]">
  Gira: <strong className="text-white">{tourToDelete.name}</strong>
  </div>
 

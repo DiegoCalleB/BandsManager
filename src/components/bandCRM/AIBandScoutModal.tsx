@@ -191,7 +191,7 @@ export function AIBandScoutModal({
  >
  {isSearching ? (
  <>
- <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+ <div className="w-5 h-5 border-2 border-[var(--hair)] border-t-white rounded-full animate-spin" />
  Buscando bandas compatibles...
  </>
  ) : (

@@ -417,7 +417,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  }`}
  >
  {/* Header */}
- <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between gap-3 bg-gradient-to-r from-[#1db954]/10 via-transparent to-transparent">
+ <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between gap-3 bg-gradient-to-r from-[#1db954]/10 via-transparent to-transparent">
  <div className="flex items-center gap-3 min-w-0">
  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[#1db954]/20 border-[#1db954]/40 flex items-center justify-center text-[#1ed760] shrink-0 shadow-inner">
  <Download className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -504,7 +504,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format === 'csv'
  ? 'bg-[#1db954]/20 border-[#1db954] text-white shadow-lg'
- : 'bg-white/5 border-white/10 text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
+ : 'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
  }`}
  >
  <FileSpreadsheet className={`w-5 h-5 ${format === 'csv' ? 'text-[#1ed760]' : 'text-emerald-400'}`} />
@@ -520,7 +520,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format === 'm3u'
  ? 'bg-[#1db954]/20 border-[#1db954] text-white shadow-lg'
- : 'bg-white/5 border-white/10 text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
+ : 'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
  }`}
  >
  <Music className={`w-5 h-5 ${format === 'm3u' ? 'text-[#1ed760]' : 'text-sky-400'}`} />
@@ -536,7 +536,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format === 'txt'
  ? 'bg-[#1db954]/20 border-[#1db954] text-white shadow-lg'
- : 'bg-white/5 border-white/10 text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
+ : 'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
  }`}
  >
  <FileText className={`w-5 h-5 ${format === 'txt' ? 'text-[#1ed760]' : 'text-amber-400'}`} />
@@ -552,7 +552,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format === 'json'
  ? 'bg-[#1db954]/20 border-[#1db954] text-white shadow-lg'
- : 'bg-white/5 border-white/10 text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
+ : 'bg-white/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
  }`}
  >
  <Code className={`w-5 h-5 ${format === 'json' ? 'text-[#1ed760]' : 'text-purple-400'}`} />
@@ -584,7 +584,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  )}
 
  {/* 3. Export Options / Toggles */}
- <div className="p-3.5 rounded-[var(--r-l)] bg-white/5 border-white/10 space-y-2.5">
+ <div className="p-3.5 rounded-[var(--r-l)] bg-white/5 border-[var(--hair)] space-y-2.5">
  <span className="text-xs font-semibold text-[var(--ink-3)]">Contenido a incluir en la exportación:</span>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
  <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -666,7 +666,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  </div>
 
  {/* Footer Actions */}
- <div className="p-4 border-t border-white/10 bg-black/40 flex flex-wrap items-center justify-between gap-2">
+ <div className="p-4 border-t border-[var(--hair)] bg-black/40 flex flex-wrap items-center justify-between gap-2">
  {onExportAsSetlistPdf && (
  <button
  type="button"
@@ -683,7 +683,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <button
  type="button"
  onClick={handleCopyClipboard}
- className="px-4 py-2.5 rounded-[var(--r-l)] bg-white/10 hover:bg-white/20 text-white font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer border-white/10 active:scale-95"
+ className="px-4 py-2.5 rounded-[var(--r-l)] bg-white/10 hover:bg-white/20 text-white font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer border-[var(--hair)] active:scale-95"
  >
  {copied ? (
  <>

@@ -73,7 +73,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className="w-full max-w-xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
- <div className="flex items-center justify-between border-b border-white/10 pb-3">
+ <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 flex items-center justify-center">
  <Radio className="w-5 h-5 animate-pulse" />
@@ -172,7 +172,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  )}
  </div>
 
- <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
+ <div className="flex justify-end gap-3 pt-3 border-t border-[var(--hair)]">
  <button
  type="button"
  onClick={onClose}

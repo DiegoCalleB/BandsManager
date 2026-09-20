@@ -865,7 +865,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  })}
 
  {sortedAlbumSongs.length === 0 && (
- <div className="text-center py-6 text-neutral-500 text-xs italic font-mono bg-white/5 rounded-[var(--r-l)] border-dashed border-white/10">
+ <div className="text-center py-6 text-neutral-500 text-xs italic font-mono bg-white/5 rounded-[var(--r-l)] border-dashed border-[var(--hair)]">
  Disco sin canciones asignadas. Haz clic en "Gestionar" para añadir temas a este álbum.
  </div>
  )}

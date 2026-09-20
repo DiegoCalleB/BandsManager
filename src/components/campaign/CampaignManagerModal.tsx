@@ -239,7 +239,7 @@ export function CampaignManagerModal({
  type="button"
  onClick={() => setFormData({ ...formData, color: col })}
  className={`w-7 h-7 rounded-[var(--r-s)] transition-transform cursor-pointer ${
- formData.color === col ? 'scale-110 border-white ring-2 ring-white/40' : 'border-transparent opacity-70 hover:opacity-100'
+ formData.color === col ? 'scale-110 border-[var(--hair)] ring-2 ring-white/40' : 'border-transparent opacity-70 hover:opacity-100'
  }`}
  style={{ backgroundColor: col }}
  />

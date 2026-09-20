@@ -190,7 +190,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
  <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl max-h-[90vh] overflow-y-auto">
  {/* Header */}
- <div className="flex items-center justify-between border-b border-white/10 pb-3">
+ <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-purple-600/30 text-purple-400 flex items-center justify-center">
  <FileText className="w-5 h-5" />
@@ -416,7 +416,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-emerald-500/20">
  <div className="space-y-1.5">
  <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Documento original</p>
- <div className="bg-black/40 border-white/10 rounded-[var(--r-s)] overflow-hidden max-h-96">
+ <div className="bg-black/40 border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden max-h-96">
  {isImageDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl) ? (
  <img
  src={song.estructuraDocumentoUrl}
@@ -438,7 +438,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  </div>
  <div className="space-y-1.5">
  <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
- <div className="bg-black/40 border-white/10 rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
+ <div className="bg-black/40 border-[var(--hair)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
  <pre className="text-[11px] font-mono text-amber-100 whitespace-pre-wrap leading-relaxed">
  {song.cifradoTexto || 'Sin acordes guardados todavía.'}
  </pre>

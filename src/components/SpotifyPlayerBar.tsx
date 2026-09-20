@@ -535,7 +535,7 @@ export default function SpotifyPlayerBar({
  className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer group"
  title="Haz clic para expandir el reproductor"
  >
- <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden border-white/5">
+ <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden border-[var(--hair)]">
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
@@ -638,7 +638,7 @@ export default function SpotifyPlayerBar({
  {/* Left: Song Info */}
  <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
  <div className="flex items-center gap-3.5 min-w-0">
- <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden group border-white/5">
+ <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden group border-[var(--hair)]">
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
@@ -778,7 +778,7 @@ export default function SpotifyPlayerBar({
  <select
  value={playbackRate}
  onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
- className="bg-[#282828] text-[#1db954] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-white/5"
+ className="bg-[#282828] text-[#1db954] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)]"
  title="Velocidad de Reproducción"
  >
  <option value={0.5}>0.5x</option>
@@ -792,7 +792,7 @@ export default function SpotifyPlayerBar({
  <select
  value={transposeSemitones}
  onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
- className={`bg-[#282828] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-white/5 ${
+ className={`bg-[#282828] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)] ${
  transposeSemitones !== 0 ? 'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' : 'text-[#b3b3b3]'
  }`}
  title="Trasposición de Tono (Nativa en tiempo real Web Audio)"

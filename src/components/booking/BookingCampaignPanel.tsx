@@ -275,7 +275,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </div>
  </div>
  </div>
- <div className="bg-white/5 px-5 py-3 border-t border-white/10 flex justify-between items-center">
+ <div className="bg-white/5 px-5 py-3 border-t border-[var(--hair)] flex justify-between items-center">
  <div className="text-xs text-gray-400">
  * Los pitches generados por la IA mencionarán automáticamente estas fechas y el formato de Co-booking.
  </div>

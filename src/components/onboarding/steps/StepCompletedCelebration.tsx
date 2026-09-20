@@ -60,17 +60,17 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
 
  {/* Stats Summary Pills */}
  <div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-white/10 text-zinc-300 flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
  <Disc3 className="w-3.5 h-3.5 text-amber-400" /> {totalSongs} Temas
  </span>
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-white/10 text-zinc-300 flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
  <Globe className="w-3.5 h-3.5 text-red-400" /> {totalVideos} Vídeos
  </span>
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-white/10 text-zinc-300 flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
  <Calendar className="w-3.5 h-3.5 text-blue-400" /> {totalEvents} Fechas
  </span>
  {hasRider && (
- <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-white/10 text-zinc-300 flex items-center gap-1.5">
+ <span className="text-xs px-3 py-1 rounded-full bg-zinc-900 border-[var(--hair)] text-zinc-300 flex items-center gap-1.5">
  <Layers className="w-3.5 h-3.5 text-emerald-400" /> Rider Técnico
  </span>
  )}

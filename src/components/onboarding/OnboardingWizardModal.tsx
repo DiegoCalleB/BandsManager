@@ -1006,10 +1006,10 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  return (
  <ModalPortal>
  <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md overflow-y-auto">
- <div className="relative w-full max-w-3xl rounded-3xl bg-[var(--surface)] border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
+ <div className="relative w-full max-w-3xl rounded-3xl bg-[var(--surface)] border-[var(--hair)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
  
  {/* Header */}
- <div className="p-5 sm:p-6 border-b border-white/5 flex items-center justify-between bg-zinc-900/50">
+ <div className="p-5 sm:p-6 border-b border-[var(--hair)] flex items-center justify-between bg-zinc-900/50">
  <div>
  <div className="flex items-center gap-2">
  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold uppercase tracking-wider">
@@ -1038,7 +1038,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
  {/* Stepper Progress Bar */}
  {!isCelebrationStep && (
- <div className="px-5 sm:px-6 py-2.5 bg-zinc-950/60 border-b border-white/5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+ <div className="px-5 sm:px-6 py-2.5 bg-zinc-950/60 border-b border-[var(--hair)] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
  {activeSteps.map((step, idx) => {
  const isCurrent = idx === currentStepIndex;
  const isPassed = idx < currentStepIndex;
@@ -1359,7 +1359,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
  {/* Footer Controls */}
  {!isCelebrationStep && (
- <div className="p-4 sm:p-5 border-t border-white/5 bg-zinc-950/80 flex items-center justify-between">
+ <div className="p-4 sm:p-5 border-t border-[var(--hair)] bg-zinc-950/80 flex items-center justify-between">
  <div>
  {currentStepIndex > 0 ? (
  <button

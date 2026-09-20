@@ -281,7 +281,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  <IconComp className="w-4 h-4 shrink-0" />
  <span>{label}</span>
  {showClickCounts && typeof count === 'number' && count > 0 && (
- <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/40 text-[var(--ink-3)] border-white/10">
+ <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/40 text-[var(--ink-3)] border-[var(--hair)]">
  {count}
  </span>
  )}
@@ -345,7 +345,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
  <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
  <span className={isFullWidth ? "text-sm font-black tracking-wide" : "truncate"}>{label}</span>
  {showClickCounts && typeof count === 'number' && count > 0 && (
- <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-black/40 text-[var(--ink-3)] border-white/10 shrink-0 ml-auto">
+ <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-black/40 text-[var(--ink-3)] border-[var(--hair)] shrink-0 ml-auto">
  {count}
  </span>
  )}

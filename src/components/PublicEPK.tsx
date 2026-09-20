@@ -519,7 +519,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  type="button"
  onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior: 'smooth' })}
  aria-label={t('fotoAnterior')}
- className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-white/20 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+ className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
  ‹
  </button>
@@ -527,7 +527,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  type="button"
  onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior: 'smooth' })}
  aria-label={t('fotoSiguiente')}
- className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-white/20 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+ className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-[var(--hair)] text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
  >
  ›
  </button>

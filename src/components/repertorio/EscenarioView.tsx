@@ -232,14 +232,14 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  {/* CONCERT PLAYER CONSOLE (SPOTIFY LIVE BAR) */}
  {activeSetlist && activeSetlist.items.length > 0 && (
- <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[#181818] border-white/10 space-y-4 shadow-2xl relative overflow-hidden">
+ <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[#181818] border-[var(--hair)] space-y-4 shadow-2xl relative overflow-hidden">
  {/* Subtle top glow line */}
  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#1db954]/60 to-transparent" />
 
  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
  {/* Active Track Metadata & Heart Favorite */}
  <div className="flex items-center gap-3.5 w-full md:w-auto">
- <div className="w-13 h-13 rounded-[var(--r-m)] bg-[#282828] border-white/10 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden group">
+ <div className="w-13 h-13 rounded-[var(--r-m)] bg-[#282828] border-[var(--hair)] flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden group">
  {currentStageSong?.portadaUrl ? (
  <img src={currentStageSong.portadaUrl} alt={currentStageSong.titulo} className="w-full h-full object-cover" />
  ) : stagePlayingIndex !== null ? (
@@ -430,7 +430,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </div>
 
  {/* Ridged Progress Track */}
- <div className="relative w-full h-3.5 rounded-full bg-[#242424] border-white/5 overflow-hidden group cursor-pointer shadow-inner flex items-center">
+ <div className="relative w-full h-3.5 rounded-full bg-[#242424] border-[var(--hair)] overflow-hidden group cursor-pointer shadow-inner flex items-center">
  <div 
  className="absolute inset-0 opacity-20 pointer-events-none"
  style={{
@@ -487,7 +487,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  )}
 
  {/* Quick Stage Actions: Pedal Helper & Live Lyrics/Chords Teleprompter */}
- <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/5">
+ <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <button
  type="button"
@@ -495,7 +495,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer ${
  showPedalShortcuts 
  ? 'bg-amber-500/20 text-amber-300' 
- : 'bg-[var(--surface)] text-zinc-400 hover:text-white border-white/5'
+ : 'bg-[var(--surface)] text-zinc-400 hover:text-white border-[var(--hair)]'
  }`}
  >
  <Footprints className="w-3.5 h-3.5" />
@@ -508,7 +508,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
  showChordsPanel 
  ? 'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/50 shadow-sm' 
- : 'bg-[var(--surface)] text-zinc-300 hover:text-white border-white/5'
+ : 'bg-[var(--surface)] text-zinc-300 hover:text-white border-[var(--hair)]'
  }`}
  >
  <FileText className="w-3.5 h-3.5 text-[#1ed760]" />
@@ -617,7 +617,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  arrastre, notas, popover de energía...) cuando este reproductor va embebido ahí —
  repetirla aquí sería la misma información dos veces en la misma pantalla. */}
  {!embedded && activeSetlist ? (
- <div className="bg-[var(--surface)] border-white/5 rounded-[var(--r-l)] overflow-hidden shadow-2xl p-4 sm:p-6">
+ <div className="bg-[var(--surface)] border-[var(--hair)] rounded-[var(--r-l)] overflow-hidden shadow-2xl p-4 sm:p-6">
  <div className="overflow-x-auto">
  <div className="min-w-[650px] space-y-2">
  <div className="grid grid-cols-12 text-[11px] font-mono font-extrabold text-[#b3b3b3] uppercase pb-3 border-b border-zinc-800/80 px-3">

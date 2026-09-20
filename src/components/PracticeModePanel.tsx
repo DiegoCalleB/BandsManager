@@ -795,7 +795,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  </div>
 
  {isExpanded && (chords || chordsErr) && (
- <div className="px-3 pb-3 space-y-2 border-t border-white/5 pt-2">
+ <div className="px-3 pb-3 space-y-2 border-t border-[var(--hair)] pt-2">
  {chordsErr && <p className="text-[11px] text-red-400">{chordsErr}</p>}
  {chords && (
  <>

@@ -92,7 +92,7 @@ export function AddSongsToSetlistModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[92vh] flex flex-col ${colors.card} text-white`}>
- <div className="flex justify-between items-center pb-3 border-b border-white/10">
+ <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <ListPlus className="w-5 h-5 text-[#1db954]" />
  <h3 className="text-sm font-bold font-mono uppercase text-white">
@@ -217,7 +217,7 @@ export function AddSongsToSetlistModal({
  )}
  </div>
 
- <div className="pt-3 mt-2 border-t border-white/10 flex items-center justify-between gap-3 shrink-0">
+ <div className="pt-3 mt-2 border-t border-[var(--hair)] flex items-center justify-between gap-3 shrink-0">
  <span className="text-[10px] font-mono text-[var(--ink-2)]">
  {selectedIds.length > 0
  ? `${selectedIds.length} seleccionadas (en orden 1..${selectedIds.length}) · ${formatSecondsToMmSs(selectedDurationSeconds)}`

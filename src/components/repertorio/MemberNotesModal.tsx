@@ -166,7 +166,7 @@ export function MemberNotesModal({
  isStitchLight ? 'bg-white ' : 'bg-[var(--bg)] '
  }`}>
  {/* Header */}
- <div className="flex justify-between items-center pb-3 border-b border-white/10 shrink-0">
+ <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)] shrink-0">
  <div className="flex items-center gap-2.5">
  <div className={`p-2 rounded-[var(--r-m)] ${isStitchLight ? 'bg-emerald-50 text-emerald-600' : 'bg-[#1db954]/10 text-[#1db954]'}`}>
  <Users className="w-5 h-5" />
@@ -355,7 +355,7 @@ export function MemberNotesModal({
  className={`text-[10px] font-mono px-2 py-1 rounded-[var(--r-s)] transition-all ${
  memberReadiness[memberKey] === level.value
  ? level.colorClass
- : 'bg-white/5 text-neutral-500 border-transparent hover:border-white/10'
+ : 'bg-white/5 text-neutral-500 border-transparent hover:border-[var(--hair)]'
  }`}
  >
  {level.icon} {level.label}
@@ -381,7 +381,7 @@ export function MemberNotesModal({
  </div>
 
  {/* Footer actions */}
- <div className="pt-3.5 mt-2 border-t border-white/10 flex justify-end items-center gap-2.5 shrink-0">
+ <div className="pt-3.5 mt-2 border-t border-[var(--hair)] flex justify-end items-center gap-2.5 shrink-0">
  <button
  type="button"
  onClick={onClose}

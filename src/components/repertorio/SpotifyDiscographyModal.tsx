@@ -289,7 +289,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  }`}
  >
  {/* Header Modal Bar */}
- <div className="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-[#1db954]/20 via-[#1db954]/5 to-transparent">
+ <div className="p-5 sm:p-6 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-[#1db954]/20 via-[#1db954]/5 to-transparent">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-l)] bg-[#1db954] text-black flex items-center justify-center shadow-lg shadow-[#1db954]/20">
  <Disc className="w-6 h-6 animate-spin-slow" />
@@ -319,7 +319,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  </div>
 
  {/* Search & URL Input Bar */}
- <div className="p-5 sm:p-6 border-b border-white/10 space-y-4">
+ <div className="p-5 sm:p-6 border-b border-[var(--hair)] space-y-4">
  <form
  onSubmit={(e) => {
  e.preventDefault();
@@ -414,7 +414,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  href={artistProfile.spotifyUrl}
  target="_blank"
  rel="noreferrer"
- className="px-3.5 py-1.5 rounded-[var(--r-m)] border-white/10 hover:border-[#1db954] text-xs font-mono font-bold flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[#1db954] transition-all"
+ className="px-3.5 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] hover:border-[#1db954] text-xs font-mono font-bold flex items-center gap-1.5 text-[var(--ink-3)] hover:text-[#1db954] transition-all"
  >
  <span>Ver en Spotify</span>
  <ExternalLink className="w-3.5 h-3.5" />
@@ -478,7 +478,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={() => toggleSelectAll(selectedAlbumsCount < albums.length)}
- className="px-3 py-1.5 rounded-[var(--r-m)] border-white/10 text-xs font-mono font-bold hover:bg-white/5 transition flex items-center gap-1.5 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] text-xs font-mono font-bold hover:bg-white/5 transition flex items-center gap-1.5 cursor-pointer"
  >
  {selectedAlbumsCount === albums.length ? (
  <>
@@ -537,7 +537,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <img
  src={album.coverUrl}
  alt={album.name}
- className="w-14 h-14 rounded-[var(--r-m)] object-cover shadow-md border-white/10 shrink-0"
+ className="w-14 h-14 rounded-[var(--r-m)] object-cover shadow-md border-[var(--hair)] shrink-0"
  />
  ) : (
  <div className="w-14 h-14 rounded-[var(--r-m)] bg-neutral-800 flex items-center justify-center shrink-0">
@@ -581,7 +581,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={() => toggleExpandAlbum(album.id)}
- className="px-3 py-1.5 rounded-[var(--r-m)] border-white/10 hover:bg-white/10 text-xs font-mono font-bold flex items-center gap-1 cursor-pointer transition"
+ className="px-3 py-1.5 rounded-[var(--r-m)] border-[var(--hair)] hover:bg-white/10 text-xs font-mono font-bold flex items-center gap-1 cursor-pointer transition"
  >
  <span>{isExpanded ? 'Ocultar Pistas' : 'Ver Pistas'}</span>
  {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -591,7 +591,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
 
  {/* Expanded Tracklist */}
  {isExpanded && (
- <div className="border-t border-white/10 bg-black/20 p-3 sm:p-4 space-y-1.5">
+ <div className="border-t border-[var(--hair)] bg-black/20 p-3 sm:p-4 space-y-1.5">
  <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] px-3 pb-1 flex items-center justify-between">
  <span>Tracklist Oficial de Spotify ({album.tracks.length} temas)</span>
  <span>Duración / Preview</span>
@@ -662,7 +662,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  </div>
 
  {/* Modal Footer with Options & Import Action */}
- <div className="p-5 sm:p-6 border-t border-white/10 bg-black/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+ <div className="p-5 sm:p-6 border-t border-[var(--hair)] bg-black/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
  <div className="space-y-2">
  <label className="flex items-center gap-2 text-xs font-mono text-[var(--ink-3)] cursor-pointer select-none">
  <input
@@ -689,7 +689,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2.5 rounded-[var(--r-l)] border-white/10 hover:bg-white/5 text-xs font-mono font-bold transition cursor-pointer"
+ className="px-4 py-2.5 rounded-[var(--r-l)] border-[var(--hair)] hover:bg-white/5 text-xs font-mono font-bold transition cursor-pointer"
  >
  Cancelar
  </button>

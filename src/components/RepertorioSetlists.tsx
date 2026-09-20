@@ -2826,7 +2826,7 @@ export default function RepertorioSetlists({
  return (
  <div className="flex flex-col gap-2.5">
  <div className={`flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-1.5 rounded-[var(--r-m)] ${
- isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-[var(--surface)]/90 border-white/5'
+ isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-[var(--surface)]/90 border-[var(--hair)]'
  }`}>
  {/* Resumen en una línea y botón asistente IA */}
  <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto px-1.5">
@@ -4044,7 +4044,7 @@ export default function RepertorioSetlists({
  items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
  } : s));
  }}
- className="bg-transparent border-b border-dashed border-white/20 text-[13px] font-bold font-mono text-white focus:outline-none min-w-0 flex-1"
+ className="bg-transparent border-b border-dashed border-[var(--hair)] text-[13px] font-bold font-mono text-white focus:outline-none min-w-0 flex-1"
  />
 
  {isSelected && (
@@ -4898,7 +4898,7 @@ export default function RepertorioSetlists({
  }`}
  >
  {statusBanner.type === 'loading' && (
- <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+ <span className="w-3.5 h-3.5 border-2 border-[var(--hair)] border-t-white rounded-full animate-spin shrink-0" />
  )}
  <span>{statusBanner.text}</span>
  </div>

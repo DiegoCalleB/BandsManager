@@ -29,7 +29,7 @@ export function ConfirmDeleteModal({ data, onClose }: ConfirmDeleteModalProps) {
  <p className="text-xs text-[var(--ink-3)] mt-1.5 leading-relaxed">{data.description}</p>
  </div>
  </div>
- <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+ <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--hair)]">
  <button
  type="button"
  onClick={onClose}

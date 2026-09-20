@@ -114,7 +114,7 @@ export function SongModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden ${colors.card}`}>
- <div className="flex justify-between items-center pb-3 border-b border-white/10">
+ <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
  <Music className="w-5 h-5 text-[#1db954]" />
  <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
@@ -438,7 +438,7 @@ export function SongModal({
  </button>
 
  {showMemberNotesSection && (
- <div className="p-3 pt-0 space-y-3 border-t border-white/5">
+ <div className="p-3 pt-0 space-y-3 border-t border-[var(--hair)]">
  <p className="text-[10px] text-[var(--ink-2)] font-sans mt-2">
  Añade notas personalizadas para cada músico. Se imprimirán bajo esta canción en la hoja individual de cada miembro:
  </p>
