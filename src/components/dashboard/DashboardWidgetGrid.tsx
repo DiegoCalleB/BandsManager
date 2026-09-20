@@ -252,7 +252,7 @@ export function DashboardWidgetGrid({
  concerts={concerts}
  rehearsals={rehearsals}
  activeBandName={activeBandName}
- colors={colors}={}
+ colors={colors
  agendaFilterMode={agendaFilterMode}
  onSetAgendaFilterMode={onSetAgendaFilterMode}
  onNavigate={onNavigate}
@@ -266,7 +266,7 @@ export function DashboardWidgetGrid({
  case'repertorio_energy':
  return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} />;
  case'crm_pipeline':
- return <CrmPipelineWidget leads={leads} onNavigate={onNavigate}={} />;
+ return <CrmPipelineWidget leads={leads} onNavigate={onNavigate />;
  case'booking_funnel_chart':
  return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} />;
  case'finances_chart':
@@ -274,17 +274,17 @@ export function DashboardWidgetGrid({
  case'social_fans_chart':
  return <SocialFansGrowthWidget fans={fans} onNavigate={onNavigate} heightMode={heightMode} />;
  case'repertorio_summary':
- return <RepertorioWidget onNavigate={onNavigate}={} />;
+ return <RepertorioWidget onNavigate={onNavigate />;
  case'finances_summary':
- return <FinancesWidget concerts={concerts} onNavigate={onNavigate}={} />;
+ return <FinancesWidget concerts={concerts} onNavigate={onNavigate />;
  case'social_fans':
- return <SocialFansWidget fans={fans} onNavigate={onNavigate}={} />;
+ return <SocialFansWidget fans={fans} onNavigate={onNavigate />;
  case'epk_status':
- return <EpkStatusWidget epkConfig={epkConfig} onNavigate={onNavigate}={} />;
+ return <EpkStatusWidget epkConfig={epkConfig} onNavigate={onNavigate />;
  case'ai_agent_status':
- return <AiAgentWidget leads={leads} currentUser={currentUser} onNavigate={onNavigate}={} />;
+ return <AiAgentWidget leads={leads} currentUser={currentUser} onNavigate={onNavigate />;
  case'tour_status':
- return <TourStatusWidget tours={tours} onNavigate={onNavigate}={} />;
+ return <TourStatusWidget tours={tours} onNavigate={onNavigate />;
  default:
  return null;
  }

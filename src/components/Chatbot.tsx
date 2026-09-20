@@ -687,7 +687,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  return () => clearInterval(intervalId);
  }, [activeRun?.id, activeRun?.status, activeRun?.isDemo]);
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
+ const isLightTheme = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
 
  // Auto-scroll chat to bottom on mount and on message/loading updates
  useEffect(() => {
@@ -2472,12 +2472,12 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="submit"
  disabled={!inputText.trim() || isLoading}
  className={`p-2.5 rounded-[var(--r-m)] font-bold transition-all flex items-center justify-center shrink-0 cursor-pointer active:scale-95 active:opacity-90 mb-0.5 ${
- inputText.trim() 
- ? ('bg-[var(--tentative)]/80 text-[var(--ink)]' : colors.primary) 
- : ('bg-[var(--sunken)] text-[var(--ink-2)]')
+ inputText.trim()
+ ? 'bg-[var(--ok)]/80 text-[var(--ink)]'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
- <Send className={`w-4 h-4 ${&& inputText.trim() ?'text-[var(--ink)]' :'text-[var(--acc-ink)]'}`} />
+ <Send className={`w-4 h-4 ${inputText.trim() ? 'text-[var(--ink)]' : 'text-[var(--ink-2)]'}`} />
  </button>
  </form>
 

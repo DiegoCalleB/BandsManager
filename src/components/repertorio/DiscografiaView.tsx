@@ -812,7 +812,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  canMoveDown={idx < sortedAlbumSongs.length - 1}
  onMoveUp={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id,'up')}
  onMoveDown={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id,'down')}
- colors={colors}={}
+ colors={colors
  />
  );
  })}
@@ -860,7 +860,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  isOpen={isLiveConcertModalOpen}
  onClose={() => setIsLiveConcertModalOpen(false)}
  bandName={bandName ||"Nuestra Banda"}
- colors={colors}={}
+ colors={colors
  onSaveAlbumToCatalog={handleSaveLiveConcertAlbum}
  onSaveSetlist={(newSetlist) => {
  if (setSetlists) {
@@ -875,7 +875,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClose={() => setIsSpotifyModalOpen(false)}
  bandName={bandName ||"Tu Banda"}
  existingSongs={songs}
- colors={colors}={}
+ colors={colors
  onSongsImported={(updatedSongs) => {
  setSongs(updatedSongs);
  }}
@@ -888,7 +888,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClose={() => setBulkUploadAlbum(null)}
  albumName={bulkUploadAlbum.name}
  albumSongs={bulkUploadAlbum.songs}
- colors={colors}={}
+ colors={colors
  bandId={bandName ||"Tu Banda"}
  onSaveUpdatedSongs={(updatedAlbumSongs, newAlbumName) => {
  const existingIds = new Set(songs.map((s) => s.id));
@@ -926,7 +926,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  songs={songs}
  albumsList={allNonEmptyAlbums}
  bandName={bandName ||"Tu Banda"}
- colors={colors}={}
+ colors={colors
  />
  </div>
  );

@@ -1963,16 +1963,16 @@ export default function BookingCRM({
  idsToDelete.forEach(id => onDeleteLead(id));
  }
  }}
- sectionTab={sectionTab}={}
+ sectionTab={sectionTab}
  />
 
  {/* Main Display Area: Map vs List */}
- {viewMode ==='map' ? (
+ {viewMode === 'map' ? (
  <VenueMap
  leads={filteredLeads}
  selectedLead={selectedLead}
  onSelectLead={handleOpenLead}
- onUpdateLead={onUpdateLead}={}
+ onUpdateLead={onUpdateLead}
  activeCityFilter={selectedCityFilter}
  activeRegionFilter=""
  />
@@ -1984,7 +1984,7 @@ export default function BookingCRM({
  onSelectLead={handleOpenLead}
  onUpdateLead={onUpdateLead}
  onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
- viewMode={viewMode ==='grid' ?'grid' :'table'}
+ viewMode={viewMode === 'grid' ? 'grid' : 'table'}
  getStatusBadgeClass={getStatusBadgeClass}
  getStatusLabel={getStatusLabel}
  normalizeType={normalizeType}
@@ -2021,7 +2021,7 @@ export default function BookingCRM({
  normalizeType={normalizeType}
  autoDetectVenueAddress={autoDetectVenueAddress}
  onDeleteLead={onDeleteLead}
- sectionTab={sectionTab}={}
+ sectionTab={sectionTab}
  activeCampaign={activeCampaign}
  onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
  isUploadingLeadLogo={isUploadingLeadLogo}
@@ -2041,7 +2041,7 @@ export default function BookingCRM({
  normalizeStatus={normalizeStatus}
  normalizeType={normalizeType}
  autoDetectVenueAddress={autoDetectVenueAddress}
- sectionTab={sectionTab}={}
+ sectionTab={sectionTab}
  activeCampaign={activeCampaign}
  onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
  isUploadingLeadLogo={isUploadingLeadLogo}
@@ -2299,17 +2299,17 @@ export default function BookingCRM({
  </div>
  </div>
 
- <ExampleThreadsSection category={templateTab}={} textSub={textSub} />
+ <ExampleThreadsSection category={templateTab} textSub={textSub} />
 
  {/* Success Stats Badge + Reset Button */}
  {templateStats && templateStats[templateTab] && (
  <div className="space-y-2 pt-3 pb-2">
  <div className="flex flex-wrap gap-2 items-center">
  <span className="text-[9px] font-sans text-[var(--ink-2)]">📊 Resultados:</span>
- <span className={`text-[9px] font-sans px-2 py-1 rounded ${'bg-[var(--tentative)]/10 text-[var(--tentative)]'}`}>
+ <span className="text-[9px] font-sans px-2 py-1 rounded bg-[var(--ok)]/10 text-[var(--ok)]">
  {templateStats[templateTab].totalUses} usos
  </span>
- <span className={`text-[9px] font-sans px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? ('bg-[var(--ok)]/10 text-[var(--ok)]') : ('bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]')}`}>
+ <span className={`text-[9px] font-sans px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? 'bg-[var(--ok)]/10 text-[var(--ok)]' : 'bg-[var(--hair)] text-[var(--ink-2)]'}`}>
  {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
  </span>
  </div>
@@ -2322,7 +2322,7 @@ export default function BookingCRM({
  </div>
  )}
  {templateStats[templateTab].bouncedEmails > 0 && (
- <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${'bg-[var(--acc)]/10 text-[var(--accent-alt)]'}`}>
+ <div className="text-[9px] px-2 py-1 rounded flex items-center gap-1 bg-[var(--ink-2)]/10 text-[var(--ink-2)]">
  <span>📬</span>
  <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
  </div>
@@ -2501,7 +2501,7 @@ export default function BookingCRM({
  {/* ADD NEW LEAD / MEDIO MODAL */}
  <NegotiationSimulationModal
  isOpen={isSimulatingAvanzado}
- selectedLead={selectedLead}={}
+ selectedLead={selectedLead}
  textSub={textSub}
  textMuted={textMuted}
  simulationRole={simulationRole}
@@ -2526,7 +2526,7 @@ export default function BookingCRM({
 
  <AddLeadModal
  isOpen={isAddingLeadModalOpen}
- sectionTab={sectionTab}={}
+ sectionTab={sectionTab}
  textSub={textSub}
  newLeadData={newLeadData}
  setNewLeadData={setNewLeadData}
@@ -2542,7 +2542,7 @@ export default function BookingCRM({
  />
 
  <GooglePlacesExplorerModal
- isOpen={isPlacesExplorerOpen}={}
+ isOpen={isPlacesExplorerOpen}
  existingLeads={leads}
  activeCampaign={activeCampaign}
  bandGenre={epkConfig?.genero || (currentUser as any)?.genero ||''}
@@ -2554,7 +2554,7 @@ export default function BookingCRM({
  />
 
  <ExcelImportModal
- isOpen={isExcelImportOpen}={}
+ isOpen={isExcelImportOpen}
  existingLeads={leads}
  onClose={() => setIsExcelImportOpen(false)}
  onSuccess={(importedLeads, updatedCount) => {
@@ -2569,15 +2569,15 @@ export default function BookingCRM({
  isOpen={isContactEnricherOpen}
  onClose={() => setIsContactEnricherOpen(false)}
  leads={leads}
- onUpdateLead={onUpdateLead}={}
+ onUpdateLead={onUpdateLead}
  />
 
  <AgentAutonomySettingsModal
  isOpen={isAgentConfigOpen}
  onClose={() => setIsAgentConfigOpen(false)}
  bandName={effectiveBandName}
- bandId={currentBandId || currentUser?.band_id ||''}
- currentUser={currentUser}={}
+ bandId={currentBandId || currentUser?.band_id || ''}
+ currentUser={currentUser}
  onOpenTemplatesSection={() => {
  setIsTemplatesSectionOpen(true);
  setTimeout(() => {
@@ -2601,7 +2601,7 @@ export default function BookingCRM({
  onClose={() => setIsDuplicatesModalOpen(false)}
  leads={leads}
  onUpdateLead={(lead) => onUpdateLead(lead.id, lead)}
- onDeleteLead={onDeleteLead}={}
+ onDeleteLead={onDeleteLead}
  />
 
 

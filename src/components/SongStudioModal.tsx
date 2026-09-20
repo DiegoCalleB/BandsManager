@@ -5156,7 +5156,7 @@ export default function SongStudioModal({
  song={song}
  idea={practiceModeIdea}
  tracks={getIdeaTracks(practiceModeIdea)}
- currentUser={currentUser}={}
+ currentUser={currentUser
  onClose={() => setPracticeModeIdea(null)}
  onApplyAsMainChords={(cifradoTexto, guiaSustituto) => {
  if (!window.confirm('Esto sustituye el cifrado de acordes principal de la canción (visible para toda la banda) por el detectado en esta pista aislada. ¿Continuar?')) return;

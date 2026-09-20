@@ -2106,7 +2106,7 @@ export function PdfExportModal({
  <MemberNotesModal
  isOpen={Boolean(editingSongForNotes)}
  song={editingSongForNotes}
- colors={{ card:'bg-[var(--surface)]', text:'text-[var(--ink)]' } as any}={}
+ colors={{ card:'bg-[var(--surface)]', text:'text-[var(--ink)]' } as any
  bandMembers={resolvedMembers}
  onClose={() => setEditingSongForNotes(null)}
  onSaveSongNotes={(updated) => {

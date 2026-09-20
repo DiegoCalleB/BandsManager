@@ -2083,7 +2083,7 @@ export default function CalendarView({
  locationQuery: undefined
  };
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
+ const isLightTheme = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
  const textTitle = 'text-[var(--ink)]';
  const textSub = 'text-[var(--ink-2)]';
  const textMuted = 'text-[var(--ink-2)]';
@@ -2757,7 +2757,7 @@ export default function CalendarView({
 
  <div className="flex flex-col gap-2">
  {items.map(({ type, event: evt }) => {
- const isConcert = type ==='concert';
+ const isConcert = type === 'concert';
  const c = isConcert ? (evt as Concert) : null;
  const r = !isConcert ? (evt as Rehearsal) : null;
  const isReu = r?.tipo_evento ==='reunion';
@@ -3345,9 +3345,7 @@ export default function CalendarView({
 
  {/* Sync Notifications */}
  {syncSuccessMessage && (
- <div className={`mb-4 p-2 px-3 rounded-[var(--r-s)] text-[10px] flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${? ('bg-[var(--surface)]/15 text-[var(--ok)]') 
- : ('bg-[var(--surface)]/15 text-[var(--ok)]')
- }`}>
+ <div className="mb-4 p-2 px-3 rounded-[var(--r-s)] text-[10px] flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 bg-[var(--surface)]/15 text-[var(--ok)]">
  <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className="flex-1 font-sans text-[10px]">{syncSuccessMessage}</span>
  <button onClick={() => setSyncSuccessMessage('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-sans">×</button>
@@ -4037,11 +4035,11 @@ export default function CalendarView({
  <DirectionsCard 
  query={evt.locationQuery} 
  locationName={evt.salaOrLugar} 
- address={evt.direccion || evt.ciudad}={} 
+ address={evt.direccion || evt.ciudad}
  />
  </div>
  ) : (
- <p className="text-[10px] font-sans text-[var(--tentative)]/80/80 mt-0.5">
+ <p className="text-[10px] font-sans text-[var(--ink-2)]/80 mt-0.5">
  {evt.salaOrLugar}
  </p>
  )}
@@ -4198,7 +4196,7 @@ export default function CalendarView({
  <EventWeatherCard
  city={selectedConcert?.ciudad || selectedRehearsal?.lugar?.split(',')[1]?.trim() || selectedRehearsal?.lugar?.split('-')[1]?.trim() || selectedRehearsal?.lugar ||''}
  dateStr={selectedDateKey}
- timeStr={selectedConcert ?'21:30' : (selectedRehearsal?.hora ||'18:00')}={}
+ timeStr={selectedConcert ? '21:30' : (selectedRehearsal?.hora || '18:00')}
  />
  </div>
  )}
@@ -4229,18 +4227,18 @@ export default function CalendarView({
  <DirectionsCard 
  query={selectedEventDetails.locationQuery} 
  locationName={selectedEventDetails.lugar} 
- address={selectedEventDetails.direccion}={} 
+ address={selectedEventDetails.direccion}
  />
  </div>
  )}
- {!isPromoPlan && selectedEventDetails.type ==='concert' && (
+ {!isPromoPlan && selectedEventDetails.type === 'concert' && (
  <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${'text-[var(--ink-2)]'}`}>
  <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className={`font-sans ${textSub}`}>Compensación:</span>
  <span className="text-[var(--ok)] font-bold font-sans">{selectedEventDetails.fee}</span>
  </div>
  )}
- {selectedEventDetails.type ==='concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
+ {selectedEventDetails.type === 'concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
  <div className="flex flex-col gap-1.5 pt-2 mt-1 /40">
  {selectedEventDetails.entradasUrl && (
  <a
@@ -4261,7 +4259,7 @@ export default function CalendarView({
  )}
  </div>
  )}
- {!isPromoPlan && selectedEventDetails.type ==='concert' && selectedConcert && (() => {
+ {!isPromoPlan && selectedEventDetails.type === 'concert' && selectedConcert && (() => {
  const g = selectedConcert.gastosDetalle;
  const totalG = g ? ((g.gasolina || 0) + (g.dietas || 0) + (g.alquilerVehiculo || 0) + (g.alojamiento || 0) + (g.otros || 0)) : (selectedConcert.gastosEstimadosTipicos || 150);
  const net = (selectedConcert.cache || 0) - totalG;
@@ -6840,7 +6838,7 @@ export default function CalendarView({
  <EventWeatherCard
  city={eventCity}
  dateStr={eventDateStr}
- timeStr={eventTimeStr}={}
+ timeStr={eventTimeStr}
  onAlertsDetected={(alerts) => setModalWeatherAlerts(alerts)}
  />
  )}
@@ -6851,7 +6849,7 @@ export default function CalendarView({
  type="button"
  onClick={() => setModalActiveTab('resumen')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
- modalActiveTab ==='resumen'
+ modalActiveTab === 'resumen'
  ?'bg-[var(--acc)] text-[var(--on-acc)]'
  : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
@@ -6928,7 +6926,7 @@ export default function CalendarView({
  </div>
 
  {/* TAB 1: RESUMEN GENERAL & DETALLES */}
- {modalActiveTab ==='resumen' && (
+ {modalActiveTab === 'resumen' && (
  <div className="space-y-4">
  <div className={`space-y-3 rounded-[var(--r-m)] p-4 ${'bg-[var(--bg)]'}`}>
  <div className="flex items-center gap-2 text-[11px]">
@@ -6953,19 +6951,19 @@ export default function CalendarView({
  <DirectionsCard
  query={selectedEventDetails.locationQuery}
  locationName={selectedEventDetails.lugar}
- address={selectedEventDetails.direccion}={}
+ address={selectedEventDetails.direccion}
  />
  </div>
  )}
- {!isPromoPlan && selectedEventDetails.type ==='concert' && (
- <div className="flex items-center gap-2 text-[11px] pt-2 /40">
+ {!isPromoPlan && selectedEventDetails.type === 'concert' && (
+ <div className="flex items-center gap-2 text-[11px] pt-2">
  <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className={`font-sans ${textSub}`}>Compensación:</span>
  <span className="text-[var(--ok)] font-bold font-sans">{selectedEventDetails.fee}</span>
  </div>
  )}
- {selectedEventDetails.type ==='concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
- <div className="flex flex-col gap-1.5 pt-2 /40">
+ {selectedEventDetails.type === 'concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
+ <div className="flex flex-col gap-1.5 pt-2">
  {selectedEventDetails.entradasUrl && (
  <a
  href={selectedEventDetails.entradasUrl}
@@ -6986,14 +6984,14 @@ export default function CalendarView({
  </div>
  )}
  {selectedConcert?.giraNombre && (
- <div className="flex items-center gap-2 text-[11px] pt-2 /40">
+ <div className="flex items-center gap-2 text-[11px] pt-2">
  <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <span className={`font-sans ${textSub}`}>Gira:</span>
  <span className="font-bold font-sans text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
  </div>
  )}
  {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
- <div className="flex items-center gap-2 text-[11px] pt-2 /40">
+ <div className="flex items-center gap-2 text-[11px] pt-2">
  <Users className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
  <span className={`font-sans ${textSub}`}>Convocatoria:</span>
  <span className="font-bold font-sans text-[var(--ink-2)]">

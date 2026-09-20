@@ -936,7 +936,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  selectedLead.direccion || `${selectedLead.nombre_sala}, ${selectedLead.ciudad}`
  }
  locationName={selectedLead.nombre_sala}
- address={selectedLead.direccion || selectedLead.ciudad}={}
+ address={selectedLead.direccion || selectedLead.ciudad
  />
  </div>
  </div>
@@ -2005,7 +2005,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <MultiModelPitchComparatorModal
  isOpen={showMultiModelModal}
  onClose={() => setShowMultiModelModal(false)}
- lead={selectedLead}={}
+ lead={selectedLead
  activeCampaign={activeCampaign}
  onSelectProposal={(text, providerName) => {
  setEditedPitch(text);
@@ -2023,7 +2023,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  lead={selectedLead}
  onClose={() => setShowBoloConfirmadoModal(false)}
  onConfirmWithSetlist={handleConfirmWithSetlist}
- onConfirmWithoutSetlist={handleConfirmWithoutSetlist}={}
+ onConfirmWithoutSetlist={handleConfirmWithoutSetlist
  />
  </div>
  );

@@ -305,7 +305,7 @@ export function TemplateConfigSection({
  </div>
  </div>
 
- <ExampleThreadsSection category={templateTab}={} textSub={textSub} />
+ <ExampleThreadsSection category={templateTab textSub={textSub} />
 
  <div className="flex flex-wrap gap-2 pt-2">
  {onOptimizeTemplate && (

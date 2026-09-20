@@ -1201,7 +1201,7 @@ Bakandeya Agent Manager IA & Músicos`;
  onBulkGeneratePitch={handleBulkGenerateSwaps}
  onBulkToggleFavorite={handleBulkBandToggleFavorite}
  onBulkExportCsv={handleBulkBandExportCsv}
- onBulkDelete={handleBulkBandDelete}={}
+ onBulkDelete={handleBulkBandDelete}
  />
 
  {/* 3. BAND LIST CONTAINER */}
@@ -1222,10 +1222,10 @@ Bakandeya Agent Manager IA & Músicos`;
  <span>Añadir Primera Banda</span>
  </button>
  </div>
- ) : viewMode ==='map' ? (
+ ) : viewMode === 'map' ? (
  <BandMap
  bands={filteredBands}
- onSelectBand={(band) => handleOpenEditModal(band)}={}
+ onSelectBand={(band) => handleOpenEditModal(band)}
  />
  ) : viewMode ==='grid' ? (
  /* GRID CARDS VIEW */
@@ -1937,7 +1937,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <BandPitchModal
  isOpen={isPitchModalOpen}
  onClose={() => setIsPitchModalOpen(false)}
- band={selectedPitchBand}={}
+ band={selectedPitchBand}
  activeCampaign={activeCampaign}
  proposedBakandeyaCity={proposedBakandeyaCity}
  setProposedBakandeyaCity={setProposedBakandeyaCity}
@@ -1953,7 +1953,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <BandToneModal
  isOpen={isToneModalOpen}
  onClose={() => setIsToneModalOpen(false)}
- band={selectedToneBand}={}
+ band={selectedToneBand}
  toneData={toneData}
  isLoading={isAnalyzingTone}
  onReAnalyze={() => selectedToneBand && handleAnalyzeTone(selectedToneBand)}
@@ -1968,7 +1968,7 @@ Bakandeya Agent Manager IA & Músicos`;
  isOpen={isScoutModalOpen}
  onClose={() => setIsScoutModalOpen(false)}
  activeCampaign={activeCampaign}
- onAddBands={handleImportScoutedBands}={}
+ onAddBands={handleImportScoutedBands}
  />
 
 

@@ -287,7 +287,7 @@ export default function Dashboard({
  return matchesSearch && matchesCity && matchesGenre;
  });
 
- const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
+ const isLightTheme = (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('neutral-50') || false;
  const subCardBg = 'bg-[var(--bg)]/80 text-[var(--ink)]';
  const textTitle = 'text-[var(--ink)]';
  const textSub = 'text-[var(--ink-2)]';
@@ -712,7 +712,7 @@ export default function Dashboard({
  ni el CTA de Ko-fi ni cuánta IA llevan gastada este mes. */}
  <div className="space-y-3">
  <AiSupportWidget variant="card" />
- <AiUsageCard={} />
+ <AiUsageCard />
  </div>
  </div>
  );
@@ -758,7 +758,7 @@ export default function Dashboard({
  posts={posts}
  epkConfig={epkConfig}
  activeBandName={activeBandName}
- colors={colors}={}
+ colors={colors}
  agendaFilterMode={agendaFilterMode}
  onSetAgendaFilterMode={setAgendaFilterMode}
  onNavigate={onNavigate}
@@ -772,7 +772,7 @@ export default function Dashboard({
  rehearsals={rehearsals}
  metrics={metrics}
  fans={fans}
- tours={tours}={}
+ tours={tours}
  bandName={activeBandName}
  currentUser={currentUser}
  onNavigate={onNavigate}
@@ -833,7 +833,7 @@ export default function Dashboard({
  onClose={() => setIsAutonomyModalOpen(false)}
  bandName={activeBandName}
  bandId={currentBandId || currentUser?.band_id ||''}
- currentUser={currentUser}={}
+ currentUser={currentUser
  onOpenTemplatesSection={() => {
  if (onNavigate) onNavigate('booking');
  }}

@@ -1554,14 +1554,14 @@ export default function App() {
  onAddMetric={handleAddMetric}
  onUpdateMetric={handleUpdateMetric}
  onDeleteMetric={handleDeleteMetric}
- colors={colors}={false}
+ colors={colors}
  onNavigate={handleNavigate}
  isPromo={isPromoPlan}
  onUpdateConcert={handleUpdateConcert}
  initialConcertId={bookingOptions.concertId}
  />
  )}
- {currentView ===' giras' && (
+ {currentView === 'giras' && (
  <ErrorBoundary fallbackTitle="Gestor de Giras">
  <TourManager 
  colors={colors}
@@ -1651,7 +1651,7 @@ export default function App() {
  currentUser={currentUser}
  users={bandUsers}
  onClose={() => setShowUserManagementModal(false)}
- onRefreshUsers={fetchState}={false}
+ onRefreshUsers={fetchState}
  />
  )}
 
@@ -1664,7 +1664,7 @@ export default function App() {
  setCurrentUser(updated);
  localStorage.setItem('bakandeya_user', JSON.stringify(updated));
  fetchState();
- }}={false}
+ }}
  isAdmin={isAdmin}
  onOpenBandManagement={() => setShowUserManagementModal(true)}
  currentTheme={currentTheme}
@@ -1686,7 +1686,7 @@ export default function App() {
  {/* Font Selector Modal */}
  {showFontModal && (
  <FontSelectorModal
- onClose={() => setShowFontModal(false)}={false}
+ onClose={() => setShowFontModal(false)}
  currentFont={currentFont}
  onSelectFont={(f) => {
  handleFontChange(f);

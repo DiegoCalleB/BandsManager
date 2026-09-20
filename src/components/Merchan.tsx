@@ -111,7 +111,7 @@ interface MerchanProps {
 }
 
 export default function Merchan({ colors, currentTheme, bandId, bandName, bandLogoUrl }: MerchanProps) {
- const= false;
+ const isDemo = false;
 
  // La plantilla de Bakandeya (logo/álbumes/catálogo de temas de demo) solo debe verse en la
  // propia Bakandeya: mismo criterio que RepertorioSetlists.tsx (ver"isBakandeya" ahí) para no

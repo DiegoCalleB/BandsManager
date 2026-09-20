@@ -95,7 +95,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
  normalizeStatus={normalizeStatus}
  normalizeType={normalizeType}
  autoDetectVenueAddress={autoDetectVenueAddress}
- sectionTab={sectionTab}={}
+ sectionTab={sectionTab
  activeCampaign={activeCampaign}
  onLeadLogoUpload={onLeadLogoUpload}
  isUploadingLeadLogo={isUploadingLeadLogo}

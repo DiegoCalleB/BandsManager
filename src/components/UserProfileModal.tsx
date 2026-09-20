@@ -1380,7 +1380,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClose={() => setShowAgentConfig(false)}
  bandName={activeBandName || currentUser.bandName}
  bandId={currentUser.band_id}
- currentUser={currentUser}={}
+ currentUser={currentUser
  />
  )}
  </div>
