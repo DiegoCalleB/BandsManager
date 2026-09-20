@@ -5,6 +5,7 @@ import { isImageDocument, isPdfDocument } from'../utils/documentType';
 import { getSemitoneDifference, transposeChordToken, processChordText, splitIntoChordSections, ChordSection } from'../utils/chordUtils';
 import { getSongIrisStemIdea, getIdeaTracks } from'../utils/irisTracks';
 import PracticeModePanel from'./PracticeModePanel';
+import { PublicoSilhouette } from'./ui/PublicoSilhouette';
 
 interface SetlistPerformanceViewProps {
  setlist: Setlist;
@@ -376,13 +377,16 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  if (!currentItem) {
  return (
- <div className="fixed inset-0 z-[9999] bg-black text-[var(--ink)] flex items-center justify-center">
- <div className="text-center">
- <Music className="w-12 h-12 mx-auto mb-4 text-[var(--acc)]" />
- <p>No hay canciones en el repertorio</p>
+ <div className="fixed inset-0 z-[9999] bg-[var(--bg)] text-[var(--ink)] flex items-center justify-center">
+ <div className="text-center flex flex-col items-center gap-6">
+ <PublicoSilhouette opacity={12} size="large" />
+ <div>
+ <p className="font-medium text-lg">Repertorio vacío</p>
+ <p className="text-xs text-[var(--ink-2)] mt-2 max-w-xs">Añade canciones a tu repertorio para comenzar a ensayar.</p>
+ </div>
  <button
  onClick={onClose}
- className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-[var(--r-s)]"
+ className="mt-4 px-6 py-2 bg-[var(--alert)] hover:bg-[var(--alert)]/80 text-white rounded-[var(--r-pill)] font-medium text-sm"
  >
  Cerrar
  </button>
