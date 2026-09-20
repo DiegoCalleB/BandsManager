@@ -26,7 +26,7 @@ interface ReelsMetricsViewProps {
 }
 
 export function ReelsMetricsView({
- colors
+ colors,
  metrics = [],
  epkConfig,
  currentBandName,
@@ -1422,8 +1422,7 @@ export function ReelsMetricsView({
  required
  value={metricDate}
  onChange={(e) => setMetricDate(e.target.value)}
- className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] }`}
+ className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
  />
  </div>
 
@@ -1437,8 +1436,7 @@ export function ReelsMetricsView({
  placeholder="1385"
  value={metricInsta}
  onChange={(e) => setMetricInsta(e.target.value)}
- className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] }`}
+ className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
  />
  </div>
 
@@ -1451,8 +1449,7 @@ export function ReelsMetricsView({
  placeholder="253"
  value={metricTiktok}
  onChange={(e) => setMetricTiktok(e.target.value)}
- className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] }`}
+ className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
  />
  </div>
 
@@ -1465,8 +1462,7 @@ export function ReelsMetricsView({
  placeholder="42"
  value={metricYoutube}
  onChange={(e) => setMetricYoutube(e.target.value)}
- className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] }`}
+ className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
  />
  </div>
 
@@ -1479,8 +1475,7 @@ export function ReelsMetricsView({
  placeholder="150"
  value={metricSpotify}
  onChange={(e) => setMetricSpotify(e.target.value)}
- className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] }`}
+ className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
  />
  </div>
  </div>
@@ -1548,8 +1543,7 @@ export function ReelsMetricsView({
  placeholder="Ej. Lanzamiento single / Concierto Apolo"
  value={metricNotes}
  onChange={(e) => setMetricNotes(e.target.value)}
- className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
-' bg-[var(--surface)] text-[var(--ink-2)] }`}
+ className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none bg-[var(--surface)] text-[var(--ink-2)]`}
  />
  </div>
 
