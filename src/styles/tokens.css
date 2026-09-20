@@ -27,6 +27,7 @@
   --ink:      #2A2E35;
   --ink-2:    #646C78;
   --ink-3:    #5D6A7A;
+  --ink-rgb:  42, 46, 53;
   --hair:     rgba(42, 46, 53, 0.065);
 
   /* Estado — sin semántica verde-sube/rojo-baja: eso es lenguaje de bolsa */
@@ -73,6 +74,7 @@
   --ink:      #E3E7EC;
   --ink-2:    #99A1AC;
   --ink-3:    #6B7380;
+  --ink-rgb:  227, 231, 236;
   --hair:     rgba(227, 231, 236, 0.08);
 
   --ok:       #4FC7B8;
@@ -100,6 +102,7 @@
   --ink:      #F4F4F5;
   --ink-2:    #A1A1AA;
   --ink-3:    #71717A;
+  --ink-rgb:  244, 244, 245;
   --hair:     rgba(244, 244, 245, 0.09);
 
   --ok:       #10B981;

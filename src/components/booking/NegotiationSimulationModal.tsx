@@ -76,17 +76,17 @@ export function NegotiationSimulationModal({
  isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
- <div className="flex justify-between items-start border-b border-[var(--sunken)] dark: pb-3">
+ <div className="flex justify-between items-start border-b border-[var(--sunken)] pb-3">
  <div>
  <div className="flex items-center gap-2">
- <Sparkles className="w-5 h-5 text-[#d1b375]/80 animate-pulse" />
+ <Sparkles className="w-5 h-5 text-[var(--acc)] animate-pulse" />
  <h3 className="text-sm font-bold font-display uppercase tracking-widest">
  Simulador de Negociación Personalizado
  </h3>
  </div>
  <p className={`text-[10px] font-sans mt-0.5 ${textMuted}`}>
  Trato actual con{''}
- <strong className="text-[#d1b375]/80 dark:text-[var(--acc)]">
+ <strong className="text-[var(--acc)]">
  {selectedLead.nombre_sala}
  </strong>{''}
  ({selectedLead.ciudad}) — Estado: {selectedLead.estado}
@@ -95,7 +95,7 @@ export function NegotiationSimulationModal({
  <button
  type="button"
  onClick={onClose}
- className={`p-1 rounded-full transition-colors cursor-pointer hover:bg-[var(--surface)]/80 dark:hover:bg-[var(--surface)]/80 ${textSub}`}
+ className={`p-1 rounded-full transition-colors cursor-pointer hover:bg-[var(--surface)]/80 ${textSub}`}
  >
  <X className="w-5 h-5" />
  </button>
@@ -252,7 +252,7 @@ export function NegotiationSimulationModal({
 
  {/* Output Preview Area */}
  {(simulationGenerated || simulationMessage) && (
- <div className="space-y-2 border-t border-[var(--sunken)] dark: pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+ <div className="space-y-2 border-t border-[var(--sunken)] pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
  <div className="flex justify-between items-center">
  <label
  className={`block text-[10px] uppercase font-sans tracking-wider ${
@@ -284,7 +284,7 @@ export function NegotiationSimulationModal({
  </div>
 
  {/* Footer Buttons */}
- <div className="flex justify-end gap-3.5 border-t border-[var(--sunken)] dark: pt-3 mt-1">
+ <div className="flex justify-end gap-3.5 border-t border-[var(--sunken)] pt-3 mt-1">
  <button
  type="button"
  onClick={onClose}

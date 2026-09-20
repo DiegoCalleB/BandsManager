@@ -2217,12 +2217,12 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  if (isLector) {
  return (
- <div className="p-3.5 bg-emerald-500/10 rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
+ <div className="p-3.5 bg-[var(--ok-soft)] rounded-[var(--r-m)] space-y-2 animate-in fade-in duration-300 select-text">
  <div className="flex items-center gap-2">
- <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
- <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Bandeja Sincronizada!</span>
+ <CheckCircle className="w-4 h-4 text-[var(--ok)] shrink-0" />
+ <span className="text-[11px] text-[var(--ok)] font-bold uppercase tracking-wider">¡Bandeja Sincronizada!</span>
  </div>
- <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+ <p className="text-[10px] leading-normal text-[var(--ok)]">
  El agente Lector ha revisado tu bandeja de correo y actualizado el hilo de respuestas en Supabase.
  </p>
  </div>

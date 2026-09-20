@@ -3184,7 +3184,7 @@ export default function CalendarView({
  >
  <Smartphone className="w-3.5 h-3.5" />
  <span>Móvil</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-black/20 dark:bg-white/10">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--sunken)]">
  {devicePrefs.mobile}M
  </span>
  {currentDeviceType ==='mobile' && (
@@ -3201,7 +3201,7 @@ export default function CalendarView({
  >
  <Monitor className="w-3.5 h-3.5" />
  <span>Ordenador</span>
- <span className="text-[9px] px-1 py-0.2 rounded bg-black/20 dark:bg-white/10">
+ <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--sunken)]">
  {devicePrefs.desktop}M
  </span>
  {currentDeviceType ==='desktop' && (
@@ -3328,7 +3328,7 @@ export default function CalendarView({
  <Users className="w-3 h-3 shrink-0" />
  <span className="truncate">Todas las bandas</span>
  <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-extrabold shrink-0 ${
- filterBandMode ==="all" ?"bg-black/20 text-stone-950" :"bg-black/30 dark:bg-white/10 text-neutral-300"
+ filterBandMode ==="all" ?"bg-[var(--sunken)] text-[var(--ink)]" :"bg-[var(--sunken)]/50 text-[var(--ink-2)]"
  }`}>
  <span className="inline-flex items-center gap-0.5 text-emerald-400" title={`${concerts.length} directos totales`}>
  <Mic className="w-2.5 h-2.5" />
@@ -3355,7 +3355,7 @@ export default function CalendarView({
  <Music className="w-3 h-3 shrink-0" />
  <span className="truncate max-w-[90px] sm:max-w-none">{activeBandName}</span>
  <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-extrabold shrink-0 ${
- filterBandMode ==="active" ?"bg-black/20 text-stone-950" :"bg-black/30 dark:bg-white/10 text-neutral-300"
+ filterBandMode ==="active" ?"bg-[var(--sunken)] text-[var(--ink)]" :"bg-[var(--sunken)]/50 text-[var(--ink-2)]"
  }`}>
  <span className="inline-flex items-center gap-0.5 text-emerald-400" title={`${activeBandConcerts.length} directos`}>
  <Mic className="w-2.5 h-2.5" />
@@ -4293,9 +4293,9 @@ export default function CalendarView({
  )}
  {!isPromoPlan && selectedEventDetails.type ==='concert' && (
  <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${isStitchLight ?'-slate-100' :'-bg-[var(--surface)]'}`}>
- <Sparkles className="w-4 h-4 text-[#10b981] shrink-0" />
+ <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className={`font-mono ${textSub}`}>Compensación:</span>
- <span className="text-[#10b981] dark:text-[#b8d6b8] font-bold font-mono">{selectedEventDetails.fee}</span>
+ <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
  </div>
  )}
  {selectedEventDetails.type ==='concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
@@ -5296,7 +5296,7 @@ export default function CalendarView({
  isStitchLight ?'-slate-100 text-[var(--ink-3)]' :'-[#99907c]/15 text-neutral-500'
  }`}>
  <span>Huso Horario: Madrid (UTC+2)</span>
- <span className="text-[#10b981] dark:text-[#b8d6b8]">● Sincronizado</span>
+ <span className="text-[var(--ok)]">● Sincronizado</span>
  </div>
  </div>
 
@@ -7073,9 +7073,9 @@ export default function CalendarView({
  )}
  {!isPromoPlan && selectedEventDetails.type ==='concert' && (
  <div className="flex items-center gap-2 text-[11px] pt-2 border-t /40">
- <Sparkles className="w-4 h-4 text-[#10b981] shrink-0" />
+ <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className={`font-mono ${textSub}`}>Compensación:</span>
- <span className="text-[#10b981] dark:text-[#b8d6b8] font-bold font-mono">{selectedEventDetails.fee}</span>
+ <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
  </div>
  )}
  {selectedEventDetails.type ==='concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (

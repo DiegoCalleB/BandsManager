@@ -772,7 +772,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  :'bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200'
  }`}
  >
- <Navigation className="w-3.5 h-3.5 text-indigo-500 dark:text-[var(--acc)]" />
+ <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Centrar Vista</span>
  </button>
  </div>

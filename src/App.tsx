@@ -626,7 +626,7 @@ export default function App() {
 
   if (isMusicianRoute) {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-[#0d0c0c] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" /></div>}>
+      <Suspense fallback={<div className="min-h-screen bg-[var(--bg)] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" /></div>}>
         <PublicMusiciansLanding />
       </Suspense>
     );
@@ -1331,7 +1331,7 @@ export default function App() {
  </aside>
 
  {/* Main Content Area */}
- <main className="flex-1 flex flex-col min-w-0 bg-[#0A0A0A] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
+ <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
  {/* Global Active Campaign Banner (solo en módulos de Booking: salas, medios, management, grupos) */}
  {activeCampaign && ['booking', 'medios', 'management', 'bandas'].includes(currentView) && (
    <GlobalCampaignBar

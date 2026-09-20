@@ -150,9 +150,9 @@ export function AddLeadModal({
  title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
  >
  {isModalScraping ? (
- <Loader2 className="w-3 h-3 animate-spin text-[#d1b375]/80" />
+ <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
  ) : (
- <Sparkles className="w-3 h-3 text-[#d1b375]/80 dark:text-[var(--acc)]" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  )}
  <span>{isModalScraping ?'Buscando datos...' :'✨ Autocompletar con IA Scout'}</span>
  </button>
