@@ -43,7 +43,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-mono font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 transition-all cursor-pointer shadow-xs active:scale-95"
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border /30 transition-all cursor-pointer shadow-xs active:scale-95"
         title="Estilizar nombre de la banda con fuentes Rock, estilo KoЯn y símbolos"
       >
         <Sparkles className="w-3 h-3 text-amber-400 animate-pulse" />
@@ -59,11 +59,11 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
             onClick={() => setIsOpen(false)}
           />
 
-          <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-2xl bg-[#181716] border border-amber-500/40 p-4 shadow-2xl z-50 text-neutral-200 animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
+          <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] border /40 p-4 shadow-2xl z-50 text-bg-[var(--sunken)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[#2b2927] pb-2.5">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xs">
+                <div className="w-7 h-7 rounded-[var(--r-s)] bg-amber-500/20 border /30 flex items-center justify-center text-amber-400 font-bold text-xs">
                   Я
                 </div>
                 <div>
@@ -71,13 +71,13 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                     <span>Estilos de Banda & Tipografía</span>
                     <Zap className="w-3 h-3 text-amber-400" />
                   </h4>
-                  <p className="text-[10px] text-neutral-400 font-mono">100% compatible con Supabase y móviles</p>
+                  <p className="text-[10px] text-text-[var(--ink-2)] font-mono">100% compatible con Supabase y móviles</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+                className="p-1 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -85,7 +85,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Notification Badge */}
             {copiedNotification && (
-              <div className="py-1 px-2.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
+              <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
                 <Check className="w-3 h-3 text-emerald-400" />
                 <span>¡Estilo aplicado al nombre!</span>
               </div>
@@ -93,7 +93,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Presets Grid */}
             <div className="space-y-1.5">
-              <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 font-bold flex items-center justify-between">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-text-[var(--ink-2)] font-bold flex items-center justify-between">
                 <span>Transformar Nombre Actual:</span>
                 <span className="text-amber-400/80 font-normal">Clic para aplicar</span>
               </label>
@@ -106,9 +106,9 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                       key={preset.id}
                       type="button"
                       onClick={() => handleApplyPreset(preset.apply)}
-                      className="p-2 rounded-xl bg-neutral-950/80 border border-neutral-800 hover:border-amber-500/60 hover:bg-neutral-900 text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[52px]"
+                      className="p-2 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 border  hover:/60 hover:bg-bg-[var(--surface)] text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[52px]"
                     >
-                      <div className="flex items-center justify-between text-[10px] text-neutral-400 font-mono group-hover:text-amber-300">
+                      <div className="flex items-center justify-between text-[10px] text-text-[var(--ink-2)] font-mono group-hover:text-amber-300">
                         <span>{preset.label}</span>
                         <span className="text-xs">{preset.icon}</span>
                       </div>
@@ -123,7 +123,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Quick Symbols Palette */}
             <div className="space-y-1.5 pt-1 border-t border-[#2b2927]">
-              <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 font-bold flex items-center justify-between">
+              <label className="text-[10px] font-mono uppercase tracking-wider text-text-[var(--ink-2)] font-bold flex items-center justify-between">
                 <span>Insertar Carácter o Símbolo:</span>
                 <span className="text-neutral-500 font-normal">Añadir al nombre</span>
               </label>
@@ -133,7 +133,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => handleInsertSymbol(sym)}
-                    className="w-7 h-7 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-amber-400 hover:bg-amber-500/20 text-neutral-200 hover:text-white font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
+                    className="w-7 h-7 rounded-[var(--r-s)] bg-bg-[var(--surface)] border  hover: hover:bg-amber-500/20 text-bg-[var(--sunken)] hover:text-white font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
                     title={`Insertar ${sym}`}
                   >
                     {sym}
@@ -147,7 +147,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
               <button
                 type="button"
                 onClick={handleClean}
-                className="inline-flex items-center gap-1 text-[10px] font-mono text-neutral-400 hover:text-rose-300 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 text-[10px] font-mono text-text-[var(--ink-2)] hover:text-rose-300 transition-colors cursor-pointer"
                 title="Restaurar a texto estándar sin caracteres especiales"
               >
                 <RotateCcw className="w-3 h-3" />
@@ -156,7 +156,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="px-3 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white font-mono text-[11px] font-bold transition-colors cursor-pointer"
+                className="px-3 py-1 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-white font-mono text-[11px] font-bold transition-colors cursor-pointer"
               >
                 Listo
               </button>

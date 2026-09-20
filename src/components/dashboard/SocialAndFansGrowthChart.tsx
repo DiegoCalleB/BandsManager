@@ -368,29 +368,29 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
   const hasAnyChannelSelected = Object.values(selectedChannels).some(Boolean);
 
   return (
-    <div className={`p-5 rounded-2xl transition-all border ${
+    <div className={`p-5 rounded-[var(--r-l)] transition-all border ${
       isStitchLight 
-        ? 'bg-slate-50/90 border-slate-200 shadow-sm text-slate-800' 
-        : 'bg-[#18181b]/90 border-neutral-800 shadow-sm text-zinc-100'
+        ? 'bg-[var(--bg)]/90  shadow-sm text-[var(--ink)]' 
+        : 'bg-[#18181b]/90  shadow-sm text-zinc-100'
     }`}>
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 border-b border-neutral-800/60">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 border-b /60">
         <div className="flex items-center gap-3">
-          <div className={`p-2.5 rounded-xl shrink-0 ${
+          <div className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${
             isStitchLight ? 'bg-amber-500/15 text-amber-600' : 'bg-amber-500/20 text-amber-400'
           }`}>
             <TrendingUp className="w-5 h-5" />
           </div>
           <div>
             <h3 className={`text-sm font-bold font-display uppercase tracking-wider flex items-center gap-2 ${
-              isStitchLight ? 'text-slate-900' : 'text-neutral-100'
+              isStitchLight ? 'text-[var(--ink)]' : 'text-bg-[var(--sunken)]'
             }`}>
               Evolución de Redes Sociales & Base de Fans en BBDD
               <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-mono font-normal flex items-center gap-1">
                 <CheckCircle2 className="w-2.5 h-2.5" /> Supabase Conectada
               </span>
             </h3>
-            <p className="text-[10px] font-mono mt-0.5 text-neutral-400">
+            <p className="text-[10px] font-mono mt-0.5 text-text-[var(--ink-2)]">
               Seguimiento unificado de audiencia digital, escuchas y fans registrados mediante el formulario público de Únete.
             </p>
           </div>
@@ -402,10 +402,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
               <button
                 type="button"
                 onClick={() => onNavigate('fans')}
-                className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 border ${
+                className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 border ${
                   isStitchLight
-                    ? 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300'
-                    : 'bg-neutral-800/80 hover:bg-neutral-700 text-amber-300 border-neutral-700'
+                    ? 'bg-white hover:bg-[var(--sunken)] text-[var(--ink)] '
+                    : 'bg-neutral-800/80 hover:bg-neutral-700 text-amber-300 '
                 }`}
                 title="Ir al gestor de comunidad, muro y capturas de fans"
               >
@@ -416,10 +416,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
               <button
                 type="button"
                 onClick={() => onNavigate('reels')}
-                className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 border ${
+                className={`px-3 py-1.5 font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 border ${
                   isStitchLight
                     ? 'bg-sky-500 text-white hover:bg-sky-600 border-sky-600'
-                    : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black border-amber-400'
+                    : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black '
                 }`}
                 title="Abrir el panel completo de métricas y sincronización"
               >
@@ -436,10 +436,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
         {/* Card 1: Instagram */}
         {hasInstagram && (
-          <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
+          <div className={`p-3 rounded-[var(--r-m)] border flex flex-col justify-between transition-all ${
             isStitchLight 
               ? 'bg-white border-pink-200 shadow-xs' 
-              : 'bg-neutral-900/60 border-pink-950/40'
+              : 'bg-bg-[var(--surface)]/60 border-pink-950/40'
           }`}>
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-pink-400 flex items-center gap-1">
@@ -453,7 +453,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
               <div className="text-xl font-display font-black text-white">
                 {countInstagram.toLocaleString()}
               </div>
-              <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
+              <div className="text-[9px] font-mono text-text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
                 <span>{latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}% ER` : 'Audiencia activa'}</span>
               </div>
             </div>
@@ -462,10 +462,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
         {/* Card 2: TikTok */}
         {hasTikTok && (
-          <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
+          <div className={`p-3 rounded-[var(--r-m)] border flex flex-col justify-between transition-all ${
             isStitchLight 
               ? 'bg-white border-cyan-200 shadow-xs' 
-              : 'bg-neutral-900/60 border-cyan-950/40'
+              : 'bg-bg-[var(--surface)]/60 border-cyan-950/40'
           }`}>
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-cyan-400 flex items-center gap-1">
@@ -479,7 +479,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
               <div className="text-xl font-display font-black text-white">
                 {countTikTok.toLocaleString()}
               </div>
-              <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
+              <div className="text-[9px] font-mono text-text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
                 <span>{latestMetric?.tiktok_total_likes ? `${(latestMetric.tiktok_total_likes / 1000).toFixed(1)}k likes` : 'Contenido viral'}</span>
               </div>
             </div>
@@ -488,10 +488,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
         {/* Card 3: YouTube */}
         {hasYouTube && (
-          <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
+          <div className={`p-3 rounded-[var(--r-m)] border flex flex-col justify-between transition-all ${
             isStitchLight 
               ? 'bg-white border-red-200 shadow-xs' 
-              : 'bg-neutral-900/60 border-red-950/40'
+              : 'bg-bg-[var(--surface)]/60 border-red-950/40'
           }`}>
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-red-400 flex items-center gap-1">
@@ -505,7 +505,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
               <div className="text-xl font-display font-black text-white">
                 {countYouTube.toLocaleString()}
               </div>
-              <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
+              <div className="text-[9px] font-mono text-text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
                 <span>{latestMetric?.youtube_total_views ? `${(latestMetric.youtube_total_views / 1000).toFixed(1)}k views` : 'Canal oficial'}</span>
               </div>
             </div>
@@ -514,10 +514,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
         {/* Card 4: Spotify */}
         {hasSpotify && (
-          <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
+          <div className={`p-3 rounded-[var(--r-m)] border flex flex-col justify-between transition-all ${
             isStitchLight 
               ? 'bg-white border-emerald-200 shadow-xs' 
-              : 'bg-neutral-900/60 border-emerald-950/40'
+              : 'bg-bg-[var(--surface)]/60 border-emerald-950/40'
           }`}>
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-emerald-400 flex items-center gap-1">
@@ -531,7 +531,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
               <div className="text-xl font-display font-black text-white">
                 {countSpotify.toLocaleString()}
               </div>
-              <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
+              <div className="text-[9px] font-mono text-text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
                 <span>{latestMetric?.spotify_followers ? `${latestMetric.spotify_followers} seguidores` : 'Streaming mensual'}</span>
               </div>
             </div>
@@ -539,10 +539,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
         )}
 
         {/* Card 5: Fans Registrados en Base de Datos (Formulario Únete) */}
-        <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all col-span-2 sm:col-span-1 ${
+        <div className={`p-3 rounded-[var(--r-m)] border flex flex-col justify-between transition-all col-span-2 sm:col-span-1 ${
           isStitchLight 
-            ? 'bg-amber-50 border-amber-300 shadow-sm' 
-            : 'bg-gradient-to-br from-amber-950/30 to-neutral-900 border-amber-500/40 shadow-sm shadow-amber-950/20'
+            ? 'bg-amber-50  shadow-sm' 
+            : 'bg-gradient-to-br from-amber-950/30 to-bg-[var(--surface)] /40 shadow-sm shadow-amber-950/20'
         }`}>
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-amber-400 flex items-center gap-1">
@@ -559,9 +559,9 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
               </span>
               <span className="text-[10px] font-mono text-amber-300/80">fans totales</span>
             </div>
-            <div className="text-[9px] font-mono text-neutral-300 flex items-center justify-between gap-1 mt-1 border-t border-amber-500/20 pt-1">
+            <div className="text-[9px] font-mono text-text-[var(--ink-3)] flex items-center justify-between gap-1 mt-1 border-t /20 pt-1">
               <span className="text-amber-300 font-bold">✨ {uneteFans} vía Únete</span>
-              {directoFans > 0 && <span className="text-neutral-400">🎤 {directoFans} directo</span>}
+              {directoFans > 0 && <span className="text-text-[var(--ink-2)]">🎤 {directoFans} directo</span>}
               <span className="text-emerald-400 font-bold">✓ RGPD</span>
             </div>
           </div>
@@ -569,15 +569,15 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
       </div>
 
       {/* Period Filter & Interactive Channel Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3 pb-3 border-b border-neutral-800/40">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3 pb-3 border-b /40">
         {/* Time Period Selector */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-[10px] font-mono text-neutral-400 flex items-center gap-1">
+          <span className="text-[10px] font-mono text-text-[var(--ink-2)] flex items-center gap-1">
             <Calendar className="w-3.5 h-3.5 text-amber-500" />
             <span className="font-bold">Periodo:</span>
           </span>
-          <div className={`flex items-center gap-1 p-0.5 rounded-xl border ${
-            isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-900/80 border-neutral-800'
+          <div className={`flex items-center gap-1 p-0.5 rounded-[var(--r-m)] border ${
+            isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/80 '
           }`}>
             {TIME_PERIOD_OPTIONS.map(opt => {
               const isSelected = selectedPeriod === opt.id;
@@ -586,14 +586,14 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
                   key={opt.id}
                   type="button"
                   onClick={() => setSelectedPeriod(opt.id)}
-                  className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all cursor-pointer ${
                     isSelected
                       ? isStitchLight
                         ? 'bg-amber-500 text-slate-950 shadow-xs'
                         : 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-sm shadow-amber-950/40'
                       : isStitchLight
-                        ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
-                        : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
+                        ? 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
+                        : 'text-text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
                   }`}
                   title={opt.label}
                 >
@@ -605,7 +605,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
           {/* Period Summary Indicator */}
           {periodGrowthSummary && (
-            <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-lg text-[9px] font-mono border ${
+            <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-[9px] font-mono border ${
               isStitchLight ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-emerald-950/20 text-emerald-300 border-emerald-500/20'
             }`}>
               <TrendingUp className="w-3 h-3 text-emerald-400" />
@@ -621,10 +621,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
         <button
           type="button"
           onClick={selectAllChannels}
-          className={`text-[9px] font-mono px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1 self-end md:self-auto cursor-pointer ${
+          className={`text-[9px] font-mono px-2.5 py-1 rounded-[var(--r-s)] border transition-all flex items-center gap-1 self-end md:self-auto cursor-pointer ${
             isStitchLight
-              ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
-              : 'border-neutral-700 bg-neutral-800/60 hover:bg-neutral-700 text-neutral-300'
+              ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] '
+              : ' bg-neutral-800/60 hover:bg-neutral-700 text-text-[var(--ink-3)]'
           }`}
           title="Restaurar y mostrar todos los canales disponibles"
         >
@@ -634,20 +634,20 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
       </div>
 
       {/* Interactive Channel Filters & Toggles */}
-      <div className="flex items-center justify-between gap-2 mb-3 pb-3 border-b border-neutral-800/40 flex-wrap">
+      <div className="flex items-center justify-between gap-2 mb-3 pb-3 border-b /40 flex-wrap">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-mono text-neutral-400 mr-1 flex items-center gap-1">
+          <span className="text-[10px] font-mono text-text-[var(--ink-2)] mr-1 flex items-center gap-1">
             <SlidersHorizontal className="w-3 h-3 text-neutral-500" /> Curvas del Gráfico:
           </span>
 
           {/* Instagram Chip */}
           {hasInstagram && (
-            <div className={`flex items-center rounded-lg border transition-all ${
+            <div className={`flex items-center rounded-[var(--r-s)] border transition-all ${
               selectedChannels.instagram
                 ? isStitchLight
                   ? 'bg-pink-50 border-pink-300 text-pink-700'
                   : 'bg-pink-950/30 border-pink-500/40 text-pink-300'
-                : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
+                : 'bg-bg-[var(--surface)]/30  text-neutral-500 opacity-60'
             }`}>
               <button
                 type="button"
@@ -675,12 +675,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
           {/* TikTok Chip */}
           {hasTikTok && (
-            <div className={`flex items-center rounded-lg border transition-all ${
+            <div className={`flex items-center rounded-[var(--r-s)] border transition-all ${
               selectedChannels.tiktok
                 ? isStitchLight
                   ? 'bg-cyan-50 border-cyan-300 text-cyan-700'
                   : 'bg-cyan-950/30 border-cyan-500/40 text-cyan-300'
-                : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
+                : 'bg-bg-[var(--surface)]/30  text-neutral-500 opacity-60'
             }`}>
               <button
                 type="button"
@@ -708,12 +708,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
           {/* YouTube Chip */}
           {hasYouTube && (
-            <div className={`flex items-center rounded-lg border transition-all ${
+            <div className={`flex items-center rounded-[var(--r-s)] border transition-all ${
               selectedChannels.youtube
                 ? isStitchLight
                   ? 'bg-red-50 border-red-300 text-red-700'
                   : 'bg-red-950/30 border-red-500/40 text-red-300'
-                : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
+                : 'bg-bg-[var(--surface)]/30  text-neutral-500 opacity-60'
             }`}>
               <button
                 type="button"
@@ -741,12 +741,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
           {/* Spotify Chip */}
           {hasSpotify && (
-            <div className={`flex items-center rounded-lg border transition-all ${
+            <div className={`flex items-center rounded-[var(--r-s)] border transition-all ${
               selectedChannels.spotify
                 ? isStitchLight
                   ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
                   : 'bg-emerald-950/30 border-emerald-500/40 text-emerald-300'
-                : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
+                : 'bg-bg-[var(--surface)]/30  text-neutral-500 opacity-60'
             }`}>
               <button
                 type="button"
@@ -773,12 +773,12 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
           )}
 
           {/* Fans Registrados (BD / Únete) Chip */}
-          <div className={`flex items-center rounded-lg border transition-all ${
+          <div className={`flex items-center rounded-[var(--r-s)] border transition-all ${
             selectedChannels.fans
               ? isStitchLight
-                ? 'bg-amber-50 border-amber-400 text-amber-800 font-bold shadow-xs'
-                : 'bg-amber-950/40 border-amber-400/60 text-amber-200 font-bold shadow-sm shadow-amber-950/30'
-              : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
+                ? 'bg-amber-50  text-amber-800 font-bold shadow-xs'
+                : 'bg-amber-950/40 /60 text-amber-200 font-bold shadow-sm shadow-amber-950/30'
+              : 'bg-bg-[var(--surface)]/30  text-neutral-500 opacity-60'
           }`}>
             <button
               type="button"
@@ -796,7 +796,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
             <button
               type="button"
               onClick={() => selectOnlyChannel('fans')}
-              className="px-1.5 py-1 text-[8px] font-mono border-l border-amber-500/30 hover:bg-amber-500/30 text-amber-300 cursor-pointer font-black"
+              className="px-1.5 py-1 text-[8px] font-mono border-l /30 hover:bg-amber-500/30 text-amber-300 cursor-pointer font-black"
               title="Aislar y ver sólo la curva de Fans registrados"
             >
               Solo
@@ -808,16 +808,16 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
       {/* Chart Canvas Area */}
       <div className="h-64 w-full relative">
         {!hasAnyChannelSelected ? (
-          <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-neutral-800 rounded-xl bg-neutral-950/20">
+          <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border border-dashed  rounded-[var(--r-m)] bg-bg-[var(--surface)]/20">
             <SlidersHorizontal className="w-8 h-8 text-neutral-500 mb-2" />
-            <p className="text-xs font-mono font-medium text-neutral-300">Todos los canales están ocultos</p>
+            <p className="text-xs font-mono font-medium text-text-[var(--ink-3)]">Todos los canales están ocultos</p>
             <p className="text-[10px] font-mono text-neutral-500 mt-1 max-w-xs">
               Haz clic en cualquiera de las etiquetas superiores para activar sus curvas y reescalar el gráfico.
             </p>
             <button
               type="button"
               onClick={selectAllChannels}
-              className="mt-3 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-mono text-[10px] font-bold transition-all cursor-pointer"
+              className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-black font-mono text-[10px] font-bold transition-all cursor-pointer"
             >
               Activar todos los canales
             </button>
@@ -877,7 +877,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: isStitchLight ? '#ffffff' : '#131313', 
+                  backgroundColor: isStitchLight ? '#ffffff' : 'var(--surface)', 
                   borderColor: isStitchLight ? '#cbd5e1' : '#333333',
                   borderRadius: '10px',
                   fontSize: '11px',
@@ -960,7 +960,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
       </div>
 
       {/* Footer Info & Direct Links */}
-      <div className="mt-4 pt-3 border-t border-neutral-800/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-mono text-neutral-400">
+      <div className="mt-4 pt-3 border-t /60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-mono text-text-[var(--ink-2)]">
         <div className="flex items-center gap-3 flex-wrap">
           <span className="flex items-center gap-1 text-emerald-400">
             <ShieldCheck className="w-3.5 h-3.5" /> 100% Consentimiento RGPD ({verifiedRgpd} registros)
@@ -970,7 +970,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
             <Users className="w-3.5 h-3.5" /> {activeCitiesCount} ciudades con fans
           </span>
           <span>•</span>
-          <span className="text-neutral-400">
+          <span className="text-text-[var(--ink-2)]">
             Landing pública: <a href={bandId ? `/unete?band=${encodeURIComponent(bandId)}` : '/unete'} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-0.5">
               {bandId ? `/unete?band=${bandId.replace(/^(band|reg)-/, '')}` : '/unete'} <ExternalLink className="w-2.5 h-2.5" />
             </a>

@@ -84,17 +84,17 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           <Disc3 className="w-5 h-5 text-amber-400" />
           <h3 className="text-base font-semibold text-white">Discografía, Canciones & Generador de Setlists</h3>
         </div>
-        <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 font-medium border border-amber-500/20">
+        <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 font-medium border /20">
           {totalImportedSongsCount} {totalImportedSongsCount === 1 ? 'canción en repertorio' : 'canciones en repertorio'}
         </span>
       </div>
 
       {/* Sub tabs */}
-      <div className="flex rounded-xl bg-zinc-900/80 p-1 border border-white/5">
+      <div className="flex rounded-[var(--r-m)] bg-zinc-900/80 p-1 border border-white/5">
         <button
           type="button"
           onClick={() => setMusicSubTab('spotify')}
-          className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
             musicSubTab === 'spotify'
               ? 'bg-amber-500 text-black shadow-md font-semibold'
               : 'text-zinc-400 hover:text-white'
@@ -106,7 +106,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
         <button
           type="button"
           onClick={() => setMusicSubTab('upload')}
-          className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
             musicSubTab === 'upload'
               ? 'bg-amber-500 text-black shadow-md font-semibold'
               : 'text-zinc-400 hover:text-white'
@@ -118,7 +118,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
         <button
           type="button"
           onClick={() => setMusicSubTab('manual')}
-          className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
             musicSubTab === 'manual'
               ? 'bg-amber-500 text-black shadow-md font-semibold'
               : 'text-zinc-400 hover:text-white'
@@ -140,13 +140,13 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                 value={spotifyQuery}
                 onChange={(e) => setSpotifyQuery(e.target.value)}
                 placeholder="Buscar artista o grupo en Spotify..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                className="w-full pl-10 pr-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
               />
             </div>
             <button
               type="submit"
               disabled={isSearchingSpotify || !spotifyQuery.trim()}
-              className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              className="px-4 py-2.5 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
             >
               {isSearchingSpotify ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Buscar'}
             </button>
@@ -155,10 +155,10 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           {spotifyAlbums.length > 0 && (
             <div className="space-y-4 max-h-72 overflow-y-auto pr-1">
               {spotifyAlbums.map((album) => (
-                <div key={album.id} className="p-3 rounded-xl bg-zinc-900 border border-white/5 space-y-2.5">
+                <div key={album.id} className="p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/5 space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <img src={album.coverUrl} alt={album.name} className="w-10 h-10 rounded-lg object-cover" />
+                      <img src={album.coverUrl} alt={album.name} className="w-10 h-10 rounded-[var(--r-s)] object-cover" />
                       <div>
                         <h4 className="text-xs font-semibold text-white">{album.name}</h4>
                         <span className="text-[10px] text-zinc-500">{album.releaseYear} · {album.totalTracks} temas</span>
@@ -181,9 +181,9 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                           key={track.id}
                           type="button"
                           onClick={() => onToggleTrackSelection(track.id)}
-                          className={`flex items-center justify-between p-2 rounded-lg text-left text-xs transition-colors ${
+                          className={`flex items-center justify-between p-2 rounded-[var(--r-s)] text-left text-xs transition-colors ${
                             isSelected
-                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                              ? 'bg-amber-500/20 text-amber-300 border /30'
                               : 'bg-zinc-800/40 text-zinc-300 border border-transparent hover:border-white/10'
                           }`}
                         >
@@ -197,7 +197,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
               ))}
 
               {selectedSpotifyTracks.size > 0 && (
-                <div className="sticky bottom-0 bg-[#121215]/95 backdrop-blur-md p-3 rounded-xl border border-amber-500/30 flex items-center justify-between">
+                <div className="sticky bottom-0 bg-[var(--surface)]/95 backdrop-blur-md p-3 rounded-[var(--r-m)] border /30 flex items-center justify-between">
                   <span className="text-xs text-amber-300 font-medium">
                     {selectedSpotifyTracks.size} canciones seleccionadas
                   </span>
@@ -205,7 +205,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     type="button"
                     onClick={onImportSpotifyTracks}
                     disabled={isImportingSpotify}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors"
                   >
                     {isImportingSpotify ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                     Importar al Repertorio
@@ -231,9 +231,9 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
 
           <div
             onClick={() => audioInputRef.current?.click()}
-            className="border-2 border-dashed border-white/10 hover:border-amber-400/50 rounded-2xl p-8 text-center cursor-pointer transition-colors bg-zinc-900/40 hover:bg-zinc-900/70"
+            className="border-2 border-dashed border-white/10 hover:/50 rounded-[var(--r-l)] p-8 text-center cursor-pointer transition-colors bg-zinc-900/40 hover:bg-zinc-900/70"
           >
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 rounded-[var(--r-l)] bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto mb-3">
               <Upload className="w-6 h-6" />
             </div>
             <h4 className="text-sm font-semibold text-white mb-1">
@@ -256,7 +256,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
       {musicSubTab === 'manual' && (
         <div className="space-y-4">
           {!showBulkInput ? (
-            <div className="p-4 rounded-xl bg-[#19191d] border border-white/10 space-y-3">
+            <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border border-white/10 space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
                   Añadir Canción Individual
@@ -277,7 +277,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     value={newManualTitle}
                     onChange={(e) => setNewManualTitle(e.target.value)}
                     placeholder="Título de la Canción *"
-                    className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
                   />
                 </div>
                 <div>
@@ -286,7 +286,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     value={newManualTonalidad}
                     onChange={(e) => setNewManualTonalidad(e.target.value)}
                     placeholder="Tonalidad (ej. Am, Sol)"
-                    className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
                   />
                 </div>
                 <div>
@@ -295,7 +295,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     value={newManualDuracion}
                     onChange={(e) => setNewManualDuracion(e.target.value)}
                     placeholder="Duración (ej. 3:45)"
-                    className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                    className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
                   />
                 </div>
               </div>
@@ -305,7 +305,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                   type="button"
                   onClick={onAddManualSong}
                   disabled={!newManualTitle.trim()}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Añadir Canción
@@ -313,7 +313,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
               </div>
             </div>
           ) : (
-            <div className="p-4 rounded-xl bg-[#19191d] border border-white/10 space-y-3">
+            <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border border-white/10 space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
                   Pegar Títulos en Bloque (Uno por línea)
@@ -331,7 +331,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                 value={bulkText}
                 onChange={(e) => setBulkText(e.target.value)}
                 placeholder={"1. El Despertar\n2. Noche en el Puerto\n3. Tormenta Eléctrica\n4. Último Baile"}
-                className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-white placeholder-zinc-600 text-xs focus:outline-none focus:border-amber-400 font-mono"
+                className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-600 text-xs focus:outline-none focus: font-mono"
               />
               <div className="flex justify-end">
                 <button
@@ -342,7 +342,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     setShowBulkInput(false);
                   }}
                   disabled={!bulkText.trim()}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Procesar e Importar Lista
@@ -354,7 +354,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
           {manualSongs.length > 0 && (
             <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
               {manualSongs.map((s) => (
-                <div key={s.id} className="flex items-center justify-between p-2 rounded-lg bg-zinc-900 border border-white/5 text-xs">
+                <div key={s.id} className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/5 text-xs">
                   <span className="text-white font-medium">{s.titulo}</span>
                   <div className="flex items-center gap-3 text-zinc-400">
                     {s.tonalidad && <span>{s.tonalidad}</span>}
@@ -375,7 +375,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
       )}
 
       {/* ⚡ Generador de Setlist de Debut */}
-      <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 space-y-2.5">
+      <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border /20 space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-400" />
@@ -399,7 +399,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             type="button"
             onClick={() => onGenerateSetlist(60)}
             disabled={isCreatingSetlist || totalImportedSongsCount === 0}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border /40 text-xs font-medium transition-colors disabled:opacity-50"
           >
             <Layers className="w-3.5 h-3.5" />
             Crear Setlist Directo (60 min)
@@ -409,7 +409,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             type="button"
             onClick={() => onGenerateSetlist(45)}
             disabled={isCreatingSetlist || totalImportedSongsCount === 0}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-white/10 text-xs font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-white/10 text-xs font-medium transition-colors disabled:opacity-50"
           >
             <Clock className="w-3.5 h-3.5" />
             Crear Setlist Festival / Showcase (45 min)

@@ -76,18 +76,18 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
   return (
     <div className="space-y-6">
       {/* 1. Header Banner & Band Stage Archetype */}
-      <div className={`p-5 rounded-2xl border transition-all ${
+      <div className={`p-5 rounded-[var(--r-l)] border transition-all ${
         isStitchLight 
           ? 'bg-gradient-to-br from-indigo-50/80 via-purple-50/40 to-slate-50 border-indigo-100 shadow-sm' 
-          : 'bg-gradient-to-br from-indigo-950/30 via-neutral-900/60 to-neutral-950 border-indigo-500/20 shadow-lg'
+          : 'bg-gradient-to-br from-indigo-950/30 via-bg-[var(--surface)]/60 to-bg-[var(--surface)] border-indigo-500/20 shadow-lg'
       }`}>
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+              <span className="p-1.5 rounded-[var(--r-s)] bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
                 <Sparkles className="w-4 h-4" />
               </span>
-              <h3 className={`text-base font-bold font-display uppercase tracking-wider ${isStitchLight ? 'text-slate-900' : 'text-white'}`}>
+              <h3 className={`text-base font-bold font-display uppercase tracking-wider ${isStitchLight ? 'text-[var(--ink)]' : 'text-white'}`}>
                 Plan de Crecimiento Musical ({growthPlan.horizonDays} Días)
               </h3>
               <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -99,22 +99,22 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 </span>
               )}
             </div>
-            <p className="text-xs font-mono text-neutral-300 mt-2 max-w-3xl leading-relaxed">
+            <p className="text-xs font-mono text-text-[var(--ink-3)] mt-2 max-w-3xl leading-relaxed">
               {growthPlan.executiveSummary}
             </p>
           </div>
 
           {/* AI Controls */}
           <div className="flex flex-wrap items-center gap-2.5 self-stretch lg:self-auto">
-            <div className="flex items-center bg-black/30 p-1 rounded-xl border border-neutral-800">
+            <div className="flex items-center bg-black/30 p-1 rounded-[var(--r-m)] border ">
               {([30, 60, 90] as const).map(h => (
                 <button
                   key={h}
                   onClick={() => setSelectedHorizon(h)}
-                  className={`px-2.5 py-1 text-[10px] font-mono rounded-lg transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 text-[10px] font-mono rounded-[var(--r-s)] transition-all cursor-pointer ${
                     selectedHorizon === h 
                       ? 'bg-indigo-600 text-white font-bold shadow' 
-                      : 'text-neutral-400 hover:text-white'
+                      : 'text-text-[var(--ink-2)] hover:text-white'
                   }`}
                 >
                   {h} Días
@@ -125,7 +125,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
             <button
               disabled={isGeneratingAI}
               onClick={() => onRefreshPlanWithAI(selectedHorizon, customPrompt || undefined)}
-              className={`px-4 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer shadow-md ${
+              className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer shadow-md ${
                 isGeneratingAI 
                   ? 'bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 cursor-wait' 
                   : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white border border-indigo-400/30 hover:scale-[1.02]'
@@ -139,22 +139,22 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         {/* Band Profile Analysis Card */}
         {archetype && (
-          <div className="mt-4 pt-4 border-t border-neutral-800/60 grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className={`p-3 rounded-xl border ${isStitchLight ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-neutral-800/80'}`}>
-              <div className="flex items-center gap-1.5 text-neutral-400 text-[10px] font-mono uppercase mb-1">
+          <div className="mt-4 pt-4 border-t /60 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className={`p-3 rounded-[var(--r-m)] border ${isStitchLight ? 'bg-white/80 ' : 'bg-black/40 /80'}`}>
+              <div className="flex items-center gap-1.5 text-text-[var(--ink-2)] text-[10px] font-mono uppercase mb-1">
                 <Users className="w-3.5 h-3.5 text-indigo-400" />
                 <span>Perfil & Audiencia Actual</span>
               </div>
               <p className="text-xs font-mono font-bold text-white">
                 {archetype.label}
               </p>
-              <p className="text-[10px] font-mono text-neutral-400 mt-1">
+              <p className="text-[10px] font-mono text-text-[var(--ink-2)] mt-1">
                 IG: {igCount.toLocaleString()} · TK: {tkCount.toLocaleString()} · YT: {ytSubs.toLocaleString()}
               </p>
             </div>
 
-            <div className={`p-3 rounded-xl border ${isStitchLight ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-neutral-800/80'}`}>
-              <div className="flex items-center gap-1.5 text-neutral-400 text-[10px] font-mono uppercase mb-1">
+            <div className={`p-3 rounded-[var(--r-m)] border ${isStitchLight ? 'bg-white/80 ' : 'bg-black/40 /80'}`}>
+              <div className="flex items-center gap-1.5 text-text-[var(--ink-2)] text-[10px] font-mono uppercase mb-1">
                 <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
                 <span>Cuello de Botella a Resolver</span>
               </div>
@@ -163,8 +163,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               </p>
             </div>
 
-            <div className={`p-3 rounded-xl border ${isStitchLight ? 'bg-white/80 border-slate-200' : 'bg-black/40 border-neutral-800/80'}`}>
-              <div className="flex items-center gap-1.5 text-neutral-400 text-[10px] font-mono uppercase mb-1">
+            <div className={`p-3 rounded-[var(--r-m)] border ${isStitchLight ? 'bg-white/80 ' : 'bg-black/40 /80'}`}>
+              <div className="flex items-center gap-1.5 text-text-[var(--ink-2)] text-[10px] font-mono uppercase mb-1">
                 <Target className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Objetivo de Conversión a Salas</span>
               </div>
@@ -176,15 +176,15 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
         )}
 
         {/* Global Progress Bar */}
-        <div className="mt-4 pt-4 border-t border-neutral-800/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="mt-4 pt-4 border-t /40 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-neutral-300 flex items-center gap-1.5">
+            <span className="text-xs font-mono text-text-[var(--ink-3)] flex items-center gap-1.5">
               <Target className="w-3.5 h-3.5 text-indigo-400" />
               Ejecución del Plan: <b>{completedCount} / {allActionItems.length}</b> tácticas completadas
             </span>
           </div>
           <div className="flex items-center gap-3 w-full sm:w-64">
-            <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden border border-neutral-700/50">
+            <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden border /50">
               <div 
                 className="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 transition-all duration-500 rounded-full"
                 style={{ width: `${progressPercent}%` }}
@@ -198,13 +198,13 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
       </div>
 
       {/* 2. Navigation Tabs for Channels & Blueprint */}
-      <div className="flex items-center gap-2 border-b border-neutral-800 pb-2 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b  pb-2 overflow-x-auto">
         <button
           onClick={() => setSelectedTab('overview')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === 'overview'
               ? 'bg-indigo-600 text-white shadow'
-              : isStitchLight ? 'text-slate-600 hover:bg-slate-100' : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'
+              : isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
           }`}
         >
           <Layers className="w-3.5 h-3.5" />
@@ -213,10 +213,10 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab('weekly')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === 'weekly'
               ? 'bg-indigo-600 text-white shadow'
-              : isStitchLight ? 'text-slate-600 hover:bg-slate-100' : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'
+              : isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
           }`}
         >
           <Calendar className="w-3.5 h-3.5 text-amber-400" />
@@ -225,10 +225,10 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab('instagram')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === 'instagram'
               ? 'bg-pink-600 text-white shadow'
-              : isStitchLight ? 'text-slate-600 hover:bg-slate-100' : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'
+              : isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
           }`}
         >
           <Instagram className="w-3.5 h-3.5 text-pink-400" />
@@ -237,10 +237,10 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab('tiktok')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === 'tiktok'
               ? 'bg-cyan-600 text-white shadow'
-              : isStitchLight ? 'text-slate-600 hover:bg-slate-100' : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'
+              : isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
           }`}
         >
           <Video className="w-3.5 h-3.5 text-cyan-400" />
@@ -249,10 +249,10 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab('youtube')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === 'youtube'
               ? 'bg-red-600 text-white shadow'
-              : isStitchLight ? 'text-slate-600 hover:bg-slate-100' : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'
+              : isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
           }`}
         >
           <Youtube className="w-3.5 h-3.5 text-red-400" />
@@ -261,10 +261,10 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
         <button
           onClick={() => setSelectedTab('spotify')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             selectedTab === 'spotify'
               ? 'bg-emerald-600 text-white shadow'
-              : isStitchLight ? 'text-slate-600 hover:bg-slate-100' : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'
+              : isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-text-[var(--ink-2)] hover:bg-neutral-800 hover:text-white'
           }`}
         >
           <Music2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -278,8 +278,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           {/* Strategic Pillars */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {growthPlan.overallPillars.map((p, idx) => (
-              <div key={idx} className={`p-4 rounded-xl border flex flex-col justify-between ${
-                isStitchLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-[#131313] border-neutral-800 shadow'
+              <div key={idx} className={`p-4 rounded-[var(--r-m)] border flex flex-col justify-between ${
+                isStitchLight ? 'bg-white  shadow-sm' : 'bg-[var(--surface)]  shadow'
               }`}>
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -290,10 +290,10 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                       {p.weightPercentage}% esfuerzo
                     </span>
                   </div>
-                  <h4 className={`text-sm font-bold font-display ${isStitchLight ? 'text-slate-900' : 'text-white'}`}>
+                  <h4 className={`text-sm font-bold font-display ${isStitchLight ? 'text-[var(--ink)]' : 'text-white'}`}>
                     {p.pillar}
                   </h4>
-                  <p className="text-xs font-mono text-neutral-400 mt-2 leading-relaxed">
+                  <p className="text-xs font-mono text-text-[var(--ink-2)] mt-2 leading-relaxed">
                     {p.description}
                   </p>
                 </div>
@@ -311,8 +311,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                                    'text-emerald-400 border-emerald-500/20 bg-emerald-500/5';
               
               return (
-                <div key={channel.platform} className={`p-4 rounded-xl border transition-all ${
-                  isStitchLight ? 'bg-white border-slate-200' : 'bg-[#131313] border-neutral-800'
+                <div key={channel.platform} className={`p-4 rounded-[var(--r-m)] border transition-all ${
+                  isStitchLight ? 'bg-white ' : 'bg-[var(--surface)] '
                 }`}>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
@@ -320,7 +320,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                       {channel.platform === 'tiktok' && <Video className="w-4 h-4 text-cyan-400" />}
                       {channel.platform === 'youtube' && <Youtube className="w-4 h-4 text-red-500" />}
                       {channel.platform === 'spotify' && <Music2 className="w-4 h-4 text-emerald-500" />}
-                      <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-200">
+                      <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-bg-[var(--sunken)]">
                         {channel.name}
                       </h4>
                     </div>
@@ -329,7 +329,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                     </span>
                   </div>
 
-                  <p className="text-xs font-mono text-neutral-300 mb-3 leading-relaxed">
+                  <p className="text-xs font-mono text-text-[var(--ink-3)] mb-3 leading-relaxed">
                     {channel.primaryObjective}
                   </p>
 
@@ -339,10 +339,10 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                       <div 
                         key={action.id}
                         onClick={() => toggleActionCompleted(action.id)}
-                        className={`p-2.5 rounded-lg border flex items-start gap-2.5 cursor-pointer transition-all ${
+                        className={`p-2.5 rounded-[var(--r-s)] border flex items-start gap-2.5 cursor-pointer transition-all ${
                           completedActions[action.id] 
                             ? 'bg-emerald-950/20 border-emerald-500/30 line-through opacity-70' 
-                            : isStitchLight ? 'bg-slate-50 hover:bg-slate-100 border-slate-200' : 'bg-neutral-900/50 hover:bg-neutral-900 border-neutral-800'
+                            : isStitchLight ? 'bg-[var(--bg)] hover:bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/50 hover:bg-bg-[var(--surface)] '
                         }`}
                       >
                         {completedActions[action.id] ? (
@@ -351,15 +351,15 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                           <Circle className="w-4 h-4 text-neutral-500 shrink-0 mt-0.5" />
                         )}
                         <div>
-                          <p className="text-xs font-mono font-bold text-neutral-200">{action.title}</p>
-                          <p className="text-[10px] font-mono text-neutral-400 mt-0.5">{action.kpiTarget}</p>
+                          <p className="text-xs font-mono font-bold text-bg-[var(--sunken)]">{action.title}</p>
+                          <p className="text-[10px] font-mono text-text-[var(--ink-2)] mt-0.5">{action.kpiTarget}</p>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-neutral-800">
-                    <span className="text-[10px] font-mono text-neutral-400">
+                  <div className="flex items-center justify-between pt-2 border-t ">
+                    <span className="text-[10px] font-mono text-text-[var(--ink-2)]">
                       {channelCompleted} / {channel.actionItems.length} completadas
                     </span>
                     <button
@@ -380,23 +380,23 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
       {/* Weekly Blueprint Tab */}
       {selectedTab === 'weekly' && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-indigo-950/20 border border-indigo-500/30 flex items-center justify-between">
+          <div className="p-4 rounded-[var(--r-m)] bg-indigo-950/20 border border-indigo-500/30 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-indigo-400" />
               <div>
                 <h4 className="text-xs font-mono font-bold uppercase text-white">Cronograma Semanal de Publicación Optimizado para Músicos</h4>
-                <p className="text-[10px] font-mono text-neutral-400">Diseñado para equilibrar ensayos, grabación y bolos sin quemar a los miembros de la banda.</p>
+                <p className="text-[10px] font-mono text-text-[var(--ink-2)]">Diseñado para equilibrar ensayos, grabación y bolos sin quemar a los miembros de la banda.</p>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-3">
             {growthPlan.weeklyBlueprint.map((dayPlan, idx) => (
-              <div key={idx} className={`p-3.5 rounded-xl border flex flex-col justify-between space-y-3 ${
-                isStitchLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-[#131313] border-neutral-800'
+              <div key={idx} className={`p-3.5 rounded-[var(--r-m)] border flex flex-col justify-between space-y-3 ${
+                isStitchLight ? 'bg-white  shadow-sm' : 'bg-[var(--surface)] '
               }`}>
                 <div>
-                  <div className="flex items-center justify-between border-b border-neutral-800/60 pb-2 mb-2">
+                  <div className="flex items-center justify-between border-b /60 pb-2 mb-2">
                     <span className="text-xs font-mono font-bold text-white uppercase">{dayPlan.day}</span>
                     <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-bold flex items-center gap-1">
                       <Clock className="w-2.5 h-2.5" /> {dayPlan.optimalPostingTime}
@@ -410,8 +410,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                     {dayPlan.recommendedPlatform === 'todas' && <span className="text-amber-400 flex items-center gap-1"><Flame className="w-3 h-3" /> Todas las Redes</span>}
                   </div>
 
-                  <h5 className="text-xs font-bold text-neutral-200 mb-1">{dayPlan.focus}</h5>
-                  <p className="text-[10px] font-mono text-neutral-400 leading-relaxed">{dayPlan.contentAction}</p>
+                  <h5 className="text-xs font-bold text-bg-[var(--sunken)] mb-1">{dayPlan.focus}</h5>
+                  <p className="text-[10px] font-mono text-text-[var(--ink-2)] leading-relaxed">{dayPlan.contentAction}</p>
                 </div>
               </div>
             ))}
@@ -423,11 +423,11 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
       {currentChannel && selectedTab !== 'overview' && selectedTab !== 'weekly' && (
         <div className="space-y-6">
           {/* Channel Hero Summary */}
-          <div className={`p-5 rounded-2xl border ${
-            currentChannel.platform === 'instagram' ? 'bg-gradient-to-r from-pink-950/20 to-neutral-900 border-pink-500/30' :
-            currentChannel.platform === 'tiktok' ? 'bg-gradient-to-r from-cyan-950/20 to-neutral-900 border-cyan-500/30' :
-            currentChannel.platform === 'youtube' ? 'bg-gradient-to-r from-red-950/20 to-neutral-900 border-red-500/30' :
-            'bg-gradient-to-r from-emerald-950/20 to-neutral-900 border-emerald-500/30'
+          <div className={`p-5 rounded-[var(--r-l)] border ${
+            currentChannel.platform === 'instagram' ? 'bg-gradient-to-r from-pink-950/20 to-bg-[var(--surface)] border-pink-500/30' :
+            currentChannel.platform === 'tiktok' ? 'bg-gradient-to-r from-cyan-950/20 to-bg-[var(--surface)] border-cyan-500/30' :
+            currentChannel.platform === 'youtube' ? 'bg-gradient-to-r from-red-950/20 to-bg-[var(--surface)] border-red-500/30' :
+            'bg-gradient-to-r from-emerald-950/20 to-bg-[var(--surface)] border-emerald-500/30'
           }`}>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
@@ -439,16 +439,16 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                   <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">
                     Estrategia para {currentChannel.name}
                   </h3>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-300 border border-neutral-700">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-neutral-800 text-text-[var(--ink-3)] border ">
                     {currentChannel.growthStage}
                   </span>
                 </div>
-                <p className="text-xs font-mono text-neutral-300 mt-2 max-w-3xl leading-relaxed">
+                <p className="text-xs font-mono text-text-[var(--ink-3)] mt-2 max-w-3xl leading-relaxed">
                   {currentChannel.coreStrategy}
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-black/40 border border-neutral-800 text-right min-w-[200px]">
+              <div className="p-3 rounded-[var(--r-m)] bg-black/40 border  text-right min-w-[200px]">
                 <span className="text-[9px] font-mono text-neutral-500 uppercase block">Horario Recomendado</span>
                 <span className="text-xs font-mono font-bold text-amber-400 mt-0.5 block">{currentChannel.recommendedSchedule}</span>
               </div>
@@ -459,7 +459,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
             {/* Action Items & Tactics Checklist (7 columns) */}
             <div className="lg:col-span-7 space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-200 flex items-center gap-1.5">
+                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-bg-[var(--sunken)] flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                   Checklist de Tácticas & Plan de Acción para la Banda
                 </h4>
@@ -472,17 +472,17 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 {currentChannel.actionItems.map(action => {
                   const isDone = completedActions[action.id];
                   const impactColor = action.impact === 'critico' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                                      action.impact === 'alto' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                                      action.impact === 'alto' ? 'bg-amber-500/10 text-amber-400 /20' :
                                       'bg-blue-500/10 text-blue-400 border-blue-500/20';
 
                   return (
                     <div
                       key={action.id}
                       onClick={() => toggleActionCompleted(action.id)}
-                      className={`p-4 rounded-xl border transition-all cursor-pointer ${
+                      className={`p-4 rounded-[var(--r-m)] border transition-all cursor-pointer ${
                         isDone 
                           ? 'bg-emerald-950/20 border-emerald-500/30 opacity-75' 
-                          : isStitchLight ? 'bg-white hover:bg-slate-50 border-slate-200 shadow-sm' : 'bg-[#131313] hover:bg-neutral-900 border-neutral-800 shadow'
+                          : isStitchLight ? 'bg-white hover:bg-[var(--bg)]  shadow-sm' : 'bg-[var(--surface)] hover:bg-bg-[var(--surface)]  shadow'
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -490,22 +490,22 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                           {isDone ? (
                             <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                           ) : (
-                            <Circle className="w-5 h-5 text-neutral-600 hover:text-neutral-400" />
+                            <Circle className="w-5 h-5 text-neutral-600 hover:text-text-[var(--ink-2)]" />
                           )}
                         </button>
                         <div className="flex-1">
                           <div className="flex flex-wrap items-center gap-2 mb-1">
-                            <span className={`text-xs font-bold ${isDone ? 'line-through text-neutral-400' : 'text-neutral-100'}`}>
+                            <span className={`text-xs font-bold ${isDone ? 'line-through text-text-[var(--ink-2)]' : 'text-bg-[var(--sunken)]'}`}>
                               {action.title}
                             </span>
                             <span className={`text-[8px] font-mono uppercase px-1.5 py-0.2 rounded border ${impactColor} font-bold`}>
                               Impacto {action.impact}
                             </span>
-                            <span className="text-[8px] font-mono uppercase px-1.5 py-0.2 rounded border border-neutral-800 text-neutral-400">
+                            <span className="text-[8px] font-mono uppercase px-1.5 py-0.2 rounded border  text-text-[var(--ink-2)]">
                               {action.frequency}
                             </span>
                           </div>
-                          <p className={`text-[11px] font-mono text-neutral-400 leading-relaxed ${isDone ? 'line-through opacity-70' : ''}`}>
+                          <p className={`text-[11px] font-mono text-text-[var(--ink-2)] leading-relaxed ${isDone ? 'line-through opacity-70' : ''}`}>
                             {action.description}
                           </p>
                           <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono text-emerald-400">
@@ -523,8 +523,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
             {/* Right Column: Hooks, Dont's & Viral Concepts (5 columns) */}
             <div className="lg:col-span-5 space-y-6">
               {/* Hook Formulas for Music Content */}
-              <div className={`p-4 rounded-xl border ${
-                isStitchLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-[#131313] border-neutral-800'
+              <div className={`p-4 rounded-[var(--r-m)] border ${
+                isStitchLight ? 'bg-white  shadow-sm' : 'bg-[var(--surface)] '
               }`}>
                 <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5 mb-3">
                   <Flame className="w-4 h-4" />
@@ -532,13 +532,13 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 </h4>
                 <div className="space-y-2.5">
                   {currentChannel.hookFormulas.map((hook, hIdx) => (
-                    <div key={hIdx} className="p-2.5 rounded-lg bg-neutral-900/60 border border-neutral-800/80 flex items-start justify-between gap-2 group">
-                      <p className="text-xs font-mono text-neutral-300 italic">
+                    <div key={hIdx} className="p-2.5 rounded-[var(--r-s)] bg-bg-[var(--surface)]/60 border /80 flex items-start justify-between gap-2 group">
+                      <p className="text-xs font-mono text-text-[var(--ink-3)] italic">
                         {hook}
                       </p>
                       <button
                         onClick={() => copyToClipboard(hook, `hook-${hIdx}`)}
-                        className="p-1.5 rounded-md hover:bg-neutral-800 text-neutral-400 hover:text-white transition-all shrink-0 cursor-pointer"
+                        className="p-1.5 rounded-md hover:bg-neutral-800 text-text-[var(--ink-2)] hover:text-white transition-all shrink-0 cursor-pointer"
                         title="Copiar gancho"
                       >
                         {copiedHook === `hook-${hIdx}` ? (
@@ -554,8 +554,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
 
               {/* Viral Concepts for Musician Reels */}
               {currentChannel.viralConcepts && currentChannel.viralConcepts.length > 0 && (
-                <div className={`p-4 rounded-xl border ${
-                  isStitchLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-[#131313] border-neutral-800'
+                <div className={`p-4 rounded-[var(--r-m)] border ${
+                  isStitchLight ? 'bg-white  shadow-sm' : 'bg-[var(--surface)] '
                 }`}>
                   <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5 mb-3">
                     <Lightbulb className="w-4 h-4" />
@@ -563,9 +563,9 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                   </h4>
                   <div className="space-y-3">
                     {currentChannel.viralConcepts.map((v, vIdx) => (
-                      <div key={vIdx} className="p-3 rounded-lg bg-indigo-950/20 border border-indigo-500/20 space-y-1.5">
+                      <div key={vIdx} className="p-3 rounded-[var(--r-s)] bg-indigo-950/20 border border-indigo-500/20 space-y-1.5">
                         <h5 className="text-xs font-bold text-white">{v.title}</h5>
-                        <p className="text-[11px] font-mono text-neutral-300">{v.concept}</p>
+                        <p className="text-[11px] font-mono text-text-[var(--ink-3)]">{v.concept}</p>
                         <div className="text-[10px] font-mono text-amber-300 bg-black/40 p-1.5 rounded">
                           <b>Gancho:</b> {v.hook}
                         </div>
@@ -579,12 +579,12 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               )}
 
               {/* Errores Críticos a Evitar (Don'ts) */}
-              <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/30 space-y-3">
+              <div className="p-4 rounded-[var(--r-m)] bg-red-950/20 border border-red-500/30 space-y-3">
                 <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-red-400 flex items-center gap-1.5">
                   <AlertCircle className="w-4 h-4" />
                   Errores Típicos de Músicos a Evitar
                 </h4>
-                <ul className="space-y-2 text-xs font-mono text-neutral-300">
+                <ul className="space-y-2 text-xs font-mono text-text-[var(--ink-3)]">
                   {currentChannel.donts.map((d, dIdx) => (
                     <li key={dIdx} className="flex items-start gap-2">
                       <span className="text-red-400 shrink-0 mt-0.5">✕</span>

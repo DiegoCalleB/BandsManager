@@ -43,8 +43,8 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
-        <div className={`w-full max-w-2xl rounded-2xl p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
-          isStitchLight ? 'bg-white text-slate-800' : 'bg-[#1c1b1b] text-neutral-100'
+        <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
+          isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#1c1b1b] text-bg-[var(--sunken)]'
         }`}>
         <div className="flex items-center justify-between pb-3">
           <div className="flex items-center gap-2">
@@ -55,21 +55,21 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
           </div>
           <button 
             onClick={onClose}
-            className="p-1 hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer"
+            className="p-1 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5 text-neutral-400" />
+            <X className="w-5 h-5 text-text-[var(--ink-2)]" />
           </button>
         </div>
 
         {/* Config Fields */}
         {!activeCampaign?.isActive && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-xl bg-neutral-900 text-[10px] font-mono">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-[10px] font-mono">
             <div>
-              <label className="block text-[10px] text-neutral-400 uppercase mb-1">Ciudad de Bakandeya</label>
+              <label className="block text-[10px] text-text-[var(--ink-2)] uppercase mb-1">Ciudad de Bakandeya</label>
               <select
                 value={proposedBakandeyaCity}
                 onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
-                className="w-full bg-neutral-800 text-white px-2 py-1 rounded-lg text-[10px]"
+                className="w-full bg-neutral-800 text-white px-2 py-1 rounded-[var(--r-s)] text-[10px]"
               >
                 <option value="Madrid">Madrid</option>
                 <option value="Sevilla">Sevilla</option>
@@ -78,22 +78,22 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[10px] text-neutral-400 uppercase mb-1">Sala propuesta en Madrid/Sevilla</label>
+              <label className="block text-[10px] text-text-[var(--ink-2)] uppercase mb-1">Sala propuesta en Madrid/Sevilla</label>
               <input
                 type="text"
                 value={proposedVenueBakandeya}
                 onChange={(e) => setProposedVenueBakandeya(e.target.value)}
-                className="w-full bg-neutral-800 text-white px-2 py-1 rounded-lg text-[10px]"
+                className="w-full bg-neutral-800 text-white px-2 py-1 rounded-[var(--r-s)] text-[10px]"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] text-neutral-400 uppercase mb-1">Periodo / Mes Estimado</label>
+              <label className="block text-[10px] text-text-[var(--ink-2)] uppercase mb-1">Periodo / Mes Estimado</label>
               <input
                 type="text"
                 value={proposedMonth}
                 onChange={(e) => setProposedMonth(e.target.value)}
-                className="w-full bg-neutral-800 text-white px-2 py-1 rounded-lg text-[10px]"
+                className="w-full bg-neutral-800 text-white px-2 py-1 rounded-[var(--r-s)] text-[10px]"
               />
             </div>
           </div>
@@ -106,7 +106,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
             <span className="text-[10px] text-neutral-500 lowercase">editable & listo para enviar</span>
           </label>
 
-          <div className="p-4 rounded-xl bg-neutral-950 text-[10px] font-mono text-neutral-200 whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
+          <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-[10px] font-mono text-bg-[var(--sunken)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
             {pitchText}
           </div>
         </div>
@@ -125,7 +125,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                 setCopiedPitch(true);
                 setTimeout(() => setCopiedPitch(false), 2000);
               }}
-              className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 rounded-xl font-mono text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
+              className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] rounded-[var(--r-m)] font-mono text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
             >
               {copiedPitch ? <Check className="w-4 h-4 text-[#10b981]" /> : <Copy className="w-4 h-4" />}
               <span>{copiedPitch ? '¡Copiado!' : 'Copiar Texto'}</span>
@@ -137,7 +137,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                 href={`https://wa.me/${band.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(pitchText)}`}
                 target="_blank"
                 rel="noreferrer"
-                className="px-2 py-1 bg-[#10b981]/15 hover:bg-[#10b981]/15 text-white font-mono text-[10px] font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
+                className="px-2 py-1 bg-[#10b981]/15 hover:bg-[#10b981]/15 text-white font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Enviar WhatsApp</span>
@@ -148,7 +148,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
             {band.email && (
               <a
                 href={`mailto:${band.email}?subject=${encodeURIComponent(`Propuesta Date Swap: Bakandeya x ${band.nombre_banda}`)}&body=${encodeURIComponent(pitchText)}`}
-                className="px-2 py-1 bg-sky-500/15 hover:bg-sky-500/15 text-white font-mono text-[10px] font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
+                className="px-2 py-1 bg-sky-500/15 hover:bg-sky-500/15 text-white font-mono text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
               >
                 <Send className="w-4 h-4" />
                 <span>Enviar Email</span>

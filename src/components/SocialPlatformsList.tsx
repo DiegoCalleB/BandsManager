@@ -152,17 +152,17 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
   },
   twitter: {
     label: 'X / Twitter',
-    colorClass: 'text-slate-200',
-    bgClass: 'bg-slate-800/80',
-    borderClass: 'border-slate-700',
-    hoverClass: 'hover:bg-slate-700 hover:border-slate-600 hover:text-white'
+    colorClass: 'text-[var(--ink-3)]',
+    bgClass: 'bg-[var(--surface)]/80',
+    borderClass: '',
+    hoverClass: 'hover:bg-[var(--surface)] hover: hover:text-white'
   },
   website: {
     label: 'Sitio Web',
     colorClass: 'text-amber-400',
     bgClass: 'bg-amber-500/10',
-    borderClass: 'border-amber-500/30',
-    hoverClass: 'hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-300'
+    borderClass: '/30',
+    hoverClass: 'hover:bg-amber-500/20 hover:/50 hover:text-amber-300'
   },
   revolut: {
     label: 'Revolut',
@@ -252,7 +252,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
     return (
       <div className="space-y-2">
         {showTitle && (
-          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider text-center">
+          <p className="text-xs text-[var(--ink-3)] font-semibold uppercase tracking-wider text-center">
             {title}
           </p>
         )}
@@ -260,10 +260,10 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
           {validEntries.map(([key, url]) => {
             const config = PLATFORM_CONFIG[key] || {
               label: key === 'website' ? getWebsiteLabel() : key,
-              colorClass: 'text-slate-300',
-              bgClass: 'bg-slate-800',
-              borderClass: 'border-slate-700',
-              hoverClass: 'hover:bg-slate-700'
+              colorClass: 'text-[var(--ink-3)]',
+              bgClass: 'bg-[var(--surface)]',
+              borderClass: '',
+              hoverClass: 'hover:bg-[var(--surface)]'
             };
             const label = key === 'website' ? getWebsiteLabel() : config.label;
             const IconComp = SocialIcons[key] || Globe;
@@ -281,7 +281,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
                 <IconComp className="w-4 h-4 shrink-0" />
                 <span>{label}</span>
                 {showClickCounts && typeof count === 'number' && count > 0 && (
-                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/40 text-neutral-300 border border-white/10">
+                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/40 text-text-[var(--ink-3)] border border-white/10">
                     {count}
                   </span>
                 )}
@@ -300,7 +300,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
           <p className="text-xs text-amber-400 font-bold uppercase tracking-wider">
             {title}
           </p>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-[11px] text-[var(--ink-3)] mt-0.5">
             {subtitle || getDefaultSubtitle()}
           </p>
         </div>
@@ -324,10 +324,10 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
 
           const config = PLATFORM_CONFIG[key] || {
             label: key === 'website' ? getWebsiteLabel() : key,
-            colorClass: 'text-slate-300',
-            bgClass: 'bg-slate-800',
-            borderClass: 'border-slate-700',
-            hoverClass: 'hover:bg-slate-700'
+            colorClass: 'text-[var(--ink-3)]',
+            bgClass: 'bg-[var(--surface)]',
+            borderClass: '',
+            hoverClass: 'hover:bg-[var(--surface)]'
           };
           const label = key === 'website' ? getWebsiteLabel() : config.label;
           const IconComp = SocialIcons[key] || Globe;
@@ -340,12 +340,12 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => onPlatformClick?.(key, url)}
-              className={`flex items-center justify-center gap-2.5 p-3 rounded-xl border text-xs font-bold transition-all duration-200 shadow-md group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
+              className={`flex items-center justify-center gap-2.5 p-3 rounded-[var(--r-m)] border text-xs font-bold transition-all duration-200 shadow-md group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
             >
               <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
               <span className={isFullWidth ? "text-sm font-black tracking-wide" : "truncate"}>{label}</span>
               {showClickCounts && typeof count === 'number' && count > 0 && (
-                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-black/40 text-neutral-300 border border-white/10 shrink-0 ml-auto">
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-black/40 text-text-[var(--ink-3)] border border-white/10 shrink-0 ml-auto">
                   {count}
                 </span>
               )}

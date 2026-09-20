@@ -42,12 +42,12 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
   return (
     <ModalPortal isOpen={isOpen} onClose={isCompleted ? onClose : undefined}>
       <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
-        <div className="w-full max-w-lg bg-[#141210] border border-[#f2ca50]/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
+        <div className="w-full max-w-lg bg-[#141210] border border-[var(--acc)]/40 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
           
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-zinc-800 bg-gradient-to-r from-[#1e1c18] to-[#121110] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 border /40 flex items-center justify-center text-amber-300">
                 {isCompleted ? (
                   <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                 ) : (
@@ -68,7 +68,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 text-zinc-400 hover:text-white rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer"
+                className="p-1.5 text-zinc-400 hover:text-white rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -79,7 +79,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
           <div className="p-4 sm:p-5 space-y-3 bg-[#181715]/60 border-b border-zinc-800">
             <div className="flex items-center justify-between text-xs font-mono">
               <span className="text-zinc-300 font-bold">Progreso global</span>
-              <span className="text-[#f2ca50] font-bold">{percentage}% ({isCompleted ? totalCount : currentIndex}/{totalCount})</span>
+              <span className="text-[var(--acc)] font-bold">{percentage}% ({isCompleted ? totalCount : currentIndex}/{totalCount})</span>
             </div>
 
             <div className="w-full h-2.5 bg-zinc-800 rounded-full overflow-hidden border border-zinc-700/60">
@@ -87,7 +87,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
                 className={`h-full transition-all duration-300 rounded-full ${
                   isCompleted 
                     ? 'bg-gradient-to-r from-emerald-500 to-teal-400' 
-                    : 'bg-gradient-to-r from-amber-500 via-[#f2ca50] to-yellow-300'
+                    : 'bg-gradient-to-r from-amber-500 via-[var(--acc)] to-yellow-300'
                 }`}
                 style={{ width: `${Math.min(100, Math.max(0, percentage))}%` }}
               />
@@ -151,7 +151,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
               <button
                 type="button"
                 onClick={onCancel}
-                className="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors cursor-pointer"
+                className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
@@ -160,7 +160,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-[#f2ca50] hover:bg-amber-400 text-black shadow-md transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)] hover:bg-amber-400 text-black shadow-md transition-colors cursor-pointer"
               >
                 Cerrar y ver resultados
               </button>

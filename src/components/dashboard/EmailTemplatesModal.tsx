@@ -17,7 +17,7 @@ export const EMAIL_TEMPLATES = [
     title: '1. Proposal Inicial a Sala de Conciertos (Aforo 200 - 600 pax)',
     type: 'Booking directo',
     icon: Building2,
-    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    badgeColor: 'bg-amber-500/20 text-amber-300 /30',
     subject: 'Propuesta de Concierto - {bandName} en {nombre_sala} (Gira 2026)',
     body: `Hola team de {nombre_sala},
 
@@ -122,19 +122,19 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
-        <div className="bg-[#181716] border border-amber-500/30 rounded-2xl w-full max-w-3xl my-auto max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
+        <div className="bg-[var(--surface)] border /30 rounded-[var(--r-l)] w-full max-w-3xl my-auto max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
         
         {/* Modal Header */}
-        <div className="p-5 bg-[#141312] border-b border-neutral-800 flex items-center justify-between">
+        <div className="p-5 bg-[#141312] border-b  flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 border /40 text-amber-400">
               <FileText className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-base font-bold font-display uppercase tracking-wider text-zinc-100 flex items-center gap-2">
                 Plantillas & Ejemplos Reales de Email
               </h3>
-              <p className="text-xs text-neutral-400 font-mono">
+              <p className="text-xs text-text-[var(--ink-2)] font-mono">
                 Modelos de redacción probados para salas, festivales, medios e intercambios
               </p>
             </div>
@@ -142,7 +142,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 text-neutral-400 hover:text-white rounded-lg hover:bg-neutral-800 cursor-pointer"
+            className="p-1.5 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -160,10 +160,10 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                 <button
                   key={tpl.id}
                   onClick={() => setSelectedTemplate(tpl.id)}
-                  className={`p-3 rounded-xl text-left transition-all border flex flex-col justify-between gap-2 cursor-pointer ${
+                  className={`p-3 rounded-[var(--r-m)] text-left transition-all border flex flex-col justify-between gap-2 cursor-pointer ${
                     isSelected
-                      ? 'bg-amber-500/20 border-amber-500/60 text-amber-300 shadow-md'
-                      : 'bg-neutral-900/80 border-neutral-800 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900'
+                      ? 'bg-amber-500/20 /60 text-amber-300 shadow-md'
+                      : 'bg-bg-[var(--surface)]/80  text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] hover:bg-bg-[var(--surface)]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -179,8 +179,8 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
           </div>
 
           {/* Selected Template Display Box */}
-          <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-4">
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3 border-b border-neutral-800">
+          <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3 border-b ">
               <div>
                 <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold">
                   {currentTpl.type}
@@ -192,7 +192,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
               <button
                 onClick={() => handleCopy(currentTpl.id, `Asunto: ${currentTpl.subject}\n\n${currentTpl.body}`)}
-                className="px-3 py-1.5 rounded-lg bg-amber-500 text-stone-950 font-mono font-bold text-xs hover:bg-amber-400 transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
+                className="px-3 py-1.5 rounded-[var(--r-s)] bg-amber-500 text-stone-950 font-mono font-bold text-xs hover:bg-amber-400 transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
               >
                 {copiedId === currentTpl.id ? (
                   <>
@@ -211,7 +211,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
             {/* Subject preview */}
             <div className="space-y-1">
               <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">Asunto del Correo:</span>
-              <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800 text-xs font-mono font-bold text-amber-300">
+              <div className="p-2 rounded-[var(--r-s)] bg-bg-[var(--surface)] border  text-xs font-mono font-bold text-amber-300">
                 {currentTpl.subject.replace(/{bandName}/g, bandName)}
               </div>
             </div>
@@ -219,13 +219,13 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
             {/* Body preview */}
             <div className="space-y-1">
               <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">Cuerpo del Mensaje:</span>
-              <pre className="p-4 rounded-lg bg-neutral-900/90 border border-neutral-800 text-xs font-sans text-neutral-200 whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">
+              <pre className="p-4 rounded-[var(--r-s)] bg-bg-[var(--surface)]/90 border  text-xs font-sans text-bg-[var(--sunken)] whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">
                 {currentTpl.body.replace(/{bandName}/g, bandName)}
               </pre>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-[var(--r-m)] bg-amber-500/10 border /20 text-amber-300 text-xs flex items-center gap-2">
             <Sparkles className="w-4 h-4 shrink-0 text-amber-400" />
             <span>
               <strong>Consejo de Agentes AI:</strong> El Agente Redactor utiliza este mismo estilo directo y conciso al generar propuestas desde el panel de Booking.
@@ -235,10 +235,10 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 bg-[#141312] border-t border-neutral-800 flex justify-end">
+        <div className="p-4 bg-[#141312] border-t  flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-neutral-800 text-zinc-200 font-mono text-xs font-bold hover:bg-neutral-700 transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 text-zinc-200 font-mono text-xs font-bold hover:bg-neutral-700 transition-colors cursor-pointer"
           >
             Cerrar
           </button>

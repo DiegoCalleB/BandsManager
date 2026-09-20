@@ -76,14 +76,14 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
   if (!activeCampaign && !isEditing) {
     return (
-      <div className="mb-6 p-4 border border-dashed border-gray-300 rounded-xl bg-gray-50 flex items-center justify-between text-gray-500">
+      <div className="mb-6 p-4 border border-dashed  rounded-[var(--r-m)] bg-gray-50 flex items-center justify-between text-gray-500">
         <div className="flex items-center gap-2">
           <Target className="w-5 h-5 text-gray-400" />
           <span>No hay ninguna campaña de booking activa.</span>
         </div>
         <button 
           onClick={() => setIsEditing(true)}
-          className="flex items-center gap-1 text-sm font-medium text-black hover:text-gray-700 bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm"
+          className="flex items-center gap-1 text-sm font-medium text-black hover:text-gray-700 bg-white px-3 py-1.5 rounded-[var(--r-s)] border  shadow-sm"
         >
           <Plus className="w-4 h-4" /> Configurar Campaña Objetivo
         </button>
@@ -93,7 +93,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
   if (isEditing) {
     return (
-      <div className="mb-6 p-5 border border-black rounded-xl bg-white shadow-sm">
+      <div className="mb-6 p-5 border border-black rounded-[var(--r-m)] bg-white shadow-sm">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-semibold text-lg flex items-center gap-2">
             <Target className="w-5 h-5" /> Configurar Campaña
@@ -110,7 +110,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
               type="text" 
               value={campaignForm.name} 
               onChange={e => setCampaignForm({...campaignForm, name: e.target.value})}
-              className="w-full text-sm border-gray-300 rounded-lg focus:ring-black focus:border-black"
+              className="w-full text-sm  rounded-[var(--r-s)] focus:ring-black focus:border-black"
             />
           </div>
           <div>
@@ -119,7 +119,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
               type="text" 
               value={campaignForm.targetCities?.join(', ')} 
               onChange={e => setCampaignForm({...campaignForm, targetCities: e.target.value.split(',').map(s => s.trim())})}
-              className="w-full text-sm border-gray-300 rounded-lg focus:ring-black focus:border-black"
+              className="w-full text-sm  rounded-[var(--r-s)] focus:ring-black focus:border-black"
               placeholder="Ej: Madrid, Barcelona"
             />
           </div>
@@ -130,14 +130,14 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
                 type="number" 
                 value={campaignForm.minCapacity} 
                 onChange={e => setCampaignForm({...campaignForm, minCapacity: parseInt(e.target.value) || 0})}
-                className="w-full text-sm border-gray-300 rounded-lg focus:ring-black focus:border-black"
+                className="w-full text-sm  rounded-[var(--r-s)] focus:ring-black focus:border-black"
               />
               <span className="text-gray-400">-</span>
               <input 
                 type="number" 
                 value={campaignForm.maxCapacity} 
                 onChange={e => setCampaignForm({...campaignForm, maxCapacity: parseInt(e.target.value) || 0})}
-                className="w-full text-sm border-gray-300 rounded-lg focus:ring-black focus:border-black"
+                className="w-full text-sm  rounded-[var(--r-s)] focus:ring-black focus:border-black"
               />
             </div>
           </div>
@@ -146,7 +146,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
             <label className="block text-xs text-gray-500 font-medium mb-2 uppercase tracking-wider">Fechas Clave del Concierto</label>
             <div className="flex gap-2 flex-wrap items-center">
               {campaignForm.targetDates?.map((date, idx) => (
-                <div key={idx} className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200/80 px-2.5 py-1.5 rounded-lg border border-gray-200 transition-colors">
+                <div key={idx} className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200/80 px-2.5 py-1.5 rounded-[var(--r-s)] border  transition-colors">
                   <Calendar className="w-3.5 h-3.5 text-gray-500 shrink-0" />
                   <input
                     type="date"
@@ -175,7 +175,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
                   </button>
                 </div>
               ))}
-              <div className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100/80 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-200 border-dashed transition-colors">
+              <div className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100/80 text-blue-700 px-3 py-1.5 rounded-[var(--r-s)] border border-blue-200 border-dashed transition-colors">
                 <Plus className="w-3.5 h-3.5 shrink-0" />
                 <span className="text-xs font-semibold shrink-0">Añadir Fecha:</span>
                 <input 
@@ -208,7 +208,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
                   type="date"
                   value={campaignForm.campaignStartDate || ''}
                   onChange={e => setCampaignForm({...campaignForm, campaignStartDate: e.target.value})}
-                  className="w-full text-sm border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full text-sm  rounded-[var(--r-s)] focus:ring-amber-500 focus:"
                 />
               </div>
               <div>
@@ -217,23 +217,23 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
                   type="date"
                   value={campaignForm.campaignEndDate || ''}
                   onChange={e => setCampaignForm({...campaignForm, campaignEndDate: e.target.value})}
-                  className="w-full text-sm border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full text-sm  rounded-[var(--r-s)] focus:ring-amber-500 focus:"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-100">
+        <div className="flex justify-end gap-2 mt-4 pt-4 border-t ">
           <button 
             onClick={() => setIsEditing(false)}
-            className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+            className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-[var(--r-s)] font-medium"
           >
             Cancelar
           </button>
           <button 
             onClick={handleSave}
-            className="px-4 py-2 text-sm bg-black text-white hover:bg-gray-800 rounded-lg font-medium flex items-center gap-2"
+            className="px-4 py-2 text-sm bg-black text-white hover:bg-gray-800 rounded-[var(--r-s)] font-medium flex items-center gap-2"
           >
             <Check className="w-4 h-4" /> Guardar y Activar
           </button>
@@ -243,7 +243,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
   }
 
   return (
-    <div className="mb-6 bg-black text-white rounded-xl overflow-hidden shadow-lg border border-gray-800 relative">
+    <div className="mb-6 bg-black text-white rounded-[var(--r-m)] overflow-hidden shadow-lg border  relative">
       <div className="absolute top-0 right-0 p-4">
         <button 
           onClick={handleClear}
@@ -261,15 +261,15 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
         <p className="text-gray-400 text-sm mb-4">El Scout IA y el generador de propuestas están configurados para estos objetivos.</p>
         
         <div className="flex flex-wrap gap-4">
-          <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg text-sm">
+          <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
             <MapPin className="w-4 h-4 text-blue-300" />
             <span>{activeCampaign?.targetCities.join(', ')}</span>
           </div>
-          <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg text-sm">
+          <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
             <Users className="w-4 h-4 text-orange-300" />
             <span>{activeCampaign?.minCapacity} - {activeCampaign?.maxCapacity} pax</span>
           </div>
-          <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg text-sm">
+          <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
             <Calendar className="w-4 h-4 text-pink-300" />
             <span>{activeCampaign?.targetDates?.length || 0} fechas ({activeCampaign?.targetDatesText})</span>
           </div>

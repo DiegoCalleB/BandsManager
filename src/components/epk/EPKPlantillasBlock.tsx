@@ -125,17 +125,17 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
     >
       <div className="space-y-4 sm:space-y-8">
       {/* SECCIÓN 1: SELECCIÓN DE PLANTILLAS VISUALES */}
-      <div className="bg-[#181716] border border-stone-800 rounded-xl sm:rounded-2xl p-3.5 sm:p-6 space-y-3 sm:space-y-4">
+      <div className="bg-[var(--surface)] border border-stone-800 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-stone-800/80">
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400 shrink-0">
               <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-bold text-white font-mono uppercase tracking-wider">
                 1. Elige la Plantilla Visual del Dossier
               </h4>
-              <p className="hidden sm:block text-xs text-slate-400">
+              <p className="hidden sm:block text-xs text-[var(--ink-3)]">
                 Personaliza los colores, tipografía, estilo de tarjetas y fondo para que coincida con el sonido de tu banda.
               </p>
             </div>
@@ -164,14 +164,14 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                 key={tpl.id}
                 type="button"
                 onClick={() => handleSelectTemplate(tpl.id)}
-                className={`text-left rounded-xl sm:rounded-2xl border transition relative overflow-hidden flex flex-col justify-between p-2.5 sm:p-4 cursor-pointer ${
+                className={`text-left rounded-[var(--r-m)] sm:rounded-[var(--r-l)] border transition relative overflow-hidden flex flex-col justify-between p-2.5 sm:p-4 cursor-pointer ${
                   isSelected
-                    ? 'bg-[#221f1c] border-amber-500 ring-2 ring-amber-500/20 shadow-lg'
+                    ? 'bg-[#221f1c]  ring-2 ring-amber-500/20 shadow-lg'
                     : 'bg-stone-900/70 border-stone-800 hover:border-stone-700 hover:bg-stone-900'
                 }`}
               >
                 {/* PREVIEW MINIATURA GRÁFICA */}
-                <div className={`w-full h-16 sm:h-24 rounded-lg sm:rounded-xl mb-2 sm:mb-3 p-2 sm:p-2.5 flex flex-col justify-between border ${tpl.preview.bg} ${tpl.preview.border}`}>
+                <div className={`w-full h-16 sm:h-24 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] mb-2 sm:mb-3 p-2 sm:p-2.5 flex flex-col justify-between border ${tpl.preview.bg} ${tpl.preview.border}`}>
                   <div className="flex items-center justify-between">
                     <span className={`text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-md ${tpl.preview.pill}`}>
                       {tpl.badge}
@@ -202,7 +202,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       </span>
                     )}
                   </div>
-                  <p className="hidden sm:block text-[11px] text-slate-400 leading-snug">
+                  <p className="hidden sm:block text-[11px] text-[var(--ink-3)] leading-snug">
                     {tpl.description}
                   </p>
                   <p className="text-[10px] text-stone-400 sm:text-stone-500 truncate pt-0.5 sm:pt-1">
@@ -213,9 +213,9 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                 {/* BOTÓN DE ESTADO */}
                 <div className="pt-2 sm:pt-3 mt-1.5 sm:mt-2 border-t border-stone-800/60">
                   <span
-                    className={`block w-full py-0.5 sm:py-1 text-center rounded-md sm:rounded-lg text-[10px] sm:text-[11px] font-bold font-mono transition ${
+                    className={`block w-full py-0.5 sm:py-1 text-center rounded-md sm:rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-bold font-mono transition ${
                       isSelected
-                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                        ? 'bg-amber-500/20 text-amber-300 border /30'
                         : 'bg-stone-800 text-stone-400 hover:text-stone-200'
                     }`}
                   >
@@ -229,17 +229,17 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
       </div>
 
       {/* SECCIÓN 2: ORDEN Y VISIBILIDAD DE SECCIONES */}
-      <div className="bg-[#181716] border border-stone-800 rounded-xl sm:rounded-2xl p-3.5 sm:p-6 space-y-3 sm:space-y-4">
+      <div className="bg-[var(--surface)] border border-stone-800 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-stone-800/80">
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400 shrink-0">
               <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-bold text-white font-mono uppercase tracking-wider">
                 2. Organiza el Orden de las Secciones
               </h4>
-              <p className="hidden sm:block text-xs text-slate-400">
+              <p className="hidden sm:block text-xs text-[var(--ink-3)]">
                 Usa las flechas para subir o bajar cualquier sección. Puedes ocultar las que aún no tengas listas.
               </p>
             </div>
@@ -250,7 +250,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
             <button
               type="button"
               onClick={handleResetDefaultOrder}
-              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-stone-300 rounded-lg text-[10px] sm:text-[11px] font-semibold border border-stone-800 flex items-center gap-1 transition"
+              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-stone-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border border-stone-800 flex items-center gap-1 transition"
               title="Restablecer el orden estándar de fábrica"
             >
               <RotateCcw className="w-3 h-3 text-stone-400" />
@@ -259,7 +259,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
             <button
               type="button"
               onClick={handlePresetMusicFirst}
-              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-sky-300 rounded-lg text-[10px] sm:text-[11px] font-semibold border border-stone-800 flex items-center gap-1 transition"
+              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-sky-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border border-stone-800 flex items-center gap-1 transition"
               title="Poner la música, vídeos y reproductor al principio"
             >
               <Music className="w-3 h-3 text-sky-400" />
@@ -268,7 +268,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
             <button
               type="button"
               onClick={handlePresetPromoterFirst}
-              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-amber-300 rounded-lg text-[10px] sm:text-[11px] font-semibold border border-stone-800 flex items-center gap-1 transition"
+              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-amber-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border border-stone-800 flex items-center gap-1 transition"
               title="Poner datos de contratación, contacto y requisitos primero"
             >
               <Briefcase className="w-3 h-3 text-amber-400" />
@@ -287,7 +287,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
             return (
               <div
                 key={item.id}
-                className={`flex items-center justify-between gap-3 p-3 rounded-xl border transition ${
+                className={`flex items-center justify-between gap-3 p-3 rounded-[var(--r-m)] border transition ${
                   item.isVisible
                     ? 'bg-[#151413] border-stone-800/90 text-stone-200'
                     : 'bg-stone-950/60 border-stone-900 text-stone-500 opacity-60'
@@ -299,9 +299,9 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                     #{index + 1}
                   </span>
                   <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border ${
+                    className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center shrink-0 border ${
                       item.isVisible
-                        ? 'bg-amber-500/10 border-amber-500/20 text-amber-400'
+                        ? 'bg-amber-500/10 /20 text-amber-400'
                         : 'bg-stone-900 border-stone-800 text-stone-600'
                     }`}
                   >
@@ -321,7 +321,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-slate-400 truncate hidden sm:block">
+                    <p className="text-[11px] text-[var(--ink-3)] truncate hidden sm:block">
                       {item.meta.subtitle}
                     </p>
                   </div>
@@ -333,7 +333,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                   <button
                     type="button"
                     onClick={() => handleToggleVisibility(item.id)}
-                    className={`p-1.5 rounded-lg border text-xs transition cursor-pointer ${
+                    className={`p-1.5 rounded-[var(--r-s)] border text-xs transition cursor-pointer ${
                       item.isVisible
                         ? 'bg-stone-900 hover:bg-stone-800 text-stone-300 border-stone-800'
                         : 'bg-rose-950/40 text-rose-400 border-rose-900/60 hover:bg-rose-900/60'
@@ -348,7 +348,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                     type="button"
                     onClick={() => handleMoveSection(index, 'up')}
                     disabled={isFirst}
-                    className={`p-1.5 rounded-lg border text-xs transition ${
+                    className={`p-1.5 rounded-[var(--r-s)] border text-xs transition ${
                       isFirst
                         ? 'opacity-30 cursor-not-allowed bg-stone-950 border-stone-900 text-stone-600'
                         : 'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-white border-stone-800 cursor-pointer'
@@ -363,7 +363,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                     type="button"
                     onClick={() => handleMoveSection(index, 'down')}
                     disabled={isLast}
-                    className={`p-1.5 rounded-lg border text-xs transition ${
+                    className={`p-1.5 rounded-[var(--r-s)] border text-xs transition ${
                       isLast
                         ? 'opacity-30 cursor-not-allowed bg-stone-950 border-stone-900 text-stone-600'
                         : 'bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-white border-stone-800 cursor-pointer'

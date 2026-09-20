@@ -77,14 +77,14 @@ export function EnsayoCronometro({
 
   if (isCompact) {
     return (
-      <div className="flex items-center gap-2 bg-[#141413] border border-[#262522] rounded-xl px-3 py-1.5 shadow-sm">
-        <Clock className={`w-3.5 h-3.5 ${isActive ? 'text-amber-400 animate-pulse' : 'text-neutral-400'}`} />
+      <div className="flex items-center gap-2 bg-[#141413] border border-[#262522] rounded-[var(--r-m)] px-3 py-1.5 shadow-sm">
+        <Clock className={`w-3.5 h-3.5 ${isActive ? 'text-amber-400 animate-pulse' : 'text-text-[var(--ink-2)]'}`} />
         <span className={`font-mono font-bold text-sm tracking-wider ${isOvertime ? 'text-rose-400' : 'text-zinc-100'}`}>
           {formatTime(seconds)}
         </span>
         <button
           onClick={toggleTimer}
-          className={`p-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+          className={`p-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
             isActive
               ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
               : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30'
@@ -98,7 +98,7 @@ export function EnsayoCronometro({
   }
 
   return (
-    <div className="p-4 rounded-2xl bg-gradient-to-br from-[#181716] to-[#121110] border border-[#2a2825] shadow-lg relative overflow-hidden">
+    <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[#121110] border border-[#2a2825] shadow-lg relative overflow-hidden">
       {/* Background soft glow when running */}
       {isActive && (
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -106,14 +106,14 @@ export function EnsayoCronometro({
 
       <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
-          <div className={`p-1.5 rounded-lg ${isActive ? 'bg-amber-400/15 text-amber-400' : 'bg-neutral-800 text-neutral-400'}`}>
+          <div className={`p-1.5 rounded-[var(--r-s)] ${isActive ? 'bg-amber-400/15 text-amber-400' : 'bg-neutral-800 text-text-[var(--ink-2)]'}`}>
             <Clock className={`w-4 h-4 ${isActive ? 'animate-pulse' : ''}`} />
           </div>
           <div>
             <h4 className="text-xs font-mono font-bold text-zinc-200 uppercase tracking-wider">
               Cronómetro de Ensayo
             </h4>
-            <p className="text-[10px] font-mono text-neutral-400">
+            <p className="text-[10px] font-mono text-text-[var(--ink-2)]">
               Objetivo: {totalEstimatedMin} min planificados
             </p>
           </div>
@@ -143,10 +143,10 @@ export function EnsayoCronometro({
         <div className="flex items-center gap-1.5">
           <button
             onClick={toggleTimer}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer shadow-sm active:scale-95 ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shadow-sm active:scale-95 ${
               isActive
-                ? 'bg-amber-500 text-neutral-950 hover:bg-amber-400 shadow-amber-500/20'
-                : 'bg-emerald-500 text-neutral-950 hover:bg-emerald-400 shadow-emerald-500/20'
+                ? 'bg-amber-500 text-bg-[var(--surface)] hover:bg-amber-400 shadow-amber-500/20'
+                : 'bg-emerald-500 text-bg-[var(--surface)] hover:bg-emerald-400 shadow-emerald-500/20'
             }`}
           >
             {isActive ? (
@@ -164,7 +164,7 @@ export function EnsayoCronometro({
 
           <button
             onClick={resetTimer}
-            className="p-2 rounded-xl text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 transition-colors cursor-pointer border border-[#2a2825]"
+            className="p-2 rounded-[var(--r-m)] text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] hover:bg-neutral-800 transition-colors cursor-pointer border border-[#2a2825]"
             title="Reiniciar cronómetro"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -174,7 +174,7 @@ export function EnsayoCronometro({
 
       {/* Progress Bar */}
       <div className="mt-3">
-        <div className="w-full h-2 rounded-full bg-neutral-900 border border-neutral-800 overflow-hidden">
+        <div className="w-full h-2 rounded-full bg-bg-[var(--surface)] border  overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-300 ${
               isOvertime

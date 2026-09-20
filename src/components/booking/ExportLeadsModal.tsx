@@ -128,11 +128,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-[#181716] border border-amber-500/30 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-6 text-zinc-100 relative">
+      <div className="bg-[var(--surface)] border /30 rounded-[var(--r-l)] max-w-lg w-full p-6 shadow-2xl space-y-6 text-zinc-100 relative">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 border /40 flex items-center justify-center text-amber-400">
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
@@ -142,7 +142,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+            className="p-2 rounded-[var(--r-m)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -158,9 +158,9 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
             <button
               type="button"
               onClick={() => setExportScope('filtered')}
-              className={`p-3 rounded-xl border text-left flex items-start gap-3 transition cursor-pointer ${
+              className={`p-3 rounded-[var(--r-m)] border text-left flex items-start gap-3 transition cursor-pointer ${
                 exportScope === 'filtered'
-                  ? 'bg-amber-500/20 border-amber-500/60 text-white'
+                  ? 'bg-amber-500/20 /60 text-white'
                   : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
@@ -182,9 +182,9 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
             <button
               type="button"
               onClick={() => setExportScope('all')}
-              className={`p-3 rounded-xl border text-left flex items-start gap-3 transition cursor-pointer ${
+              className={`p-3 rounded-[var(--r-m)] border text-left flex items-start gap-3 transition cursor-pointer ${
                 exportScope === 'all'
-                  ? 'bg-amber-500/20 border-amber-500/60 text-white'
+                  ? 'bg-amber-500/20 /60 text-white'
                   : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
@@ -207,9 +207,9 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               <button
                 type="button"
                 onClick={() => setExportScope('selected')}
-                className={`p-3 rounded-xl border text-left flex items-start gap-3 transition cursor-pointer ${
+                className={`p-3 rounded-[var(--r-m)] border text-left flex items-start gap-3 transition cursor-pointer ${
                   exportScope === 'selected'
-                    ? 'bg-amber-500/20 border-amber-500/60 text-white'
+                    ? 'bg-amber-500/20 /60 text-white'
                     : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
                 }`}
               >
@@ -239,7 +239,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
             <button
               type="button"
               onClick={() => setExportFormat('csv')}
-              className={`p-3 rounded-xl border text-left flex items-center gap-2.5 transition cursor-pointer ${
+              className={`p-3 rounded-[var(--r-m)] border text-left flex items-center gap-2.5 transition cursor-pointer ${
                 exportFormat === 'csv'
                   ? 'bg-emerald-500/20 border-emerald-500/60 text-emerald-200 font-bold'
                   : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
@@ -255,7 +255,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
             <button
               type="button"
               onClick={() => setExportFormat('json')}
-              className={`p-3 rounded-xl border text-left flex items-center gap-2.5 transition cursor-pointer ${
+              className={`p-3 rounded-[var(--r-m)] border text-left flex items-center gap-2.5 transition cursor-pointer ${
                 exportFormat === 'json'
                   ? 'bg-sky-500/20 border-sky-500/60 text-sky-200 font-bold'
                   : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
@@ -272,7 +272,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
         {/* 3. CSV Options */}
         {exportFormat === 'csv' && (
-          <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-2">
+          <div className="p-3 rounded-[var(--r-m)] bg-zinc-900/80 border border-zinc-800 space-y-2">
             <span className="text-[11px] font-bold text-zinc-300 block">Campos adicionales en CSV:</span>
             <div className="flex items-center gap-4 text-xs">
               <label className="flex items-center gap-2 cursor-pointer text-zinc-300">
@@ -303,7 +303,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition cursor-pointer"
+            className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition cursor-pointer"
           >
             Cancelar
           </button>
@@ -311,7 +311,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
             type="button"
             onClick={handleExport}
             disabled={targetCount === 0}
-            className="px-5 py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-zinc-950 flex items-center gap-2 shadow-lg shadow-amber-500/10 transition cursor-pointer disabled:opacity-50"
+            className="px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-amber-500 hover:bg-amber-400 text-zinc-950 flex items-center gap-2 shadow-lg shadow-amber-500/10 transition cursor-pointer disabled:opacity-50"
           >
             <Download className="w-4 h-4" />
             <span>Descargar {targetCount} {targetCount === 1 ? 'contacto' : 'contactos'}</span>

@@ -231,29 +231,29 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
-      <div className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto">
+      <div className="bg-bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto border  shadow-2xl pointer-events-auto">
         {/* Header + Mapa de Energía en un único bloque sticky, mismo patrón que el Análisis IA —
             así el gráfico se ve siempre arriba mientras se hace scroll por las acciones del plan. */}
-        <div className="sticky top-0 z-10 bg-neutral-900">
-          <div className="border-b border-neutral-700 p-3 flex justify-between items-center">
+        <div className="sticky top-0 z-10 bg-bg-[var(--surface)]">
+          <div className="border-b  p-3 flex justify-between items-center">
             <div className="flex items-center gap-2.5">
               <Wand2 className="w-5 h-5 text-emerald-400" />
               <div>
                 <h2 className="text-base font-bold">Setlist Perfecto</h2>
-                {setlistName && <p className="text-xs text-neutral-400">{setlistName}</p>}
+                {setlistName && <p className="text-xs text-text-[var(--ink-2)]">{setlistName}</p>}
               </div>
             </div>
             <div className="flex items-center gap-1.5">
               {canUndo && (
                 <button
                   onClick={onUndo}
-                  className="px-2 py-1 rounded-lg bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+                  className="px-2 py-1 rounded-[var(--r-s)] bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
                   title="Deshacer el último cambio del setlist"
                 >
                   ↩️ Deshacer
                 </button>
               )}
-              <button onClick={onClose} className="p-2 hover:bg-neutral-800 rounded-lg transition">
+              <button onClick={onClose} className="p-2 hover:bg-neutral-800 rounded-[var(--r-s)] transition">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -262,7 +262,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
           {/* Mapa de Energía integrado: arrastrar un punto reordena el setlist directamente, igual
               que en el gráfico grande de fuera. */}
           {hasChart && (
-            <div className="border-b border-neutral-700 p-3">
+            <div className="border-b  p-3">
               <EnergyChart
                 setlistKey="perfect-setlist"
                 chartData={chartData!}
@@ -281,7 +281,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
           {!plan && !loading && !error && (
             <div className="text-center py-8">
               <Wand2 className="w-12 h-12 text-emerald-400/50 mx-auto mb-4" />
-              <p className="text-neutral-300 mb-3">
+              <p className="text-text-[var(--ink-3)] mb-3">
                 Deja que la IA revise este setlist Y el resto de tu catálogo, y te proponga un plan
                 de cambios: reordenar canciones, quitar las que no encajen, añadir otras del
                 repertorio que sí, y sugerir bloques (presentación, pausa, bis...) donde falten.
@@ -291,7 +291,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
               </p>
               <button
                 onClick={() => onGenerate()}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition font-medium"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-[var(--r-s)] transition font-medium"
               >
                 Generar Plan
               </button>
@@ -301,12 +301,12 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
           {loading && (
             <div className="text-center py-12">
               <Loader className="w-8 h-8 animate-spin text-emerald-400 mx-auto mb-4" />
-              <p className="text-neutral-400">Analizando setlist y catálogo...</p>
+              <p className="text-text-[var(--ink-2)]">Analizando setlist y catálogo...</p>
             </div>
           )}
 
           {error && (
-            <div className="bg-red-900/20 border border-red-700 rounded-lg p-4 flex gap-3">
+            <div className="bg-red-900/20 border border-red-700 rounded-[var(--r-s)] p-4 flex gap-3">
               <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-red-200">Error</p>
@@ -320,13 +320,13 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
 
           {plan && liveActions && (
             <div className="space-y-4">
-              <div className="bg-neutral-800 rounded-lg p-3 border border-neutral-700">
-                <p className="text-xs text-neutral-400 mb-1.5">🪄 Resumen del plan</p>
-                <p className="text-sm text-neutral-200">{plan.summary}</p>
+              <div className="bg-neutral-800 rounded-[var(--r-s)] p-3 border ">
+                <p className="text-xs text-text-[var(--ink-2)] mb-1.5">🪄 Resumen del plan</p>
+                <p className="text-sm text-bg-[var(--sunken)]">{plan.summary}</p>
               </div>
 
               {liveActions.length === 0 && (
-                <p className="text-sm text-neutral-400 text-center py-4">
+                <p className="text-sm text-text-[var(--ink-2)] text-center py-4">
                   Este setlist ya está bien construido — no hay cambios que proponer ahora mismo.
                 </p>
               )}
@@ -340,11 +340,11 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                   const isInvalid = invalidActionIndices.has(idx);
 
                   return (
-                    <div key={idx} className={`rounded-lg p-3 border flex items-start gap-2.5 ${isInvalid ? 'bg-neutral-900 border-neutral-800 opacity-50' : 'bg-neutral-800 border-neutral-700'}`}>
+                    <div key={idx} className={`rounded-[var(--r-s)] p-3 border flex items-start gap-2.5 ${isInvalid ? 'bg-bg-[var(--surface)]  opacity-50' : 'bg-neutral-800 '}`}>
                       <span className="text-sm mt-0.5">{icon}</span>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-neutral-100">{label}</p>
-                        <p className="text-xs text-neutral-400 mt-0.5">{action.reason}</p>
+                        <p className="text-sm font-medium text-bg-[var(--sunken)]">{label}</p>
+                        <p className="text-xs text-text-[var(--ink-2)] mt-0.5">{action.reason}</p>
                       </div>
                       {isInvalid ? (
                         <span className="shrink-0 text-[10px] text-neutral-500 font-mono font-medium whitespace-nowrap" title="Un cambio anterior afectó al item que esta acción necesitaba">
@@ -383,7 +383,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
           <div className="px-4 pb-4 space-y-2.5">
             {/* Feedback para la próxima generación — mismo patrón que ya entrena los Reels y los
                 pitches de booking: valorar + comentar, y elegir si se recuerda para siempre. */}
-            <div className="p-2.5 rounded-xl border border-neutral-800 bg-neutral-900/60 space-y-2">
+            <div className="p-2.5 rounded-[var(--r-m)] border  bg-bg-[var(--surface)]/60 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-center gap-1">
                   <span className="text-[9px] font-mono uppercase tracking-wider text-neutral-500">Intensidad</span>
@@ -419,15 +419,15 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                 value={comentarioFeedback}
                 onChange={(e) => setComentarioFeedback(e.target.value)}
                 placeholder="Ej: 'Evita más de una balada seguida', 'el bis siempre un tema conocido'..."
-                className="w-full p-2 bg-black/60 rounded-lg border border-neutral-700/80 text-[11px] text-neutral-200 placeholder-neutral-500 font-sans focus:outline-none focus:border-amber-400"
+                className="w-full p-2 bg-black/60 rounded-[var(--r-s)] border /80 text-[11px] text-bg-[var(--sunken)] placeholder-neutral-500 font-sans focus:outline-none focus:"
               />
               <div className="flex items-center gap-1.5 text-[10px] font-mono">
                 <span className="text-neutral-500 uppercase tracking-wider">Alcance:</span>
                 <button
                   type="button"
                   onClick={() => setFeedbackScope('este_setlist')}
-                  className={`px-2 py-1 rounded-lg cursor-pointer transition-all ${
-                    feedbackScope === 'este_setlist' ? 'bg-neutral-700 text-white font-bold' : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
+                    feedbackScope === 'este_setlist' ? 'bg-neutral-700 text-white font-bold' : 'bg-transparent text-neutral-500 hover:text-text-[var(--ink-3)]'
                   }`}
                 >
                   Solo este plan
@@ -435,8 +435,8 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                 <button
                   type="button"
                   onClick={() => setFeedbackScope('global')}
-                  className={`px-2 py-1 rounded-lg cursor-pointer transition-all flex items-center gap-1 ${
-                    feedbackScope === 'global' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all flex items-center gap-1 ${
+                    feedbackScope === 'global' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'bg-transparent text-neutral-500 hover:text-text-[var(--ink-3)]'
                   }`}
                   title="La IA recordará esta corrección también para futuros setlists de la banda"
                 >
@@ -449,20 +449,20 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
               <button
                 onClick={() => handleGenerateWithFeedback()}
                 title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
               >
                 🔄 Regenerar
               </button>
               <button
                 onClick={() => handleGenerateWithFeedback(true)}
                 title="Crea una copia nueva desde cero en vez de reutilizar la actual"
-                className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 px-4 py-2 rounded-lg transition font-medium text-sm"
+                className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-bg-[var(--sunken)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
               >
                 🆕 Nueva copia
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
+                className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
               >
                 Cerrar
               </button>

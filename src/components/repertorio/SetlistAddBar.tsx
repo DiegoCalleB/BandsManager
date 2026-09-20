@@ -88,7 +88,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
     <div className="space-y-1.5 pt-0.5">
       {/* Insertion Mode Indicator */}
       {selectedSetlistItemId && (
-        <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-300 text-xs">
+        <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-[var(--r-s)] bg-amber-500/10 border /25 text-amber-300 text-xs">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="shrink-0 text-amber-400 font-semibold">📌 Insertando debajo de:</span>
             <span className="truncate font-medium text-white">"{selectedItemLabel}"</span>
@@ -111,7 +111,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
           <button
             type="button"
             onClick={() => setIsAddSongsModalOpen(true)}
-            className="px-3 py-1.5 text-xs rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs shrink-0"
+            className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs shrink-0"
             title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
           >
             <ListPlus className="w-3.5 h-3.5 text-emerald-400" />
@@ -127,8 +127,8 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
               }
             }}
             defaultValue=""
-            className={`text-xs py-1.5 px-2.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500/50 cursor-pointer border font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${
-              isStitchLight ? 'bg-white text-slate-800 border-slate-200 hover:border-slate-300' : 'bg-slate-900/80 text-slate-200 border-slate-700/80 hover:border-slate-600'
+            className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-indigo-500/50 cursor-pointer border font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${
+              isStitchLight ? 'bg-white text-[var(--ink)]  hover:' : 'bg-[var(--surface)]/80 text-[var(--ink-3)] /80 hover:'
             }`}
           >
             <option value="">+ Añadir 1 Tema...</option>
@@ -151,7 +151,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
             <button
               type="button"
               onClick={() => handleAddItemToSetlist(undefined, 'bloque_header', '⚡ Bloque Nuevo')}
-              className="px-2.5 py-1.5 text-xs rounded-lg bg-indigo-500/10 text-indigo-300 border border-indigo-500/25 hover:bg-indigo-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
+              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-indigo-500/10 text-indigo-300 border border-indigo-500/25 hover:bg-indigo-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
               title="Añadir un encabezado de bloque para estructurar el concierto"
             >
               <span>⚡</span>
@@ -162,7 +162,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
             <button
               type="button"
               onClick={() => setShowEventMenu(v => !v)}
-              className="px-2.5 py-1.5 text-xs rounded-lg bg-sky-500/10 text-sky-300 border border-sky-500/25 hover:bg-sky-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
+              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 border border-sky-500/25 hover:bg-sky-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
               title="Añadir saludos, presentaciones, descansos, bises o eventos personalizados"
             >
               <Zap className="w-3.5 h-3.5 text-sky-400" />
@@ -175,10 +175,10 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
           {showEventMenu && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowEventMenu(false)} />
-              <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-xl border border-slate-700/80 bg-slate-900/95 backdrop-blur-md shadow-2xl p-2 space-y-2 text-xs">
+              <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] border /80 bg-[var(--surface)]/95 backdrop-blur-md shadow-2xl p-2 space-y-2 text-xs">
                 {/* Standard Preset Events */}
                 <div>
-                  <div className="text-[10px] uppercase tracking-wider text-slate-400 px-2 py-1 font-semibold">
+                  <div className="text-[10px] uppercase tracking-wider text-[var(--ink-3)] px-2 py-1 font-semibold">
                     Eventos de Show
                   </div>
                   <div className="grid grid-cols-1 gap-0.5">
@@ -190,20 +190,20 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                           setShowEventMenu(false);
                           handleAddItemToSetlist(undefined, ev.type);
                         }}
-                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-200 hover:text-white transition flex items-center justify-between cursor-pointer"
+                        className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-white transition flex items-center justify-between cursor-pointer"
                       >
                         <span className="flex items-center gap-2 font-medium">
                           <span>{ev.icon}</span>
                           <span>{ev.label}</span>
                         </span>
-                        <span className="text-[10px] text-slate-500">Añadir</span>
+                        <span className="text-[10px] text-[var(--ink-2)]">Añadir</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Custom Event Trigger */}
-                <div className="pt-1 border-t border-slate-800">
+                <div className="pt-1 border-t ">
                   <button
                     type="button"
                     onClick={() => {
@@ -211,7 +211,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                       setEditingShowItem(null);
                       setShowShowItemModal(true);
                     }}
-                    className="w-full text-left px-2.5 py-1.5 rounded-lg bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 font-medium transition flex items-center gap-2 cursor-pointer"
+                    className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 font-medium transition flex items-center gap-2 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>+ Evento a Medida (Nombre, Audio, Minutos)...</span>
@@ -219,7 +219,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                 </div>
 
                 {/* Custom Band Shortcuts */}
-                <div className="pt-1 border-t border-slate-800">
+                <div className="pt-1 border-t ">
                   <div className="flex items-center justify-between px-2 py-1">
                     <span className="text-[10px] uppercase tracking-wider text-teal-400 font-semibold">
                       Accesos Rápidos de la Banda
@@ -237,14 +237,14 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
 
                   {/* New Shortcut Inline Creator */}
                   {isAddingShortcut && (
-                    <div className="p-2 rounded-lg bg-slate-800/90 border border-slate-700 space-y-2 mb-1.5">
+                    <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/90 border  space-y-2 mb-1.5">
                       <div className="flex items-center gap-1.5">
                         <input
                           value={newShortcutIcon}
                           onChange={(e) => setNewShortcutIcon(e.target.value)}
                           maxLength={2}
                           placeholder="⭐"
-                          className="w-8 bg-slate-900 border border-slate-700 rounded-md p-1 text-center text-xs focus:outline-none"
+                          className="w-8 bg-[var(--surface)] border  rounded-md p-1 text-center text-xs focus:outline-none"
                         />
                         <input
                           value={newShortcutLabel}
@@ -256,18 +256,18 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                             if (e.key === 'Enter') handleCreateShortcut();
                             if (e.key === 'Escape') setIsAddingShortcut(false);
                           }}
-                          className="flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs focus:outline-none"
+                          className="flex-1 min-w-0 bg-[var(--surface)] border  rounded-md px-2 py-1 text-xs focus:outline-none"
                         />
                       </div>
                       <div className="flex items-center justify-between gap-2 pt-0.5">
-                        <div className="flex items-center gap-1 text-xs text-slate-400">
+                        <div className="flex items-center gap-1 text-xs text-[var(--ink-3)]">
                           <span>Duración:</span>
                           <input
                             type="number"
                             min={0}
                             value={newShortcutMinutes}
                             onChange={(e) => setNewShortcutMinutes(Math.max(0, parseInt(e.target.value, 10) || 0))}
-                            className="w-10 bg-slate-900 border border-slate-700 rounded text-center text-xs py-0.5 focus:outline-none"
+                            className="w-10 bg-[var(--surface)] border  rounded text-center text-xs py-0.5 focus:outline-none"
                           />
                           <span>min</span>
                         </div>
@@ -283,7 +283,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                           <button
                             type="button"
                             onClick={() => setIsAddingShortcut(false)}
-                            className="px-2 py-1 text-slate-400 hover:text-slate-200 text-xs cursor-pointer"
+                            className="px-2 py-1 text-[var(--ink-3)] hover:text-[var(--ink-3)] text-xs cursor-pointer"
                           >
                             Cancelar
                           </button>
@@ -298,7 +298,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                       {customShortcuts.map(sc => (
                         <div
                           key={sc.id}
-                          className="group/sc relative inline-flex items-center rounded-lg bg-teal-500/10 text-teal-300 border border-teal-500/20 text-xs"
+                          className="group/sc relative inline-flex items-center rounded-[var(--r-s)] bg-teal-500/10 text-teal-300 border border-teal-500/20 text-xs"
                         >
                           <button
                             type="button"
@@ -318,7 +318,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                               e.stopPropagation();
                               handleDeleteShortcut(sc.id);
                             }}
-                            className="px-1.5 py-1 text-slate-500 hover:text-rose-400 transition cursor-pointer"
+                            className="px-1.5 py-1 text-[var(--ink-2)] hover:text-rose-400 transition cursor-pointer"
                             title="Eliminar este acceso rápido"
                           >
                             ×
@@ -328,7 +328,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                     </div>
                   ) : (
                     !isAddingShortcut && (
-                      <p className="text-xs text-slate-500 px-2 py-1 italic">
+                      <p className="text-xs text-[var(--ink-2)] px-2 py-1 italic">
                         Crea botones para eventos recurrentes de tus conciertos.
                       </p>
                     )

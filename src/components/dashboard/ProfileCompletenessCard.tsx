@@ -240,7 +240,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
   const getStatusBadge = () => {
     if (percentage >= 85) return { label: 'Entrenamiento Completo (100% Agéntico)', color: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' };
-    if (percentage >= 50) return { label: 'Entrenamiento Intermedio', color: 'bg-amber-500/15 text-amber-300 border-amber-500/30' };
+    if (percentage >= 50) return { label: 'Entrenamiento Intermedio', color: 'bg-amber-500/15 text-amber-300 /30' };
     return { label: 'Entrenamiento Inicial', color: 'bg-rose-500/15 text-rose-300 border-rose-500/30' };
   };
 
@@ -265,15 +265,15 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
   const badgeInfo = getStatusBadge();
 
   return (
-    <div className={`p-4 sm:p-5 rounded-2xl transition-all border shadow-sm ${
+    <div className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all border shadow-sm ${
       isStitchLight 
-        ? 'bg-white border-slate-200 text-slate-800' 
-        : 'bg-[#181716] border-stone-800 text-zinc-100'
+        ? 'bg-white  text-[var(--ink)]' 
+        : 'bg-[var(--surface)] border-stone-800 text-zinc-100'
     }`}>
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-stone-800/60">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 font-mono font-bold text-sm">
+          <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/10 border /30 text-amber-400 flex items-center justify-center shrink-0 font-mono font-bold text-sm">
             {percentage}%
           </div>
           <div>
@@ -286,7 +286,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
                 {badgeInfo.label}
               </span>
             </div>
-            <p className="text-[11px] text-neutral-400 mt-0.5">
+            <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5">
               {completedPillarsCount} de {pillars.length} factores configurados para {bandName}.
             </p>
           </div>
@@ -296,7 +296,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
           {onOpenAutonomyModal && (
             <button
               onClick={() => onOpenAutonomyModal()}
-              className="px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+              className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
             >
               <Sliders className="w-3.5 h-3.5 text-purple-400" />
               <span className="hidden xs:inline">Autonomía & Caché</span>
@@ -305,15 +305,15 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
           <button
             onClick={() => setShowAuditModal(true)}
-            className="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-neutral-300 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+            className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-stone-800 hover:bg-stone-700 text-text-[var(--ink-3)] text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-neutral-400" />
+            <HelpCircle className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
             <span>Info</span>
           </button>
           
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-400 text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+            className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-stone-800 hover:bg-stone-700 text-amber-400 text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
             title="Expandir/colapsar checklist"
           >
             <span>{isExpanded ? 'Ocultar' : 'Ver checklist'}</span>
@@ -369,10 +369,10 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
               <button
                 key={pillar.id}
                 onClick={() => handlePillarClick(pillar.view)}
-                className={`p-2.5 rounded-xl text-left transition-all border flex flex-col justify-between gap-1 cursor-pointer group active:scale-95 ${
+                className={`p-2.5 rounded-[var(--r-m)] text-left transition-all border flex flex-col justify-between gap-1 cursor-pointer group active:scale-95 ${
                   pillar.completed
                     ? 'bg-emerald-950/20 border-emerald-500/20 text-emerald-300 hover:bg-emerald-950/30'
-                    : 'bg-amber-950/20 border-amber-500/20 text-amber-200 hover:bg-amber-950/30'
+                    : 'bg-amber-950/20 /20 text-amber-200 hover:bg-amber-950/30'
                 }`}
               >
                 <div className="flex items-center justify-between gap-1">
@@ -405,8 +405,8 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
               {pillars.map(pillar => (
                 <div 
                   key={`exp-${pillar.id}`}
-                  className={`p-2.5 rounded-xl border flex items-start justify-between gap-3 ${
-                    pillar.completed ? 'bg-neutral-900/40 border-neutral-800/80' : 'bg-amber-500/5 border-amber-500/20'
+                  className={`p-2.5 rounded-[var(--r-m)] border flex items-start justify-between gap-3 ${
+                    pillar.completed ? 'bg-bg-[var(--surface)]/40 /80' : 'bg-amber-500/5 /20'
                   }`}
                 >
                   <div className="space-y-0.5">
@@ -418,7 +418,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
                       )}
                       <span className="font-bold text-zinc-100 text-xs">{pillar.title}</span>
                     </div>
-                    <p className="text-[10px] text-neutral-400 leading-snug">
+                    <p className="text-[10px] text-text-[var(--ink-2)] leading-snug">
                       {pillar.agentImpact}
                     </p>
                   </div>
@@ -426,7 +426,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
                   {!pillar.completed && (
                     <button
                       onClick={() => handlePillarClick(pillar.view)}
-                      className="px-2 py-1 rounded-lg bg-amber-500 text-stone-950 font-mono font-bold text-[10px] shrink-0 hover:bg-amber-400 transition-colors cursor-pointer"
+                      className="px-2 py-1 rounded-[var(--r-s)] bg-amber-500 text-stone-950 font-mono font-bold text-[10px] shrink-0 hover:bg-amber-400 transition-colors cursor-pointer"
                     >
                       Configurar
                     </button>
@@ -441,17 +441,17 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
       {/* AUDIT MODAL */}
       {showAuditModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-[#181716] border border-amber-500/30 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="bg-[var(--surface)] border /30 rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-amber-500/20 border border-amber-500/40 rounded-xl text-amber-400">
+                <div className="p-2.5 bg-amber-500/20 border /40 rounded-[var(--r-m)] text-amber-400">
                   <Bot className="w-6 h-6" />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold font-display uppercase tracking-wider text-zinc-100">
                     Entrenamiento de Agentes IA para {bandName}
                   </h3>
-                  <p className="text-xs text-neutral-400 font-mono">
+                  <p className="text-xs text-text-[var(--ink-2)] font-mono">
                     Cómo utiliza cada agente tu información para conseguir más y mejores conciertos
                   </p>
                 </div>
@@ -459,45 +459,45 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
               <button
                 onClick={() => setShowAuditModal(false)}
-                className="p-1 text-neutral-400 hover:text-white rounded-lg hover:bg-neutral-800 cursor-pointer"
+                className="p-1 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-3 text-xs text-zinc-300 font-sans leading-relaxed">
-              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-1.5">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  space-y-1.5">
                 <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
                   <Bot className="w-4 h-4" /> 1. Agente Scout (Prospección de Salas & Recintos)
                 </h4>
-                <p className="text-neutral-400 text-xs">
+                <p className="text-text-[var(--ink-2)] text-xs">
                   Busca automáticamente salas, festivales y fiestas patronales en las regiones seleccionadas. Filtra por aforo y género para encontrar sólo recintos compatibles.
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-1.5">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  space-y-1.5">
                 <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
                   <FileText className="w-4 h-4" /> 2. Agente Redactor (Pitches Personalizados & ADN de Tono)
                 </h4>
-                <p className="text-neutral-400 text-xs">
+                <p className="text-text-[var(--ink-2)] text-xs">
                   Redacta las propuestas de correo para las salas extrayendo hitos de tu <strong className="text-zinc-100">Biografía</strong>, adjuntando tu <strong className="text-zinc-100">Dossier PDF</strong> y adaptando el vocabulario a la voz de la banda.
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-1.5">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  space-y-1.5">
                 <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
                   <Disc3 className="w-4 h-4" /> 3. Agente Mánager AI (Negociación de Fechas & Caché)
                 </h4>
-                <p className="text-neutral-400 text-xs">
+                <p className="text-text-[var(--ink-2)] text-xs">
                   Responde a las salas sobre disponibilidad consultando tu <strong className="text-zinc-100">Calendario</strong>, comprueba el <strong className="text-zinc-100">Rider Técnico</strong> y defiende el presupuesto según tus reglas de <strong className="text-zinc-100">Caché Mínimo</strong>.
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-1.5">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  space-y-1.5">
                 <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
                   <Mail className="w-4 h-4" /> 4. Agente Lector & Enviador (Smart Gate)
                 </h4>
-                <p className="text-neutral-400 text-xs">
+                <p className="text-text-[var(--ink-2)] text-xs">
                   Despacha los correos aprobados en los horarios de máxima apertura comercial y monitoriza la bandeja de entrada para detectar respuestas de programadores al instante.
                 </p>
               </div>
@@ -506,7 +506,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setShowAuditModal(false)}
-                className="px-4 py-2 rounded-xl bg-amber-500 text-stone-950 font-bold font-mono text-xs hover:bg-amber-400 transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-amber-500 text-stone-950 font-bold font-mono text-xs hover:bg-amber-400 transition-colors cursor-pointer"
               >
                 Entendido
               </button>

@@ -76,7 +76,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
         type="button"
         onClick={handleCheckout}
         disabled={isLoading}
-        className={`w-full py-3 px-6 rounded-xl font-medium transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 shadow-sm hover:shadow active:scale-98 disabled:opacity-75 disabled:cursor-wait ${className}`}
+        className={`w-full py-3 px-6 rounded-[var(--r-m)] font-medium transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 shadow-sm hover:shadow active:scale-98 disabled:opacity-75 disabled:cursor-wait ${className}`}
       >
         {isLoading ? (
           <>
@@ -93,7 +93,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
         )}
       </button>
       {errorMessage && (
-        <p className="mt-2 text-xs text-red-500 text-center font-medium bg-red-50 dark:bg-red-950/30 p-2 rounded-lg border border-red-200 dark:border-red-900">
+        <p className="mt-2 text-xs text-red-500 text-center font-medium bg-red-50 dark:bg-red-950/30 p-2 rounded-[var(--r-s)] border border-red-200 dark:border-red-900">
           {errorMessage}
         </p>
       )}

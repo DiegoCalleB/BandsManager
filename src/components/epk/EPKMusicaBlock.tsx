@@ -58,26 +58,26 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* AUDIO PREVIEW ADELANTO EN LANDING DE FANS & EPK */}
-        <div className="bg-slate-900 border border-amber-500/30 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+        <div className="bg-[var(--surface)] border /30 rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <div className="flex items-center justify-between border-b  pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
               <Music className="w-5 h-5" /> Canción / Adelanto en Audio Preview (Landing de Fans & EPK)
             </h3>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border /20 px-2.5 py-1 rounded-full">
               Player Interactivo
             </span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--ink-3)]">
             Permite a fans y programadores escuchar un fragmento o tema destacado de la banda. Puedes activar el reproductor, elegir una canción del repertorio o pegar una URL de audio directa.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <div className="space-y-3">
               {/* Switch de activación */}
-              <div className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-slate-950 border  rounded-[var(--r-m)]">
                 <div className="space-y-0.5 pr-3">
                   <span className="text-xs font-bold text-white">Activar reproductor de adelanto</span>
-                  <p className="text-[10px] text-slate-400">Si está desactivado, el widget no se mostrará en la landing pública.</p>
+                  <p className="text-[10px] text-[var(--ink-3)]">Si está desactivado, el widget no se mostrará en la landing pública.</p>
                 </div>
                 <input
                   type="checkbox"
@@ -98,7 +98,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               {/* Selector de canción del repertorio */}
               {!isPromoUser && (
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
+                  <label className="text-xs font-semibold text-[var(--ink-3)] flex items-center justify-between">
                     <span>Elegir tema de vuestro repertorio</span>
                     {songs.length > 0 && (
                       <span className="text-[10px] text-amber-400 font-mono">{songs.length} temas disponibles</span>
@@ -119,7 +119,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         }
                       }));
                     }}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+                    className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none"
                   >
                     <option value="">-- Seleccionar tema del repertorio o usar personalizado --</option>
                     {songs.map(song => (
@@ -135,7 +135,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               {/* Título y subtítulo visual del reproductor */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Título mostrado en el reproductor</label>
+                  <label className="text-xs font-semibold text-[var(--ink-3)]">Título mostrado en el reproductor</label>
                   <input
                     type="text"
                     value={config.audioPreview?.tituloTema ?? ''}
@@ -149,11 +149,11 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       })
                     }
                     placeholder="Ej: Single Debut / Directo Preview"
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+                    className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Subtítulo / Mensaje de escucha</label>
+                  <label className="text-xs font-semibold text-[var(--ink-3)]">Subtítulo / Mensaje de escucha</label>
                   <input
                     type="text"
                     value={config.audioPreview?.subtitulo ?? ''}
@@ -167,14 +167,14 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       })
                     }
                     placeholder="Ej: Dale al play para escuchar cómo sonamos"
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+                    className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none"
                   />
                 </div>
               </div>
 
               {/* URL del archivo de audio */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300">
+                <label className="text-xs font-semibold text-[var(--ink-3)]">
                   URL del archivo de audio (MP3 / OGG / WAV)
                 </label>
                 <input
@@ -190,25 +190,25 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     })
                   }
                   placeholder="https://.../tema-adelanto.mp3"
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none font-mono"
+                  className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none font-mono"
                 />
               </div>
             </div>
 
             {/* Vista previa en vivo del reproductor */}
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col justify-center space-y-3">
-              <span className="text-[10px] uppercase font-mono font-bold text-slate-400">
+            <div className="p-4 rounded-[var(--r-m)] bg-slate-950 border  flex flex-col justify-center space-y-3">
+              <span className="text-[10px] uppercase font-mono font-bold text-[var(--ink-3)]">
                 Previsualización del reproductor
               </span>
               <div
-                className={`p-3 rounded-2xl bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 border ${
+                className={`p-3 rounded-[var(--r-l)] bg-gradient-to-r from-bg-[var(--surface)] via-bg-[var(--surface)] to-bg-[var(--surface)] border ${
                   config.audioPreview?.habilitado !== false
-                    ? 'border-amber-500/40 shadow-lg'
-                    : 'border-slate-800 opacity-50'
+                    ? '/40 shadow-lg'
+                    : ' opacity-50'
                 } flex items-center justify-between gap-3 text-left`}
               >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-neutral-950 flex items-center justify-center shrink-0 shadow-md">
-                  <Music className="w-5 h-5 fill-neutral-950" />
+                <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 text-bg-[var(--surface)] flex items-center justify-center shrink-0 shadow-md">
+                  <Music className="w-5 h-5 fill-bg-[var(--surface)]" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-white truncate">
@@ -217,7 +217,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         `${currentUser?.bandName || 'Tu Banda'} · Directo Preview`}
                     </span>
                   </div>
-                  <p className="text-[10px] text-neutral-400 font-mono truncate">
+                  <p className="text-[10px] text-text-[var(--ink-2)] font-mono truncate">
                     {config.audioPreview?.subtitulo?.trim() || 'Dale al play para escuchar cómo sonamos'}
                   </p>
                 </div>
@@ -237,8 +237,8 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
         </div>
 
         {/* VÍDEOS DE DIRECTO */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b  pb-3">
             <div className="flex items-center gap-2">
               <Share2 className="w-5 h-5 text-amber-400" />
               <h3 className="text-base sm:text-lg font-bold text-amber-400">
@@ -248,16 +248,16 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
             <button
               type="button"
               onClick={anadirVideo}
-              className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition cursor-pointer"
+              className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
             >
               + Añadir vídeo
             </button>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--ink-3)]">
             Pega enlaces de YouTube o Vimeo. El vídeo marcado con la estrella se muestra destacado: elige el mejor directo que tengáis.
           </p>
           {videos.length === 0 && (
-            <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
+            <div className="rounded-[var(--r-m)] border  bg-slate-950 p-4 text-xs text-[var(--ink-3)]">
               Todavía no hay vídeos añadidos. Es el material que más convence al programar — añade al menos uno en directo.
             </div>
           )}
@@ -265,8 +265,8 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
             {videos.map(v => (
               <div
                 key={v.id}
-                className={`rounded-xl border p-3 space-y-2 ${
-                  v.destacado ? 'border-amber-500/60 bg-amber-500/5' : 'border-slate-800 bg-slate-950'
+                className={`rounded-[var(--r-m)] border p-3 space-y-2 ${
+                  v.destacado ? '/60 bg-amber-500/5' : ' bg-slate-950'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -274,10 +274,10 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     type="button"
                     onClick={() => destacarVideo(v.id)}
                     title={v.destacado ? 'Vídeo principal' : 'Marcar como principal'}
-                    className={`shrink-0 w-8 h-8 rounded-lg border flex items-center justify-center text-sm transition cursor-pointer ${
+                    className={`shrink-0 w-8 h-8 rounded-[var(--r-s)] border flex items-center justify-center text-sm transition cursor-pointer ${
                       v.destacado
-                        ? 'bg-amber-500 text-slate-950 border-amber-500 font-bold'
-                        : 'border-slate-700 text-slate-500 hover:text-amber-300'
+                        ? 'bg-amber-500 text-slate-950  font-bold'
+                        : ' text-[var(--ink-2)] hover:text-amber-300'
                     }`}
                   >
                     ★
@@ -287,12 +287,12 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     value={v.titulo}
                     onChange={e => editarVideo(v.id, { titulo: e.target.value })}
                     placeholder="Título (ej. Directo en Sala Caracol, 2026)"
-                    className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                    className="flex-1 bg-[var(--surface)] border  rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => quitarVideo(v.id)}
-                    className="shrink-0 p-2 text-slate-500 hover:text-red-400 transition cursor-pointer"
+                    className="shrink-0 p-2 text-[var(--ink-2)] hover:text-red-400 transition cursor-pointer"
                     title="Quitar vídeo"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -303,7 +303,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   value={v.url}
                   onChange={e => editarVideo(v.id, { url: e.target.value })}
                   placeholder="https://www.youtube.com/watch?v=..."
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:border-amber-500 outline-none"
+                  className="w-full bg-[var(--surface)] border  rounded-[var(--r-s)] px-3 py-2 text-xs font-mono text-white focus: outline-none"
                 />
               </div>
             ))}
@@ -311,27 +311,27 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
         </div>
 
         {/* DATOS LOGÍSTICOS & GIRA (DATOS DE CONTRATACIÓN) */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b  pb-3">
             <Info className="w-5 h-5" /> Datos de Gira y Contratación
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--ink-3)]">
             Lo que un programador siempre necesita saber antes de cerrar fecha. Cuanto más claro, menos correos de ida y vuelta.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Nº de músicos en escena</label>
+              <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">Nº de músicos en escena</label>
               <input
                 type="number"
                 value={config.datosContratacion?.numMusicos ?? ''}
                 onChange={e => editarDatoContratacion('numMusicos', e.target.value)}
                 placeholder="4"
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                className="w-full bg-slate-950 border  rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Duración del directo</label>
-              <div className="flex items-center bg-slate-950 border border-slate-800 rounded-lg focus-within:border-amber-500">
+              <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">Duración del directo</label>
+              <div className="flex items-center bg-slate-950 border  rounded-[var(--r-s)] focus-within:">
                 <input
                   type="number"
                   value={config.datosContratacion?.duracionDirecto ?? ''}
@@ -339,32 +339,32 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   placeholder="75"
                   className="w-full bg-transparent px-3 py-2 text-sm text-white outline-none"
                 />
-                <span className="pr-3 text-xs text-slate-500 font-semibold">min</span>
+                <span className="pr-3 text-xs text-[var(--ink-2)] font-semibold">min</span>
               </div>
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Ciudad base</label>
+              <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">Ciudad base</label>
               <input
                 type="text"
                 value={config.datosContratacion?.ciudadBase ?? ''}
                 onChange={e => editarDatoContratacion('ciudadBase', e.target.value)}
                 placeholder="Madrid"
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                className="w-full bg-slate-950 border  rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Formatos disponibles</label>
+              <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">Formatos disponibles</label>
               <input
                 type="text"
                 value={config.datosContratacion?.formatos ?? ''}
                 onChange={e => editarDatoContratacion('formatos', e.target.value)}
                 placeholder="Banda completa / Acústico"
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                className="w-full bg-slate-950 border  rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
               />
             </div>
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1">
+            <label className="text-xs font-semibold text-[var(--ink-3)] block mb-1">
               Necesidades de escenario (resumen corto)
             </label>
             <input
@@ -372,7 +372,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               value={config.datosContratacion?.necesidadesEscenario || ''}
               onChange={e => editarDatoContratacion('necesidadesEscenario', e.target.value)}
               placeholder="Escenario mínimo 5x4m, 4 tomas de corriente, PA con 8 canales"
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+              className="w-full bg-slate-950 border  rounded-[var(--r-s)] px-3 py-2 text-sm text-white focus: outline-none"
             />
           </div>
         </div>

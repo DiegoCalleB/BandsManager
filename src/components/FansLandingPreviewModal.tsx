@@ -56,10 +56,10 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
     >
       {/* BARRA SUPERIOR PRINCIPAL (DESKTOP & MOBILE) */}
-      <header className="w-full bg-[#181716] border-b border-[#2d2a27] px-3 sm:px-5 py-2.5 shrink-0 z-30 shadow-2xl flex items-center justify-between gap-2">
+      <header className="w-full bg-[var(--surface)] border-b border-[#2d2a27] px-3 sm:px-5 py-2.5 shrink-0 z-30 shadow-2xl flex items-center justify-between gap-2">
         {/* Lado Izquierdo: Título y Estado */}
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+          <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/15 border /30 flex items-center justify-center text-amber-400 shrink-0">
             <Eye className="w-4 h-4" />
           </div>
           <div className="min-w-0">
@@ -67,12 +67,12 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               <h2 className="text-xs sm:text-sm font-bold text-white font-display uppercase tracking-wider truncate">
                 {t('previewModalTitle')}
               </h2>
-              <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">
+              <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border /30 font-bold">
                 <Sparkles className="w-3 h-3 text-amber-400" />
                 {t('previewProductionSyncBadge')}
               </span>
             </div>
-            <p className="text-[10px] text-neutral-400 font-mono truncate hidden sm:block">
+            <p className="text-[10px] text-text-[var(--ink-2)] font-mono truncate hidden sm:block">
               {effectiveBandName} • {selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : 'Bio / Enlace General'}
             </p>
           </div>
@@ -81,14 +81,14 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
         {/* Centro (en pantallas medianas y grandes): Controles Principales */}
         <div className="hidden lg:flex items-center gap-2">
           {/* Selector de Pantalla / Estado */}
-          <div className="flex bg-neutral-900 border border-neutral-800 rounded-xl p-1 shadow-inner">
+          <div className="flex bg-bg-[var(--surface)] border  rounded-[var(--r-m)] p-1 shadow-inner">
             <button
               type="button"
               onClick={() => setPreviewScreen('form')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
                 previewScreen === 'form'
                   ? 'bg-amber-500 text-slate-950 shadow-md font-extrabold'
-                  : 'text-neutral-400 hover:text-white'
+                  : 'text-text-[var(--ink-2)] hover:text-white'
               }`}
             >
               <FileText className="w-3.5 h-3.5" />
@@ -97,10 +97,10 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             <button
               type="button"
               onClick={() => setPreviewScreen('success')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
                 previewScreen === 'success'
                   ? 'bg-emerald-500 text-slate-950 shadow-md font-extrabold'
-                  : 'text-neutral-400 hover:text-white'
+                  : 'text-text-[var(--ink-2)] hover:text-white'
               }`}
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
@@ -109,14 +109,14 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           </div>
 
           {/* Selector de Dispositivo */}
-          <div className="flex bg-neutral-900 border border-neutral-800 rounded-xl p-1 shadow-inner">
+          <div className="flex bg-bg-[var(--surface)] border  rounded-[var(--r-m)] p-1 shadow-inner">
             <button
               type="button"
               onClick={() => setDeviceMode('mobile')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
                 deviceMode === 'mobile'
-                  ? 'bg-neutral-800 text-amber-300 border border-amber-500/30'
-                  : 'text-neutral-400 hover:text-white'
+                  ? 'bg-neutral-800 text-amber-300 border /30'
+                  : 'text-text-[var(--ink-2)] hover:text-white'
               }`}
               title={t('previewMobile')}
             >
@@ -126,10 +126,10 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             <button
               type="button"
               onClick={() => setDeviceMode('desktop')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
                 deviceMode === 'desktop'
-                  ? 'bg-neutral-800 text-amber-300 border border-amber-500/30'
-                  : 'text-neutral-400 hover:text-white'
+                  ? 'bg-neutral-800 text-amber-300 border /30'
+                  : 'text-text-[var(--ink-2)] hover:text-white'
               }`}
               title={t('previewDesktop')}
             >
@@ -139,17 +139,17 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           </div>
 
           {/* Selector de Idioma */}
-          <div className="flex items-center bg-neutral-900 border border-neutral-800 rounded-xl p-1 gap-1 shadow-inner">
+          <div className="flex items-center bg-bg-[var(--surface)] border  rounded-[var(--r-m)] p-1 gap-1 shadow-inner">
             <Globe2 className="w-3 h-3 text-neutral-500 ml-1 mr-0.5" />
             {FAN_FORM_LANGUAGES.map(l => (
               <button
                 key={l.code}
                 type="button"
                 onClick={() => setSelectedLanguage(l.code)}
-                className={`px-2 py-0.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+                className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-mono transition-all cursor-pointer ${
                   selectedLanguage === l.code
-                    ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 shadow-inner'
-                    : 'text-neutral-400 hover:text-white opacity-75 hover:opacity-100'
+                    ? 'bg-amber-500/20 text-amber-300 font-bold border /40 shadow-inner'
+                    : 'text-text-[var(--ink-2)] hover:text-white opacity-75 hover:opacity-100'
                 }`}
                 title={l.label}
               >
@@ -161,18 +161,18 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
 
           {/* Selector de Concierto */}
           {concerts.length > 0 && (
-            <div className="flex items-center bg-neutral-900 border border-neutral-800 rounded-xl px-2.5 py-1">
+            <div className="flex items-center bg-bg-[var(--surface)] border  rounded-[var(--r-m)] px-2.5 py-1">
               <Calendar className="w-3.5 h-3.5 text-amber-400 mr-1.5 shrink-0" />
               <select
                 value={selectedConcertId}
                 onChange={e => setSelectedConcertId(e.target.value)}
-                className="bg-transparent text-xs font-mono text-neutral-200 outline-none cursor-pointer max-w-[160px] truncate"
+                className="bg-transparent text-xs font-mono text-bg-[var(--sunken)] outline-none cursor-pointer max-w-[160px] truncate"
               >
-                <option value="" className="bg-neutral-950 text-neutral-200">
+                <option value="" className="bg-bg-[var(--surface)] text-bg-[var(--sunken)]">
                   {t('previewGeneralConcert')}
                 </option>
                 {concerts.map(c => (
-                  <option key={c.id} value={c.id} className="bg-neutral-950 text-neutral-200">
+                  <option key={c.id} value={c.id} className="bg-bg-[var(--surface)] text-bg-[var(--sunken)]">
                     {c.ciudad} - {c.sala}
                   </option>
                 ))}
@@ -186,7 +186,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <button
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 transition cursor-pointer text-xs font-mono"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] hover:text-white border  transition cursor-pointer text-xs font-mono"
             title={t('previewReset')}
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -196,7 +196,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition cursor-pointer text-xs font-mono shadow-md active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition cursor-pointer text-xs font-mono shadow-md active:scale-95"
             title={t('previewClose')}
           >
             <X className="w-4 h-4" />
@@ -208,14 +208,14 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       {/* BARRA SECUNDARIA DE CONTROLES COMPACTA PARA MÓVIL / TABLET */}
       <div className="lg:hidden w-full bg-[#1e1d1b] border-b border-[#2d2a27] px-3 py-1.5 flex items-center justify-between gap-2 shrink-0 overflow-x-auto z-20">
         {/* Selector de Pantalla */}
-        <div className="flex bg-neutral-900 border border-neutral-800 rounded-lg p-0.5 shrink-0">
+        <div className="flex bg-bg-[var(--surface)] border  rounded-[var(--r-s)] p-0.5 shrink-0">
           <button
             type="button"
             onClick={() => setPreviewScreen('form')}
             className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all ${
               previewScreen === 'form'
                 ? 'bg-amber-500 text-slate-950'
-                : 'text-neutral-400'
+                : 'text-text-[var(--ink-2)]'
             }`}
           >
             {t('previewTabForm')}
@@ -226,7 +226,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all ${
               previewScreen === 'success'
                 ? 'bg-emerald-500 text-slate-950'
-                : 'text-neutral-400'
+                : 'text-text-[var(--ink-2)]'
             }`}
           >
             {t('previewTabSuccess')}
@@ -234,12 +234,12 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
         </div>
 
         {/* Selector de Dispositivo */}
-        <div className="flex bg-neutral-900 border border-neutral-800 rounded-lg p-0.5 shrink-0">
+        <div className="flex bg-bg-[var(--surface)] border  rounded-[var(--r-s)] p-0.5 shrink-0">
           <button
             type="button"
             onClick={() => setDeviceMode('mobile')}
             className={`p-1 rounded text-xs transition-all ${
-              deviceMode === 'mobile' ? 'bg-neutral-800 text-amber-300' : 'text-neutral-400'
+              deviceMode === 'mobile' ? 'bg-neutral-800 text-amber-300' : 'text-text-[var(--ink-2)]'
             }`}
           >
             <Smartphone className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             type="button"
             onClick={() => setDeviceMode('desktop')}
             className={`p-1 rounded text-xs transition-all ${
-              deviceMode === 'desktop' ? 'bg-neutral-800 text-amber-300' : 'text-neutral-400'
+              deviceMode === 'desktop' ? 'bg-neutral-800 text-amber-300' : 'text-text-[var(--ink-2)]'
             }`}
           >
             <Monitor className="w-3.5 h-3.5" />
@@ -256,7 +256,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
         </div>
 
         {/* Idiomas en móvil */}
-        <div className="flex items-center gap-1 bg-neutral-900 border border-neutral-800 rounded-lg p-0.5 shrink-0">
+        <div className="flex items-center gap-1 bg-bg-[var(--surface)] border  rounded-[var(--r-s)] p-0.5 shrink-0">
           {FAN_FORM_LANGUAGES.map(l => (
             <button
               key={l.code}
@@ -264,8 +264,8 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               onClick={() => setSelectedLanguage(l.code)}
               className={`px-1.5 py-0.5 rounded text-[11px] font-mono ${
                 selectedLanguage === l.code
-                  ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40'
-                  : 'text-neutral-400 opacity-60'
+                  ? 'bg-amber-500/20 text-amber-300 font-bold border /40'
+                  : 'text-text-[var(--ink-2)] opacity-60'
               }`}
             >
               {l.flag}
@@ -275,7 +275,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       </div>
 
       {/* ÁREA DE VISUALIZACIÓN / SIMULADOR CENTRADO */}
-      <main className="w-full flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-900 via-[#100f0f] to-[#0a0a0a]">
+      <main className="w-full flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-bg-[var(--surface)] via-[#100f0f] to-[#0a0a0a]">
         {deviceMode === 'mobile' ? (
           /* MOCKUP ELEGANTE DE SMARTPHONE */
           <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-all duration-200">
@@ -287,7 +287,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               </div>
 
               {/* Pantalla del teléfono con altura adaptativa y scroll nativo */}
-              <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[#121111] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4 border border-neutral-900 shadow-inner">
+              <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[#121111] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4 border border-bg-[var(--surface)] shadow-inner">
                 <FansLanding
                   key={`mobile-${simKey}-${selectedLanguage}-${selectedConcertId}-${previewScreen}`}
                   currentBandId={currentBandId}
@@ -309,15 +309,15 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           </div>
         ) : (
           /* MOCKUP DE ESCRITORIO / NAVEGADOR */
-          <div className="w-full max-w-4xl bg-[#121111] border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col h-[calc(100dvh-160px)] max-h-[740px]">
+          <div className="w-full max-w-4xl bg-[#121111] border  rounded-[var(--r-l)] shadow-2xl overflow-hidden my-auto flex flex-col h-[calc(100dvh-160px)] max-h-[740px]">
             {/* Barra simulada de navegador */}
-            <div className="bg-neutral-950 border-b border-neutral-800 px-4 py-2 flex items-center justify-between gap-3 text-xs font-mono shrink-0">
+            <div className="bg-bg-[var(--surface)] border-b  px-4 py-2 flex items-center justify-between gap-3 text-xs font-mono shrink-0">
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
               </div>
-              <div className="bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1 text-neutral-400 text-[11px] flex-1 max-w-md text-center truncate font-mono">
+              <div className="bg-bg-[var(--surface)] border  rounded-[var(--r-s)] px-3 py-1 text-text-[var(--ink-2)] text-[11px] flex-1 max-w-md text-center truncate font-mono">
                 https://bandmanager.io/unete{selectedConcert ? `/${selectedConcert.ciudad.toLowerCase()}-${selectedConcert.sala.toLowerCase().replace(/\s+/g, '-')}` : ''}?lang={selectedLanguage}
               </div>
               <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">
@@ -346,7 +346,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       </main>
 
       {/* PIE DE PÁGINA INFORMATIVO Y ACCESIBLE */}
-      <footer className="w-full bg-[#181716] border-t border-[#2d2a27] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-mono text-neutral-400 shrink-0 flex items-center justify-between">
+      <footer className="w-full bg-[var(--surface)] border-t border-[#2d2a27] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-mono text-text-[var(--ink-2)] shrink-0 flex items-center justify-between">
         <div className="flex items-center gap-2 truncate">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0 inline-block" />
           <span className="truncate">{t('previewDisclaimer')}</span>

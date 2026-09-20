@@ -118,7 +118,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
-            className="absolute -top-0.5 -right-0.5 text-slate-500/40 blur-[1px]"
+            className="absolute -top-0.5 -right-0.5 text-[var(--ink-2)]/40 blur-[1px]"
           >
             <Cloud className={currentSize.icon} />
           </motion.div>
@@ -133,7 +133,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
-            className="relative z-10 text-slate-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
+            className="relative z-10 text-[var(--ink-3)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
           >
             <Cloud className={currentSize.icon} />
           </motion.div>
@@ -274,7 +274,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
-            className="relative z-10 text-slate-400 drop-shadow-[0_0_6px_rgba(148,163,184,0.3)]"
+            className="relative z-10 text-[var(--ink-3)] drop-shadow-[0_0_6px_rgba(148,163,184,0.3)]"
           >
             <CloudFog className={currentSize.icon} />
           </motion.div>
@@ -368,7 +368,7 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
     switch (alert.icon) {
       case 'lightning':
         return {
-          bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-yellow-500/20 border-yellow-500/50 text-yellow-300',
+          bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-yellow-500/20 /50 text-yellow-300',
           glow: isDanger ? 'shadow-[0_0_8px_rgba(244,63,94,0.3)]' : 'shadow-[0_0_8px_rgba(234,179,8,0.3)]'
         };
       case 'rain':
@@ -383,12 +383,12 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
         };
       case 'wind':
         return {
-          bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-amber-500/20 border-amber-500/50 text-amber-300',
+          bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-amber-500/20 /50 text-amber-300',
           glow: isDanger ? 'shadow-[0_0_8px_rgba(244,63,94,0.3)]' : 'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
         };
       default:
         return {
-          bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-amber-500/20 border-amber-500/50 text-amber-300',
+          bg: isDanger ? 'bg-rose-500/25 border-rose-500/60 text-rose-200' : 'bg-amber-500/20 /50 text-amber-300',
           glow: isDanger ? 'shadow-[0_0_8px_rgba(244,63,94,0.3)]' : 'shadow-[0_0_8px_rgba(245,158,11,0.3)]'
         };
     }
@@ -416,7 +416,7 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold tracking-tight backdrop-blur-sm ${style.bg} ${style.glow}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-s)] border text-[10px] font-mono font-bold tracking-tight backdrop-blur-sm ${style.bg} ${style.glow}`}
     >
       <AnimatedWeatherIcon
         iconType={alert.icon}

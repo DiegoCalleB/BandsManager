@@ -37,29 +37,29 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
       onMouseLeave={() => setShowTooltip(false)}
     >
       <span 
-        className={`inline-flex items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-neutral-950 font-black shadow-md shadow-amber-500/20 ring-1 ring-amber-300/50 ${sizeClasses[size]}`}
+        className={`inline-flex items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-bg-[var(--surface)] font-black shadow-md shadow-amber-500/20 ring-1 ring-amber-300/50 ${sizeClasses[size]}`}
         title="Lead Verificado • Conversación activa mediante agentes de IA"
       >
         <Check className={`${iconSizes[size]} stroke-[3.5]`} />
       </span>
 
       {showLabel && (
-        <span className="text-[11px] font-bold tracking-wide text-amber-300 uppercase bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded-md">
+        <span className="text-[11px] font-bold tracking-wide text-amber-300 uppercase bg-amber-500/10 border /30 px-1.5 py-0.5 rounded-md">
           Verificado
         </span>
       )}
 
       {/* Tooltip Popup */}
       {showTooltip && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 rounded-xl bg-neutral-900/95 border border-amber-500/40 text-neutral-200 text-xs shadow-2xl z-50 pointer-events-none backdrop-blur-md">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/95 border /40 text-bg-[var(--sunken)] text-xs shadow-2xl z-50 pointer-events-none backdrop-blur-md">
           <div className="flex items-center gap-1.5 font-bold text-amber-400 mb-1">
             <ShieldCheck className="w-4 h-4 text-amber-400" />
             <span>Lead Verificado por IA</span>
           </div>
-          <p className="text-[11px] text-neutral-300 leading-tight">
+          <p className="text-[11px] text-text-[var(--ink-3)] leading-tight">
             Este contacto ha sido verificado mediante interacción y conversación real lograda por los agentes de IA de Booking.
           </p>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-neutral-900/95" />
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-bg-[var(--surface)]/95" />
         </div>
       )}
     </div>

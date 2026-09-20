@@ -522,12 +522,12 @@ export function SongTransitionPreviewModal({
           initial={{ opacity: 0, scale: 0.96, y: 8 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 8 }}
-          className="relative w-full max-w-4xl max-h-[90vh] bg-[#16161a] border border-[#2a2a30] rounded-2xl shadow-2xl overflow-hidden flex flex-col text-zinc-200"
+          className="relative w-full max-w-4xl max-h-[90vh] bg-[#16161a] border border-[#2a2a30] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col text-zinc-200"
         >
           {/* Compact Header */}
           <div className="flex items-center justify-between px-3.5 py-2 border-b border-[#2a2a30] bg-[#1a1a20] shrink-0">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-[#f2ca50] shrink-0">
+              <div className="w-7 h-7 rounded-[var(--r-s)] bg-amber-500/10 border /30 flex items-center justify-center text-[var(--acc)] shrink-0">
                 <Headphones className="w-3.5 h-3.5" />
               </div>
               <div>
@@ -535,7 +535,7 @@ export function SongTransitionPreviewModal({
                   <h2 className="text-xs sm:text-sm font-bold text-white tracking-tight">
                     Comprobar Unión y Transición
                   </h2>
-                  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-amber-500/10 text-amber-300 border /30">
                     #{indexA + 1} ➔ #{indexB + 1}
                   </span>
                   <span className={`hidden sm:inline-flex px-1.5 py-0.2 rounded-full text-[9px] font-bold border ${diagnosis.verdict.badgeClass}`}>
@@ -548,7 +548,7 @@ export function SongTransitionPreviewModal({
             <div className="flex items-center gap-1.5">
               {/* Previous / Next navigation */}
               {onNavigateTransition && (
-                <div className="flex items-center bg-[#222228] border border-[#33333e] rounded-lg p-0.5">
+                <div className="flex items-center bg-[#222228] border border-[#33333e] rounded-[var(--r-s)] p-0.5">
                   <button
                     type="button"
                     disabled={!canGoPrev}
@@ -586,7 +586,7 @@ export function SongTransitionPreviewModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+                className="p-1 rounded-[var(--r-s)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -635,10 +635,10 @@ export function SongTransitionPreviewModal({
             <div className="grid grid-cols-1 md:grid-cols-11 gap-2 items-stretch">
               {/* Song A (Previous) */}
               <div
-                className="md:col-span-5 p-2 rounded-xl border transition relative overflow-hidden flex flex-col justify-between"
+                className="md:col-span-5 p-2 rounded-[var(--r-m)] border transition relative overflow-hidden flex flex-col justify-between"
                 style={{
                   backgroundColor: currentGains.isPlayingA ? 'rgba(30,30,36,0.95)' : 'rgba(20,20,24,0.6)',
-                  borderColor: currentGains.isPlayingA ? '#f2ca50' : '#2a2a30',
+                  borderColor: currentGains.isPlayingA ? 'var(--acc)' : '#2a2a30',
                   boxShadow: currentGains.isPlayingA ? '0 0 10px rgba(242,202,80,0.1)' : 'none'
                 }}
               >
@@ -676,7 +676,7 @@ export function SongTransitionPreviewModal({
 
                   {/* Auto-CUE Out info for Song A */}
                   {autoCueEnabled && cueAnalysisA && (cueAnalysisA.outroSilenceSec > 0.3 || cueAnalysisA.hasApplauseOutro || songA.cueOut) && (
-                    <div className="flex items-center justify-between gap-1 mb-1 px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-[9px]">
+                    <div className="flex items-center justify-between gap-1 mb-1 px-1.5 py-0.5 rounded bg-amber-500/10 border /20 text-[9px]">
                       <span className="text-amber-300 font-mono flex items-center gap-1 truncate">
                         <Scissors className="w-2.5 h-2.5 text-amber-400 shrink-0" />
                         CUE Out: {formatSec(cueAnalysisA.cueOut)}
@@ -765,7 +765,7 @@ export function SongTransitionPreviewModal({
                 <div
                   className={`w-7 h-7 rounded-full flex items-center justify-center transition border ${
                     currentGains.isCrossfading
-                      ? 'bg-amber-500 text-black border-amber-300 scale-110 shadow-lg shadow-amber-500/30 animate-pulse'
+                      ? 'bg-amber-500 text-black  scale-110 shadow-lg shadow-amber-500/30 animate-pulse'
                       : 'bg-[#222228] text-zinc-400 border-[#33333e]'
                   }`}
                 >
@@ -778,10 +778,10 @@ export function SongTransitionPreviewModal({
 
               {/* Song B (Next / Selected) */}
               <div
-                className="md:col-span-5 p-2 rounded-xl border transition relative overflow-hidden flex flex-col justify-between"
+                className="md:col-span-5 p-2 rounded-[var(--r-m)] border transition relative overflow-hidden flex flex-col justify-between"
                 style={{
                   backgroundColor: currentGains.isPlayingB ? 'rgba(30,30,36,0.95)' : 'rgba(20,20,24,0.6)',
-                  borderColor: currentGains.isPlayingB ? '#f2ca50' : '#2a2a30',
+                  borderColor: currentGains.isPlayingB ? 'var(--acc)' : '#2a2a30',
                   boxShadow: currentGains.isPlayingB ? '0 0 10px rgba(242,202,80,0.1)' : 'none'
                 }}
               >
@@ -905,12 +905,12 @@ export function SongTransitionPreviewModal({
             </div>
 
             {/* Compact Unified Player & Waveform Timeline */}
-            <div className="p-2 sm:p-2.5 rounded-xl bg-[#121216] border border-[#222228] space-y-1.5">
+            <div className="p-2 sm:p-2.5 rounded-[var(--r-m)] bg-[#121216] border border-[#222228] space-y-1.5">
               {/* Controls & Mode Ribbon Header */}
               <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
                 {/* Mode Selector & Auto-CUE toggle */}
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <div className="flex items-center p-0.5 bg-[#1c1c24] rounded-lg border border-[#30303c]">
+                  <div className="flex items-center p-0.5 bg-[#1c1c24] rounded-[var(--r-s)] border border-[#30303c]">
                     <button
                       type="button"
                       onClick={() => {
@@ -950,9 +950,9 @@ export function SongTransitionPreviewModal({
                       stopPlayback();
                       setAutoCueEnabled(!autoCueEnabled);
                     }}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 transition border cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition border cursor-pointer ${
                       autoCueEnabled
-                        ? 'bg-amber-500/15 text-[#f2ca50] border-amber-500/40 shadow-sm'
+                        ? 'bg-amber-500/15 text-[var(--acc)] /40 shadow-sm'
                         : 'bg-[#1c1c24] text-zinc-400 border-zinc-700 hover:text-zinc-200'
                     }`}
                     title="Auto-CUE Inteligente: Detecta y salta automáticamente los huecos de silencio y aplausos al principio y final de canciones en directo"
@@ -963,7 +963,7 @@ export function SongTransitionPreviewModal({
                 </div>
 
                 {/* Transition Style Selector */}
-                <div className="flex items-center gap-1 bg-[#1a1a20] p-0.5 rounded-lg border border-[#2e2e38]">
+                <div className="flex items-center gap-1 bg-[#1a1a20] p-0.5 rounded-[var(--r-s)] border border-[#2e2e38]">
                   <button
                     type="button"
                     onClick={() => {
@@ -972,7 +972,7 @@ export function SongTransitionPreviewModal({
                     }}
                     className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
                       config.style === 'crossfade'
-                        ? 'bg-[#f2ca50] text-black shadow-sm'
+                        ? 'bg-[var(--acc)] text-black shadow-sm'
                         : 'text-zinc-400 hover:text-white'
                     }`}
                   >
@@ -986,7 +986,7 @@ export function SongTransitionPreviewModal({
                     }}
                     className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
                       config.style === 'segue'
-                        ? 'bg-[#f2ca50] text-black shadow-sm'
+                        ? 'bg-[var(--acc)] text-black shadow-sm'
                         : 'text-zinc-400 hover:text-white'
                     }`}
                   >
@@ -1000,7 +1000,7 @@ export function SongTransitionPreviewModal({
                     }}
                     className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
                       config.style === 'pause'
-                        ? 'bg-[#f2ca50] text-black shadow-sm'
+                        ? 'bg-[var(--acc)] text-black shadow-sm'
                         : 'text-zinc-400 hover:text-white'
                     }`}
                   >
@@ -1020,7 +1020,7 @@ export function SongTransitionPreviewModal({
                           }}
                           className={`px-1 py-0.2 rounded font-mono text-[9px] transition cursor-pointer ${
                             config.fadeDurationSec === sec
-                              ? 'bg-amber-500/30 text-[#f2ca50] font-bold'
+                              ? 'bg-amber-500/30 text-[var(--acc)] font-bold'
                               : 'text-zinc-400 hover:text-white'
                           }`}
                         >
@@ -1034,7 +1034,7 @@ export function SongTransitionPreviewModal({
 
               {/* Visual Multi-Track Waveform Timeline with Scrubbing */}
               <div
-                className="relative h-7 bg-black/60 rounded-lg border border-zinc-800 cursor-pointer overflow-hidden p-0.5 select-none"
+                className="relative h-7 bg-black/60 rounded-[var(--r-s)] border border-zinc-800 cursor-pointer overflow-hidden p-0.5 select-none"
                 onClick={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const ratio = (e.clientX - rect.left) / rect.width;
@@ -1043,7 +1043,7 @@ export function SongTransitionPreviewModal({
               >
                 {/* Track A segment */}
                 <div
-                  className="absolute top-0.5 bottom-0.5 left-0.5 rounded bg-amber-500/20 border border-amber-500/40 flex items-center px-1.5"
+                  className="absolute top-0.5 bottom-0.5 left-0.5 rounded bg-amber-500/20 border /40 flex items-center px-1.5"
                   style={{
                     width: `${(timeline.songAEndSec / timeline.totalDurationSec) * 100}%`
                   }}
@@ -1070,7 +1070,7 @@ export function SongTransitionPreviewModal({
                 {/* Crossfade overlap highlight */}
                 {config.style === 'crossfade' && (
                   <div
-                    className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-500/30 to-emerald-500/30 border-x border-amber-400/80 pointer-events-none flex items-center justify-center text-[8px] font-mono font-bold text-white/90"
+                    className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-500/30 to-emerald-500/30 border-x /80 pointer-events-none flex items-center justify-center text-[8px] font-mono font-bold text-white/90"
                     style={{
                       left: `${(timeline.crossfadeStartSec / timeline.totalDurationSec) * 100}%`,
                       width: `${((timeline.crossfadeEndSec - timeline.crossfadeStartSec) / timeline.totalDurationSec) * 100}%`
@@ -1097,7 +1097,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={togglePlay}
-                    className="w-7 h-7 rounded-lg bg-[#f2ca50] hover:bg-[#ffe07a] text-black font-bold flex items-center justify-center shadow transition active:scale-95 cursor-pointer"
+                    className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[#ffe07a] text-black font-bold flex items-center justify-center shadow transition active:scale-95 cursor-pointer"
                     title={isPlaying ? 'Pausar comprobación' : 'Reproducir unión'}
                   >
                     {isPlaying ? <Pause className="w-3.5 h-3.5 fill-black" /> : <Play className="w-3.5 h-3.5 fill-black ml-0.5" />}
@@ -1106,7 +1106,7 @@ export function SongTransitionPreviewModal({
                   <button
                     type="button"
                     onClick={handleRestart}
-                    className="p-1 rounded-lg bg-[#222228] hover:bg-[#2d2d36] text-zinc-300 border border-[#33333e] transition cursor-pointer"
+                    className="p-1 rounded-[var(--r-s)] bg-[#222228] hover:bg-[#2d2d36] text-zinc-300 border border-[#33333e] transition cursor-pointer"
                     title="Rebobinar al inicio del enlace"
                   >
                     <RotateCcw className="w-3 h-3" />
@@ -1135,7 +1135,7 @@ export function SongTransitionPreviewModal({
                           syntheticControllerRef.current.setVolume(val);
                         }
                       }}
-                      className="w-14 accent-[#f2ca50] cursor-pointer h-1"
+                      className="w-14 accent-[var(--acc)] cursor-pointer h-1"
                     />
                   </div>
                 </div>
@@ -1156,7 +1156,7 @@ export function SongTransitionPreviewModal({
             </div>
 
             {/* Smart Tabbed Musical Intelligence Panel */}
-            <div className="rounded-xl bg-[#1a1a22] border border-[#2a2a34] overflow-hidden">
+            <div className="rounded-[var(--r-m)] bg-[#1a1a22] border border-[#2a2a34] overflow-hidden">
               {/* Tab Navigation Ribbon & Verdict Summary */}
               <div className="flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1.5 border-b border-zinc-800 bg-[#16161d]">
                 {/* Tabs */}
@@ -1166,7 +1166,7 @@ export function SongTransitionPreviewModal({
                     onClick={() => setActiveTab('pros_cons')}
                     className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
                       activeTab === 'pros_cons'
-                        ? 'bg-zinc-800 text-amber-300 border border-amber-500/30'
+                        ? 'bg-zinc-800 text-amber-300 border /30'
                         : 'text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
@@ -1181,7 +1181,7 @@ export function SongTransitionPreviewModal({
                     onClick={() => setActiveTab('metrics')}
                     className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
                       activeTab === 'metrics'
-                        ? 'bg-zinc-800 text-amber-300 border border-amber-500/30'
+                        ? 'bg-zinc-800 text-amber-300 border /30'
                         : 'text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
@@ -1193,7 +1193,7 @@ export function SongTransitionPreviewModal({
                     onClick={() => setActiveTab('stagecraft')}
                     className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
                       activeTab === 'stagecraft'
-                        ? 'bg-zinc-800 text-amber-300 border border-amber-500/30'
+                        ? 'bg-zinc-800 text-amber-300 border /30'
                         : 'text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
@@ -1203,7 +1203,7 @@ export function SongTransitionPreviewModal({
 
                 {/* Right Summary Verdict */}
                 <div className="text-[10px] text-zinc-400 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-[#f2ca50]" />
+                  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                   <span>Recomendado: <strong className="text-white uppercase font-bold">{diagnosis.recommendedStyle}</strong></span>
                 </div>
               </div>
@@ -1222,7 +1222,7 @@ export function SongTransitionPreviewModal({
                         {diagnosis.porQueSi.map((pro) => (
                           <div
                             key={pro.id}
-                            className="p-1.5 rounded-lg bg-emerald-950/15 border border-emerald-500/20 text-[10px] space-y-0.5"
+                            className="p-1.5 rounded-[var(--r-s)] bg-emerald-950/15 border border-emerald-500/20 text-[10px] space-y-0.5"
                           >
                             <div className="flex items-center justify-between gap-1">
                               <span className="font-bold text-emerald-300 flex items-center gap-1 truncate">
@@ -1239,7 +1239,7 @@ export function SongTransitionPreviewModal({
                           </div>
                         ))}
                         {diagnosis.porQueSi.length === 0 && (
-                          <div className="p-1.5 rounded-lg bg-zinc-900/50 border border-zinc-800 text-[10px] text-zinc-400 text-center">
+                          <div className="p-1.5 rounded-[var(--r-s)] bg-zinc-900/50 border border-zinc-800 text-[10px] text-zinc-400 text-center">
                             Sin factores musicales especialmente favorables.
                           </div>
                         )}
@@ -1256,11 +1256,11 @@ export function SongTransitionPreviewModal({
                         {diagnosis.porQueNo.map((con) => (
                           <div
                             key={con.id}
-                            className={`p-1.5 rounded-lg border text-[10px] space-y-0.5 ${
+                            className={`p-1.5 rounded-[var(--r-s)] border text-[10px] space-y-0.5 ${
                               con.severity === 'critico'
                                 ? 'bg-rose-950/20 border-rose-500/40'
                                 : con.severity === 'aviso'
-                                ? 'bg-amber-950/15 border-amber-500/30'
+                                ? 'bg-amber-950/15 /30'
                                 : 'bg-zinc-900/60 border-zinc-800'
                             }`}
                           >
@@ -1281,7 +1281,7 @@ export function SongTransitionPreviewModal({
                           </div>
                         ))}
                         {diagnosis.porQueNo.length === 0 && (
-                          <div className="p-1.5 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-center text-[10px] text-emerald-300 flex items-center justify-center gap-1">
+                          <div className="p-1.5 rounded-[var(--r-s)] bg-emerald-500/5 border border-emerald-500/20 text-center text-[10px] text-emerald-300 flex items-center justify-center gap-1">
                             <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                             <span>Enlace limpio sin objeciones.</span>
                           </div>
@@ -1293,7 +1293,7 @@ export function SongTransitionPreviewModal({
 
                 {activeTab === 'metrics' && (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-1.5">
-                    <div className="p-2 rounded-lg bg-[#15151b] border border-zinc-800 space-y-0.5">
+                    <div className="p-2 rounded-[var(--r-s)] bg-[#15151b] border border-zinc-800 space-y-0.5">
                       <div className="flex items-center gap-1 text-[11px] font-bold text-amber-300">
                         <Music className="w-3 h-3" />
                         <span>Armonía & Tono</span>
@@ -1303,7 +1303,7 @@ export function SongTransitionPreviewModal({
                       </p>
                     </div>
 
-                    <div className="p-2 rounded-lg bg-[#15151b] border border-zinc-800 space-y-0.5">
+                    <div className="p-2 rounded-[var(--r-s)] bg-[#15151b] border border-zinc-800 space-y-0.5">
                       <div className="flex items-center gap-1 text-[11px] font-bold text-sky-300">
                         <Zap className="w-3 h-3" />
                         <span>Salto BPM</span>
@@ -1313,7 +1313,7 @@ export function SongTransitionPreviewModal({
                       </p>
                     </div>
 
-                    <div className="p-2 rounded-lg bg-[#15151b] border border-zinc-800 space-y-0.5">
+                    <div className="p-2 rounded-[var(--r-s)] bg-[#15151b] border border-zinc-800 space-y-0.5">
                       <div className="flex items-center gap-1 text-[11px] font-bold text-rose-300">
                         <Flame className="w-3 h-3" />
                         <span>Energía Escénica</span>
@@ -1328,8 +1328,8 @@ export function SongTransitionPreviewModal({
                 {activeTab === 'stagecraft' && (
                   <div className="space-y-1">
                     {diagnosis.stageRecommendations.map((rec, idx) => (
-                      <div key={idx} className="flex items-start gap-1.5 bg-black/30 p-1.5 rounded-lg border border-amber-500/20 text-[10px]">
-                        <Compass className="w-3 h-3 text-[#f2ca50] shrink-0 mt-0.5" />
+                      <div key={idx} className="flex items-start gap-1.5 bg-black/30 p-1.5 rounded-[var(--r-s)] border /20 text-[10px]">
+                        <Compass className="w-3 h-3 text-[var(--acc)] shrink-0 mt-0.5" />
                         <p className="text-[10px] leading-tight text-zinc-300">
                           {rec}
                         </p>
@@ -1357,7 +1357,7 @@ export function SongTransitionPreviewModal({
                     onInsertInterludio(itemA.id);
                     onClose();
                   }}
-                  className="px-2.5 py-1 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-[var(--r-s)] bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
                 >
                   <MessageSquarePlus className="w-3 h-3" />
                   <span>Insertar Chapa</span>
@@ -1372,7 +1372,7 @@ export function SongTransitionPreviewModal({
                     onSwapSongs(indexA, indexB);
                     onClose();
                   }}
-                  className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
                 >
                   <ArrowLeftRight className="w-3 h-3" />
                   <span>Invertir (A ⇄ B)</span>
@@ -1383,7 +1383,7 @@ export function SongTransitionPreviewModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-3.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white text-[11px] font-bold transition cursor-pointer"
+              className="px-3.5 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-white text-[11px] font-bold transition cursor-pointer"
             >
               Cerrar
             </button>

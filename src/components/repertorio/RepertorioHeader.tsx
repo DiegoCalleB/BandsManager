@@ -29,7 +29,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
       <div className="flex items-center gap-3">
         <div
-          className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
+          className="w-12 h-12 rounded-[var(--r-l)] flex items-center justify-center shadow-lg"
           style={{
             backgroundColor: `${colors.primary}15`,
             color: colors.primary,
@@ -41,7 +41,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
           <h1 className="text-2xl font-bold tracking-tight" style={{ color: colors.text }}>
             Repertorio & Setlists
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--ink-3)]">
             {songCount} canciones en catálogo • {setlistCount} setlists de concierto
           </p>
         </div>
@@ -50,13 +50,13 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
       <div className="flex items-center gap-3">
         {/* Navigation Tabs */}
         <div
-          className="flex items-center p-1 rounded-xl border"
+          className="flex items-center p-1 rounded-[var(--r-m)] border"
           style={{ backgroundColor: colors.card, borderColor: colors.border }}
         >
           <button
             id="tab-btn-canciones"
             onClick={() => setActiveTab('canciones')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-all ${
               activeTab === 'canciones' ? 'shadow-sm' : 'hover:opacity-80'
             }`}
             style={{
@@ -70,7 +70,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
           <button
             id="tab-btn-setlists"
             onClick={() => setActiveTab('setlists')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-all ${
               activeTab === 'setlists' ? 'shadow-sm' : 'hover:opacity-80'
             }`}
             style={{
@@ -88,7 +88,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
           <button
             id="btn-nueva-cancion"
             onClick={onOpenNewSongModal}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs text-white shadow-md hover:brightness-110 active:scale-95 transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-white shadow-md hover:brightness-110 active:scale-95 transition-all"
             style={{ backgroundColor: colors.primary }}
           >
             <Plus className="w-4 h-4" />
@@ -98,7 +98,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
           <button
             id="btn-nuevo-setlist"
             onClick={onOpenNewSetlistModal}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs text-white shadow-md hover:brightness-110 active:scale-95 transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-white shadow-md hover:brightness-110 active:scale-95 transition-all"
             style={{ backgroundColor: colors.primary }}
           >
             <Plus className="w-4 h-4" />

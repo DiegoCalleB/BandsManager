@@ -605,14 +605,14 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       />
 
       {savedSuccess && (
-        <div className="p-3 sm:p-4 bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-2">
+        <div className="p-3 sm:p-4 bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 text-xs sm:text-sm font-semibold rounded-[var(--r-m)] flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 shrink-0" />
           <span>¡Información del dossier y kit de prensa guardada y sincronizada correctamente!</span>
         </div>
       )}
 
       {saveError && (
-        <div className="p-3 sm:p-4 bg-red-950/80 border border-red-500/50 text-red-200 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-2">
+        <div className="p-3 sm:p-4 bg-red-950/80 border border-red-500/50 text-red-200 text-xs sm:text-sm font-semibold rounded-[var(--r-m)] flex items-center gap-2">
           <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
           <span>{saveError}</span>
         </div>

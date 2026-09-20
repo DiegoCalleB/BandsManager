@@ -99,20 +99,20 @@ export function AIBandScoutModal({
   };
 
   const bgColor = isStitchLight ? "bg-white" : "bg-[#1a1a1a]";
-  const textColor = isStitchLight ? "text-slate-800" : "text-white";
-  const subtextColor = isStitchLight ? "text-slate-500" : "text-gray-400";
-  const inputBg = isStitchLight ? "bg-slate-50" : "bg-[#2a2a2a]";
-  const borderColor = isStitchLight ? "border-slate-200" : "border-[#333]";
+  const textColor = isStitchLight ? "text-[var(--ink)]" : "text-white";
+  const subtextColor = isStitchLight ? "text-[var(--ink-2)]" : "text-gray-400";
+  const inputBg = isStitchLight ? "bg-[var(--bg)]" : "bg-[#2a2a2a]";
+  const borderColor = isStitchLight ? "" : "border-[#333]";
 
   return (
     <ModalPortal>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-        <div className={`w-full max-w-4xl ${bgColor} rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}>
+        <div className={`w-full max-w-4xl ${bgColor} rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}>
           
           {/* Header */}
           <div className="p-4 border-b border-black/10 flex justify-between items-center bg-gradient-to-r from-amber-500/10 to-orange-500/10">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-amber-500/20 rounded-lg text-amber-500">
+              <div className="p-2 bg-amber-500/20 rounded-[var(--r-s)] text-amber-500">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
@@ -127,7 +127,7 @@ export function AIBandScoutModal({
 
           <div className="p-5 flex-1 overflow-y-auto">
             {activeCampaign && (
-              <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-3">
+              <div className="mb-6 p-4 bg-amber-500/10 border /20 rounded-[var(--r-m)] flex items-start gap-3">
                 <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
                 <div>
                   <p className={`text-sm font-medium ${textColor}`}>Contexto de tu Campaña Activa</p>
@@ -150,7 +150,7 @@ export function AIBandScoutModal({
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     placeholder="Ej: Barcelona, Valencia..."
-                    className={`w-full pl-9 pr-3 py-2 ${inputBg} border ${borderColor} rounded-xl text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 ${textColor}`}
+                    className={`w-full pl-9 pr-3 py-2 ${inputBg} border ${borderColor} rounded-[var(--r-m)] text-sm focus: focus:ring-1 focus:ring-amber-500 ${textColor}`}
                   />
                 </div>
               </div>
@@ -164,7 +164,7 @@ export function AIBandScoutModal({
                     value={genre}
                     onChange={(e) => setGenre(e.target.value)}
                     placeholder="Ej: Balkan Ska, Punk Rock..."
-                    className={`w-full pl-9 pr-3 py-2 ${inputBg} border ${borderColor} rounded-xl text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 ${textColor}`}
+                    className={`w-full pl-9 pr-3 py-2 ${inputBg} border ${borderColor} rounded-[var(--r-m)] text-sm focus: focus:ring-1 focus:ring-amber-500 ${textColor}`}
                   />
                 </div>
               </div>
@@ -174,7 +174,7 @@ export function AIBandScoutModal({
                 <select
                   value={count}
                   onChange={(e) => setCount(Number(e.target.value))}
-                  className={`w-full px-3 py-2 ${inputBg} border ${borderColor} rounded-xl text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 ${textColor}`}
+                  className={`w-full px-3 py-2 ${inputBg} border ${borderColor} rounded-[var(--r-m)] text-sm focus: focus:ring-1 focus:ring-amber-500 ${textColor}`}
                 >
                   <option value={3}>3 bandas</option>
                   <option value={5}>5 bandas</option>
@@ -187,7 +187,7 @@ export function AIBandScoutModal({
               <button
                 onClick={handleSearch}
                 disabled={isSearching}
-                className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-[var(--r-m)] shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isSearching ? (
                   <>
@@ -204,7 +204,7 @@ export function AIBandScoutModal({
             </div>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl flex items-center gap-2 text-sm">
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-[var(--r-m)] flex items-center gap-2 text-sm">
                 <AlertCircle className="w-5 h-5 shrink-0" />
                 <p>{error}</p>
               </div>
@@ -225,14 +225,14 @@ export function AIBandScoutModal({
                     <div 
                       key={idx}
                       onClick={() => toggleSelection(idx)}
-                      className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex items-center justify-between
+                      className={`p-4 rounded-[var(--r-m)] border-2 transition-all cursor-pointer flex items-center justify-between
                         ${selectedBands.has(idx) 
-                          ? 'border-amber-500 bg-amber-500/5' 
+                          ? ' bg-amber-500/5' 
                           : `${borderColor} ${inputBg} opacity-70 hover:opacity-100`}`}
                     >
                       <div className="flex items-center gap-4">
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0
-                          ${selectedBands.has(idx) ? 'bg-amber-500 text-white' : 'border-2 border-gray-400'}`}>
+                          ${selectedBands.has(idx) ? 'bg-amber-500 text-white' : 'border-2 '}`}>
                           {selectedBands.has(idx) && <CheckCircle2 className="w-4 h-4" />}
                         </div>
                         
@@ -256,14 +256,14 @@ export function AIBandScoutModal({
           <div className={`p-4 border-t ${borderColor} flex justify-end gap-3 bg-black/5`}>
             <button
               onClick={onClose}
-              className={`px-4 py-2 font-medium text-sm rounded-xl ${subtextColor} hover:${textColor} transition-colors`}
+              className={`px-4 py-2 font-medium text-sm rounded-[var(--r-m)] ${subtextColor} hover:${textColor} transition-colors`}
             >
               Cancelar
             </button>
             <button
               onClick={handleImport}
               disabled={selectedBands.size === 0}
-              className="px-6 py-2 bg-black text-white hover:bg-neutral-800 font-bold text-sm rounded-xl transition-all shadow disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-black text-white hover:bg-neutral-800 font-bold text-sm rounded-[var(--r-m)] transition-all shadow disabled:opacity-50 flex items-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
               Importar {selectedBands.size} Bandas al CRM

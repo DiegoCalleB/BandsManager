@@ -211,7 +211,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-stone-900 border border-amber-500/40 p-2.5 rounded-xl shadow-xl font-mono text-xs text-zinc-100 z-50 max-w-[200px]">
+                    <div className="bg-stone-900 border /40 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50 max-w-[200px]">
                       <div className="font-bold text-amber-400 text-sm truncate">#{data.num} {data.title}</div>
                       <div className="text-[11px] text-zinc-300 mt-1 space-y-0.5">
                         <div>Energía: <span className="font-bold" style={{ color: data.hexColor }}>{data.energy}/20 ({data.label})</span></div>
@@ -266,16 +266,16 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
-      <div className="flex items-center justify-between pb-2.5 border-b border-neutral-800">
+      <div className="flex items-center justify-between pb-2.5 border-b ">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-sky-500/15 text-sky-400 shrink-0">
+          <div className="p-2 rounded-[var(--r-m)] bg-sky-500/15 text-sky-400 shrink-0">
             <Building2 className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100">
+            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-bg-[var(--sunken)]">
               Embudo de Contrataciones
             </h3>
-            <p className="text-[11px] font-mono text-neutral-400">Conversión de Salas & Festivales</p>
+            <p className="text-[11px] font-mono text-text-[var(--ink-2)]">Conversión de Salas & Festivales</p>
           </div>
         </div>
 
@@ -291,8 +291,8 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
         )}
       </div>
 
-      <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#121214] border border-stone-800 text-xs font-mono">
-        <span className="text-neutral-400">Tasa de Conversión a Conciertos:</span>
+      <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[#121214] border border-stone-800 text-xs font-mono">
+        <span className="text-text-[var(--ink-2)]">Tasa de Conversión a Conciertos:</span>
         <span className="font-bold text-emerald-400 flex items-center gap-1">
           <TrendingUp className="w-3.5 h-3.5" /> {conversionRate}% ({counts.confirmado} cierres)
         </span>
@@ -310,12 +310,12 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
                   const data = payload[0].payload;
                   const pct = ((data.count / total) * 100).toFixed(1);
                   return (
-                    <div className="bg-stone-900 border border-stone-700 p-2.5 rounded-xl shadow-xl font-mono text-xs text-zinc-100 z-50">
+                    <div className="bg-stone-900 border border-stone-700 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
                       <div className="font-bold text-amber-400">{data.name}</div>
                       <div className="text-zinc-300 mt-1">
                         Cantidad: <span className="font-bold text-white">{data.count} salas</span>
                       </div>
-                      <div className="text-neutral-400 text-[10px]">
+                      <div className="text-text-[var(--ink-2)] text-[10px]">
                         Representa el {pct}% del total
                       </div>
                     </div>
@@ -356,16 +356,16 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
-      <div className="flex items-center justify-between pb-2.5 border-b border-neutral-800">
+      <div className="flex items-center justify-between pb-2.5 border-b ">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 shrink-0">
+          <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/15 text-emerald-400 shrink-0">
             <DollarSign className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100">
+            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-bg-[var(--sunken)]">
               Evolución Financiera & Caché
             </h3>
-            <p className="text-[11px] font-mono text-neutral-400">Ingresos vs Gastos de Directos</p>
+            <p className="text-[11px] font-mono text-text-[var(--ink-2)]">Ingresos vs Gastos de Directos</p>
           </div>
         </div>
 
@@ -382,12 +382,12 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
       </div>
 
       <div className="grid grid-cols-2 gap-2 font-mono text-xs text-center">
-        <div className="p-2 rounded-xl bg-[#121214] border border-emerald-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Ingresos Totales</span>
+        <div className="p-2 rounded-[var(--r-m)] bg-[#121214] border border-emerald-500/20">
+          <span className="text-[10px] text-text-[var(--ink-2)] block uppercase">Ingresos Totales</span>
           <span className="font-bold text-emerald-400 text-sm">+{totalIngresos}€</span>
         </div>
-        <div className="p-2 rounded-xl bg-[#121214] border border-amber-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Neto / Beneficio</span>
+        <div className="p-2 rounded-[var(--r-m)] bg-[#121214] border /20">
+          <span className="text-[10px] text-text-[var(--ink-2)] block uppercase">Neto / Beneficio</span>
           <span className="font-bold text-amber-400 text-sm">+{beneficio}€</span>
         </div>
       </div>
@@ -403,7 +403,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-stone-900 border border-emerald-500/40 p-2.5 rounded-xl shadow-xl font-mono text-xs text-zinc-100 z-50">
+                    <div className="bg-stone-900 border border-emerald-500/40 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
                       <div className="font-bold text-emerald-400">{data.month}</div>
                       <div className="text-zinc-300 mt-1 space-y-0.5">
                         <div>Ingresos: <span className="font-bold text-emerald-400">+{data.ingresos}€</span></div>
@@ -440,16 +440,16 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
-      <div className="flex items-center justify-between pb-2.5 border-b border-neutral-800">
+      <div className="flex items-center justify-between pb-2.5 border-b ">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-purple-500/15 text-purple-400 shrink-0">
+          <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400 shrink-0">
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100">
+            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-bg-[var(--sunken)]">
               Captación de Fans & QR
             </h3>
-            <p className="text-[11px] font-mono text-neutral-400">Crecimiento en Registro de Seguidores</p>
+            <p className="text-[11px] font-mono text-text-[var(--ink-2)]">Crecimiento en Registro de Seguidores</p>
           </div>
         </div>
 
@@ -465,8 +465,8 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
         )}
       </div>
 
-      <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#121214] border border-purple-500/20 text-xs font-mono">
-        <span className="text-neutral-400">Fans Registrados:</span>
+      <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[#121214] border border-purple-500/20 text-xs font-mono">
+        <span className="text-text-[var(--ink-2)]">Fans Registrados:</span>
         <span className="font-bold text-purple-400 text-sm">{fansCount > 0 ? fansCount : 85} seguidores</span>
       </div>
 
@@ -487,7 +487,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-stone-900 border border-purple-500/40 p-2.5 rounded-xl shadow-xl font-mono text-xs text-zinc-100 z-50">
+                    <div className="bg-stone-900 border border-purple-500/40 p-2.5 rounded-[var(--r-m)] shadow-xl font-mono text-xs text-zinc-100 z-50">
                       <div className="font-bold text-purple-400">{data.mes}</div>
                       <div className="text-zinc-300 mt-1 space-y-0.5">
                         <div>Fans acumulados: <span className="font-bold text-purple-300">{data.fans}</span></div>

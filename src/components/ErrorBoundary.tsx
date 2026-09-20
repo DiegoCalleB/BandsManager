@@ -45,26 +45,26 @@ export class ErrorBoundary extends React.Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="p-8 rounded-2xl bg-slate-900 border border-slate-800 text-slate-200 space-y-4 max-w-2xl mx-auto my-8">
+        <div className="p-8 rounded-[var(--r-l)] bg-[var(--surface)] border  text-[var(--ink-3)] space-y-4 max-w-2xl mx-auto my-8">
           <div className="flex items-center gap-3 text-amber-400">
             <AlertTriangle className="w-8 h-8 shrink-0 text-amber-500" />
             <h3 className="text-lg font-bold">
               {this.props.fallbackTitle || 'Ha ocurrido un error al cargar este módulo'}
             </h3>
           </div>
-          <p className="text-xs text-slate-400 leading-relaxed font-mono bg-slate-950 p-3 rounded-xl border border-slate-850 overflow-x-auto">
+          <p className="text-xs text-[var(--ink-3)] leading-relaxed font-mono bg-slate-950 p-3 rounded-[var(--r-m)] border  overflow-x-auto">
             {this.state.error?.message || 'Error no especificado en la renderización.'}
           </p>
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={this.handleReset}
-              className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl flex items-center gap-2 transition"
+              className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-[var(--r-m)] flex items-center gap-2 transition"
             >
               <RefreshCw className="w-4 h-4" /> Reintentar Cargar Módulo
             </button>
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 transition"
+              className="px-4 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] text-xs font-semibold rounded-[var(--r-m)] border  transition"
             >
               Recargar Aplicación
             </button>

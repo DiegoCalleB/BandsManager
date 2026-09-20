@@ -47,20 +47,20 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
   const activeSetlist = setlists.find(s => s.id === activeSetlistId) || setlists[0];
 
   return (
-    <header className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-2xl ${isStitchLight ? 'bg-white border-slate-200' : 'bg-[#16161a]/95 border-neutral-800/80'} border space-y-2.5 shadow-sm`}>
+    <header className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-[var(--r-l)] ${isStitchLight ? 'bg-white ' : 'bg-[#16161a]/95 /80'} border space-y-2.5 shadow-sm`}>
       {/* Top Row: Title + 2 Main Pillars (Setlists vs Discografía) */}
       <div className="flex items-center justify-between gap-2">
         {/* Module Title */}
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center font-bold shrink-0 shadow-xs ${
+          <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 shadow-xs ${
             isStitchLight 
-              ? 'bg-amber-100 text-amber-700 border border-amber-200' 
-              : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+              ? 'bg-amber-100 text-amber-700 border ' 
+              : 'bg-amber-500/15 text-amber-400 border /30'
           }`}>
             <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
           </div>
           <div className="min-w-0">
-            <h1 className={`text-base sm:text-lg font-bold tracking-tight leading-none truncate ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>
+            <h1 className={`text-base sm:text-lg font-bold tracking-tight leading-none truncate ${isStitchLight ? 'text-[var(--ink)]' : 'text-zinc-100'}`}>
               Repertorios
             </h1>
             <p className="text-xs text-zinc-400 mt-1 hidden sm:block truncate font-normal">
@@ -83,23 +83,23 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             </div>
           )}
 
-          <nav aria-label="Vistas principales de repertorio" className={`p-1 rounded-xl flex items-center gap-1 border ${isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-neutral-900/90 border-white/5'}`}>
+          <nav aria-label="Vistas principales de repertorio" className={`p-1 rounded-[var(--r-m)] flex items-center gap-1 border ${isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/90 border-white/5'}`}>
             <button
               id="tab-btn-setlists"
               type="button"
               onClick={() => setActiveTab('setlists')}
-              className={`px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'setlists'
                   ? isStitchLight
-                    ? 'bg-white text-slate-900 shadow-sm border border-slate-200/80 font-bold'
-                    : 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
+                    ? 'bg-white text-[var(--ink)] shadow-sm border /80 font-bold'
+                    : 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200 font-medium'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
               <span>Setlists</span>
               <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                activeTab === 'setlists' && !isStitchLight ? 'bg-[#2c2200]/20 text-[#2c2200]' : 'bg-black/25 text-inherit'
+                activeTab === 'setlists' && !isStitchLight ? 'bg-[var(--acc-ink)]/20 text-[var(--acc-ink)]' : 'bg-black/25 text-inherit'
               }`}>
                 {setlists.length}
               </span>
@@ -109,18 +109,18 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               id="tab-btn-catalogo"
               type="button"
               onClick={() => setActiveTab('catalogo')}
-              className={`px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'catalogo'
                   ? isStitchLight
-                    ? 'bg-white text-slate-900 shadow-sm border border-slate-200/80 font-bold'
-                    : 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
+                    ? 'bg-white text-[var(--ink)] shadow-sm border /80 font-bold'
+                    : 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200 font-medium'
               }`}
             >
               <Disc3 className="w-3.5 h-3.5" />
               <span>Discografía</span>
               <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                activeTab === 'catalogo' && !isStitchLight ? 'bg-[#2c2200]/20 text-[#2c2200]' : 'bg-black/25 text-inherit'
+                activeTab === 'catalogo' && !isStitchLight ? 'bg-[var(--acc-ink)]/20 text-[var(--acc-ink)]' : 'bg-black/25 text-inherit'
               }`}>
                 {songCount}
               </span>
@@ -130,7 +130,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
       </div>
 
       {/* Sub Row: Contextual Quick Actions */}
-      <div className={`flex items-center justify-between gap-2 pt-1.5 border-t ${isStitchLight ? 'border-slate-100' : 'border-neutral-800/60'}`}>
+      <div className={`flex items-center justify-between gap-2 pt-1.5 border-t ${isStitchLight ? '' : '/60'}`}>
         {activeTab === 'setlists' && (
           <>
             {/* Quick Setlist Switcher (Dropdown for 1-click change) */}
@@ -138,10 +138,10 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               <button
                 type="button"
                 onClick={() => setShowSetlistDropdown(v => !v)}
-                className={`w-full px-3 py-1.5 rounded-xl border text-left flex items-center justify-between gap-2 text-xs font-medium transition-all cursor-pointer shadow-xs ${
+                className={`w-full px-3 py-1.5 rounded-[var(--r-m)] border text-left flex items-center justify-between gap-2 text-xs font-medium transition-all cursor-pointer shadow-xs ${
                   isStitchLight
-                    ? 'bg-white border-slate-200 text-slate-800 hover:border-slate-300'
-                    : 'bg-[#1a1a1e] border-neutral-800 text-zinc-200 hover:border-neutral-700'
+                    ? 'bg-white  text-[var(--ink)] hover:'
+                    : 'bg-[#1a1a1e]  text-zinc-200 hover:'
                 }`}
               >
                 <div className="flex items-center gap-2 min-w-0">
@@ -162,10 +162,10 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               {showSetlistDropdown && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowSetlistDropdown(false)} />
-                  <div className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-xl border shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+                  <div className={`absolute left-0 top-full mt-1.5 z-50 w-full sm:w-80 max-h-72 overflow-y-auto rounded-[var(--r-m)] border shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
                     isStitchLight
-                      ? 'bg-white border-slate-200 text-slate-900'
-                      : 'border-neutral-800 bg-[#16161a] text-zinc-200'
+                      ? 'bg-white  text-[var(--ink)]'
+                      : ' bg-[#16161a] text-zinc-200'
                   }`}>
                     <div className="px-2.5 py-1.5 text-[11px] uppercase tracking-wider text-zinc-400 font-semibold flex items-center justify-between">
                       <span>Tus Setlists ({setlists.length})</span>
@@ -192,10 +192,10 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                             onSelectSetlist(sl.id);
                             setShowSetlistDropdown(false);
                           }}
-                          className={`w-full text-left px-2.5 py-2 rounded-lg flex items-center justify-between gap-2 transition cursor-pointer ${
+                          className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 transition cursor-pointer ${
                             isSelected
-                              ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold'
-                              : isStitchLight ? 'text-slate-700 hover:bg-slate-100' : 'text-zinc-300 hover:bg-white/5'
+                              ? 'bg-amber-500/15 text-amber-300 border /30 font-semibold'
+                              : isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-zinc-300 hover:bg-white/5'
                           }`}
                         >
                           <div className="min-w-0 truncate">
@@ -219,7 +219,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-create-setlist"
                 type="button"
                 onClick={onCreateSetlist}
-                className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
                 title="Crear un nuevo setlist de concierto"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -229,10 +229,10 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               <button
                 type="button"
                 onClick={onImportSetlist}
-                className={`p-1.5 rounded-xl border transition cursor-pointer ${
+                className={`p-1.5 rounded-[var(--r-m)] border transition cursor-pointer ${
                   isStitchLight
-                    ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
-                    : 'bg-neutral-800 hover:bg-neutral-700 text-zinc-300 hover:text-white border-neutral-700/70'
+                    ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] '
+                    : 'bg-neutral-800 hover:bg-neutral-700 text-zinc-300 hover:text-white /70'
                 }`}
                 title="Importar repertorio desde foto o PDF impreso"
               >
@@ -245,16 +245,16 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
         {activeTab === 'catalogo' && (
           <div className="flex items-center justify-between w-full gap-2">
             {/* Sub-view switcher inside Catálogo */}
-            <div className={`hidden md:flex items-center gap-1 p-0.5 rounded-xl border shrink-0 ${
-              isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-neutral-900/90 border-white/5'
+            <div className={`hidden md:flex items-center gap-1 p-0.5 rounded-[var(--r-m)] border shrink-0 ${
+              isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/90 border-white/5'
             }`}>
               <button
                 id="btn-subtab-albumes"
                 type="button"
                 onClick={() => setCatalogoViewMode('albumes')}
-                className={`px-3 py-1 rounded-lg text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
+                className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
                   catalogoViewMode === 'albumes'
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-xs font-bold'
+                    ? 'bg-amber-500/20 text-amber-300 border /30 shadow-xs font-bold'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
@@ -265,7 +265,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-subtab-canciones"
                 type="button"
                 onClick={() => setCatalogoViewMode('canciones')}
-                className={`px-3 py-1 rounded-lg text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
+                className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
                   catalogoViewMode === 'canciones'
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-xs font-bold'
                     : 'text-zinc-400 hover:text-zinc-200'
@@ -289,7 +289,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-add-song"
                 type="button"
                 onClick={onOpenNewSongModal}
-                className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 active:scale-95"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 active:scale-95"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>Nueva Canción</span>
@@ -298,10 +298,10 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 id="btn-add-album"
                 type="button"
                 onClick={onOpenNewAlbumModal}
-                className={`px-3 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] border text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shadow-sm shrink-0 ${
                   isStitchLight
-                    ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
-                    : 'bg-neutral-800 hover:bg-neutral-700 text-zinc-200 border-neutral-700/80'
+                    ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] '
+                    : 'bg-neutral-800 hover:bg-neutral-700 text-zinc-200 /80'
                 }`}
               >
                 <Disc3 className="w-3.5 h-3.5 stroke-[2.5]" />

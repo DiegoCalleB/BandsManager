@@ -72,11 +72,11 @@ export function NegotiationSimulationModal({
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
         <div
-          className={`w-full max-w-2xl p-5 rounded-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
-            isStitchLight ? 'bg-white text-slate-800' : 'bg-[#18181b] text-[#e5e2e1]'
+          className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
+            isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#18181b] text-[var(--ink)]'
           }`}
         >
-        <div className="flex justify-between items-start border-b border-neutral-200 dark:border-neutral-800 pb-3">
+        <div className="flex justify-between items-start border-b border-bg-[var(--sunken)] dark: pb-3">
           <div>
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-[#d1b375]/80 animate-pulse" />
@@ -86,7 +86,7 @@ export function NegotiationSimulationModal({
             </div>
             <p className={`text-[10px] font-sans mt-0.5 ${textMuted}`}>
               Trato actual con{' '}
-              <strong className="text-[#d1b375]/80 dark:text-[#f2ca50]">
+              <strong className="text-[#d1b375]/80 dark:text-[var(--acc)]">
                 {selectedLead.nombre_sala}
               </strong>{' '}
               ({selectedLead.ciudad}) — Estado: {selectedLead.estado}
@@ -112,14 +112,14 @@ export function NegotiationSimulationModal({
               <button
                 type="button"
                 onClick={() => onRoleChange('sala')}
-                className={`py-2 px-3 rounded-lg font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   simulationRole === 'sala'
                     ? isStitchLight
                       ? 'bg-[#d1b375]/15 hover:bg-[#d1b375]/15 text-white shadow-sm'
-                      : 'bg-[#f2ca50] hover:bg-[#ffe28d] text-[#3c2f00]'
+                      : 'bg-[var(--acc)] hover:bg-[#ffe28d] text-[var(--acc-ink)]'
                     : isStitchLight
-                    ? 'bg-slate-50 hover:bg-slate-100 text-slate-500'
-                    : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-400'
+                    ? 'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+                    : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)]'
                 }`}
               >
                 <Building className="w-4 h-4" /> Sala o Festival (Entrante)
@@ -127,14 +127,14 @@ export function NegotiationSimulationModal({
               <button
                 type="button"
                 onClick={() => onRoleChange('banda')}
-                className={`py-2 px-3 rounded-lg font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   simulationRole === 'banda'
                     ? isStitchLight
                       ? 'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-sm'
                       : 'bg-sky-500/15 hover:bg-sky-500/15 text-white'
                     : isStitchLight
-                    ? 'bg-slate-50 hover:bg-slate-100 text-slate-500'
-                    : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-400'
+                    ? 'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+                    : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)]'
                 }`}
               >
                 <Users className="w-4 h-4" /> Banda Bakandeya (Saliente)
@@ -150,10 +150,10 @@ export function NegotiationSimulationModal({
             <select
               value={simulationScenario}
               onChange={(e) => onScenarioChange(e.target.value)}
-              className={`w-full rounded-lg px-2 py-1 text-[10px] focus:outline-none font-sans ${
+              className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                 isStitchLight
-                  ? 'bg-white text-slate-800 focus:border-indigo-500'
-                  : 'bg-[#1c1b1b] text-[#e5e2e1] focus:border-[#f2ca50]'
+                  ? 'bg-white text-[var(--ink)] focus:border-indigo-500'
+                  : 'bg-[#1c1b1b] text-[var(--ink)] focus:border-[var(--acc)]'
               }`}
             >
               {(simulationRole === 'sala'
@@ -178,10 +178,10 @@ export function NegotiationSimulationModal({
                 value={simulationSenderName}
                 onChange={(e) => onSenderNameChange(e.target.value)}
                 placeholder="Ej. Kike (Sala Hebe) o Bakandeya Agent Manager IA"
-                className={`w-full rounded-lg px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                   isStitchLight
-                    ? 'bg-white text-slate-800 focus:border-indigo-500'
-                    : 'bg-[#1c1b1b] text-[#e5e2e1] focus:border-[#f2ca50]'
+                    ? 'bg-white text-[var(--ink)] focus:border-indigo-500'
+                    : 'bg-[#1c1b1b] text-[var(--ink)] focus:border-[var(--acc)]'
                 }`}
               />
             </div>
@@ -194,10 +194,10 @@ export function NegotiationSimulationModal({
                 value={simulationSubject}
                 onChange={(e) => onSubjectChange(e.target.value)}
                 placeholder="Ej. Re: Propuesta..."
-                className={`w-full rounded-lg px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                   isStitchLight
-                    ? 'bg-white text-slate-800 focus:border-indigo-500'
-                    : 'bg-[#1c1b1b] text-[#e5e2e1] focus:border-[#f2ca50]'
+                    ? 'bg-white text-[var(--ink)] focus:border-indigo-500'
+                    : 'bg-[#1c1b1b] text-[var(--ink)] focus:border-[var(--acc)]'
                 }`}
               />
             </div>
@@ -218,10 +218,10 @@ export function NegotiationSimulationModal({
               value={simulationCustomInstruction}
               onChange={(e) => onCustomInstructionChange(e.target.value)}
               placeholder="Define pautas específicas (ej. propone taquilla 60/40, exige rider técnico especial, etc.)..."
-              className={`w-full rounded-lg p-2.5 text-[10px] focus:outline-none font-sans leading-relaxed ${
+              className={`w-full rounded-[var(--r-s)] p-2.5 text-[10px] focus:outline-none font-sans leading-relaxed ${
                 isStitchLight
-                  ? 'bg-white text-slate-800 focus:border-indigo-500'
-                  : 'bg-[#1c1b1b] text-[#e5e2e1] focus:border-[#f2ca50]'
+                  ? 'bg-white text-[var(--ink)] focus:border-indigo-500'
+                  : 'bg-[#1c1b1b] text-[var(--ink)] focus:border-[var(--acc)]'
               }`}
             />
           </div>
@@ -232,7 +232,7 @@ export function NegotiationSimulationModal({
               type="button"
               onClick={onGenerate}
               disabled={isGeneratingSimulation || !simulationCustomInstruction}
-              className={`w-full py-2.5 rounded-lg font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 ${
+              className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 ${
                 isStitchLight
                   ? 'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md'
                   : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-extrabold shadow-lg'
@@ -252,11 +252,11 @@ export function NegotiationSimulationModal({
 
           {/* Output Preview Area */}
           {(simulationGenerated || simulationMessage) && (
-            <div className="space-y-2 border-t border-neutral-200 dark:border-neutral-800 pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="space-y-2 border-t border-bg-[var(--sunken)] dark: pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex justify-between items-center">
                 <label
                   className={`block text-[10px] uppercase font-sans tracking-wider ${
-                    isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'
+                    isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'
                   }`}
                 >
                   ✨ Vista Previa del Correo Generado (Editable)
@@ -269,10 +269,10 @@ export function NegotiationSimulationModal({
                 rows={6}
                 value={simulationMessage}
                 onChange={(e) => onMessageChange(e.target.value)}
-                className={`w-full rounded-lg p-3 text-[10px] focus:outline-none font-sans leading-relaxed ${
+                className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none font-sans leading-relaxed ${
                   isStitchLight
-                    ? 'bg-sky-500/15 text-slate-800'
-                    : 'bg-neutral-900 text-neutral-200'
+                    ? 'bg-sky-500/15 text-[var(--ink)]'
+                    : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]'
                 }`}
               />
               <p className={`text-[10px] font-sans ${textMuted} leading-tight`}>
@@ -284,14 +284,14 @@ export function NegotiationSimulationModal({
         </div>
 
         {/* Footer Buttons */}
-        <div className="flex justify-end gap-3.5 border-t border-neutral-200 dark:border-neutral-800 pt-3 mt-1">
+        <div className="flex justify-end gap-3.5 border-t border-bg-[var(--sunken)] dark: pt-3 mt-1">
           <button
             type="button"
             onClick={onClose}
-            className={`px-2 py-1 rounded-lg font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+            className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
               isStitchLight
-                ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-400'
+                ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+                : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)]'
             }`}
           >
             Cancelar
@@ -300,7 +300,7 @@ export function NegotiationSimulationModal({
             type="button"
             onClick={onCommit}
             disabled={!simulationMessage || isGeneratingSimulation}
-            className={`px-2 py-1 rounded-lg font-sans font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all ${
+            className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all ${
               isStitchLight
                 ? 'bg-sky-500/15 hover:bg-sky-500/15 text-white'
                 : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-extrabold'

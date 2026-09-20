@@ -230,8 +230,8 @@ export const BandMap: React.FC<BandMapProps> = ({
         iconCreateFunction: (cluster: any) => {
           const count = cluster.getChildCount();
           const size = 42;
-          const bgColor = '#f2ca50';
-          const textColor = '#3c2f00';
+          const bgColor = 'var(--acc)';
+          const textColor = 'var(--acc-ink)';
 
           return L.divIcon({
             html: `
@@ -473,7 +473,7 @@ export const BandMap: React.FC<BandMapProps> = ({
             <button id="pop-band-select-${band.id}" style="
               width: 100%;
               background: #18181b;
-              color: #f2ca50;
+              color: var(--acc);
               border: 1px solid #3f3f46;
               padding: 6px 10px;
               border-radius: 8px;
@@ -531,16 +531,16 @@ export const BandMap: React.FC<BandMapProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[550px] sm:h-[650px] rounded-2xl overflow-hidden shadow-lg border border-neutral-800">
+    <div className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden shadow-lg border ">
       {/* Map Element */}
       <div ref={mapRef} className="w-full h-full z-0" />
 
       {/* Header Overlay */}
       <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
-        <div className={`pointer-events-auto px-3.5 py-2 rounded-xl backdrop-blur-md shadow-md flex items-center gap-2 font-mono text-xs ${
-          isStitchLight ? 'bg-white/90 text-slate-900' : 'bg-zinc-900/90 text-zinc-100'
+        <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] backdrop-blur-md shadow-md flex items-center gap-2 font-mono text-xs ${
+          isStitchLight ? 'bg-white/90 text-[var(--ink)]' : 'bg-zinc-900/90 text-zinc-100'
         }`}>
-          <MapPin className="w-4 h-4 text-[#f2ca50] animate-bounce" />
+          <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
           <div>
             <span className="font-bold">Mapa de Bandas Amigas</span>
             <span className="ml-2 text-[10px] opacity-75">
@@ -551,8 +551,8 @@ export const BandMap: React.FC<BandMapProps> = ({
 
         <div className="pointer-events-auto flex items-center gap-2 relative">
           {isGeocoding && (
-            <div className="px-3 py-1.5 rounded-xl backdrop-blur-md text-[10px] font-mono flex items-center gap-1.5 bg-amber-950/90 text-amber-200">
-              <Loader2 className="w-3 h-3 animate-spin text-[#f2ca50]" />
+            <div className="px-3 py-1.5 rounded-[var(--r-m)] backdrop-blur-md text-[10px] font-mono flex items-center gap-1.5 bg-amber-950/90 text-amber-200">
+              <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
               <span>Geolocalizando bandas...</span>
             </div>
           )}
@@ -560,16 +560,16 @@ export const BandMap: React.FC<BandMapProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowStyleMenu(!showStyleMenu)}
-              className={`px-3 py-2 rounded-xl backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
-                isStitchLight ? 'bg-white/95 text-slate-800' : 'bg-zinc-900/95 text-zinc-200'
+              className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
+                isStitchLight ? 'bg-white/95 text-[var(--ink)]' : 'bg-zinc-900/95 text-zinc-200'
               }`}
             >
-              <Layers className="w-3.5 h-3.5 text-[#f2ca50]" />
+              <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Capa</span>
             </button>
 
             {showStyleMenu && (
-              <div className="absolute right-0 top-11 w-60 p-2 rounded-xl shadow-2xl backdrop-blur-md space-y-1 font-mono text-xs z-[1100] bg-zinc-900/95 text-zinc-200">
+              <div className="absolute right-0 top-11 w-60 p-2 rounded-[var(--r-m)] shadow-2xl backdrop-blur-md space-y-1 font-mono text-xs z-[1100] bg-zinc-900/95 text-zinc-200">
                 {(Object.keys(MAP_STYLES) as MapStyleKey[]).map(key => (
                   <button
                     key={key}
@@ -577,8 +577,8 @@ export const BandMap: React.FC<BandMapProps> = ({
                       setMapStyle(key);
                       setShowStyleMenu(false);
                     }}
-                    className={`w-full text-left px-2.5 py-2 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
-                      mapStyle === key ? 'bg-[#f2ca50] text-[#3c2f00]' : 'hover:bg-zinc-800 text-zinc-300'
+                    className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                      mapStyle === key ? 'bg-[var(--acc)] text-[var(--acc-ink)]' : 'hover:bg-zinc-800 text-zinc-300'
                     }`}
                   >
                     <span>{MAP_STYLES[key].name}</span>
@@ -591,11 +591,11 @@ export const BandMap: React.FC<BandMapProps> = ({
 
           <button
             onClick={handleRecenter}
-            className={`px-3 py-2 rounded-xl backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
-              isStitchLight ? 'bg-white/90 text-slate-800' : 'bg-zinc-900/90 text-zinc-200'
+            className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
+              isStitchLight ? 'bg-white/90 text-[var(--ink)]' : 'bg-zinc-900/90 text-zinc-200'
             }`}
           >
-            <Navigation className="w-3.5 h-3.5 text-[#f2ca50]" />
+            <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span>Centrar</span>
           </button>
         </div>

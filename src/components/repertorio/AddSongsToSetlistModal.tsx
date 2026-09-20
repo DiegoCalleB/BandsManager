@@ -91,7 +91,7 @@ export function AddSongsToSetlistModal({
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
-        <div className={`w-full max-w-2xl p-5 rounded-2xl shadow-2xl my-auto max-h-[92vh] flex flex-col border border-neutral-800 ${colors.card} text-white`}>
+        <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[92vh] flex flex-col border  ${colors.card} text-white`}>
           <div className="flex justify-between items-center pb-3 border-b border-white/10">
             <div className="flex items-center gap-2">
               <ListPlus className="w-5 h-5 text-[#1db954]" />
@@ -99,7 +99,7 @@ export function AddSongsToSetlistModal({
                 Añadir Varias Canciones al Repertorio
               </h3>
             </div>
-            <button onClick={onClose} className="p-1 rounded-lg text-neutral-400 hover:text-white cursor-pointer">
+            <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white cursor-pointer">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -112,8 +112,8 @@ export function AddSongsToSetlistModal({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar por título o tonalidad..."
-                className={`w-full pl-8 pr-3 py-2 text-xs font-mono rounded-xl border focus:outline-none focus:border-[#1db954] ${
-                  isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                className={`w-full pl-8 pr-3 py-2 text-xs font-mono rounded-[var(--r-m)] border focus:outline-none focus:border-[#1db954] ${
+                  isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
                 }`}
               />
             </div>
@@ -122,8 +122,8 @@ export function AddSongsToSetlistModal({
               <select
                 value={albumFilter}
                 onChange={(e) => setAlbumFilter(e.target.value)}
-                className={`text-[10px] font-mono py-1.5 px-2.5 rounded-lg focus:outline-none cursor-pointer border border-neutral-800 font-bold ${
-                  isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-[#d1b375]'
+                className={`text-[10px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer border  font-bold ${
+                  isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-[#d1b375]'
                 }`}
               >
                 {albumsList.map(alb => (
@@ -134,10 +134,10 @@ export function AddSongsToSetlistModal({
               <button
                 type="button"
                 onClick={() => setOnlyFavoritos(p => !p)}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-mono font-bold cursor-pointer transition-colors ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold cursor-pointer transition-colors ${
                   onlyFavoritos
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                    : 'bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-white'
+                    ? 'bg-amber-500/20 text-amber-300 border /40'
+                    : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)] border  hover:text-white'
                 }`}
               >
                 <Star className={`w-3 h-3 ${onlyFavoritos ? 'fill-amber-400' : ''}`} />
@@ -147,7 +147,7 @@ export function AddSongsToSetlistModal({
               <button
                 type="button"
                 onClick={selectAllFiltered}
-                className="px-2.5 py-1.5 rounded-lg text-[10px] font-mono font-bold cursor-pointer bg-neutral-900 text-neutral-300 border border-neutral-800 hover:text-white transition-colors"
+                className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold cursor-pointer bg-bg-[var(--surface)] text-text-[var(--ink-3)] border  hover:text-white transition-colors"
               >
                 Seleccionar todo lo filtrado ({filteredSongs.length})
               </button>
@@ -156,7 +156,7 @@ export function AddSongsToSetlistModal({
                 <button
                   type="button"
                   onClick={clearSelection}
-                  className="px-2.5 py-1.5 rounded-lg text-[10px] font-mono font-bold cursor-pointer bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-white transition-colors"
+                  className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold cursor-pointer bg-bg-[var(--surface)] text-text-[var(--ink-2)] border  hover:text-white transition-colors"
                 >
                   Vaciar selección
                 </button>
@@ -179,16 +179,16 @@ export function AddSongsToSetlistModal({
                     type="button"
                     key={s.id}
                     onClick={() => toggleSong(s.id)}
-                    className={`w-full flex items-center gap-3 p-2.5 rounded-xl border text-left cursor-pointer transition-colors ${
+                    className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] border text-left cursor-pointer transition-colors ${
                       isSelected
                         ? 'bg-[#1db954]/15 border-[#1db954]/50'
                         : isStitchLight
-                        ? 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                        : 'bg-neutral-900 border-neutral-800 hover:bg-neutral-800'
+                        ? 'bg-[var(--bg)]  hover:bg-[var(--sunken)]'
+                        : 'bg-bg-[var(--surface)]  hover:bg-neutral-800'
                     }`}
                   >
                     <div className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 font-mono text-xs font-black transition-all ${
-                      isSelected ? 'bg-[#1db954] border-[#1db954] text-black shadow-sm scale-105' : 'border-neutral-600 text-neutral-500'
+                      isSelected ? 'bg-[#1db954] border-[#1db954] text-black shadow-sm scale-105' : ' text-neutral-500'
                     }`}>
                       {isSelected ? (selectedIndex + 1) : null}
                     </div>
@@ -197,7 +197,7 @@ export function AddSongsToSetlistModal({
                         <span className="text-xs font-bold text-white truncate">{formatSongTitle(s.titulo)}</span>
                         {s.favoritoGeneral && <Star className="w-3 h-3 text-amber-400 fill-amber-400 shrink-0" />}
                         {alreadyInSetlist && (
-                          <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-neutral-700 text-neutral-300 shrink-0">
+                          <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-neutral-700 text-text-[var(--ink-3)] shrink-0">
                             Ya en el repertorio
                           </span>
                         )}
@@ -207,7 +207,7 @@ export function AddSongsToSetlistModal({
                           </span>
                         )}
                       </div>
-                      <div className="text-[10px] text-neutral-400 font-mono truncate">
+                      <div className="text-[10px] text-text-[var(--ink-2)] font-mono truncate">
                         {(s.albumDisco || s.album || 'Sin álbum')} · {s.tonalidad || '—'} · {formatSecondsToMmSs(s.duracionSegundos || 0)}
                       </div>
                     </div>
@@ -218,7 +218,7 @@ export function AddSongsToSetlistModal({
           </div>
 
           <div className="pt-3 mt-2 border-t border-white/10 flex items-center justify-between gap-3 shrink-0">
-            <span className="text-[10px] font-mono text-neutral-400">
+            <span className="text-[10px] font-mono text-text-[var(--ink-2)]">
               {selectedIds.length > 0
                 ? `${selectedIds.length} seleccionadas (en orden 1..${selectedIds.length}) · ${formatSecondsToMmSs(selectedDurationSeconds)}`
                 : 'Ninguna canción seleccionada'}
@@ -227,7 +227,7 @@ export function AddSongsToSetlistModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs text-neutral-300 hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] text-xs text-text-[var(--ink-3)] hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
               >
                 Cancelar
               </button>
@@ -235,7 +235,7 @@ export function AddSongsToSetlistModal({
                 type="button"
                 disabled={selectedIds.length === 0}
                 onClick={handleSubmit}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#1db954] hover:bg-[#1ed760] disabled:opacity-40 disabled:cursor-not-allowed text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[#1db954] hover:bg-[#1ed760] disabled:opacity-40 disabled:cursor-not-allowed text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
               >
                 <ListPlus className="w-4 h-4 stroke-[3]" />
                 <span>Añadir {selectedIds.length > 0 ? `${selectedIds.length} Canciones en Orden` : 'Canciones'}</span>

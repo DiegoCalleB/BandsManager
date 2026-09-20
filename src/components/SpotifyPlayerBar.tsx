@@ -535,7 +535,7 @@ export default function SpotifyPlayerBar({
               className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer group"
               title="Haz clic para expandir el reproductor"
             >
-              <div className="relative shrink-0 w-10 h-10 rounded-lg bg-[#282828] shadow-md overflow-hidden border border-white/5">
+              <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden border border-white/5">
                 {song.portadaUrl ? (
                   <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
                 ) : (
@@ -638,7 +638,7 @@ export default function SpotifyPlayerBar({
           {/* Left: Song Info */}
           <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
             <div className="flex items-center gap-3.5 min-w-0">
-              <div className="relative shrink-0 w-14 h-14 rounded-lg bg-[#282828] shadow-md overflow-hidden group border border-white/5">
+              <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden group border border-white/5">
                 {song.portadaUrl ? (
                   <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
                 ) : (
@@ -825,7 +825,7 @@ export default function SpotifyPlayerBar({
                   step={0.5}
                   value={currentTime}
                   onChange={(e) => handleSeek(parseFloat(e.target.value))}
-                  className="w-full h-1 bg-[#4d4d4d] rounded-lg appearance-none cursor-pointer accent-[#1db954] hover:accent-[#1ed760] focus:outline-none"
+                  className="w-full h-1 bg-[#4d4d4d] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[#1db954] hover:accent-[#1ed760] focus:outline-none"
                 />
               </div>
 
@@ -842,7 +842,7 @@ export default function SpotifyPlayerBar({
                 href={song.enlaceAcordes}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-[#282828] hover:bg-[#3e3e3e] text-[#b3b3b3] hover:text-white text-xs font-mono flex items-center gap-1 transition-all cursor-pointer"
+                className="p-2 rounded-[var(--r-s)] bg-[#282828] hover:bg-[#3e3e3e] text-[#b3b3b3] hover:text-white text-xs font-mono flex items-center gap-1 transition-all cursor-pointer"
                 title="Ver Acordes / Partitura"
               >
                 <FileText className="w-3.5 h-3.5 text-[#1db954]" />
@@ -863,7 +863,7 @@ export default function SpotifyPlayerBar({
             {/* Iris Stem Separator Button */}
             <button
               onClick={() => onOpenIris ? onOpenIris(song) : onOpenStudio(song)}
-              className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
+              className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 border /40 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
               title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
@@ -888,7 +888,7 @@ export default function SpotifyPlayerBar({
                   setVolume(parseFloat(e.target.value));
                   setIsMuted(false);
                 }}
-                className="w-16 h-1 bg-[#4d4d4d] rounded-lg appearance-none cursor-pointer accent-[#1db954]"
+                className="w-16 h-1 bg-[#4d4d4d] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[#1db954]"
               />
             </div>
 

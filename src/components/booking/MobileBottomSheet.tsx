@@ -62,7 +62,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
 
       {/* Sheet Drawer Container */}
       <div
-        className="relative z-[999999] w-full sm:max-w-2xl max-h-[90vh] sm:max-h-[85vh] bg-[#121110] border-t-2 sm:border-2 border-[#f2ca50] rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl flex flex-col text-zinc-100 overflow-hidden"
+        className="relative z-[999999] w-full sm:max-w-2xl max-h-[90vh] sm:max-h-[85vh] bg-[#121110] border-t-2 sm:border-2 border-[var(--acc)] rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl flex flex-col text-zinc-100 overflow-hidden"
       >
         {/* Header Bar */}
         <div className="w-full flex justify-between items-center pb-3 border-b border-zinc-800 mb-3 shrink-0">
@@ -76,7 +76,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center justify-center px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/50 transition-colors cursor-pointer shadow-md text-xs font-bold shrink-0 gap-1"
+            className="flex items-center justify-center px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border /50 transition-colors cursor-pointer shadow-md text-xs font-bold shrink-0 gap-1"
             title="Cerrar ficha"
           >
             <X className="w-4 h-4" />

@@ -61,20 +61,20 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       {/* Header Banner */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-amber-500/15 via-[#181614] to-[#121110] border border-amber-500/30 shadow-xl shadow-amber-500/5">
+      <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-br from-amber-500/15 via-[#181614] to-[#121110] border /30 shadow-xl shadow-amber-500/5">
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center border border-amber-500/30 shrink-0 mt-0.5">
+          <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 text-amber-300 flex items-center justify-center border /30 shrink-0 mt-0.5">
             <Globe className="w-5 h-5 text-amber-400" />
           </div>
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/20 border border-amber-400/30 text-amber-300 text-[10px] font-mono font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/20 border /30 text-amber-300 text-[10px] font-mono font-bold uppercase tracking-wider">
               <Sparkles className="w-3 h-3 text-amber-400" />
               <span>Primer Paso Obligatorio / First Step</span>
             </div>
             <h3 className="text-base sm:text-lg font-bold font-display text-white">
               ¿En qué idioma quieres trabajar con tu banda?
             </h3>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-text-[var(--ink-3)] leading-relaxed">
               Selecciona tu idioma principal. Esta configuración adapta al instante la interfaz, el estilo de redacción de los agentes de IA y tu dossier de prensa oficial.
             </p>
           </div>
@@ -109,9 +109,9 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                   handleSelectLanguage(lang.code, lang.label);
                 }
               }}
-              className={`relative p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-3 ${
+              className={`relative p-4 rounded-[var(--r-l)] border text-left transition-all cursor-pointer flex flex-col justify-between gap-3 ${
                 isSelected
-                  ? 'bg-gradient-to-br from-amber-500/20 via-amber-950/20 to-neutral-900/90 border-amber-400 ring-2 ring-amber-500/30 shadow-lg shadow-amber-500/10 scale-[1.01]'
+                  ? 'bg-gradient-to-br from-amber-500/20 via-amber-950/20 to-bg-[var(--surface)]/90  ring-2 ring-amber-500/30 shadow-lg shadow-amber-500/10 scale-[1.01]'
                   : 'bg-[#181614]/90 hover:bg-[#201d19] border-white/10 hover:border-white/20'
               }`}
             >
@@ -132,7 +132,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-neutral-400 font-mono">
+                    <p className="text-[11px] text-text-[var(--ink-2)] font-mono">
                       {details.nativeName}
                     </p>
                   </div>
@@ -140,7 +140,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
 
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all ${
                   isSelected 
-                    ? 'bg-amber-400 border-amber-400 text-stone-950' 
+                    ? 'bg-amber-400  text-stone-950' 
                     : 'border-white/20 bg-neutral-800/40 text-transparent'
                 }`}>
                   <Check className="w-3.5 h-3.5 stroke-[3]" />
@@ -149,7 +149,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
 
               {/* Bottom Row: Details & AI Note */}
               <div className="space-y-1.5 pt-2 border-t border-white/5">
-                <p className="text-xs text-neutral-300 leading-snug">
+                <p className="text-xs text-text-[var(--ink-3)] leading-snug">
                   {details.description}
                 </p>
                 <div className="flex items-center gap-1.5 text-[11px] text-amber-300/80 font-mono">
@@ -164,37 +164,37 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
 
       {/* Impact Breakdown Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-        <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262320] flex items-start gap-2.5">
-          <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400 shrink-0">
+        <div className="p-3.5 rounded-[var(--r-m)] bg-[#141312] border border-[#262320] flex items-start gap-2.5">
+          <div className="p-2 rounded-[var(--r-s)] bg-amber-500/10 text-amber-400 shrink-0">
             <Languages className="w-4 h-4" />
           </div>
           <div>
-            <h5 className="text-xs font-bold text-neutral-200">Panel & Menús</h5>
-            <p className="text-[11px] text-neutral-400 mt-0.5 leading-relaxed">
+            <h5 className="text-xs font-bold text-bg-[var(--sunken)]">Panel & Menús</h5>
+            <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5 leading-relaxed">
               Todos los módulos, botones y tablas cambian de inmediato en tiempo real.
             </p>
           </div>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262320] flex items-start gap-2.5">
-          <div className="p-2 rounded-lg bg-sky-500/10 text-sky-400 shrink-0">
+        <div className="p-3.5 rounded-[var(--r-m)] bg-[#141312] border border-[#262320] flex items-start gap-2.5">
+          <div className="p-2 rounded-[var(--r-s)] bg-sky-500/10 text-sky-400 shrink-0">
             <MessageSquareText className="w-4 h-4" />
           </div>
           <div>
-            <h5 className="text-xs font-bold text-neutral-200">Agentes de IA</h5>
-            <p className="text-[11px] text-neutral-400 mt-0.5 leading-relaxed">
+            <h5 className="text-xs font-bold text-bg-[var(--sunken)]">Agentes de IA</h5>
+            <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5 leading-relaxed">
               Redacción de propuestas y respuestas a salas afinadas según el idioma seleccionado.
             </p>
           </div>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262320] flex items-start gap-2.5">
-          <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 shrink-0">
+        <div className="p-3.5 rounded-[var(--r-m)] bg-[#141312] border border-[#262320] flex items-start gap-2.5">
+          <div className="p-2 rounded-[var(--r-s)] bg-emerald-500/10 text-emerald-400 shrink-0">
             <FileText className="w-4 h-4" />
           </div>
           <div>
-            <h5 className="text-xs font-bold text-neutral-200">Dossier EPK</h5>
-            <p className="text-[11px] text-neutral-400 mt-0.5 leading-relaxed">
+            <h5 className="text-xs font-bold text-bg-[var(--sunken)]">Dossier EPK</h5>
+            <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5 leading-relaxed">
               Biografía oficial y fichas técnicas generadas con este idioma por defecto.
             </p>
           </div>

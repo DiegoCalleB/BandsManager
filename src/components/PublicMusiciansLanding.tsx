@@ -155,7 +155,7 @@ export const PublicMusiciansLanding: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0c0c] text-neutral-100 font-sans selection:bg-[#f2ca50] selection:text-black">
+    <div className="min-h-screen bg-[#0d0c0c] text-bg-[var(--sunken)] font-sans selection:bg-[var(--acc)] selection:text-black">
       {/* Background Ambient Glows */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[120px]" />
@@ -164,10 +164,10 @@ export const PublicMusiciansLanding: React.FC = () => {
       </div>
 
       {/* Sticky Navigation / Header */}
-      <header className="relative z-20 border-b border-neutral-800/80 bg-[#121111]/90 backdrop-blur-md sticky top-0">
+      <header className="relative z-20 border-b /80 bg-[#121111]/90 backdrop-blur-md sticky top-0">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl overflow-hidden bg-black border border-amber-500/30 p-0.5 shadow-md flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black border /30 p-0.5 shadow-md flex items-center justify-center shrink-0">
               <img
                 src="/bandmanageriodefinitiva.jpeg"
                 alt="BandManager.io Logo"
@@ -177,7 +177,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             </div>
             <div>
               <span className="font-extrabold tracking-tight text-white font-mono text-base flex items-center gap-0.5">
-                BandManager<span className="text-[#f2ca50]">.io</span>
+                BandManager<span className="text-[var(--acc)]">.io</span>
               </span>
               <span className="text-[10px] font-mono text-amber-400/80 block -mt-1 tracking-wider uppercase">
                 IA Agéntica para tu Banda
@@ -186,16 +186,16 @@ export const PublicMusiciansLanding: React.FC = () => {
           </div>
 
           {/* Language Selector (Solo banderas, contextual) */}
-          <div className="flex items-center gap-1.5 bg-neutral-950/80 border border-neutral-800/90 p-1 rounded-xl shadow-inner" role="group" aria-label="Idioma / Language">
+          <div className="flex items-center gap-1.5 bg-bg-[var(--surface)]/80 border /90 p-1 rounded-[var(--r-m)] shadow-inner" role="group" aria-label="Idioma / Language">
             {availableLanguages.map((lang) => (
               <button
                 key={lang.code}
                 type="button"
                 onClick={() => handleLanguageChange(lang.code)}
-                className={`w-8 h-8 rounded-lg text-base flex items-center justify-center border transition-all ${
+                className={`w-8 h-8 rounded-[var(--r-s)] text-base flex items-center justify-center border transition-all ${
                   currentLang === lang.code
-                    ? 'bg-amber-500/20 text-[#f2ca50] border-amber-500/50 shadow-inner scale-105'
-                    : 'bg-neutral-900/60 border-neutral-800/80 hover:border-neutral-700 opacity-70 hover:opacity-100'
+                    ? 'bg-amber-500/20 text-[var(--acc)] /50 shadow-inner scale-105'
+                    : 'bg-bg-[var(--surface)]/60 /80 hover: opacity-70 hover:opacity-100'
                 }`}
                 title={lang.label}
                 aria-label={lang.label}
@@ -211,7 +211,7 @@ export const PublicMusiciansLanding: React.FC = () => {
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-8 sm:py-12 space-y-12">
         {/* Optional Origin Band Badge */}
         {originInfo.fromBand && (
-          <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-mono text-amber-300 animate-in fade-in">
+          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-amber-500/10 border /20 text-xs font-mono text-amber-300 animate-in fade-in">
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-amber-400 animate-pulse" />
               <span>
@@ -234,17 +234,17 @@ export const PublicMusiciansLanding: React.FC = () => {
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-yellow-400/20 to-amber-600/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
-              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-black border border-amber-500/40 p-1 shadow-2xl flex items-center justify-center">
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-black border /40 p-1 shadow-2xl flex items-center justify-center">
                 <img
                   src="/bandmanageriodefinitiva.jpeg"
                   alt="BandManager.io"
-                  className="w-full h-full object-contain rounded-xl"
+                  className="w-full h-full object-contain rounded-[var(--r-m)]"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
                 />
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mt-1">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border /25 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mt-1">
               <Sparkles className="w-3.5 h-3.5" />
               <span>{t.badge}</span>
             </div>
@@ -252,50 +252,50 @@ export const PublicMusiciansLanding: React.FC = () => {
 
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white max-w-3xl mx-auto leading-[1.15]">
             {t.heroTitle}{' '}
-            <span className="bg-gradient-to-r from-[#f2ca50] via-amber-300 to-yellow-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[var(--acc)] via-amber-300 to-yellow-500 bg-clip-text text-transparent">
               {t.heroHighlight}
             </span>
           </h1>
 
-          <p className="text-neutral-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-normal">
+          <p className="text-text-[var(--ink-3)] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-normal">
             {t.heroSubtitle}
           </p>
         </section>
 
         {/* FEATURE CARDS */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+          <div className="p-5 rounded-[var(--r-l)] bg-bg-[var(--surface)]/70 border  hover:/30 transition-all space-y-2.5 shadow-lg">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400">
               <QrCode className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
               {t.feature1Title}
             </h3>
-            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
+            <p className="text-text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
               {t.feature1Desc}
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+          <div className="p-5 rounded-[var(--r-l)] bg-bg-[var(--surface)]/70 border  hover:/30 transition-all space-y-2.5 shadow-lg">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400">
               <FileText className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
               {t.feature2Title}
             </h3>
-            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
+            <p className="text-text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
               {t.feature2Desc}
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+          <div className="p-5 rounded-[var(--r-l)] bg-bg-[var(--surface)]/70 border  hover:/30 transition-all space-y-2.5 shadow-lg">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400">
               <Music className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
               {t.feature3Title}
             </h3>
-            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
+            <p className="text-text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
               {t.feature3Desc}
             </p>
           </div>
@@ -303,11 +303,11 @@ export const PublicMusiciansLanding: React.FC = () => {
 
         {/* ROADMAP TEASER: hype de que la plataforma sigue creciendo, sin detallar features
             concretas todavía por confirmar */}
-        <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+        <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border /20">
+          <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/15 border /30 flex items-center justify-center text-amber-400 shrink-0">
             <Rocket className="w-5 h-5" />
           </div>
-          <p className="text-neutral-300 text-xs sm:text-sm leading-relaxed">
+          <p className="text-text-[var(--ink-3)] text-xs sm:text-sm leading-relaxed">
             <span className="text-amber-400 font-bold">{t.roadmapTeaserLead}</span>{' '}
             {t.roadmapTeaserText}
           </p>
@@ -319,7 +319,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
           {submitted ? (
             /* SUCCESS CONFIRMATION */
-            <div className="p-8 sm:p-12 rounded-3xl bg-[#141312] border border-amber-500/40 shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95">
+            <div className="p-8 sm:p-12 rounded-3xl bg-[#141312] border /40 shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95">
               <div className="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.2)]">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
@@ -331,7 +331,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 <p className="text-amber-400 font-mono text-sm font-bold">
                   {t.successSubtitle.replace('{bandName}', formData.nombreBanda || 'tu banda')}
                 </p>
-                <p className="text-neutral-300 text-sm max-w-lg mx-auto leading-relaxed">
+                <p className="text-text-[var(--ink-3)] text-sm max-w-lg mx-auto leading-relaxed">
                   {t.successMessage}
                 </p>
               </div>
@@ -340,14 +340,14 @@ export const PublicMusiciansLanding: React.FC = () => {
                 {originInfo.fromBand && (
                   <button
                     onClick={handleBackToOrigin}
-                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-mono text-xs font-bold border border-neutral-700 transition"
+                    className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-bg-[var(--surface)] hover:bg-neutral-800 text-white font-mono text-xs font-bold border  transition"
                   >
                     {t.successBackToBand.replace('{bandName}', originInfo.fromBand.replace(/^(band|reg)-/, ''))}
                   </button>
                 )}
                 <a
                   href="/"
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-[#f2ca50] to-[#e0a820] text-black font-mono text-xs font-black uppercase tracking-wider transition hover:brightness-110 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[#e0a820] text-black font-mono text-xs font-black uppercase tracking-wider transition hover:brightness-110 flex items-center justify-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
                   {t.successExploreApp}
@@ -356,8 +356,8 @@ export const PublicMusiciansLanding: React.FC = () => {
             </div>
           ) : (
             /* EARLY ACCESS FORM */
-            <div className="p-6 sm:p-10 rounded-3xl bg-[#141312] border border-neutral-800 shadow-2xl space-y-6">
-              <div className="space-y-2 border-b border-neutral-800 pb-6 text-center sm:text-left">
+            <div className="p-6 sm:p-10 rounded-3xl bg-[#141312] border  shadow-2xl space-y-6">
+              <div className="space-y-2 border-b  pb-6 text-center sm:text-left">
                 <div className="inline-flex items-center gap-2 text-amber-400 font-mono text-xs font-bold uppercase tracking-wider">
                   <Users className="w-4 h-4" />
                   <span>Early Access Waitlist</span>
@@ -365,13 +365,13 @@ export const PublicMusiciansLanding: React.FC = () => {
                 <h2 className="text-2xl font-black text-white">
                   {t.formTitle}
                 </h2>
-                <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
+                <p className="text-text-[var(--ink-2)] text-xs sm:text-sm leading-relaxed">
                   {t.formSubtitle}
                 </p>
               </div>
 
               {errorMessage && (
-                <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-mono">
+                <div className="p-4 rounded-[var(--r-m)] bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-mono">
                   {errorMessage}
                 </div>
               )}
@@ -382,9 +382,9 @@ export const PublicMusiciansLanding: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Band Name */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-mono uppercase text-neutral-200 tracking-wider flex items-center justify-between">
+                      <label className="text-[11px] font-bold font-mono uppercase text-bg-[var(--sunken)] tracking-wider flex items-center justify-between">
                         <span>{t.labelBandName}</span>
-                        <span className="text-[#f2ca50] text-[10px] font-normal lowercase tracking-normal">imprescindible</span>
+                        <span className="text-[var(--acc)] text-[10px] font-normal lowercase tracking-normal">imprescindible</span>
                       </label>
                       <input
                         type="text"
@@ -392,15 +392,15 @@ export const PublicMusiciansLanding: React.FC = () => {
                         value={formData.nombreBanda}
                         onChange={(e) => setFormData({ ...formData, nombreBanda: e.target.value })}
                         placeholder={t.placeholderBandName}
-                        className="w-full px-3.5 py-3 rounded-xl bg-neutral-950 border border-neutral-800 focus:border-[#f2ca50] focus:ring-1 focus:ring-[#f2ca50] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
                       />
                     </div>
 
                     {/* Email */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-mono uppercase text-neutral-200 tracking-wider flex items-center justify-between">
+                      <label className="text-[11px] font-bold font-mono uppercase text-bg-[var(--sunken)] tracking-wider flex items-center justify-between">
                         <span>{t.labelEmail}</span>
-                        <span className="text-[#f2ca50] text-[10px] font-normal lowercase tracking-normal">imprescindible</span>
+                        <span className="text-[var(--acc)] text-[10px] font-normal lowercase tracking-normal">imprescindible</span>
                       </label>
                       <input
                         type="email"
@@ -408,7 +408,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder={t.placeholderEmail}
-                        className="w-full px-3.5 py-3 rounded-xl bg-neutral-950 border border-neutral-800 focus:border-[#f2ca50] focus:ring-1 focus:ring-[#f2ca50] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
                       />
                     </div>
                   </div>
@@ -416,7 +416,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Instagram */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-mono uppercase text-neutral-300 tracking-wider flex items-center justify-between">
+                      <label className="text-[11px] font-bold font-mono uppercase text-text-[var(--ink-3)] tracking-wider flex items-center justify-between">
                         <span>{t.labelInstagram}</span>
                         <span className="text-neutral-500 text-[10px] font-normal lowercase tracking-normal">recomendado</span>
                       </label>
@@ -425,13 +425,13 @@ export const PublicMusiciansLanding: React.FC = () => {
                         value={formData.instagram}
                         onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
                         placeholder={t.placeholderInstagram}
-                        className="w-full px-3.5 py-3 rounded-xl bg-neutral-950 border border-neutral-800 focus:border-[#f2ca50] focus:ring-1 focus:ring-[#f2ca50] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
                       />
                     </div>
 
                     {/* Contact Person Name */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-mono uppercase text-neutral-300 tracking-wider flex items-center justify-between">
+                      <label className="text-[11px] font-bold font-mono uppercase text-text-[var(--ink-3)] tracking-wider flex items-center justify-between">
                         <span>{t.labelContactName}</span>
                         <span className="text-neutral-500 text-[10px] font-normal lowercase tracking-normal">opcional</span>
                       </label>
@@ -440,7 +440,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                         value={formData.nombreContacto}
                         onChange={(e) => setFormData({ ...formData, nombreContacto: e.target.value })}
                         placeholder={t.placeholderContactName}
-                        className="w-full px-3.5 py-3 rounded-xl bg-neutral-950 border border-neutral-800 focus:border-[#f2ca50] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+                        className="w-full px-3.5 py-3 rounded-[var(--r-m)] bg-bg-[var(--surface)] border  focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
                       />
                     </div>
                   </div>
@@ -451,33 +451,33 @@ export const PublicMusiciansLanding: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowOptionalDetails(!showOptionalDetails)}
-                    className="w-full py-2.5 px-4 rounded-xl bg-neutral-900/70 hover:bg-neutral-900 border border-neutral-800 hover:border-neutral-700 text-xs font-mono text-neutral-300 flex items-center justify-between transition-colors group"
+                    className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-bg-[var(--surface)]/70 hover:bg-bg-[var(--surface)] border  hover: text-xs font-mono text-text-[var(--ink-3)] flex items-center justify-between transition-colors group"
                   >
                     <span className="flex items-center gap-2">
-                      <Sliders className="w-3.5 h-3.5 text-[#f2ca50]" />
+                      <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
                       <span className="group-hover:text-white transition-colors font-medium">
                         {showOptionalDetails ? t.moreInfoToggleClose : t.moreInfoToggleOpen}
                       </span>
                     </span>
                     {showOptionalDetails ? (
-                      <ChevronUp className="w-4 h-4 text-neutral-400 group-hover:text-[#f2ca50] transition-colors" />
+                      <ChevronUp className="w-4 h-4 text-text-[var(--ink-2)] group-hover:text-[var(--acc)] transition-colors" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-neutral-400 group-hover:text-[#f2ca50] transition-colors" />
+                      <ChevronDown className="w-4 h-4 text-text-[var(--ink-2)] group-hover:text-[var(--acc)] transition-colors" />
                     )}
                   </button>
                 </div>
 
                 {/* 3. CAMPOS OPCIONALES DESPLEGABLES */}
                 {showOptionalDetails && (
-                  <div className="p-4 rounded-2xl bg-neutral-950/90 border border-neutral-800/80 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <p className="text-[11px] font-mono text-neutral-400 -mt-1">
+                  <div className="p-4 rounded-[var(--r-l)] bg-bg-[var(--surface)]/90 border /80 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <p className="text-[11px] font-mono text-text-[var(--ink-2)] -mt-1">
                       {t.moreInfoSubtitle}
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Music Genre */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-mono uppercase text-neutral-400 tracking-wider">
+                        <label className="text-[11px] font-bold font-mono uppercase text-text-[var(--ink-2)] tracking-wider">
                           {t.labelGenre}
                         </label>
                         <input
@@ -485,13 +485,13 @@ export const PublicMusiciansLanding: React.FC = () => {
                           value={formData.genero}
                           onChange={(e) => setFormData({ ...formData, genero: e.target.value })}
                           placeholder={t.placeholderGenre}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 focus:border-[#f2ca50] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 border  focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
                         />
                       </div>
 
                       {/* City */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-mono uppercase text-neutral-400 tracking-wider">
+                        <label className="text-[11px] font-bold font-mono uppercase text-text-[var(--ink-2)] tracking-wider">
                           {t.labelCity}
                         </label>
                         <input
@@ -499,7 +499,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                           value={formData.ciudad}
                           onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
                           placeholder={t.placeholderCity}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 focus:border-[#f2ca50] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 border  focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
                         />
                       </div>
                     </div>
@@ -507,7 +507,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Phone / WhatsApp */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-mono uppercase text-neutral-400 tracking-wider">
+                        <label className="text-[11px] font-bold font-mono uppercase text-text-[var(--ink-2)] tracking-wider">
                           {t.labelPhone}
                         </label>
                         <input
@@ -515,13 +515,13 @@ export const PublicMusiciansLanding: React.FC = () => {
                           value={formData.telefono}
                           onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
                           placeholder={t.placeholderPhone}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 focus:border-[#f2ca50] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 border  focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
                         />
                       </div>
 
                       {/* Music link */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-mono uppercase text-neutral-400 tracking-wider">
+                        <label className="text-[11px] font-bold font-mono uppercase text-text-[var(--ink-2)] tracking-wider">
                           {t.labelMusicLink}
                         </label>
                         <input
@@ -529,20 +529,20 @@ export const PublicMusiciansLanding: React.FC = () => {
                           value={formData.enlaceMusica}
                           onChange={(e) => setFormData({ ...formData, enlaceMusica: e.target.value })}
                           placeholder={t.placeholderMusicLink}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 focus:border-[#f2ca50] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
+                          className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 border  focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono"
                         />
                       </div>
                     </div>
 
                     {/* Priority Feature */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-mono uppercase text-neutral-400 tracking-wider">
+                      <label className="text-[11px] font-bold font-mono uppercase text-text-[var(--ink-2)] tracking-wider">
                         {t.labelMainInterest}
                       </label>
                       <select
                         value={formData.interesPrincipal}
                         onChange={(e) => setFormData({ ...formData, interesPrincipal: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 focus:border-[#f2ca50] text-sm text-white outline-none transition font-mono"
+                        className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 border  focus:border-[var(--acc)] text-sm text-white outline-none transition font-mono"
                       >
                         <option value="">{t.optionSelectInterest}</option>
                         <option value="fans">{t.optionInterestFans}</option>
@@ -554,7 +554,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                     {/* Notes */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-mono uppercase text-neutral-400 tracking-wider">
+                      <label className="text-[11px] font-bold font-mono uppercase text-text-[var(--ink-2)] tracking-wider">
                         {t.labelNotes}
                       </label>
                       <textarea
@@ -562,7 +562,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                         value={formData.notas}
                         onChange={(e) => setFormData({ ...formData, notas: e.target.value })}
                         placeholder={t.placeholderNotes}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 focus:border-[#f2ca50] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono resize-none"
+                        className="w-full px-3.5 py-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 border  focus:border-[var(--acc)] text-sm text-white placeholder:text-neutral-600 outline-none transition font-mono resize-none"
                       />
                     </div>
                   </div>
@@ -570,15 +570,15 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                 {/* Consent checkbox */}
                 <div className="pt-2">
-                  <label className="flex items-start gap-3 p-3 rounded-xl bg-neutral-950/80 border border-neutral-800 cursor-pointer group hover:border-neutral-700 transition">
+                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 border  cursor-pointer group hover: transition">
                     <input
                       type="checkbox"
                       required
                       checked={formData.consentimiento}
                       onChange={(e) => setFormData({ ...formData, consentimiento: e.target.checked })}
-                      className="mt-0.5 w-4 h-4 rounded bg-neutral-900 border-neutral-700 text-[#f2ca50] focus:ring-[#f2ca50]"
+                      className="mt-0.5 w-4 h-4 rounded bg-bg-[var(--surface)]  text-[var(--acc)] focus:ring-[var(--acc)]"
                     />
-                    <span className="text-xs font-mono text-neutral-400 group-hover:text-neutral-300 leading-relaxed">
+                    <span className="text-xs font-mono text-text-[var(--ink-2)] group-hover:text-text-[var(--ink-3)] leading-relaxed">
                       {t.consentCheckbox}
                     </span>
                   </label>
@@ -588,7 +588,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#f2ca50] via-amber-400 to-[#e0a820] text-black font-mono font-black text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20 hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full py-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] via-amber-400 to-[#e0a820] text-black font-mono font-black text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20 hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
                   {loading ? (
                     <>
@@ -615,7 +615,7 @@ export const PublicMusiciansLanding: React.FC = () => {
         </section>
 
         {/* Footer */}
-        <footer className="text-center py-6 border-t border-neutral-900 text-xs font-mono text-neutral-500">
+        <footer className="text-center py-6 border-t border-bg-[var(--surface)] text-xs font-mono text-neutral-500">
           <p>{t.footerText}</p>
         </footer>
       </main>

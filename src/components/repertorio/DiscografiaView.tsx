@@ -365,16 +365,16 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
   return (
     <div
-      className={`p-3.5 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl transition-all ${
-        isStitchLight ? 'bg-white border border-slate-200' : 'bg-[#16161a]/95 border border-neutral-800/80 backdrop-blur-sm'
+      className={`p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl shadow-xl transition-all ${
+        isStitchLight ? 'bg-white border ' : 'bg-[#16161a]/95 border /80 backdrop-blur-sm'
       }`}
     >
       {/* Top Controls Bar (Search + Quick Filters + Actions) */}
-      <div className="mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-neutral-800/60 space-y-2.5">
+      <div className="mb-4 sm:mb-6 pb-3 sm:pb-4 border-b /60 space-y-2.5">
         {/* Desktop title row (hidden on mobile to keep screen ultra-clean since RepertorioNavBar already provides title) */}
         <div className="hidden sm:flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shadow-inner shrink-0">
+            <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/15 border /30 flex items-center justify-center shadow-inner shrink-0">
               <Disc3 className="w-4 h-4 text-amber-400" />
             </div>
             <div>
@@ -392,10 +392,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             <button
               type="button"
               onClick={() => setExportModalData({ isOpen: true, albumName: 'all' })}
-              className={`px-3.5 py-1.5 rounded-xl font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-xs transition-all border ${
+              className={`px-3.5 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-xs transition-all border ${
                 isStitchLight
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200'
-                  : 'bg-neutral-800/90 hover:bg-neutral-700 text-zinc-200 hover:text-white border-neutral-700/80'
+                  ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)] '
+                  : 'bg-neutral-800/90 hover:bg-neutral-700 text-zinc-200 hover:text-white /80'
               }`}
               title="Exportar canciones de la discografía a Excel, M3U playlist, TXT o PDF"
             >
@@ -406,7 +406,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             <button
               type="button"
               onClick={() => setShowCreateAlbumMenu((v) => !v)}
-              className="px-3.5 py-1.5 rounded-xl bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-95"
+              className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-95"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Nuevo Disco</span>
@@ -414,17 +414,17 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             {showCreateAlbumMenu && (
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setShowCreateAlbumMenu(false)} />
-                <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-2xl border shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+                <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] border shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
                   isStitchLight
-                    ? 'border-slate-200 bg-white text-slate-800'
-                    : 'border-neutral-800 bg-[#16161a] text-zinc-200'
+                    ? ' bg-white text-[var(--ink)]'
+                    : ' bg-[#16161a] text-zinc-200'
                 }`}>
                   {onCreateAlbum && (
                     <button
                       type="button"
                       onClick={() => { setShowCreateAlbumMenu(false); onCreateAlbum(); }}
-                      className={`w-full text-left p-2.5 rounded-xl transition-all cursor-pointer flex items-start gap-2.5 ${
-                        isStitchLight ? 'hover:bg-slate-100' : 'hover:bg-neutral-800/80'
+                      className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${
+                        isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
                       }`}
                     >
                       <Plus className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
@@ -437,8 +437,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <button
                     type="button"
                     onClick={() => { setShowCreateAlbumMenu(false); setBulkUploadAlbum({ name: '', songs: [] }); }}
-                    className={`w-full text-left p-2.5 rounded-xl transition-all cursor-pointer flex items-start gap-2.5 ${
-                      isStitchLight ? 'hover:bg-slate-100' : 'hover:bg-neutral-800/80'
+                    className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${
+                      isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
                     }`}
                   >
                     <FolderUp className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -450,8 +450,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <button
                     type="button"
                     onClick={() => { setShowCreateAlbumMenu(false); setIsSpotifyModalOpen(true); }}
-                    className={`w-full text-left p-2.5 rounded-xl transition-all cursor-pointer flex items-start gap-2.5 ${
-                      isStitchLight ? 'hover:bg-slate-100' : 'hover:bg-neutral-800/80'
+                    className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${
+                      isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
                     }`}
                   >
                     <Disc className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -463,8 +463,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <button
                     type="button"
                     onClick={() => { setShowCreateAlbumMenu(false); setIsLiveConcertModalOpen(true); }}
-                    className={`w-full text-left p-2.5 rounded-xl transition-all cursor-pointer flex items-start gap-2.5 ${
-                      isStitchLight ? 'hover:bg-slate-100' : 'hover:bg-neutral-800/80'
+                    className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${
+                      isStitchLight ? 'hover:bg-[var(--sunken)]' : 'hover:bg-neutral-800/80'
                     }`}
                   >
                     <Scissors className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
@@ -489,10 +489,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar canción, tono, letra..."
-              className={`w-full pl-8 pr-7 py-1.5 rounded-xl text-xs border transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 ${
+              className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs border transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 ${
                 isStitchLight
-                  ? 'bg-slate-100 border-slate-300 text-slate-800 placeholder-slate-400 focus:bg-white'
-                  : 'bg-neutral-900/80 border-neutral-800 text-zinc-100 placeholder-zinc-500 focus:border-amber-500/60'
+                  ? 'bg-[var(--sunken)]  text-[var(--ink)] placeholder-slate-400 focus:bg-white'
+                  : 'bg-bg-[var(--surface)]/80  text-zinc-100 placeholder-zinc-500 focus:/60'
               }`}
             />
             {searchQuery && (
@@ -508,13 +508,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           </div>
 
           {/* Quick Filter Tabs */}
-          <div className={`p-0.5 rounded-xl border flex items-center gap-0.5 shrink-0 ${isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-900/80 border-neutral-800'}`}>
+          <div className={`p-0.5 rounded-[var(--r-m)] border flex items-center gap-0.5 shrink-0 ${isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/80 '}`}>
             <button
               type="button"
               onClick={() => setActiveFilterTab('todos')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
                 activeFilterTab === 'todos'
-                  ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-xs'
+                  ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
@@ -523,9 +523,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveFilterTab('albumes')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
                 activeFilterTab === 'albumes'
-                  ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-xs'
+                  ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
@@ -534,9 +534,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveFilterTab('singles')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
                 activeFilterTab === 'singles'
-                  ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-xs'
+                  ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
@@ -550,10 +550,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
               <button
                 type="button"
                 onClick={toggleAllAlbums}
-                className={`p-1.5 rounded-xl transition-all cursor-pointer border ${
+                className={`p-1.5 rounded-[var(--r-m)] transition-all cursor-pointer border ${
                   isStitchLight
-                    ? 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
-                    : 'bg-neutral-900/80 border-neutral-800 text-zinc-300 hover:bg-neutral-800 hover:text-white'
+                    ? 'bg-[var(--sunken)]  text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                    : 'bg-bg-[var(--surface)]/80  text-zinc-300 hover:bg-neutral-800 hover:text-white'
                 }`}
                 title={areAllExpanded ? 'Plegar todos los discos' : 'Desplegar todos los discos'}
               >
@@ -568,7 +568,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   type="button"
                   onClick={handleAnalyzeAllDynamics}
                   disabled={dynamicsAnalysis?.running}
-                  className="px-2 py-1 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 border border-sky-500/40 disabled:opacity-70 disabled:cursor-wait text-sky-300 hover:text-sky-200 font-bold text-[11px] font-mono flex items-center gap-1 cursor-pointer shadow-sm transition-all"
+                  className="px-2 py-1 rounded-[var(--r-m)] bg-sky-600/20 hover:bg-sky-600/30 border border-sky-500/40 disabled:opacity-70 disabled:cursor-wait text-sky-300 hover:text-sky-200 font-bold text-[11px] font-mono flex items-center gap-1 cursor-pointer shadow-sm transition-all"
                   title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
                 >
                   {dynamicsAnalysis?.running ? (
@@ -637,10 +637,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           return (
             <div
               key={album}
-              className={`rounded-2xl overflow-hidden border transition-all duration-200 shadow-sm ${
+              className={`rounded-[var(--r-l)] overflow-hidden border transition-all duration-200 shadow-sm ${
                 isStitchLight
-                  ? 'border-slate-200 bg-slate-50'
-                  : 'border-neutral-800/80 bg-neutral-900/40 hover:border-neutral-700/80'
+                  ? ' bg-[var(--bg)]'
+                  : '/80 bg-bg-[var(--surface)]/40 hover:/80'
               }`}
             >
               {/* Compact Album Header Bar */}
@@ -648,8 +648,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                 onClick={() => toggleAlbumExpand(album)}
                 className={`p-3.5 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer select-none transition-colors ${
                   isStitchLight
-                    ? 'hover:bg-slate-100/80 border-b border-slate-200'
-                    : 'hover:bg-neutral-800/40 border-b border-neutral-800/60'
+                    ? 'hover:bg-[var(--sunken)]/80 border-b '
+                    : 'hover:bg-neutral-800/40 border-b /60'
                 }`}
               >
                 {/* Left: Cover & Information */}
@@ -659,13 +659,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       url={coverUrl}
                       onPlay={onSelectSong ? handlePlayAlbum : undefined}
                       isPlaying={isPlayingAlbum}
-                      className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl sm:rounded-2xl shadow-sm border border-neutral-700/60 object-cover"
+                      className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] shadow-sm border /60 object-cover"
                     />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                      <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border /20 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
                         <Disc3 className="w-3 h-3 text-amber-400" />
                         {album === 'Singles / Sin Disco' ? 'SENCILLOS & INÉDITAS' : 'ÁLBUM OFICIAL'}
                       </span>
@@ -697,7 +697,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     <button
                       type="button"
                       onClick={handlePlayAlbum}
-                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+                      className="px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
                       title={isPlayingAlbum ? 'Pausar disco' : 'Reproducir disco'}
                     >
                       {isPlayingAlbum ? (
@@ -718,10 +718,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     <button
                       type="button"
                       onClick={() => onEditAlbum(album)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer border ${
+                      className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer border ${
                         isStitchLight
-                          ? 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100'
-                          : 'bg-neutral-800/80 border-neutral-700 text-zinc-200 hover:bg-neutral-700 hover:text-white'
+                          ? 'bg-white  text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                          : 'bg-neutral-800/80  text-zinc-200 hover:bg-neutral-700 hover:text-white'
                       }`}
                       title="Gestionar las canciones de este álbum"
                     >
@@ -738,10 +738,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                         e.stopPropagation();
                         setExportModalData({ isOpen: true, albumName: album });
                       }}
-                      className={`px-2.5 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border ${
+                      className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border ${
                         isStitchLight
-                          ? 'bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100'
-                          : 'bg-neutral-800/80 border-neutral-700 text-amber-300 hover:bg-neutral-700 hover:text-white'
+                          ? 'bg-amber-50  text-amber-800 hover:bg-amber-100'
+                          : 'bg-neutral-800/80  text-amber-300 hover:bg-neutral-700 hover:text-white'
                       }`}
                       title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
                     >
@@ -755,10 +755,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     <button
                       type="button"
                       onClick={() => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs })}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border ${
+                      className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border ${
                         isStitchLight
                           ? 'bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-emerald-100'
-                          : 'bg-neutral-800/80 border-neutral-700 text-emerald-300 hover:bg-neutral-700 hover:text-white'
+                          : 'bg-neutral-800/80  text-emerald-300 hover:bg-neutral-700 hover:text-white'
                       }`}
                       title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
                     >
@@ -771,7 +771,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     <button
                       type="button"
                       onClick={() => onRequestDeleteAlbum(album, sortedAlbumSongs.length)}
-                      className="p-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors cursor-pointer shrink-0"
+                      className="p-1.5 rounded-[var(--r-m)] bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors cursor-pointer shrink-0"
                       title="Eliminar álbum"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -782,12 +782,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); toggleAlbumExpand(album); }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border ${
+                    className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border ${
                       isExpanded
-                        ? 'bg-amber-500/15 border-amber-500/30 text-amber-300'
+                        ? 'bg-amber-500/15 /30 text-amber-300'
                         : isStitchLight
-                        ? 'bg-slate-200/80 border-slate-300 text-slate-700 hover:bg-slate-300'
-                        : 'bg-neutral-800/80 border-neutral-700 text-zinc-300 hover:bg-neutral-700 hover:text-white'
+                        ? 'bg-[var(--sunken)]/80  text-[var(--ink-2)] hover:bg-slate-300'
+                        : 'bg-neutral-800/80  text-zinc-300 hover:bg-neutral-700 hover:text-white'
                     }`}
                   >
                     <span className="hidden xs:inline">{isExpanded ? 'Ocultar' : `Temas (${sortedAlbumSongs.length})`}</span>
@@ -798,7 +798,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
               {/* Collapsible Tracklist Section */}
               {isExpanded && (
-                <div className={`p-3 sm:p-4 border-t space-y-1.5 ${isStitchLight ? 'bg-slate-50/70 border-slate-200' : 'bg-[#121215]/80 border-neutral-800/80'}`}>
+                <div className={`p-3 sm:p-4 border-t space-y-1.5 ${isStitchLight ? 'bg-[var(--bg)]/70 ' : 'bg-[var(--surface)]/80 /80'}`}>
                   {sortedAlbumSongs.map((s, idx) => {
                     const isCurrentTrack = activePlayerSong?.id === s.id;
                     const isDraggingThis = draggedItem?.album === album && draggedItem?.index === idx;
@@ -865,7 +865,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   })}
 
                   {sortedAlbumSongs.length === 0 && (
-                    <div className="text-center py-6 text-neutral-500 text-xs italic font-mono bg-white/5 rounded-2xl border border-dashed border-white/10">
+                    <div className="text-center py-6 text-neutral-500 text-xs italic font-mono bg-white/5 rounded-[var(--r-l)] border border-dashed border-white/10">
                       Disco sin canciones asignadas. Haz clic en "Gestionar" para añadir temas a este álbum.
                     </div>
                   )}

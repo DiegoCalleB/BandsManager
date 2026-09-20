@@ -1347,8 +1347,8 @@ export function PdfExportModal({
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 z-[9999] overflow-y-auto overscroll-contain">
         <div
-          className={`w-full max-w-7xl max-h-[96vh] my-auto flex flex-col rounded-2xl shadow-2xl overflow-hidden border ${
-            isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-950 border-neutral-800'
+          className={`w-full max-w-7xl max-h-[96vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden border ${
+            isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)] '
           }`}
         >
         {/* Modal Top Header — recortado a lo esencial en móvil (badge decorativo e info extra
@@ -1357,11 +1357,11 @@ export function PdfExportModal({
             de verdad hace falta ver de un vistazo. */}
         <div
           className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 border-b shrink-0 ${
-            isStitchLight ? 'border-slate-300 bg-white' : 'border-neutral-800 bg-[#121111]'
+            isStitchLight ? ' bg-white' : ' bg-[#121111]'
           }`}
         >
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <div className="hidden sm:flex p-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 shrink-0">
+            <div className="hidden sm:flex p-2.5 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400 border /30 shrink-0">
               <Zap className="w-5 h-5" />
             </div>
             <div className="min-w-0">
@@ -1373,7 +1373,7 @@ export function PdfExportModal({
                   Rock Stage Edition
                 </span>
               </div>
-              <p className="text-xs text-neutral-400 font-sans mt-0.5 truncate">
+              <p className="text-xs text-text-[var(--ink-2)] font-sans mt-0.5 truncate">
                 <span className="font-bold text-white">{activeSetlist.nombre}</span>
                 <span className="hidden sm:inline"> ({activeSetlistMetrics.songCount} temas • Letras grandes para el suelo de escenario con notas a mano)</span>
                 <span className="sm:hidden"> · {activeSetlistMetrics.songCount} temas</span>
@@ -1384,7 +1384,7 @@ export function PdfExportModal({
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <button
               onClick={() => handlePrint()}
-              className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[#1db954] hover:bg-[#1ed760] text-black active:scale-95 hover:shadow-[#1db954]/20"
+              className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[#1db954] hover:bg-[#1ed760] text-black active:scale-95 hover:shadow-[#1db954]/20"
             >
               <Printer className="w-4 h-4" />
               {/* "Músico(s)", no "Hoja(s)": cada uno puede generar más de una página física según
@@ -1397,10 +1397,10 @@ export function PdfExportModal({
             </button>
             <button
               onClick={onClose}
-              className={`p-2 rounded-xl transition-colors active:scale-95 cursor-pointer ${
+              className={`p-2 rounded-[var(--r-m)] transition-colors active:scale-95 cursor-pointer ${
                 isStitchLight
-                  ? 'hover:bg-slate-200 text-slate-500 hover:text-slate-700'
-                  : 'hover:bg-neutral-800 text-neutral-400 hover:text-neutral-200'
+                  ? 'hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                  : 'hover:bg-neutral-800 text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
               }`}
             >
               <X className="w-5 h-5" />
@@ -1410,7 +1410,7 @@ export function PdfExportModal({
 
         {/* Customization Control Panel */}
         <div className={`p-3 sm:px-6 border-b flex flex-col gap-3 text-xs font-mono shrink-0 ${
-          isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/90 border-neutral-800'
+          isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)]/90 '
         }`}>
           {/* Row 1: Mode & Target Selector — en móvil un <select> compacto (los 3 botones en
               fila no cabían sin apretarse); en desktop, los botones de siempre, más cómodos con
@@ -1422,8 +1422,8 @@ export function PdfExportModal({
                 setPrintMode(e.target.value as 'all_members' | 'single_member' | 'master');
                 setPreviewPageIndex(0);
               }}
-              className={`sm:hidden flex-1 min-w-0 p-2 rounded-lg border font-bold cursor-pointer ${
-                isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-900 border-neutral-700 text-white'
+              className={`sm:hidden flex-1 min-w-0 p-2 rounded-[var(--r-s)] border font-bold cursor-pointer ${
+                isStitchLight ? 'bg-white  text-[var(--ink)]' : 'bg-bg-[var(--surface)]  text-white'
               }`}
             >
               <option value="all_members">👥 Todos los Músicos ({resolvedMembers.length} hojas)</option>
@@ -1431,16 +1431,16 @@ export function PdfExportModal({
               <option value="master">📄 Master Escenario / Sonido</option>
             </select>
 
-            <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/10">
+            <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-black/40 border border-white/10">
               <button
                 onClick={() => {
                   setPrintMode('all_members');
                   setPreviewPageIndex(0);
                 }}
-                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                   printMode === 'all_members'
                     ? 'bg-[#1db954] text-black shadow-md'
-                    : 'text-neutral-400 hover:text-white'
+                    : 'text-text-[var(--ink-2)] hover:text-white'
                 }`}
               >
                 <Users className="w-3.5 h-3.5" /> Todos los Músicos ({resolvedMembers.length} hojas individuales)
@@ -1450,10 +1450,10 @@ export function PdfExportModal({
                   setPrintMode('single_member');
                   setPreviewPageIndex(0);
                 }}
-                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                   printMode === 'single_member'
                     ? 'bg-[#1db954] text-black shadow-md'
-                    : 'text-neutral-400 hover:text-white'
+                    : 'text-text-[var(--ink-2)] hover:text-white'
                 }`}
               >
                 <User className="w-3.5 h-3.5" /> 1 Músico Específico
@@ -1463,10 +1463,10 @@ export function PdfExportModal({
                   setPrintMode('master');
                   setPreviewPageIndex(0);
                 }}
-                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                   printMode === 'master'
                     ? 'bg-[#1db954] text-black shadow-md'
-                    : 'text-neutral-400 hover:text-white'
+                    : 'text-text-[var(--ink-2)] hover:text-white'
                 }`}
               >
                 <FileText className="w-3.5 h-3.5" /> Master Escenario / Sonido
@@ -1476,12 +1476,12 @@ export function PdfExportModal({
             {/* Single member picker */}
             {printMode === 'single_member' && (
               <div className="flex items-center gap-2 w-full sm:w-auto">
-                <span className="hidden sm:inline text-neutral-400 font-bold">Músico:</span>
+                <span className="hidden sm:inline text-text-[var(--ink-2)] font-bold">Músico:</span>
                 <select
                   value={selectedMemberId}
                   onChange={(e) => setSelectedMemberId(e.target.value)}
-                  className={`flex-1 sm:flex-none min-w-0 p-1.5 px-3 rounded-lg border font-bold cursor-pointer ${
-                    isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-900 border-neutral-700 text-white'
+                  className={`flex-1 sm:flex-none min-w-0 p-1.5 px-3 rounded-[var(--r-s)] border font-bold cursor-pointer ${
+                    isStitchLight ? 'bg-white  text-[var(--ink)]' : 'bg-bg-[var(--surface)]  text-white'
                   }`}
                 >
                   {resolvedMembers.map((m) => (
@@ -1496,11 +1496,11 @@ export function PdfExportModal({
             {/* Densidad de vista: "sentado" busca el mínimo nº de hojas posible (para leer de
                 cerca — atril, mesa de sonido); "de pie" fuerza la letra más grande de todas,
                 aceptando más hojas a cambio — para leerlo desde lejos, de pie en el escenario. */}
-            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/10">
+            <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-black/40 border border-white/10">
               <button
                 onClick={() => setViewDensity('sentado')}
-                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
-                  viewDensity === 'sentado' ? 'bg-[#1db954] text-black shadow-md' : 'text-neutral-400 hover:text-white'
+                className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  viewDensity === 'sentado' ? 'bg-[#1db954] text-black shadow-md' : 'text-text-[var(--ink-2)] hover:text-white'
                 }`}
                 title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
               >
@@ -1508,8 +1508,8 @@ export function PdfExportModal({
               </button>
               <button
                 onClick={() => setViewDensity('de_pie')}
-                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
-                  viewDensity === 'de_pie' ? 'bg-[#1db954] text-black shadow-md' : 'text-neutral-400 hover:text-white'
+                className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  viewDensity === 'de_pie' ? 'bg-[#1db954] text-black shadow-md' : 'text-text-[var(--ink-2)] hover:text-white'
                 }`}
                 title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
               >
@@ -1524,8 +1524,8 @@ export function PdfExportModal({
               sin importar showAdvancedSettings). */}
           <button
             onClick={() => setShowAdvancedSettings(v => !v)}
-            className={`sm:hidden w-full flex items-center justify-between px-3 py-2 rounded-lg font-bold cursor-pointer transition-colors ${
-              isStitchLight ? 'bg-white border border-slate-300 text-slate-700' : 'bg-black/40 border border-white/10 text-neutral-300'
+            className={`sm:hidden w-full flex items-center justify-between px-3 py-2 rounded-[var(--r-s)] font-bold cursor-pointer transition-colors ${
+              isStitchLight ? 'bg-white border  text-[var(--ink-2)]' : 'bg-black/40 border border-white/10 text-text-[var(--ink-3)]'
             }`}
           >
             <span className="flex items-center gap-1.5">
@@ -1545,11 +1545,11 @@ export function PdfExportModal({
                 tamaño de emergencia (15pt) como último recurso — nunca para repartir en más de
                 1 página, solo para intentar mantenerlo en una sola. */}
             <div className="flex items-center gap-2">
-              <span className="text-neutral-400 font-bold flex items-center gap-1">
+              <span className="text-text-[var(--ink-2)] font-bold flex items-center gap-1">
                 <Type className="w-3.5 h-3.5 text-amber-400" /> Tamaño Títulos:
               </span>
               <span
-                className="px-2.5 py-1 rounded text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                className="px-2.5 py-1 rounded text-[11px] font-bold bg-amber-500/20 text-amber-300 border /30"
                 title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio (mínimo ideal 17pt; solo baja a 15pt como último recurso si eso evita saltar a una hoja extra)."
               >
                 ⚡ Automático
@@ -1558,13 +1558,13 @@ export function PdfExportModal({
 
             {/* Handwritten Note Style */}
             <div className="flex items-center gap-2">
-              <span className="text-neutral-400 font-bold flex items-center gap-1">
+              <span className="text-text-[var(--ink-2)] font-bold flex items-center gap-1">
                 <Palette className="w-3.5 h-3.5 text-sky-400" /> Letra Manuscrita:
               </span>
               <select
                 value={handwritingFont}
                 onChange={(e) => setHandwritingFont(e.target.value as any)}
-                className="p-1 px-2.5 rounded-lg bg-black/50 border border-neutral-700 text-white font-bold text-[11px] cursor-pointer"
+                className="p-1 px-2.5 rounded-[var(--r-s)] bg-black/50 border  text-white font-bold text-[11px] cursor-pointer"
               >
                 <option value="caveat">✍️ Rotulador Fino (Caveat)</option>
                 <option value="permanent_marker">🖊️ Sharpie Grueso (Permanent Marker)</option>
@@ -1573,7 +1573,7 @@ export function PdfExportModal({
               </select>
 
               {/* Ink color selector */}
-              <div className="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/10">
+              <div className="flex items-center gap-1 bg-black/40 p-1 rounded-[var(--r-s)] border border-white/10">
                 <button
                   onClick={() => setHandwritingColor('blue')}
                   className={`w-5 h-5 rounded-full bg-blue-600 transition-transform cursor-pointer ${
@@ -1583,7 +1583,7 @@ export function PdfExportModal({
                 />
                 <button
                   onClick={() => setHandwritingColor('black')}
-                  className={`w-5 h-5 rounded-full bg-neutral-900 border border-neutral-600 transition-transform cursor-pointer ${
+                  className={`w-5 h-5 rounded-full bg-bg-[var(--surface)] border  transition-transform cursor-pointer ${
                     handwritingColor === 'black' ? 'ring-2 ring-white scale-110' : 'opacity-60 hover:opacity-100'
                   }`}
                   title="Tinta Negra Sharpie"
@@ -1607,7 +1607,7 @@ export function PdfExportModal({
 
             {/* Feature Toggles (BPM & Duration optional, Logo, etc.) */}
             <div className="flex flex-wrap items-center gap-3">
-              <label className="flex items-center gap-1.5 text-neutral-300 hover:text-white cursor-pointer select-none">
+              <label className="flex items-center gap-1.5 text-text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={showBandLogo}
@@ -1617,7 +1617,7 @@ export function PdfExportModal({
                 <span>Logo Grupo</span>
               </label>
 
-              <label className="flex items-center gap-1.5 text-neutral-300 hover:text-white cursor-pointer select-none">
+              <label className="flex items-center gap-1.5 text-text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={showTonality}
@@ -1627,7 +1627,7 @@ export function PdfExportModal({
                 <span>Tono</span>
               </label>
 
-              <label className="flex items-center gap-1.5 text-neutral-300 hover:text-white cursor-pointer select-none">
+              <label className="flex items-center gap-1.5 text-text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={showBpm}
@@ -1637,7 +1637,7 @@ export function PdfExportModal({
                 <span>BPM</span>
               </label>
 
-              <label className="flex items-center gap-1.5 text-neutral-300 hover:text-white cursor-pointer select-none">
+              <label className="flex items-center gap-1.5 text-text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={showDuration}
@@ -1647,7 +1647,7 @@ export function PdfExportModal({
                 <span>Duración</span>
               </label>
 
-              <label className="flex items-center gap-1.5 text-neutral-300 hover:text-white cursor-pointer select-none">
+              <label className="flex items-center gap-1.5 text-text-[var(--ink-3)] hover:text-white cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={showAppBranding}
@@ -1665,28 +1665,28 @@ export function PdfExportModal({
             texto competía por ancho con el badge del músico en pantallas pequeñas). */}
         {membersToExport.length > 1 && (
           <div className={`px-3 sm:px-6 py-1.5 sm:py-2 border-b flex items-center justify-between gap-2 text-xs font-mono shrink-0 ${
-            isStitchLight ? 'bg-slate-200 border-slate-300' : 'bg-[#151515] border-neutral-800 text-neutral-300'
+            isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-[#151515]  text-text-[var(--ink-3)]'
           }`}>
             <div className="flex items-center gap-2 min-w-0">
-              <span className="hidden sm:inline font-bold text-neutral-400 shrink-0">Previsualizando hoja {previewPageIndex + 1} de {membersToExport.length}:</span>
-              <span className="sm:hidden font-bold text-neutral-400 shrink-0">{previewPageIndex + 1}/{membersToExport.length}</span>
+              <span className="hidden sm:inline font-bold text-text-[var(--ink-2)] shrink-0">Previsualizando hoja {previewPageIndex + 1} de {membersToExport.length}:</span>
+              <span className="sm:hidden font-bold text-text-[var(--ink-2)] shrink-0">{previewPageIndex + 1}/{membersToExport.length}</span>
               <span className="px-2.5 sm:px-3 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1.5 min-w-0 truncate">
                 <span className="truncate">👤 {currentPreviewMember.name}</span>
-                <span className="hidden sm:inline text-neutral-400 text-[10px] shrink-0">({currentPreviewMember.instrument})</span>
+                <span className="hidden sm:inline text-text-[var(--ink-2)] text-[10px] shrink-0">({currentPreviewMember.instrument})</span>
               </span>
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <button
                 disabled={previewPageIndex <= 0}
                 onClick={() => setPreviewPageIndex(p => Math.max(0, p - 1))}
-                className="p-1.5 sm:p-1 sm:px-3 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-s)] bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
               >
                 <ChevronLeft className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Anterior</span>
               </button>
               <button
                 disabled={previewPageIndex >= membersToExport.length - 1}
                 onClick={() => setPreviewPageIndex(p => Math.min(membersToExport.length - 1, p + 1))}
-                className="p-1.5 sm:p-1 sm:px-3 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                className="p-1.5 sm:p-1 sm:px-3 rounded-[var(--r-s)] bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
               >
                 <span className="hidden sm:inline">Siguiente</span> <ChevronRight className="w-3.5 h-3.5" />
               </button>
@@ -1697,13 +1697,13 @@ export function PdfExportModal({
         {/* Modal Body: A4 Stage Sheet Real Preview Container */}
         <div
           className={`flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center ${
-            isStitchLight ? 'bg-slate-200' : 'bg-[#0a0a0a]'
+            isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[#0a0a0a]'
           }`}
         >
           {/* Authentic Real Stage Paper Sheet */}
           <div
             ref={sheetRef}
-            className="relative overflow-hidden bg-white text-black p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border border-neutral-300 transition-all"
+            className="relative overflow-hidden bg-white text-black p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border border-text-[var(--ink-3)] transition-all"
             style={{
               width: '210mm',
               minHeight: '297mm',
@@ -1905,7 +1905,7 @@ export function PdfExportModal({
                         <div className="flex items-baseline gap-1.5 flex-nowrap">
                           <div className="flex items-baseline gap-2.5 min-w-0 flex-nowrap overflow-hidden">
                             {showSongNumbers && (
-                              <span className="font-mono text-[20pt] text-neutral-400 font-black min-w-[32px] shrink-0">
+                              <span className="font-mono text-[20pt] text-text-[var(--ink-2)] font-black min-w-[32px] shrink-0">
                                 {index + 1}.
                               </span>
                             )}
@@ -1973,7 +1973,7 @@ export function PdfExportModal({
                             <button
                               onClick={() => setEditingSongForNotes(s)}
                               title="Editar notas manuscritas de esta canción"
-                              className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 rounded font-mono text-neutral-800 flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
+                              className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-bg-[var(--sunken)] hover:bg-bg-[var(--sunken)] border border-text-[var(--ink-3)] rounded font-mono text-neutral-800 flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
                             >
                               <Edit3 className="w-3 h-3 text-emerald-600" />
                               <span>Editar Nota</span>
@@ -2059,14 +2059,14 @@ export function PdfExportModal({
           auto-ajuste detecta ese caso límite real — nunca decide en nombre del usuario. */}
       {sizeChoiceDialog && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[10000] p-4">
-          <div className={`rounded-2xl shadow-2xl max-w-lg w-full p-6 border ${
-            isStitchLight ? 'bg-white border-slate-300' : 'bg-neutral-900 border-neutral-700'
+          <div className={`rounded-[var(--r-l)] shadow-2xl max-w-lg w-full p-6 border ${
+            isStitchLight ? 'bg-white ' : 'bg-bg-[var(--surface)] '
           }`}>
-            <h3 className={`text-lg font-black uppercase mb-2 flex items-center gap-2 ${isStitchLight ? 'text-slate-900' : 'text-white'}`}>
+            <h3 className={`text-lg font-black uppercase mb-2 flex items-center gap-2 ${isStitchLight ? 'text-[var(--ink)]' : 'text-white'}`}>
               <Zap className="w-5 h-5 text-amber-400" />
               ¿Cómo prefieres el repertorio?
             </h3>
-            <p className={`text-sm mb-5 ${isStitchLight ? 'text-slate-600' : 'text-neutral-400'}`}>
+            <p className={`text-sm mb-5 ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'}`}>
               El repertorio casi cabe en una sola hoja, pero necesitaría una letra algo más pequeña
               de lo recomendado para leerse cómodo en escena (~2m). Elige qué prefieres:
             </p>
@@ -2076,12 +2076,12 @@ export function PdfExportModal({
                   setSizeChoiceDialog(null);
                   handlePrint('single');
                 }}
-                className="p-4 rounded-xl border-2 border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-left transition-colors cursor-pointer"
+                className="p-4 rounded-[var(--r-m)] border-2 /40 bg-amber-500/10 hover:bg-amber-500/20 text-left transition-colors cursor-pointer"
               >
-                <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ? 'text-slate-900' : 'text-white'}`}>
+                <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ? 'text-[var(--ink)]' : 'text-white'}`}>
                   📄 1 sola hoja (letra más pequeña)
                 </div>
-                <div className={`text-xs ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                <div className={`text-xs ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'}`}>
                   {sizeChoiceDialog.singleTotalPages} hoja{sizeChoiceDialog.singleTotalPages !== 1 ? 's' : ''} en total — todo el repertorio de un vistazo
                 </div>
               </button>
@@ -2090,19 +2090,19 @@ export function PdfExportModal({
                   setSizeChoiceDialog(null);
                   handlePrint('multi');
                 }}
-                className="p-4 rounded-xl border-2 border-sky-500/40 bg-sky-500/10 hover:bg-sky-500/20 text-left transition-colors cursor-pointer"
+                className="p-4 rounded-[var(--r-m)] border-2 border-sky-500/40 bg-sky-500/10 hover:bg-sky-500/20 text-left transition-colors cursor-pointer"
               >
-                <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ? 'text-slate-900' : 'text-white'}`}>
+                <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ? 'text-[var(--ink)]' : 'text-white'}`}>
                   📄📄 Varias hojas (letra más grande)
                 </div>
-                <div className={`text-xs ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                <div className={`text-xs ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'}`}>
                   {sizeChoiceDialog.multiTotalPages} hojas en total — letra al tamaño ideal para leer desde ~2m
                 </div>
               </button>
             </div>
             <button
               onClick={() => setSizeChoiceDialog(null)}
-              className={`mt-4 text-xs font-mono cursor-pointer ${isStitchLight ? 'text-slate-400 hover:text-slate-600' : 'text-neutral-500 hover:text-neutral-300'}`}
+              className={`mt-4 text-xs font-mono cursor-pointer ${isStitchLight ? 'text-[var(--ink-3)] hover:text-[var(--ink-2)]' : 'text-neutral-500 hover:text-text-[var(--ink-3)]'}`}
             >
               Cancelar
             </button>
@@ -2115,7 +2115,7 @@ export function PdfExportModal({
         <MemberNotesModal
           isOpen={Boolean(editingSongForNotes)}
           song={editingSongForNotes}
-          colors={{ card: 'bg-neutral-900', text: 'text-white' } as any}
+          colors={{ card: 'bg-bg-[var(--surface)]', text: 'text-white' } as any}
           isStitchLight={isStitchLight}
           bandMembers={resolvedMembers}
           onClose={() => setEditingSongForNotes(null)}

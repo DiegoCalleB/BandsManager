@@ -58,7 +58,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
         <div
           id="add-transaction-modal"
-          className="w-full max-w-md rounded-2xl border p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto"
+          className="w-full max-w-md rounded-[var(--r-l)] border p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto"
           style={{
           backgroundColor: colors.card,
           borderColor: colors.border,
@@ -68,7 +68,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
         <button
           id="close-add-transaction-modal"
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-white transition-colors"
+          className="absolute top-4 right-4 p-2 rounded-[var(--r-m)] text-[var(--ink-3)] hover:text-white transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -80,17 +80,17 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-slate-400">
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
               Tipo
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setTipo('ingreso')}
-                className={`py-2 px-4 rounded-xl text-sm font-semibold transition-all border ${
+                className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all border ${
                   tipo === 'ingreso'
                     ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
-                    : 'bg-slate-800/40 text-slate-400 border-transparent hover:bg-slate-800'
+                    : 'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent hover:bg-[var(--surface)]'
                 }`}
               >
                 Ingreso (+€)
@@ -98,10 +98,10 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
               <button
                 type="button"
                 onClick={() => setTipo('gasto')}
-                className={`py-2 px-4 rounded-xl text-sm font-semibold transition-all border ${
+                className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all border ${
                   tipo === 'gasto'
                     ? 'bg-rose-500/20 text-rose-400 border-rose-500'
-                    : 'bg-slate-800/40 text-slate-400 border-transparent hover:bg-slate-800'
+                    : 'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent hover:bg-[var(--surface)]'
                 }`}
               >
                 Gasto (-€)
@@ -110,13 +110,13 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-slate-400">
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
               Categoría
             </label>
             <select
               value={categoria}
               onChange={(e) => setCategoria(e.target.value as Payment['categoria'])}
-              className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-indigo-500"
+              className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] border  text-sm focus:outline-none focus:border-indigo-500"
             >
               <option value="concierto">Concierto / Caché</option>
               <option value="merchandising">Merchandising</option>
@@ -130,7 +130,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-slate-400">
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
               Concepto / Descripción
             </label>
             <input
@@ -139,13 +139,13 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
               value={concepto}
               onChange={(e) => setConcepto(e.target.value)}
               placeholder="Ej. Caché Concierto Wurlitzer"
-              className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-indigo-500"
+              className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] border  text-sm focus:outline-none focus:border-indigo-500"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-slate-400">
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
                 Importe (€)
               </label>
               <input
@@ -155,11 +155,11 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                 value={importe}
                 onChange={(e) => setImporte(e.target.value)}
                 placeholder="0.00"
-                className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-indigo-500"
+                className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] border  text-sm focus:outline-none focus:border-indigo-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-slate-400">
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
                 Fecha
               </label>
               <input
@@ -167,23 +167,23 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                 required
                 value={fecha}
                 onChange={(e) => setFecha(e.target.value)}
-                className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-indigo-500"
+                className="w-full p-3 rounded-[var(--r-m)] bg-[var(--surface)] border  text-sm focus:outline-none focus:border-indigo-500"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-slate-400">
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--ink-3)]">
               Estado
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setEstado('pagado')}
-                className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all border ${
+                className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all border ${
                   estado === 'pagado'
                     ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
-                    : 'bg-slate-800/40 text-slate-400 border-transparent'
+                    : 'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent'
                 }`}
               >
                 Pagado / Completado
@@ -191,10 +191,10 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
               <button
                 type="button"
                 onClick={() => setEstado('pendiente')}
-                className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all border ${
+                className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all border ${
                   estado === 'pendiente'
-                    ? 'bg-amber-500/20 text-amber-400 border-amber-500'
-                    : 'bg-slate-800/40 text-slate-400 border-transparent'
+                    ? 'bg-amber-500/20 text-amber-400 '
+                    : 'bg-[var(--surface)]/40 text-[var(--ink-3)] border-transparent'
                 }`}
               >
                 Pendiente / Cobro futuro
@@ -206,7 +206,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+              className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50"
             >
               {isSubmitting ? 'Guardando...' : 'Guardar Transacción'}
             </button>

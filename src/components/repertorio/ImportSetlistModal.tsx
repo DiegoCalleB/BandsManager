@@ -210,13 +210,13 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
-      <div className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto">
-        <div className="sticky top-0 z-10 bg-neutral-900 border-b border-neutral-700 p-3 flex justify-between items-center">
+      <div className="bg-bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto border  shadow-2xl pointer-events-auto">
+        <div className="sticky top-0 z-10 bg-bg-[var(--surface)] border-b  p-3 flex justify-between items-center">
           <div className="flex items-center gap-2.5">
             <ImagePlus className="w-5 h-5 text-sky-400" />
             <h2 className="text-base font-bold">Importar Repertorio de Foto/PDF</h2>
           </div>
-          <button onClick={handleClose} className="p-2 hover:bg-neutral-800 rounded-lg transition">
+          <button onClick={handleClose} className="p-2 hover:bg-neutral-800 rounded-[var(--r-s)] transition">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -225,7 +225,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
           {!reviewItems && !analyzing && (
             <div className="text-center py-8 space-y-4">
               <ImagePlus className="w-12 h-12 text-sky-400/50 mx-auto" />
-              <p className="text-neutral-300">
+              <p className="text-text-[var(--ink-3)]">
                 Sube una foto o PDF de un repertorio ya impreso (a mano o a máquina) — la IA lee los
                 temas en orden y los casa contra tu catálogo antes de crear nada.
               </p>
@@ -233,12 +233,12 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
                 type="file"
                 accept="image/*,.pdf"
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
-                className="text-xs text-neutral-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-sky-700 file:text-white file:text-xs file:font-medium mx-auto block"
+                className="text-xs text-text-[var(--ink-3)] file:mr-3 file:py-1.5 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:bg-sky-700 file:text-white file:text-xs file:font-medium mx-auto block"
               />
               {file && (
                 <button
                   onClick={handleAnalyze}
-                  className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-lg transition font-medium"
+                  className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-[var(--r-s)] transition font-medium"
                 >
                   Analizar
                 </button>
@@ -249,12 +249,12 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
           {analyzing && (
             <div className="text-center py-12">
               <Loader className="w-8 h-8 animate-spin text-sky-400 mx-auto mb-4" />
-              <p className="text-neutral-400">Leyendo el repertorio...</p>
+              <p className="text-text-[var(--ink-2)]">Leyendo el repertorio...</p>
             </div>
           )}
 
           {error && (
-            <div className="bg-red-900/20 border border-red-700 rounded-lg p-4 flex gap-3">
+            <div className="bg-red-900/20 border border-red-700 rounded-[var(--r-s)] p-4 flex gap-3">
               <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-red-300">{error}</p>
             </div>
@@ -263,16 +263,16 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
           {reviewItems && (
             <div className="space-y-4">
               <div>
-                <label className="text-[11px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">Nombre del repertorio</label>
+                <label className="text-[11px] font-mono uppercase tracking-wider text-text-[var(--ink-2)] block mb-1">Nombre del repertorio</label>
                 <input
                   type="text"
                   value={setlistName}
                   onChange={(e) => setSetlistName(e.target.value)}
-                  className="w-full p-2 bg-black/60 rounded-lg border border-neutral-700 text-sm text-neutral-100 focus:outline-none focus:border-sky-400"
+                  className="w-full p-2 bg-black/60 rounded-[var(--r-s)] border  text-sm text-bg-[var(--sunken)] focus:outline-none focus:border-sky-400"
                 />
               </div>
 
-              <p className="text-[11px] font-mono text-neutral-400 flex items-center gap-1.5">
+              <p className="text-[11px] font-mono text-text-[var(--ink-2)] flex items-center gap-1.5">
                 <ListChecks className="w-3.5 h-3.5" />
                 {matchedCount}/{songItemsCount} temas ya vinculados automáticamente al catálogo
               </p>
@@ -281,12 +281,12 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
                 {reviewItems.map((it, idx) => {
                   if (it.type === 'block') {
                     return (
-                      <div key={idx} className={`p-2 rounded-lg border flex items-center justify-between gap-2 ${it.included ? 'bg-neutral-800 border-neutral-700' : 'bg-neutral-900 border-neutral-800 opacity-50'}`}>
-                        <span className="text-xs text-neutral-200">📋 {it.titulo} <span className="text-neutral-500">({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})</span></span>
+                      <div key={idx} className={`p-2 rounded-[var(--r-s)] border flex items-center justify-between gap-2 ${it.included ? 'bg-neutral-800 ' : 'bg-bg-[var(--surface)]  opacity-50'}`}>
+                        <span className="text-xs text-bg-[var(--sunken)]">📋 {it.titulo} <span className="text-neutral-500">({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})</span></span>
                         <button
                           type="button"
                           onClick={() => toggleBlockIncluded(idx)}
-                          className="text-[10px] px-2 py-0.5 rounded bg-neutral-700 hover:bg-neutral-600 text-neutral-200 font-mono"
+                          className="text-[10px] px-2 py-0.5 rounded bg-neutral-700 hover:bg-neutral-600 text-bg-[var(--sunken)] font-mono"
                         >
                           {it.included ? 'Descartar' : 'Incluir'}
                         </button>
@@ -296,9 +296,9 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
 
                   const isDiscarded = it.action === 'discard';
                   return (
-                    <div key={idx} className={`p-2 rounded-lg border space-y-1.5 ${isDiscarded ? 'bg-neutral-900 border-neutral-800 opacity-50' : 'bg-neutral-800 border-neutral-700'}`}>
+                    <div key={idx} className={`p-2 rounded-[var(--r-s)] border space-y-1.5 ${isDiscarded ? 'bg-bg-[var(--surface)]  opacity-50' : 'bg-neutral-800 '}`}>
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs text-neutral-200 flex items-center gap-1.5">
+                        <span className="text-xs text-bg-[var(--sunken)] flex items-center gap-1.5">
                           <Music className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
                           "{it.detectedTitle}"
                         </span>
@@ -310,7 +310,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
                         <select
                           value={it.action}
                           onChange={(e) => updateSongItem(idx, { action: e.target.value as SongAction })}
-                          className="text-[10px] bg-black/60 border border-neutral-700 rounded px-1.5 py-1 text-neutral-200 font-mono"
+                          className="text-[10px] bg-black/60 border  rounded px-1.5 py-1 text-bg-[var(--sunken)] font-mono"
                         >
                           {it.matchedSongId && <option value="link_matched">Vincular a "{it.matchedSongTitle}"</option>}
                           <option value="create_new">Crear canción nueva</option>
@@ -323,14 +323,14 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
                             value={it.newTitle}
                             onChange={(e) => updateSongItem(idx, { newTitle: e.target.value })}
                             placeholder="Título de la canción nueva"
-                            className="text-[10px] bg-black/60 border border-neutral-700 rounded px-1.5 py-1 text-neutral-200 flex-1 min-w-[140px]"
+                            className="text-[10px] bg-black/60 border  rounded px-1.5 py-1 text-bg-[var(--sunken)] flex-1 min-w-[140px]"
                           />
                         )}
                         {it.action === 'link_other' && (
                           <select
                             value={it.linkedSongId}
                             onChange={(e) => updateSongItem(idx, { linkedSongId: e.target.value })}
-                            className="text-[10px] bg-black/60 border border-neutral-700 rounded px-1.5 py-1 text-neutral-200 flex-1 min-w-[140px]"
+                            className="text-[10px] bg-black/60 border  rounded px-1.5 py-1 text-bg-[var(--sunken)] flex-1 min-w-[140px]"
                           >
                             <option value="">Elige una canción del catálogo...</option>
                             {catalogSongs.map((s) => (
@@ -352,13 +352,13 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
             <button
               onClick={handleCreate}
               disabled={creating || !setlistName.trim()}
-              className="flex-1 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition font-medium text-sm flex items-center justify-center gap-1.5"
+              className="flex-1 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
             >
               {creating ? <Loader className="w-4 h-4 animate-spin" /> : '✓ Crear Repertorio'}
             </button>
             <button
               onClick={handleClose}
-              className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
+              className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
             >
               Cancelar
             </button>

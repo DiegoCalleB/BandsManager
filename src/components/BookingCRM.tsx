@@ -949,14 +949,14 @@ export default function BookingCRM({
  };
 
 
- const subCardBg = isStitchLight ? 'bg-slate-50/60' : 'bg-[#131313]';
- const textTitle = isStitchLight ? 'text-slate-900' : 'text-neutral-100';
- const textSub = isStitchLight ? 'text-slate-500' : 'text-neutral-400';
- const textMuted = isStitchLight ? 'text-slate-400' : 'text-[#9a9591]';
+ const subCardBg = isStitchLight ? 'bg-[var(--bg)]/60' : 'bg-[var(--surface)]';
+ const textTitle = isStitchLight ? 'text-[var(--ink)]' : 'text-bg-[var(--sunken)]';
+ const textSub = isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]';
+ const textMuted = isStitchLight ? 'text-[var(--ink-3)]' : 'text-[var(--ink-3)]';
  const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCityFilter ? 1 : 0) + (statusFilter !== 'todos' ? 1 : 0) + (typeFilter !== 'todos' ? 1 : 0) + (minCapacityFilter > 0 ? 1 : 0) + (onlyFavoritesFilter ? 1 : 0) + (onlyVerifiedFilter ? 1 : 0) + (activeSavedFilterId ? 1 : 0);
 
  return (
- <div className="space-y-4 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden">
+ <div data-modulo="booking" className="space-y-4 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden">
  
  {/* 2. LEADS CRM WORKSPACE */}
  <div className={`grid grid-cols-1 ${selectedLead ? 'lg:grid-cols-3 gap-8' : 'w-full'} items-start transition-all duration-300`}>
@@ -1131,7 +1131,7 @@ export default function BookingCRM({
 
     {/* EXPANDED IA TOOLS PANEL (Responsive on all screen sizes) */}
     {isMobileToolsOpen && (
-      <div className="p-3.5 rounded-2xl border bg-[#1c1b18] border-amber-500/40 space-y-2.5 animate-in slide-in-from-top-2 duration-150 shadow-2xl">
+      <div className="p-3.5 rounded-[var(--r-l)] border bg-[var(--surface)] /40 space-y-2.5 animate-in slide-in-from-top-2 duration-150 shadow-2xl">
         <div className="flex items-center justify-between text-xs font-bold text-amber-300 pb-1.5 border-b border-white/10">
           <span className="flex items-center gap-1.5">
             <Wrench className="w-3.5 h-3.5" />
@@ -1140,7 +1140,7 @@ export default function BookingCRM({
           <button
             type="button"
             onClick={() => setIsMobileToolsOpen(false)}
-            className="text-zinc-400 hover:text-white p-1 rounded-lg cursor-pointer"
+            className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -1154,7 +1154,7 @@ export default function BookingCRM({
               setIsMobileToolsOpen(false);
               handleTriggerEnviadorAgent();
             }}
-            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-emerald-200 border border-emerald-500/40 transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
+            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-emerald-200 border border-emerald-500/40 transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
           >
             <span className="flex items-center gap-2">
               {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" /> : <Send className="w-4 h-4 text-emerald-400" />}
@@ -1168,7 +1168,7 @@ export default function BookingCRM({
               setIsPlacesExplorerOpen(true);
               setIsMobileToolsOpen(false);
             }}
-            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-[#f2ca50] text-[#2c2200] hover:bg-[#e5bc40] transition-all cursor-pointer shadow-sm active:scale-98"
+            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--acc-ink)] hover:bg-[var(--acc)] transition-all cursor-pointer shadow-sm active:scale-98"
           >
             <span className="flex items-center gap-2">
               <Search className="w-4 h-4" />
@@ -1183,7 +1183,7 @@ export default function BookingCRM({
               setIsExcelImportOpen(true);
               setIsMobileToolsOpen(false);
             }}
-            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200 border border-emerald-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200 border border-emerald-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
           >
             <span className="flex items-center gap-2">
               <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
@@ -1198,14 +1198,14 @@ export default function BookingCRM({
               setIsDuplicatesModalOpen(true);
               setIsMobileToolsOpen(false);
             }}
-            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-[#f2ca50]/15 hover:bg-[#f2ca50]/25 text-[#f2ca50] border border-[#f2ca50]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
           >
             <span className="flex items-center gap-2">
-              <Copy className="w-4 h-4 text-[#f2ca50]" />
+              <Copy className="w-4 h-4 text-[var(--acc)]" />
               Detector y Limpiador de Duplicados
             </span>
             {duplicateGroupsCount > 0 ? (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#f2ca50] text-[#2c2200]">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)] text-[var(--acc-ink)]">
                 {duplicateGroupsCount} {duplicateGroupsCount === 1 ? 'grupo' : 'grupos'}
               </span>
             ) : (
@@ -1219,7 +1219,7 @@ export default function BookingCRM({
               setIsContactEnricherOpen(true);
               setIsMobileToolsOpen(false);
             }}
-            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-900/60 to-purple-900/60 hover:from-indigo-900/80 hover:to-purple-900/80 text-indigo-200 border border-indigo-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-indigo-900/60 to-purple-900/60 hover:from-indigo-900/80 hover:to-purple-900/80 text-indigo-200 border border-indigo-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
           >
             <span className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-indigo-400" />
@@ -1234,7 +1234,7 @@ export default function BookingCRM({
               setIsAgentConfigOpen(true);
               setIsMobileToolsOpen(false);
             }}
-            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 transition-all cursor-pointer active:scale-98"
+            className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border /40 transition-all cursor-pointer active:scale-98"
           >
             <span className="flex items-center gap-2">
               <Bot className="w-4 h-4 text-amber-400" />
@@ -1249,7 +1249,7 @@ export default function BookingCRM({
               setIsMobileToolsOpen(false);
               setIsExportLeadsOpen(true);
             }}
-            className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 transition-all cursor-pointer active:scale-98"
+            className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 transition-all cursor-pointer active:scale-98"
           >
             <Download className="w-3.5 h-3.5 text-emerald-400" />
             <span>Exportar Leads (A la vista / Todos / Excel)</span>
@@ -1262,7 +1262,7 @@ export default function BookingCRM({
               setIsMobileToolsOpen(false);
               handleEnrichAddresses();
             }}
-            className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+            className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
           >
             <MapPin className="w-3.5 h-3.5 text-zinc-400" />
             <span>{isEnrichingAddresses ? 'Rellenando direcciones...' : 'Autocompletar Direcciones'}</span>
@@ -1460,7 +1460,7 @@ export default function BookingCRM({
 
   {/* ⚡ UNIFIED COMPACT FILTERS PANEL (Desktop, Tablet & Mobile) */}
   {isMobileFiltersOpen && (
-    <div className="p-3.5 rounded-2xl border bg-[#181716] border-amber-500/40 space-y-3.5 shadow-2xl animate-in slide-in-from-top-2 duration-150">
+    <div className="p-3.5 rounded-[var(--r-l)] border bg-[var(--surface)] /40 space-y-3.5 shadow-2xl animate-in slide-in-from-top-2 duration-150">
       <div className="flex items-center justify-between pb-2 border-b border-white/10">
         <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
           <Filter className="w-3.5 h-3.5" />
@@ -1469,7 +1469,7 @@ export default function BookingCRM({
         <button
           type="button"
           onClick={() => setIsMobileFiltersOpen(false)}
-          className="text-zinc-400 hover:text-white p-1 rounded-lg cursor-pointer"
+          className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
@@ -1482,10 +1482,10 @@ export default function BookingCRM({
           <button
             type="button"
             onClick={() => setOnlyFavoritesFilter(!onlyFavoritesFilter)}
-            className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-[var(--r-s)] border text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
               onlyFavoritesFilter
-                ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
-                : 'bg-black/40 text-neutral-400 border-neutral-800 hover:text-white'
+                ? 'bg-amber-500/20 text-amber-300 /50'
+                : 'bg-black/40 text-text-[var(--ink-2)]  hover:text-white'
             }`}
           >
             <span>⭐ Favoritos</span>
@@ -1495,24 +1495,24 @@ export default function BookingCRM({
           <button
             type="button"
             onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
-            className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-[var(--r-s)] border text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
               onlyVerifiedFilter
                 ? 'bg-sky-500/20 text-sky-300 border-sky-500/50'
-                : 'bg-black/40 text-neutral-400 border-neutral-800 hover:text-white'
+                : 'bg-black/40 text-text-[var(--ink-2)]  hover:text-white'
             }`}
           >
             <span>✔ Verificados</span>
             {onlyVerifiedFilter && <X className="w-3 h-3 ml-0.5" />}
           </button>
 
-          <div className="flex items-center gap-1.5 bg-black/40 px-2.5 py-1.5 rounded-lg border border-neutral-800 text-xs">
-            <span className="text-neutral-400">Aforo mín:</span>
+          <div className="flex items-center gap-1.5 bg-black/40 px-2.5 py-1.5 rounded-[var(--r-s)] border  text-xs">
+            <span className="text-text-[var(--ink-2)]">Aforo mín:</span>
             <input
               type="number"
               placeholder="Ej: 300"
               value={minCapacityFilter || ''}
               onChange={(e) => setMinCapacityFilter(Number(e.target.value) || 0)}
-              className="w-16 bg-transparent text-[#eab308] font-bold focus:outline-none"
+              className="w-16 bg-transparent text-[var(--acc)] font-bold focus:outline-none"
             />
             {minCapacityFilter > 0 && (
               <button
@@ -1530,10 +1530,10 @@ export default function BookingCRM({
             <button
               type="button"
               onClick={() => setIsSavingFilterOpen(true)}
-              className="px-2.5 py-1.5 bg-[#eab308]/15 hover:bg-[#eab308]/25 text-[#eab308] rounded-lg font-bold text-xs flex items-center gap-1 transition-all border border-[#eab308]/30 cursor-pointer"
+              className="px-2.5 py-1.5 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-s)] font-bold text-xs flex items-center gap-1 transition-all border border-[var(--acc)]/30 cursor-pointer"
               title="Guardar la combinación de filtros actual en 1 clic"
             >
-              <BookmarkCheck className="w-3.5 h-3.5 text-[#eab308]" />
+              <BookmarkCheck className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>💾 Guardar búsqueda</span>
             </button>
           ) : (
@@ -1544,18 +1544,18 @@ export default function BookingCRM({
                 placeholder="Nombre del filtro (ej: Salas BCN > 300)..."
                 value={newFilterName}
                 onChange={(e) => setNewFilterName(e.target.value)}
-                className="px-2.5 py-1.5 text-xs rounded-lg bg-zinc-900 border border-[#eab308]/50 text-white focus:outline-none w-48 sm:w-56"
+                className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-zinc-900 border border-[var(--acc)]/50 text-white focus:outline-none w-48 sm:w-56"
               />
               <button
                 type="submit"
-                className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold cursor-pointer"
+                className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
               >
                 Guardar
               </button>
               <button
                 type="button"
                 onClick={() => setIsSavingFilterOpen(false)}
-                className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg cursor-pointer"
+                className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-[var(--r-s)] cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -1576,7 +1576,7 @@ export default function BookingCRM({
                   key={sf.id}
                   className={`group relative shrink-0 flex items-center rounded-full border transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-[#eab308]/20 border-[#eab308] text-[#eab308] font-bold shadow-xs'
+                      ? 'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--acc)] font-bold shadow-xs'
                       : 'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-800 text-neutral-300'
                   }`}
                 >
@@ -1587,7 +1587,7 @@ export default function BookingCRM({
                   >
                     <span>📌 {sf.nombre}</span>
                     {sf.minCapacityFilter ? (
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#eab308]/30 text-amber-200">
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-amber-200">
                         &gt;{sf.minCapacityFilter}
                       </span>
                     ) : null}
@@ -1641,9 +1641,9 @@ export default function BookingCRM({
               key={t.key}
               type="button"
               onClick={() => setTypeFilter(t.key)}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
                 typeFilter === t.key
-                  ? 'bg-[#f2ca50] text-[#3c2f00] font-bold shadow-sm'
+                  ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
                   : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
               }`}
             >
@@ -1673,7 +1673,7 @@ export default function BookingCRM({
             onClick={() => setSelectedCityFilter('')}
             className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-all cursor-pointer ${
               selectedCityFilter === ''
-                ? 'bg-[#22211F] text-[#eab308] font-bold border border-amber-500/40'
+                ? 'bg-[var(--surface)] text-[var(--acc)] font-bold border /40'
                 : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
             }`}
           >
@@ -1689,7 +1689,7 @@ export default function BookingCRM({
                 onClick={() => setSelectedCityFilter(isSelected ? '' : cityName)}
                 className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
                   isSelected
-                    ? 'bg-[#eab308]/20 text-[#eab308] font-bold border border-[#eab308]/50'
+                    ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold border border-[var(--acc)]/50'
                     : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
                 }`}
               >
@@ -1715,7 +1715,7 @@ export default function BookingCRM({
         <button
           type="button"
           onClick={() => setIsMobileFiltersOpen(false)}
-          className="px-4 py-1.5 rounded-lg text-xs font-bold bg-[#f2ca50] text-[#2c2200] cursor-pointer shadow-sm"
+          className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--acc)] text-[var(--acc-ink)] cursor-pointer shadow-sm"
         >
           Ver {filteredLeads.length} resultados
         </button>
@@ -1728,19 +1728,19 @@ export default function BookingCRM({
     <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
       <span className="text-[10px] uppercase font-bold text-amber-400 shrink-0">Filtros:</span>
       {selectedCityFilter && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border /40 shrink-0">
           📍 {selectedCityFilter}
           <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
         </span>
       )}
       {typeFilter !== 'todos' && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border /40 shrink-0">
           🏛️ {typeFilter}
           <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
         </span>
       )}
       {onlyFavoritesFilter && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border /40 shrink-0">
           ⭐ Favoritos
           <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
         </span>
@@ -1752,13 +1752,13 @@ export default function BookingCRM({
         </span>
       )}
       {minCapacityFilter > 0 && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border /40 shrink-0">
           &gt;{minCapacityFilter} pax
           <button type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
         </span>
       )}
       {activeSavedFilterId && (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#eab308]/20 text-[#eab308] border border-[#eab308]/50 shrink-0">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/50 shrink-0">
           📌 {savedFilters.find(f => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
           <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-white cursor-pointer"><X className="w-3 h-3" /></button>
         </span>
@@ -2103,14 +2103,14 @@ export default function BookingCRM({
       <div className="mt-5 pt-4 border-t border-zinc-800/80 space-y-6">
         <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
           <div>
-            <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>
+            <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'}`}>
               Pautas diferenciadas por categoría
             </h4>
           </div>
 
           {/* Template Tab Selector (7 Categories) */}
-          <div className={`flex flex-wrap items-center gap-1 p-1 rounded-xl shrink-0 ${
-            isStitchLight ? 'bg-slate-100' : 'bg-[#121215]'
+          <div className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${
+            isStitchLight ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)]'
           }`}>
             {[
               { id: 'salas', label: '🏛️ Salas', icon: Building2 },
@@ -2129,14 +2129,14 @@ export default function BookingCRM({
                   type="button"
                   id={`template-tab-${tab.id}`}
                   onClick={() => setTemplateTab(tab.id as TemplateCategory)}
-                  className={`py-1.5 px-2.5 rounded-lg text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
+                  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
                     isActive
                       ? isStitchLight
                         ? 'bg-white text-sky-400 shadow-sm'
-                        : 'bg-[#f2ca50] text-[#3c2f00] font-extrabold shadow-md'
+                        : 'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
                       : isStitchLight
-                      ? 'text-slate-500 hover:text-slate-800'
-                      : 'text-neutral-400 hover:text-neutral-200'
+                      ? 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                      : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
                   }`}
                 >
                   <IconComp className="w-3.5 h-3.5" />
@@ -2152,7 +2152,7 @@ export default function BookingCRM({
  const activeTemplate = getActiveTemplateData();
  return (
  <>
- <div className={`p-3 rounded-xl text-[10px] font-sans flex items-center justify-between ${
+ <div className={`p-3 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between ${
  templateTab === 'medios'
  ? isStitchLight ? 'bg-rose-500/15 text-rose-400' : 'bg-rose-500/15 text-rose-400'
  : templateTab === 'grupos'
@@ -2175,45 +2175,45 @@ export default function BookingCRM({
  {/* Form Side */}
  <div className="space-y-4">
  {optimizationFeedbackMsg && (
-   <div className="p-3 bg-amber-500/15 border border-amber-500/30 text-amber-200 text-[11px] rounded-xl flex items-center justify-between font-sans animate-in fade-in">
+   <div className="p-3 bg-amber-500/15 border /30 text-amber-200 text-[11px] rounded-[var(--r-m)] flex items-center justify-between font-sans animate-in fade-in">
      <span>{optimizationFeedbackMsg}</span>
      <button onClick={() => setOptimizationFeedbackMsg(null)} className="text-amber-400 font-bold ml-2 hover:text-white cursor-pointer">✕</button>
    </div>
  )}
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ? 'text-slate-600' : 'text-neutral-300'}`}>Asunto del Email por Defecto</label>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-neutral-300'}`}>Asunto del Email por Defecto</label>
  <input
  id="template-subject"
  type="text"
  value={activeTemplate.subject}
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
- className={`w-full rounded-lg px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
+ className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
  isStitchLight
- ? 'bg-white text-slate-800 focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
- : 'bg-[#131313] text-[#e5e2e1] focus:-[#f2ca50]/50'
+ ? 'bg-white text-[var(--ink)] focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
+ : 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ? 'text-slate-600' : 'text-neutral-300'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-neutral-300'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
  <textarea
  id="template-body"
  rows={8}
  value={activeTemplate.body}
  onChange={(e) => activeTemplate.setBody(e.target.value)}
- className={`w-full rounded-lg p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
+ className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ? 'bg-white text-slate-800 focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
- : 'bg-[#131313] text-[#e5e2e1] focus:-[#f2ca50]/50'
+ ? 'bg-white text-[var(--ink)] focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
+ : 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
  />
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${isStitchLight ? 'text-sky-400' : 'text-[#ffb596]'}`}>
+ <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${isStitchLight ? 'text-sky-400' : 'text-[var(--accent)]'}`}>
  <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
  </label>
  <textarea
@@ -2221,16 +2221,16 @@ export default function BookingCRM({
  rows={3}
  value={activeTemplate.guidelines}
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
- className={`w-full rounded-lg p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
+ className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
  isStitchLight
- ? 'bg-white text-slate-800 focus:-indigo-500'
- : 'bg-[#131313] text-[#e5e2e1] focus:-[#ffb596]/50'
+ ? 'bg-white text-[var(--ink)] focus:-indigo-500'
+ : 'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
  />
  </div>
 
- <div className="space-y-3 p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10">
+ <div className="space-y-3 p-3.5 rounded-[var(--r-m)] border /30 bg-amber-500/10">
  <div className="flex items-center justify-between">
  <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
@@ -2253,7 +2253,7 @@ export default function BookingCRM({
  {/* Estrellitas de Tono y Contenido */}
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
  {/* Tono y Estilo */}
- <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
+ <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] border /20 space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
@@ -2278,7 +2278,7 @@ export default function BookingCRM({
  </div>
 
  {/* Contenido y Estructura */}
- <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
+ <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] border /20 space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
@@ -2312,7 +2312,7 @@ export default function BookingCRM({
  rows={2}
  value={templateCustomInstruction}
  onChange={(e) => setTemplateCustomInstruction(e.target.value)}
- className="w-full rounded-lg p-2.5 text-[10px] bg-[#131313] text-[#e5e2e1] border border-amber-500/30 focus:border-amber-400 focus:outline-none font-sans leading-relaxed"
+ className="w-full rounded-[var(--r-s)] p-2.5 text-[10px] bg-[var(--surface)] text-[var(--ink)] border /30 focus: focus:outline-none font-sans leading-relaxed"
  placeholder="Ej: 'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
  />
  </div>
@@ -2327,7 +2327,7 @@ export default function BookingCRM({
  {templateStats && templateStats[templateTab] && (
    <div className="space-y-2 pt-3 pb-2">
      <div className="flex flex-wrap gap-2 items-center">
-       <span className="text-[9px] font-mono text-neutral-400">📊 Resultados:</span>
+       <span className="text-[9px] font-mono text-text-[var(--ink-2)]">📊 Resultados:</span>
        <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-950 text-blue-300'}`}>
          {templateStats[templateTab].totalUses} usos
        </span>
@@ -2360,7 +2360,7 @@ export default function BookingCRM({
  type="button"
  onClick={handleOptimizeTemplate}
  disabled={isOptimizingTemplate}
- className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border /30 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  title="Re-redacta la plantilla y sus pautas integrando todo el feedback histórico de valoraciones del mánager"
  >
  <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
@@ -2370,10 +2370,10 @@ export default function BookingCRM({
  id="template-btn-test"
  onClick={handleTestPrompt}
  disabled={isTestingPrompt}
- className={`px-2 py-1 font-sans text-[10px] rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+ className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
- ? 'bg-white hover:bg-slate-50 text-slate-700'
- : 'bg-neutral-900 hover:-neutral-700 text-neutral-300'
+ ? 'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
+ : 'bg-bg-[var(--surface)] hover:-neutral-700 text-neutral-300'
  }`}
  >
  {isTestingPrompt ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
@@ -2382,9 +2382,9 @@ export default function BookingCRM({
  <button
  id="template-btn-reset"
  onClick={handleResetTemplate}
- className={`px-2 py-1 font-sans text-[10px] rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+ className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
- ? 'bg-slate-200 hover:bg-slate-300 text-slate-600'
+ ? 'bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink-2)]'
  : 'bg-neutral-700 hover:bg-neutral-600 text-neutral-300'
  }`}
  title="Restaurar valores por defecto de esta plantilla"
@@ -2395,10 +2395,10 @@ export default function BookingCRM({
  <button
  id="template-btn-save"
  onClick={handleSaveTemplates}
- className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-lg transition-all cursor-pointer text-center active:scale-95 ${
+ className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
  isStitchLight
  ? 'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md shadow-indigo-100'
- : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[#f2ca50]/10'
+ : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -2407,14 +2407,14 @@ export default function BookingCRM({
  </div>
 
  {/* Test / Prompt Output side */}
- <div className={` rounded-xl p-4 flex flex-col justify-between ${
+ <div className={` rounded-[var(--r-m)] p-4 flex flex-col justify-between ${
  isStitchLight
- ? 'bg-slate-50'
- : 'bg-[#131313]'
+ ? 'bg-[var(--bg)]'
+ : 'bg-[var(--surface)]'
  }`}>
  <div className="space-y-3">
- <div className={`flex items-center gap-2 pb-2 ${isStitchLight ? '-slate-200' : '-neutral-900'}`}>
- <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isStitchLight ? 'bg-sky-500/15' : 'bg-[#f2ca50]'}`} />
+ <div className={`flex items-center gap-2 pb-2 ${isStitchLight ? '-slate-200' : '-bg-[var(--surface)]'}`}>
+ <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isStitchLight ? 'bg-sky-500/15' : 'bg-[var(--acc)]'}`} />
  <h4 className={`text-[10px] font-sans uppercase tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
  </div>
  
@@ -2424,16 +2424,16 @@ export default function BookingCRM({
 
  {testPromptResult ? (
  <div className="space-y-3">
- <div className={`rounded-lg p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
+ <div className={`rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
  isStitchLight
- ? 'bg-white text-slate-700 border border-slate-200'
- : 'bg-[#1c1b1b] text-neutral-300 border border-neutral-800'
+ ? 'bg-white text-[var(--ink-2)] border '
+ : 'bg-[#1c1b1b] text-neutral-300 border '
  }`}>
  {testPromptResult}
  </div>
 
  {/* Valoración directa del resultado generado en la simulación */}
- <div className="p-3 bg-amber-500/10 rounded-xl border border-amber-500/30 space-y-2">
+ <div className="p-3 bg-amber-500/10 rounded-[var(--r-m)] border /30 space-y-2">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5 font-sans">
  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Valorar esta plantilla / resultado
@@ -2447,7 +2447,7 @@ export default function BookingCRM({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
  {/* Tono */}
- <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
+ <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] border /20 space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
@@ -2472,7 +2472,7 @@ export default function BookingCRM({
  </div>
 
  {/* Contenido */}
- <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
+ <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] border /20 space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
  <span className="text-[10px] font-mono text-amber-400 font-bold">
@@ -2501,7 +2501,7 @@ export default function BookingCRM({
  type="button"
  onClick={handleOptimizeTemplate}
  disabled={isOptimizingTemplate}
- className="w-full py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+ className="w-full py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
  >
  <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
  <span>Re-generar plantilla usando estas valoraciones ✨</span>
@@ -2509,10 +2509,10 @@ export default function BookingCRM({
  </div>
  </div>
  ) : (
- <div className={`border-2 border-dashed rounded-lg p-12 text-center text-[10px] font-sans ${
+ <div className={`border-2 border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
  isStitchLight
- ? 'border-slate-200 text-slate-400'
- : 'border-neutral-800 text-neutral-600'
+ ? ' text-[var(--ink-3)]'
+ : ' text-neutral-600'
  }`}>
  Haz clic en "Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus directrices actuales.
  </div>

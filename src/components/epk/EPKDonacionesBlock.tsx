@@ -67,8 +67,8 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* APOYO ECONÓMICO / DONACIONES */}
-        <div className="bg-slate-900 border border-sky-500/30 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+        <div className="bg-[var(--surface)] border border-sky-500/30 rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <div className="flex items-center justify-between border-b  pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-sky-400 flex items-center gap-2">
               <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones (Revolut, PayPal & Bizum)
             </h3>
@@ -76,17 +76,17 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
               Crowdfunding Directo
             </span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--ink-3)]">
             Permite a tus fans y salas hacer aportaciones por Revolut, PayPal o Bizum sin intermediarios. Se muestra en el formulario público y en el Dossier EPK.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Campos de configuración */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-slate-950 border  rounded-[var(--r-m)]">
                 <div className="space-y-0.5 pr-3">
                   <span className="text-xs font-bold text-white">Mostrar tarjeta de donación</span>
-                  <p className="text-[10px] text-slate-400">Activa o desactiva la opción de colaboración</p>
+                  <p className="text-[10px] text-[var(--ink-3)]">Activa o desactiva la opción de colaboración</p>
                 </div>
                 <input
                   type="checkbox"
@@ -104,7 +104,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
               {/* Métodos de Pago: Revolut y PayPal */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Revolut */}
-                <div className="p-3 bg-slate-950/80 border border-sky-500/20 rounded-xl space-y-1.5">
+                <div className="p-3 bg-slate-950/80 border border-sky-500/20 rounded-[var(--r-m)] space-y-1.5">
                   <div className="flex items-center gap-1.5">
                     <div className="w-5 h-5 rounded-md bg-white text-black flex items-center justify-center p-0.5 shadow-sm">
                       <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
@@ -113,8 +113,8 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     </div>
                     <label className="text-xs font-semibold text-sky-200">Revolut (Revtag)</label>
                   </div>
-                  <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 focus-within:border-sky-500 rounded-lg px-2.5">
-                    <span className="text-[10px] text-slate-500 font-mono">revolut.me/</span>
+                  <div className="flex items-center gap-1 bg-[var(--surface)] border  focus-within:border-sky-500 rounded-[var(--r-s)] px-2.5">
+                    <span className="text-[10px] text-[var(--ink-2)] font-mono">revolut.me/</span>
                     <input
                       type="text"
                       value={config.donacionRevolut?.revolutTag || ''}
@@ -146,15 +146,15 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                 </div>
 
                 {/* PayPal */}
-                <div className="p-3 bg-slate-950/80 border border-blue-500/20 rounded-xl space-y-1.5">
+                <div className="p-3 bg-slate-950/80 border border-blue-500/20 rounded-[var(--r-m)] space-y-1.5">
                   <div className="flex items-center gap-1.5">
                     <div className="w-5 h-5 rounded-md bg-[#003087] text-[#0079C1] flex items-center justify-center p-0.5 shadow-sm">
                       <PayPalLogo className="w-full h-full fill-white" />
                     </div>
                     <label className="text-xs font-semibold text-blue-200">PayPal (paypal.me)</label>
                   </div>
-                  <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 focus-within:border-blue-500 rounded-lg px-2.5">
-                    <span className="text-[10px] text-slate-500 font-mono">paypal.me/</span>
+                  <div className="flex items-center gap-1 bg-[var(--surface)] border  focus-within:border-blue-500 rounded-[var(--r-s)] px-2.5">
+                    <span className="text-[10px] text-[var(--ink-2)] font-mono">paypal.me/</span>
                     <input
                       type="text"
                       value={config.donacionRevolut?.paypalUser || ''}
@@ -194,8 +194,8 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                   </div>
                   <label className="text-xs font-semibold text-emerald-200">Bizum (Teléfono)</label>
                 </div>
-                <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 focus-within:border-emerald-500 rounded-lg px-2.5">
-                  <span className="text-[10px] text-slate-500 font-mono">TLF:</span>
+                <div className="flex items-center gap-1 bg-[var(--surface)] border  focus-within:border-emerald-500 rounded-[var(--r-s)] px-2.5">
+                  <span className="text-[10px] text-[var(--ink-2)] font-mono">TLF:</span>
                   <input
                     type="text"
                     value={config.donacionRevolut?.bizumTelefono || ''}
@@ -215,7 +215,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
 
               {/* Método por defecto */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300">Método preferente</label>
+                <label className="text-xs font-semibold text-[var(--ink-3)]">Método preferente</label>
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
@@ -225,10 +225,10 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'revolut' }
                       })
                     }
-                    className={`p-2 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition cursor-pointer ${
+                    className={`p-2 rounded-[var(--r-m)] text-xs font-bold border flex items-center justify-center gap-2 transition cursor-pointer ${
                       (config.donacionRevolut?.metodoPorDefecto || 'revolut') === 'revolut'
                         ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                        : 'bg-slate-950  text-[var(--ink-3)] hover:text-white'
                     }`}
                   >
                     <span className="w-2 h-2 rounded-full bg-sky-400" />
@@ -242,10 +242,10 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'paypal' }
                       })
                     }
-                    className={`p-2 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition cursor-pointer ${
+                    className={`p-2 rounded-[var(--r-m)] text-xs font-bold border flex items-center justify-center gap-2 transition cursor-pointer ${
                       config.donacionRevolut?.metodoPorDefecto === 'paypal'
                         ? 'bg-blue-500/20 border-blue-500 text-blue-300 shadow-sm'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                        : 'bg-slate-950  text-[var(--ink-3)] hover:text-white'
                     }`}
                   >
                     <span className="w-2 h-2 rounded-full bg-blue-400" />
@@ -259,10 +259,10 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'bizum' }
                       })
                     }
-                    className={`p-2 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition cursor-pointer ${
+                    className={`p-2 rounded-[var(--r-m)] text-xs font-bold border flex items-center justify-center gap-2 transition cursor-pointer ${
                       config.donacionRevolut?.metodoPorDefecto === 'bizum'
                         ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-sm'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                        : 'bg-slate-950  text-[var(--ink-3)] hover:text-white'
                     }`}
                   >
                     <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -272,7 +272,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Título de la tarjeta</label>
+                <label className="text-xs font-semibold text-[var(--ink-3)]">Título de la tarjeta</label>
                 <input
                   type="text"
                   value={config.donacionRevolut?.titulo || ''}
@@ -283,12 +283,12 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     })
                   }
                   placeholder="Colabora con la banda"
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+                  className="w-full bg-slate-950 border  focus:border-sky-500 rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Descripción del destino</label>
+                <label className="text-xs font-semibold text-[var(--ink-3)]">Descripción del destino</label>
                 <textarea
                   rows={2}
                   value={config.donacionRevolut?.descripcion || ''}
@@ -299,7 +299,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     })
                   }
                   placeholder="Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none resize-none"
+                  className="w-full bg-slate-950 border  focus:border-sky-500 rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none resize-none"
                 />
               </div>
             </div>
@@ -307,7 +307,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
             {/* Vista previa en vivo */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">
                   Previsualización en vivo
                 </span>
                 <button
@@ -321,18 +321,18 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
               </div>
 
               {config.donacionRevolut?.habilitado === false ? (
-                <div className="p-4 rounded-xl border border-dashed border-slate-700 text-center text-xs text-slate-500">
+                <div className="p-4 rounded-[var(--r-m)] border border-dashed  text-center text-xs text-[var(--ink-2)]">
                   Tarjeta desactivada: no se mostrará en &quot;Únete&quot; ni en el Dossier
                 </div>
               ) : (
-                <div className="relative overflow-hidden p-3.5 sm:p-4 rounded-2xl bg-gradient-to-b from-neutral-900/95 via-neutral-900/90 to-neutral-950/95 border border-neutral-700 p-4 shadow-xl space-y-3">
+                <div className="relative overflow-hidden p-3.5 sm:p-4 rounded-[var(--r-l)] bg-gradient-to-b from-bg-[var(--surface)]/95 via-bg-[var(--surface)]/90 to-bg-[var(--surface)]/95 border  p-4 shadow-xl space-y-3">
                   <div className="relative flex items-start gap-3 sm:gap-3.5">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
                           {config.donacionRevolut?.titulo || 'Colabora con la banda'}
                         </h3>
-                        <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold shrink-0">
+                        <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border /30 font-bold shrink-0">
                           Contribución
                         </span>
                       </div>
@@ -356,26 +356,26 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
         </div>
 
         {/* EPK MULTIIDIOMA */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b  pb-3">
             <Languages className="w-5 h-5" /> Versiones del EPK en otros idiomas
           </h3>
-          <div className="text-xs text-slate-400 space-y-1">
+          <div className="text-xs text-[var(--ink-3)] space-y-1">
             <p>
               Traduce automáticamente biografía, lema y formación a otros idiomas para festivales y programadores internacionales.
             </p>
             <p>
-              <strong className="text-slate-300">Gasta tokens solo al pulsar el botón</strong>. La IA genera el borrador y puedes repasarlo antes de dejarlo público.
+              <strong className="text-[var(--ink-3)]">Gasta tokens solo al pulsar el botón</strong>. La IA genera el borrador y puedes repasarlo antes de dejarlo público.
             </p>
           </div>
 
           {errorTraduccion && (
-            <div className="rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 p-3 text-xs flex items-start gap-2">
+            <div className="rounded-[var(--r-m)] border border-red-500/40 bg-red-500/10 text-red-300 p-3 text-xs flex items-start gap-2">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" /> <span>{errorTraduccion}</span>
             </div>
           )}
           {avisoTraduccion && (
-            <div className="rounded-xl border border-sky-500/40 bg-sky-500/10 text-sky-300 p-3 text-xs flex items-start gap-2">
+            <div className="rounded-[var(--r-m)] border border-sky-500/40 bg-sky-500/10 text-sky-300 p-3 text-xs flex items-start gap-2">
               <Info className="w-4 h-4 shrink-0 mt-0.5" /> <span>{avisoTraduccion}</span>
             </div>
           )}
@@ -387,7 +387,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
             const estaTraduciendo = traduciendo === idioma.code;
 
             return (
-              <div key={idioma.code} className="border border-slate-800 rounded-xl p-4 bg-slate-950 space-y-4">
+              <div key={idioma.code} className="border  rounded-[var(--r-m)] p-4 bg-slate-950 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-lg" aria-hidden="true">
@@ -406,7 +406,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         href={`${publicEpkUrl}&lang=${idioma.code}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1.5 transition"
+                        className="text-xs bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-300 font-semibold px-3 py-1.5 rounded-[var(--r-s)] border  flex items-center gap-1.5 transition"
                       >
                         <ExternalLink className="w-3.5 h-3.5" /> Ver página
                       </a>
@@ -415,7 +415,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       type="button"
                       onClick={() => traducirConIA(idioma.code)}
                       disabled={estaTraduciendo}
-                      className="text-xs bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition cursor-pointer"
+                      className="text-xs bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer"
                     >
                       {estaTraduciendo ? (
                         <>
@@ -432,7 +432,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                 </div>
 
                 {desactualizada && (
-                  <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-300 p-3 text-xs flex items-start gap-2">
+                  <div className="rounded-[var(--r-s)] border /40 bg-amber-500/10 text-amber-300 p-3 text-xs flex items-start gap-2">
                     <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                     <span>
                       Has modificado el texto en español desde la última traducción. Conviene volver a traducir para sincronizarla.
@@ -460,10 +460,10 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       .map(f => (
                         <div key={f.campo} className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1.5">
+                            <label className="block text-[10px] uppercase tracking-wider text-[var(--ink-2)] font-semibold mb-1.5">
                               {f.etiqueta} — original (ES)
                             </label>
-                            <div className="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 text-xs text-slate-500 whitespace-pre-line max-h-40 overflow-y-auto">
+                            <div className="w-full bg-[var(--surface)]/60 border  rounded-[var(--r-s)] p-3 text-xs text-[var(--ink-2)] whitespace-pre-line max-h-40 overflow-y-auto">
                               {f.original}
                             </div>
                           </div>
@@ -475,25 +475,25 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                               value={traduccion?.[f.campo] || ''}
                               onChange={e => editarTraduccion(idioma.code, f.campo, e.target.value)}
                               rows={f.filas}
-                              className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-white focus:border-amber-500 focus:outline-none"
+                              className="w-full bg-[var(--surface)] border  rounded-[var(--r-s)] p-3 text-xs text-white focus: focus:outline-none"
                             />
                           </div>
                         </div>
                       ))}
 
                     {miembros.filter(m => (m.rol || '').trim() || (m.bio || '').trim()).length > 0 && (
-                      <div className="space-y-3 pt-2 border-t border-slate-800">
-                        <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">
+                      <div className="space-y-3 pt-2 border-t ">
+                        <p className="text-[10px] uppercase tracking-wider text-[var(--ink-2)] font-semibold">
                           Formación
                         </p>
                         {miembros
                           .filter(m => (m.rol || '').trim() || (m.bio || '').trim())
                           .map(m => (
-                            <div key={m.id} className="bg-slate-900/60 border border-slate-800 rounded-lg p-3 space-y-2">
+                            <div key={m.id} className="bg-[var(--surface)]/60 border  rounded-[var(--r-s)] p-3 space-y-2">
                               <p className="text-xs font-bold text-white">{m.nombre || 'Sin nombre'}</p>
                               {(m.rol || '').trim() && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                  <div className="text-[11px] text-slate-500 pt-1.5">{m.rol}</div>
+                                  <div className="text-[11px] text-[var(--ink-2)] pt-1.5">{m.rol}</div>
                                   <input
                                     type="text"
                                     value={traduccion?.miembros?.[m.id]?.rol || ''}
@@ -501,13 +501,13 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                       editarTraduccionMiembro(idioma.code, m.id, 'rol', e.target.value)
                                     }
                                     placeholder={`Instrumento en ${idioma.label}`}
-                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-amber-500 focus:outline-none"
+                                    className="w-full bg-[var(--surface)] border  rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-white focus: focus:outline-none"
                                   />
                                 </div>
                               )}
                               {(m.bio || '').trim() && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                  <div className="text-[11px] text-slate-500">{m.bio}</div>
+                                  <div className="text-[11px] text-[var(--ink-2)]">{m.bio}</div>
                                   <textarea
                                     value={traduccion?.miembros?.[m.id]?.bio || ''}
                                     onChange={e =>
@@ -515,7 +515,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                     }
                                     rows={2}
                                     placeholder={`Trayectoria en ${idioma.label}`}
-                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-amber-500 focus:outline-none"
+                                    className="w-full bg-[var(--surface)] border  rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-white focus: focus:outline-none"
                                   />
                                 </div>
                               )}

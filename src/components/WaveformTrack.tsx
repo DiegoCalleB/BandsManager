@@ -289,7 +289,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
 
   return (
     <div 
-      className="relative w-full h-12 bg-black/60 rounded-lg overflow-hidden border border-white/10 cursor-pointer select-none group transition-colors hover:border-indigo-500/40"
+      className="relative w-full h-12 bg-black/60 rounded-[var(--r-s)] overflow-hidden border border-white/10 cursor-pointer select-none group transition-colors hover:border-indigo-500/40"
       onClick={handleContainerClick}
       title="Haz clic para mover el cabezal de reproducción (Seek Master)"
     >
@@ -364,7 +364,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
 
       {/* Loading Overlay */}
       {!isLoaded && !loadError && (
-        <div className="absolute inset-0 flex items-center justify-center text-[10px] text-neutral-400 font-mono animate-pulse bg-black/70 z-30">
+        <div className="absolute inset-0 flex items-center justify-center text-[10px] text-text-[var(--ink-2)] font-mono animate-pulse bg-black/70 z-30">
           ⚡ Cargando onda de audio...
         </div>
       )}

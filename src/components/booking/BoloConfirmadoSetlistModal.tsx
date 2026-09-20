@@ -181,7 +181,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
             </div>
             <button
               onClick={onClose}
-              className="p-1 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+              className="p-1 rounded-[var(--r-m)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -198,7 +198,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
                 type="date"
                 value={concertDate}
                 onChange={(e) => setConcertDate(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white font-mono focus:border-[#1ed760] focus:outline-none"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-white font-mono focus:border-[#1ed760] focus:outline-none"
               />
             </div>
 
@@ -212,7 +212,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
                 placeholder="Ej. 600"
                 value={cacheAmount}
                 onChange={(e) => setCacheAmount(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white font-mono focus:border-amber-400 focus:outline-none"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-white font-mono focus: focus:outline-none"
               />
             </div>
           </div>
@@ -232,7 +232,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
                     setTargetDurationMin(mins);
                     setGenerateNewSetlist(false);
                   }}
-                  className={`py-2 px-1 rounded-xl font-bold border transition-all cursor-pointer text-center ${
+                  className={`py-2 px-1 rounded-[var(--r-m)] font-bold border transition-all cursor-pointer text-center ${
                     targetDurationMin === mins
                       ? 'bg-[#1db954]/20 border-[#1ed760] text-[#1ed760] shadow-sm'
                       : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
@@ -263,11 +263,11 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
             </div>
 
             {isLoadingData ? (
-              <div className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 text-center text-xs font-mono text-zinc-500 animate-pulse">
+              <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 border border-zinc-800 text-center text-xs font-mono text-zinc-500 animate-pulse">
                 Calculando duraciones y repertorios óptimos...
               </div>
             ) : generateNewSetlist ? (
-              <div className="p-3.5 rounded-2xl bg-[#1db954]/10 border border-[#1db954]/40 space-y-2 animate-fadeIn">
+              <div className="p-3.5 rounded-[var(--r-l)] bg-[#1db954]/10 border border-[#1db954]/40 space-y-2 animate-fadeIn">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#1ed760]">
                   <Zap className="w-4 h-4 text-[#1ed760]" />
                   <span>Se creará un nuevo setlist automático:</span>
@@ -277,12 +277,12 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
                 </p>
               </div>
             ) : setlists.length === 0 ? (
-              <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 text-center space-y-2 text-xs font-mono text-zinc-400">
+              <div className="p-4 rounded-[var(--r-l)] bg-zinc-900 border border-zinc-800 text-center space-y-2 text-xs font-mono text-zinc-400">
                 <p>No tienes ningún setlist guardado aún.</p>
                 <button
                   type="button"
                   onClick={() => setGenerateNewSetlist(true)}
-                  className="px-3 py-1.5 rounded-xl bg-[#1ed760] text-black font-bold text-[11px] cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[#1ed760] text-black font-bold text-[11px] cursor-pointer"
                 >
                   ⚡ Autogenerar Setlist ({targetDurationMin} min)
                 </button>
@@ -302,9 +302,9 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
                         setSelectedSetlistId(st.id);
                         setGenerateNewSetlist(false);
                       }}
-                      className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                      className={`p-3 rounded-[var(--r-l)] border transition-all cursor-pointer flex items-center justify-between gap-2 ${
                         isSelected
-                          ? 'bg-amber-500/15 border-amber-400/80 shadow-md'
+                          ? 'bg-amber-500/15 /80 shadow-md'
                           : isOptimal
                           ? 'bg-emerald-500/10 border-emerald-500/40 hover:bg-emerald-500/15'
                           : 'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700'
@@ -329,7 +329,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
                       </div>
 
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
-                        isSelected ? 'border-amber-400 bg-amber-400 text-black' : 'border-zinc-700'
+                        isSelected ? ' bg-amber-400 text-black' : 'border-zinc-700'
                       }`}>
                         {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
                       </div>
@@ -346,7 +346,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
               type="button"
               disabled={isSubmitting || (!selectedSetlistId && !generateNewSetlist)}
               onClick={handleSaveAndLink}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-[#1ed760] text-black font-mono font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
+              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-emerald-500 to-[#1ed760] text-black font-mono font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer shadow-lg shadow-emerald-500/20"
             >
               <Check className="w-4 h-4 stroke-[3]" />
               <span>{isSubmitting ? 'Guardando...' : 'Confirmar Bolo y Asignar Setlist'}</span>

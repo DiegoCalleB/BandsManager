@@ -67,17 +67,17 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
   // Size styling
   const containerSize =
     size === 'lg'
-      ? 'w-14 h-14 rounded-2xl text-2xl'
+      ? 'w-14 h-14 rounded-[var(--r-l)] text-2xl'
       : size === 'md'
-      ? 'w-12 h-12 rounded-xl text-xl'
-      : 'w-8 h-8 rounded-lg text-xs';
+      ? 'w-12 h-12 rounded-[var(--r-m)] text-xl'
+      : 'w-8 h-8 rounded-[var(--r-s)] text-xs';
 
   const imgSize =
     size === 'lg'
-      ? 'w-14 h-14 rounded-2xl p-1 border-2 border-[#f2ca50]'
+      ? 'w-14 h-14 rounded-[var(--r-l)] p-1 border-2 border-[var(--acc)]'
       : size === 'md'
-      ? 'w-12 h-12 rounded-xl p-1 border border-[#f2ca50]/50'
-      : 'w-8 h-8 rounded-lg p-0.5 border border-[#f2ca50]/50';
+      ? 'w-12 h-12 rounded-[var(--r-m)] p-1 border border-[var(--acc)]/50'
+      : 'w-8 h-8 rounded-[var(--r-s)] p-0.5 border border-[var(--acc)]/50';
 
   const cameraIconSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-5 h-5';
 
@@ -101,8 +101,8 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
       )}
 
       {showCameraHover && onClick && (
-        <div className="absolute inset-0 bg-black/75 rounded-lg opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity border border-[#f2ca50]">
-          <Camera className={`${cameraIconSize} text-[#f2ca50]`} />
+        <div className="absolute inset-0 bg-black/75 rounded-[var(--r-s)] opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity border border-[var(--acc)]">
+          <Camera className={`${cameraIconSize} text-[var(--acc)]`} />
         </div>
       )}
     </div>

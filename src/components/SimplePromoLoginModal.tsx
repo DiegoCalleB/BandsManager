@@ -347,7 +347,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
 
             {error && (
-              <div className="w-full p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-xs text-rose-300 flex items-start gap-2 animate-in fade-in duration-200">
+              <div className="w-full p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-[var(--r-l)] text-xs text-rose-300 flex items-start gap-2 animate-in fade-in duration-200">
                 <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
                 <span className="leading-relaxed">{error}</span>
               </div>
@@ -367,7 +367,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                 </div>
 
                 {resetSuccessMsg && (
-                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-xs text-emerald-400 flex items-center gap-2">
+                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-[var(--r-l)] text-xs text-emerald-400 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 shrink-0" />
                     <span>{resetSuccessMsg}</span>
                   </div>
@@ -380,11 +380,11 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <div className="relative flex items-center">
                     <Lock className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
                     <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Contraseña" className={`${inputClass} pr-11`} required />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-neutral-500 hover:text-neutral-200 transition-colors cursor-pointer">
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-neutral-500 hover:text-bg-[var(--sunken)] transition-colors cursor-pointer">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
-                  <div className="flex items-center justify-end text-xs text-neutral-400 px-1 pt-0.5">
+                  <div className="flex items-center justify-end text-xs text-text-[var(--ink-2)] px-1 pt-0.5">
                     <button type="button" onClick={() => { setError(null); setResetSuccessMsg(null); setResetStep(1); setResetEmailOrUsername(username || ''); setView('reset-password'); }} className="text-[var(--ink-2)] underline underline-offset-2 hover:text-[var(--ink)] font-medium cursor-pointer">
                       ¿Olvidaste tu contraseña?
                     </button>
@@ -413,7 +413,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
                 </button>
 
-                <p className="text-center text-xs text-neutral-400 pt-1">
+                <p className="text-center text-xs text-text-[var(--ink-2)] pt-1">
                   ¿Primera vez por aquí?{' '}
                   <button type="button" onClick={() => { setError(null); setView('register'); }} className="text-[var(--ink-2)] underline underline-offset-2 hover:text-[var(--ink)] font-medium cursor-pointer">
                     Crea tu cuenta gratis
@@ -438,7 +438,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       <LoginBrandVideo />
                     </div>
                   </div>
-                  <p className="mt-3 text-sm text-neutral-300 font-medium">
+                  <p className="mt-3 text-sm text-text-[var(--ink-3)] font-medium">
                     Crea tu dossier, QR y calendario en 30 segundos.
                   </p>
                 </div>
@@ -459,11 +459,11 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <div className="relative flex items-center">
                     <Lock className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
                     <input type={showRegPassword ? 'text' : 'password'} value={regPassword} onChange={(e) => setRegPassword(e.target.value)} placeholder="Contraseña" className={`${inputClass} pr-11`} required />
-                    <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-4 text-neutral-500 hover:text-neutral-200 transition-colors cursor-pointer">
+                    <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-4 text-neutral-500 hover:text-bg-[var(--sunken)] transition-colors cursor-pointer">
                       {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
-                  <button type="submit" disabled={loading} className="w-full py-3.5 px-4 mt-2 rounded-2xl bg-[#f2ca50] hover:bg-[#f5d778] text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
+                  <button type="submit" disabled={loading} className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
                     {loading ? 'Creando cuenta...' : (<><span>Crear mi Dossier y QR</span><ArrowRight className="w-4 h-4" /></>)}
                   </button>
                 </form>
@@ -487,7 +487,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
                 </button>
 
-                <p className="text-center text-xs text-neutral-400">
+                <p className="text-center text-xs text-text-[var(--ink-2)]">
                   ¿Ya tienes cuenta?{' '}
                   <button type="button" onClick={() => { setError(null); setView('login'); }} className="text-[var(--ink-2)] underline underline-offset-2 hover:text-[var(--ink)] font-medium cursor-pointer">
                     Volver al login
@@ -498,7 +498,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
             {view === 'reset-password' && (
               <div className="w-full animate-in slide-in-from-bottom-4 duration-300 space-y-4">
-                <button type="button" onClick={() => { setError(null); setView('login'); }} className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-neutral-200 cursor-pointer">
+                <button type="button" onClick={() => { setError(null); setView('login'); }} className="flex items-center gap-1.5 text-xs text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] cursor-pointer">
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Volver al login</span>
                 </button>
@@ -508,17 +508,17 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       <Mail className="w-4 h-4 text-[var(--ink-3)] absolute left-4 pointer-events-none" />
                       <input type="text" value={resetEmailOrUsername} onChange={(e) => setResetEmailOrUsername(e.target.value)} placeholder="Tu correo o usuario" className={inputClass} required />
                     </div>
-                    <button type="submit" disabled={loading} className="w-full py-3.5 px-4 rounded-2xl bg-[#f2ca50] hover:bg-[#f5d778] text-neutral-950 font-bold text-sm transition-all disabled:opacity-50 cursor-pointer">
+                    <button type="submit" disabled={loading} className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer">
                       {loading ? 'Enviando...' : 'Enviar código de recuperación'}
                     </button>
                   </form>
                 ) : (
                   <form onSubmit={handleConfirmReset} className="w-full space-y-3.5">
-                    {resetMaskedEmail && <p className="text-xs text-neutral-400">Código enviado a {resetMaskedEmail}</p>}
+                    {resetMaskedEmail && <p className="text-xs text-text-[var(--ink-2)]">Código enviado a {resetMaskedEmail}</p>}
                     <input type="text" value={resetCode} onChange={(e) => setResetCode(e.target.value)} placeholder="Código de 6 dígitos" className={`${inputClass} pl-4`} required />
                     <input type="password" value={resetNewPassword} onChange={(e) => setResetNewPassword(e.target.value)} placeholder="Nueva contraseña" className={`${inputClass} pl-4`} required />
                     <input type="password" value={resetConfirmPassword} onChange={(e) => setResetConfirmPassword(e.target.value)} placeholder="Confirma la nueva contraseña" className={`${inputClass} pl-4`} required />
-                    <button type="submit" disabled={loading} className="w-full py-3.5 px-4 rounded-2xl bg-[#f2ca50] hover:bg-[#f5d778] text-neutral-950 font-bold text-sm transition-all disabled:opacity-50 cursor-pointer">
+                    <button type="submit" disabled={loading} className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer">
                       {loading ? 'Guardando...' : 'Guardar nueva contraseña'}
                     </button>
                   </form>

@@ -88,7 +88,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-6">
-        <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 border-4  border-t-transparent rounded-full animate-spin mb-4"></div>
         <p className="text-amber-400 font-medium">{t('cargando')}</p>
       </div>
     );
@@ -169,25 +169,25 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
       <section key="cifras" className="mb-14 print:mb-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
           {config.cifrasClave.oyentes && (
-            <div className={`${styles.cardHighlight} border rounded-2xl p-4.5 text-center shadow-lg transition`}>
+            <div className={`${styles.cardHighlight} border rounded-[var(--r-l)] p-4.5 text-center shadow-lg transition`}>
               <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.oyentes}</span>
               <p className="text-xs opacity-75 font-medium mt-1">{t('cifraOyentes')}</p>
             </div>
           )}
           {config.cifrasClave.directos && (
-            <div className={`${styles.cardHighlight} border rounded-2xl p-4.5 text-center shadow-lg transition`}>
+            <div className={`${styles.cardHighlight} border rounded-[var(--r-l)] p-4.5 text-center shadow-lg transition`}>
               <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.directos}</span>
               <p className="text-xs opacity-75 font-medium mt-1">{t('cifraDirectos')}</p>
             </div>
           )}
           {config.cifrasClave.comunidad && (
-            <div className={`${styles.cardHighlight} border rounded-2xl p-4.5 text-center shadow-lg transition`}>
+            <div className={`${styles.cardHighlight} border rounded-[var(--r-l)] p-4.5 text-center shadow-lg transition`}>
               <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.comunidad}</span>
               <p className="text-xs opacity-75 font-medium mt-1">{t('cifraComunidad')}</p>
             </div>
           )}
           {config.cifrasClave.ciudades && (
-            <div className={`${styles.cardHighlight} border rounded-2xl p-4.5 text-center shadow-lg transition`}>
+            <div className={`${styles.cardHighlight} border rounded-[var(--r-l)] p-4.5 text-center shadow-lg transition`}>
               <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.ciudades}</span>
               <p className="text-xs opacity-75 font-medium mt-1">{t('cifraCiudades')}</p>
             </div>
@@ -216,14 +216,14 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             { label: t('etiquetaCiudadBase'), valor: datos.ciudadBase || '' },
             { label: t('etiquetaFormatos'), valor: contenido.dato('formatos') }
           ].filter(d => d.valor).map(d => (
-            <div key={d.label} className={`${styles.card} border rounded-xl p-4`}>
+            <div key={d.label} className={`${styles.card} border rounded-[var(--r-m)] p-4`}>
               <p className="text-[10px] uppercase tracking-wider opacity-60 font-semibold">{d.label}</p>
               <p className="font-bold mt-1 text-sm">{d.valor}</p>
             </div>
           ))}
         </div>
         {contenido.dato('necesidadesEscenario') && (
-          <div className={`${styles.card} border rounded-xl p-4`}>
+          <div className={`${styles.card} border rounded-[var(--r-m)] p-4`}>
             <p className="text-[10px] uppercase tracking-wider opacity-60 font-semibold">{t('etiquetaNecesidades')}</p>
             <p className="text-sm mt-1 opacity-80">{contenido.dato('necesidadesEscenario')}</p>
           </div>
@@ -239,7 +239,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
           {t('seccionVideo')}
         </h2>
-        <div className={`rounded-xl overflow-hidden ${styles.card} border aspect-video`}>
+        <div className={`rounded-[var(--r-m)] overflow-hidden ${styles.card} border aspect-video`}>
           <iframe
             src={aEmbed(videoPrincipal.url)!}
             title={contenido.tituloVideo(videoPrincipal) || t('tituloVideoPorDefecto')}
@@ -256,7 +256,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             {videosSecundarios.map(v => (
               <div key={v.id} className="space-y-2">
-                <div className={`rounded-xl overflow-hidden ${styles.card} border aspect-video`}>
+                <div className={`rounded-[var(--r-m)] overflow-hidden ${styles.card} border aspect-video`}>
                   <iframe
                     src={aEmbed(v.url)!}
                     title={contenido.tituloVideo(v) || t('tituloVideoPorDefecto')}
@@ -285,7 +285,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {miembros.map(m => (
             <div key={m.id} className="text-center space-y-2">
-              <div className={`aspect-square rounded-2xl overflow-hidden ${styles.memberCard} border`}>
+              <div className={`aspect-square rounded-[var(--r-l)] overflow-hidden ${styles.memberCard} border`}>
                 {m.fotoUrl ? (
                   <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" loading="lazy" />
                 ) : (
@@ -310,7 +310,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/40 shadow-sm transition-all duration-200 active:scale-95 text-slate-300 hover:text-white"
+                        className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--surface)]/90 hover:bg-[var(--surface)] border  hover:border-pink-500/40 shadow-sm transition-all duration-200 active:scale-95 text-[var(--ink-3)] hover:text-white"
                         title={interpolate(t('seguirMiembro'), { name: m.nombre })}
                         aria-label={interpolate(t('seguirMiembro'), { name: m.nombre })}
                       >
@@ -347,12 +347,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </div>
         </section>
 
-        <section className={`${styles.bookingCard} border rounded-2xl p-6 space-y-5 flex flex-col justify-between print:border-amber-400 print:bg-white print:text-black`}>
+        <section className={`${styles.bookingCard} border rounded-[var(--r-l)] p-6 space-y-5 flex flex-col justify-between print: print:bg-white print:text-black`}>
           <div className="space-y-3">
             <h3 className={`text-lg font-bold ${styles.bookingTitle} print:text-black flex items-center gap-2`}>
               <Mail className="w-5 h-5" /> {t('contactoTitulo')}
             </h3>
-            <p className="text-xs opacity-75 print:text-slate-600">
+            <p className="text-xs opacity-75 print:text-[var(--ink-2)]">
               {t('contactoSubtitulo')}
             </p>
 
@@ -386,10 +386,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </div>
           </div>
 
-          <div className="pt-4 border-t border-current/20 print:border-slate-300">
+          <div className="pt-4 border-t border-current/20 print:">
             <a
               href={`mailto:${config.contactoBooking?.email}?subject=${encodeURIComponent(t('asuntoContratacion'))}`}
-              className={`w-full py-2.5 ${styles.accentBtn} rounded-xl flex items-center justify-center gap-2 transition print:hidden`}
+              className={`w-full py-2.5 ${styles.accentBtn} rounded-[var(--r-m)] flex items-center justify-center gap-2 transition print:hidden`}
             >
               <Mail className="w-4 h-4" /> {t('ctaCache')}
             </a>
@@ -416,7 +416,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {validCitas.map(cita => (
-            <div key={cita.id} className={`${styles.cardHighlight} border rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-lg transition`}>
+            <div key={cita.id} className={`${styles.cardHighlight} border rounded-[var(--r-l)] p-5 flex flex-col justify-between space-y-4 shadow-lg transition`}>
               <div className="space-y-3">
                 <Quote className={`w-6 h-6 ${styles.quoteIcon}`} />
                 <p className="text-sm italic leading-relaxed">
@@ -446,7 +446,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           {songs.map((song: any) => {
             const sonando = playingSongId === song.id;
             return (
-              <div key={song.id} className={`${styles.cardHighlight} border rounded-xl p-4 flex flex-col justify-between gap-3 transition`}>
+              <div key={song.id} className={`${styles.cardHighlight} border rounded-[var(--r-m)] p-4 flex flex-col justify-between gap-3 transition`}>
                 <div className="space-y-1">
                   <h4 className="font-bold text-base leading-tight">{song.titulo}</h4>
                   <p className="text-xs opacity-75">
@@ -457,7 +457,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   <div className="space-y-2">
                     <button
                       onClick={() => setPlayingSongId(sonando ? null : song.id)}
-                      className={`w-full flex items-center justify-center gap-2 text-xs font-bold px-3 py-2 rounded-lg transition ${sonando ? styles.accentBtn : styles.accentBtnSubtle}`}
+                      className={`w-full flex items-center justify-center gap-2 text-xs font-bold px-3 py-2 rounded-[var(--r-s)] transition ${sonando ? styles.accentBtn : styles.accentBtnSubtle}`}
                     >
                       {sonando ? <><Pause className="w-3.5 h-3.5" /> {t('sonando')}</> : <><Play className="w-3.5 h-3.5" /> {t('escuchar')}</>}
                     </button>
@@ -495,12 +495,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none] print:hidden"
           >
             {validPhotos.map((photoUrl, idx) => (
-              <div key={idx} className={`group/foto relative shrink-0 w-[78%] sm:w-[340px] snap-center rounded-xl overflow-hidden ${styles.card} border aspect-video`}>
+              <div key={idx} className={`group/foto relative shrink-0 w-[78%] sm:w-[340px] snap-center rounded-[var(--r-m)] overflow-hidden ${styles.card} border aspect-video`}>
                 <img src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/foto:opacity-100 transition p-4 flex items-end justify-between">
                   <span className="text-xs font-semibold text-white">{t('fotoPromocional', { n: String(idx + 1) })}</span>
                   {safeUrl(photoUrl) && (
-                    <a href={safeUrl(photoUrl)} target="_blank" rel="noopener noreferrer" className={`p-1.5 ${styles.accentBtn} rounded-lg text-xs font-bold`}>
+                    <a href={safeUrl(photoUrl)} target="_blank" rel="noopener noreferrer" className={`p-1.5 ${styles.accentBtn} rounded-[var(--r-s)] text-xs font-bold`}>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
@@ -510,7 +510,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </div>
           <div className="hidden print:grid print:grid-cols-2 print:gap-4">
             {validPhotos.map((photoUrl, idx) => (
-              <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-xl border border-current/20" />
+              <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-[var(--r-m)] border border-current/20" />
             ))}
           </div>
           {validPhotos.length > 1 && (
@@ -547,7 +547,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </h2>
         <div className={`grid gap-4 ${spotifyEmbedUrl && youtubeEmbedUrl ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
           {youtubeEmbedUrl && (
-            <div className={`rounded-xl overflow-hidden ${styles.card} border aspect-video`}>
+            <div className={`rounded-[var(--r-m)] overflow-hidden ${styles.card} border aspect-video`}>
               <iframe
                 src={youtubeEmbedUrl}
                 title={t('tituloVideoPorDefecto')}
@@ -559,7 +559,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </div>
           )}
           {spotifyEmbedUrl && (
-            <div className={`rounded-xl overflow-hidden ${styles.card} border`}>
+            <div className={`rounded-[var(--r-m)] overflow-hidden ${styles.card} border`}>
               <iframe
                 src={spotifyEmbedUrl}
                 title={t('tituloSpotify')}
@@ -583,7 +583,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </h2>
         <div className="space-y-2.5">
           {concerts.map(c => (
-            <div key={c.id} className={`${styles.card} border rounded-xl p-3.5 space-y-2.5`}>
+            <div key={c.id} className={`${styles.card} border rounded-[var(--r-m)] p-3.5 space-y-2.5`}>
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <span className={`px-2.5 py-1 rounded ${styles.badge} font-mono text-xs font-bold shrink-0 border`}>
@@ -607,7 +607,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                       href={c.entradasUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-stone-950 text-xs font-bold hover:bg-emerald-400 transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 text-stone-950 text-xs font-bold hover:bg-emerald-400 transition-colors"
                     >
                       <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
                     </a>
@@ -632,9 +632,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
       <div className={`fixed top-0 left-0 right-0 ${styles.topBar} backdrop-blur-md border-b z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden`}>
         <div className="flex items-center gap-3">
           {displayLogo ? (
-            <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover border border-amber-500/50" />
+            <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover border /50" />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-slate-800 border border-amber-500/50 flex items-center justify-center text-amber-400 font-bold text-xs">
+            <div className="w-8 h-8 rounded-full bg-[var(--surface)] border /50 flex items-center justify-center text-amber-400 font-bold text-xs">
               {bandName.charAt(0).toUpperCase()}
             </div>
           )}
@@ -646,7 +646,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Selector de idioma */}
-          <div className="flex items-center gap-0.5 bg-black/20 border border-current/15 rounded-lg p-0.5" role="group" aria-label={t('selectorIdioma')}>
+          <div className="flex items-center gap-0.5 bg-black/20 border border-current/15 rounded-[var(--r-s)] p-0.5" role="group" aria-label={t('selectorIdioma')}>
             {availableLanguages.map(l => (
               <button
                 key={l.code}
@@ -663,7 +663,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </div>
           <button
             onClick={handleShare}
-            className={`flex items-center gap-1.5 px-3 py-1.5 ${styles.topBarBtn} text-xs sm:text-sm font-medium rounded-lg border transition`}
+            className={`flex items-center gap-1.5 px-3 py-1.5 ${styles.topBarBtn} text-xs sm:text-sm font-medium rounded-[var(--r-s)] border transition`}
           >
             {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
             <span>{copiedLink ? t('enlaceCopiado') : t('compartir')}</span>
@@ -687,7 +687,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             <img
               src={displayLogo}
               alt={t('logoOficialAlt')}
-              className={`rounded-xl object-cover shadow-2xl mb-7 ${fotoPortada ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-24 h-24 sm:w-28 sm:h-28'}`}
+              className={`rounded-[var(--r-m)] object-cover shadow-2xl mb-7 ${fotoPortada ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-24 h-24 sm:w-28 sm:h-28'}`}
             />
           )}
 
@@ -765,11 +765,11 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         const isCurrentlyPlaying = playingSongId === activeSong.id;
 
         return (
-          <div className={`fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 ${styles.stickyPlayer} backdrop-blur-md rounded-2xl p-3.5 shadow-2xl z-40 flex items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 print:hidden`}>
+          <div className={`fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 ${styles.stickyPlayer} backdrop-blur-md rounded-[var(--r-l)] p-3.5 shadow-2xl z-40 flex items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 print:hidden`}>
             <div className="flex items-center gap-3 overflow-hidden">
               <button
                 onClick={() => setPlayingSongId(isCurrentlyPlaying ? null : activeSong.id)}
-                className={`w-10 h-10 rounded-xl ${styles.accentBtn} flex items-center justify-center shrink-0 shadow transition`}
+                className={`w-10 h-10 rounded-[var(--r-m)] ${styles.accentBtn} flex items-center justify-center shrink-0 shadow transition`}
                 aria-label={isCurrentlyPlaying ? 'Pausar' : 'Reproducir'}
               >
                 {isCurrentlyPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
@@ -787,7 +787,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <button
                 onClick={() => setStickyPlayerDismissed(true)}
                 title={t('playerCerrar')}
-                className="p-1.5 opacity-60 hover:opacity-100 rounded-lg hover:bg-black/10 transition"
+                className="p-1.5 opacity-60 hover:opacity-100 rounded-[var(--r-s)] hover:bg-black/10 transition"
               >
                 <X className="w-4 h-4" />
               </button>

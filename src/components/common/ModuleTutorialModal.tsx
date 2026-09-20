@@ -243,15 +243,15 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       targetBtn: 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/40'
     },
     amber: {
-      badgeBg: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-      iconBox: 'bg-amber-500/20 text-amber-400 border-amber-500/30 shadow-amber-500/10',
+      badgeBg: 'bg-amber-500/15 text-amber-300 /30',
+      iconBox: 'bg-amber-500/20 text-amber-400 /30 shadow-amber-500/10',
       activeDot: 'bg-amber-400 w-7',
       primaryBtn: 'bg-amber-500 hover:bg-amber-400 text-stone-950 font-black shadow-amber-900/30',
-      hookBorder: 'border-amber-500/25 bg-amber-500/10 text-amber-100',
+      hookBorder: '/25 bg-amber-500/10 text-amber-100',
       highlightText: 'text-amber-400',
-      targetCard: 'border-amber-500/40 bg-amber-500/5',
-      targetBadge: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-      targetBtn: 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40'
+      targetCard: '/40 bg-amber-500/5',
+      targetBadge: 'bg-amber-500/20 text-amber-300 /30',
+      targetBtn: 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 /40'
     },
     blue: {
       badgeBg: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
@@ -303,7 +303,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       {targetRect && effectiveFloatingMode && (
         <div className="fixed inset-0 z-[9999] pointer-events-none">
           <div
-            className="absolute border-2 sm:border-3 border-amber-400 rounded-xl transition-all duration-300 shadow-[0_0_35px_rgba(251,191,36,0.75)] animate-pulse pointer-events-none"
+            className="absolute border-2 sm:border-3  rounded-[var(--r-m)] transition-all duration-300 shadow-[0_0_35px_rgba(251,191,36,0.75)] animate-pulse pointer-events-none"
             style={{
               top: Math.max(0, targetRect.top - 4),
               left: Math.max(0, targetRect.left - 4),
@@ -314,7 +314,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
             {/* Corner Ping Beacon */}
             <span className="absolute -top-2 -right-2 flex h-4 w-4">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500 border border-slate-900"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500 border "></span>
             </span>
 
             {/* Target Tooltip Badge */}
@@ -349,7 +349,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
           className={
             effectiveFloatingMode
-              ? "pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[#131217]/95 backdrop-blur-md border-2 border-amber-500/50 rounded-2xl shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
+              ? "pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[#131217]/95 backdrop-blur-md border-2 /50 rounded-[var(--r-l)] shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
               : "relative w-full h-full md:h-auto md:max-w-xl bg-[#131217] border-0 md:border md:border-stone-800/90 rounded-none md:rounded-3xl shadow-2xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
           }
         >
@@ -376,7 +376,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                       setTimeout(() => locateTargetElement(true), 150);
                     }
                   }}
-                  className="p-1.5 px-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-stone-800/80 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono"
+                  className="p-1.5 px-2 rounded-[var(--r-s)] text-stone-400 hover:text-amber-300 hover:bg-stone-800/80 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono"
                   title={isFloatingMode ? "Expandir a tarjeta centrada" : "Fijar como tarjeta flotante en esquina para ver la pantalla"}
                 >
                   {isFloatingMode ? (
@@ -414,7 +414,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                 id={`tutorial-close-btn-${moduleId}`}
                 type="button"
                 onClick={() => onClose(dontShowAgain)}
-                className="p-1.5 rounded-xl text-stone-400 hover:text-white hover:bg-stone-800 transition-colors cursor-pointer"
+                className="p-1.5 rounded-[var(--r-m)] text-stone-400 hover:text-white hover:bg-stone-800 transition-colors cursor-pointer"
                 title="Cerrar guía (Esc)"
               >
                 <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -435,7 +435,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
               >
                 {/* Step Header with Icon */}
                 <div className="flex items-start gap-3">
-                  <div className={`p-2.5 rounded-xl border shadow-inner shrink-0 ${accentStyles.iconBox}`}>
+                  <div className={`p-2.5 rounded-[var(--r-m)] border shadow-inner shrink-0 ${accentStyles.iconBox}`}>
                     <CurrentIcon className="w-5 h-5" />
                   </div>
                   <div className="space-y-0.5 min-w-0">
@@ -449,7 +449,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                 </div>
 
                 {/* Practical Takeaway / Musician Hook */}
-                <div className={`p-3 rounded-xl border text-xs leading-relaxed font-sans ${accentStyles.hookBorder}`}>
+                <div className={`p-3 rounded-[var(--r-m)] border text-xs leading-relaxed font-sans ${accentStyles.hookBorder}`}>
                   <p className="font-medium">
                     {currentStep.musicianHook}
                   </p>
@@ -457,7 +457,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
 
                 {/* TARJETITA DE REFERENCIA AL BOTÓN O SECCIÓN EN LA APP */}
                 {currentStep.uiTarget && (
-                  <div className={`rounded-2xl border p-3.5 space-y-2.5 shadow-sm ${accentStyles.targetCard}`}>
+                  <div className={`rounded-[var(--r-l)] border p-3.5 space-y-2.5 shadow-sm ${accentStyles.targetCard}`}>
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-1.5">
                         <span className="relative flex h-2 w-2">
@@ -485,7 +485,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                             setIsFloatingMode(true);
                             setTimeout(() => locateTargetElement(true), 100);
                           }}
-                          className={`text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1.5 transition cursor-pointer active:scale-95 shadow-xs ${accentStyles.targetBtn}`}
+                          className={`text-[11px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-s)] border flex items-center gap-1.5 transition cursor-pointer active:scale-95 shadow-xs ${accentStyles.targetBtn}`}
                           title="Fijar modo flotante y enfocar este elemento en la pantalla"
                         >
                           <Target className="w-3.5 h-3.5 text-amber-400" />
@@ -495,7 +495,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     </div>
 
                     {/* Nombre del elemento simulando botón o control */}
-                    <div className="flex items-center gap-2 p-2 rounded-xl bg-stone-950/90 border border-stone-800 text-xs shadow-inner">
+                    <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-stone-950/90 border border-stone-800 text-xs shadow-inner">
                       <span className="text-amber-400 font-mono font-black text-xs shrink-0">
                         {currentStep.uiTarget.type === 'button' ? '▶' : '▪'}
                       </span>
@@ -528,7 +528,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                   {currentStep.keyPoints.map((point, i) => (
                     <div 
                       key={i}
-                      className="p-2.5 rounded-xl bg-stone-900/70 border border-stone-800/80 flex flex-col justify-between space-y-0.5 hover:border-stone-700/80 transition-colors"
+                      className="p-2.5 rounded-[var(--r-m)] bg-stone-900/70 border border-stone-800/80 flex flex-col justify-between space-y-0.5 hover:border-stone-700/80 transition-colors"
                     >
                       <div className="flex items-center gap-1.5">
                         <Check className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`} />
@@ -567,7 +567,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                   id={`tutorial-prev-btn-${moduleId}`}
                   type="button"
                   onClick={handlePrev}
-                  className="px-3 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>Anterior</span>
@@ -578,7 +578,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                 id={`tutorial-next-btn-${moduleId}`}
                 type="button"
                 onClick={handleNext}
-                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-lg ${accentStyles.primaryBtn}`}
+                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-lg ${accentStyles.primaryBtn}`}
               >
                 {isLastStep ? (
                   <>

@@ -24,10 +24,10 @@ export default function DirectionsCard({
       target="_blank"
       rel="noopener noreferrer"
       onClick={(e) => e.stopPropagation()}
-      className={`inline-flex relative max-w-full w-full sm:w-auto mx-auto justify-center items-center overflow-hidden rounded-xl border transition-all duration-200 group cursor-pointer ${
+      className={`inline-flex relative max-w-full w-full sm:w-auto mx-auto justify-center items-center overflow-hidden rounded-[var(--r-m)] border transition-all duration-200 group cursor-pointer ${
         isStitchLight
-          ? 'bg-slate-900 border-slate-700/70 shadow-sm hover:border-indigo-500/60 hover:shadow-indigo-500/10'
-          : 'bg-[#181716] border-[#2c2a29] shadow-md hover:border-purple-500/50 hover:shadow-purple-500/10'
+          ? 'bg-[var(--surface)] /70 shadow-sm hover:border-indigo-500/60 hover:shadow-indigo-500/10'
+          : 'bg-[var(--surface)] border-[#2c2a29] shadow-md hover:border-purple-500/50 hover:shadow-purple-500/10'
       } ${className}`}
     >
       {/* Tactile Simulated Map Grid */}
@@ -52,9 +52,9 @@ export default function DirectionsCard({
         )}
 
         {/* Action: Cómo llegar Button */}
-        <div className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono font-bold transition-all shrink-0 ${
+        <div className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] border text-xs font-mono font-bold transition-all shrink-0 ${
           isStitchLight
-            ? 'bg-slate-800 border-slate-700 text-slate-200 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-500'
+            ? 'bg-[var(--surface)]  text-[var(--ink-3)] group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-500'
             : 'bg-zinc-800/90 border-zinc-700/80 text-zinc-200 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-500'
         }`}>
           <Navigation className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />

@@ -341,7 +341,7 @@ export function EnergyChart({
   return (
     <div
       ref={containerRef}
-      className={`relative ${compact ? 'w-full bg-black/70 rounded-lg overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-lg overflow-hidden'} ${animMode === 'entrance' && !compact ? 'energy-map-grand-entrance' : ''}`}
+      className={`relative ${compact ? 'w-full bg-black/70 rounded-[var(--r-s)] overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-[var(--r-s)] overflow-hidden'} ${animMode === 'entrance' && !compact ? 'energy-map-grand-entrance' : ''}`}
       style={{
         height,
         width: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
@@ -377,7 +377,7 @@ export function EnergyChart({
         const placeOnLeft = dragPointerPos.x > containerWidth * 0.6;
         return (
           <div
-            className="absolute z-20 bg-black/90 rounded-lg px-3 py-1.5 text-[12px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap"
+            className="absolute z-20 bg-black/90 rounded-[var(--r-s)] px-3 py-1.5 text-[12px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap"
             style={{
               border: `1px solid ${info.hexColor}99`,
               ...(isTouch
@@ -392,14 +392,14 @@ export function EnergyChart({
             }}
           >
             <span className="font-bold text-base" style={{ color: info.hexColor }}>{info.icon} {liveEnergyScore}</span>
-            <span className="text-neutral-400">/20 · {info.label}</span>
+            <span className="text-text-[var(--ink-2)]">/20 · {info.label}</span>
           </div>
         );
       })()}
       {/* Arrastrando en horizontal (o gesto aún sin decidir): nombre + destino del reordenamiento,
           para saber qué se está moviendo sin tener que leer el número de posición en el eje X. */}
       {draggingFromIndex !== null && dragAxis !== 'y' && hoverIndex !== null && (
-        <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-black/90 border border-amber-400/60 rounded-lg px-3 py-1.5 text-[11px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap">
+        <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-black/90 border /60 rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap">
           <span className="text-amber-300 font-bold">{chartData[draggingFromIndex]?.name}</span>
           {hoverIndex !== draggingFromIndex && (
             <>
@@ -553,15 +553,15 @@ export function EnergyChart({
               if (!active || !payload?.length) return null;
               const d = payload[0].payload;
               return (
-                <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-lg shadow-xl border border-neutral-700 max-w-[200px]">
+                <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] shadow-xl border  max-w-[200px]">
                   <p className="font-bold text-[#d1b375] text-[10px]">#{d.idx + 1} {d.name}</p>
                   {d.isSpeechEvent ? (
-                    <p className="text-neutral-400 flex items-center gap-1 mt-0.5">
+                    <p className="text-text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
                       <span>{d.icon}</span> Interludio / Pausa — meseta de energía
                     </p>
                   ) : (
                     <>
-                      <p className="text-neutral-300 flex items-center gap-1 mt-0.5">
+                      <p className="text-text-[var(--ink-3)] flex items-center gap-1 mt-0.5">
                         <span>{d.icon}</span> {d.label} ({d.score}/20)
                       </p>
                       {typeof d.bpm === 'number' && (
@@ -576,12 +576,12 @@ export function EnergyChart({
                         </p>
                       )}
                       {showIdealCurve && typeof d.idealScore === 'number' && Math.abs(d.idealScore - d.score) >= 2 && (
-                        <p className="text-neutral-400 mt-0.5">
+                        <p className="text-text-[var(--ink-2)] mt-0.5">
                           〰️ Ideal aquí: ~{d.idealScore}/20
                         </p>
                       )}
                       {d.transitionFromPrev && (
-                        <div className={`mt-1.5 pt-1 border-t border-neutral-800 ${
+                        <div className={`mt-1.5 pt-1 border-t  ${
                           d.transitionFromPrev.status === 'ok' ? 'text-emerald-300' : 'text-rose-300'
                         }`}>
                           <div className="flex items-center gap-1 font-bold">
@@ -595,14 +595,14 @@ export function EnergyChart({
                             <span>Unión con #{d.idx}: {d.transitionFromPrev.status === 'ok' ? 'Fluida' : 'Revisar'} ({d.transitionFromPrev.scorePercent}%)</span>
                           </div>
                           {d.transitionFromPrev.motivos.length > 0 && (
-                            <p className="text-[8px] text-neutral-400 pl-4 mt-0.5 leading-tight">
+                            <p className="text-[8px] text-text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">
                               {d.transitionFromPrev.motivos.join(' · ')}
                             </p>
                           )}
                         </div>
                       )}
                       {d.idx > 0 && onPreviewTransition && (
-                        <p className="text-[#f2ca50] font-semibold mt-1 pt-1 border-t border-neutral-800 flex items-center gap-1 cursor-pointer hover:underline">
+                        <p className="text-[var(--acc)] font-semibold mt-1 pt-1 border-t  flex items-center gap-1 cursor-pointer hover:underline">
                           🎧 Probar unión con #{d.idx}
                         </p>
                       )}

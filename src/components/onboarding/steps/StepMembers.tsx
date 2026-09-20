@@ -41,11 +41,11 @@ export const StepMembers: React.FC<StepMembersProps> = ({
         {members.map((m, idx) => (
           <div
             key={m.id || idx}
-            className="flex items-center justify-between p-3 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/10 transition-colors"
+            className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/5 hover:border-white/10 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs ${
-                m.isLeader ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-zinc-800 text-zinc-300 border border-white/5'
+              <div className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold text-xs ${
+                m.isLeader ? 'bg-amber-500/20 text-amber-300 border /30' : 'bg-zinc-800 text-zinc-300 border border-white/5'
               }`}>
                 {m.name.charAt(0).toUpperCase()}
               </div>
@@ -70,7 +70,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
               <button
                 type="button"
                 onClick={() => onRemoveMember(m.id)}
-                className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                className="p-1.5 rounded-[var(--r-s)] text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                 title="Quitar miembro"
               >
                 <Trash2 className="w-4 h-4" />
@@ -81,7 +81,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
       </div>
 
       {/* Add new member form */}
-      <div className="p-4 rounded-xl bg-[#19191d] border border-white/10 space-y-3">
+      <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border border-white/10 space-y-3">
         <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
           <Plus className="w-3.5 h-3.5 text-amber-400" />
           Añadir Compañero de Banda / Músico
@@ -93,7 +93,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberName}
             onChange={(e) => setNewMemberName(e.target.value)}
             placeholder="Nombre y Apellidos *"
-            className="px-3 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+            className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
           />
 
           <input
@@ -101,7 +101,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberRole}
             onChange={(e) => setNewMemberRole(e.target.value)}
             placeholder="Instrumento / Rol (ej. Batería, Bajo, Teclados) *"
-            className="px-3 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+            className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
           />
 
           <input
@@ -109,7 +109,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberEmail}
             onChange={(e) => setNewMemberEmail(e.target.value)}
             placeholder="Email (para invitarle a acceder al panel)"
-            className="px-3 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+            className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
           />
 
           <input
@@ -117,7 +117,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             value={newMemberInstagram}
             onChange={(e) => setNewMemberInstagram(e.target.value)}
             placeholder="Instagram (ej. @nombremusico)"
-            className="px-3 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+            className="px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
           />
         </div>
 
@@ -126,7 +126,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
             type="button"
             onClick={onAddMember}
             disabled={!newMemberName.trim()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
             Añadir a la formación

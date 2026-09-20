@@ -204,17 +204,17 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
       {/* Top Section: Live Audio Recording & Upload */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Audio Recorder Card */}
-        <div className="p-5 rounded-2xl bg-[#141413] border border-[#262522] shadow-sm space-y-4">
+        <div className="p-5 rounded-[var(--r-l)] bg-[#141413] border border-[#262522] shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
+              <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
                 <Mic className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="text-sm font-mono font-bold text-zinc-100 uppercase">
                   Grabadora de Audio en Vivo
                 </h3>
-                <p className="text-xs text-neutral-400">
+                <p className="text-xs text-text-[var(--ink-2)]">
                   Graba tomas completas, riffs o notas de voz directamente desde el micrófono
                 </p>
               </div>
@@ -228,7 +228,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
           </div>
 
           {/* Big Recording Button & Wave */}
-          <div className="p-4 rounded-xl bg-[#1a1918] border border-[#2a2825] flex flex-col items-center justify-center space-y-3">
+          <div className="p-4 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] flex flex-col items-center justify-center space-y-3">
             {isRecording ? (
               <div className="w-full space-y-3 text-center">
                 {/* Simulated Audio Waveform Bars */}
@@ -248,7 +248,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 <button
                   type="button"
                   onClick={stopRecording}
-                  className="px-6 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-mono font-bold text-xs uppercase flex items-center gap-2 mx-auto cursor-pointer shadow-lg shadow-rose-500/30 active:scale-95 transition-all"
+                  className="px-6 py-2.5 rounded-[var(--r-m)] bg-rose-500 hover:bg-rose-400 text-white font-mono font-bold text-xs uppercase flex items-center gap-2 mx-auto cursor-pointer shadow-lg shadow-rose-500/30 active:scale-95 transition-all"
                 >
                   <Square className="w-4 h-4 fill-current" />
                   <span>Detener Grabación ({formatTime(recordDuration)})</span>
@@ -258,7 +258,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               <button
                 type="button"
                 onClick={startRecording}
-                className="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-mono font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 active:scale-95 transition-all"
+                className="px-6 py-3 rounded-[var(--r-l)] bg-amber-400 hover:bg-amber-300 text-bg-[var(--surface)] font-mono font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 active:scale-95 transition-all"
               >
                 <Mic className="w-4 h-4" />
                 <span>Iniciar Grabación con Micrófono</span>
@@ -276,12 +276,12 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     placeholder="Título de la toma (ej. Riff nuevo tema 2)..."
                     value={recordingTitle}
                     onChange={e => setRecordingTitle(e.target.value)}
-                    className="px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-xs text-zinc-100 outline-none focus:border-amber-400"
+                    className="px-3 py-1.5 rounded-[var(--r-m)] bg-[#141413] border border-[#2a2825] text-xs text-zinc-100 outline-none focus:"
                   />
                   <select
                     value={recordingTag}
                     onChange={e => setRecordingTag(e.target.value as any)}
-                    className="px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-xs text-zinc-100 outline-none cursor-pointer"
+                    className="px-3 py-1.5 rounded-[var(--r-m)] bg-[#141413] border border-[#2a2825] text-xs text-zinc-100 outline-none cursor-pointer"
                   >
                     <option value="toma_completa">🎵 Toma Completa</option>
                     <option value="riff">🎸 Riff / Idea Nueva</option>
@@ -295,14 +295,14 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                   <button
                     type="button"
                     onClick={() => setRecordingBlobUrl(null)}
-                    className="px-3 py-1.5 text-xs font-mono text-neutral-400 hover:text-white"
+                    className="px-3 py-1.5 text-xs font-mono text-text-[var(--ink-2)] hover:text-white"
                   >
                     Descartar
                   </button>
                   <button
                     type="button"
                     onClick={handleSaveRecording}
-                    className="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 text-xs font-mono font-bold cursor-pointer"
+                    className="px-4 py-1.5 rounded-[var(--r-m)] bg-emerald-500 hover:bg-emerald-400 text-bg-[var(--surface)] text-xs font-mono font-bold cursor-pointer"
                   >
                     Guardar Grabación
                   </button>
@@ -312,11 +312,11 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
           </div>
 
           {/* Upload Audio File Option */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-[#181716] border border-[#22211F]">
-            <span className="text-xs text-neutral-400">
+          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--surface)]">
+            <span className="text-xs text-text-[var(--ink-2)]">
               ¿Grabaste con Zoom H4n o grabadora externa?
             </span>
-            <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-mono font-bold cursor-pointer transition-colors">
+            <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] text-xs font-mono font-bold cursor-pointer transition-colors">
               <Upload className="w-3.5 h-3.5" />
               <span>Subir Archivo de Audio</span>
               <input
@@ -330,7 +330,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
         </div>
 
         {/* Rehearsal Audio Clips Library */}
-        <div className="p-5 rounded-2xl bg-[#141413] border border-[#262522] shadow-sm space-y-4">
+        <div className="p-5 rounded-[var(--r-l)] bg-[#141413] border border-[#262522] shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <FileAudio className="w-4 h-4 text-amber-400" />
@@ -341,7 +341,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
           </div>
 
           {recordings.length === 0 ? (
-            <div className="p-8 text-center text-neutral-500 italic text-xs border border-dashed border-[#262522] rounded-xl">
+            <div className="p-8 text-center text-neutral-500 italic text-xs border border-dashed border-[#262522] rounded-[var(--r-m)]">
               No hay grabaciones guardadas en esta sesión.
             </div>
           ) : (
@@ -349,7 +349,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               {recordings.map(rec => (
                 <div
                   key={rec.id}
-                  className="p-3 rounded-xl bg-[#1a1918] border border-[#2a2825] space-y-2 hover:border-neutral-700 transition-colors"
+                  className="p-3 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] space-y-2 hover: transition-colors"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
@@ -383,18 +383,18 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
       </div>
 
       {/* Bottom Section: AI Generated Minutes / Acta del Ensayo */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-[#181716] to-[#121110] border border-[#2a2825] shadow-lg space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#22211F] pb-4">
+      <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[#121110] border border-[#2a2825] shadow-lg space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--surface)] pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-lg bg-amber-400/15 text-amber-400">
+              <span className="p-1.5 rounded-[var(--r-s)] bg-amber-400/15 text-amber-400">
                 <Sparkles className="w-4 h-4" />
               </span>
               <h3 className="text-sm font-mono font-bold text-zinc-100 uppercase tracking-wider">
                 Acta de Ensayo Inteligente (Human-in-the-loop)
               </h3>
             </div>
-            <p className="text-xs text-neutral-400">
+            <p className="text-xs text-text-[var(--ink-2)]">
               Sintetiza automáticamente los temas bordados, fallos detectados y tareas para el grupo de WhatsApp.
             </p>
           </div>
@@ -403,7 +403,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             <button
               onClick={handleGenerateAIActa}
               disabled={isGeneratingActa}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-400 text-neutral-950 hover:bg-amber-300 disabled:opacity-50 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-amber-400 text-bg-[var(--surface)] hover:bg-amber-300 disabled:opacity-50 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer"
             >
               {isGeneratingActa ? (
                 <>
@@ -421,7 +421,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             {acta && (
               <button
                 onClick={handleCopyToWhatsApp}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 text-xs font-mono font-bold transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 text-xs font-mono font-bold transition-all cursor-pointer"
                 title="Copiar formato listo para WhatsApp"
               >
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -433,28 +433,28 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
         {/* Display Acta Content */}
         {!acta ? (
-          <div className="p-8 text-center text-neutral-500 text-xs space-y-2 border border-dashed border-[#262522] rounded-xl">
+          <div className="p-8 text-center text-neutral-500 text-xs space-y-2 border border-dashed border-[#262522] rounded-[var(--r-m)]">
             <p>Pulsa "Generar Acta con IA" para obtener un resumen estructurado del ensayo listo para compartir.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Executive Summary */}
-            <div className="p-4 rounded-xl bg-[#141413] border border-[#262522] space-y-2">
+            <div className="p-4 rounded-[var(--r-m)] bg-[#141413] border border-[#262522] space-y-2">
               <h4 className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                 📝 Resumen Ejecutivo
               </h4>
-              <p className="text-xs text-neutral-300 leading-relaxed font-sans">
+              <p className="text-xs text-text-[var(--ink-3)] leading-relaxed font-sans">
                 {acta.resumenEjecutivo}
               </p>
             </div>
 
             {/* Temas Bordados vs A Pulir */}
-            <div className="p-4 rounded-xl bg-[#141413] border border-[#262522] space-y-3">
+            <div className="p-4 rounded-[var(--r-m)] bg-[#141413] border border-[#262522] space-y-3">
               <div>
                 <h4 className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider mb-1.5">
                   🟢 Temas Bordados
                 </h4>
-                <ul className="text-xs text-neutral-300 space-y-1 pl-4 list-disc">
+                <ul className="text-xs text-text-[var(--ink-3)] space-y-1 pl-4 list-disc">
                   {(acta.cancionesDestacadas || acta.cancionesBordadas || []).map((c, i) => (
                     <li key={i}>{c}</li>
                   ))}
@@ -465,7 +465,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 <h4 className="text-xs font-mono font-bold text-rose-400 uppercase tracking-wider mb-1.5">
                   🔴 A Repasar Próximo Día
                 </h4>
-                <ul className="text-xs text-neutral-300 space-y-1 pl-4 list-disc">
+                <ul className="text-xs text-text-[var(--ink-3)] space-y-1 pl-4 list-disc">
                   {(acta.cancionesAPulir || acta.cancionesParaRepetir || []).map((c, i) => (
                     <li key={i}>{c}</li>
                   ))}
@@ -474,15 +474,15 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             </div>
 
             {/* Deberes para casa */}
-            <div className="p-4 rounded-xl bg-[#141413] border border-[#262522] space-y-2.5">
+            <div className="p-4 rounded-[var(--r-m)] bg-[#141413] border border-[#262522] space-y-2.5">
               <h4 className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                 🎯 Deberes para Casa
               </h4>
               <div className="space-y-2">
                 {(acta.deberesPorMiembro || []).map((d, i) => (
-                  <div key={i} className="p-2 rounded-lg bg-[#1a1918] border border-[#2a2825] text-xs">
+                  <div key={i} className="p-2 rounded-[var(--r-s)] bg-[#1a1918] border border-[#2a2825] text-xs">
                     <span className="font-mono font-bold text-amber-300 block">{d.miembro}:</span>
-                    <span className="text-neutral-300">{d.tarea}</span>
+                    <span className="text-text-[var(--ink-3)]">{d.tarea}</span>
                   </div>
                 ))}
               </div>

@@ -1006,7 +1006,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   return (
     <ModalPortal>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md overflow-y-auto">
-        <div className="relative w-full max-w-3xl rounded-3xl bg-[#121215] border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
+        <div className="relative w-full max-w-3xl rounded-3xl bg-[var(--surface)] border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
           
           {/* Header */}
           <div className="p-5 sm:p-6 border-b border-white/5 flex items-center justify-between bg-zinc-900/50">
@@ -1029,7 +1029,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+              className="p-2 rounded-[var(--r-m)] text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
               title="Cerrar asistente"
             >
               <X className="w-5 h-5" />
@@ -1047,7 +1047,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                     key={step.key}
                     type="button"
                     onClick={() => setCurrentStepIndex(idx)}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs whitespace-nowrap transition-all ${
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs whitespace-nowrap transition-all ${
                       isCurrent
                         ? 'bg-amber-500 text-black font-bold shadow-sm'
                         : isPassed
@@ -1365,7 +1365,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                   <button
                     type="button"
                     onClick={handlePrevStep}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-medium transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-medium transition-colors"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" /> Anterior
                   </button>
@@ -1384,7 +1384,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                 <button
                   type="button"
                   onClick={handleSkipStep}
-                  className="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-zinc-400 hover:text-white text-xs transition-colors"
+                  className="inline-flex items-center gap-1 px-3 py-2 rounded-[var(--r-m)] text-zinc-400 hover:text-white text-xs transition-colors"
                 >
                   <SkipForward className="w-3.5 h-3.5" /> Saltar paso
                 </button>
@@ -1392,7 +1392,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                 <button
                   type="button"
                   onClick={handleNextStep}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-all shadow-lg shadow-amber-500/20"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-all shadow-lg shadow-amber-500/20"
                 >
                   {currentStepIndex === activeSteps.length - 1 ? (
                     <>

@@ -422,14 +422,14 @@ export function DashboardWidgetGrid({
               className={`${colSpanClass} relative transition-all duration-200 ${
                 isDragging ? 'opacity-40 scale-[0.98]' : ''
               } ${
-                isDragOver ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#121214] rounded-2xl bg-amber-500/10' : ''
+                isDragOver ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#121214] rounded-[var(--r-l)] bg-amber-500/10' : ''
               } ${
-                isEditMode ? 'ring-2 ring-amber-500/40 rounded-2xl p-1 bg-amber-500/5 hover:ring-amber-400' : ''
+                isEditMode ? 'ring-2 ring-amber-500/40 rounded-[var(--r-l)] p-1 bg-amber-500/5 hover:ring-amber-400' : ''
               }`}
             >
               {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
               {isEditMode && (
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-stone-950 border border-amber-500/60 p-2 rounded-t-xl mb-1 text-xs font-mono text-neutral-200 shadow-md gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-stone-950 border /60 p-2 rounded-t-xl mb-1 text-xs font-mono text-bg-[var(--sunken)] shadow-md gap-2">
                   <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
                     <GripVertical className="w-4 h-4 text-amber-400 shrink-0" />
                     <span className="font-bold text-amber-300 text-xs truncate max-w-[150px]">
@@ -439,7 +439,7 @@ export function DashboardWidgetGrid({
 
                   <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
                     {/* Width options */}
-                    <div className="flex items-center gap-0.5 bg-stone-900 border border-stone-800 p-0.5 rounded-lg text-[10px]">
+                    <div className="flex items-center gap-0.5 bg-stone-900 border border-stone-800 p-0.5 rounded-[var(--r-s)] text-[10px]">
                       <span className="text-neutral-500 px-1 font-bold">Ancho:</span>
                       {([3, 4, 6, 8, 12] as const).map(spanVal => (
                         <button
@@ -449,7 +449,7 @@ export function DashboardWidgetGrid({
                           className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
                             widget.wSpan === spanVal
                               ? 'bg-amber-500 text-stone-950'
-                              : 'text-neutral-400 hover:text-white'
+                              : 'text-text-[var(--ink-2)] hover:text-white'
                           }`}
                         >
                           {spanVal === 3 ? '25%' : spanVal === 4 ? '33%' : spanVal === 6 ? '50%' : spanVal === 8 ? '66%' : '100%'}
@@ -458,7 +458,7 @@ export function DashboardWidgetGrid({
                     </div>
 
                     {/* Height options */}
-                    <div className="flex items-center gap-0.5 bg-stone-900 border border-stone-800 p-0.5 rounded-lg text-[10px]">
+                    <div className="flex items-center gap-0.5 bg-stone-900 border border-stone-800 p-0.5 rounded-[var(--r-s)] text-[10px]">
                       <span className="text-neutral-500 px-1 font-bold">Alto:</span>
                       {(['compact', 'normal', 'tall'] as const).map(hVal => (
                         <button
@@ -468,7 +468,7 @@ export function DashboardWidgetGrid({
                           className={`px-1.5 py-0.5 rounded font-bold transition-all cursor-pointer ${
                             (widget.hSpan || 'normal') === hVal
                               ? 'bg-purple-500 text-white'
-                              : 'text-neutral-400 hover:text-white'
+                              : 'text-text-[var(--ink-2)] hover:text-white'
                           }`}
                         >
                           {hVal === 'compact' ? 'Bajo' : hVal === 'normal' ? 'Med' : 'Alto'}
@@ -482,7 +482,7 @@ export function DashboardWidgetGrid({
                         type="button"
                         onClick={() => handleMoveWidget(index, 'up')}
                         disabled={index === 0}
-                        className="p-1 rounded bg-stone-900 border border-stone-800 hover:bg-neutral-800 text-neutral-300 disabled:opacity-30 cursor-pointer"
+                        className="p-1 rounded bg-stone-900 border border-stone-800 hover:bg-neutral-800 text-text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
                         title="Mover arriba"
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
@@ -491,7 +491,7 @@ export function DashboardWidgetGrid({
                         type="button"
                         onClick={() => handleMoveWidget(index, 'down')}
                         disabled={index === visibleWidgets.length - 1}
-                        className="p-1 rounded bg-stone-900 border border-stone-800 hover:bg-neutral-800 text-neutral-300 disabled:opacity-30 cursor-pointer"
+                        className="p-1 rounded bg-stone-900 border border-stone-800 hover:bg-neutral-800 text-text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
                         title="Mover abajo"
                       >
                         <ArrowDown className="w-3.5 h-3.5" />
@@ -521,7 +521,7 @@ export function DashboardWidgetGrid({
       {/* WIDGET IMPRESCINDIBLE: APOYO A BANDMANAGER (NO SE PUEDE QUITAR) */}
       <div className="pt-2 space-y-3">
         {isEditMode && (
-          <div className="px-3 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-mono font-bold flex items-center gap-1.5 w-fit">
+          <div className="px-3 py-1 rounded-[var(--r-s)] bg-amber-500/15 border /30 text-amber-300 text-[11px] font-mono font-bold flex items-center gap-1.5 w-fit">
             <Info className="w-3.5 h-3.5 text-amber-400 shrink-0" />
             <span>Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)</span>
           </div>
@@ -533,18 +533,18 @@ export function DashboardWidgetGrid({
       {/* MODAL / CATALOGO: AÑADIR NUEVO WIDGET */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#18181b] border border-neutral-800 rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
+          <div className="bg-[#18181b] border  rounded-[var(--r-l)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
             {/* Header */}
-            <div className="p-5 border-b border-neutral-800 flex items-center justify-between">
+            <div className="p-5 border-b  flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
+                <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
                   <Plus className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold font-display text-neutral-100">
+                  <h3 className="text-lg font-bold font-display text-bg-[var(--sunken)]">
                     Catálogo de Widgets del Dashboard
                   </h3>
-                  <p className="text-xs font-mono text-neutral-400">
+                  <p className="text-xs font-mono text-text-[var(--ink-2)]">
                     Selecciona módulos y gráficos para añadirlos a tu panel principal
                   </p>
                 </div>
@@ -553,23 +553,23 @@ export function DashboardWidgetGrid({
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="p-2 rounded-xl hover:bg-neutral-800 text-neutral-400 hover:text-white transition-all cursor-pointer"
+                className="p-2 rounded-[var(--r-m)] hover:bg-neutral-800 text-text-[var(--ink-2)] hover:text-white transition-all cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Category Filter Pills */}
-            <div className="p-4 border-b border-neutral-800/80 bg-[#121214] flex gap-2 overflow-x-auto">
+            <div className="p-4 border-b /80 bg-[#121214] flex gap-2 overflow-x-auto">
               {categories.map(cat => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap cursor-pointer transition-all ${
+                  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold whitespace-nowrap cursor-pointer transition-all ${
                     selectedCategory === cat
                       ? 'bg-amber-500 text-stone-950 shadow-xs'
-                      : 'bg-neutral-800/60 text-neutral-400 hover:text-neutral-200'
+                      : 'bg-neutral-800/60 text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
                   }`}
                 >
                   {cat}
@@ -585,16 +585,16 @@ export function DashboardWidgetGrid({
                 return (
                   <div
                     key={item.type}
-                    className="p-4 rounded-xl bg-[#121214] border border-neutral-800 hover:border-amber-500/40 transition-all flex items-center justify-between gap-4"
+                    className="p-4 rounded-[var(--r-m)] bg-[#121214] border  hover:/40 transition-all flex items-center justify-between gap-4"
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-neutral-100">{item.title}</span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-800 text-amber-400 border border-neutral-700">
+                        <span className="text-sm font-bold text-bg-[var(--sunken)]">{item.title}</span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-800 text-amber-400 border ">
                           {item.category}
                         </span>
                       </div>
-                      <p className="text-xs text-neutral-400 leading-relaxed">
+                      <p className="text-xs text-text-[var(--ink-2)] leading-relaxed">
                         {item.description}
                       </p>
                     </div>
@@ -602,7 +602,7 @@ export function DashboardWidgetGrid({
                     <button
                       type="button"
                       onClick={() => handleAddWidget(item.type)}
-                      className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95 shadow-sm"
+                      className="px-3.5 py-2 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95 shadow-sm"
                     >
                       <Plus className="w-4 h-4" />
                       <span>{isAlreadyAdded ? 'Añadir Otro' : 'Añadir'}</span>
@@ -613,11 +613,11 @@ export function DashboardWidgetGrid({
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-neutral-800 bg-[#121214] text-right">
+            <div className="p-4 border-t  bg-[#121214] text-right">
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-mono text-xs font-bold cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-text-[var(--ink-3)] font-mono text-xs font-bold cursor-pointer"
               >
                 Cerrar
               </button>

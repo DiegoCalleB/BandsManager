@@ -38,14 +38,14 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
         {photos.map((url, idx) => (
           <div
             key={idx}
-            className="aspect-video rounded-xl bg-zinc-900 border border-white/10 overflow-hidden relative group"
+            className="aspect-video rounded-[var(--r-m)] bg-zinc-900 border border-white/10 overflow-hidden relative group"
           >
             <img src={url} alt={`Foto promo ${idx + 1}`} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <button
                 type="button"
                 onClick={() => onRemovePhoto(idx)}
-                className="p-1.5 rounded-lg bg-red-500/80 hover:bg-red-500 text-white transition-colors"
+                className="p-1.5 rounded-[var(--r-s)] bg-red-500/80 hover:bg-red-500 text-white transition-colors"
                 title="Eliminar foto"
               >
                 <Trash2 className="w-4 h-4" />
@@ -57,7 +57,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
         {/* Upload box */}
         <div
           onClick={() => photoInputRef.current?.click()}
-          className="aspect-video rounded-xl border-2 border-dashed border-white/10 hover:border-amber-400/40 bg-zinc-900/40 hover:bg-zinc-900/70 flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-colors"
+          className="aspect-video rounded-[var(--r-m)] border-2 border-dashed border-white/10 hover:/40 bg-zinc-900/40 hover:bg-zinc-900/70 flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-colors"
         >
           <input
             type="file"
@@ -85,13 +85,13 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
           value={newPhotoUrl}
           onChange={(e) => setNewPhotoUrl(e.target.value)}
           placeholder="O añade una URL de imagen directa (https://...)"
-          className="flex-1 px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+          className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
         />
         <button
           type="button"
           onClick={onAddPhotoUrl}
           disabled={!newPhotoUrl.trim()}
-          className="px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium transition-colors disabled:opacity-50 flex items-center gap-1"
+          className="px-3 py-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium transition-colors disabled:opacity-50 flex items-center gap-1"
         >
           <Plus className="w-3.5 h-3.5" /> Añadir
         </button>

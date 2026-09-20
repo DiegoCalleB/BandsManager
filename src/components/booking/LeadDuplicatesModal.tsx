@@ -208,22 +208,22 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
     <ModalPortal>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
         <div
-          className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl shadow-2xl border overflow-hidden transition-all ${
+          className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] shadow-2xl border overflow-hidden transition-all ${
             isStitchLight
-              ? 'bg-white border-slate-200 text-slate-900'
-              : 'bg-[#16161a] border-neutral-800 text-zinc-100'
+              ? 'bg-white  text-[var(--ink)]'
+              : 'bg-[#16161a]  text-zinc-100'
           }`}
         >
           {/* Header */}
           <div
             className={`p-4 sm:p-5 border-b flex items-center justify-between shrink-0 ${
               isStitchLight
-                ? 'bg-slate-50 border-slate-200'
-                : 'bg-[#121215] border-neutral-800'
+                ? 'bg-[var(--bg)] '
+                : 'bg-[var(--surface)] '
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/15 border /30 text-amber-400">
                 <Copy className="w-5 h-5" />
               </div>
               <div>
@@ -231,11 +231,11 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   <h2 className="text-base sm:text-lg font-bold tracking-tight text-white">
                     Detector y Limpiador de Duplicados
                   </h2>
-                  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-500/15 text-amber-300 border /30">
                     {duplicateGroups.length} {duplicateGroups.length === 1 ? 'grupo' : 'grupos'}
                   </span>
                 </div>
-                <p className={`text-xs mt-0.5 ${isStitchLight ? 'text-slate-500' : 'text-zinc-400'}`}>
+                <p className={`text-xs mt-0.5 ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-zinc-400'}`}>
                   Detecta salas y contactos repetidos por email idéntico, nombre y ciudad, o dominios coincidentes.
                 </p>
               </div>
@@ -244,10 +244,10 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className={`p-2 rounded-xl border transition-colors cursor-pointer ${
+              className={`p-2 rounded-[var(--r-m)] border transition-colors cursor-pointer ${
                 isStitchLight
-                  ? 'hover:bg-slate-200 text-slate-600 border-slate-300'
-                  : 'hover:bg-neutral-800 text-zinc-400 hover:text-white border-neutral-700'
+                  ? 'hover:bg-[var(--sunken)] text-[var(--ink-2)] '
+                  : 'hover:bg-neutral-800 text-zinc-400 hover:text-white '
               }`}
             >
               <X className="w-5 h-5" />
@@ -265,7 +265,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
           {/* Controls & Filter Bar */}
           <div
             className={`p-3 sm:px-5 border-b flex flex-wrap items-center justify-between gap-2.5 shrink-0 ${
-              isStitchLight ? 'bg-slate-100/60 border-slate-200' : 'bg-neutral-900/40 border-neutral-800'
+              isStitchLight ? 'bg-[var(--sunken)]/60 ' : 'bg-bg-[var(--surface)]/40 '
             }`}
           >
             {/* Filter Pills */}
@@ -273,12 +273,12 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedFilter('all')}
-                className={`px-3 py-1.5 rounded-xl font-medium transition cursor-pointer shrink-0 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
                   selectedFilter === 'all'
-                    ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-xs'
+                    ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
                     : isStitchLight
-                    ? 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
-                    : 'bg-neutral-800 border border-neutral-700 text-zinc-300 hover:bg-neutral-700'
+                    ? 'bg-white border  text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                    : 'bg-neutral-800 border  text-zinc-300 hover:bg-neutral-700'
                 }`}
               >
                 Todos ({reasonCounts.all})
@@ -287,12 +287,12 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedFilter('same_email')}
-                  className={`px-3 py-1.5 rounded-xl font-medium transition cursor-pointer shrink-0 ${
+                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === 'same_email'
-                      ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-xs'
+                      ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
                       : isStitchLight
-                      ? 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
-                      : 'bg-neutral-800 border border-neutral-700 text-zinc-300 hover:bg-neutral-700'
+                      ? 'bg-white border  text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                      : 'bg-neutral-800 border  text-zinc-300 hover:bg-neutral-700'
                   }`}
                 >
                   Mismo Email ({reasonCounts.same_email})
@@ -302,12 +302,12 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedFilter('same_name_and_city')}
-                  className={`px-3 py-1.5 rounded-xl font-medium transition cursor-pointer shrink-0 ${
+                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === 'same_name_and_city'
-                      ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-xs'
+                      ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
                       : isStitchLight
-                      ? 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
-                      : 'bg-neutral-800 border border-neutral-700 text-zinc-300 hover:bg-neutral-700'
+                      ? 'bg-white border  text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                      : 'bg-neutral-800 border  text-zinc-300 hover:bg-neutral-700'
                   }`}
                 >
                   Mismo Nombre y Ciudad ({reasonCounts.same_name_and_city})
@@ -317,12 +317,12 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedFilter('similar_name_same_city')}
-                  className={`px-3 py-1.5 rounded-xl font-medium transition cursor-pointer shrink-0 ${
+                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === 'similar_name_same_city'
-                      ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-xs'
+                      ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
                       : isStitchLight
-                      ? 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
-                      : 'bg-neutral-800 border border-neutral-700 text-zinc-300 hover:bg-neutral-700'
+                      ? 'bg-white border  text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                      : 'bg-neutral-800 border  text-zinc-300 hover:bg-neutral-700'
                   }`}
                 >
                   Nombre Similar ({reasonCounts.similar_name_same_city})
@@ -332,12 +332,12 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedFilter('same_website')}
-                  className={`px-3 py-1.5 rounded-xl font-medium transition cursor-pointer shrink-0 ${
+                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
                     selectedFilter === 'same_website'
-                      ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-xs'
+                      ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
                       : isStitchLight
-                      ? 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
-                      : 'bg-neutral-800 border border-neutral-700 text-zinc-300 hover:bg-neutral-700'
+                      ? 'bg-white border  text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                      : 'bg-neutral-800 border  text-zinc-300 hover:bg-neutral-700'
                   }`}
                 >
                   Misma Web ({reasonCounts.same_website})
@@ -351,7 +351,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 type="button"
                 disabled={isProcessing}
                 onClick={handleMergeAllAuto}
-                className="px-3 py-1.5 rounded-xl text-xs font-bold bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] transition flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50 shrink-0 ml-auto"
+                className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)] transition flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50 shrink-0 ml-auto"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Fusionar Todos Automáticamente</span>
@@ -377,16 +377,16 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
               duplicateGroups.map((group) => (
                 <div
                   key={group.id}
-                  className={`rounded-2xl border p-4 transition-all ${
+                  className={`rounded-[var(--r-l)] border p-4 transition-all ${
                     isStitchLight
-                      ? 'bg-slate-50/70 border-slate-200 shadow-xs'
-                      : 'bg-neutral-900/60 border-neutral-800/90'
+                      ? 'bg-[var(--bg)]/70  shadow-xs'
+                      : 'bg-bg-[var(--surface)]/60 /90'
                   }`}
                 >
                   {/* Group Top Info */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-neutral-800/60">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b /60">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/25 flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-amber-500/15 text-amber-300 border /25 flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
                         {group.matchReasonLabel}
                       </span>
@@ -413,14 +413,14 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                       return (
                         <div
                           key={lead.id}
-                          className={`rounded-xl p-3.5 border flex flex-col justify-between transition-all ${
+                          className={`rounded-[var(--r-m)] p-3.5 border flex flex-col justify-between transition-all ${
                             isSuggested
                               ? isStitchLight
-                                ? 'bg-amber-50/60 border-amber-300'
-                                : 'bg-[#1e1c15] border-amber-500/50 shadow-xs'
+                                ? 'bg-amber-50/60 '
+                                : 'bg-[#1e1c15] /50 shadow-xs'
                               : isStitchLight
-                              ? 'bg-white border-slate-200'
-                              : 'bg-neutral-900 border-neutral-800'
+                              ? 'bg-white '
+                              : 'bg-bg-[var(--surface)] '
                           }`}
                         >
                           <div className="space-y-2">
@@ -431,7 +431,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                     {lead.nombre_sala}
                                   </h4>
                                   {isSuggested && (
-                                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#f2ca50] text-[#2c2200]">
+                                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--acc)] text-[var(--acc-ink)]">
                                       ⭐ Recomendado
                                     </span>
                                   )}
@@ -443,7 +443,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                 </div>
                               </div>
 
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-neutral-800 text-zinc-300 border border-neutral-700 capitalize shrink-0">
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-neutral-800 text-zinc-300 border  capitalize shrink-0">
                                 {lead.estado || 'nuevo'}
                               </span>
                             </div>
@@ -480,7 +480,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               ) : null}
 
                               {lead.notas && (
-                                <p className="text-[11px] text-zinc-400 line-clamp-2 bg-black/20 p-1.5 rounded-lg border border-neutral-800 mt-1">
+                                <p className="text-[11px] text-zinc-400 line-clamp-2 bg-black/20 p-1.5 rounded-[var(--r-s)] border  mt-1">
                                   {lead.notas}
                                 </p>
                               )}
@@ -488,15 +488,15 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                           </div>
 
                           {/* Card Actions */}
-                          <div className="mt-3.5 pt-2.5 border-t border-neutral-800/80 flex items-center justify-between gap-2">
+                          <div className="mt-3.5 pt-2.5 border-t /80 flex items-center justify-between gap-2">
                             <button
                               type="button"
                               disabled={isProcessing}
                               onClick={() => handleMergeGroup(group, lead.id)}
-                              className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
+                              className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs ${
                                 isSuggested
-                                  ? 'bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200]'
-                                  : 'bg-neutral-800 hover:bg-neutral-700 text-zinc-200 border border-neutral-700'
+                                  ? 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--acc-ink)]'
+                                  : 'bg-neutral-800 hover:bg-neutral-700 text-zinc-200 border '
                               }`}
                               title="Conserva este lead y añade todos los teléfonos, notas y datos de los demás"
                             >
@@ -508,7 +508,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               type="button"
                               disabled={isProcessing}
                               onClick={() => handleDeleteSingleLead(lead.id, lead.nombre_sala)}
-                              className="p-1.5 rounded-lg text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 transition cursor-pointer"
+                              className="p-1.5 rounded-[var(--r-s)] text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 transition cursor-pointer"
                               title="Eliminar solo este registro individual"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -527,8 +527,8 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
           <div
             className={`p-3 sm:px-5 border-t flex items-center justify-between text-xs ${
               isStitchLight
-                ? 'bg-slate-50 border-slate-200 text-slate-500'
-                : 'bg-[#121215] border-neutral-800 text-zinc-400'
+                ? 'bg-[var(--bg)]  text-[var(--ink-2)]'
+                : 'bg-[var(--surface)]  text-zinc-400'
             }`}
           >
             <span>
@@ -537,7 +537,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-xl font-medium bg-neutral-800 hover:bg-neutral-700 text-zinc-200 transition cursor-pointer border border-neutral-700"
+              className="px-4 py-1.5 rounded-[var(--r-m)] font-medium bg-neutral-800 hover:bg-neutral-700 text-zinc-200 transition cursor-pointer border "
             >
               Cerrar
             </button>

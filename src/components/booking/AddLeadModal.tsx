@@ -95,8 +95,8 @@ export function AddLeadModal({
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
         <div
-          className={`w-full max-w-lg p-5 rounded-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
-            isStitchLight ? 'bg-white text-slate-800' : 'bg-[#18181b] text-[#e5e2e1]'
+          className={`w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
+            isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#18181b] text-[var(--ink)]'
           }`}
         >
         <div className="flex items-center justify-between pb-3">
@@ -110,7 +110,7 @@ export function AddLeadModal({
             )}
             <h3
               className={`text-sm font-bold font-display uppercase tracking-widest ${
-                isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'
+                isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'
               }`}
             >
               {sectionTab === 'medios'
@@ -122,7 +122,7 @@ export function AddLeadModal({
           </div>
           <button
             onClick={onClose}
-            className="text-neutral-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+            className="text-text-[var(--ink-2)] hover:text-white p-1 rounded-[var(--r-s)] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -142,17 +142,17 @@ export function AddLeadModal({
                 type="button"
                 onClick={onModalScrape}
                 disabled={isModalScraping || !newLeadData.nombre_sala}
-                className={`px-2 py-1 text-[10px] font-sans rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                className={`px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                   isStitchLight
                     ? 'bg-[#d1b375]/15 hover:bg-[#d1b375]/15 text-[#d1b375] disabled:opacity-50'
-                    : 'bg-[#f2ca50]/10 hover:bg-[#f2ca50]/20 text-[#f2ca50] disabled:opacity-50'
+                    : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'
                 }`}
                 title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
               >
                 {isModalScraping ? (
                   <Loader2 className="w-3 h-3 animate-spin text-[#d1b375]/80" />
                 ) : (
-                  <Sparkles className="w-3 h-3 text-[#d1b375]/80 dark:text-[#f2ca50]" />
+                  <Sparkles className="w-3 h-3 text-[#d1b375]/80 dark:text-[var(--acc)]" />
                 )}
                 <span>{isModalScraping ? 'Buscando datos...' : '✨ Autocompletar con IA Scout'}</span>
               </button>
@@ -167,16 +167,16 @@ export function AddLeadModal({
               }
               value={newLeadData.nombre_sala}
               onChange={e => setNewLeadData(prev => ({ ...prev, nombre_sala: e.target.value }))}
-              className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+              className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                 isStitchLight
-                  ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
-                  : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                  ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                  : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
               }`}
             />
           </div>
 
           {/* Logo Selector */}
-          <div className="bg-zinc-900/60 p-3 rounded-xl border border-zinc-800 space-y-2.5">
+          <div className="bg-zinc-900/60 p-3 rounded-[var(--r-m)] border border-zinc-800 space-y-2.5">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
                 Icono o Logo del Medio / Sala
@@ -186,13 +186,13 @@ export function AddLeadModal({
                   type="button"
                   onClick={handleAutoSearchLogo}
                   disabled={isSearchingLogo || !newLeadData.nombre_sala}
-                  className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] rounded-lg flex items-center gap-1.5 font-bold transition-all border border-amber-500/40 cursor-pointer disabled:opacity-50"
+                  className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border /40 cursor-pointer disabled:opacity-50"
                 >
                   <Sparkles className="w-3 h-3 text-amber-400" />
                   <span>{isSearchingLogo ? 'Buscando...' : '🔍 Buscar Logo'}</span>
                 </button>
-                <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[10px] rounded-lg flex items-center gap-1.5 font-bold transition-all border border-zinc-700">
-                  <Upload className="w-3 h-3 text-[#f2ca50]" />
+                <label className="cursor-pointer px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border border-zinc-700">
+                  <Upload className="w-3 h-3 text-[var(--acc)]" />
                   <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir Logo'}</span>
                   <input
                     type="file"
@@ -214,11 +214,11 @@ export function AddLeadModal({
             </div>
 
             {newLeadData.imagen_url ? (
-              <div className="flex items-center gap-3 p-2 bg-zinc-950 rounded-lg border border-zinc-800">
+              <div className="flex items-center gap-3 p-2 bg-zinc-950 rounded-[var(--r-s)] border border-zinc-800">
                 <img
                   src={newLeadData.imagen_url}
                   alt="Logo"
-                  className="w-10 h-10 rounded-lg object-cover border border-[#f2ca50]/50 shrink-0"
+                  className="w-10 h-10 rounded-[var(--r-s)] object-cover border border-[var(--acc)]/50 shrink-0"
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] text-zinc-300 font-bold truncate">
@@ -244,9 +244,9 @@ export function AddLeadModal({
                         key={emoji}
                         type="button"
                         onClick={() => setNewLeadData(prev => ({ ...prev, icono: emoji }))}
-                        className={`w-7 h-7 rounded-lg text-sm flex items-center justify-center transition-all cursor-pointer ${
+                        className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
                           newLeadData.icono === emoji
-                            ? 'bg-[#f2ca50] text-[#3c2f00] font-bold scale-110 shadow-md border border-[#f2ca50]'
+                            ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold scale-110 shadow-md border border-[var(--acc)]'
                             : 'bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700'
                         }`}
                       >
@@ -262,7 +262,7 @@ export function AddLeadModal({
           {/* Progress / Status Banner */}
           {isModalScraping && (
             <div
-              className={`p-2.5 rounded-lg text-[10px] font-sans flex items-center gap-2 animate-pulse ${
+              className={`p-2.5 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 animate-pulse ${
                 isStitchLight ? 'bg-[#d1b375]/15 text-[#d1b375]' : 'bg-[#1f1a10]/30 text-[#d1b375]'
               }`}
             >
@@ -272,13 +272,13 @@ export function AddLeadModal({
           )}
 
           {modalScrapeError && (
-            <div className="p-2.5 rounded-lg text-[10px] font-sans text-rose-400 bg-rose-500/15">
+            <div className="p-2.5 rounded-[var(--r-s)] text-[10px] font-sans text-rose-400 bg-rose-500/15">
               ⚠️ {modalScrapeError}
             </div>
           )}
 
           {modalScrapeSuccessMsg && (
-            <div className="p-2.5 rounded-lg text-[10px] font-sans text-[#10b981] bg-[#10b981]/15">
+            <div className="p-2.5 rounded-[var(--r-s)] text-[10px] font-sans text-[#10b981] bg-[#10b981]/15">
               {modalScrapeSuccessMsg}
             </div>
           )}
@@ -292,10 +292,10 @@ export function AddLeadModal({
               placeholder="Ej. Calle San Vicente Ferrer 33"
               value={newLeadData.direccion || ''}
               onChange={e => setNewLeadData(prev => ({ ...prev, direccion: e.target.value }))}
-              className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+              className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                 isStitchLight
-                  ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
-                  : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                  ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                  : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
               }`}
             />
           </div>
@@ -310,10 +310,10 @@ export function AddLeadModal({
                 placeholder="Ej. Madrid, Barcelona"
                 value={newLeadData.ciudad}
                 onChange={e => setNewLeadData(prev => ({ ...prev, ciudad: e.target.value }))}
-                className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                   isStitchLight
-                    ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
-                    : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                    ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                    : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
                 }`}
               />
             </div>
@@ -326,10 +326,10 @@ export function AddLeadModal({
                 placeholder="Ej. Nacional, Cataluña, Andalucía"
                 value={newLeadData.region}
                 onChange={e => setNewLeadData(prev => ({ ...prev, region: e.target.value }))}
-                className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                   isStitchLight
-                    ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
-                    : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                    ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                    : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
                 }`}
               />
             </div>
@@ -345,10 +345,10 @@ export function AddLeadModal({
                 placeholder="info@salanazcaconciertos.com"
                 value={newLeadData.email_contacto}
                 onChange={e => setNewLeadData(prev => ({ ...prev, email_contacto: e.target.value }))}
-                className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                   isStitchLight
-                    ? 'bg-slate-50 text-[#e5e2e1] focus:ring-indigo-500'
-                    : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                    ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                    : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
                 }`}
               />
             </div>
@@ -362,10 +362,10 @@ export function AddLeadModal({
                 placeholder="info@magnetikproducciones.com"
                 value={newLeadData.email_secundario || ''}
                 onChange={e => setNewLeadData(prev => ({ ...prev, email_secundario: e.target.value }))}
-                className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                   isStitchLight
-                    ? 'bg-slate-50 text-[#e5e2e1] focus:ring-indigo-500'
-                    : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                    ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                    : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
                 }`}
               />
             </div>
@@ -379,10 +379,10 @@ export function AddLeadModal({
                 <select
                   value={newLeadData.genero}
                   onChange={e => setNewLeadData(prev => ({ ...prev, genero: e.target.value }))}
-                  className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                     isStitchLight
-                      ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
-                      : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                      ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                      : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
                   }`}
                 >
                   <option value="Radio">Radio / Programa</option>
@@ -397,10 +397,10 @@ export function AddLeadModal({
                   onChange={e =>
                     setNewLeadData(prev => ({ ...prev, tipo: e.target.value as LeadType }))
                   }
-                  className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                     isStitchLight
-                      ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
-                      : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                      ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                      : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
                   }`}
                 >
                   <option value="sala">Sala de Conciertos</option>
@@ -425,10 +425,10 @@ export function AddLeadModal({
                 placeholder="Ej. Ska-P, Boikot, Zoo, La Raíz..."
                 value={newLeadData.roster || ''}
                 onChange={e => setNewLeadData(prev => ({ ...prev, roster: e.target.value }))}
-                className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                   isStitchLight
-                    ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
-                    : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                    ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                    : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
                 }`}
               />
             </div>
@@ -449,10 +449,10 @@ export function AddLeadModal({
               }
               value={newLeadData.pitch_generado}
               onChange={e => setNewLeadData(prev => ({ ...prev, pitch_generado: e.target.value }))}
-              className={`w-full rounded-xl p-3 text-[10px] focus:outline-none font-sans ${
+              className={`w-full rounded-[var(--r-m)] p-3 text-[10px] focus:outline-none font-sans ${
                 isStitchLight
-                  ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
-                  : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                  ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                  : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
               }`}
             />
           </div>
@@ -466,10 +466,10 @@ export function AddLeadModal({
               placeholder="Ej. Redactor jefe Bruno, programa nocturno, etc."
               value={newLeadData.notas}
               onChange={e => setNewLeadData(prev => ({ ...prev, notas: e.target.value }))}
-              className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+              className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${
                 isStitchLight
-                  ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
-                  : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                  ? 'bg-[var(--bg)] text-[var(--ink)] focus:ring-indigo-500'
+                  : 'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'
               }`}
             />
           </div>
@@ -478,20 +478,20 @@ export function AddLeadModal({
             <button
               type="button"
               onClick={onClose}
-              className={`px-2 py-1 rounded-xl font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+              className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
                 isStitchLight
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                  : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-400'
+                  ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+                  : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)]'
               }`}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className={`px-4 py-2 rounded-xl font-sans text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg ${
+              className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg ${
                 isStitchLight
                   ? 'bg-sky-500 hover:bg-sky-400 text-white'
-                  : 'bg-[#f2ca50] hover:bg-[#e2ba40] text-[#3c2f00]'
+                  : 'bg-[var(--acc)] hover:bg-[#e2ba40] text-[var(--acc-ink)]'
               }`}
             >
               {sectionTab === 'medios' ? 'Guardar Medio' : sectionTab === 'grupos' ? 'Guardar Contacto' : 'Guardar Sala'}

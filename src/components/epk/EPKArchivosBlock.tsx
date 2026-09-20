@@ -62,8 +62,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LOGO DE LA BANDA */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
+          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b  pb-3">
             <ImageIcon className="w-5 h-5" /> Logo Oficial de la Banda
           </h3>
 
@@ -73,25 +73,25 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 <img
                   src={config.logoUrl}
                   alt="Logo de la banda"
-                  className="w-28 h-28 rounded-2xl object-contain p-1 border-2 border-amber-500/60 shadow-lg bg-slate-950"
+                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 shadow-lg bg-slate-950"
                 />
               ) : isBakandeya ? (
                 <img
                   src="/logo_bakandeya_bueno_sin_fondo.png"
                   alt="Bakandeya Logo"
-                  className="w-28 h-28 rounded-2xl object-contain p-1 border-2 border-amber-500/60 shadow-lg bg-slate-950"
+                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 border-2 /60 shadow-lg bg-slate-950"
                 />
               ) : (
-                <div className="w-28 h-28 rounded-2xl border-2 border-dashed border-slate-700 bg-slate-950 flex flex-col items-center justify-center text-slate-500 p-2 text-center">
-                  <ImageIcon className="w-8 h-8 text-slate-600 mb-1" />
-                  <span className="text-[10px] font-medium text-slate-400">Sin Logo</span>
+                <div className="w-28 h-28 rounded-[var(--r-l)] border-2 border-dashed  bg-slate-950 flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
+                  <ImageIcon className="w-8 h-8 text-[var(--ink-2)] mb-1" />
+                  <span className="text-[10px] font-medium text-[var(--ink-3)]">Sin Logo</span>
                 </div>
               )}
             </div>
 
             <div className="space-y-3 flex-1 w-full">
               <div className="flex items-center gap-2">
-                <label className="flex-1 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md">
+                <label className="flex-1 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 transition shadow-md">
                   {isUploadingLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                   <span>{isUploadingLogo ? 'Subiendo Logo...' : 'Subir Logo (PNG/JPG)'}</span>
                   <input
@@ -107,7 +107,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   <button
                     type="button"
                     onClick={() => setConfig({ ...config, logoUrl: '' })}
-                    className="p-2.5 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl border border-slate-700 transition cursor-pointer"
+                    className="p-2.5 bg-[var(--surface)] hover:bg-red-500/20 text-[var(--ink-3)] hover:text-red-400 rounded-[var(--r-m)] border  transition cursor-pointer"
                     title="Eliminar logo"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -116,13 +116,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-slate-400">O introduce URL de la imagen:</label>
+                <label className="text-[11px] font-semibold text-[var(--ink-3)]">O introduce URL de la imagen:</label>
                 <input
                   type="text"
                   value={config.logoUrl || ''}
                   onChange={e => setConfig({ ...config, logoUrl: e.target.value })}
                   placeholder="https://ejemplo.com/logo.jpg"
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-1.5 text-xs font-mono text-slate-200 outline-none"
+                  className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-mono text-slate-200 outline-none"
                 />
               </div>
             </div>
@@ -130,16 +130,16 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
         </div>
 
         {/* DOSSIER EN PDF O DOCUMENTO OFICIAL */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
+          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b  pb-3">
             <FileDown className="w-5 h-5" /> Dossier en PDF o Documento Oficial
           </h3>
 
           {config.dossierPdfUrl ? (
-            <div className="p-4 bg-slate-950 border border-amber-500/40 rounded-xl space-y-3">
+            <div className="p-4 bg-slate-950 border /40 rounded-[var(--r-m)] space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                  <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-500/20 border /30 flex items-center justify-center text-amber-400 shrink-0">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="truncate">
@@ -153,24 +153,24 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 <button
                   type="button"
                   onClick={() => setConfig({ ...config, dossierPdfUrl: '', dossierPdfName: '' })}
-                  className="p-2 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-lg border border-slate-700 transition shrink-0 cursor-pointer"
+                  className="p-2 bg-[var(--surface)] hover:bg-red-500/20 text-[var(--ink-3)] hover:text-red-400 rounded-[var(--r-s)] border  transition shrink-0 cursor-pointer"
                   title="Eliminar dossier"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="flex items-center gap-2 pt-1 border-t border-slate-800/80">
+              <div className="flex items-center gap-2 pt-1 border-t /80">
                 <a
                   href={config.dossierPdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition"
+                  className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 border /40 text-amber-300 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
                 >
                   <Download className="w-3.5 h-3.5" /> Descargar / Abrir Dossier
                 </a>
 
-                <label className="cursor-pointer py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
+                <label className="cursor-pointer py-1.5 px-3 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] font-semibold text-xs rounded-[var(--r-s)] border  flex items-center gap-1.5 transition">
                   <Upload className="w-3.5 h-3.5 text-amber-400" /> Cambiar
                   <input
                     type="file"
@@ -183,16 +183,16 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               </div>
             </div>
           ) : (
-            <div className="p-5 bg-slate-950 border border-dashed border-slate-800 rounded-xl text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 mx-auto">
+            <div className="p-5 bg-slate-950 border border-dashed  rounded-[var(--r-m)] text-center space-y-3">
+              <div className="w-12 h-12 rounded-full bg-[var(--surface)] border  flex items-center justify-center text-[var(--ink-3)] mx-auto">
                 <FileDown className="w-6 h-6 text-amber-400" />
               </div>
               <div className="space-y-1">
                 <p className="text-xs font-bold text-white">Sube aquí el Dossier Oficial (PDF o Word)</p>
-                <p className="text-[11px] text-slate-400">PDF, Word o TXT. Estará listo para el envío automático en correos.</p>
+                <p className="text-[11px] text-[var(--ink-3)]">PDF, Word o TXT. Estará listo para el envío automático en correos.</p>
               </div>
 
-              <label className="inline-flex cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs items-center gap-2 transition shadow-md">
+              <label className="inline-flex cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition shadow-md">
                 {isUploadingDossier ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                 <span>{isUploadingDossier ? 'Subiendo Documento...' : 'Seleccionar PDF / Dossier'}</span>
                 <input
@@ -207,7 +207,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
           )}
 
           <div className="space-y-1 pt-1">
-            <label className="text-[11px] font-semibold text-slate-400">
+            <label className="text-[11px] font-semibold text-[var(--ink-3)]">
               O enlace externo al Dossier (Google Drive, Dropbox, etc.):
             </label>
             <input
@@ -221,59 +221,59 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 })
               }
               placeholder="https://drive.google.com/file/d/..."
-              className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-1.5 text-xs font-mono text-slate-200 outline-none"
+              className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-mono text-slate-200 outline-none"
             />
           </div>
         </div>
 
         {/* RIDER TÉCNICO */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <div className="flex items-center justify-between border-b  pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
               <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca Interna)
             </h3>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border /20 px-2.5 py-1 rounded-full">
               Solo visible aquí
             </span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--ink-3)]">
             Este texto y documento no se muestra en el enlace público. Úsalo como biblioteca para guardarlo aquí y enviarlo a las salas cuando sea necesario.
           </p>
 
           <div className="space-y-3">
             <label className="text-xs font-bold text-white block">Archivo de Rider Técnico (PDF)</label>
             {config.riderPdfUrl ? (
-              <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+              <div className="p-3 bg-slate-950 border  rounded-[var(--r-m)] space-y-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3 overflow-hidden">
-                    <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-500/10 border /20 text-amber-500 flex items-center justify-center shrink-0">
                       <FileDown className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs font-bold text-white truncate">{config.riderPdfName || 'Archivo subido'}</p>
-                      <p className="text-[10px] text-slate-400 truncate mt-0.5">PDF guardado correctamente</p>
+                      <p className="text-[10px] text-[var(--ink-3)] truncate mt-0.5">PDF guardado correctamente</p>
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={() => setConfig({ ...config, riderPdfUrl: '', riderPdfName: '' })}
-                    className="p-1.5 hover:bg-slate-800 text-slate-400 hover:text-red-400 rounded-lg transition shrink-0 cursor-pointer"
+                    className="p-1.5 hover:bg-[var(--surface)] text-[var(--ink-3)] hover:text-red-400 rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
                     title="Eliminar PDF"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="flex items-center gap-2 pt-1 border-t border-slate-800/80">
+                <div className="flex items-center gap-2 pt-1 border-t /80">
                   <a
                     href={config.riderPdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition"
+                    className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 border /40 text-amber-300 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
                   >
                     <Download className="w-3.5 h-3.5" /> Descargar / Abrir Rider
                   </a>
 
-                  <label className="cursor-pointer py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
+                  <label className="cursor-pointer py-1.5 px-3 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] font-semibold text-xs rounded-[var(--r-s)] border  flex items-center gap-1.5 transition">
                     <Upload className="w-3.5 h-3.5 text-amber-400" /> Cambiar
                     <input
                       type="file"
@@ -286,15 +286,15 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="p-5 bg-slate-950 border border-dashed border-slate-800 rounded-xl text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 mx-auto">
+              <div className="p-5 bg-slate-950 border border-dashed  rounded-[var(--r-m)] text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-[var(--surface)] border  flex items-center justify-center text-[var(--ink-3)] mx-auto">
                   <FileDown className="w-6 h-6 text-amber-400" />
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-bold text-white">Sube aquí el Rider Técnico (PDF)</p>
                 </div>
 
-                <label className="inline-flex cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs items-center gap-2 transition shadow-md">
+                <label className="inline-flex cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition shadow-md">
                   {isUploadingRider ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                   <span>{isUploadingRider ? 'Subiendo Documento...' : 'Seleccionar PDF / Rider'}</span>
                   <input
@@ -309,28 +309,28 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             )}
 
             <div className="pt-2 space-y-1">
-              <label className="text-[11px] font-semibold text-slate-400">Rider Técnico (Texto)</label>
+              <label className="text-[11px] font-semibold text-[var(--ink-3)]">Rider Técnico (Texto)</label>
               <textarea
                 value={config.riderTecnico || ''}
                 onChange={e => setConfig({ ...config, riderTecnico: e.target.value })}
                 placeholder="Canales, microfonía, DIs, etc..."
                 rows={4}
-                className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors font-mono leading-relaxed resize-none"
+                className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-4 py-3 text-sm text-slate-200 outline-none transition-colors font-mono leading-relaxed resize-none"
               />
             </div>
           </div>
         </div>
 
         {/* GALERÍA DE IMAGEN & PRENSA */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b  pb-3">
             <ImageIcon className="w-5 h-5" /> Galería de Imagen &amp; Prensa
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--ink-3)]">
             Fotos reales de directo o sesión de prensa. Es lo primero que ve alguien que nunca os ha visto tocar.
           </p>
           <label
-            className={`cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs inline-flex items-center justify-center gap-2 transition shadow-md ${
+            className={`cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs inline-flex items-center justify-center gap-2 transition shadow-md ${
               subiendoGaleria ? 'opacity-70 pointer-events-none' : ''
             }`}
           >
@@ -350,7 +350,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             />
           </label>
           {(config.bandPhotos || []).length === 0 ? (
-            <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
+            <div className="rounded-[var(--r-m)] border  bg-slate-950 p-4 text-xs text-[var(--ink-3)]">
               Todavía no hay fotos de directo o prensa.
             </div>
           ) : (
@@ -358,13 +358,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               {(config.bandPhotos || []).filter(url => Boolean(url && url.trim() !== '')).map((url, idx) => (
                 <div
                   key={url + idx}
-                  className="group relative aspect-video rounded-xl overflow-hidden border border-slate-800 bg-slate-950"
+                  className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden border  bg-slate-950"
                 >
                   <img src={url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
                   <button
                     type="button"
                     onClick={() => quitarFotoGaleria(url)}
-                    className="absolute top-1.5 right-1.5 p-1.5 bg-slate-950/80 text-slate-300 hover:text-red-400 rounded-lg border border-slate-700 opacity-0 group-hover:opacity-100 transition cursor-pointer"
+                    className="absolute top-1.5 right-1.5 p-1.5 bg-slate-950/80 text-[var(--ink-3)] hover:text-red-400 rounded-[var(--r-s)] border  opacity-0 group-hover:opacity-100 transition cursor-pointer"
                     title="Quitar foto"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

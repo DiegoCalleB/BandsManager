@@ -33,7 +33,7 @@ export function GlobalCampaignBar({
   const firstTargetDate = campaign.targetDates?.[0];
 
   return (
-    <div className="w-full mb-2 sm:mb-3 rounded-xl bg-gradient-to-r from-[#1b122e] via-[#141022] to-[#121110] border border-purple-500/30 p-1.5 sm:p-2.5 shadow-sm shadow-purple-950/20 animate-fade-in relative overflow-hidden">
+    <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-gradient-to-r from-[#1b122e] via-[#141022] to-[#121110] border border-purple-500/30 p-1.5 sm:p-2.5 shadow-sm shadow-purple-950/20 animate-fade-in relative overflow-hidden">
       {/* Background ambient glow */}
       <div 
         className="absolute -right-10 -top-10 w-28 h-28 rounded-full blur-3xl opacity-15 pointer-events-none"
@@ -67,7 +67,7 @@ export function GlobalCampaignBar({
             </div>
 
             {/* Desktop / Tablet Inline details */}
-            <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-neutral-300 mt-0.5">
+            <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-text-[var(--ink-3)] mt-0.5">
               <span className="inline-flex items-center gap-1 text-sky-300 font-medium truncate max-w-[200px]">
                 <MapPin className="w-2.5 h-2.5 text-sky-400 shrink-0" />
                 {campaign.targetCities?.join(', ') || 'Todas las ciudades'}
@@ -89,7 +89,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={() => setIsMobileExpanded(prev => !prev)}
-            className="sm:hidden p-1 text-neutral-400 hover:text-purple-300 transition-colors shrink-0"
+            className="sm:hidden p-1 text-text-[var(--ink-2)] hover:text-purple-300 transition-colors shrink-0"
             title={isMobileExpanded ? "Ocultar detalles" : "Ver ciudades y fechas"}
           >
             {isMobileExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -149,7 +149,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onOpenManager}
-            className="p-1 rounded-md bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700/60 transition-colors shrink-0"
+            className="p-1 rounded-md bg-bg-[var(--surface)]/80 hover:bg-neutral-800 text-text-[var(--ink-3)] hover:text-white border /60 transition-colors shrink-0"
             title="Gestionar o cambiar campaña activa"
           >
             <Settings2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -159,7 +159,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onDeactivate}
-            className="p-1 rounded-md bg-neutral-900/80 hover:bg-red-950/60 text-neutral-400 hover:text-red-300 border border-neutral-700/60 hover:border-red-500/40 transition-colors shrink-0"
+            className="p-1 rounded-md bg-bg-[var(--surface)]/80 hover:bg-red-950/60 text-text-[var(--ink-2)] hover:text-red-300 border /60 hover:border-red-500/40 transition-colors shrink-0"
             title="Desactivar modo campaña (volver a modo general)"
           >
             <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -171,12 +171,12 @@ export function GlobalCampaignBar({
 
       {/* Mobile Collapsible Details */}
       {isMobileExpanded && (
-        <div className="sm:hidden pt-2 mt-2 border-t border-purple-500/20 text-[10px] text-neutral-300 flex flex-col gap-1 animate-fade-in relative z-10">
+        <div className="sm:hidden pt-2 mt-2 border-t border-purple-500/20 text-[10px] text-text-[var(--ink-3)] flex flex-col gap-1 animate-fade-in relative z-10">
           <div className="flex items-center gap-1.5 text-sky-300 font-medium">
             <MapPin className="w-3 h-3 text-sky-400 shrink-0" />
             <span>{campaign.targetCities?.join(', ') || 'Todas las ciudades'}</span>
           </div>
-          <div className="flex items-center justify-between text-neutral-300">
+          <div className="flex items-center justify-between text-text-[var(--ink-3)]">
             <span className="inline-flex items-center gap-1 text-amber-300 font-mono">
               <Users className="w-3 h-3 text-amber-400 shrink-0" />
               {campaign.minCapacity} - {campaign.maxCapacity} pax

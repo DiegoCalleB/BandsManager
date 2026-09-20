@@ -50,7 +50,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
 
       {/* Cifras Clave de Impacto */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="p-3 rounded-xl bg-zinc-900 border border-white/10 space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 space-y-1">
           <label className="block text-[11px] font-medium text-zinc-400 flex items-center gap-1">
             <TrendingUp className="w-3.5 h-3.5 text-emerald-400" /> Oyentes Mensuales Spotify
           </label>
@@ -59,11 +59,11 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
             value={cifrasOyentes}
             onChange={(e) => setCifrasOyentes(e.target.value)}
             placeholder="Ej. 12.500 oyentes / mes"
-            className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-800 border border-white/5 text-white text-xs focus:outline-none focus:border-amber-400"
+            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border border-white/5 text-white text-xs focus:outline-none focus:"
           />
         </div>
 
-        <div className="p-3 rounded-xl bg-zinc-900 border border-white/10 space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 space-y-1">
           <label className="block text-[11px] font-medium text-zinc-400 flex items-center gap-1">
             <Radio className="w-3.5 h-3.5 text-amber-400" /> Conciertos Realizados
           </label>
@@ -72,11 +72,11 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
             value={cifrasDirectos}
             onChange={(e) => setCifrasDirectos(e.target.value)}
             placeholder="Ej. +35 directos en 2025"
-            className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-800 border border-white/5 text-white text-xs focus:outline-none focus:border-amber-400"
+            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border border-white/5 text-white text-xs focus:outline-none focus:"
           />
         </div>
 
-        <div className="p-3 rounded-xl bg-zinc-900 border border-white/10 space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 space-y-1">
           <label className="block text-[11px] font-medium text-zinc-400 flex items-center gap-1">
             <Users className="w-3.5 h-3.5 text-pink-400" /> Comunidad / Seguidores
           </label>
@@ -85,7 +85,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
             value={cifrasComunidad}
             onChange={(e) => setCifrasComunidad(e.target.value)}
             placeholder="Ej. +4.800 en Instagram & TikTok"
-            className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-800 border border-white/5 text-white text-xs focus:outline-none focus:border-amber-400"
+            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border border-white/5 text-white text-xs focus:outline-none focus:"
           />
         </div>
       </div>
@@ -100,7 +100,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
           value={festivalesDestacados}
           onChange={(e) => setFestivalesDestacados(e.target.value)}
           placeholder="Ej. Sonorama Ribera 2024, Sala Sol (Madrid), Finalistas Villa de Madrid, Monkey Week..."
-          className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
         />
       </div>
 
@@ -115,7 +115,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
             {pressQuotes.map((q) => (
               <div
                 key={q.id}
-                className="flex items-start justify-between p-3 rounded-xl bg-zinc-900 border border-white/5 text-xs"
+                className="flex items-start justify-between p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/5 text-xs"
               >
                 <div>
                   <p className="text-zinc-200 italic mb-1">"{q.texto}"</p>
@@ -133,7 +133,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
           </div>
         )}
 
-        <div className="p-3 rounded-xl bg-[#19191d] border border-white/10 space-y-2.5">
+        <div className="p-3 rounded-[var(--r-m)] bg-[#19191d] border border-white/10 space-y-2.5">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             <div className="sm:col-span-2">
               <input
@@ -141,7 +141,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
                 value={newQuoteText}
                 onChange={(e) => setNewQuoteText(e.target.value)}
                 placeholder="Cita destacada (ej. Una de las propuestas más frescas del año...)"
-                className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
               />
             </div>
             <div>
@@ -150,7 +150,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
                 value={newQuoteMedia}
                 onChange={(e) => setNewQuoteMedia(e.target.value)}
                 placeholder="Medio (ej. MondoSonoro, Radio 3)"
-                className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
               />
             </div>
           </div>
@@ -159,7 +159,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
               type="button"
               onClick={onAddQuote}
               disabled={!newQuoteText.trim() || !newQuoteMedia.trim()}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
             >
               <Plus className="w-3.5 h-3.5" /> Añadir Cita
             </button>

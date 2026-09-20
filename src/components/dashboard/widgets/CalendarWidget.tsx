@@ -359,11 +359,11 @@ export function CalendarWidget({
       {viewMode === 'mini_month' && (
         <div className="space-y-3">
           {/* Calendar Controls */}
-          <div className="flex items-center justify-between bg-[#121214] p-2.5 rounded-xl border border-neutral-800">
+          <div className="flex items-center justify-between bg-[#121214] p-2.5 rounded-[var(--r-m)] border ">
             <button
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month - 1, 1))}
-              className="p-1.5 text-neutral-400 hover:text-amber-400 rounded-lg hover:bg-neutral-800 cursor-pointer"
+              className="p-1.5 text-text-[var(--ink-2)] hover:text-amber-400 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -373,7 +373,7 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month + 1, 1))}
-              className="p-1.5 text-neutral-400 hover:text-amber-400 rounded-lg hover:bg-neutral-800 cursor-pointer"
+              className="p-1.5 text-text-[var(--ink-2)] hover:text-amber-400 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -408,14 +408,14 @@ export function CalendarWidget({
                   type="button"
                   key={dateKey}
                   onClick={() => setSelectedDayStr(dateKey === selectedDayStr ? null : dateKey)}
-                  className={`p-1.5 min-h-[38px] rounded-lg border text-xs flex flex-col items-center justify-between transition-all cursor-pointer relative ${
+                  className={`p-1.5 min-h-[38px] rounded-[var(--r-s)] border text-xs flex flex-col items-center justify-between transition-all cursor-pointer relative ${
                     isSelected
-                      ? 'bg-amber-500/20 border-amber-500 text-amber-200 font-bold shadow-xs'
+                      ? 'bg-amber-500/20  text-amber-200 font-bold shadow-xs'
                       : isToday
-                      ? 'bg-stone-800 border-amber-500/40 text-amber-400 font-black'
+                      ? 'bg-stone-800 /40 text-amber-400 font-black'
                       : dayEvents.length > 0
-                      ? 'bg-[#121214] border-neutral-700/80 text-neutral-100 hover:border-amber-500/30'
-                      : 'bg-[#121214]/50 border-neutral-800/40 text-neutral-400 hover:bg-stone-900'
+                      ? 'bg-[#121214] /80 text-bg-[var(--sunken)] hover:/30'
+                      : 'bg-[#121214]/50 /40 text-text-[var(--ink-2)] hover:bg-stone-900'
                   }`}
                 >
                   <span className="leading-none">{dayNum}</span>
@@ -432,17 +432,17 @@ export function CalendarWidget({
 
           {/* Details for selected day if clicked */}
           {selectedDayStr && (
-            <div className="p-3 bg-[#121214] rounded-xl border border-amber-500/30 text-xs font-mono space-y-2">
-              <div className="flex items-center justify-between text-neutral-300 pb-1.5 border-b border-neutral-800">
+            <div className="p-3 bg-[#121214] rounded-[var(--r-m)] border /30 text-xs font-mono space-y-2">
+              <div className="flex items-center justify-between text-text-[var(--ink-3)] pb-1.5 border-b ">
                 <span className="font-bold text-amber-300">Eventos para {selectedDayStr}:</span>
-                <button type="button" onClick={() => setSelectedDayStr(null)} className="text-neutral-500 hover:text-neutral-300">✕</button>
+                <button type="button" onClick={() => setSelectedDayStr(null)} className="text-neutral-500 hover:text-text-[var(--ink-3)]">✕</button>
               </div>
               {(eventsByDayMap.get(selectedDayStr) || []).length > 0 ? (
                 (eventsByDayMap.get(selectedDayStr) || []).map(evt => (
                   <div
                     key={evt.id}
                     onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: evt.id, selectedDate: evt.dateStr })}
-                    className="p-2 rounded-lg bg-stone-900 border border-neutral-800 hover:border-amber-500/40 flex items-center justify-between cursor-pointer"
+                    className="p-2 rounded-[var(--r-s)] bg-stone-900 border  hover:/40 flex items-center justify-between cursor-pointer"
                   >
                     <div>
                       <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
@@ -450,14 +450,14 @@ export function CalendarWidget({
                       }`}>
                         {evt.type}
                       </span>
-                      <p className="font-bold text-neutral-100 mt-1">{evt.title}</p>
-                      <p className="text-neutral-400 text-[11px]">{evt.location}</p>
+                      <p className="font-bold text-bg-[var(--sunken)] mt-1">{evt.title}</p>
+                      <p className="text-text-[var(--ink-2)] text-[11px]">{evt.location}</p>
                     </div>
                     <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
                   </div>
                 ))
               ) : (
-                <p className="text-neutral-400 italic">No hay eventos programados para este día.</p>
+                <p className="text-text-[var(--ink-2)] italic">No hay eventos programados para este día.</p>
               )}
             </div>
           )}
@@ -467,7 +467,7 @@ export function CalendarWidget({
       {/* VISTA 3: AGENDA SEMANAL COMPACTA */}
       {viewMode === 'weekly_grid' && (
         <div className="space-y-3">
-          <p className="text-xs font-mono text-neutral-400">Próximos 7 días de actividad programada:</p>
+          <p className="text-xs font-mono text-text-[var(--ink-2)]">Próximos 7 días de actividad programada:</p>
           <div className="grid grid-cols-1 sm:grid-cols-7 gap-2">
             {Array.from({ length: 7 }).map((_, idx) => {
               const date = new Date();
@@ -480,14 +480,14 @@ export function CalendarWidget({
               return (
                 <div
                   key={dateStr}
-                  className={`p-2.5 rounded-xl border text-xs font-mono flex flex-col justify-between min-h-[90px] transition-all ${
+                  className={`p-2.5 rounded-[var(--r-m)] border text-xs font-mono flex flex-col justify-between min-h-[90px] transition-all ${
                     dayEvts.length > 0
-                      ? 'bg-[#121214] border-amber-500/40'
-                      : 'bg-[#121214]/60 border-neutral-800'
+                      ? 'bg-[#121214] /40'
+                      : 'bg-[#121214]/60 '
                   }`}
                 >
-                  <div className="flex items-center justify-between pb-1 border-b border-neutral-800">
-                    <span className="uppercase text-[10px] text-neutral-400 font-bold">{dayName}</span>
+                  <div className="flex items-center justify-between pb-1 border-b ">
+                    <span className="uppercase text-[10px] text-text-[var(--ink-2)] font-bold">{dayName}</span>
                     <span className="font-bold text-amber-400">{dayNum}</span>
                   </div>
 

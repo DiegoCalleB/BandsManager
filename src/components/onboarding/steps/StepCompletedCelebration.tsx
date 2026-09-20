@@ -79,7 +79,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
       {/* Action Cards for EPK and Fans */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto pt-2">
         {/* EPK Card */}
-        <div className="p-5 rounded-2xl bg-zinc-900/90 border border-amber-500/30 shadow-lg space-y-3 relative overflow-hidden group">
+        <div className="p-5 rounded-[var(--r-l)] bg-zinc-900/90 border /30 shadow-lg space-y-3 relative overflow-hidden group">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Globe className="w-5 h-5 text-amber-400" />
@@ -99,14 +99,14 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
               href="/epk"
               target="_blank"
               rel="noreferrer"
-              className="flex-1 py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
             >
               <ExternalLink className="w-3.5 h-3.5" /> Ver Dossier EPK
             </a>
             <button
               type="button"
               onClick={() => copyToClipboard(epkUrl, 'epk')}
-              className="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs transition-colors flex items-center justify-center"
+              className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs transition-colors flex items-center justify-center"
               title="Copiar enlace EPK"
             >
               {copiedEpk ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -115,7 +115,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
         </div>
 
         {/* Fans Landing Card */}
-        <div className="p-5 rounded-2xl bg-zinc-900/90 border border-pink-500/30 shadow-lg space-y-3 relative overflow-hidden group">
+        <div className="p-5 rounded-[var(--r-l)] bg-zinc-900/90 border border-pink-500/30 shadow-lg space-y-3 relative overflow-hidden group">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Heart className="w-5 h-5 text-pink-400" />
@@ -135,14 +135,14 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
               href="/fans"
               target="_blank"
               rel="noreferrer"
-              className="flex-1 py-2 px-3 rounded-xl bg-pink-500 hover:bg-pink-400 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-pink-500 hover:bg-pink-400 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
             >
               <ExternalLink className="w-3.5 h-3.5" /> Ver Landing Fans
             </a>
             <button
               type="button"
               onClick={() => copyToClipboard(fansUrl, 'fans')}
-              className="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs transition-colors flex items-center justify-center"
+              className="p-2 rounded-[var(--r-m)] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs transition-colors flex items-center justify-center"
               title="Copiar enlace Fans"
             >
               {copiedFans ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -156,7 +156,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
         <button
           type="button"
           onClick={onFinish}
-          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.02] transition-all"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.02] transition-all"
         >
           Entrar a BandManager.ai <ArrowRight className="w-4 h-4" />
         </button>

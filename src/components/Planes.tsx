@@ -445,9 +445,9 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
     <div className="w-full max-w-7xl mx-auto space-y-8 pb-16 font-sans">
       {/* Pending Payment Alert */}
       {currentUser?.estado_suscripcion === 'pago_pendiente' && (
-        <div className="p-4 sm:p-5 rounded-2xl bg-rose-500/15 border-2 border-rose-500/50 text-rose-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+        <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-rose-500/15 border-2 border-rose-500/50 text-rose-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
           <div className="flex items-start sm:items-center gap-3.5">
-            <div className="p-2.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 shrink-0">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-rose-500/20 border border-rose-500/40 text-rose-400 shrink-0">
               <AlertTriangle className="w-6 h-6 animate-pulse" />
             </div>
             <div>
@@ -463,7 +463,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30 shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-[var(--r-m)] bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30 shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isOpeningPortal ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
             <span>Actualizar tarjeta en Stripe</span>
@@ -473,9 +473,9 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
       {/* Scheduled Downgrade Notice Banner */}
       {currentUser?.plan_pendiente && (
-        <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+        <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-amber-500/15 border-2 /40 text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
           <div className="flex items-start sm:items-center gap-3.5">
-            <div className="p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 shrink-0">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 border /40 text-amber-400 shrink-0">
               <Calendar className="w-6 h-6" />
             </div>
             <div>
@@ -496,7 +496,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-amber-300 font-bold text-xs uppercase tracking-wider border border-amber-500/30 transition-all shadow-md shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 font-bold text-xs uppercase tracking-wider border /30 transition-all shadow-md shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isOpeningPortal ? <Loader2 className="w-4 h-4 animate-spin" /> : <ExternalLink className="w-4 h-4" />}
             <span>Gestionar en Portal</span>
@@ -505,19 +505,19 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
       )}
 
       {/* Stripe Customer Portal Floating / Top Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-2xl bg-[#141312] border border-[#2c2a28]">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[#141312] border border-[#2c2a28]">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400 shrink-0">
+          <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-400/10 border /20 flex items-center justify-center text-amber-400 shrink-0">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-mono text-neutral-400">Plan activo:</span>
-              <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 border border-amber-400/40 text-xs font-mono font-bold uppercase">
+              <span className="text-xs font-mono text-text-[var(--ink-2)]">Plan activo:</span>
+              <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 border /40 text-xs font-mono font-bold uppercase">
                 {currentPlan.replace('_', ' ')}
               </span>
               {activeBandName && (
-                <span className="text-xs text-neutral-400 font-mono">
+                <span className="text-xs text-text-[var(--ink-2)] font-mono">
                   • Proyecto: <strong className="text-zinc-200">{activeBandName}</strong>
                 </span>
               )}
@@ -532,7 +532,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
           type="button"
           onClick={handleOpenCustomerPortal}
           disabled={isOpeningPortal}
-          className="w-full sm:w-auto px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-zinc-100 text-xs font-bold font-mono uppercase tracking-wider transition-all border border-neutral-700 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-zinc-100 text-xs font-bold font-mono uppercase tracking-wider transition-all border  flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
         >
           {isOpeningPortal ? (
             <>
@@ -543,31 +543,31 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
             <>
               <CreditCard className="w-4 h-4 text-amber-400" />
               <span>Portal de Clientes Stripe</span>
-              <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
+              <ExternalLink className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
             </>
           )}
         </button>
       </div>
 
       {portalError && (
-        <p className="text-xs text-rose-400 font-mono bg-rose-500/10 p-3 rounded-xl border border-rose-500/20">
+        <p className="text-xs text-rose-400 font-mono bg-rose-500/10 p-3 rounded-[var(--r-m)] border border-rose-500/20">
           {portalError}
         </p>
       )}
 
       {/* 1. Banner superior */}
       {showBanner && currentPlan === 'ensayo' && (
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-emerald-500/20 border border-amber-400/30 p-4 sm:p-5 text-zinc-100 shadow-lg shadow-black/40">
+        <div className="relative overflow-hidden rounded-[var(--r-l)] bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-emerald-500/20 border /30 p-4 sm:p-5 text-zinc-100 shadow-lg shadow-black/40">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3.5 text-center sm:text-left">
-              <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0 shadow-inner">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-400/20 border /40 flex items-center justify-center text-amber-300 shrink-0 shadow-inner">
                 <Crown className="w-5 h-5 animate-pulse" />
               </div>
               <div>
                 <p className="text-sm sm:text-base font-bold text-zinc-100 flex items-center justify-center sm:justify-start gap-2">
                   <span>30 días gratis del plan De Gira. Sin compromiso.</span>
                 </p>
-                <p className="text-xs text-neutral-400 mt-0.5">
+                <p className="text-xs text-text-[var(--ink-2)] mt-0.5">
                   Desbloquea el Booking IA ilimitado, Tour Manager y la suite completa durante un mes completo.
                 </p>
               </div>
@@ -580,14 +580,14 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                   const deGiraBtn = document.getElementById('btn-plan-de_gira');
                   if (deGiraBtn) deGiraBtn.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
               >
                 <span>Probar Ahora</span>
               </button>
               <button
                 type="button"
                 onClick={() => setShowBanner(false)}
-                className="p-2 text-neutral-400 hover:text-white rounded-lg hover:bg-neutral-800/60 transition-colors cursor-pointer"
+                className="p-2 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800/60 transition-colors cursor-pointer"
                 title="Cerrar aviso"
               >
                 <X className="w-4 h-4" />
@@ -599,7 +599,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
       {/* 2. Header & Toggle Mensual / Anual */}
       <div className="flex flex-col items-center text-center space-y-4 pt-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono font-bold uppercase tracking-widest">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border /30 text-amber-300 text-xs font-mono font-bold uppercase tracking-widest">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
           <span>Planes & Suscripciones</span>
         </div>
@@ -608,20 +608,20 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
           Planes diseñados para <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-200">músicos independientes</span>
         </h1>
 
-        <p className="text-sm sm:text-base text-neutral-400 max-w-2xl leading-relaxed">
+        <p className="text-sm sm:text-base text-text-[var(--ink-2)] max-w-2xl leading-relaxed">
           Desde tus primeros ensayos hasta giras nacionales. Elige el ritmo de automatización y créditos de inteligencia artificial que tu proyecto necesita.
         </p>
 
         {/* Toggle Mensual / Anual con badge "-20% · 2 meses gratis" */}
         <div className="pt-4 flex flex-col sm:flex-row items-center gap-3">
-          <div className="inline-flex p-1.5 rounded-2xl bg-[#181716] border border-[#2c2a28] shadow-inner">
+          <div className="inline-flex p-1.5 rounded-[var(--r-l)] bg-[var(--surface)] border border-[#2c2a28] shadow-inner">
             <button
               type="button"
               onClick={() => setBillingPeriod('monthly')}
-              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 billingPeriod === 'monthly'
-                  ? 'bg-neutral-800 text-zinc-100 shadow-md border border-neutral-700'
-                  : 'text-neutral-400 hover:text-zinc-200'
+                  ? 'bg-neutral-800 text-zinc-100 shadow-md border '
+                  : 'text-text-[var(--ink-2)] hover:text-zinc-200'
               }`}
             >
               Mensual
@@ -629,10 +629,10 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
             <button
               type="button"
               onClick={() => setBillingPeriod('annual')}
-              className={`relative px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
+              className={`relative px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
                 billingPeriod === 'annual'
                   ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20 font-black'
-                  : 'text-neutral-400 hover:text-zinc-200'
+                  : 'text-text-[var(--ink-2)] hover:text-zinc-200'
               }`}
             >
               <span>Anual</span>
@@ -660,9 +660,9 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
               case 'blue':
                 return 'bg-sky-500/15 text-sky-300 border-sky-500/30';
               case 'silver':
-                return 'bg-slate-400/15 text-slate-300 border-slate-400/30';
+                return 'bg-slate-400/15 text-[var(--ink-3)] /30';
               case 'gold':
-                return 'bg-amber-400/20 text-amber-300 border-amber-400/50';
+                return 'bg-amber-400/20 text-amber-300 /50';
               case 'emerald':
                 return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
             }
@@ -671,9 +671,9 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
           const getCtaStyle = (variant: PlanCardData['ctaVariant']) => {
             switch (variant) {
               case 'secondary':
-                return 'bg-neutral-800 hover:bg-neutral-700 text-zinc-100 border border-neutral-700';
+                return 'bg-neutral-800 hover:bg-neutral-700 text-zinc-100 border ';
               case 'silver':
-                return 'bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600';
+                return 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] border ';
               case 'gold':
                 return 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:brightness-110 text-black font-black shadow-lg shadow-amber-500/20';
               case 'emerald':
@@ -686,8 +686,8 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
               key={plan.id}
               className={`relative flex flex-col justify-between rounded-3xl p-6 transition-all duration-300 ${
                 plan.isPopular
-                  ? 'bg-gradient-to-b from-[#1c1813] via-[#141210] to-[#0f0e0d] border-2 border-amber-400/80 shadow-2xl shadow-amber-500/10 lg:-translate-y-2.5 z-10'
-                  : 'bg-[#141312] border border-[#262422] hover:border-neutral-700 shadow-xl'
+                  ? 'bg-gradient-to-b from-[#1c1813] via-[#141210] to-[#0f0e0d] border-2 /80 shadow-2xl shadow-amber-500/10 lg:-translate-y-2.5 z-10'
+                  : 'bg-[#141312] border border-[#262422] hover: shadow-xl'
               }`}
             >
               {/* Popular Floating Badge */}
@@ -711,7 +711,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                   </span>
                 </div>
 
-                <p className="text-xs text-neutral-400 leading-relaxed min-h-[36px]">
+                <p className="text-xs text-text-[var(--ink-2)] leading-relaxed min-h-[36px]">
                   {plan.description}
                 </p>
 
@@ -721,7 +721,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                     <span className="text-4xl sm:text-5xl font-black font-display tracking-tight text-zinc-100">
                       {priceDisplay}
                     </span>
-                    <span className="text-xs font-mono font-bold text-neutral-400 uppercase">
+                    <span className="text-xs font-mono font-bold text-text-[var(--ink-2)] uppercase">
                       {periodSuffix}
                     </span>
                   </div>
@@ -739,17 +739,17 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                 </div>
 
                 {/* IA Credits Highlight Chip */}
-                <div className={`p-3 rounded-2xl flex items-start gap-2.5 border ${
+                <div className={`p-3 rounded-[var(--r-l)] flex items-start gap-2.5 border ${
                   plan.isPopular
-                    ? 'bg-amber-400/10 border-amber-400/30 text-amber-200'
-                    : 'bg-neutral-900/80 border-neutral-800 text-neutral-300'
+                    ? 'bg-amber-400/10 /30 text-amber-200'
+                    : 'bg-bg-[var(--surface)]/80  text-text-[var(--ink-3)]'
                 }`}>
-                  <Sparkles className={`w-4 h-4 mt-0.5 shrink-0 ${plan.isPopular ? 'text-amber-400' : 'text-neutral-400'}`} />
+                  <Sparkles className={`w-4 h-4 mt-0.5 shrink-0 ${plan.isPopular ? 'text-amber-400' : 'text-text-[var(--ink-2)]'}`} />
                   <div className="flex flex-col">
                     <span className="text-xs font-mono font-black tracking-wide">
                       {plan.creditsLabel}
                     </span>
-                    <span className="text-[10px] text-neutral-400 leading-tight">
+                    <span className="text-[10px] text-text-[var(--ink-2)] leading-tight">
                       {plan.creditsSub}
                     </span>
                   </div>
@@ -757,15 +757,15 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
 
                 {/* 🎁 Sticker Gift */}
                 {plan.stickerGift ? (
-                  <div className={`p-3 rounded-2xl border transition-all relative overflow-hidden ${
+                  <div className={`p-3 rounded-[var(--r-l)] border transition-all relative overflow-hidden ${
                     plan.isPopular
-                      ? 'bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-amber-500/15 border-amber-400/50 shadow-md shadow-amber-500/10'
+                      ? 'bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-amber-500/15 /50 shadow-md shadow-amber-500/10'
                       : plan.id === 'cabeza_de_cartel'
                       ? 'bg-gradient-to-r from-emerald-500/20 via-emerald-400/10 to-emerald-500/15 border-emerald-400/50 shadow-md shadow-emerald-500/10'
-                      : 'bg-gradient-to-r from-slate-500/20 via-neutral-800 to-slate-500/10 border-slate-400/30'
+                      : 'bg-gradient-to-r from-slate-500/20 via-neutral-800 to-slate-500/10 /30'
                   }`}>
                     <div className="flex items-start gap-2.5">
-                      <div className={`p-1.5 rounded-xl shrink-0 ${
+                      <div className={`p-1.5 rounded-[var(--r-m)] shrink-0 ${
                         plan.isPopular
                           ? 'bg-amber-400 text-black shadow-sm'
                           : plan.id === 'cabeza_de_cartel'
@@ -778,26 +778,26 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                         <div className="flex items-center justify-between gap-1 flex-wrap mb-1">
                           <span className={`text-[10px] font-mono font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${
                             plan.isPopular
-                              ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40'
+                              ? 'bg-amber-400/20 text-amber-300 border /40'
                               : plan.id === 'cabeza_de_cartel'
                               ? 'bg-emerald-400/20 text-emerald-300 border border-emerald-400/40'
-                              : 'bg-slate-400/20 text-slate-200 border border-slate-400/30'
+                              : 'bg-slate-400/20 text-[var(--ink-3)] border /30'
                           }`}>
                             {plan.stickerGift.tag}
                           </span>
-                          <span className="text-[9px] font-mono text-neutral-400 uppercase">Regalo</span>
+                          <span className="text-[9px] font-mono text-text-[var(--ink-2)] uppercase">Regalo</span>
                         </div>
                         <p className="text-[11px] font-bold text-zinc-100 leading-snug">
                           🎁 {plan.stickerGift.qty}
                         </p>
-                        <p className="text-[10px] text-neutral-400 leading-tight mt-0.5">
+                        <p className="text-[10px] text-text-[var(--ink-2)] leading-tight mt-0.5">
                           {plan.stickerGift.description}
                         </p>
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="p-2.5 rounded-xl border border-dashed border-neutral-800 bg-neutral-950/60 flex items-center justify-between gap-2 text-neutral-500">
+                  <div className="p-2.5 rounded-[var(--r-m)] border border-dashed  bg-bg-[var(--surface)]/60 flex items-center justify-between gap-2 text-neutral-500">
                     <div className="flex items-center gap-2">
                       <Gift className="w-3.5 h-3.5 text-neutral-600" />
                       <span className="text-[10px] font-mono">Pack de pegatinas de bienvenida</span>
@@ -821,7 +821,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                             <Check className="w-3 h-3 stroke-[3]" />
                           </div>
                         ) : (
-                          <div className="p-0.5 rounded-full mt-0.5 shrink-0 bg-neutral-900 text-neutral-600 border border-neutral-800">
+                          <div className="p-0.5 rounded-full mt-0.5 shrink-0 bg-bg-[var(--surface)] text-neutral-600 border ">
                             <X className="w-3 h-3 stroke-[2]" />
                           </div>
                         )}
@@ -829,7 +829,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                           feat.included
                             ? feat.highlight
                               ? 'text-zinc-100 font-bold'
-                              : 'text-neutral-300'
+                              : 'text-text-[var(--ink-3)]'
                             : 'text-neutral-600 line-through'
                         }`}>
                           {feat.text}
@@ -844,7 +844,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
               <div id={`btn-plan-${plan.id}`} className="pt-6 mt-4 border-t border-[#262422]">
                 {plan.id === currentPlan ? (
                   <div className="space-y-2">
-                    <div className="w-full py-2.5 px-4 rounded-xl bg-amber-400/15 border border-amber-400/40 text-amber-300 font-bold text-xs font-mono uppercase text-center flex items-center justify-center gap-1.5 shadow-sm">
+                    <div className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-amber-400/15 border /40 text-amber-300 font-bold text-xs font-mono uppercase text-center flex items-center justify-center gap-1.5 shadow-sm">
                       <Check className="w-4 h-4 stroke-[3]" />
                       <span>Tu Plan Actual</span>
                     </div>
@@ -853,7 +853,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                         type="button"
                         onClick={handleOpenCustomerPortal}
                         disabled={isOpeningPortal}
-                        className="w-full py-2 px-3 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        className="w-full py-2 px-3 rounded-[var(--r-s)] bg-neutral-800/80 hover:bg-neutral-700 text-text-[var(--ink-3)] hover:text-white text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                       >
                         <CreditCard className="w-3.5 h-3.5" />
                         <span>Gestionar en Stripe</span>
@@ -880,9 +880,9 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                       type="button"
                       onClick={handleOpenCustomerPortal}
                       disabled={isOpeningPortal}
-                      className="w-full py-3 px-4 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="w-full py-3 px-4 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] border  text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
-                      <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
+                      <ExternalLink className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
                       <span>Bajar a {plan.name}</span>
                     </button>
                     <p className="text-[10px] text-neutral-500 font-mono text-center leading-tight">
@@ -903,7 +903,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
             <h2 className="text-2xl sm:text-3xl font-black font-display uppercase tracking-wider text-zinc-100">
               Tabla Comparativa de Módulos
             </h2>
-            <p className="text-xs text-neutral-400">
+            <p className="text-xs text-text-[var(--ink-2)]">
               Desglose detallado de capacidades técnicas, límites y herramientas de BandManager
             </p>
           </div>
@@ -912,14 +912,14 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
             <button
               type="button"
               onClick={expandAllSections}
-              className="px-3 py-1.5 rounded-lg text-xs font-mono bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800 cursor-pointer transition-colors"
+              className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] border  cursor-pointer transition-colors"
             >
               Expandir todo
             </button>
             <button
               type="button"
               onClick={collapseAllSections}
-              className="px-3 py-1.5 rounded-lg text-xs font-mono bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800 cursor-pointer transition-colors"
+              className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] border  cursor-pointer transition-colors"
             >
               Colapsar todo
             </button>
@@ -929,10 +929,10 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
         {/* Table Container */}
         <div className="rounded-3xl border border-[#262422] bg-[#141312] overflow-hidden shadow-2xl">
           {/* Header Row on Desktop */}
-          <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[#1a1918] border-b border-[#262422] text-xs font-mono font-bold uppercase text-neutral-400">
+          <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[#1a1918] border-b border-[#262422] text-xs font-mono font-bold uppercase text-text-[var(--ink-2)]">
             <div className="col-span-4">Módulo / Funcionalidad</div>
             <div className="col-span-2 text-center text-sky-400">Ensayo (0€)</div>
-            <div className="col-span-2 text-center text-slate-300">Local (12€/m)</div>
+            <div className="col-span-2 text-center text-[var(--ink-3)]">Local (12€/m)</div>
             <div className="col-span-2 text-center text-amber-300 font-black">De Gira (29€/m) ⭐</div>
             <div className="col-span-2 text-center text-emerald-400 font-black">Cabeza de Cartel (79€/m)</div>
           </div>
@@ -952,7 +952,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                     className="w-full p-4 sm:p-5 flex items-center justify-between bg-[#171615] hover:bg-[#1c1b1a] transition-colors cursor-pointer text-left"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      <div className="p-2 rounded-[var(--r-m)] bg-amber-500/10 text-amber-400 border /20">
                         <IconComp className="w-4 h-4" />
                       </div>
                       <span className="text-sm sm:text-base font-bold font-display uppercase tracking-wider text-zinc-100">
@@ -960,7 +960,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 text-neutral-400 text-xs font-mono">
+                    <div className="flex items-center gap-2 text-text-[var(--ink-2)] text-xs font-mono">
                       <span>{isExpanded ? 'Ocultar' : 'Ver detalles'}</span>
                       {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </div>
@@ -972,7 +972,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                       {section.items.map((row, rIdx) => (
                         <div
                           key={rIdx}
-                          className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 p-4 items-center hover:bg-[#181716]/80 transition-colors"
+                          className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 p-4 items-center hover:bg-[var(--surface)]/80 transition-colors"
                         >
                           <div className="lg:col-span-4 space-y-0.5">
                             <p className="text-xs sm:text-sm font-semibold text-zinc-200">{row.name}</p>
@@ -990,7 +990,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                                 <X className="w-4 h-4 text-neutral-600" />
                               )
                             ) : (
-                              <span className="text-neutral-300 text-center font-mono">{row.ensayo}</span>
+                              <span className="text-text-[var(--ink-3)] text-center font-mono">{row.ensayo}</span>
                             )}
                           </div>
 
@@ -1003,11 +1003,11 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
                                 <X className="w-4 h-4 text-neutral-600" />
                               )
                             ) : (
-                              <span className="text-neutral-300 text-center font-mono">{row.local}</span>
+                              <span className="text-text-[var(--ink-3)] text-center font-mono">{row.local}</span>
                             )}
                           </div>
 
-                          <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs bg-amber-500/5 lg:bg-transparent p-2 lg:p-0 rounded-lg">
+                          <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs bg-amber-500/5 lg:bg-transparent p-2 lg:p-0 rounded-[var(--r-s)]">
                             <span className="lg:hidden text-[10px] font-mono text-amber-400 font-bold">De Gira (⭐):</span>
                             {typeof row.de_gira === 'boolean' ? (
                               row.de_gira ? (
@@ -1050,46 +1050,46 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
       {/* 5. Transparencia, Upgrades/Downgrades y Degradación No Destructiva */}
       <div className="rounded-3xl p-6 sm:p-8 bg-[#141312] border border-[#262422] space-y-6">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400">
+          <div className="p-2.5 rounded-[var(--r-m)] bg-amber-400/10 border /20 text-amber-400">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
             <h3 className="text-lg font-bold font-display uppercase tracking-wide text-zinc-100">
               Garantía BandManager: Política de Planes y Datos Protegidos
             </h3>
-            <p className="text-xs text-neutral-400">
+            <p className="text-xs text-text-[var(--ink-2)]">
               Transparencia total para bandas independientes sin letra pequeña.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-          <div className="p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 space-y-2">
+          <div className="p-4 rounded-[var(--r-l)] bg-bg-[var(--surface)]/60 border  space-y-2">
             <div className="flex items-center gap-2 text-amber-300 font-mono font-bold text-xs">
               <Sparkles className="w-4 h-4 text-amber-400" />
               <span>Upgrades Inmediatos</span>
             </div>
-            <p className="text-xs text-neutral-400 leading-relaxed">
+            <p className="text-xs text-text-[var(--ink-2)] leading-relaxed">
               Si mejoras de plan, se activa al instante. Stripe prorratea automáticamente los días no disfrutados y recibes de inmediato la cuota completa de créditos IA y nuevos módulos.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 space-y-2">
+          <div className="p-4 rounded-[var(--r-l)] bg-bg-[var(--surface)]/60 border  space-y-2">
             <div className="flex items-center gap-2 text-sky-300 font-mono font-bold text-xs">
               <Lock className="w-4 h-4 text-sky-400" />
               <span>Cero Borrado de Datos</span>
             </div>
-            <p className="text-xs text-neutral-400 leading-relaxed">
+            <p className="text-xs text-text-[var(--ink-2)] leading-relaxed">
               Al bajar de plan o cancelar, <strong className="text-zinc-200">NUNCA eliminamos tus salas, medios, fans, canciones o giras</strong>. Todo tu histórico sigue visible y editable. Únicamente se pausa la creación de nuevos registros si superas el cupo del nuevo plan.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 space-y-2">
+          <div className="p-4 rounded-[var(--r-l)] bg-bg-[var(--surface)]/60 border  space-y-2">
             <div className="flex items-center gap-2 text-emerald-300 font-mono font-bold text-xs">
               <Gift className="w-4 h-4 text-emerald-400" />
               <span>Pegatinas y Regalos Tuyos</span>
             </div>
-            <p className="text-xs text-neutral-400 leading-relaxed">
+            <p className="text-xs text-text-[var(--ink-2)] leading-relaxed">
               Los packs de pegatinas de vinilo de alta resistencia ya entregados son propiedad de tu banda para siempre. Sin devoluciones ni cargos adicionales.
             </p>
           </div>

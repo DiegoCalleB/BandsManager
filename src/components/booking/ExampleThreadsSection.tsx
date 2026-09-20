@@ -148,7 +148,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
   };
 
   return (
-    <div className="space-y-3 p-3.5 rounded-xl border border-sky-500/20 bg-sky-500/5">
+    <div className="space-y-3 p-3.5 rounded-[var(--r-m)] border border-sky-500/20 bg-sky-500/5">
       <div className="flex items-center justify-between">
         <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-sky-300 flex items-center gap-1.5">
           <MessageSquareText className="w-3.5 h-3.5 text-sky-400" /> Hilos de Email Reales de Ejemplo
@@ -174,11 +174,11 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
             <div
               key={t.id}
               onClick={() => handleEdit(t)}
-              className="flex items-center justify-between p-2 rounded-lg bg-[#131313] border border-sky-500/10 text-[10px] cursor-pointer hover:border-sky-500/40 transition-colors"
+              className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] border border-sky-500/10 text-[10px] cursor-pointer hover:border-sky-500/40 transition-colors"
               title="Abrir para ver o editar este hilo"
             >
               <div className="min-w-0">
-                <span className="font-bold text-neutral-200">{t.titulo || 'Sin título'}</span>
+                <span className="font-bold text-bg-[var(--sunken)]">{t.titulo || 'Sin título'}</span>
                 <span className="text-neutral-500 ml-2">{t.mensajes.length} mensaje(s) · {RESULTADO_LABEL[t.resultado] || t.resultado}</span>
               </div>
               <div className="flex items-center gap-1 shrink-0">
@@ -216,7 +216,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
             placeholder="Título del ejemplo (ej: Sala Apolo, negociación de fecha)"
-            className={`w-full rounded-lg px-2 py-1.5 text-[10px] focus:outline-none font-sans ${isStitchLight ? 'bg-white text-slate-800' : 'bg-[#131313] text-[#e5e2e1] border border-sky-500/20'}`}
+            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--ink)] border border-sky-500/20'}`}
           />
 
           {mensajes.map((m, idx) => (
@@ -224,7 +224,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
               <select
                 value={m.rol}
                 onChange={(e) => handleMessageChange(idx, 'rol', e.target.value)}
-                className="text-[9px] rounded-lg px-1.5 py-1.5 bg-[#131313] text-neutral-300 border border-sky-500/20 shrink-0"
+                className="text-[9px] rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--surface)] text-neutral-300 border border-sky-500/20 shrink-0"
               >
                 <option value="banda">Banda</option>
                 <option value="sala">Sala</option>
@@ -234,7 +234,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
                 value={m.texto}
                 onChange={(e) => handleMessageChange(idx, 'texto', e.target.value)}
                 placeholder={m.rol === 'banda' ? 'Lo que escribimos nosotros...' : 'Lo que respondió la sala...'}
-                className={`flex-1 rounded-lg p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${isStitchLight ? 'bg-white text-slate-800' : 'bg-[#131313] text-[#e5e2e1] border border-sky-500/20'}`}
+                className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--ink)] border border-sky-500/20'}`}
               />
               {mensajes.length > 1 && (
                 <button type="button" onClick={() => handleRemoveMessageRow(idx)} className="p-1 text-neutral-500 hover:text-red-400 cursor-pointer shrink-0">
@@ -253,13 +253,13 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="text-[9px] text-neutral-400 font-sans">Resultado:</span>
+            <span className="text-[9px] text-text-[var(--ink-2)] font-sans">Resultado:</span>
             {(['positiva', 'neutral', 'negativa'] as const).map((r) => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setResultado(r)}
-                className={`text-[9px] px-2 py-1 rounded-lg font-sans cursor-pointer ${resultado === r ? 'bg-sky-500/30 text-sky-200 font-bold' : 'bg-[#131313] text-neutral-500'}`}
+                className={`text-[9px] px-2 py-1 rounded-[var(--r-s)] font-sans cursor-pointer ${resultado === r ? 'bg-sky-500/30 text-sky-200 font-bold' : 'bg-[var(--surface)] text-neutral-500'}`}
               >
                 {RESULTADO_LABEL[r]}
               </button>
@@ -272,7 +272,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="w-full py-1.5 px-3 bg-sky-500 hover:bg-sky-400 text-black font-bold text-[10px] rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+            className="w-full py-1.5 px-3 bg-sky-500 hover:bg-sky-400 text-black font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
             <span>{isSaving ? 'Guardando...' : editingId ? 'Guardar cambios' : 'Guardar hilo de ejemplo'}</span>

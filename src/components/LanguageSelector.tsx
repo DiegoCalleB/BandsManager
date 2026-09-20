@@ -29,22 +29,22 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = fa
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-mono font-medium transition-all duration-200 cursor-pointer active:scale-95 ${
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] border text-xs font-mono font-medium transition-all duration-200 cursor-pointer active:scale-95 ${
           isOpen
-            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-xs'
-            : 'bg-[#1A1918] text-neutral-300 border-[#22211F] hover:bg-[#22211F] hover:text-white'
+            ? 'bg-amber-500/20 text-amber-300 /40 shadow-xs'
+            : 'bg-[#1A1918] text-text-[var(--ink-3)] border-[var(--surface)] hover:bg-[var(--surface)] hover:text-white'
         }`}
         title="Cambiar idioma / Change language"
       >
         <span className="text-sm leading-none">{currentLangObj.flag}</span>
         {!compact && <span className="font-sans font-bold text-xs">{currentLangObj.label}</span>}
         <span className="text-[10px] uppercase text-amber-400/90 font-mono">({currentLangObj.code})</span>
-        <ChevronDown className={`w-3.5 h-3.5 text-neutral-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-amber-400' : ''}`} />
+        <ChevronDown className={`w-3.5 h-3.5 text-text-[var(--ink-2)] transition-transform duration-200 ${isOpen ? 'rotate-180 text-amber-400' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-44 rounded-xl bg-[#121110] border border-[#22211F] shadow-2xl z-50 overflow-hidden py-1 backdrop-blur-md animate-in fade-in zoom-in-95 duration-100">
-          <div className="px-3 py-1.5 border-b border-[#22211F]/60 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
+        <div className="absolute right-0 mt-2 w-44 rounded-[var(--r-m)] bg-[#121110] border border-[var(--surface)] shadow-2xl z-50 overflow-hidden py-1 backdrop-blur-md animate-in fade-in zoom-in-95 duration-100">
+          <div className="px-3 py-1.5 border-b border-[var(--surface)]/60 text-[10px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] flex items-center gap-1.5">
             <Globe className="w-3 h-3 text-amber-400" />
             <span>Seleccionar Idioma</span>
           </div>
@@ -67,7 +67,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = fa
                   className={`w-full flex items-center justify-between px-3 py-2 text-xs font-sans text-left transition-colors cursor-pointer ${
                     isSelected
                       ? 'bg-amber-500/15 text-amber-300 font-bold'
-                      : 'text-neutral-300 hover:bg-[#1A1918] hover:text-white'
+                      : 'text-text-[var(--ink-3)] hover:bg-[#1A1918] hover:text-white'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">

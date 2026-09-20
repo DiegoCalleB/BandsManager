@@ -31,17 +31,17 @@ export function AssignSetlistModal({
   return (
     <ModalPortal isOpen={!!assigningSetlist} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
-        <div className={`w-full max-w-md p-5 rounded-2xl space-y-4 shadow-2xl my-auto max-h-[90vh] overflow-y-auto ${colors.card}`}>
+        <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] space-y-4 shadow-2xl my-auto max-h-[90vh] overflow-y-auto ${colors.card}`}>
         <div className="flex justify-between items-center pb-3">
           <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
             Asignar Repertorio a Concierto / Ensayo
           </h3>
-          <button onClick={onClose} className="text-neutral-400 hover:text-white">
+          <button onClick={onClose} className="text-text-[var(--ink-2)] hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <p className="text-[10px] text-neutral-300 font-sans">
+        <p className="text-[10px] text-text-[var(--ink-3)] font-sans">
           Selecciona el concierto o ensayo al que deseas vincular el repertorio{' '}
           <strong className="text-[#d1b375] font-mono">"{assigningSetlist.nombre}"</strong>:
         </p>
@@ -54,10 +54,10 @@ export function AssignSetlistModal({
             concerts.map(c => (
               <label
                 key={c.id}
-                className={`p-2.5 rounded-xl flex items-center justify-between cursor-pointer ${
+                className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
                   selectedConcertToAssign === c.id
-                    ? 'border-amber-400 bg-[#d1b375]/15'
-                    : 'border-neutral-800 bg-neutral-900/60'
+                    ? ' bg-[#d1b375]/15'
+                    : ' bg-bg-[var(--surface)]/60'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -70,7 +70,7 @@ export function AssignSetlistModal({
                   />
                   <div>
                     <div className="font-bold text-white">{c.sala} ({c.ciudad})</div>
-                    <div className="text-[10px] text-neutral-400">{c.fecha}</div>
+                    <div className="text-[10px] text-text-[var(--ink-2)]">{c.fecha}</div>
                   </div>
                 </div>
               </label>
@@ -84,10 +84,10 @@ export function AssignSetlistModal({
             rehearsals.map(r => (
               <label
                 key={r.id}
-                className={`p-2.5 rounded-xl flex items-center justify-between cursor-pointer ${
+                className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
                   selectedConcertToAssign === r.id
                     ? 'border-emerald-400 bg-[#10b981]/15'
-                    : 'border-neutral-800 bg-neutral-900/60'
+                    : ' bg-bg-[var(--surface)]/60'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export function AssignSetlistModal({
                   />
                   <div>
                     <div className="font-bold text-white">Ensayo en {r.lugar}</div>
-                    <div className="text-[10px] text-neutral-400">{r.fecha} a las {r.hora}</div>
+                    <div className="text-[10px] text-text-[var(--ink-2)]">{r.fecha} a las {r.hora}</div>
                   </div>
                 </div>
               </label>
@@ -111,15 +111,15 @@ export function AssignSetlistModal({
         <div className="pt-3 flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-2 py-1 rounded-lg text-neutral-300 text-[10px] font-mono"
+            className="px-2 py-1 rounded-[var(--r-s)] text-text-[var(--ink-3)] text-[10px] font-mono"
           >
             Cancelar
           </button>
           <button
             onClick={onSave}
             disabled={!selectedConcertToAssign}
-            className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold disabled:opacity-40 ${
-              isStitchLight ? 'bg-sky-500/15 text-white' : 'bg-[#f2ca50] text-black'
+            className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold disabled:opacity-40 ${
+              isStitchLight ? 'bg-sky-500/15 text-white' : 'bg-[var(--acc)] text-black'
             }`}
           >
             Guardar Asignación

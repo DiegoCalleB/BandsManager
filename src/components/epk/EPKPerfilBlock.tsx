@@ -60,8 +60,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* BIOGRAFÍA OFICIAL / RESUMEN EJECUTIVO */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between border-b  pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
               <FileText className="w-5 h-5" /> Biografía Oficial / Resumen Ejecutivo
             </h3>
@@ -72,7 +72,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 !config.biografia.toLowerCase().includes('por definir') &&
                 !config.biografia.includes('Propuesta musical en directo')
                   ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                  : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                  : 'bg-amber-500/10 text-amber-300 /20'
               }`}
             >
               {config.biografia &&
@@ -84,9 +84,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             </span>
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-300">Biografía de Presentación</label>
-            <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-[11px] text-slate-400 space-y-1.5">
-              <p className="text-slate-300 font-semibold">
+            <label className="text-xs font-semibold text-[var(--ink-3)]">Biografía de Presentación</label>
+            <div className="bg-slate-950/60 border  rounded-[var(--r-m)] p-3 text-[11px] text-[var(--ink-3)] space-y-1.5">
+              <p className="text-[var(--ink-3)] font-semibold">
                 Escribid UN texto de banda, no la trayectoria de cada uno por separado (eso va en &quot;Formación de la Banda&quot;, con su foto).
               </p>
               <p>Un programador de sala lee esto en 15 segundos antes de decidir si sigue mirando. En este orden:</p>
@@ -104,9 +104,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               placeholder={
                 'Ejemplo de estructura (sustituid por lo vuestro):\n\n[Nombre de la banda] es [una frase que os define + vuestro género/sonido propio].\n\nEn directo, [qué ocurre encima del escenario: instrumentación, energía, qué se lleva el público].\n\nCon [X años/conciertos] a la espalda, hemos tocado en [salas/festivales relevantes] y compartido escenario con [referencias, si aplica].'
               }
-              className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed placeholder:text-slate-600"
+              className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] p-3 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed placeholder:text-[var(--ink-2)]"
             />
-            <div className="flex justify-between items-center text-[11px] font-mono text-slate-400">
+            <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
               <span>Mínimo 80 caracteres para completar el perfil</span>
               <span className={(config.biografia || '').trim().length >= 80 ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
                 {(config.biografia || '').trim().length} / 80 min.
@@ -116,8 +116,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         </div>
 
         {/* INFORMACIÓN ADICIONAL PARA EL DOSSIER */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between border-b  pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
               <Info className="w-5 h-5" /> Información Adicional y Notas del Dossier
             </h3>
@@ -129,7 +129,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     config.dossierTextoExtra.trim().length >= 80 &&
                     !config.dossierTextoExtra.toLowerCase().includes('por definir'))
                     ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                    : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                    : 'bg-amber-500/10 text-amber-300 /20'
                 }`}
               >
                 {(config.dossierPdfUrl && config.dossierPdfUrl.trim().length > 5) ||
@@ -139,16 +139,16 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   ? '✓ Listo'
                   : 'Mín. 80 car. o PDF'}
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full hidden sm:inline">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border /20 px-2 py-0.5 rounded-full hidden sm:inline">
                 Uso Interno
               </span>
             </div>
           </div>
 
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-[var(--ink-3)] leading-relaxed">
             Escribe notas y detalles de la banda (trayectoria, integrantes, estilo, hitos, prensa, etc.) para enriquecer la documentación del proyecto.
           </p>
-          <p className="text-[11px] text-amber-400/90 font-semibold bg-amber-500/5 border border-amber-500/20 rounded-lg px-3 py-2">
+          <p className="text-[11px] text-amber-400/90 font-semibold bg-amber-500/5 border /20 rounded-[var(--r-s)] px-3 py-2">
             Nota: Este texto es para uso interno del equipo y no se muestra en la página pública del EPK.
           </p>
 
@@ -158,9 +158,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               value={config.dossierTextoExtra || ''}
               onChange={e => setConfig({ ...config, dossierTextoExtra: e.target.value })}
               placeholder="Ejemplo: La banda cuenta con 4 integrantes (voz, guitarra, bajo y batería). Formato versátil para salas y festivales según aforo y requisitos técnicos. Ofrecemos un show potente y enérgico de 90 minutos concebido para hacer vibrar al público..."
-              className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3.5 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed font-sans"
+              className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed font-sans"
             />
-            <div className="flex justify-between items-center text-[11px] font-mono text-slate-400">
+            <div className="flex justify-between items-center text-[11px] font-mono text-[var(--ink-3)]">
               <span>Mínimo 80 caracteres para marcar como completado (si no hay PDF)</span>
               <span className={(config.dossierTextoExtra || '').trim().length >= 80 ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
                 {(config.dossierTextoExtra || '').trim().length} / 80 min.
@@ -170,8 +170,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         </div>
 
         {/* FORMACIÓN DE LA BANDA */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b  pb-3">
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-amber-400" />
               <h3 className="text-base sm:text-lg font-bold text-amber-400">
@@ -181,33 +181,33 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <button
               type="button"
               onClick={anadirMiembro}
-              className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition cursor-pointer"
+              className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-[var(--r-s)] transition cursor-pointer"
             >
               + Añadir miembro
             </button>
           </div>
-          <div className="text-xs text-slate-400 space-y-1">
+          <div className="text-xs text-[var(--ink-3)] space-y-1">
             <p>Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre, instrumento y breve descripción de cada integrante.</p>
           </div>
           {miembros.length === 0 && (
-            <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
+            <div className="rounded-[var(--r-m)] border  bg-slate-950 p-4 text-xs text-[var(--ink-3)]">
               Todavía no has añadido a nadie. Añade a los integrantes con su foto y descripción para que el dossier tenga cercanía.
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {miembros.map(m => (
-              <div key={m.id} className="rounded-xl border border-slate-800 bg-slate-950 p-3.5 space-y-2.5">
+              <div key={m.id} className="rounded-[var(--r-m)] border  bg-slate-950 p-3.5 space-y-2.5">
                 <div className="flex items-start gap-3">
                   <label className="shrink-0 cursor-pointer group" title="Subir foto del músico">
-                    <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 flex items-center justify-center relative">
+                    <div className="w-16 h-16 rounded-[var(--r-m)] overflow-hidden border  bg-[var(--surface)] flex items-center justify-center relative">
                       {subiendoFotoMiembro === m.id ? (
                         <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
                       ) : m.fotoUrl && m.fotoUrl.trim() !== '' ? (
                         <img src={m.fotoUrl} alt={m.nombre || 'Miembro'} className="w-full h-full object-cover" />
                       ) : (
                         <div className="flex flex-col items-center justify-center p-1 text-center">
-                          <Upload className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition mb-0.5" />
-                          <span className="text-[8px] text-slate-500 font-medium">Foto</span>
+                          <Upload className="w-4 h-4 text-[var(--ink-2)] group-hover:text-amber-400 transition mb-0.5" />
+                          <span className="text-[8px] text-[var(--ink-2)] font-medium">Foto</span>
                         </div>
                       )}
                     </div>
@@ -228,27 +228,27 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       value={m.nombre}
                       onChange={e => editarMiembro(m.id, { nombre: e.target.value })}
                       placeholder="Nombre del músico"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-sm font-semibold text-white focus:border-amber-500 outline-none"
+                      className="w-full bg-[var(--surface)] border  rounded-[var(--r-s)] px-3 py-1.5 text-sm font-semibold text-white focus: outline-none"
                     />
                     <input
                       type="text"
                       value={m.rol}
                       onChange={e => editarMiembro(m.id, { rol: e.target.value })}
                       placeholder="Instrumento / Rol (Voz, guitarra, metales...)"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-amber-400/90 focus:border-amber-500 outline-none"
+                      className="w-full bg-[var(--surface)] border  rounded-[var(--r-s)] px-3 py-1.5 text-xs text-amber-400/90 focus: outline-none"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={() => quitarMiembro(m.id)}
-                    className="shrink-0 p-1.5 text-slate-500 hover:text-red-400 transition cursor-pointer"
+                    className="shrink-0 p-1.5 text-[var(--ink-2)] hover:text-red-400 transition cursor-pointer"
                     title="Quitar músico"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                  <label className="text-[10px] font-semibold text-[var(--ink-3)] uppercase tracking-wider block">
                     Breve descripción / Trayectoria (opcional)
                   </label>
                   <textarea
@@ -256,21 +256,21 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     value={m.bio || ''}
                     onChange={e => editarMiembro(m.id, { bio: e.target.value })}
                     placeholder="Trayectoria o rol en directo..."
-                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:border-amber-500 outline-none placeholder:text-slate-600 leading-relaxed"
+                    className="w-full bg-[var(--surface)] border  rounded-[var(--r-s)] px-3 py-2 text-xs text-slate-200 focus: outline-none placeholder:text-[var(--ink-2)] leading-relaxed"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                  <label className="text-[10px] font-semibold text-[var(--ink-3)] uppercase tracking-wider block">
                     Instagram personal (opcional)
                   </label>
                   <div className="relative">
-                    <Instagram className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                    <Instagram className="w-3.5 h-3.5 text-[var(--ink-2)] absolute left-2.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={m.instagram || ''}
                       onChange={e => editarMiembro(m.id, { instagram: e.target.value })}
                       placeholder="@usuario o https://instagram.com/usuario"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 focus:border-amber-500 outline-none"
+                      className="w-full bg-[var(--surface)] border  rounded-[var(--r-s)] pl-8 pr-3 py-1.5 text-xs text-slate-200 focus: outline-none"
                     />
                   </div>
                 </div>
@@ -280,15 +280,15 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         </div>
 
         {/* DATOS DE CONTACTO DE BOOKING & REDES */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[var(--surface)] border  rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b  pb-3">
             <Mail className="w-5 h-5" /> Datos de Contacto de Booking & Redes Oficiales
           </h3>
 
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="text-xs font-semibold text-slate-300">Nombre / Cargo Mánager</label>
+                <label className="text-xs font-semibold text-[var(--ink-3)]">Nombre / Cargo Mánager</label>
                 <input
                   type="text"
                   value={config.contactoBooking?.nombre || ''}
@@ -298,12 +298,12 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       contactoBooking: { ...config.contactoBooking, nombre: e.target.value }
                     })
                   }
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none mt-1"
+                  className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none mt-1"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Email de Contacto</label>
+                <label className="text-xs font-semibold text-[var(--ink-3)]">Email de Contacto</label>
                 <input
                   type="email"
                   value={config.contactoBooking?.email || ''}
@@ -313,12 +313,12 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       contactoBooking: { ...config.contactoBooking, email: e.target.value }
                     })
                   }
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none mt-1"
+                  className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none mt-1"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300">Teléfono Mánager</label>
+                <label className="text-xs font-semibold text-[var(--ink-3)]">Teléfono Mánager</label>
                 <input
                   type="text"
                   value={config.contactoBooking?.telefono || ''}
@@ -328,22 +328,22 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       contactoBooking: { ...config.contactoBooking, telefono: e.target.value }
                     })
                   }
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none mt-1"
+                  className="w-full bg-slate-950 border  focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none mt-1"
                 />
               </div>
             </div>
 
             {/* SITIO WEB OFICIAL PROPIO DE LA BANDA */}
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-amber-500/30 space-y-2">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-slate-950 border /30 space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
                   <Globe className="w-4 h-4 text-amber-400" /> Sitio Web Oficial Propio de la Banda (Opcional)
                 </label>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border /20">
                   Dossier EPK + Fans Landing
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
+              <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
                 Si vuestra banda ya dispone de un sitio web oficial o dominio propio, incluidlo aquí. Se enlazará de forma destacada en el Dossier EPK y en la Landing de Fans.
               </p>
               <input
@@ -367,17 +367,17 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     };
                   });
                 }}
-                className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none font-mono"
+                className="w-full bg-[var(--surface)] border  focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-slate-200 outline-none font-mono"
               />
             </div>
 
-            <div className="pt-3 border-t border-slate-800 space-y-3">
+            <div className="pt-3 border-t  space-y-3">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
                   <label className="text-xs font-bold text-amber-300 uppercase flex items-center gap-1.5">
                     <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes & Plataformas Oficiales
                   </label>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-[var(--ink-3)]">
                     Fuente única: se sincronizan automáticamente en tu Dossier EPK, firma de email, landing de fans y plataformas oficiales.
                   </p>
                 </div>
@@ -389,7 +389,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
                 {unifiedPlatforms.filter(item => item.key !== 'website').map(item => (
                   <div key={item.key} className="space-y-1">
-                    <label className="text-[11px] font-semibold text-slate-300 flex items-center gap-1">
+                    <label className="text-[11px] font-semibold text-[var(--ink-3)] flex items-center gap-1">
                       <span>{item.icon}</span>
                       <span>{item.label}</span>
                     </label>
@@ -414,7 +414,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                           };
                         });
                       }}
-                      className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-slate-200 outline-none font-mono text-[11px]"
+                      className="w-full bg-slate-950 border  focus: rounded-[var(--r-s)] px-2.5 py-1.5 text-slate-200 outline-none font-mono text-[11px]"
                     />
                   </div>
                 ))}

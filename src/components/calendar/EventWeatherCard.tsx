@@ -75,21 +75,21 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
   const getWeatherIconBackdrop = (iconType?: EventWeatherData['iconType']) => {
     switch (iconType) {
       case 'sun':
-        return 'from-amber-500/30 via-amber-400/10 to-transparent border-amber-400/50 shadow-[0_0_20px_rgba(251,191,36,0.3)]';
+        return 'from-amber-500/30 via-amber-400/10 to-transparent /50 shadow-[0_0_20px_rgba(251,191,36,0.3)]';
       case 'cloud-sun':
-        return 'from-amber-500/25 via-slate-700/25 to-transparent border-amber-400/35 shadow-[0_0_16px_rgba(251,191,36,0.2)]';
+        return 'from-amber-500/25 via-slate-700/25 to-transparent /35 shadow-[0_0_16px_rgba(251,191,36,0.2)]';
       case 'cloud':
-        return 'from-slate-600/35 via-slate-800/25 to-transparent border-slate-500/40 shadow-[0_0_14px_rgba(148,163,184,0.2)]';
+        return 'from-slate-600/35 via-slate-800/25 to-transparent /40 shadow-[0_0_14px_rgba(148,163,184,0.2)]';
       case 'rain':
         return 'from-sky-500/30 via-blue-600/20 to-transparent border-sky-400/50 shadow-[0_0_18px_rgba(56,189,248,0.3)]';
       case 'lightning':
-        return 'from-yellow-500/35 via-purple-900/35 to-transparent border-yellow-400/60 shadow-[0_0_22px_rgba(250,204,21,0.4)]';
+        return 'from-yellow-500/35 via-purple-900/35 to-transparent /60 shadow-[0_0_22px_rgba(250,204,21,0.4)]';
       case 'snow':
         return 'from-cyan-500/30 via-blue-900/25 to-transparent border-cyan-400/50 shadow-[0_0_18px_rgba(103,232,249,0.3)]';
       case 'fog':
-        return 'from-slate-500/25 via-zinc-700/25 to-transparent border-slate-400/35 shadow-[0_0_12px_rgba(148,163,184,0.2)]';
+        return 'from-slate-500/25 via-zinc-700/25 to-transparent /35 shadow-[0_0_12px_rgba(148,163,184,0.2)]';
       default:
-        return 'from-amber-500/20 to-transparent border-amber-500/30 shadow-[0_0_14px_rgba(251,191,36,0.2)]';
+        return 'from-amber-500/20 to-transparent /30 shadow-[0_0_14px_rgba(251,191,36,0.2)]';
     }
   };
 
@@ -104,17 +104,17 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
   // Modo compacto y simplificado para móvil / modal
   if (collapsible && !isExpanded) {
     return (
-      <div className={`rounded-xl border px-3.5 py-2.5 transition-all duration-200 flex items-center justify-between gap-3 ${
+      <div className={`rounded-[var(--r-m)] border px-3.5 py-2.5 transition-all duration-200 flex items-center justify-between gap-3 ${
         isStitchLight 
           ? hasAlerts
-            ? 'bg-amber-50 border-amber-300 text-slate-900 shadow-xs'
-            : 'bg-slate-50 border-slate-200 text-slate-800'
+            ? 'bg-amber-50  text-[var(--ink)] shadow-xs'
+            : 'bg-[var(--bg)]  text-[var(--ink)]'
           : hasAlerts
-            ? 'bg-amber-950/30 border-amber-500/40 text-neutral-100 shadow-xs'
-            : 'bg-neutral-900/80 border-neutral-800 text-neutral-200'
+            ? 'bg-amber-950/30 /40 text-bg-[var(--sunken)] shadow-xs'
+            : 'bg-bg-[var(--surface)]/80  text-bg-[var(--sunken)]'
       }`}>
         <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          <div className={`p-1.5 rounded-lg bg-gradient-to-br border shrink-0 ${getWeatherIconBackdrop(weatherData?.iconType)}`}>
+          <div className={`p-1.5 rounded-[var(--r-s)] bg-gradient-to-br border shrink-0 ${getWeatherIconBackdrop(weatherData?.iconType)}`}>
             <AnimatedWeatherIcon iconType={weatherData?.iconType} size="sm" />
           </div>
           <div className="min-w-0 flex-1">
@@ -122,7 +122,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
               <span className="text-sm font-bold font-mono text-amber-400">
                 {isLoading ? '...' : (weatherData?.temperature !== undefined ? `${weatherData.temperature}°C` : '--')}
               </span>
-              <span className={`text-xs font-medium truncate ${isStitchLight ? 'text-slate-700' : 'text-neutral-200'}`}>
+              <span className={`text-xs font-medium truncate ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-bg-[var(--sunken)]'}`}>
                 {isLoading ? 'Consultando tiempo...' : (weatherData?.conditionText || 'Clima')}
               </span>
               {weatherData?.rainProbability !== undefined && (
@@ -145,7 +145,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 </span>
               )}
             </div>
-            <span className={`text-[10px] font-mono block truncate ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+            <span className={`text-[10px] font-mono block truncate ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'}`}>
               {weatherData?.cityName || city} · Show {timeStr || '21:00'}
             </span>
           </div>
@@ -154,7 +154,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
         <button
           type="button"
           onClick={() => setIsExpanded(true)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-mono font-bold border border-amber-500/30 text-amber-300 hover:bg-amber-500/15 transition-colors shrink-0 min-h-[40px] cursor-pointer"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold border /30 text-amber-300 hover:bg-amber-500/15 transition-colors shrink-0 min-h-[40px] cursor-pointer"
           title="Ver previsión meteorológica detallada"
           aria-label="Ver previsión meteorológica detallada"
         >
@@ -166,21 +166,21 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
   }
 
   return (
-    <div className={`rounded-xl border p-4 transition-all duration-200 ${
+    <div className={`rounded-[var(--r-m)] border p-4 transition-all duration-200 ${
       isStitchLight 
         ? hasAlerts
           ? dangerAlertsCount > 0
-            ? 'bg-gradient-to-br from-rose-50 to-amber-50 border-rose-300 text-slate-900 shadow-sm'
-            : 'bg-gradient-to-br from-amber-50 to-sky-50 border-amber-300 text-slate-900 shadow-sm'
-          : 'bg-gradient-to-br from-amber-50/70 to-sky-50/70 border-amber-200 text-slate-800' 
+            ? 'bg-gradient-to-br from-rose-50 to-amber-50 border-rose-300 text-[var(--ink)] shadow-sm'
+            : 'bg-gradient-to-br from-amber-50 to-sky-50  text-[var(--ink)] shadow-sm'
+          : 'bg-gradient-to-br from-amber-50/70 to-sky-50/70  text-[var(--ink)]' 
         : hasAlerts
           ? dangerAlertsCount > 0
-            ? 'bg-gradient-to-br from-rose-950/40 via-neutral-900/90 to-stone-900/90 border-rose-500/40 text-neutral-100 shadow-rose-950/20 shadow-lg'
-            : 'bg-gradient-to-br from-amber-950/30 via-neutral-900/90 to-stone-900/90 border-amber-500/40 text-neutral-100 shadow-amber-950/20 shadow-lg'
-          : 'bg-gradient-to-br from-stone-900/80 to-neutral-900/80 border-amber-500/25 text-neutral-100'
+            ? 'bg-gradient-to-br from-rose-950/40 via-bg-[var(--surface)]/90 to-stone-900/90 border-rose-500/40 text-bg-[var(--sunken)] shadow-rose-950/20 shadow-lg'
+            : 'bg-gradient-to-br from-amber-950/30 via-bg-[var(--surface)]/90 to-stone-900/90 /40 text-bg-[var(--sunken)] shadow-amber-950/20 shadow-lg'
+          : 'bg-gradient-to-br from-stone-900/80 to-bg-[var(--surface)]/80 /25 text-bg-[var(--sunken)]'
     }`}>
       {/* Barra superior del widget del tiempo */}
-      <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-amber-500/15">
+      <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b /15">
         <div className="flex items-center gap-2">
           <span className={`p-1 rounded-md ${
             hasAlerts 
@@ -206,21 +206,21 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 </span>
               )}
             </div>
-            <span className={`text-[10px] font-mono block ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+            <span className={`text-[10px] font-mono block ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'}`}>
               {weatherData?.cityName || city} · {dateStr}
             </span>
           </div>
         </div>
 
         {/* Pestañas Concierto vs Prueba de Sonido y Controles */}
-        <div className="flex items-center gap-1 bg-black/20 p-0.5 rounded-lg border border-amber-500/20">
+        <div className="flex items-center gap-1 bg-black/20 p-0.5 rounded-[var(--r-s)] border /20">
           <button
             type="button"
             onClick={() => setSelectedSlot('show')}
             className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors cursor-pointer flex items-center gap-1 ${
               selectedSlot === 'show'
                 ? 'bg-amber-500 text-stone-950 shadow-sm'
-                : 'text-neutral-400 hover:text-amber-300'
+                : 'text-text-[var(--ink-2)] hover:text-amber-300'
             }`}
           >
             <span>Show ({timeStr || '21:00'})</span>
@@ -231,7 +231,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
             className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors cursor-pointer flex items-center gap-1 ${
               selectedSlot === 'soundcheck'
                 ? 'bg-amber-500 text-stone-950 shadow-sm'
-                : 'text-neutral-400 hover:text-amber-300'
+                : 'text-text-[var(--ink-2)] hover:text-amber-300'
             }`}
           >
             <span>Prueba (18:00)</span>
@@ -240,7 +240,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
             type="button"
             onClick={loadWeather}
             title="Actualizar previsión"
-            className="p-1 text-neutral-400 hover:text-amber-400 transition-colors cursor-pointer"
+            className="p-1 text-text-[var(--ink-2)] hover:text-amber-400 transition-colors cursor-pointer"
           >
             <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin text-amber-400' : ''}`} />
           </button>
@@ -249,7 +249,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
               type="button"
               onClick={() => setIsExpanded(false)}
               title="Minimizar widget del tiempo"
-              className="px-1.5 py-0.5 text-neutral-400 hover:text-amber-300 text-[10px] font-mono flex items-center gap-0.5 transition-colors cursor-pointer border-l border-amber-500/20 ml-0.5"
+              className="px-1.5 py-0.5 text-text-[var(--ink-2)] hover:text-amber-300 text-[10px] font-mono flex items-center gap-0.5 transition-colors cursor-pointer border-l /20 ml-0.5"
             >
               <span>Minimizar</span>
               <ChevronUp className="w-3 h-3" />
@@ -260,26 +260,26 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
 
       {/* Contenido principal del tiempo */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-4 gap-2 text-xs font-mono text-neutral-400">
+        <div className="flex items-center justify-center py-4 gap-2 text-xs font-mono text-text-[var(--ink-2)]">
           <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
           <span>Consultando satélites meteorológicos en directo...</span>
         </div>
       ) : weatherData?.status === 'future' ? (
-        <div className="flex items-center gap-3 py-2 px-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] font-mono">
+        <div className="flex items-center gap-3 py-2 px-3 rounded-[var(--r-s)] bg-amber-500/10 border /20 text-[11px] font-mono">
           <Calendar className="w-5 h-5 text-amber-400 shrink-0" />
           <div>
             <span className="font-bold text-amber-300 block">Previsión a 14 días vista</span>
-            <p className={isStitchLight ? 'text-slate-600 text-[10px]' : 'text-neutral-400 text-[10px]'}>
+            <p className={isStitchLight ? 'text-[var(--ink-2)] text-[10px]' : 'text-text-[var(--ink-2)] text-[10px]'}>
               {weatherData.conditionText}
             </p>
           </div>
         </div>
       ) : weatherData?.status === 'past' ? (
-        <div className="text-[11px] font-mono text-neutral-400 py-1">
+        <div className="text-[11px] font-mono text-text-[var(--ink-2)] py-1">
           ✓ {weatherData.conditionText}
         </div>
       ) : weatherData?.status === 'error' ? (
-        <div className="text-[10px] font-mono text-neutral-400 py-1">
+        <div className="text-[10px] font-mono text-text-[var(--ink-2)] py-1">
           {weatherData.error || 'Previsión no disponible para esta ubicación'}
         </div>
       ) : weatherData ? (
@@ -290,7 +290,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
               <motion.div 
                 whileHover={{ scale: 1.08 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                className={`p-2 rounded-2xl bg-gradient-to-br border relative backdrop-blur-md ${getWeatherIconBackdrop(weatherData.iconType)}`}
+                className={`p-2 rounded-[var(--r-l)] bg-gradient-to-br border relative backdrop-blur-md ${getWeatherIconBackdrop(weatherData.iconType)}`}
               >
                 <AnimatedWeatherIcon iconType={weatherData.iconType} size="lg" />
               </motion.div>
@@ -300,12 +300,12 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                     {weatherData.temperature}°C
                   </span>
                   {weatherData.apparentTemperature !== undefined && (
-                    <span className={`text-[10px] font-mono ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                    <span className={`text-[10px] font-mono ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'}`}>
                       (sensación {weatherData.apparentTemperature}°C)
                     </span>
                   )}
                 </div>
-                <p className={`text-xs font-medium flex items-center gap-1.5 ${isStitchLight ? 'text-slate-700' : 'text-neutral-200'}`}>
+                <p className={`text-xs font-medium flex items-center gap-1.5 ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-bg-[var(--sunken)]'}`}>
                   <span>{weatherData.conditionText}</span>
                 </p>
               </div>
@@ -315,10 +315,10 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
             <div className="flex items-center gap-2 sm:gap-3">
               <motion.div 
                 whileHover={{ scale: 1.05 }}
-                className={`flex flex-col items-center px-2.5 py-1.5 rounded-xl border text-center transition-all ${
+                className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] border text-center transition-all ${
                   (weatherData.rainProbability || 0) >= 40 
                     ? 'bg-sky-500/20 border-sky-500/50 text-sky-300 shadow-[0_0_12px_rgba(14,165,233,0.25)]' 
-                    : 'bg-black/20 border-white/5 text-neutral-300'
+                    : 'bg-black/20 border-white/5 text-text-[var(--ink-3)]'
                 }`}
               >
                 <div className="flex items-center gap-1 text-[10px] font-mono">
@@ -341,10 +341,10 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
 
               <motion.div 
                 whileHover={{ scale: 1.05 }}
-                className={`flex flex-col items-center px-2.5 py-1.5 rounded-xl border text-center transition-all ${
+                className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] border text-center transition-all ${
                   (weatherData.windGusts || 0) >= 40 
-                    ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.25)]' 
-                    : 'bg-black/20 border-white/5 text-neutral-300'
+                    ? 'bg-amber-500/20 /50 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.25)]' 
+                    : 'bg-black/20 border-white/5 text-text-[var(--ink-3)]'
                 }`}
               >
                 <div className="flex items-center gap-1 text-[10px] font-mono">
@@ -358,7 +358,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 <span className="text-xs font-bold font-mono text-amber-400 mt-0.5">
                   {weatherData.windGusts} km/h
                 </span>
-                <span className="text-[9px] font-mono text-neutral-400">
+                <span className="text-[9px] font-mono text-text-[var(--ink-2)]">
                   rachas
                 </span>
               </motion.div>
@@ -373,7 +373,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                   <AlertTriangle className="w-3 h-3 text-rose-400 animate-pulse" />
                   Alertas de Escenario y Directo ({weatherData.alerts.length})
                 </span>
-                <span className="text-[9px] font-mono text-neutral-400">
+                <span className="text-[9px] font-mono text-text-[var(--ink-2)]">
                   Recomendaciones para rider y banda
                 </span>
               </div>
@@ -388,22 +388,22 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                       key={alert.id}
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`rounded-xl border p-3 transition-all duration-200 ${
+                      className={`rounded-[var(--r-m)] border p-3 transition-all duration-200 ${
                         isDanger
                           ? isStitchLight
                             ? 'bg-rose-100/70 border-rose-300 text-rose-950 shadow-xs'
                             : 'bg-rose-950/40 border-rose-500/50 text-rose-100 shadow-rose-950/30 shadow-md'
                           : isStitchLight
-                            ? 'bg-amber-100/70 border-amber-300 text-amber-950 shadow-xs'
-                            : 'bg-amber-950/35 border-amber-500/40 text-amber-100 shadow-amber-950/20 shadow-md'
+                            ? 'bg-amber-100/70  text-amber-950 shadow-xs'
+                            : 'bg-amber-950/35 /40 text-amber-100 shadow-amber-950/20 shadow-md'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-start gap-2.5">
-                          <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 border ${
+                          <div className={`p-1.5 rounded-[var(--r-s)] shrink-0 mt-0.5 border ${
                             isDanger 
                               ? 'bg-rose-500/20 border-rose-500/40' 
-                              : 'bg-amber-500/20 border-amber-500/40'
+                              : 'bg-amber-500/20 /40'
                           }`}>
                             <AnimatedWeatherIcon
                               iconType={alert.icon}
@@ -413,7 +413,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                           </div>
                           <div>
                             <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                              <span className="font-bold font-mono text-xs text-neutral-100 tracking-tight">
+                              <span className="font-bold font-mono text-xs text-bg-[var(--sunken)] tracking-tight">
                                 {alert.title}
                               </span>
                               <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
@@ -433,7 +433,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                         <button
                           type="button"
                           onClick={() => toggleAlertExpand(alert.id)}
-                          className={`p-1 rounded-md text-neutral-400 hover:text-white transition-colors shrink-0 cursor-pointer ${
+                          className={`p-1 rounded-md text-text-[var(--ink-2)] hover:text-white transition-colors shrink-0 cursor-pointer ${
                             isDanger ? 'hover:bg-rose-900/40' : 'hover:bg-amber-900/40'
                           }`}
                           title={isExpanded ? 'Ocultar recomendaciones' : 'Ver recomendaciones técnicas'}
@@ -451,7 +451,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.2 }}
                             className={`mt-2.5 pt-2.5 border-t space-y-1.5 text-[10px] font-sans overflow-hidden ${
-                              isDanger ? 'border-rose-500/20 text-rose-200/90' : 'border-amber-500/20 text-amber-200/90'
+                              isDanger ? 'border-rose-500/20 text-rose-200/90' : '/20 text-amber-200/90'
                             }`}
                           >
                             <div className="font-mono uppercase tracking-wider text-[9px] font-bold text-amber-400/90 mb-1 flex items-center gap-1">

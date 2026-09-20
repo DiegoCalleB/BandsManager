@@ -53,7 +53,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
 
       {/* Quick Specs Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="p-3 rounded-xl bg-zinc-900 border border-white/10 space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 space-y-1">
           <label className="block text-[11px] font-medium text-zinc-400">Canales de Mesa Mínimos</label>
           <input
             type="number"
@@ -61,16 +61,16 @@ export const StepRider: React.FC<StepRiderProps> = ({
             max={64}
             value={canalesMesa}
             onChange={(e) => setCanalesMesa(Number(e.target.value))}
-            className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-800 border border-white/5 text-white text-xs focus:outline-none focus:border-amber-400"
+            className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-800 border border-white/5 text-white text-xs focus:outline-none focus:"
           />
         </div>
 
         <button
           type="button"
           onClick={() => setLlevaMicrofoniaPropia(!llevaMicrofoniaPropia)}
-          className={`p-3 rounded-xl border text-left transition-all ${
+          className={`p-3 rounded-[var(--r-m)] border text-left transition-all ${
             llevaMicrofoniaPropia
-              ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+              ? 'bg-amber-500/10 /30 text-amber-300'
               : 'bg-zinc-900 border-white/10 text-zinc-400 hover:border-white/20'
           }`}
         >
@@ -84,9 +84,9 @@ export const StepRider: React.FC<StepRiderProps> = ({
         <button
           type="button"
           onClick={() => setLlevaInEars(!llevaInEars)}
-          className={`p-3 rounded-xl border text-left transition-all ${
+          className={`p-3 rounded-[var(--r-m)] border text-left transition-all ${
             llevaInEars
-              ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+              ? 'bg-amber-500/10 /30 text-amber-300'
               : 'bg-zinc-900 border-white/10 text-zinc-400 hover:border-white/20'
           }`}
         >
@@ -100,9 +100,9 @@ export const StepRider: React.FC<StepRiderProps> = ({
         <button
           type="button"
           onClick={() => setNecesitaBacklineBateria(!necesitaBacklineBateria)}
-          className={`p-3 rounded-xl border text-left transition-all ${
+          className={`p-3 rounded-[var(--r-m)] border text-left transition-all ${
             necesitaBacklineBateria
-              ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+              ? 'bg-amber-500/10 /30 text-amber-300'
               : 'bg-zinc-900 border-white/10 text-zinc-400 hover:border-white/20'
           }`}
         >
@@ -129,7 +129,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
         />
 
         {riderPdfUrl ? (
-          <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-emerald-500/10 border border-emerald-500/30">
             <div className="flex items-center gap-3">
               <FileText className="w-6 h-6 text-emerald-400" />
               <div>
@@ -159,7 +159,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
         ) : (
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-white/10 hover:border-amber-400/40 rounded-xl p-5 text-center cursor-pointer bg-zinc-900/40 hover:bg-zinc-900/70 transition-colors"
+            className="border-2 border-dashed border-white/10 hover:/40 rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-zinc-900/40 hover:bg-zinc-900/70 transition-colors"
           >
             <Upload className="w-6 h-6 text-zinc-500 mx-auto mb-1.5" />
             <span className="text-xs font-medium text-zinc-300 block">
@@ -187,7 +187,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           value={riderTecnicoText}
           onChange={(e) => setRiderTecnicoText(e.target.value)}
           placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m..."
-          className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400 leading-relaxed"
+          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus: leading-relaxed"
         />
       </div>
     </div>

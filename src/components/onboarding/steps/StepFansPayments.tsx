@@ -74,7 +74,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
             value={fanCallToAction}
             onChange={(e) => setFanCallToAction(e.target.value)}
             placeholder="Ej. ¡Únete al club y descarga nuestra maqueta inédita!"
-            className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
           />
         </div>
 
@@ -87,13 +87,13 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
             value={fanWelcomeMessage}
             onChange={(e) => setFanWelcomeMessage(e.target.value)}
             placeholder="Ej. ¡Gracias por apoyarnos en directo! Aquí tienes tu regalo."
-            className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
           />
         </div>
       </div>
 
       {/* Regalo / Lead Magnet Directo */}
-      <div className="p-4 rounded-xl bg-[#19191d] border border-white/10 space-y-3">
+      <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border border-white/10 space-y-3">
         <div className="flex items-center justify-between">
           <h4 className="text-xs font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -111,7 +111,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
               value={fanRewardDescription}
               onChange={(e) => setFanRewardDescription(e.target.value)}
               placeholder="Ej. Canción acústica inédita en MP3 + Libreto PDF"
-              className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
 
@@ -124,7 +124,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
               value={discountCode}
               onChange={(e) => setDiscountCode(e.target.value)}
               placeholder="Ej. DIRECTO10"
-              className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400 uppercase"
+              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus: uppercase"
             />
           </div>
         </div>
@@ -143,7 +143,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
           />
 
           {fanRewardLink ? (
-            <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+            <div className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] bg-emerald-500/10 border border-emerald-500/30">
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                 <span className="text-xs font-medium text-emerald-300 truncate max-w-sm">
@@ -173,7 +173,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 type="button"
                 onClick={() => leadMagnetInputRef.current?.click()}
                 disabled={isUploadingLeadMagnet}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-medium transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border /30 text-xs font-medium transition-colors"
               >
                 {isUploadingLeadMagnet ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
                 Subir Archivo de Regalo
@@ -183,7 +183,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
                 value={fanRewardLink}
                 onChange={(e) => setFanRewardLink(e.target.value)}
                 placeholder="O pega un enlace de descarga externo (Dropbox, Drive, Mega...)"
-                className="flex-1 px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
               />
             </div>
           )}
@@ -207,7 +207,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
               value={bizumNumber}
               onChange={(e) => setBizumNumber(e.target.value)}
               placeholder="600 000 000"
-              className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
 
@@ -220,7 +220,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
               value={revolutTag}
               onChange={(e) => setRevolutTag(e.target.value)}
               placeholder="@tubandatag"
-              className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
 
@@ -233,7 +233,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
               value={paypalEmail}
               onChange={(e) => setPaypalEmail(e.target.value)}
               placeholder="paypal.me/tubanda"
-              className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
 
@@ -246,7 +246,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
               value={ibanNumber}
               onChange={(e) => setIbanNumber(e.target.value)}
               placeholder="ES00 0000..."
-              className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+              className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
         </div>

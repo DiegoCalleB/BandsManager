@@ -20,18 +20,18 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <ModalPortal isOpen={true} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div 
- className={`w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[85vh] ${
+ className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[85vh] ${
  isStitchLight 
- ? 'bg-white -slate-200 text-slate-800' 
- : 'bg-neutral-900 -neutral-800 text-neutral-100'
+ ? 'bg-white -slate-200 text-[var(--ink)]' 
+ : 'bg-bg-[var(--surface)] -neutral-800 text-bg-[var(--sunken)]'
  }`}
  >
  {/* Header */}
  <div className={`px-6 py-4 flex justify-between items-center shrink-0 ${
- isStitchLight ? '-slate-200 bg-slate-50' : '-neutral-800 bg-neutral-950/60'
+ isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-3">
- <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-inner shrink-0 ${
+ <div className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shadow-inner shrink-0 ${
  isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-[#d1b375]/15 text-[#d1b375] -amber-500/20'
  }`}>
  <Type className="w-5 h-5" />
@@ -43,7 +43,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  En tiempo real
  </span>
  </h3>
- <p className="text-[11px] text-neutral-400 font-mono">
+ <p className="text-[11px] text-text-[var(--ink-2)] font-mono">
  Elige la fuente que mejor se adapte a tu gusto visual
  </p>
  </div>
@@ -51,7 +51,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  <button
  onClick={onClose}
- className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/50 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] hover:bg-neutral-800/50 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -59,7 +59,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  {/* Informative banner */}
  <div className={`px-6 py-3 text-xs flex items-center gap-2.5 ${
- isStitchLight ? 'bg-indigo-50/70 -indigo-100 text-indigo-900' : 'bg-neutral-950/40 -neutral-800 text-neutral-300'
+ isStitchLight ? 'bg-indigo-50/70 -indigo-100 text-indigo-900' : 'bg-bg-[var(--surface)]/40 -neutral-800 text-text-[var(--ink-3)]'
  }`}>
  <Info className="w-4 h-4 text-amber-400 shrink-0" />
  <p className="text-[11px] leading-relaxed font-mono">
@@ -76,14 +76,14 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <div
  key={preset.id}
  onClick={() => onSelectFont(preset.id)}
- className={`p-4 rounded-xl transition-all cursor-pointer relative group ${
+ className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer relative group ${
  isSelected
  ? isStitchLight
  ? 'bg-indigo-50/80 -indigo-500 ring-2 ring-indigo-500/20 shadow-md'
  : 'bg-amber-500/10 -amber-500 ring-2 ring-amber-500/20 shadow-lg'
  : isStitchLight
- ? 'bg-slate-50 -slate-200 hover:-slate-300 hover:bg-slate-100/80'
- : 'bg-neutral-950/60 -neutral-800 hover:-neutral-700 hover:bg-neutral-900'
+ ? 'bg-[var(--bg)] -slate-200 hover:-slate-300 hover:bg-[var(--sunken)]/80'
+ : 'bg-bg-[var(--surface)]/60 -neutral-800 hover:-neutral-700 hover:bg-bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-start justify-between gap-3 mb-2">
@@ -102,7 +102,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  {preset.badge}
  </span>
  </div>
- <span className="text-[10px] text-neutral-400 font-mono block mt-0.5">
+ <span className="text-[10px] text-text-[var(--ink-2)] font-mono block mt-0.5">
  {preset.subtitle}
  </span>
  </div>
@@ -118,14 +118,14 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  </div>
  </div>
 
- <p className="text-xs text-neutral-400 leading-relaxed mb-3 font-mono">
+ <p className="text-xs text-text-[var(--ink-2)] leading-relaxed mb-3 font-mono">
  {preset.description}
  </p>
 
  {/* Live Preview Sample */}
  <div 
- className={`p-3 rounded-lg text-sm transition-all ${
- isStitchLight ? 'bg-white -slate-200 text-slate-800' : 'bg-neutral-900 -neutral-800/80 text-neutral-200'
+ className={`p-3 rounded-[var(--r-s)] text-sm transition-all ${
+ isStitchLight ? 'bg-white -slate-200 text-[var(--ink)]' : 'bg-bg-[var(--surface)] -neutral-800/80 text-bg-[var(--sunken)]'
  }`}
  style={{ fontFamily: preset.displayFont }}
  >
@@ -143,14 +143,14 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  {/* Footer */}
  <div className={`px-6 py-3 flex justify-between items-center shrink-0 ${
- isStitchLight ? '-slate-200 bg-slate-50' : '-neutral-800 bg-neutral-950/60'
+ isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-bg-[var(--surface)]/60'
  }`}>
  <span className="text-[10px] font-mono text-neutral-500">
  Cambio instantáneo guardado en tu navegador
  </span>
  <button
  onClick={onClose}
- className={`px-5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm ${
+ className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer shadow-sm ${
  isStitchLight 
  ? 'bg-indigo-600 hover:bg-indigo-700 text-white' 
  : 'bg-amber-500 hover:bg-amber-400 text-stone-950'

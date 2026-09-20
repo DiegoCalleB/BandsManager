@@ -158,7 +158,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
   }, [handleStageNext, handleStagePrev, toggleStagePlayPause]);
 
   return (
-    <div className="p-4 sm:p-6 rounded-2xl bg-black space-y-6 text-white shadow-2xl">
+    <div className="p-4 sm:p-6 rounded-[var(--r-l)] bg-black space-y-6 text-white shadow-2xl">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4">
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -169,7 +169,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
             {/* Offline Robustness Badge */}
             {!isOnline ? (
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5" title="Sin conexión a internet: funcionando 100% con el repertorio y letras cacheados localmente">
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border /40 text-amber-300 font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5" title="Sin conexión a internet: funcionando 100% con el repertorio y letras cacheados localmente">
                 <WifiOff className="w-3 h-3 text-amber-400" />
                 Modo Offline Activo
               </span>
@@ -193,7 +193,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
             <select
               value={activeSetlistId}
               onChange={(e) => setActiveSetlistId(e.target.value)}
-              className="bg-neutral-900 text-[#d1b375] text-[10px] font-mono py-2 px-3 rounded-xl focus:outline-none"
+              className="bg-bg-[var(--surface)] text-[#d1b375] text-[10px] font-mono py-2 px-3 rounded-[var(--r-m)] focus:outline-none"
             >
               {setlists.map(s => (
                 <option key={s.id} value={s.id}>{s.nombre}</option>
@@ -202,7 +202,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
             <button
               onClick={() => setShowPdfPreview(true)}
-              className="px-2 py-1 bg-[#f2ca50] text-black font-mono font-extrabold text-[10px] rounded-xl hover:bg-[#d1b375]/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+              className="px-2 py-1 bg-[var(--acc)] text-black font-mono font-extrabold text-[10px] rounded-[var(--r-m)] hover:bg-[#d1b375]/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
             >
               <Printer className="w-4 h-4" />
               <span>Imprimir / Exportar</span>
@@ -232,14 +232,14 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
       {/* CONCERT PLAYER CONSOLE (SPOTIFY LIVE BAR) */}
       {activeSetlist && activeSetlist.items.length > 0 && (
-        <div className="p-5 sm:p-6 rounded-2xl bg-[#181818] border border-white/10 space-y-4 shadow-2xl relative overflow-hidden">
+        <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[#181818] border border-white/10 space-y-4 shadow-2xl relative overflow-hidden">
           {/* Subtle top glow line */}
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#1db954]/60 to-transparent" />
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Active Track Metadata & Heart Favorite */}
             <div className="flex items-center gap-3.5 w-full md:w-auto">
-              <div className="w-13 h-13 rounded-xl bg-[#282828] border border-white/10 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden group">
+              <div className="w-13 h-13 rounded-[var(--r-m)] bg-[#282828] border border-white/10 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden group">
                 {currentStageSong?.portadaUrl ? (
                   <img src={currentStageSong.portadaUrl} alt={currentStageSong.titulo} className="w-full h-full object-cover" />
                 ) : stagePlayingIndex !== null ? (
@@ -265,7 +265,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       Audio Real
                     </span>
                   ) : stagePlayingIndex !== null ? (
-                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
+                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-amber-500/20 text-amber-300 border /30 font-bold">
                       Simulación
                     </span>
                   ) : null}
@@ -312,10 +312,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
-                className={`p-2 rounded-xl border text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                className={`p-2 rounded-[var(--r-m)] border text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
                   showPedalShortcuts
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                    : 'bg-neutral-900 hover:bg-neutral-800 text-zinc-400 border-zinc-700'
+                    ? 'bg-amber-500/20 text-amber-300 /40'
+                    : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-zinc-400 border-zinc-700'
                 }`}
                 title="Atajos de teclado / Pedal Bluetooth para pasar canciones sin manos"
               >
@@ -348,7 +348,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                     setShowItemAudioUrl(currentStageItem.audioUrl || '');
                     setShowShowItemModal(true);
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-sky-950/80 hover:bg-sky-900 text-sky-300 border border-sky-500/40 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ml-1 hover:scale-105 shadow-md"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-sky-950/80 hover:bg-sky-900 text-sky-300 border border-sky-500/40 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ml-1 hover:scale-105 shadow-md"
                   title="Grabar o subir audio para esta presentación / interludio"
                 >
                   <Mic className="w-4 h-4 text-sky-400" />
@@ -464,7 +464,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
           {/* Bluetooth Pedal / Foot Controller Helper Banner */}
           {showPedalShortcuts && (
-            <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs font-mono space-y-2 animate-fadeIn">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/10 border /30 text-amber-200 text-xs font-mono space-y-2 animate-fadeIn">
               <div className="flex items-center justify-between font-bold text-amber-300">
                 <span className="flex items-center gap-1.5">
                   <Footprints className="w-4 h-4 text-amber-400" />
@@ -473,13 +473,13 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">Activo</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
-                <div className="p-2 rounded-lg bg-black/60 border border-amber-500/20">
+                <div className="p-2 rounded-[var(--r-s)] bg-black/60 border /20">
                   <span className="font-bold text-white">🦶 Pista Siguiente:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">PageDown</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">→</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">]</code>
                 </div>
-                <div className="p-2 rounded-lg bg-black/60 border border-amber-500/20">
+                <div className="p-2 rounded-[var(--r-s)] bg-black/60 border /20">
                   <span className="font-bold text-white">🦶 Pista Anterior:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">PageUp</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">←</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">[</code>
                 </div>
-                <div className="p-2 rounded-lg bg-black/60 border border-amber-500/20">
+                <div className="p-2 rounded-[var(--r-s)] bg-black/60 border /20">
                   <span className="font-bold text-white">🦶 Play / Pausa:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">Barra Espaciadora</code>
                 </div>
               </div>
@@ -492,10 +492,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
-                className={`text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer ${
+                className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer ${
                   showPedalShortcuts 
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
-                    : 'bg-neutral-900 text-zinc-400 hover:text-white border border-white/5'
+                    ? 'bg-amber-500/20 text-amber-300 border /40' 
+                    : 'bg-bg-[var(--surface)] text-zinc-400 hover:text-white border border-white/5'
                 }`}
               >
                 <Footprints className="w-3.5 h-3.5" />
@@ -505,10 +505,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <button
                 type="button"
                 onClick={() => setShowChordsPanel(!showChordsPanel)}
-                className={`text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
+                className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
                   showChordsPanel 
                     ? 'bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/50 shadow-sm' 
-                    : 'bg-neutral-900 text-zinc-300 hover:text-white border border-white/5'
+                    : 'bg-bg-[var(--surface)] text-zinc-300 hover:text-white border border-white/5'
                 }`}
               >
                 <FileText className="w-3.5 h-3.5 text-[#1ed760]" />
@@ -534,7 +534,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
           {/* Live Stage Lyrics & Chords Teleprompter Drawer (Offline-safe) */}
           {showChordsPanel && (
-            <div className="p-4 rounded-xl bg-neutral-950 border border-zinc-800 space-y-3 animate-fadeIn">
+            <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] border border-zinc-800 space-y-3 animate-fadeIn">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-2.5">
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-[#1ed760]" />
@@ -617,7 +617,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
           arrastre, notas, popover de energía...) cuando este reproductor va embebido ahí —
           repetirla aquí sería la misma información dos veces en la misma pantalla. */}
       {!embedded && activeSetlist ? (
-        <div className="bg-[#121212] border border-white/5 rounded-2xl overflow-hidden shadow-2xl p-4 sm:p-6">
+        <div className="bg-[#121212] border border-white/5 rounded-[var(--r-l)] overflow-hidden shadow-2xl p-4 sm:p-6">
           <div className="overflow-x-auto">
             <div className="min-w-[650px] space-y-2">
               <div className="grid grid-cols-12 text-[11px] font-mono font-extrabold text-[#b3b3b3] uppercase pb-3 border-b border-zinc-800/80 px-3">
@@ -639,7 +639,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   return (
                     <div
                       key={it.id}
-                      className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-xl transition-all cursor-pointer ${
+                      className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-[var(--r-m)] transition-all cursor-pointer ${
                         isSelectedThis
                           ? 'bg-[#1db954]/15 border-l-4 border-[#1db954] text-white' 
                           : 'hover:bg-zinc-800/60 text-zinc-300'
@@ -701,7 +701,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   return (
                     <div
                       key={it.id}
-                      className="py-3 px-4 bg-gradient-to-r from-[#1db954]/20 via-[#181818] to-black border-l-4 border-[#1db954] rounded-xl font-mono text-[#1ed760] font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 my-2 shadow-md"
+                      className="py-3 px-4 bg-gradient-to-r from-[#1db954]/20 via-[#181818] to-black border-l-4 border-[#1db954] rounded-[var(--r-m)] font-mono text-[#1ed760] font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 my-2 shadow-md"
                     >
                       <span className="text-sm">⚡</span>
                       <span>{it.tituloCustom || 'SECCIÓN DEL SHOW'}</span>
@@ -716,7 +716,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   return (
                     <div
                       key={it.id}
-                      className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-xl transition-all cursor-pointer ${
+                      className={`grid grid-cols-12 items-center py-3.5 px-3 rounded-[var(--r-m)] transition-all cursor-pointer ${
                         isSelectedThis 
                           ? 'bg-sky-500/15 border-l-4 border-sky-400 text-white' 
                           : 'hover:bg-zinc-800/60 text-zinc-300'
@@ -775,7 +775,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                             setShowItemAudioUrl(it.audioUrl || '');
                             setShowShowItemModal(true);
                           }}
-                          className="px-2 py-1 rounded-lg bg-sky-950/70 hover:bg-sky-900 border border-sky-500/30 text-sky-300 text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer hover:scale-105 shrink-0 self-start sm:self-auto"
+                          className="px-2 py-1 rounded-[var(--r-s)] bg-sky-950/70 hover:bg-sky-900 border border-sky-500/30 text-sky-300 text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer hover:scale-105 shrink-0 self-start sm:self-auto"
                           title="Modificar Audio o Grabación de este evento"
                         >
                           <Mic className="w-3 h-3 text-sky-400" />

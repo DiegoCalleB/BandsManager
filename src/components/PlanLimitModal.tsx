@@ -49,18 +49,18 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-white rounded-xl hover:bg-neutral-800 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-2 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-m)] hover:bg-neutral-800 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         <div className="flex items-start gap-4">
-          <div className="p-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 shrink-0">
+          <div className="p-3 rounded-[var(--r-l)] bg-amber-500/15 border /30 text-amber-400 shrink-0">
             <Lock className="w-7 h-7" />
           </div>
           <div>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md border /20">
               Límite de {currentPlanDef.name} alcanzado
             </span>
             <h3 className="text-xl font-bold font-display uppercase tracking-wide text-zinc-100 mt-1">
@@ -70,18 +70,18 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
         </div>
 
         {/* Non-destructive guarantee notice */}
-        <div className="p-4 rounded-2xl bg-neutral-900/90 border border-neutral-800 space-y-2">
+        <div className="p-4 rounded-[var(--r-l)] bg-bg-[var(--surface)]/90 border  space-y-2">
           <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold">
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>Tus datos actuales están 100% seguros y protegidos</span>
           </div>
-          <p className="text-xs text-neutral-300 leading-relaxed">
+          <p className="text-xs text-text-[var(--ink-3)] leading-relaxed">
             Puedes consultar, editar, filtrar y exportar todas tus {currentCount} {info.plural} creadas sin ninguna limitación. Para añadir nuevas {info.plural}, mejora tu plan a <strong className="text-amber-300 font-semibold">{targetPlanDef.name}</strong>.
           </p>
         </div>
 
         {/* Recommended plan highlight */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#1c1a18] to-[#141312] border-2 border-amber-500/40 space-y-4">
+        <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-b from-[#1c1a18] to-[#141312] border-2 /40 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-400" />
@@ -89,16 +89,16 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                 Plan Recomendado: {targetPlanDef.name}
               </span>
             </div>
-            <span className="text-xs font-mono text-zinc-300 font-bold bg-amber-400/20 px-2.5 py-0.5 rounded-full border border-amber-400/40">
+            <span className="text-xs font-mono text-zinc-300 font-bold bg-amber-400/20 px-2.5 py-0.5 rounded-full border /40">
               {targetPlanDef.badge}
             </span>
           </div>
 
-          <p className="text-xs text-neutral-300">
+          <p className="text-xs text-text-[var(--ink-3)]">
             {targetPlanDef.description}
           </p>
 
-          <ul className="space-y-1.5 text-xs text-neutral-300">
+          <ul className="space-y-1.5 text-xs text-text-[var(--ink-3)]">
             {targetPlanDef.features.slice(0, 3).map((feat, idx) => (
               <li key={idx} className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-amber-400 shrink-0 stroke-[3]" />
@@ -113,7 +113,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               billingInterval={billingPeriod}
               bandId={currentUser?.band_id}
               userEmail={currentUser?.email}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-black uppercase text-xs tracking-wider shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-black uppercase text-xs tracking-wider shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center justify-center gap-2"
             >
               <span>Mejorar a {targetPlanDef.name} ({targetPlanDef.price})</span>
               <ArrowRight className="w-4 h-4" />
@@ -126,7 +126,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-neutral-400 hover:text-zinc-200 text-xs font-mono transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-[var(--r-m)] text-text-[var(--ink-2)] hover:text-zinc-200 text-xs font-mono transition-colors cursor-pointer"
           >
             Continuar en {currentPlanDef.name}
           </button>
@@ -137,7 +137,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               onClose();
               onNavigateToPlanes();
             }}
-            className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold border border-amber-500/20 transition-all cursor-pointer flex items-center gap-1.5"
+            className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold border /20 transition-all cursor-pointer flex items-center gap-1.5"
           >
             <span>Ver Comparativa Completa</span>
             <ExternalLink className="w-3.5 h-3.5" />

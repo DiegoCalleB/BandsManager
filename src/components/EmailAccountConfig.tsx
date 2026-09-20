@@ -201,38 +201,38 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
     }
   };
 
-  const inputClass = `w-full p-2.5 rounded-xl text-xs font-mono transition-all outline-none ${
+  const inputClass = `w-full p-2.5 rounded-[var(--r-m)] text-xs font-mono transition-all outline-none ${
     isStitchLight
-      ? 'bg-slate-50 border border-slate-300 text-slate-800 focus:border-indigo-500'
-      : 'bg-neutral-950 border border-neutral-800 text-neutral-200 focus:border-sky-500/60'
+      ? 'bg-[var(--bg)] border  text-[var(--ink)] focus:border-indigo-500'
+      : 'bg-bg-[var(--surface)] border  text-bg-[var(--sunken)] focus:border-sky-500/60'
   }`;
-  const labelClass = 'text-xs font-mono font-semibold text-neutral-300 flex items-center gap-2';
+  const labelClass = 'text-xs font-mono font-semibold text-text-[var(--ink-3)] flex items-center gap-2';
 
   if (loading) {
     return (
-      <div className={`p-6 rounded-2xl flex items-center justify-center gap-3 ${
-        isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-neutral-900/60 border border-neutral-800'
+      <div className={`p-6 rounded-[var(--r-l)] flex items-center justify-center gap-3 ${
+        isStitchLight ? 'bg-[var(--bg)] border ' : 'bg-bg-[var(--surface)]/60 border '
       }`}>
         <Loader2 className="w-5 h-5 animate-spin text-sky-400" />
-        <span className="text-xs font-mono text-neutral-400">Comprobando cuenta de email conectada...</span>
+        <span className="text-xs font-mono text-text-[var(--ink-2)]">Comprobando cuenta de email conectada...</span>
       </div>
     );
   }
 
   return (
-    <div className={`space-y-5 p-5 sm:p-6 rounded-2xl border transition-all ${
+    <div className={`space-y-5 p-5 sm:p-6 rounded-[var(--r-l)] border transition-all ${
       isStitchLight
-        ? 'bg-white border-slate-200 shadow-sm'
-        : 'bg-neutral-900/70 border-neutral-800 text-white'
+        ? 'bg-white  shadow-sm'
+        : 'bg-bg-[var(--surface)]/70  text-white'
     }`}>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-800/60">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b /60">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
+          <div className="p-2 rounded-[var(--r-m)] bg-sky-500/10 border border-sky-500/20 text-sky-400">
             <Mail className="w-5 h-5" />
           </div>
           <div>
             <h3 className="text-base font-bold tracking-tight">Cuenta de Email (Agente Enviador / Lector)</h3>
-            <p className="text-xs font-mono text-neutral-400">
+            <p className="text-xs font-mono text-text-[var(--ink-2)]">
               Gmail, Outlook o cualquier proveedor con SMTP/IMAP - siempre tu propia cuenta, nunca compartida entre bandas.
             </p>
           </div>
@@ -251,25 +251,25 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
           corre en el servidor sin banda con sesión abierta (ver server/routes/gmailOAuth.ts).
           Solo para Gmail; Outlook y otros proveedores siguen usando el formulario SMTP/IMAP de
           abajo. */}
-      <div className={`p-4 rounded-xl border space-y-3 ${
+      <div className={`p-4 rounded-[var(--r-m)] border space-y-3 ${
         isStitchLight ? 'bg-sky-50/60 border-sky-200' : 'bg-sky-500/5 border-sky-500/20'
       }`}>
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-sky-400 shrink-0" />
           <h4 className="text-sm font-bold">Gmail sin contraseña (recomendado)</h4>
         </div>
-        <p className="text-xs font-mono text-neutral-400">
+        <p className="text-xs font-mono text-text-[var(--ink-2)]">
           Conecta tu cuenta de Gmail con un solo clic - sin generar ninguna contraseña de aplicación.
           Funciona tanto al aprobar un lead a mano como en el Agente Enviador programado.
         </p>
 
         {gmailOAuthLoading ? (
-          <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
+          <div className="flex items-center gap-2 text-xs font-mono text-text-[var(--ink-2)]">
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
             <span>Comprobando conexión de Gmail...</span>
           </div>
         ) : gmailOAuthStatus.connected ? (
-          <div className={`p-3 rounded-lg text-xs flex items-center justify-between gap-3 border ${
+          <div className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 border ${
             isStitchLight ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
           }`}>
             <div className="flex items-center gap-2 min-w-0">
@@ -282,7 +282,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
               type="button"
               onClick={handleDisconnectGmailOAuth}
               disabled={gmailOAuthDisconnecting}
-              className="shrink-0 px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+              className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
             >
               {gmailOAuthDisconnecting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Unlink className="w-3 h-3" />}
               Desconectar
@@ -293,7 +293,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
             type="button"
             onClick={handleConnectGmailOAuth}
             disabled={gmailOAuthConnecting}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-neutral-950 font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-sky-500 hover:bg-sky-400 text-bg-[var(--surface)] font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {gmailOAuthConnecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
             <span>{gmailOAuthConnecting ? 'Redirigiendo a Google...' : 'Conectar con Google'}</span>
@@ -301,7 +301,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
         )}
 
         {gmailOAuthFeedback && (
-          <div className={`p-2.5 rounded-lg text-[11px] flex items-center gap-2 animate-fadeIn ${
+          <div className={`p-2.5 rounded-[var(--r-s)] text-[11px] flex items-center gap-2 animate-fadeIn ${
             gmailOAuthFeedback.type === 'success'
               ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
               : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
@@ -324,7 +324,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
 
       {status.connected && !editing ? (
         <div className="space-y-3">
-          <div className={`p-4 rounded-xl text-xs flex items-center justify-between gap-3 border ${
+          <div className={`p-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 border ${
             isStitchLight ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
           }`}>
             <div className="flex items-center gap-2 min-w-0">
@@ -336,7 +336,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="shrink-0 px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
+              className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
             >
               <RefreshCw className="w-3 h-3" />
               Cambiar cuenta
@@ -355,12 +355,12 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
                   key={p}
                   type="button"
                   onClick={() => handleProviderChange(p)}
-                  className={`p-2.5 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${
+                  className={`p-2.5 rounded-[var(--r-m)] border text-xs font-mono font-bold transition-all cursor-pointer ${
                     provider === p
                       ? 'bg-sky-500/20 border-sky-400/80 text-sky-200 shadow-sm shadow-sky-900/30'
                       : isStitchLight
-                      ? 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
-                      : 'bg-neutral-950/80 border-neutral-800/80 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200'
+                      ? 'bg-[var(--bg)]  text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                      : 'bg-bg-[var(--surface)]/80 /80 text-text-[var(--ink-2)] hover:bg-neutral-800/50 hover:text-bg-[var(--sunken)]'
                   }`}
                 >
                   {p === 'gmail' ? 'Gmail' : p === 'outlook' ? 'Outlook' : 'Otro (manual)'}
@@ -399,8 +399,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
             </div>
           </div>
 
-          <div className={`p-3 rounded-xl text-[11px] flex items-start gap-2 border ${
-            isStitchLight ? 'bg-indigo-50/80 border-indigo-100 text-indigo-950' : 'bg-neutral-950 border-neutral-800 text-neutral-400'
+          <div className={`p-3 rounded-[var(--r-m)] text-[11px] flex items-start gap-2 border ${
+            isStitchLight ? 'bg-indigo-50/80 border-indigo-100 text-indigo-950' : 'bg-bg-[var(--surface)]  text-text-[var(--ink-2)]'
           }`}>
             <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-sky-400" />
             <span>
@@ -414,14 +414,14 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
           </div>
 
           {provider === 'other' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-neutral-800/60">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t /60">
               <div className="space-y-2">
                 <label className={labelClass}><span>Servidor SMTP (envío)</span></label>
                 <div className="flex gap-2">
                   <input type="text" value={smtpHost} onChange={(e) => setSmtpHost(e.target.value)} placeholder="smtp.tudominio.com" className={`${inputClass} flex-1`} />
                   <input type="number" value={smtpPort} onChange={(e) => setSmtpPort(Number(e.target.value))} placeholder="465" className={`${inputClass} w-20`} />
                 </div>
-                <label className="flex items-center gap-1.5 text-[11px] font-mono text-neutral-400 cursor-pointer">
+                <label className="flex items-center gap-1.5 text-[11px] font-mono text-text-[var(--ink-2)] cursor-pointer">
                   <input type="checkbox" checked={smtpSecure} onChange={(e) => setSmtpSecure(e.target.checked)} />
                   Conexión SSL/TLS directa (desmarcar si tu proveedor usa STARTTLS)
                 </label>
@@ -439,7 +439,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
       )}
 
       {feedback && (
-        <div className={`p-3 rounded-xl text-xs flex items-center gap-2 animate-fadeIn ${
+        <div className={`p-3 rounded-[var(--r-m)] text-xs flex items-center gap-2 animate-fadeIn ${
           feedback.type === 'success'
             ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
             : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
@@ -459,7 +459,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
             <button
               type="button"
               onClick={() => { setEditing(false); setFeedback(null); }}
-              className="px-4 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold text-xs font-mono transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-text-[var(--ink-3)] font-bold text-xs font-mono transition-all cursor-pointer"
             >
               Cancelar
             </button>
@@ -468,7 +468,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-neutral-950 font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-[var(--r-m)] bg-sky-500 hover:bg-sky-400 text-bg-[var(--surface)] font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {saving ? (
               <>

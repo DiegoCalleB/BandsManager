@@ -794,35 +794,35 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  switch (status) {
  case 'colegas_aliados':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-[#10b981]/15 text-[#10b981] whitespace-nowrap shrink-0">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[#10b981]/15 text-[#10b981] whitespace-nowrap shrink-0">
  <Handshake className="w-3 h-3 text-[#10b981] shrink-0" />
  <span>Colegas / Aliados</span>
  </span>
  );
  case 'concierto_agendado':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-[#d1b375]/15 text-[#d1b375] whitespace-nowrap shrink-0">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-[#d1b375]/15 text-[#d1b375] whitespace-nowrap shrink-0">
  <Zap className="w-3 h-3 text-[#d1b375] shrink-0 animate-pulse" />
  <span>Concierto Agendado</span>
  </span>
  );
  case 'intercambio_propuesto':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-sky-500/15 text-sky-400 whitespace-nowrap shrink-0">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-sky-500/15 text-sky-400 whitespace-nowrap shrink-0">
  <Repeat className="w-3 h-3 text-sky-400 shrink-0" />
  <span>Intercambio Propuesto</span>
  </span>
  );
  case 'pendiente_respuesta':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-fuchsia-500/15 text-fuchsia-300 whitespace-nowrap shrink-0">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-fuchsia-500/15 text-fuchsia-300 whitespace-nowrap shrink-0">
  <Clock className="w-3 h-3 text-fuchsia-300 shrink-0" />
  <span>Pendiente Respuesta</span>
  </span>
  );
  case 'no_disponible':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-rose-500/15 text-rose-400 whitespace-nowrap shrink-0">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-rose-500/15 text-rose-400 whitespace-nowrap shrink-0">
  <X className="w-3 h-3 text-rose-400 shrink-0" />
  <span>No Disponible</span>
  </span>
@@ -830,8 +830,8 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  case 'sin_contactar':
  default:
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-neutral-800 text-neutral-400 whitespace-nowrap shrink-0">
- <Radio className="w-3 h-3 text-neutral-400 shrink-0" />
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-neutral-800 text-text-[var(--ink-2)] whitespace-nowrap shrink-0">
+ <Radio className="w-3 h-3 text-text-[var(--ink-2)] shrink-0" />
  <span>Sin Contactar</span>
  </span>
  );
@@ -884,15 +884,15 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="w-full space-y-6">
  
  {/* 1. HEADER COMPACTO Y CONTROLES */}
- <div className={`p-3 sm:p-3.5 rounded-xl transition-all ${colors.card} border border-neutral-800/60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5`}>
+ <div className={`p-3 sm:p-3.5 rounded-[var(--r-m)] transition-all ${colors.card} border /60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5`}>
  {/* Izquierda: Título y sub-pestañas */}
  <div className="flex items-center gap-2.5 flex-wrap">
  <div className="flex items-center gap-2">
  <h2 className="text-lg sm:text-xl font-bold font-display tracking-tight text-zinc-100 flex items-center gap-1.5">
- <Users className="w-4 h-4 text-[#f2ca50]" />
+ <Users className="w-4 h-4 text-[var(--acc)]" />
  <span>Grupos</span>
  </h2>
- <span className="text-[11px] font-mono text-neutral-400 bg-neutral-900 px-2 py-0.5 rounded-full border border-neutral-800">
+ <span className="text-[11px] font-mono text-text-[var(--ink-2)] bg-bg-[var(--surface)] px-2 py-0.5 rounded-full border ">
  {totalBands}
  </span>
  </div>
@@ -900,14 +900,14 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="h-4 w-px bg-neutral-800 hidden sm:block" />
 
  {/* Sub-tabs segmentadas */}
- <div className="flex items-center gap-1 bg-neutral-900/80 p-0.5 rounded-lg border border-neutral-800/80">
+ <div className="flex items-center gap-1 bg-bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)] border /80">
  <button
  type="button"
  onClick={() => setSubTab('co_booking')}
  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
  subTab === 'co_booking'
  ? 'bg-zinc-800 text-zinc-100 shadow-sm'
- : 'text-neutral-400 hover:text-white'
+ : 'text-text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <span>Bandas Amigas</span>
@@ -920,7 +920,7 @@ Bakandeya Agent Manager IA & Músicos`;
  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
  subTab === 'registered_bands'
  ? 'bg-emerald-500/20 text-emerald-300 shadow-sm'
- : 'text-neutral-400 hover:text-white'
+ : 'text-text-[var(--ink-2)] hover:text-white'
  }`}
  >
  <span>Registro</span>
@@ -945,7 +945,7 @@ Bakandeya Agent Manager IA & Músicos`;
  alert('Añade primero una banda para generar un pitch de intercambio.');
  }
  }}
- className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-sky-500/10 hover:bg-sky-500/20 text-sky-200 border border-sky-500/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-sky-500/10 hover:bg-sky-500/20 text-sky-200 border border-sky-500/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
  title="Generar pitch de intercambio de fechas (Date Swap)"
  >
  <Repeat className="w-3.5 h-3.5 text-sky-400 shrink-0" />
@@ -955,7 +955,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={() => setIsScoutModalOpen(true)}
- className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-300 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-amber-500/10 hover:bg-amber-500/20 border /20 text-amber-300 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
  title="Scout IA: Buscar bandas para co-booking"
  >
  <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -966,7 +966,7 @@ Bakandeya Agent Manager IA & Músicos`;
  id="band-btn-add-new"
  type="button"
  onClick={handleOpenCreateModal}
- className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#f2ca50] hover:bg-[#e2ba40] text-[#3c2f00] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)] hover:bg-[#e2ba40] text-[var(--acc-ink)] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
  >
  <Plus className="w-3.5 h-3.5 shrink-0" />
  <span>Nueva Banda</span>
@@ -975,7 +975,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800 transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] border  transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
  title="Exportar Excel Completo (.xlsx)"
  >
  <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
@@ -986,21 +986,21 @@ Bakandeya Agent Manager IA & Músicos`;
 
   {/* TAB 2: REGISTERED BANDS VIEW (registro_bandas) */}
  {subTab === 'registered_bands' ? (
- <div className={`p-5 rounded-2xl ${colors.card} space-y-4 shadow-lg border border-neutral-800`}>
+ <div className={`p-5 rounded-[var(--r-l)] ${colors.card} space-y-4 shadow-lg border `}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
  <h3 className="text-xl font-bold font-display text-white flex items-center gap-2">
  <Building2 className="w-5 h-5 text-emerald-400" />
  <span>Registro de Nuevas Bandas Clientes (registro_bandas)</span>
  </h3>
- <p className="text-xs text-neutral-400 font-mono mt-0.5">
+ <p className="text-xs text-text-[var(--ink-2)] font-mono mt-0.5">
  Tabla oficial de Supabase <span className="text-emerald-400 font-bold">registro_bandas</span> con la columna <span className="text-amber-300 font-bold">band_id</span> situándose en la extrema derecha.
  </p>
  </div>
  <div className="flex items-center gap-2 shrink-0">
  <button
  onClick={fetchRegisteredBands}
- className="p-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer border border-neutral-800"
+ className="p-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer border "
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isLoadingRegBands ? 'animate-spin' : ''}`} />
  <span>Actualizar</span>
@@ -1008,7 +1008,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="p-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer border border-emerald-500/30"
+ className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer border border-emerald-500/30"
  >
  <FileSpreadsheet className="w-3.5 h-3.5" />
  <span>Excel (.xlsx)</span>
@@ -1016,10 +1016,10 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  </div>
 
- <div className="overflow-x-auto rounded-xl border border-neutral-800">
+ <div className="overflow-x-auto rounded-[var(--r-m)] border ">
  <table className="w-full text-left border-collapse text-xs font-mono">
  <thead>
- <tr className="bg-neutral-950 text-neutral-400 uppercase tracking-wider text-[10px] border-b border-neutral-800">
+ <tr className="bg-bg-[var(--surface)] text-text-[var(--ink-2)] uppercase tracking-wider text-[10px] border-b ">
  <th className="p-3">ID Reg.</th>
  <th className="p-3">Nombre Banda</th>
  <th className="p-3">Email Contacto</th>
@@ -1028,10 +1028,10 @@ Bakandeya Agent Manager IA & Músicos`;
  <th className="p-3">Estado Cuenta</th>
  <th className="p-3">Notas</th>
  <th className="p-3 font-bold text-cyan-300 bg-cyan-500/10 border-l border-cyan-500/20">user_id</th>
- <th className="p-3 text-right text-amber-300 bg-amber-500/10 border-l border-amber-500/20 font-bold">band_id</th>
+ <th className="p-3 text-right text-amber-300 bg-amber-500/10 border-l /20 font-bold">band_id</th>
  </tr>
  </thead>
- <tbody className="divide-y divide-neutral-800/60 bg-neutral-900/40 text-neutral-200">
+ <tbody className="divide-y divide-neutral-800/60 bg-bg-[var(--surface)]/40 text-bg-[var(--sunken)]">
  {registeredBands.length === 0 ? (
  <tr>
  <td colSpan={9} className="p-8 text-center text-neutral-500 italic">
@@ -1041,18 +1041,18 @@ Bakandeya Agent Manager IA & Músicos`;
  ) : (
  registeredBands.map((band: any, idx: number) => (
  <tr key={band.id || `reg-${idx}`} className="hover:bg-neutral-800/40 transition-colors">
- <td className="p-3 font-mono text-neutral-400">{band.id || `reg-${idx + 1}`}</td>
+ <td className="p-3 font-mono text-text-[var(--ink-2)]">{band.id || `reg-${idx + 1}`}</td>
  <td className="p-3 font-bold text-white flex items-center gap-2">
  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
  <span>{band.nombre_banda || band.nombreBanda || band.contacto_nombre}</span>
  </td>
- <td className="p-3 text-neutral-300">{band.email || '—'}</td>
+ <td className="p-3 text-text-[var(--ink-3)]">{band.email || '—'}</td>
  <td className="p-3">
  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-indigo-500/15 text-indigo-300 border border-indigo-500/20">
  {band.plan || 'emergente'}
  </span>
  </td>
- <td className="p-3 text-neutral-400">
+ <td className="p-3 text-text-[var(--ink-2)]">
  {band.fecha_registro ? new Date(band.fecha_registro).toLocaleDateString() : '—'}
  </td>
  <td className="p-3">
@@ -1060,11 +1060,11 @@ Bakandeya Agent Manager IA & Músicos`;
  {band.estado_cuenta || 'activo'}
  </span>
  </td>
- <td className="p-3 text-neutral-400 max-w-xs truncate">{band.notas || '—'}</td>
+ <td className="p-3 text-text-[var(--ink-2)] max-w-xs truncate">{band.notas || '—'}</td>
  <td className="p-3 text-left font-bold text-cyan-300 bg-cyan-500/5 border-l border-cyan-500/20 font-mono">
  {band.user_id || '—'}
  </td>
- <td className="p-3 text-right font-bold text-amber-300 bg-amber-500/5 border-l border-amber-500/20 font-mono">
+ <td className="p-3 text-right font-bold text-amber-300 bg-amber-500/5 border-l /20 font-mono">
  {band.band_id || band.bandId || 'band-1'}
  </td>
  </tr>
@@ -1077,24 +1077,24 @@ Bakandeya Agent Manager IA & Músicos`;
  ) : (
  <>
  {/* 2. FILTER & SEARCH CONTROL BAR */}
- <div className={`p-4 rounded-xl ${colors.card}  space-y-3 shadow-md`}>
+ <div className={`p-4 rounded-[var(--r-m)] ${colors.card}  space-y-3 shadow-md`}>
  <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
  
  {/* Search Bar */}
  <div className="relative flex-1 min-w-[220px]">
- <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
+ <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-[var(--ink-2)]" />
  <input
  id="band-search-input"
  type="text"
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
  placeholder="Buscar por banda, estilo, ciudad o contacto..."
- className="w-full bg-neutral-900/90 text-white pl-9 pr-3 py-2 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50 transition-colors"
+ className="w-full bg-bg-[var(--surface)]/90 text-white pl-9 pr-3 py-2 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 transition-colors"
  />
  {searchTerm && (
  <button 
  onClick={() => setSearchTerm('')} 
- className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+ className="absolute right-3 top-1/2 -translate-y-1/2 text-text-[var(--ink-2)] hover:text-white"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -1109,7 +1109,7 @@ Bakandeya Agent Manager IA & Músicos`;
  id="band-filter-status"
  value={statusFilter}
  onChange={(e) => setStatusFilter(e.target.value as BandRelationshipStatus | 'todos')}
- className="bg-neutral-900 text-neutral-200 px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer"
+ className="bg-bg-[var(--surface)] text-bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
  >
  <option value="todos">🤝 Todos los Estados</option>
  <option value="colegas_aliados">🤝 Colegas / Aliados</option>
@@ -1125,7 +1125,7 @@ Bakandeya Agent Manager IA & Músicos`;
  id="band-filter-location"
  value={locationFilter}
  onChange={(e) => setLocationFilter(e.target.value)}
- className="bg-neutral-900 text-neutral-200 px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer max-w-[160px] truncate"
+ className="bg-bg-[var(--surface)] text-bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 cursor-pointer max-w-[160px] truncate"
  >
  <option value="todos">📍 Todas las Ciudades</option>
  {availableLocations.map(loc => (
@@ -1138,32 +1138,32 @@ Bakandeya Agent Manager IA & Músicos`;
    <button
      type="button"
      onClick={selectedBandIds.length === filteredBands.length ? handleDeselectAllBands : handleSelectAllFilteredBands}
-     className={`px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 border ${
+     className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 border ${
        selectedBandIds.length > 0
-         ? 'bg-[#f2ca50]/15 text-[#f2ca50] border-[#f2ca50]/30 hover:bg-[#f2ca50]/25'
-         : 'bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-white'
+         ? 'bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 hover:bg-[var(--acc)]/25'
+         : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)]  hover:text-white'
      }`}
      title={selectedBandIds.length === filteredBands.length ? 'Deseleccionar todas' : 'Seleccionar todas las filtradas'}
    >
      {selectedBandIds.length === filteredBands.length ? (
-       <CheckSquare className="w-3.5 h-3.5 text-[#f2ca50]" />
+       <CheckSquare className="w-3.5 h-3.5 text-[var(--acc)]" />
      ) : selectedBandIds.length > 0 ? (
-       <MinusSquare className="w-3.5 h-3.5 text-[#f2ca50]" />
+       <MinusSquare className="w-3.5 h-3.5 text-[var(--acc)]" />
      ) : (
-       <Square className="w-3.5 h-3.5 text-neutral-400" />
+       <Square className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
      )}
      <span>{selectedBandIds.length > 0 ? `${selectedBandIds.length}/${filteredBands.length}` : 'Sel. Todos'}</span>
    </button>
  )}
 
  {/* View Mode Toggle */}
- <div className="flex items-center p-1 bg-neutral-900 rounded-xl shrink-0">
+ <div className="flex items-center p-1 bg-bg-[var(--surface)] rounded-[var(--r-m)] shrink-0">
  <button
  id="view-grid-btn"
  type="button"
  onClick={() => setViewMode('grid')}
- className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
- viewMode === 'grid' ? 'bg-[#f2ca50] text-[#3c2f00]' : 'text-neutral-400 hover:text-white'
+ className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
+ viewMode === 'grid' ? 'bg-[var(--acc)] text-[var(--acc-ink)]' : 'text-text-[var(--ink-2)] hover:text-white'
  }`}
  title="Vista en Tarjetas"
  >
@@ -1173,8 +1173,8 @@ Bakandeya Agent Manager IA & Músicos`;
  id="view-table-btn"
  type="button"
  onClick={() => setViewMode('table')}
- className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
- viewMode === 'table' ? 'bg-[#f2ca50] text-[#3c2f00]' : 'text-neutral-400 hover:text-white'
+ className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
+ viewMode === 'table' ? 'bg-[var(--acc)] text-[var(--acc-ink)]' : 'text-text-[var(--ink-2)] hover:text-white'
  }`}
  title="Vista en Lista / Tabla"
  >
@@ -1184,8 +1184,8 @@ Bakandeya Agent Manager IA & Músicos`;
  id="view-map-btn"
  type="button"
  onClick={() => setViewMode('map')}
- className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
- viewMode === 'map' ? 'bg-[#f2ca50] text-[#3c2f00]' : 'text-neutral-400 hover:text-white'
+ className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
+ viewMode === 'map' ? 'bg-[var(--acc)] text-[var(--acc-ink)]' : 'text-text-[var(--ink-2)] hover:text-white'
  }`}
  title="Vista en Mapa Interactivo"
  >
@@ -1213,9 +1213,9 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* 3. BAND LIST CONTAINER */}
  {filteredBands.length === 0 ? (
- <div className={`p-12 rounded-2xl text-center space-y-3 ${colors.card} `}>
+ <div className={`p-12 rounded-[var(--r-l)] text-center space-y-3 ${colors.card} `}>
  <AlertCircle className="w-10 h-10 text-neutral-500 mx-auto" />
- <h3 className="text-sm font-mono font-bold text-neutral-300 uppercase tracking-wider">
+ <h3 className="text-sm font-mono font-bold text-text-[var(--ink-3)] uppercase tracking-wider">
  No se encontraron bandas
  </h3>
  <p className="text-[10px] text-neutral-500 max-w-md mx-auto font-sans">
@@ -1223,7 +1223,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </p>
  <button
  onClick={handleOpenCreateModal}
- className="mt-2 inline-flex items-center gap-2 px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all cursor-pointer"
+ className="mt-2 inline-flex items-center gap-2 px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-m)] transition-all cursor-pointer"
  >
  <Plus className="w-4 h-4" />
  <span>Añadir Primera Banda</span>
@@ -1243,8 +1243,8 @@ Bakandeya Agent Manager IA & Músicos`;
    return (
  <div
  key={band.id}
- className={`p-5 rounded-2xl transition-all flex flex-col justify-between space-y-4 ${colors.card} shadow-md group relative overflow-hidden ${
-   isSelected ? 'ring-2 ring-[#f2ca50] border-[#f2ca50]/70 bg-[#1e1c17]' : 'hover:-amber-500/40'
+ className={`p-5 rounded-[var(--r-l)] transition-all flex flex-col justify-between space-y-4 ${colors.card} shadow-md group relative overflow-hidden ${
+   isSelected ? 'ring-2 ring-[var(--acc)] border-[var(--acc)]/70 bg-[#1e1c17]' : 'hover:-amber-500/40'
  }`}
  >
  <div className="space-y-3">
@@ -1254,20 +1254,20 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
    type="button"
    onClick={(e) => handleToggleSelectBand(band.id, e)}
-   className="mt-0.5 p-1 rounded hover:bg-neutral-800/80 text-neutral-400 hover:text-[#f2ca50] transition-colors cursor-pointer shrink-0"
+   className="mt-0.5 p-1 rounded hover:bg-neutral-800/80 text-text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer shrink-0"
    title={isSelected ? 'Deseleccionar banda' : 'Seleccionar banda'}
  >
    {isSelected ? (
-     <CheckSquare className="w-4 h-4 text-[#f2ca50]" />
+     <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
    ) : (
-     <Square className="w-4 h-4 text-neutral-500 hover:text-neutral-300" />
+     <Square className="w-4 h-4 text-neutral-500 hover:text-text-[var(--ink-3)]" />
    )}
  </button>
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-1.5 min-w-0">
- <h3 className="text-base font-bold font-display tracking-wider uppercase text-white flex items-center gap-2 group-hover:text-[#f2ca50] transition-colors truncate min-w-0">
+ <h3 className="text-base font-bold font-display tracking-wider uppercase text-white flex items-center gap-2 group-hover:text-[var(--acc)] transition-colors truncate min-w-0">
  {band.imagen_url ? (
- <img src={band.imagen_url} alt={band.nombre_banda} className="w-6 h-6 rounded-full object-cover border border-[#f2ca50]/50 shrink-0" />
+ <img src={band.imagen_url} alt={band.nombre_banda} className="w-6 h-6 rounded-full object-cover border border-[var(--acc)]/50 shrink-0" />
  ) : (
  <span className="text-sm shrink-0">{band.icono || '🎸'}</span>
  )}
@@ -1276,13 +1276,13 @@ Bakandeya Agent Manager IA & Músicos`;
  <VerifiedBadge isVerified={isLeadVerificado(band)} size="sm" />
  </div>
  
- <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono text-neutral-400">
+ <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono text-text-[var(--ink-2)]">
  <span className="bg-neutral-800 px-2 py-0.5 rounded-md text-[#d1b375] flex items-center gap-1 shrink-0 max-w-[160px]" title={band.estilo_musical}>
  <Music className="w-3 h-3 text-[#d1b375] shrink-0" />
  <span className="truncate">{band.estilo_musical}</span>
  </span>
 
- <span className="bg-neutral-800/80 px-2 py-0.5 rounded-md text-neutral-300 flex items-center gap-1 shrink-0 max-w-[140px]" title={band.localizacion}>
+ <span className="bg-neutral-800/80 px-2 py-0.5 rounded-md text-text-[var(--ink-3)] flex items-center gap-1 shrink-0 max-w-[140px]" title={band.localizacion}>
  <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
  <span className="truncate">{band.localizacion}</span>
  </span>
@@ -1304,14 +1304,14 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
 
  {/* Contact & Audience Row */}
- <div className="p-3 rounded-xl bg-neutral-900/80 text-[10px] font-mono space-y-2">
- <div className="flex items-center justify-between text-neutral-300">
- <span className="text-[10px] text-neutral-400 uppercase">Contacto:</span>
+ <div className="p-3 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 text-[10px] font-mono space-y-2">
+ <div className="flex items-center justify-between text-text-[var(--ink-3)]">
+ <span className="text-[10px] text-text-[var(--ink-2)] uppercase">Contacto:</span>
  <span className="font-bold text-[#d1b375]">{band.contacto_nombre || 'Sin especificar'}</span>
  </div>
 
  {band.email && (
- <div className="flex items-center justify-between text-neutral-400 truncate">
+ <div className="flex items-center justify-between text-text-[var(--ink-2)] truncate">
  <span className="text-[10px] text-neutral-500 uppercase">Email:</span>
  <a href={`mailto:${band.email}`} className="text-sky-400 hover:underline truncate max-w-[180px]">
  {band.email}
@@ -1320,7 +1320,7 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
 
  {band.telefono && (
- <div className="flex items-center justify-between text-neutral-400">
+ <div className="flex items-center justify-between text-text-[var(--ink-2)]">
  <span className="text-[10px] text-neutral-500 uppercase">Teléfono:</span>
  <a href={`tel:${band.telefono}`} className="text-[#10b981] hover:underline">
  {band.telefono}
@@ -1328,15 +1328,15 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  )}
 
- <div className="flex items-center justify-between text-neutral-400 pt-1">
+ <div className="flex items-center justify-between text-text-[var(--ink-2)] pt-1">
  <span className="text-[10px] text-neutral-500 uppercase">Aforo habitual:</span>
- <span className="font-bold text-neutral-200">{band.aforo_promedio ? `~${band.aforo_promedio} pers.` : 'No indicado'}</span>
+ <span className="font-bold text-bg-[var(--sunken)]">{band.aforo_promedio ? `~${band.aforo_promedio} pers.` : 'No indicado'}</span>
  </div>
  </div>
 
  {/* Notes & Collaboration Ideas */}
  {band.notas_colaboracion && (
- <div className="p-2.5 rounded-xl bg-neutral-950/60 text-[10px] font-sans text-neutral-300 leading-relaxed italic">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/60 text-[10px] font-sans text-text-[var(--ink-3)] leading-relaxed italic">
  "{band.notas_colaboracion}"
  </div>
  )}
@@ -1346,7 +1346,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="pt-3 space-y-3">
  
  {/* Social Links & Last Contact */}
- <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400">
+ <div className="flex items-center justify-between text-[10px] font-mono text-text-[var(--ink-2)]">
  <div className="flex items-center gap-2">
  {band.instagram && (
  <a 
@@ -1362,8 +1362,8 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
  </div>
 
- <span className="flex items-center gap-1 text-neutral-400">
- <Clock className="w-3 h-3 text-neutral-400" />
+ <span className="flex items-center gap-1 text-text-[var(--ink-2)]">
+ <Clock className="w-3 h-3 text-text-[var(--ink-2)]" />
  <span>Últ. contacto: {band.ultimo_contacto || 'Reciente'}</span>
  </span>
  </div>
@@ -1373,7 +1373,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Analyze Tone */}
  <button
  onClick={() => handleAnalyzeTone(band)}
- className="py-1.5 px-2 bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1"
+ className="py-1.5 px-2 bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1"
  title="Analizar forma de expresarse y tono en redes sociales con IA Grounding"
  >
  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -1387,7 +1387,7 @@ Bakandeya Agent Manager IA & Músicos`;
  setSelectedPitchBand(band);
  setIsPitchModalOpen(true);
  }}
- className="flex-1 py-1.5 px-2 bg-sky-500/15 hover:bg-sky-500/25 text-sky-400 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
+ className="flex-1 py-1.5 px-2 bg-sky-500/15 hover:bg-sky-500/25 text-sky-400 rounded-[var(--r-s)] text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
  title="Generar Pitch de Date Swap"
  >
  <Repeat className="w-3.5 h-3.5 text-sky-400" />
@@ -1397,7 +1397,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Edit */}
  <button
  onClick={() => handleOpenEditModal(band)}
- className="p-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-lg transition-colors cursor-pointer"
+ className="p-1.5 bg-neutral-800 hover:bg-neutral-700 text-text-[var(--ink-3)] rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Editar Banda"
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -1406,7 +1406,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Delete */}
  <button
  onClick={() => handleDeleteBand(band.id, band.nombre_banda)}
- className="p-1.5 bg-rose-500/15 hover:bg-rose-500/15 text-rose-400 rounded-lg transition-colors cursor-pointer"
+ className="p-1.5 bg-rose-500/15 hover:bg-rose-500/15 text-rose-400 rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Eliminar Banda"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1419,21 +1419,21 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  ) : (
  /* TABLE LIST VIEW */
- <div className={`rounded-2xl overflow-hidden ${colors.card} shadow-md overflow-x-auto`}>
+ <div className={`rounded-[var(--r-l)] overflow-hidden ${colors.card} shadow-md overflow-x-auto`}>
  <table className="w-full text-left text-[10px] font-mono min-w-[850px] border-collapse">
- <thead className="bg-neutral-900/90 text-neutral-400 uppercase tracking-wider text-[10px] border-b border-neutral-800">
+ <thead className="bg-bg-[var(--surface)]/90 text-text-[var(--ink-2)] uppercase tracking-wider text-[10px] border-b ">
  <tr>
  <th className="py-2.5 px-3 w-10 text-center whitespace-nowrap">
    <button
      type="button"
      onClick={selectedBandIds.length === filteredBands.length && filteredBands.length > 0 ? handleDeselectAllBands : handleSelectAllFilteredBands}
-     className="text-neutral-400 hover:text-[#f2ca50] transition-colors cursor-pointer"
+     className="text-text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer"
      title={selectedBandIds.length === filteredBands.length ? 'Deseleccionar todas' : 'Seleccionar todas'}
    >
      {filteredBands.length > 0 && selectedBandIds.length === filteredBands.length ? (
-       <CheckSquare className="w-4 h-4 text-[#f2ca50]" />
+       <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
      ) : selectedBandIds.length > 0 ? (
-       <MinusSquare className="w-4 h-4 text-[#f2ca50]" />
+       <MinusSquare className="w-4 h-4 text-[var(--acc)]" />
      ) : (
        <Square className="w-4 h-4 text-neutral-500" />
      )}
@@ -1449,29 +1449,29 @@ Bakandeya Agent Manager IA & Músicos`;
  <th className="py-2.5 px-3 whitespace-nowrap min-w-[130px] text-right">Acciones</th>
  </tr>
  </thead>
- <tbody className="divide-y divide-neutral-800/60 text-neutral-300">
+ <tbody className="divide-y divide-neutral-800/60 text-text-[var(--ink-3)]">
  {filteredBands.map((band) => {
    const isRowSelected = selectedBandIds.includes(band.id);
    return (
- <tr key={band.id} className={`transition-colors ${isRowSelected ? 'bg-[#f2ca50]/10 hover:bg-[#f2ca50]/15' : 'hover:bg-neutral-900/50'}`}>
+ <tr key={band.id} className={`transition-colors ${isRowSelected ? 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/15' : 'hover:bg-bg-[var(--surface)]/50'}`}>
  <td className="py-2 px-3 w-10 text-center align-middle whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
    <button
      type="button"
      onClick={(e) => handleToggleSelectBand(band.id, e)}
-     className="text-neutral-400 hover:text-[#f2ca50] transition-colors cursor-pointer"
+     className="text-text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer"
      title={isRowSelected ? 'Deseleccionar banda' : 'Seleccionar banda'}
    >
      {isRowSelected ? (
-       <CheckSquare className="w-4 h-4 text-[#f2ca50]" />
+       <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
      ) : (
-       <Square className="w-4 h-4 text-neutral-500 hover:text-neutral-300" />
+       <Square className="w-4 h-4 text-neutral-500 hover:text-text-[var(--ink-3)]" />
      )}
    </button>
  </td>
  <td className="py-2 px-3 font-bold text-white align-middle whitespace-nowrap">
  <div className="flex items-center gap-2 min-w-0">
  {band.imagen_url ? (
- <img src={band.imagen_url} alt={band.nombre_banda} className="w-5 h-5 rounded-full object-cover border border-[#f2ca50]/50 shrink-0" />
+ <img src={band.imagen_url} alt={band.nombre_banda} className="w-5 h-5 rounded-full object-cover border border-[var(--acc)]/50 shrink-0" />
  ) : (
  <span className="text-xs shrink-0">{band.icono || '🎸'}</span>
  )}
@@ -1484,7 +1484,7 @@ Bakandeya Agent Manager IA & Músicos`;
    </span>
  </td>
  <td className="py-2 px-3 align-middle whitespace-nowrap">
- <span className="inline-flex items-center gap-1 text-neutral-300 max-w-[140px] sm:max-w-[190px]" title={band.localizacion}>
+ <span className="inline-flex items-center gap-1 text-text-[var(--ink-3)] max-w-[140px] sm:max-w-[190px]" title={band.localizacion}>
  <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
  <span className="truncate">{band.localizacion}</span>
  </span>
@@ -1493,16 +1493,16 @@ Bakandeya Agent Manager IA & Músicos`;
  <td className="py-2 px-3 align-middle whitespace-nowrap">
  <div className="space-y-0.5 max-w-[160px]">
  <div className="text-[#d1b375] font-bold truncate" title={band.contacto_nombre}>{band.contacto_nombre || '-'}</div>
- <div className="text-[10px] text-neutral-400 truncate" title={band.email || band.telefono}>{band.email || band.telefono || '-'}</div>
+ <div className="text-[10px] text-text-[var(--ink-2)] truncate" title={band.email || band.telefono}>{band.email || band.telefono || '-'}</div>
  </div>
  </td>
- <td className="py-2 px-3 font-mono align-middle whitespace-nowrap text-neutral-300">{band.aforo_promedio ? `${band.aforo_promedio} pers.` : '-'}</td>
- <td className="py-2 px-3 text-neutral-400 align-middle whitespace-nowrap">{band.ultimo_contacto || '-'}</td>
+ <td className="py-2 px-3 font-mono align-middle whitespace-nowrap text-text-[var(--ink-3)]">{band.aforo_promedio ? `${band.aforo_promedio} pers.` : '-'}</td>
+ <td className="py-2 px-3 text-text-[var(--ink-2)] align-middle whitespace-nowrap">{band.ultimo_contacto || '-'}</td>
  <td className="py-2 px-3 text-right align-middle whitespace-nowrap">
  <div className="flex items-center justify-end gap-1.5">
  <button
  onClick={() => handleAnalyzeTone(band)}
- className="px-2 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 rounded-lg text-[10px] transition-all cursor-pointer flex items-center gap-1"
+ className="px-2 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 rounded-[var(--r-s)] text-[10px] transition-all cursor-pointer flex items-center gap-1"
  title="Analizar forma de expresarse"
  >
  <Sparkles className="w-3 h-3 text-amber-400" />
@@ -1515,7 +1515,7 @@ Bakandeya Agent Manager IA & Músicos`;
  setSelectedPitchBand(band);
  setIsPitchModalOpen(true);
  }}
- className="px-2 py-1 bg-sky-500/15 hover:bg-sky-500/25 text-sky-400 rounded-lg text-[10px] transition-all cursor-pointer flex items-center gap-1"
+ className="px-2 py-1 bg-sky-500/15 hover:bg-sky-500/25 text-sky-400 rounded-[var(--r-s)] text-[10px] transition-all cursor-pointer flex items-center gap-1"
  >
  <Repeat className="w-3 h-3 text-sky-400" />
  <span>Pitch</span>
@@ -1523,7 +1523,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <button
  onClick={() => handleOpenEditModal(band)}
- className="p-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-lg transition-colors cursor-pointer"
+ className="p-1.5 bg-neutral-800 hover:bg-neutral-700 text-text-[var(--ink-3)] rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Editar"
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -1531,7 +1531,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <button
  onClick={() => handleDeleteBand(band.id, band.nombre_banda)}
- className="p-1.5 bg-rose-500/15 hover:bg-rose-500/15 text-rose-400 rounded-lg transition-colors cursor-pointer"
+ className="p-1.5 bg-rose-500/15 hover:bg-rose-500/15 text-rose-400 rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Eliminar"
  >
  <Trash2 className="w-3.5 h-3.5" />
@@ -1551,21 +1551,21 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* 4. MODAL: CREATE / EDIT BAND CONTACT */}
  {isAddEditModalOpen && (
  <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
- <div className={`w-full max-w-2xl rounded-2xl p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ? 'bg-white text-slate-800' : 'bg-[#1c1b1b] text-neutral-100'
+ <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#1c1b1b] text-bg-[var(--sunken)]'
  }`}>
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
- <Music className="w-5 h-5 text-[#f2ca50]" />
+ <Music className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-base font-bold font-display uppercase tracking-wider">
  {editingBand ? `Editar Banda: ${editingBand.nombre_banda}` : 'Añadir Nueva Banda al CRM'}
  </h3>
  </div>
  <button 
  onClick={() => setIsAddEditModalOpen(false)}
- className="p-1 hover:bg-neutral-800 rounded-lg transition-colors"
+ className="p-1 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors"
  >
- <X className="w-5 h-5 text-neutral-400" />
+ <X className="w-5 h-5 text-text-[var(--ink-2)]" />
  </button>
  </div>
 
@@ -1575,21 +1575,21 @@ Bakandeya Agent Manager IA & Músicos`;
  {/* Nombre de la Banda */}
  <div className="space-y-1 md:col-span-2">
  <div className="flex items-center justify-between">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Nombre de la Banda / Artista *</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Nombre de la Banda / Artista *</label>
  <button
  type="button"
  onClick={handleAiLookup}
  disabled={isAiSearching || !formName.trim()}
- className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-xl bg-[#f2ca50]/10 hover:bg-[#f2ca50]/20 text-[#f2ca50] border border-[#f2ca50]/30 transition-all disabled:opacity-50 cursor-pointer shadow-sm"
+ className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30 transition-all disabled:opacity-50 cursor-pointer shadow-sm"
  >
  {isAiSearching ? (
  <>
- <Loader2 className="w-3 h-3 animate-spin text-[#f2ca50]" />
+ <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
  <span>Buscando en la Web...</span>
  </>
  ) : (
  <>
- <Sparkles className="w-3 h-3 text-[#f2ca50]" />
+ <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>Buscar con IA (Autorellenar)</span>
  </>
  )}
@@ -1601,20 +1601,20 @@ Bakandeya Agent Manager IA & Músicos`;
  value={formName}
  onChange={(e) => setFormName(e.target.value)}
  placeholder="Ej: Pardiez, La Señora Tomasa, Tarraco Ska..."
- className="w-full bg-neutral-900 text-white px-3 py-1.5 rounded-xl text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"
  />
  </div>
 
  {/* AI Proposal Overlay / Card */}
  {isAiSearching && (
- <div className="md:col-span-2 p-3 bg-neutral-900/90 border border-[#f2ca50]/30 rounded-xl flex items-center gap-3 text-xs text-[#f2ca50] font-mono animate-pulse">
- <Loader2 className="w-4 h-4 animate-spin text-[#f2ca50]" />
+ <div className="md:col-span-2 p-3 bg-bg-[var(--surface)]/90 border border-[var(--acc)]/30 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-mono animate-pulse">
+ <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
  <span>Buscando datos de "{formName}" con IA en la web...</span>
  </div>
  )}
 
  {aiError && (
- <div className="md:col-span-2 p-3 bg-rose-950/40 border border-rose-800/50 rounded-xl flex items-center justify-between text-xs text-rose-300 font-mono">
+ <div className="md:col-span-2 p-3 bg-rose-950/40 border border-rose-800/50 rounded-[var(--r-m)] flex items-center justify-between text-xs text-rose-300 font-mono">
  <span>⚠️ {aiError}</span>
  <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-rose-900/50 rounded">
  <X className="w-3.5 h-3.5" />
@@ -1623,9 +1623,9 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
 
  {aiProposal && (
- <div className="md:col-span-2 p-3.5 bg-zinc-900 border border-[#f2ca50]/40 rounded-xl space-y-3 text-xs font-mono shadow-xl">
+ <div className="md:col-span-2 p-3.5 bg-zinc-900 border border-[var(--acc)]/40 rounded-[var(--r-m)] space-y-3 text-xs font-mono shadow-xl">
  <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
- <div className="flex items-center gap-1.5 text-[#f2ca50] font-bold">
+ <div className="flex items-center gap-1.5 text-[var(--acc)] font-bold">
  <Sparkles className="w-4 h-4" />
  <span>Propuesta de la IA (Revisa antes de confirmar):</span>
  </div>
@@ -1633,7 +1633,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={handleApplyAllAiData}
- className="px-3 py-1 bg-[#f2ca50] text-[#3c2f00] font-bold rounded-lg text-[10px] hover:bg-[#e0b83e] transition-all cursor-pointer flex items-center gap-1 shadow"
+ className="px-3 py-1 bg-[var(--acc)] text-[var(--acc-ink)] font-bold rounded-[var(--r-s)] text-[10px] hover:bg-[#e0b83e] transition-all cursor-pointer flex items-center gap-1 shadow"
  >
  <Check className="w-3.5 h-3.5" />
  <span>Aplicar Todo</span>
@@ -1641,7 +1641,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={() => setAiProposal(null)}
- className="p-1 hover:bg-zinc-800 text-zinc-400 rounded-lg transition-colors cursor-pointer"
+ className="p-1 hover:bg-zinc-800 text-zinc-400 rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Descartar propuesta"
  >
  <X className="w-3.5 h-3.5" />
@@ -1651,59 +1651,59 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-zinc-300">
  {aiProposal.estilo_musical && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Estilo:</span> {aiProposal.estilo_musical}</div>
- <button type="button" onClick={() => setFormStyle(aiProposal.estilo_musical)} className="text-[10px] font-bold text-[#f2ca50] hover:underline cursor-pointer shrink-0">Usar</button>
+ <button type="button" onClick={() => setFormStyle(aiProposal.estilo_musical)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.localizacion && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Origen:</span> {aiProposal.localizacion}</div>
- <button type="button" onClick={() => setFormLocation(aiProposal.localizacion)} className="text-[10px] font-bold text-[#f2ca50] hover:underline cursor-pointer shrink-0">Usar</button>
+ <button type="button" onClick={() => setFormLocation(aiProposal.localizacion)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.contacto_nombre && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Contacto:</span> {aiProposal.contacto_nombre}</div>
- <button type="button" onClick={() => setFormContactName(aiProposal.contacto_nombre)} className="text-[10px] font-bold text-[#f2ca50] hover:underline cursor-pointer shrink-0">Usar</button>
+ <button type="button" onClick={() => setFormContactName(aiProposal.contacto_nombre)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.email && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Email:</span> {aiProposal.email}</div>
- <button type="button" onClick={() => setFormEmail(aiProposal.email)} className="text-[10px] font-bold text-[#f2ca50] hover:underline cursor-pointer shrink-0">Usar</button>
+ <button type="button" onClick={() => setFormEmail(aiProposal.email)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.telefono && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Tel:</span> {aiProposal.telefono}</div>
- <button type="button" onClick={() => setFormPhone(aiProposal.telefono)} className="text-[10px] font-bold text-[#f2ca50] hover:underline cursor-pointer shrink-0">Usar</button>
+ <button type="button" onClick={() => setFormPhone(aiProposal.telefono)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.instagram && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Instagram:</span> {aiProposal.instagram}</div>
- <button type="button" onClick={() => setFormInstagram(aiProposal.instagram)} className="text-[10px] font-bold text-[#f2ca50] hover:underline cursor-pointer shrink-0">Usar</button>
+ <button type="button" onClick={() => setFormInstagram(aiProposal.instagram)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {(aiProposal.spotify_url || aiProposal.youtube_url) && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800 sm:col-span-2">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800 sm:col-span-2">
  <div className="truncate max-w-[80%]"><span className="text-zinc-500 font-bold">Música / Media:</span> {aiProposal.spotify_url || aiProposal.youtube_url}</div>
- <button type="button" onClick={() => setFormSpotifyYoutube(aiProposal.spotify_url || aiProposal.youtube_url)} className="text-[10px] font-bold text-[#f2ca50] hover:underline cursor-pointer shrink-0">Usar</button>
+ <button type="button" onClick={() => setFormSpotifyYoutube(aiProposal.spotify_url || aiProposal.youtube_url)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.biografia && (
- <div className="bg-zinc-950/70 p-2 rounded-lg border border-zinc-800 sm:col-span-2 space-y-1">
+ <div className="bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800 sm:col-span-2 space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-zinc-500 font-bold">Resumen / Bio:</span>
- <button type="button" onClick={() => setFormNotes(prev => prev ? `${prev}\n\n[Bio IA]: ${aiProposal.biografia}` : aiProposal.biografia)} className="text-[10px] font-bold text-[#f2ca50] hover:underline cursor-pointer shrink-0">Añadir a Notas</button>
+ <button type="button" onClick={() => setFormNotes(prev => prev ? `${prev}\n\n[Bio IA]: ${aiProposal.biografia}` : aiProposal.biografia)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Añadir a Notas</button>
  </div>
  <p className="text-[10px] text-zinc-300 italic leading-relaxed">{aiProposal.biografia}</p>
  </div>
@@ -1713,14 +1713,14 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
 
  {/* Icono o Imagen / Logo de la Banda */}
- <div className="space-y-2 sm:col-span-2 p-3 bg-neutral-900/60 rounded-xl border border-neutral-800">
- <label className="block text-[10px] font-mono uppercase text-[#f2ca50] font-bold">
+ <div className="space-y-2 sm:col-span-2 p-3 bg-bg-[var(--surface)]/60 rounded-[var(--r-m)] border ">
+ <label className="block text-[10px] font-mono uppercase text-[var(--acc)] font-bold">
  Icono o Logo / Foto de la Banda
  </label>
 
  <div className="flex flex-wrap items-center gap-3">
  {/* Preview current avatar */}
- <div className="w-10 h-10 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center overflow-hidden shrink-0">
+ <div className="w-10 h-10 rounded-full bg-neutral-800 border  flex items-center justify-center overflow-hidden shrink-0">
  {formImageUrl ? (
  <img src={formImageUrl} alt="Logo Banda" className="w-full h-full object-cover" />
  ) : (
@@ -1730,17 +1730,17 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* Emoji preset selection */}
  <div className="flex-1 space-y-1">
- <span className="text-[10px] text-neutral-400 block font-mono">Seleccionar icono emoji:</span>
+ <span className="text-[10px] text-text-[var(--ink-2)] block font-mono">Seleccionar icono emoji:</span>
  <div className="flex flex-wrap gap-1">
  {['🎸', '🎹', '🥁', '🎤', '🎷', '🎺', '🎧', '🪕', '🎻', '⚡', '🔥', '🌟', '🎶'].map(emoji => (
  <button
  key={emoji}
  type="button"
  onClick={() => { setFormIcon(emoji); }}
- className={`w-7 h-7 rounded-lg text-sm flex items-center justify-center transition-all cursor-pointer ${
+ className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  formIcon === emoji && !formImageUrl
- ? 'bg-[#f2ca50]/20 border border-[#f2ca50] text-white scale-110'
- : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300'
+ ? 'bg-[var(--acc)]/20 border border-[var(--acc)] text-white scale-110'
+ : 'bg-neutral-800 hover:bg-neutral-700 text-text-[var(--ink-3)]'
  }`}
  >
  {emoji}
@@ -1751,12 +1751,12 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* Upload file button */}
  <div className="shrink-0 space-y-1">
- <span className="text-[10px] text-neutral-400 block font-mono">O subir logo (Supabase):</span>
- <label className="cursor-pointer px-2.5 py-1.5 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-xl text-[10px] font-mono text-zinc-200 flex items-center gap-1.5 transition-all active:scale-95">
+ <span className="text-[10px] text-text-[var(--ink-2)] block font-mono">O subir logo (Supabase):</span>
+ <label className="cursor-pointer px-2.5 py-1.5 bg-neutral-800 hover:bg-neutral-700 border  rounded-[var(--r-m)] text-[10px] font-mono text-zinc-200 flex items-center gap-1.5 transition-all active:scale-95">
  {isUploadingLogo ? (
- <Loader2 className="w-3.5 h-3.5 animate-spin text-[#f2ca50]" />
+ <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
  ) : (
- <Upload className="w-3.5 h-3.5 text-[#f2ca50]" />
+ <Upload className="w-3.5 h-3.5 text-[var(--acc)]" />
  )}
  <span>{isUploadingLogo ? 'Subiendo...' : 'Subir Imagen'}</span>
  <input
@@ -1784,37 +1784,37 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* Estilo Musical */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Estilo Musical *</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Estilo Musical *</label>
  <input
  type="text"
  required
  value={formStyle}
  onChange={(e) => setFormStyle(e.target.value)}
  placeholder="Ej: Balkan Ska, Reggae, Punk, Mestizaje..."
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
  {/* Localización / Ciudad */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Localización / Ciudad Principal *</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Localización / Ciudad Principal *</label>
  <input
  type="text"
  required
  value={formLocation}
  onChange={(e) => setFormLocation(e.target.value)}
  placeholder="Ej: Barcelona, Madrid, Valencia, Sevilla..."
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
  {/* Estado de la Relación */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Estado de la Relación</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Estado de la Relación</label>
  <select
  value={formStatus}
  onChange={(e) => setFormStatus(e.target.value as BandRelationshipStatus)}
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
  >
  <option value="sin_contactar">📡 Sin Contactar</option>
  <option value="intercambio_propuesto">🔄 Intercambio Propuesto (Date Swap)</option>
@@ -1827,97 +1827,97 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* Persona de Contacto */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Persona de Contacto / Rol</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Persona de Contacto / Rol</label>
  <input
  type="text"
  value={formContactName}
  onChange={(e) => setFormContactName(e.target.value)}
  placeholder="Ej: Carlos (Mánager / Teclista)"
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
  {/* Último Contacto */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Fecha de Último Contacto</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Fecha de Último Contacto</label>
  <input
  type="date"
  value={formLastContact}
  onChange={(e) => setFormLastContact(e.target.value)}
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
  {/* Email */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Email de Contacto / Booking</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Email de Contacto / Booking</label>
  <input
  type="email"
  value={formEmail}
  onChange={(e) => setFormEmail(e.target.value)}
  placeholder="ejemplo@banda.com"
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
  {/* Teléfono */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Teléfono / WhatsApp</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Teléfono / WhatsApp</label>
  <input
  type="text"
  value={formPhone}
  onChange={(e) => setFormPhone(e.target.value)}
  placeholder="+34 600 000 000"
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
  {/* Instagram */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Instagram</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Instagram</label>
  <input
  type="text"
  value={formInstagram}
  onChange={(e) => setFormInstagram(e.target.value)}
  placeholder="@nombrebanda"
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
  {/* Aforo habitual */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Aforo Promedio que Mueven</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Aforo Promedio que Mueven</label>
  <input
  type="number"
  value={formAforo}
  onChange={(e) => setFormAforo(Number(e.target.value))}
  placeholder="300"
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
  </div>
 
  {/* Enlace Spotify / YouTube */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Enlace Spotify / YouTube / Dossier</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Enlace Spotify / YouTube / Dossier</label>
  <input
  type="url"
  value={formSpotifyYoutube}
  onChange={(e) => setFormSpotifyYoutube(e.target.value)}
  placeholder="https://open.spotify.com/artist/..."
- className="w-full bg-neutral-900 text-white px-2 py-1 rounded-xl text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
  {/* Notas de Colaboración */}
  <div className="space-y-1">
- <label className="block text-[10px] font-mono uppercase text-neutral-400">Notas de Colaboración / Salas propuestas / Intercambios</label>
+ <label className="block text-[10px] font-mono uppercase text-text-[var(--ink-2)]">Notas de Colaboración / Salas propuestas / Intercambios</label>
  <textarea
  rows={3}
  value={formNotes}
  onChange={(e) => setFormNotes(e.target.value)}
  placeholder="Escribe notas relevantes para la colaboración (ej. Dispuestos a compartir fecha en Sala Apolo, proponen fecha en Noviembre)..."
- className="w-full bg-neutral-900 text-white p-3 rounded-xl text-[10px] font-sans leading-relaxed focus:outline-none focus:-[#f2ca50]/50"
+ className="w-full bg-bg-[var(--surface)] text-white p-3 rounded-[var(--r-m)] text-[10px] font-sans leading-relaxed focus:outline-none focus:-[var(--acc)]/50"
  />
  </div>
 
@@ -1926,13 +1926,13 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={() => setIsAddEditModalOpen(false)}
- className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-mono text-[10px] rounded-xl transition-colors cursor-pointer"
+ className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-text-[var(--ink-3)] font-mono text-[10px] rounded-[var(--r-m)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>
  <button
  type="submit"
- className="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md"
+ className="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-m)] transition-all cursor-pointer shadow-md"
  >
  {editingBand ? 'Guardar Cambios' : 'Añadir Banda'}
  </button>

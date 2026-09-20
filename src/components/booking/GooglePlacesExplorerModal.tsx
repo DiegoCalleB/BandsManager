@@ -601,24 +601,24 @@ export function GooglePlacesExplorerModal({
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md overflow-y-auto overscroll-contain pt-2 pb-24 sm:py-6 animate-fadeIn">
         <div
-          className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-2xl shadow-2xl overflow-hidden border ${
+          className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] shadow-2xl overflow-hidden border ${
             isStitchLight
-              ? 'bg-white text-slate-800 border-slate-200'
-              : 'bg-[#18181b] text-[#e5e2e1] border-zinc-800'
+              ? 'bg-white text-[var(--ink)] '
+              : 'bg-[#18181b] text-[var(--ink)] border-zinc-800'
           }`}
         >
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-zinc-800 flex items-center justify-between shrink-0 bg-zinc-900/60">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[#f2ca50]/15 border border-[#f2ca50]/40 text-[#f2ca50]">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 border border-[var(--acc)]/40 text-[var(--acc)]">
               <Search className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold font-display uppercase tracking-wider text-[#f2ca50]">
+                <h2 className="text-base font-bold font-display uppercase tracking-wider text-[var(--acc)]">
                   Buscador de Salas & Nuevos Leads (Scout Descubridor)
                 </h2>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono font-bold">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 border /30 text-amber-300 font-mono font-bold">
                   IA + Google Places
                 </span>
               </div>
@@ -633,7 +633,7 @@ export function GooglePlacesExplorerModal({
               <button
                 type="button"
                 onClick={() => setShowDiscardedModal(true)}
-                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 transition-all cursor-pointer"
+                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 transition-all cursor-pointer"
                 title="Ver y gestionar sugerencias marcadas como no deseadas"
               >
                 <Ban className="w-3.5 h-3.5 text-rose-400" />
@@ -643,7 +643,7 @@ export function GooglePlacesExplorerModal({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+              className="p-1.5 rounded-[var(--r-s)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -654,10 +654,10 @@ export function GooglePlacesExplorerModal({
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
           
           {/* Búsqueda Masiva de Campaña Activa: Recintos, Locales y Discotecas con Aforo y Estilo */}
-          <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-indigo-500/10 border border-amber-500/30 space-y-3 shadow-md">
+          <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-indigo-500/10 border /30 space-y-3 shadow-md">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-start sm:items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
+                <div className="p-2 rounded-[var(--r-s)] bg-amber-500/20 text-amber-300 shrink-0">
                   <Target className="w-5 h-5" />
                 </div>
                 <div>
@@ -666,7 +666,7 @@ export function GooglePlacesExplorerModal({
                       Prospección Masiva de Campaña
                     </span>
                     {activeCampaign && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 border border-amber-400/40 font-mono">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 border /40 font-mono">
                         {activeCampaign.name}
                       </span>
                     )}
@@ -681,7 +681,7 @@ export function GooglePlacesExplorerModal({
                 type="button"
                 onClick={handleMassCampaignSearch}
                 disabled={isMassCampaignSearching || isSearching}
-                className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-zinc-950 font-black text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-amber-500/20 cursor-pointer disabled:opacity-50 shrink-0"
+                className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-zinc-950 font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-amber-500/20 cursor-pointer disabled:opacity-50 shrink-0"
               >
                 {isMassCampaignSearching ? (
                   <>
@@ -722,9 +722,9 @@ export function GooglePlacesExplorerModal({
                           setMassFilterTipos([...massFilterTipos, item.id]);
                         }
                       }}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer border ${
+                      className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer border ${
                         isChecked
-                          ? 'bg-amber-400/20 text-amber-300 border-amber-400/50 shadow-sm'
+                          ? 'bg-amber-400/20 text-amber-300 /50 shadow-sm'
                           : 'bg-zinc-900/80 text-zinc-500 border-zinc-800 hover:text-zinc-300'
                       }`}
                     >
@@ -745,7 +745,7 @@ export function GooglePlacesExplorerModal({
 
           {/* Discard Toast */}
           {discardToast && (
-            <div className="p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between animate-in fade-in duration-200">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between animate-in fade-in duration-200">
               <div className="flex items-center gap-2">
                 <Ban className="w-4 h-4 text-rose-400 shrink-0" />
                 <span>{discardToast}</span>
@@ -760,7 +760,7 @@ export function GooglePlacesExplorerModal({
           )}
 
           {/* Main Filter and Search Bar */}
-          <div className="bg-zinc-900/80 p-4 rounded-xl border border-zinc-800/80 space-y-3.5 shadow-sm">
+          <div className="bg-zinc-900/80 p-4 rounded-[var(--r-m)] border border-zinc-800/80 space-y-3.5 shadow-sm">
             
             {/* Category Selector Pills (8 Categorías) */}
             <div className="space-y-1.5">
@@ -787,9 +787,9 @@ export function GooglePlacesExplorerModal({
                       key={cat.id}
                       type="button"
                       onClick={() => handleCategoryChange(cat.id)}
-                      className={`px-2 py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer border ${
+                      className={`px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer border ${
                         isSelected
-                          ? 'bg-[#f2ca50] text-[#3c2f00] border-[#f2ca50] shadow-sm'
+                          ? 'bg-[var(--acc)] text-[var(--acc-ink)] border-[var(--acc)] shadow-sm'
                           : 'bg-zinc-950/60 border-zinc-800 text-zinc-300 hover:bg-zinc-800'
                       }`}
                       title={cat.desc}
@@ -807,14 +807,14 @@ export function GooglePlacesExplorerModal({
               
               {/* City Input */}
               <div className="relative md:col-span-4">
-                <MapPin className="w-4 h-4 absolute left-3 top-3 text-[#f2ca50]" />
+                <MapPin className="w-4 h-4 absolute left-3 top-3 text-[var(--acc)]" />
                 <input
                   type="text"
                   value={selectedCity}
                   onChange={e => setSelectedCity(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSearch()}
                   placeholder="Ciudad (ej. Granada, Madrid...)"
-                  className="w-full pl-9 pr-7 py-2 text-xs rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[#f2ca50]"
+                  className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-zinc-950 border border-zinc-800 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[var(--acc)]"
                 />
                 {selectedCity && (
                   <button
@@ -836,12 +836,12 @@ export function GooglePlacesExplorerModal({
                   onChange={e => setSearchQuery(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSearch()}
                   placeholder={CATEGORIES.find(c => c.id === selectedType)?.placeholder || "Búsqueda opcional..."}
-                  className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[#f2ca50]"
+                  className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-zinc-950 border border-zinc-800 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[var(--acc)]"
                 />
               </div>
 
               {/* Number of Venues limit (1 a 10) */}
-              <div className="md:col-span-3 flex items-center gap-1.5 bg-zinc-950 px-3 py-1 rounded-xl border border-zinc-800">
+              <div className="md:col-span-3 flex items-center gap-1.5 bg-zinc-950 px-3 py-1 rounded-[var(--r-m)] border border-zinc-800">
                 <span className="text-[10px] font-mono text-zinc-400 whitespace-nowrap">Cantidad:</span>
                 <input
                   type="range"
@@ -849,9 +849,9 @@ export function GooglePlacesExplorerModal({
                   max="10"
                   value={searchLimit}
                   onChange={e => setSearchLimit(Number(e.target.value))}
-                  className="w-full accent-[#f2ca50] cursor-pointer"
+                  className="w-full accent-[var(--acc)] cursor-pointer"
                 />
-                <span className="text-xs font-bold font-mono text-[#f2ca50] w-4 text-center">
+                <span className="text-xs font-bold font-mono text-[var(--acc)] w-4 text-center">
                   {searchLimit}
                 </span>
               </div>
@@ -872,7 +872,7 @@ export function GooglePlacesExplorerModal({
                 type="button"
                 onClick={() => handleSearch()}
                 disabled={isSearching}
-                className="px-5 py-2 bg-[#f2ca50] hover:bg-[#d8b03e] text-[#2c2200] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50 ml-auto"
+                className="px-5 py-2 bg-[var(--acc)] hover:bg-[#d8b03e] text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50 ml-auto"
               >
                 {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                 <span>{isSearching ? 'Buscando...' : `Buscar ${searchLimit} Resultados`}</span>
@@ -880,7 +880,7 @@ export function GooglePlacesExplorerModal({
             </div>
 
             {showAdvancedFilters && (
-              <div className="p-3 bg-zinc-950 rounded-xl border border-amber-500/20 grid grid-cols-2 sm:grid-cols-2 gap-3 animate-fadeIn text-xs">
+              <div className="p-3 bg-zinc-950 rounded-[var(--r-m)] border /20 grid grid-cols-2 sm:grid-cols-2 gap-3 animate-fadeIn text-xs">
                 <div>
                   <label className="block text-[10px] font-mono text-zinc-400 mb-1">
                     Aforo Mínimo (personas)
@@ -890,7 +890,7 @@ export function GooglePlacesExplorerModal({
                     placeholder="Ej. 150"
                     value={aforoMin}
                     onChange={e => setAforoMin(e.target.value)}
-                    className="w-full p-2 bg-zinc-900 border border-zinc-700 rounded-lg text-zinc-200 text-xs focus:outline-none focus:border-amber-400"
+                    className="w-full p-2 bg-zinc-900 border border-zinc-700 rounded-[var(--r-s)] text-zinc-200 text-xs focus:outline-none focus:"
                   />
                 </div>
                 <div>
@@ -902,7 +902,7 @@ export function GooglePlacesExplorerModal({
                     placeholder="Ej. 800"
                     value={aforoMax}
                     onChange={e => setAforoMax(e.target.value)}
-                    className="w-full p-2 bg-zinc-900 border border-zinc-700 rounded-lg text-zinc-200 text-xs focus:outline-none focus:border-amber-400"
+                    className="w-full p-2 bg-zinc-900 border border-zinc-700 rounded-[var(--r-s)] text-zinc-200 text-xs focus:outline-none focus:"
                   />
                 </div>
               </div>
@@ -915,9 +915,9 @@ export function GooglePlacesExplorerModal({
                 <button
                   key={city}
                   onClick={() => handleQuickCityClick(city)}
-                  className={`px-2.5 py-0.5 text-[10px] rounded-lg transition-all cursor-pointer font-medium ${
+                  className={`px-2.5 py-0.5 text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer font-medium ${
                     selectedCity === city
-                      ? 'bg-[#f2ca50] text-[#3c2f00] font-bold'
+                      ? 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold'
                       : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300'
                   }`}
                 >
@@ -931,7 +931,7 @@ export function GooglePlacesExplorerModal({
           {searchSource && (
             <div className="flex items-center justify-between text-[11px] px-2 text-zinc-400">
               <span>
-                Fuente: <strong className="text-[#f2ca50]">{searchSource}</strong>
+                Fuente: <strong className="text-[var(--acc)]">{searchSource}</strong>
               </span>
               <span>
                 Encontrados: <strong className="text-white">{places.length}</strong> | Con email: <strong className="text-emerald-400">{emailsFoundCount}</strong>
@@ -940,21 +940,21 @@ export function GooglePlacesExplorerModal({
           )}
 
           {searchError && (
-            <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs rounded-xl flex items-center gap-2">
+            <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs rounded-[var(--r-m)] flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{searchError}</span>
             </div>
           )}
 
           {extractStatus && (
-            <div className="p-3 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs rounded-xl flex items-center gap-2 animate-fadeIn">
+            <div className="p-3 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs rounded-[var(--r-m)] flex items-center gap-2 animate-fadeIn">
               <Sparkles className="w-4 h-4 shrink-0 text-indigo-400 animate-pulse" />
               <span>{extractStatus}</span>
             </div>
           )}
 
           {importSuccessMsg && (
-            <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs rounded-xl flex items-center gap-2 animate-fadeIn">
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs rounded-[var(--r-m)] flex items-center gap-2 animate-fadeIn">
               <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
               <span>{importSuccessMsg}</span>
             </div>
@@ -964,7 +964,7 @@ export function GooglePlacesExplorerModal({
           {places.length > 0 ? (
             <div className="space-y-3">
               {/* Batch Actions Bar */}
-              <div className="p-3 bg-zinc-900/90 rounded-xl border border-zinc-800 flex flex-wrap items-center justify-between gap-3">
+              <div className="p-3 bg-zinc-900/90 rounded-[var(--r-m)] border border-zinc-800 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={toggleSelectAll}
@@ -974,7 +974,7 @@ export function GooglePlacesExplorerModal({
                       type="checkbox"
                       checked={places.length > 0 && places.every(p => p.selected)}
                       onChange={toggleSelectAll}
-                      className="rounded accent-[#f2ca50] cursor-pointer"
+                      className="rounded accent-[var(--acc)] cursor-pointer"
                     />
                     <span>Seleccionar todos ({selectedCount}/{places.length})</span>
                   </button>
@@ -984,7 +984,7 @@ export function GooglePlacesExplorerModal({
                   <button
                     onClick={handleExtractBatchEmails}
                     disabled={isExtractingBatch || selectedCount === 0}
-                    className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md border border-indigo-400/30"
+                    className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md border border-indigo-400/30"
                     title="Agente Enriquecedor: Investiga las páginas oficiales y fuentes públicas sin inventar emails"
                   >
                     {isExtractingBatch ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-amber-300" />}
@@ -994,7 +994,7 @@ export function GooglePlacesExplorerModal({
                   <button
                     onClick={handleImportToCRM}
                     disabled={isImporting || selectedCount === 0}
-                    className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md"
+                    className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-md"
                   >
                     {isImporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PlusCircle className="w-3.5 h-3.5" />}
                     <span>📥 Incluir en mis Leads ({selectedCount})</span>
@@ -1007,9 +1007,9 @@ export function GooglePlacesExplorerModal({
                 {places.map(place => (
                   <div
                     key={place.place_id}
-                    className={`p-3.5 rounded-xl border transition-all flex flex-col justify-between space-y-2.5 ${
+                    className={`p-3.5 rounded-[var(--r-m)] border transition-all flex flex-col justify-between space-y-2.5 ${
                       place.selected
-                        ? 'bg-zinc-900 border-[#f2ca50]/50 shadow-lg'
+                        ? 'bg-zinc-900 border-[var(--acc)]/50 shadow-lg'
                         : 'bg-zinc-950/60 border-zinc-800/80 opacity-70'
                     }`}
                   >
@@ -1020,16 +1020,16 @@ export function GooglePlacesExplorerModal({
                             type="checkbox"
                             checked={place.selected || false}
                             onChange={() => toggleSelectPlace(place.place_id)}
-                            className="mt-1 rounded accent-[#f2ca50] cursor-pointer"
+                            className="mt-1 rounded accent-[var(--acc)] cursor-pointer"
                           />
                           {place.imagen_url ? (
                             <img
                               src={place.imagen_url}
                               alt={place.nombre_sala}
-                              className="w-10 h-10 rounded-lg object-cover border border-zinc-700 shrink-0"
+                              className="w-10 h-10 rounded-[var(--r-s)] object-cover border border-zinc-700 shrink-0"
                             />
                           ) : (
-                            <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-lg shrink-0">
+                            <div className="w-10 h-10 rounded-[var(--r-s)] bg-zinc-800 border border-zinc-700 flex items-center justify-center text-lg shrink-0">
                               {place.icono || '🏛️'}
                             </div>
                           )}
@@ -1039,7 +1039,7 @@ export function GooglePlacesExplorerModal({
                                 {place.nombre_sala}
                               </h4>
                               {place.alreadyInCrm && (
-                                <span className="text-[9px] px-1.5 py-0.2 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded font-bold uppercase tracking-wider shrink-0" title="Este contacto ya existe en tu CRM de Leads">
+                                <span className="text-[9px] px-1.5 py-0.2 bg-amber-500/20 text-amber-300 border /40 rounded font-bold uppercase tracking-wider shrink-0" title="Este contacto ya existe en tu CRM de Leads">
                                   En CRM ({place.crmStatus || 'Registrado'})
                                 </span>
                               )}
@@ -1050,7 +1050,7 @@ export function GooglePlacesExplorerModal({
                               )}
                             </div>
                             <p className="text-[10px] text-zinc-400 flex items-center gap-1">
-                              <MapPin className="w-3 h-3 text-[#f2ca50] shrink-0" />
+                              <MapPin className="w-3 h-3 text-[var(--acc)] shrink-0" />
                               <span className="truncate">{place.ciudad} ({place.region})</span>
                             </p>
                           </div>
@@ -1058,7 +1058,7 @@ export function GooglePlacesExplorerModal({
 
                         <div className="flex items-center gap-1.5 shrink-0">
                           {place.rating && (
-                            <div className="flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-md text-[10px] font-bold">
+                            <div className="flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/10 border /30 text-amber-400 rounded-md text-[10px] font-bold">
                               <Star className="w-3 h-3 fill-amber-400" />
                               <span>{place.rating}</span>
                               {place.user_ratings_total && (
@@ -1070,7 +1070,7 @@ export function GooglePlacesExplorerModal({
                           <button
                             type="button"
                             onClick={() => handleDiscardPlace(place)}
-                            className="p-1 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-rose-500/15 transition-all cursor-pointer"
+                            className="p-1 rounded-[var(--r-s)] text-zinc-500 hover:text-rose-400 hover:bg-rose-500/15 transition-all cursor-pointer"
                             title="Marcar como no deseada (descartar para futuras búsquedas)"
                           >
                             <Ban className="w-3.5 h-3.5" />
@@ -1085,7 +1085,7 @@ export function GooglePlacesExplorerModal({
                           <select
                             value={String(place.tipo || 'sala').toLowerCase()}
                             onChange={(e) => handlePlaceCategoryChange(place.place_id, e.target.value as LeadType)}
-                            className="bg-zinc-950 border border-zinc-700 text-amber-300 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus:border-amber-400 cursor-pointer"
+                            className="bg-zinc-950 border border-zinc-700 text-amber-300 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus: cursor-pointer"
                           >
                             {CATEGORIES.map(c => (
                               <option key={c.id} value={c.id}>
@@ -1097,7 +1097,7 @@ export function GooglePlacesExplorerModal({
 
                         <div className="flex items-center gap-1.5">
                           {place.genero && (
-                            <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-300 font-medium">
+                            <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-amber-500/10 border /20 text-amber-300 font-medium">
                               <Music2 className="w-2.5 h-2.5 shrink-0" />
                               <span className="truncate max-w-[130px]">{place.genero}</span>
                             </span>
@@ -1113,7 +1113,7 @@ export function GooglePlacesExplorerModal({
 
                       {/* Informative Description of the Proposal */}
                       {place.descripcion && (
-                        <div className="p-2 rounded-lg bg-zinc-950/80 border border-zinc-800/80 text-[11px] text-zinc-300 leading-relaxed font-sans">
+                        <div className="p-2 rounded-[var(--r-s)] bg-zinc-950/80 border border-zinc-800/80 text-[11px] text-zinc-300 leading-relaxed font-sans">
                           <div className="flex items-start gap-1.5">
                             <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
                             <p className="line-clamp-2">{place.descripcion}</p>
@@ -1122,7 +1122,7 @@ export function GooglePlacesExplorerModal({
                       )}
 
                       {/* Address & Phone */}
-                      <div className="text-[10px] text-zinc-400 space-y-1 bg-zinc-950 p-2 rounded-lg border border-zinc-800/60 font-mono">
+                      <div className="text-[10px] text-zinc-400 space-y-1 bg-zinc-950 p-2 rounded-[var(--r-s)] border border-zinc-800/60 font-mono">
                         {place.direccion && (
                           <p className="truncate text-zinc-300">{place.direccion}</p>
                         )}
@@ -1150,7 +1150,7 @@ export function GooglePlacesExplorerModal({
                       {/* Email Status & Extractor */}
                       <div className="pt-1">
                         {place.email_contacto ? (
-                          <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] flex items-center justify-between font-mono">
+                          <div className="p-2 rounded-[var(--r-s)] bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] flex items-center justify-between font-mono">
                             <div className="flex items-center gap-1.5 truncate">
                               <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                               <span className="font-bold truncate">{place.email_contacto}</span>
@@ -1160,7 +1160,7 @@ export function GooglePlacesExplorerModal({
                             </span>
                           </div>
                         ) : (
-                          <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800 text-[10px] flex items-center justify-between gap-2">
+                          <div className="p-2 rounded-[var(--r-s)] bg-zinc-950 border border-zinc-800 text-[10px] flex items-center justify-between gap-2">
                             <span className="text-zinc-500 italic">Sin correo extraído aún</span>
                             <button
                               onClick={() => handleExtractSingleEmail(place.place_id)}
@@ -1184,7 +1184,7 @@ export function GooglePlacesExplorerModal({
               </div>
             </div>
           ) : !isSearching ? (
-            <div className="p-10 text-center space-y-3 bg-zinc-900/40 rounded-2xl border border-zinc-800/80">
+            <div className="p-10 text-center space-y-3 bg-zinc-900/40 rounded-[var(--r-l)] border border-zinc-800/80">
               <Building2 className="w-12 h-12 text-zinc-600 mx-auto" />
               <h3 className="text-sm font-bold text-zinc-300">Descubre nuevas oportunidades de booking</h3>
               <p className="text-xs text-zinc-500 max-w-md mx-auto">
@@ -1197,7 +1197,7 @@ export function GooglePlacesExplorerModal({
         {/* Discarded Suggestions Sub-Modal */}
         {showDiscardedModal && (
           <div className="fixed inset-0 z-[110] flex items-center justify-center p-3 bg-black/80 backdrop-blur-sm animate-fadeIn">
-            <div className="w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+            <div className="w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
               <div className="p-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/60">
                 <div className="flex items-center gap-2">
                   <Ban className="w-4 h-4 text-rose-400" />
@@ -1205,7 +1205,7 @@ export function GooglePlacesExplorerModal({
                 </div>
                 <button
                   onClick={() => setShowDiscardedModal(false)}
-                  className="text-zinc-400 hover:text-white p-1 rounded-lg cursor-pointer"
+                  className="text-zinc-400 hover:text-white p-1 rounded-[var(--r-s)] cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -1218,7 +1218,7 @@ export function GooglePlacesExplorerModal({
                   discardedList.map(item => (
                     <div
                       key={item.nombre_sala}
-                      className="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800/80 flex items-center justify-between gap-3 text-xs"
+                      className="p-2.5 rounded-[var(--r-m)] bg-zinc-950 border border-zinc-800/80 flex items-center justify-between gap-3 text-xs"
                     >
                       <div className="min-w-0">
                         <p className="font-bold text-zinc-200 truncate">{item.nombre_sala}</p>
@@ -1229,7 +1229,7 @@ export function GooglePlacesExplorerModal({
                       <button
                         type="button"
                         onClick={() => handleRestorePlace(item.nombre_sala)}
-                        className="px-2.5 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer shrink-0 transition-all"
+                        className="px-2.5 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border /40 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 cursor-pointer shrink-0 transition-all"
                         title="Volver a permitir en sugerencias futuras"
                       >
                         <RotateCcw className="w-3 h-3" />
@@ -1254,7 +1254,7 @@ export function GooglePlacesExplorerModal({
                   <button
                     type="button"
                     onClick={() => setShowDiscardedModal(false)}
-                    className="px-4 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-xs font-bold cursor-pointer"
+                    className="px-4 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
                   >
                     Cerrar
                   </button>

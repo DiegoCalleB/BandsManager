@@ -55,41 +55,41 @@ export function SetlistModal({
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
-        <div className={`w-full max-w-md p-5 rounded-2xl shadow-2xl border border-neutral-800 ${colors.card} text-white my-auto max-h-[90vh] overflow-y-auto`}>
+        <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] shadow-2xl border  ${colors.card} text-white my-auto max-h-[90vh] overflow-y-auto`}>
         <div className="flex justify-between items-center pb-3 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <Layers className="w-5 h-5 text-[#f2ca50]" />
+            <Layers className="w-5 h-5 text-[var(--acc)]" />
             <h3 className="text-sm font-bold font-mono uppercase text-white">
               {setlistToEdit ? 'Editar Repertorio' : 'Crear Nuevo Repertorio desde Cero'}
             </h3>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg text-neutral-400 hover:text-white cursor-pointer">
+          <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-mono">
           <div>
-            <label className="block text-neutral-300 font-bold mb-1">Nombre del Repertorio / Setlist *</label>
+            <label className="block text-text-[var(--ink-3)] font-bold mb-1">Nombre del Repertorio / Setlist *</label>
             <input
               type="text"
               required
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               placeholder="ej. Festival Rumba & Rock 2026"
-              className={`w-full p-2.5 rounded-xl border focus:outline-none focus:border-[#f2ca50] ${
-                isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+              className={`w-full p-2.5 rounded-[var(--r-m)] border focus:outline-none focus:border-[var(--acc)] ${
+                isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
               }`}
             />
           </div>
 
           <div>
-            <label className="block text-neutral-300 font-bold mb-1">Formato / Tipo de Concierto</label>
+            <label className="block text-text-[var(--ink-3)] font-bold mb-1">Formato / Tipo de Concierto</label>
             <select
               value={tipoFormato}
               onChange={(e) => setTipoFormato(e.target.value as any)}
-              className={`w-full p-2.5 rounded-xl border focus:outline-none focus:border-[#f2ca50] cursor-pointer ${
-                isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+              className={`w-full p-2.5 rounded-[var(--r-m)] border focus:outline-none focus:border-[var(--acc)] cursor-pointer ${
+                isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
               }`}
             >
               <option value="festival">🔥 Festival (45-60m Caña Directa)</option>
@@ -101,14 +101,14 @@ export function SetlistModal({
           </div>
 
           <div>
-            <label className="block text-neutral-300 font-bold mb-1">Descripción / Notas de Escenario</label>
+            <label className="block text-text-[var(--ink-3)] font-bold mb-1">Descripción / Notas de Escenario</label>
             <textarea
               rows={3}
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
               placeholder="ej. Setlist pensado para festivales con ritmo alto sin pausas..."
-              className={`w-full p-2.5 rounded-xl border focus:outline-none focus:border-[#f2ca50] ${
-                isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+              className={`w-full p-2.5 rounded-[var(--r-m)] border focus:outline-none focus:border-[var(--acc)] ${
+                isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
               }`}
             />
           </div>
@@ -117,13 +117,13 @@ export function SetlistModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs text-neutral-300 hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-m)] text-xs text-text-[var(--ink-3)] hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-[#f2ca50] hover:bg-[#e0b840] text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+              className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[#e0b840] text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
             >
               <Check className="w-4 h-4 stroke-[3]" />
               <span>{setlistToEdit ? 'Guardar Cambios' : 'Crear Repertorio'}</span>
