@@ -36,18 +36,12 @@
   --alert-soft: #FAE7E5;
 
   /* Acento por defecto (módulo Panel/Booking). Lo tiñe [data-modulo].
-     Naranja quemado, no dorado: el ámbar quedó descartado el 2026-09-19 —
-     pasado por bordes y glow, seguía leyendo a bróker cripto en cuanto se
-     juntaba con el sidebar oscuro. El dorado de marca (#F2CA50) se queda
-     en el logo; no vuelve a la UI salvo en [data-theme="classic"].
-     OJO: la primera propuesta fue terracota (#C2703D) — descartada porque
-     el propio §8 de esta skill la señala, junto a salvia/crema/azul
-     polvoriento, como LA paleta segura de diseño generado. Este tono sube
-     la saturación (68% vs 52%) y baja el nombre de "de buen gusto" a
-     "naranja quemado" sin más: vivo, no de catálogo de interiorismo. */
-  --acc:      #D86E31;
-  --acc-soft: #F9EAE1;
-  --acc-ink:  #813F18;
+     Terracota suave, inspirado en instrumentos musicales: madera, latón.
+     Menos saturado que el naranja quemado anterior (#D86E31), más universal.
+     Músicos de todo el mundo lo reconocen (no grita "broker cripto"). */
+  --acc:      #A0763D;
+  --acc-soft: #E8D5C8;
+  --acc-ink:  #6B4D2D;
   --on-acc:   #FFFFFF;
 
   /* Elevación — Espectro es plano. Separa el relleno, no la sombra. */
@@ -86,10 +80,10 @@
   --alert:    #E27A70;
   --alert-soft: #2E1815;
 
-  --acc:      #E99463;
-  --acc-soft: #3B2416;
-  --acc-ink:  #E99463;
-  --on-acc:   #33190A;
+  --acc:      #C8945E;
+  --acc-soft: #3E3028;
+  --acc-ink:  #C8945E;
+  --on-acc:   #2A1F14;
 
   color-scheme: dark;
 }
@@ -135,7 +129,7 @@
    --acc-ink → texto (versión oscurecida que pasa AA sobre claro)
    No son intercambiables: #D9A62B sobre blanco no llega a 4,5:1.       */
 
-[data-modulo="repertorio"] { --acc:#E0615C; --acc-soft:#FDE9E7; --acc-ink:#A83C37; --on-acc:#FFFFFF; }
+[data-modulo="repertorio"] { --acc:#B85450; --acc-soft:#E8D2D0; --acc-ink:#7A3438; --on-acc:#FFFFFF; }
 [data-modulo="gira"],
 [data-modulo="sala"]       { --acc:#17998C; --acc-soft:#DDF1EE; --acc-ink:#0E6B62; --on-acc:#FFFFFF; }
 [data-modulo="finanzas"]   { --acc:#3C7EA8; --acc-soft:#E2EDF4; --acc-ink:#24587A; --on-acc:#FFFFFF; }
@@ -143,7 +137,7 @@
 [data-modulo="reels"]      { --acc:#9B5FB5; --acc-soft:#F0E7F5; --acc-ink:#6F3D87; --on-acc:#FFFFFF; }
 [data-modulo="epk"]        { --acc:#6B4CE0; --acc-soft:#F0E7F9; --acc-ink:#4A2F8D; --on-acc:#FFFFFF; }
 
-[data-theme="dark"] [data-modulo="repertorio"] { --acc:#F08B84; --acc-soft:#2E1A18; --acc-ink:#F08B84; --on-acc:#2A100D; }
+[data-theme="dark"] [data-modulo="repertorio"] { --acc:#D9897F; --acc-soft:#3A2A27; --acc-ink:#D9897F; --on-acc:#2B1A17; }
 [data-theme="dark"] [data-modulo="gira"],
 [data-theme="dark"] [data-modulo="sala"]       { --acc:#4FC7B8; --acc-soft:#122D29; --acc-ink:#4FC7B8; --on-acc:#08201C; }
 [data-theme="dark"] [data-modulo="finanzas"]   { --acc:#6FB0D9; --acc-soft:#14232E; --acc-ink:#6FB0D9; --on-acc:#0B1A24; }
