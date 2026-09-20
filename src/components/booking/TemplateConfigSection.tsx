@@ -163,7 +163,7 @@ export function TemplateConfigSection({
         {/* Form Side */}
         <div className="space-y-4">
           {optimizationFeedbackMsg && (
-            <div className="p-3 bg-amber-500/15 border /30 text-amber-200 text-[11px] rounded-[var(--r-m)] font-sans animate-in fade-in">
+            <div className="p-3 bg-amber-500/15 text-amber-200 text-[11px] rounded-[var(--r-m)] font-sans animate-in fade-in">
               {optimizationFeedbackMsg}
             </div>
           )}
@@ -234,7 +234,7 @@ export function TemplateConfigSection({
           </div>
 
           {/* Evaluation & Training Box for Template */}
-          <div className="space-y-3 p-3.5 rounded-[var(--r-m)] border /30 bg-amber-500/10">
+          <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-amber-500/10">
             <div className="flex items-center justify-between">
               <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
                 <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
@@ -257,7 +257,7 @@ export function TemplateConfigSection({
             {/* Estrellitas de Tono y Contenido */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {/* Tono y Estilo */}
-              <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] border /20 space-y-1">
+              <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
                   <span className="text-[10px] font-mono text-amber-400 font-bold">
@@ -282,7 +282,7 @@ export function TemplateConfigSection({
               </div>
 
               {/* Contenido y Estructura */}
-              <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] border /20 space-y-1">
+              <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
                   <span className="text-[10px] font-mono text-amber-400 font-bold">
@@ -317,7 +317,7 @@ export function TemplateConfigSection({
                 rows={2}
                 value={customInstruction}
                 onChange={(e) => setCustomInstruction(e.target.value)}
-                className="w-full rounded-[var(--r-s)] p-2.5 text-[10px] bg-[var(--surface)] text-[var(--ink)] border /30 focus: focus:outline-none font-sans leading-relaxed"
+                className="w-full rounded-[var(--r-s)] p-2.5 text-[10px] bg-[var(--surface)] text-[var(--ink)] focus: focus:outline-none font-sans leading-relaxed"
                 placeholder="Ej: 'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
               />
             </div>
@@ -335,7 +335,7 @@ export function TemplateConfigSection({
                 type="button"
                 onClick={onOptimizeTemplate}
                 disabled={isOptimizingTemplate}
-                className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border /30 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               >
                 <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
                 <span>{isOptimizingTemplate ? 'Regenerando con IA...' : '✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
@@ -410,7 +410,7 @@ export function TemplateConfigSection({
                 </div>
 
                 {/* Valoración directa del resultado generado en la simulación */}
-                <div className="p-3 bg-amber-500/10 rounded-[var(--r-m)] border /30 space-y-2">
+                <div className="p-3 bg-amber-500/10 rounded-[var(--r-m)] space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5 font-sans">
                       <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Valorar esta plantilla / resultado
@@ -424,7 +424,7 @@ export function TemplateConfigSection({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {/* Tono */}
-                    <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] border /20 space-y-1">
+                    <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
                         <span className="text-[10px] font-mono text-amber-400 font-bold">
@@ -449,7 +449,7 @@ export function TemplateConfigSection({
                     </div>
 
                     {/* Contenido */}
-                    <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] border /20 space-y-1">
+                    <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
                         <span className="text-[10px] font-mono text-amber-400 font-bold">
@@ -489,7 +489,7 @@ export function TemplateConfigSection({
               </div>
             ) : (
               <div
-                className={`border border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
+                className={`border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
                   isStitchLight
                     ? ' text-[var(--ink-3)]'
                     : ' text-neutral-600'

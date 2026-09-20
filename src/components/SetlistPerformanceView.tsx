@@ -472,7 +472,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
                 glareMode
                   ? 'bg-amber-100 hover:bg-amber-200 text-amber-900 border '
-                  : 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40'
+                  : 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40'
               }`}
               title="Repertorio completo: ver todos los temas, estado de pistas Iris y accesos directos a Studio"
             >
@@ -480,7 +480,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <span className="hidden sm:inline">Pistas & Repertorio</span>
               <span className="sm:hidden">Temas</span>
               {songsWithIrisCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-emerald-500/30 text-emerald-300 border border-emerald-500/40">
+                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-emerald-500/30 text-emerald-300">
                   {songsWithIrisCount}
                 </span>
               )}
@@ -494,8 +494,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 onClick={() => handleLaunchPractice()}
                 className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
                   glareMode
-                    ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300'
-                    : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400'
+                    ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-emerald-300'
+                    : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 hover:border-emerald-400'
                 }`}
                 title="Modo Ensayo: practica este tema con pistas separadas por Iris (silenciar/aislar pistas, tempo, bucle A/B)"
               >
@@ -512,8 +512,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 onClick={() => handleLaunchStudio()}
                 className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
                   glareMode
-                    ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-zinc-300'
-                    : 'bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 border border-zinc-600/60'
+                    ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border-zinc-300'
+                    : 'bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300'
                 }`}
                 title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
               >
@@ -531,8 +531,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 onClick={() => handleLaunchStudio()}
                 className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm ${
                   glareMode
-                    ? 'bg-indigo-100 hover:bg-indigo-200 text-indigo-900 border border-indigo-300'
-                    : 'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 hover:border-indigo-400'
+                    ? 'bg-indigo-100 hover:bg-indigo-200 text-indigo-900 border-indigo-300'
+                    : 'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 hover:border-indigo-400'
                 }`}
                 title="Modo Studio: grabaciones multipista, ideas de audio, acordes y arreglos de este tema"
               >
@@ -707,7 +707,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
           {!isBlock && currentSong?.estructuraDocumentoUrl && !currentSong?.estructuraVerificada && (
             <span
-              className="font-bold px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border /40"
+              className="font-bold px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400"
               title="Los acordes de este tema vienen de una subida sin verificar todavía por nadie de la banda"
             >
               ⚠️ sin verificar
@@ -761,7 +761,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             <button
               type="button"
               onClick={() => handleLaunchStudio()}
-              className="px-2 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1 border border-zinc-700 transition active:scale-95 cursor-pointer"
+              className="px-2 py-1 rounded-[var(--r-s)] bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1 border-zinc-700 transition active:scale-95 cursor-pointer"
             >
               <Sliders className="w-3.5 h-3.5 text-indigo-300" />
               <span>Studio</span>
@@ -866,7 +866,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       <div className={`shrink-0 px-3 sm:px-4 py-2 space-y-2 z-20 ${glareMode ? 'bg-gradient-to-t from-white to-white/0' : 'bg-gradient-to-t from-black to-black/0'}`}>
         {!isBlock && !showScannedSheet && currentSong?.tonalidad && (
           <div className="flex items-center justify-center gap-2 text-xs">
-            <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded border border-white/10">
+            <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded border-white/10">
               <button
                 type="button"
                 onClick={() => setLiveTransposeOffset(v => v - 1)}
@@ -991,7 +991,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             {/* Drawer Header */}
             <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#111114]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)] border-[var(--acc)]/30 flex items-center justify-center">
                   <ListMusic className="w-4 h-4" />
                 </div>
                 <div>
@@ -1078,7 +1078,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       </div>
 
                       {songIrisIdea ? (
-                        <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                        <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 flex items-center gap-1">
                           <Headphones className="w-2.5 h-2.5" />
                           {stemCount > 0 ? `${stemCount} pistas` : 'Iris'}
                         </span>
@@ -1097,7 +1097,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                             setShowSongListDrawer(false);
                             handleLaunchPractice(song, songIrisIdea);
                           }}
-                          className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+                          className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
                           title="Modo Ensayo individual con las pistas aisladas de este tema"
                         >
                           <Headphones className="w-3.5 h-3.5 text-emerald-400" />
@@ -1110,7 +1110,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                             setShowSongListDrawer(false);
                             handleLaunchStudio(song);
                           }}
-                          className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+                          className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
                           title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
                         >
                           <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
@@ -1124,7 +1124,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           setShowSongListDrawer(false);
                           handleLaunchStudio(song);
                         }}
-                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border-zinc-700 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
                         title="Abrir Studio multipista completo de este tema"
                       >
                         <Sliders className="w-3.5 h-3.5 text-indigo-300" />
@@ -1137,7 +1137,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           setCurrentIndex(idx);
                           setShowSongListDrawer(false);
                         }}
-                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-black/40 hover:bg-black/60 text-zinc-300 border border-white/10 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-black/40 hover:bg-black/60 text-zinc-300 border-white/10 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
                         title="Mostrar en el atril"
                       >
                         <Play className="w-3 h-3 text-[var(--acc)]" />
@@ -1292,7 +1292,7 @@ const ChordSheetPage: React.FC<{
       <div className={`shrink-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 px-4 py-2 text-xs sm:text-sm font-mono border-b ${borderClass} ${glareMode ? 'bg-black/5' : 'bg-black/40'}`}>
         <div className="flex items-center gap-2 flex-wrap">
           {/* Selector de tono con transposición en tiempo real */}
-          <div className="flex items-center gap-1 bg-black/30 px-2 py-0.5 rounded border border-white/10">
+          <div className="flex items-center gap-1 bg-black/30 px-2 py-0.5 rounded border-white/10">
             <button
               type="button"
               onClick={() => onLiveTransposeChange(liveTransposeOffset - 1)}
@@ -1423,7 +1423,7 @@ const ChordSheetPage: React.FC<{
                   onClick={() => onChangeTeleprompterSpeed(speed)}
                   className={`px-2 py-1 rounded text-xs transition cursor-pointer ${
                     teleprompterSpeed === speed
-                      ? 'bg-amber-500/20 text-amber-300 font-bold border /40'
+                      ? 'bg-amber-500/20 text-amber-300 font-bold'
                       : 'bg-neutral-800 text-text-[var(--ink-2)] hover:text-white'
                   }`}
                 >

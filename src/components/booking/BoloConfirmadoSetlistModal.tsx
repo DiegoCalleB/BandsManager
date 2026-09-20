@@ -163,7 +163,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
-        <div className="w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl p-5 sm:p-6 text-white space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
+        <div className="w-full max-w-lg bg-zinc-950 border-zinc-800 rounded-3xl p-5 sm:p-6 text-white space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
           
           {/* Header */}
           <div className="flex justify-between items-start border-b border-zinc-800/80 pb-3">
@@ -198,7 +198,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
                 type="date"
                 value={concertDate}
                 onChange={(e) => setConcertDate(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-white font-mono focus:border-[#1ed760] focus:outline-none"
+                className="w-full bg-zinc-900 border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-white font-mono focus:border-[#1ed760] focus:outline-none"
               />
             </div>
 
@@ -212,7 +212,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
                 placeholder="Ej. 600"
                 value={cacheAmount}
                 onChange={(e) => setCacheAmount(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-white font-mono focus: focus:outline-none"
+                className="w-full bg-zinc-900 border-zinc-800 rounded-[var(--r-m)] px-3 py-2 text-white font-mono focus: focus:outline-none"
               />
             </div>
           </div>
@@ -263,11 +263,11 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
             </div>
 
             {isLoadingData ? (
-              <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 border border-zinc-800 text-center text-xs font-mono text-zinc-500 animate-pulse">
+              <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 border-zinc-800 text-center text-xs font-mono text-zinc-500 animate-pulse">
                 Calculando duraciones y repertorios óptimos...
               </div>
             ) : generateNewSetlist ? (
-              <div className="p-3.5 rounded-[var(--r-l)] bg-[#1db954]/10 border border-[#1db954]/40 space-y-2 animate-fadeIn">
+              <div className="p-3.5 rounded-[var(--r-l)] bg-[#1db954]/10 border-[#1db954]/40 space-y-2 animate-fadeIn">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#1ed760]">
                   <Zap className="w-4 h-4 text-[#1ed760]" />
                   <span>Se creará un nuevo setlist automático:</span>
@@ -277,7 +277,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
                 </p>
               </div>
             ) : setlists.length === 0 ? (
-              <div className="p-4 rounded-[var(--r-l)] bg-zinc-900 border border-zinc-800 text-center space-y-2 text-xs font-mono text-zinc-400">
+              <div className="p-4 rounded-[var(--r-l)] bg-zinc-900 border-zinc-800 text-center space-y-2 text-xs font-mono text-zinc-400">
                 <p>No tienes ningún setlist guardado aún.</p>
                 <button
                   type="button"

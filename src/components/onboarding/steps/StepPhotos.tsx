@@ -38,7 +38,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
         {photos.map((url, idx) => (
           <div
             key={idx}
-            className="aspect-video rounded-[var(--r-m)] bg-zinc-900 border border-white/10 overflow-hidden relative group"
+            className="aspect-video rounded-[var(--r-m)] bg-zinc-900 border-white/10 overflow-hidden relative group"
           >
             <img src={url} alt={`Foto promo ${idx + 1}`} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -85,7 +85,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
           value={newPhotoUrl}
           onChange={(e) => setNewPhotoUrl(e.target.value)}
           placeholder="O añade una URL de imagen directa (https://...)"
-          className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+          className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-zinc-900 border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
         />
         <button
           type="button"

@@ -1319,7 +1319,7 @@ export default function ReelsCenter({
  <div className="flex gap-2.5 items-center flex-wrap">
  <button
  onClick={handleOpenToneModal}
- className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border /30 transition-all cursor-pointer shadow-md"
+ className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 transition-all cursor-pointer shadow-md"
  title={`Ver el tono de voz guardado de ${instagramHandle || nombreBanda}, o analizarlo si todavía no existe`}
  >
  <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />

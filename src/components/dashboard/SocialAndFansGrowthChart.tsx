@@ -808,7 +808,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
       {/* Chart Canvas Area */}
       <div className="h-64 w-full relative">
         {!hasAnyChannelSelected ? (
-          <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border border-dashed  rounded-[var(--r-m)] bg-bg-[var(--surface)]/20">
+          <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border-dashed  rounded-[var(--r-m)] bg-bg-[var(--surface)]/20">
             <SlidersHorizontal className="w-8 h-8 text-neutral-500 mb-2" />
             <p className="text-xs font-mono font-medium text-text-[var(--ink-3)]">Todos los canales están ocultos</p>
             <p className="text-[10px] font-mono text-neutral-500 mt-1 max-w-xs">

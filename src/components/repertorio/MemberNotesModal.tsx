@@ -197,9 +197,9 @@ export function MemberNotesModal({
           return (
             <div className="flex items-center gap-2 flex-wrap pt-3 text-[11px] font-mono">
               <span className="text-neutral-500 uppercase font-bold">Preparación de la banda:</span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">✅ {summary.lista} listos</span>
-              <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/25">🔶 {summary.casiLista} casi</span>
-              <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border /25">🌱 {summary.aprendiendo} aprendiendo</span>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">✅ {summary.lista} listos</span>
+              <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400">🔶 {summary.casiLista} casi</span>
+              <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400">🌱 {summary.aprendiendo} aprendiendo</span>
               {summary.sinOpinar > 0 && (
                 <span className="px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-500 border ">{summary.sinOpinar} sin marcar</span>
               )}
@@ -209,7 +209,7 @@ export function MemberNotesModal({
 
         {/* Informational Tip */}
         <div className={`p-3 rounded-[var(--r-m)] my-3 text-xs flex items-start gap-2.5 ${
-          isStitchLight ? 'bg-indigo-50 border border-indigo-200 text-indigo-900' : 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-300'
+          isStitchLight ? 'bg-indigo-50 border-indigo-200 text-indigo-900' : 'bg-emerald-950/40 text-emerald-300'
         }`}>
           <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
           <div>
@@ -338,7 +338,7 @@ export function MemberNotesModal({
                     </div>
 
                     {hasNote && (
-                      <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full flex items-center gap-1 border border-emerald-500/20">
+                      <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
                         <Check className="w-3 h-3" /> Con notas
                       </span>
                     )}

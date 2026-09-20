@@ -368,7 +368,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </h3>
  <p className="text-[11px] text-text-[var(--ink-2)] font-mono flex items-center gap-1.5 flex-wrap">
  <span>@{currentUser.username} • {isAdmin ? 'Administrador' : 'Músico'}</span>
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-300 border /30 shadow-sm">
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-300 shadow-sm">
  <Sparkles className="w-2.5 h-2.5 text-amber-400" />
  {currentPlanDef.name}
  </span>
@@ -407,7 +407,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }`}>
  <div className="flex items-center justify-between gap-3">
  <div className="flex items-center gap-2.5">
- <div className="w-9 h-9 rounded-[var(--r-s)] bg-amber-500/20 border /40 flex items-center justify-center shrink-0">
+ <div className="w-9 h-9 rounded-[var(--r-s)] bg-amber-500/20 flex items-center justify-center shrink-0">
  <Crown className="w-5 h-5 text-amber-400" />
  </div>
  <div>
@@ -435,7 +435,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
  type="button"
  onClick={onOpenProfileWizard}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border /40 text-xs font-bold font-mono transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold font-mono transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
  title="Abrir Asistente de Inicio / Onboarding"
  >
  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -524,7 +524,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className="flex items-center gap-2 flex-wrap">
  <p className="text-xs font-bold text-white">{activeBandName || currentUser.bandName || 'Tu Banda'}</p>
  {isPromoUser ? (
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-300 border /30">
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-300">
    <Sparkles className="w-2.5 h-2.5 text-amber-400" />
    <span>{currentPlanDef.name}</span>
  </span>
@@ -532,7 +532,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <button
    type="button"
    onClick={() => setShowUpgradeModal(true)}
-   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border /30 shadow-sm cursor-pointer transition-colors"
+   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 shadow-sm cursor-pointer transition-colors"
    title="Cambiar o mejorar suscripción"
  >
    <Sparkles className="w-2.5 h-2.5 text-amber-400" />
@@ -545,7 +545,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  </div>
 
- <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-amber-500/20 hover:bg-amber-500/30 border /40 text-amber-300 text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95">
+ <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95">
  {uploadingLogo ? (
  <>
  <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
@@ -741,7 +741,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
    {/* Delete Confirmation Box */}
    {bandToDeleteInProfile && (
-     <div className="p-3 rounded-[var(--r-m)] border border-rose-500/50 bg-rose-500/10 space-y-2 animate-in fade-in duration-200">
+     <div className="p-3 rounded-[var(--r-m)] bg-rose-500/10 space-y-2 animate-in fade-in duration-200">
        <p className="text-xs font-bold text-rose-400 flex items-center gap-1.5">
          <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
          <span>¿Eliminar proyecto "{bandToDeleteInProfile.name}"?</span>
@@ -916,7 +916,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </button>
 
  {showAppearance && (
- <div className="mt-3 p-3.5 rounded-[var(--r-m)] border /80 space-y-4 bg-bg-[var(--surface)]/50 animate-in fade-in duration-200">
+ <div className="mt-3 p-3.5 rounded-[var(--r-m)] space-y-4 bg-bg-[var(--surface)]/50 animate-in fade-in duration-200">
  {onThemeChange && (
  <div className="space-y-2">
  <label className="text-[11px] font-mono font-semibold text-text-[var(--ink-2)] flex items-center gap-1.5">
@@ -991,7 +991,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
      'classic' = exactamente la app de siempre; el resto son las pantallas ya
      migradas (login, panel) mas el resto de la app tal cual, mientras avanza. */}
  <div className="pt-3 border-t /80">
-   <div className="p-3.5 rounded-[var(--r-m)] border /30 bg-amber-500/[0.04] space-y-2.5">
+   <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/[0.04] space-y-2.5">
      <label className="text-[11px] font-mono font-semibold text-amber-300 flex items-center gap-1.5">
        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
        <span>Nuevo diseño — Espectro (en pruebas)</span>
@@ -1187,7 +1187,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }`}>
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-bg-[var(--surface)] to-bg-[var(--surface)] border-b /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
- <div className="w-8 h-8 rounded-[var(--r-s)] bg-amber-500/20 border /40 flex items-center justify-center">
+ <div className="w-8 h-8 rounded-[var(--r-s)] bg-amber-500/20 flex items-center justify-center">
  <Sparkles className="w-4 h-4 text-amber-400" />
  </div>
  <div>
@@ -1205,7 +1205,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
   {currentUser?.estado_suscripcion === 'pago_pendiente' && (
-    <div className="p-3.5 rounded-[var(--r-m)] bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs flex items-center justify-between gap-3">
+    <div className="p-3.5 rounded-[var(--r-m)] bg-rose-500/20 text-rose-200 text-xs flex items-center justify-between gap-3">
       <div className="flex items-center gap-2">
         <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
         <span>Pago pendiente. Actualiza tu método de pago para mantener tus funciones.</span>
@@ -1231,7 +1231,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   )}
 
   {currentUser?.plan_pendiente && (
-    <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/15 border /40 text-amber-200 text-xs flex items-center gap-2.5">
+    <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/15 text-amber-200 text-xs flex items-center gap-2.5">
       <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
       <span>
         Cambio programado a <strong className="uppercase font-mono text-amber-300">{currentUser.plan_pendiente.replace('_', ' ')}</strong> al finalizar el ciclo.
@@ -1261,7 +1261,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           alert('Error al conectar con Stripe: ' + err.message);
         }
       }}
-      className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold transition-all border /20 flex items-center gap-1.5 cursor-pointer"
+      className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer"
     >
       <span>Portal de Stripe</span>
       <ExternalLink className="w-3 h-3" />
@@ -1294,7 +1294,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {plan.badge}
  </span>
  {isCurrent && (
- <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border /40">
+ <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">
  Plan Actual
  </span>
  )}
@@ -1303,7 +1303,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  {plan.stickerGift && (
- <div className="mt-2 px-2.5 py-1 rounded-[var(--r-s)] bg-amber-400/10 border /30 flex items-center gap-1.5 text-[10px] font-mono text-amber-300 font-bold">
+ <div className="mt-2 px-2.5 py-1 rounded-[var(--r-s)] bg-amber-400/10 flex items-center gap-1.5 text-[10px] font-mono text-amber-300 font-bold">
  <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
  <span>Regalo de bienvenida: {plan.stickerGift.qty}</span>
  </div>
@@ -1328,7 +1328,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {isCurrent ? 'Tu plan activo' : 'Cambio de plan inmediato'}
  </span>
  {isCurrent ? (
- <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border /40 flex items-center gap-1">
+ <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 flex items-center gap-1">
  <Check className="w-3 h-3 text-amber-400" />
  <span>Activo</span>
  </span>

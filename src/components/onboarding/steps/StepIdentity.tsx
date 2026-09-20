@@ -55,7 +55,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
             <Guitar className="w-4 h-4 text-amber-400" />
             <h3 className="text-sm font-semibold text-white">Nombre del Proyecto Musical & Ubicación</h3>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-neutral-800 border border-white/10 text-[11px] text-text-[var(--ink-2)] font-mono">
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-neutral-800 border-white/10 text-[11px] text-text-[var(--ink-2)] font-mono">
             <Globe className="w-3 h-3 text-amber-400" />
             <span>Idioma: <strong className="text-white">{language || 'Español'}</strong></span>
           </div>
@@ -72,7 +72,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={localBandName}
               onChange={(e) => setLocalBandName(e.target.value)}
               placeholder="Ej. Linkin Park, Los Delirio, The Midnight Waves..."
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white font-medium placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
+              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-white/10 text-white font-medium placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
             />
           </div>
 
@@ -86,7 +86,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={city}
               onChange={(e) => setCity(e.target.value)}
               placeholder="Ej. Madrid, Barcelona, Valencia, Los Ángeles..."
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
+              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-white/10 text-white placeholder-zinc-500 focus:outline-none focus: text-sm shadow-inner"
             />
           </div>
 
@@ -100,7 +100,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
               placeholder="Ej. Nu-Metal, Rock Alternativo, Indie Pop, Ska-Rock..."
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 focus:outline-none focus: text-sm mb-2 shadow-inner"
+              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-zinc-900 border-white/10 text-white placeholder-zinc-500 focus:outline-none focus: text-sm mb-2 shadow-inner"
             />
             <div className="flex flex-wrap gap-1.5">
               {commonGenres.slice(0, 8).map((g) => (
@@ -189,16 +189,16 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
         </div>
 
         {/* Live Banner Preview */}
-        <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 border /20 flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+        <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
           <div className="flex items-center gap-3.5 w-full sm:w-auto">
             {logoUrl ? (
               <img
                 src={logoUrl}
                 alt="Logo"
-                className="w-12 h-12 rounded-[var(--r-m)] object-cover border /40 shrink-0"
+                className="w-12 h-12 rounded-[var(--r-m)] object-cover shrink-0"
               />
             ) : (
-              <div className="w-12 h-12 rounded-[var(--r-m)] bg-amber-500/20 text-amber-300 font-bold flex items-center justify-center border /30 shrink-0 text-base">
+              <div className="w-12 h-12 rounded-[var(--r-m)] bg-amber-500/20 text-amber-300 font-bold flex items-center justify-center shrink-0 text-base">
                 {previewName.charAt(0).toUpperCase()}
               </div>
             )}
@@ -234,7 +234,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-[var(--r-l)] bg-zinc-900 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0 relative group shadow-inner">
+          <div className="w-20 h-20 rounded-[var(--r-l)] bg-zinc-900 border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0 relative group shadow-inner">
             {logoUrl ? (
               <img src={logoUrl} alt="Logo de la banda" className="w-full h-full object-cover" />
             ) : (
@@ -260,7 +260,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                 type="button"
                 onClick={() => logoInputRef.current?.click()}
                 disabled={isUploadingLogo}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border /30 text-xs font-semibold transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-semibold transition-colors cursor-pointer"
               >
                 <Upload className="w-3.5 h-3.5" />
                 {logoUrl ? 'Cambiar Imagen / Logo' : 'Subir Imagen desde el dispositivo'}
@@ -271,7 +271,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={logoUrl}
               onChange={(e) => setLogoUrl(e.target.value)}
               placeholder="O pega aquí una URL directa (https://...)"
-              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900/60 border border-white/5 text-zinc-300 placeholder-zinc-600 text-xs focus:outline-none focus:"
+              className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900/60 border-white/5 text-zinc-300 placeholder-zinc-600 text-xs focus:outline-none focus:"
             />
           </div>
         </div>

@@ -273,7 +273,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-stone-800/60">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/10 border /30 text-amber-400 flex items-center justify-center shrink-0 font-mono font-bold text-sm">
+          <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0 font-mono font-bold text-sm">
             {percentage}%
           </div>
           <div>
@@ -296,7 +296,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
           {onOpenAutonomyModal && (
             <button
               onClick={() => onOpenAutonomyModal()}
-              className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+              className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
             >
               <Sliders className="w-3.5 h-3.5 text-purple-400" />
               <span className="hidden xs:inline">Autonomía & Caché</span>
@@ -441,10 +441,10 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
       {/* AUDIT MODAL */}
       {showAuditModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-[var(--surface)] border /30 rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-amber-500/20 border /40 rounded-[var(--r-m)] text-amber-400">
+                <div className="p-2.5 bg-amber-500/20 rounded-[var(--r-m)] text-amber-400">
                   <Bot className="w-6 h-6" />
                 </div>
                 <div>

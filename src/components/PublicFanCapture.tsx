@@ -142,7 +142,7 @@ export const PublicFanCapture: React.FC = () => {
           /* FORM CARD */
           <form onSubmit={handleSubmit} className="bg-[var(--surface)]/90 border  rounded-[var(--r-l)] p-6 shadow-2xl space-y-4 backdrop-blur-md">
             {errorMsg && (
-              <div className="p-3 bg-red-950/80 border border-red-500/50 text-red-200 text-xs rounded-[var(--r-m)] font-medium">
+              <div className="p-3 bg-red-950/80 text-red-200 text-xs rounded-[var(--r-m)] font-medium">
                 ⚠️ {errorMsg}
               </div>
             )}
@@ -239,8 +239,8 @@ export const PublicFanCapture: React.FC = () => {
           </form>
         ) : (
           /* THANK YOU CARD */
-          <div className="bg-[var(--surface)]/90 border /40 rounded-[var(--r-l)] p-6 sm:p-8 shadow-2xl space-y-6 text-center backdrop-blur-md animate-fade-in">
-            <div className="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-full mx-auto flex items-center justify-center border /40">
+          <div className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 sm:p-8 shadow-2xl space-y-6 text-center backdrop-blur-md animate-fade-in">
+            <div className="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-full mx-auto flex items-center justify-center">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
@@ -264,7 +264,7 @@ export const PublicFanCapture: React.FC = () => {
             className="group block p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 border  hover:/40 transition-all text-left"
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-[var(--r-s)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400 shrink-0">
+              <div className="w-8 h-8 rounded-[var(--r-s)] bg-amber-500/10 flex items-center justify-center text-amber-400 shrink-0">
                 <Music className="w-4 h-4" />
               </div>
               <div className="flex-1 min-w-0">

@@ -117,14 +117,14 @@ export const getDetailedDateInfo = (dateInput: string | Date | undefined | null)
     relativeBadgeClass = 'bg-amber-400 text-stone-950 font-black shadow-xs';
   } else if (diffDays === 2) {
     relativeLabel = 'Pasado mañana';
-    relativeBadgeClass = 'bg-amber-500/20 text-amber-300 border /40';
+    relativeBadgeClass = 'bg-amber-500/20 text-amber-300';
   } else if (diffDays > 2 && diffDays <= 7) {
     relativeLabel = `En ${diffDays} días`;
-    relativeBadgeClass = 'bg-sky-500/20 text-sky-300 border border-sky-500/40';
+    relativeBadgeClass = 'bg-sky-500/20 text-sky-300';
   } else if (diffDays > 7 && diffDays <= 30) {
     const weeks = Math.round(diffDays / 7);
     relativeLabel = `En ${diffDays} días (${weeks} sem)`;
-    relativeBadgeClass = 'bg-sky-950/40 text-sky-300 border border-sky-500/30';
+    relativeBadgeClass = 'bg-sky-950/40 text-sky-300';
   } else if (diffDays > 30) {
     const months = Math.round(diffDays / 30);
     relativeLabel = `En ${diffDays} días (~${months} mes${months > 1 ? 'es' : ''})`;
@@ -2256,7 +2256,7 @@ export default function CalendarView({
  )}
 
  {/* Weekday Labels */}
- <div className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono mb-2.5 font-bold uppercase ${textSub} bg-slate-950/60 p-2 rounded-[var(--r-m)] border /80`}>
+ <div className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono mb-2.5 font-bold uppercase ${textSub} bg-slate-950/60 p-2 rounded-[var(--r-m)]`}>
  {weekdays.map(day => (
  <div key={day} className="py-0.5 tracking-wider">{day}</div>
  ))}
@@ -2295,13 +2295,13 @@ export default function CalendarView({
  } else if (isToday) {
  borderAndBgClass = 'bg-amber-500/15 text-amber-300 font-bold border-2 /80 shadow-md shadow-amber-500/10 hover: z-10';
  } else if (hasConcert && hasRehearsal) {
- borderAndBgClass = 'bg-gradient-to-br from-amber-950/40 to-emerald-950/40 border /50 hover: hover:shadow-md hover:shadow-amber-500/10 text-white';
+ borderAndBgClass = 'bg-gradient-to-br from-amber-950/40 to-emerald-950/40 hover: hover:shadow-md hover:shadow-amber-500/10 text-white';
  } else if (hasConcert) {
- borderAndBgClass = 'bg-amber-950/20 border /40 hover: hover:shadow-md hover:shadow-amber-500/10 text-amber-200';
+ borderAndBgClass = 'bg-amber-950/20 hover: hover:shadow-md hover:shadow-amber-500/10 text-amber-200';
  } else if (hasRehearsal) {
- borderAndBgClass = 'bg-emerald-950/20 border border-emerald-500/40 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-500/10 text-emerald-200';
+ borderAndBgClass = 'bg-emerald-950/20 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-500/10 text-emerald-200';
  } else if (hasCampaign) {
- borderAndBgClass = 'bg-purple-950/30 border border-purple-500/50 hover:border-purple-400 hover:shadow-md hover:shadow-purple-500/20 text-purple-200';
+ borderAndBgClass = 'bg-purple-950/30 hover:border-purple-400 hover:shadow-md hover:shadow-purple-500/20 text-purple-200';
  } else {
  borderAndBgClass = isStitchLight
  ? 'bg-white border  hover:border-sky-400 hover:bg-[var(--bg)] text-[var(--ink)] shadow-xs'
@@ -2350,8 +2350,8 @@ export default function CalendarView({
                           isSelected 
                             ? 'bg-stone-950/25 text-stone-950 font-black' 
                             : isPosible
-                            ? 'bg-purple-500/25 text-purple-200 border border-purple-500/40 hover:bg-purple-500/35 hover:text-white shadow-xs'
-                            : 'bg-amber-500/25 text-amber-200 border /40 hover:bg-amber-500/35 hover:text-white shadow-xs'
+                            ? 'bg-purple-500/25 text-purple-200 hover:bg-purple-500/35 hover:text-white shadow-xs'
+                            : 'bg-amber-500/25 text-amber-200 hover:bg-amber-500/35 hover:text-white shadow-xs'
                         }`}
                         title={`${isPosible ? 'Posible Concierto' : 'Concierto'} [${bandInfo.name}]: ${c.sala} (${c.ciudad})${c.cache ? ` · Caché: ${c.cache}€` : ''}`}
                       >
@@ -2384,8 +2384,8 @@ export default function CalendarView({
                           isSelected
                             ? 'bg-stone-950/25 text-stone-950 font-black'
                             : isReu
-                            ? 'bg-indigo-500/25 text-indigo-200 border border-indigo-500/40 hover:bg-indigo-500/35 hover:text-white shadow-xs'
-                            : 'bg-emerald-500/25 text-emerald-200 border border-emerald-500/40 hover:bg-emerald-500/35 hover:text-white shadow-xs'
+                            ? 'bg-indigo-500/25 text-indigo-200 hover:bg-indigo-500/35 hover:text-white shadow-xs'
+                            : 'bg-emerald-500/25 text-emerald-200 hover:bg-emerald-500/35 hover:text-white shadow-xs'
                         }`}
                         title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
                       >
@@ -2560,7 +2560,7 @@ export default function CalendarView({
                             {bandInfo.name}
                           </span>
                           {isPosible && (
-                            <span className="ml-auto text-[8px] font-mono uppercase font-black px-1.5 py-0.5 rounded bg-purple-500/30 text-purple-200 border border-purple-500/40">
+                            <span className="ml-auto text-[8px] font-mono uppercase font-black px-1.5 py-0.5 rounded bg-purple-500/30 text-purple-200">
                               Posible
                             </span>
                           )}
@@ -2640,14 +2640,14 @@ export default function CalendarView({
                   {campaigns.map(camp => (
                     <div
                       key={camp.id}
-                      className="p-1.5 rounded-[var(--r-s)] border border-purple-500/40 bg-purple-950/25 text-[10px] text-purple-200"
+                      className="p-1.5 rounded-[var(--r-s)] bg-purple-950/25 text-[10px] text-purple-200"
                     >
                       🎯 {camp.name}
                     </div>
                   ))}
 
                   {dayConcerts.length === 0 && dayRehearsals.length === 0 && campaigns.length === 0 && (
-                    <div className="h-24 flex flex-col items-center justify-center text-center p-2 rounded border border-dashed /60 text-[var(--ink-2)]">
+                    <div className="h-24 flex flex-col items-center justify-center text-center p-2 rounded border-dashed /60 text-[var(--ink-2)]">
                       <span className="text-[10px]">Sin eventos</span>
                     </div>
                   )}
@@ -2726,7 +2726,7 @@ export default function CalendarView({
         </div>
 
         {dateKeys.length === 0 ? (
-          <div className="p-8 text-center rounded-[var(--r-l)] border border-dashed /80 bg-slate-950/40">
+          <div className="p-8 text-center rounded-[var(--r-l)] border-dashed /80 bg-slate-950/40">
             <Calendar className="w-8 h-8 text-[var(--ink-2)] mx-auto mb-2" />
             <p className="text-sm font-bold text-[var(--ink-3)]">No hay eventos en este periodo</p>
             <p className="text-xs text-[var(--ink-2)] mt-1">Usa el botón "Añadir Evento" o cambia de mes para ver otras fechas</p>
@@ -2806,7 +2806,7 @@ export default function CalendarView({
                               <img
                                 src={bandInfo.logoUrl}
                                 alt={bandInfo.name}
-                                className="w-8 h-8 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-white/20 shadow-xs"
+                                className="w-8 h-8 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border-white/20 shadow-xs"
                                 onError={(e) => {
                                   (e.currentTarget as HTMLElement).style.display = 'none';
                                   const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -2884,17 +2884,17 @@ export default function CalendarView({
                   Calendario de Directos, Ensayos y Reuniones
                 </h4>
                 <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold mt-1 overflow-x-auto no-scrollbar pb-0.5 max-w-full">
-                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border /30 flex items-center gap-1" title="Eventos visibles vs Total">
+                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 flex items-center gap-1" title="Eventos visibles vs Total">
                     <Calendar className="w-3 h-3" /> {filteredConcerts.length + filteredRehearsals.length}/{concerts.length + rehearsals.length}
                   </span>
-                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center gap-1 border border-emerald-500/20" title="Directos y conciertos públicos">
+                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center gap-1" title="Directos y conciertos públicos">
                     <Mic className="w-3 h-3 text-emerald-400" /> {filteredConcerts.length} directos
                   </span>
-                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-400 flex items-center gap-1 border border-purple-500/20" title="Ensayos de banda">
+                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-400 flex items-center gap-1" title="Ensayos de banda">
                     <DoorClosed className="w-3 h-3 text-purple-400" /> {filteredRehearsals.filter(r => r.tipo_evento !== 'reunion').length} ensayos
                   </span>
                   {filteredRehearsals.filter(r => r.tipo_evento === 'reunion').length > 0 && (
-                    <span className="shrink-0 px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-400 flex items-center gap-1 border border-indigo-500/20" title="Reuniones de coordinación">
+                    <span className="shrink-0 px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-400 flex items-center gap-1" title="Reuniones de coordinación">
                       <span>🤝</span> {filteredRehearsals.filter(r => r.tipo_evento === 'reunion').length} reuniones
                     </span>
                   )}
@@ -2978,8 +2978,8 @@ export default function CalendarView({
                     onClick={() => setShowSyncModal(true)}
                     className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
                       isStitchLight
-                        ? "bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink)] border /80"
-                        : "bg-neutral-800 hover:bg-neutral-700 text-amber-300 border /30"
+                        ? "bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink)]"
+                        : "bg-neutral-800 hover:bg-neutral-700 text-amber-300"
                     }`}
                     title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
                   >
@@ -3056,7 +3056,7 @@ export default function CalendarView({
         {/* Vistas estilo Google Calendar: 1M | 2M | Semana | Agenda + Configuración */}
         <div className="relative inline-flex items-center shrink-0" ref={viewConfigRef}>
             <div className={`flex items-center rounded-[var(--r-s)] p-0.5 ${
-              isStitchLight ? "bg-[var(--sunken)]" : "bg-bg-[var(--surface)] border border-zinc-800"
+              isStitchLight ? "bg-[var(--sunken)]" : "bg-bg-[var(--surface)] border-zinc-800"
             }`}>
               <button
                 id="calendar-view-1m-btn"
@@ -3296,7 +3296,7 @@ export default function CalendarView({
 
                 {/* Toast feedback */}
                 {configToast && (
-                  <div className="mt-3 p-2 rounded-[var(--r-s)] bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono flex items-center gap-1.5 animate-in fade-in">
+                  <div className="mt-3 p-2 rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-400 text-[10px] font-mono flex items-center gap-1.5 animate-in fade-in">
                     <Check className="w-3.5 h-3.5 shrink-0" />
                     <span>{configToast}</span>
                   </div>
@@ -3484,7 +3484,7 @@ export default function CalendarView({
              {selectedDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
            </h4>
            {dayEventsList.length > 0 && (
-             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border /30">
+             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300">
                {dayEventsList.length} {dayEventsList.length === 1 ? 'evento' : 'eventos'}
              </span>
            )}
@@ -3506,14 +3506,14 @@ export default function CalendarView({
        <button
          type="button"
          onClick={() => setShowCreateModal('concert')}
-         className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border /30 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+         className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
        >
          <span>🎸</span> + Concierto
        </button>
        <button
          type="button"
          onClick={() => setShowCreateModal('rehearsal')}
-         className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+         className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
        >
          <span>🥁</span> + Ensayo
        </button>
@@ -3562,7 +3562,7 @@ export default function CalendarView({
        {selectedConcert && (() => {
          const bandInfo = getBandIdentity(selectedConcert.band_id, (selectedConcert as any).bandName || (selectedConcert as any).band_name);
          return (
-           <div className="p-3.5 rounded-[var(--r-m)] bg-amber-950/20 border /40 space-y-2.5">
+           <div className="p-3.5 rounded-[var(--r-m)] bg-amber-950/20 space-y-2.5">
              <div className="flex items-start justify-between gap-3 flex-wrap">
                <div className="min-w-0">
                  <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -3573,16 +3573,16 @@ export default function CalendarView({
                      {bandInfo.name}
                    </span>
                    {selectedConcert.cache ? (
-                     <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black text-amber-300 bg-amber-500/10 border /30">
+                     <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black text-amber-300 bg-amber-500/10">
                        💰 {selectedConcert.cache.toLocaleString('es-ES')} €
                      </span>
                    ) : null}
                    <span className={`px-2 py-0.5 rounded-md text-[9px] font-mono font-bold uppercase ${
                      selectedConcert.estado_pago === 'pagado'
-                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                       ? 'bg-emerald-500/20 text-emerald-300'
                        : selectedConcert.estado_pago === 'anticipo'
-                       ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
-                       : 'bg-amber-500/20 text-amber-300 border /40'
+                       ? 'bg-blue-500/20 text-blue-300'
+                       : 'bg-amber-500/20 text-amber-300'
                    }`}>
                      {selectedConcert.estado_pago === 'pagado' ? '✓ Cobrado' : selectedConcert.estado_pago === 'anticipo' ? 'Anticipo recibido' : 'Pendiente cobro'}
                    </span>
@@ -3610,7 +3610,7 @@ export default function CalendarView({
                      setModalActiveTab('tecnica');
                      setShowEventFichaModal(true);
                    }}
-                   className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                   className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
                    title="1. Logística técnica y rider"
                  >
                    <Wrench className="w-3 h-3" />
@@ -3622,7 +3622,7 @@ export default function CalendarView({
                      setModalActiveTab('contactos');
                      setShowEventFichaModal(true);
                    }}
-                   className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                   className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
                    title="2. Contactos clave y WhatsApp directo"
                  >
                    <Phone className="w-3 h-3" />
@@ -3634,7 +3634,7 @@ export default function CalendarView({
                      setModalActiveTab('cierre');
                      setShowEventFichaModal(true);
                    }}
-                   className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                   className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
                    title="5. Checklist de cierre de material y carga de furgoneta"
                  >
                    <ShieldCheck className="w-3 h-3" />
@@ -3681,7 +3681,7 @@ export default function CalendarView({
                    setReminderErrorMsg(null);
                    setShowReminderModal(true);
                  }}
-                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-sky-300 border border-sky-500/30 flex items-center gap-1 cursor-pointer"
+                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-sky-300 flex items-center gap-1 cursor-pointer"
                >
                  <Bell className="w-3 h-3 text-sky-400" />
                  <span>Notificar Banda</span>
@@ -3689,7 +3689,7 @@ export default function CalendarView({
                <button
                  type="button"
                  onClick={() => setViewingConcert(selectedConcert)}
-                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-amber-300 border /30 flex items-center gap-1 cursor-pointer"
+                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-amber-300 flex items-center gap-1 cursor-pointer"
                >
                  <Edit className="w-3 h-3 text-amber-400" />
                  <span>Editar Concierto</span>
@@ -3701,7 +3701,7 @@ export default function CalendarView({
                    )}`}
                    target="_blank"
                    rel="noopener noreferrer"
-                   className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 cursor-pointer"
+                   className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-emerald-300 flex items-center gap-1 cursor-pointer"
                  >
                    <MapPin className="w-3 h-3 text-emerald-400" />
                    <span>Google Maps</span>
@@ -3810,7 +3810,7 @@ export default function CalendarView({
                    setReminderErrorMsg(null);
                    setShowReminderModal(true);
                  }}
-                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-sky-300 border border-sky-500/30 flex items-center gap-1 cursor-pointer"
+                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-sky-300 flex items-center gap-1 cursor-pointer"
                >
                  <Bell className="w-3 h-3 text-sky-400" />
                  <span>Notificar Convocatoria</span>
@@ -3818,7 +3818,7 @@ export default function CalendarView({
                <button
                  type="button"
                  onClick={() => setViewingRehearsal(selectedRehearsal)}
-                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 cursor-pointer"
+                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-emerald-300 flex items-center gap-1 cursor-pointer"
                >
                  <Edit className="w-3 h-3 text-emerald-400" />
                  <span>Editar Ensayo</span>
@@ -3857,14 +3857,14 @@ export default function CalendarView({
  {selectedEventDetails.type === 'free' ? (
  <div className="flex flex-col items-center justify-center text-center py-4 space-y-3">
  {getCampaignsForDate(selectedDateKey).length > 0 ? (
- <div className="w-full text-left rounded-[var(--r-l)] bg-gradient-to-br from-purple-950/40 via-purple-900/20 to-bg-[var(--surface)] border border-purple-500/50 p-4 shadow-xl shadow-purple-950/20">
+ <div className="w-full text-left rounded-[var(--r-l)] bg-gradient-to-br from-purple-950/40 via-purple-900/20 to-bg-[var(--surface)] p-4 shadow-xl shadow-purple-950/20">
  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-purple-500/30">
  <div className="flex items-center gap-2">
- <div className="w-8 h-8 rounded-[var(--r-s)] bg-purple-500/20 border border-purple-500/40 text-purple-300 flex items-center justify-center">
+ <div className="w-8 h-8 rounded-[var(--r-s)] bg-purple-500/20 text-purple-300 flex items-center justify-center">
  <Target className="w-4 h-4" />
  </div>
  <div>
- <span className="text-[9px] font-mono font-extrabold uppercase tracking-wider text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-full border border-purple-500/30">
+ <span className="text-[9px] font-mono font-extrabold uppercase tracking-wider text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-full">
  🎯 Fecha Objetivo de Campaña
  </span>
  <p className="text-[11px] font-mono text-zinc-300 font-bold mt-0.5">
@@ -3910,7 +3910,7 @@ export default function CalendarView({
  <button
  type="button"
  onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
- className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+ className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
  >
  <Building2 className="w-3 h-3 text-purple-300" />
  <span>Salas CRM</span>
@@ -4000,7 +4000,7 @@ export default function CalendarView({
  onClick={() => setUpcomingFilter(f.id as any)}
  className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold transition-all cursor-pointer ${
  upcomingFilter === f.id
- ? 'bg-amber-400/20 text-amber-300 border /40'
+ ? 'bg-amber-400/20 text-amber-300'
  : 'text-neutral-500 hover:text-neutral-300'
  }`}
  >
@@ -4040,8 +4040,8 @@ export default function CalendarView({
  }}
  className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-3 transition-all cursor-pointer ${
  evt.type === 'campaña'
- ? 'bg-purple-950/20 hover:border-purple-500/50 border border-purple-500/30'
- : isStitchLight ? 'bg-white hover:border-sky-400 hover:shadow-sm border ' : 'bg-[#141414] hover:/40 border border-zinc-800'
+ ? 'bg-purple-950/20 hover:border-purple-500/50'
+ : isStitchLight ? 'bg-white hover:border-sky-400 hover:shadow-sm border ' : 'bg-[#141414] hover:/40 border-zinc-800'
  }`}
  >
  {/* Custom calendar badge: Day number top, short month bottom */}
@@ -4066,15 +4066,15 @@ export default function CalendarView({
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
  evt.type === 'concierto'
- ? isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-amber-500/20 text-amber-300 border /30'
+ ? isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-amber-500/20 text-amber-300'
  : evt.type === 'campaña'
- ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
- : isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+ ? 'bg-purple-500/20 text-purple-300'
+ : isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-emerald-500/20 text-emerald-300'
  }`}>
  {evt.type === 'campaña' ? '🎯 Posible Bolo' : evt.type}
  </span>
  {evt.bandName && (
- <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-zinc-800/80 text-amber-200 border /30 truncate max-w-[100px]" title={evt.bandName}>
+ <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-zinc-800/80 text-amber-200 truncate max-w-[100px]" title={evt.bandName}>
  {evt.bandName}
  </span>
  )}
@@ -4124,7 +4124,7 @@ export default function CalendarView({
  <div className="flex items-center gap-1.5 flex-wrap">
  <div className={`text-[10px] font-mono uppercase tracking-widest font-bold ${isStitchLight ? 'text-sky-400' : 'text-[var(--accent)]'}`}>Logística de Ensayos y Conciertos</div>
  {(selectedConcert || selectedRehearsal) && (
- <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border /40 shadow-xs flex items-center gap-1">
+ <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 shadow-xs flex items-center gap-1">
  🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
  </span>
  )}
@@ -4411,14 +4411,14 @@ export default function CalendarView({
   }`}>
   <div 
   onClick={() => onNavigate?.('fans', { concertId: selectedConcert.id })}
-  className="p-1 bg-white rounded-[var(--r-s)] shadow border /40 shrink-0 cursor-pointer hover:scale-105 transition-transform"
+  className="p-1 bg-white rounded-[var(--r-s)] shadow shrink-0 cursor-pointer hover:scale-105 transition-transform"
   title="Haz clic para abrir la configuración del QR"
   >
   <QRCode value={targetQrUrl} size={58} level="M" />
   </div>
 
   <div className="flex-1 min-w-0 space-y-1.5">
-  <p className="text-[9px] font-mono text-[var(--ink-3)] truncate break-all bg-[var(--surface)]/60 p-1 rounded border /60 text-amber-300 font-semibold" title={targetQrUrl}>
+  <p className="text-[9px] font-mono text-[var(--ink-3)] truncate break-all bg-[var(--surface)]/60 p-1 rounded text-amber-300 font-semibold" title={targetQrUrl}>
   {targetQrUrl}
   </p>
   <div className="flex items-center gap-1.5">
@@ -4426,7 +4426,7 @@ export default function CalendarView({
   href={targetQrUrl}
   target="_blank"
   rel="noopener noreferrer"
-  className="px-2 py-0.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded text-[9px] font-mono font-bold flex items-center gap-1 border /30 transition-colors"
+  className="px-2 py-0.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors"
   >
   <ExternalLink className="w-2.5 h-2.5" /> Abrir
   </a>
@@ -4465,7 +4465,7 @@ export default function CalendarView({
                     <Video className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
                     <span>Detalles de la Reunión:</span>
                   </div>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300">
                     🤝 Coordinación
                   </span>
                 </div>
@@ -5010,7 +5010,7 @@ export default function CalendarView({
 
  {/* Arqueo Rápido */}
  <div className="grid grid-cols-2 gap-1.5 text-[9px] font-mono">
- <div className="p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20 flex flex-col">
+ <div className="p-1.5 rounded bg-emerald-500/10 flex flex-col">
  <span className="text-emerald-400/80 text-[8px] flex items-center gap-0.5">
  <Banknote className="w-2.5 h-2.5" /> Efectivo
  </span>
@@ -5018,7 +5018,7 @@ export default function CalendarView({
  {(merch.ingresosEfectivo || 0).toFixed(0)}€
  </span>
  </div>
- <div className="p-1.5 rounded bg-sky-500/10 border border-sky-500/20 flex flex-col">
+ <div className="p-1.5 rounded bg-sky-500/10 flex flex-col">
  <span className="text-sky-400/80 text-[8px] flex items-center gap-0.5">
  <Smartphone className="w-2.5 h-2.5" /> Bizum / TPV
  </span>
@@ -5324,7 +5324,7 @@ export default function CalendarView({
               </button>
 
               {/* Segmented Event Type Selector */}
-              <div className="flex items-center justify-between gap-1 p-1 bg-black/30 rounded-[var(--r-m)] mb-5 border border-white/5">
+              <div className="flex items-center justify-between gap-1 p-1 bg-black/30 rounded-[var(--r-m)] mb-5 border-white/5">
                 <button
                   type="button"
                   onClick={() => { setShowCreateModal('concert'); setConcIsPosible(false); }}
@@ -5875,7 +5875,7 @@ export default function CalendarView({
                     </select>
                   </div>
 
-                  <div className="flex items-center gap-2 py-1 px-2 rounded-[var(--r-s)] bg-purple-950/20 border border-purple-500/30">
+                  <div className="flex items-center gap-2 py-1 px-2 rounded-[var(--r-s)] bg-purple-950/20">
                     <input
                       type="checkbox"
                       id="concIsPosibleCheck"
@@ -6131,7 +6131,7 @@ export default function CalendarView({
  </label>
  </div>
 
- <div className="flex items-center gap-2 py-1 px-2 rounded-[var(--r-s)] bg-purple-950/20 border border-purple-500/30">
+ <div className="flex items-center gap-2 py-1 px-2 rounded-[var(--r-s)] bg-purple-950/20">
  <input
  type="checkbox"
  id="editIsPosibleCheck"
@@ -6440,7 +6440,7 @@ export default function CalendarView({
  }`}>
  <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-white/10">
  <div className="flex items-center gap-3">
- <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/15 border /30 text-amber-400">
+ <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
  <Radio className="w-5 h-5 animate-pulse" />
  </div>
  <div>
@@ -6474,7 +6474,7 @@ export default function CalendarView({
  </div>
 
  {isMultiBandUser && (
- <div className="p-3 rounded-[var(--r-m)] bg-black/40 border border-white/10 space-y-2">
+ <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-white/10 space-y-2">
  <label className="block text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold">
  ¿Qué bandas quieres incluir en tu agenda?
  </label>
@@ -6574,7 +6574,7 @@ export default function CalendarView({
  </a>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-bg-[var(--surface)]/60 border border-white/5 space-y-1.5 text-[11px] text-neutral-300">
+ <div className="p-3 rounded-[var(--r-m)] bg-bg-[var(--surface)]/60 border-white/5 space-y-1.5 text-[11px] text-neutral-300">
  <p className="font-bold text-bg-[var(--sunken)]">Pasos en Google Calendar (1 minuto):</p>
  <ol className="list-decimal list-inside space-y-1 text-text-[var(--ink-2)]">
  <li>Haz clic en el botón azul <strong>"Añadir a Google Calendar"</strong> de arriba.</li>
@@ -6635,13 +6635,13 @@ export default function CalendarView({
 
  <div className="py-4 space-y-4 text-xs">
  {reminderSuccessMsg && (
- <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-[var(--r-m)] font-mono text-[11px]">
+ <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-[var(--r-m)] font-mono text-[11px]">
  {reminderSuccessMsg}
  </div>
  )}
 
  {reminderErrorMsg && (
- <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-[var(--r-m)] font-mono text-[11px]">
+ <div className="p-3 bg-red-500/10 text-red-400 rounded-[var(--r-m)] font-mono text-[11px]">
  {reminderErrorMsg}
  </div>
  )}
@@ -6661,7 +6661,7 @@ export default function CalendarView({
  </label>
  <div className="flex flex-wrap gap-1 font-mono text-[10px]">
  {effectiveBandMembers.map((m: any, idx: number) => (
- <span key={idx} className="px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-300 border border-sky-500/20">
+ <span key={idx} className="px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-300">
  👤 {m.name} {m.email ? `(${m.email})` : ''}
  </span>
  ))}
@@ -6777,7 +6777,7 @@ export default function CalendarView({
                type="button"
                onClick={() => goToAdjacentEvent(-1)}
                disabled={allChronologicalEvents.length === 0 || activeChronoIndex <= 0}
-               className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold border /40 text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+               className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                title="Evento anterior (←)"
              >
                <ChevronLeft className="w-4 h-4" />
@@ -6796,7 +6796,7 @@ export default function CalendarView({
                  type="button"
                  onClick={() => goToAdjacentEvent(1)}
                  disabled={allChronologicalEvents.length === 0 || activeChronoIndex < 0 || activeChronoIndex >= allChronologicalEvents.length - 1}
-                 className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold border /40 text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                 className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-mono font-bold text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                  title="Evento siguiente (→)"
                >
                  <span className="hidden sm:inline">Siguiente</span>
@@ -6821,7 +6821,7 @@ export default function CalendarView({
                    <img
                      src={modalBandInfo.logoUrl}
                      alt={modalBandInfo.name}
-                     className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-black/40 p-1 shrink-0 border /40 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
+                     className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-black/40 p-1 shrink-0 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
                      onError={(e) => {
                        (e.currentTarget as HTMLElement).style.display = 'none';
                        const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
@@ -6833,7 +6833,7 @@ export default function CalendarView({
                    {modalBandInfo.initials}
                  </span>
                  <div className="min-w-0 flex-1">
-                   <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border /40 inline-flex items-center gap-1">
+                   <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 inline-flex items-center gap-1">
                      🎸 {modalBandInfo.name}
                    </span>
                    <h3 className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}>{selectedEventTitle}</h3>
@@ -6915,7 +6915,7 @@ export default function CalendarView({
 
              {/* Panel de Confirmación de Eliminación In-Modal */}
              {isConfirmingDelete && modalEvent && (
-               <div className="p-3.5 rounded-[var(--r-m)] border border-rose-500/50 bg-rose-950/60 text-rose-100 flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
+               <div className="p-3.5 rounded-[var(--r-m)] bg-rose-950/60 text-rose-100 flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
                  <div className="flex items-center gap-2">
                    <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
                    <div>
@@ -7288,7 +7288,7 @@ export default function CalendarView({
                          value={modalRoadbook.horaShow || '21:30'}
                          onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaShow: e.target.value })}
                          placeholder="21:30"
-                         className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono border /50 font-bold ${
+                         className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold ${
                            isStitchLight ? 'bg-amber-50 text-[var(--ink)]' : 'bg-amber-950/30 text-amber-200'
                          }`}
                        />
@@ -7577,7 +7577,7 @@ export default function CalendarView({
                              <span className="text-xs font-mono font-bold text-white">
                                {contact.nombre}
                              </span>
-                             <span className="px-2 py-0.5 rounded-md text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                             <span className="px-2 py-0.5 rounded-md text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-300">
                                {contact.rol}
                              </span>
                            </div>
@@ -7605,7 +7605,7 @@ export default function CalendarView({
                            </button>
                            <a
                              href={`tel:${contact.telefono.replace(/\s+/g, '')}`}
-                             className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/10 flex items-center gap-1 transition-colors"
+                             className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold text-emerald-300 hover:bg-emerald-500/10 flex items-center gap-1 transition-colors"
                              title="Llamar directamente por teléfono"
                            >
                              <Phone className="w-3.5 h-3.5" />
@@ -7668,7 +7668,7 @@ export default function CalendarView({
                        <button
                          type="button"
                          onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
-                         className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border /40 hover:bg-amber-500/30 transition-colors flex items-center gap-1 cursor-pointer"
+                         className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition-colors flex items-center gap-1 cursor-pointer"
                          title="Copiar arqueo y balance para WhatsApp"
                        >
                          {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -7690,7 +7690,7 @@ export default function CalendarView({
                      <motion.div
                        initial={{ opacity: 0, y: -6 }}
                        animate={{ opacity: 1, y: 0 }}
-                       className="p-2.5 rounded-[var(--r-s)] bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-2"
+                       className="p-2.5 rounded-[var(--r-s)] bg-emerald-500/20 text-emerald-300 text-xs font-mono flex items-center gap-2"
                      >
                        <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
                        <span>¡Resumen de arqueo y ventas copiado al portapapeles con formato WhatsApp para el grupo de la banda!</span>
@@ -7912,7 +7912,7 @@ export default function CalendarView({
                          <button
                            type="button"
                            onClick={() => setShowAddMerchForm(true)}
-                           className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border /40 hover:bg-amber-500/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                           className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
                          >
                            <Plus className="w-3.5 h-3.5" />
                            <span>Añadir primer producto</span>
@@ -8263,7 +8263,7 @@ export default function CalendarView({
                      <button
                        type="button"
                        onClick={() => handleToggleAllCierreItems(modalRoadbookKey, true)}
-                       className="px-2 py-1 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-colors cursor-pointer"
+                       className="px-2 py-1 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition-colors cursor-pointer"
                      >
                        ✓ Marcar Todo
                      </button>
@@ -8305,12 +8305,12 @@ export default function CalendarView({
                        </div>
 
                        {isCompleted ? (
-                         <div className="p-3 rounded-[var(--r-m)] bg-emerald-950/60 border border-emerald-500/50 text-emerald-200 text-xs font-mono flex items-center gap-2">
+                         <div className="p-3 rounded-[var(--r-m)] bg-emerald-950/60 text-emerald-200 text-xs font-mono flex items-center gap-2">
                            <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
                            <span>¡TODO EL MATERIAL VERIFICADO! Escenario y camerinos despejados. Furgoneta cerrada y lista para partir.</span>
                          </div>
                        ) : (
-                         <div className="p-3 rounded-[var(--r-m)] bg-purple-950/30 border border-purple-500/40 text-purple-200 text-xs font-mono flex items-center gap-2">
+                         <div className="p-3 rounded-[var(--r-m)] bg-purple-950/30 text-purple-200 text-xs font-mono flex items-center gap-2">
                            <ShieldCheck className="w-4 h-4 text-purple-400 shrink-0" />
                            <span>Verifica uno a uno antes de cerrar la furgoneta para garantizar cero olvidos de cables, instrumentos o ropa.</span>
                          </div>

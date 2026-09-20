@@ -366,7 +366,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   return (
     <div
       className={`p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl shadow-xl transition-all ${
-        isStitchLight ? 'bg-white border ' : 'bg-[#16161a]/95 border /80 backdrop-blur-sm'
+        isStitchLight ? 'bg-white border ' : 'bg-[#16161a]/95 backdrop-blur-sm'
       }`}
     >
       {/* Top Controls Bar (Search + Quick Filters + Actions) */}
@@ -374,7 +374,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         {/* Desktop title row (hidden on mobile to keep screen ultra-clean since RepertorioNavBar already provides title) */}
         <div className="hidden sm:flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/15 border /30 flex items-center justify-center shadow-inner shrink-0">
+            <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/15 flex items-center justify-center shadow-inner shrink-0">
               <Disc3 className="w-4 h-4 text-amber-400" />
             </div>
             <div>
@@ -568,7 +568,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   type="button"
                   onClick={handleAnalyzeAllDynamics}
                   disabled={dynamicsAnalysis?.running}
-                  className="px-2 py-1 rounded-[var(--r-m)] bg-sky-600/20 hover:bg-sky-600/30 border border-sky-500/40 disabled:opacity-70 disabled:cursor-wait text-sky-300 hover:text-sky-200 font-bold text-[11px] font-mono flex items-center gap-1 cursor-pointer shadow-sm transition-all"
+                  className="px-2 py-1 rounded-[var(--r-m)] bg-sky-600/20 hover:bg-sky-600/30 disabled:opacity-70 disabled:cursor-wait text-sky-300 hover:text-sky-200 font-bold text-[11px] font-mono flex items-center gap-1 cursor-pointer shadow-sm transition-all"
                   title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
                 >
                   {dynamicsAnalysis?.running ? (
@@ -659,13 +659,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       url={coverUrl}
                       onPlay={onSelectSong ? handlePlayAlbum : undefined}
                       isPlaying={isPlayingAlbum}
-                      className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] shadow-sm border /60 object-cover"
+                      className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] shadow-sm object-cover"
                     />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                      <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border /20 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
                         <Disc3 className="w-3 h-3 text-amber-400" />
                         {album === 'Singles / Sin Disco' ? 'SENCILLOS & INÉDITAS' : 'ÁLBUM OFICIAL'}
                       </span>
@@ -771,7 +771,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     <button
                       type="button"
                       onClick={() => onRequestDeleteAlbum(album, sortedAlbumSongs.length)}
-                      className="p-1.5 rounded-[var(--r-m)] bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors cursor-pointer shrink-0"
+                      className="p-1.5 rounded-[var(--r-m)] bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors cursor-pointer shrink-0"
                       title="Eliminar álbum"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -865,7 +865,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   })}
 
                   {sortedAlbumSongs.length === 0 && (
-                    <div className="text-center py-6 text-neutral-500 text-xs italic font-mono bg-white/5 rounded-[var(--r-l)] border border-dashed border-white/10">
+                    <div className="text-center py-6 text-neutral-500 text-xs italic font-mono bg-white/5 rounded-[var(--r-l)] border-dashed border-white/10">
                       Disco sin canciones asignadas. Haz clic en "Gestionar" para añadir temas a este álbum.
                     </div>
                   )}
@@ -887,7 +887,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="mt-3 px-3 py-1.5 rounded-full bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/30 text-xs font-mono font-bold hover:bg-[#1db954]/30 transition-all cursor-pointer inline-flex items-center gap-1.5"
+                className="mt-3 px-3 py-1.5 rounded-full bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/30 text-xs font-mono font-bold hover:bg-[#1db954]/30 transition-all cursor-pointer inline-flex items-center gap-1.5"
               >
                 <X className="w-3.5 h-3.5" />
                 <span>Limpiar búsqueda</span>

@@ -419,7 +419,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between gap-3 bg-gradient-to-r from-[#1db954]/10 via-transparent to-transparent">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[#1db954]/20 border border-[#1db954]/40 flex items-center justify-center text-[#1ed760] shrink-0 shadow-inner">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[#1db954]/20 border-[#1db954]/40 flex items-center justify-center text-[#1ed760] shrink-0 shadow-inner">
                 <Download className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <div className="min-w-0">
@@ -566,7 +566,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
             {/* Audio Availability Banner (for ZIP mode) */}
             {format === 'zip' && (
-              <div className="p-3.5 rounded-[var(--r-l)] bg-[#1db954]/10 border border-[#1db954]/30 flex items-center justify-between gap-3 text-xs">
+              <div className="p-3.5 rounded-[var(--r-l)] bg-[#1db954]/10 border-[#1db954]/30 flex items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2 text-emerald-300">
                   <Music className="w-4 h-4 text-[#1ed760] shrink-0" />
                   <span>
@@ -576,7 +576,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   </span>
                 </div>
                 {songsWithAudio.length < targetSongs.length && (
-                  <span className="text-[11px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-[var(--r-s)] border /20 shrink-0">
+                  <span className="text-[11px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-[var(--r-s)] shrink-0">
                     {targetSongs.length - songsWithAudio.length} sin MP3 subido
                   </span>
                 )}
@@ -584,7 +584,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
             )}
 
             {/* 3. Export Options / Toggles */}
-            <div className="p-3.5 rounded-[var(--r-l)] bg-white/5 border border-white/10 space-y-2.5">
+            <div className="p-3.5 rounded-[var(--r-l)] bg-white/5 border-white/10 space-y-2.5">
               <span className="text-xs font-semibold text-text-[var(--ink-3)]">Contenido a incluir en la exportación:</span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -611,7 +611,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
             {/* ZIP Progress Bar */}
             {zipLoading && (
-              <div className="p-4 rounded-[var(--r-l)] bg-emerald-950/60 border border-emerald-500/40 space-y-2 animate-in fade-in">
+              <div className="p-4 rounded-[var(--r-l)] bg-emerald-950/60 space-y-2 animate-in fade-in">
                 <div className="flex items-center justify-between text-xs font-medium text-emerald-300">
                   <span className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 text-[#1ed760] animate-spin" />
@@ -624,7 +624,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   )}
                 </div>
                 {zipProgress.total > 0 && (
-                  <div className="w-full h-2 bg-bg-[var(--surface)] rounded-full overflow-hidden border border-emerald-500/30">
+                  <div className="w-full h-2 bg-bg-[var(--surface)] rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-[#1db954] to-[#1ed760] transition-all duration-300 rounded-full"
                       style={{ width: `${Math.round((zipProgress.current / zipProgress.total) * 100)}%` }}
@@ -636,7 +636,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
             {/* ZIP Error Alert */}
             {zipError && (
-              <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-[var(--r-l)] text-xs text-rose-300 flex items-center gap-2">
+              <div className="p-3 bg-rose-500/10 rounded-[var(--r-l)] text-xs text-rose-300 flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
                 <span>{zipError}</span>
               </div>
@@ -671,7 +671,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
               <button
                 type="button"
                 onClick={handlePrintSetlist}
-                className="px-3.5 py-2.5 rounded-[var(--r-l)] bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="px-3.5 py-2.5 rounded-[var(--r-l)] bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95"
                 title="Convertir canciones del disco en un setlist para imprimir en PDF"
               >
                 <Printer className="w-4 h-4 text-purple-400" />
@@ -683,7 +683,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
               <button
                 type="button"
                 onClick={handleCopyClipboard}
-                className="px-4 py-2.5 rounded-[var(--r-l)] bg-white/10 hover:bg-white/20 text-white font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer border border-white/10 active:scale-95"
+                className="px-4 py-2.5 rounded-[var(--r-l)] bg-white/10 hover:bg-white/20 text-white font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer border-white/10 active:scale-95"
               >
                 {copied ? (
                   <>

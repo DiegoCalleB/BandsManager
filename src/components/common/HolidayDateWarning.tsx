@@ -24,7 +24,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
     if (audit.riskLevel === 'opportunity') {
       return (
         <span 
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 ${className}`}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 ${className}`}
           title={`${audit.title}: ${audit.advice}`}
         >
           <Sparkles className="w-3 h-3 text-emerald-400 shrink-0" />
@@ -36,7 +36,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
     if (audit.riskLevel === 'high_risk') {
       return (
         <span 
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse ${className}`}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 animate-pulse ${className}`}
           title={`${audit.title}: ${audit.advice}`}
         >
           <AlertTriangle className="w-3 h-3 text-rose-400 shrink-0" />
@@ -47,7 +47,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
 
     return (
       <span 
-        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border /40 ${className}`}
+        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 ${className}`}
         title={`${audit.title}: ${audit.advice}`}
       >
         <AlertTriangle className="w-3 h-3 text-amber-400 shrink-0" />
@@ -59,7 +59,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
   // Full detailed banner
   if (audit.riskLevel === 'opportunity') {
     return (
-      <div className={`p-3 rounded-[var(--r-m)] bg-emerald-950/40 border border-emerald-500/40 text-emerald-200 text-xs space-y-1 ${className}`}>
+      <div className={`p-3 rounded-[var(--r-m)] bg-emerald-950/40 text-emerald-200 text-xs space-y-1 ${className}`}>
         <div className="flex items-center gap-2 font-bold text-emerald-300">
           <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
           <span>{audit.title}</span>
@@ -73,7 +73,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
 
   if (audit.riskLevel === 'high_risk') {
     return (
-      <div className={`p-3 rounded-[var(--r-m)] bg-rose-950/40 border border-rose-500/40 text-rose-200 text-xs space-y-1 ${className}`}>
+      <div className={`p-3 rounded-[var(--r-m)] bg-rose-950/40 text-rose-200 text-xs space-y-1 ${className}`}>
         <div className="flex items-center gap-2 font-bold text-rose-300">
           <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 animate-bounce" />
           <span>{audit.title}</span>
@@ -86,7 +86,7 @@ export const HolidayDateWarning: React.FC<HolidayDateWarningProps> = ({
   }
 
   return (
-    <div className={`p-3 rounded-[var(--r-m)] bg-amber-950/40 border /40 text-amber-200 text-xs space-y-1 ${className}`}>
+    <div className={`p-3 rounded-[var(--r-m)] bg-amber-950/40 text-amber-200 text-xs space-y-1 ${className}`}>
       <div className="flex items-center gap-2 font-bold text-amber-300">
         <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
         <span>{audit.title}</span>

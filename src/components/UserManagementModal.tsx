@@ -619,7 +619,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  ) : (
   /* Associate Existing User Form */
   <form onSubmit={handleAssociateUser} className="space-y-4">
-    <div className="p-4 bg-indigo-500/5 border border-indigo-500/10 rounded-[var(--r-l)] text-xs text-text-[var(--ink-3)]">
+    <div className="p-4 bg-indigo-500/5 rounded-[var(--r-l)] text-xs text-text-[var(--ink-3)]">
       <p className="font-semibold text-indigo-400 mb-1 flex items-center gap-1.5">
         <Sparkles className="w-3.5 h-3.5" />
         <span>¿Músico ya registrado en la plataforma?</span>

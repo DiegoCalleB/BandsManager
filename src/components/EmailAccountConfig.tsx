@@ -227,7 +227,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
     }`}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b /60">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-[var(--r-m)] bg-sky-500/10 border border-sky-500/20 text-sky-400">
+          <div className="p-2 rounded-[var(--r-m)] bg-sky-500/10 text-sky-400">
             <Mail className="w-5 h-5" />
           </div>
           <div>
@@ -239,7 +239,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
         </div>
 
         {status.connected && !editing && (
-          <div className="flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono">
+          <div className="flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-mono">
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Conectado</span>
           </div>
@@ -303,8 +303,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
         {gmailOAuthFeedback && (
           <div className={`p-2.5 rounded-[var(--r-s)] text-[11px] flex items-center gap-2 animate-fadeIn ${
             gmailOAuthFeedback.type === 'success'
-              ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
-              : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
+              ? 'bg-emerald-500/10 text-emerald-300'
+              : 'bg-rose-500/10 text-rose-300'
           }`}>
             {gmailOAuthFeedback.type === 'success' ? (
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
@@ -441,8 +441,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
       {feedback && (
         <div className={`p-3 rounded-[var(--r-m)] text-xs flex items-center gap-2 animate-fadeIn ${
           feedback.type === 'success'
-            ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
-            : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
+            ? 'bg-emerald-500/10 text-emerald-300'
+            : 'bg-rose-500/10 text-rose-300'
         }`}>
           {feedback.type === 'success' ? (
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />

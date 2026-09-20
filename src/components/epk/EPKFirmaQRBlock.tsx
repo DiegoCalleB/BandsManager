@@ -113,7 +113,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
             <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
               <AtSign className="w-5 h-5" /> Configurar Firma de Correo
             </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border /20">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300">
               HTML Automático
             </span>
           </div>
@@ -259,7 +259,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigateToBlock('perfil')}
-                  className="px-2 py-0.5 text-[10px] font-bold text-amber-400 hover:text-amber-300 bg-amber-500/10 rounded border /30 flex items-center gap-1 cursor-pointer"
+                  className="px-2 py-0.5 text-[10px] font-bold text-amber-400 hover:text-amber-300 bg-amber-500/10 rounded flex items-center gap-1 cursor-pointer"
                 >
                   <FileText className="w-3 h-3" /> Editar en Bloque 1
                 </button>
@@ -528,7 +528,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
               {/* AVISO / TOAST DE ÉXITO */}
               {copiadoFirma && (
-                <div className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-start gap-2 animate-fadeIn">
+                <div className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-300 text-xs flex items-start gap-2 animate-fadeIn">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <div className="leading-snug">
                     {copiadoFirma === 'rich' && (
@@ -549,7 +549,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowInstructions(!showInstructions)}
-                  className="w-full text-left py-2 px-3 rounded-[var(--r-m)] bg-slate-950/60 hover:bg-slate-950 border /80 text-xs text-[var(--ink-3)] hover:text-amber-300 flex items-center justify-between transition cursor-pointer"
+                  className="w-full text-left py-2 px-3 rounded-[var(--r-m)] bg-slate-950/60 hover:bg-slate-950 text-xs text-[var(--ink-3)] hover:text-amber-300 flex items-center justify-between transition cursor-pointer"
                 >
                   <span className="flex items-center gap-1.5 font-medium">
                     <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
@@ -567,7 +567,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         onClick={() => setInstructionTab('gmail')}
                         className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
                           instructionTab === 'gmail'
-                            ? 'bg-amber-500/20 text-amber-300 border /40'
+                            ? 'bg-amber-500/20 text-amber-300'
                             : 'text-[var(--ink-3)] hover:text-white'
                         }`}
                       >
@@ -578,7 +578,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         onClick={() => setInstructionTab('outlook')}
                         className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
                           instructionTab === 'outlook'
-                            ? 'bg-amber-500/20 text-amber-300 border /40'
+                            ? 'bg-amber-500/20 text-amber-300'
                             : 'text-[var(--ink-3)] hover:text-white'
                         }`}
                       >
@@ -589,7 +589,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         onClick={() => setInstructionTab('apple')}
                         className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold cursor-pointer transition ${
                           instructionTab === 'apple'
-                            ? 'bg-amber-500/20 text-amber-300 border /40'
+                            ? 'bg-amber-500/20 text-amber-300'
                             : 'text-[var(--ink-3)] hover:text-white'
                         }`}
                       >

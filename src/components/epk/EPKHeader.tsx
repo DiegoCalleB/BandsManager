@@ -62,7 +62,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
       {/* ============================================================ */}
       {/* 1. VERSIÓN MÓVIL (< sm): ULTRA COMPACTA, LIMPIA Y SIN RUIDO */}
       {/* ============================================================ */}
-      <div className="sm:hidden bg-[var(--surface)] border border-stone-800 p-2.5 rounded-[var(--r-m)] shadow-xs space-y-2">
+      <div className="sm:hidden bg-[var(--surface)] border-stone-800 p-2.5 rounded-[var(--r-m)] shadow-xs space-y-2">
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
             <h2 className="text-sm font-bold font-mono text-white leading-tight truncate">
@@ -112,7 +112,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setShowMobileMenu(false)}
                   />
-                  <div className="absolute right-0 top-full mt-1.5 w-56 bg-[#1b1a18] border border-stone-700/90 rounded-[var(--r-m)] shadow-2xl z-50 p-1.5 space-y-1 text-xs">
+                  <div className="absolute right-0 top-full mt-1.5 w-56 bg-[#1b1a18] rounded-[var(--r-m)] shadow-2xl z-50 p-1.5 space-y-1 text-xs">
                     <a
                       href={publicEpkUrl}
                       target="_blank"
@@ -200,12 +200,12 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
       </div>
 
       {/* SELECTOR ERGONÓMICO DE BLOQUES EN MÓVIL (< sm) */}
-      <div className="sm:hidden flex items-center justify-between gap-1.5 bg-[#141312] border border-stone-800 p-1 rounded-[var(--r-m)]">
+      <div className="sm:hidden flex items-center justify-between gap-1.5 bg-[#141312] border-stone-800 p-1 rounded-[var(--r-m)]">
         <button
           type="button"
           onClick={() => prevBlock && onSelectBlock(prevBlock.id)}
           disabled={!prevBlock}
-          className="p-2 rounded-[var(--r-s)] bg-stone-900 border border-stone-800 text-stone-300 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
+          className="p-2 rounded-[var(--r-s)] bg-stone-900 border-stone-800 text-stone-300 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
           title="Bloque anterior"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -215,7 +215,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <select
             value={activeBlock}
             onChange={(e) => onSelectBlock(e.target.value as EPKBlockId)}
-            className="w-full appearance-none bg-stone-900 border border-stone-700/80 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-mono text-amber-300 focus:outline-none focus: cursor-pointer"
+            className="w-full appearance-none bg-stone-900 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-mono text-amber-300 focus:outline-none focus: cursor-pointer"
           >
             {EPK_BLOCKS.map(block => (
               <option key={block.id} value={block.id} className="bg-stone-900 text-white">
@@ -230,7 +230,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           type="button"
           onClick={() => nextBlock && onSelectBlock(nextBlock.id)}
           disabled={!nextBlock}
-          className="p-2 rounded-[var(--r-s)] bg-stone-900 border border-stone-800 text-stone-300 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
+          className="p-2 rounded-[var(--r-s)] bg-stone-900 border-stone-800 text-stone-300 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
           title="Siguiente bloque"
         >
           <ChevronRight className="w-4 h-4" />
@@ -240,10 +240,10 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
       {/* ============================================================ */}
       {/* 2. VERSIÓN ESCRITORIO (>= sm): COMPLETA Y ESPACIOSA          */}
       {/* ============================================================ */}
-      <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] border border-stone-800 p-4 sm:p-5 rounded-[var(--r-l)] shadow-sm">
+      <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] border-stone-800 p-4 sm:p-5 rounded-[var(--r-l)] shadow-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border /20 text-amber-400 text-[10px] font-mono font-bold uppercase">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-mono font-bold uppercase">
               Kit de Prensa & EPK
             </span>
             <span className="text-[11px] text-stone-500 hidden sm:inline">•</span>
@@ -268,7 +268,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               id="tutorial-trigger-epk"
               type="button"
               onClick={onOpenTutorial}
-              className="px-3 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-xs font-mono font-bold rounded-[var(--r-m)] border border-purple-500/30 flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
+              className="px-3 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-xs font-mono font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
               title="Abrir guía interactiva del Dossier EPK"
             >
               <HelpCircle className="w-3.5 h-3.5 text-purple-400 shrink-0" />
@@ -280,7 +280,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             id="epk-header-copy-btn"
             type="button"
             onClick={onCopyUrl}
-            className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-slate-200 text-xs font-semibold rounded-[var(--r-m)] border border-stone-700/80 flex items-center gap-1.5 transition cursor-pointer"
+            className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-slate-200 text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer"
             title="Copiar enlace web público del EPK"
           >
             {copiedPublicUrl ? (
@@ -296,7 +296,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             href={publicEpkUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-300 hover:text-amber-200 text-xs font-semibold rounded-[var(--r-m)] border border-stone-700/80 flex items-center gap-1.5 transition"
+            className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-amber-300 hover:text-amber-200 text-xs font-semibold rounded-[var(--r-m)] flex items-center gap-1.5 transition"
             title="Abrir vista pública del EPK"
           >
             <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
@@ -315,7 +315,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
       </div>
 
       {/* STATUS & HEALTH BAR ESCRITORIO (>= sm) */}
-      <div className="hidden sm:flex items-center justify-between gap-3 px-3 sm:px-4 py-2 bg-[#141312] border border-stone-800/90 rounded-[var(--r-m)] text-xs">
+      <div className="hidden sm:flex items-center justify-between gap-3 px-3 sm:px-4 py-2 bg-[#141312] rounded-[var(--r-m)] text-xs">
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5 text-[11px] font-mono">
           <span className="text-stone-500 uppercase tracking-wider text-[10px] shrink-0 font-bold">
             Estado:
@@ -437,7 +437,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
       {/* AVISO EXPANDIBLE DE AGENTES DE IA (COLAPSADO POR DEFECTO PARA NO COMER ESPACIO) */}
       {!isPromoPlan && showAiNotice && (
-        <div className="p-3.5 bg-amber-500/10 border /30 rounded-[var(--r-l)] text-xs text-[var(--ink-3)] flex items-start gap-3 transition">
+        <div className="p-3.5 bg-amber-500/10 rounded-[var(--r-l)] text-xs text-[var(--ink-3)] flex items-start gap-3 transition">
           <Bot className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <div className="space-y-1">
             <p className="font-bold text-amber-300 text-xs">

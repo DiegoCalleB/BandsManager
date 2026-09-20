@@ -299,7 +299,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                 <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight flex items-center gap-2">
                   Importar Discografía de Spotify
                 </h2>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#1db954]/20 text-[#1db954] border border-[#1db954]/30">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#1db954]/20 text-[#1db954] border-[#1db954]/30">
                   OFICIAL SPOTIFY API
                 </span>
               </div>
@@ -361,7 +361,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
           </form>
 
           {errorMsg && (
-            <div className="p-3.5 rounded-[var(--r-l)] bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-mono flex items-center gap-2.5">
+            <div className="p-3.5 rounded-[var(--r-l)] bg-rose-500/15 text-rose-300 text-xs font-mono flex items-center gap-2.5">
               <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
               <span>{errorMsg}</span>
             </div>
@@ -384,7 +384,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                     className="w-14 h-14 rounded-full object-cover border-2 border-[#1db954] shadow-md"
                   />
                 ) : (
-                  <div className="w-14 h-14 rounded-full bg-[#1db954]/20 border border-[#1db954]/40 flex items-center justify-center text-xl">
+                  <div className="w-14 h-14 rounded-full bg-[#1db954]/20 border-[#1db954]/40 flex items-center justify-center text-xl">
                     🎸
                   </div>
                 )}
@@ -414,7 +414,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                 href={artistProfile.spotifyUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="px-3.5 py-1.5 rounded-[var(--r-m)] border border-white/10 hover:border-[#1db954] text-xs font-mono font-bold flex items-center gap-1.5 text-text-[var(--ink-3)] hover:text-[#1db954] transition-all"
+                className="px-3.5 py-1.5 rounded-[var(--r-m)] border-white/10 hover:border-[#1db954] text-xs font-mono font-bold flex items-center gap-1.5 text-text-[var(--ink-3)] hover:text-[#1db954] transition-all"
               >
                 <span>Ver en Spotify</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -478,7 +478,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                   <button
                     type="button"
                     onClick={() => toggleSelectAll(selectedAlbumsCount < albums.length)}
-                    className="px-3 py-1.5 rounded-[var(--r-m)] border border-white/10 text-xs font-mono font-bold hover:bg-white/5 transition flex items-center gap-1.5 cursor-pointer"
+                    className="px-3 py-1.5 rounded-[var(--r-m)] border-white/10 text-xs font-mono font-bold hover:bg-white/5 transition flex items-center gap-1.5 cursor-pointer"
                   >
                     {selectedAlbumsCount === albums.length ? (
                       <>
@@ -537,7 +537,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                             <img
                               src={album.coverUrl}
                               alt={album.name}
-                              className="w-14 h-14 rounded-[var(--r-m)] object-cover shadow-md border border-white/10 shrink-0"
+                              className="w-14 h-14 rounded-[var(--r-m)] object-cover shadow-md border-white/10 shrink-0"
                             />
                           ) : (
                             <div className="w-14 h-14 rounded-[var(--r-m)] bg-neutral-800 flex items-center justify-center shrink-0">
@@ -551,8 +551,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                               <span
                                 className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
                                   album.albumType === 'album'
-                                    ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
-                                    : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                    ? 'bg-indigo-500/20 text-indigo-400'
+                                    : 'bg-emerald-500/20 text-emerald-400'
                                 }`}
                               >
                                 {album.albumType === 'album' ? 'Álbum' : 'Single / EP'}
@@ -581,7 +581,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                           <button
                             type="button"
                             onClick={() => toggleExpandAlbum(album.id)}
-                            className="px-3 py-1.5 rounded-[var(--r-m)] border border-white/10 hover:bg-white/10 text-xs font-mono font-bold flex items-center gap-1 cursor-pointer transition"
+                            className="px-3 py-1.5 rounded-[var(--r-m)] border-white/10 hover:bg-white/10 text-xs font-mono font-bold flex items-center gap-1 cursor-pointer transition"
                           >
                             <span>{isExpanded ? 'Ocultar Pistas' : 'Ver Pistas'}</span>
                             {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -606,7 +606,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                                 key={track.id}
                                 className={`px-3 py-2 rounded-[var(--r-m)] flex items-center justify-between gap-3 text-xs font-mono transition-all ${
                                   isPlaying
-                                    ? 'bg-[#1db954]/20 border border-[#1db954]/40 text-white'
+                                    ? 'bg-[#1db954]/20 border-[#1db954]/40 text-white'
                                     : 'hover:bg-white/5 text-text-[var(--ink-3)]'
                                 }`}
                               >
@@ -642,7 +642,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
 
                                 <div className="flex items-center gap-3 shrink-0">
                                   {track.tonalidadEstimada && (
-                                    <span className="px-1.5 py-0.5 rounded bg-white/5 text-[10px] text-amber-400 font-bold border /20">
+                                    <span className="px-1.5 py-0.5 rounded bg-white/5 text-[10px] text-amber-400 font-bold">
                                       {track.tonalidadEstimada}
                                     </span>
                                   )}
@@ -689,7 +689,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-[var(--r-l)] border border-white/10 hover:bg-white/5 text-xs font-mono font-bold transition cursor-pointer"
+              className="px-4 py-2.5 rounded-[var(--r-l)] border-white/10 hover:bg-white/5 text-xs font-mono font-bold transition cursor-pointer"
             >
               Cancelar
             </button>

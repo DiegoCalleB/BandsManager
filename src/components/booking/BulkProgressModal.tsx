@@ -42,12 +42,12 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
   return (
     <ModalPortal isOpen={isOpen} onClose={isCompleted ? onClose : undefined}>
       <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
-        <div className="w-full max-w-lg bg-[#141210] border border-[var(--acc)]/40 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
+        <div className="w-full max-w-lg bg-[#141210] border-[var(--acc)]/40 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] my-auto">
           
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-zinc-800 bg-gradient-to-r from-[#1e1c18] to-[#121110] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 border /40 flex items-center justify-center text-amber-300">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 flex items-center justify-center text-amber-300">
                 {isCompleted ? (
                   <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                 ) : (
@@ -82,7 +82,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
               <span className="text-[var(--acc)] font-bold">{percentage}% ({isCompleted ? totalCount : currentIndex}/{totalCount})</span>
             </div>
 
-            <div className="w-full h-2.5 bg-zinc-800 rounded-full overflow-hidden border border-zinc-700/60">
+            <div className="w-full h-2.5 bg-zinc-800 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all duration-300 rounded-full ${
                   isCompleted 
@@ -95,12 +95,12 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
 
             {/* Stats summary */}
             <div className="flex items-center gap-3 text-xs font-mono pt-1">
-              <span className="inline-flex items-center gap-1 text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-800/40">
+              <span className="inline-flex items-center gap-1 text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded">
                 <CheckCircle2 className="w-3 h-3" />
                 {successCount} completados
               </span>
               {errorCount > 0 && (
-                <span className="inline-flex items-center gap-1 text-rose-400 bg-rose-950/50 px-2 py-0.5 rounded border border-rose-800/40">
+                <span className="inline-flex items-center gap-1 text-rose-400 bg-rose-950/50 px-2 py-0.5 rounded">
                   <AlertTriangle className="w-3 h-3" />
                   {errorCount} con incidencias
                 </span>
@@ -123,7 +123,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
                     <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                   )}
                   {item.status === 'pending' && (
-                    <div className="w-3.5 h-3.5 rounded-full border border-zinc-600 shrink-0" />
+                    <div className="w-3.5 h-3.5 rounded-full border-zinc-600 shrink-0" />
                   )}
                   <span className="text-zinc-200 truncate font-semibold">
                     {item.name}

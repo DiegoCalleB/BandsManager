@@ -148,7 +148,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
   };
 
   return (
-    <div className="space-y-3 p-3.5 rounded-[var(--r-m)] border border-sky-500/20 bg-sky-500/5">
+    <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-sky-500/5">
       <div className="flex items-center justify-between">
         <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-sky-300 flex items-center gap-1.5">
           <MessageSquareText className="w-3.5 h-3.5 text-sky-400" /> Hilos de Email Reales de Ejemplo
@@ -174,7 +174,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
             <div
               key={t.id}
               onClick={() => handleEdit(t)}
-              className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] border border-sky-500/10 text-[10px] cursor-pointer hover:border-sky-500/40 transition-colors"
+              className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[10px] cursor-pointer hover:border-sky-500/40 transition-colors"
               title="Abrir para ver o editar este hilo"
             >
               <div className="min-w-0">
@@ -216,7 +216,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
             placeholder="Título del ejemplo (ej: Sala Apolo, negociación de fecha)"
-            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--ink)] border border-sky-500/20'}`}
+            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--ink)]'}`}
           />
 
           {mensajes.map((m, idx) => (
@@ -224,7 +224,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
               <select
                 value={m.rol}
                 onChange={(e) => handleMessageChange(idx, 'rol', e.target.value)}
-                className="text-[9px] rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--surface)] text-neutral-300 border border-sky-500/20 shrink-0"
+                className="text-[9px] rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--surface)] text-neutral-300 shrink-0"
               >
                 <option value="banda">Banda</option>
                 <option value="sala">Sala</option>
@@ -234,7 +234,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
                 value={m.texto}
                 onChange={(e) => handleMessageChange(idx, 'texto', e.target.value)}
                 placeholder={m.rol === 'banda' ? 'Lo que escribimos nosotros...' : 'Lo que respondió la sala...'}
-                className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--ink)] border border-sky-500/20'}`}
+                className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--ink)]'}`}
               />
               {mensajes.length > 1 && (
                 <button type="button" onClick={() => handleRemoveMessageRow(idx)} className="p-1 text-neutral-500 hover:text-red-400 cursor-pointer shrink-0">

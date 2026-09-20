@@ -19,9 +19,9 @@ export function ConfirmDeleteModal({ data, onClose }: ConfirmDeleteModalProps) {
   return (
     <ModalPortal isOpen={!!data} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
-        <div className="bg-bg-[var(--surface)] border border-rose-500/40 rounded-[var(--r-l)] max-w-md w-full p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 my-auto">
+        <div className="bg-bg-[var(--surface)] rounded-[var(--r-l)] max-w-md w-full p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 my-auto">
           <div className="flex items-start gap-3">
-            <div className="p-3 rounded-[var(--r-m)] bg-rose-500/20 text-rose-400 border border-rose-500/30 shrink-0">
+            <div className="p-3 rounded-[var(--r-m)] bg-rose-500/20 text-rose-400 shrink-0">
               <Trash2 className="w-6 h-6" />
             </div>
             <div>

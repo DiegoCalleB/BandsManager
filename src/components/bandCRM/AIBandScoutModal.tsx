@@ -127,7 +127,7 @@ export function AIBandScoutModal({
 
           <div className="p-5 flex-1 overflow-y-auto">
             {activeCampaign && (
-              <div className="mb-6 p-4 bg-amber-500/10 border /20 rounded-[var(--r-m)] flex items-start gap-3">
+              <div className="mb-6 p-4 bg-amber-500/10 rounded-[var(--r-m)] flex items-start gap-3">
                 <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
                 <div>
                   <p className={`text-sm font-medium ${textColor}`}>Contexto de tu Campaña Activa</p>
@@ -204,7 +204,7 @@ export function AIBandScoutModal({
             </div>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-[var(--r-m)] flex items-center gap-2 text-sm">
+              <div className="mb-6 p-4 bg-red-500/10 text-red-500 rounded-[var(--r-m)] flex items-center gap-2 text-sm">
                 <AlertCircle className="w-5 h-5 shrink-0" />
                 <p>{error}</p>
               </div>

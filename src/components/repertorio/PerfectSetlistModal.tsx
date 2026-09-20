@@ -306,7 +306,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
           )}
 
           {error && (
-            <div className="bg-red-900/20 border border-red-700 rounded-[var(--r-s)] p-4 flex gap-3">
+            <div className="bg-red-900/20 border-red-700 rounded-[var(--r-s)] p-4 flex gap-3">
               <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-red-200">Error</p>
@@ -419,7 +419,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                 value={comentarioFeedback}
                 onChange={(e) => setComentarioFeedback(e.target.value)}
                 placeholder="Ej: 'Evita más de una balada seguida', 'el bis siempre un tema conocido'..."
-                className="w-full p-2 bg-black/60 rounded-[var(--r-s)] border /80 text-[11px] text-bg-[var(--sunken)] placeholder-neutral-500 font-sans focus:outline-none focus:"
+                className="w-full p-2 bg-black/60 rounded-[var(--r-s)] text-[11px] text-bg-[var(--sunken)] placeholder-neutral-500 font-sans focus:outline-none focus:"
               />
               <div className="flex items-center gap-1.5 text-[10px] font-mono">
                 <span className="text-neutral-500 uppercase tracking-wider">Alcance:</span>

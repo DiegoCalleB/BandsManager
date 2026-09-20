@@ -76,8 +76,8 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
     size === 'lg'
       ? 'w-14 h-14 rounded-[var(--r-l)] p-1 border-2 border-[var(--acc)]'
       : size === 'md'
-      ? 'w-12 h-12 rounded-[var(--r-m)] p-1 border border-[var(--acc)]/50'
-      : 'w-8 h-8 rounded-[var(--r-s)] p-0.5 border border-[var(--acc)]/50';
+      ? 'w-12 h-12 rounded-[var(--r-m)] p-1 border-[var(--acc)]/50'
+      : 'w-8 h-8 rounded-[var(--r-s)] p-0.5 border-[var(--acc)]/50';
 
   const cameraIconSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-5 h-5';
 
@@ -95,13 +95,13 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
           onError={() => setImgError(true)}
         />
       ) : (
-        <div className={`${containerSize} bg-zinc-800 border border-zinc-700/60 flex items-center justify-center shrink-0 shadow-inner group-hover/avatar:bg-zinc-700 transition-colors`}>
+        <div className={`${containerSize} bg-zinc-800 flex items-center justify-center shrink-0 shadow-inner group-hover/avatar:bg-zinc-700 transition-colors`}>
           <span>{emoji}</span>
         </div>
       )}
 
       {showCameraHover && onClick && (
-        <div className="absolute inset-0 bg-black/75 rounded-[var(--r-s)] opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity border border-[var(--acc)]">
+        <div className="absolute inset-0 bg-black/75 rounded-[var(--r-s)] opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity border-[var(--acc)]">
           <Camera className={`${cameraIconSize} text-[var(--acc)]`} />
         </div>
       )}

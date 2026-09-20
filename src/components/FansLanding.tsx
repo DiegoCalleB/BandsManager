@@ -30,7 +30,7 @@ export interface FansLandingProps {
 const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ code, className = "w-4 h-3" }) => {
   if (code === 'es') {
     return (
-      <svg className={`${className} rounded-xs shadow-xs object-cover border border-white/20 shrink-0`} viewBox="0 0 640 480">
+      <svg className={`${className} rounded-xs shadow-xs object-cover border-white/20 shrink-0`} viewBox="0 0 640 480">
         <path fill="#c60b1e" d="M0 0h640v480H0z"/>
         <path fill="#ffc400" d="M0 120h640v240H0z"/>
       </svg>
@@ -38,7 +38,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
   }
   if (code === 'en') {
     return (
-      <svg className={`${className} rounded-xs shadow-xs object-cover border border-white/20 shrink-0`} viewBox="0 0 640 480">
+      <svg className={`${className} rounded-xs shadow-xs object-cover border-white/20 shrink-0`} viewBox="0 0 640 480">
         <path fill="#012169" d="M0 0h640v480H0z"/>
         <path fill="#fff" d="m75 0 245 180L565 0h75v55L415 240l225 185v55h-75L320 300 75 480H0v-55l225-185L0 55V0z"/>
         <path fill="#c8102e" d="m425 240 215 175v25h-35L390 265zm-210 0L0 415v25h35l215-175zm210 0L640 65V40h-35L390 215zm-210 0L0 65V40h35l215 175z"/>
@@ -49,7 +49,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
   }
   if (code === 'it') {
     return (
-      <svg className={`${className} rounded-xs shadow-xs object-cover border border-white/20 shrink-0`} viewBox="0 0 640 480">
+      <svg className={`${className} rounded-xs shadow-xs object-cover border-white/20 shrink-0`} viewBox="0 0 640 480">
         <path fill="#009246" d="M0 0h213.3v480H0z"/>
         <path fill="#fff" d="M213.3 0h213.4v480H213.3z"/>
         <path fill="#ce2b37" d="M426.7 0H640v480H426.7z"/>
@@ -58,7 +58,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ cod
   }
   if (code === 'cs') {
     return (
-      <svg className={`${className} rounded-xs shadow-xs object-cover border border-white/20 shrink-0`} viewBox="0 0 640 480">
+      <svg className={`${className} rounded-xs shadow-xs object-cover border-white/20 shrink-0`} viewBox="0 0 640 480">
         <path fill="#d7141a" d="M0 0h640v480H0z"/>
         <path fill="#fff" d="M0 0h640v240H0z"/>
         <path fill="#11457e" d="M0 0l320 240L0 480z"/>
@@ -624,7 +624,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackClick('revolut', revolutUrl, contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-bg-[var(--surface)] hover:bg-bg-[var(--surface)] border /90 hover:/60 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow' : ''}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-bg-[var(--surface)] hover:bg-bg-[var(--surface)] hover:/60 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow' : ''}`}
           >
             <span
               className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen"
@@ -655,7 +655,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackClick('paypal', paypalUrl, contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[#003087] hover:bg-[#00266e] border border-sky-400/60 hover:border-sky-300 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow-delayed' : ''}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-[#003087] hover:bg-[#00266e] hover:border-sky-300 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow-delayed' : ''}`}
           >
             <span
               className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"
@@ -682,7 +682,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             key={`bizum-${variant}`}
             type="button"
             onClick={() => handleCopyBizum(contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-emerald-950/90 hover:bg-emerald-900/90 border border-emerald-500/60 hover:border-emerald-400 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow' : ''}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-[var(--r-m)] bg-emerald-950/90 hover:bg-emerald-900/90 hover:border-emerald-400 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow' : ''}`}
           >
             <span
               className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-emerald-300/15 to-transparent animate-donate-sheen"
@@ -700,7 +700,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               </span>
             </div>
             {isFull && (
-              <span className="p-1.5 rounded-[var(--r-s)] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+              <span className="p-1.5 rounded-[var(--r-s)] bg-emerald-500/20 text-emerald-300 shrink-0">
                 <Copy className="w-3.5 h-3.5" />
               </span>
             )}
@@ -719,7 +719,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {/* Cabecera de la tarjeta: Screenshot / Imagen + Título + Badge */}
           <div className="relative flex items-start gap-3 sm:gap-3.5">
-            <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-[var(--r-m)] overflow-hidden border /30 bg-bg-[var(--surface)] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+            <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-[var(--r-m)] overflow-hidden bg-bg-[var(--surface)] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
               <img
                 src="/Screenshot_20260824_164054_Google.jpg"
                 alt={t('revolutBadge') || 'Colaboración'}
@@ -734,7 +734,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
                   {label}
                 </h3>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border /30 font-bold shrink-0">
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-bold shrink-0">
                   {t('revolutBadge') || 'Contribución'}
                 </span>
               </div>
@@ -746,7 +746,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {/* Notificación de Bizum Copiado */}
           {copiedBizum && (
-            <div className="mt-2.5 p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-2 animate-fade-in shadow-lg">
+            <div className="mt-2.5 p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-300 text-xs font-mono flex items-center gap-2 animate-fade-in shadow-lg">
               <Check className="w-4 h-4 text-emerald-400 shrink-0" />
               <span className="font-bold">
                 {t('bizumCopiedNotification', { phone: bizumPhone }) || `¡Teléfono de Bizum (${bizumPhone}) copiado! Abre tu banco para enviarlo.`}
@@ -864,7 +864,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600" />
           
           {isPreview && (
-            <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 border /30 text-amber-300 text-[11px] font-mono flex items-center justify-between gap-2">
+            <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-300 text-[11px] font-mono flex items-center justify-between gap-2">
               <span className="flex items-center gap-1 font-bold">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 {t('interactiveSimulation')}
@@ -891,7 +891,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           )}
 
-          <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-2 border /20 shadow-inner">
+          <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-2 shadow-inner">
             <Heart className="w-10 h-10 text-amber-500" />
           </div>
 
@@ -932,7 +932,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               {codigoDescuentoFan && (
                 <div className="pt-2">
                   <p className="text-[10px] text-neutral-500 uppercase tracking-wider font-bold mb-1">{t('merchCode')}</p>
-                  <div className="flex items-center justify-center gap-2 p-3 bg-bg-[var(--surface)] border  border-dashed rounded-[var(--r-s)]">
+                  <div className="flex items-center justify-center gap-2 p-3 bg-bg-[var(--surface)] border-dashed rounded-[var(--r-s)]">
                     <Tag className="w-4 h-4 text-emerald-400" />
                     <span className="font-mono text-emerald-400 font-bold tracking-widest">{codigoDescuentoFan}</span>
                   </div>
@@ -942,7 +942,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           )}
 
           {/* COMPARTIR CON UN AMIGO */}
-          <div className="bg-bg-[var(--surface)] border /30 rounded-[var(--r-m)] p-4 text-left space-y-3 shadow-lg">
+          <div className="bg-bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-left space-y-3 shadow-lg">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5 uppercase tracking-wider">
                 <Share2 className="w-3.5 h-3.5" /> {t('shareWithFriend') || 'Pásaselo a un colega'}
@@ -1013,12 +1013,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           {/* Booking / Contrataciones in Success View */}
           {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
             <div className="pt-4 border-t  text-left">
-              <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] border /30 space-y-2.5">
+              <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
                     <Briefcase className="w-3.5 h-3.5 text-amber-400" /> {t('bookingTitle')}
                   </div>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border /30">
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300">
                     {t('bookingBadgeLive')}
                   </span>
                 </div>
@@ -1050,7 +1050,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                         href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-emerald-950/60 rounded border border-emerald-500/30 flex items-center gap-1 shrink-0 ml-2"
+                        className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-emerald-950/60 rounded flex items-center gap-1 shrink-0 ml-2"
                       >
                         <MessageCircle className="w-3 h-3" /> WhatsApp
                       </a>
@@ -1063,7 +1063,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {/* Banner para músicos y bandas */}
           <div className="pt-4 border-t  text-left">
-            <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-bg-[var(--surface)] via-bg-[var(--surface)] to-amber-950/20 border /20 shadow-lg space-y-2.5">
+            <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-bg-[var(--surface)] via-bg-[var(--surface)] to-amber-950/20 shadow-lg space-y-2.5">
               <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
                 <Sparkles className="w-4 h-4 text-amber-400" />
                 <span>{t('musicianBannerTitle')}</span>
@@ -1076,7 +1076,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   href="/musicos"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 border /30 text-amber-300 font-mono text-xs font-bold transition-all hover:scale-[1.01]"
+                  className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-mono text-xs font-bold transition-all hover:scale-[1.01]"
                 >
                   {t('musicianBannerCTA')}
                 </a>
@@ -1125,13 +1125,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="pt-2 space-y-2">
             {isConcertLink ? (
               <div>
-                <span className="text-emerald-400 font-bold px-3.5 py-1.5 bg-emerald-400/10 border border-emerald-400/20 rounded-full inline-flex items-center gap-1.5 text-xs">
+                <span className="text-emerald-400 font-bold px-3.5 py-1.5 bg-emerald-400/10 rounded-full inline-flex items-center gap-1.5 text-xs">
                   <span>{concertName ? t('thanksConcertWithName', { concertName: sanitizeConcertDisplayName(concertName) }) : t('thanksConcertGeneric')}</span>
                 </span>
               </div>
             ) : (
               <div>
-                <span className="text-amber-400 font-bold px-3.5 py-1.5 bg-amber-400/10 border /20 rounded-full inline-flex items-center gap-1.5 text-xs">
+                <span className="text-amber-400 font-bold px-3.5 py-1.5 bg-amber-400/10 rounded-full inline-flex items-center gap-1.5 text-xs">
                   <span>{t('thanksSupport')}</span>
                 </span>
               </div>
@@ -1145,7 +1145,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
         {/* REPRODUCTOR AUDIO PREVIEW DIRECTO (Single / Adelanto) */}
         {audioPreviewConfig?.habilitado !== false && Boolean(audioPreviewConfig?.audioUrl?.trim()) && (
-          <div className="p-3 rounded-[var(--r-l)] bg-gradient-to-r from-bg-[var(--surface)] via-bg-[var(--surface)] to-bg-[var(--surface)] border /30 shadow-lg flex items-center justify-between gap-3 text-left">
+          <div className="p-3 rounded-[var(--r-l)] bg-gradient-to-r from-bg-[var(--surface)] via-bg-[var(--surface)] to-bg-[var(--surface)] shadow-lg flex items-center justify-between gap-3 text-left">
             <button
               type="button"
               onClick={toggleAudioPreview}
@@ -1253,7 +1253,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-full bg-amber-500/10 blur-2xl group-hover:bg-amber-500/20 transition-colors duration-500"
                 aria-hidden="true"
               />
-              <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500/25 to-rose-500/15 border /30 text-amber-400 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+              <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-amber-500/25 to-rose-500/15 text-amber-400 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
                 {logoUrl && !imgError ? (
                   <img
                     src={logoUrl}
@@ -1306,7 +1306,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
             {/* PRÓXIMOS CONCIERTOS / GIRA - debajo de Colaborar y encima de Booking y Contratación */}
             {upcomingConcerts && upcomingConcerts.length > 0 && (
-              <div className="p-3.5 rounded-[var(--r-l)] bg-bg-[var(--surface)] border /30 space-y-2.5 shadow-xl text-left">
+              <div className="p-3.5 rounded-[var(--r-l)] bg-bg-[var(--surface)] space-y-2.5 shadow-xl text-left">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5 uppercase tracking-wider">
                     <Calendar className="w-3.5 h-3.5" /> {t('upcomingShowsTitle') || 'Próximos Conciertos'}
@@ -1383,7 +1383,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         {activeTab === 'form' && (
           <form onSubmit={handleSubmit} className="space-y-4 pt-1 animate-fade-in text-left">
             {error && (
-              <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-mono rounded-[var(--r-m)] text-center">
+              <div className="p-3 bg-rose-500/10 text-rose-400 text-xs font-mono rounded-[var(--r-m)] text-center">
                 {error}
               </div>
             )}
@@ -1549,7 +1549,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         {/* Sección Destacada de Contrataciones & Booking Directo */}
         {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
           <div className="pt-5 border-t  space-y-3">
-            <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-bg-[var(--surface)] via-bg-[var(--surface)] to-amber-950/30 border /30 shadow-lg space-y-3">
+            <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-bg-[var(--surface)] via-bg-[var(--surface)] to-amber-950/30 shadow-lg space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-amber-400">
                   <Briefcase className="w-4 h-4 text-amber-400" />
@@ -1557,7 +1557,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     {t('bookingTitle')}
                   </span>
                 </div>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border /30 font-bold">
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 font-bold">
                   {t('bookingBadgeLive')}
                 </span>
               </div>
@@ -1593,7 +1593,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                         href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-2.5 py-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/60 hover:bg-emerald-950 rounded border border-emerald-500/30 transition-colors flex items-center gap-1.5 font-bold"
+                        className="px-2.5 py-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/60 hover:bg-emerald-950 rounded transition-colors flex items-center gap-1.5 font-bold"
                       >
                         <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
                         <span>WhatsApp</span>
@@ -1608,7 +1608,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
         {/* Banner para músicos y bandas al final del formulario */}
         <div className="pt-4 border-t  text-left">
-          <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-bg-[var(--surface)] via-bg-[var(--surface)] to-amber-950/20 border /20 shadow-lg space-y-2.5">
+          <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-bg-[var(--surface)] via-bg-[var(--surface)] to-amber-950/20 shadow-lg space-y-2.5">
             <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
               <Sparkles className="w-4 h-4 text-amber-400" />
               <span>{t('musicianBannerTitle')}</span>
@@ -1621,7 +1621,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 href="/musicos"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 border /30 text-amber-300 font-mono text-xs font-bold transition-all hover:scale-[1.01]"
+                className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-mono text-xs font-bold transition-all hover:scale-[1.01]"
               >
                 {t('musicianBannerCTA')}
               </a>

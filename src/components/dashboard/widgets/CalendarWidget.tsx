@@ -432,7 +432,7 @@ export function CalendarWidget({
 
           {/* Details for selected day if clicked */}
           {selectedDayStr && (
-            <div className="p-3 bg-[#121214] rounded-[var(--r-m)] border /30 text-xs font-mono space-y-2">
+            <div className="p-3 bg-[#121214] rounded-[var(--r-m)] text-xs font-mono space-y-2">
               <div className="flex items-center justify-between text-text-[var(--ink-3)] pb-1.5 border-b ">
                 <span className="font-bold text-amber-300">Eventos para {selectedDayStr}:</span>
                 <button type="button" onClick={() => setSelectedDayStr(null)} className="text-neutral-500 hover:text-text-[var(--ink-3)]">✕</button>

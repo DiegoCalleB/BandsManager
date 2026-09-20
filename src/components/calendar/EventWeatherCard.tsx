@@ -154,7 +154,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
         <button
           type="button"
           onClick={() => setIsExpanded(true)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold border /30 text-amber-300 hover:bg-amber-500/15 transition-colors shrink-0 min-h-[40px] cursor-pointer"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold text-amber-300 hover:bg-amber-500/15 transition-colors shrink-0 min-h-[40px] cursor-pointer"
           title="Ver previsión meteorológica detallada"
           aria-label="Ver previsión meteorológica detallada"
         >
@@ -213,7 +213,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
         </div>
 
         {/* Pestañas Concierto vs Prueba de Sonido y Controles */}
-        <div className="flex items-center gap-1 bg-black/20 p-0.5 rounded-[var(--r-s)] border /20">
+        <div className="flex items-center gap-1 bg-black/20 p-0.5 rounded-[var(--r-s)]">
           <button
             type="button"
             onClick={() => setSelectedSlot('show')}
@@ -265,7 +265,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
           <span>Consultando satélites meteorológicos en directo...</span>
         </div>
       ) : weatherData?.status === 'future' ? (
-        <div className="flex items-center gap-3 py-2 px-3 rounded-[var(--r-s)] bg-amber-500/10 border /20 text-[11px] font-mono">
+        <div className="flex items-center gap-3 py-2 px-3 rounded-[var(--r-s)] bg-amber-500/10 text-[11px] font-mono">
           <Calendar className="w-5 h-5 text-amber-400 shrink-0" />
           <div>
             <span className="font-bold text-amber-300 block">Previsión a 14 días vista</span>

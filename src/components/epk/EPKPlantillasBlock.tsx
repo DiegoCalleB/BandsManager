@@ -125,10 +125,10 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
     >
       <div className="space-y-4 sm:space-y-8">
       {/* SECCIÓN 1: SELECCIÓN DE PLANTILLAS VISUALES */}
-      <div className="bg-[var(--surface)] border border-stone-800 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
+      <div className="bg-[var(--surface)] border-stone-800 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-stone-800/80">
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400 shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-400 shrink-0">
               <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
             <div>
@@ -215,7 +215,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                   <span
                     className={`block w-full py-0.5 sm:py-1 text-center rounded-md sm:rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-bold font-mono transition ${
                       isSelected
-                        ? 'bg-amber-500/20 text-amber-300 border /30'
+                        ? 'bg-amber-500/20 text-amber-300'
                         : 'bg-stone-800 text-stone-400 hover:text-stone-200'
                     }`}
                   >
@@ -229,10 +229,10 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
       </div>
 
       {/* SECCIÓN 2: ORDEN Y VISIBILIDAD DE SECCIONES */}
-      <div className="bg-[var(--surface)] border border-stone-800 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
+      <div className="bg-[var(--surface)] border-stone-800 rounded-[var(--r-m)] sm:rounded-[var(--r-l)] p-3.5 sm:p-6 space-y-3 sm:space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-stone-800/80">
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400 shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[var(--r-s)] sm:rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-400 shrink-0">
               <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
             <div>
@@ -250,7 +250,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
             <button
               type="button"
               onClick={handleResetDefaultOrder}
-              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-stone-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border border-stone-800 flex items-center gap-1 transition"
+              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-stone-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border-stone-800 flex items-center gap-1 transition"
               title="Restablecer el orden estándar de fábrica"
             >
               <RotateCcw className="w-3 h-3 text-stone-400" />
@@ -259,7 +259,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
             <button
               type="button"
               onClick={handlePresetMusicFirst}
-              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-sky-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border border-stone-800 flex items-center gap-1 transition"
+              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-sky-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border-stone-800 flex items-center gap-1 transition"
               title="Poner la música, vídeos y reproductor al principio"
             >
               <Music className="w-3 h-3 text-sky-400" />
@@ -268,7 +268,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
             <button
               type="button"
               onClick={handlePresetPromoterFirst}
-              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-amber-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border border-stone-800 flex items-center gap-1 transition"
+              className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-stone-900 hover:bg-stone-800 text-amber-300 rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-semibold border-stone-800 flex items-center gap-1 transition"
               title="Poner datos de contratación, contacto y requisitos primero"
             >
               <Briefcase className="w-3 h-3 text-amber-400" />
@@ -312,11 +312,11 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       <span className="text-xs font-bold text-white font-mono truncate">
                         {item.meta.label}
                       </span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-stone-900 text-stone-400 border border-stone-800 shrink-0 hidden sm:inline">
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-stone-900 text-stone-400 border-stone-800 shrink-0 hidden sm:inline">
                         {item.meta.defaultBadge}
                       </span>
                       {!item.isVisible && (
-                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 shrink-0">
+                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-rose-500/10 text-rose-400 shrink-0">
                           Oculta
                         </span>
                       )}

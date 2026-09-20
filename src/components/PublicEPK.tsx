@@ -510,7 +510,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </div>
           <div className="hidden print:grid print:grid-cols-2 print:gap-4">
             {validPhotos.map((photoUrl, idx) => (
-              <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-[var(--r-m)] border border-current/20" />
+              <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-[var(--r-m)] border-current/20" />
             ))}
           </div>
           {validPhotos.length > 1 && (
@@ -519,7 +519,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 type="button"
                 onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior: 'smooth' })}
                 aria-label={t('fotoAnterior')}
-                className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border border-white/20 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+                className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-white/20 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
               >
                 ‹
               </button>
@@ -527,7 +527,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 type="button"
                 onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior: 'smooth' })}
                 aria-label={t('fotoSiguiente')}
-                className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border border-white/20 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+                className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border-white/20 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
               >
                 ›
               </button>
@@ -632,9 +632,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
       <div className={`fixed top-0 left-0 right-0 ${styles.topBar} backdrop-blur-md border-b z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden`}>
         <div className="flex items-center gap-3">
           {displayLogo ? (
-            <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover border /50" />
+            <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover" />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-[var(--surface)] border /50 flex items-center justify-center text-amber-400 font-bold text-xs">
+            <div className="w-8 h-8 rounded-full bg-[var(--surface)] flex items-center justify-center text-amber-400 font-bold text-xs">
               {bandName.charAt(0).toUpperCase()}
             </div>
           )}
@@ -646,7 +646,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Selector de idioma */}
-          <div className="flex items-center gap-0.5 bg-black/20 border border-current/15 rounded-[var(--r-s)] p-0.5" role="group" aria-label={t('selectorIdioma')}>
+          <div className="flex items-center gap-0.5 bg-black/20 border-current/15 rounded-[var(--r-s)] p-0.5" role="group" aria-label={t('selectorIdioma')}>
             {availableLanguages.map(l => (
               <button
                 key={l.code}

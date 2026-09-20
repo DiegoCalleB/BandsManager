@@ -884,7 +884,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="w-full space-y-6">
  
  {/* 1. HEADER COMPACTO Y CONTROLES */}
- <div className={`p-3 sm:p-3.5 rounded-[var(--r-m)] transition-all ${colors.card} border /60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5`}>
+ <div className={`p-3 sm:p-3.5 rounded-[var(--r-m)] transition-all ${colors.card} shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5`}>
  {/* Izquierda: Título y sub-pestañas */}
  <div className="flex items-center gap-2.5 flex-wrap">
  <div className="flex items-center gap-2">
@@ -900,7 +900,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="h-4 w-px bg-neutral-800 hidden sm:block" />
 
  {/* Sub-tabs segmentadas */}
- <div className="flex items-center gap-1 bg-bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)] border /80">
+ <div className="flex items-center gap-1 bg-bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
  <button
  type="button"
  onClick={() => setSubTab('co_booking')}
@@ -945,7 +945,7 @@ Bakandeya Agent Manager IA & Músicos`;
  alert('Añade primero una banda para generar un pitch de intercambio.');
  }
  }}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-sky-500/10 hover:bg-sky-500/20 text-sky-200 border border-sky-500/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-sky-500/10 hover:bg-sky-500/20 text-sky-200 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
  title="Generar pitch de intercambio de fechas (Date Swap)"
  >
  <Repeat className="w-3.5 h-3.5 text-sky-400 shrink-0" />
@@ -955,7 +955,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={() => setIsScoutModalOpen(true)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-amber-500/10 hover:bg-amber-500/20 border /20 text-amber-300 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
  title="Scout IA: Buscar bandas para co-booking"
  >
  <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -1008,7 +1008,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer border border-emerald-500/30"
+ className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
  >
  <FileSpreadsheet className="w-3.5 h-3.5" />
  <span>Excel (.xlsx)</span>
@@ -1048,7 +1048,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </td>
  <td className="p-3 text-text-[var(--ink-3)]">{band.email || '—'}</td>
  <td className="p-3">
- <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-indigo-500/15 text-indigo-300 border border-indigo-500/20">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-indigo-500/15 text-indigo-300">
  {band.plan || 'emergente'}
  </span>
  </td>
@@ -1056,7 +1056,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {band.fecha_registro ? new Date(band.fecha_registro).toLocaleDateString() : '—'}
  </td>
  <td className="p-3">
- <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">
+ <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400">
  {band.estado_cuenta || 'activo'}
  </span>
  </td>
@@ -1267,7 +1267,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <div className="flex items-center gap-1.5 min-w-0">
  <h3 className="text-base font-bold font-display tracking-wider uppercase text-white flex items-center gap-2 group-hover:text-[var(--acc)] transition-colors truncate min-w-0">
  {band.imagen_url ? (
- <img src={band.imagen_url} alt={band.nombre_banda} className="w-6 h-6 rounded-full object-cover border border-[var(--acc)]/50 shrink-0" />
+ <img src={band.imagen_url} alt={band.nombre_banda} className="w-6 h-6 rounded-full object-cover border-[var(--acc)]/50 shrink-0" />
  ) : (
  <span className="text-sm shrink-0">{band.icono || '🎸'}</span>
  )}
@@ -1471,7 +1471,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <td className="py-2 px-3 font-bold text-white align-middle whitespace-nowrap">
  <div className="flex items-center gap-2 min-w-0">
  {band.imagen_url ? (
- <img src={band.imagen_url} alt={band.nombre_banda} className="w-5 h-5 rounded-full object-cover border border-[var(--acc)]/50 shrink-0" />
+ <img src={band.imagen_url} alt={band.nombre_banda} className="w-5 h-5 rounded-full object-cover border-[var(--acc)]/50 shrink-0" />
  ) : (
  <span className="text-xs shrink-0">{band.icono || '🎸'}</span>
  )}
@@ -1580,7 +1580,7 @@ Bakandeya Agent Manager IA & Músicos`;
  type="button"
  onClick={handleAiLookup}
  disabled={isAiSearching || !formName.trim()}
- className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30 transition-all disabled:opacity-50 cursor-pointer shadow-sm"
+ className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/30 transition-all disabled:opacity-50 cursor-pointer shadow-sm"
  >
  {isAiSearching ? (
  <>
@@ -1607,14 +1607,14 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* AI Proposal Overlay / Card */}
  {isAiSearching && (
- <div className="md:col-span-2 p-3 bg-bg-[var(--surface)]/90 border border-[var(--acc)]/30 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-mono animate-pulse">
+ <div className="md:col-span-2 p-3 bg-bg-[var(--surface)]/90 border-[var(--acc)]/30 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-mono animate-pulse">
  <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
  <span>Buscando datos de "{formName}" con IA en la web...</span>
  </div>
  )}
 
  {aiError && (
- <div className="md:col-span-2 p-3 bg-rose-950/40 border border-rose-800/50 rounded-[var(--r-m)] flex items-center justify-between text-xs text-rose-300 font-mono">
+ <div className="md:col-span-2 p-3 bg-rose-950/40 rounded-[var(--r-m)] flex items-center justify-between text-xs text-rose-300 font-mono">
  <span>⚠️ {aiError}</span>
  <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-rose-900/50 rounded">
  <X className="w-3.5 h-3.5" />
@@ -1623,7 +1623,7 @@ Bakandeya Agent Manager IA & Músicos`;
  )}
 
  {aiProposal && (
- <div className="md:col-span-2 p-3.5 bg-zinc-900 border border-[var(--acc)]/40 rounded-[var(--r-m)] space-y-3 text-xs font-mono shadow-xl">
+ <div className="md:col-span-2 p-3.5 bg-zinc-900 border-[var(--acc)]/40 rounded-[var(--r-m)] space-y-3 text-xs font-mono shadow-xl">
  <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
  <div className="flex items-center gap-1.5 text-[var(--acc)] font-bold">
  <Sparkles className="w-4 h-4" />
@@ -1651,56 +1651,56 @@ Bakandeya Agent Manager IA & Músicos`;
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-zinc-300">
  {aiProposal.estilo_musical && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Estilo:</span> {aiProposal.estilo_musical}</div>
  <button type="button" onClick={() => setFormStyle(aiProposal.estilo_musical)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.localizacion && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Origen:</span> {aiProposal.localizacion}</div>
  <button type="button" onClick={() => setFormLocation(aiProposal.localizacion)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.contacto_nombre && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Contacto:</span> {aiProposal.contacto_nombre}</div>
  <button type="button" onClick={() => setFormContactName(aiProposal.contacto_nombre)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.email && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Email:</span> {aiProposal.email}</div>
  <button type="button" onClick={() => setFormEmail(aiProposal.email)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.telefono && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Tel:</span> {aiProposal.telefono}</div>
  <button type="button" onClick={() => setFormPhone(aiProposal.telefono)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.instagram && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-zinc-800">
  <div className="truncate pr-2"><span className="text-zinc-500 font-bold">Instagram:</span> {aiProposal.instagram}</div>
  <button type="button" onClick={() => setFormInstagram(aiProposal.instagram)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {(aiProposal.spotify_url || aiProposal.youtube_url) && (
- <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800 sm:col-span-2">
+ <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-zinc-800 sm:col-span-2">
  <div className="truncate max-w-[80%]"><span className="text-zinc-500 font-bold">Música / Media:</span> {aiProposal.spotify_url || aiProposal.youtube_url}</div>
  <button type="button" onClick={() => setFormSpotifyYoutube(aiProposal.spotify_url || aiProposal.youtube_url)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Usar</button>
  </div>
  )}
 
  {aiProposal.biografia && (
- <div className="bg-zinc-950/70 p-2 rounded-[var(--r-s)] border border-zinc-800 sm:col-span-2 space-y-1">
+ <div className="bg-zinc-950/70 p-2 rounded-[var(--r-s)] border-zinc-800 sm:col-span-2 space-y-1">
  <div className="flex items-center justify-between">
  <span className="text-zinc-500 font-bold">Resumen / Bio:</span>
  <button type="button" onClick={() => setFormNotes(prev => prev ? `${prev}\n\n[Bio IA]: ${aiProposal.biografia}` : aiProposal.biografia)} className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0">Añadir a Notas</button>
@@ -1739,7 +1739,7 @@ Bakandeya Agent Manager IA & Músicos`;
  onClick={() => { setFormIcon(emoji); }}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  formIcon === emoji && !formImageUrl
- ? 'bg-[var(--acc)]/20 border border-[var(--acc)] text-white scale-110'
+ ? 'bg-[var(--acc)]/20 border-[var(--acc)] text-white scale-110'
  : 'bg-neutral-800 hover:bg-neutral-700 text-text-[var(--ink-3)]'
  }`}
  >

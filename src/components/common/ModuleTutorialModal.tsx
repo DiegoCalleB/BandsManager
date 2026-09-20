@@ -495,7 +495,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     </div>
 
                     {/* Nombre del elemento simulando botón o control */}
-                    <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-stone-950/90 border border-stone-800 text-xs shadow-inner">
+                    <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-stone-950/90 border-stone-800 text-xs shadow-inner">
                       <span className="text-amber-400 font-mono font-black text-xs shrink-0">
                         {currentStep.uiTarget.type === 'button' ? '▶' : '▪'}
                       </span>
@@ -528,7 +528,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                   {currentStep.keyPoints.map((point, i) => (
                     <div 
                       key={i}
-                      className="p-2.5 rounded-[var(--r-m)] bg-stone-900/70 border border-stone-800/80 flex flex-col justify-between space-y-0.5 hover:border-stone-700/80 transition-colors"
+                      className="p-2.5 rounded-[var(--r-m)] bg-stone-900/70 flex flex-col justify-between space-y-0.5 hover:border-stone-700/80 transition-colors"
                     >
                       <div className="flex items-center gap-1.5">
                         <Check className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`} />

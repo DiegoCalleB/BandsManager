@@ -139,7 +139,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   ? '✓ Listo'
                   : 'Mín. 80 car. o PDF'}
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border /20 px-2 py-0.5 rounded-full hidden sm:inline">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full hidden sm:inline">
                 Uso Interno
               </span>
             </div>
@@ -148,7 +148,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
           <p className="text-xs text-[var(--ink-3)] leading-relaxed">
             Escribe notas y detalles de la banda (trayectoria, integrantes, estilo, hitos, prensa, etc.) para enriquecer la documentación del proyecto.
           </p>
-          <p className="text-[11px] text-amber-400/90 font-semibold bg-amber-500/5 border /20 rounded-[var(--r-s)] px-3 py-2">
+          <p className="text-[11px] text-amber-400/90 font-semibold bg-amber-500/5 rounded-[var(--r-s)] px-3 py-2">
             Nota: Este texto es para uso interno del equipo y no se muestra en la página pública del EPK.
           </p>
 
@@ -334,12 +334,12 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             </div>
 
             {/* SITIO WEB OFICIAL PROPIO DE LA BANDA */}
-            <div className="p-3.5 rounded-[var(--r-m)] bg-slate-950 border /30 space-y-2">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-slate-950 space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
                   <Globe className="w-4 h-4 text-amber-400" /> Sitio Web Oficial Propio de la Banda (Opcional)
                 </label>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border /20">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300">
                   Dossier EPK + Fans Landing
                 </span>
               </div>
@@ -381,7 +381,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     Fuente única: se sincronizan automáticamente en tu Dossier EPK, firma de email, landing de fans y plataformas oficiales.
                   </p>
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400">
                   Fuente Centralizada
                 </span>
               </div>

@@ -55,7 +55,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
           <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 shadow-xs ${
             isStitchLight 
               ? 'bg-amber-100 text-amber-700 border ' 
-              : 'bg-amber-500/15 text-amber-400 border /30'
+              : 'bg-amber-500/15 text-amber-400'
           }`}>
             <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
           </div>
@@ -91,7 +91,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'setlists'
                   ? isStitchLight
-                    ? 'bg-white text-[var(--ink)] shadow-sm border /80 font-bold'
+                    ? 'bg-white text-[var(--ink)] shadow-sm font-bold'
                     : 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200 font-medium'
               }`}
@@ -112,7 +112,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
               className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'catalogo'
                   ? isStitchLight
-                    ? 'bg-white text-[var(--ink)] shadow-sm border /80 font-bold'
+                    ? 'bg-white text-[var(--ink)] shadow-sm font-bold'
                     : 'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200 font-medium'
               }`}
@@ -194,7 +194,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                           }}
                           className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 transition cursor-pointer ${
                             isSelected
-                              ? 'bg-amber-500/15 text-amber-300 border /30 font-semibold'
+                              ? 'bg-amber-500/15 text-amber-300 font-semibold'
                               : isStitchLight ? 'text-[var(--ink-2)] hover:bg-[var(--sunken)]' : 'text-zinc-300 hover:bg-white/5'
                           }`}
                         >
@@ -254,7 +254,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 onClick={() => setCatalogoViewMode('albumes')}
                 className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
                   catalogoViewMode === 'albumes'
-                    ? 'bg-amber-500/20 text-amber-300 border /30 shadow-xs font-bold'
+                    ? 'bg-amber-500/20 text-amber-300 shadow-xs font-bold'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
@@ -267,7 +267,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 onClick={() => setCatalogoViewMode('canciones')}
                 className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
                   catalogoViewMode === 'canciones'
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-xs font-bold'
+                    ? 'bg-emerald-500/20 text-emerald-300 shadow-xs font-bold'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >

@@ -277,7 +277,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b /10">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/20 border /30 flex items-center justify-center text-amber-400">
+            <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/20 flex items-center justify-center text-amber-400">
               <Sparkles className="w-4 h-4 animate-pulse" />
             </div>
             <div>
@@ -331,7 +331,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         {/* Loading State */}
         {isLoading ? (
           <div className="py-12 flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="w-12 h-12 rounded-[var(--r-l)] bg-amber-500/10 border /30 flex items-center justify-center text-amber-400 animate-spin">
+            <div className="w-12 h-12 rounded-[var(--r-l)] bg-amber-500/10 flex items-center justify-center text-amber-400 animate-spin">
               <Radio className="w-6 h-6" />
             </div>
             <div className="space-y-1">
@@ -524,7 +524,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   toneData.vocabulario_clave.map((word, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-1 rounded-md text-[10px] font-mono bg-amber-500/10 text-amber-300 border /20"
+                      className="px-2 py-1 rounded-md text-[10px] font-mono bg-amber-500/10 text-amber-300"
                     >
                       #{word}
                     </span>
@@ -542,7 +542,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </span>
                   <div className="space-y-1">
                     {toneData.frases_emblematicas_extraidas.map((quote, idx) => (
-                      <p key={idx} className="text-[10px] font-mono italic text-text-[var(--ink-3)] bg-black/30 p-1.5 rounded border /60">
+                      <p key={idx} className="text-[10px] font-mono italic text-text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
                         "{quote}"
                       </p>
                     ))}
@@ -558,7 +558,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </span>
                   <div className="space-y-1">
                     {toneData.frases_directo_extraidas.map((quote, idx) => (
-                      <p key={idx} className="text-[10px] font-mono italic text-text-[var(--ink-3)] bg-black/30 p-1.5 rounded border /60">
+                      <p key={idx} className="text-[10px] font-mono italic text-text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
                         "{quote}"
                       </p>
                     ))}
@@ -580,7 +580,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       ['facebook', 'Facebook'],
                     ] as const).map(([key, label]) =>
                       toneData.matices_por_red?.[key] ? (
-                        <p key={key} className="text-[10px] font-mono text-text-[var(--ink-3)] bg-black/30 p-1.5 rounded border /60">
+                        <p key={key} className="text-[10px] font-mono text-text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
                           <span className="text-sky-400 font-bold">{label}:</span> {toneData.matices_por_red[key]}
                         </p>
                       ) : null
@@ -682,7 +682,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       const savingAuto = savingRuleKey === autoKey;
                       const savingManual = savingRuleKey === manualKey;
                       return (
-                        <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-black/30 border border-violet-900/30 space-y-1.5">
+                        <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-black/30 space-y-1.5">
                           <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-violet-300">
                             {CATEGORY_LABELS[cat] || cat}
                           </span>
@@ -792,7 +792,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       const savingAuto = savingRuleKey === autoKey;
                       const savingManual = savingRuleKey === manualKey;
                       return (
-                        <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-black/30 border border-sky-900/30 space-y-1.5">
+                        <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-black/30 space-y-1.5">
                           <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-sky-300">
                             {CATEGORY_LABELS[cat] || cat}
                           </span>

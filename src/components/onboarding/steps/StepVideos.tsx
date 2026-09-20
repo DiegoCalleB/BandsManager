@@ -44,7 +44,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
           {videos.map((vid) => (
             <div
               key={vid.id}
-              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/5 hover:border-white/10 transition-colors"
+              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-zinc-900 border-white/5 hover:border-white/10 transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-[var(--r-s)] bg-red-500/10 text-red-400 flex items-center justify-center flex-shrink-0">
@@ -101,7 +101,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
       )}
 
       {/* Add Video Form */}
-      <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border border-white/10 space-y-3">
+      <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border-white/10 space-y-3">
         <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
           <Plus className="w-3.5 h-3.5 text-amber-400" />
           Añadir Nuevo Vídeo (YouTube)
@@ -114,7 +114,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
               value={newVideoUrl}
               onChange={(e) => setNewVideoUrl(e.target.value)}
               placeholder="URL de YouTube (https://www.youtube.com/watch?v=... o youtu.be/...)"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
 
@@ -122,7 +122,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
             <select
               value={newVideoType}
               onChange={(e) => setNewVideoType(e.target.value as any)}
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-white text-xs focus:outline-none focus:"
             >
               <option value="videoclip">Videoclip Oficial</option>
               <option value="directo">Directo en Concierto</option>
@@ -138,7 +138,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
             value={newVideoTitle}
             onChange={(e) => setNewVideoTitle(e.target.value)}
             placeholder="Título del vídeo (opcional, se extraerá de la URL si se omite)"
-            className="w-2/3 px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+            className="w-2/3 px-3 py-1.5 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
           />
 
           <button

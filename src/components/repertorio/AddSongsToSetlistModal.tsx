@@ -136,7 +136,7 @@ export function AddSongsToSetlistModal({
                 onClick={() => setOnlyFavoritos(p => !p)}
                 className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold cursor-pointer transition-colors ${
                   onlyFavoritos
-                    ? 'bg-amber-500/20 text-amber-300 border /40'
+                    ? 'bg-amber-500/20 text-amber-300'
                     : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)] border  hover:text-white'
                 }`}
               >
@@ -202,7 +202,7 @@ export function AddSongsToSetlistModal({
                           </span>
                         )}
                         {isSelected && (
-                          <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#1db954]/20 text-[#1db954] font-extrabold shrink-0 ml-auto border border-[#1db954]/40">
+                          <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#1db954]/20 text-[#1db954] font-extrabold shrink-0 ml-auto border-[#1db954]/40">
                             #{selectedIndex + 1} en orden
                           </span>
                         )}

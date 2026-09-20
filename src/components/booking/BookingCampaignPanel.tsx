@@ -76,7 +76,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
   if (!activeCampaign && !isEditing) {
     return (
-      <div className="mb-6 p-4 border border-dashed  rounded-[var(--r-m)] bg-gray-50 flex items-center justify-between text-gray-500">
+      <div className="mb-6 p-4 border-dashed  rounded-[var(--r-m)] bg-gray-50 flex items-center justify-between text-gray-500">
         <div className="flex items-center gap-2">
           <Target className="w-5 h-5 text-gray-400" />
           <span>No hay ninguna campaña de booking activa.</span>
@@ -93,7 +93,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
 
   if (isEditing) {
     return (
-      <div className="mb-6 p-5 border border-black rounded-[var(--r-m)] bg-white shadow-sm">
+      <div className="mb-6 p-5 border-black rounded-[var(--r-m)] bg-white shadow-sm">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-semibold text-lg flex items-center gap-2">
             <Target className="w-5 h-5" /> Configurar Campaña
@@ -175,7 +175,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
                   </button>
                 </div>
               ))}
-              <div className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100/80 text-blue-700 px-3 py-1.5 rounded-[var(--r-s)] border border-blue-200 border-dashed transition-colors">
+              <div className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100/80 text-blue-700 px-3 py-1.5 rounded-[var(--r-s)] border-blue-200 border-dashed transition-colors">
                 <Plus className="w-3.5 h-3.5 shrink-0" />
                 <span className="text-xs font-semibold shrink-0">Añadir Fecha:</span>
                 <input 

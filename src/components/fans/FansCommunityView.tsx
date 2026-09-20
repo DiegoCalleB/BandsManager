@@ -207,14 +207,14 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Pinned / Band Post Box */}
-      <div className="bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border /30 rounded-[var(--r-l)] p-5 shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 rounded-[var(--r-l)] p-5 shadow-lg relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             {effectiveBandLogo ? (
               <img 
                 src={effectiveBandLogo} 
                 alt="Logo" 
-                className="w-12 h-12 object-contain rounded-[var(--r-m)] p-1 bg-slate-950 border /40 shrink-0" 
+                className="w-12 h-12 object-contain rounded-[var(--r-m)] p-1 bg-slate-950 shrink-0" 
               />
             ) : (
               <div className="w-12 h-12 rounded-[var(--r-m)] bg-amber-500 text-slate-950 flex items-center justify-center font-black font-display text-lg shrink-0">
@@ -224,7 +224,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400">Muro Oficial de la Banda</span>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/20 text-amber-300 border /30 flex items-center gap-1">
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/20 text-amber-300 flex items-center gap-1">
                   <Megaphone className="w-2.5 h-2.5" /> Oficial
                 </span>
               </div>
@@ -253,7 +253,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
       {/* Band Announcements Feed */}
       {announcements.length === 0 && (
-        <div className="bg-[var(--surface)]/60 border border-dashed  rounded-[var(--r-l)] p-6 text-center space-y-2">
+        <div className="bg-[var(--surface)]/60 border-dashed  rounded-[var(--r-l)] p-6 text-center space-y-2">
           <div className="w-10 h-10 mx-auto rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
             <Megaphone className="w-5 h-5" />
           </div>
@@ -267,17 +267,17 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
       {announcements.map((ann) => (
         <div 
           key={ann.id} 
-          className="bg-[var(--surface)]/90 border /40 rounded-[var(--r-l)] p-5 space-y-3.5 shadow-md relative group transition hover:"
+          className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-5 space-y-3.5 shadow-md relative group transition hover:"
         >
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-amber-500/20 border /50 flex items-center justify-center text-amber-400 font-bold">
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold">
                 <Pin className="w-4 h-4" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-white text-sm">{ann.autor}</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-mono font-bold border /30">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-mono font-bold">
                     Noticia Banda
                   </span>
                 </div>
@@ -448,14 +448,14 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
                 {/* Favorite Song Badge */}
                 {fan.cancionFavorita && (
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border /25 rounded-[var(--r-m)] text-xs font-mono text-amber-300">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 rounded-[var(--r-m)] text-xs font-mono text-amber-300">
                     <Music className="w-3.5 h-3.5 text-amber-400" />
                     <span>Tema favorito: <strong className="text-white">{fan.cancionFavorita}</strong></span>
                   </div>
                 )}
 
                 {/* Fan Post / Message / Shout */}
-                <div className="bg-slate-950/70 border /80 rounded-[var(--r-m)] p-3.5">
+                <div className="bg-slate-950/70 rounded-[var(--r-m)] p-3.5">
                   {mensajeFan ? (
                     <p className="text-[var(--ink-3)] text-xs font-sans leading-relaxed">
                       "{mensajeFan}"
@@ -479,7 +479,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onClick={() => handleReactFan(fan.id, 'likes')}
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.likes 
-                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-xs font-bold' 
+                          ? 'bg-rose-500/20 text-rose-300 shadow-xs font-bold' 
                           : 'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] border '
                       }`}
                       title="Me gusta"
@@ -493,7 +493,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onClick={() => handleReactFan(fan.id, 'fire')}
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.fire 
-                          ? 'bg-amber-500/20 text-amber-300 border /40 shadow-xs font-bold' 
+                          ? 'bg-amber-500/20 text-amber-300 shadow-xs font-bold' 
                           : 'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] border '
                       }`}
                       title="Fuego / Brutal"
@@ -507,7 +507,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onClick={() => handleReactFan(fan.id, 'guitars')}
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.guitars 
-                          ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-xs font-bold' 
+                          ? 'bg-purple-500/20 text-purple-300 shadow-xs font-bold' 
                           : 'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] border '
                       }`}
                       title="Púa de Oro / Rock On"
@@ -521,7 +521,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onClick={() => handleReactFan(fan.id, 'applause')}
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.applause 
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs font-bold' 
+                          ? 'bg-emerald-500/20 text-emerald-300 shadow-xs font-bold' 
                           : 'bg-slate-950 hover:bg-[var(--surface)] text-[var(--ink-3)] border '
                       }`}
                       title="Aplausos"

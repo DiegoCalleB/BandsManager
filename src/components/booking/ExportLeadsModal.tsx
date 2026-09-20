@@ -128,11 +128,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-[var(--surface)] border /30 rounded-[var(--r-l)] max-w-lg w-full p-6 shadow-2xl space-y-6 text-zinc-100 relative">
+      <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 shadow-2xl space-y-6 text-zinc-100 relative">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 border /40 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/20 flex items-center justify-center text-amber-400">
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
@@ -272,7 +272,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
         {/* 3. CSV Options */}
         {exportFormat === 'csv' && (
-          <div className="p-3 rounded-[var(--r-m)] bg-zinc-900/80 border border-zinc-800 space-y-2">
+          <div className="p-3 rounded-[var(--r-m)] bg-zinc-900/80 border-zinc-800 space-y-2">
             <span className="text-[11px] font-bold text-zinc-300 block">Campos adicionales en CSV:</span>
             <div className="flex items-center gap-4 text-xs">
               <label className="flex items-center gap-2 cursor-pointer text-zinc-300">

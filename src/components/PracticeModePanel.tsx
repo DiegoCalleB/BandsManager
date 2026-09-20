@@ -520,7 +520,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
         {/* Header */}
         <div className={`px-5 py-4 flex items-center justify-between border-b ${isStitchLight ? ' bg-[var(--bg)]' : ' bg-bg-[var(--surface)]/60'}`}>
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-9 h-9 rounded-[var(--r-m)] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-[var(--r-m)] bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
               <Headphones className="w-5 h-5" />
             </div>
             <div className="min-w-0">
@@ -533,7 +533,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
               <button
                 type="button"
                 onClick={onOpenStudio}
-                className="px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border border-[var(--acc)]/40 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-sm"
+                className="px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] border-[var(--acc)]/40 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-sm"
                 title="Abrir Studio multipista completo de este tema"
               >
                 <Sliders className="w-3.5 h-3.5" />
@@ -549,11 +549,11 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
         <div className="overflow-y-auto p-5 space-y-4">
           {/* Aviso: qué instrumento detectó / instrucción si no hay ninguno */}
           {myTrack ? (
-            <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-emerald-500/10 border border-emerald-500/25 text-emerald-300">
+            <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-emerald-500/10 text-emerald-300">
               Tu instrumento (<strong>{currentUser?.instrument}</strong>) coincide con la pista <strong>{myTrack.nombre}</strong>.
             </div>
           ) : (
-            <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-amber-500/10 border /25 text-amber-300">
+            <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-amber-500/10 text-amber-300">
               No hemos podido identificar tu pista. Pídele a quien administra la banda que te asigne un instrumento (Voz, Batería, Bajo, Guitarras, Teclados o Arreglos) en Gestión de Miembros — mientras tanto puedes usar la mezcla manual de abajo.
             </div>
           )}
@@ -563,7 +563,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
             <button
               onClick={applyPresetPracticeWithBand}
               disabled={!myTrack}
-              className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-sky-500/10 border border-sky-500/25 text-sky-300 hover:bg-sky-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <Headphones className="w-4 h-4" />
               <span className="text-[11px] font-mono font-semibold text-center">Tocar con la banda<br />(silencia mi pista)</span>
@@ -571,7 +571,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
             <button
               onClick={applyPresetLearnMyPart}
               disabled={!myTrack}
-              className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-violet-500/10 border border-violet-500/25 text-violet-300 hover:bg-violet-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-violet-500/10 text-violet-300 hover:bg-violet-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <GraduationCap className="w-4 h-4" />
               <span className="text-[11px] font-mono font-semibold text-center">Aprender mi parte<br />(aísla mi pista)</span>
@@ -809,7 +809,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
                           {onApplyAsMainChords && (
                             <button
                               onClick={() => onApplyAsMainChords(chords.cifradoTexto, chords.guiaSustituto)}
-                              className="flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1.5 rounded-[var(--r-s)] bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/25"
+                              className="flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1.5 rounded-[var(--r-s)] bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25"
                             >
                               <CheckCircle2 className="w-3 h-3" /> Usar como cifrado principal de la canción
                             </button>
@@ -830,14 +830,14 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
               <button
                 onClick={() => handleExport('sin-mi-pista')}
                 disabled={!myTrack || isExporting !== null}
-                className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-sky-500/10 border border-sky-500/25 text-sky-300 hover:bg-sky-500/20 disabled:opacity-40"
+                className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 disabled:opacity-40"
               >
                 <Download className="w-3.5 h-3.5" /> {isExporting === 'sin-mi-pista' ? 'Generando…' : 'Sin mi pista'}
               </button>
               <button
                 onClick={() => handleExport('solo-mi-pista')}
                 disabled={!myTrack || isExporting !== null}
-                className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-violet-500/10 border border-violet-500/25 text-violet-300 hover:bg-violet-500/20 disabled:opacity-40"
+                className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-violet-500/10 text-violet-300 hover:bg-violet-500/20 disabled:opacity-40"
               >
                 <Download className="w-3.5 h-3.5" /> {isExporting === 'solo-mi-pista' ? 'Generando…' : 'Solo mi pista'}
               </button>

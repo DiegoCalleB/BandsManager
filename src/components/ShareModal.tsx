@@ -91,13 +91,13 @@ export function ShareModal({
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
         <div 
-          className="w-full max-w-xl rounded-[var(--r-l)] bg-[#141820] border border-white/10 shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-white"
+          className="w-full max-w-xl rounded-[var(--r-l)] bg-[#141820] border-white/10 shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-white"
           onClick={(e) => e.stopPropagation()}
         >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-white/[0.02]">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-white/5 border border-white/10 flex items-center justify-center">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-white/5 border-white/10 flex items-center justify-center">
               {getItemIcon()}
             </div>
             <div>
@@ -144,7 +144,7 @@ export function ShareModal({
               className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-all shadow-lg active:scale-95 ${
                 copied 
                   ? 'bg-amber-600 text-white' 
-                  : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-white/10'
+                  : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border-white/10'
               }`}
             >
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -161,7 +161,7 @@ export function ShareModal({
           </div>
 
           {/* Optional Phone Number input for WhatsApp direct */}
-          <div className="p-3 rounded-[var(--r-m)] bg-white/[0.03] border border-white/10 space-y-1.5">
+          <div className="p-3 rounded-[var(--r-m)] bg-white/[0.03] border-white/10 space-y-1.5">
             <label className="text-xs font-medium text-zinc-300 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-emerald-400" />
@@ -176,7 +176,7 @@ export function ShareModal({
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Ej: +34612345678 o 612345678"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
             />
           </div>
 
@@ -200,10 +200,10 @@ export function ShareModal({
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 rows={10}
-                className="w-full p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/10 text-xs font-mono text-zinc-200 focus:outline-none focus:border-[#d1b375] leading-relaxed custom-scrollbar"
+                className="w-full p-3 rounded-[var(--r-m)] bg-zinc-900 border-white/10 text-xs font-mono text-zinc-200 focus:outline-none focus:border-[#d1b375] leading-relaxed custom-scrollbar"
               />
             ) : (
-              <div className="p-3.5 rounded-[var(--r-m)] bg-zinc-900/90 border border-white/10 text-xs text-zinc-300 whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-zinc-900/90 border-white/10 text-xs text-zinc-300 whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto font-sans custom-scrollbar select-text">
                 {text}
               </div>
             )}

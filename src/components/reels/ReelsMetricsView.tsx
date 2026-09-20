@@ -704,7 +704,7 @@ export function ReelsMetricsView({
         isStitchLight ? 'bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border-emerald-200' : 'bg-gradient-to-r from-emerald-950/30 via-bg-[var(--surface)] to-indigo-950/30 border-emerald-900/40'
       }`}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-[var(--r-m)] bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+          <div className="w-10 h-10 rounded-[var(--r-m)] bg-emerald-500/20 flex items-center justify-center text-emerald-400">
             <Radio className="w-5 h-5 animate-pulse" />
           </div>
           <div>
@@ -806,7 +806,7 @@ export function ReelsMetricsView({
       </div>
 
       {metricSuccess && (
-        <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-[var(--r-m)] text-emerald-400 font-mono text-xs flex items-center gap-2">
+        <div className="p-3 bg-emerald-500/10 rounded-[var(--r-m)] text-emerald-400 font-mono text-xs flex items-center gap-2">
           <CheckCircle2 className="w-3.5 h-3.5" />
           <span>{metricSuccess}</span>
         </div>
@@ -979,7 +979,7 @@ export function ReelsMetricsView({
               <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
                 <Heart className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" /> Fans Registrados
               </span>
-              <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border /20">
+              <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400">
                 100% RGPD
               </span>
             </div>
@@ -999,14 +999,14 @@ export function ReelsMetricsView({
 
       {/* 2. Recharts Dynamic Adaptive Area Chart */}
       {metrics.length > 0 && (
-        <div className={`p-4 sm:p-5 rounded-[var(--r-m)] transition-all ${isStitchLight ? 'bg-[var(--bg)]/70 border /80 shadow-sm' : 'bg-[var(--surface)]/70 border /80 shadow-md'}`}>
+        <div className={`p-4 sm:p-5 rounded-[var(--r-m)] transition-all ${isStitchLight ? 'bg-[var(--bg)]/70 shadow-sm' : 'bg-[var(--surface)]/70 shadow-md'}`}>
           {/* Header with Title & Scale Badge */}
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-4">
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <BarChart3 className="w-4 h-4 text-indigo-400" />
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-bg-[var(--sunken)]">Curva de Crecimiento Multiplataforma</span>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400">
                   Escala Adaptativa: 0 - {yAxisDomain[1] >= 1000 ? `${(yAxisDomain[1] / 1000).toFixed(1)}k` : yAxisDomain[1]}
                 </span>
               </div>
@@ -1242,7 +1242,7 @@ export function ReelsMetricsView({
           {/* Chart Canvas or Empty State */}
           <div className="h-64 w-full relative">
             {(!selectedChannels.instagram && !selectedChannels.tiktok && !selectedChannels.youtube && (!hasSpotify || !selectedChannels.spotify)) ? (
-              <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border border-dashed  rounded-[var(--r-m)] bg-bg-[var(--surface)]/20">
+              <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 border-dashed  rounded-[var(--r-m)] bg-bg-[var(--surface)]/20">
                 <SlidersHorizontal className="w-8 h-8 text-neutral-500 mb-2" />
                 <p className="text-xs font-mono font-medium text-text-[var(--ink-3)]">Todos los canales están ocultos</p>
                 <p className="text-[10px] font-mono text-neutral-500 mt-1 max-w-xs">
@@ -1377,7 +1377,7 @@ export function ReelsMetricsView({
         </div>
 
         {contentItems.length === 0 ? (
-          <div className="py-8 text-center text-neutral-500 font-mono text-xs border border-dashed  rounded-[var(--r-m)]">
+          <div className="py-8 text-center text-neutral-500 font-mono text-xs border-dashed  rounded-[var(--r-m)]">
             Pulsa <b className="text-emerald-400">"Ejecutar Radar Ahora"</b> para escanear y listar los vídeos y reproducciones de tus canales.
           </div>
         ) : (
@@ -1460,7 +1460,7 @@ export function ReelsMetricsView({
                 className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
                   isStitchLight
                     ? 'bg-white border  text-[var(--ink)] focus:border-indigo-500'
-                    : 'bg-[var(--surface)] border border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
+                    : 'bg-[var(--surface)] border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
                 }`}
               />
             </div>
@@ -1478,7 +1478,7 @@ export function ReelsMetricsView({
                   className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
                     isStitchLight
                       ? 'bg-white border  text-[var(--ink)] focus:border-indigo-500'
-                      : 'bg-[var(--surface)] border border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
+                      : 'bg-[var(--surface)] border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
                   }`}
                 />
               </div>
@@ -1495,7 +1495,7 @@ export function ReelsMetricsView({
                   className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
                     isStitchLight
                       ? 'bg-white border  text-[var(--ink)] focus:border-indigo-500'
-                      : 'bg-[var(--surface)] border border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
+                      : 'bg-[var(--surface)] border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
                   }`}
                 />
               </div>
@@ -1512,7 +1512,7 @@ export function ReelsMetricsView({
                   className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
                     isStitchLight
                       ? 'bg-white border  text-[var(--ink)] focus:border-indigo-500'
-                      : 'bg-[var(--surface)] border border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
+                      : 'bg-[var(--surface)] border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
                   }`}
                 />
               </div>
@@ -1529,7 +1529,7 @@ export function ReelsMetricsView({
                   className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-mono focus:outline-none ${
                     isStitchLight
                       ? 'bg-white border  text-[var(--ink)] focus:border-indigo-500'
-                      : 'bg-[var(--surface)] border border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
+                      : 'bg-[var(--surface)] border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
                   }`}
                 />
               </div>
@@ -1601,7 +1601,7 @@ export function ReelsMetricsView({
                 className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans focus:outline-none ${
                   isStitchLight
                     ? 'bg-white border  text-[var(--ink)] focus:border-indigo-500'
-                    : 'bg-[var(--surface)] border border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
+                    : 'bg-[var(--surface)] border-[#99907c]/15 text-bg-[var(--sunken)] focus:border-[var(--acc)]/30'
                 }`}
               />
             </div>
@@ -1799,7 +1799,7 @@ export function ReelsMetricsView({
             {/* Modal Body */}
             <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto font-sans">
               {/* Official Documentation Reference */}
-              <div className="p-3.5 rounded-[var(--r-m)] border border-pink-500/30 bg-pink-950/20 flex items-center justify-between gap-3">
+              <div className="p-3.5 rounded-[var(--r-m)] bg-pink-950/20 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 text-xs text-pink-200">
                   <ExternalLink className="w-4 h-4 text-pink-400 shrink-0" />
                   <span>
@@ -1851,7 +1851,7 @@ export function ReelsMetricsView({
                     <button
                       onClick={handleDisconnectIg}
                       disabled={isConnectingIg}
-                      className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer"
+                      className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer"
                     >
                       <Unlink className="w-3 h-3" /> Desconectar
                     </button>
@@ -2020,7 +2020,7 @@ export function ReelsMetricsView({
             {/* Modal Header */}
             <div className="p-5 border-b  flex items-center justify-between bg-bg-[var(--surface)]/40">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-[var(--r-m)] bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <div className="w-9 h-9 rounded-[var(--r-m)] bg-indigo-500/20 flex items-center justify-center text-indigo-400">
                   <Camera className="w-5 h-5" />
                 </div>
                 <div>
@@ -2047,13 +2047,13 @@ export function ReelsMetricsView({
             <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto font-sans">
               {/* Feedback messages */}
               {scanError && (
-                <div className="p-3.5 rounded-[var(--r-m)] border border-red-500/40 bg-red-950/20 text-red-300 text-xs flex items-center gap-2">
+                <div className="p-3.5 rounded-[var(--r-m)] bg-red-950/20 text-red-300 text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
                   <span>{scanError}</span>
                 </div>
               )}
               {scanSuccess && (
-                <div className="p-3.5 rounded-[var(--r-m)] border border-emerald-500/40 bg-emerald-950/20 text-emerald-300 text-xs flex items-center gap-2">
+                <div className="p-3.5 rounded-[var(--r-m)] bg-emerald-950/20 text-emerald-300 text-xs flex items-center gap-2">
                   <Check className="w-4 h-4 shrink-0 text-emerald-400" />
                   <span>{scanSuccess}</span>
                 </div>

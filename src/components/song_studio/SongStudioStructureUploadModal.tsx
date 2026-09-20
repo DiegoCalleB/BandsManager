@@ -188,11 +188,11 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div className="w-full max-w-2xl rounded-[var(--r-l)] border border-purple-500/40 bg-zinc-950 p-6 space-y-5 text-white shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl max-h-[90vh] overflow-y-auto">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-purple-600/30 text-purple-400 border border-purple-500/40 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-purple-600/30 text-purple-400 flex items-center justify-center">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
@@ -214,14 +214,14 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
 
           {/* Messages */}
           {successMessage && (
-            <div className="p-3 rounded-[var(--r-s)] bg-green-950/30 border border-green-500/30 text-xs text-green-200 flex items-center gap-2">
+            <div className="p-3 rounded-[var(--r-s)] bg-green-950/30 text-xs text-green-200 flex items-center gap-2">
               <CheckCircle className="w-4 h-4" />
               {successMessage}
             </div>
           )}
 
           {errorMessage && (
-            <div className="p-3 rounded-[var(--r-s)] bg-red-950/30 border border-red-500/30 text-xs text-red-200 flex items-center gap-2">
+            <div className="p-3 rounded-[var(--r-s)] bg-red-950/30 text-xs text-red-200 flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
               {errorMessage}
             </div>
@@ -229,7 +229,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
 
           {/* Processing status */}
           {isProcessing && (
-            <div className="p-4 rounded-[var(--r-s)] bg-purple-950/30 border border-purple-500/30 text-sm text-purple-200 flex items-center gap-3">
+            <div className="p-4 rounded-[var(--r-s)] bg-purple-950/30 text-sm text-purple-200 flex items-center gap-3">
               <Loader className="w-4 h-4 animate-spin" />
               <div>
                 <p className="font-semibold">{processingMessage || 'Procesando...'}</p>
@@ -312,12 +312,12 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
                           <img src={preview} alt="Preview" className="w-full max-h-64 object-contain rounded" />
                         )}
                         {selectedFile.type === 'application/pdf' && (
-                          <div className="bg-red-950/20 border border-red-500/30 rounded p-3 text-center text-sm text-text-[var(--ink-3)]">
+                          <div className="bg-red-950/20 rounded p-3 text-center text-sm text-text-[var(--ink-3)]">
                             📄 PDF - Se procesará con IA para extraer acordes
                           </div>
                         )}
                         {selectedFile.type.includes('word') && (
-                          <div className="bg-blue-950/20 border border-blue-500/30 rounded p-3 text-center text-sm text-text-[var(--ink-3)]">
+                          <div className="bg-blue-950/20 rounded p-3 text-center text-sm text-text-[var(--ink-3)]">
                             📝 Documento Word - Se procesará con IA para extraer acordes
                           </div>
                         )}
@@ -349,13 +349,13 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
               {/* Current Document Info — se mantiene visible incluso justo después de un
                   procesado con éxito: es precisamente cuando el usuario necesita comparar. */}
               {song.estructuraDocumentoUrl && (
-                <div className="p-3 rounded-[var(--r-s)] bg-emerald-950/20 border border-emerald-500/30 text-sm text-emerald-200 space-y-2">
+                <div className="p-3 rounded-[var(--r-s)] bg-emerald-950/20 text-sm text-emerald-200 space-y-2">
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-semibold">Estructura actual guardada</p>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 ${
                       song.estructuraVerificada
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                        : 'bg-amber-500/20 text-amber-300 border /40'
+                        ? 'bg-emerald-500/20 text-emerald-300'
+                        : 'bg-amber-500/20 text-amber-300'
                     }`}>
                       <ShieldCheck className="w-3 h-3" />
                       {song.estructuraVerificada ? 'Verificado' : 'Sin verificar'}
@@ -400,8 +400,8 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
                     disabled={isSavingVerified}
                     className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-semibold transition flex items-center justify-center gap-1.5 disabled:opacity-50 ${
                       song.estructuraVerificada
-                        ? 'bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-600/30'
-                        : 'bg-amber-600/20 border /40 text-amber-300 hover:bg-amber-600/30'
+                        ? 'bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30'
+                        : 'bg-amber-600/20 text-amber-300 hover:bg-amber-600/30'
                     }`}
                   >
                     <ShieldCheck className="w-3.5 h-3.5" />
@@ -416,7 +416,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-emerald-500/20">
                       <div className="space-y-1.5">
                         <p className="text-[10px] font-mono uppercase tracking-wider text-text-[var(--ink-2)]">Documento original</p>
-                        <div className="bg-black/40 border border-white/10 rounded-[var(--r-s)] overflow-hidden max-h-96">
+                        <div className="bg-black/40 border-white/10 rounded-[var(--r-s)] overflow-hidden max-h-96">
                           {isImageDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl) ? (
                             <img
                               src={song.estructuraDocumentoUrl}
@@ -438,7 +438,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
                       </div>
                       <div className="space-y-1.5">
                         <p className="text-[10px] font-mono uppercase tracking-wider text-text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
-                        <div className="bg-black/40 border border-white/10 rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
+                        <div className="bg-black/40 border-white/10 rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
                           <pre className="text-[11px] font-mono text-amber-100 whitespace-pre-wrap leading-relaxed">
                             {song.cifradoTexto || 'Sin acordes guardados todavía.'}
                           </pre>

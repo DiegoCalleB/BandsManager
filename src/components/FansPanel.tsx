@@ -664,7 +664,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   </p>
                   <p className="text-[11px] text-[var(--ink-2)] font-mono">Curva acumulativa de la comunidad {effectiveBandName}</p>
                 </div>
-                <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-[var(--r-s)] border /20">
+                <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-[var(--r-s)]">
                   Total: {fans.length} fans
                 </span>
               </div>
@@ -743,7 +743,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     {/* Channel Legend List */}
                     <div className="w-full sm:w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar pr-1">
                       {originData.map((item, idx) => (
-                        <div key={item.name} className="flex items-center justify-between bg-slate-950 p-2 rounded-[var(--r-m)] border /80 text-xs font-mono">
+                        <div key={item.name} className="flex items-center justify-between bg-slate-950 p-2 rounded-[var(--r-m)] text-xs font-mono">
                           <div className="flex items-center gap-2 min-w-0">
                             <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
                             <span className="text-slate-200 font-bold truncate">{item.name}</span>
@@ -859,7 +859,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsAddingCity(true)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-slate-950 hover:bg-[var(--surface)] text-amber-400 border /30 border-dashed flex items-center gap-1 transition cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-slate-950 hover:bg-[var(--surface)] text-amber-400 border-dashed flex items-center gap-1 transition cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Añadir ciudad</span>
@@ -990,7 +990,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <div key={fan.id} className="bg-slate-950 border  hover:/50 rounded-[var(--r-l)] p-4 transition-all space-y-3 relative group">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 border /30 flex items-center justify-center text-amber-500 font-bold uppercase text-sm">
+                        <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-500 font-bold uppercase text-sm">
                           {fan.nombre.charAt(0)}
                         </div>
                         <div>
@@ -1029,7 +1029,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <div className="flex items-center justify-between text-[10px] font-mono text-[var(--ink-2)] pt-1">
                       <span>Registrado: {fan.fechaCaptura || 'Reciente'}</span>
                       {fan.consentimientoRGPD && (
-                        <span className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                        <span className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full">
                           <Check className="w-3 h-3" /> RGPD Ok
                         </span>
                       )}
@@ -1062,7 +1062,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         <MapPin className="w-4 h-4 text-amber-500 shrink-0" />
                         <span className="font-bold text-white truncate">{city}</span>
                       </div>
-                      <span className="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border /30">
+                      <span className="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
                         {count} {count === 1 ? 'fan' : 'fans'}
                       </span>
                     </div>
@@ -1390,7 +1390,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
                 {/* Apoyo Económico / Revolut: se configura ahora desde el Dossier EPK, fuente única
                     del resto de datos de marca (booking, redes, etc.) — aquí solo un acceso directo. */}
-                <div className="bg-slate-950/80 p-5 rounded-[var(--r-l)] border border-sky-500/30 space-y-3">
+                <div className="bg-slate-950/80 p-5 rounded-[var(--r-l)] space-y-3">
                   <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
                     <Heart className="w-4 h-4 text-sky-400" />
                     Colaboración Económica & Donaciones (Revolut, PayPal y Bizum)

@@ -44,14 +44,14 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
       </span>
 
       {showLabel && (
-        <span className="text-[11px] font-bold tracking-wide text-amber-300 uppercase bg-amber-500/10 border /30 px-1.5 py-0.5 rounded-md">
+        <span className="text-[11px] font-bold tracking-wide text-amber-300 uppercase bg-amber-500/10 px-1.5 py-0.5 rounded-md">
           Verificado
         </span>
       )}
 
       {/* Tooltip Popup */}
       {showTooltip && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/95 border /40 text-bg-[var(--sunken)] text-xs shadow-2xl z-50 pointer-events-none backdrop-blur-md">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/95 text-bg-[var(--sunken)] text-xs shadow-2xl z-50 pointer-events-none backdrop-blur-md">
           <div className="flex items-center gap-1.5 font-bold text-amber-400 mb-1">
             <ShieldCheck className="w-4 h-4 text-amber-400" />
             <span>Lead Verificado por IA</span>

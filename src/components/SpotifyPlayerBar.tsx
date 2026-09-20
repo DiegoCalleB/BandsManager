@@ -535,7 +535,7 @@ export default function SpotifyPlayerBar({
               className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer group"
               title="Haz clic para expandir el reproductor"
             >
-              <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden border border-white/5">
+              <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden border-white/5">
                 {song.portadaUrl ? (
                   <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
                 ) : (
@@ -556,7 +556,7 @@ export default function SpotifyPlayerBar({
                 <div className="flex items-center gap-2">
                   <h4 className="text-xs sm:text-sm font-bold text-white truncate group-hover:text-[#1db954] transition">{song.titulo}</h4>
                   {isDrive && (
-                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0">
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 shrink-0">
                       Drive
                     </span>
                   )}
@@ -638,7 +638,7 @@ export default function SpotifyPlayerBar({
           {/* Left: Song Info */}
           <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
             <div className="flex items-center gap-3.5 min-w-0">
-              <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden group border border-white/5">
+              <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[#282828] shadow-md overflow-hidden group border-white/5">
                 {song.portadaUrl ? (
                   <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
                 ) : (
@@ -669,7 +669,7 @@ export default function SpotifyPlayerBar({
                     </button>
                   )}
                   {isDrive && (
-                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0">
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 shrink-0">
                       Drive
                     </span>
                   )}
@@ -778,7 +778,7 @@ export default function SpotifyPlayerBar({
               <select
                 value={playbackRate}
                 onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-                className="bg-[#282828] text-[#1db954] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border border-white/5"
+                className="bg-[#282828] text-[#1db954] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-white/5"
                 title="Velocidad de Reproducción"
               >
                 <option value={0.5}>0.5x</option>
@@ -792,7 +792,7 @@ export default function SpotifyPlayerBar({
               <select
                 value={transposeSemitones}
                 onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
-                className={`bg-[#282828] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border border-white/5 ${
+                className={`bg-[#282828] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-white/5 ${
                   transposeSemitones !== 0 ? 'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' : 'text-[#b3b3b3]'
                 }`}
                 title="Trasposición de Tono (Nativa en tiempo real Web Audio)"
@@ -853,7 +853,7 @@ export default function SpotifyPlayerBar({
             {/* Studio / Arreglos Button */}
             <button
               onClick={() => onOpenStudio(song)}
-              className="px-3 py-1.5 rounded-full bg-[#1db954]/15 hover:bg-[#1db954]/25 text-[#1ed760] border border-[#1db954]/30 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+              className="px-3 py-1.5 rounded-full bg-[#1db954]/15 hover:bg-[#1db954]/25 text-[#1ed760] border-[#1db954]/30 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
               title="Abrir Estudio de Arreglos e Ideas"
             >
               <Sliders className="w-3.5 h-3.5" />
@@ -863,7 +863,7 @@ export default function SpotifyPlayerBar({
             {/* Iris Stem Separator Button */}
             <button
               onClick={() => onOpenIris ? onOpenIris(song) : onOpenStudio(song)}
-              className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 border /40 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
+              className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
               title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />

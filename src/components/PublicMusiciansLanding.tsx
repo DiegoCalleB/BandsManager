@@ -167,7 +167,7 @@ export const PublicMusiciansLanding: React.FC = () => {
       <header className="relative z-20 border-b /80 bg-[#121111]/90 backdrop-blur-md sticky top-0">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black border /30 p-0.5 shadow-md flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black p-0.5 shadow-md flex items-center justify-center shrink-0">
               <img
                 src="/bandmanageriodefinitiva.jpeg"
                 alt="BandManager.io Logo"
@@ -186,7 +186,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           </div>
 
           {/* Language Selector (Solo banderas, contextual) */}
-          <div className="flex items-center gap-1.5 bg-bg-[var(--surface)]/80 border /90 p-1 rounded-[var(--r-m)] shadow-inner" role="group" aria-label="Idioma / Language">
+          <div className="flex items-center gap-1.5 bg-bg-[var(--surface)]/80 p-1 rounded-[var(--r-m)] shadow-inner" role="group" aria-label="Idioma / Language">
             {availableLanguages.map((lang) => (
               <button
                 key={lang.code}
@@ -211,7 +211,7 @@ export const PublicMusiciansLanding: React.FC = () => {
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-8 sm:py-12 space-y-12">
         {/* Optional Origin Band Badge */}
         {originInfo.fromBand && (
-          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-amber-500/10 border /20 text-xs font-mono text-amber-300 animate-in fade-in">
+          <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-amber-500/10 text-xs font-mono text-amber-300 animate-in fade-in">
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-amber-400 animate-pulse" />
               <span>
@@ -234,7 +234,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-yellow-400/20 to-amber-600/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
-              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-black border /40 p-1 shadow-2xl flex items-center justify-center">
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-black p-1 shadow-2xl flex items-center justify-center">
                 <img
                   src="/bandmanageriodefinitiva.jpeg"
                   alt="BandManager.io"
@@ -244,7 +244,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border /25 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mt-1">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mt-1">
               <Sparkles className="w-3.5 h-3.5" />
               <span>{t.badge}</span>
             </div>
@@ -265,7 +265,7 @@ export const PublicMusiciansLanding: React.FC = () => {
         {/* FEATURE CARDS */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="p-5 rounded-[var(--r-l)] bg-bg-[var(--surface)]/70 border  hover:/30 transition-all space-y-2.5 shadow-lg">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-400">
               <QrCode className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
@@ -277,7 +277,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           </div>
 
           <div className="p-5 rounded-[var(--r-l)] bg-bg-[var(--surface)]/70 border  hover:/30 transition-all space-y-2.5 shadow-lg">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-400">
               <FileText className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
@@ -289,7 +289,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           </div>
 
           <div className="p-5 rounded-[var(--r-l)] bg-bg-[var(--surface)]/70 border  hover:/30 transition-all space-y-2.5 shadow-lg">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 border /20 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/10 flex items-center justify-center text-amber-400">
               <Music className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
@@ -303,8 +303,8 @@ export const PublicMusiciansLanding: React.FC = () => {
 
         {/* ROADMAP TEASER: hype de que la plataforma sigue creciendo, sin detallar features
             concretas todavía por confirmar */}
-        <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border /20">
-          <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/15 border /30 flex items-center justify-center text-amber-400 shrink-0">
+        <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent">
+          <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/15 flex items-center justify-center text-amber-400 shrink-0">
             <Rocket className="w-5 h-5" />
           </div>
           <p className="text-text-[var(--ink-3)] text-xs sm:text-sm leading-relaxed">
@@ -319,8 +319,8 @@ export const PublicMusiciansLanding: React.FC = () => {
 
           {submitted ? (
             /* SUCCESS CONFIRMATION */
-            <div className="p-8 sm:p-12 rounded-3xl bg-[#141312] border /40 shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95">
-              <div className="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+            <div className="p-8 sm:p-12 rounded-3xl bg-[#141312] shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95">
+              <div className="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.2)]">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
 
@@ -371,7 +371,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               </div>
 
               {errorMessage && (
-                <div className="p-4 rounded-[var(--r-m)] bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-mono">
+                <div className="p-4 rounded-[var(--r-m)] bg-rose-500/10 text-rose-400 text-xs font-mono">
                   {errorMessage}
                 </div>
               )}
@@ -469,7 +469,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                 {/* 3. CAMPOS OPCIONALES DESPLEGABLES */}
                 {showOptionalDetails && (
-                  <div className="p-4 rounded-[var(--r-l)] bg-bg-[var(--surface)]/90 border /80 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="p-4 rounded-[var(--r-l)] bg-bg-[var(--surface)]/90 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
                     <p className="text-[11px] font-mono text-text-[var(--ink-2)] -mt-1">
                       {t.moreInfoSubtitle}
                     </p>

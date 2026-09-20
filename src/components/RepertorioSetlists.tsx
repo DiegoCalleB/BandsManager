@@ -2650,7 +2650,7 @@ export default function RepertorioSetlists({
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
    isStitchLight 
      ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)] border '
-     : 'bg-neutral-800/90 hover:bg-neutral-700 text-zinc-200 hover:text-white border /80'
+     : 'bg-neutral-800/90 hover:bg-neutral-700 text-zinc-200 hover:text-white'
  }`}
  title="Imprimir repertorio o exportar a PDF / atril en papel"
  >
@@ -2665,8 +2665,8 @@ export default function RepertorioSetlists({
  onClick={() => setShowAIAnalysisModal(true)}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
    isStitchLight 
-     ? 'bg-purple-100 hover:bg-purple-200 text-purple-950 border border-purple-300'
-     : 'bg-purple-950/50 hover:bg-purple-900/70 text-purple-200 hover:text-white border border-purple-500/40 shadow-[0_0_12px_rgba(168,85,247,0.18)]'
+     ? 'bg-purple-100 hover:bg-purple-200 text-purple-950 border-purple-300'
+     : 'bg-purple-950/50 hover:bg-purple-900/70 text-purple-200 hover:text-white shadow-[0_0_12px_rgba(168,85,247,0.18)]'
  }`}
  title="Cerebro IA: Análisis de narrativa, curva de energía, transiciones de tono y sugerencias"
  >
@@ -2674,7 +2674,7 @@ export default function RepertorioSetlists({
  <span className="hidden sm:inline">Cerebro IA</span>
  <span className="sm:hidden">IA</span>
  {aiAnalysisResult?.overallScore && (
-   <span className="px-1.5 py-0.2 rounded-full bg-purple-500/20 text-[10px] font-mono font-bold text-purple-300 border border-purple-500/30">
+   <span className="px-1.5 py-0.2 rounded-full bg-purple-500/20 text-[10px] font-mono font-bold text-purple-300">
      {aiAnalysisResult.overallScore}
    </span>
  )}
@@ -2692,7 +2692,7 @@ export default function RepertorioSetlists({
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
    isStitchLight 
      ? 'bg-amber-100 hover:bg-amber-200 text-amber-950 border '
-     : 'bg-amber-950/40 hover:bg-amber-900/60 text-amber-200 hover:text-white border /40 shadow-[0_0_12px_rgba(245,158,11,0.18)]'
+     : 'bg-amber-950/40 hover:bg-amber-900/60 text-amber-200 hover:text-white shadow-[0_0_12px_rgba(245,158,11,0.18)]'
  }`}
  title="Optimizar IA: Generar el setlist perfecto con orden dinámico ideal y clímax de concierto"
  >
@@ -2731,7 +2731,7 @@ export default function RepertorioSetlists({
      setPerformanceSetlistId(activeSetlist.id);
    }
  }}
- className="shrink-0 px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+ className="shrink-0 px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
  title="Modo Ensayo: atril optimizado para ensayo con pistas Iris, silenciamiento de instrumentos y metrónomo"
  >
  <Headphones className="w-3.5 h-3.5 text-emerald-400" />
@@ -2846,7 +2846,7 @@ export default function RepertorioSetlists({
               <button
                 type="button"
                 onClick={() => setShowAssistantChooser((v) => !v)}
-                className="px-2.5 py-1 rounded-[var(--r-s)] bg-amber-500/15 hover:bg-amber-500/25 border /30 text-amber-300 hover:text-amber-200 transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-xs"
+                className="px-2.5 py-1 rounded-[var(--r-s)] bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 hover:text-amber-200 transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-xs"
                 title="Asistente IA del repertorio"
               >
                 🧠 <span className="hidden xs:inline">Asistente IA</span>
@@ -2897,13 +2897,13 @@ export default function RepertorioSetlists({
         {/* Métricas secundarias, solo si se piden */}
         {showSetlistStats && (
           <div className="flex flex-wrap items-center gap-1.5 px-1 text-xs">
-            <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 font-medium border border-sky-500/20">
+            <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 font-medium">
               💬 {activeSetlistMetrics.eventCount} interludios
             </span>
-            <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/10 text-amber-300 font-medium border /20">
+            <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/10 text-amber-300 font-medium">
               ⚡ {activeSetlistMetrics.blockCount} bloques
             </span>
-            <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 border /30 font-medium">
+            <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 font-medium">
               {energyAnalysis.profileLabel}
             </span>
           </div>
@@ -3074,7 +3074,7 @@ export default function RepertorioSetlists({
                   💡 Toca un punto para reordenar o cambiar su energía — la energía es de la canción, se aplica en todos tus repertorios.
                 </p>
                 {optimizeSummary && (
-                  <p className="text-[10px] font-mono text-emerald-300 bg-emerald-900/20 border border-emerald-700/40 rounded-[var(--r-s)] px-2 py-1">
+                  <p className="text-[10px] font-mono text-emerald-300 bg-emerald-900/20 rounded-[var(--r-s)] px-2 py-1">
                     {optimizeSummary}
                   </p>
                 )}
@@ -3084,7 +3084,7 @@ export default function RepertorioSetlists({
                   if (chapaSuggestion.coste.bpmDiff != null && chapaSuggestion.coste.bpmDiff >= 15) motivos.push(`salto de ${Math.round(chapaSuggestion.coste.bpmDiff)} BPM`);
                   if (chapaSuggestion.coste.energyDiff != null && chapaSuggestion.coste.energyDiff >= 6) motivos.push('salto grande de energía');
                   return (
-                    <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-sky-300 bg-sky-900/20 border border-sky-700/40 rounded-[var(--r-s)] px-2 py-1">
+                    <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-sky-300 bg-sky-900/20 rounded-[var(--r-s)] px-2 py-1">
                       <span>
                         💬 Mejor sitio para una chapa: entre <b>"{chapaSuggestion.cancionAntes}"</b> y <b>"{chapaSuggestion.cancionDespues}"</b>
                         {motivos.length > 0 ? ` — ${motivos.join(', ')}.` : '.'}
@@ -3150,7 +3150,7 @@ export default function RepertorioSetlists({
                     if (next !== point.score) handleEnergyChartDrag(point, next);
                   };
                   const dirBtnClass = "w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
-                  const reorderBtnClass = `${dirBtnClass} bg-neutral-800/80 hover:bg-neutral-700 text-amber-300/90 border /30 hover:/60`;
+                  const reorderBtnClass = `${dirBtnClass} bg-neutral-800/80 hover:bg-neutral-700 text-amber-300/90 hover:/60`;
                   const energyBtnStyle = info
                     ? { color: info.hexColor, borderColor: `${info.hexColor}55`, background: 'rgba(23,23,23,0.8)' }
                     : undefined;
@@ -3448,7 +3448,7 @@ export default function RepertorioSetlists({
   {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
   <div className="space-y-2 max-h-[calc(88vh-200px)] min-h-[480px] overflow-y-auto pr-1">
   {activeSetlist.items.length === 0 ? (
-  <div className="text-center py-12 border border-dashed /80 rounded-[var(--r-l)] text-[var(--ink-3)] text-xs">
+  <div className="text-center py-12 border-dashed /80 rounded-[var(--r-l)] text-[var(--ink-3)] text-xs">
   No hay canciones en este repertorio. Usa la barra superior para añadir temas o eventos.
   </div>
   ) : (
@@ -4127,7 +4127,7 @@ export default function RepertorioSetlists({
       : 'bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 /80 text-white'
   }`}>
     <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
-      <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] bg-[var(--surface)] shadow-md overflow-hidden border /80 flex items-center justify-center group">
+      <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] bg-[var(--surface)] shadow-md overflow-hidden flex items-center justify-center group">
         <AlbumCover
           title={`Repertorio ${bName}`}
           artist={bName}
@@ -4325,7 +4325,7 @@ export default function RepertorioSetlists({
         <button
           type="button"
           onClick={() => handleBulkDeleteSongs(Array.from(selectedCatalogIds))}
-          className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 cursor-pointer transition-all flex items-center gap-1.5"
+          className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 cursor-pointer transition-all flex items-center gap-1.5"
         >
           <Trash2 className="w-3.5 h-3.5" />
           <span>Eliminar Seleccionadas</span>
@@ -4333,7 +4333,7 @@ export default function RepertorioSetlists({
         <button
           type="button"
           onClick={clearCatalogSelection}
-          className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] cursor-pointer transition-all border /80"
+          className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-3)] cursor-pointer transition-all"
         >
           Cancelar
         </button>
@@ -4371,9 +4371,9 @@ export default function RepertorioSetlists({
 
       <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-3)]">
         <span className="hidden lg:inline opacity-70">Acciones rápidas:</span>
-        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-400 font-medium border border-emerald-500/30">Acordes</span>
-        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-indigo-500/15 text-indigo-300 font-medium border border-indigo-500/30">Studio</span>
-        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 font-medium border /30">Notas</span>
+        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-400 font-medium">Acordes</span>
+        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-indigo-500/15 text-indigo-300 font-medium">Studio</span>
+        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 font-medium">Notas</span>
         <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-3)] font-medium border ">Editar</span>
       </div>
     </div>
@@ -4511,7 +4511,7 @@ export default function RepertorioSetlists({
   {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
   {showShowItemModal && (
   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-  <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 shadow-2xl ${colors.card} border border-sky-500/30`}>
+  <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 shadow-2xl ${colors.card}`}>
   <div className="flex justify-between items-center pb-3 border-b ">
   <div className="flex items-center gap-2">
   <span className="p-2 bg-sky-500/20 text-sky-400 rounded-[var(--r-m)]">⚡</span>
@@ -4643,14 +4643,14 @@ export default function RepertorioSetlists({
   />
   </div>
 
-  <div className="p-3 bg-black/40 rounded-[var(--r-m)] border border-sky-500/30 space-y-3">
+  <div className="p-3 bg-black/40 rounded-[var(--r-m)] space-y-3">
   <div className="flex items-center justify-between">
     <label className="block text-sky-400 font-bold text-[11px] flex items-center gap-1.5">
       <Mic className="w-3.5 h-3.5" />
       Audio de la Presentación / Chapa / Ensayo
     </label>
     {showItemAudioUrl && (
-      <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold flex items-center gap-1">
+      <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold flex items-center gap-1">
         <Check className="w-3 h-3" /> Audio Guardado
       </span>
     )}

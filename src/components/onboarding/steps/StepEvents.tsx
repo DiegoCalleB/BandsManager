@@ -58,7 +58,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
           {events.map((ev) => (
             <div
               key={ev.id}
-              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-zinc-900 border border-white/5 hover:border-white/10 transition-colors"
+              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-zinc-900 border-white/5 hover:border-white/10 transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-bold text-xs ${
@@ -99,7 +99,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
       )}
 
       {/* Add Event Form */}
-      <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border border-white/10 space-y-3">
+      <div className="p-4 rounded-[var(--r-m)] bg-[#19191d] border-white/10 space-y-3">
         <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
           <Plus className="w-3.5 h-3.5 text-amber-400" />
           Añadir Fecha a la Agenda
@@ -112,7 +112,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               value={newEventTitle}
               onChange={(e) => setNewEventTitle(e.target.value)}
               placeholder="Título / Sala (ej. Concierto Presentación Disco) *"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
 
@@ -120,7 +120,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
             <select
               value={newEventType}
               onChange={(e) => setNewEventType(e.target.value as any)}
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-white text-xs focus:outline-none focus:"
             >
               <option value="concierto">Concierto en Sala</option>
               <option value="festival">Festival</option>
@@ -134,7 +134,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               type="date"
               value={newEventDate}
               onChange={(e) => setNewEventDate(e.target.value)}
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-white text-xs focus:outline-none focus:"
             />
           </div>
 
@@ -144,7 +144,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               value={newEventCity}
               onChange={(e) => setNewEventCity(e.target.value)}
               placeholder="Ciudad (ej. Madrid)"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
 
@@ -154,7 +154,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               value={newEventVenue}
               onChange={(e) => setNewEventVenue(e.target.value)}
               placeholder="Sala / Recinto (ej. Sala Copérnico)"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
 
@@ -164,7 +164,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               value={newEventTicketUrl}
               onChange={(e) => setNewEventTicketUrl(e.target.value)}
               placeholder="Enlace de venta de entradas (Wegow, DICE, Eventbrite...)"
-              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
+              className="w-full px-3 py-2 rounded-[var(--r-s)] bg-zinc-900 border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:"
             />
           </div>
         </div>

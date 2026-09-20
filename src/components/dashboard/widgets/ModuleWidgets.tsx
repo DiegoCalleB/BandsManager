@@ -120,7 +120,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
             <p className="text-xs font-mono text-text-[var(--ink-2)]">Temas guardados en catálogo</p>
           </div>
         </div>
-        <span className="text-[10px] font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-300 font-bold border /30">
+        <span className="text-[10px] font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-300 font-bold">
           Iris IA Activo
         </span>
       </div>
@@ -158,7 +158,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
         )}
       </div>
 
-      <div className="p-3.5 rounded-[var(--r-m)] bg-[#121214] border border-emerald-500/30 flex items-center justify-between">
+      <div className="p-3.5 rounded-[var(--r-m)] bg-[#121214] flex items-center justify-between">
         <div>
           <span className="text-2xl font-mono font-black text-emerald-400">{totalCache.toLocaleString('es-ES')} €</span>
           <p className="text-[10px] font-mono text-text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Suma de cachés de bolos</p>
@@ -201,14 +201,14 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="p-3 rounded-[var(--r-m)] bg-[#121214] border /30">
+        <div className="p-3 rounded-[var(--r-m)] bg-[#121214]">
           <span className="text-2xl font-mono font-bold text-amber-400">{fans.length}</span>
           <p className="text-[10px] font-mono text-text-[var(--ink-2)] uppercase tracking-wider mt-1">Fans Registrados</p>
         </div>
         <button
           type="button"
           onClick={() => onNavigate && onNavigate('fans')}
-          className="p-3 rounded-[var(--r-m)] bg-amber-500/10 border /40 hover:bg-amber-500/20 text-amber-300 transition-all flex flex-col items-center justify-center cursor-pointer"
+          className="p-3 rounded-[var(--r-m)] bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-all flex flex-col items-center justify-center cursor-pointer"
         >
           <QrCode className="w-5 h-5 text-amber-400 mb-1" />
           <span className="text-[11px] font-mono font-bold">Generar QR de Concierto</span>
@@ -255,7 +255,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
           href="/epk"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-3 py-1.5 rounded-[var(--r-s)] bg-purple-500/20 text-purple-300 border border-purple-500/40 font-mono text-xs font-bold hover:bg-purple-500/30 transition-all"
+          className="px-3 py-1.5 rounded-[var(--r-s)] bg-purple-500/20 text-purple-300 font-mono text-xs font-bold hover:bg-purple-500/30 transition-all"
         >
           Ver EPK Vivo ↗
         </a>
@@ -294,12 +294,12 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
         )}
       </div>
 
-      <div className="p-3.5 rounded-[var(--r-m)] bg-[#121214] border /30 flex items-center justify-between">
+      <div className="p-3.5 rounded-[var(--r-m)] bg-[#121214] flex items-center justify-between">
         <div>
           <span className="text-lg font-mono font-bold text-amber-400">{pendingApprovals} Borradores</span>
           <p className="text-[10px] font-mono text-text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Pendientes de Aprobación Humana</p>
         </div>
-        <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold">
+        <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold">
           ● Activo
         </span>
       </div>

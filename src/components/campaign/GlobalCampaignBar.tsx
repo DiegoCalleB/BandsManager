@@ -33,7 +33,7 @@ export function GlobalCampaignBar({
   const firstTargetDate = campaign.targetDates?.[0];
 
   return (
-    <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-gradient-to-r from-[#1b122e] via-[#141022] to-[#121110] border border-purple-500/30 p-1.5 sm:p-2.5 shadow-sm shadow-purple-950/20 animate-fade-in relative overflow-hidden">
+    <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-gradient-to-r from-[#1b122e] via-[#141022] to-[#121110] p-1.5 sm:p-2.5 shadow-sm shadow-purple-950/20 animate-fade-in relative overflow-hidden">
       {/* Background ambient glow */}
       <div 
         className="absolute -right-10 -top-10 w-28 h-28 rounded-full blur-3xl opacity-15 pointer-events-none"
@@ -58,7 +58,7 @@ export function GlobalCampaignBar({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[8px] font-mono font-extrabold uppercase tracking-wider px-1 py-0.2 rounded bg-purple-500/25 text-purple-200 border border-purple-400/30 shrink-0">
+              <span className="text-[8px] font-mono font-extrabold uppercase tracking-wider px-1 py-0.2 rounded bg-purple-500/25 text-purple-200 shrink-0">
                 🎯 CAMPAÑA
               </span>
               <h2 className="text-xs sm:text-sm font-bold font-display text-zinc-100 truncate" title={campaign.name}>
@@ -106,7 +106,7 @@ export function GlobalCampaignBar({
             className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
               currentView === 'booking'
                 ? 'bg-purple-500 text-white shadow-xs'
-                : 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200 border border-purple-500/30'
+                : 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
             }`}
             title="Ver salas objetivo de esta campaña en Booking CRM"
           >
@@ -121,7 +121,7 @@ export function GlobalCampaignBar({
             className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
               currentView === 'calendario'
                 ? 'bg-purple-500 text-white shadow-xs'
-                : 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200 border border-purple-500/30'
+                : 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
             }`}
             title="Ver fechas de la campaña en el Calendario"
           >
@@ -136,7 +136,7 @@ export function GlobalCampaignBar({
             className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
               currentView === 'bandas'
                 ? 'bg-purple-500 text-white shadow-xs'
-                : 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200 border border-purple-500/30'
+                : 'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
             }`}
             title="Ver grupos en las ciudades objetivo para Co-booking"
           >
@@ -149,7 +149,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onOpenManager}
-            className="p-1 rounded-md bg-bg-[var(--surface)]/80 hover:bg-neutral-800 text-text-[var(--ink-3)] hover:text-white border /60 transition-colors shrink-0"
+            className="p-1 rounded-md bg-bg-[var(--surface)]/80 hover:bg-neutral-800 text-text-[var(--ink-3)] hover:text-white transition-colors shrink-0"
             title="Gestionar o cambiar campaña activa"
           >
             <Settings2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -159,7 +159,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onDeactivate}
-            className="p-1 rounded-md bg-bg-[var(--surface)]/80 hover:bg-red-950/60 text-text-[var(--ink-2)] hover:text-red-300 border /60 hover:border-red-500/40 transition-colors shrink-0"
+            className="p-1 rounded-md bg-bg-[var(--surface)]/80 hover:bg-red-950/60 text-text-[var(--ink-2)] hover:text-red-300 hover:border-red-500/40 transition-colors shrink-0"
             title="Desactivar modo campaña (volver a modo general)"
           >
             <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

@@ -110,7 +110,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
           </div>
 
           {statusMessage && (
-            <div className="p-3 rounded-[var(--r-s)] bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 flex items-center gap-2">
+            <div className="p-3 rounded-[var(--r-s)] bg-indigo-500/10 text-indigo-300 flex items-center gap-2">
               {isProcessing ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />}
               <span>{statusMessage}</span>
             </div>
@@ -120,7 +120,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
             <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
               <span className="text-[11px] font-semibold text-text-[var(--ink-2)] uppercase tracking-wider">Contactos actualizados:</span>
               {enrichedResults.map((r, i) => (
-                <div key={i} className="p-2.5 rounded-[var(--r-s)] bg-neutral-800/50 border /50 flex flex-col gap-1">
+                <div key={i} className="p-2.5 rounded-[var(--r-s)] bg-neutral-800/50 flex flex-col gap-1">
                   <span className="font-bold text-bg-[var(--sunken)]">{r.name}</span>
                   <div className="flex flex-wrap gap-3 text-[11px] text-text-[var(--ink-2)]">
                     {r.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-emerald-400" /> {r.email}</span>}

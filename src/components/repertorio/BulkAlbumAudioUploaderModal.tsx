@@ -574,7 +574,7 @@ export function BulkAlbumAudioUploaderModal({
         {/* Modal Header */}
         <div className="p-6 border-b border-white/10 flex items-center justify-between shrink-0 bg-gradient-to-r from-emerald-500/10 to-transparent">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-[var(--r-l)] bg-[#1db954]/20 border border-[#1db954]/40 flex items-center justify-center text-[#1db954] shadow-inner">
+            <div className="w-12 h-12 rounded-[var(--r-l)] bg-[#1db954]/20 border-[#1db954]/40 flex items-center justify-center text-[#1db954] shadow-inner">
               <FolderUp className="w-6 h-6" />
             </div>
             <div>
@@ -605,7 +605,7 @@ export function BulkAlbumAudioUploaderModal({
         <div className="p-6 overflow-y-auto space-y-6 flex-1">
           {/* Top Form (Album Title & Cover for New Album) */}
           {isCreatingBrandNewAlbum && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-white/5 border border-white/10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-white/5 border-white/10">
               <div className="md:col-span-2 space-y-2">
                 <label className="text-xs font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)]">
                   Nombre del Álbum / Disco
@@ -716,7 +716,7 @@ export function BulkAlbumAudioUploaderModal({
 
           {/* Upload Progress Bar (when active) */}
           {isUploading && (
-            <div className="p-4 rounded-[var(--r-l)] bg-white/5 border border-white/10 space-y-2">
+            <div className="p-4 rounded-[var(--r-l)] bg-white/5 border-white/10 space-y-2">
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="flex items-center gap-2 text-emerald-400 font-bold">
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -922,7 +922,7 @@ export function BulkAlbumAudioUploaderModal({
             type="button"
             onClick={onClose}
             disabled={isUploading}
-            className="px-5 py-2.5 rounded-[var(--r-l)] border border-white/10 hover:bg-white/5 text-xs font-mono font-bold transition cursor-pointer disabled:opacity-50"
+            className="px-5 py-2.5 rounded-[var(--r-l)] border-white/10 hover:bg-white/5 text-xs font-mono font-bold transition cursor-pointer disabled:opacity-50"
           >
             Cancelar
           </button>

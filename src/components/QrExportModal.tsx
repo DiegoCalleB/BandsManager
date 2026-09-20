@@ -108,7 +108,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
         {/* Cabecera */}
         <div className="flex items-center justify-between border-b  pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--r-l)] bg-amber-500/10 border /30 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-[var(--r-l)] bg-amber-500/10 flex items-center justify-center text-amber-400">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
@@ -230,7 +230,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
         </div>
 
         {/* Opciones de Personalización */}
-        <div className="space-y-4 bg-slate-950 border /80 rounded-[var(--r-l)] p-5">
+        <div className="space-y-4 bg-slate-950 rounded-[var(--r-l)] p-5">
           <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider block">
             2. Personalización:
           </label>
@@ -269,7 +269,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
         {/* Mensaje de Éxito */}
         {exportSuccess && (
-          <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-[var(--r-m)] text-emerald-400 text-xs font-mono flex items-center gap-2">
+          <div className="p-3 bg-emerald-500/10 rounded-[var(--r-m)] text-emerald-400 text-xs font-mono flex items-center gap-2">
             <Check className="w-4 h-4 shrink-0" />
             <span>{exportSuccess}</span>
           </div>

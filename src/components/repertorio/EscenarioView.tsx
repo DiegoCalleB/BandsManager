@@ -162,19 +162,19 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4">
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#1db954]/20 border border-[#1db954]/40 text-[#1ed760] font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#1db954]/20 border-[#1db954]/40 text-[#1ed760] font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#1db954] animate-ping" />
               Directo & Concierto
             </span>
 
             {/* Offline Robustness Badge */}
             {!isOnline ? (
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border /40 text-amber-300 font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5" title="Sin conexión a internet: funcionando 100% con el repertorio y letras cacheados localmente">
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5" title="Sin conexión a internet: funcionando 100% con el repertorio y letras cacheados localmente">
                 <WifiOff className="w-3 h-3 text-amber-400" />
                 Modo Offline Activo
               </span>
             ) : isCached ? (
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5" title="Repertorio, letras, acordes y tempos guardados localmente para tocar sin red">
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5" title="Repertorio, letras, acordes y tempos guardados localmente para tocar sin red">
                 <Check className="w-3 h-3 text-emerald-400" />
                 Caché Offline Listo
               </span>
@@ -232,14 +232,14 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
       {/* CONCERT PLAYER CONSOLE (SPOTIFY LIVE BAR) */}
       {activeSetlist && activeSetlist.items.length > 0 && (
-        <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[#181818] border border-white/10 space-y-4 shadow-2xl relative overflow-hidden">
+        <div className="p-5 sm:p-6 rounded-[var(--r-l)] bg-[#181818] border-white/10 space-y-4 shadow-2xl relative overflow-hidden">
           {/* Subtle top glow line */}
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#1db954]/60 to-transparent" />
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Active Track Metadata & Heart Favorite */}
             <div className="flex items-center gap-3.5 w-full md:w-auto">
-              <div className="w-13 h-13 rounded-[var(--r-m)] bg-[#282828] border border-white/10 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden group">
+              <div className="w-13 h-13 rounded-[var(--r-m)] bg-[#282828] border-white/10 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden group">
                 {currentStageSong?.portadaUrl ? (
                   <img src={currentStageSong.portadaUrl} alt={currentStageSong.titulo} className="w-full h-full object-cover" />
                 ) : stagePlayingIndex !== null ? (
@@ -261,16 +261,16 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       : 'Reproductor de Concierto'}
                   </span>
                   {stageResolvedUrl ? (
-                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/30 font-bold">
+                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/30 font-bold">
                       Audio Real
                     </span>
                   ) : stagePlayingIndex !== null ? (
-                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-amber-500/20 text-amber-300 border /30 font-bold">
+                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-amber-500/20 text-amber-300 font-bold">
                       Simulación
                     </span>
                   ) : null}
                   {isCrossfading && nextStageSong && (
-                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-1 animate-pulse">
+                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-sky-500/20 text-sky-300 font-bold flex items-center gap-1 animate-pulse">
                       🔀 Fundiendo → {formatSongTitle(nextStageSong.titulo)}
                     </span>
                   )}
@@ -348,7 +348,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                     setShowItemAudioUrl(currentStageItem.audioUrl || '');
                     setShowShowItemModal(true);
                   }}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-sky-950/80 hover:bg-sky-900 text-sky-300 border border-sky-500/40 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ml-1 hover:scale-105 shadow-md"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-sky-950/80 hover:bg-sky-900 text-sky-300 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ml-1 hover:scale-105 shadow-md"
                   title="Grabar o subir audio para esta presentación / interludio"
                 >
                   <Mic className="w-4 h-4 text-sky-400" />
@@ -395,8 +395,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 onClick={() => setStageAutoplayNext(!stageAutoplayNext)}
                 className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all ${
                   stageAutoplayNext
-                    ? 'bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/50 shadow-sm'
-                    : 'bg-[#282828] text-zinc-400 border border-transparent hover:text-white'
+                    ? 'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/50 shadow-sm'
+                    : 'bg-[#282828] text-zinc-400 border-transparent hover:text-white'
                 }`}
                 title={stageAutoplayNext ? "Autoplay continuo activado" : "Autoplay desactivado"}
               >
@@ -409,8 +409,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 onClick={() => setStageCrossfadeEnabled(!stageCrossfadeEnabled)}
                 className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all text-base ${
                   stageCrossfadeEnabled
-                    ? 'bg-sky-500/20 text-sky-300 border border-sky-500/50 shadow-sm'
-                    : 'bg-[#282828] text-zinc-400 border border-transparent hover:text-white'
+                    ? 'bg-sky-500/20 text-sky-300 shadow-sm'
+                    : 'bg-[#282828] text-zinc-400 border-transparent hover:text-white'
                 }`}
                 title={stageCrossfadeEnabled ? "Fundido entre canciones activado (5s)" : "Fundido entre canciones desactivado (corte directo)"}
               >
@@ -430,7 +430,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
             </div>
 
             {/* Ridged Progress Track */}
-            <div className="relative w-full h-3.5 rounded-full bg-[#242424] border border-white/5 overflow-hidden group cursor-pointer shadow-inner flex items-center">
+            <div className="relative w-full h-3.5 rounded-full bg-[#242424] border-white/5 overflow-hidden group cursor-pointer shadow-inner flex items-center">
               <div 
                 className="absolute inset-0 opacity-20 pointer-events-none"
                 style={{
@@ -464,7 +464,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
           {/* Bluetooth Pedal / Foot Controller Helper Banner */}
           {showPedalShortcuts && (
-            <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/10 border /30 text-amber-200 text-xs font-mono space-y-2 animate-fadeIn">
+            <div className="p-3.5 rounded-[var(--r-m)] bg-amber-500/10 text-amber-200 text-xs font-mono space-y-2 animate-fadeIn">
               <div className="flex items-center justify-between font-bold text-amber-300">
                 <span className="flex items-center gap-1.5">
                   <Footprints className="w-4 h-4 text-amber-400" />
@@ -473,13 +473,13 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">Activo</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
-                <div className="p-2 rounded-[var(--r-s)] bg-black/60 border /20">
+                <div className="p-2 rounded-[var(--r-s)] bg-black/60">
                   <span className="font-bold text-white">🦶 Pista Siguiente:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">PageDown</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">→</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">]</code>
                 </div>
-                <div className="p-2 rounded-[var(--r-s)] bg-black/60 border /20">
+                <div className="p-2 rounded-[var(--r-s)] bg-black/60">
                   <span className="font-bold text-white">🦶 Pista Anterior:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">PageUp</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">←</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">[</code>
                 </div>
-                <div className="p-2 rounded-[var(--r-s)] bg-black/60 border /20">
+                <div className="p-2 rounded-[var(--r-s)] bg-black/60">
                   <span className="font-bold text-white">🦶 Play / Pausa:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">Barra Espaciadora</code>
                 </div>
               </div>
@@ -494,8 +494,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
                 className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer ${
                   showPedalShortcuts 
-                    ? 'bg-amber-500/20 text-amber-300 border /40' 
-                    : 'bg-bg-[var(--surface)] text-zinc-400 hover:text-white border border-white/5'
+                    ? 'bg-amber-500/20 text-amber-300' 
+                    : 'bg-bg-[var(--surface)] text-zinc-400 hover:text-white border-white/5'
                 }`}
               >
                 <Footprints className="w-3.5 h-3.5" />
@@ -507,8 +507,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 onClick={() => setShowChordsPanel(!showChordsPanel)}
                 className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
                   showChordsPanel 
-                    ? 'bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/50 shadow-sm' 
-                    : 'bg-bg-[var(--surface)] text-zinc-300 hover:text-white border border-white/5'
+                    ? 'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/50 shadow-sm' 
+                    : 'bg-bg-[var(--surface)] text-zinc-300 hover:text-white border-white/5'
                 }`}
               >
                 <FileText className="w-3.5 h-3.5 text-[#1ed760]" />
@@ -534,7 +534,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
           {/* Live Stage Lyrics & Chords Teleprompter Drawer (Offline-safe) */}
           {showChordsPanel && (
-            <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] border border-zinc-800 space-y-3 animate-fadeIn">
+            <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] border-zinc-800 space-y-3 animate-fadeIn">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-2.5">
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-[#1ed760]" />
@@ -604,7 +604,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
               {/* Musician/Substitute notes if present */}
               {currentStageSong?.notasRepertorio && (
-                <div className="p-2.5 rounded bg-zinc-900/80 border border-zinc-800 text-xs font-mono text-amber-200/90">
+                <div className="p-2.5 rounded bg-zinc-900/80 border-zinc-800 text-xs font-mono text-amber-200/90">
                   <span className="font-bold text-amber-400">💡 Nota de directo:</span> {currentStageSong.notasRepertorio}
                 </div>
               )}
@@ -617,7 +617,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
           arrastre, notas, popover de energía...) cuando este reproductor va embebido ahí —
           repetirla aquí sería la misma información dos veces en la misma pantalla. */}
       {!embedded && activeSetlist ? (
-        <div className="bg-[#121212] border border-white/5 rounded-[var(--r-l)] overflow-hidden shadow-2xl p-4 sm:p-6">
+        <div className="bg-[#121212] border-white/5 rounded-[var(--r-l)] overflow-hidden shadow-2xl p-4 sm:p-6">
           <div className="overflow-x-auto">
             <div className="min-w-[650px] space-y-2">
               <div className="grid grid-cols-12 text-[11px] font-mono font-extrabold text-[#b3b3b3] uppercase pb-3 border-b border-zinc-800/80 px-3">
@@ -683,7 +683,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       </div>
 
                       <div className="col-span-2 text-center">
-                        <span className="px-2.5 py-1 bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/30 rounded-md text-xs font-mono font-black">
+                        <span className="px-2.5 py-1 bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/30 rounded-md text-xs font-mono font-black">
                           {s.tonalidad || 'Am'}
                         </span>
                       </div>
@@ -756,7 +756,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                               {typeConfig.icon} {it.tituloCustom || 'Interludio / Evento del Show'}
                             </span>
                             {it.audioUrl && (
-                              <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-1">
+                              <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-bold flex items-center gap-1">
                                 <Mic className="w-3 h-3" /> Audio Real
                               </span>
                             )}
@@ -775,7 +775,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                             setShowItemAudioUrl(it.audioUrl || '');
                             setShowShowItemModal(true);
                           }}
-                          className="px-2 py-1 rounded-[var(--r-s)] bg-sky-950/70 hover:bg-sky-900 border border-sky-500/30 text-sky-300 text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer hover:scale-105 shrink-0 self-start sm:self-auto"
+                          className="px-2 py-1 rounded-[var(--r-s)] bg-sky-950/70 hover:bg-sky-900 text-sky-300 text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer hover:scale-105 shrink-0 self-start sm:self-auto"
                           title="Modificar Audio o Grabación de este evento"
                         >
                           <Mic className="w-3 h-3 text-sky-400" />

@@ -254,7 +254,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
           )}
 
           {error && (
-            <div className="bg-red-900/20 border border-red-700 rounded-[var(--r-s)] p-4 flex gap-3">
+            <div className="bg-red-900/20 border-red-700 rounded-[var(--r-s)] p-4 flex gap-3">
               <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-red-300">{error}</p>
             </div>

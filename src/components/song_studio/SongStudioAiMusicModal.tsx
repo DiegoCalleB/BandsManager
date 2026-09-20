@@ -72,10 +72,10 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-        <div className="w-full max-w-xl rounded-[var(--r-l)] border /40 bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+        <div className="w-full max-w-xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 border /40 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 flex items-center justify-center">
                 <Radio className="w-5 h-5 animate-pulse" />
               </div>
               <div>
@@ -92,7 +92,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
             </button>
           </div>
 
-          <div className="p-3 rounded-[var(--r-m)] bg-amber-950/20 border /30 text-xs text-amber-200 space-y-1">
+          <div className="p-3 rounded-[var(--r-m)] bg-amber-950/20 text-xs text-amber-200 space-y-1">
             <p className="font-semibold flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Motor de Audio Generativo IA
             </p>
@@ -125,13 +125,13 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
             </div>
 
             {error && (
-              <div className="p-3 rounded-[var(--r-m)] bg-red-950/40 border border-red-500/40 text-xs text-red-300 font-mono">
+              <div className="p-3 rounded-[var(--r-m)] bg-red-950/40 text-xs text-red-300 font-mono">
                 ⚠️ {error}
               </div>
             )}
 
             {generatedAudioUrl && (
-              <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 border /40 space-y-3 animate-in fade-in duration-300">
+              <div className="p-4 rounded-[var(--r-m)] bg-zinc-900 space-y-3 animate-in fade-in duration-300">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold font-mono text-amber-400 flex items-center gap-1.5">
                     <Music className="w-4 h-4" /> Soundtrack Generado con Éxito

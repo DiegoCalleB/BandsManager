@@ -43,7 +43,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
       <div 
         role="dialog"
         aria-modal="true"
-        className="relative w-full max-w-2xl bg-[#141312] border border-[#2b2926] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
+        className="relative w-full max-w-2xl bg-[#141312] border-[#2b2926] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
       >
         {/* Decorative Top Ambient Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-24 bg-amber-500/10 blur-3xl pointer-events-none" />
@@ -60,7 +60,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
           </button>
 
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 border /30 text-amber-300 text-[11px] font-mono font-bold tracking-wider uppercase">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 text-[11px] font-mono font-bold tracking-wider uppercase">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span>Primeros Pasos para Músicos</span>
             </div>
@@ -77,7 +77,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
                     className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
                       isSelected
                         ? 'bg-amber-400 text-stone-950 font-bold shadow-sm scale-105'
-                        : 'bg-neutral-800/70 hover:bg-neutral-800 text-text-[var(--ink-3)] border border-white/5'
+                        : 'bg-neutral-800/70 hover:bg-neutral-800 text-text-[var(--ink-3)] border-white/5'
                     }`}
                     title={l.label}
                   >
@@ -102,10 +102,10 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
           {/* Misión 1: Bolo / Concierto */}
           <div
             onClick={() => handleChooseMission('calendario')}
-            className="group relative p-4 rounded-[var(--r-m)] bg-[#1b1917] hover:bg-[#23201d] border border-[#2b2926] hover:/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-amber-500/5"
+            className="group relative p-4 rounded-[var(--r-m)] bg-[#1b1917] hover:bg-[#23201d] border-[#2b2926] hover:/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-amber-500/5"
           >
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 border /30 shrink-0 group-hover:scale-105 transition-transform">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400 shrink-0 group-hover:scale-105 transition-transform">
                 <Calendar className="w-5 h-5" />
               </div>
               <div className="space-y-1">
@@ -135,10 +135,10 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
           {/* Misión 2: Dossier / EPK */}
           <div
             onClick={() => handleChooseMission('epk')}
-            className="group relative p-4 rounded-[var(--r-m)] bg-[#1b1917] hover:bg-[#23201d] border border-[#2b2926] hover:border-sky-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-sky-500/5"
+            className="group relative p-4 rounded-[var(--r-m)] bg-[#1b1917] hover:bg-[#23201d] border-[#2b2926] hover:border-sky-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-sky-500/5"
           >
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-sky-500/20 text-sky-400 border border-sky-500/30 shrink-0 group-hover:scale-105 transition-transform">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-sky-500/20 text-sky-400 shrink-0 group-hover:scale-105 transition-transform">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div className="space-y-1">
@@ -168,10 +168,10 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
           {/* Misión 3: Repertorio / Setlist */}
           <div
             onClick={() => handleChooseMission('repertorio')}
-            className="group relative p-4 rounded-[var(--r-m)] bg-[#1b1917] hover:bg-[#23201d] border border-[#2b2926] hover:border-emerald-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-emerald-500/5"
+            className="group relative p-4 rounded-[var(--r-m)] bg-[#1b1917] hover:bg-[#23201d] border-[#2b2926] hover:border-emerald-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:shadow-emerald-500/5"
           >
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0 group-hover:scale-105 transition-transform">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
                 <Disc3 className="w-5 h-5" />
               </div>
               <div className="space-y-1">

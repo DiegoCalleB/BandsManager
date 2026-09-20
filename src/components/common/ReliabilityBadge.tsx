@@ -54,7 +54,7 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
 
       {/* Tooltip Breakdown */}
       {showTooltip && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 rounded-[var(--r-l)] bg-bg-[var(--surface)]/95 border /80 text-bg-[var(--sunken)] text-xs shadow-2xl z-50 pointer-events-none backdrop-blur-md">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 rounded-[var(--r-l)] bg-bg-[var(--surface)]/95 text-bg-[var(--sunken)] text-xs shadow-2xl z-50 pointer-events-none backdrop-blur-md">
           <div className="flex items-center justify-between pb-1.5 border-b  mb-2">
             <span className="font-bold text-bg-[var(--sunken)] flex items-center gap-1">
               <Target className="w-3.5 h-3.5 text-amber-400" />

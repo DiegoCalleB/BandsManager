@@ -214,12 +214,12 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain">
-        <div className="relative w-full max-w-6xl bg-[#141312] border /30 rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
+        <div className="relative w-full max-w-6xl bg-[#141312] rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
         
         {/* HEADER */}
         <div className="px-5 py-3.5 border-b border-zinc-800 flex items-center justify-between bg-[#191817]/95 sticky top-0 z-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/15 border /30 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-amber-500/15 flex items-center justify-center text-amber-400">
               <Layers className="w-5 h-5" />
             </div>
             <div>
@@ -227,7 +227,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                 <h2 className="text-base font-bold text-zinc-100 font-display">
                   Comparador A/B: DeepSeek 🚀 vs. Gemini ⚡
                 </h2>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border /40">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300">
                   A/B Testing + Costes Reales (€)
                 </span>
               </div>
@@ -251,7 +251,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
             {/* Venue Badge */}
             <div className="flex items-center gap-2 text-xs">
               <span className="text-zinc-400 font-mono text-[11px]">SALA DESTINO:</span>
-              <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900 border border-zinc-700 text-amber-300 font-bold">
+              <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-zinc-900 border-zinc-700 text-amber-300 font-bold">
                 🏟️ {lead.nombre_sala} ({lead.ciudad || 'España'})
               </span>
               <span className="text-zinc-500 text-[11px]">
@@ -295,7 +295,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                 value={customComment}
                 onChange={e => setCustomComment(e.target.value)}
                 placeholder="Ajuste puntual opcional: Ej. 'Destacar que tenemos 100k streams', 'Proponer viernes o sábado'..."
-                className="w-full px-3 py-2 bg-black/60 rounded-[var(--r-m)] border border-zinc-700 text-xs text-zinc-100 placeholder-zinc-500 font-sans focus:outline-none focus:"
+                className="w-full px-3 py-2 bg-black/60 rounded-[var(--r-m)] border-zinc-700 text-xs text-zinc-100 placeholder-zinc-500 font-sans focus:outline-none focus:"
                 onKeyDown={e => {
                   if (e.key === 'Enter') handleRunComparison();
                 }}
@@ -331,7 +331,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                 <span className="text-xs font-bold text-zinc-200">
                   Calculadora de Inversión y Coste por Envío:
                 </span>
-                <span className="text-[10px] px-1.5 py-0.2 bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded font-mono">
+                <span className="text-[10px] px-1.5 py-0.2 bg-emerald-500/10 text-emerald-300 rounded font-mono">
                   Tarifas Oficiales 2025/2026
                 </span>
               </div>
@@ -341,7 +341,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
             </div>
           </div>
 
-          <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-m)] border border-zinc-800 self-start sm:self-auto">
+          <div className="flex items-center gap-1 bg-black/60 p-1 rounded-[var(--r-m)] border-zinc-800 self-start sm:self-auto">
             <span className="text-[10px] text-zinc-500 px-2 font-mono uppercase">Escala:</span>
             <button
               type="button"
@@ -381,7 +381,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
         {/* NOTIFICATION */}
         {appliedSuccess && (
-          <div className="mx-4 mt-3 p-3 bg-emerald-500/20 border border-emerald-500/40 rounded-[var(--r-m)] text-emerald-300 text-xs font-medium flex items-center gap-2 animate-fadeIn">
+          <div className="mx-4 mt-3 p-3 bg-emerald-500/20 rounded-[var(--r-m)] text-emerald-300 text-xs font-medium flex items-center gap-2 animate-fadeIn">
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
             <span>{appliedSuccess}</span>
           </div>
@@ -391,7 +391,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
         <div className="p-4 flex-1 overflow-y-auto space-y-4">
           {isLoading ? (
             <div className="py-16 text-center space-y-4">
-              <div className="inline-flex items-center justify-center p-4 bg-amber-500/10 rounded-[var(--r-l)] border /30">
+              <div className="inline-flex items-center justify-center p-4 bg-amber-500/10 rounded-[var(--r-l)]">
                 <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
               </div>
               <div>
@@ -500,7 +500,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                     <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                       {prop.status === 'error' ? (
                         <div className="space-y-2.5">
-                          <div className="p-2.5 bg-amber-500/10 border /30 rounded-[var(--r-m)] text-amber-200 text-xs flex items-start gap-2">
+                          <div className="p-2.5 bg-amber-500/10 rounded-[var(--r-m)] text-amber-200 text-xs flex items-start gap-2">
                             <AlertCircle className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
                             <div>
                               <p className="font-bold text-amber-300">Aviso de Cuota / Saldo API</p>
@@ -512,14 +512,14 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                               <div className="flex items-center justify-between text-[10px] text-zinc-400 font-mono">
                                 <span>⚡ Borrador Inteligente Adaptado (Modo Local):</span>
                               </div>
-                              <div className="p-3 bg-[#0d0c0c] rounded-[var(--r-m)] border border-zinc-800/80 text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
+                              <div className="p-3 bg-[#0d0c0c] rounded-[var(--r-m)] text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
                                 {prop.fallbackText}
                               </div>
                             </div>
                           )}
                         </div>
                       ) : (
-                        <div className="p-3 bg-[#0d0c0c] rounded-[var(--r-m)] border border-zinc-800/80 text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto">
+                        <div className="p-3 bg-[#0d0c0c] rounded-[var(--r-m)] text-xs text-zinc-200 font-sans whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto">
                           {prop.text}
                         </div>
                       )}
@@ -542,7 +542,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                           className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                             isSelected
                               ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/20'
-                              : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border /40 hover:/60'
+                              : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 hover:/60'
                           }`}
                         >
                           {isSelected ? (
@@ -566,7 +566,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
           )}
 
           {/* TABLA COMPARATIVA DE RENTABILIDAD & TARIFAS */}
-          <div className="mt-4 p-3.5 bg-black/50 rounded-[var(--r-m)] border border-zinc-800/90 text-xs space-y-2">
+          <div className="mt-4 p-3.5 bg-black/50 rounded-[var(--r-m)] text-xs space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
                 <Calculator className="w-3.5 h-3.5 text-amber-400" />

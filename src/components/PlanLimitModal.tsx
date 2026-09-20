@@ -45,7 +45,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fade-in">
-        <div className="relative w-full max-w-lg rounded-3xl bg-[#141312] border border-[#333130] p-6 sm:p-8 shadow-2xl space-y-6 text-zinc-100 font-sans my-auto max-h-[90vh] overflow-y-auto">
+        <div className="relative w-full max-w-lg rounded-3xl bg-[#141312] border-[#333130] p-6 sm:p-8 shadow-2xl space-y-6 text-zinc-100 font-sans my-auto max-h-[90vh] overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -56,11 +56,11 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
 
         {/* Header */}
         <div className="flex items-start gap-4">
-          <div className="p-3 rounded-[var(--r-l)] bg-amber-500/15 border /30 text-amber-400 shrink-0">
+          <div className="p-3 rounded-[var(--r-l)] bg-amber-500/15 text-amber-400 shrink-0">
             <Lock className="w-7 h-7" />
           </div>
           <div>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md border /20">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md">
               Límite de {currentPlanDef.name} alcanzado
             </span>
             <h3 className="text-xl font-bold font-display uppercase tracking-wide text-zinc-100 mt-1">
@@ -89,7 +89,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                 Plan Recomendado: {targetPlanDef.name}
               </span>
             </div>
-            <span className="text-xs font-mono text-zinc-300 font-bold bg-amber-400/20 px-2.5 py-0.5 rounded-full border /40">
+            <span className="text-xs font-mono text-zinc-300 font-bold bg-amber-400/20 px-2.5 py-0.5 rounded-full">
               {targetPlanDef.badge}
             </span>
           </div>
@@ -137,7 +137,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               onClose();
               onNavigateToPlanes();
             }}
-            className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold border /20 transition-all cursor-pointer flex items-center gap-1.5"
+            className="px-4 py-2 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5"
           >
             <span>Ver Comparativa Completa</span>
             <ExternalLink className="w-3.5 h-3.5" />

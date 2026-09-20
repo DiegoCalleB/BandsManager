@@ -43,7 +43,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border /30 transition-all cursor-pointer shadow-xs active:scale-95"
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 transition-all cursor-pointer shadow-xs active:scale-95"
         title="Estilizar nombre de la banda con fuentes Rock, estilo KoЯn y símbolos"
       >
         <Sparkles className="w-3 h-3 text-amber-400 animate-pulse" />
@@ -59,11 +59,11 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
             onClick={() => setIsOpen(false)}
           />
 
-          <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] border /40 p-4 shadow-2xl z-50 text-bg-[var(--sunken)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
+          <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] p-4 shadow-2xl z-50 text-bg-[var(--sunken)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[#2b2927] pb-2.5">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-[var(--r-s)] bg-amber-500/20 border /30 flex items-center justify-center text-amber-400 font-bold text-xs">
+                <div className="w-7 h-7 rounded-[var(--r-s)] bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-xs">
                   Я
                 </div>
                 <div>
@@ -85,7 +85,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Notification Badge */}
             {copiedNotification && (
-              <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
+              <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
                 <Check className="w-3 h-3 text-emerald-400" />
                 <span>¡Estilo aplicado al nombre!</span>
               </div>

@@ -458,7 +458,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => onNavigate && onNavigate("fans")}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border /30 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+              className="px-3 py-1.5 rounded-[var(--r-m)] bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
             >
               <QrCode className="w-4 h-4 text-amber-400" />
               <span>Códigos QR & Fans</span>
@@ -466,7 +466,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => onNavigate && onNavigate("epk")}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+              className="px-3 py-1.5 rounded-[var(--r-m)] bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
             >
               <BookOpen className="w-4 h-4 text-purple-400" />
               <span>Dossier EPK</span>
@@ -475,7 +475,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("repertorio")}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
               >
                 <Disc3 className="w-4 h-4 text-sky-400" />
                 <span>Repertorio</span>
@@ -493,7 +493,7 @@ export default function Dashboard({
         </div>
 
         {/* 1. SECCIÓN PRINCIPAL AL INICIO: PRÓXIMAS FECHAS Y AGENDA */}
-        <div className="p-6 rounded-[var(--r-l)] bg-[#18181b]/90 border /80 shadow-sm space-y-4">
+        <div className="p-6 rounded-[var(--r-l)] bg-[#18181b]/90 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b ">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-[var(--r-m)] bg-amber-500/15 text-amber-400">
@@ -564,7 +564,7 @@ export default function Dashboard({
                 <div
                   key={item.id}
                   onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: item.id, selectedDate: item.dateStr })}
-                  className="p-4 rounded-[var(--r-m)] bg-[#121214] border /90 hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
+                  className="p-4 rounded-[var(--r-m)] bg-[#121214] hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
                 >
                   <div className="flex items-start gap-3.5">
                     <div className="w-12 h-12 rounded-[var(--r-m)] bg-[#1c1b1b] text-bg-[var(--sunken)] flex flex-col items-center justify-center shrink-0 shadow-sm border ">
@@ -580,13 +580,13 @@ export default function Dashboard({
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
                           item.type === 'concierto'
-                            ? 'bg-amber-500/20 text-amber-300 border /30'
-                            : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                            ? 'bg-amber-500/20 text-amber-300'
+                            : 'bg-emerald-500/20 text-emerald-300'
                         }`}>
                           {item.type}
                         </span>
                         {(agendaFilterMode === 'all' || hasMultipleBands) && item.bandName && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold bg-stone-800/80 text-amber-300/90 border border-stone-700/60 truncate max-w-[120px] flex items-center gap-1">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold bg-stone-800/80 text-amber-300/90 truncate max-w-[120px] flex items-center gap-1">
                             <Music className="w-2.5 h-2.5 text-amber-400 shrink-0" />
                             <span className="truncate">{item.bandName}</span>
                           </span>
@@ -615,7 +615,7 @@ export default function Dashboard({
               ))}
             </div>
           ) : (
-            <div className="p-8 rounded-[var(--r-m)] bg-[#121214] border /80 text-center space-y-3">
+            <div className="p-8 rounded-[var(--r-m)] bg-[#121214] text-center space-y-3">
               <Calendar className="w-8 h-8 text-neutral-500 mx-auto" />
               <div>
                 <p className="text-sm font-bold text-bg-[var(--sunken)] font-display">No hay próximas fechas programadas</p>
@@ -624,7 +624,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate('calendario')}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border /40 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Ir al Calendario</span>
@@ -636,7 +636,7 @@ export default function Dashboard({
         {/* 2. TARJETAS RÁPIDAS DE CAPTURA QR, FANS Y DOSSIER */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Card 1: Códigos QR & Captura de Fans */}
-          <div className="p-5 rounded-[var(--r-l)] bg-[#18181b]/90 border /20 shadow-sm flex flex-col justify-between space-y-4 hover:/40 transition-all">
+          <div className="p-5 rounded-[var(--r-l)] bg-[#18181b]/90 shadow-sm flex flex-col justify-between space-y-4 hover:/40 transition-all">
             <div>
               <div className="flex items-center justify-between pb-3 border-b ">
                 <div className="flex items-center gap-2.5">
@@ -652,7 +652,7 @@ export default function Dashboard({
                     </p>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-300 border /20">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-300">
                   {totalFansCount} / {maxPromoFans} Fans
                 </span>
               </div>
@@ -674,7 +674,7 @@ export default function Dashboard({
           </div>
 
           {/* Card 2: Dossier EPK Digital */}
-          <div className="p-5 rounded-[var(--r-l)] bg-[#18181b]/90 border border-purple-500/20 shadow-sm flex flex-col justify-between space-y-4 hover:border-purple-500/40 transition-all">
+          <div className="p-5 rounded-[var(--r-l)] bg-[#18181b]/90 shadow-sm flex flex-col justify-between space-y-4 hover:border-purple-500/40 transition-all">
             <div>
               <div className="flex items-center justify-between pb-3 border-b ">
                 <div className="flex items-center gap-2.5">
@@ -690,7 +690,7 @@ export default function Dashboard({
                     </p>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/10 text-purple-300">
                   Público
                 </span>
               </div>

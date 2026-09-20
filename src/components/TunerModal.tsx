@@ -408,18 +408,18 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-        <div className="bg-gradient-to-b from-zinc-900 via-bg-[var(--surface)] to-black border border-emerald-500/30 rounded-[var(--r-l)] w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col my-auto max-h-[92vh]">
+        <div className="bg-gradient-to-b from-zinc-900 via-bg-[var(--surface)] to-black rounded-[var(--r-l)] w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col my-auto max-h-[92vh]">
         
         {/* Header */}
         <div className="p-4 border-b border-white/10 flex items-center justify-between bg-white/5 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            <div className="p-2 rounded-[var(--r-m)] bg-emerald-500/20 text-emerald-400">
               <Guitar className="w-5 h-5 animate-pulse" />
             </div>
             <div>
               <h3 className="text-base font-bold text-white flex items-center gap-2">
                 Afinador Pro Guitarra, Bajo & Ukelele
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300">
                   Precision Autocorrelation
                 </span>
               </h3>
@@ -450,7 +450,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
               </label>
 
               {/* Instrument Category Filter Tabs */}
-              <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-[var(--r-s)] border border-white/10 text-[10px]">
+              <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-[var(--r-s)] border-white/10 text-[10px]">
                 {(['all', 'guitar', 'ukulele', 'bass'] as const).map((cat) => {
                   const labels = {
                     all: 'Todos',
@@ -505,10 +505,10 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                       <span className="truncate">{p.name}</span>
                       <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono shrink-0 uppercase ${
                         p.category === 'ukulele'
-                          ? 'bg-amber-500/20 text-amber-300 border /30'
+                          ? 'bg-amber-500/20 text-amber-300'
                           : p.category === 'bass'
-                          ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                          : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          ? 'bg-blue-500/20 text-blue-300'
+                          : 'bg-emerald-500/20 text-emerald-300'
                       }`}>
                         {p.category === 'ukulele' ? 'Uke' : p.category === 'bass' ? 'Bajo' : 'Guitar'}
                       </span>
@@ -528,7 +528,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
           </div>
 
           {/* Main Visual Tuner Display */}
-          <div className="bg-black/80 border border-white/10 rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+          <div className="bg-black/80 border-white/10 rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
             
             {/* Tuning needle meter bar */}
             <div className="w-full space-y-2">
@@ -581,10 +581,10 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                     </span>
                     <span className={`px-2 py-0.5 rounded-md font-bold ${
                       isTunedIn 
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
+                        ? 'bg-emerald-500/20 text-emerald-300' 
                         : pitch.cents < 0 
-                        ? 'bg-amber-500/20 text-amber-300 border /40' 
-                        : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                        ? 'bg-amber-500/20 text-amber-300' 
+                        : 'bg-rose-500/20 text-rose-300'
                     }`}>
                       {pitch.cents > 0 ? `+${pitch.cents}` : pitch.cents} Cents
                     </span>
@@ -608,7 +608,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
               onClick={isListening ? stopTuner : startTuner}
               className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 ${
                 isListening
-                  ? 'bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 shadow-sm'
+                  ? 'bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 shadow-sm'
                   : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black shadow-lg shadow-emerald-500/20'
               }`}
             >
@@ -626,7 +626,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
             </button>
 
             {micError && (
-              <div className="mt-3 p-3 rounded-[var(--r-m)] bg-amber-500/10 border /30 w-full text-left space-y-2">
+              <div className="mt-3 p-3 rounded-[var(--r-m)] bg-amber-500/10 w-full text-left space-y-2">
                 <div className="flex items-start gap-2 text-amber-300 text-xs font-mono">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
                   <p className="leading-snug">{micError}</p>

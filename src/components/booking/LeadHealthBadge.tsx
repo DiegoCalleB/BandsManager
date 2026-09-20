@@ -56,7 +56,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
     return {
       type: 'caliente',
       label: '🔥 Lead Caliente',
-      badgeClass: 'bg-amber-500/20 text-amber-300 border /40 font-bold',
+      badgeClass: 'bg-amber-500/20 text-amber-300 font-bold',
       icon: '🔥',
       description: desc
     };
@@ -72,7 +72,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
       return {
         type: 'seguimiento',
         label: '⏳ Seguimiento Necesario',
-        badgeClass: 'bg-amber-500/20 text-amber-400 border /50 font-bold',
+        badgeClass: 'bg-amber-500/20 text-amber-400 font-bold',
         icon: '⏳',
         description: `Enviado hace ${days}d sin respuesta`
       };
@@ -88,7 +88,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
     return {
       type: 'frio',
       label: '🧊 Lead Frío',
-      badgeClass: 'bg-sky-500/20 text-sky-300 border border-sky-500/40 font-medium',
+      badgeClass: 'bg-sky-500/20 text-sky-300 font-medium',
       icon: '🧊',
       description: `Sin interacción desde hace ${days}d`
     };
@@ -98,7 +98,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
   return {
     type: 'neutral',
     label: '✨ Activo',
-    badgeClass: 'bg-zinc-800/80 text-zinc-300 border border-zinc-700/60 font-medium',
+    badgeClass: 'bg-zinc-800/80 text-zinc-300 font-medium',
     icon: '✨',
     description: 'En seguimiento regular'
   };

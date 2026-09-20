@@ -59,7 +59,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       <header className="w-full bg-[var(--surface)] border-b border-[#2d2a27] px-3 sm:px-5 py-2.5 shrink-0 z-30 shadow-2xl flex items-center justify-between gap-2">
         {/* Lado Izquierdo: Título y Estado */}
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/15 border /30 flex items-center justify-center text-amber-400 shrink-0">
+          <div className="w-8 h-8 rounded-[var(--r-m)] bg-amber-500/15 flex items-center justify-center text-amber-400 shrink-0">
             <Eye className="w-4 h-4" />
           </div>
           <div className="min-w-0">
@@ -67,7 +67,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               <h2 className="text-xs sm:text-sm font-bold text-white font-display uppercase tracking-wider truncate">
                 {t('previewModalTitle')}
               </h2>
-              <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border /30 font-bold">
+              <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-bold">
                 <Sparkles className="w-3 h-3 text-amber-400" />
                 {t('previewProductionSyncBadge')}
               </span>
@@ -115,7 +115,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               onClick={() => setDeviceMode('mobile')}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
                 deviceMode === 'mobile'
-                  ? 'bg-neutral-800 text-amber-300 border /30'
+                  ? 'bg-neutral-800 text-amber-300'
                   : 'text-text-[var(--ink-2)] hover:text-white'
               }`}
               title={t('previewMobile')}
@@ -128,7 +128,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               onClick={() => setDeviceMode('desktop')}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono font-bold transition-all cursor-pointer ${
                 deviceMode === 'desktop'
-                  ? 'bg-neutral-800 text-amber-300 border /30'
+                  ? 'bg-neutral-800 text-amber-300'
                   : 'text-text-[var(--ink-2)] hover:text-white'
               }`}
               title={t('previewDesktop')}
@@ -148,7 +148,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
                 onClick={() => setSelectedLanguage(l.code)}
                 className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-mono transition-all cursor-pointer ${
                   selectedLanguage === l.code
-                    ? 'bg-amber-500/20 text-amber-300 font-bold border /40 shadow-inner'
+                    ? 'bg-amber-500/20 text-amber-300 font-bold shadow-inner'
                     : 'text-text-[var(--ink-2)] hover:text-white opacity-75 hover:opacity-100'
                 }`}
                 title={l.label}
@@ -264,7 +264,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               onClick={() => setSelectedLanguage(l.code)}
               className={`px-1.5 py-0.5 rounded text-[11px] font-mono ${
                 selectedLanguage === l.code
-                  ? 'bg-amber-500/20 text-amber-300 font-bold border /40'
+                  ? 'bg-amber-500/20 text-amber-300 font-bold'
                   : 'text-text-[var(--ink-2)] opacity-60'
               }`}
             >
@@ -280,14 +280,14 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           /* MOCKUP ELEGANTE DE SMARTPHONE */
           <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-all duration-200">
             {/* Chasis exterior del smartphone */}
-            <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[#121110] shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.06)] border border-[#3e3b37]/80">
+            <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-gradient-to-b from-[#2e2d2b] via-[#1c1b1a] to-[#121110] shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.06)] border-[#3e3b37]/80">
               {/* Dynamic Island / Altavoz */}
               <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-20 h-3 bg-black rounded-full z-30 flex items-center justify-center pointer-events-none opacity-80">
-                <div className="w-2 h-2 rounded-full bg-[#1b1b2f] border border-[#2d2d46]" />
+                <div className="w-2 h-2 rounded-full bg-[#1b1b2f] border-[#2d2d46]" />
               </div>
 
               {/* Pantalla del teléfono con altura adaptativa y scroll nativo */}
-              <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[#121111] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4 border border-bg-[var(--surface)] shadow-inner">
+              <div className="relative w-full h-[calc(100dvh-170px)] sm:h-[calc(100dvh-150px)] max-h-[700px] min-h-[460px] bg-[#121111] rounded-[30px] overflow-y-auto overflow-x-hidden pt-4 border-bg-[var(--surface)] shadow-inner">
                 <FansLanding
                   key={`mobile-${simKey}-${selectedLanguage}-${selectedConcertId}-${previewScreen}`}
                   currentBandId={currentBandId}
@@ -320,7 +320,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               <div className="bg-bg-[var(--surface)] border  rounded-[var(--r-s)] px-3 py-1 text-text-[var(--ink-2)] text-[11px] flex-1 max-w-md text-center truncate font-mono">
                 https://bandmanager.io/unete{selectedConcert ? `/${selectedConcert.ciudad.toLowerCase()}-${selectedConcert.sala.toLowerCase().replace(/\s+/g, '-')}` : ''}?lang={selectedLanguage}
               </div>
-              <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">
+              <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
                 HTTPS
               </span>
             </div>

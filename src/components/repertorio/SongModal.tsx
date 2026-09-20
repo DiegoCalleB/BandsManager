@@ -132,7 +132,7 @@ export function SongModal({
 
           <div className="space-y-3 overflow-y-auto pr-1 flex-1 pb-2">
             {/* Audio File Upload Box with Auto Duration Detection */}
-            <div className={`p-3 rounded-[var(--r-m)] border border-dashed transition-all ${
+            <div className={`p-3 rounded-[var(--r-m)] border-dashed transition-all ${
               isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)]/90 '
             }`}>
               <div className="flex items-center justify-between gap-2">
@@ -289,7 +289,7 @@ export function SongModal({
                     value={customAlbumInput}
                     onChange={(e) => setCustomAlbumInput(e.target.value)}
                     placeholder="Escribe el nombre del nuevo disco..."
-                    className={`w-full mt-1.5 p-2 rounded-[var(--r-s)] focus:outline-none border border-[#1db954]/50 ${
+                    className={`w-full mt-1.5 p-2 rounded-[var(--r-s)] focus:outline-none border-[#1db954]/50 ${
                       isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-white'
                     }`}
                   />

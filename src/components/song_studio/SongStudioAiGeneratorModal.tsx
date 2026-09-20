@@ -46,10 +46,10 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
   return (
     <ModalPortal isOpen={!!showGenModalForIdea} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-        <div className="w-full max-w-lg rounded-[var(--r-l)] border border-purple-500/40 bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+        <div className="w-full max-w-lg rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-[var(--r-m)] bg-purple-600/30 text-purple-400 border border-purple-500/40 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-[var(--r-m)] bg-purple-600/30 text-purple-400 flex items-center justify-center">
               <Wand2 className="w-5 h-5" />
             </div>
             <div>
@@ -66,7 +66,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
           </button>
         </div>
 
-        <div className="p-3 rounded-[var(--r-m)] bg-purple-950/30 border border-purple-500/30 text-xs text-purple-200 space-y-1">
+        <div className="p-3 rounded-[var(--r-m)] bg-purple-950/30 text-xs text-purple-200 space-y-1">
           <p className="font-semibold flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Pista de Referencia Orientativa
           </p>

@@ -113,10 +113,10 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-        <div className="w-full max-w-2xl rounded-[var(--r-l)] border border-indigo-500/40 bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+        <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-indigo-600/30 text-indigo-400 border border-indigo-500/40 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-indigo-600/30 text-indigo-400 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 animate-pulse" />
               </div>
               <div>
@@ -133,7 +133,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
             </button>
           </div>
 
-          <div className="p-3.5 rounded-[var(--r-m)] bg-indigo-950/30 border border-indigo-500/30 text-xs text-indigo-200 space-y-1">
+          <div className="p-3.5 rounded-[var(--r-m)] bg-indigo-950/30 text-xs text-indigo-200 space-y-1">
             <p className="font-semibold flex items-center gap-1.5">
               <Wand2 className="w-3.5 h-3.5 text-indigo-400" /> Creación de Ideas Avanzadas
             </p>
@@ -240,7 +240,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
 
             {/* GENERATED IDEA PREVIEW CARD */}
             {generatedIdea && (
-              <div className="mt-4 p-4 rounded-[var(--r-m)] border border-indigo-500/50 bg-indigo-950/20 space-y-3 animate-in fade-in duration-200">
+              <div className="mt-4 p-4 rounded-[var(--r-m)] bg-indigo-950/20 space-y-3 animate-in fade-in duration-200">
                 <div className="flex items-center justify-between border-b border-indigo-500/30 pb-2">
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded bg-indigo-500/30 text-indigo-300 font-mono text-[10px] uppercase font-bold">

@@ -109,7 +109,7 @@ export function ConvocarEnsayoModal({
   return (
     <ModalPortal>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto">
-        <div className="bg-[#141413] border border-[#2a2825] w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh]">
+        <div className="bg-[#141413] border-[#2a2825] w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh]">
           {/* Header */}
           <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[var(--surface)]">
             <div className="flex items-center gap-2.5">
@@ -146,7 +146,7 @@ export function ConvocarEnsayoModal({
                   required
                   value={fecha}
                   onChange={e => setFecha(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs font-mono focus: outline-none"
+                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825] text-zinc-100 text-xs font-mono focus: outline-none"
                 />
               </div>
               <div>
@@ -158,7 +158,7 @@ export function ConvocarEnsayoModal({
                   required
                   value={hora}
                   onChange={e => setHora(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs font-mono focus: outline-none"
+                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825] text-zinc-100 text-xs font-mono focus: outline-none"
                 />
               </div>
               <div>
@@ -169,7 +169,7 @@ export function ConvocarEnsayoModal({
                   type="time"
                   value={horaFin}
                   onChange={e => setHoraFin(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs font-mono focus: outline-none"
+                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825] text-zinc-100 text-xs font-mono focus: outline-none"
                 />
               </div>
             </div>
@@ -188,7 +188,7 @@ export function ConvocarEnsayoModal({
                     placeholder="Ej: Local 4 - Rock Palace, Madrid"
                     value={lugar}
                     onChange={e => setLugar(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs focus: outline-none"
+                    className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825] text-zinc-100 text-xs focus: outline-none"
                   />
                 </div>
               </div>
@@ -203,7 +203,7 @@ export function ConvocarEnsayoModal({
                   step="15"
                   value={duracionEstimadaMin}
                   onChange={e => setDuracionEstimadaMin(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs font-mono focus: outline-none"
+                  className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825] text-zinc-100 text-xs font-mono focus: outline-none"
                 />
               </div>
             </div>
@@ -218,7 +218,7 @@ export function ConvocarEnsayoModal({
                 <select
                   value={setlistId}
                   onChange={e => setSetlistId(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs focus: outline-none cursor-pointer"
+                  className="w-full pl-9 pr-3 py-2 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825] text-zinc-100 text-xs focus: outline-none cursor-pointer"
                 >
                   <option value="">Sin setlist específico (ensayo libre)</option>
                   {setlists.map(s => (
@@ -236,7 +236,7 @@ export function ConvocarEnsayoModal({
                 <label className="block text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase mb-1.5">
                   Músicos Convocados
                 </label>
-                <div className="flex flex-wrap gap-2 p-2.5 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825]">
+                <div className="flex flex-wrap gap-2 p-2.5 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825]">
                   {bandUsers.map(u => {
                     const isSelected = convocadosIds.includes(u.id);
                     return (
@@ -246,8 +246,8 @@ export function ConvocarEnsayoModal({
                         onClick={() => toggleConvocado(u.id)}
                         className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-amber-400/20 text-amber-300 border /40 font-bold'
-                            : 'bg-neutral-800/60 text-text-[var(--ink-2)] border border-transparent hover:'
+                            ? 'bg-amber-400/20 text-amber-300 font-bold'
+                            : 'bg-neutral-800/60 text-text-[var(--ink-2)] border-transparent hover:'
                         }`}
                       >
                         <Users className="w-3 h-3" />
@@ -277,7 +277,7 @@ export function ConvocarEnsayoModal({
                 {objetivos.map(obj => (
                   <div
                     key={obj.id}
-                    className="flex items-center justify-between gap-2 p-2 rounded-[var(--r-s)] bg-[#1a1918] border border-[#2a2825] text-xs text-zinc-200"
+                    className="flex items-center justify-between gap-2 p-2 rounded-[var(--r-s)] bg-[#1a1918] border-[#2a2825] text-xs text-zinc-200"
                   >
                     <div className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
@@ -306,7 +306,7 @@ export function ConvocarEnsayoModal({
                       handleAddObjetivo();
                     }
                   }}
-                  className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] text-xs text-zinc-100 outline-none focus:"
+                  className="flex-1 px-3 py-1.5 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825] text-xs text-zinc-100 outline-none focus:"
                 />
                 <button
                   type="button"
@@ -328,7 +328,7 @@ export function ConvocarEnsayoModal({
                 placeholder="Ej: Traer juego nuevo de cuerdas, cables XLR y la tarjeta de sonido..."
                 value={notas}
                 onChange={e => setNotas(e.target.value)}
-                className="w-full p-2.5 rounded-[var(--r-m)] bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs outline-none focus: resize-none"
+                className="w-full p-2.5 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825] text-zinc-100 text-xs outline-none focus: resize-none"
               />
             </div>
 

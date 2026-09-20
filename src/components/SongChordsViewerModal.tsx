@@ -216,7 +216,7 @@ export function SongChordsViewerModal({
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
-        <div className="relative bg-bg-[var(--surface)] border /80 rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-white my-auto">
+        <div className="relative bg-bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-white my-auto">
 
         {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
         <button
@@ -231,14 +231,14 @@ export function SongChordsViewerModal({
         {/* MODAL HEADER */}
         <div className="bg-gradient-to-r from-bg-[var(--surface)] via-bg-[var(--surface)] to-purple-950/40 p-4 pr-12 border-b  flex flex-wrap items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 border /40 text-amber-400">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400">
               <Music2 className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold tracking-tight text-white">{formatSongTitle(song.titulo)}</h2>
                 {song.esVersionCovers && (
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 border border-blue-500/30">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900/60 text-blue-300">
                     Cover
                   </span>
                 )}
@@ -280,7 +280,7 @@ export function SongChordsViewerModal({
             <button
               type="button"
               onClick={() => setShowStructureUploadModal(true)}
-              className="p-2 rounded-[var(--r-m)] bg-teal-600/20 border border-teal-500/40 hover:bg-teal-600/30 text-teal-300 transition cursor-pointer"
+              className="p-2 rounded-[var(--r-m)] bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 transition cursor-pointer"
               title="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
             >
               <Upload className="w-4 h-4" />
@@ -497,7 +497,7 @@ export function SongChordsViewerModal({
                 
                 {/* SUBSTITUTE QUICK SUMMARY BANNER */}
                 {guiaSustituto?.estructura && (
-                  <div className="bg-gradient-to-r from-purple-950/40 via-bg-[var(--surface)] to-black p-3.5 rounded-[var(--r-m)] border border-purple-500/30 text-xs font-mono space-y-1.5">
+                  <div className="bg-gradient-to-r from-purple-950/40 via-bg-[var(--surface)] to-black p-3.5 rounded-[var(--r-m)] text-xs font-mono space-y-1.5">
                     <div className="flex items-center justify-between text-purple-300 font-bold">
                       <span className="flex items-center gap-1.5">
                         <Zap className="w-4 h-4 text-amber-400" />
@@ -510,7 +510,7 @@ export function SongChordsViewerModal({
                         Ver Ficha Completa →
                       </button>
                     </div>
-                    <p className="text-bg-[var(--sunken)] text-sm font-semibold tracking-wide bg-black/40 p-2 rounded-[var(--r-s)] border border-white/5">
+                    <p className="text-bg-[var(--sunken)] text-sm font-semibold tracking-wide bg-black/40 p-2 rounded-[var(--r-s)] border-white/5">
                       {guiaSustituto.estructura}
                     </p>
                   </div>
@@ -526,7 +526,7 @@ export function SongChordsViewerModal({
             {/* TAB 2: SUBSTITUTE QUICK GUIDE (FICHA PARA MÚSICO SUSTITUTO) */}
             {activeTab === 'substitute' && (
               <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
-                <div className="bg-gradient-to-br from-purple-950/60 to-bg-[var(--surface)] p-6 rounded-[var(--r-l)] border border-purple-500/40 shadow-xl space-y-5">
+                <div className="bg-gradient-to-br from-purple-950/60 to-bg-[var(--surface)] p-6 rounded-[var(--r-l)] shadow-xl space-y-5">
                   <div className="flex items-center gap-3 border-b border-purple-500/30 pb-4">
                     <div className="p-3 rounded-[var(--r-m)] bg-purple-600 text-white shadow-lg">
                       <UserCheck className="w-6 h-6" />
@@ -541,7 +541,7 @@ export function SongChordsViewerModal({
 
                   {/* GUIDES GRID */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
-                    <div className="bg-black/50 p-4 rounded-[var(--r-m)] border border-white/10 space-y-1.5">
+                    <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
                       <span className="text-amber-400 font-bold block text-[11px] uppercase tracking-wider">
                         1. Estructura Exacta del Tema
                       </span>
@@ -550,7 +550,7 @@ export function SongChordsViewerModal({
                       </p>
                     </div>
 
-                    <div className="bg-black/50 p-4 rounded-[var(--r-m)] border border-white/10 space-y-1.5">
+                    <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
                       <span className="text-emerald-400 font-bold block text-[11px] uppercase tracking-wider">
                         2. Progresión Armónica Clave
                       </span>
@@ -559,7 +559,7 @@ export function SongChordsViewerModal({
                       </p>
                     </div>
 
-                    <div className="bg-black/50 p-4 rounded-[var(--r-m)] border border-white/10 space-y-1.5">
+                    <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
                       <span className="text-rose-400 font-bold block text-[11px] uppercase tracking-wider">
                         3. Cortes, Entradas y Claves
                       </span>
@@ -568,7 +568,7 @@ export function SongChordsViewerModal({
                       </p>
                     </div>
 
-                    <div className="bg-black/50 p-4 rounded-[var(--r-m)] border border-white/10 space-y-1.5">
+                    <div className="bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
                       <span className="text-purple-300 font-bold block text-[11px] uppercase tracking-wider">
                         4. Capo / Afinación
                       </span>
@@ -577,7 +577,7 @@ export function SongChordsViewerModal({
                       </p>
                     </div>
 
-                    <div className="sm:col-span-2 bg-black/50 p-4 rounded-[var(--r-m)] border border-white/10 space-y-1.5">
+                    <div className="sm:col-span-2 bg-black/50 p-4 rounded-[var(--r-m)] border-white/10 space-y-1.5">
                       <span className="text-cyan-400 font-bold block text-[11px] uppercase tracking-wider">
                         5. Protagonismo de Instrumentos / Arreglos
                       </span>
@@ -591,7 +591,7 @@ export function SongChordsViewerModal({
                     <button
                       type="button"
                       onClick={() => setActiveTab('edit')}
-                      className="px-4 py-2 rounded-[var(--r-m)] bg-purple-900/60 hover:bg-purple-800 text-purple-200 border border-purple-500/40 text-xs font-mono font-bold transition cursor-pointer flex items-center gap-2"
+                      className="px-4 py-2 rounded-[var(--r-m)] bg-purple-900/60 hover:bg-purple-800 text-purple-200 text-xs font-mono font-bold transition cursor-pointer flex items-center gap-2"
                     >
                       <Edit3 className="w-4 h-4" />
                       <span>Editar esta Ficha de Sustitución</span>
@@ -754,7 +754,7 @@ function renderFormattedChordSheet(text: string) {
     if (/^\[(Intro|Verso|Estribillo|Coro|Puente|Solo|Outro|Coda|Final|Intro\s\d+|Verso\s\d+)\]/i.test(line.trim())) {
       return (
         <div key={idx} className="text-purple-400 font-bold text-base my-2 pt-2 border-t /60 flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded bg-purple-950/80 border border-purple-500/40 text-purple-300">
+          <span className="px-2.5 py-0.5 rounded bg-purple-950/80 text-purple-300">
             {line.trim()}
           </span>
         </div>
@@ -772,7 +772,7 @@ function renderFormattedChordSheet(text: string) {
               return (
                 <span
                   key={pIdx}
-                  className="font-bold text-amber-400 bg-amber-950/40 px-1 py-0.5 rounded border /30 mx-0.5 text-xs shadow-sm"
+                  className="font-bold text-amber-400 bg-amber-950/40 px-1 py-0.5 rounded mx-0.5 text-xs shadow-sm"
                 >
                   {chordName}
                 </span>

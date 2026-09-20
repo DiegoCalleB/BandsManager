@@ -429,7 +429,7 @@ export function DashboardWidgetGrid({
             >
               {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
               {isEditMode && (
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-stone-950 border /60 p-2 rounded-t-xl mb-1 text-xs font-mono text-bg-[var(--sunken)] shadow-md gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-stone-950 p-2 rounded-t-xl mb-1 text-xs font-mono text-bg-[var(--sunken)] shadow-md gap-2">
                   <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
                     <GripVertical className="w-4 h-4 text-amber-400 shrink-0" />
                     <span className="font-bold text-amber-300 text-xs truncate max-w-[150px]">
@@ -439,7 +439,7 @@ export function DashboardWidgetGrid({
 
                   <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
                     {/* Width options */}
-                    <div className="flex items-center gap-0.5 bg-stone-900 border border-stone-800 p-0.5 rounded-[var(--r-s)] text-[10px]">
+                    <div className="flex items-center gap-0.5 bg-stone-900 border-stone-800 p-0.5 rounded-[var(--r-s)] text-[10px]">
                       <span className="text-neutral-500 px-1 font-bold">Ancho:</span>
                       {([3, 4, 6, 8, 12] as const).map(spanVal => (
                         <button
@@ -458,7 +458,7 @@ export function DashboardWidgetGrid({
                     </div>
 
                     {/* Height options */}
-                    <div className="flex items-center gap-0.5 bg-stone-900 border border-stone-800 p-0.5 rounded-[var(--r-s)] text-[10px]">
+                    <div className="flex items-center gap-0.5 bg-stone-900 border-stone-800 p-0.5 rounded-[var(--r-s)] text-[10px]">
                       <span className="text-neutral-500 px-1 font-bold">Alto:</span>
                       {(['compact', 'normal', 'tall'] as const).map(hVal => (
                         <button
@@ -482,7 +482,7 @@ export function DashboardWidgetGrid({
                         type="button"
                         onClick={() => handleMoveWidget(index, 'up')}
                         disabled={index === 0}
-                        className="p-1 rounded bg-stone-900 border border-stone-800 hover:bg-neutral-800 text-text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
+                        className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-neutral-800 text-text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
                         title="Mover arriba"
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
@@ -491,7 +491,7 @@ export function DashboardWidgetGrid({
                         type="button"
                         onClick={() => handleMoveWidget(index, 'down')}
                         disabled={index === visibleWidgets.length - 1}
-                        className="p-1 rounded bg-stone-900 border border-stone-800 hover:bg-neutral-800 text-text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
+                        className="p-1 rounded bg-stone-900 border-stone-800 hover:bg-neutral-800 text-text-[var(--ink-3)] disabled:opacity-30 cursor-pointer"
                         title="Mover abajo"
                       >
                         <ArrowDown className="w-3.5 h-3.5" />
@@ -502,7 +502,7 @@ export function DashboardWidgetGrid({
                     <button
                       type="button"
                       onClick={() => handleRemoveWidget(widget.id)}
-                      className="p-1 rounded bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/30 cursor-pointer"
+                      className="p-1 rounded bg-red-500/15 text-red-400 hover:bg-red-500/30 cursor-pointer"
                       title="Quitar Widget"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -521,7 +521,7 @@ export function DashboardWidgetGrid({
       {/* WIDGET IMPRESCINDIBLE: APOYO A BANDMANAGER (NO SE PUEDE QUITAR) */}
       <div className="pt-2 space-y-3">
         {isEditMode && (
-          <div className="px-3 py-1 rounded-[var(--r-s)] bg-amber-500/15 border /30 text-amber-300 text-[11px] font-mono font-bold flex items-center gap-1.5 w-fit">
+          <div className="px-3 py-1 rounded-[var(--r-s)] bg-amber-500/15 text-amber-300 text-[11px] font-mono font-bold flex items-center gap-1.5 w-fit">
             <Info className="w-3.5 h-3.5 text-amber-400 shrink-0" />
             <span>Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)</span>
           </div>

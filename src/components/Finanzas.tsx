@@ -417,7 +417,7 @@ export default function Finanzas({
                        <span className="font-bold text-white block">{c.fecha}</span>
                        <span className="text-[10px] text-[var(--ink-2)] capitalize">{c.tipo}</span>
                           {c.giraNombre && (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 font-mono">
+                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-mono">
                               🚐 {c.giraNombre}
                             </span>
                           )}
@@ -426,7 +426,7 @@ export default function Finanzas({
                        <span className="font-bold text-white block">{c.sala}</span>
                        <span className="text-[10px] text-[var(--ink-3)]">{c.ciudad}</span>
                         {c.convocatoria_tipo === "parcial" ? (
-                          <span className="inline-block mt-0.5 text-[9px] text-purple-300 bg-purple-500/10 px-1.5 py-0.2 rounded border border-purple-500/20 font-mono" title={c.convocados_nombres?.join(", ")}>
+                          <span className="inline-block mt-0.5 text-[9px] text-purple-300 bg-purple-500/10 px-1.5 py-0.2 rounded font-mono" title={c.convocados_nombres?.join(", ")}>
                             👤 Parcial ({numConvocados} miembros)
                           </span>
                         ) : (
@@ -579,7 +579,7 @@ export default function Finanzas({
              </div>
 
              {/* Total calculation preview */}
-             <div className="p-3 bg-slate-950 border /30 rounded-[var(--r-m)] flex items-center justify-between font-mono">
+             <div className="p-3 bg-slate-950 rounded-[var(--r-m)] flex items-center justify-between font-mono">
                <span className="text-[var(--ink-3)] font-bold">TOTAL GASTOS CALCULADOS:</span>
                <span className="text-rose-400 font-black text-sm">
                  -{(Number(editingGasolina) || 0) + (Number(editingDietas) || 0) + (Number(editingAlquiler) || 0) + (Number(editingAlojamiento) || 0) + (Number(editingOtros) || 0)}€

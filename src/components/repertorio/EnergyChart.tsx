@@ -399,7 +399,7 @@ export function EnergyChart({
       {/* Arrastrando en horizontal (o gesto aún sin decidir): nombre + destino del reordenamiento,
           para saber qué se está moviendo sin tener que leer el número de posición en el eje X. */}
       {draggingFromIndex !== null && dragAxis !== 'y' && hoverIndex !== null && (
-        <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-black/90 border /60 rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap">
+        <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-black/90 rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap">
           <span className="text-amber-300 font-bold">{chartData[draggingFromIndex]?.name}</span>
           {hoverIndex !== draggingFromIndex && (
             <>
@@ -587,8 +587,8 @@ export function EnergyChart({
                           <div className="flex items-center gap-1 font-bold">
                             <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${
                               d.transitionFromPrev.status === 'ok'
-                                ? 'bg-emerald-500/20 border border-emerald-500/50 text-emerald-300'
-                                : 'bg-rose-500/20 border border-rose-500/50 text-rose-300'
+                                ? 'bg-emerald-500/20 text-emerald-300'
+                                : 'bg-rose-500/20 text-rose-300'
                             }`}>
                               {d.transitionFromPrev.icon}
                             </span>

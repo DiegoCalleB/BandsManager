@@ -84,13 +84,13 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="p-1.5 rounded-[var(--r-s)] bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+              <span className="p-1.5 rounded-[var(--r-s)] bg-indigo-500/20 text-indigo-400">
                 <Sparkles className="w-4 h-4" />
               </span>
               <h3 className={`text-base font-bold font-display uppercase tracking-wider ${isStitchLight ? 'text-[var(--ink)]' : 'text-white'}`}>
                 Plan de Crecimiento Musical ({growthPlan.horizonDays} Días)
               </h3>
-              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">
                 🎸 {bandName}
               </span>
               {archetype && (
@@ -127,8 +127,8 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               onClick={() => onRefreshPlanWithAI(selectedHorizon, customPrompt || undefined)}
               className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer shadow-md ${
                 isGeneratingAI 
-                  ? 'bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 cursor-wait' 
-                  : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white border border-indigo-400/30 hover:scale-[1.02]'
+                  ? 'bg-indigo-900/50 text-indigo-300 cursor-wait' 
+                  : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white hover:scale-[1.02]'
               }`}
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isGeneratingAI ? 'animate-spin' : ''}`} />
@@ -184,7 +184,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
             </span>
           </div>
           <div className="flex items-center gap-3 w-full sm:w-64">
-            <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden border /50">
+            <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 transition-all duration-500 rounded-full"
                 style={{ width: `${progressPercent}%` }}
@@ -283,7 +283,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               }`}>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-bold">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-bold">
                       Pilar Musical {idx + 1}
                     </span>
                     <span className="text-xs font-mono font-bold text-emerald-400">
@@ -380,7 +380,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
       {/* Weekly Blueprint Tab */}
       {selectedTab === 'weekly' && (
         <div className="space-y-4">
-          <div className="p-4 rounded-[var(--r-m)] bg-indigo-950/20 border border-indigo-500/30 flex items-center justify-between">
+          <div className="p-4 rounded-[var(--r-m)] bg-indigo-950/20 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-indigo-400" />
               <div>
@@ -398,7 +398,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 <div>
                   <div className="flex items-center justify-between border-b /60 pb-2 mb-2">
                     <span className="text-xs font-mono font-bold text-white uppercase">{dayPlan.day}</span>
-                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-bold flex items-center gap-1">
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 font-bold flex items-center gap-1">
                       <Clock className="w-2.5 h-2.5" /> {dayPlan.optimalPostingTime}
                     </span>
                   </div>
@@ -532,7 +532,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                 </h4>
                 <div className="space-y-2.5">
                   {currentChannel.hookFormulas.map((hook, hIdx) => (
-                    <div key={hIdx} className="p-2.5 rounded-[var(--r-s)] bg-bg-[var(--surface)]/60 border /80 flex items-start justify-between gap-2 group">
+                    <div key={hIdx} className="p-2.5 rounded-[var(--r-s)] bg-bg-[var(--surface)]/60 flex items-start justify-between gap-2 group">
                       <p className="text-xs font-mono text-text-[var(--ink-3)] italic">
                         {hook}
                       </p>
@@ -563,7 +563,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
                   </h4>
                   <div className="space-y-3">
                     {currentChannel.viralConcepts.map((v, vIdx) => (
-                      <div key={vIdx} className="p-3 rounded-[var(--r-s)] bg-indigo-950/20 border border-indigo-500/20 space-y-1.5">
+                      <div key={vIdx} className="p-3 rounded-[var(--r-s)] bg-indigo-950/20 space-y-1.5">
                         <h5 className="text-xs font-bold text-white">{v.title}</h5>
                         <p className="text-[11px] font-mono text-text-[var(--ink-3)]">{v.concept}</p>
                         <div className="text-[10px] font-mono text-amber-300 bg-black/40 p-1.5 rounded">
@@ -579,7 +579,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
               )}
 
               {/* Errores Críticos a Evitar (Don'ts) */}
-              <div className="p-4 rounded-[var(--r-m)] bg-red-950/20 border border-red-500/30 space-y-3">
+              <div className="p-4 rounded-[var(--r-m)] bg-red-950/20 space-y-3">
                 <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-red-400 flex items-center gap-1.5">
                   <AlertCircle className="w-4 h-4" />
                   Errores Típicos de Músicos a Evitar

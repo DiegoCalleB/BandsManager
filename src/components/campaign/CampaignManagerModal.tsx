@@ -169,18 +169,18 @@ export function CampaignManagerModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#121110] border border-[#2b2826] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-[#121110] border-[#2b2826] rounded-[var(--r-l)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
         
         {/* Header */}
         <div className="p-5 border-b border-[#22201e] flex items-center justify-between bg-gradient-to-r from-[var(--surface)] to-[#121110]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--r-m)] bg-purple-500/20 border border-purple-500/40 text-purple-300 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-[var(--r-m)] bg-purple-500/20 text-purple-300 flex items-center justify-center">
               <Target className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold font-display text-zinc-100 flex items-center gap-2">
                 Gestor de Campañas de Booking
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300">
                   {campaigns.length} disponibles
                 </span>
               </h2>
@@ -257,7 +257,7 @@ export function CampaignManagerModal({
                   {formData.targetCities?.map(city => (
                     <span
                       key={city}
-                      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-[var(--r-s)] bg-sky-500/20 text-sky-300 border border-sky-500/30"
+                      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-[var(--r-s)] bg-sky-500/20 text-sky-300"
                     >
                       <MapPin className="w-3 h-3 text-sky-400" />
                       {city}
@@ -326,7 +326,7 @@ export function CampaignManagerModal({
                     {formData.targetDates?.map((date, idx) => (
                       <div 
                         key={idx}
-                        className="flex flex-col gap-1 bg-[#1a1918] px-2.5 py-1.5 rounded-[var(--r-m)] border border-purple-500/30 text-zinc-100"
+                        className="flex flex-col gap-1 bg-[#1a1918] px-2.5 py-1.5 rounded-[var(--r-m)] text-zinc-100"
                       >
                         <div className="flex items-center gap-1.5">
                           <Calendar className="w-3.5 h-3.5 text-purple-400 shrink-0" />
@@ -355,7 +355,7 @@ export function CampaignManagerModal({
                       </div>
                     ))}
 
-                    <div className="flex items-center gap-1.5 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 border-dashed rounded-[var(--r-m)] px-2.5 py-1 text-purple-300">
+                    <div className="flex items-center gap-1.5 bg-purple-500/10 hover:bg-purple-500/20 border-dashed rounded-[var(--r-m)] px-2.5 py-1 text-purple-300">
                       <Plus className="w-3.5 h-3.5" />
                       <span className="text-[11px] font-mono font-bold">Añadir Fecha:</span>
                       <input
@@ -393,7 +393,7 @@ export function CampaignManagerModal({
                 <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] mb-1 flex items-center gap-2">
                   Plantilla de Pitch de Campaña por Caso de Uso (opcional)
                   {filledPitchCategoriesCount > 0 && (
-                    <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                    <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">
                       {filledPitchCategoriesCount}/{PITCH_CATEGORIES.length} definidas
                     </span>
                   )}
@@ -463,7 +463,7 @@ export function CampaignManagerModal({
                 </div>
                 <button
                   onClick={handleStartCreate}
-                  className="px-3 py-1.5 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/40 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all active:scale-95"
+                  className="px-3 py-1.5 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center gap-1.5 transition-all active:scale-95"
                 >
                   <Plus className="w-3.5 h-3.5" /> + Nueva Campaña
                 </button>
@@ -490,7 +490,7 @@ export function CampaignManagerModal({
                         Modo General (Sin Filtro de Campaña)
                       </span>
                       {!activeCampaign && (
-                        <span className="text-[9px] font-mono font-extrabold uppercase px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border /30">
+                        <span className="text-[9px] font-mono font-extrabold uppercase px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300">
                           ACTIVO
                         </span>
                       )}
@@ -540,7 +540,7 @@ export function CampaignManagerModal({
                               {camp.name}
                             </h3>
                             {isActive ? (
-                              <span className="inline-flex items-center gap-1 text-[9px] font-mono font-extrabold uppercase px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                              <span className="inline-flex items-center gap-1 text-[9px] font-mono font-extrabold uppercase px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300">
                                 <Flame className="w-2.5 h-2.5 text-purple-400" />
                                 MODO ACTIVO EN LA WEB
                               </span>
@@ -594,7 +594,7 @@ export function CampaignManagerModal({
                                     onClose();
                                     onNavigate('calendario', { selectedDate: camp.targetDates?.[0] });
                                   }}
-                                  className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 border border-purple-500/40 flex items-center gap-1"
+                                  className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 flex items-center gap-1"
                                 >
                                   <Calendar className="w-3 h-3" /> Ver en Calendario
                                 </button>

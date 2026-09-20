@@ -136,10 +136,10 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
           </h3>
 
           {config.dossierPdfUrl ? (
-            <div className="p-4 bg-slate-950 border /40 rounded-[var(--r-m)] space-y-3">
+            <div className="p-4 bg-slate-950 rounded-[var(--r-m)] space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-500/20 border /30 flex items-center justify-center text-amber-400 shrink-0">
+                  <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="truncate">
@@ -165,7 +165,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   href={config.dossierPdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 border /40 text-amber-300 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
+                  className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
                 >
                   <Download className="w-3.5 h-3.5" /> Descargar / Abrir Dossier
                 </a>
@@ -183,7 +183,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               </div>
             </div>
           ) : (
-            <div className="p-5 bg-slate-950 border border-dashed  rounded-[var(--r-m)] text-center space-y-3">
+            <div className="p-5 bg-slate-950 border-dashed  rounded-[var(--r-m)] text-center space-y-3">
               <div className="w-12 h-12 rounded-full bg-[var(--surface)] border  flex items-center justify-center text-[var(--ink-3)] mx-auto">
                 <FileDown className="w-6 h-6 text-amber-400" />
               </div>
@@ -232,7 +232,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
               <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca Interna)
             </h3>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border /20 px-2.5 py-1 rounded-full">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full">
               Solo visible aquí
             </span>
           </div>
@@ -246,7 +246,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               <div className="p-3 bg-slate-950 border  rounded-[var(--r-m)] space-y-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3 overflow-hidden">
-                    <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-500/10 border /20 text-amber-500 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-[var(--r-s)] bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
                       <FileDown className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
@@ -268,7 +268,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     href={config.riderPdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 border /40 text-amber-300 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
+                    className="flex-1 py-1.5 px-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition"
                   >
                     <Download className="w-3.5 h-3.5" /> Descargar / Abrir Rider
                   </a>
@@ -286,7 +286,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="p-5 bg-slate-950 border border-dashed  rounded-[var(--r-m)] text-center space-y-3">
+              <div className="p-5 bg-slate-950 border-dashed  rounded-[var(--r-m)] text-center space-y-3">
                 <div className="w-12 h-12 rounded-full bg-[var(--surface)] border  flex items-center justify-center text-[var(--ink-3)] mx-auto">
                   <FileDown className="w-6 h-6 text-amber-400" />
                 </div>

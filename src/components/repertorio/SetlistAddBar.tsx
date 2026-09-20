@@ -88,7 +88,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
     <div className="space-y-1.5 pt-0.5">
       {/* Insertion Mode Indicator */}
       {selectedSetlistItemId && (
-        <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-[var(--r-s)] bg-amber-500/10 border /25 text-amber-300 text-xs">
+        <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-[var(--r-s)] bg-amber-500/10 text-amber-300 text-xs">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="shrink-0 text-amber-400 font-semibold">📌 Insertando debajo de:</span>
             <span className="truncate font-medium text-white">"{selectedItemLabel}"</span>
@@ -111,7 +111,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
           <button
             type="button"
             onClick={() => setIsAddSongsModalOpen(true)}
-            className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs shrink-0"
+            className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs shrink-0"
             title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
           >
             <ListPlus className="w-3.5 h-3.5 text-emerald-400" />
@@ -151,7 +151,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
             <button
               type="button"
               onClick={() => handleAddItemToSetlist(undefined, 'bloque_header', '⚡ Bloque Nuevo')}
-              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-indigo-500/10 text-indigo-300 border border-indigo-500/25 hover:bg-indigo-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
+              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
               title="Añadir un encabezado de bloque para estructurar el concierto"
             >
               <span>⚡</span>
@@ -162,7 +162,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
             <button
               type="button"
               onClick={() => setShowEventMenu(v => !v)}
-              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 border border-sky-500/25 hover:bg-sky-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
+              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
               title="Añadir saludos, presentaciones, descansos, bises o eventos personalizados"
             >
               <Zap className="w-3.5 h-3.5 text-sky-400" />
@@ -175,7 +175,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
           {showEventMenu && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowEventMenu(false)} />
-              <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] border /80 bg-[var(--surface)]/95 backdrop-blur-md shadow-2xl p-2 space-y-2 text-xs">
+              <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 backdrop-blur-md shadow-2xl p-2 space-y-2 text-xs">
                 {/* Standard Preset Events */}
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-[var(--ink-3)] px-2 py-1 font-semibold">
@@ -298,7 +298,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                       {customShortcuts.map(sc => (
                         <div
                           key={sc.id}
-                          className="group/sc relative inline-flex items-center rounded-[var(--r-s)] bg-teal-500/10 text-teal-300 border border-teal-500/20 text-xs"
+                          className="group/sc relative inline-flex items-center rounded-[var(--r-s)] bg-teal-500/10 text-teal-300 text-xs"
                         >
                           <button
                             type="button"

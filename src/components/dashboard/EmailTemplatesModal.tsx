@@ -122,12 +122,12 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
-        <div className="bg-[var(--surface)] border /30 rounded-[var(--r-l)] w-full max-w-3xl my-auto max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
+        <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-3xl my-auto max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
         
         {/* Modal Header */}
         <div className="p-5 bg-[#141312] border-b  flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 border /40 text-amber-400">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400">
               <FileText className="w-5 h-5" />
             </div>
             <div>
@@ -225,7 +225,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
             </div>
           </div>
 
-          <div className="p-3 rounded-[var(--r-m)] bg-amber-500/10 border /20 text-amber-300 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-[var(--r-m)] bg-amber-500/10 text-amber-300 text-xs flex items-center gap-2">
             <Sparkles className="w-4 h-4 shrink-0 text-amber-400" />
             <span>
               <strong>Consejo de Agentes AI:</strong> El Agente Redactor utiliza este mismo estilo directo y conciso al generar propuestas desde el panel de Booking.

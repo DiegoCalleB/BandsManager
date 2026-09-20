@@ -198,7 +198,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
         {/* Optional Cover image (hidden on tiny screens if no cover) */}
         {song.portadaUrl ? (
-          <div className="hidden sm:block w-8.5 h-8.5 rounded-[var(--r-s)] overflow-hidden shrink-0 border /60 shadow-xs">
+          <div className="hidden sm:block w-8.5 h-8.5 rounded-[var(--r-s)] overflow-hidden shrink-0 shadow-xs">
             <img src={song.portadaUrl} alt={displayTitle} className="w-full h-full object-cover" />
           </div>
         ) : null}
@@ -258,7 +258,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
                 isStitchLight
                   ? 'bg-[var(--sunken)] text-[var(--ink-2)] border '
-                  : 'bg-neutral-800/90 text-zinc-300 border /70'
+                  : 'bg-neutral-800/90 text-zinc-300'
               }`}
             >
               {song.tonalidad || '—'}{song.bpm ? ` • ${song.bpm} BPM` : ''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? ' 🤖' : ''}
@@ -274,10 +274,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               <span
                 className={`px-2 py-0.5 rounded-full text-[10px] font-medium tracking-wide ${
                   song.estadoTema === 'listo'
-                    ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/25'
+                    ? 'bg-emerald-500/15 text-emerald-300'
                     : song.estadoTema === 'ensayando'
-                    ? 'bg-amber-500/15 text-amber-300 border /25'
-                    : 'bg-neutral-800 text-zinc-400 border /50'
+                    ? 'bg-amber-500/15 text-amber-300'
+                    : 'bg-neutral-800 text-zinc-400'
                 }`}
               >
                 {song.estadoTema === 'listo' ? 'Listo' : song.estadoTema === 'ensayando' ? 'Ensayando' : song.estadoTema}
@@ -294,12 +294,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
             {/* Audio Indicator */}
             {song.audioPrincipalUrl ? (
-              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">
+              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300">
                 <Volume2 className="w-2.5 h-2.5" />
                 <span>{isDriveAudio ? 'Drive' : 'Audio'}</span>
               </span>
             ) : ideasCount > 0 ? (
-              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">
+              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300">
                 <Headphones className="w-2.5 h-2.5" />
                 <span>{ideasCount} ideas</span>
               </span>

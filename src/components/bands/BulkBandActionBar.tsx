@@ -226,7 +226,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             <button
               type="button"
               onClick={() => setIsConfirmDeleteOpen(true)}
-              className="p-1.5 bg-rose-950/60 hover:bg-rose-900 border border-rose-800/60 text-rose-300 rounded-[var(--r-m)] transition-all cursor-pointer"
+              className="p-1.5 bg-rose-950/60 hover:bg-rose-900 text-rose-300 rounded-[var(--r-m)] transition-all cursor-pointer"
               title={`Eliminar ${selectedCount} bandas`}
             >
               <Trash2 className="w-4 h-4 text-rose-400" />
@@ -251,9 +251,9 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
       {/* Confirmation Modal for Bulk Deletion */}
       <ModalPortal isOpen={isConfirmDeleteOpen} onClose={() => setIsConfirmDeleteOpen(false)}>
         <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-fade-in">
-          <div className="w-full max-w-md bg-[#141210] border border-rose-500/40 rounded-[var(--r-l)] shadow-2xl p-5 space-y-4 my-auto">
+          <div className="w-full max-w-md bg-[#141210] rounded-[var(--r-l)] shadow-2xl p-5 space-y-4 my-auto">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
                 <Trash2 className="w-5 h-5" />
               </div>
               <div>
@@ -266,7 +266,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
               </div>
             </div>
 
-            <div className="p-3 rounded-[var(--r-m)] bg-rose-950/30 border border-rose-900/50 text-xs text-rose-200 font-mono">
+            <div className="p-3 rounded-[var(--r-m)] bg-rose-950/30 text-xs text-rose-200 font-mono">
               ⚠️ Se borrarán definitivamente {selectedCount} bandas aliadas.
             </div>
 
